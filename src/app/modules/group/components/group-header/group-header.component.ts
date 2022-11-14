@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { withManagementAdditions, ManagementAdditions } from '../../helpers/group-management';
 import { map } from 'rxjs/operators';
@@ -29,7 +28,6 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
   navigationNeighbors$ = this.groupNavTreeService.navigationNeighbors$;
 
   constructor(
-    private modeService: ModeService,
     private groupWatchingService: GroupWatchingService,
     private groupNavTreeService: GroupNavTreeService,
   ) {}
@@ -44,10 +42,6 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.group$.complete();
-  }
-
-  onEditButtonClicked(): void {
-    this.modeService.modeActions$.next(ModeAction.StartEditing);
   }
 
   onStartWatchButtonClicked(event: Event): void {

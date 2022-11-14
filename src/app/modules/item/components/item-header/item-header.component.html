@@ -30,7 +30,6 @@
     </div>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      [allowEditing]="false"
       [allowFullScreen]="false"
       [navigationMode]="{
         parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
@@ -40,7 +39,6 @@
       (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
       (left)="navigationNeighbors?.data?.previous?.navigateTo()"
       (right)="navigationNeighbors?.data?.next?.navigateTo()"
-      (edit)="onEditButtonClicked()"
     ></alg-page-navigator>
   </div>
 </div>

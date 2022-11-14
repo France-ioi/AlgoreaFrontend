@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
 import { of, Subscription } from 'rxjs';
-import { combineLatestWith, distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -12,8 +12,7 @@ import { ItemDataSource, ItemData } from '../../services/item-datasource.service
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { ModeAction, ModeService } from 'src/app/shared/services/mode.service';
-import { isItemInfo, itemInfo } from 'src/app/shared/models/content/item-info';
+import { itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
@@ -46,7 +45,6 @@ export class ItemByIdComponent implements OnDestroy {
     private itemRouter: ItemRouter,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
-    private modeService: ModeService,
     private itemDataSource: ItemDataSource,
     private userSessionService: UserSessionService,
     private resultActionsService: ResultActionsService,
@@ -112,13 +110,6 @@ export class ItemByIdComponent implements OnDestroy {
           }
           this.currentContent.clear();
         }
-      }),
-
-      this.modeService.modeActions$.pipe(
-        filter(action => [ ModeAction.StartEditing, ModeAction.StopEditing ].includes(action)),
-        combineLatestWith(this.currentContent.content$.pipe(filter(isItemInfo))),
-      ).subscribe(([ action, content ]) => {
-        this.itemRouter.navigateTo(content.route, { page: action === ModeAction.StartEditing ? 'edit' : 'details' });
       }),
 
       this.itemDataSource.state$.pipe(

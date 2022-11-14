@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ModeAction, ModeService } from '../../../shared/services/mode.service';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
@@ -18,7 +17,6 @@ export class ContentTopBarComponent {
   @Input() fullFrameContent?: FullFrameContent;
   @Input() scrolled = false;
 
-  currentMode$ = this.modeService.mode$.asObservable();
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
@@ -38,16 +36,11 @@ export class ContentTopBarComponent {
   );
 
   constructor(
-    private modeService: ModeService,
     private groupWatchingService: GroupWatchingService,
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private currentContent: CurrentContentService,
-  ) {
-  }
+  ) {}
 
-  onEditCancel(): void {
-    this.modeService.modeActions$.next(ModeAction.StopEditing);
-  }
 }

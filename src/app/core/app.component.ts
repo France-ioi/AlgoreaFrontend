@@ -4,7 +4,6 @@ import { delay, switchMap, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
-import { ModeAction, ModeService } from '../shared/services/mode.service';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
@@ -22,8 +21,6 @@ import { Location } from '@angular/common';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  // the delay(0) is used to prevent the UI to update itself (when the content is loaded) (ExpressionChangedAfterItHasBeenCheckedError)
-  readonly currentMode$ = this.modeService.mode$.asObservable().pipe(delay(0));
   fatalError$ = merge(
     this.authService.failure$,
     this.sessionService.userProfileError$,
@@ -47,7 +44,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private sessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private authService: AuthService,
-    private modeService: ModeService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
     private crashReportingService: CrashReportingService,
@@ -105,10 +101,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.scrolled = false;
       });
     }
-  }
-
-  onEditCancel() : void{
-    this.modeService.modeActions$.next(ModeAction.StopEditing);
   }
 
   closeWatchGroupErrorDialog(): void {

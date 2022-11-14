@@ -8,12 +8,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class PageNavigatorComponent {
   @Input() allowWatching = false;
   @Input() isWatched = false;
-  @Input() allowEditing = false;
   @Input() allowFullScreen = false;
 
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 
-  @Output() edit = new EventEmitter<void>();
   @Output() watch = new EventEmitter<Event>();
   @Output() stopWatch = new EventEmitter<void>();
 

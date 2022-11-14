@@ -7,7 +7,6 @@ import { ItemStringChanges, UpdateItemStringService } from '../../http-services/
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
-import { ModeService } from 'src/app/shared/services/mode.service';
 import { readyData } from 'src/app/shared/operators/state';
 import { Duration } from '../../../../shared/helpers/duration';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
@@ -76,7 +75,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   constructor(
-    private modeService: ModeService,
     private currentContentService: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private formBuilder: UntypedFormBuilder,
@@ -84,7 +82,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
     private updateItemStringService: UpdateItemStringService,
     private actionFeedbackService: ActionFeedbackService,
   ) {
-    this.modeService.startEditing();
     this.subscription = this.fetchState$
       .pipe(readyData(), map(data => ({
         ...data.item,
@@ -99,7 +96,6 @@ export class ItemEditComponent implements OnDestroy, PendingChangesComponent {
   }
 
   ngOnDestroy(): void {
-    this.modeService.stopEditing();
     this.subscription?.unsubscribe();
   }
 
