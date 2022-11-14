@@ -52,6 +52,12 @@
       (refresh)="retryError(activeTab.index)"
     ></alg-error>
 
+    <div class="watching-warning" *ngIf="state.isReady && (isWatching$ | async) && [0, 1].includes(activeTab.index)">
+      <div class="content" i18n>
+        This menu is filtered by the observation mode.
+      </div>
+    </div>
+
     <alg-left-nav-tree
       *ngIf="state.isReady"
       [data]="state.data"
