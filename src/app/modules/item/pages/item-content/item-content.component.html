@@ -51,6 +51,7 @@
               (scoreChange)="thread.newActivityOnTask(); scoreChange.emit($event)"
               (skipSave)="skipSave.emit()"
               (refresh)="refresh.emit()"
+              (editorUrl)="editorUrl.emit($event)"
             ></alg-item-display>
             <alg-thread
               #thread
@@ -72,6 +73,7 @@
               (scoreChange)="scoreChange.emit($event)"
               (skipSave)="skipSave.emit()"
               (refresh)="refresh.emit()"
+              (editorUrl)="editorUrl.emit($event)"
             ></alg-item-display>
           </ng-template>
         </ng-container>

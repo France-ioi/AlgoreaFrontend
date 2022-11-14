@@ -67,10 +67,10 @@ export type UpdateDisplayParams = D.TypeOf<typeof updateDisplayParamsDecoder>;
 export const taskLogDecoder = D.UnknownArray;
 export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
 
-// Currently unused
 export const metadataDecoder = D.partial({
   autoHeight: D.boolean,
   disablePlatformProgress: D.boolean,
+  editorUrl: D.string,
 });
 export type TaskMetaData = D.TypeOf<typeof metadataDecoder>;
 export type TaskResources = unknown;
