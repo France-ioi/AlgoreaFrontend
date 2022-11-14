@@ -31,6 +31,10 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
               children: [],
             },
             {
+              path: 'edit',
+              children: []
+            },
+            {
               path: 'progress',
               children: [
                 {
