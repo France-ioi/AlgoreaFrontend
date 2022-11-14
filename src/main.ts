@@ -11,6 +11,9 @@ Sentry.init({
   environment: appConfig.production ? `prod-${window.location.hostname}` : 'dev',
   release: version,
   integrations: [],
+  ignoreErrors: [
+    "Cannot read properties of undefined (reading 'sendMessage')", // a chrome extension error
+  ]
 });
 
 if (appConfig.production) {
