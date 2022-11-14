@@ -7,6 +7,7 @@
     "generate-types-from-swagger": "node ./mocks/generate-types.js from-swagger",
     "start": "concurrently --kill-others -n \"mock,serve\" -c \"yellow.bold,green.bold\" \"npm run mock\" \"npm run serve\"",
     "build": "ng build core && npm run copyColor && npm run copyGeo",
+    "postBuild": "node purgecss.js dist",
     "extract-i18n": "ng extract-i18n --output-path src/locale && ./node_modules/.bin/xliffmerge",
     "copyColor": "xcopy \"projects\\core\\src\\lib\\colors.scss\" \"dist\\core\\\"",
     "copyGeo": "xcopy \"projects\\core\\src\\lib\\geometry.scss\" \"dist\\core\\\"",
@@ -93,6 +94,7 @@
     "ngx-i18nsupport": "^0.17.1",
     "nodemon": "^2.0.7",
     "protractor": "~7.0.0",
+    "purgecss": "^5.0.0",
     "release-it": "^15.4.2",
     "ts-node": "~7.0.0",
     "typescript": "~4.7.4"

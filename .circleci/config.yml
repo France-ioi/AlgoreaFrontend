@@ -54,6 +54,7 @@ commands:
       - run: echo "export const version = '`git describe --always`';" > ./src/version.ts
       - run: npm run injectDeployUrlForAssets --url='//assets.algorea.org<< parameters.path >><< parameters.lang >>/'
       - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //assets.algorea.org<< parameters.path >><< parameters.lang >>/ --progress=false
+      - run: npm run postBuild
 
 jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
