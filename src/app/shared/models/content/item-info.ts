@@ -1,6 +1,7 @@
 import { ItemNavigationData } from 'src/app/core/http-services/item-navigation.service';
 import { ItemType } from '../../helpers/item-type';
 import { FullItemRoute } from '../../routing/item-route';
+import { ItemCorePerm } from '../domain/item-permissions';
 import { ContentInfo, RoutedContentInfo } from './content-info';
 
 export interface ItemInfo extends RoutedContentInfo {
@@ -13,6 +14,7 @@ export interface ItemInfo extends RoutedContentInfo {
 export interface ItemDetails {
   title: string|null,
   type: ItemType,
+  permissions: ItemCorePerm,
   attemptId?: string,
   bestScore?: number,
   currentScore?: number,

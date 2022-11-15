@@ -84,6 +84,7 @@ export class ItemByIdComponent implements OnDestroy {
             details: {
               title: state.data.item.string.title,
               type: state.data.item.type,
+              permissions: state.data.item.permissions,
               attemptId: state.data.currentResult?.attemptId,
               bestScore: state.data.item.watchedGroup ? state.data.item.watchedGroup.averageScore : state.data.item.bestScore,
               currentScore: state.data.item.watchedGroup ? state.data.item.watchedGroup.averageScore : state.data.currentResult?.score,
