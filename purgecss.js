@@ -20,6 +20,7 @@ const safeList = [
     'p-toast-message-info',
     'p-toast-message-warn',
     'p-toast-message-error',
+    'p-sorticon',
 ];
 
 if (allCssFiles.length === 0) {
