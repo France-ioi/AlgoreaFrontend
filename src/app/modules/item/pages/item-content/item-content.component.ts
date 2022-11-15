@@ -9,6 +9,7 @@ import {
 } from '../../components/item-children-edit-form/item-children-edit-form.component';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
+import { DiscussionService } from '../../services/discussion.service';
 
 @Component({
   selector: 'alg-item-content',
@@ -40,8 +41,11 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
   showItemThreadWidget = !!appConfig.forumServerUrl;
   attemptId?: string;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-  }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private discussionService: DiscussionService,
+  ) {}
 
   ngOnChanges(): void {
     if (!this.itemData) return;
@@ -56,6 +60,11 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
         this.switchComponent?.writeValue(true);
       }
     });
+  }
+
+  onScoreChange(score: number): void {
+    this.scoreChange.emit(score);
+    this.discussionService.resyncEventLog();
   }
 
 }
