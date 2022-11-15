@@ -23,7 +23,7 @@ export class ContentTopBarComponent {
     delay(0),
   );
 
-  navigationNeighbors$ = this.currentContent.content$.pipe(
+  navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {
       if (!isItemInfo(content) || !content.route?.contentType) {
         return of(undefined);
@@ -40,7 +40,6 @@ export class ContentTopBarComponent {
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
-    private currentContent: CurrentContentService,
   ) {}
 
 }
