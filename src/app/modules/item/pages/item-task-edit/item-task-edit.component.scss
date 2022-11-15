@@ -1,12 +1,11 @@
-:host {
-  .iframe-container {
-    position: relative;
-    background-color: white;
-    iframe {
-      display: block;
-      width: 100%;
-      border: none;
-      min-height: 100%;
-    }
+
+.iframe-container {
+  position: relative;
+  background-color: white;
+  iframe {
+    display: block;
+    width: 100%;
+    border: none;
+    min-height: 100%;
   }
 }
