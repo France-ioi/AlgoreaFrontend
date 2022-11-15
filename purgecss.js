@@ -15,6 +15,12 @@ const contentFilesFolderPath = [
     `${ distPath }/**/*.js`,
 ];
 const allCssFiles = getAllCssFiles(cssFilesFolderPath);
+const safeList = [
+    'p-toast-message-success',
+    'p-toast-message-info',
+    'p-toast-message-warn',
+    'p-toast-message-error',
+];
 
 if (allCssFiles.length === 0) {
     console.log('Css files are not found.');
@@ -27,7 +33,7 @@ const data = allCssFiles.map(file => ({
 }));
 
 let cmd = data.map(fileData =>
-    `npx purgecss -css ${fileData.file} --content ${ contentFilesFolderPath.join(' ') } -o ${ fileData.file }`
+    `npx purgecss -css ${fileData.file} --content ${ contentFilesFolderPath.join(' ') } --safelist ${ safeList.join(' ') } -o ${ fileData.file }`
 );
 
 console.log('Run PurgeCSS...');
