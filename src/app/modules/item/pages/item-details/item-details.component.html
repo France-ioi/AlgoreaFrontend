@@ -20,7 +20,7 @@
         (changed)="reloadItem()"
       ></alg-item-permissions>
 
-      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !progressTab.isActive && !dependenciesTab.isActive && !parametersTab.isActive">
+      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !progressTab.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive">
         <a
           class="nav-tab-item"
           [routerLink]="'./'"
@@ -54,6 +54,15 @@
             {{ tab.name }}
           </a>
         </ng-container>
+        <a
+          [hidden]="(!editorUrl || !(itemData.item.permissions | allowsEditingAll)) && !taskEditTab.isActive"
+          class="nav-tab-item"
+          [routerLink]="'./edit'"
+          routerLinkActive #taskEditTab="routerLinkActive"
+          [class.active]="taskEditTab?.isActive"
+        >
+          <span i18n>Edit</span>
+        </a>
         <a
           [hidden]="!(showProgressTab$ | async) && !progressTab.isActive"
           class="nav-tab-item"
@@ -117,6 +126,7 @@
               (scoreChange)="patchStateWithScore($event)"
               (skipSave)="skipBeforeUnload()"
               (refresh)="reloadItem()"
+              (editorUrl)="editorUrl = $event"
             ></alg-item-content>
           </ng-container>
         </ng-container>
@@ -127,6 +137,8 @@
           [savingAnswer]="(savingAnswer$ | async) ?? false"
           (skipSave)="skipBeforeUnload()"
         ></alg-item-progress>
+
+        <alg-item-task-edit *ngIf="taskEditTab?.isActive" [editorUrl]="editorUrl"></alg-item-task-edit>
 
         <ng-container *ngIf="dependenciesTab.isActive">
           <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>

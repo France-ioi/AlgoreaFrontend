@@ -1,0 +1,14 @@
+
+<alg-error *ngIf="!sanitizedUrl" i18n-message message="You have to visit the 'Content' tab before editing this task."></alg-error>
+
+<div
+*ngIf="!!sanitizedUrl"
+class="iframe-container"
+[algFullHeightContent]="true"
+>
+  <iframe
+    [src]="sanitizedUrl"
+    [algFullHeightContent]="true"
+    allowfullscreen
+  ></iframe>
+</div>

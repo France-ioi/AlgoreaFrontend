@@ -31,6 +31,7 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
   @Output() scoreChange = new EventEmitter<number>();
   @Output() skipSave = new EventEmitter<void>();
   @Output() refresh = new EventEmitter<void>();
+  @Output() editorUrl = new EventEmitter<string|undefined>();
 
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent?.dirty;

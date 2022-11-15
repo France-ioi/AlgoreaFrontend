@@ -66,7 +66,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     catchError(() => EMPTY),
   );
 
-  metadata$ =this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  metadata$ = this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  @Output() editorUrl = this.metadata$.pipe(map(({ editorUrl }) => editorUrl));
+
   iframeHeight$ = this.metadata$.pipe(
     switchMap(({ autoHeight }) => {
       if (autoHeight) return of(undefined);
