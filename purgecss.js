@@ -21,6 +21,7 @@ const safeList = [
     'p-toast-message-warn',
     'p-toast-message-error',
     'p-sorticon',
+    'p-tableheadercheckbox',
 ];
 
 if (allCssFiles.length === 0) {
