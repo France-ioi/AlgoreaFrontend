@@ -1,6 +1,6 @@
-<ng-container *ngrxLet="widgetOpened$ | async as widgetOpened">
+<ng-container *ngrxLet="visible$ | async as visible">
   <div class="widget" *ngIf="state$ | async as state">
-    <ng-container *ngIf="widgetOpened">
+    <ng-container *ngIf="visible">
       <div *ngIf="state.isFetching">Loading...</div>
       <div *ngIf="state.isError">Error!</div>
       <div *ngIf="state.isReady" class="widget-body">
@@ -19,20 +19,5 @@
           ></p-button>
       </div>
     </ng-container>
-
-    <div class="widget-footer" *ngrxLet="unreadCount$ | async as unreadCount">
-      <p-button
-        *ngIf="widgetOpened"
-        label="Hide thread"
-        (click)="toggleWidget(false)"
-      ></p-button>
-
-      <p-button
-        *ngIf="!widgetOpened"
-        label="Show thread {{ unreadCount && unreadCount > 0 ? '('+unreadCount+')' : '' }}"
-        (click)="toggleWidget(true)"
-      ></p-button>
-    </div>
   </div>
-
 </ng-container>

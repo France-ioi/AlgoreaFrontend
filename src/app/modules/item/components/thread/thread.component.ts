@@ -14,8 +14,7 @@ export class ThreadComponent {
 
   state$ = this.threadService.state$;
 
-  unreadCount$ = this.discussionService.unreadCount$;
-  widgetOpened$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
+  visible$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
 
   constructor(
     private threadService: ThreadService,
@@ -27,10 +26,6 @@ export class ThreadComponent {
     if (!messageToSend) return;
     this.threadService.sendMessage(messageToSend);
     this.messageToSend = '';
-  }
-
-  toggleWidget(visible: boolean): void {
-    this.discussionService.toggleVisibility(visible);
   }
 
 }
