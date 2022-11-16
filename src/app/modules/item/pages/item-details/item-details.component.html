@@ -123,7 +123,7 @@
               [(taskView)]="taskView"
               [editModeEnabled]="editChildrenTab.isActive"
               (taskTabsChange)="setTaskTabs($event)"
-              (scoreChange)="patchStateWithScore($event)"
+              (scoreChange)="onScoreChange($event)"
               (skipSave)="skipBeforeUnload()"
               (refresh)="reloadItem()"
               (editorUrl)="editorUrl = $event"
