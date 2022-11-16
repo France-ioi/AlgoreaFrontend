@@ -34,6 +34,7 @@ import {
 } from 'src/app/shared/models/domain/item-view-permission';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
 import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 const loadForbiddenAnswerError = new Error('load answer forbidden');
 
@@ -159,6 +160,7 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
     private layoutService: LayoutService,
     private getAnswerService: GetAnswerService,
     private router: Router,
+    private currentContentService: CurrentContentService,
   ) {}
 
   ngOnDestroy(): void {
@@ -170,7 +172,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
     this.itemDataSource.refreshItem();
   }
 
-  patchStateWithScore(score: number): void {
+  onScoreChange(score: number): void {
+    this.currentContentService.forceNavMenuReload();
     this.itemDataSource.patchItemScore(score);
   }
 
