@@ -18,7 +18,7 @@
     </div>
     <button
       *ngIf="discussionState$ | async as discussion"
-      class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size"
+      class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size large-icon-size"
       [ngClass]="{ 'active': discussion.visible, 'margin-right': !(navigationNeighbors$ | async) }"
       pButton
       type="button"
