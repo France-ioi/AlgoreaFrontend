@@ -3,7 +3,9 @@ import { UntypedFormGroup, Validators } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { HOURS } from 'src/app/shared/helpers/duration';
-import { DEFAULT_ENTERING_TIME_MAX, DEFAULT_ENTERING_TIME_MIN } from '../item-edit/item-edit.component';
+
+export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
+export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 
 @Component({
   selector: 'alg-item-edit-advanced-parameters',
