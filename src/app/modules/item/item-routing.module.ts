@@ -4,7 +4,6 @@ import { BeforeUnloadGuard } from 'src/app/shared/guards/before-unload-guard';
 import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { ItemDetailsComponent } from './pages/item-details/item-details.component';
-import { ItemEditComponent } from './pages/item-edit/item-edit.component';
 
 @NgModule({
   imports: [ RouterModule.forChild([
@@ -60,15 +59,6 @@ import { ItemEditComponent } from './pages/item-edit/item-edit.component';
               path: 'dependencies',
               children: [],
             },
-          ]
-        },
-        {
-          path: 'edit',
-          component: ItemEditComponent,
-          canDeactivate: [ PendingChangesGuard ],
-          children: [
-            { path: '', pathMatch: 'full', children: [] },
-            { path: 'advanced-parameters', children: [] }
           ]
         },
       ]
