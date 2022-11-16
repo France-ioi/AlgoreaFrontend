@@ -1,23 +1,19 @@
-<ng-container *ngrxLet="visible$ | async as visible">
-  <div class="widget" *ngIf="state$ | async as state">
-    <ng-container *ngIf="visible">
-      <div *ngIf="state.isFetching">Loading...</div>
-      <div *ngIf="state.isError">Error!</div>
-      <div *ngIf="state.isReady" class="widget-body">
-        <div *ngIf="state.data.length === 0">There are currently no events</div>
-        <div *ngFor="let event of state.data">
-          <div>{{ event | json }}</div>
-        </div>
-        <textarea
-          [(ngModel)]="messageToSend"
-          placeholder="Send a message..."
-        ></textarea>
-        <p-button
-          label="Submit"
-          (click)="sendMessage()"
-          [disabled]="!messageToSend.trim()"
-          ></p-button>
-      </div>
-    </ng-container>
+<div class="widget" *ngIf="state$ | async as state">
+  <div *ngIf="state.isFetching">Loading...</div>
+  <div *ngIf="state.isError">Error!</div>
+  <div *ngIf="state.isReady" class="widget-body">
+    <div *ngIf="state.data.length === 0">There are currently no events</div>
+    <div *ngFor="let event of state.data">
+      <div>{{ event | json }}</div>
+    </div>
+    <textarea
+      [(ngModel)]="messageToSend"
+      placeholder="Send a message..."
+    ></textarea>
+    <p-button
+      label="Submit"
+      (click)="sendMessage()"
+      [disabled]="!messageToSend.trim()"
+      ></p-button>
   </div>
-</ng-container>
+</div>

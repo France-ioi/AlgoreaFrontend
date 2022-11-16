@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
-import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemData } from '../../services/item-datasource.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -38,7 +37,6 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
     return !!this.itemChildrenEditFormComponent?.dirty;
   }
 
-  showItemThreadWidget = !!appConfig.forumServerUrl;
   attemptId?: string;
 
   constructor(
