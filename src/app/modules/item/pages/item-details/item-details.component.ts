@@ -149,6 +149,8 @@ export class ItemDetailsComponent implements OnDestroy, BeforeUnloadComponent, P
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
     $localize`:@@contactUs:If the problem persists, please contact us.`;
 
+  showItemThreadWidget = !!appConfig.forumServerUrl;
+
   isDirty(): boolean {
     return !!this.itemContentComponent?.isDirty() || !!this.itemEditWrapperComponent?.isDirty();
   }

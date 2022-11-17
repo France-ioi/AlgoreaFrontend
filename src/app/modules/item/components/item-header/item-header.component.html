@@ -28,6 +28,15 @@
       <p>{{itemData.item.string.title}}</p>
       <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
     </div>
+    <button
+      *ngIf="discussionState$ | async as discussion"
+      class="p-button-raised p-button-rounded alg-round-button-icon large-icon-size"
+      [ngClass]="{'active': discussion.visible }"
+      pButton
+      type="button"
+      icon="pi pi-comments"
+      (click)="toggleThread()"
+    ></button>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
       [allowFullScreen]="false"

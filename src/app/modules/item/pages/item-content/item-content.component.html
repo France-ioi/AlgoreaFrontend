@@ -36,46 +36,22 @@
 
       <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
         <ng-container *ngIf="itemData.item.url; else noUrl">
-          <ng-container *ngIf="showItemThreadWidget; else nothread">
-            <alg-item-display
-              *ngIf="attemptId; else noCurrentResult"
-              [route]="itemData.route"
-              [editingPermission]="itemData.item.permissions"
-              [url]="itemData.item.url"
-              [attemptId]="attemptId"
-              [view]="taskView"
-              [taskConfig]="taskConfig"
-              [savingAnswer]="savingAnswer"
-              (viewChange)="taskViewChange.emit($event)"
-              (tabsChange)="taskTabsChange.emit($event)"
-              (scoreChange)="thread.newActivityOnTask(); scoreChange.emit($event)"
-              (skipSave)="skipSave.emit()"
-              (refresh)="refresh.emit()"
-              (editorUrl)="editorUrl.emit($event)"
-            ></alg-item-display>
-            <alg-thread
-              #thread
-              [itemId]="itemData.route.id"
-            ></alg-thread>
-          </ng-container>
-          <ng-template #nothread> <!-- repeating the same as above but without the thread so that we can have a reference between item-display and thread (bit hacky) -->
-            <alg-item-display
-              *ngIf="attemptId; else noCurrentResult"
-              [route]="itemData.route"
-              [editingPermission]="itemData.item.permissions"
-              [url]="itemData.item.url"
-              [attemptId]="attemptId"
-              [view]="taskView"
-              [taskConfig]="taskConfig"
-              [savingAnswer]="savingAnswer"
-              (viewChange)="taskViewChange.emit($event)"
-              (tabsChange)="taskTabsChange.emit($event)"
-              (scoreChange)="scoreChange.emit($event)"
-              (skipSave)="skipSave.emit()"
-              (refresh)="refresh.emit()"
-              (editorUrl)="editorUrl.emit($event)"
-            ></alg-item-display>
-          </ng-template>
+          <alg-item-display
+            *ngIf="attemptId; else noCurrentResult"
+            [route]="itemData.route"
+            [editingPermission]="itemData.item.permissions"
+            [url]="itemData.item.url"
+            [attemptId]="attemptId"
+            [view]="taskView"
+            [taskConfig]="taskConfig"
+            [savingAnswer]="savingAnswer"
+            (viewChange)="taskViewChange.emit($event)"
+            (tabsChange)="taskTabsChange.emit($event)"
+            (scoreChange)="onScoreChange($event)"
+            (skipSave)="skipSave.emit()"
+            (refresh)="refresh.emit()"
+            (editorUrl)="editorUrl.emit($event)"
+          ></alg-item-display>
         </ng-container>
 
         <ng-template #noUrl>

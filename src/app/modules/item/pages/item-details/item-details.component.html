@@ -95,7 +95,11 @@
           <span i18n>Parameters</span>
         </a>
       </nav>
-      <div class="bg-white" [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) }">
+      <div
+        class="bg-white"
+        [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) }"
+        #contentContainer
+      >
         <alg-error
           *ngIf="unknownError"
           [message]="errorMessage"
@@ -148,6 +152,7 @@
           <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
         </ng-container>
       </div>
+      <alg-thread-container [topCompensation]="contentContainer.offsetTop" *ngIf="showItemThreadWidget"></alg-thread-container>
     </ng-container>
 
   </ng-container>

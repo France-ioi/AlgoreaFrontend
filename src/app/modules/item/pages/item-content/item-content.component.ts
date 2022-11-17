@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
-import { appConfig } from 'src/app/shared/helpers/config';
 import { ItemData } from '../../services/item-datasource.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -9,6 +8,7 @@ import {
 } from '../../components/item-children-edit-form/item-children-edit-form.component';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
+import { DiscussionService } from '../../services/discussion.service';
 
 @Component({
   selector: 'alg-item-content',
@@ -37,11 +37,13 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
     return !!this.itemChildrenEditFormComponent?.dirty;
   }
 
-  showItemThreadWidget = !!appConfig.forumServerUrl;
   attemptId?: string;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-  }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private discussionService: DiscussionService,
+  ) {}
 
   ngOnChanges(): void {
     if (!this.itemData) return;
@@ -56,6 +58,11 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
         this.switchComponent?.writeValue(true);
       }
     });
+  }
+
+  onScoreChange(score: number): void {
+    this.scoreChange.emit(score);
+    this.discussionService.resyncEventLog();
   }
 
 }

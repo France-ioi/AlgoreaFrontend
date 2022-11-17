@@ -49,6 +49,7 @@ import {
 } from './components/permissions-edit-dialog-form/permissions-edit-form.component';
 import { ItemUnlockAccessComponent } from './components/item-unlock-access/item-unlock-access.component';
 import { ItemTaskEditComponent } from './pages/item-task-edit/item-task-edit.component';
+import { ThreadContainerComponent } from './components/thread-container/thread-container.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { ItemTaskEditComponent } from './pages/item-task-edit/item-task-edit.com
     TaskLoaderComponent,
     ItemChildrenEditFormComponent,
     ThreadComponent,
+    ThreadContainerComponent,
     ItemDependenciesComponent,
     ItemEditWrapperComponent,
     AddDependencyComponent,

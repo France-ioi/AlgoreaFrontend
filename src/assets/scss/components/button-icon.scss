@@ -11,3 +11,42 @@
   }
 
 }
+
+.alg-round-button-icon {
+  width: 3rem !important;
+  height: 3rem !important;
+  border: 1px solid var(--light-border-color);
+  background-color: #fff;
+  box-shadow: none !important;
+
+  &.top-bar-size {
+    width: 2.6rem !important;
+    height: 2.6rem !important;
+  }
+
+  &.large-icon-size {
+    .p-button-icon {
+      font-size: 1.4rem;
+    }
+  }
+
+  &:hover {
+    background-color: #fff !important;
+    border: 1px solid var(--light-border-color) !important;
+  }
+
+  .p-button-icon {
+    color: var(--base-color);
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+
+  &.active {
+    background-color: var(--base-color) !important;
+    border-color: var(--base-color) !important;
+
+    .p-button-icon {
+      color: #fff !important;
+    }
+  }
+}

@@ -7,6 +7,7 @@ import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navi
 import { isItemInfo } from '../../../shared/models/content/item-info';
 import { FullFrameContent } from 'src/app/shared/services/layout.service';
 import { GroupWatchingService } from '../../services/group-watching.service';
+import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -17,13 +18,15 @@ export class ContentTopBarComponent {
   @Input() fullFrameContent?: FullFrameContent;
   @Input() scrolled = false;
 
+  discussionState$ = this.discussionService.state$;
+
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
   );
 
-  navigationNeighbors$ = this.currentContent.content$.pipe(
+  navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {
       if (!isItemInfo(content) || !content.route?.contentType) {
         return of(undefined);
@@ -40,7 +43,11 @@ export class ContentTopBarComponent {
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
-    private currentContent: CurrentContentService,
+    private discussionService: DiscussionService
   ) {}
+
+  toggleThread(): void {
+    this.discussionService.toggleVisibility();
+  }
 
 }

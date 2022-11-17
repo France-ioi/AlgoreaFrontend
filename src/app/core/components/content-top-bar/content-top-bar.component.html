@@ -16,6 +16,15 @@
     <div class="right-pane-title">
       <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>
+    <button
+      *ngIf="discussionState$ | async as discussion"
+      class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size large-icon-size"
+      [ngClass]="{ 'active': discussion.visible, 'margin-right': !(navigationNeighbors$ | async) }"
+      pButton
+      type="button"
+      icon="pi pi-comments"
+      (click)="toggleThread()"
+    ></button>
     <alg-neighbor-widget
       class="neighbor-widget"
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
