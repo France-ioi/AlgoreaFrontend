@@ -1,12 +1,24 @@
 import { build, ChannelConfiguration, MessageTransaction, MessagingChannel } from 'jschannel';
 import { isObservable, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { isString } from 'src/app/shared/helpers/type-checkers';
 
 export interface RxMessage {
   method: string,
   params?: unknown,
   timeout?: number,
   error?: (error: unknown, message: string) => void,
+}
+
+class JsChannelError extends Error {
+  constructor(error: unknown, message: string) {
+    super(message);
+    if (isString(error)) this.name = error;
+    else {
+      this.name = 'JSChannelError';
+      this.message = `${this.message} (${JSON.stringify(error)})`;
+    }
+  }
 }
 
 /** Build a RxMessagingChannel, which is a jschannel with rxjs calls */
@@ -76,7 +88,7 @@ export class RxMessagingChannel {
           subscriber.next(results);
           subscriber.complete();
         },
-        error: (error: any, _message: string): void => subscriber.error(error)
+        error: (error: any, errorMessage: string): void => subscriber.error(new JsChannelError(error, errorMessage))
       };
       this.channel.call(innerMessage);
     });
