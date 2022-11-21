@@ -29,10 +29,10 @@
               <span class="scored-text" *ngIf="event.data.score !== undefined" i18n>which scored {{ event.data.score }}</span>.
             </ng-container>
           </div>
-          <div>{{ event.time | date : 'hh:mm' }}</div>
+          <div>{{ event.time | date : 'short' }}</div>
         </ng-container>
       </div>
-      <div class="date" *ngIf="event.label === 'message'" i18n>Sent at {{ event.time | date : 'hh:mm' }}</div>
+      <div class="date" *ngIf="event.label === 'message'" i18n>Sent at {{ event.time | date : 'short' }}</div>
     </div>
   </div>
 </ng-container>
