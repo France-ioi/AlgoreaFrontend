@@ -21,6 +21,7 @@
     <alg-item-edit-content
       [parentForm]="itemForm"
       [itemData]="itemData"
+      *ngIf="!['Task', 'Course'].includes(itemData.item.type)"
     >
     </alg-item-edit-content>
     <ng-container *ngIf="attemptId">
