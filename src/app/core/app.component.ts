@@ -57,10 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? appConfig.defaultTitle);
 
-    // Temp hack during the hash to non-hash routing transition. Redirect "#/abc/efg" to "/abc/efg"
-    const hashPath = window.location.hash.slice(1); // omit leading "#"
-    if (hashPath.length && hashPath.charAt(0) === '/') void this.router.navigateByUrl(hashPath, { replaceUrl: true });
-
     // Handle a redirect to sub path which can be used to redirect to a specific page when coming back on the app
     const redirectTo = urlToRedirectTo({ from: this.location.path() });
     if (redirectTo) void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
