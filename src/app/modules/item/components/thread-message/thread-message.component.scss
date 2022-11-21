@@ -1,0 +1,55 @@
+.message-container {
+  display: flex;
+
+  &.left {
+    justify-content: left;
+
+    .bubble {
+      color: #fff;
+      border-radius: .3rem 2.2rem 2.2rem 2.2rem;
+      background-color: #79adea;
+    }
+  }
+
+  &.right {
+    justify-content: right;
+
+    .bubble {
+      border-radius: 2.2rem .3rem 2.2rem 2.2rem;
+    }
+    .date {
+      text-align: right;
+    }
+  }
+
+  &.full-width {
+    .message {
+      width: 100%;
+      text-align: center;
+    }
+    .date {
+      text-align: center;
+    }
+  }
+
+  &.transparent {
+    .bubble {
+      color: #fff;
+      background-color: transparent;
+      border: .2rem solid #79adea;
+      border-radius: 1.5rem;
+    }
+  }
+}
+
+.bubble {
+  margin: .2rem 0;
+  padding: 1rem;
+  color: var(--base-text-color);
+  background-color: #fff;
+  border-radius: 2.2rem;
+}
+
+.scored-text {
+  margin-left: .2rem;
+}

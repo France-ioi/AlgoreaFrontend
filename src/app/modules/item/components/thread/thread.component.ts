@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ThreadService } from '../../services/threads.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'alg-thread',
@@ -7,19 +8,24 @@ import { ThreadService } from '../../services/threads.service';
   styleUrls: [ './thread.component.scss' ],
 })
 export class ThreadComponent {
-  messageToSend = '';
+  form = this.fb.nonNullable.group({
+    messageToSend: [ '' ],
+  });
 
   state$ = this.threadService.state$;
 
   constructor(
     private threadService: ThreadService,
+    private fb: FormBuilder,
   ) {}
 
   sendMessage(): void {
-    const messageToSend = this.messageToSend.trim();
-    if (!messageToSend) return;
+    const messageToSend = this.form.value.messageToSend;
+    if (!messageToSend || !messageToSend.trim()) return;
     this.threadService.sendMessage(messageToSend);
-    this.messageToSend = '';
+    this.form.reset({
+      messageToSend: '',
+    });
   }
 
 }

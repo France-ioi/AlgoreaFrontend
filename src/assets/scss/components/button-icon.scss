@@ -30,6 +30,15 @@
     }
   }
 
+  &.send-button-size {
+    width: 3.684rem !important;
+    height: 3.684rem !important;
+
+    .p-button-icon {
+      font-size: 1.7rem;
+    }
+  }
+
   &:hover {
     background-color: #fff !important;
     border: 1px solid var(--light-border-color) !important;
