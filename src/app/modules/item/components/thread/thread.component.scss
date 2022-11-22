@@ -24,7 +24,7 @@
   height: 100%;
 }
 
-.widget-messages {
+.widget-scroll {
   display: block;
   padding: 1rem;
   overflow-y: auto;
@@ -40,17 +40,16 @@
 }
 
 .footer-panel {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
 }
 
 .textarea {
-  padding: 1rem 1.5rem;
+  padding: .7rem 1rem;
   margin-right: .5rem;
-  border-radius: 2.2rem;
+  border-radius: 1.5rem;
   border: none;
   flex: 1;
   background-color: #79adea;

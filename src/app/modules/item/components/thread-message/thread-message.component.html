@@ -13,10 +13,10 @@
       </div>
       <div class="bubble">
         <ng-container *ngIf="event.label === 'message'">
-          {{ event.data.content }}
+          <div class="message-event">{{ event.data.content }}</div>
         </ng-container>
         <ng-container *ngIf="['result_started', 'submission'].includes(event.label)">
-          <div>
+          <div class="classical-event">
             <span *ngIf="isMessageCreatedByCurrentUser; else anotherUser" i18n>
               You
             </span>
@@ -26,10 +26,12 @@
             <span *ngIf="event.label === 'result_started'" i18n>started the activity</span>
             <ng-container *ngIf="event.label === 'submission'">
               <span i18n>submitted a solution</span>
-              <span class="scored-text" *ngIf="event.data.score !== undefined" i18n>which scored {{ event.data.score }}</span>.
+              <span class="scored-text" *ngIf="event.data.score !== undefined" i18n>
+                which scored <strong>{{ event.data.score }}</strong>
+              </span>.
             </ng-container>
           </div>
-          <div>{{ event.time | date : 'short' }}</div>
+          <div class="date">{{ event.time | date : 'short' }}</div>
         </ng-container>
       </div>
       <div class="date" *ngIf="event.label === 'message'" i18n>Sent at {{ event.time | date : 'short' }}</div>

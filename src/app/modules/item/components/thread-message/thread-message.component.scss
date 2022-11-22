@@ -6,7 +6,7 @@
 
     .bubble {
       color: #fff;
-      border-radius: .3rem 2.2rem 2.2rem 2.2rem;
+      border-radius: .3rem 1.5rem 1.5rem 1.5rem;
       background-color: #79adea;
     }
   }
@@ -15,7 +15,7 @@
     justify-content: right;
 
     .bubble {
-      border-radius: 2.2rem .3rem 2.2rem 2.2rem;
+      border-radius: 1.5rem .3rem 1.5rem 1.5rem;
     }
     .date {
       text-align: right;
@@ -36,20 +36,37 @@
     .bubble {
       color: #fff;
       background-color: transparent;
-      border: .2rem solid #79adea;
-      border-radius: 1.5rem;
+      border: .1rem solid #79adea;
+      border-radius: 1.2rem;
     }
   }
 }
 
+.name {
+  margin-bottom: .2rem;
+}
+
 .bubble {
-  margin: .2rem 0;
-  padding: 1rem;
+  padding: .4rem 1rem;
   color: var(--base-text-color);
   background-color: #fff;
-  border-radius: 2.2rem;
+  border-radius: 1.5rem;
 }
 
 .scored-text {
   margin-left: .2rem;
+}
+
+.date {
+  font-size: .9rem;
+  font-weight: 300;
+  opacity: .9;
+}
+
+.classical-event {
+  font-size: 1rem;
+}
+
+.message-event {
+  font-size: 1.1rem;
 }

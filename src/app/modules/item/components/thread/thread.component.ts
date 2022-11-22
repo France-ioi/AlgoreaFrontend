@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ThreadService } from '../../services/threads.service';
 import { FormBuilder } from '@angular/forms';
 
@@ -8,6 +8,8 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: [ './thread.component.scss' ],
 })
 export class ThreadComponent {
+  @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
+
   form = this.fb.nonNullable.group({
     messageToSend: [ '' ],
   });
@@ -26,6 +28,17 @@ export class ThreadComponent {
     this.form.reset({
       messageToSend: '',
     });
+  }
+
+  scrollDown(): void {
+    if (!this.messagesScroll) {
+      throw new Error('Unexpected: Missed scroll el');
+    }
+
+    this.messagesScroll.nativeElement.scrollTo(
+      0,
+      this.messagesScroll.nativeElement.scrollHeight - this.messagesScroll.nativeElement.offsetHeight
+    );
   }
 
 }

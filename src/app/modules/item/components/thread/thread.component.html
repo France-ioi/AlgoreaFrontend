@@ -6,7 +6,7 @@
   </div>
   <ng-template #eventsBlock>
     <div class="widget-body">
-      <div class="widget-messages">
+      <div class="widget-scroll" #messagesScroll>
         <alg-thread-message
           class="thread-message"
           [event]="event"
@@ -23,7 +23,7 @@
             (keydown.enter)="$event.preventDefault(); sendMessage()"
           ></textarea>
           <button
-            class="send-button p-button-raised p-button-rounded alg-round-button-icon send-button-size"
+            class="send-button p-button-raised p-button-rounded alg-round-button-icon large-icon-size"
             type="submit"
             icon="pi pi-send"
             pButton
