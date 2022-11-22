@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../helpers/config';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from '../helpers/decoders';
+import { SECONDS } from '../helpers/duration';
+import { requestTimeout } from '../interceptors/interceptor_common';
 
 const activityLogDecoder = pipe(
   D.struct({
@@ -47,6 +49,8 @@ const activityLogDecoder = pipe(
 
 export type ActivityLog = D.TypeOf<typeof activityLogDecoder>;
 
+const logServicesTimeout = 10 * SECONDS; // log services may be very slow
+
 @Injectable({
   providedIn: 'root'
 })
@@ -66,7 +70,10 @@ export class ActivityLogService {
     }
 
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${itemId}/log`, { params: params })
+      .get<unknown[]>(`${appConfig.apiUrl}/items/${itemId}/log`, {
+        params: params,
+        context: new HttpContext().set(requestTimeout, logServicesTimeout),
+      })
       .pipe(decodeSnakeCase(D.array(activityLogDecoder)));
   }
 
@@ -81,7 +88,10 @@ export class ActivityLogService {
     }
 
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/log`, { params: params })
+      .get<unknown[]>(`${appConfig.apiUrl}/items/log`, {
+        params: params,
+        context: new HttpContext().set(requestTimeout, logServicesTimeout),
+      })
       .pipe(decodeSnakeCase(D.array(activityLogDecoder)));
   }
 }
