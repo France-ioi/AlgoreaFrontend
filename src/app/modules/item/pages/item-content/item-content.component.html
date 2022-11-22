@@ -2,7 +2,11 @@
   <ng-container *ngIf="itemData.item.permissions | allowsViewingContent; else notAllowToWatch">
     <ng-container *ngIf="itemData.currentResult; else noCurrentResult">
 
-      <alg-section icon="fa fa-book" i18n-label label="Description" *ngIf="itemData.item.string.description">
+      <alg-section
+        icon="fa fa-book"
+        i18n-label label="Description"
+        *ngIf="!['Task', 'Course'].includes(itemData.item.type) && itemData.item.string.description"
+      >
         <p>{{ itemData.item.string.description }} </p>
       </alg-section>
 
