@@ -46,12 +46,13 @@
 }
 
 .name {
-  margin-bottom: .2rem;
+  margin-bottom: 0;
+  font-size: 1.1rem;
 }
 
 .bubble {
   display: inline-block;
-  padding: .4rem 1rem;
+  padding: .2rem 1rem;
   color: var(--base-text-color);
   background-color: #fff;
   border-radius: 1.5rem;
@@ -62,13 +63,14 @@
 }
 
 .date {
-  font-size: .9rem;
+  font-size: .8rem;
   font-weight: 300;
   opacity: .9;
 }
 
 .classical-event {
   font-size: 1rem;
+  line-height: 1rem;
 }
 
 .message-event {

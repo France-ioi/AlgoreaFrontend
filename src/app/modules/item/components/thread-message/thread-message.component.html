@@ -9,7 +9,7 @@
   >
     <div class="message">
       <div class="name" *ngIf="!isMessageCreatedByCurrentUser && event.label === 'message'">
-        {{ event.createdBy }}
+        <strong>{{ event.createdBy }}</strong>
       </div>
       <div class="bubble">
         <ng-container *ngIf="event.label === 'message'">

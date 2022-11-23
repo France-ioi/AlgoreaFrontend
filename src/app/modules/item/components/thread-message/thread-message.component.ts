@@ -12,10 +12,9 @@ import { map } from 'rxjs/operators';
 export class ThreadMessageComponent implements OnChanges, OnDestroy {
   @Input() event!: IncomingThreadEvent;
 
-  currentUser$ = this.userSessionService.userProfile$;
   event$ = new ReplaySubject<IncomingThreadEvent>(1);
   isMessageCreatedByCurrentUser$ = combineLatest([
-    this.currentUser$,
+    this.userSessionService.userProfile$,
     this.event$,
   ]).pipe(
     map(([ currentUser, event ]) => currentUser.groupId === event.createdBy),
