@@ -66,9 +66,18 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
 
+  itemRouteFetching = new ReplaySubject<void>(1);
+  itemRouteError = new ReplaySubject<unknown>(1);
+
+  state$: Observable<FetchState<ItemData>> = merge(
+    this.itemRouteFetching.pipe(map(() => fetchingState())),
+    this.itemRouteError.pipe(map(e => errorState(e))),
+    this.itemDataSource.state$
+  );
+
   itemData$ = this.itemDataSource.state$;
-  // datasource state re-used with fetching/error states of route resolution
-  state: FetchState<ItemData> = fetchingState();
+
+
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
@@ -201,8 +210,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.subscriptions.push(
       // on datasource state change, update current state and current content page info
       this.itemDataSource.state$.subscribe(state => {
-        this.state = state;
-
         if (state.isReady) {
           this.hasRedirected = false;
           this.currentContent.replace(itemInfo({
@@ -341,9 +348,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     const item = this.getItemRoute(params);
     if (isItemRouteError(item)) {
       if (item.id) {
-        this.state = fetchingState();
+        this.itemRouteFetching.next();
         this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
-      } else this.state = errorState(new Error('No id in url'));
+      } else throw new Error('unexpected: no id in item page');
       return;
     }
     // just publish to current content the new route we are navigating to (without knowing any info)
@@ -371,7 +378,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     ).subscribe({
       next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
       error: err => {
-        this.state = errorState(err);
+        this.itemRouteError.next(err);
         this.layoutService.configure({ fullFrameActive: false });
         this.currentContent.clear();
       }
