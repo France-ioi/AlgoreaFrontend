@@ -35,8 +35,8 @@
         <div class="dialog-content">
           <ng-container *ngIf="item.string.title">
             <p class="dialog-description" i18n>
-              These are the permissions given to "{{ permReceiverName }}" on "{{ item.string.title }}"
-              <ng-container *ngIf="group.isUser && permGiverName">by "{{ permGiverName }}"</ng-container>
+              These are the permissions given by "{{ permReceiverName }}" to "{{ item.string.title }}"
+              <ng-container *ngIf="group.isUser && permGiverName">on "{{ permGiverName }}"</ng-container>
             </p>
           </ng-container>
 
