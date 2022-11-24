@@ -92,13 +92,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemDataSource.state$
   );
 
-  itemData$ = this.itemDataSource.state$;
-
-
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
 
-  showAccessCodeField$ = this.itemData$.pipe(
+  showAccessCodeField$ = this.state$.pipe(
     mapStateData(data =>
       data.item.promptToJoinGroupByCode && !canCurrentUserViewContent(data.item) && !this.userSessionService.isCurrentUserTemp()
     ),
@@ -106,7 +103,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   );
 
   private tabs = new ReplaySubject<TaskTab[]>(1);
-  tabs$ = combineLatest([ this.tabs, this.itemData$.pipe(readyData()) ]).pipe(
+  tabs$ = combineLatest([ this.tabs, this.state$.pipe(readyData()) ]).pipe(
     map(([ tabs, data ]) => (
       canCurrentUserViewSolution(data.item, data.currentResult) ? tabs : tabs.filter(tab => tab.view !== 'solution')
     )),
@@ -114,7 +111,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     shareReplay(1),
   );
   readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
-  readonly showProgressTab$ = combineLatest([ this.itemData$.pipe(readyData()), this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
+  readonly showProgressTab$ = combineLatest([ this.state$.pipe(readyData()), this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
     map(([ itemData, isWatching, tabs ]) =>
       (!isWatching && allowsViewingContent(itemData.item.permissions) && tabs.some(tab => tab.view === 'progress')) ||
       (isWatching && allowsWatchingResults(itemData.item.permissions))
@@ -127,7 +124,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   unknownError?: unknown;
 
-  readonly formerAnswer$ = this.itemData$.pipe(
+  readonly formerAnswer$ = this.state$.pipe(
     map(state => state.data?.route.answerId),
     distinctUntilChanged(),
     switchMap(answerId => (answerId ? this.getAnswerService.get(answerId) : of(null))),
@@ -139,7 +136,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     catchError(error => of(errorIsHTTPForbidden(error) ? loadForbiddenAnswerError : error))
   );
   readonly formerAnswerLoadForbidden$ = this.formerAnswerError$.pipe(filter(error => error === loadForbiddenAnswerError));
-  readonly answerFallbackLink$ = combineLatest([ this.itemData$.pipe(readyData()), this.formerAnswerLoadForbidden$ ]).pipe(
+  readonly answerFallbackLink$ = combineLatest([ this.state$.pipe(readyData()), this.formerAnswerLoadForbidden$ ]).pipe(
     map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
   );
 
@@ -147,7 +144,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly taskConfig$: Observable<TaskConfig> = combineLatest([
     this.formerAnswer$.pipe(catchError(() => EMPTY)), // error is handled by formerAnswerError$
     this.taskReadOnly$,
-    this.itemData$.pipe(readyData()),
+    this.state$.pipe(readyData()),
   ]).pipe(map(([ formerAnswer, readOnly, data ]) => ({ readOnly, formerAnswer, locale: data.item.string.languageTag })));
 
   // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
