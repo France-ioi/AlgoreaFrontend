@@ -2,8 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { ThreadService } from '../../services/threads.service';
 import { FormBuilder } from '@angular/forms';
 import { readyData } from '../../../../shared/operators/state';
-import { Subscription, combineLatest } from 'rxjs';
-import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-thread',
@@ -12,6 +11,7 @@ import { UserSessionService } from '../../../../shared/services/user-session.ser
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
+  @ViewChild('sendMessageForm') sendMessageForm?: ElementRef<HTMLFormElement>;
 
   form = this.fb.nonNullable.group({
     messageToSend: [ '' ],
@@ -24,16 +24,13 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   constructor(
     private threadService: ThreadService,
     private fb: FormBuilder,
-    private userSessionService: UserSessionService,
   ) {}
 
   ngAfterViewInit(): void {
-    this.subscription = combineLatest([
-      this.state$.pipe(readyData()),
-      this.userSessionService.userProfile$,
-    ]).subscribe(([ events, currentUser ]) => {
-      const lastEvent = events[events.length - 1];
-      if (lastEvent && lastEvent.createdBy === currentUser.groupId) {
+    this.subscription = this.state$.pipe(readyData()).subscribe(() => {
+      if (this.messagesScroll && this.sendMessageForm && (this.messagesScroll.nativeElement.scrollHeight
+        <= (this.messagesScroll.nativeElement.scrollTop + this.messagesScroll.nativeElement.offsetHeight
+        + this.sendMessageForm.nativeElement.offsetHeight + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))) {
         setTimeout(() => {
           this.scrollDown();
         });

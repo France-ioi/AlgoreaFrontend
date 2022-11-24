@@ -12,7 +12,7 @@
           [event]="event"
           *ngFor="let event of state.data"
         ></alg-thread-message>
-        <form class="footer-panel" [formGroup]="form" (ngSubmit)="sendMessage()">
+        <form class="footer-panel" [formGroup]="form" (ngSubmit)="sendMessage()" #sendMessageForm>
           <textarea
             class="textarea"
             placeholder="Send a message..."
