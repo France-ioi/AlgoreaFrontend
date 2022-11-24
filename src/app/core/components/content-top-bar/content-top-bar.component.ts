@@ -8,6 +8,8 @@ import { isItemInfo } from '../../../shared/models/content/item-info';
 import { FullFrameContent } from 'src/app/shared/services/layout.service';
 import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
+import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
+import { isGroupInfo } from '../../../shared/models/content/group-info';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -28,6 +30,10 @@ export class ContentTopBarComponent {
 
   navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {
+      if (isGroupInfo(content)) {
+        return this.groupNavTreeService.navigationNeighbors$;
+      }
+
       if (!isItemInfo(content) || !content.route?.contentType) {
         return of(undefined);
       }
@@ -43,6 +49,7 @@ export class ContentTopBarComponent {
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
+    private groupNavTreeService: GroupNavTreeService,
     private discussionService: DiscussionService
   ) {}
 
