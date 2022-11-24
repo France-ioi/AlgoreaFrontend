@@ -51,6 +51,8 @@ interface ProgressDataDialog {
     },
   },
   group: RawGroupRoute,
+  groupName: string,
+  sourceGroupName: string,
 }
 
 @Component({
@@ -131,6 +133,9 @@ export class GroupProgressGridComponent implements OnChanges {
   }
 
   showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
+    if (!this.group) {
+      throw new Error('Unexpected: Missed group');
+    }
     this.progressOverlay = {
       target,
       progress: userProgress,
@@ -139,10 +144,12 @@ export class GroupProgressGridComponent implements OnChanges {
       item: {
         id: col.id,
         string: {
-          title: row.header,
+          title: col.title,
         },
       },
       group: rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }),
+      groupName: row.header,
+      sourceGroupName: this.group.name,
     };
   }
 

@@ -10,7 +10,7 @@ import { TypeFilter } from '../../helpers/composition-filter';
 import { mapToFetchState } from '../../../../shared/operators/state';
 
 @Component({
-  selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group]',
+  selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group][permReceiverName]',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ]
 })
@@ -21,6 +21,8 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   @Input() item!: { id: string, string: { title: string | null } };
   @Input() group!: RawGroupRoute;
   @Input() sourceGroup?: RawGroupRoute;
+  @Input() permReceiverName!: string;
+  @Input() permGiverName?: string;
 
   private params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
   state$ = this.params$.pipe(

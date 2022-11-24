@@ -117,6 +117,8 @@
         [item]="progressDataDialog.item"
         [group]="progressDataDialog.group"
         [sourceGroup]="sourceGroup"
+        [permReceiverName]="progressDataDialog.groupName"
+        [permGiverName]="progressDataDialog.sourceGroupName"
         (close)="onDialogClose()"
         *ngIf="isPermissionsDialogOpened && itemData && progressDataDialog && sourceGroup"
       ></alg-permissions-edit-dialog>
