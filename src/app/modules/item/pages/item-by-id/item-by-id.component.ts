@@ -202,6 +202,67 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         this.currentContent.clear();
       }
     }),
+
+    // on datasource state change, update the current content page info
+    this.itemDataSource.state$.subscribe(state => {
+      if (state.isReady) {
+        this.hasRedirected = false;
+        this.currentContent.replace(itemInfo({
+          breadcrumbs: {
+            category: itemBreadcrumbCat,
+            path: state.data.breadcrumbs.map(el => ({
+              title: el.title,
+              hintNumber: el.attemptCnt,
+              navigateTo: ():UrlTree => this.itemRouter.url(el.route),
+            })),
+            currentPageIdx: state.data.breadcrumbs.length - 1,
+          },
+          title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
+          route: routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId),
+          details: {
+            title: state.data.item.string.title,
+            type: state.data.item.type,
+            permissions: state.data.item.permissions,
+            attemptId: state.data.currentResult?.attemptId,
+            bestScore: state.data.item.watchedGroup ? state.data.item.watchedGroup.averageScore : state.data.item.bestScore,
+            currentScore: state.data.item.watchedGroup ? state.data.item.watchedGroup.averageScore : state.data.currentResult?.score,
+            validated: state.data.item.watchedGroup ?
+              state.data.item.watchedGroup.averageScore === 100 : state.data.currentResult?.validated,
+          },
+        }));
+
+        if (state.data.route.answerId) {
+          this.itemRouter.navigateTo(
+            { ...state.data.route, answerId: undefined },
+            { navExtras: { replaceUrl: true, state: { preventRefetch: true } } },
+          );
+        }
+
+      } else if (state.isError) {
+        // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
+        if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
+          if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
+          this.hasRedirected = true;
+          const { contentType, id, answerId } = this.getItemRoute();
+          if (!id) throw new Error('Unexpected: item id should exist');
+          this.itemRouter.navigateTo({ contentType, id, answerId }, { navExtras: { replaceUrl: true } });
+        }
+        this.currentContent.clear();
+      }
+    }),
+
+    this.itemDataSource.state$.pipe(
+      readyData(),
+      distinctUntilChanged((a, b) => a.item.id === b.item.id),
+      startWith(undefined),
+      pairwise(),
+      filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
+      map(([ , current ]) => ensureDefined(current).item),
+    ).subscribe(item => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
+      const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
+      this.layoutService.configure({ fullFrameActive: activateFullFrame });
+    })
   ];
 
   editorUrl?: string;
@@ -224,70 +285,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private getAnswerService: GetAnswerService,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
-  ) {
-    this.subscriptions.push(
-      // on datasource state change, update the current content page info
-      this.itemDataSource.state$.subscribe(state => {
-        if (state.isReady) {
-          this.hasRedirected = false;
-          this.currentContent.replace(itemInfo({
-            breadcrumbs: {
-              category: itemBreadcrumbCat,
-              path: state.data.breadcrumbs.map(el => ({
-                title: el.title,
-                hintNumber: el.attemptCnt,
-                navigateTo: ():UrlTree => itemRouter.url(el.route),
-              })),
-              currentPageIdx: state.data.breadcrumbs.length - 1,
-            },
-            title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-            route: routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId),
-            details: {
-              title: state.data.item.string.title,
-              type: state.data.item.type,
-              permissions: state.data.item.permissions,
-              attemptId: state.data.currentResult?.attemptId,
-              bestScore: state.data.item.watchedGroup ? state.data.item.watchedGroup.averageScore : state.data.item.bestScore,
-              currentScore: state.data.item.watchedGroup ? state.data.item.watchedGroup.averageScore : state.data.currentResult?.score,
-              validated: state.data.item.watchedGroup ?
-                state.data.item.watchedGroup.averageScore === 100 : state.data.currentResult?.validated,
-            },
-          }));
-
-          if (state.data.route.answerId) {
-            this.itemRouter.navigateTo(
-              { ...state.data.route, answerId: undefined },
-              { navExtras: { replaceUrl: true, state: { preventRefetch: true } } },
-            );
-          }
-
-        } else if (state.isError) {
-          // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
-          if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
-            if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
-            this.hasRedirected = true;
-            const { contentType, id, answerId } = this.getItemRoute();
-            if (!id) throw new Error('Unexpected: item id should exist');
-            this.itemRouter.navigateTo({ contentType, id, answerId }, { navExtras: { replaceUrl: true } });
-          }
-          this.currentContent.clear();
-        }
-      }),
-
-      this.itemDataSource.state$.pipe(
-        readyData(),
-        distinctUntilChanged((a, b) => a.item.id === b.item.id),
-        startWith(undefined),
-        pairwise(),
-        filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
-        map(([ , current ]) => ensureDefined(current).item),
-      ).subscribe(item => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
-        const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
-        this.layoutService.configure({ fullFrameActive: activateFullFrame });
-      })
-    );
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.currentContent.clear();
