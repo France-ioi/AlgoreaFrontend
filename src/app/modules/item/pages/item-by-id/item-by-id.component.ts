@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router, RouterLinkActive, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, UrlTree } from '@angular/router';
 import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -63,7 +63,6 @@ const loadForbiddenAnswerError = new Error('load answer forbidden');
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
 
-  @ViewChild('progressTab') progressTab?: RouterLinkActive;
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
 
