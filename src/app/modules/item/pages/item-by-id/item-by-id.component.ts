@@ -15,7 +15,7 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { errorState, fetchingState, FetchState } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, isFetchingOrError } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
@@ -29,7 +29,7 @@ import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
-import { mapStateData, readyData } from 'src/app/shared/operators/state';
+import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
@@ -66,12 +66,29 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
 
-  itemRouteFetching = new ReplaySubject<void>(1);
-  itemRouteError = new ReplaySubject<unknown>(1);
+  private itemRouteState$ = this.activatedRoute.paramMap.pipe(
+    repeatLatestWhen(this.userSessionService.userChanged$),
+    // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
+    // a former answer if the user refreshes the page
+    // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
+    filter(() => !(typeof history.state === 'object' && history.state?.preventRefetch)),
+    switchMap(params => {
+      const item = this.getItemRoute(params);
+      if (isItemRouteError(item)) {
+        if (!item.id) throw new Error('unexpected: no id in item page');
+        return this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
+      }
+      return of(item);
+    }),
+    mapToFetchState()
+  );
 
   state$: Observable<FetchState<ItemData>> = merge(
-    this.itemRouteFetching.pipe(map(() => fetchingState())),
-    this.itemRouteError.pipe(map(e => errorState(e))),
+    this.itemRouteState$.pipe(
+      filter(isFetchingOrError),
+      map(s => (s.isFetching ? fetchingState() : errorState(s.error)))
+    ),
     this.itemDataSource.state$
   );
 
@@ -173,6 +190,21 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.formerAnswerError$.subscribe(caught => {
       if (caught !== loadForbiddenAnswerError) this.unknownError = caught;
     }),
+
+    this.itemRouteState$.subscribe(state => {
+      if (state.isReady) {
+        // just publish to current content the new route we are navigating to (without knowing any info)
+        this.currentContent.replace(itemInfo({
+          route: state.data,
+          breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
+        }));
+        // trigger the fetch of the item (which will itself re-update the current content)
+        this.itemDataSource.fetchItem(state.data);
+      } else if (state.isError) {
+        this.layoutService.configure({ fullFrameActive: false });
+        this.currentContent.clear();
+      }
+    }),
   ];
 
   editorUrl?: string;
@@ -196,19 +228,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
   ) {
-
-    // on route change or user change: refetch item if needed
-    this.activatedRoute.paramMap.pipe(
-      repeatLatestWhen(this.userSessionService.userChanged$),
-      // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
-      // a former answer if the user refreshes the page
-      // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
-      filter(() => !(typeof history.state === 'object' && history.state?.preventRefetch)),
-    ).subscribe(params => this.fetchItemAtRoute(params)),
-
     this.subscriptions.push(
-      // on datasource state change, update current state and current content page info
+      // on datasource state change, update the current content page info
       this.itemDataSource.state$.subscribe(state => {
         if (state.isReady) {
           this.hasRedirected = false;
@@ -344,29 +365,14 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     return itemRouteFromParams(snapshot.parent.url[0].path, params ?? snapshot.paramMap);
   }
 
-  private fetchItemAtRoute(params: ParamMap): void {
-    const item = this.getItemRoute(params);
-    if (isItemRouteError(item)) {
-      if (item.id) {
-        this.itemRouteFetching.next();
-        this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
-      } else throw new Error('unexpected: no id in item page');
-      return;
-    }
-    // just publish to current content the new route we are navigating to (without knowing any info)
-    this.currentContent.replace(itemInfo({ route: item, breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 } }));
-    // trigger the fetch of the item (which will itself re-update the current content)
-    this.itemDataSource.fetchItem(item);
-  }
-
   /**
    * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
-   * Will redirect when relevant data has been fetched.
+   * Will redirect when relevant data has been fetched (and emit nothing).
+   * May emit errors.
    */
-  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[], answerId?: string): void {
-
-    const pathObservable = path ? of(path) : this.getItemPathService.getItemPath(id);
-    pathObservable.pipe(
+  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[], answerId?: string): Observable<never> {
+    return of(path).pipe(
+      switchMap(path => (path ? of(path) : this.getItemPathService.getItemPath(id))),
       switchMap(path => {
         // for empty path (root items), consider the item has a (fake) parent attempt id 0
         if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answerId });
@@ -374,15 +380,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         return this.resultActionsService.startWithoutAttempt(path).pipe(
           map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answerId }))
         );
+      }),
+      switchMap(itemRoute => {
+        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+        return EMPTY;
       })
-    ).subscribe({
-      next: itemRoute => this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } }),
-      error: err => {
-        this.itemRouteError.next(err);
-        this.layoutService.configure({ fullFrameActive: false });
-        this.currentContent.clear();
-      }
-    });
+    );
   }
 
 }
