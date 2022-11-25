@@ -543,7 +543,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">173</context></context-group></trans-unit><trans-unit id="3419681791450150574" datatype="html">
         <source>Progress</source><target state="translated">Avancement</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-overview/group-overview.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">120</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="2738733136413289671" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-overview/group-overview.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">120</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="2738733136413289671" datatype="html">
         <source>Leave the group?</source><target state="new">Leave the group?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/pages/group-overview/group-overview.component.html</context>
@@ -1094,7 +1094,13 @@
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="2880983087661811596" datatype="html">
        <source>TYPE</source><target state="translated">TYPE</target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="544102334421307622" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="7269166825697408326" datatype="html">
+        <source> You are manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;user.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> of which this user is member. </source><target state="new"> You are manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;user.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> of which this user is member. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/user-indicator/user-indicator.component.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+      </trans-unit><trans-unit id="544102334421307622" datatype="html">
         <source>The group(s) must be empty</source><target state="new">The group(s) must be empty</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/http-services/remove-group.service.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5132273078121257617" datatype="html">
@@ -2190,7 +2196,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="4426319772533875265" datatype="html">
         <source> Settings </source><target state="translated"> Paramètres </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="4710139977652705392" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="4710139977652705392" datatype="html">
         <source> You are not allowed to view this group page. </source><target state="new"> You are not allowed to view this group page. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.html</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="7288998356732151629" datatype="html">
@@ -2223,13 +2229,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2624846324402649932" datatype="html">
         <source> Progress </source><target state="new"> Progress </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="4301389120920899318" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="4301389120920899318" datatype="html">
         <source> Personal data </source><target state="new"> Personal data </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="4480933489956077341" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="4480933489956077341" datatype="html">
         <source>You cannot access this page for this user</source><target state="new">You cannot access this page for this user</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="4555457172864212828" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source><target state="new">Users</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="3796559375439217278" datatype="html">
