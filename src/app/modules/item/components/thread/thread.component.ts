@@ -2,7 +2,10 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { ThreadService } from '../../services/threads.service';
 import { FormBuilder } from '@angular/forms';
 import { readyData } from '../../../../shared/operators/state';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
+import { DiscussionService } from '../../services/discussion.service';
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'alg-thread',
@@ -23,11 +26,16 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private threadService: ThreadService,
+    private discussionService: DiscussionService,
     private fb: FormBuilder,
   ) {}
 
   ngAfterViewInit(): void {
-    this.subscription = this.state$.pipe(readyData()).subscribe(() => {
+    this.subscription = this.state$.pipe(
+      readyData(),
+      withLatestFrom(this.discussionService.state$.pipe(filter(isNotUndefined))),
+      filter(([ , { visible }]) => visible),
+    ).subscribe(() => {
       if (this.messagesScroll && this.sendMessageForm && (this.messagesScroll.nativeElement.scrollHeight
         <= (this.messagesScroll.nativeElement.scrollTop + this.messagesScroll.nativeElement.offsetHeight
         + this.sendMessageForm.nativeElement.offsetHeight + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))) {
