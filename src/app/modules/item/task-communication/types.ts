@@ -85,6 +85,9 @@ export const openUrlParamsDecoder = D.union(
     D.struct({ url: D.string }),
     D.intersect(D.partial({ newTab: D.boolean }))
   ),
+  pipe(
+    D.struct({ itemId: D.string }),
+  ),
 );
 
 export type OpenUrlParams = D.TypeOf<typeof openUrlParamsDecoder>;
