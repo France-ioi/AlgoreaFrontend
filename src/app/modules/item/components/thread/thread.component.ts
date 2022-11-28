@@ -49,8 +49,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   sendMessage(): void {
-    const messageToSend = this.form.value.messageToSend;
-    if (!messageToSend || !messageToSend.trim()) return;
+    const messageToSend = this.form.value.messageToSend?.trim();
+    if (!messageToSend) return;
     this.threadService.sendMessage(messageToSend);
     this.form.reset({
       messageToSend: '',
