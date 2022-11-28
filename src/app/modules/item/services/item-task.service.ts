@@ -106,6 +106,7 @@ export class ItemTaskService {
       openUrl: params => {
         if (typeof params === 'string') return this.navigateToItem(params);
         if ('path' in params) return this.navigateToItem(params.path, params.newTab);
+        if ('itemId' in params) return this.navigateToItem(params.itemId);
         return this.navigate(params.url, params.newTab);
       },
       askHint: (hintToken: string) => combineLatest([ this.askHint(hintToken), this.task$ ]).pipe(
@@ -157,11 +158,11 @@ export class ItemTaskService {
   }
 
   private navigateToItem(path: string, newTab = false): void {
-    const [ , ...parentIds ] = path.split('/');
-    const id = parentIds.pop();
-    if (!id) throw new Error('id must be defined');
+    const ids = path.split('/');
+    const id = ids.pop();
+    if (!id) throw new Error(`id must be defined. Received path: '${path}'.`);
 
-    const route = itemRoute('activity', id, parentIds);
+    const route = itemRoute('activity', id, ids);
     if (newTab) this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true);
     else this.itemRouter.navigateTo(route);
   }
