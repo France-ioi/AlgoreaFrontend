@@ -45,7 +45,7 @@
                   &nbsp;(
                   <a
                     class="alg-link"
-                    [routerLink]="rowData.item | rawItemLink:'details':rowData.answerId"
+                    [routerLink]="rowData.item | rawItemLink:[]:rowData.answerId"
                     i18n="text on button to load a submission"
                   >
                     Load

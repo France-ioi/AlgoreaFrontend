@@ -20,7 +20,7 @@ export class ItemRouter {
 
   /**
    * Navigate to given item, on the path page.
-   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
+   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to '/'.
    */
   navigateTo(item: RawItemRoute, {
     page,
@@ -33,7 +33,7 @@ export class ItemRouter {
 
   /**
    * Return a url to the given item, on the given page.
-   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to 'details'.
+   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to '/'.
    */
   url(item: RawItemRoute, page?: string|string[]): UrlTree {
     return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));

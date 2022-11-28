@@ -6,7 +6,7 @@ export class ItemPage extends AppPage {
     const url = [
       `/activities/by-id/${itemId}`,
       path && `;path=${path.join(',')}`,
-      ';parentAttempId=0/details',
+      ';parentAttempId=0',
     ].filter(Boolean).join('');
 
     await super.navigateTo(url);
