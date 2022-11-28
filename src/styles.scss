@@ -31,6 +31,11 @@
 @import 'assets/scss/components/tooltip';
 @import 'assets/scss/components/path-suggestion-overlay';
 
+:root {
+  --font-family: "titillium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
 /* Custom themes */
 @import 'assets/scss/themes/coursera-pt';
 
@@ -44,9 +49,6 @@ body {
   margin: 0;
   background-color: var(--base-bk-color);
   min-height: 100%;
-
-  --font-family: "titillium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 body .p-component {
