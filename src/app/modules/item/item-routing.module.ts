@@ -10,6 +10,7 @@ import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
       path: 'by-id/:id',
       component: ItemByIdComponent,
       canDeactivate: [ BeforeUnloadGuard, PendingChangesGuard ],
+      // Children below do not use routing but there are defined here so that the router can validate the route exists
       children: [
         { path: '', pathMatch: 'full', children: [] },
         {
