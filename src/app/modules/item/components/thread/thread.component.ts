@@ -37,7 +37,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       filter(([ events , { visible }]) => visible && events.length > 0 && (events[events.length - 1]?.label === 'submission'
         || !!(this.messagesScroll && this.sendMessageForm && (this.messagesScroll.nativeElement.scrollHeight
           <= (this.messagesScroll.nativeElement.scrollTop + this.messagesScroll.nativeElement.offsetHeight
-            + this.sendMessageForm.nativeElement.offsetHeight + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))))
+            + this.sendMessageForm.nativeElement.offsetHeight
+            + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))))
       ),
       delay(0),
     ).subscribe(() => this.scrollDown());
