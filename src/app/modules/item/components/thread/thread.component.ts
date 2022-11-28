@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { ThreadService } from '../../services/threads.service';
 import { FormBuilder } from '@angular/forms';
 import { readyData } from '../../../../shared/operators/state';
-import { Subscription, filter } from 'rxjs';
+import { Subscription, filter, delay } from 'rxjs';
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { withLatestFrom } from 'rxjs/operators';
@@ -34,16 +34,13 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscription = this.state$.pipe(
       readyData(),
       withLatestFrom(this.discussionService.state$.pipe(filter(isNotUndefined))),
-      filter(([ , { visible }]) => visible),
-    ).subscribe(() => {
-      if (this.messagesScroll && this.sendMessageForm && (this.messagesScroll.nativeElement.scrollHeight
-        <= (this.messagesScroll.nativeElement.scrollTop + this.messagesScroll.nativeElement.offsetHeight
-        + this.sendMessageForm.nativeElement.offsetHeight + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))) {
-        setTimeout(() => {
-          this.scrollDown();
-        });
-      }
-    });
+      filter(([ events , { visible }]) => visible && events.length > 0 && (events[events.length - 1]?.label === 'submission'
+        || !!(this.messagesScroll && this.sendMessageForm && (this.messagesScroll.nativeElement.scrollHeight
+          <= (this.messagesScroll.nativeElement.scrollTop + this.messagesScroll.nativeElement.offsetHeight
+            + this.sendMessageForm.nativeElement.offsetHeight + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))))
+      ),
+      delay(0),
+    ).subscribe(() => this.scrollDown());
   }
 
   ngOnDestroy(): void {
@@ -60,9 +57,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   scrollDown(): void {
-    if (!this.messagesScroll) {
-      throw new Error('Unexpected: Missed scroll el');
-    }
+    if (!this.messagesScroll) return;
 
     this.messagesScroll.nativeElement.scrollTo(
       0,
