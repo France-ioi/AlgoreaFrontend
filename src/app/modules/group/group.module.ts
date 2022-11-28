@@ -50,6 +50,7 @@ import { GroupPermissionsComponent } from './components/group-permissions/group-
 import { GroupLeaveComponent } from './components/group-leave/group-leave.component';
 import { GroupManagerAddComponent } from './components/group-manager-add/group-manager-add.component';
 import { PlatformSettingsComponent } from './pages/platform-settings/platform-settings.component';
+import { UserIndicatorComponent } from './components/user-indicator/user-indicator.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { PlatformSettingsComponent } from './pages/platform-settings/platform-se
     GroupLinksComponent,
     UserComponent,
     UserHeaderComponent,
+    UserIndicatorComponent,
     GroupLogViewComponent,
     AddGroupComponent,
     GroupManagersComponent,

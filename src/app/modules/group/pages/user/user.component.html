@@ -15,6 +15,12 @@
 
     <alg-user-header [user]="state.data.user" [route]="state.data.route" *ngIf="!(fullFrame$ | async)?.active"></alg-user-header>
 
+    <alg-user-indicator
+      class="user-indicator"
+      [user]="state.data.user"
+      *ngIf="!state.data.user.isCurrentUser && state.data.user.ancestorsCurrentUserIsManagerOf.length > 0"
+    ></alg-user-indicator>
+
     <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === state.data.user.groupId || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
       <a
           class="nav-tab-item"
