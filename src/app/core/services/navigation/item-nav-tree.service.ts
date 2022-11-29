@@ -110,12 +110,12 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     const route = fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId });
     let score = undefined;
     if (!child.noScore) {
-      if (child.watchedGroup && child.watchedGroup.avgScore && child.watchedGroup.allValidated) score = {
+      if (child.watchedGroup && child.watchedGroup.avgScore !== undefined && child.watchedGroup.allValidated !== undefined) score = {
         bestScore: child.watchedGroup.avgScore,
         currentScore: child.watchedGroup.avgScore,
         validated: child.watchedGroup.allValidated
       };
-      if (currentResult) score = {
+      else if (currentResult) score = {
         bestScore: child.bestScore,
         currentScore: currentResult.scoreComputed,
         validated: currentResult.validated
