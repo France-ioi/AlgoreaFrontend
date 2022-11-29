@@ -14,7 +14,6 @@ import { withLatestFrom } from 'rxjs/operators';
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
-  @ViewChild('sendMessageForm') sendMessageForm?: ElementRef<HTMLFormElement>;
 
   form = this.fb.nonNullable.group({
     messageToSend: [ '' ],
@@ -34,12 +33,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscription = this.state$.pipe(
       readyData(),
       withLatestFrom(this.discussionService.state$.pipe(filter(isNotUndefined))),
-      filter(([ events , { visible }]) => visible && events.length > 0 && (events[events.length - 1]?.label === 'submission'
-        || !!(this.messagesScroll && this.sendMessageForm && (this.messagesScroll.nativeElement.scrollHeight
-          <= (this.messagesScroll.nativeElement.scrollTop + this.messagesScroll.nativeElement.offsetHeight
-            + this.sendMessageForm.nativeElement.offsetHeight
-            + parseInt(getComputedStyle(this.messagesScroll.nativeElement).paddingBottom)))))
-      ),
+      filter(([ events, { visible }]) => visible && events.length > 0),
       delay(0),
     ).subscribe(() => this.scrollDown());
   }
