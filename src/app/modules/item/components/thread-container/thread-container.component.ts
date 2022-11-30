@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { animate, style, transition, state, trigger } from '@angular/animations';
 import { DiscussionService } from '../../services/discussion.service';
-import { filter, map } from 'rxjs';
+import { filter, map, Subscription } from 'rxjs';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { ThreadComponent } from '../thread/thread.component';
 
 const animationTiming = '.6s .2s ease-in-out';
 
@@ -27,11 +28,25 @@ const animationTiming = '.6s .2s ease-in-out';
     ]),
   ]
 })
-export class ThreadContainerComponent {
+export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(ThreadComponent) threadComponent?: ThreadComponent;
+
   @Input() topCompensation = 0;
 
   visible$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
 
+  private subscription?: Subscription;
+
   constructor(private discussionService: DiscussionService) {
+  }
+
+  ngAfterViewInit(): void {
+    this.subscription = this.visible$.pipe(filter(visible => visible)).subscribe(() => {
+      this.threadComponent?.scrollDown();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

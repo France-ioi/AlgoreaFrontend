@@ -1,19 +1,36 @@
 <div class="widget" *ngIf="state$ | async as state">
-  <div *ngIf="state.isFetching">Loading...</div>
-  <div *ngIf="state.isError">Error!</div>
-  <div *ngIf="state.isReady" class="widget-body">
-    <div *ngIf="state.data.length === 0">There are currently no events</div>
-    <div *ngFor="let event of state.data">
-      <div>{{ event | json }}</div>
-    </div>
-    <textarea
-      [(ngModel)]="messageToSend"
-      placeholder="Send a message..."
-    ></textarea>
-    <p-button
-      label="Submit"
-      (click)="sendMessage()"
-      [disabled]="!messageToSend.trim()"
-      ></p-button>
+  <div class="widget-loading" *ngIf="state.isFetching">Loading...</div>
+  <div class="widget-error" *ngIf="state.isError">Error!</div>
+  <div class="no-events" *ngIf="state.isReady && state.data.length === 0; else eventsBlock">
+    There are currently no events
   </div>
+  <ng-template #eventsBlock>
+    <div class="widget-body">
+      <div class="widget-scroll" #messagesScroll>
+        <alg-thread-message
+          class="thread-message"
+          [event]="event"
+          *ngFor="let event of state.data"
+        ></alg-thread-message>
+        <form class="footer-panel" [formGroup]="form" (ngSubmit)="sendMessage()">
+          <textarea
+            class="textarea"
+            placeholder="Send a message..."
+            pInputTextarea
+            formControlName="messageToSend"
+            [rows]="1"
+            [autoResize]="true"
+            (keydown.enter)="$event.preventDefault(); sendMessage()"
+          ></textarea>
+          <button
+            class="send-button p-button-raised p-button-rounded alg-round-button-icon large-icon-size light-icon-weight"
+            type="submit"
+            icon="pi pi-send"
+            pButton
+            [disabled]="!form.get('messageToSend')?.value?.trim()"
+          ></button>
+        </form>
+      </div>
+    </div>
+  </ng-template>
 </div>

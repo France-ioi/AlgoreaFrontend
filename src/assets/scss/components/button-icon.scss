@@ -30,6 +30,12 @@
     }
   }
 
+  &.light-icon-weight {
+    .p-button-icon {
+      font-weight: 100;
+    }
+  }
+
   &:hover {
     background-color: #fff !important;
     border: 1px solid var(--light-border-color) !important;

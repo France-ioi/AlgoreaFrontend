@@ -49,6 +49,8 @@ import {
 import { ItemUnlockAccessComponent } from './components/item-unlock-access/item-unlock-access.component';
 import { ItemTaskEditComponent } from './pages/item-task-edit/item-task-edit.component';
 import { ThreadContainerComponent } from './components/thread-container/thread-container.component';
+import { ThreadMessageComponent } from './components/thread-message/thread-message.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -83,6 +85,7 @@ import { ThreadContainerComponent } from './components/thread-container/thread-c
     ItemChildrenEditFormComponent,
     ThreadComponent,
     ThreadContainerComponent,
+    ThreadMessageComponent,
     ItemDependenciesComponent,
     ItemEditWrapperComponent,
     AddDependencyComponent,
@@ -102,6 +105,7 @@ import { ThreadContainerComponent } from './components/thread-container/thread-c
     CalendarModule,
     InputNumberModule,
     OverlayPanelModule,
+    InputTextareaModule,
   ],
   exports: [],
   providers: [
