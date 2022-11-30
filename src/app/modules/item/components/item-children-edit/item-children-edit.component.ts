@@ -12,7 +12,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
 import { itemViewPermMax } from 'src/app/shared/models/domain/item-view-permission';
-import { allowsGrantingView, itemGrantViewPermMax } from 'src/app/shared/models/domain/item-grant-view-permission';
+import { itemGrantViewPermMax } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { itemWatchPermMax } from 'src/app/shared/models/domain/item-watch-permission';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { itemEditPermMax } from 'src/app/shared/models/domain/item-edit-permission';
@@ -161,7 +161,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
       ...child,
       scoreWeight: DEFAULT_SCORE_WEIGHT,
       isVisible: true,
-      contentViewPropagation: !allowsGrantingView(child.permissions ?? permissionsForCreatedItem) ? 'none' : 'as_info',
+      contentViewPropagation: 'none', // default propagation: none so that users cannot see new items before they are ready
       permissions: child.permissions ?? permissionsForCreatedItem,
     });
     this.onChildrenListUpdate();
