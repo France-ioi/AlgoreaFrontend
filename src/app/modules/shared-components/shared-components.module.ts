@@ -21,8 +21,6 @@ import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 
 
-import { ClickOutsideModule } from 'ng-click-outside';
-
 import { SectionComponent } from './components/section/section.component';
 import { PageNavigatorComponent } from './components/page-navigator/page-navigator.component';
 import { SkillProgressComponent } from './components/skill-progress/skill-progress.component';
@@ -36,7 +34,6 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
 import { TextareaComponent } from './components/textarea/textarea.component';
 import { EditorBarComponent } from './components/editor-bar/editor-bar.component';
 import { InputComponent } from './components/input/input.component';
-import { SelectComponent } from './components/select/select.component';
 import { SectionParagraphComponent } from './components/section-paragrah/section-paragraph.component';
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
@@ -89,7 +86,6 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     TextareaComponent,
     EditorBarComponent,
     InputComponent,
-    SelectComponent,
     SectionParagraphComponent,
     MessageComponent,
     ProgressLevelComponent,
@@ -145,7 +141,6 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     ToastModule,
     TagModule,
 
-    ClickOutsideModule,
     ReactiveFormsModule,
     TooltipModule,
     TooltipModule,
@@ -166,7 +161,6 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     TextareaComponent,
     EditorBarComponent,
     InputComponent,
-    SelectComponent,
     SectionParagraphComponent,
     ToastModule,
     TableModule,

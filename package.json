@@ -46,7 +46,6 @@
     "fp-ts": "^2.9.5",
     "io-ts": "^2.2.16",
     "jschannel": "^1.0.2",
-    "ng-click-outside": "^6.0.0",
     "ngx-perfect-scrollbar": "^8.0.0",
     "primeicons": "^5.0.0",
     "primeng": "^14.0.0",
