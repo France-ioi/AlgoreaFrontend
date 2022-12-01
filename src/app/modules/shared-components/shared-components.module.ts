@@ -73,6 +73,7 @@ import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 's
 import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
 import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 import { MessageInfoComponent } from './components/message-info/message-info.component';
+import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
 
 @NgModule({
   declarations: [
@@ -113,6 +114,7 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
     FullHeightContentDirective,
+    HasHTMLDirective,
     SectionHeaderComponent,
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
@@ -193,6 +195,7 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
     CollapsibleSectionComponent,
     NeighborWidgetComponent,
     FullHeightContentDirective,
+    HasHTMLDirective,
     SectionHeaderComponent,
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
