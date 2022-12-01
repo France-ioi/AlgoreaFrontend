@@ -76,7 +76,9 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     switchMap(({ autoHeight }) => {
       if (autoHeight) return of(undefined);
       return merge(
-        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+        this.taskService.task$.pipe(
+          switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight().pipe(catchError(() => EMPTY)))))
+        ),
         this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
       ).pipe(map(height => `${height}px`));
     }),
