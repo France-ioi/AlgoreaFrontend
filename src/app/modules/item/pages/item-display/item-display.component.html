@@ -52,7 +52,7 @@
   </div>
   <div
     class="iframe-container"
-    [style.display]="state.isError && !showTaskAnyway ? 'none' : 'block'"
+    [style.display]="(state.isError || (metadataError$ | async)) && !showTaskAnyway ? 'none' : 'block'"
     [algFullHeightContent]="true"
   >
     <div class="saving-answer" *ngIf="savingAnswer">
