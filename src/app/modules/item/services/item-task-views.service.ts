@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, merge, ReplaySubject, Subject } from 'rxjs';
-import { combineLatestWith, delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { combineLatest, EMPTY, merge, ReplaySubject, Subject } from 'rxjs';
+import { catchError, combineLatestWith, delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { TaskViews, UpdateDisplayParams } from '../task-communication/types';
 import { ItemTaskInitService } from './item-task-init.service';
@@ -14,7 +14,7 @@ export class ItemTaskViewsService implements OnDestroy {
   readonly display$ = this.displaySubject.asObservable().pipe(takeUntil(this.error$));
   private task$ = this.initService.task$.pipe(takeUntil(this.error$));
 
-  readonly views$ = merge(
+  private readonly views = merge(
     this.task$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
   ).pipe(
@@ -23,7 +23,8 @@ export class ItemTaskViewsService implements OnDestroy {
       const availableViews = this.getAvailableViews(views);
       return disablePlatformProgress ? availableViews : [ ...availableViews, 'progress' ];
     }),
-  );
+  ); // may error if `task.getViews()` or `.getMetaData()` fails (e.g., timeout)
+  readonly views$ = this.views.pipe(catchError(() => EMPTY)); // never emit errors
 
   private activeViewSubject = new ReplaySubject<string>(1);
   readonly activeView$ = this.activeViewSubject.pipe(
@@ -37,7 +38,7 @@ export class ItemTaskViewsService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.showViews$.subscribe({
+    combineLatest([ this.showViews$, this.views ]).subscribe({
       error: err => this.errorSubject.next(err),
     }),
     combineLatest([

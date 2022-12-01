@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, ignoreElements, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -66,14 +66,19 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     catchError(() => EMPTY),
   );
 
-  metadata$ = this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  private metadata = this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  metadataError$ = this.metadata.pipe(ignoreElements(), catchError(err => of(err)));
+  metadata$ = this.metadata.pipe(catchError(() => EMPTY)); /* never emit errors */
+
   @Output() editorUrl = this.metadata$.pipe(map(({ editorUrl }) => editorUrl));
 
   iframeHeight$ = this.metadata$.pipe(
     switchMap(({ autoHeight }) => {
       if (autoHeight) return of(undefined);
       return merge(
-        this.taskService.task$.pipe(switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight())))),
+        this.taskService.task$.pipe(
+          switchMap(task => interval(heightSyncInterval).pipe(switchMap(() => task.getHeight().pipe(catchError(() => EMPTY)))))
+        ),
         this.taskService.display$.pipe(map(({ height }) => height), filter(isNotUndefined)),
       ).pipe(map(height => `${height}px`));
     }),
