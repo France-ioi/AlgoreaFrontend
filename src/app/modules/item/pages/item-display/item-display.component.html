@@ -14,24 +14,25 @@
 
       <ng-template #urlError>
         <alg-error
-          *ngIf="urlError$ | async as error; else unknownError"
+          *ngIf="urlError$ | async as error; else metadataError"
           message="{{ error.message }}"
-        ></alg-error>
-      </ng-template>
-
-      <ng-template #unknownError>
-        <alg-error
-          *ngIf="unknownError$ | async as error; else metadataError"
-          [message]="errorMessage"
         ></alg-error>
       </ng-template>
 
       <ng-template #metadataError>
         <alg-error
-        *ngIf="metadataError$ | async"
+        *ngIf="metadataError$ | async; else unknownError"
         i18n-message message="Error while requesting task metadata"
       ></alg-error>
       </ng-template>
+
+      <ng-template #unknownError>
+        <alg-error
+          *ngIf="unknownError$ | async"
+          [message]="errorMessage"
+        ></alg-error>
+      </ng-template>
+
     </ng-container>
 
     <div class="error-buttons">
