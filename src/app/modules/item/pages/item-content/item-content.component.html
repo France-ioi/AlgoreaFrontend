@@ -6,11 +6,14 @@
         i18n-label label="Description"
         *ngIf="!['Task', 'Course'].includes(itemData.item.type) && itemData.item.string.description"
       >
-        <div
-          class="html-container"
-          [innerHTML]="itemData.item.string.description"
+        <ng-container
           *algHasHTML="itemData.item.string.description; else textContent"
-        ></div>
+        >
+          <div
+            class="html-container"
+            [innerHTML]="itemData.item.string.description"
+          ></div>
+        </ng-container>
         <ng-template #textContent>
           <p>{{ itemData.item.string.description }}</p>
         </ng-template>
