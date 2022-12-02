@@ -133,6 +133,7 @@ body .p-component {
 .html-container {
   a {
     @extend .alg-link;
+    @extend .base-color;
   }
 }
 
