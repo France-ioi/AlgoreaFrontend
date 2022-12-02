@@ -130,6 +130,12 @@ body .p-component {
   margin-right: 2rem;
 }
 
+.html-container {
+  a {
+    @extend .alg-link;
+  }
+}
+
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
 }
