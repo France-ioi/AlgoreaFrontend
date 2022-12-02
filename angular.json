@@ -68,7 +68,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "bundles",
               "sourceMap": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -95,7 +95,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "bundles",
               "sourceMap": true,
               "namedChunks": false,
               "extractLicenses": true,
