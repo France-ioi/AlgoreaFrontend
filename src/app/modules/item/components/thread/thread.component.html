@@ -10,6 +10,7 @@
         <alg-thread-message
           class="thread-message"
           [event]="event"
+          [userCache]="(userCache | async) || []"
           *ngFor="let event of state.data"
         ></alg-thread-message>
         <form class="footer-panel" [formGroup]="form" (ngSubmit)="sendMessage()">

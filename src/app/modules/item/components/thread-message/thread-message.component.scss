@@ -18,10 +18,19 @@
       text-align: right;
     }
     .bubble {
+      color: black;
+      background-color: var(--secondary-color);
       border-radius: 1.5rem .3rem 1.5rem 1.5rem;
     }
     .date {
       text-align: right;
+    }
+  }
+
+  &.highlighted {
+    .bubble {
+      color: var(--base-text-color);
+      background-color: #fff;
     }
   }
 
@@ -53,8 +62,6 @@
 .bubble {
   display: inline-block;
   padding: .2rem 1rem;
-  color: var(--base-text-color);
-  background-color: #fff;
   border-radius: 1.5rem;
 }
 
