@@ -1,6 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NewContentType, AddedContent } from 'src/app/modules/shared-components/components/add-content/add-content.component';
+import {
+  NewContentType,
+  AddedContent,
+  AddContentComponent
+} from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { ItemType } from 'src/app/shared/helpers/item-type';
 import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
 import { SearchItemService } from '../../http-services/search-item.service';
@@ -11,6 +15,7 @@ import { SearchItemService } from '../../http-services/search-item.service';
   styleUrls: [ './add-item.component.scss' ]
 })
 export class AddItemComponent implements OnChanges {
+  @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;
 
   @Input() allowSkills = false;
   @Input() addedItemIds: string[] = [];
@@ -31,5 +36,6 @@ export class AddItemComponent implements OnChanges {
 
   addChild(item: AddedContent<ItemType>): void {
     this.contentAdded.emit(item);
+    this.addContentComponent?.reset();
   }
 }
