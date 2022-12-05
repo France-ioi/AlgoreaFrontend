@@ -1,7 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AddedContent, NewContentType } from 'src/app/modules/shared-components/components/add-content/add-content.component';
+import {
+  AddContentComponent,
+  AddedContent,
+  NewContentType
+} from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { SearchGroupService } from '../../http-services/search-group.service';
 
@@ -13,6 +17,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
   styleUrls: [ './add-sub-group.component.scss' ]
 })
 export class AddSubGroupComponent {
+  @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<GroupType>;
 
   @Input() group?: Group;
   @Input() loading = false;

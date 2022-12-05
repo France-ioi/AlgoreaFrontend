@@ -110,7 +110,6 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
       title: title,
       type: type,
     });
-    this.reset();
   }
 
   addExisting(item: AddedContent<Type>): void {
@@ -121,7 +120,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
     return s.length >= this.minInputLength;
   }
 
-  private reset(focused?: 'searchExisting' | 'create'): void {
+  reset(focused?: 'searchExisting' | 'create'): void {
     this.addContentForm.reset(defaultFormValues);
     this.focused = focused;
   }

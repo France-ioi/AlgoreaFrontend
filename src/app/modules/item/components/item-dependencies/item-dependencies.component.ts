@@ -12,6 +12,7 @@ import { AddItemPrerequisiteService } from '../../http-services/add-item-prerequ
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { RemoveItemPrerequisiteService } from '../../http-services/remove-item-prerequisite.service';
+import { AddDependencyComponent } from '../add-dependency/add-dependency.component';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -21,6 +22,7 @@ import { RemoveItemPrerequisiteService } from '../../http-services/remove-item-p
 export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
+  @ViewChild('addDependencyComponent') addDependencyComponent?: AddDependencyComponent;
   @ViewChild('op') op?: OverlayPanel;
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
@@ -103,6 +105,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
       next: () => {
         this.changeInProgress = false;
         this.actionFeedbackService.success('The new dependency has been added');
+        this.addDependencyComponent?.addContentComponent?.reset();
         this.refresh();
       },
       error: err => {
