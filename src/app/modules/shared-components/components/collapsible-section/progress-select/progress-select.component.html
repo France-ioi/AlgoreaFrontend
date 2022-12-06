@@ -12,7 +12,7 @@
       <ng-container *ngIf="descriptionTemplate" [ngTemplateOutlet]="descriptionTemplate" [ngTemplateOutletContext]="{ $implicit: value }"></ng-container>
     </div>
   </div>
-  <div *ngFor="let item of values; let idx = index;" class="progress-select-item">
+  <div *ngFor="let item of values; trackBy: trackByFn; let idx = index;" class="progress-select-item">
     <div class="progress-control">
       <span
         class="progress-point"
