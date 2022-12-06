@@ -17,11 +17,18 @@
       </ng-container>
       <ng-container *ngIf="['result_started', 'submission'].includes(event.label)">
         <div class="classical-event">
-          <span *ngIf="userInfo?.isCurrentUser; else anotherUser" i18n>
+          <span *ngIf="userInfo?.isCurrentUser; else notCurrentUser" i18n>
             You
           </span>
+          <ng-template #notCurrentUser>
+            <span *ngIf="userInfo?.isThreadParticipant; else anotherUser" i18n>
+              The user
+            </span>
+          </ng-template>
           <ng-template #anotherUser>
-            {{ userInfo?.name }}
+            <span>
+              {{ userInfo?.name }}
+            </span>
           </ng-template>
           <span *ngIf="event.label === 'result_started'" i18n>started the activity</span>
           <ng-container *ngIf="event.label === 'submission'">
