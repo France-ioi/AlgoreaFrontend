@@ -81,4 +81,8 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
     this.onChange(value);
     this.valueChange.emit(value);
   }
+
+  trackByFn(index: number): number {
+    return index;
+  }
 }
