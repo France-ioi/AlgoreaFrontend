@@ -33,7 +33,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     startWith([]),
     distinctUntilChanged((prev, cur) => JSON.stringify(prev) === JSON.stringify(cur))
   );
-  readonly userCache = combineLatest([
+  readonly userCache$ = combineLatest([
     this.distinctUsersInThread,
     this.userSessionService.userProfile$,
     this.groupWatchingService.watchedGroup$
