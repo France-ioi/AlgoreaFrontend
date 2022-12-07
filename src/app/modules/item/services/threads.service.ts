@@ -86,6 +86,7 @@ export class ThreadService implements OnDestroy {
     this.threadSub?.unsubscribe(); // stop sending subscribes on ws open
     // send 'unsubscribe' only if the ws is open
     if (this.tokenData) this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.send(UNSUBSCRIBE));
+    this.clearEvents$.next();
     this.tokenData = undefined;
   }
 

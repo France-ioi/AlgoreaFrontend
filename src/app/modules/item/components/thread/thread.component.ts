@@ -27,7 +27,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly state$ = this.threadService.state$;
 
   private distinctUsersInThread = this.state$.pipe(
-    readyData(),
+    map(state => state.data ?? []), // if there is no data, consider there is no events
     map(events => events.map(e => e.createdBy)),
     scan((acc: string[], val) => [ ...new Set([ ...acc, ...val ]) ].sort() , []),
     startWith([]),
