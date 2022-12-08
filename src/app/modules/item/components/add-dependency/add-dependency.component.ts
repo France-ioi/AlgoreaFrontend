@@ -1,5 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { AddedContent, NewContentType } from '../../../shared-components/components/add-content/add-content.component';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AddContentComponent,
+  AddedContent,
+  NewContentType
+} from '../../../shared-components/components/add-content/add-content.component';
 import { getAllowedNewItemTypes } from '../../../../shared/helpers/new-item-types';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Observable } from 'rxjs';
@@ -11,6 +15,7 @@ import { SearchItemService } from '../../http-services/search-item.service';
   styleUrls: [ './add-dependency.component.scss' ]
 })
 export class AddDependencyComponent implements OnChanges {
+  @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;
   @Input() allowSkills = false;
   @Input() addedIds: string[] = [];
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();

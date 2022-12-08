@@ -6,6 +6,7 @@
           *ngIf="groupData?.group?.currentUserCanManage !== 'none'"
           [loading]="state === 'addingGroup'"
           (addGroup)="addGroup($event)"
+          #addSubGroupComponent
       ></alg-add-sub-group>
     </alg-section>
     <alg-group-join-by-code [group]="groupData?.group" (refreshRequired)="refreshGroupInfo()" *ngIf="groupWithPermissions.canCurrentUserManageMembers">

@@ -56,6 +56,7 @@
       *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit)"
       (contentAdded)="onAdd($event)"
       [addedIds]="addedIds"
+      #addDependencyComponent
     ></alg-add-dependency>
   </ng-container>
 

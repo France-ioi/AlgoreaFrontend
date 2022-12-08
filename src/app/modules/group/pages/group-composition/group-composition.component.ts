@@ -9,6 +9,7 @@ import { ManagementAdditions, withManagementAdditions } from '../../helpers/grou
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupCreationService } from '../../http-services/group-creation.service';
 import { GroupData } from '../../services/group-datasource.service';
+import { AddSubGroupComponent } from '../../components/add-sub-group/add-sub-group.component';
 
 export interface GroupChildData {
   id?: string,
@@ -22,6 +23,7 @@ export interface GroupChildData {
   styleUrls: [ './group-composition.component.scss' ]
 })
 export class GroupCompositionComponent implements OnChanges {
+  @ViewChild('addSubGroupComponent') addSubGroupComponent?: AddSubGroupComponent;
 
   @Input() groupData?: GroupData;
 
@@ -62,6 +64,7 @@ export class GroupCompositionComponent implements OnChanges {
         this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
         this.state = 'ready';
         this.addedGroup.emit();
+        this.addSubGroupComponent?.addContentComponent?.reset();
       },
       error: err => {
         this.state = 'ready';
