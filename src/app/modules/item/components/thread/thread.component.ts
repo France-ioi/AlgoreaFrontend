@@ -5,7 +5,7 @@ import { readyData } from '../../../../shared/operators/state';
 import { Subscription, filter, delay, combineLatest, of } from 'rxjs';
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
-import { catchError, distinctUntilChanged, map, mergeScan, scan, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { formatUser } from 'src/app/shared/helpers/user';
@@ -54,7 +54,6 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         catchError(() => of({ ...u, notVisibleUser: true })),
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
-    shareReplay(1),
   );
 
   private subscription?: Subscription;
