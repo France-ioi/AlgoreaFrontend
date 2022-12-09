@@ -28,7 +28,7 @@ import { PendingRequestComponent } from './components/pending-request/pending-re
 import { PendingJoinRequestsComponent } from './components/pending-join-requests/pending-join-requests.component';
 import { AddSubGroupComponent } from './components/add-sub-group/add-sub-group.component';
 import { ManagedGroupListComponent } from './components/managed-group-list/managed-group-list.component';
-import { AssociatedActivityComponent } from './components/associated-activity/associated-activity.component';
+import { AssociatedItemComponent } from './components/associated-item/associated-item.component';
 import { GroupIndicatorComponent } from './components/group-indicator/group-indicator.component';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
@@ -74,7 +74,7 @@ import { UserIndicatorComponent } from './components/user-indicator/user-indicat
     PendingRequestComponent,
     AddSubGroupComponent,
     ManagedGroupListComponent,
-    AssociatedActivityComponent,
+    AssociatedItemComponent,
     GroupRemoveButtonComponent,
     GroupIndicatorComponent,
     GroupLinksComponent,

@@ -6,7 +6,7 @@ import { concatMap } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
 import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
-  isNewAssociatedItem, isExistingAssociatedItem } from '../../components/associated-activity/associated-activity-types';
+  isNewAssociatedItem, isExistingAssociatedItem } from '../../components/associated-item/associated-item-types';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';

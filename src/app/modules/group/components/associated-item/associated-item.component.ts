@@ -16,23 +16,23 @@ import {
   isExistingAssociatedItem,
   isNewAssociatedItem,
   getAllowedTypesForNewAssociatedItem,
-} from './associated-activity-types';
+} from './associated-item-types';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 
 @Component({
-  selector: 'alg-associated-activity',
-  templateUrl: './associated-activity.component.html',
-  styleUrls: [ './associated-activity.component.scss' ],
+  selector: 'alg-associated-item',
+  templateUrl: './associated-item.component.html',
+  styleUrls: [ './associated-item.component.scss' ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => AssociatedActivityComponent),
+      useExisting: forwardRef(() => AssociatedItemComponent),
       multi: true,
     }
   ]
 })
-export class AssociatedActivityComponent implements ControlValueAccessor, OnChanges, OnDestroy {
+export class AssociatedItemComponent implements ControlValueAccessor, OnChanges, OnDestroy {
   @Input() contentType: ItemTypeCategory = 'activity';
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
