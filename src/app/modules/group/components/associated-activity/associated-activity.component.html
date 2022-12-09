@@ -1,5 +1,8 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-section i18n-label label="Associated Activity" icon="fa fa-book" styleClass="associated-activity">
+  <alg-section i18n-label label="Associated {{ contentType | i18nSelect : {
+    skill: 'Skill',
+    other: 'Activity'
+  } }}" icon="fa fa-book" styleClass="associated-item">
 
     <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
@@ -7,7 +10,10 @@
       *ngIf="state.isError"
       class="dark"
       icon="fa fa-exclamation-triangle"
-      i18n-message message="Error while loading the root activity"
+      i18n-message message="Error while loading the root {{ contentType | i18nSelect : {
+        skill: 'Skill',
+        other: 'activity'
+      } }}"
       [showRefreshButton]="true"
       refreshButtonType="refresh"
       (refresh)="refresh()"
@@ -16,8 +22,11 @@
     <ng-container *ngIf="state.isReady">
       <ng-container [ngSwitch]="state.data.tag">
 
-        <ng-container *ngSwitchCase="'no-activity'">
-          <p>There are currently no activities associated with this group.</p>
+        <ng-container *ngSwitchCase="'no-item'">
+          <p>There are currently no {{ contentType | i18nSelect : {
+              skill: 'skills',
+              other: 'activities'
+            } }} associated with this group.</p>
           <alg-add-content
             [allowedTypesForNewContent]="allowedNewItemTypes"
             [searchFunction]="searchFunction"
@@ -26,8 +35,8 @@
           ></alg-add-content>
         </ng-container>
 
-        <div class="activity" *ngSwitchCase="'new-activity'">
-          <span class="activity-name">
+        <div class="item" *ngSwitchCase="'new-item'">
+          <span class="item-name">
             {{state.data.name}}
           </span>
           <span class="remove" (click)="onRemove()">
@@ -36,10 +45,10 @@
           </span>
         </div>
 
-        <div class="activity" *ngSwitchCase="'existing-activity'">
-          <!--When rootActivity is an existing activity, rootActivityData is not null-->
+        <div class="item" *ngSwitchCase="'existing-item'">
+          <!--When rootActivity|rootSkill is an existing item, rootActivityData|rootSkillData is not null-->
           <i class="fa fa-lock" *ngIf="!state.data.path"></i>
-          <span class="activity-name"
+          <span class="item-name"
             [routerLink]="state.data.path"
             [ngClass]="{clickable: !!state.data.path}"
           >{{state.data.name}}</span>

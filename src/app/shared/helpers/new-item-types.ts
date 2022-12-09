@@ -22,7 +22,7 @@ export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   },
 ];
 
-const skillNewType: NewContentType<ItemType> = {
+export const skillNewType: NewContentType<ItemType> = {
   type: 'Skill',
   icon: 'fa fa-graduation-cap',
   title: $localize`Skill`,

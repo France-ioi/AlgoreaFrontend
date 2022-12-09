@@ -30,7 +30,8 @@
           </div>
         </div>
       </alg-section>
-      <alg-associated-activity formControlName="rootActivity"></alg-associated-activity>
+      <alg-associated-activity formControlName="rootActivity" contentType="activity"></alg-associated-activity>
+      <alg-associated-activity formControlName="rootSkill" contentType="skill"></alg-associated-activity>
 
       <div class="remove-button-section">
         <alg-group-remove-button [group]="state.data" (groupDeleted)="refreshNav()"></alg-group-remove-button>
