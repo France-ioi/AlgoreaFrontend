@@ -7,11 +7,14 @@
   <ng-template #eventsBlock>
     <div class="widget-body">
       <div class="widget-scroll" #messagesScroll>
-        <alg-thread-message
-          class="thread-message"
-          [event]="event"
-          *ngFor="let event of state.data"
-        ></alg-thread-message>
+        <ng-container *ngIf="((userCache$ | async) || []) as userCache">
+          <alg-thread-message
+            class="thread-message"
+            [event]="event"
+            [userCache]="userCache"
+            *ngFor="let event of state.data"
+          ></alg-thread-message>
+        </ng-container>
         <form class="footer-panel" [formGroup]="form" (ngSubmit)="sendMessage()">
           <textarea
             class="textarea"

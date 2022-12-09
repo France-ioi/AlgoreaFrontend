@@ -1,33 +1,20 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { IncomingThreadEvent } from '../../services/threads-inbound-events';
-import { UserSessionService } from '../../../../shared/services/user-session.service';
-import { ReplaySubject, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { UserInfo } from './thread-user-info';
 
 @Component({
   selector: 'alg-thread-message[event]',
   templateUrl: './thread-message.component.html',
   styleUrls: [ './thread-message.component.scss' ],
 })
-export class ThreadMessageComponent implements OnChanges, OnDestroy {
+export class ThreadMessageComponent implements OnChanges {
   @Input() event!: IncomingThreadEvent;
-
-  event$ = new ReplaySubject<IncomingThreadEvent>(1);
-  isMessageCreatedByCurrentUser$ = combineLatest([
-    this.userSessionService.userProfile$,
-    this.event$,
-  ]).pipe(
-    map(([ currentUser, event ]) => currentUser.groupId === event.createdBy),
-  );
-
-  constructor(private userSessionService: UserSessionService) {
-  }
+  @Input() userCache: UserInfo[] = [];
+  userInfo?: UserInfo & { name: string };
 
   ngOnChanges(): void {
-    this.event$.next(this.event);
+    const userInfo = this.userCache.find(user => user.id === this.event.createdBy);
+    this.userInfo = userInfo ? { ...userInfo, name: userInfo.name ?? $localize`An unknown user` } : undefined;
   }
 
-  ngOnDestroy(): void {
-    this.event$.complete();
-  }
 }
