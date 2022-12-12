@@ -22,7 +22,3 @@ export function isNewAssociatedItem(item: NoAssociatedItem|NewAssociatedItem|Exi
 export function isActivityFound(itemFound: ItemFound<ItemType>): itemFound is ItemFound<ActivityType> {
   return itemFound.type !== 'Skill';
 }
-
-export function getAllowedTypesForNewAssociatedItem(contentType: 'activity' | 'skill'): NewContentType<ItemType>[] {
-  return contentType === 'activity' ? allowedNewActivityTypes : [ skillNewType ];
-}

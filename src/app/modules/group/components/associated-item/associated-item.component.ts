@@ -15,10 +15,10 @@ import {
   ExistingAssociatedItem,
   isExistingAssociatedItem,
   isNewAssociatedItem,
-  getAllowedTypesForNewAssociatedItem,
 } from './associated-item-types';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { mapToFetchState } from 'src/app/shared/operators/state';
+import { getAllowedNewItemTypes } from '../../../../shared/helpers/new-item-types';
 
 @Component({
   selector: 'alg-associated-item',
@@ -101,7 +101,10 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
       !== changes.contentType.previousValue) {
       throw new Error('Unexpected: Not allow to change content type');
     }
-    this.allowedNewItemTypes = getAllowedTypesForNewAssociatedItem(this.contentType);
+    this.allowedNewItemTypes = getAllowedNewItemTypes({
+      allowActivities: this.contentType === 'activity',
+      allowSkills: this.contentType === 'skill',
+    });
     this.contentType$.next(this.contentType);
   }
 

@@ -29,6 +29,9 @@ export const skillNewType: NewContentType<ItemType> = {
   description: $localize`A new skill.`,
 };
 
-export function getAllowedNewItemTypes(allowSkills: boolean): NewContentType<ItemType>[] {
-  return allowSkills ? [ skillNewType ].concat(allowedNewActivityTypes) : allowedNewActivityTypes;
+export function getAllowedNewItemTypes(options: {allowActivities?: boolean, allowSkills?: boolean}): NewContentType<ItemType>[] {
+  return [
+    ...(options.allowSkills ? [ skillNewType ] : []),
+    ...(options.allowActivities ? allowedNewActivityTypes : []),
+  ];
 }
