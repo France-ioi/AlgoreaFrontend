@@ -560,11 +560,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.html</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="3307474071394609167" datatype="html">
         <source>You don't have access to this </source><target state="new">You don't have access to this </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-      </trans-unit><trans-unit id="8488818580261010572" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.ts</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="8488818580261010572" datatype="html">
         <source>activity</source><target state="new">activity</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.ts</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="1086089060464522984" datatype="html">
@@ -660,10 +657,13 @@
       </trans-unit><trans-unit id="6387879863897234206" datatype="html">
         <source>Skill</source><target state="translated">Compétence</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="9108820859798349403" datatype="html">
-        <source>A new sub-skill.</source><target state="translated">Une nouvelle sous-compétence.</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="3305017324257919959" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="7504783300225171495" datatype="html">
+        <source>A new skill.</source><target state="new">A new skill.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/helpers/new-item-types.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="3305017324257919959" datatype="html">
         <source>All with grant</source><target state="new">All with grant</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/groupPermissionCaption.ts</context>
