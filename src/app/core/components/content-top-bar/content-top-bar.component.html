@@ -5,14 +5,15 @@
     <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
   </div>
   <div class="full-frame-content-top-bar" *ngIf="fullFrameContent?.active || scrolled">
-    <ng-container *ngIf="currentContent.score">
+    <div class="score-placeholder">
       <alg-score-ring
-        [bestScore]="currentContent.score.bestScore"
-        [currentScore]="currentContent.score.currentScore"
-        [isValidated]="currentContent.score.isValidated"
+        *ngIf="currentContent.type === 'item' && $any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
+        [bestScore]="$any(currentContent).details.bestScore"
+        [currentScore]="$any(currentContent).details.currentScore"
+        [isValidated]="$any(currentContent).details.validated"
         [diameter]="34"
       ></alg-score-ring>
-    </ng-container>
+    </div>
     <div class="right-pane-title">
       <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>
