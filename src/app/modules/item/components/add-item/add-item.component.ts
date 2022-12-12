@@ -24,14 +24,16 @@ export class AddItemComponent implements OnChanges {
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, getAllowedNewItemTypes({allowActivities: true, allowSkills: this.allowSkills}).map(item => item.type));
+    this.searchItemService.search(
+      value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills }).map(item => item.type)
+    );
 
   constructor(
     private searchItemService: SearchItemService
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.allowedNewItemTypes = getAllowedNewItemTypes({allowActivities: true, allowSkills: this.allowSkills});
+    this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills });
   }
 
   addChild(item: AddedContent<ItemType>): void {

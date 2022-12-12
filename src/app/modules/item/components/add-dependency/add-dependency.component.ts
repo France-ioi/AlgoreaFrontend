@@ -24,7 +24,7 @@ export class AddDependencyComponent implements OnChanges {
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(
-      value, getAllowedNewItemTypes({allowActivities: true, allowSkills: this.allowSkills}).map(item => item.type)
+      value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills }).map(item => item.type)
     );
 
   constructor(
@@ -32,7 +32,7 @@ export class AddDependencyComponent implements OnChanges {
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.allowedNewItemTypes = getAllowedNewItemTypes({allowActivities: true, allowSkills: this.allowSkills});
+    this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills });
   }
 
   addDependency(item: AddedContent<ItemType>): void {

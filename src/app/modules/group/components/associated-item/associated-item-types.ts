@@ -1,7 +1,5 @@
 import { ItemFound } from 'src/app/modules/item/http-services/search-item.service';
 import { ActivityType, ItemType } from 'src/app/shared/helpers/item-type';
-import { NewContentType } from '../../../shared-components/components/add-content/add-content.component';
-import { allowedNewActivityTypes, skillNewType } from '../../../../shared/helpers/new-item-types';
 
 type AssociatedItemId = string;
 
