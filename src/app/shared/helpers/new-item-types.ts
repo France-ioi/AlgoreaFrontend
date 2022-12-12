@@ -26,7 +26,7 @@ export const skillNewType: NewContentType<ItemType> = {
   type: 'Skill',
   icon: 'fa fa-graduation-cap',
   title: $localize`Skill`,
-  description: $localize`A new sub-skill.`,
+  description: $localize`A new skill.`,
 };
 
 export function getAllowedNewItemTypes(allowSkills: boolean): NewContentType<ItemType>[] {
