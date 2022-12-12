@@ -123,7 +123,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
       item: { tag: 'no-item' }, triggerChange: true });
   }
 
-  setRootActivity(item: AddedContent<ItemType>): void {
+  setRootItem(item: AddedContent<ItemType>): void {
     this.itemChanges$.next({
       item: item.id !== undefined ?
         { tag: 'existing-item', id: item.id, name: item.title } :
