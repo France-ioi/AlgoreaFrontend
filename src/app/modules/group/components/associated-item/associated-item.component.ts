@@ -1,7 +1,7 @@
-import { Component, forwardRef, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, forwardRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, ReplaySubject, Subject, combineLatest } from 'rxjs';
-import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { rawItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
@@ -45,11 +45,9 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   }>();
 
   private refresh$ = new Subject<void>();
-  readonly state$ = combineLatest([
-    this.itemChanges$,
-    this.contentType$,
-  ]).pipe(
+  readonly state$ = this.itemChanges$.pipe(
     distinctUntilChanged(),
+    withLatestFrom(this.contentType$),
     switchMap(([ data, contentType ]) => {
       if (data.triggerChange) this.onChange(data.item);
 
@@ -98,13 +96,19 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
     private searchItemService: SearchItemService,
   ) { }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.contentType && !changes.contentType.firstChange && changes.contentType.currentValue
+      !== changes.contentType.previousValue) {
+      throw new Error('Unexpected: Not allow to change content type');
+    }
     this.allowedNewItemTypes = getAllowedTypesForNewAssociatedItem(this.contentType);
     this.contentType$.next(this.contentType);
   }
 
   ngOnDestroy(): void {
     this.refresh$.complete();
+    this.contentType$.complete();
+    this.itemChanges$.complete();
   }
 
   writeValue(rootItem: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem): void {
