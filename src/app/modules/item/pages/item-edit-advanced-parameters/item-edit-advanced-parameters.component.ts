@@ -47,6 +47,14 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     value: 'forceYes'
   }];
 
+  childrenLayoutOptions: {label: string, value: string}[] = [{
+    label: $localize`List`,
+    value: 'List'
+  }, {
+    label: $localize`Grid`,
+    value: 'Grid'
+  }];
+
   minEnteringTimeMaxDate = new Date();
 
   minAdmittedMembersRatioOptions: DropdownOption[] = [{

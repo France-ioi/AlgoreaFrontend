@@ -33,6 +33,7 @@ export const itemDecoder = pipe(
     noScore: D.boolean,
     titleBarVisible: D.boolean,
     fullScreen: D.literal('forceYes','forceNo','default'),
+    childrenLayout: D.literal('List', 'Grid'),
     allowsMultipleAttempts: D.boolean,
     duration: D.nullable(durationDecoder),
     enteringTimeMin: dateDecoder,

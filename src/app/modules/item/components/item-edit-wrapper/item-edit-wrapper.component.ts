@@ -37,6 +37,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     title_bar_visible: [ false ],
     prompt_to_join_group_by_code: [ false ],
     full_screen: [ '' ],
+    children_layout: [ '' ],
     allows_multiple_attempts: [ false ],
     requires_explicit_entry: [ false ],
     duration_enabled: [ false ],
@@ -108,6 +109,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       titleBarVisible: this.itemForm.get('title_bar_visible'),
       promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
       fullScreen: this.itemForm.get('full_screen'),
+      childrenLayout: this.itemForm.get('children_layout'),
       ...(this.enableParticipation ? {
         allowsMultipleAttempts: this.itemForm.get('allows_multiple_attempts'),
         requiresExplicitEntry: this.itemForm.get('requires_explicit_entry'),
@@ -154,6 +156,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     if (fullScreen !== this.initialFormData.fullScreen) itemFormValues.full_screen = fullScreen;
+
+    const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid';
+    if (childrenLayout !== this.initialFormData.childrenLayout) itemFormValues.children_layout = childrenLayout;
 
     if (this.enableParticipation) {
       const allowsMultipleAttempts = formControls.allowsMultipleAttempts?.value as boolean;
@@ -319,6 +324,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       title_bar_visible: item.titleBarVisible || false,
       prompt_to_join_group_by_code: item.promptToJoinGroupByCode || false,
       full_screen: item.fullScreen,
+      children_layout: item.childrenLayout,
       ...(this.enableParticipation ? {
         allows_multiple_attempts: item.allowsMultipleAttempts,
         requires_explicit_entry: item.requiresExplicitEntry,
