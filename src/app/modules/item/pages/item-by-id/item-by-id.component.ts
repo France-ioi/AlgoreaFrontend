@@ -1,6 +1,6 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, UrlTree } from '@angular/router';
-import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject } from 'rxjs';
+import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -65,6 +65,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
+  @ViewChild('contentContainer') contentContainer?: ElementRef<HTMLDivElement>;
 
   private itemRouteState$ = this.activatedRoute.paramMap.pipe(
     repeatLatestWhen(this.userSessionService.userChanged$),
@@ -167,6 +168,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
+  contentContainerTop = 0;
+
   private subscriptions: Subscription[] = [
     this.itemDataSource.state$.pipe(
       // submission reloads the item data. Here we handle the progress tab existence only when the item loads, not when it reloads.
@@ -262,7 +265,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
       const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
       this.layoutService.configure({ fullFrameActive: activateFullFrame });
-    })
+    }),
+
+    this.layoutService.fullFrame$.pipe(delay(0)).subscribe(() => {
+      this.contentContainerTop = this.contentContainer?.nativeElement.offsetTop || 0;
+    }),
   ];
 
   editorUrl?: string;
