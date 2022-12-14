@@ -21,6 +21,7 @@ import { GroupWatchingService } from 'src/app/core/services/group-watching.servi
 import { appConfig } from 'src/app/shared/helpers/config';
 import { isATask } from 'src/app/shared/helpers/item-type';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { formatUser } from 'src/app/shared/helpers/user';
 import { isItemInfo } from 'src/app/shared/models/content/item-info';
 import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
 import { readyData } from 'src/app/shared/operators/state';
@@ -42,7 +43,7 @@ export class DiscussionService implements OnDestroy {
 
   private readonly threadService?: ThreadService; // only injected if forum is enabled
 
-  private threadToken$ = combineLatest([
+  private threadInfo$ = combineLatest([
     this.userSessionService.userProfile$,
     this.currentContentService.content$,
     this.groupWatchingService.watchedGroup$,
@@ -59,11 +60,14 @@ export class DiscussionService implements OnDestroy {
       // if watching, only for users (not group) and for content we can watch
       if (watching && (!watching.route.isUser || !allowsWatchingResults(content.details.permissions))) return undefined;
       return {
-        participantId: watching ? watching.route.id : session.groupId,
-        itemId: content.route.id,
-        userId: session.groupId,
-        isMine: !watching,
-        canWatchParticipant: !!watching
+        participant: {
+          id: watching ? watching.route.id : session.groupId,
+          name: watching ? watching.name : formatUser(session),
+        },
+        currentUserId: session.groupId,
+        itemRoute: content.route,
+        canWatchParticipant: !!watching,
+        contentWatchPermission: content.details.permissions,
       };
     }),
     startWith(undefined),
@@ -76,7 +80,7 @@ export class DiscussionService implements OnDestroy {
     * visible (i.e., currently shown) for this page.
     * Emit `undefined` if not available, `{ visible: boolean }` otherwise.
     */
-  state$ = combineLatest([ this.visible, this.threadToken$.pipe(map(isNotUndefined)) ]).pipe(
+  state$ = combineLatest([ this.visible, this.threadInfo$.pipe(map(isNotUndefined)) ]).pipe(
     map(([ visible, hasThread ]) => (this.enabled && hasThread ? { visible } : undefined)));
 
   /**
@@ -105,11 +109,11 @@ export class DiscussionService implements OnDestroy {
     this.threadService = this.injector.get<ThreadService>(ThreadService);
 
     this.subscriptions.add(
-      this.threadToken$.pipe(pairwise()).subscribe(
-        ([ prevTokenData, tokenData ]) => {
+      this.threadInfo$.pipe(pairwise()).subscribe(
+        ([ prevTokenData, thread ]) => {
           this.toggleVisibility(false); // always hide the previous discussion on thread change
           if (prevTokenData) this.threadService?.leaveThread();
-          if (tokenData) this.threadService?.setThread(tokenData);
+          if (thread) this.threadService?.setThread(thread);
         }
       )
     );

@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { RawItemRoute } from 'src/app/shared/routing/item-route';
 import { IncomingThreadEvent } from '../../services/threads-inbound-events';
 import { UserInfo } from './thread-user-info';
 
@@ -10,6 +11,8 @@ import { UserInfo } from './thread-user-info';
 export class ThreadMessageComponent implements OnChanges {
   @Input() event!: IncomingThreadEvent;
   @Input() userCache: UserInfo[] = [];
+  @Input() canCurrentUserLoadAnswers = false;
+  @Input() itemRoute?: RawItemRoute;
   userInfo?: UserInfo & { name: string };
 
   ngOnChanges(): void {

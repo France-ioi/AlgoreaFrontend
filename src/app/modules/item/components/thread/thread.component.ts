@@ -11,6 +11,7 @@ import { GroupWatchingService } from 'src/app/core/services/group-watching.servi
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetUserService } from 'src/app/modules/group/http-services/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
+import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
 
 @Component({
   selector: 'alg-thread',
@@ -54,6 +55,18 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         catchError(() => of({ ...u, notVisibleUser: true })),
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
+  );
+  private threadInfo$ = this.state$.pipe(
+    map(() => this.threadService.threadInfo),
+    distinctUntilChanged(),
+  );
+
+  readonly canCurrentUserLoadAnswers$ = this.threadInfo$.pipe(
+    map(t => !!t && (t.currentUserId === t.participant.id || allowsWatchingAnswers(t.contentWatchPermission)),
+    )
+  );
+  readonly itemRoute$ = this.threadInfo$.pipe(
+    map(t => t?.itemRoute),
   );
 
   private subscription?: Subscription;

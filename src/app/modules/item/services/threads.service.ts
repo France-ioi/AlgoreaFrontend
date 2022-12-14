@@ -23,13 +23,18 @@ import { publishEventsAction, SUBSCRIBE, ThreadAction, UNSUBSCRIBE } from './thr
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { messageEvent } from './threads-events';
 import { IncomingThreadEvent, incomingThreadEventDecoder } from './threads-inbound-events';
+import { ItemPermWithWatch } from 'src/app/shared/models/domain/item-watch-permission';
+import { RawItemRoute } from 'src/app/shared/routing/item-route';
 
-interface TokenData {
-  participantId: string,
-  itemId: string,
-  userId: string,
-  isMine: boolean,
+interface ThreadInfo {
+  participant: {
+    id: string,
+    name: string,
+  },
+  currentUserId: string,
+  itemRoute: RawItemRoute,
   canWatchParticipant: boolean,
+  contentWatchPermission: ItemPermWithWatch,
 }
 
 @Injectable({
@@ -38,7 +43,7 @@ interface TokenData {
 export class ThreadService implements OnDestroy {
 
   private clearEvents$ = new ReplaySubject<void>(1);
-  private tokenData?: TokenData;
+  threadInfo?: ThreadInfo;
 
   private threadSub?: SubscriptionLike;
 
@@ -71,10 +76,10 @@ export class ThreadService implements OnDestroy {
     this.threadSub?.unsubscribe();
   }
 
-  setThread(tokenData: TokenData): void {
-    if (this.tokenData) throw new Error('"leaveThread" should be called before setThread when changing thread');
+  setThread(threadInfo: ThreadInfo): void {
+    if (this.threadInfo) throw new Error('"leaveThread" should be called before setThread when changing thread');
     if (this.threadSub && !this.threadSub.closed) throw new Error('unexpected: threadSub has not been closed');
-    this.tokenData = tokenData;
+    this.threadInfo = threadInfo;
     // send 'subscribe' each time the ws is reopened
     this.threadSub = this.forumService.isWsOpen$.pipe(filter(open => open)).subscribe(() => {
       this.clearEvents$.next();
@@ -85,25 +90,29 @@ export class ThreadService implements OnDestroy {
   leaveThread(): void {
     this.threadSub?.unsubscribe(); // stop sending subscribes on ws open
     // send 'unsubscribe' only if the ws is open
-    if (this.tokenData) this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.send(UNSUBSCRIBE));
+    if (this.threadInfo) this.forumService.isWsOpen$.pipe(take(1), filter(open => open)).subscribe(() => this.send(UNSUBSCRIBE));
     this.clearEvents$.next();
-    this.tokenData = undefined;
+    this.threadInfo = undefined;
   }
 
   private send(action: ThreadAction): void {
-    if (!this.tokenData) throw new Error('service must be initialized');
-    this.forumService.send({
-      token: this.tokenData,
-      ...action,
-    });
+    if (!this.threadInfo) throw new Error('service must be initialized');
+    const token = {
+      participantId: this.threadInfo.participant.id,
+      itemId: this.threadInfo.itemRoute.id,
+      userId: this.threadInfo.currentUserId,
+      isMine: this.threadInfo.participant.id === this.threadInfo.currentUserId,
+      canWatchParticipant: this.threadInfo.canWatchParticipant,
+    };
+    this.forumService.send({ ...action, token });
   }
 
   syncEvents(): Observable<void> {
-    if (!this.tokenData) throw new Error('cannot sync thread without token data');
-    const { participantId, userId, itemId } = this.tokenData;
-    const watchedGroupId = participantId === userId ? undefined : participantId;
+    if (!this.threadInfo) throw new Error('cannot sync thread without token data');
+    const { participant, currentUserId, itemRoute } = this.threadInfo;
+    const watchedGroupId = participant.id === currentUserId ? undefined : participant.id;
 
-    return this.activityLogService.getActivityLog(itemId, watchedGroupId).pipe(
+    return this.activityLogService.getActivityLog(itemRoute.id, watchedGroupId).pipe(
       map(log => log.map(e => {
         switch (e.activityType) {
           case 'result_started': return { label: 'result_started' as const, time: e.at.valueOf(), data: { attemptId: e.attemptId } };
