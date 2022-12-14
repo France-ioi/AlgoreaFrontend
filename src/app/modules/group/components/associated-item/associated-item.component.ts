@@ -69,7 +69,8 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({
             tag: 'existing-item',
-            name: $localize`You don't have access to this ` + this.contentType === 'activity' ? $localize`activity` : $localize`skill` + '.',
+            name: $localize`You don't have access to this ` + this.contentType === 'activity'
+              ? $localize`activity` : $localize`skill` + '.',
             path: null,
           });
           throw err;
