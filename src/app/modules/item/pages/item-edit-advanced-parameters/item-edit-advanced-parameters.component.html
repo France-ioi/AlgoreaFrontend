@@ -71,6 +71,14 @@
         <alg-selection formControlName="full_screen" [items]="fullScreenOptions"></alg-selection>
       </div>
     </div>
+    <div class="form-item-view" *ngIf="!['Task', 'Course'].includes(item.type)">
+      <span class="form-item-label">
+        <ng-container i18n>Children layout</ng-container>
+      </span>
+      <div class="form-item-control">
+        <alg-selection formControlName="children_layout" [items]="childrenLayoutOptions"></alg-selection>
+      </div>
+    </div>
   </alg-section>
 
   <alg-section icon="fa fa-desktop" i18n-label label="Participation" *ngIf="item.type !== 'Skill'">
