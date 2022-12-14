@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/modules/item/http-services/get-item-by-id.service';
 import { rawItemRoute, urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { SearchItemService } from 'src/app/modules/item/http-services/search-item.service';
@@ -37,8 +37,6 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
 
-  private readonly contentType$ = new ReplaySubject<ItemTypeCategory>();
-
   private readonly itemChanges$ = new ReplaySubject<{
     item: NoAssociatedItem|NewAssociatedItem|(ExistingAssociatedItem&{ name?: string }),
     triggerChange: boolean,
@@ -47,8 +45,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   private refresh$ = new Subject<void>();
   readonly state$ = this.itemChanges$.pipe(
     distinctUntilChanged(),
-    withLatestFrom(this.contentType$),
-    switchMap(([ data, contentType ]) => {
+    switchMap(data => {
       if (data.triggerChange) this.onChange(data.item);
 
       if (!isExistingAssociatedItem(data.item)) {
@@ -67,12 +64,12 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
           tag: 'existing-item',
           id,
           name,
-          path: urlArrayForItemRoute(rawItemRoute(contentType, id))
+          path: urlArrayForItemRoute(rawItemRoute(this.contentType, id))
         })),
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({
             tag: 'existing-item',
-            name: $localize`You don't have access to this ` + contentType === 'activity' ? $localize`activity` : $localize`skill` + '.',
+            name: $localize`You don't have access to this ` + this.contentType === 'activity' ? $localize`activity` : $localize`skill` + '.',
             path: null,
           });
           throw err;
@@ -85,11 +82,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   private onChange: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void = () => {};
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.contentType$.pipe(
-      switchMap(contentType =>
-        this.searchItemService.search(value, contentType === 'activity' ? [ 'Chapter', 'Course', 'Task' ] : [ 'Skill' ])
-      )
-    );
+    this.searchItemService.search(value, this.contentType === 'activity' ? [ 'Chapter', 'Course', 'Task' ] : [ 'Skill' ]);
 
   constructor(
     private getItemByIdService: GetItemByIdService,
@@ -105,12 +98,10 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
       allowActivities: this.contentType === 'activity',
       allowSkills: this.contentType === 'skill',
     });
-    this.contentType$.next(this.contentType);
   }
 
   ngOnDestroy(): void {
     this.refresh$.complete();
-    this.contentType$.complete();
     this.itemChanges$.complete();
   }
 
