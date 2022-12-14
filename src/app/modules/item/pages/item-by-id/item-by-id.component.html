@@ -98,6 +98,7 @@
         class="bg-white"
         [ngClass]="{ 'compensate-margin': !(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) }"
         #contentContainer
+        [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
       >
         <alg-error
           *ngIf="unknownError"
