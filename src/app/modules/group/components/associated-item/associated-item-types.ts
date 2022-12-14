@@ -1,5 +1,5 @@
 import { ItemFound } from 'src/app/modules/item/http-services/search-item.service';
-import { ActivityType, ItemType } from 'src/app/shared/helpers/item-type';
+import { ActivityType, isASkill, ItemType } from 'src/app/shared/helpers/item-type';
 
 type AssociatedItemId = string;
 
@@ -18,5 +18,5 @@ export function isNewAssociatedItem(item: NoAssociatedItem|NewAssociatedItem|Exi
 }
 
 export function isActivityFound(itemFound: ItemFound<ItemType>): itemFound is ItemFound<ActivityType> {
-  return itemFound.type !== 'Skill';
+  return !isASkill(itemFound);
 }
