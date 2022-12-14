@@ -22,13 +22,16 @@ export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   },
 ];
 
-const skillNewType: NewContentType<ItemType> = {
+export const skillNewType: NewContentType<ItemType> = {
   type: 'Skill',
   icon: 'fa fa-graduation-cap',
   title: $localize`Skill`,
-  description: $localize`A new sub-skill.`,
+  description: $localize`A new skill.`,
 };
 
-export function getAllowedNewItemTypes(allowSkills: boolean): NewContentType<ItemType>[] {
-  return allowSkills ? [ skillNewType ].concat(allowedNewActivityTypes) : allowedNewActivityTypes;
+export function getAllowedNewItemTypes(options: {allowActivities?: boolean, allowSkills?: boolean}): NewContentType<ItemType>[] {
+  return [
+    ...(options.allowSkills ? [ skillNewType ] : []),
+    ...(options.allowActivities ? allowedNewActivityTypes : []),
+  ];
 }

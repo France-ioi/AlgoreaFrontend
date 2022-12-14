@@ -1,6 +1,6 @@
 @import 'src/colors.scss';
 
-.activity {
+.item {
 
   width: 100%;
   display: flex;
@@ -21,7 +21,7 @@
     padding-right: 1rem;
   }
 
-  .activity-name {
+  .item-name {
     flex: 1;
     white-space: nowrap;
     overflow: hidden;

@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
-import { of, Subscription } from 'rxjs';
+import { of, Subscription, combineLatest } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/modules/item/http-services/create-item.service';
 import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-guard';
-import { NoActivity, NewActivity, ExistingActivity,
-  isNewActivity, isExistingActivity } from '../../components/associated-activity/associated-activity-types';
+import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
+  isNewAssociatedItem, isExistingAssociatedItem } from '../../components/associated-item/associated-item-types';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupUpdateService } from '../../http-services/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
@@ -27,6 +27,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
     rootActivity: [ '', [] ],
+    rootSkill: [ '', [] ],
   });
   initialFormData?: Group;
 
@@ -77,20 +78,30 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     const name = this.groupForm.get('name')?.value as string;
     const description = this.groupForm.get('description')?.value as string;
 
-    const rootActivity = this.groupForm.get('rootActivity')?.value as NoActivity|NewActivity|ExistingActivity;
-    const rootActivityId = !isNewActivity(rootActivity) ? of(isExistingActivity(rootActivity) ? rootActivity.id : null) :
+    const rootActivity = this.groupForm.get('rootActivity')?.value as NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem;
+    const rootActivityId$ = !isNewAssociatedItem(rootActivity) ? of(isExistingAssociatedItem(rootActivity) ? rootActivity.id : null) :
       this.createItemService.create({
         title: rootActivity.name,
-        type: rootActivity.activityType,
+        type: rootActivity.itemType,
         languageTag: 'en',// FIXME
         asRootOfGroupId: this.initialFormData.id,
       });
 
-    rootActivityId.pipe(
-      concatMap(rootActivityId => this.groupUpdateService.updateGroup(id, {
+    const rootSkill = this.groupForm.get('rootSkill')?.value as NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem;
+    const rootSkillId$ = !isNewAssociatedItem(rootSkill) ? of(isExistingAssociatedItem(rootSkill) ? rootSkill.id : null) :
+      this.createItemService.create({
+        title: rootSkill.name,
+        type: rootSkill.itemType,
+        languageTag: 'en',// FIXME
+        asRootOfGroupId: this.initialFormData.id,
+      });
+
+    combineLatest([ rootActivityId$, rootSkillId$ ]).pipe(
+      concatMap(([ rootActivityId, rootSkillId ]) => this.groupUpdateService.updateGroup(id, {
         name,
         description: description === '' ? null : description,
-        root_activity_id: rootActivityId
+        root_activity_id: rootActivityId,
+        root_skill_id: rootSkillId,
       }))
     ).subscribe({
       next: () => {
@@ -117,13 +128,18 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   private resetFormWith(group: Group): void {
 
     const rootActivity = group.rootActivityId === null ?
-      { tag: 'no-activity' } :
-      { tag: 'existing-activity', id: group.rootActivityId };
+      { tag: 'no-item' } :
+      { tag: 'existing-item', id: group.rootActivityId };
+
+    const rootSkill = group.rootSkillId === null ?
+      { tag: 'no-item' } :
+      { tag: 'existing-item', id: group.rootSkillId };
 
     this.groupForm.reset({
       name: group.name,
       description: group.description,
       rootActivity: rootActivity,
+      rootSkill,
     });
     this.groupForm.enable();
   }

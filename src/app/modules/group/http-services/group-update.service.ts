@@ -9,6 +9,7 @@ export interface GroupChanges {
   name?: string,
   description?: string|null,
   root_activity_id?: string|null,
+  root_skill_id?: string|null,
 }
 
 @Injectable({
