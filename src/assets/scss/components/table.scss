@@ -320,6 +320,12 @@
       }
     }
   }
+
+  &.item-log-view {
+    table {
+      table-layout: fixed !important;
+    }
+  }
 }
 
 .summary {

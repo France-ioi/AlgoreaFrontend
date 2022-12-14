@@ -36,5 +36,9 @@
     // padding: 1.25rem 2rem 3rem 5.8333rem;
     padding: 2rem 2rem 3rem 5.8333rem;
     color: var(--base-text-color);
+
+    @media screen and (max-width: 479px) {
+      padding: 2rem 2rem 3rem 2rem;
+    }
   }
 }

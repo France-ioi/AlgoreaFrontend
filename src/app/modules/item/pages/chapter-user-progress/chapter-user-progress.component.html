@@ -11,7 +11,14 @@
   ></alg-error>
 
   <div *ngIf="state.data">
-    <p-table class="alg-table alg-table chapter-user-progress" [columns]="columns" [value]="state.data" [loading]="state.isFetching">
+    <p-table
+      class="alg-table chapter-user-progress"
+      [columns]="columns"
+      [value]="state.data"
+      [loading]="state.isFetching"
+      [tableStyle]="{'min-width': '479px'}"
+      responsiveLayout="scroll"
+    >
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr>
           <th [colSpan]="columns.length">
