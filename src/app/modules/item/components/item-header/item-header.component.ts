@@ -28,8 +28,8 @@ export class ItemHeaderComponent implements OnChanges {
     this.navigationNeighbors$ = isASkill(this.itemData.item) ? this.skillNavigationNeighbors$ : this.activityNavigationNeighbors$;
   }
 
-  toggleThread(): void {
-    this.discussionService.toggleVisibility();
+  toggleThreadVisibility(visible: boolean): void {
+    this.discussionService.toggleVisibility(visible);
   }
 
 }

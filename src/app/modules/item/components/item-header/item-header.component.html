@@ -35,7 +35,7 @@
       pButton
       type="button"
       icon="pi pi-comments"
-      (click)="toggleThread()"
+      (click)="toggleThreadVisibility(!discussion.visible)"
     ></button>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"

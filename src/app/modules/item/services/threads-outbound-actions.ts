@@ -1,13 +1,25 @@
 import { ThreadEvent } from './threads-events';
 
-export type ThreadAction =
-  | typeof UNSUBSCRIBE
-  | typeof SUBSCRIBE
-  | { action: 'publish', events: (ThreadEvent & { time?: number })[] };
+export interface ThreadToken {
+  participantId: string,
+  itemId: string,
+  userId: string,
+  isMine: boolean,
+  canWatchParticipant: boolean,
+}
 
-export const UNSUBSCRIBE = { action: 'unsubscribe' as const };
-export const SUBSCRIBE = { action: 'subscribe' as const };
+export type ThreadAction = (
+  | { action: 'unsubscribe' }
+  | { action: 'subscribe' }
+  | { action: 'publish', events: (ThreadEvent & { time?: number })[] }
+) & { token: ThreadToken };
 
-export function publishEventsAction(events: (ThreadEvent & { time?: number })[]): ThreadAction {
-  return { action: 'publish', events: events };
+export function unsubscribeAction(token: ThreadToken): ThreadAction {
+  return { action: 'unsubscribe', token };
+}
+export function subscribeAction(token: ThreadToken): ThreadAction {
+  return { action: 'subscribe', token };
+}
+export function publishEventsAction(token: ThreadToken, events: (ThreadEvent & { time?: number })[]): ThreadAction {
+  return { action: 'publish', events: events, token };
 }

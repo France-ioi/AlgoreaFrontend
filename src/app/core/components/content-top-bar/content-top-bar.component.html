@@ -24,7 +24,7 @@
       pButton
       type="button"
       icon="pi pi-comments"
-      (click)="toggleThread()"
+      (click)="toggleThreadVisibility(!discussion.visible)"
     ></button>
     <alg-neighbor-widget
       class="neighbor-widget"

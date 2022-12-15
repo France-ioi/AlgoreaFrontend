@@ -25,7 +25,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     messageToSend: [ '' ],
   });
 
-  readonly state$ = this.threadService.state$;
+  readonly state$ = this.threadService.eventsState$;
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
@@ -56,16 +56,11 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
-  private threadInfo$ = this.state$.pipe(
-    map(() => this.threadService.threadInfo),
-    distinctUntilChanged(),
-  );
-
-  readonly canCurrentUserLoadAnswers$ = this.threadInfo$.pipe(
+  readonly canCurrentUserLoadAnswers$ = this.threadService.threadInfo$.pipe(
     map(t => !!t && (t.currentUserId === t.participant.id || allowsWatchingAnswers(t.contentWatchPermission)),
     )
   );
-  readonly itemRoute$ = this.threadInfo$.pipe(
+  readonly itemRoute$ = this.threadService.threadInfo$.pipe(
     map(t => t?.itemRoute),
   );
 

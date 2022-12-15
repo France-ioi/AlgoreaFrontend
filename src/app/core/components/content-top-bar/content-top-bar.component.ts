@@ -53,8 +53,8 @@ export class ContentTopBarComponent {
     private discussionService: DiscussionService
   ) {}
 
-  toggleThread(): void {
-    this.discussionService.toggleVisibility();
+  toggleThreadVisibility(visible: boolean): void {
+    this.discussionService.toggleVisibility(visible);
   }
 
 }
