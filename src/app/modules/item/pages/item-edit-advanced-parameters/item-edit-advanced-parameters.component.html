@@ -79,6 +79,14 @@
         <alg-selection formControlName="children_layout" [items]="childrenLayoutOptions"></alg-selection>
       </div>
     </div>
+    <div class="form-item-view" *ngIf="['Task', 'Chapter'].includes(item.type)">
+      <span class="form-item-label">
+        <ng-container i18n>Thumbnail url</ng-container>
+      </span>
+      <div class="form-item-control">
+        <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url" size="small"></alg-input>
+      </div>
+    </div>
   </alg-section>
 
   <alg-section icon="fa fa-desktop" i18n-label label="Participation" *ngIf="item.type !== 'Skill'">

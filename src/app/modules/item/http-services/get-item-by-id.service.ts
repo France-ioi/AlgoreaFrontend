@@ -16,6 +16,7 @@ export const itemDecoder = pipe(
       D.struct({
         title: D.nullable(D.string),
         languageTag: D.string,
+        imageUrl: D.nullable(D.string),
       }),
       D.intersect(
         D.partial({
