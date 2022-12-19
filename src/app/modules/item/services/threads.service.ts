@@ -151,7 +151,7 @@ export class ThreadService implements OnDestroy {
         watchedGroupId: t.participant.id === t.currentUserId ? undefined : t.participant.id,
         token: threadInfoToToken(t),
       })),
-      switchMap(({ itemId, watchedGroupId, token }) => this.activityLogService.getActivityLog(itemId, watchedGroupId).pipe(
+      switchMap(({ itemId, watchedGroupId, token }) => this.activityLogService.getActivityLog(itemId, { watchedGroupId, limit: 100 }).pipe(
         map(log => log.map(e => {
           switch (e.activityType) {
             case 'result_started': return { label: 'result_started' as const, time: e.at.valueOf(), data: { attemptId: e.attemptId } };

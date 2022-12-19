@@ -50,6 +50,7 @@ const activityLogDecoder = pipe(
 export type ActivityLog = D.TypeOf<typeof activityLogDecoder>;
 
 const logServicesTimeout = 10 * SECONDS; // log services may be very slow
+const logDefaultLimit = 20;
 
 @Injectable({
   providedIn: 'root'
@@ -58,15 +59,13 @@ export class ActivityLogService {
 
   constructor(private http: HttpClient) { }
 
-  getActivityLog(
-    itemId: string,
-    watchedGroupId?: string,
-  ): Observable<ActivityLog[]> {
+  getActivityLog(itemId: string, options?: { watchedGroupId?: string, limit?: number }): Observable<ActivityLog[]> {
     let params = new HttpParams();
-    params = params.set('limit', '20');
+    const limit = options?.limit ?? logDefaultLimit;
+    params = params.set('limit', limit.toString());
 
-    if (watchedGroupId) {
-      params = params.set('watched_group_id', watchedGroupId);
+    if (options?.watchedGroupId) {
+      params = params.set('watched_group_id', options.watchedGroupId);
     }
 
     return this.http
