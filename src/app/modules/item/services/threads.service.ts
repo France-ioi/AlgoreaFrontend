@@ -17,6 +17,7 @@ import {
   scan,
   shareReplay,
   startWith,
+  Subscription,
   switchMap,
   take,
   tap
@@ -129,6 +130,8 @@ export class ThreadService implements OnDestroy {
     shareReplay(1),
   );
 
+  private subscriptions = new Subscription();
+
   constructor(
     private forumService: ForumService,
     private activityLogService: ActivityLogService,
@@ -140,6 +143,7 @@ export class ThreadService implements OnDestroy {
   ngOnDestroy(): void {
     this.clearEvents$.complete();
     this.threadSubscriptionSub.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   syncEvents(): Observable<void> {
@@ -174,11 +178,13 @@ export class ThreadService implements OnDestroy {
 
   sendMessage(message: string): void {
     if (!message) throw new Error('Cannot send an empty message');
-    this.threadInfo$.pipe(
-      take(1), // send on the current thread (if any) only
-      filter(isNotUndefined),
-      map(threadInfoToToken),
-    ).subscribe(token => this.forumService.send(publishEventsAction(token, [ messageEvent(message) ])));
+    this.subscriptions.add(
+      this.threadInfo$.pipe(
+        take(1), // send on the current thread (if any) only
+        filter(isNotUndefined),
+        map(threadInfoToToken),
+      ).subscribe(token => this.forumService.send(publishEventsAction(token, [ messageEvent(message) ])))
+    );
   }
 
 }
