@@ -94,7 +94,7 @@ export class ThreadService implements OnDestroy {
       };
     }),
     startWith(undefined),
-    distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y)),
+    distinctUntilChanged((x, y) => x?.participant.id === y?.participant.id && x?.itemRoute.id === y?.itemRoute.id),
     shareReplay(1),
   );
   private threadSubscriptionSub = this.threadInfo$.pipe(
