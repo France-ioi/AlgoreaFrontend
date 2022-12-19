@@ -29,6 +29,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: [ '' ],
+    image_url: [ '' ],
     url: [ '', Validators.maxLength(2000) ],
     text_id: [ '', Validators.maxLength(200) ],
     uses_api: [ false ],
@@ -245,9 +246,11 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const titleControl = this.itemForm.get('title');
     const subtitleControl = this.itemForm.get('subtitle');
     const descriptionControl = this.itemForm.get('description');
+    const imageUrlControl = this.itemForm.get('image_url');
     const initialValues = this.initialFormData?.string;
 
-    if (titleControl === null || subtitleControl === null || descriptionControl === null || !initialValues) return undefined;
+    if (titleControl === null || subtitleControl === null || descriptionControl === null || imageUrlControl === null
+      || !initialValues) return undefined;
 
     const res: ItemStringChanges = {};
 
@@ -259,6 +262,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
     const description = (descriptionControl.value as string).trim() || null;
     if (description !== initialValues.description) res.description = description;
+
+    const imageUrl = (imageUrlControl.value as string).trim() || null;
+    if (imageUrl !== initialValues.imageUrl) res.image_url = imageUrl;
 
     return res;
   }
@@ -315,6 +321,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     this.itemForm.reset({
       title: item.string.title || '',
       description: item.string.description || '',
+      image_url: item.string.imageUrl || '',
       subtitle: item.string.subtitle || '',
       url: item.url || '',
       text_id: '',
