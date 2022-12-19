@@ -3,19 +3,13 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
-import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
-import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
+import { isASkill, isSkill, ItemType, ItemTypeCategory, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
-import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
-import { itemViewPermMax } from 'src/app/shared/models/domain/item-view-permission';
-import { itemGrantViewPermMax } from 'src/app/shared/models/domain/item-grant-view-permission';
-import { itemWatchPermMax } from 'src/app/shared/models/domain/item-watch-permission';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
-import { itemEditPermMax } from 'src/app/shared/models/domain/item-edit-permission';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -62,11 +56,8 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   @ViewChild('op') op?: OverlayPanel;
 
-  data: PossiblyInvisibleChildData[] = [];
-  selectedRows: PossiblyInvisibleChildData[] = [];
-  scoreWeightEnabled = false;
-  addedItemIds: string[] = [];
-  propagationEditItemIdx?: number;
+  activities: PossiblyInvisibleChildData[] = [];
+  skills: PossiblyInvisibleChildData[] = [];
 
   private subscription?: Subscription;
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
@@ -123,9 +114,8 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.subscription = this.state$.pipe(readyData()).subscribe(data => {
-      this.data = data;
-      this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
-      this.onChildrenListUpdate();
+      this.skills = data.filter(item => item.isVisible && isASkill(item));
+      this.activities = data.filter(item => item.isVisible && !isASkill(item));
     });
   }
 
@@ -148,87 +138,8 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
     this.refresh$.next();
   }
 
-  addChild(child: AddedContent<ItemType>): void {
-    const permissionsForCreatedItem: ItemCorePerm = {
-      canView: itemViewPermMax,
-      canWatch: itemWatchPermMax,
-      canEdit: itemEditPermMax,
-      canGrantView: itemGrantViewPermMax,
-      isOwner: true,
-    };
-
-    this.data.push({
-      ...child,
-      scoreWeight: DEFAULT_SCORE_WEIGHT,
-      isVisible: true,
-      contentViewPropagation: 'none', // default propagation: none so that users cannot see new items before they are ready
-      permissions: child.permissions ?? permissionsForCreatedItem,
-    });
-    this.onChildrenListUpdate();
-    this.childrenChanges.emit(this.data);
-  }
-
-  onSelectAll(): void {
-    this.selectedRows = this.selectedRows.length === this.data.length ? [] : this.data;
-  }
-
-  onRemove(): void {
-    this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
-    this.onChildrenListUpdate();
-    this.childrenChanges.emit(this.data);
-    this.selectedRows = [];
-  }
-
-  orderChanged(): void {
-    this.childrenChanges.emit(this.data);
-  }
-
   reset(): void {
     this.reloadData();
-  }
-
-  onEnableScoreWeightChange(event: boolean): void {
-    if (!event) {
-      this.resetScoreWeight();
-    }
-  }
-
-  resetScoreWeight(): void {
-    this.data = this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT }));
-    this.onChildrenListUpdate();
-    this.onScoreWeightChange();
-  }
-
-  onScoreWeightChange(): void {
-    this.childrenChanges.emit(this.data);
-  }
-
-  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, itemIdx: number): void {
-    this.propagationEditItemIdx = itemIdx;
-    this.op?.toggle(event, actualTarget);
-  }
-
-  onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
-    this.op?.hide();
-    this.data = this.data.map((c, index) => {
-      if (index === this.propagationEditItemIdx) {
-        return {
-          ...c,
-          contentViewPropagation,
-        };
-      }
-      return c;
-    });
-    this.propagationEditItemIdx = undefined;
-    this.childrenChanges.emit(this.data);
-  }
-
-  private onChildrenListUpdate(): void {
-    this.recomputeAddedItemIds();
-  }
-
-  private recomputeAddedItemIds(): void {
-    this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
   }
 
   onClick(child: PossiblyInvisibleChildData): void {
@@ -250,5 +161,14 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
     });
+  }
+
+  onDataChange(children: PossiblyInvisibleChildData[], type: ItemTypeCategory = 'activity'): void {
+    if (isSkill(type)) {
+      this.skills = children;
+    } else {
+      this.activities = children;
+    }
+    this.childrenChanges.emit([ ...this.skills, ...this.activities ]);
   }
 }
