@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, UrlTree } from '@angular/router';
 import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay } from 'rxjs';
 import {
@@ -294,6 +294,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.itemDataSource.state$.pipe(readyData()),
       this.layoutService.fullFrame$,
       this.taskTabs$,
+      fromEvent(window, 'resize'),
     ).pipe(
       delay(0),
       map(() => this.contentContainer?.nativeElement.offsetTop || 0),
@@ -309,11 +310,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   showItemThreadWidget = !!appConfig.forumServerUrl;
-
-  @HostListener('window:resize')
-  resize(): void {
-    this.contentContainerTop = this.contentContainer?.nativeElement.offsetTop || 0;
-  }
 
   constructor(
     private router: Router,
