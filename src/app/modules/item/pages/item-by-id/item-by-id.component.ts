@@ -48,9 +48,14 @@ import {
   canCurrentUserViewContent,
   canCurrentUserViewSolution
 } from 'src/app/shared/models/domain/item-view-permission';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { DiscussionService } from '../../services/discussion.service';
+import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 
 const itemBreadcrumbCat = $localize`Items`;
 const loadForbiddenAnswerError = new Error('load answer forbidden');
+
+const animationTiming = '.6s .2s ease-in-out';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -59,7 +64,23 @@ const loadForbiddenAnswerError = new Error('load answer forbidden');
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
-  providers: [ ItemDataSource ]
+  providers: [ ItemDataSource ],
+  animations: [
+    trigger('threadOpenClose', [
+      state('opened', style({
+        marginRight: '25rem',
+      })),
+      state('closed', style({
+        marginRight: 0,
+      })),
+      transition('opened => closed', [
+        animate(animationTiming)
+      ]),
+      transition('closed => opened', [
+        animate(animationTiming)
+      ]),
+    ]),
+  ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
 
@@ -168,6 +189,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
+  threadOpened$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
+
   contentContainerTop = 0;
 
   private subscriptions: Subscription[] = [
@@ -267,9 +290,18 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.layoutService.configure({ fullFrameActive: activateFullFrame });
     }),
 
-    this.layoutService.fullFrame$.pipe(delay(0)).subscribe(() => {
-      this.contentContainerTop = this.contentContainer?.nativeElement.offsetTop || 0;
-    }),
+    merge(
+      this.itemDataSource.state$.pipe(readyData()),
+      this.layoutService.fullFrame$,
+      this.taskTabs$,
+      fromEvent(window, 'resize'),
+    ).pipe(
+      delay(0),
+      map(() => this.contentContainer?.nativeElement.offsetTop || 0),
+      distinctUntilChanged(),
+    ).subscribe(contentContainerTop =>
+      this.contentContainerTop = contentContainerTop
+    ),
   ];
 
   editorUrl?: string;
@@ -292,6 +324,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private getAnswerService: GetAnswerService,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
+    private discussionService: DiscussionService,
   ) {}
 
   ngOnDestroy(): void {
