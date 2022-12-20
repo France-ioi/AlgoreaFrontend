@@ -1,7 +1,7 @@
 import { arraysEqual } from 'src/app/shared/helpers/array';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { ContentRoute } from 'src/app/shared/routing/content-route';
-import { RootItem } from '../../http-services/item-navigation.service';
+import { GroupWithRootItem } from '../../http-services/item-navigation.service';
 
 type Id = string;
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
@@ -17,7 +17,7 @@ export interface NavTreeElement {
   // specific uses
   locked?: boolean, // considering 'not set' as false
   associatedGroupName?: string,
-  associatedGroupType?: RootItem['type'],
+  associatedGroupType?: GroupWithRootItem['type'],
   score?: { bestScore: number, currentScore: number, validated: boolean },
   groupRelation?: { isMember: boolean, managership: 'none'|'direct'|'ancestor'|'descendant' },
 }
