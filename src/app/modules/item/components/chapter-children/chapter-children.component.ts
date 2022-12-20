@@ -1,4 +1,4 @@
-import { ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, ReplaySubject, Subject } from 'rxjs';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
@@ -8,6 +8,7 @@ import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
+import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -28,34 +29,34 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
   private refresh$ = new Subject<void>();
-  readonly state$ = this.params$.pipe(
-    distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
-    switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
-    map((itemChildren: ItemChild[]) => {
-      const children = itemChildren.map(child => {
-        const res = bestAttemptFromResults(child.results);
-        return {
-          ...child,
-          isLocked: !canCurrentUserViewContent(child),
-          result: res === null ? undefined : {
-            attemptId: res.attemptId,
-            validated: res.validated,
-            score: res.scoreComputed,
-          },
-        };
-      });
-
+  readonly state$ = combineLatest([
+    this.params$.pipe(distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId)),
+    this.groupWatchingService.watchedGroup$.pipe(map(watchedGroup => watchedGroup?.route.id)),
+  ]).pipe(
+    switchMap(([{ id, attemptId }, watchedGroupId ]) => this.getItemChildrenService.get(id, attemptId, { watchedGroupId })),
+    map<ItemChild[],(ItemChild&ItemChildAdditions)[]>(itemChildren => itemChildren.map(child => {
+      const res = bestAttemptFromResults(child.results);
       return {
-        children,
-        missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
-          .every(item => item.result && item.result.validated)),
+        ...child,
+        isLocked: !canCurrentUserViewContent(child),
+        result: res === null ? undefined : {
+          attemptId: res.attemptId,
+          validated: res.validated,
+          score: res.scoreComputed,
+        },
       };
-    }),
+    })),
+    map(children => ({
+      children,
+      missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
+        .every(item => item.result && item.result.validated)),
+    })),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
+    private groupWatchingService: GroupWatchingService,
     private itemRouter: ItemRouter,
   ) {}
 

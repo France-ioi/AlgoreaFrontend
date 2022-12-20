@@ -5,8 +5,9 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
-import { canCurrentUserViewInfo, ItemWithViewPerm } from 'src/app/shared/models/domain/item-view-permission';
+import { canCurrentUserViewInfo, itemViewPermDecoder, ItemWithViewPerm } from 'src/app/shared/models/domain/item-view-permission';
 import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
+import { pipe } from 'fp-ts/lib/function';
 
 const baseItemChildDecoder = D.struct({
   id: D.string,
@@ -21,21 +22,37 @@ const baseItemChildDecoder = D.struct({
   watchPropagation: D.boolean,
 });
 
-const itemChildDecoder = D.intersect(baseItemChildDecoder)(
-  D.struct({
-    bestScore: D.number,
-    string: D.struct({
-      title: D.nullable(D.string),
+const itemChildDecoder = pipe(
+  baseItemChildDecoder,
+  D.intersect(
+    D.struct({
+      bestScore: D.number,
+      string: D.struct({
+        title: D.nullable(D.string),
+      }),
+      type: D.literal('Chapter','Task','Course','Skill'),
+      results: D.array(D.struct({
+        attemptId: D.string,
+        latestActivityAt: dateDecoder,
+        startedAt: D.nullable(dateDecoder),
+        scoreComputed: D.number,
+        validated: D.boolean,
+      })),
     }),
-    type: D.literal('Chapter','Task','Course','Skill'),
-    results: D.array(D.struct({
-      attemptId: D.string,
-      latestActivityAt: dateDecoder,
-      startedAt: D.nullable(dateDecoder),
-      scoreComputed: D.number,
-      validated: D.boolean,
-    })),
-  }),
+  ),
+  D.intersect(
+    D.partial({
+      watchedGroup: pipe(
+        itemViewPermDecoder,
+        D.intersect(
+          D.partial({
+            allValidated: D.boolean,
+            avgScore: D.number,
+          })
+        )
+      ),
+    })
+  )
 );
 
 const invisibleItemChildDecoder = baseItemChildDecoder;
@@ -61,24 +78,23 @@ export class GetItemChildrenService {
 
   constructor(private http: HttpClient) { }
 
-  get(id: string, attemptId: string): Observable<ItemChild[]> {
+  private getRaw(id: string, attemptId: string, options?: { showInvisible?: boolean, watchedGroupId?: string }): Observable<unknown[]> {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
-    return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params: params })
-      .pipe(
-        decodeSnakeCase(D.array(itemChildDecoder))
-      );
+    if (options?.watchedGroupId !== undefined) params = params.set('watched_group_id', options?.watchedGroupId);
+    if (options?.showInvisible) params = params.set('show_invisible_items', '1');
+    return this.http.get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params });
   }
 
-  getWithInvisibleItems(id: string, attemptId: string): Observable<PossiblyInvisibleItemChild[]> {
-    const params = new HttpParams()
-      .set('attempt_id', attemptId)
-      .set('show_invisible_items', '1');
-    return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params })
-      .pipe(
-        decodeSnakeCase(D.array(possiblyInvisibleItemChild))
-      );
+  get(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<ItemChild[]> {
+    return this.getRaw(id, attemptId, options).pipe(
+      decodeSnakeCase(D.array(itemChildDecoder))
+    );
+  }
+
+  getWithInvisibleItems(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<PossiblyInvisibleItemChild[]> {
+    return this.getRaw(id, attemptId, { ...options, showInvisible: true }).pipe(
+      decodeSnakeCase(D.array(possiblyInvisibleItemChild))
+    );
   }
 }
