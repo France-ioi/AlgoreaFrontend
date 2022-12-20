@@ -8,6 +8,7 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
 import { HttpErrorResponse } from '@angular/common/http';
 import { TypeFilter } from '../../helpers/composition-filter';
 import { mapToFetchState } from '../../../../shared/operators/state';
+import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 
 @Component({
   selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group][permReceiverName]',
@@ -40,6 +41,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   constructor(
     private groupPermissionsService: GroupPermissionsService,
     private actionFeedbackService: ActionFeedbackService,
+    private currentContentService: CurrentContentService,
   ) {
   }
 
@@ -84,11 +86,13 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
         next: () => {
           this.updateInProcess = false;
           this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
+          this.currentContentService.forceNavMenuReload();
           this.closeDialog(true);
         },
         error: err => {
           this.updateInProcess = false;
           this.actionFeedbackService.unexpectedError();
+          this.currentContentService.forceNavMenuReload();
           if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
