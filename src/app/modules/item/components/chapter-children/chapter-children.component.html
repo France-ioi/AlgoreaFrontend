@@ -20,11 +20,11 @@
       <li *ngFor="let item of data.children; index as ln">
       <span class="activity-progress">
         <alg-score-ring
-          *ngIf="!item.isLocked && item.result"
+          *ngIf="(!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)"
           [diameter]="30"
-          [currentScore]="item.result.score"
-          [isValidated]="item.result.validated"
-          [bestScore]="item.bestScore"
+          [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
+          [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
+          [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
         ></alg-score-ring>
       </span>
       <span
