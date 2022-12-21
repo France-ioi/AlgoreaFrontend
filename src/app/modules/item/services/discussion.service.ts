@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Injector, OnDestroy } from '@angular/core';
-import { combineLatestWith, EMPTY, filter, map, merge, Observable, of, Subject, Subscription, switchMap, take, } from 'rxjs';
+import { combineLatestWith, EMPTY, filter, map, merge, Observable, of, shareReplay, Subject, Subscription, switchMap, take } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { readyData } from 'src/app/shared/operators/state';
 import { ThreadService } from './threads.service';
@@ -47,7 +47,7 @@ export class DiscussionService implements OnDestroy {
     this.state$ = merge(
       this.manualVisibilityToggle.pipe(map(visible => ({ visible }))),
       this.threadService.threadInfo$.pipe(map(info => (info ? { visible: false } : undefined)))
-    );
+    ).pipe(shareReplay(1)); // keep the last value for latecomers
     this.unreadCount$ = this.state$.pipe(
       // when hidden (manually or because thread changes), store the current time as the last read time
       map(state => (state && !state.visible ? Date.now() : Number.MAX_SAFE_INTEGER)),
