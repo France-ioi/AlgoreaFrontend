@@ -11,6 +11,7 @@ import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { itemViewPermDecoder } from 'src/app/shared/models/domain/item-view-permission';
 import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
+import { groupBy } from 'src/app/shared/helpers/array';
 
 const itemNavigationChildDecoderBase = pipe(
   D.struct({
@@ -71,26 +72,23 @@ const itemNavigationDataDecoder = D.struct({
 
 export type ItemNavigationData = D.TypeOf<typeof itemNavigationDataDecoder>;
 
-const rootActivityDecoder = D.struct({
+const rootItemGroupInfoDecoder = D.struct({
   groupId: D.string,
   name: D.string,
   type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
-  activity: itemNavigationChildDecoderBase
 });
 
-export type RootActivity = D.TypeOf<typeof rootActivityDecoder>;
+const rootActivityDecoder = D.intersect(rootItemGroupInfoDecoder)(D.struct({ activity: itemNavigationChildDecoderBase }));
+type GroupWithRootActivity = D.TypeOf<typeof rootActivityDecoder>;
 
-const rootSkillDecoder = D.struct({
-  groupId: D.string,
-  name: D.string,
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
-  skill: itemNavigationChildDecoderBase
-});
-
-export type RootSkill = D.TypeOf<typeof rootSkillDecoder>;
+const rootSkillDecoder = D.intersect(rootItemGroupInfoDecoder)(D.struct({ skill: itemNavigationChildDecoderBase }));
+type GroupWithRootSkill = D.TypeOf<typeof rootSkillDecoder>;
 
 // common type to RootActivity and RootSkill if the activity/skill key is renamed 'item'
-export type RootItem = Omit<RootActivity, 'activity'> & { item: RootActivity['activity']};
+export type GroupWithRootItem = Omit<GroupWithRootActivity, 'activity'> & { item: GroupWithRootActivity['activity']};
+
+// see `mapToItemList` for explanation
+export type RootItem = D.TypeOf<typeof itemNavigationChildDecoderBase> & { groups: D.TypeOf<typeof rootItemGroupInfoDecoder>[] };
 
 @Injectable({
   providedIn: 'root'
@@ -115,7 +113,7 @@ export class ItemNavigationService {
     );
   }
 
-  getRootActivities(watchedGroupId?: string): Observable<RootActivity[]> {
+  getRootActivities(watchedGroupId?: string): Observable<GroupWithRootActivity[]> {
     let httpParams = new HttpParams();
 
     if (watchedGroupId) {
@@ -127,7 +125,7 @@ export class ItemNavigationService {
     );
   }
 
-  getRootSkills(watchedGroupId?: string): Observable<RootSkill[]> {
+  getRootSkills(watchedGroupId?: string): Observable<GroupWithRootSkill[]> {
     let httpParams = new HttpParams();
 
     if (watchedGroupId) {
@@ -140,9 +138,21 @@ export class ItemNavigationService {
   }
 
   getRoots(type: ItemTypeCategory, watchedGroupId?: string): Observable<RootItem[]> {
-    return isSkill(type) ?
+    const rootAsGroupList$: Observable<GroupWithRootItem[]> = isSkill(type) ?
       this.getRootSkills(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
+    return rootAsGroupList$.pipe(map(groupList => this.mapToItemList(groupList)));
+  }
+
+  /**
+   * Map a list of groups, each time with their root activity/skill (possibily used several time) to a list of the root activities/skills
+   * with a list of the groups which use them as root activity/skill
+   */
+  private mapToItemList(groups: GroupWithRootItem[]): RootItem[] {
+    return Array.from(groupBy(groups, g => g.item.id).values()).map(groupsForItem => ({
+      ...groupsForItem[0]!.item,
+      groups: groupsForItem,
+    }));
   }
 
 }

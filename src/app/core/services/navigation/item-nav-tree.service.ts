@@ -15,6 +15,7 @@ import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 import { GroupWatchingService } from '../group-watching.service';
+import { isGroupTypeVisible } from 'src/app/shared/models/domain/group-types';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
@@ -67,10 +68,9 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return this.groupWatchingService.watchedGroup$.pipe(
       take(1),
       switchMap(watchedGroup => this.itemNavService.getRoots(this.category, watchedGroup?.route.id)),
-      map(groups => groups.map(g => ({
-        ...this.mapChild(g.item, defaultAttemptId, []),
-        associatedGroupName: g.name,
-        associatedGroupType: g.type,
+      map(items => items.map(i => ({
+        ...this.mapChild(i, defaultAttemptId, []),
+        associatedGroupNames: i.groups.filter(g => isGroupTypeVisible(g.type)).map(g => g.name),
       })))
     );
   }
