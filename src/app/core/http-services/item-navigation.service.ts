@@ -11,6 +11,7 @@ import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { itemViewPermDecoder } from 'src/app/shared/models/domain/item-view-permission';
 import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
+import { groupBy } from 'src/app/shared/helpers/array';
 
 const itemNavigationChildDecoderBase = pipe(
   D.struct({
@@ -86,7 +87,8 @@ type GroupWithRootSkill = D.TypeOf<typeof rootSkillDecoder>;
 // common type to RootActivity and RootSkill if the activity/skill key is renamed 'item'
 export type GroupWithRootItem = Omit<GroupWithRootActivity, 'activity'> & { item: GroupWithRootActivity['activity']};
 
-
+// see `mapToItemList` for explanation
+export type RootItem = D.TypeOf<typeof itemNavigationChildDecoderBase> & { groups: D.TypeOf<typeof rootItemGroupInfoDecoder>[] };
 
 @Injectable({
   providedIn: 'root'
@@ -135,10 +137,22 @@ export class ItemNavigationService {
     );
   }
 
-  getRoots(type: ItemTypeCategory, watchedGroupId?: string): Observable<GroupWithRootItem[]> {
-    return isSkill(type) ?
+  getRoots(type: ItemTypeCategory, watchedGroupId?: string): Observable<RootItem[]> {
+    const rootAsGroupList$: Observable<GroupWithRootItem[]> = isSkill(type) ?
       this.getRootSkills(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
+    return rootAsGroupList$.pipe(map(groupList => this.mapToItemList(groupList)));
+  }
+
+  /**
+   * Map a list of groups, each time with their root activity/skill (possibily used several time) to a list of the root activities/skills
+   * with a list of the groups which use them as root activity/skill
+   */
+  private mapToItemList(groups: GroupWithRootItem[]): RootItem[] {
+    return Array.from(groupBy(groups, g => g.item.id).values()).map(groupsForItem => ({
+      ...groupsForItem[0]!.item,
+      groups: groupsForItem,
+    }));
   }
 
 }

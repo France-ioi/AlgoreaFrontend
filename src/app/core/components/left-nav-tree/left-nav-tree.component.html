@@ -52,8 +52,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
-                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              <span *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+                (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+                {{ node.data.associatedGroupNames.join(', ') }})
               </span>
             </span>
             <span
@@ -92,8 +93,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.label }}
-              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
-                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              <span *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+                (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+                {{ node.data.associatedGroupNames.join(', ') }})
               </span>
             </span>
             <span class="node-state" *ngIf="node.data.locked">
@@ -135,8 +137,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}
-              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
-                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              <span *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+                (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+                {{ node.data.associatedGroupNames.join(', ') }})
               </span>
             </span>
             <span
@@ -239,8 +242,9 @@
           <span class="label-container">
             <span class="node-label-title">
               {{ node.data.title }}
-              <span *ngIf="!['Base', 'ContestParticipants'].includes(node.data.associatedGroupType) && node.data.associatedGroupName">
-                (<span i18n="@@viaGroup">via group</span> "{{ node.data.associatedGroupName }}")
+              <span *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+                (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+                {{ node.data.associatedGroupNames.join(', ') }})
               </span>
             </span>
             <span
