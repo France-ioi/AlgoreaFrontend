@@ -142,7 +142,11 @@
           (skipSave)="skipBeforeUnload()"
         ></alg-item-progress>
 
-        <alg-item-task-edit *ngIf="taskEditTab?.isActive" [editorUrl]="editorUrl"></alg-item-task-edit>
+        <alg-item-task-edit
+          *ngIf="taskEditTab?.isActive"
+          [editorUrl]="editorUrl"
+          (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
+        ></alg-item-task-edit>
 
         <ng-container *ngIf="dependenciesTab.isActive">
           <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>

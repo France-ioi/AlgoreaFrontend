@@ -31,7 +31,7 @@ import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
-import { routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
+import { RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
@@ -376,6 +376,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   skipBeforeUnload(): void {
     this.skipBeforeUnload$.next();
+  }
+
+  navigateToDefaultTab(route: RawItemRoute): void {
+    this.itemRouter.navigateTo(route, { page: [] });
   }
 
   private showTaskTab(): boolean {
