@@ -199,6 +199,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
     ).subscribe(state => {
       // reset tabs when item changes. By default do not display it unless we currently are on progress page
+      this.editorUrl = undefined;
       if (state.isFetching) this.tabs.next(this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
       // update tabs when item is fetched
       // Case 1: item is not a task: display the progress tab anyway
