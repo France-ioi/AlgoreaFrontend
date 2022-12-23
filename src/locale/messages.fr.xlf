@@ -18,7 +18,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">310</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">311</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="translated">Mauvaise langue?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
@@ -103,7 +103,7 @@
       </trans-unit><trans-unit id="569741268651615075" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">168</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">172</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
         <source>home page</source><target state="translated">accueil</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
@@ -133,7 +133,7 @@
       </trans-unit><trans-unit id="7463044993322326313" datatype="html">
         <source> This content does not exist or you are not allowed to view it. </source><target state="translated"> Ce contenu n'existe pas ou vous n'êtes pas autorisé à le voir. </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">164</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">168</context></context-group></trans-unit><trans-unit id="5199111763891627410" datatype="html">
         <source>This page has unsaved changes. Do you want to leave this page and lose its changes?</source><target state="translated">Cette page comporte des changements non sauvegardés. Voulez-vous quitter cette page et perdre les changements ?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="7296226328505512523" datatype="html">
@@ -463,20 +463,20 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-details/item-details.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="887257604747944910" datatype="html">
         <source>Leave unsaved task</source><target state="translated">Ne pas sauvegarder la réponse</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">188</context></context-group></trans-unit><trans-unit id="6669833589802408443" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">192</context></context-group></trans-unit><trans-unit id="6669833589802408443" datatype="html">
         <source>You do not appear to be connected to the Internet, if you leave this task you may loose your progress. Are you sure you want to continue?</source><target state="translated">Vous ne semblez pas être connecté à Internet, si vous quittez cette tâche, vous perdrez vos changements. Êtes-vous sûr de vouloir continuer ?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">190</context></context-group></trans-unit><trans-unit id="8127788667268693950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">194</context></context-group></trans-unit><trans-unit id="8127788667268693950" datatype="html">
         <source>Loose progress and leave the task</source><target state="translated">Perdre les changement et quitter la tâche</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">195</context></context-group></trans-unit><trans-unit id="7934833136974560675" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">199</context></context-group></trans-unit><trans-unit id="7934833136974560675" datatype="html">
         <source>Retry</source><target state="translated">Réessayer</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">201</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">205</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
         <source>An unknown error occurred. </source><target state="translated">Une erreur est survenue. </target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">309</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">128</context></context-group></trans-unit><trans-unit id="6885936620581271929" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">310</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">128</context></context-group></trans-unit><trans-unit id="6885936620581271929" datatype="html">
         <source>Unable to load the task</source><target state="new">Unable to load the task</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8679237608788920660" datatype="html">
@@ -742,13 +742,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="853471125604435384" datatype="html">
         <source>Your situation</source><target state="new">Your situation</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="6213602803715375846" datatype="html">
-        <source>You have to visit the 'Content' tab before editing this task.</source><target state="new">You have to visit the 'Content' tab before editing this task.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-task-edit/item-task-edit.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="1125515177419706232" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-progress/item-progress.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="1125515177419706232" datatype="html">
         <source>Maformed url: "<x id="PH" equiv-text="url"/>"</source><target state="new">Maformed url: "<x id="PH" equiv-text="url"/>"</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/services/item-task-init.service.ts</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="1648546115727864611" datatype="html">
@@ -1001,7 +995,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
         <source> home page </source><target state="translated"> page d'accueil </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">176</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">180</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
@@ -1016,7 +1010,7 @@
       </trans-unit><trans-unit id="9041444757418829014" datatype="html">
         <source>Error while loading the item.</source><target state="translated">Erreur lors du chargement du contenu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">166</context></context-group></trans-unit><trans-unit id="3249513483374643425" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">170</context></context-group></trans-unit><trans-unit id="3249513483374643425" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="9165363087268857396" datatype="html">

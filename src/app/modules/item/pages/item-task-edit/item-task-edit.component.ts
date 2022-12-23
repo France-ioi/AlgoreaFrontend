@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -8,6 +8,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class ItemTaskEditComponent implements OnChanges {
   @Input() editorUrl?: string;
+  @Output() redirectToDefaultTab = new EventEmitter<void>();
+
   sanitizedUrl?: SafeResourceUrl;
 
   constructor(
@@ -17,6 +19,7 @@ export class ItemTaskEditComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.editorUrl) {
       this.sanitizedUrl = this.editorUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(this.editorUrl) : undefined;
+      if (!this.sanitizedUrl) this.redirectToDefaultTab.emit();
     }
   }
 

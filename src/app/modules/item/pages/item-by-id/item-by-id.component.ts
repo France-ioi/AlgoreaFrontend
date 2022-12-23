@@ -31,7 +31,7 @@ import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
-import { routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
+import { RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
@@ -199,6 +199,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
     ).subscribe(state => {
       // reset tabs when item changes. By default do not display it unless we currently are on progress page
+      this.editorUrl = undefined;
       if (state.isFetching) this.tabs.next(this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
       // update tabs when item is fetched
       // Case 1: item is not a task: display the progress tab anyway
@@ -375,6 +376,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   skipBeforeUnload(): void {
     this.skipBeforeUnload$.next();
+  }
+
+  navigateToDefaultTab(route: RawItemRoute): void {
+    this.itemRouter.navigateTo(route, { page: [] });
   }
 
   private showTaskTab(): boolean {
