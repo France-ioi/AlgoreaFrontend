@@ -115,7 +115,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit(): void {
     this.subscription = this.state$.pipe(readyData()).subscribe(data => {
       this.skills = data.filter(item => item.isVisible && isASkill(item));
-      this.activities = data.filter(item => item.isVisible && !isASkill(item));
+      this.activities = data.filter(item => !item.isVisible || !isASkill(item));
     });
   }
 
