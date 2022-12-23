@@ -36,6 +36,13 @@
             <span class="scored-text" *ngIf="event.data.score !== undefined" i18n>
               which scored <strong>{{ event.data.score }}</strong>
             </span>.
+            <ng-container *ngIf="canCurrentUserLoadAnswers && itemRoute">
+              <div>
+                <a class="alg-link white-color hover-underline" [routerLink]="itemRoute | itemRouteLink:[]:event.data.answerId" i18n>
+                  <strong>Load this submission</strong>
+                </a>
+              </div>
+            </ng-container>
           </ng-container>
         </div>
         <div class="date">{{ event.time | date : 'short' }}</div>

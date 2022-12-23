@@ -71,6 +71,7 @@ import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app
 import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 import { MessageInfoComponent } from './components/message-info/message-info.component';
 import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
+import { ItemRouteLinkPipe } from 'src/app/shared/pipes/itemRouteLink';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
     ProgressLevelComponent,
     FormErrorComponent,
     RawItemLinkPipe,
+    ItemRouteLinkPipe,
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
@@ -171,6 +173,7 @@ import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
     ProgressLevelComponent,
     FormErrorComponent,
     RawItemLinkPipe,
+    ItemRouteLinkPipe,
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,

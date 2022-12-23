@@ -7,11 +7,13 @@
   <ng-template #eventsBlock>
     <div class="widget-body">
       <div class="widget-scroll" #messagesScroll>
-        <ng-container *ngIf="((userCache$ | async) || []) as userCache">
+        <ng-container *ngIf="{ userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async, itemRoute: itemRoute$ | async } as threadMetadata">
           <alg-thread-message
             class="thread-message"
             [event]="event"
-            [userCache]="userCache"
+            [userCache]="threadMetadata.userCache ?? []"
+            [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
+            [itemRoute]="threadMetadata.itemRoute ?? undefined"
             *ngFor="let event of state.data"
           ></alg-thread-message>
         </ng-container>

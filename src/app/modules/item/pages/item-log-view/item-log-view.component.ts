@@ -65,7 +65,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   private getData$(item: Item, watchingGroup: WatchedGroup|null): Observable<Data> {
     return combineLatest([
-      this.activityLogService.getActivityLog(item.id, watchingGroup?.route.id),
+      this.activityLogService.getActivityLog(item.id, { watchedGroupId: watchingGroup?.route.id }),
       this.sessionService.userProfile$,
     ]).pipe(
       map(([ data, profile ]) => ({
