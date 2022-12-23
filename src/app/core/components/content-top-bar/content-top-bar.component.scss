@@ -22,7 +22,7 @@
 }
 
 .full-frame-content-top-bar {
-  margin-left: 1rem;
+  margin-left: 0.8rem;
   display: flex;
   align-items: center;
   height: 3.75rem;
@@ -30,7 +30,6 @@
   min-width: 0;
 
   .right-pane-title {
-    margin-left: 1.25rem;
     flex: 1;
     font-size: 1.6rem;
     margin-bottom: 0.4167rem;
@@ -54,5 +53,5 @@
 }
 
 .score-placeholder {
-  width: 2.85rem;
+  width: 3.45rem;
 }
