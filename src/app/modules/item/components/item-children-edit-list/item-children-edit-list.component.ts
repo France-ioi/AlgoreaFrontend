@@ -32,6 +32,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
+    this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
     this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
   }
 
@@ -43,16 +44,16 @@ export class ItemChildrenEditListComponent implements OnChanges {
       canGrantView: itemGrantViewPermMax,
       isOwner: true,
     };
-
-    this.data.push({
-      ...child,
-      scoreWeight: DEFAULT_SCORE_WEIGHT,
-      isVisible: true,
-      contentViewPropagation: 'none', // default propagation: none so that users cannot see new items before they are ready
-      permissions: child.permissions ?? permissionsForCreatedItem,
-    });
-    this.onChildrenListUpdate();
-    this.childrenChanges.emit(this.data);
+    this.childrenChanges.emit([
+      ...this.data,
+      {
+        ...child,
+        scoreWeight: DEFAULT_SCORE_WEIGHT,
+        isVisible: true,
+        contentViewPropagation: 'none', // default propagation: none so that users cannot see new items before they are ready
+        permissions: child.permissions ?? permissionsForCreatedItem,
+      }
+    ]);
   }
 
   onSelectAll(): void {
@@ -60,26 +61,18 @@ export class ItemChildrenEditListComponent implements OnChanges {
   }
 
   onRemove(): void {
-    this.data = this.data.filter(elm => !this.selectedRows.includes(elm));
-    this.onChildrenListUpdate();
-    this.childrenChanges.emit(this.data);
+    this.childrenChanges.emit(this.data.filter(elm => !this.selectedRows.includes(elm)));
     this.selectedRows = [];
-  }
-
-  orderChanged(): void {
-    this.childrenChanges.emit(this.data);
   }
 
   onEnableScoreWeightChange(event: boolean): void {
     if (!event) {
-      this.resetScoreWeight();
+      this.childrenChanges.emit(this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT })));
     }
   }
 
-  resetScoreWeight(): void {
-    this.data = this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT }));
-    this.onChildrenListUpdate();
-    this.onScoreWeightChange();
+  orderChanged(): void {
+    this.childrenChanges.emit(this.data);
   }
 
   onScoreWeightChange(): void {
@@ -93,7 +86,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
     this.op?.hide();
-    this.data = this.data.map((c, index) => {
+    this.childrenChanges.emit(this.data.map((c, index) => {
       if (index === this.propagationEditItemIdx) {
         return {
           ...c,
@@ -101,17 +94,8 @@ export class ItemChildrenEditListComponent implements OnChanges {
         };
       }
       return c;
-    });
+    }));
     this.propagationEditItemIdx = undefined;
-    this.childrenChanges.emit(this.data);
-  }
-
-  private onChildrenListUpdate(): void {
-    this.recomputeAddedItemIds();
-  }
-
-  private recomputeAddedItemIds(): void {
-    this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
   }
 
   onClick(child: PossiblyInvisibleChildData): void {
