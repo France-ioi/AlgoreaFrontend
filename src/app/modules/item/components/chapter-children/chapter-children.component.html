@@ -38,8 +38,15 @@
               <div class="grid-card-lock-bg" *ngIf="item.isLocked"></div>
               <div
                 class="grid-card-image"
-                [style.background-image]="'url(' + (item.string?.imageUrl ? item.string.imageUrl : 'assets/images/chapter-default.jpg') + ')'"
+                [style.background-image]="'url(' + item.string.imageUrl + ')'"
+                *ngIf="item.string.imageUrl; else defaultImage"
               ></div>
+              <ng-template #defaultImage>
+                <div
+                  class="grid-card-image"
+                  [style.background-image]="'url(assets/images/chapter-default.jpg)'"
+                ></div>
+              </ng-template>
             </div>
             <div class="grid-card-footer">
               <div></div>
