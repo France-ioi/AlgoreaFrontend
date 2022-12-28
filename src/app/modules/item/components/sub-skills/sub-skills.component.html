@@ -1,45 +1,21 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
+  <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-    <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <alg-error
+    *ngIf="state.isError"
+    class="dark"
+    i18n-message message="Error while loading content"
+    [showRefreshButton]="true"
+    (refresh)="refresh()"
+  ></alg-error>
 
-    <alg-error
-      *ngIf="state.isError"
-      class="dark"
-      i18n-message message="Error while loading content"
-      [showRefreshButton]="true"
-      (refresh)="refresh()"
-    ></alg-error>
+  <ng-container *ngIf="state.isReady && state.data as children">
+    <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
+      <alg-item-children-list type="skill" [children]="skills" *ngIf="skills$ | async as skills"></alg-item-children-list>
+    </alg-section>
 
-    <ng-container *ngIf="state.isReady && state.data as children">
-
-      <p *ngIf="children.length === 0" i18n>This skill does not have subskills.</p>
-
-      <ul *ngIf="children.length > 0" class="data-list-container sub-skill">
-        <li *ngFor="let item of children">
-          <div
-            class="skill-content"
-            (click)="click(item)"
-            [ngClass]="{ locked: item.isLocked }"
-          >
-            <a class="skill-title alg-link">
-              {{ item.string.title }}
-            </a>
-            <span *ngIf="item.isLocked" class="skill-status">
-              <i *ngIf="item.isLocked" class="fa fa-lock"></i>
-            </span>
-            <alg-skill-progress
-              *ngIf="item.result"
-              style="width: 25%;"
-              type="thick-horizontal"
-              [bestScore]="item.bestScore"
-              [currentScore]="item.result.score"
-            ></alg-skill-progress>
-          </div>
-        </li>
-      </ul>
-
-    </ng-container>
-
-  </alg-section>
+    <alg-section i18n-label label="Activities to learn or reinforce this skill" icon="fa fa-graduation-cap">
+      <alg-item-children-list [children]="activities" *ngIf="activities$ | async as activities"></alg-item-children-list>
+    </alg-section>
+  </ng-container>
 </ng-container>

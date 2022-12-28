@@ -852,10 +852,10 @@
         } }}"/> </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Only empty chapters can be deleted.' : 'Only empty skills can be deleted.' }}"/> </target>
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="8286483904887493596" datatype="html">
         <source>You are not allowed to watch the group for which you have requested watching.</source><target state="new">You are not allowed to watch the group for which you have requested watching.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="1223537461642312433" datatype="html">
         <source>Something went wrong while enabling group watching. If the problem persists, please contact us.</source><target state="new">Something went wrong while enabling group watching. If the problem persists, please contact us.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="new">Close</target>
 
@@ -1521,10 +1521,7 @@
       </trans-unit><trans-unit id="4178036374836569451" datatype="html">
         <source>Error while loading content</source><target state="translated">Erreur lors du chargement du contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="5233338047905293197" datatype="html">
-        <source>This skill does not have subskills.</source><target state="translated">Cette compétence n'a pas de sous-compétence.</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7555865016486494326" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="7555865016486494326" datatype="html">
         <source> You </source><target state="new"> You </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context>

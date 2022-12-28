@@ -1,0 +1,49 @@
+@import 'src/colors.scss';
+@import 'src/geometry.scss';
+
+.data-list-container {
+  list-style: none;
+  padding-left: 0;
+  color: var(--dark-text-color);
+
+  &.sub-item {
+    li {
+      margin-left: -3.3333rem;
+      border-bottom: none;
+      display: flex;
+      align-items: center;
+
+      .item-icon {
+        width: 2.9167rem;
+      }
+
+      .item-content {
+        display: flex;
+        flex: 1;
+        padding: 0.5833rem 0;
+        border-bottom: .1rem solid var(--light-border-color);
+        cursor: pointer;
+
+        &.locked {
+          color: var(--light-text-color);
+          cursor: default;
+        }
+
+        .item-title {
+          flex: 1;
+        }
+
+        .item-icon {
+          margin-right: 0.4167rem;
+        }
+
+        .item-status {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 2rem;
+        }
+      }
+    }
+  }
+}

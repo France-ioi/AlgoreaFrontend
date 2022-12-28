@@ -1,0 +1,32 @@
+<ul *ngIf="children.length > 0; else noChildrenSection" class="data-list-container sub-item">
+  <li *ngFor="let item of children">
+    <div
+      class="item-content"
+      (click)="click(item)"
+      [ngClass]="{ locked: item.isLocked }"
+    >
+      <a class="item-title alg-link">
+        {{ item.string.title }}
+      </a>
+      <span *ngIf="item.isLocked" class="item-status">
+        <i *ngIf="item.isLocked" class="fa fa-lock"></i>
+      </span>
+      <alg-skill-progress
+        *ngIf="type === 'skill' && item.result"
+        style="width: 25%;"
+        type="thick-horizontal"
+        [bestScore]="item.bestScore"
+        [currentScore]="item.result.score"
+      ></alg-skill-progress>
+    </div>
+  </li>
+</ul>
+
+<ng-template #noChildrenSection>
+  <p>
+    {{ type | i18nSelect : {
+      skill: 'This skill does not have subskills.',
+      other: 'This skill does not have subactivities.'
+    } }}
+  </p>
+</ng-template>

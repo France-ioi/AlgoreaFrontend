@@ -6,10 +6,10 @@ import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 
-interface SubSkillAdditions {
+export interface ItemChildWithAdditions extends ItemChild {
   isLocked: boolean,
   result?: {
     attemptId: string,
@@ -32,7 +32,6 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
     map(children =>
       children
-        .filter(child => isASkill(child))
         .map(child => {
           const res = bestAttemptFromResults(child.results);
           return {
@@ -47,6 +46,8 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     ),
     mapToFetchState({ resetter: this.refresh$ }),
   );
+  skills$ = this.state$.pipe(readyData(), map(children => children.filter(child => isASkill(child))));
+  activities$ = this.state$.pipe(readyData(), map(children => children.filter(child => !isASkill(child))));
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
@@ -62,7 +63,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     }
   }
 
-  click(child: ItemChild&SubSkillAdditions): void {
+  click(child: ItemChildWithAdditions): void {
     if (!this.itemData) return;
     const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
