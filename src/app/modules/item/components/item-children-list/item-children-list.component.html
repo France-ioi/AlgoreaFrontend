@@ -5,6 +5,14 @@
       (click)="click(item)"
       [ngClass]="{ locked: item.isLocked }"
     >
+      <span class="activity-progress" *ngIf="type === 'activity' && item.result">
+        <alg-score-ring
+          [diameter]="30"
+          [currentScore]="item.result?.score ?? 0"
+          [isValidated]="item.result?.validated ?? false"
+          [bestScore]="item.bestScore"
+        ></alg-score-ring>
+      </span>
       <a class="item-title alg-link">
         {{ item.string.title }}
       </a>

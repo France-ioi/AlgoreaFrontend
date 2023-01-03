@@ -13,6 +13,7 @@ export interface ItemChildWithAdditions extends ItemChild {
   isLocked: boolean,
   result?: {
     attemptId: string,
+    validated: boolean,
     score: number,
   },
 }
@@ -39,6 +40,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
             isLocked: !canCurrentUserViewContent(child),
             result: res === null ? undefined : {
               attemptId: res.attemptId,
+              validated: res.validated,
               score: res.scoreComputed,
             },
           };

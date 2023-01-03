@@ -11,11 +11,20 @@
 
   <ng-container *ngIf="state.isReady && state.data as children">
     <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
-      <alg-item-children-list type="skill" [children]="skills" *ngIf="skills$ | async as skills"></alg-item-children-list>
+      <alg-item-children-list
+        type="skill"
+        [children]="skills"
+        (clickEvent)="click($event)"
+        *ngIf="skills$ | async as skills"
+      ></alg-item-children-list>
     </alg-section>
 
     <alg-section i18n-label label="Activities to learn or reinforce this skill" icon="fa fa-graduation-cap">
-      <alg-item-children-list [children]="activities" *ngIf="activities$ | async as activities"></alg-item-children-list>
+      <alg-item-children-list
+        [children]="activities"
+        (clickEvent)="click($event)"
+        *ngIf="activities$ | async as activities"
+      ></alg-item-children-list>
     </alg-section>
   </ng-container>
 </ng-container>
