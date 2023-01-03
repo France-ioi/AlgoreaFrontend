@@ -6,8 +6,25 @@
   display: block;
 
   padding-top: 2rem;
+}
 
-  .header-refresh {
-    justify-content: flex-end;
-  }
+.header-refresh {
+  justify-content: flex-end;
+}
+
+.activity-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activity-left {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.activity-progress {
+  width: 2.66667rem;
+  margin-right: 1rem;
 }

@@ -47,18 +47,27 @@
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
-                {{ rowData.activityType | logActionDisplay : rowData.score }}
-                <ng-container *ngIf="rowData.displayLoadButton">
-                  &nbsp;(
-                  <a
-                    class="alg-link"
+                <div class="activity-container">
+                  <div class="activity-left">
+                    <span class="activity-progress">
+                      <alg-score-ring
+                        [currentScore]="rowData.score"
+                        [diameter]="32"
+                        *ngIf="rowData.score"
+                      ></alg-score-ring>
+                    </span>
+
+                    {{ rowData.activityType | logActionDisplay }}
+                  </div>
+
+                  <button
+                    pButton
+                    class="alg-button p-button-rounded p-small-button"
+                    i18n-label="text on button to load a submission" label="Load"
                     [routerLink]="rowData.item | rawItemLink:[]:rowData.answerId"
-                    i18n="text on button to load a submission"
-                  >
-                    Load
-                  </a>
-                  )
-                </ng-container>
+                    *ngIf="rowData.displayLoadButton"
+                  ></button>
+                </div>
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
                 <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemLink">
