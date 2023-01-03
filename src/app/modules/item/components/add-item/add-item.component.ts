@@ -5,7 +5,7 @@ import {
   AddedContent,
   AddContentComponent
 } from 'src/app/modules/shared-components/components/add-content/add-content.component';
-import { ItemType } from 'src/app/shared/helpers/item-type';
+import { isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
 import { SearchItemService } from '../../http-services/search-item.service';
 
@@ -17,7 +17,7 @@ import { SearchItemService } from '../../http-services/search-item.service';
 export class AddItemComponent implements OnChanges {
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;
 
-  @Input() allowSkills = false;
+  @Input() type: ItemTypeCategory = 'activity';
   @Input() addedItemIds: string[] = [];
   @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
 
@@ -25,7 +25,7 @@ export class AddItemComponent implements OnChanges {
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(
-      value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills }).map(item => item.type)
+      value, getAllowedNewItemTypes({ allowActivities: !isSkill(this.type), allowSkills: isSkill(this.type) }).map(item => item.type)
     );
 
   constructor(
@@ -33,7 +33,7 @@ export class AddItemComponent implements OnChanges {
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills });
+    this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: !isSkill(this.type), allowSkills: isSkill(this.type) });
   }
 
   addChild(item: AddedContent<ItemType>): void {

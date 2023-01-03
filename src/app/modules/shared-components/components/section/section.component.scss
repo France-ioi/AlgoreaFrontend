@@ -2,6 +2,14 @@
 @import 'src/geometry.scss';
 @import 'src/typography.scss';
 
+:host {
+  &.edit-children {
+    .section-content {
+      padding: 1rem 0 !important;
+    }
+  }
+}
+
 .section-container {
   padding-top: 2rem;
   border-bottom: 0.1rem solid var(--light-border-color);

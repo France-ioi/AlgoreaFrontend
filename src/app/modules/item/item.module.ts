@@ -51,6 +51,7 @@ import { ItemTaskEditComponent } from './pages/item-task-edit/item-task-edit.com
 import { ThreadContainerComponent } from './components/thread-container/thread-container.component';
 import { ThreadMessageComponent } from './components/thread-message/thread-message.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ItemChildrenEditListComponent } from './components/item-children-edit-list/item-children-edit-list.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     AddDependencyComponent,
     ItemUnlockAccessComponent,
     ItemTaskEditComponent,
+    ItemChildrenEditListComponent,
   ],
   imports: [
     CommonModule,

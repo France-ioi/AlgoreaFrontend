@@ -2,111 +2,43 @@
   <ng-container *ngIf="itemData">
 
     <ng-container *ngIf="state.isReady">
-      <div class="section-chapter-wrapper">
 
-        <div class="score-weight-container">
-          <div class="score-weight">
-            <span class="score-weight-label alg-base-text-color" i18n>Enable score weight</span>
-            <alg-switch
-                mode="white"
-                [(ngModel)]="scoreWeightEnabled"
-                (ngModelChange)="onEnableScoreWeightChange($event)"
-            ></alg-switch>
-          </div>
-        </div>
+      <ng-container *ngIf="itemData.item.type === 'Skill'; else childrenEditWithNoTitle">
+        <alg-section
+          class="edit-children"
+          i18n-label label="Sub-skills"
+          icon="fa fa-list"
+          [hideBorder]="true"
+        >
+          <alg-item-children-edit-list
+            type="skill"
+            [data]="skills"
+            (childrenChanges)="onDataChange($event, 'skill')"
+            (linkClick)="onClick($event)"
+          ></alg-item-children-edit-list>
+        </alg-section>
 
-        <p-table
-            class="alg-editable-table"
-            *ngIf="data.length"
-            [value]="data"
-            [reorderableColumns]="true"
-            [(selection)]="selectedRows"
-            (onRowReorder)="orderChanged()">
-          <ng-template pTemplate="body" let-rowData let-index="rowIndex">
-            <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
-              <td class="reorder-handle" [pReorderableRowHandle]="index">
-                <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
-              </td>
-              <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
-              <ng-container *ngIf="scoreWeightEnabled">
-                <td pEditableColumn>
-                  <p-cellEditor>
-                    <ng-template pTemplate="input">
-                      <p-inputNumber
-                          [size]="3"
-                          [(ngModel)]="rowData.scoreWeight"
-                          (ngModelChange)="onScoreWeightChange()"
-                          [min]="0"
-                          [max]="100"
-                          [ariaRequired]="true"
-                      ></p-inputNumber>
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                      x{{ rowData.scoreWeight }}
-                    </ng-template>
-                  </p-cellEditor>
-                </td>
-              </ng-container>
-              <ng-container *ngIf="rowData.isVisible; else invisibleChildCells">
-                <td><span class="type">{{ rowData.type }}</span></td>
-                <td class="flex-1">
-                  <a
-                    class="main alg-link"
-                    [ngClass]="{'disabled': !rowData.id}"
-                    (click)="onClick(rowData)"
-                  >
-                    {{ rowData.title }}
-                  </a>
-                </td>
-              </ng-container>
-              <ng-template #invisibleChildCells>
-                <td class="flex-1"><ng-container i18n>Non-visible content</ng-container> ({{ rowData.id }})</td>
-              </ng-template>
+        <alg-section
+          class="edit-children"
+          i18n-label label="Activities to learn or reinforce this skill"
+          icon="fa fa-list"
+          [hideBorder]="true"
+        >
+          <alg-item-children-edit-list
+            [data]="activities"
+            (childrenChanges)="onDataChange($event)"
+            (linkClick)="onClick($event)"
+          ></alg-item-children-edit-list>
+        </alg-section>
+      </ng-container>
 
-              <td>
-                <div class="propagation-state-wrapper" #propagationStateWrapperTarget>
-                  <button
-                      class="alg-button-icon base-color"
-                      type="button"
-                      (click)="openPropagationEditMenu($event, propagationStateWrapperTarget, index)"
-                  >
-                    <i class="fa" [ngClass]="{
-                    'fa-eye': rowData.contentViewPropagation === 'as_content',
-                    'fa-lock': rowData.contentViewPropagation === 'as_info',
-                    'fa-eye-slash': rowData.contentViewPropagation === 'none'
-                  }"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="summary">
-            <div class="summary">
-              <span class="spacer"></span>
-              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              <span class="select-all" (click)="onSelectAll()" i18n>Select all</span>
-              <span class="filler"></span>
-              <div class="summary-actions">
-                <span (click)="onRemove()" [ngClass]="{disabled: selectedRows.length === 0}">
-                  <span i18n>Remove selected</span>
-                  <i class="fa fa-trash-alt"></i>
-                </span>
-              </div>
-            </div>
-          </ng-template>
-        </p-table>
-
-        <p *ngIf="!data.length" i18n>No children for this chapter.</p>
-
-      </div>
-
-      <div class="add-item-container">
-        <alg-add-item
-            [allowSkills]="itemData.item.type === 'Skill'"
-            [addedItemIds]="addedItemIds"
-            (contentAdded)="addChild($event)"
-        ></alg-add-item>
-      </div>
+      <ng-template #childrenEditWithNoTitle>
+        <alg-item-children-edit-list
+          [data]="activities"
+          (childrenChanges)="onDataChange($event)"
+          (linkClick)="onClick($event)"
+        ></alg-item-children-edit-list>
+      </ng-template>
 
     </ng-container>
 
@@ -122,14 +54,4 @@
 
   </ng-container>
 </ng-container>
-
-<p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-propagation-edit-menu" #op appendTo="body">
-  <ng-template pTemplate>
-    <alg-propagation-edit-menu
-      *ngIf="propagationEditItemIdx !== undefined"
-      [childData]="data[propagationEditItemIdx]"
-      (clickEvent)="onContentViewPropagationChanged($event)"
-    ></alg-propagation-edit-menu>
-  </ng-template>
-</p-overlayPanel>
 
