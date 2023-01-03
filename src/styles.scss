@@ -137,6 +137,10 @@ body .p-component {
   }
 }
 
+.grid-card-image-default-bg {
+  background-image: url("/assets/images/chapter-default.jpg");
+}
+
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
 }
