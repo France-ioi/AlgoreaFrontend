@@ -29,6 +29,7 @@ const itemChildDecoder = pipe(
       bestScore: D.number,
       string: D.struct({
         title: D.nullable(D.string),
+        imageUrl: D.nullable(D.string),
       }),
       type: D.literal('Chapter','Task','Course','Skill'),
       results: D.array(D.struct({

@@ -9,6 +9,7 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { LayoutService } from '../../../../shared/services/layout.service';
 
 interface ItemChildAdditions {
   isLocked: boolean,
@@ -53,11 +54,13 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     })),
     mapToFetchState({ resetter: this.refresh$ }),
   );
+  fullFrame$ = this.layoutService.fullFrame$;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private groupWatchingService: GroupWatchingService,
     private itemRouter: ItemRouter,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
