@@ -1,20 +1,25 @@
-<ul *ngIf="children.length > 0; else noChildrenSection" class="data-list-container sub-item">
-  <li *ngFor="let item of children">
+<ul
+  *ngIf="children.length > 0; else noChildrenSection"
+  class="data-list-container sub-item"
+  [ngClass]="{'activity-type': type === 'activity'}"
+>
+  <li *ngFor="let item of children; let i = index">
+    <div class="activity-progress" *ngIf="type === 'activity'">
+      <alg-score-ring
+        [diameter]="30"
+        [currentScore]="item.result?.score ?? 0"
+        [isValidated]="item.result?.validated ?? false"
+        [bestScore]="item.bestScore"
+        *ngIf="item.result"
+      ></alg-score-ring>
+    </div>
     <div
       class="item-content"
       (click)="click(item)"
       [ngClass]="{ locked: item.isLocked }"
     >
-      <span class="activity-progress" *ngIf="type === 'activity' && item.result">
-        <alg-score-ring
-          [diameter]="30"
-          [currentScore]="item.result?.score ?? 0"
-          [isValidated]="item.result?.validated ?? false"
-          [bestScore]="item.bestScore"
-        ></alg-score-ring>
-      </span>
       <a class="item-title alg-link">
-        {{ item.string.title }}
+        {{ i + 1 }}. {{ item.string.title }}
       </a>
       <span *ngIf="item.isLocked" class="item-status">
         <i *ngIf="item.isLocked" class="fa fa-lock"></i>

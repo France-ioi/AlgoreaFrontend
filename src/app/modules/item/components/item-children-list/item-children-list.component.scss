@@ -6,9 +6,14 @@
   padding-left: 0;
   color: var(--dark-text-color);
 
+  margin-left: -3.3333rem;
+
+  &.activity-type {
+    margin-left: -4.3rem;
+  }
+
   &.sub-item {
     li {
-      margin-left: -3.3333rem;
       border-bottom: none;
       display: flex;
       align-items: center;
@@ -21,7 +26,7 @@
         display: flex;
         flex: 1;
         align-items: center;
-        padding: 0.5833rem 0;
+        height: 3.5rem;
         border-bottom: .1rem solid var(--light-border-color);
         cursor: pointer;
 
@@ -44,11 +49,11 @@
           justify-content: center;
           margin-right: 2rem;
         }
-
-        .activity-progress {
-          margin-right: 1rem;
-        }
       }
     }
   }
+}
+
+.activity-progress {
+  width: 4rem;
 }
