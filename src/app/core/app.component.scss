@@ -136,3 +136,15 @@ a:hover {
     }
   }
 }
+
+.error-message, .error-refresh-button, .error-note {
+  text-align: center;
+}
+
+.error-refresh-button {
+  margin: .6rem 0;
+}
+
+.error-note {
+  font-size: 1rem;
+}

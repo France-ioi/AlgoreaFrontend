@@ -27,7 +27,7 @@
 <p-confirmDialog></p-confirmDialog>
 <p-confirmPopup key="commonPopup" styleClass="common-confirm-popup"></p-confirmPopup>
 <p-dialog
-  *ngrxLet="fatalError$"
+  *ngrxLet="fatalError$; let fatalError"
   i18n-header="@@auth-error-modal-title" header="Error"
   [visible]="true"
   [style]="{width: '50vw'}"
@@ -35,10 +35,27 @@
   [closeOnEscape]="false"
   [closable]="false"
 >
-  <p i18n="@@auth-error-modal-context">Oops, we are unable to make the site work properly. Are you connected to the Internet?</p>
-  <p>
-    <ng-container i18n="@@auth-error-modal-todo">Try to refresh the page.</ng-container>&nbsp;
-    <ng-container i18n="@@contactUs">If the problem persists, please contact us.</ng-container>
+  <p class="error-message">
+    <ng-container *ngIf="fatalError.message === 'ChunkError'; else otherErrorMessage" i18n>
+      The application has been updated since you opened it, it needs to be reloaded.
+    </ng-container>
+    <ng-template #otherErrorMessage>
+      <ng-container i18n="@@auth-error-modal-context">
+        Oops, we are unable to make the site work properly. Are you connected to the Internet?
+      </ng-container>
+    </ng-template>
+  </p>
+  <div class="error-refresh-button">
+    <p-button
+      class="refresh-button"
+      icon="pi pi-refresh"
+      i18n-label label="Reload the application."
+      (click)="onRefresh()"
+      styleClass="p-button-sm"
+    ></p-button>
+  </div>
+  <p class="error-note" i18n="@@contactUs">
+    If the problem persists, please contact us.
   </p>
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>

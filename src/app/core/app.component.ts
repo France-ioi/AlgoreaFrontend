@@ -13,6 +13,7 @@ import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
 import { Location } from '@angular/common';
+import { ChunkErrorService } from './services/chunk-error.service';
 
 @Component({
   selector: 'alg-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authService.failure$,
     this.sessionService.userProfileError$,
     this.localeService.currentLangError$,
+    this.chunkErrorService.error$,
   ).pipe(
     // eslint-disable-next-line no-console
     tap(err => console.error('fatal:', err))
@@ -52,6 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private renderer: Renderer2,
     private el: ElementRef,
+    private chunkErrorService: ChunkErrorService,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
@@ -102,6 +105,10 @@ export class AppComponent implements OnInit, OnDestroy {
   closeWatchGroupErrorDialog(): void {
     this.showWatchedGroupErrorDialog = false;
     this.groupWatchingService.stopWatching();
+  }
+
+  onRefresh(): void {
+    window.location.reload();
   }
 
 }
