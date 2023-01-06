@@ -59,34 +59,7 @@
     </ng-container>
 
     <ng-template #listSection>
-      <ul class="data-list-container activity" *ngIf="data.children.length > 0">
-        <li *ngFor="let item of data.children; index as ln">
-          <span class="activity-progress">
-            <alg-score-ring
-              *ngIf="(!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)"
-              [diameter]="30"
-              [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
-              [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
-              [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
-            ></alg-score-ring>
-          </span>
-          <span
-            class="activity-content"
-            (click)="click(item)"
-            [ngClass]="{ locked: item.isLocked }"
-          >
-            <a class="activity-title alg-link">
-              {{ ln + 1 }}. {{ item.string.title }}
-            </a>
-            <span *ngIf="item.isLocked" class="activity-status">
-              <i *ngIf="item.isLocked" class="fa fa-lock"></i>
-            </span>
-            <alg-state-widget
-              [type]="item.category"
-            ></alg-state-widget>
-          </span>
-        </li>
-      </ul>
+      <alg-item-children-list [children]="data.children" [showStateWidget]="true" (clickEvent)="click($event)"></alg-item-children-list>
     </ng-template>
 
   </ng-container>

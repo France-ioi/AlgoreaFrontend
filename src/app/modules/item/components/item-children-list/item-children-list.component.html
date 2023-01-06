@@ -1,16 +1,16 @@
 <ul
-  *ngIf="children.length > 0; else noChildrenSection"
-  class="data-list-container sub-item"
+  class="data-list-container"
   [ngClass]="{'activity-type': type === 'activity'}"
+  *ngIf="children.length > 0; else noChildrenSection"
 >
-  <li *ngFor="let item of children; let i = index">
+  <li class="data-list-item" *ngFor="let item of children; let i = index">
     <div class="activity-progress" *ngIf="type === 'activity'">
       <alg-score-ring
+        *ngIf="(!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)"
         [diameter]="30"
-        [currentScore]="item.result?.score ?? 0"
-        [isValidated]="item.result?.validated ?? false"
-        [bestScore]="item.bestScore"
-        *ngIf="item.result"
+        [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
+        [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
+        [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
       ></alg-score-ring>
     </div>
     <div
@@ -31,10 +31,14 @@
         [bestScore]="item.bestScore"
         [currentScore]="item.result.score"
       ></alg-skill-progress>
+      <alg-state-widget
+        [type]="item.category"
+        *ngIf="showStateWidget"
+      ></alg-state-widget>
     </div>
   </li>
 </ul>
 
 <ng-template #noChildrenSection>
-  <p>{{ emptyMessage }}</p>
+  <p *ngIf="emptyMessage">{{ emptyMessage }}</p>
 </ng-template>

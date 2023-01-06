@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemTypeCategory } from '../../../../shared/helpers/item-type';
-import { ItemChildWithAdditions } from '../sub-skills/sub-skills.component';
+import { ItemChildWithAdditions } from '../../helpers/item-children';
 
 @Component({
   selector: 'alg-item-children-list',
@@ -11,7 +11,8 @@ export class ItemChildrenListComponent {
   @Output() clickEvent = new EventEmitter<ItemChildWithAdditions>();
   @Input() type: ItemTypeCategory = 'activity';
   @Input() children: ItemChildWithAdditions[] = [];
-  @Input() emptyMessage = $localize`This skill does not have related activities.`;
+  @Input() emptyMessage?: string;
+  @Input() showStateWidget = false;
 
   click(child: ItemChildWithAdditions): void {
     this.clickEvent.emit(child);

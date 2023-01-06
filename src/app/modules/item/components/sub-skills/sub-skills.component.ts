@@ -4,19 +4,11 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
-
-export interface ItemChildWithAdditions extends ItemChild {
-  isLocked: boolean,
-  result?: {
-    attemptId: string,
-    validated: boolean,
-    score: number,
-  },
-}
+import { ItemChildWithAdditions } from '../../helpers/item-children';
 
 @Component({
   selector: 'alg-sub-skills',

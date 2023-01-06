@@ -1,59 +1,66 @@
 @import 'src/colors.scss';
 @import 'src/geometry.scss';
 
-.data-list-container {
-  list-style: none;
-  padding-left: 0;
-  color: var(--dark-text-color);
+:host {
+  &.for-section {
+    .data-list-container {
+      margin-left: -3.3333rem;
+      padding: 0;
 
-  margin-left: -3.3333rem;
-
-  &.activity-type {
-    margin-left: -4.3rem;
-  }
-
-  &.sub-item {
-    li {
-      border-bottom: none;
-      display: flex;
-      align-items: center;
-
-      .item-icon {
-        width: 2.9167rem;
-      }
-
-      .item-content {
-        display: flex;
-        flex: 1;
-        align-items: center;
-        height: 3.5rem;
-        border-bottom: .1rem solid var(--light-border-color);
-        cursor: pointer;
-
-        &.locked {
-          color: var(--light-text-color);
-          cursor: default;
-        }
-
-        .item-title {
-          flex: 1;
-        }
-
-        .item-icon {
-          margin-right: 0.4167rem;
-        }
-
-        .item-status {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 2rem;
-        }
+      &.activity-type {
+        margin-left: -4.3rem;
       }
     }
   }
 }
 
+.data-list-container {
+  list-style: none;
+  margin: 0;
+  padding: 1.6667rem;
+  color: var(--dark-text-color);
+}
+
+.data-list-item {
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
 .activity-progress {
-  width: 4rem;
+  width: 4.2rem;
+}
+
+.item-icon {
+  width: 2.9167rem;
+}
+
+.item-content {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  height: 3.5rem;
+  border-bottom: .1rem solid var(--light-border-color);
+  cursor: pointer;
+
+  &.locked {
+    color: var(--light-text-color);
+    cursor: default;
+  }
+}
+
+.item-title {
+  flex: 1;
+}
+
+.item-icon {
+  margin-right: 0.4167rem;
+}
+
+.item-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2rem;
 }

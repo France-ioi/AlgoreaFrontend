@@ -12,6 +12,7 @@
   <ng-container *ngIf="state.isReady && state.data as data">
     <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
       <alg-item-children-list
+        class="for-section"
         type="skill"
         i18n-emptyMessage emptyMessage="This skill does not have subskills."
         [children]="data.skills"
@@ -21,6 +22,8 @@
 
     <alg-section i18n-label label="Activities to learn or reinforce this skill" icon="fa fa-graduation-cap">
       <alg-item-children-list
+        class="for-section"
+        i18n-emptyMessage emptyMessage="This skill does not have related activities."
         [children]="data.activities"
         (clickEvent)="click($event)"
       ></alg-item-children-list>
