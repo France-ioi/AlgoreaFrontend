@@ -9,21 +9,19 @@
     (refresh)="refresh()"
   ></alg-error>
 
-  <ng-container *ngIf="state.isReady && state.data as children">
+  <ng-container *ngIf="state.isReady && state.data as data">
     <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
       <alg-item-children-list
         type="skill"
-        [children]="skills"
+        [children]="data.skills"
         (clickEvent)="click($event)"
-        *ngIf="skills$ | async as skills"
       ></alg-item-children-list>
     </alg-section>
 
     <alg-section i18n-label label="Activities to learn or reinforce this skill" icon="fa fa-graduation-cap">
       <alg-item-children-list
-        [children]="activities"
+        [children]="data.activities"
         (clickEvent)="click($event)"
-        *ngIf="activities$ | async as activities"
       ></alg-item-children-list>
     </alg-section>
   </ng-container>
