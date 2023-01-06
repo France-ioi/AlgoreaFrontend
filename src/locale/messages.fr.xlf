@@ -1509,11 +1509,20 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="4475993768283951722" datatype="html">
         <source>Sub-skills</source><target state="translated">Sous-compétences</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="3298563984742351101" datatype="html">
-        <source>Activities to learn or reinforce this skill</source><target state="new">Activities to learn or reinforce this skill</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5233338047905293197" datatype="html">
+        <source>This skill does not have subskills.</source><target state="new">This skill does not have subskills.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context>
-          <context context-type="linenumber">23,24</context>
+          <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+      </trans-unit><trans-unit id="3298563984742351101" datatype="html">
+        <source>Activities to learn or reinforce this skill</source><target state="new">Activities to learn or reinforce this skill</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4292111728885991868" datatype="html">
+        <source>This skill does not have related activities.</source><target state="new">This skill does not have related activities.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
+          <context context-type="linenumber">26,27</context>
         </context-group>
       </trans-unit><trans-unit id="3303008548461857588" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> own this item, and get the maximum access in all categories above, and may also delete this item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> est propriétaire de cet
