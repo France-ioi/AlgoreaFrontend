@@ -72,7 +72,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
         columns: this.getLogColumns(item.type, watchingGroup),
         rowData: data
           .filter(log => !this.isSelfCurrentAnswer(log, profile.groupId))
-          .map(log => ({ ...log, displayLoadButton: this.canDisplayLoadButton(log, profile.groupId) })),
+          .map(log => ({ ...log, displayLoadButton: this.canDisplayLoadButton(log, profile.groupId), isWatchingGroup: !!watchingGroup })),
       }))
     );
   }

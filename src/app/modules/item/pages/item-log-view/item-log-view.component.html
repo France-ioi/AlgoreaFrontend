@@ -63,7 +63,10 @@
                   <button
                     pButton
                     class="alg-button p-button-rounded p-small-button p-button-outlined"
-                    i18n-label="text on button to load a submission" label="Load"
+                    [label]="(rowData.isWatchingGroup ? 'watchingGroup' : '') | i18nSelect : {
+                      watchingGroup: 'View answer',
+                      other: 'Reload answer'
+                    }"
                     [routerLink]="rowData.item | rawItemLink:[]:rowData.answerId"
                     *ngIf="rowData.displayLoadButton"
                   ></button>
