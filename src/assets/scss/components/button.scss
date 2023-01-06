@@ -34,6 +34,18 @@
       text-transform: uppercase;
     }
 
+    &.p-button-outlined {
+      background-color: unset;
+
+      &:hover {
+        background-color: var(--base-color);
+
+        .p-button-label {
+          color: #fff;
+        }
+      }
+    }
+
     &.p-button-warning {
       background-color: var(--warning-color);
       border-color: var(--warning-color);
