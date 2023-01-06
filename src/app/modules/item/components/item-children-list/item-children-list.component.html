@@ -36,10 +36,5 @@
 </ul>
 
 <ng-template #noChildrenSection>
-  <p>
-    {{ type | i18nSelect : {
-      skill: 'This skill does not have subskills.',
-      other: 'This skill does not have subactivities.'
-    } }}
-  </p>
+  <p>{{ emptyMessage }}</p>
 </ng-template>

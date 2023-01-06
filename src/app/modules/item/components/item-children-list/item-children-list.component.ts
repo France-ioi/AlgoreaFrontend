@@ -11,6 +11,7 @@ export class ItemChildrenListComponent {
   @Output() clickEvent = new EventEmitter<ItemChildWithAdditions>();
   @Input() type: ItemTypeCategory = 'activity';
   @Input() children: ItemChildWithAdditions[] = [];
+  @Input() emptyMessage = $localize`This skill does not have related activities.`;
 
   click(child: ItemChildWithAdditions): void {
     this.clickEvent.emit(child);

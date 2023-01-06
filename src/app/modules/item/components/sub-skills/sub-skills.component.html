@@ -13,6 +13,7 @@
     <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
       <alg-item-children-list
         type="skill"
+        i18n-emptyMessage emptyMessage="This skill does not have subskills."
         [children]="data.skills"
         (clickEvent)="click($event)"
       ></alg-item-children-list>
