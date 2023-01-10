@@ -54,6 +54,10 @@
   }
 }
 
+.message {
+  overflow: hidden;
+}
+
 .name {
   margin-bottom: 0;
   font-size: 1.1rem;
@@ -63,6 +67,7 @@
   display: inline-block;
   padding: .2rem 1rem;
   border-radius: 1.5rem;
+  max-width: 100%;
 }
 
 .scored-text {
@@ -82,4 +87,5 @@
 
 .message-event {
   font-size: 1.1rem;
+  line-height: 1.4;
 }
