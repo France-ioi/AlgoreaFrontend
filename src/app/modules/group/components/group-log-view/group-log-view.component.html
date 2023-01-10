@@ -47,7 +47,19 @@
           <td *ngFor="let col of columns" (mouseleave)="onMouseLeave($event, col.field)">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
-                {{ rowData.activityType | logActionDisplay : rowData.score }}
+                <div class="activity-container">
+                  <div class="activity-left">
+                    <span class="activity-progress">
+                      <alg-score-ring
+                        [currentScore]="rowData.score"
+                        [diameter]="32"
+                        *ngIf="rowData.score"
+                      ></alg-score-ring>
+                    </span>
+
+                    {{ rowData.activityType | logActionDisplay }}
+                  </div>
+                </div>
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
                 <a
