@@ -16,7 +16,7 @@ import {
   isExistingAssociatedItem,
   isNewAssociatedItem,
 } from './associated-item-types';
-import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { getAllowedNewItemTypes } from '../../../../shared/helpers/new-item-types';
 
@@ -69,8 +69,14 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({
             tag: 'existing-item',
-            name: $localize`You don't have access to this ` + this.contentType === 'activity'
-              ? $localize`activity` : $localize`skill` + '.',
+            name: $localize`You don't have access to this ` + (this.contentType === 'activity'
+              ? $localize`activity` : $localize`skill`) + '.',
+            path: null,
+          });
+          else if (errorIsHTTPNotFound(err)) return of({
+            tag: 'existing-item',
+            name: $localize`The configured ` + (this.contentType === 'activity'
+              ? $localize`activity` : $localize`skill`) + $localize` is currently not visible to you.`,
             path: null,
           });
           throw err;
