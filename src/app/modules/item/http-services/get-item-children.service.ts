@@ -9,10 +9,12 @@ import { canCurrentUserViewInfo, itemViewPermDecoder, ItemWithViewPerm } from 's
 import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
 import { pipe } from 'fp-ts/lib/function';
 
+const baseItemChildCategory = D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge');
+
 const baseItemChildDecoder = D.struct({
   id: D.string,
   order: D.number,
-  category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
+  category: baseItemChildCategory,
   permissions: itemCorePermDecoder,
   scoreWeight: D.number,
   contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
@@ -21,6 +23,8 @@ const baseItemChildDecoder = D.struct({
   upperViewLevelsPropagation: D.literal('use_content_view_propagation', 'as_content_with_descendants', 'as_is'),
   watchPropagation: D.boolean,
 });
+
+const itemChildTypeDecoder = D.literal('Chapter','Task','Course','Skill');
 
 const itemChildDecoder = pipe(
   baseItemChildDecoder,
@@ -31,7 +35,7 @@ const itemChildDecoder = pipe(
         title: D.nullable(D.string),
         imageUrl: D.nullable(D.string),
       }),
-      type: D.literal('Chapter','Task','Course','Skill'),
+      type: itemChildTypeDecoder,
       results: D.array(D.struct({
         attemptId: D.string,
         latestActivityAt: dateDecoder,
@@ -63,9 +67,10 @@ const possiblyInvisibleItemChild = D.union(
   invisibleItemChildDecoder,
 );
 
+export type BaseItemChildCategory = D.TypeOf<typeof baseItemChildCategory>;
 export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
-export type InvisibleItemChild = D.TypeOf<typeof invisibleItemChildDecoder>;
 type PossiblyInvisibleItemChild = D.TypeOf<typeof possiblyInvisibleItemChild>;
+export type ItemChildType = D.TypeOf<typeof itemChildTypeDecoder>;
 
 export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChild {
   return canCurrentUserViewInfo(item);
