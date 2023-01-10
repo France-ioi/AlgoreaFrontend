@@ -76,7 +76,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
           else if (errorIsHTTPNotFound(err)) return of({
             tag: 'existing-item',
             name: $localize`The configured ` + (this.contentType === 'activity'
-              ? $localize`activity` : $localize`skill`) + $localize`is currently not visible to you.`,
+              ? $localize`activity` : $localize`skill`) + $localize` is currently not visible to you.`,
             path: null,
           });
           throw err;
