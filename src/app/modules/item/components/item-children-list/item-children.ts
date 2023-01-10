@@ -1,4 +1,4 @@
-import { ItemChild } from '../http-services/get-item-children.service';
+import { ItemChild } from '../../http-services/get-item-children.service';
 
 export interface ItemChildWithAdditions extends ItemChild {
   isLocked: boolean,

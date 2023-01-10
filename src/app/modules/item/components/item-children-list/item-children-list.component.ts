@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemTypeCategory } from '../../../../shared/helpers/item-type';
-import { ItemChildWithAdditions } from '../../helpers/item-children';
+import { ItemChildWithAdditions } from './item-children';
 
 @Component({
   selector: 'alg-item-children-list',

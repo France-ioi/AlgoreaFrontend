@@ -8,7 +8,7 @@ import { GetItemChildrenService } from '../../http-services/get-item-children.se
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
-import { ItemChildWithAdditions } from '../../helpers/item-children';
+import { ItemChildWithAdditions } from '../item-children-list/item-children';
 
 @Component({
   selector: 'alg-sub-skills',
