@@ -10,15 +10,7 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { LayoutService } from '../../../../shared/services/layout.service';
-
-interface ItemChildAdditions {
-  isLocked: boolean,
-  result?: {
-    attemptId: string,
-    validated: boolean,
-    score: number,
-  },
-}
+import { ItemChildWithAdditions } from '../item-children-list/item-children';
 
 @Component({
   selector: 'alg-chapter-children',
@@ -35,7 +27,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     this.groupWatchingService.watchedGroup$.pipe(map(watchedGroup => watchedGroup?.route.id)),
   ]).pipe(
     switchMap(([{ id, attemptId }, watchedGroupId ]) => this.getItemChildrenService.get(id, attemptId, { watchedGroupId })),
-    map<ItemChild[],(ItemChild&ItemChildAdditions)[]>(itemChildren => itemChildren.map(child => {
+    map<ItemChild[], ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
       const res = bestAttemptFromResults(child.results);
       return {
         ...child,
@@ -72,7 +64,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     }
   }
 
-  click(child: ItemChild&ItemChildAdditions): void {
+  click(child: ItemChildWithAdditions): void {
     if (!this.itemData) return;
     const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;

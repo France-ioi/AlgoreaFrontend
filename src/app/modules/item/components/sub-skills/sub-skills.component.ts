@@ -4,18 +4,11 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { isASkill, typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
-
-interface SubSkillAdditions {
-  isLocked: boolean,
-  result?: {
-    attemptId: string,
-    score: number,
-  },
-}
+import { ItemChildWithAdditions } from '../item-children-list/item-children';
 
 @Component({
   selector: 'alg-sub-skills',
@@ -30,9 +23,8 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
-    map(children =>
-      children
-        .filter(child => isASkill(child))
+    map(children => {
+      const newChildren = children
         .map(child => {
           const res = bestAttemptFromResults(child.results);
           return {
@@ -40,11 +32,16 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
             isLocked: !canCurrentUserViewContent(child),
             result: res === null ? undefined : {
               attemptId: res.attemptId,
+              validated: res.validated,
               score: res.scoreComputed,
             },
           };
-        })
-    ),
+        });
+      return {
+        skills: newChildren.filter(child => isASkill(child)),
+        activities: newChildren.filter(child => !isASkill(child)),
+      };
+    }),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
@@ -62,7 +59,7 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     }
   }
 
-  click(child: ItemChild&SubSkillAdditions): void {
+  click(child: ItemChildWithAdditions): void {
     if (!this.itemData) return;
     const attemptId = child.result?.attemptId;
     const parentAttemptId = this.itemData.currentResult?.attemptId;
