@@ -31,7 +31,11 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/update-profile.html",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "src/assets/images/",
+                "output": "/images/"
+              }
             ],
             "styles": [
               "node_modules/primeicons/primeicons.css",
