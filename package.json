@@ -11,7 +11,7 @@
     "extract-i18n": "ng extract-i18n --output-path src/locale && ./node_modules/.bin/xliffmerge",
     "copyColor": "xcopy \"projects\\core\\src\\lib\\colors.scss\" \"dist\\core\\\"",
     "copyGeo": "xcopy \"projects\\core\\src\\lib\\geometry.scss\" \"dist\\core\\\"",
-    "injectDeployUrlForAssets": "find src -regex \".*\\.html\" -exec sed -i -E 's@(href|src)=\"assets/(.*)\"@\\1=\"'$npm_config_url'assets/\\2\"@g' {} +",
+    "injectDeployUrlForAssets": "find src -regex \".*\\.html\" -exec sed -i -E 's@(href|src)=\"images/(.*)\"@\\1=\"'$npm_config_url'images/\\2\"@g' {} +",
     "injectDeployUrlForPreloadFonts": "find src/index.html -exec sed -i -E 's@(href)=\"((.*).(woff2|ttf))\"@\\1=\"'$npm_config_url'\\2\"@g' {} +",
     "test": "ng test",
     "lint": "./node_modules/.bin/eslint src/ --ext .ts",
