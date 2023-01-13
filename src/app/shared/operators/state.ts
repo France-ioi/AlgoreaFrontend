@@ -1,5 +1,5 @@
 import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
-import { catchError, filter, map, startWith, switchMapTo } from 'rxjs/operators';
+import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { errorState, fetchingState, FetchState, Ready, readyState } from 'src/app/shared/helpers/state';
 
 /**
@@ -17,7 +17,7 @@ export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }):
     mapErrorToState<T>(),
     source => resetter.pipe(
       startWith(noop),
-      switchMapTo(source)
+      switchMap(() => source),
     ),
     map(state => {
       if (state.isReady) previousData = state.data;
