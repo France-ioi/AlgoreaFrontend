@@ -1,4 +1,4 @@
-import { AfterViewChecked, Directive, ElementRef, HostListener, Input, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
+import { AfterViewChecked, Directive, ElementRef, HostListener, Input, NgZone, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
 
 @Directive({
   selector: '[algFullHeightContent]',
@@ -11,12 +11,16 @@ export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
     this.setHeight();
   }
 
-  constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2) {
+  constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private ngZone: NgZone) {
   }
 
   ngAfterViewChecked(): void {
     this.renderer.setStyle(this.el.nativeElement, 'display', 'block');
-    if (this.algFullHeightContent) this.setHeight();
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        if (this.algFullHeightContent) this.setHeight();
+      });
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
