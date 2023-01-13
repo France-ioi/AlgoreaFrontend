@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
-import { catchError, delayWhen, filter, map, mapTo, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
+import { catchError, delayWhen, filter, map, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -46,7 +46,7 @@ export class ItemTaskInitService implements OnDestroy {
       switchMap(task => {
         bindPlatform(task);
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-        return task.load(initialViews).pipe(mapTo(task));
+        return task.load(initialViews).pipe(map(() => task));
       }),
     )),
     shareReplay(1),

@@ -6,7 +6,7 @@ import { TaskToken } from './task-token.service';
 import { TaskScore, TaskScoreToken } from '../task-communication/types';
 import { AnswerToken } from './answer-token.service';
 import { ActionResponse, successData } from 'src/app/shared/http-services/action-response';
-import { map, mapTo } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,7 @@ export class GradeService {
       score_token: scoreToken,
     }).pipe(
       map(successData),
-      mapTo(undefined),
+      map(() => undefined),
     );
   }
 

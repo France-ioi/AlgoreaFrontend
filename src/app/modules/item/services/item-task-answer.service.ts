@@ -7,7 +7,6 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  mapTo,
   retry,
   shareReplay,
   startWith,
@@ -63,7 +62,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     this.task$,
   ]).pipe(
     switchMap(([ initialAnswer, task ]) =>
-      (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(mapTo(undefined)) : of(undefined))
+      (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
     ),
     shareReplay(1),
   );
@@ -73,7 +72,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   ]).pipe(
     delayWhen(() => this.initializedTaskState$),
     switchMap(([ initialAnswer, task ]) =>
-      (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(mapTo(undefined)) : of(undefined))
+      (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(map(() => undefined)) : of(undefined))
     ),
     shareReplay(1),
   );
