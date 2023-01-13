@@ -13,9 +13,9 @@ export function getHashFragmentParams(): Map<string, string>{
   }
   const questionMarkPosition = hash.indexOf('?');
   if (questionMarkPosition > -1) {
-    hash = hash.substr(questionMarkPosition + 1);
+    hash = hash.substring(questionMarkPosition + 1);
   } else {
-    hash = hash.substr(1);
+    hash = hash.substring(1);
   }
   return parseQueryString(hash);
 }
@@ -29,12 +29,12 @@ export function parseQueryString(queryString: string): Map<string, string> {
   for (const pair of queryString.split('&')) {
     const separatorIndex = pair.indexOf('=');
     if (separatorIndex === -1) continue;
-    escapedKey = pair.substr(0, separatorIndex);
-    escapedValue = pair.substr(separatorIndex + 1);
+    escapedKey = pair.substring(0, separatorIndex);
+    escapedValue = pair.substring(separatorIndex + 1);
     let key = decodeURIComponent(escapedKey);
     const value = decodeURIComponent(escapedValue);
-    if (key.substr(0, 1) === '/') {
-      key = key.substr(1);
+    if (key.substring(0, 1) === '/') {
+      key = key.substring(1);
     }
     data.set(key, value);
   }
@@ -48,7 +48,7 @@ export function getArgsFromUrl(): Map<string, string> {
   }
   // normalize query string
   if (queryString.charAt(0) === '?') {
-    queryString = queryString.substr(1);
+    queryString = queryString.substring(1);
   }
   return parseQueryString(queryString);
 }

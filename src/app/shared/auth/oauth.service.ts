@@ -85,8 +85,8 @@ export class OAuthService {
     if (state) {
       const idx = state.indexOf(nonceStateSeparator);
       if (idx > -1) {
-        nonce = state.substr(0, idx);
-        userState = state.substr(idx + nonceStateSeparator.length);
+        nonce = state.substring(0, idx);
+        userState = state.substring(idx + nonceStateSeparator.length);
       }
     }
     return { nonce: nonce, userState: userState };
