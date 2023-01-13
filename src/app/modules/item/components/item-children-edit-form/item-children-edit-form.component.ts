@@ -6,7 +6,7 @@ import {
   ItemChildrenEditComponent,
   PossiblyInvisibleChildData
 } from '../item-children-edit/item-children-edit.component';
-import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { CreateItemService, NewItem } from '../../http-services/create-item.service';
 import { map, switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
@@ -65,10 +65,10 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
 
     return forkJoin(
       this.itemChanges.children.map(child => {
-        if (!this.itemData) return throwError(new Error('Missed item data'));
+        if (!this.itemData) throw new Error('Missed item data');
         if (hasId(child) || !child.isVisible) return of(child);
         // the child doesn't have an id, so we create it
-        if (!child.title) return throwError(new Error('Something went wrong, the new child is missing his title'));
+        if (!child.title) throw new Error('Something went wrong, the new child is missing his title');
         const newChild: NewItem = {
           title: child.title,
           type: child.type,
@@ -85,8 +85,8 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   private updateItem(): Observable<void> {
     return this.createChildren().pipe(
       switchMap(children => {
-        if (!this.itemData) return throwError(new Error('Invalid initial data'));
-        if (!children) return throwError(new Error('Unexpected: Children list are empty'));
+        if (!this.itemData) throw new Error('Invalid initial data');
+        if (!children) throw new Error('Unexpected: Children list are empty');
         const changes: ItemChanges = { children: [] };
         // @TODO: Avoid affecting component vars in Observable Operator
         // save the new children (their ids) to prevent recreating them in case of error
