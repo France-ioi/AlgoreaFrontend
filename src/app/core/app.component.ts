@@ -88,11 +88,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onScrollContent(): void {
-    if (window.pageYOffset > 40 && !this.scrolled) {
+    if (window.scrollY > 40 && !this.scrolled) {
       this.ngZone.run(() => {
         this.scrolled = true;
       });
-    } else if (window.pageYOffset <= 40 && this.scrolled) {
+    } else if (window.scrollY <= 40 && this.scrolled) {
       this.ngZone.run(() => {
         this.scrolled = false;
       });
