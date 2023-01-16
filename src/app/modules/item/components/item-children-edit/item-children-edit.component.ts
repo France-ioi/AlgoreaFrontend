@@ -28,6 +28,7 @@ interface ChildData extends BaseChildData {
   id?: string,
   isVisible: true,
   title: string | null,
+  url?: string,
   type: ItemType,
   result?: {
     attemptId: string,

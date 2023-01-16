@@ -82,6 +82,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     const rootActivityId$ = !isNewAssociatedItem(rootActivity) ? of(isExistingAssociatedItem(rootActivity) ? rootActivity.id : null) :
       this.createItemService.create({
         title: rootActivity.name,
+        url: rootActivity.url,
         type: rootActivity.itemType,
         languageTag: 'en',// FIXME
         asRootOfGroupId: this.initialFormData.id,

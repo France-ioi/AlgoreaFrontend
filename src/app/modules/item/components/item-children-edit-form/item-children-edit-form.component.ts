@@ -72,6 +72,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
         const newChild: NewItem = {
           title: child.title,
           type: child.type,
+          url: child.url,
           languageTag: 'en',
           parent: this.itemData.item.id,
         };
