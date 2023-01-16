@@ -46,7 +46,7 @@ export class SearchGroupService {
 
   searchPossibleSubgroups(
     searchString: string,
-    limit = 5,
+    limit = 11,
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<Group[]>(

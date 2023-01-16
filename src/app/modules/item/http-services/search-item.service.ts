@@ -33,7 +33,7 @@ export class SearchItemService {
     searchString: string,
     includedTypes?: ItemType[],
     excludedTypes?: ItemType[],
-    limit = 5,
+    limit = 11,
   ): Observable<ItemFound<ItemType>[]> {
     let params = new HttpParams().set('search', searchString).set('limit', limit.toString());
 

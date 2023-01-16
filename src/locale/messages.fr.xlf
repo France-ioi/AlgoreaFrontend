@@ -455,7 +455,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="3781733569549468335" datatype="html">
         <source>No records found</source><target state="translated">Aucun résultat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="5928181193903168495" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="4834436992204469960" datatype="html">
+        <source> More than 10 results match your search terms. If you have not found what you are looking for, make your search more specific. </source><target state="new"> More than 10 results match your search terms. If you have not found what you are looking for, make your search more specific. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/shared-components/components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+      </trans-unit><trans-unit id="5928181193903168495" datatype="html">
         <source> Content </source><target state="translated"> Contenu </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="7585826646011739428" datatype="html">
@@ -1509,7 +1515,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="4475993768283951722" datatype="html">
         <source>Sub-skills</source><target state="translated">Sous-compétences</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5233338047905293197" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="5233338047905293197" datatype="html">
         <source>This skill does not have subskills.</source><target state="new">This skill does not have subskills.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
@@ -1518,7 +1524,7 @@
       </trans-unit><trans-unit id="3298563984742351101" datatype="html">
         <source>Activities to learn or reinforce this skill</source><target state="new">Activities to learn or reinforce this skill</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4292111728885991868" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4292111728885991868" datatype="html">
         <source>This skill does not have related activities.</source><target state="new">This skill does not have related activities.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context>
@@ -1532,35 +1538,26 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/sub-skills/sub-skills.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="7555865016486494326" datatype="html">
         <source> You </source><target state="new"> You </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context>
-          <context context-type="linenumber">20,22</context>
-        </context-group>
-      </trans-unit><trans-unit id="3033931349682055221" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="3033931349682055221" datatype="html">
         <source> The user </source><target state="new"> The user </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context>
-          <context context-type="linenumber">24,26</context>
-        </context-group>
-      </trans-unit><trans-unit id="6769997291593114032" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="6769997291593114032" datatype="html">
         <source>started the activity</source><target state="new">started the activity</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="4202564758883774190" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="4202564758883774190" datatype="html">
         <source>submitted a solution</source><target state="new">submitted a solution</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="6891776217114642276" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="6891776217114642276" datatype="html">
         <source> which scored <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/><x id="INTERPOLATION" equiv-text="{{ event.data.score }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></source><target state="new"> which scored <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/><x id="INTERPOLATION" equiv-text="{{ event.data.score }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="6028326590794704051" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="6028326590794704051" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Load this submission<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></source><target state="new"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Load this submission<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit><trans-unit id="5078919999921089039" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="5078919999921089039" datatype="html">
         <source>Sent at <x id="INTERPOLATION" equiv-text="{{ event.time | date : 'short' }}"/></source><target state="new">Sent at <x id="INTERPOLATION" equiv-text="{{ event.time | date : 'short' }}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="4672292365306876208" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="4672292365306876208" datatype="html">
         <source>An unknown user</source><target state="new">An unknown user</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/thread-message/thread-message.component.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
