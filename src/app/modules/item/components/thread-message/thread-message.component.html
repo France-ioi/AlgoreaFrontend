@@ -13,7 +13,10 @@
     </div>
     <div class="bubble">
       <ng-container *ngIf="event.label === 'message'">
-        <div class="message-event" [innerHTML]="event.data.content | allowDisplayCode"></div>
+        <div
+          class="message-event"
+          [innerHTML]="event.data.content | allowDisplayCodeSnippet : userInfo?.isCurrentUser && event.label === 'message' ? 'light' : 'dark'"
+        ></div>
       </ng-container>
       <ng-container *ngIf="['result_started', 'submission'].includes(event.label)">
         <div class="classical-event">
