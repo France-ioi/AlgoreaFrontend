@@ -234,9 +234,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   private updateItem(): Observable<void> {
-    if (!this.initialFormData) return throwError(new Error('Invalid initial data'));
+    if (!this.initialFormData) return throwError(() => new Error('Invalid initial data'));
     const changes = this.getItemChanges();
-    if (!changes) return throwError(new Error('Invalid form'));
+    if (!changes) return throwError(() => new Error('Invalid form'));
     if (!Object.keys(changes).length) return of(undefined);
     return this.updateItemService.updateItem(this.initialFormData.id, changes);
   }
@@ -270,9 +270,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   private updateString(): Observable<void> {
-    if (!this.initialFormData) return throwError(new Error('Missing ID form'));
+    if (!this.initialFormData) return throwError(() => new Error('Missing ID form'));
     const itemStringChanges = this.getItemStringChanges();
-    if (!itemStringChanges) return throwError(new Error('Invalid form or initial data'));
+    if (!itemStringChanges) return throwError(() => new Error('Invalid form or initial data'));
     if (!Object.keys(itemStringChanges).length) return of(undefined);
     return this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges);
   }

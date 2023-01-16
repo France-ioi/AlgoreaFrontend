@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { catchError, mapTo, startWith } from 'rxjs/operators';
+import { catchError, map, startWith } from 'rxjs/operators';
 
 /**
  * Operator to indicate if the source action is pending
@@ -9,7 +9,7 @@ import { catchError, mapTo, startWith } from 'rxjs/operators';
  */
 export function mapPending() {
   return (source: Observable<any>): Observable<boolean> => source.pipe(
-    mapTo(false),
+    map(() => false),
     startWith(true),
     catchError(() => of(false)),
   );

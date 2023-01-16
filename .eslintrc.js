@@ -9,7 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended',
   ],
-  plugins: ['rxjs', 'jasmine'],
+  plugins: ['rxjs', 'jasmine', 'deprecation'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -86,7 +86,8 @@ module.exports = {
       avoidEscape: true,
       allowTemplateLiterals: false
     }],
-    'jasmine/no-focused-tests': ['error']
+    'jasmine/no-focused-tests': ['error'],
+    'deprecation/deprecation': ['error'],
   },
   overrides: [
     {

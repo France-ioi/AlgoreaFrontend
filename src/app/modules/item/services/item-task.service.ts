@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, throwError } from 'rxjs';
-import { catchError, map, mapTo, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
@@ -91,7 +91,7 @@ export class ItemTaskService {
     if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
 
     const platform: TaskPlatform = {
-      validate: mode => (this.readOnly ? this.validateReadOnly(mode) : this.validate(mode)).pipe(mapTo(undefined)),
+      validate: mode => (this.readOnly ? this.validateReadOnly(mode) : this.validate(mode)).pipe(map(() => undefined)),
       getTaskParams: () => ({
         minScore: 0,
         maxScore: 100,

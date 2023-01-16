@@ -54,14 +54,14 @@ export class OAuthService {
     // get and store 'sesssionState' as well?
     clearHash([ 'code', 'state' ]);
     if (!code || !state) {
-      return throwError(new Error('No code or state for code flow'));
+      return throwError(() => new Error('No code or state for code flow'));
     }
     if (parts.has('errors')) {
-      return throwError(new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
+      return throwError(() => new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
     }
     const { nonce: nonceInState } = this.parseState(state);
     if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {
-      return throwError(new Error('Invalid state received'));
+      return throwError(() => new Error('Invalid state received'));
     }
     nonceStorage.removeItem(nonceStorageKey); // no need to store the nonce any longer
     // the code can be used to get a token back
@@ -85,8 +85,8 @@ export class OAuthService {
     if (state) {
       const idx = state.indexOf(nonceStateSeparator);
       if (idx > -1) {
-        nonce = state.substr(0, idx);
-        userState = state.substr(idx + nonceStateSeparator.length);
+        nonce = state.substring(0, idx);
+        userState = state.substring(idx + nonceStateSeparator.length);
       }
     }
     return { nonce: nonce, userState: userState };

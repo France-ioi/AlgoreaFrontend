@@ -6,7 +6,7 @@
  */
 
 import { Observable, of } from 'rxjs';
-import { catchError, delay, map, retryWhen, switchMap, take } from 'rxjs/operators';
+import { catchError, map, switchMap, retry } from 'rxjs/operators';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import * as D from 'io-ts/Decoder';
 import {
@@ -58,8 +58,10 @@ export function taskProxyFromIframe(iframe : HTMLIFrameElement): Observable<Task
     } else observer.error(new Error('contentWindow not set for iframe'));
   }).pipe(
     // Check every 100ms whether the iframe loaded, for 5 minutes
-    retryWhen(err => err.pipe(delay(100), take(3000))),
-
+    retry({
+      delay: 100,
+      count: 3000,
+    }),
     // Get the RxMessagingChannel from the contentWindow
     switchMap(window => rxBuild({
       window,
