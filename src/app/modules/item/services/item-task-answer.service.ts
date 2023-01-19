@@ -60,9 +60,10 @@ export class ItemTaskAnswerService implements OnDestroy {
   private initializedTaskState$ = combineLatest([
     this.initialAnswer$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
     this.task$,
+    this.config$,
   ]).pipe(
-    switchMap(([ initialAnswer, task ]) =>
-      (initialAnswer?.state ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
+    switchMap(([ initialAnswer, task, { readOnly }]) =>
+      (initialAnswer?.state && !readOnly ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
     ),
     shareReplay(1),
   );
