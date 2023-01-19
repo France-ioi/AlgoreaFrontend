@@ -28,7 +28,12 @@ export class ItemTaskInitService implements OnDestroy {
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    switchMap(({ attemptId, route }) => this.taskTokenService.generate(route.id, attemptId)),
+    switchMap(({ readOnly, formerAnswer, attemptId, route }) => {
+      if (readOnly && formerAnswer) return this.taskTokenService.generateForAnswer(formerAnswer.id);
+      // if we are no observing (= not in readOnly) -> we need a token for our user and the task may be edited by ourself
+      // if there are no answer loaded -> we currently want an empty task, so using our own task token
+      else return this.taskTokenService.generate(route.id, attemptId);
+    }),
     shareReplay(1),
   );
 
