@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import * as D from 'io-ts/Decoder';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { decodeSnakeCase } from 'src/app/shared/operators/decode';
@@ -40,8 +40,6 @@ export class GroupNavigationService {
   getRoot(): Observable<GroupNavigationChild[]> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/groups/roots`).pipe(
       decodeSnakeCase(D.array(groupNavigationChildDecoder)),
-      // temporary fix: do not list "User" (they should not be listed by the backend!)
-      map(children => children.filter(g => g.type !== 'User')),
     );
   }
 
