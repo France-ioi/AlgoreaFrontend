@@ -105,7 +105,8 @@ import { UserIndicatorComponent } from './components/user-indicator/user-indicat
     DialogModule,
   ],
   exports: [
-    GroupIndicatorComponent
+    GroupIndicatorComponent,
+    SuggestionOfActivitiesComponent,
   ],
   providers: [
     PendingChangesGuard,

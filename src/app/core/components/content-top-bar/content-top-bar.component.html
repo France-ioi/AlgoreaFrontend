@@ -26,6 +26,17 @@
       icon="pi pi-comments"
       (click)="toggleThreadVisibility(!discussion.visible)"
     ></button>
+    <ng-container *ngIf="allowWatchingGroup$ | async">
+      <button
+        class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size"
+        [ngClass]="{ 'active-secondary': isCurrentGroupWatched, 'margin-right': !(navigationNeighbors$ | async) }"
+        pButton
+        type="button"
+        icon="fa fa-eye"
+        (click)="toggleWatchingMode($event, currentContent, isCurrentGroupWatched)"
+        *ngrxLet="isCurrentGroupWatched$; let isCurrentGroupWatched"
+      ></button>
+    </ng-container>
     <alg-neighbor-widget
       class="neighbor-widget"
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
@@ -40,3 +51,11 @@
     ></alg-neighbor-widget>
   </div>
 </ng-container>
+
+<p-overlayPanel
+  #op
+  styleClass="top-bar-overlay-panel"
+  appendTo="body"
+>
+  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
+</p-overlayPanel>
