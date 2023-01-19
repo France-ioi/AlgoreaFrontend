@@ -13,6 +13,8 @@ const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
 const answerParamName = 'answerId';
 
+export const bestAnswerToken = 'best'; // value to be set in place of the answer id to request the "best answer"
+
 // alias for better readibility
 type ItemId = string;
 type AttemptId = string;

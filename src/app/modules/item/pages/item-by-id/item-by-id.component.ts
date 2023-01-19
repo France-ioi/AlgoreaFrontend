@@ -31,7 +31,7 @@ import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
-import { RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
+import { bestAnswerToken, RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
@@ -147,9 +147,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   unknownError?: unknown;
 
   readonly formerAnswer$ = this.state$.pipe(
-    map(state => state.data?.route.answerId),
+    map(state => state.data?.route),
     distinctUntilChanged(),
-    switchMap(answerId => (answerId ? this.getAnswerService.get(answerId) : of(null))),
+    switchMap(route => {
+      if (!route || !route.answerId) return of(null);
+      if (route.answerId === bestAnswerToken) return this.getAnswerService.getBest(route.id);
+      return this.getAnswerService.get(route.answerId);
+    }),
     shareReplay(1),
   );
 

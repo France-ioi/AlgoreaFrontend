@@ -34,4 +34,10 @@ export class GetAnswerService {
       .pipe(decodeSnakeCase(answerDecoder));
   }
 
+  getBest(itemId: string): Observable<Answer | null> {
+    return this.http
+      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/best-answer`)
+      .pipe(decodeSnakeCase(answerDecoder));
+  }
+
 }
