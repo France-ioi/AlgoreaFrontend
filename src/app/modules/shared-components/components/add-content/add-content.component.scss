@@ -88,7 +88,7 @@
     overflow: hidden;
   }
 
-  &:hover {
+  &:hover, &.selected {
     background-color: var(--base-color);
     .item-image-wrapper {
       span {
@@ -110,6 +110,16 @@
 .more-items {
   color: var(--base-text-color);
   font-size: 1.2rem;
+}
+
+.input-group {
+  margin-top: 1rem;
+  display: flex;
+}
+
+.input-group-control {
+  margin-right: 1rem;
+  flex: 1;
 }
 
 @media screen and (min-width: 1220px) {

@@ -5,7 +5,7 @@ type AssociatedItemId = string;
 
 export interface NoAssociatedItem { tag: 'no-item' }
 
-export interface NewAssociatedItem { tag: 'new-item', name: string, itemType: ItemType }
+export interface NewAssociatedItem { tag: 'new-item', name: string, url?: string, itemType: ItemType }
 
 export interface ExistingAssociatedItem { tag: 'existing-item', id: AssociatedItemId }
 

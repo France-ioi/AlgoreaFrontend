@@ -11,8 +11,15 @@ export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   {
     type: 'Task',
     icon: 'fa fa-code',
+    title: $localize`Empty task`,
+    description: $localize`A new task which will be configured later.`,
+  },
+  {
+    type: 'Task',
+    icon: 'fa fa-code',
     title: $localize`Task`,
-    description: $localize`A new task which users can try to solve.`,
+    description: $localize`A new task configured with a given url.`,
+    allowToAddUrl: true,
   },
   {
     type: 'Course',

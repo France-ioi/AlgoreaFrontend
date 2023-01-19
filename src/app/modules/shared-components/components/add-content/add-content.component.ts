@@ -9,6 +9,7 @@ import { FetchState } from '../../../../shared/helpers/state';
 export interface AddedContent<T> {
   id?: string,
   title: string,
+  url?: string,
   type: T,
   permissions?: ItemCorePerm,
 }
@@ -18,9 +19,10 @@ export interface NewContentType<T> {
   icon: string,
   title: string,
   description: string,
+  allowToAddUrl?: boolean,
 }
 
-const defaultFormValues = { create: '', searchExisting: '' };
+const defaultFormValues = { title: '', url: '', searchExisting: '' };
 
 @Component({
   selector: 'alg-add-content',
@@ -47,6 +49,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   trimmedInputsValue = defaultFormValues;
 
   focused?: 'create' | 'searchExisting';
+  selected?: NewContentType<Type>;
 
   private subscriptions: Subscription[] = [];
 
@@ -59,7 +62,8 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.addContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
         this.trimmedInputsValue = {
-          create: changes.create.trim(),
+          title: changes.title.trim(),
+          url: changes.url.trim(),
           searchExisting: changes.searchExisting.trim(),
         };
       })
@@ -99,16 +103,26 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   onBlur(): void {
     // Do not un-lighten the input if there is content in the other one
     if (this.focused === 'searchExisting' && this.trimmedInputsValue.searchExisting) return;
-    if (this.focused === 'create' && this.trimmedInputsValue.create) return;
+    if (this.focused === 'create' && this.trimmedInputsValue.title) return;
     this.focused = undefined;
   }
 
+  onSelect(content: NewContentType<Type>): void {
+    if (content.allowToAddUrl) {
+      this.selected = content;
+      return;
+    }
+    this.addNew(content.type);
+  }
+
   addNew(type: Type): void {
-    const title = this.trimmedInputsValue.create;
+    const title = this.trimmedInputsValue.title;
+    const url = this.trimmedInputsValue.url;
     if (!this.checkLength(title)) return;
     this.contentAdded.emit({
-      title: title,
-      type: type,
+      title,
+      ...(url ? { url } : {}),
+      type,
     });
   }
 

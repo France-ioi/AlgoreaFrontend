@@ -132,7 +132,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
     this.itemChanges$.next({
       item: item.id !== undefined ?
         { tag: 'existing-item', id: item.id, name: item.title } :
-        { tag: 'new-item', name: item.title, itemType: item.type },
+        { tag: 'new-item', name: item.title, url: item.url, itemType: item.type },
       triggerChange: true
     });
   }

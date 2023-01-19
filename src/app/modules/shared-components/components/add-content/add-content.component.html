@@ -5,12 +5,12 @@
     (focus)="onNewFocus()"
     (blur)="onBlur()"
     [ngClass]="{'input-light': focused === 'searchExisting'}"
-    name="create"
+    name="title"
     [placeholder]="inputCreatePlaceholder"
     i18n-pTooltip pTooltip="Enter at least 3 characters"
     tooltipEvent="focus"
     tooltipPosition="bottom"
-    [tooltipDisabled]="trimmedInputsValue.create.length >= minInputLength"
+    [tooltipDisabled]="trimmedInputsValue.title.length >= minInputLength"
     *ngIf="showCreateUI"
   >
   </alg-input>
@@ -36,15 +36,24 @@
   <alg-loading size="medium"></alg-loading>
 </ng-container>
 <ng-template #ready>
-  <div *ngIf="trimmedInputsValue.create.length >= minInputLength" class="new-content-type">
+  <div *ngIf="trimmedInputsValue.title.length >= minInputLength" class="new-content-type">
     <div class="new-content-container">
-      <div *ngFor="let newContent of allowedTypesForNewContent" class="content-type-item-container" (click)="addNew(newContent.type)">
+      <div
+        *ngFor="let newContent of allowedTypesForNewContent"
+        class="content-type-item-container"
+        [ngClass]="{'selected': newContent === selected}"
+        (click)="onSelect(newContent)"
+      >
         <div class="item-image-wrapper">
           <span><i class="{{newContent.icon}}"></i></span>
         </div>
         <div class="item-title">{{newContent.title}}</div>
         <div class="item-description">{{newContent.description}}</div>
       </div>
+    </div>
+    <div class="input-group" *ngIf="selected">
+      <alg-input class="input-group-control" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm"></alg-input>
+      <p-button styleClass="alg-button p-button-rounded" (onClick)="addNew(selected.type)">Add Task</p-button>
     </div>
   </div>
 

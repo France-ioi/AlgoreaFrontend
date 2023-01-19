@@ -12,6 +12,7 @@ interface NewItemData {
 
 export type NewItem = {
   title: string,
+  url?: string,
   type: ItemType,
   languageTag: string,
 } & ({ parent: string } | { asRootOfGroupId: string });
@@ -27,6 +28,7 @@ export class CreateItemService {
   create(newItem: NewItem): Observable<string> {
     const body: {[k: string]: any} = {
       title: newItem.title,
+      url: newItem.url,
       type: newItem.type,
       language_tag: newItem.languageTag,
     };
