@@ -5,6 +5,7 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CurrentContentService } from '../../../../shared/services/current-content.service';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
 
@@ -47,6 +48,7 @@ export class AddGroupComponent {
     private groupCreationService: GroupCreationService,
     private actionFeedbackService: ActionFeedbackService,
     private groupRouter: GroupRouter,
+    private currentContentService: CurrentContentService,
   ) {}
 
   addChild(group: AddedContent<GroupType>): void {
@@ -55,6 +57,7 @@ export class AddGroupComponent {
       next: createdId => {
         this.state = 'ready';
         this.actionFeedbackService.success($localize`Group successfully created`);
+        this.currentContentService.forceNavMenuReload();
         this.groupRouter.navigateTo(rawGroupRoute({ ...group, id: createdId }));
       },
       error: err => {
