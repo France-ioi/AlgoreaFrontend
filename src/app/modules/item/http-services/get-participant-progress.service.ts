@@ -21,7 +21,7 @@ const participantProgressDecoder = D.struct({
     }),
     submissions: D.number,
     timeSpent: D.number,
-    type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+    type: D.literal('Chapter', 'Task', 'Skill'),
     validated: D.boolean,
   })),
   item: D.struct({

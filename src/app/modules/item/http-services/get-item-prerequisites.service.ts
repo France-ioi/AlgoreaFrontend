@@ -33,7 +33,7 @@ const itemPrerequisitesDecoder = pipe(
         }),
       ),
     ),
-    type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+    type: D.literal('Chapter', 'Task', 'Skill'),
     validationType: D.literal('None','All','AllButOne','Categories','One','Manual'),
   }),
   D.intersect(

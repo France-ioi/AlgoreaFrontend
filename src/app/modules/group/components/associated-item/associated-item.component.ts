@@ -89,7 +89,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   private onChange: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void = () => {};
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, this.contentType === 'activity' ? [ 'Chapter', 'Course', 'Task' ] : [ 'Skill' ]);
+    this.searchItemService.search(value, this.contentType === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
 
   constructor(
     private getItemByIdService: GetItemByIdService,

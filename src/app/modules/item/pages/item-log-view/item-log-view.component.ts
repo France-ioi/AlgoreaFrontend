@@ -106,7 +106,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
       {
         field: 'item.string.title',
         header: $localize`Content`,
-        enabled: ![ 'Task', 'Course' ].includes(type),
+        enabled: type !== 'Task',
       },
       {
         field: 'item.user',

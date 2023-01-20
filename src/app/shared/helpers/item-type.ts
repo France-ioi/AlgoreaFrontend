@@ -1,5 +1,5 @@
 
-export type ActivityType = 'Chapter'|'Task'|'Course';
+export type ActivityType = 'Chapter'|'Task';
 export type ItemType = ActivityType|'Skill';
 export type ItemTypeCategory = 'activity'|'skill';
 interface ItemWithType { type: ItemType }
@@ -10,8 +10,7 @@ export function isASkill(item: ItemWithType): boolean {
 }
 
 export function isATask(item: ItemWithType): boolean {
-  // courses are now considered the same way as tasks (both will be merged soon)
-  return item.type === 'Task' || item.type === 'Course';
+  return item.type === 'Task';
 }
 
 export function mayHaveChildren(item: ItemWithType): boolean {
@@ -28,5 +27,5 @@ export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
 }
 
 export function isTask(item: ItemWithType): boolean {
-  return item.type === 'Task' || item.type === 'Course';
+  return item.type === 'Task';
 }

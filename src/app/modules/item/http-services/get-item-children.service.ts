@@ -24,7 +24,7 @@ const baseItemChildDecoder = D.struct({
   watchPropagation: D.boolean,
 });
 
-const itemChildTypeDecoder = D.literal('Chapter','Task','Course','Skill');
+const itemChildTypeDecoder = D.literal('Chapter','Task','Skill');
 
 const itemChildDecoder = pipe(
   baseItemChildDecoder,

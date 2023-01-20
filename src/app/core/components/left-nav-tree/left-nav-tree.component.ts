@@ -49,7 +49,7 @@ export class LeftNavTreeComponent implements OnChanges {
   private typeForElement(e: NavTreeElement): string {
     switch (this.elementType) {
       case 'activity':
-        return e.hasChildren ? 'chapter' : 'task-course';
+        return e.hasChildren ? 'chapter' : 'task';
       case 'skill':
         return e.hasChildren ? 'skill-folder' : 'skill-leaf';
       case 'group':

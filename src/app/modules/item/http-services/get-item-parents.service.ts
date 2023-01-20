@@ -14,7 +14,7 @@ const itemParentDecoder = D.struct({
     title: D.nullable(D.string),
   }),
   category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
-  type: D.literal('Chapter','Task','Course','Skill'),
+  type: D.literal('Chapter','Task','Skill'),
   permissions: itemCorePermDecoder,
   result: D.struct({
     attemptId: D.string,

@@ -18,7 +18,7 @@ const breadcrumbItemDecoder = pipe(
     itemId: D.string,
     languageTag: D.string,
     title: D.string,
-    type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+    type: D.literal('Chapter', 'Task', 'Skill'),
   }),
   D.intersect(
     D.partial({

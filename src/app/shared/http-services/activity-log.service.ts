@@ -19,7 +19,7 @@ const activityLogDecoder = pipe(
       string: D.struct({
         title: D.string,
       }),
-      type: D.literal('Chapter', 'Task', 'Course', 'Skill'),
+      type: D.literal('Chapter', 'Task', 'Skill'),
     }),
     participant: D.struct({
       id: D.string,
