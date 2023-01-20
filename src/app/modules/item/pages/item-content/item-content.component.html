@@ -4,7 +4,7 @@
       <alg-section
         icon="fa fa-book"
         i18n-label label="Description"
-        *ngIf="!['Task', 'Course'].includes(itemData.item.type) && itemData.item.string.description"
+        *ngIf="itemData.item.type !== 'Task' && itemData.item.string.description"
       >
         <ng-container
           *algHasHTML="itemData.item.string.description; else textContent"
@@ -47,7 +47,7 @@
         <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
       </ng-container>
 
-      <ng-container *ngIf="(itemData.item.type === 'Task' || itemData.item.type === 'Course')">
+      <ng-container *ngIf="itemData.item.type === 'Task'">
         <ng-container *ngIf="itemData.item.url; else noUrl">
           <alg-item-display
             *ngIf="attemptId; else noCurrentResult"
@@ -90,7 +90,7 @@
           Your current access rights do not allow you to list the content of this skill.
         </span>
 
-        <span *ngIf="['Task', 'Course'].includes(itemData.item.type)" i18n>
+        <span *ngIf="itemData.item.type === 'Task'" i18n>
           Your current access rights do not allow you to start the activity.
         </span>
       </alg-message-info>

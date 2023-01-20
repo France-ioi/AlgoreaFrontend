@@ -35,7 +35,7 @@ const itemNavigationChildDecoderBase = pipe(
       languageTag: D.string,
       title: D.nullable(D.string),
     }),
-    type: D.literal('Chapter','Task','Course','Skill'),
+    type: D.literal('Chapter','Task','Skill'),
   })
 );
 
@@ -66,7 +66,7 @@ const itemNavigationDataDecoder = D.struct({
     languageTag: D.string,
     title: D.nullable(D.string),
   }),
-  type: D.literal('Chapter','Task','Course','Skill'),
+  type: D.literal('Chapter','Task','Skill'),
   children: D.array(itemNavigationChildDecoder),
 });
 

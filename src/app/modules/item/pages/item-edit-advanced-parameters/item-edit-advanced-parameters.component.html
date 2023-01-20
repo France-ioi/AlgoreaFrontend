@@ -1,6 +1,6 @@
 <form *ngIf="item && parentForm" [formGroup]="parentForm">
   <alg-section icon="fa fa-cogs" i18n-label label="Global parameters"
-    *ngIf="['Task', 'Course'].includes(item.type)">
+    *ngIf="item.type === 'Task'">
     <div class="form-item-view">
       <span class="form-item-label" i18n>Url</span>
       <div class="form-item-control">
@@ -71,7 +71,7 @@
         <alg-selection formControlName="full_screen" [items]="fullScreenOptions"></alg-selection>
       </div>
     </div>
-    <div class="form-item-view" *ngIf="!['Task', 'Course'].includes(item.type)">
+    <div class="form-item-view" *ngIf="item.type !== 'Task'">
       <span class="form-item-label">
         <ng-container i18n>Children layout</ng-container>
       </span>

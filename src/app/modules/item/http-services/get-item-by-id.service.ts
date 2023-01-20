@@ -27,7 +27,7 @@ export const itemDecoder = pipe(
     ),
     bestScore: D.number,
     permissions: itemCorePermDecoder,
-    type: D.literal('Chapter','Task','Course','Skill'),
+    type: D.literal('Chapter','Task','Skill'),
     promptToJoinGroupByCode: D.boolean,
     textId: D.nullable(D.string),
     validationType: D.literal('None','All','AllButOne','Categories','One','Manual'),

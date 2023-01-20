@@ -17,7 +17,7 @@ export interface ItemFound<T> {
 export const itemFoundDecoder = D.struct({
   id: D.string,
   title: D.string,
-  type: D.literal('Chapter','Task','Course','Skill'),
+  type: D.literal('Chapter','Task','Skill'),
   permissions: itemCorePermDecoder,
 });
 
