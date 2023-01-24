@@ -73,6 +73,7 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
 import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
 import { ItemRouteLinkPipe } from 'src/app/shared/pipes/itemRouteLink';
 import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnippet';
+import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 
 @NgModule({
   declarations: [
@@ -125,6 +126,7 @@ import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnip
     AllowsWatchingItemResultsPipe,
     AllowDisplayCodeSnippet,
     MessageInfoComponent,
+    SuggestionOfActivitiesComponent,
   ],
   imports: [
     CommonModule,
@@ -206,6 +208,7 @@ import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnip
     AllowsWatchingItemResultsPipe,
     MessageInfoComponent,
     AllowDisplayCodeSnippet,
+    SuggestionOfActivitiesComponent,
   ],
   providers: [],
 })

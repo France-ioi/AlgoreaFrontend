@@ -43,7 +43,6 @@ import { ContentTopBarComponent } from './components/content-top-bar/content-top
 import { AuthenticationInterceptor } from '../shared/interceptors/authentication.interceptor';
 import { AlgErrorHandler } from '../shared/error-handling/error-handler';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { GroupModule } from '../modules/group/group.module';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -84,7 +83,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
     ConfirmPopupModule,
     OverlayPanelModule,
-    GroupModule,
   ],
   providers: [
     ConfirmationService,

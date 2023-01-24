@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ItemNavigationService } from '../../../../core/http-services/item-navigation.service';
+import { ItemNavigationService } from 'src/app/core/http-services/item-navigation.service';
 import { switchMap, filter, map } from 'rxjs/operators';
-import { isNotNull } from '../../../../shared/helpers/null-undefined-predicates';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
+import { mapToFetchState } from 'src/app/shared/operators/state';
 import { Subject } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 
