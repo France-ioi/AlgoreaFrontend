@@ -23,7 +23,7 @@ export interface WatchedGroup {
 export interface StartWatchGroupInfo {
   id: string,
   name: string,
-  currentUserCanGrantGroupAccess?: boolean,
+  currentUserCanGrantGroupAccess: boolean,
 }
 
 @Injectable({
@@ -97,7 +97,7 @@ export class GroupWatchingService implements OnDestroy {
     this.cachedGroupInfo.next({
       route: route,
       name: group.name,
-      currentUserCanGrantAccess: group.currentUserCanGrantGroupAccess || false,
+      currentUserCanGrantAccess: group.currentUserCanGrantGroupAccess,
     });
     this.setWatchedGroupInUrlParams({ groupId: group.id, isUser: false });
   }

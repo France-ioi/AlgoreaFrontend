@@ -46,7 +46,11 @@ export class GroupHeaderComponent implements OnChanges, OnDestroy {
 
   onStartWatchButtonClicked(event: Event): void {
     if (!this.groupData?.group) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    this.groupWatchingService.startGroupWatching(this.groupData.route, this.groupData.group);
+    this.groupWatchingService.startGroupWatching(this.groupData.route, {
+      id: this.groupData.group.id,
+      name: this.groupData.group.name,
+      currentUserCanGrantGroupAccess: !!this.groupData.group.currentUserCanGrantGroupAccess,
+    });
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }
 

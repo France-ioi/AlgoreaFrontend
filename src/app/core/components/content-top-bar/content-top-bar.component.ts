@@ -99,7 +99,7 @@ export class ContentTopBarComponent implements OnDestroy {
     this.groupWatchingService.startGroupWatching(contentInfo.route, {
       id: contentInfo.route.id,
       name: contentInfo.title || '',
-      currentUserCanGrantGroupAccess: contentInfo.currentUserCanGrantGroupAccess,
+      currentUserCanGrantGroupAccess: !!contentInfo.currentUserCanGrantGroupAccess,
     });
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }
