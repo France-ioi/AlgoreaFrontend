@@ -7,9 +7,14 @@
     </div>
     <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
       <alg-page-navigator
-        *ngIf="!!groupWithManagement"
+        *ngIf="!!groupWithManagement && groupData"
+        [startWatchGroupInfo]="{
+          id: groupData.group.id,
+          name: groupData.group.name,
+          currentUserCanGrantGroupAccess: !!groupData.group.currentUserCanGrantGroupAccess
+         }"
+        [route]="groupData.route"
         [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
-        [isWatched]="!!(isCurrentGroupWatched$ | async)"
         [allowFullScreen]="false"
         [navigationMode]="{
           parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
@@ -19,17 +24,7 @@
         (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
         (left)="navigationNeighbors?.data?.previous?.navigateTo()"
         (right)="navigationNeighbors?.data?.next?.navigateTo()"
-        (watch)="onStartWatchButtonClicked($event)"
-        (stopWatch)="onStopWatchButtonClicked()"
       ></alg-page-navigator>
     </ng-container>
   </div>
 </div>
-
-<p-overlayPanel
-    #op
-    [style]="{ width: '450px' }"
-    appendTo="body"
->
-  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
-</p-overlayPanel>

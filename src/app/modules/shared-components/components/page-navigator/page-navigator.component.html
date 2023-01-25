@@ -1,6 +1,11 @@
 <div class="page-nav">
+  <alg-watch-button
+    [route]="route"
+    [startWatchGroupInfo]="startWatchGroupInfo"
+    *ngIf="allowWatching && startWatchGroupInfo"
+  ></alg-watch-button>
   <span
-    *ngIf="allowWatching"
+    *ngIf="allowWatching && !startWatchGroupInfo"
     class="round-icon-action-button"
     [ngClass]="isWatched ? 'watched' : 'watch'"
     (click)="isWatched ? stopWatch.emit() : watch.emit($event)"
