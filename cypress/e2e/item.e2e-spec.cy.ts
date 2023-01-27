@@ -1,9 +1,4 @@
-import { retry } from './helpers/retry';
-import { ItemPage } from './item.po';
-
 describe('item page', () => {
-  const page = new ItemPage();
-
   describe('activity page', () => {
     const motifArt = {
       id: '1625159049301502151',
@@ -17,11 +12,9 @@ describe('item page', () => {
       { label: 'with incorrect path', path: [ 'invalid', 'path' ] },
     ];
     for (const useCase of pageLoadUseCases) {
-      it(`should load ${useCase.label}`, async () => {
-        await page.navigateToActivity(motifArt.id, useCase.path);
-        const taskTitle = page.getActivityTitle();
-        await page.waitUntilTextIsPresent(taskTitle, motifArt.title);
-        await retry(() => expect(taskTitle.getText()).toBe(motifArt.title));
+      it(`should load ${useCase.label}`, () => {
+        cy.navigateToActivity(motifArt.id, useCase.path);
+        cy.get('alg-item-header .task-title').should('be.visible').should('have.text', motifArt.title);
       });
     }
   });

@@ -57,3 +57,7 @@ Thumbs.db
 # Firebase Hosting
 ./firebase/*
 .firebase/*
+
+# Cypress
+/cypress/screenshots
+/cypress/videos

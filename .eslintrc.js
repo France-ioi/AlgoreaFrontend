@@ -8,8 +8,9 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended',
+    'plugin:cypress/recommended',
   ],
-  plugins: ['rxjs', 'jasmine', 'deprecation'],
+  plugins: ['rxjs', 'jasmine', 'deprecation', 'cypress'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -88,6 +89,12 @@ module.exports = {
     }],
     'jasmine/no-focused-tests': ['error'],
     'deprecation/deprecation': ['error'],
+    "cypress/no-assigning-return-values": "error",
+    "cypress/no-unnecessary-waiting": "error",
+    "cypress/assertion-before-screenshot": "warn",
+    "cypress/no-force": "warn",
+    "cypress/no-async-tests": "error",
+    "cypress/no-pause": "error"
   },
   overrides: [
     {
@@ -97,6 +104,7 @@ module.exports = {
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/naming-convention': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
       }
     },
   ],

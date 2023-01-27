@@ -154,11 +154,11 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
-          name: Install the same version of webdriver as the local one
+          name: Install Cypress
           command: |
-            npx webdriver-manager clean
-            npx webdriver-manager update --versions.chrome=$(google-chrome --version | cut -d ' ' -f 3)
-      - run: npx ng e2e --protractor-config=e2e/protractor-ci.conf.js --webdriver-update=false
+            npx cypress cache clear
+            npx cypress install
+      - run: npx ng e2e
 
 
   deploy-branch:
