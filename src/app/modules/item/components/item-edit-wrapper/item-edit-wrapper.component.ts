@@ -139,7 +139,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const usesApi = formControls.usesApi?.value as boolean;
     if (isNotUndefined(this.initialFormData.usesApi) && usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
 
-    const textId = formControls.textId?.value !== '' ? formControls.textId?.value as string : null;
+    const textIdValue = (formControls.textId?.value as string).trim();
+    const textId = textIdValue !== '' ? textIdValue : null;
     if (textId !== this.initialFormData.textId) itemFormValues.text_id = textId;
 
     const validationType = formControls.validationType?.value as 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual';
