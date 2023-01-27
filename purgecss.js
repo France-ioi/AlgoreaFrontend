@@ -22,6 +22,14 @@ const safeList = [
     'p-toast-message-error',
     'p-sorticon',
     'p-tableheadercheckbox',
+    'p-tooltip',
+    'p-tooltip-arrow',
+    'p-tooltip-text',
+    'p-tooltip-right',
+    'p-tooltip-left',
+    'p-tooltip-top',
+    'p-tooltip-bottom',
+    'tooltip-custom',
 ];
 
 if (allCssFiles.length === 0) {
