@@ -6,8 +6,13 @@ export interface GroupInfo extends RoutedContentInfo {
   type: 'group',
   route: GroupRoute,
   navData?: GroupNavigationData,
-  currentUserCanWatchMembers?: boolean,
-  currentUserCanGrantGroupAccess?: boolean,
+  details?: GroupDetails,
+}
+
+export interface GroupDetails {
+  name: string,
+  currentUserCanWatchMembers: boolean,
+  currentUserCanGrantGroupAccess: boolean,
 }
 
 export function isGroupInfo(info: ContentInfo|null): info is GroupInfo {

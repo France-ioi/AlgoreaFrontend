@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ContentInfo } from '../../../shared/models/content/content-info';
-import { map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
 import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -49,10 +49,6 @@ export class ContentTopBarComponent {
         this.activityNavTreeService.navigationNeighbors$ : this.skillNavTreeService.navigationNeighbors$;
     }),
     filter(navigationNeighbors => !!navigationNeighbors?.isReady),
-  );
-
-  allowWatchingGroup$ = this.currentContent$.pipe(
-    map(currentContent => isGroupInfo(currentContent) && currentContent.currentUserCanWatchMembers),
   );
 
   constructor(
