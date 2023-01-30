@@ -139,8 +139,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const usesApi = formControls.usesApi?.value as boolean;
     if (isNotUndefined(this.initialFormData.usesApi) && usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
 
-    const textId = formControls.textId?.value as string;
-    if (textId !== '') itemFormValues.text_id = textId;
+    const textIdValue = (formControls.textId?.value as string).trim();
+    const textId = textIdValue !== '' ? textIdValue : null;
+    if (textId !== this.initialFormData.textId) itemFormValues.text_id = textId;
 
     const validationType = formControls.validationType?.value as 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual';
     if (validationType !== this.initialFormData.validationType) itemFormValues.validation_type = validationType;
@@ -324,7 +325,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       image_url: item.string.imageUrl || '',
       subtitle: item.string.subtitle || '',
       url: item.url || '',
-      text_id: '',
+      text_id: item.textId,
       uses_api: item.usesApi || false,
       validation_type: item.validationType,
       no_score: item.noScore,
