@@ -4,6 +4,7 @@
     [startWatchGroupInfo]="startWatchGroupInfo"
     *ngIf="allowWatching && startWatchGroupInfo"
   ></alg-watch-button>
+  <!-- We need to keep this code for support watching group on user page, as content of user page is not UserInfo yet -->
   <span
     *ngIf="allowWatching && !startWatchGroupInfo"
     class="round-icon-action-button"
