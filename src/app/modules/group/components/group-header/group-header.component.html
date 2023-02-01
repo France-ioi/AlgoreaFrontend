@@ -1,18 +1,18 @@
-<div class="group-header-container">
+<div class="group-header-container" *ngIf="groupData">
   <div class="group-header unfolded">
     <div class="user-info">
       <div class="user-name">
-        <span>{{ groupData?.group?.name }}</span>
+        <span>{{ groupData.group.name }}</span>
       </div>
     </div>
     <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
       <alg-page-navigator
-        *ngIf="!!groupWithManagement && groupData"
+        *ngIf="groupWithManagement"
         [startWatchGroupInfo]="{
-          id: groupData.group.id,
-          name: groupData.group.name,
-          currentUserCanGrantGroupAccess: !!groupData.group.currentUserCanGrantGroupAccess
-         }"
+          id: groupWithManagement.id,
+          name: groupWithManagement.name,
+          currentUserCanGrantGroupAccess: !!groupWithManagement.currentUserCanGrantGroupAccess
+        }"
         [route]="groupData.route"
         [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
         [allowFullScreen]="false"
