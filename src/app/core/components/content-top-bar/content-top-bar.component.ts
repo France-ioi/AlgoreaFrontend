@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
@@ -10,7 +10,6 @@ import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../../shared/models/content/group-info';
-import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -20,8 +19,6 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 export class ContentTopBarComponent {
   @Input() fullFrameContent?: FullFrameContent;
   @Input() scrolled = false;
-
-  @ViewChild('op') op?: OverlayPanel;
 
   discussionState$ = this.discussionService.state$;
 
