@@ -151,8 +151,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     distinctUntilChanged(),
     switchMap(route => {
       if (!route || !route.answerId) return of(null);
-      if (route.answerId === bestAnswerToken) return this.getAnswerService.getBest(route.id);
-      return this.getAnswerService.get(route.answerId);
+      if (route.answerId !== bestAnswerToken) return this.getAnswerService.get(route.answerId);
+      return this.watchedGroup$.pipe(
+        take(1),
+        switchMap(g => this.getAnswerService.getBest(route.id, { watchedGroupId: g?.route.isUser ? g?.route.id : undefined }))
+      );
     }),
     shareReplay(1),
   );
