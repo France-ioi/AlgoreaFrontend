@@ -8,13 +8,8 @@
     <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
       <alg-page-navigator
         *ngIf="groupWithManagement"
-        [startWatchGroupInfo]="{
-          id: groupWithManagement.id,
-          name: groupWithManagement.name,
-          currentUserCanGrantGroupAccess: !!groupWithManagement.currentUserCanGrantGroupAccess
-        }"
-        [route]="groupData.route"
         [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
+        [showNewStartWatchButton]="true"
         [allowFullScreen]="false"
         [navigationMode]="{
           parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,

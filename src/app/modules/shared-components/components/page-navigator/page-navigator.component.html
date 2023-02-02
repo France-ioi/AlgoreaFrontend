@@ -1,12 +1,8 @@
 <div class="page-nav">
-  <alg-watch-button
-    [route]="route"
-    [startWatchGroupInfo]="startWatchGroupInfo"
-    *ngIf="allowWatching && startWatchGroupInfo"
-  ></alg-watch-button>
+  <alg-watch-button *ngIf="allowWatching && showNewStartWatchButton"></alg-watch-button>
   <!-- We need to keep this code for support watching group on user page, as content of user page is not UserInfo yet -->
   <span
-    *ngIf="allowWatching && !startWatchGroupInfo"
+    *ngIf="allowWatching && !showNewStartWatchButton"
     class="round-icon-action-button"
     [ngClass]="isWatched ? 'watched' : 'watch'"
     (click)="isWatched ? stopWatch.emit() : watch.emit($event)"

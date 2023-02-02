@@ -1,55 +1,47 @@
-import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { GroupWatchingService, StartWatchGroupInfo } from '../../../../core/services/group-watching.service';
-import { combineLatest, map, ReplaySubject } from 'rxjs';
-import { GroupRoute } from '../../../../shared/routing/group-route';
+import { GroupWatchingService } from '../../../../core/services/group-watching.service';
+import { combineLatest, map } from 'rxjs';
+import { CurrentContentService } from '../../../../shared/services/current-content.service';
+import { filter } from 'rxjs/operators';
+import { GroupInfo, isGroupInfo } from '../../../../shared/models/content/group-info';
 
 @Component({
   selector: 'alg-watch-button',
   templateUrl: './watch-button.component.html',
   styleUrls: [ './watch-button.component.scss' ],
 })
-export class WatchButtonComponent implements OnChanges, OnDestroy {
+export class WatchButtonComponent {
   @ViewChild('op') op?: OverlayPanel;
 
-  @Input() route?: GroupRoute;
-  @Input() startWatchGroupInfo?: StartWatchGroupInfo;
-
-  startWatchGroupInfo$ = new ReplaySubject<StartWatchGroupInfo>(1);
+  groupInfo$ = this.currentContentService.content$.pipe(
+    filter(isGroupInfo),
+  );
   isCurrentGroupWatched$ = combineLatest([
     this.groupWatchingService.watchedGroup$,
-    this.startWatchGroupInfo$,
+    this.groupInfo$,
   ]).pipe(
-    map(([ watchedGroup, startWatchGroupInfo ]) => !!(watchedGroup && watchedGroup.route.id === startWatchGroupInfo.id)),
+    map(([ watchedGroup, groupInfo ]) => !!(watchedGroup && watchedGroup.route.id === groupInfo.route.id)),
   );
 
-  constructor(private groupWatchingService: GroupWatchingService) {
+  constructor(private currentContentService: CurrentContentService, private groupWatchingService: GroupWatchingService) {
   }
 
-  ngOnChanges(): void {
-    if (this.startWatchGroupInfo) {
-      this.startWatchGroupInfo$.next(this.startWatchGroupInfo);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.startWatchGroupInfo$.complete();
-  }
-
-  toggleWatchingMode(event: Event, isWatching: boolean): void {
-    if (!this.startWatchGroupInfo) throw new Error("unexpected group not set in 'onWatchButtonClicked'");
-    if (!this.route) throw new Error("unexpected route not set in 'onWatchButtonClicked'");
-
+  toggleWatchingMode(event: Event, groupInfo: GroupInfo, isWatching: boolean): void {
     if (isWatching) {
       this.op?.hide();
       this.groupWatchingService.stopWatching();
       return;
     }
 
-    this.groupWatchingService.startGroupWatching(this.route, {
-      id: this.startWatchGroupInfo.id,
-      name: this.startWatchGroupInfo.name,
-      currentUserCanGrantGroupAccess: this.startWatchGroupInfo.currentUserCanGrantGroupAccess,
+    if (!groupInfo.details) {
+      throw new Error('Unexpected: group details in not set');
+    }
+
+    this.groupWatchingService.startGroupWatching(groupInfo.route, {
+      id: groupInfo.route.id,
+      name: groupInfo.details.name,
+      currentUserCanGrantGroupAccess: groupInfo.details.currentUserCanGrantGroupAccess,
     });
     this.openSuggestionOfActivitiesOverlayPanel(event);
   }

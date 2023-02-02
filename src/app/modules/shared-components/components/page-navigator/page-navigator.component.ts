@@ -1,6 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { StartWatchGroupInfo } from '../../../../core/services/group-watching.service';
-import { GroupRoute } from '../../../../shared/routing/group-route';
 
 @Component({
   selector: 'alg-page-navigator',
@@ -11,8 +9,7 @@ export class PageNavigatorComponent {
   @Input() allowWatching = false;
   @Input() isWatched = false;
   @Input() allowFullScreen = false;
-  @Input() startWatchGroupInfo?: StartWatchGroupInfo;
-  @Input() route?: GroupRoute;
+  @Input() showNewStartWatchButton = false;
 
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 

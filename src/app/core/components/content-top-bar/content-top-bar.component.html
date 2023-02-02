@@ -26,18 +26,10 @@
       icon="pi pi-comments"
       (click)="toggleThreadVisibility(!discussion.visible)"
     ></button>
-    <ng-container *ngIf="groupInfo$ | async as groupInfo">
-      <alg-watch-button
-        [ngClass]="{ 'margin-right': !(navigationNeighbors$ | async) }"
-        [route]="groupInfo.route"
-        [startWatchGroupInfo]="{
-          id: groupInfo.route.id,
-          name: groupInfo.details.name,
-          currentUserCanGrantGroupAccess: groupInfo.details.currentUserCanGrantGroupAccess
-        }"
-        *ngIf="groupInfo.details && groupInfo.details.currentUserCanWatchMembers"
-      ></alg-watch-button>
-    </ng-container>
+    <alg-watch-button
+      [ngClass]="{ 'margin-right': !(navigationNeighbors$ | async) }"
+      *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
+    ></alg-watch-button>
     <alg-neighbor-widget
       class="neighbor-widget"
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"

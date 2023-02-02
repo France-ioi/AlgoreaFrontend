@@ -28,10 +28,6 @@ export class ContentTopBarComponent {
     delay(0),
   );
 
-  groupInfo$ = this.currentContentService.content$.pipe(
-    filter(isGroupInfo),
-  );
-
   navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {
       if (isGroupInfo(content)) {
