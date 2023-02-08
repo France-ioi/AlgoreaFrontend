@@ -22,9 +22,14 @@
         <div class="breadcrumbs-container" *ngFor="let breadcrumbs of state.data">
           <span class="breadcrumbs-prefix" i18n>via</span>
           <ul class="breadcrumbs">
-            <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs; let i = index">
+            <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs; let isLast = last">
               <a class="alg-link" [routerLink]="item.url">
-                {{ item.title }}
+                <ng-container *ngIf="!isLast">{{ item.title }}</ng-container>
+                <i
+                  class="fa"
+                  [ngClass]="{'fa-hand-paper': item.type !== 'Skill', 'fa-graduation-cap': item.type === 'Skill'}"
+                  *ngIf="isLast"
+                ></i>
               </a>
             </li>
           </ul>

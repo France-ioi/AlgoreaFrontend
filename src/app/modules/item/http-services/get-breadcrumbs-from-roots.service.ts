@@ -9,6 +9,7 @@ const breadcrumbsFromRootDecoder = D.struct({
   id: D.string,
   languageTag: D.string,
   title: D.string,
+  type: D.literal('Chapter','Task','Skill'),
 });
 
 export type BreadcrumbsFromRoot = D.TypeOf<typeof breadcrumbsFromRootDecoder>;

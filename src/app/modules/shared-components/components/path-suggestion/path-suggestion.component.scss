@@ -19,9 +19,15 @@
 }
 
 .breadcrumbs-item {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  &:not(:last-child) {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &:last-child {
+    width: 3rem;
+  }
 
   &:not(:first-child):before {
     content: '/';
