@@ -29,7 +29,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: [ '' ],
-    image_url: [ '' ],
+    image_url: [ '', Validators.maxLength(2000) ],
     url: [ '', Validators.maxLength(2000) ],
     text_id: [ '', Validators.maxLength(200) ],
     uses_api: [ false ],
