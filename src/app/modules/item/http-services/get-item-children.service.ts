@@ -11,6 +11,8 @@ import { pipe } from 'fp-ts/lib/function';
 
 const baseItemChildCategory = D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge');
 
+const itemChildTypeDecoder = D.literal('Chapter','Task','Skill');
+
 const baseItemChildDecoder = D.struct({
   id: D.string,
   order: D.number,
@@ -22,9 +24,8 @@ const baseItemChildDecoder = D.struct({
   grantViewPropagation: D.boolean,
   upperViewLevelsPropagation: D.literal('use_content_view_propagation', 'as_content_with_descendants', 'as_is'),
   watchPropagation: D.boolean,
+  type: itemChildTypeDecoder,
 });
-
-const itemChildTypeDecoder = D.literal('Chapter','Task','Skill');
 
 const itemChildDecoder = pipe(
   baseItemChildDecoder,
@@ -35,7 +36,6 @@ const itemChildDecoder = pipe(
         title: D.nullable(D.string),
         imageUrl: D.nullable(D.string),
       }),
-      type: itemChildTypeDecoder,
       results: D.array(D.struct({
         attemptId: D.string,
         latestActivityAt: dateDecoder,
@@ -60,11 +60,9 @@ const itemChildDecoder = pipe(
   )
 );
 
-const invisibleItemChildDecoder = baseItemChildDecoder;
-
 const possiblyInvisibleItemChild = D.union(
   itemChildDecoder,
-  invisibleItemChildDecoder,
+  baseItemChildDecoder,
 );
 
 export type BaseItemChildCategory = D.TypeOf<typeof baseItemChildCategory>;
