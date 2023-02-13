@@ -29,7 +29,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: [ '' ],
-    image_url: [ '' ],
+    image_url: [ '', Validators.maxLength(2000) ],
     url: [ '', Validators.maxLength(2000) ],
     text_id: [ '', Validators.maxLength(200) ],
     uses_api: [ false ],
@@ -139,7 +139,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const usesApi = formControls.usesApi?.value as boolean;
     if (isNotUndefined(this.initialFormData.usesApi) && usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
 
-    const textIdValue = (formControls.textId?.value as string).trim();
+    const textIdValue = ((formControls.textId?.value as string | null) || '').trim();
     const textId = textIdValue !== '' ? textIdValue : null;
     if (textId !== this.initialFormData.textId) itemFormValues.text_id = textId;
 
