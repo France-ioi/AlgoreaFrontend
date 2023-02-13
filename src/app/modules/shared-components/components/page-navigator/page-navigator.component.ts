@@ -9,6 +9,7 @@ export class PageNavigatorComponent {
   @Input() allowWatching = false;
   @Input() isWatched = false;
   @Input() allowFullScreen = false;
+  @Input() showNewStartWatchButton = false;
 
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 

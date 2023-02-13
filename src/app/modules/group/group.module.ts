@@ -41,7 +41,6 @@ import { UserHeaderComponent } from './components/user-header/user-header.compon
 import { GroupLogViewComponent } from './components/group-log-view/group-log-view.component';
 import { AddGroupComponent } from './components/add-group/add-group.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 import { GroupAccessComponent } from './pages/group-access/group-access.component';
 import { GroupManagersComponent } from './pages/group-managers/group-managers.component';
 import { DialogModule } from 'primeng/dialog';
@@ -84,7 +83,6 @@ import { UserIndicatorComponent } from './components/user-indicator/user-indicat
     GroupLogViewComponent,
     AddGroupComponent,
     GroupManagersComponent,
-    SuggestionOfActivitiesComponent,
     GroupAccessComponent,
     ManagerPermissionDialogComponent,
     GroupPermissionsComponent,
@@ -105,7 +103,7 @@ import { UserIndicatorComponent } from './components/user-indicator/user-indicat
     DialogModule,
   ],
   exports: [
-    GroupIndicatorComponent
+    GroupIndicatorComponent,
   ],
   providers: [
     PendingChangesGuard,

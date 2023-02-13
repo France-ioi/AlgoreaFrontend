@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
-import { GetGroupByIdService, Group } from 'src/app/modules/group/http-services/get-group-by-id.service';
+import { GetGroupByIdService } from 'src/app/modules/group/http-services/get-group-by-id.service';
 import { GetUserService, User } from 'src/app/modules/group/http-services/get-user.service';
 import { isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { boolToQueryParamValue, queryParamValueToBool } from 'src/app/shared/helpers/url';
@@ -18,6 +18,12 @@ export interface WatchedGroup {
   route: RawGroupRoute,
   name: string,
   currentUserCanGrantAccess: boolean,
+}
+
+export interface StartWatchGroupInfo {
+  id: string,
+  name: string,
+  currentUserCanGrantGroupAccess: boolean,
 }
 
 @Injectable({
@@ -87,11 +93,11 @@ export class GroupWatchingService implements OnDestroy {
     this.setWatchedGroupInUrlParams({ groupId: user.groupId, isUser: true });
   }
 
-  startGroupWatching(route: GroupRoute, group: Group): void {
+  startGroupWatching(route: GroupRoute, group: StartWatchGroupInfo): void {
     this.cachedGroupInfo.next({
       route: route,
       name: group.name,
-      currentUserCanGrantAccess: group.currentUserCanGrantGroupAccess || false,
+      currentUserCanGrantAccess: group.currentUserCanGrantGroupAccess,
     });
     this.setWatchedGroupInUrlParams({ groupId: group.id, isUser: false });
   }

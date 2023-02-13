@@ -55,4 +55,13 @@
       color: #fff !important;
     }
   }
+
+  &.active-secondary {
+    background-color: var(--secondary-color) !important;
+    border-color: var(--secondary-color) !important;
+
+    .p-button-icon {
+      color: #fff !important;
+    }
+  }
 }

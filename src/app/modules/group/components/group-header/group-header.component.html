@@ -1,15 +1,15 @@
-<div class="group-header-container">
+<div class="group-header-container" *ngIf="groupData">
   <div class="group-header unfolded">
     <div class="user-info">
       <div class="user-name">
-        <span>{{ groupData?.group?.name }}</span>
+        <span>{{ groupData.group.name }}</span>
       </div>
     </div>
     <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
       <alg-page-navigator
-        *ngIf="!!groupWithManagement"
+        *ngIf="groupWithManagement"
         [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
-        [isWatched]="!!(isCurrentGroupWatched$ | async)"
+        [showNewStartWatchButton]="true"
         [allowFullScreen]="false"
         [navigationMode]="{
           parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
@@ -19,17 +19,7 @@
         (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
         (left)="navigationNeighbors?.data?.previous?.navigateTo()"
         (right)="navigationNeighbors?.data?.next?.navigateTo()"
-        (watch)="onStartWatchButtonClicked($event)"
-        (stopWatch)="onStopWatchButtonClicked()"
       ></alg-page-navigator>
     </ng-container>
   </div>
 </div>
-
-<p-overlayPanel
-    #op
-    [style]="{ width: '450px' }"
-    appendTo="body"
->
-  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
-</p-overlayPanel>

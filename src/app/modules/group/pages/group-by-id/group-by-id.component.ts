@@ -52,6 +52,11 @@ export class GroupByIdComponent implements OnInit, OnDestroy {
         currentPageIdx: breadcrumbs.length - 1,
       },
       title: group.name,
+      details: {
+        name: group.name,
+        currentUserCanWatchMembers: !!group.currentUserCanWatchMembers,
+        currentUserCanGrantGroupAccess: !!group.currentUserCanGrantGroupAccess,
+      },
     })),
   ).subscribe(p => this.currentContent.replace(p));
 

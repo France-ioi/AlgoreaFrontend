@@ -26,6 +26,10 @@
       icon="pi pi-comments"
       (click)="toggleThreadVisibility(!discussion.visible)"
     ></button>
+    <alg-watch-button
+      [ngClass]="{ 'margin-right': !(navigationNeighbors$ | async) }"
+      *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
+    ></alg-watch-button>
     <alg-neighbor-widget
       class="neighbor-widget"
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"

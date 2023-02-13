@@ -172,6 +172,14 @@ body .p-component {
   }
 }
 
+  .top-bar-overlay-panel {
+    width: 450px;
+
+    @media screen and (max-width: 479px) {
+      width: 100% !important;
+    }
+}
+
 @media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
 }
