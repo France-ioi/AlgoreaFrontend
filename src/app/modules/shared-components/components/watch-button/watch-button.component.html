@@ -1,12 +1,11 @@
-<ng-container *ngIf="groupInfo$ | async as groupInfo">
+<ng-container *ngIf="currentGroupContent$ | async as currentGroupContent">
   <button
     class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size"
-    [ngClass]="{ 'active-secondary': isCurrentGroupWatched }"
+    [ngClass]="{ 'active-secondary': currentGroupContent.isBeingWatched }"
     pButton
     type="button"
     icon="fa fa-eye"
-    (click)="toggleWatchingMode($event, groupInfo, isCurrentGroupWatched)"
-    *ngrxLet="isCurrentGroupWatched$; let isCurrentGroupWatched"
+    (click)="toggleWatchingMode($event, currentGroupContent)"
   ></button>
 
   <p-overlayPanel

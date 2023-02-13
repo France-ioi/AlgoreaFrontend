@@ -3,7 +3,6 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { GroupWatchingService } from '../../../../core/services/group-watching.service';
 import { combineLatest, map } from 'rxjs';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
-import { filter } from 'rxjs/operators';
 import { GroupInfo, isGroupInfo } from '../../../../shared/models/content/group-info';
 
 @Component({
@@ -14,21 +13,21 @@ import { GroupInfo, isGroupInfo } from '../../../../shared/models/content/group-
 export class WatchButtonComponent {
   @ViewChild('op') op?: OverlayPanel;
 
-  groupInfo$ = this.currentContentService.content$.pipe(
-    filter(isGroupInfo),
-  );
-  isCurrentGroupWatched$ = combineLatest([
+  currentGroupContent$ = combineLatest([
+    this.currentContentService.content$,
     this.groupWatchingService.watchedGroup$,
-    this.groupInfo$,
   ]).pipe(
-    map(([ watchedGroup, groupInfo ]) => !!(watchedGroup && watchedGroup.route.id === groupInfo.route.id)),
+    map(([ currentContent, watchedGroup ]) => (isGroupInfo(currentContent) ? {
+      ...currentContent,
+      isBeingWatched: currentContent.route.id === watchedGroup?.route.id,
+    } : undefined)),
   );
 
   constructor(private currentContentService: CurrentContentService, private groupWatchingService: GroupWatchingService) {
   }
 
-  toggleWatchingMode(event: Event, groupInfo: GroupInfo, isWatching: boolean): void {
-    if (isWatching) {
+  toggleWatchingMode(event: Event, groupInfo: GroupInfo & {isBeingWatched: boolean}): void {
+    if (groupInfo.isBeingWatched) {
       this.op?.hide();
       this.groupWatchingService.stopWatching();
       return;
