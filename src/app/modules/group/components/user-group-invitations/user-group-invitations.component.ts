@@ -8,6 +8,7 @@ import { GetRequestsService, PendingRequest } from '../../http-services/get-requ
 import { Action, parseGroupInvitationResults, RequestActionsService } from '../../http-services/request-actions.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CurrentContentService } from '../../../../shared/services/current-content.service';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -32,6 +33,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
     private getRequestsService: GetRequestsService,
     private requestActionService: RequestActionsService,
     private actionFeedbackService: ActionFeedbackService,
+    private currentContentService: CurrentContentService,
   ) {
     this.dataFetching.pipe(
       switchMap(params =>
@@ -70,6 +72,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
           this.state = 'ready';
           displayResponseToast(this.actionFeedbackService, parseGroupInvitationResults(result), params.type);
           this.dataFetching.next({ sort: this.currentSort });
+          this.currentContentService.forceNavMenuReload();
         },
         error: err => {
           this.state = 'ready';
