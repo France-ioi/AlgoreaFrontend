@@ -38,7 +38,6 @@ import { SectionParagraphComponent } from './components/section-paragrah/section
 import { MessageComponent } from './components/message/message.component';
 import { ProgressLevelComponent } from './components/progress-level/progress-level.component';
 import { FormErrorComponent } from './components/form-error/form-error.component';
-import { RawItemLinkPipe } from 'src/app/shared/pipes/rawItemLink';
 import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
 import { SubSectionComponent } from './components/sub-section/sub-section.component';
 import { AddContentComponent } from './components/add-content/add-content.component';
@@ -71,8 +70,9 @@ import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app
 import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 import { MessageInfoComponent } from './components/message-info/message-info.component';
 import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
-import { ItemRouteLinkPipe } from 'src/app/shared/pipes/itemRouteLink';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
 import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnippet';
+import { RawItemRoutePipe, ItemRouteWithAnswerPipe } from 'src/app/shared/pipes/itemRoute';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 import { WatchButtonComponent } from './components/watch-button/watch-button.component';
 import { LetModule } from '@ngrx/component';
@@ -97,8 +97,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
-    RawItemLinkPipe,
-    ItemRouteLinkPipe,
+    RawItemRoutePipe,
+    ItemRouteWithAnswerPipe,
+    RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
@@ -182,8 +183,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     MessageComponent,
     ProgressLevelComponent,
     FormErrorComponent,
-    RawItemLinkPipe,
-    ItemRouteLinkPipe,
+    RawItemRoutePipe,
+    ItemRouteWithAnswerPipe,
+    RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,

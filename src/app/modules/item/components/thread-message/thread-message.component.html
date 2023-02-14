@@ -41,7 +41,7 @@
             </span>.
             <ng-container *ngIf="canCurrentUserLoadAnswers && itemRoute">
               <div>
-                <a class="alg-link white-color hover-underline" [routerLink]="itemRoute | itemRouteLink:[]:event.data.answerId" i18n>
+                <a class="alg-link white-color hover-underline" [routerLink]="itemRoute | withAnswer: { id: event.data.answerId } | url" i18n>
                   <strong>Load this submission</strong>
                 </a>
               </div>

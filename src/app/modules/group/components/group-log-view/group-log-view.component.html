@@ -72,7 +72,7 @@
                 <a
                   class="alg-link"
                   [ngClass]="{'disabled': !rowData.item}"
-                  [routerLink]="rowData.item | rawItemLink"
+                  [routerLink]="rowData.item | rawItemRoute | url"
                   (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
                   #contentRef
                 >
