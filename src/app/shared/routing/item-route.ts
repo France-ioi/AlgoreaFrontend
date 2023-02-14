@@ -12,8 +12,8 @@ const skillPrefix = 'skills';
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
 const answerParamName = 'answerId';
-
-export const bestAnswerToken = 'best'; // value to be set in place of the answer id to request the "best answer"
+const answerBestParamName = 'answerBest';
+const answerBestParticipantParamName = 'answerParticipantId';
 
 // alias for better readibility
 type ItemId = string;
@@ -34,7 +34,9 @@ export interface ItemRoute extends ContentRoute {
   contentType: ItemTypeCategory,
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
-  answerId?: AnswerId,
+  answer?:
+    { best?: undefined, id: AnswerId, participantId?: undefined } |
+    { best: true, id?: undefined, participantId?: string /* not set if mine */ },
 }
 type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
 type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
@@ -53,8 +55,8 @@ export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWi
   return item.attemptId !== undefined;
 }
 
-export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId, answerId?: AnswerId): RawItemRoute {
-  return { contentType, id, answerId };
+export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Partial<ItemRoute>): RawItemRoute {
+  return { contentType, id, ...attrs };
 }
 export function itemRoute(contentType: ItemTypeCategory, id: ItemId, path: string[]): ItemRoute {
   return { ...rawItemRoute(contentType, id), path };
@@ -84,14 +86,16 @@ export const appDefaultItemRoute: FullItemRoute = {
 
 
 /* **********************************************************************************************************
- * Utility functions for decoding the item route
+ * Utility functions for decoding the item route from url params
  * ********************************************************************************************************** */
 export function decodeItemRouterParameters(params: ParamMap): {
   id: string|null,
-  path: string|null,
+  path: string[]|null,
   attemptId: string|null,
   parentAttemptId: string|null,
   answerId: string|null,
+  answerBest: boolean,
+  answerParticipantId: string|null,
 } {
   return {
     id: params.get('id'),
@@ -99,6 +103,8 @@ export function decodeItemRouterParameters(params: ParamMap): {
     attemptId: params.get(attemptParamName),
     parentAttemptId: params.get(parentAttemptParamName),
     answerId: params.get(answerParamName),
+    answerBest: params.get(answerBestParamName) === '1',
+    answerParticipantId: params.get(answerBestParticipantParamName),
   };
 }
 
@@ -121,7 +127,12 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
   const params = route.path ? pathAsParameter(route.path) : {};
   if (route.attemptId) params[attemptParamName] = route.attemptId;
   else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
-  if (route.answerId) params[answerParamName] = route.answerId;
+  if (route.answer) {
+    if (route.answer.best) {
+      params[answerBestParamName] = '1';
+      if (route.answer.participantId) params[answerBestParticipantParamName] = route.answer.participantId;
+    } else params[answerParamName] = route.answer.id;
+  }
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;

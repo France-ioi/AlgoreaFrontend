@@ -64,7 +64,7 @@ function isGroupPage(page: string[]): boolean {
   return [ 'members', 'managers', 'settings', 'access' ].includes(page[0]);
 }
 
-export function decodeGroupRouterParameters(params: ParamMap): { id: string | null, path: string | null } {
+export function decodeGroupRouterParameters(params: ParamMap): { id: string | null, path: string[] | null } {
   return {
     id: params.get('id'),
     path: pathFromRouterParameters(params),
@@ -75,10 +75,7 @@ export function groupRouteFromParams(params: ParamMap, isUser = false): GroupRou
   const id = params.get('id') ?? undefined;
   const path = pathFromRouterParameters(params);
   if (!id || path === null) return { tag: 'error', id };
-
-  const pathList = path === '' ? [] : path.split(',');
-
-  return groupRoute({ id, isUser }, pathList);
+  return groupRoute({ id, isUser }, path);
 }
 
 export function isGroupRouteError(route: GroupRoute | GroupRouteError): route is GroupRouteError {
