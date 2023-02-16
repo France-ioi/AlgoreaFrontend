@@ -3,10 +3,10 @@
   <ng-container *ngIf="state.data?.group as group">
     <div *ngIf="state.isFetching" class="block-ui"></div>
     <alg-group-header [groupData]="state.data" *ngIf="!(fullFrame$ | async)?.active"></alg-group-header>
-    <alg-pending-join-requests
+<!--    <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"
-    ></alg-pending-join-requests>
+    ></alg-pending-join-requests>-->
     <alg-group-indicator
         class="group-indicator"
         *ngIf="group.currentUserManagership !== 'none' || group.currentUserMembership !== 'none'"
