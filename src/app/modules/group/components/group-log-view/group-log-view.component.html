@@ -17,7 +17,14 @@
   </alg-error>
 
   <ng-container *ngIf="state.data">
-    <p-table class="alg-table" [columns]="state.data.columns" [value]="state.data.rowData" [loading]="state.isFetching">
+    <p-table
+      class="alg-table"
+      [columns]="state.data.columns"
+      [value]="state.data.rowData"
+      [loading]="state.isFetching"
+      [tableStyle]="{'min-width': '479px'}"
+      responsiveLayout="scroll"
+    >
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr>
           <th [colSpan]="columns.length">

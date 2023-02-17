@@ -9,6 +9,8 @@
   color: var(--base-color);
   background-color: var(--section-color);
   border-radius: $border-radius;
+  white-space: nowrap;
+  overflow-x: scroll;
 }
 
 .content {

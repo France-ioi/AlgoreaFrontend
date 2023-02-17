@@ -18,6 +18,8 @@
   (onRowSelect)="onRowSelect()"
   (onRowUnselect)="onRowUnselect()"
   (onHeaderCheckboxToggle)="onHeaderCheckbox()"
+  [tableStyle]="{'min-width': '479px'}"
+  responsiveLayout="scroll"
 >
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
   <ng-template *ngIf="frozenHeaderTemplate && frozenWidth && frozenWidth.length > 0" pTemplate="frozenheader">
