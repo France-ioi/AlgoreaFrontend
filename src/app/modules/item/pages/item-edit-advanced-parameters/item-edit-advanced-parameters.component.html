@@ -85,6 +85,15 @@
       </span>
       <div class="form-item-control">
         <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url" size="small"></alg-input>
+        <ng-container *ngIf="parentForm.get('image_url')?.value as imageUrlValue">
+          <span
+            class="alg-warning-message"
+            *ngIf="imageUrlValue.trim().length > 0 && !imageUrlValue.startsWith('https://')"
+            i18n
+          >
+              The url should start with "https://" so that it is visible on any browser.
+          </span>
+        </ng-container>
       </div>
     </div>
   </alg-section>
