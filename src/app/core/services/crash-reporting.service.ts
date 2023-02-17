@@ -28,7 +28,9 @@ export class CrashReportingService {
     }));
 
     this.layoutService.fullFrame$.subscribe(ffc => setTags({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       'full-frame.active': ffc.active,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       'full-frame.can-toggle': ffc.canToggle,
     }));
 

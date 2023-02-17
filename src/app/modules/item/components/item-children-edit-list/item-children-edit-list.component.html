@@ -20,8 +20,8 @@
   >
     <ng-template pTemplate="body" let-rowData let-index="rowIndex">
       <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
-        <td class="reorder-handle" [pReorderableRowHandle]="index">
-          <i class="fa fa-sort" [pReorderableRowHandle]="index"></i>
+        <td class="reorder-handle" pReorderableRowHandle>
+          <i class="fa fa-sort" pReorderableRowHandle></i>
         </td>
         <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
         <ng-container *ngIf="scoreWeightEnabled">

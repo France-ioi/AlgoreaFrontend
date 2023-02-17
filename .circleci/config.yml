@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   aws-s3: circleci/aws-s3@1.0.15
+  browser-tools: circleci/browser-tools@1.4.1
 
 commands:
   deploy-to-s3:
@@ -60,7 +61,7 @@ jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
     docker: &node_image
-      - image: circleci/node:14.15
+      - image: cimg/node:14.21
     steps:
       - checkout
       # cache is used between builds, we use the cache if the lock file has not changed
@@ -139,8 +140,9 @@ jobs:
 
   tests:
     docker: &node_browsers_image
-      - image: circleci/node:14.15-browsers
+      - image: cimg/node:14.21-browsers
     steps:
+      - browser-tools/install-browser-tools
       - attach_workspace:
           at: ./
       - run: npx ng test --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
