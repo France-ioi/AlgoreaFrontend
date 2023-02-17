@@ -40,11 +40,11 @@ export class GroupCompositionFilterComponent implements OnInit{
   ];
 
   readonly allDescendantsTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
-    {
+    /*    {
       icon: 'fa fa-users',
       label: $localize`teams`,
       value: TypeFilter.Teams
-    },
+    },*/
     {
       icon: 'fa fa-user',
       label: $localize`users`,
@@ -58,7 +58,7 @@ export class GroupCompositionFilterComponent implements OnInit{
       label: $localize`sub-groups`,
       value: TypeFilter.Groups
     },
-    {
+    /*    {
       icon: 'fa fa-calendar',
       label: $localize`sessions`,
       value: TypeFilter.Sessions
@@ -67,7 +67,7 @@ export class GroupCompositionFilterComponent implements OnInit{
       icon: 'fa fa-users',
       label: $localize`teams`,
       value: TypeFilter.Teams
-    },
+    },*/
     {
       icon: 'fa fa-user',
       label: $localize`users`,
