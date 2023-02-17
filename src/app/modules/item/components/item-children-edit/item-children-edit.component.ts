@@ -19,6 +19,7 @@ interface BaseChildData {
   scoreWeight: number,
   watchPropagation?: boolean,
   permissions?: ItemCorePerm,
+  type: ItemType,
 }
 interface InvisibleChildData extends BaseChildData {
   id: string,
@@ -29,7 +30,6 @@ interface ChildData extends BaseChildData {
   isVisible: true,
   title: string | null,
   url?: string,
-  type: ItemType,
   result?: {
     attemptId: string,
     validated: boolean,
@@ -79,6 +79,7 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
           upperViewLevelsPropagation: child.upperViewLevelsPropagation,
           watchPropagation: child.watchPropagation,
           permissions: child.permissions,
+          type: child.type,
         };
 
         if (isVisibleItemChild(child)) {
@@ -87,7 +88,6 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
             ...baseChildData,
             id: child.id,
             title: child.string.title,
-            type: child.type,
             isVisible: true,
             result: res === null ? undefined : {
               attemptId: res.attemptId,
@@ -115,8 +115,8 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.subscription = this.state$.pipe(readyData()).subscribe(data => {
-      this.skills = data.filter(item => item.isVisible && isASkill(item));
-      this.activities = data.filter(item => !item.isVisible || !isASkill(item));
+      this.skills = data.filter(item => isASkill(item));
+      this.activities = data.filter(item => !isASkill(item));
     });
   }
 
