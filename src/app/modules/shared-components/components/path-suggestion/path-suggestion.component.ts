@@ -10,16 +10,16 @@ import { itemRoute, urlArrayForItemRoute } from '../../../../shared/routing/item
 import { UrlCommand } from '../../../../shared/helpers/url';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 
-const getItemRouteUrl = (id: string, breadcrumbs: BreadcrumbsFromRoot[]): UrlCommand => {
+const getItemRouteUrl = (id: string, breadcrumbs: BreadcrumbsFromRoot[], hoveredItemId: string): UrlCommand => {
   const index = breadcrumbs.findIndex(item => item.id === id);
   const path = breadcrumbs.slice(0, index).map(item => item.id);
-  const firstItem = breadcrumbs[0];
+  const hoveredItem = breadcrumbs[breadcrumbs.length - 1];
 
-  if (!firstItem) {
-    throw new Error('Unexpected: Missed breadcrumbs from root');
+  if (!hoveredItem || hoveredItem.id !== hoveredItemId) {
+    throw new Error('Unexpected: Missed hovered item');
   }
 
-  return urlArrayForItemRoute(itemRoute(typeCategoryOfItem(firstItem), id, path));
+  return urlArrayForItemRoute(itemRoute(typeCategoryOfItem(hoveredItem), id, path));
 };
 
 @Component({
@@ -39,7 +39,7 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
         (group.length > 0 ? group.filter(breadcrumbs => breadcrumbs.length > 1).map(breadcrumbs =>
           breadcrumbs.map(item => ({
             ...item,
-            url: getItemRouteUrl(item.id, breadcrumbs),
+            url: getItemRouteUrl(item.id, breadcrumbs, itemId),
           }))
         ).filter(group => group.length > 0) : undefined)
       ),
