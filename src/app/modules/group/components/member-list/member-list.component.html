@@ -22,6 +22,8 @@
       [(selection)]="selection"
       selectionMode="multiple"
       dataKey="id"
+      [tableStyle]="{'min-width': '479px'}"
+      responsiveLayout="scroll"
     >
       <ng-template pTemplate="header" let-columns>
         <tr *ngIf="state.data && state.data.length > 0">
