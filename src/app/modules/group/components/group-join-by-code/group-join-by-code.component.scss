@@ -59,6 +59,14 @@
       margin-right: 2rem;
     }
 
+    @media screen and (max-width: 479px) {
+      flex-direction: column;
+      align-items: start;
+
+      .validity-selector {
+        margin: 1rem 0 0 0;
+      }
+    }
   }
 
   // .auto-create {
