@@ -41,6 +41,8 @@ export interface Environment {
     skillsDisabled: boolean,
     showGroupAccessTab?: boolean,
   },
+
+  redirects?: Record<string, string>,
 }
 
 type Config = Environment; // config may be someday an extension of the environment

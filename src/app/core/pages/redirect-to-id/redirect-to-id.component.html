@@ -1,0 +1,11 @@
+<ng-container *ngIf="notExisting; else checking">
+  <p i18n>This page does not exist!</p>
+  <p>
+    <span i18n>Go back to the </span>
+    <a class="alg-link base-color" routerLink="/" i18n>home page</a>
+  </p>
+</ng-container>
+
+<ng-template #checking>
+  <alg-loading></alg-loading>
+</ng-template>
