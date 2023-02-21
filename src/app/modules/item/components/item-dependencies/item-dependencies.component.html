@@ -27,7 +27,7 @@
                 <a
                   class="alg-link"
                   [routerLink]="item | rawItemRoute | url"
-                  (mouseenter)="onMouseEnter($event, item.id, i)"
+                  (mouseenter)="onMouseEnter($event, item.id, contentRef)"
                   #contentRef
                 >
                   {{ item.string.title }}
@@ -59,6 +59,41 @@
       #addDependencyComponent
     ></alg-add-dependency>
   </ng-container>
+
+  <alg-section icon="fa fa-list" i18n-label label="Content depending on this one">
+    <div *ngIf="dependenciesState$ | async as state">
+      <alg-loading size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
+
+      <ng-container *ngIf="!state.isFetching && !changeInProgress && state.data">
+        <ng-container *ngIf="state.data.length > 0; else noOtherContent">
+          <ul class="list">
+            <li
+                class="list-item"
+                *ngFor="let item of state.data; let i = index"
+                (mouseleave)="onMouseLeave($event)"
+            >
+              <a
+                  class="alg-link"
+                  [routerLink]="item | rawItemLink"
+                  (mouseenter)="onMouseEnter($event, item.id, contentRef)"
+                  #contentRef
+              >
+                {{ item.string.title }}
+              </a>
+            </li>
+          </ul>
+          <p class="note-caption" i18n>
+            Only the content that is visible to you is listed. Other content may depend on it.
+          </p>
+        </ng-container>
+      </ng-container>
+    </div>
+    <ng-template #noOtherContent>
+      <p class="alg-error-text" i18n>
+        There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to.
+      </p>
+    </ng-template>
+  </alg-section>
 
   <ng-template #emptyList>
     <p class="alg-error-text" i18n>

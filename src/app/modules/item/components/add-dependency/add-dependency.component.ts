@@ -35,7 +35,7 @@ export class AddDependencyComponent implements OnChanges {
     this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills });
   }
 
-  addDependency(item: AddedContent<ItemType>): void {
+  onAdd(item: AddedContent<ItemType>): void {
     this.contentAdded.emit(item);
   }
 }

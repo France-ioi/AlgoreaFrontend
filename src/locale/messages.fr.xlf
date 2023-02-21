@@ -473,7 +473,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="7585826646011739428" datatype="html">
         <source>Edit</source><target state="new">Edit</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="2250922476634643797" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="4045087308145757242" datatype="html">
+        <source>Dependencies</source><target state="new">Dependencies</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit><trans-unit id="2250922476634643797" datatype="html">
         <source>Parameters</source><target state="new">Parameters</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="7319979892477125831" datatype="html">
@@ -1408,7 +1414,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="4605864425009617908" datatype="html">
         <source>Prerequisites</source><target state="new">Prerequisites</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-unlock-access/item-unlock-access.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="7731242626827304298" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-unlock-access/item-unlock-access.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="7731242626827304298" datatype="html">
         <source>Unable to load the dependencies</source><target state="new">Unable to load the dependencies</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-unlock-access/item-unlock-access.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="9045659846963395136" datatype="html">
@@ -1417,7 +1423,25 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="4862743093134382333" datatype="html">
         <source> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </source><target state="new"> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="2926423520956948326" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="1823124172013249286" datatype="html">
+        <source>Content depending on this one</source><target state="new">Content depending on this one</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit><trans-unit id="4510905835500873772" datatype="html">
+        <source> Only the content that is visible to you is listed. Other content may depend on it. </source><target state="new"> Only the content that is visible to you is listed. Other content may depend on it. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">86,87</context>
+        </context-group>
+      </trans-unit><trans-unit id="3235601792663508256" datatype="html">
+        <source> There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to. </source><target state="new"> There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context>
+          <context context-type="linenumber">93,94</context>
+        </context-group>
+      </trans-unit><trans-unit id="2926423520956948326" datatype="html">
         <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
         Skill: 'skill',
         other: 'activity'
@@ -1434,10 +1458,10 @@
         other: 'activity'
     } }}"/>. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="7423100881808748596" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="7423100881808748596" datatype="html">
         <source>You are not allowed to view dependencies for this content</source><target state="new">You are not allowed to view dependencies for this content</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="5037437391296624618" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">116</context></context-group></trans-unit><trans-unit id="5037437391296624618" datatype="html">
         <source>Information</source><target state="new">Information</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/item-edit-wrapper/item-edit-wrapper.component.html</context>
@@ -1782,17 +1806,14 @@
         <source>teams</source><target state="translated">équipes</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">68</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="1670306451865226564" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="1670306451865226564" datatype="html">
         <source>users</source><target state="translated">utilisateurs</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="6388953296711657780" datatype="html">
         <source>sub-groups</source><target state="translated">sous-groupes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="7741873707372237131" datatype="html">
-        <source>sessions</source><target state="translated">sessions</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="2778681880262367513" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="2778681880262367513" datatype="html">
         <source> You are a member of this group. </source><target state="new"> You are a member of this group. </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="6350999595816280001" datatype="html">
@@ -2306,7 +2327,13 @@
       </trans-unit><trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source><target state="translated">Paramètres</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="3872177273357595383" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">122</context></context-group></trans-unit><trans-unit id="955425775818627867" datatype="html">
+        <source>Add a new prerequisite</source><target state="new">Add a new prerequisite</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="3872177273357595383" datatype="html">
         <source>Error while loading the user info</source><target state="new">Error while loading the user info</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2624846324402649932" datatype="html">
@@ -2321,13 +2348,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source><target state="new">Users</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="3796559375439217278" datatype="html">
-        <source>Create a new dependency</source><target state="new">Create a new dependency</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="4139147089479340367" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="4139147089479340367" datatype="html">
         <source>Enter a title to create a new dependency</source><target state="new">Enter a title to create a new dependency</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>

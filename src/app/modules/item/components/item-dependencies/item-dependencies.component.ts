@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { GetItemPrerequisitesService } from '../../http-services/get-item-prerequisites.service';
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { RemoveItemPrerequisiteService } from '../../http-services/remove-item-prerequisite.service';
 import { AddDependencyComponent } from '../add-dependency/add-dependency.component';
+import { GetItemDependenciesService } from '../../http-services/get-item-dependencies.service';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -24,13 +25,18 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
 
   @ViewChild('addDependencyComponent') addDependencyComponent?: AddDependencyComponent;
   @ViewChild('op') op?: OverlayPanel;
-  @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
   private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getItemPrerequisitesService.get(itemId)),
+    map(items => items.filter(item => item.dependencyGrantContentView)),
+    mapToFetchState({ resetter: this.refresh$ }),
+    share(),
+  );
+  dependenciesState$ = this.itemId$.pipe(
+    switchMap(itemId => this.getItemDependenciesService.get(itemId)),
     map(items => items.filter(item => item.dependencyGrantContentView)),
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
@@ -46,7 +52,6 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
   });
 
-
   changeInProgress = false;
 
   constructor(
@@ -54,6 +59,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     private addItemPrerequisiteService: AddItemPrerequisiteService,
     private removeItemPrerequisiteService: RemoveItemPrerequisiteService,
     private actionFeedbackService: ActionFeedbackService,
+    private getItemDependenciesService: GetItemDependenciesService,
   ) {
   }
 
@@ -70,12 +76,8 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     this.showOverlaySubscription.unsubscribe();
   }
 
-  onMouseEnter(event: Event, itemId: string, index: number): void {
-    const targetRef = this.contentRef?.get(index);
-    if (!targetRef) {
-      throw new Error('Unexpected: Target is not found');
-    }
-    this.showOverlaySubject$.next({ event, itemId, target: targetRef.nativeElement });
+  onMouseEnter(event: Event, itemId: string, targetElement: HTMLAnchorElement): void {
+    this.showOverlaySubject$.next({ event, itemId, target: targetElement });
   }
 
   onMouseLeave(event: MouseEvent): void {
