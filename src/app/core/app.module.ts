@@ -43,6 +43,7 @@ import { ContentTopBarComponent } from './components/content-top-bar/content-top
 import { AuthenticationInterceptor } from '../shared/interceptors/authentication.interceptor';
 import { AlgErrorHandler } from '../shared/error-handling/error-handler';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -63,6 +64,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LanguageMismatchComponent,
     TopBarComponent,
     ContentTopBarComponent,
+    RedirectToIdComponent,
   ],
   imports: [
     BrowserModule,

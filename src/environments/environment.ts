@@ -30,6 +30,10 @@ export const environment: Environment = {
     skillsDisabled: false,
     showGroupAccessTab: true,
   },
+
+  redirects: {
+    'home': '4702'
+  }
 };
 
 type Preset = 'demo';

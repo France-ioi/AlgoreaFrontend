@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { urlStringFromArray } from '../shared/helpers/url';
 import { appDefaultItemRoute, urlArrayForItemRoute } from '../shared/routing/item-route';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path: 'lti/:contentId',
     loadChildren: (): Promise<any> => import('../modules/lti/lti.module').then(m => m.LTIModule),
+  },
+  {
+    path: 'r/:path',
+    component: RedirectToIdComponent,
   },
   {
     path: '**',
