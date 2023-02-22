@@ -146,11 +146,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   unknownError?: unknown;
 
-  readonly formerAnswer$ = this.state$.pipe(
-    map(state => state.data?.route),
+  readonly formerAnswer$ = this.itemRouteState$.pipe(
+    readyData(),
     distinctUntilChanged(),
     switchMap(route => {
-      if (!route || !route.answer) return of(null);
+      if (!route.answer) return of(null);
       if (route.answer.id) return this.getAnswerService.get(route.answer.id);
       return this.getAnswerService.getBest(route.id, { watchedGroupId: route.answer.participantId });
     }),
