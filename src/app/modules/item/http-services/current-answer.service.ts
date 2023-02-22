@@ -32,7 +32,7 @@ export class CurrentAnswerService {
 
   constructor(private http: HttpClient) {}
 
-  get(itemId: string, attemptId: string, asTeamId?: string): Observable<Answer | null> {
+  get(itemId: string, attemptId: string, asTeamId?: string): Observable<Answer> {
     const params = new HttpParams({
       fromObject: asTeamId ? { attempt_id: attemptId, as_team_id: asTeamId } : { attempt_id: attemptId },
     });

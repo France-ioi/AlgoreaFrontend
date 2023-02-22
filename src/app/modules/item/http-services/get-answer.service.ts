@@ -28,13 +28,13 @@ export class GetAnswerService {
 
   constructor(private http: HttpClient) {}
 
-  get(answerId: string): Observable<Answer | null> {
+  get(answerId: string): Observable<Answer> {
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/answers/${answerId}`)
       .pipe(decodeSnakeCase(answerDecoder));
   }
 
-  getBest(itemId: string, options?: { watchedGroupId?: string }): Observable<Answer | null> {
+  getBest(itemId: string, options?: { watchedGroupId?: string }): Observable<Answer> {
     let params = new HttpParams();
     if (options?.watchedGroupId) {
       params = params.set('watched_group_id', options.watchedGroupId);
