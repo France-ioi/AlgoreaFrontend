@@ -33,8 +33,9 @@ export const environment: Environment = {
 
   /* eslint-disable @typescript-eslint/naming-convention */
   redirects: {
-    'home': '4702',
-    'algorea/adventure': '100575556387408660',
+    'home': { id: '4702', path: [] },
+    'algorea/adventure': { id: '100575556387408660' },
+    'officiels/algorea-serious-game': { id: '1471479157476024035', path: [ '4702' ] },
   }
   /* eslint-enable @typescript-eslint/naming-convention */
 };
