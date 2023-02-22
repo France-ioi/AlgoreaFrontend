@@ -29,9 +29,12 @@ export const environment: Environment = {
     showGroupAccessTab: true,
   },
 
+  /* eslint-disable @typescript-eslint/naming-convention */
   redirects: {
-    'home': '4702'
+    'home': '4702',
+    'algorea/adventure': '100575556387408660',
   }
+  /* eslint-enable @typescript-eslint/naming-convention */
 };
 
 type Preset = 'telecomParis';
