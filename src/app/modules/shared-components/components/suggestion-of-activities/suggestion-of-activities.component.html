@@ -21,7 +21,7 @@
       <tr>
         <td><span class="type">{{ item.activity.type }}</span></td>
         <td>
-          <a class="alg-link dots" [routerLink]="item.activity | rawItemLink">
+          <a class="alg-link dots" [routerLink]="item.activity | rawItemRoute | url">
             {{ item.activity.string.title }} ({{ item.name }})
           </a>
         </td>

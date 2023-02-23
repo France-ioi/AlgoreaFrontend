@@ -47,7 +47,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, formerAnswer, readOnly }) => {
-      if (route.answerId) {
+      if (route.answer) {
         return readOnly ? of(formerAnswer) : this.loadFormerAsNewCurrentAnswer(route.id, attemptId, formerAnswer);
       }
 

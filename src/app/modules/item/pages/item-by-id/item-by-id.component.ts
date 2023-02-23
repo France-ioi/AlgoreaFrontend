@@ -31,7 +31,7 @@ import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
-import { RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
+import { ItemRoute, RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
@@ -99,7 +99,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       const item = this.getItemRoute(params);
       if (isItemRouteError(item)) {
         if (!item.id) throw new Error('unexpected: no id in item page');
-        return this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answerId);
+        return this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answer);
       }
       return of(item);
     }),
@@ -146,10 +146,14 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   unknownError?: unknown;
 
-  readonly formerAnswer$ = this.state$.pipe(
-    map(state => state.data?.route.answerId),
+  readonly formerAnswer$ = this.itemRouteState$.pipe(
+    readyData(),
     distinctUntilChanged(),
-    switchMap(answerId => (answerId ? this.getAnswerService.get(answerId) : of(null))),
+    switchMap(route => {
+      if (!route.answer) return of(null);
+      if (route.answer.id) return this.getAnswerService.get(route.answer.id);
+      return this.getAnswerService.getBest(route.id, { watchedGroupId: route.answer.participantId });
+    }),
     shareReplay(1),
   );
 
@@ -159,7 +163,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   );
   readonly formerAnswerLoadForbidden$ = this.formerAnswerError$.pipe(filter(error => error === loadForbiddenAnswerError));
   readonly answerFallbackLink$ = combineLatest([ this.state$.pipe(readyData()), this.formerAnswerLoadForbidden$ ]).pipe(
-    map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answerId: undefined })),
+    map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answer: undefined })),
   );
 
   readonly taskReadOnly$ = this.groupWatchingService.isWatching$;
@@ -258,9 +262,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
           },
         }));
 
-        if (state.data.route.answerId) {
+        if (state.data.route.answer) {
           this.itemRouter.navigateTo(
-            { ...state.data.route, answerId: undefined },
+            { ...state.data.route, answer: undefined },
             { navExtras: { replaceUrl: true, state: { preventRefetch: true } } },
           );
         }
@@ -270,9 +274,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
           if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
           this.hasRedirected = true;
-          const { contentType, id, answerId } = this.getItemRoute();
+          const { contentType, id, answer } = this.getItemRoute();
           if (!id) throw new Error('Unexpected: item id should exist');
-          this.itemRouter.navigateTo({ contentType, id, answerId }, { navExtras: { replaceUrl: true } });
+          this.itemRouter.navigateTo({ contentType, id, answer }, { navExtras: { replaceUrl: true } });
         }
         this.currentContent.clear();
       }
@@ -410,15 +414,20 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
    * Will redirect when relevant data has been fetched (and emit nothing).
    * May emit errors.
    */
-  private solveMissingPathAttempt(contentType: ItemTypeCategory, id: string, path?: string[], answerId?: string): Observable<never> {
+  private solveMissingPathAttempt(
+    contentType: ItemTypeCategory,
+    id: string,
+    path?: string[],
+    answer?: ItemRoute['answer']
+  ): Observable<never> {
     return of(path).pipe(
       switchMap(path => (path ? of(path) : this.getItemPathService.getItemPath(id))),
       switchMap(path => {
         // for empty path (root items), consider the item has a (fake) parent attempt id 0
-        if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answerId });
+        if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answer });
         // else, will start all path but the current item
         return this.resultActionsService.startWithoutAttempt(path).pipe(
-          map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answerId }))
+          map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answer }))
         );
       }),
       switchMap(itemRoute => {

@@ -1,30 +1,25 @@
 import { ParamMap } from '@angular/router';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
-import { decodeItemRouterParameters, FullItemRoute, itemCategoryFromPrefix } from 'src/app/shared/routing/item-route';
+import { decodeItemRouterParameters, FullItemRoute, itemCategoryFromPrefix, ItemRoute } from 'src/app/shared/routing/item-route';
 
-// alias for better readibility
-type ItemId = string;
-
-interface ItemRouteError {
+interface ItemRouteError extends Partial<ItemRoute> {
   tag: 'error',
   contentType: ItemTypeCategory,
-  id?: ItemId,
-  path?: ItemId[],
-  answerId?: string,
 }
 
 export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {
-  const cat = itemCategoryFromPrefix(prefix);
-  if (cat === null) throw new Error('Unexpected item path prefix');
-  const { id, path, attemptId, parentAttemptId, answerId: answerIdOrNull } = decodeItemRouterParameters(params);
-  const answerId = answerIdOrNull ?? undefined;
+  const contentType = itemCategoryFromPrefix(prefix);
+  if (contentType === null) throw new Error('Unexpected item path prefix');
+  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId } = decodeItemRouterParameters(params);
+  let answer: ItemRoute['answer']|undefined;
+  if (answerBest) answer = { best: true, participantId: answerParticipantId ?? undefined };
+  else if (answerId) answer = { id: answerId };
 
-  if (!id) return { contentType: cat, tag: 'error', id: undefined, answerId }; // null or empty
-  if (path === null) return { contentType: cat, tag: 'error', id, answerId };
-  const pathList = path === '' ? [] : path.split(',');
-  if (attemptId) return { contentType: cat, id: id, path: pathList, attemptId, answerId }; // not null nor empty
-  if (parentAttemptId) return { contentType: cat, id: id, path: pathList, parentAttemptId, answerId }; // not null nor empty
-  return { contentType: cat, tag: 'error', id: id, path: pathList, answerId };
+  if (!id) return { tag: 'error', contentType };
+  if (path === null) return { tag: 'error', contentType, id, answer };
+  if (attemptId) return { contentType, id: id, path, attemptId, answer };
+  if (parentAttemptId) return { contentType, id, path, parentAttemptId, answer };
+  return { tag: 'error', contentType, id, path, answer };
 }
 
 export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is ItemRouteError {

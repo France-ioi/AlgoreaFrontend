@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import * as D from 'io-ts/Decoder';
@@ -28,9 +28,19 @@ export class GetAnswerService {
 
   constructor(private http: HttpClient) {}
 
-  get(answerId: string): Observable<Answer | null> {
+  get(answerId: string): Observable<Answer> {
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/answers/${answerId}`)
+      .pipe(decodeSnakeCase(answerDecoder));
+  }
+
+  getBest(itemId: string, options?: { watchedGroupId?: string }): Observable<Answer> {
+    let params = new HttpParams();
+    if (options?.watchedGroupId) {
+      params = params.set('watched_group_id', options.watchedGroupId);
+    }
+    return this.http
+      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/best-answer`, { params })
       .pipe(decodeSnakeCase(answerDecoder));
   }
 
