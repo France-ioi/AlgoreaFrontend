@@ -34,4 +34,12 @@ export class TaskTokenService {
     );
   }
 
+  generateForAnswer(answerId: string): Observable<TaskToken> {
+    return this.http.post<ActionResponse<unknown>>(`${appConfig.apiUrl}/answers/${answerId}/generate-task-token`, undefined).pipe(
+      map(successData),
+      decodeSnakeCase(taskTokenDataDecoder),
+      map(data => data.taskToken),
+    );
+  }
+
 }
