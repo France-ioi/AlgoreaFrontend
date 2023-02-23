@@ -42,6 +42,7 @@ export interface Environment {
     showGroupAccessTab?: boolean,
   },
 
+  /* paths to be matched must not have a trailing slash */
   redirects?: Record<string, { id: string, path?: string[] }>,
 }
 

@@ -32,7 +32,7 @@ export const environment: Environment = {
   },
 
   /* eslint-disable @typescript-eslint/naming-convention */
-  redirects: {
+  redirects: { /* paths to be matched must not have a trailing slash */
     'home': { id: '4702', path: [] },
     'algorea/adventure': { id: '100575556387408660' },
     'officiels/algorea-serious-game': { id: '1471479157476024035', path: [ '4702' ] },
