@@ -74,7 +74,7 @@
             >
               <a
                   class="alg-link"
-                  [routerLink]="item | rawItemLink"
+                  [routerLink]="item | rawItemRoute | url"
                   (mouseenter)="onMouseEnter($event, item.id, contentRef)"
                   #contentRef
               >
