@@ -42,7 +42,7 @@ export interface Environment {
     showGroupAccessTab?: boolean,
   },
 
-  redirects?: Record<string, string>,
+  redirects?: Record<string, { id: string, path?: string[] }>,
 }
 
 type Config = Environment; // config may be someday an extension of the environment

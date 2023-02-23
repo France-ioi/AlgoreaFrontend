@@ -25,8 +25,8 @@ export class RedirectToIdComponent implements OnDestroy {
 
   private subscription = this.path$.pipe(
     map(path => (appConfig.redirects ? appConfig.redirects[path] : undefined))
-  ).subscribe(id => {
-    if (id) this.itemRouter.navigateTo(rawItemRoute('activity', id));
+  ).subscribe(route => {
+    if (route) this.itemRouter.navigateTo({ ...rawItemRoute('activity', route.id), path: route.path });
     else this.notExisting = true;
   });
 
