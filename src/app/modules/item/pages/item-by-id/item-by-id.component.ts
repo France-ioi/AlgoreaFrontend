@@ -103,7 +103,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }
       return of(item);
     }),
-    mapToFetchState()
+    mapToFetchState(),
+    shareReplay(1),
   );
 
   state$: Observable<FetchState<ItemData>> = merge(
