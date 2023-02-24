@@ -18,7 +18,7 @@
   </alg-error>
   <ng-container *ngIf="state.isReady">
     <ng-container *ngIf="state.data; else noPath">
-      <ng-container *ngIf="state.data.length > 0; else emptyPath">
+      <ng-container *ngIf="state.data.length > 1; else rootPath">
         <div class="breadcrumbs-container" *ngFor="let breadcrumbs of state.data">
           <span class="breadcrumbs-prefix" i18n>via</span>
           <ul class="breadcrumbs">
@@ -36,10 +36,18 @@
         <span i18n>You have no path to this content.</span>
       </alg-error>
     </ng-template>
-    <ng-template #emptyPath>
-      <alg-error class="dark small">
-        <span i18n>This content is one of your root activity/skill</span>
-      </alg-error>
+    <ng-template #rootPath>
+      <ng-container *ngIf="state.data?.[0]?.[0] as rootItem">
+        <alg-error class="dark small">
+          <span i18n>
+            This content is one of your root
+            {{ rootItem.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}
+          </span>
+        </alg-error>
+      </ng-container>
     </ng-template>
   </ng-container>
 </ng-container>
