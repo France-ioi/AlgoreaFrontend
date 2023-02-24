@@ -14,6 +14,7 @@ const attemptParamName = 'attempId';
 const answerParamName = 'answerId';
 const answerBestParamName = 'answerBest';
 const answerBestParticipantParamName = 'answerParticipantId';
+const answerLoadAsCurrentParamName = 'answerLoadAsCurrent';
 
 // alias for better readibility
 type ItemId = string;
@@ -35,8 +36,8 @@ export interface ItemRoute extends ContentRoute {
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?:
-    { best?: undefined, id: AnswerId, participantId?: undefined } |
-    { best: true, id?: undefined, participantId?: string /* not set if mine */ },
+    { best?: undefined, id: AnswerId, participantId?: undefined, loadAsCurrent?: true } |
+    { best: true, id?: undefined, participantId?: string /* not set if mine */, loadAsCurrent?: undefined },
 }
 type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
 type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
@@ -96,6 +97,7 @@ export function decodeItemRouterParameters(params: ParamMap): {
   answerId: string|null,
   answerBest: boolean,
   answerParticipantId: string|null,
+  answerLoadAsCurrent: boolean,
 } {
   return {
     id: params.get('id'),
@@ -105,6 +107,7 @@ export function decodeItemRouterParameters(params: ParamMap): {
     answerId: params.get(answerParamName),
     answerBest: params.get(answerBestParamName) === '1',
     answerParticipantId: params.get(answerBestParticipantParamName),
+    answerLoadAsCurrent: params.get(answerLoadAsCurrentParamName) === '1',
   };
 }
 
@@ -131,7 +134,10 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
     if (route.answer.best) {
       params[answerBestParamName] = '1';
       if (route.answer.participantId) params[answerBestParticipantParamName] = route.answer.participantId;
-    } else params[answerParamName] = route.answer.id;
+    } else {
+      params[answerParamName] = route.answer.id;
+      if (route.answer.loadAsCurrent) params[answerLoadAsCurrentParamName] = '1';
+    }
   }
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
