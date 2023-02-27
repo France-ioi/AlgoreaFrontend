@@ -40,7 +40,6 @@ import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-g
 import { TaskTab } from '../item-display/item-display.component';
 import { TaskConfig } from '../../services/item-task.service';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
-import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
@@ -324,7 +323,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private groupWatchingService: GroupWatchingService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
-    private getAnswerService: GetAnswerService,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private discussionService: DiscussionService,
