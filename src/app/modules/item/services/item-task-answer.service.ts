@@ -22,9 +22,10 @@ import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
 import { AnswerService } from '../http-services/answer.service';
-import { Answer, CurrentAnswerService } from '../http-services/current-answer.service';
+import { CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskInitService } from './item-task-init.service';
+import { Answer } from './item-task.service';
 
 const answerAndStateSaveInterval = 5*SECONDS;
 
@@ -46,12 +47,11 @@ export class ItemTaskAnswerService implements OnDestroy {
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
-    switchMap(({ route, attemptId, formerAnswer, readOnly }) => {
-      if (route.answer) {
-        return readOnly ? of(formerAnswer) : this.loadFormerAsNewCurrentAnswer(route.id, attemptId, formerAnswer);
+    switchMap(({ route, attemptId, initialAnswer }) => {
+      if (route.answer?.loadAsCurrent && initialAnswer) {
+        return this.loadAsNewCurrentAnswer(route.id, attemptId, initialAnswer);
       }
-
-      return readOnly ? of(formerAnswer) : this.getCurrentAnswer(route.id, attemptId);
+      return of(initialAnswer);
     }),
     retry(3),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
@@ -217,18 +217,14 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  private loadFormerAsNewCurrentAnswer(itemId: string, attemptId: string, formerAnswer: Answer | null): Observable<Answer | null> {
-    const savedCurrentAnswer$ = this.getCurrentAnswer(itemId, attemptId).pipe(
+  private loadAsNewCurrentAnswer(itemId: string, attemptId: string, newAnswer: Answer): Observable<Answer> {
+    return this.getCurrentAnswer(itemId, attemptId).pipe(
       filter(isNotNull),
       switchMap(current => this.answerService.save(itemId, attemptId, { answer: current.answer ?? '', state: current.state ?? '' })),
       defaultIfEmpty(undefined),
-    );
-
-    return savedCurrentAnswer$.pipe(
       switchMap(() => {
-        if (!formerAnswer) return of(null);
-        const body = { answer: formerAnswer.answer ?? '', state: formerAnswer.state ?? '' };
-        return this.currentAnswerService.update(itemId, attemptId, body).pipe(map(() => formerAnswer));
+        const body = { answer: newAnswer.answer ?? '', state: newAnswer.state ?? '' };
+        return this.currentAnswerService.update(itemId, attemptId, body).pipe(map(() => newAnswer));
       }),
     );
   }
