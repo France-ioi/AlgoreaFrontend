@@ -17,7 +17,7 @@ interface Column {
 
 interface Data {
   columns: Column[],
-  rowData: (ActivityLog & { displayLoadButton: boolean })[],
+  rowData: ActivityLog[],
 }
 
 @Component({
@@ -28,7 +28,6 @@ interface Data {
 export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
-  @Input() isTaskReadOnly = false;
 
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
@@ -38,6 +37,11 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
   ]).pipe(
     switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup)),
     mapToFetchState({ resetter: this.refresh$ }),
+  );
+
+  isWatching$ = this.groupWatchingService.isWatching$;
+  canWatchAnswers$ = this.item$.pipe(
+    map(item => allowsWatchingAnswers(item.permissions))
   );
 
   constructor(
@@ -72,28 +76,11 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
         columns: this.getLogColumns(item.type, watchingGroup),
         rowData: data
           .filter(log => !this.isSelfCurrentAnswer(log, profile.groupId))
-          .map(log => ({ ...log, displayLoadButton: this.canDisplayLoadButton(log, profile.groupId), isWatchingGroup: !!watchingGroup })),
       }))
     );
   }
   private isSelfCurrentAnswer(log: ActivityLog, profileId: string): boolean {
     return log.activityType === 'current_answer' && log.participant.id === profileId;
-  }
-
-  private canDisplayLoadButton(log: ActivityLog, profileId: string): boolean {
-    if (!this.itemData) throw new Error('itemData must be defined');
-    if (!log.answerId) return false;
-
-    // Can load other user answer only in read-only mode and with correct permissions
-    if (this.isTaskReadOnly) {
-      return allowsWatchingAnswers(this.itemData.item.permissions) &&
-        [ 'submission', 'saved_answer', 'current_answer' ].includes(log.activityType);
-    }
-
-    // If answer author is self, we can always load it
-    if (log.user?.id === profileId) return [ 'submission', 'saved_answer' ].includes(log.activityType);
-
-    return false;
   }
 
   private getLogColumns(type: ItemType, watchingGroup: WatchedGroup|null): Column[] {

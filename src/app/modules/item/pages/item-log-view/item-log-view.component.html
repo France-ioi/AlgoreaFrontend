@@ -18,6 +18,7 @@
       [loading]="state.isFetching"
       [tableStyle]="{'min-width': '479px'}"
       responsiveLayout="scroll"
+      *ngIf="{ isWatching: isWatching$ | async, canWatchAnswers: canWatchAnswers$ | async } as meta"
     >
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr>
@@ -63,12 +64,12 @@
                   <button
                     pButton
                     class="alg-button p-button-rounded p-small-button p-button-outlined"
-                    [label]="(rowData.isWatchingGroup ? 'watchingGroup' : '') | i18nSelect : {
-                      watchingGroup: 'View answer',
+                    [label]="(meta.isWatching ? 'watchingMode' : '') | i18nSelect : {
+                      watchingMode: 'View answer',
                       other: 'Reload answer'
                     }"
-                    [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId} | url"
-                    *ngIf="rowData.displayLoadButton"
+                    [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isWatching ? undefined : true } | url"
+                    *ngIf="(!meta.isWatching || meta.canWatchAnswers) && rowData.answerId"
                   ></button>
                 </div>
               </ng-container>
