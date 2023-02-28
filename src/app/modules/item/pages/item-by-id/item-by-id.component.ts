@@ -210,6 +210,17 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }),
     this.initialAnswerDataSource.unknownError$.subscribe(e => this.unknownError = e),
 
+
+    // drop "answer" route arg when switching "watching" off
+    this.groupWatchingService.isWatching$.pipe(
+      pairwise(),
+      filter(([ old, cur ]) => old && !cur), // was "on", become "off"
+      switchMap(() => this.itemRouteState$.pipe(take(1), readyData())),
+      delay(0),
+    ).subscribe(route => {
+      this.itemRouter.navigateTo({ ...route, answer: undefined });
+    }),
+
     this.itemRouteState$.subscribe(state => {
       if (state.isReady) {
         // configure initialAnswerDataSource
