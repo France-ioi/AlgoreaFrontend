@@ -121,7 +121,9 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
       id: rowData.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       parentAttemptId,
-    });
+    }, rowData.type === 'Task' ? {
+      page: [],
+    } : undefined);
   }
 
 }

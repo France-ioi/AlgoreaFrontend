@@ -61,6 +61,11 @@
               <ng-container *ngSwitchCase="'timeSpent'">
                 {{ rowData.timeSpent | duration }}
               </ng-container>
+              <ng-container *ngSwitchCase="'submissions'">
+                <ng-container *ngIf="!['Chapter', 'Skill'].includes(rowData.type)">
+                  {{ rowData.submissions }}
+                </ng-container>
+              </ng-container>
               <ng-container *ngSwitchCase="'score'">
                 <div class="score-ring">
                   <alg-score-ring [diameter]="42" [currentScore]="rowData.score"></alg-score-ring>
