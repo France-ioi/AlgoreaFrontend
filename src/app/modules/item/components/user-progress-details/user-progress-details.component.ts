@@ -44,9 +44,11 @@ export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
   }
 
   private showOverlay(): void {
-    if (!this.panel) throw new Error('panel not available');
-    if (!this.progressData) throw new Error('no progress to render');
-    this.panel.show(null, this.progressData.target);
+    setTimeout(() => {
+      if (!this.panel) throw new Error('panel not available');
+      if (!this.progressData) throw new Error('no progress to render');
+      this.panel.show(null, this.progressData.target);
+    });
   }
 
   private hideOverlay(): void {
