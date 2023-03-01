@@ -8,11 +8,11 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 import { map } from 'rxjs/operators';
 import { itemRoute, urlArrayForItemRoute } from '../../../../shared/routing/item-route';
 import { UrlCommand } from '../../../../shared/helpers/url';
+import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 
-const getItemRouteUrl = (id: string, breadcrumbs: BreadcrumbsFromRoot[]): UrlCommand => {
-  const index = breadcrumbs.findIndex(item => item.id === id);
-  const path = breadcrumbs.slice(0, index).map(item => item.id);
-  return urlArrayForItemRoute(itemRoute('activity', id, path));
+const getItemRouteUrl = (item: BreadcrumbsFromRoot, breadcrumbs: BreadcrumbsFromRoot[]): UrlCommand => {
+  const path = breadcrumbs.map(item => item.id);
+  return urlArrayForItemRoute(itemRoute(typeCategoryOfItem(item), item.id, path));
 };
 
 @Component({
@@ -28,14 +28,12 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getBreadcrumbsFromRootsService.get(itemId).pipe(
-      map(group =>
-        (group.length > 0 ? group.map(breadcrumbs =>
-          breadcrumbs.slice(0, breadcrumbs.length - 1).map(item => ({
-            ...item,
-            url: getItemRouteUrl(item.id, breadcrumbs),
-          }))
-        ).filter(group => group.length > 0) : undefined)
-      ),
+      map(group => (group.length > 0 ? group.map(breadcrumbs =>
+        breadcrumbs.map((item, index) => ({
+          ...item,
+          url: getItemRouteUrl(item, breadcrumbs.slice(0, index)),
+        }))
+      ).filter(group => group.length > 0) : undefined)),
     )),
     mapToFetchState({ resetter: this.refresh$ }),
   );
