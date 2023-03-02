@@ -2,7 +2,6 @@
 @import 'src/geometry.scss';
 
 .group-situation-data {
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +27,6 @@
   &.not-started {
     background-color: white;
   }
-
 
   .situation-check {
     display: flex;
