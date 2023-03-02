@@ -47,27 +47,49 @@
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'title'">
-                <a
-                  class="alg-link"
-                  [ngClass]="{'disabled': rowData.id === itemData?.item?.id}"
-                  (click)="onClick(rowData)"
-                >
-                  {{ rowData.title }}
-                </a>
+                <div class="title">
+                  <a
+                    class="alg-link"
+                    [ngClass]="{'disabled': rowData.id === itemData?.item?.id}"
+                    (click)="onClick(rowData)"
+                  >
+                    {{ rowData.title }}
+                  </a>
+
+                  <ng-container *ngIf="rowData.type === 'Task' && rowData.currentUserPermissions">
+                    <button
+                      pButton
+                      class="alg-button p-button-rounded p-small-button p-button-outlined load-answer-button"
+                      [label]="(!!(watchedGroup$ | async) ? 'watchingGroup' : '') | i18nSelect : {
+                        watchingGroup: 'View the best answer',
+                        other: 'Reload the best answer'
+                      }"
+                      (click)="onClick(rowData)"
+                      *ngIf="rowData.currentUserPermissions | allowsWatchingAnswers"
+                    ></button>
+                  </ng-container>
+                </div>
               </ng-container>
               <ng-container *ngSwitchCase="'latestActivityAt'">
-                {{ rowData.latestActivityAt | date:'short' }}
+                <ng-container *ngIf="rowData.latestActivityAt; else notStarted">
+                  {{ rowData.latestActivityAt | date:'short' }}
+                </ng-container>
+                <ng-template #notStarted>
+                  <span i18n>Not started</span>
+                </ng-template>
               </ng-container>
               <ng-container *ngSwitchCase="'timeSpent'">
-                {{ rowData.timeSpent | duration }}
+                <ng-container *ngIf="rowData.latestActivityAt">
+                  {{ rowData.timeSpent | duration }}
+                </ng-container>
               </ng-container>
               <ng-container *ngSwitchCase="'submissions'">
-                <ng-container *ngIf="!['Chapter', 'Skill'].includes(rowData.type)">
+                <ng-container *ngIf="!['Chapter', 'Skill'].includes(rowData.type) && rowData.latestActivityAt">
                   {{ rowData.submissions }}
                 </ng-container>
               </ng-container>
               <ng-container *ngSwitchCase="'score'">
-                <div class="score-ring">
+                <div class="score-ring" *ngIf="rowData.latestActivityAt">
                   <alg-score-ring [diameter]="42" [currentScore]="rowData.score"></alg-score-ring>
                 </div>
               </ng-container>

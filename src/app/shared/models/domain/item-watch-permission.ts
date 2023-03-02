@@ -46,3 +46,8 @@ export function allowsGrantingWatch(p: ItemPermWithWatch): boolean {
 export class AllowsWatchingItemResultsPipe implements PipeTransform {
   transform = allowsWatchingResults;
 }
+
+@Pipe({ name: 'allowsWatchingAnswers', pure: true })
+export class AllowsWatchingItemAnswersPipe implements PipeTransform {
+  transform = allowsWatchingAnswers;
+}

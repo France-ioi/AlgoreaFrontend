@@ -28,21 +28,12 @@
     text-transform: uppercase;
     white-space: nowrap;
     text-decoration: none;
-    border-right: .1rem solid #BBB;
 
     &.active {
       color: white;
       box-shadow: none;
       border-radius: 9rem;
       background-color: var(--base-color);
-    }
-
-    &.prev {
-      border-right: none;
-    }
-
-    &:last-child {
-      border-right: none;
     }
   }
 }

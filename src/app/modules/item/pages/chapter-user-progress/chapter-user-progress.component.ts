@@ -8,6 +8,8 @@ import { FetchState } from '../../../../shared/helpers/state';
 import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { ItemData } from '../../services/item-datasource.service';
 import { ItemRouter } from '../../../../shared/routing/item-router';
+import { GroupWatchingService } from '../../../../core/services/group-watching.service';
+import { ItemPermWithWatch } from '../../../../shared/models/domain/item-watch-permission';
 
 interface Column {
   field: string,
@@ -22,6 +24,7 @@ interface RowData {
   timeSpent: number,
   submissions: number,
   score: number,
+  currentUserPermissions?: ItemPermWithWatch,
 }
 
 @Component({
@@ -54,11 +57,13 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           timeSpent: itemData.timeSpent,
           submissions: itemData.submissions,
           score: itemData.score,
+          currentUserPermissions: itemData.currentUserPermissions,
         })),
       ])))
     ),
     mapToFetchState({ resetter: this.refresh$ }),
   );
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   columns: Column[] = [
     {
@@ -86,6 +91,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   constructor(
     private getParticipantProgressService: GetParticipantProgressService,
     private itemRouter: ItemRouter,
+    private groupWatchingService: GroupWatchingService,
   ) { }
 
   ngOnChanges(): void {
@@ -121,9 +127,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
       id: rowData.id,
       path: this.itemData.route.path.concat([ this.itemData.item.id ]),
       parentAttemptId,
-    }, rowData.type === 'Task' ? {
-      page: [],
-    } : undefined);
+    });
   }
 
 }

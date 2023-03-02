@@ -67,7 +67,7 @@ import {
 } from 'src/app/shared/models/domain/item-view-permission';
 import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
-import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
+import { AllowsWatchingItemAnswersPipe, AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 import { MessageInfoComponent } from './components/message-info/message-info.component';
 import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
 import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
@@ -128,6 +128,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
     AllowsWatchingItemResultsPipe,
+    AllowsWatchingItemAnswersPipe,
     AllowDisplayCodeSnippet,
     MessageInfoComponent,
     SuggestionOfActivitiesComponent,
@@ -214,6 +215,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
     AllowsWatchingItemResultsPipe,
+    AllowsWatchingItemAnswersPipe,
     MessageInfoComponent,
     AllowDisplayCodeSnippet,
     SuggestionOfActivitiesComponent,
