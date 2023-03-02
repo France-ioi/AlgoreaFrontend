@@ -1,6 +1,18 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, combineLatest } from 'rxjs';
-import { delayWhen, distinctUntilChanged, filter, map, scan, shareReplay, startWith, switchMap, takeUntil, } from 'rxjs/operators';
+import {
+  catchError,
+  delayWhen,
+  distinctUntilChanged,
+  filter,
+  map,
+  retry,
+  scan,
+  shareReplay,
+  startWith,
+  switchMap,
+  takeUntil
+} from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -14,6 +26,7 @@ import { FetchState } from 'src/app/shared/helpers/state';
 import { LocaleService } from 'src/app/core/services/localeService';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -104,7 +117,7 @@ export class ItemDataSource implements OnDestroy {
     return forkJoin({
       route: of(itemRoute),
       item: this.getItemByIdService.get(itemRoute.id, watchedGroupId),
-      breadcrumbs: this.getBreadcrumbService.getBreadcrumb(itemRoute),
+      breadcrumbs: this.getBreadcrumb(itemRoute),
     }).pipe(
       buildUp(data => (canCurrentUserViewContent(data.item) ? this.fetchResults(data.route, data.item) : EMPTY)),
     );
@@ -138,6 +151,22 @@ export class ItemDataSource implements OnDestroy {
           )),
         );
       }),
+    );
+  }
+
+  private getBreadcrumb(itemRoute: FullItemRoute): Observable<BreadcrumbItem[]> {
+    return this.getBreadcrumbService.getBreadcrumb(itemRoute).pipe(
+      /**
+       * If the breadcrumb service fails with 'forbidden' error, try to start results for the item path. If this works, retry fetching
+       * the breadcrumbs. Otherwise, return the original breadcrumb error.
+       */
+      retry({
+        count: 1,
+        delay: (err: unknown) => {
+          if (!errorIsHTTPForbidden(err)) throw err;
+          return this.resultActionsService.startWithoutAttempt(itemRoute.path).pipe(catchError(() => of(err)));
+        }
+      })
     );
   }
 
