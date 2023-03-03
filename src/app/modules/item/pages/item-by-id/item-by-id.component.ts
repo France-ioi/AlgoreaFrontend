@@ -276,6 +276,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }
     }),
 
+    this.itemDataSource.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
+
     this.itemDataSource.state$.pipe(
       filter(s => s.isError),
     ).subscribe(state => {

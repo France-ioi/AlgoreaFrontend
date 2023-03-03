@@ -11,7 +11,8 @@ import {
   shareReplay,
   startWith,
   switchMap,
-  takeUntil
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -76,6 +77,9 @@ export class ItemDataSource implements OnDestroy {
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
+  private resultPathStarted = new Subject<void>();
+  /** Indicate that we have started the full result path of the current item (was not started before doing it) */
+  readonly resultPathStarted$ = this.resultPathStarted.asObservable();
 
   private subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
 
@@ -164,7 +168,10 @@ export class ItemDataSource implements OnDestroy {
         count: 1,
         delay: (err: unknown) => {
           if (!errorIsHTTPForbidden(err)) throw err;
-          return this.resultActionsService.startWithoutAttempt(itemRoute.path).pipe(catchError(() => of(err)));
+          return this.resultActionsService.startWithoutAttempt(itemRoute.path).pipe(
+            tap(() => this.resultPathStarted.next()), // side effect: inform this operation has been done
+            catchError(() => of(err))
+          );
         }
       })
     );
