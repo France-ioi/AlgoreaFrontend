@@ -14,7 +14,6 @@ import { combineLatest, ReplaySubject } from 'rxjs';
 export class ItemProgressComponent implements OnChanges {
 
   @Input() itemData?: ItemData;
-  @Input() isTaskReadOnly = false;
   @Input() savingAnswer = false;
 
   @Output() skipSave = new EventEmitter<void>();

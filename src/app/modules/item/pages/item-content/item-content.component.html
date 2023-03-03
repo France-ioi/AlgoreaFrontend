@@ -47,7 +47,7 @@
         <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
       </ng-container>
 
-      <ng-container *ngIf="itemData.item.type === 'Task'">
+      <ng-container *ngIf="taskConfig">
         <ng-container *ngIf="itemData.item.url; else noUrl">
           <alg-item-display
             *ngIf="attemptId; else noCurrentResult"

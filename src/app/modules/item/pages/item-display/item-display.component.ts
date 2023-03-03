@@ -48,7 +48,7 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
-  @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
+  @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: null };
   @Input() savingAnswer = false;
 
   @Output() scoreChange = this.taskService.scoreChange$;

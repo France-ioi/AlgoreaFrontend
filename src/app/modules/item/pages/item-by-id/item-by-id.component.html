@@ -106,18 +106,18 @@
         ></alg-error>
 
         <ng-container *ngIf="contentTab.isActive || editChildrenTab.isActive || taskTabs.length > 0">
-          <alg-error *ngIf="answerFallbackLink$ | async as fallbackLink">
-            <ng-container *ngIf="(taskReadOnly$ | async); else fallback" i18n>Unable to load the answer</ng-container>
+          <alg-error *ngIf="answerError$ | async as error">
+            <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
             <ng-template #fallback>
               <ng-container i18n>
-                Unable to load the answer, <a [routerLink]="fallbackLink" class="alg-link">load your most recent answer</a>
+                Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>
               </ng-container>
             </ng-template>
           </alg-error>
 
-          <ng-container *ngIf="taskConfig$ | async as taskConfig">
-            <div *ngIf="taskConfig.readOnly && contentTab.isActive" class="indicator">
-              <alg-answer-author-indicator *ngIf="taskConfig.formerAnswer" [answer]="taskConfig.formerAnswer"></alg-answer-author-indicator>
+          <ng-container *ngrxLet="taskConfig$ as taskConfig">
+            <div *ngIf="taskConfig && taskConfig.readOnly && contentTab.isActive" class="indicator">
+              <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
             </div>
             <alg-item-content
               [hidden]="!contentTab.isActive && !editChildrenTab.isActive"
@@ -137,7 +137,6 @@
         <alg-item-progress
           *ngIf="progressTab?.isActive"
           [itemData]="itemData"
-          [isTaskReadOnly]="(taskReadOnly$ | async) ?? false"
           [savingAnswer]="(savingAnswer$ | async) ?? false"
           (skipSave)="skipBeforeUnload()"
         ></alg-item-progress>

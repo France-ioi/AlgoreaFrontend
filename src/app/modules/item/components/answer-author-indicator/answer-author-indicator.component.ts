@@ -5,7 +5,7 @@ import { GetUserService } from 'src/app/modules/group/http-services/get-user.ser
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { groupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
-import { Answer } from '../../http-services/get-answer.service';
+import { Answer } from '../../services/item-task.service';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',

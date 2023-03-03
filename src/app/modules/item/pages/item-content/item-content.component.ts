@@ -22,7 +22,7 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
 
   @Input() itemData?: ItemData;
   @Input() taskView?: TaskTab['view'];
-  @Input() taskConfig: TaskConfig = { readOnly: false, formerAnswer: null };
+  @Input() taskConfig: TaskConfig|null = null;
   @Input() savingAnswer = false;
   @Input() editModeEnabled = false;
 

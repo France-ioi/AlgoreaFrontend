@@ -12,7 +12,8 @@ import {
   take,
   catchError,
   mergeWith,
-  takeUntil
+  takeUntil,
+  withLatestFrom
 } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState, isFetchingOrError } from 'src/app/shared/helpers/state';
@@ -39,7 +40,6 @@ import { PendingChangesComponent } from 'src/app/shared/guards/pending-changes-g
 import { TaskTab } from '../item-display/item-display.component';
 import { TaskConfig } from '../../services/item-task.service';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
-import { GetAnswerService } from '../../http-services/get-answer.service';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
@@ -51,9 +51,9 @@ import {
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { InitialAnswerDataSource } from './initial-answer-datasource';
 
 const itemBreadcrumbCat = $localize`Items`;
-const loadForbiddenAnswerError = new Error('load answer forbidden');
 
 const animationTiming = '.6s .2s ease-in-out';
 
@@ -64,7 +64,7 @@ const animationTiming = '.6s .2s ease-in-out';
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
-  providers: [ ItemDataSource ],
+  providers: [ ItemDataSource, InitialAnswerDataSource ],
   animations: [
     trigger('threadOpenClose', [
       state('opened', style({
@@ -90,7 +90,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   private itemRouteState$ = this.activatedRoute.paramMap.pipe(
     repeatLatestWhen(this.userSessionService.userChanged$),
-    // When loading a task with a former answerId, we need to remove the answerId from the url to avoid reloading
+    // When loading a task with an answerId to be loaded as current, we need to remove the answerId from the url to avoid reloading
     // a former answer if the user refreshes the page
     // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
@@ -147,32 +147,24 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   unknownError?: unknown;
 
-  readonly formerAnswer$ = this.itemRouteState$.pipe(
-    readyData(),
-    distinctUntilChanged(),
-    switchMap(route => {
-      if (!route.answer) return of(null);
-      if (route.answer.id) return this.getAnswerService.get(route.answer.id);
-      return this.getAnswerService.getBest(route.id, { watchedGroupId: route.answer.participantId });
-    }),
-    shareReplay(1),
+  readonly answerError$ = this.initialAnswerDataSource.forbidden$.pipe(
+    withLatestFrom(this.itemRouteState$.pipe(readyData())),
+    map(([ _, route ]) => ({ fallbackLink: route.answer ? urlArrayForItemRoute({ ...route, answer: undefined }) : undefined })),
   );
 
-  readonly formerAnswerError$ = this.formerAnswer$.pipe(
-    switchMap(() => EMPTY), // ignore non-errors
-    catchError(error => of(errorIsHTTPForbidden(error) ? loadForbiddenAnswerError : error))
+  readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(readyData()).pipe(
+    switchMap(data => {
+      if (!isTask(data.item)) return of(null); // config for non-task's is null
+      return this.initialAnswerDataSource.answer$.pipe(
+        catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
+        map(initialAnswer => ({
+          readOnly: !!data.route.answer && !data.route.answer.loadAsCurrent,
+          initialAnswer,
+          locale: data.item.string.languageTag
+        }))
+      );
+    })
   );
-  readonly formerAnswerLoadForbidden$ = this.formerAnswerError$.pipe(filter(error => error === loadForbiddenAnswerError));
-  readonly answerFallbackLink$ = combineLatest([ this.state$.pipe(readyData()), this.formerAnswerLoadForbidden$ ]).pipe(
-    map(([{ route }]) => urlArrayForItemRoute({ ...route, attemptId: undefined, parentAttemptId: undefined, answer: undefined })),
-  );
-
-  readonly taskReadOnly$ = this.groupWatchingService.isWatching$;
-  readonly taskConfig$: Observable<TaskConfig> = combineLatest([
-    this.formerAnswer$.pipe(catchError(() => EMPTY)), // error is handled by formerAnswerError$
-    this.taskReadOnly$,
-    this.state$.pipe(readyData()),
-  ]).pipe(map(([ formerAnswer, readOnly, data ]) => ({ readOnly, formerAnswer, locale: data.item.string.languageTag })));
 
   // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
   private skipBeforeUnload$ = new Subject<void>();
@@ -216,12 +208,23 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       .subscribe({
         error: () => { /* Errors cannot be handled before unloading page. */ },
       }),
-    this.formerAnswerError$.subscribe(caught => {
-      if (caught !== loadForbiddenAnswerError) this.unknownError = caught;
+    this.initialAnswerDataSource.unknownError$.subscribe(e => this.unknownError = e),
+
+
+    // drop "answer" route arg when switching "watching" off
+    this.groupWatchingService.isWatching$.pipe(
+      pairwise(),
+      filter(([ old, cur ]) => old && !cur), // was "on", become "off"
+      switchMap(() => this.itemRouteState$.pipe(take(1), readyData())),
+      delay(0),
+    ).subscribe(route => {
+      this.itemRouter.navigateTo({ ...route, answer: undefined });
     }),
 
     this.itemRouteState$.subscribe(state => {
       if (state.isReady) {
+        // configure initialAnswerDataSource
+        this.initialAnswerDataSource.setRoute(state.data);
         // just publish to current content the new route we are navigating to (without knowing any info)
         this.currentContent.replace(itemInfo({
           route: state.data,
@@ -238,6 +241,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     // on datasource state change, update the current content page info
     this.itemDataSource.state$.subscribe(state => {
       if (state.isReady) {
+        const fullRoute = routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId);
+        this.initialAnswerDataSource.setRoute(fullRoute);
+        this.initialAnswerDataSource.setIsTask(isTask(state.data.item));
         this.hasRedirected = false;
         this.currentContent.replace(itemInfo({
           breadcrumbs: {
@@ -250,7 +256,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
             currentPageIdx: state.data.breadcrumbs.length - 1,
           },
           title: state.data.item.string.title === null ? undefined : state.data.item.string.title,
-          route: routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId),
+          route: fullRoute,
           details: {
             title: state.data.item.string.title,
             type: state.data.item.type,
@@ -263,7 +269,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
           },
         }));
 
-        if (state.data.route.answer) {
+        if (state.data.route.answer?.loadAsCurrent) {
           this.itemRouter.navigateTo(
             { ...state.data.route, answer: undefined },
             { navExtras: { replaceUrl: true, state: { preventRefetch: true } } },
@@ -323,11 +329,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
+    private initialAnswerDataSource: InitialAnswerDataSource,
     private userSessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
-    private getAnswerService: GetAnswerService,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private discussionService: DiscussionService,

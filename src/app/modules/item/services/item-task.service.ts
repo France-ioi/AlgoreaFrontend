@@ -8,15 +8,17 @@ import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { AskHintService } from '../http-services/ask-hint.service';
-import { Answer } from '../http-services/get-answer.service';
+import { Answer as GetAnswerType } from '../http-services/get-answer.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 
+export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
+
 export interface TaskConfig {
   readOnly: boolean,
-  formerAnswer: Answer | null,
+  initialAnswer: Answer | null,
   locale?: string,
 }
 
@@ -68,7 +70,7 @@ export class ItemTaskService {
   configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
     this.readOnly = options.readOnly;
     this.attemptId = attemptId;
-    this.initService.configure(route, url, attemptId, options.formerAnswer, options.locale, options.readOnly);
+    this.initService.configure(route, url, attemptId, options.initialAnswer, options.locale, options.readOnly);
   }
 
   initTask(iframe: HTMLIFrameElement): void {

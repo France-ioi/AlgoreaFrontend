@@ -10,10 +10,11 @@ interface ItemRouteError extends Partial<ItemRoute> {
 export function itemRouteFromParams(prefix: string, params: ParamMap): FullItemRoute|ItemRouteError {
   const contentType = itemCategoryFromPrefix(prefix);
   if (contentType === null) throw new Error('Unexpected item path prefix');
-  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId } = decodeItemRouterParameters(params);
+  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId, answerLoadAsCurrent }
+    = decodeItemRouterParameters(params);
   let answer: ItemRoute['answer']|undefined;
   if (answerBest) answer = { best: true, participantId: answerParticipantId ?? undefined };
-  else if (answerId) answer = { id: answerId };
+  else if (answerId) answer = { id: answerId, loadAsCurrent: answerLoadAsCurrent ? true : undefined };
 
   if (!id) return { tag: 'error', contentType };
   if (path === null) return { tag: 'error', contentType, id, answer };

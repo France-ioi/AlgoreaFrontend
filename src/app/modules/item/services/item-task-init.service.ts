@@ -4,9 +4,9 @@ import { catchError, delayWhen, filter, map, shareReplay, switchMap, timeout, wi
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
-import { Answer } from '../http-services/get-answer.service';
 import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
+import { Answer } from './item-task.service';
 
 const taskChannelIdPrefix = 'task-';
 const loadTaskTimeout = 15 * SECONDS;
@@ -15,7 +15,7 @@ export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
   attemptId: string,
-  formerAnswer: Answer | null,
+  initialAnswer: Answer | null,
   readOnly: boolean,
   locale?: string,
 }
@@ -28,8 +28,8 @@ export class ItemTaskInitService implements OnDestroy {
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    switchMap(({ readOnly, formerAnswer, attemptId, route }) => {
-      if (readOnly && formerAnswer) return this.taskTokenService.generateForAnswer(formerAnswer.id);
+    switchMap(({ readOnly, initialAnswer, attemptId, route }) => {
+      if (readOnly && initialAnswer) return this.taskTokenService.generateForAnswer(initialAnswer.id);
       // if we are no observing (= not in readOnly) -> we need a token for our user and the task may be edited by ourself
       // if there are no answer loaded -> we currently want an empty task, so using our own task token
       else return this.taskTokenService.generate(route.id, attemptId);
@@ -82,11 +82,11 @@ export class ItemTaskInitService implements OnDestroy {
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId: string, formerAnswer: Answer | null, locale?: string, readOnly = false): void {
+  configure(route: FullItemRoute, url: string, attemptId: string, initialAnswer: Answer | null, locale?: string, readOnly = false): void {
     if (this.configured) throw new Error('task init service can be configured once only');
     this.configured = true;
 
-    this.configFromItem$.next({ route, url, attemptId, formerAnswer, locale, readOnly });
+    this.configFromItem$.next({ route, url, attemptId, initialAnswer, locale, readOnly });
     this.configFromItem$.complete();
   }
 
