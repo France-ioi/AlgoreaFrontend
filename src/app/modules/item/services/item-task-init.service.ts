@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, fromEvent, Observable, of, ReplaySubject, TimeoutError } from 'rxjs';
-import { catchError, delayWhen, filter, map, shareReplay, switchMap, timeout, withLatestFrom } from 'rxjs/operators';
+import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
+import { catchError, delayWhen, filter, map, shareReplay, switchMap, takeUntil, timeout, withLatestFrom } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -22,6 +22,7 @@ export interface ItemTaskConfig {
 
 @Injectable()
 export class ItemTaskInitService implements OnDestroy {
+  private destroyed$ = new Subject<void>();
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
 
@@ -54,6 +55,7 @@ export class ItemTaskInitService implements OnDestroy {
         return task.load(initialViews).pipe(map(() => task));
       }),
     )),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
@@ -80,6 +82,8 @@ export class ItemTaskInitService implements OnDestroy {
     this.task$.pipe(timeout(0), catchError(() => EMPTY)).subscribe(task => task.destroy());
     if (!this.configFromItem$.closed) this.configFromItem$.complete();
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   configure(route: FullItemRoute, url: string, attemptId: string, initialAnswer: Answer | null, locale?: string, readOnly = false): void {

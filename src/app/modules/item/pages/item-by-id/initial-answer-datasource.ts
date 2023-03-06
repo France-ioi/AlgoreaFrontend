@@ -11,7 +11,8 @@ import {
   of,
   shareReplay,
   Subject,
-  switchMap
+  switchMap,
+  takeUntil
 } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
@@ -33,6 +34,7 @@ export class InitialAnswerDataSource implements OnDestroy {
 
   private readonly itemRoute$ = new Subject<FullItemRoute>();
   private readonly isTask$ = new BehaviorSubject<boolean|undefined>(undefined);
+  private readonly destroyed$ = new Subject<void>();
 
   readonly answer$ = combineLatest([ this.itemRoute$, this.isTask$, this.groupWatchingService.isWatching$ ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
@@ -55,6 +57,7 @@ export class InitialAnswerDataSource implements OnDestroy {
       // "Wait" and "NotApplicable" cases:
       return EMPTY;
     }),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
@@ -87,6 +90,8 @@ export class InitialAnswerDataSource implements OnDestroy {
   ngOnDestroy(): void {
     this.itemRoute$.complete();
     this.isTask$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   private getCurrentAnswer(itemId: string, attemptId: string): Observable<Answer | null> {

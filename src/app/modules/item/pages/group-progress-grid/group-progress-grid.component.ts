@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/modules/group/helpers/group-management';
@@ -60,7 +60,7 @@ interface ProgressDataDialog {
   templateUrl: './group-progress-grid.component.html',
   styleUrls: [ './group-progress-grid.component.scss' ]
 })
-export class GroupProgressGridComponent implements OnChanges {
+export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -126,6 +126,11 @@ export class GroupProgressGridComponent implements OnChanges {
     }
     this.canAccess = !!(this.group && canCurrentUserGrantGroupAccess(this.group)
       && this.itemData && allowsGivingPermToItem(this.itemData.item.permissions));
+  }
+
+  ngOnDestroy(): void {
+    this.itemData$.complete();
+    this.refresh$.complete();
   }
 
   trackByRow(_index: number, row: DataRow): string {

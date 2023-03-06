@@ -69,7 +69,7 @@ export class LTIComponent implements OnDestroy {
       return this.checkLoginService.check(loginId);
     }),
     retry(3),
-    shareReplay(1),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   readonly navigationData$ = combineLatest([ this.isLoggedIn$, this.isRedirection$ ]).pipe(
@@ -82,7 +82,7 @@ export class LTIComponent implements OnDestroy {
     }),
     switchMap(contentId => this.getNavigationData(contentId)),
     mapToFetchState(),
-    shareReplay(1),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   readonly error$ = this.navigationData$.pipe(

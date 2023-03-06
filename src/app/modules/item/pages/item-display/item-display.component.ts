@@ -11,8 +11,19 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { EMPTY, interval, Observable, merge, of } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, ignoreElements, map, pairwise, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { EMPTY, interval, Observable, merge, of, Subject } from 'rxjs';
+import {
+  catchError,
+  distinctUntilChanged,
+  filter,
+  ignoreElements,
+  map,
+  pairwise,
+  shareReplay,
+  startWith,
+  switchMap,
+  takeUntil
+} from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState } from 'src/app/shared/operators/state';
@@ -66,7 +77,13 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     catchError(() => EMPTY),
   );
 
-  private metadata = this.taskService.task$.pipe(switchMap(task => task.getMetaData()), shareReplay(1));
+  private destroyed$ = new Subject<void>();
+
+  private metadata = this.taskService.task$.pipe(
+    switchMap(task => task.getMetaData()),
+    takeUntil(this.destroyed$),
+    shareReplay(1),
+  );
   metadataError$ = this.metadata.pipe(ignoreElements(), catchError(err => of(err)));
   metadata$ = this.metadata.pipe(catchError(() => EMPTY)); /* never emit errors */
 
@@ -164,6 +181,8 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {

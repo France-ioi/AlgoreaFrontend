@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/modules/group/http-services/get-user.service';
@@ -12,7 +12,7 @@ import { Answer } from '../../services/item-task.service';
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
 })
-export class AnswerAuthorIndicatorComponent implements OnChanges {
+export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 
   @Input() answer!: Answer;
 
@@ -34,5 +34,9 @@ export class AnswerAuthorIndicatorComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.answer) this.answer$.next(this.answer);
+  }
+
+  ngOnDestroy(): void {
+    this.answer$.complete();
   }
 }

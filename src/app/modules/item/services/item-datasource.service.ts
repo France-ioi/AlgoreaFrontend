@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, forkJoin, Observable, of, ReplaySubject, Subject, combineLatest } from 'rxjs';
-import { delayWhen, distinctUntilChanged, filter, map, scan, shareReplay, startWith, switchMap, } from 'rxjs/operators';
+import { delayWhen, distinctUntilChanged, filter, map, scan, shareReplay, startWith, switchMap, takeUntil, } from 'rxjs/operators';
 import { bestAttemptFromResults, implicitResultStart } from 'src/app/shared/helpers/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/shared/routing/item-route';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
@@ -32,6 +32,7 @@ export interface ItemData {
 @Injectable()
 export class ItemDataSource implements OnDestroy {
 
+  private readonly destroyed$ = new Subject<void>();
   private readonly fetchOperation$ = new ReplaySubject<FullItemRoute>(1); // trigger item fetching
   private readonly refresh$ = new Subject<void>();
   private readonly scorePatch$ = new Subject<number | undefined>();
@@ -59,6 +60,7 @@ export class ItemDataSource implements OnDestroy {
     // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
     // so the max score patch is only valid for current item
     switchMap(state => this.maxScorePatch$.pipe(map(score => this.patchScore(state, score)))),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
@@ -90,6 +92,8 @@ export class ItemDataSource implements OnDestroy {
     this.refresh$.complete();
     this.fetchOperation$.complete();
     this.subscription.unsubscribe();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   /**

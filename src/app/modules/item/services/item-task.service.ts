@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, throwError } from 'rxjs';
-import { catchError, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
@@ -23,10 +23,11 @@ export interface TaskConfig {
 }
 
 @Injectable()
-export class ItemTaskService {
-  readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(shareReplay(1));
-  readonly initError$ = this.initService.initError$.pipe(shareReplay(1));
-  readonly urlError$ = this.initService.urlError$.pipe(shareReplay(1));
+export class ItemTaskService implements OnDestroy {
+  readonly destroyed$ = new Subject<void>();
+  readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(takeUntil(this.destroyed$), shareReplay(1));
+  readonly initError$ = this.initService.initError$.pipe(takeUntil(this.destroyed$), shareReplay(1));
+  readonly urlError$ = this.initService.urlError$.pipe(takeUntil(this.destroyed$), shareReplay(1));
   readonly hintError$ = new Subject<void>();
 
   readonly error$ = merge(
@@ -50,6 +51,7 @@ export class ItemTaskService {
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
     map(neighborsState => (neighborsState.isReady ? (neighborsState.data?.next ?? neighborsState.data?.parent)?.navigateTo : undefined)),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
@@ -66,6 +68,12 @@ export class ItemTaskService {
     private location: Location,
     private askHintService: AskHintService,
   ) {}
+
+  ngOnDestroy(): void {
+    this.hintError$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 
   configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
     this.readOnly = options.readOnly;
@@ -115,6 +123,7 @@ export class ItemTaskService {
         take(1),
         switchMap(([ taskToken, task ]) => task.updateToken(taskToken)),
         map(() => undefined),
+        takeUntil(this.destroyed$),
         shareReplay(1),
       ),
       log: (messages: string[]) => {
