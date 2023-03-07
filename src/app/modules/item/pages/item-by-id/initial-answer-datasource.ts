@@ -1,11 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  BehaviorSubject,
   catchError,
   combineLatest,
   distinctUntilChanged,
-  EMPTY,
-  filter,
   map,
   Observable,
   of,
@@ -21,8 +18,6 @@ import { CurrentAnswerService } from '../../http-services/current-answer.service
 import { GetAnswerService } from '../../http-services/get-answer.service';
 import { Answer } from '../../services/item-task.service';
 
-const loadForbiddenAnswerError = new Error('load answer forbidden');
-
 type Strategy =
   { tag: 'EmptyInitialAnswer'|'Wait'|'NotApplicable' } |
   { tag: 'LoadCurrent', itemId: string, attemptId: string } |
@@ -32,46 +27,38 @@ type Strategy =
 @Injectable()
 export class InitialAnswerDataSource implements OnDestroy {
 
-  private readonly itemRoute$ = new Subject<FullItemRoute>();
-  private readonly isTask$ = new BehaviorSubject<boolean|undefined>(undefined);
+  private readonly itemInfo$ = new Subject<{ route: FullItemRoute, isTask: boolean|undefined }>();
   private readonly destroyed$ = new Subject<void>();
 
-  readonly answer$ = combineLatest([ this.itemRoute$, this.isTask$, this.groupWatchingService.isWatching$ ]).pipe(
+  readonly answer$ = combineLatest([ this.itemInfo$, this.groupWatchingService.isWatching$ ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
-    map(([ route, isTask, isWatching ]): Strategy => {
+    map(([{ route, isTask }, isWatching ]): Strategy => {
+      if (isTask === false) return { tag: 'NotApplicable' };
       if (!route.answer) {
         if (isWatching) return { tag: 'EmptyInitialAnswer' };
         if (isTask === undefined) return { tag: 'Wait' };
-        if (isTask) return route.attemptId ? { tag: 'LoadCurrent', itemId: route.id, attemptId: route.attemptId } : { tag: 'Wait' };
-        else /* isTask === false */ return { tag: 'NotApplicable' };
+        return route.attemptId ? { tag: 'LoadCurrent', itemId: route.id, attemptId: route.attemptId } : { tag: 'Wait' };
       }
       if (route.answer.id) return { tag: 'LoadById', answerId: route.answer.id };
       return { tag: 'LoadBest', itemId: route.id, participantId: route.answer.participantId };
     }),
     distinctUntilChanged((s1, s2) => JSON.stringify(s1) === JSON.stringify(s2)),
     switchMap(strategy => {
-      if (strategy.tag === 'EmptyInitialAnswer') return of(null);
+      if (strategy.tag === 'EmptyInitialAnswer') return of(null); // null -> no initial answer
       if (strategy.tag === 'LoadCurrent') return this.getCurrentAnswer(strategy.itemId, strategy.attemptId);
       if (strategy.tag === 'LoadById') return this.getAnswerService.get(strategy.answerId);
       if (strategy.tag === 'LoadBest') return this.getAnswerService.getBest(strategy.itemId, { watchedGroupId: strategy.participantId });
-      // "Wait" and "NotApplicable" cases:
-      return EMPTY;
+      return of(undefined); // "Wait" and "NotApplicable" cases - undefined -> not defined yet
     }),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
-  readonly error$ = this.answer$.pipe(
-    switchMap(() => EMPTY), // ignore non-errors
-    catchError(error => of(errorIsHTTPForbidden(error) ? loadForbiddenAnswerError : error))
+  readonly error$: Observable<{ error: unknown }|undefined> = this.answer$.pipe(
+    map(() => undefined), // non-errors -> undefined
+    distinctUntilChanged(),
+    catchError((e: unknown) => of({ error: e })), // convert stream error to value
   );
-  readonly forbidden$ = this.error$.pipe(filter(error => error === loadForbiddenAnswerError));
-  readonly unknownError$: Observable<unknown> = this.error$.pipe(filter(error => error !== loadForbiddenAnswerError));
-
-  subscription = this.itemRoute$.pipe(
-    map(route => route.id),
-    distinctUntilChanged()
-  ).subscribe(() => this.isTask$.next(undefined)); // each time the item change, reset 'isTask$'
 
   constructor(
     private groupWatchingService: GroupWatchingService,
@@ -79,17 +66,12 @@ export class InitialAnswerDataSource implements OnDestroy {
     private getAnswerService: GetAnswerService,
   ) {}
 
-  setRoute(route: FullItemRoute): void {
-    this.itemRoute$.next(route);
-  }
-
-  setIsTask(isTask: boolean|undefined): void {
-    this.isTask$.next(isTask);
+  setInfo(route: FullItemRoute, isTask: boolean|undefined): void {
+    this.itemInfo$.next({ route, isTask });
   }
 
   ngOnDestroy(): void {
-    this.itemRoute$.complete();
-    this.isTask$.complete();
+    this.itemInfo$.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

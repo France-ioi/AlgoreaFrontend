@@ -100,19 +100,15 @@
         #contentContainer
         [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
       >
-        <alg-error
-          *ngIf="unknownError"
-          [message]="errorMessage"
-        ></alg-error>
-
         <ng-container *ngIf="contentTab.isActive || editChildrenTab.isActive || taskTabs.length > 0">
-          <alg-error *ngIf="answerError$ | async as error">
+          <alg-error *ngIf="answerLoadingError$ | async as error">
             <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
             <ng-template #fallback>
               <ng-container i18n>
-                Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>
+                Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
               </ng-container>
             </ng-template>
+            <p *ngIf="!error.isForbidden">{{ errorMessageContactUs }}</p>
           </alg-error>
 
           <ng-container *ngrxLet="taskConfig$ as taskConfig">
