@@ -2,7 +2,7 @@
   <ng-template pTemplate>
     <div class="user-progress-info">
       <div class="content validated">
-        <ng-container *ngIf="progress && (progress.timeSpent > 0 || progress.score > 0); else notStarted">
+        <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
           <span>
             <i class="fa fa-clock"></i>
             <span class="menu-label" i18n>Time spent</span>
@@ -16,15 +16,40 @@
               [isValidated]="progress.validated"
             ></alg-score-ring>
           </span>
+          <ng-container *ngIf="progressData && progressData.progress.submissions > 0 && progressData.taskDetails as taskDetails">
+            <ng-container *ngIf="currentUser$ | async as currentUser">
+              <div
+                i18n-pTooltip pTooltip="You cannot view answers for this content."
+                [tooltipDisabled]="(taskDetails.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
+              >
+                <a
+                  class="clickable"
+                  [ngClass]="{ 'disabled': !(taskDetails.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
+                  [routerLink]="{
+                    id: taskDetails.route.id,
+                    contentType: taskDetails.route.contentType,
+                    path: taskDetails.route.id === progressData.itemRoute.id ? progressData.itemRoute.path : progressData.itemRoute.path.concat([ progressData.itemRoute.id ]),
+                    parentAttemptId: progressData.itemRoute.parentAttemptId,
+                    answer: {
+                      best: true, participantId: progress.groupId
+                    }
+                  } | url"
+                >
+                  <i class="pi pi-code"></i>
+                  <span i18n>View answer</span>
+                </a>
+              </div>
+            </ng-container>
+          </ng-container>
         </ng-container>
-        <ng-template #notStarted>
+        <ng-template #noActivity>
           <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
         </ng-template>
         <span
           *ngIf="canEditPermissions"
           class="clickable"
           (click)="editPermissions.emit()"
-          >
+        >
           <i class="fa fa-lock"></i>
           <span i18n>ACCESS</span>
         </span>

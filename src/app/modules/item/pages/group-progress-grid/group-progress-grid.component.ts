@@ -9,7 +9,7 @@ import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-gro
 import { GetGroupProgressService, TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { TypeFilter } from '../../helpers/composition-filter';
-import { GetItemChildrenService } from '../../http-services/get-item-children.service';
+import { GetItemChildrenService, ItemChildType } from '../../http-services/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';
 import { downloadFile } from '../../../../shared/helpers/download-file';
@@ -22,7 +22,8 @@ import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
-import { allowsGivingPermToItem } from 'src/app/shared/models/domain/item-permissions';
+import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { rawItemRoute } from '../../../../shared/routing/item-route';
 
 const progressListLimit = 25;
 
@@ -34,6 +35,8 @@ interface DataRow {
 interface DataColumn {
   id: string,
   title: string|null,
+  type: ItemChildType,
+  permissions: ItemCorePerm,
 }
 interface DataFetching {
   groupId: string,
@@ -138,12 +141,22 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
+    if (!this.itemData) {
+      throw new Error('Unexpected: Missed item data');
+    }
     if (!this.group) {
       throw new Error('Unexpected: Missed group');
     }
     this.progressOverlay = {
       target,
       progress: userProgress,
+      ...(this.currentFilter !== 'Groups' && col.type === 'Task' ? {
+        taskDetails: {
+          route: rawItemRoute(typeCategoryOfItem(col), col.id),
+          permissions: col.permissions,
+        }
+      } : {}),
+      itemRoute: this.itemData.route,
     };
     this.progressDataDialog = {
       item: {
@@ -307,10 +320,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         {
           id: itemData.item.id,
           title: itemData.item.string.title,
+          type: itemData.item.type,
+          permissions: itemData.item.permissions,
         },
         ...items.map(item => ({
           id: item.id,
           title: item.string.title,
+          type: item.type,
+          permissions: item.permissions,
         }))
       ]),
     );
