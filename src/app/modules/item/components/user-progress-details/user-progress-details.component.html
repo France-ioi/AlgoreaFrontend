@@ -13,11 +13,8 @@
               [isDark]="true"
               [currentScore]="progress.score"
               [diameter]="32"
-              *ngIf="!progress.validated"
+              [isValidated]="progress.validated"
             ></alg-score-ring>
-            <span class="situation-check" *ngIf="progress.validated">
-              <i class="fa fa-check"></i>
-            </span>
           </span>
         </ng-container>
         <ng-template #notStarted>
