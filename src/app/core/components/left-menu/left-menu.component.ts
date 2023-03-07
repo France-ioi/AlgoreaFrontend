@@ -1,11 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
-import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
-import { readyData } from '../../../shared/operators/state';
-import { debounceTime, merge } from 'rxjs';
-import { map, filter, distinctUntilChanged } from 'rxjs/operators';
-import { isNotUndefined } from '../../../shared/helpers/null-undefined-predicates';
-import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'alg-left-menu',
@@ -16,33 +11,19 @@ export class LeftMenuComponent implements OnDestroy {
   @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
 
   isNavThemeDark = false;
+  private selectedElement$ = new Subject<string>();
 
-  private subscription = merge(
-    this.activityNavTreeService.state$,
-    this.skillNavTreeService.state$,
-    this.groupNavTreeService.state$,
-  ).pipe(
-    readyData(),
-    map(navTreeData => navTreeData.selectedElementId),
-    filter(isNotUndefined),
-    debounceTime(250),
-    distinctUntilChanged(),
-  ).subscribe(selectedElementId =>
-    this.onSelectId(selectedElementId)
-  );
-
-  constructor(
-    private activityNavTreeService: ActivityNavTreeService,
-    private skillNavTreeService: SkillNavTreeService,
-    private groupNavTreeService: GroupNavTreeService,
-  ) {
-  }
+  private subscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(id => this.scrollToContent(id));
 
   onNavThemeChange(dark: boolean): void {
     this.isNavThemeDark = dark;
   }
 
-  onSelectId(id: string): void {
+  onSelectedElementChange(id: string | undefined): void {
+    if (id !== undefined) this.selectedElement$.next(id);
+  }
+
+  private scrollToContent(id: string): void {
     const scrollbarDirectiveRef = this.componentRef?.directiveRef;
     if (!scrollbarDirectiveRef) return;
     const scrollbarElement = (scrollbarDirectiveRef.elementRef as ElementRef<HTMLElement>).nativeElement;
@@ -57,6 +38,7 @@ export class LeftMenuComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.selectedElement$.unsubscribe();
     this.subscription.unsubscribe();
   }
 
