@@ -1,8 +1,8 @@
 
 import { Component, Output } from '@angular/core';
 import { merge, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
-import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
+import { delay, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { isDefined, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo, isMyGroupsInfo } from 'src/app/shared/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/shared/models/content/item-info';
@@ -12,6 +12,7 @@ import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.se
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { environment } from '../../../../environments/environment';
 import { GroupWatchingService } from '../../services/group-watching.service';
+import { readyData } from 'src/app/shared/operators/state';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -39,6 +40,14 @@ export class LeftNavComponent {
   );
 
   @Output() themeChange = this.activeTab$.pipe(map(tab => ({ isDark: tab.index === groupsTabIdx })), delay(0));
+  @Output() selectElement = this.activeTab$.pipe(
+    map(tab => this.navTreeServices[tab.index]),
+    filter(isNotUndefined),
+    switchMap(activeTreeService => activeTreeService.state$),
+    readyData(),
+    map(navTreeData => navTreeData.selectedElementId),
+    distinctUntilChanged(),
+  );
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
