@@ -3,7 +3,7 @@ import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
-import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
@@ -24,6 +24,7 @@ export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('progress') progress?: RouterLinkActive;
   @ViewChild('personalData') personalData?: RouterLinkActive;
 
+  private destroyed$ = new Subject<void>();
   private refresh$ = new Subject<void>();
   private readonly userRoute$ = this.route.paramMap.pipe(
     map(params => {
@@ -37,6 +38,7 @@ export class UserComponent implements OnInit, OnDestroy {
   readonly state$ = this.userRoute$.pipe(
     switchMap(route => this.getUserService.getForId(route.id).pipe(map(user => ({ route: route, user: user })))),
     mapToFetchState({ resetter: this.refresh$ }),
+    takeUntil(this.destroyed$),
     share(),
   );
 
@@ -106,6 +108,8 @@ export class UserComponent implements OnInit, OnDestroy {
     this.currentContent.clear();
     this.subscription?.unsubscribe();
     this.refresh$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   refresh(): void {

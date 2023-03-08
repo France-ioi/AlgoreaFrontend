@@ -88,6 +88,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
   @ViewChild('contentContainer') contentContainer?: ElementRef<HTMLDivElement>;
 
+  private destroyed$ = new Subject<void>();
+
   private itemRouteState$ = this.activatedRoute.paramMap.pipe(
     repeatLatestWhen(this.userSessionService.userChanged$),
     // When loading a task with an answerId to be loaded as current, we need to remove the answerId from the url to avoid reloading
@@ -104,6 +106,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       return of(item);
     }),
     mapToFetchState(),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
@@ -346,6 +349,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
       .subscribe(() => this.layoutService.configure({ fullFrameActive: false }));
     this.tabs.complete();
+    this.skipBeforeUnload$.complete();
+    this.retryBeforeUnload$.complete();
+    this.beforeUnload$.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
 

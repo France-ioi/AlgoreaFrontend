@@ -54,6 +54,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       return of(initialAnswer);
     }),
     retry(3),
+    takeUntil(this.destroyed$),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
@@ -65,6 +66,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     switchMap(([ initialAnswer, task, { readOnly }]) =>
       (initialAnswer?.state && !readOnly ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
     ),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
   private initializedTaskAnswer$ = combineLatest([
@@ -75,6 +77,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     switchMap(([ initialAnswer, task ]) =>
       (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(map(() => undefined)) : of(undefined))
     ),
+    takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
@@ -148,12 +151,13 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   submitAnswer(): Observable<unknown> {
     // Step 1: get answer from task
-    const answer$ = this.task$.pipe(take(1), switchMap(task => task.getAnswer()), shareReplay(1));
+    const answer$ = this.task$.pipe(take(1), switchMap(task => task.getAnswer()), takeUntil(this.destroyed$), shareReplay(1));
 
     // Step 2: generate answer token with backend
     const answerToken$ = combineLatest([ this.taskToken$, answer$ ]).pipe(
       take(1),
       switchMap(([ taskToken, answer ]) => this.answerTokenService.generate(answer, taskToken)),
+      takeUntil(this.destroyed$),
       shareReplay(1),
     );
 
@@ -161,6 +165,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     const grade$ = combineLatest([ this.task$, answer$, answerToken$ ]).pipe(
       take(1),
       switchMap(([ task, answer, answerToken ]) => task.gradeAnswer(answer, answerToken)),
+      takeUntil(this.destroyed$),
       shareReplay(1),
     );
 
@@ -173,6 +178,7 @@ export class ItemTaskAnswerService implements OnDestroy {
         grade.score,
         grade.scoreToken ?? undefined,
       )),
+      takeUntil(this.destroyed$),
       shareReplay(1),
     );
     combineLatest([ grade$, saveGrade$ ])
@@ -213,6 +219,7 @@ export class ItemTaskAnswerService implements OnDestroy {
         );
       }),
       defaultIfEmpty({ saving: false }), // when a timeout is caught, the observable is empty
+      takeUntil(this.destroyed$),
       shareReplay(1),
     );
   }
