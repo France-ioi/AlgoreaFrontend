@@ -18,7 +18,7 @@
     </ng-template>
   </alg-section>
 
-  <ng-container *ngIf="itemData.item.permissions | allowsViewingContent; else notAllowToWatch">
+  <ng-container *ngIf="itemData.item.permissions | allowsViewingContent; else notAllowedToViewContent">
     <ng-container *ngIf="itemData.currentResult; else noCurrentResult">
 
       <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
@@ -81,7 +81,7 @@
     </ng-container>
   </ng-container>
 
-  <ng-template #notAllowToWatch>
+  <ng-template #notAllowedToViewContent>
     <div class="message-info">
       <alg-message-info>
         <span *ngIf="itemData.item.type === 'Chapter'" i18n>
