@@ -52,11 +52,10 @@
       <ng-container *ngIf="taskConfig">
         <ng-container *ngIf="itemData.item.url; else noUrl">
           <alg-item-display
-            *ngIf="attemptId; else noCurrentResult"
             [route]="itemData.route"
             [editingPermission]="itemData.item.permissions"
             [url]="itemData.item.url"
-            [attemptId]="attemptId"
+            [attemptId]="itemData.currentResult.attemptId"
             [view]="taskView"
             [taskConfig]="taskConfig"
             [savingAnswer]="savingAnswer"

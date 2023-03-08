@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -15,7 +15,7 @@ import { DiscussionService } from '../../services/discussion.service';
   templateUrl: './item-content.component.html',
   styleUrls: [ './item-content.component.scss' ]
 })
-export class ItemContentComponent implements OnChanges, PendingChangesComponent {
+export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;
   @ViewChild(ItemChildrenEditFormComponent) itemChildrenEditFormComponent?: ItemChildrenEditFormComponent;
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
@@ -37,18 +37,11 @@ export class ItemContentComponent implements OnChanges, PendingChangesComponent 
     return !!this.itemChildrenEditFormComponent?.dirty;
   }
 
-  attemptId?: string;
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private discussionService: DiscussionService,
   ) {}
-
-  ngOnChanges(): void {
-    if (!this.itemData) return;
-    this.attemptId = this.itemData.route.attemptId || this.itemData.currentResult?.attemptId;
-  }
 
   onEditModeEnableChange(editModeEnabled: boolean): void {
     void this.router.navigate([ editModeEnabled ? './edit-children' : './' ], {
