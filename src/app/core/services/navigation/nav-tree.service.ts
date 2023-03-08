@@ -119,6 +119,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * In practice, the fetches all have a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
      * The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
      * subscribers, and so that new subscribers get the latest results on subscription.
+     * (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
+     * will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
      *
      * Test case:
      * - normal navigation -> no request is cancelled to be re-executed
