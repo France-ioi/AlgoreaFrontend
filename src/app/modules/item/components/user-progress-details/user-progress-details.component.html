@@ -8,15 +8,13 @@
             <span class="menu-label" i18n>Time spent</span>
             <span class="menu-value">{{ progress.timeSpent | duration }}</span>
           </span>
-          <span class="score" *ngIf="!progress.validated">
+          <span class="score">
             <alg-score-ring
               [isDark]="true"
               [currentScore]="progress.score"
               [diameter]="32"
+              [isValidated]="progress.validated"
             ></alg-score-ring>
-            <span class="situation-check" *ngIf="progress.validated">
-              <i class="fa fa-check"></i>
-            </span>
           </span>
         </ng-container>
         <ng-template #notStarted>
