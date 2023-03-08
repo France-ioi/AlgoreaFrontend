@@ -9,7 +9,8 @@ describe('item page', () => {
     const pageLoadUseCases = [
       { label: 'without path', path: undefined },
       { label: 'with correct path', path: motifArt.path },
-      { label: 'with incorrect path', path: [ 'invalid', 'path' ] },
+      { label: 'with incorrect path', path: [ '111', '999' ] },
+      { label: 'with incorrect path with non-numbers', path: [ 'invalid', 'path' ] },
     ];
     for (const useCase of pageLoadUseCases) {
       it(`should load ${useCase.label}`, () => {
