@@ -18,69 +18,67 @@
     </ng-template>
   </alg-section>
 
-  <ng-container *ngIf="itemData.item.permissions | allowsViewingContent; else notAllowedToViewContent">
-    <ng-container *ngIf="itemData.currentResult; else noCurrentResult">
+  <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && itemData.currentResult">
 
-      <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
-        <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
-          <label class="edit-label">
-            <span class="alg-base-text-color" i18n>Edit content</span>
-            <alg-switch
-              class="edit-switch"
-              mode="white"
-              [checked]="editModeEnabled"
-              (change)="onEditModeEnableChange($event)"
-            ></alg-switch>
-          </label>
-        </div>
+    <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
+      <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
+        <label class="edit-label">
+          <span class="alg-base-text-color" i18n>Edit content</span>
+          <alg-switch
+            class="edit-switch"
+            mode="white"
+            [checked]="editModeEnabled"
+            (change)="onEditModeEnableChange($event)"
+          ></alg-switch>
+        </label>
+      </div>
 
-        <alg-item-children-edit-form
-          [itemData]="itemData"
-          *ngIf="editModeEnabled"
-        ></alg-item-children-edit-form>
+      <alg-item-children-edit-form
+        [itemData]="itemData"
+        *ngIf="editModeEnabled"
+      ></alg-item-children-edit-form>
 
-        <alg-chapter-children
-          [itemData]="itemData"
-          [algFullHeightContent]="true"
-          *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
-        ></alg-chapter-children>
+      <alg-chapter-children
+        [itemData]="itemData"
+        [algFullHeightContent]="true"
+        *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
+      ></alg-chapter-children>
 
-        <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
-        <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
+      <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
+      <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
+    </ng-container>
+
+    <ng-container *ngIf="taskConfig">
+      <ng-container *ngIf="itemData.item.url; else noUrl">
+        <alg-item-display
+          [route]="itemData.route"
+          [editingPermission]="itemData.item.permissions"
+          [url]="itemData.item.url"
+          [attemptId]="itemData.currentResult.attemptId"
+          [view]="taskView"
+          [taskConfig]="taskConfig"
+          [savingAnswer]="savingAnswer"
+          (viewChange)="taskViewChange.emit($event)"
+          (tabsChange)="taskTabsChange.emit($event)"
+          (scoreChange)="onScoreChange($event)"
+          (skipSave)="skipSave.emit()"
+          (refresh)="refresh.emit()"
+          (editorUrl)="editorUrl.emit($event)"
+        ></alg-item-display>
       </ng-container>
 
-      <ng-container *ngIf="taskConfig">
-        <ng-container *ngIf="itemData.item.url; else noUrl">
-          <alg-item-display
-            [route]="itemData.route"
-            [editingPermission]="itemData.item.permissions"
-            [url]="itemData.item.url"
-            [attemptId]="itemData.currentResult.attemptId"
-            [view]="taskView"
-            [taskConfig]="taskConfig"
-            [savingAnswer]="savingAnswer"
-            (viewChange)="taskViewChange.emit($event)"
-            (tabsChange)="taskTabsChange.emit($event)"
-            (scoreChange)="onScoreChange($event)"
-            (skipSave)="skipSave.emit()"
-            (refresh)="refresh.emit()"
-            (editorUrl)="editorUrl.emit($event)"
-          ></alg-item-display>
-        </ng-container>
-
-        <ng-template #noUrl>
-          <p class="validation-text" i18n>
-            This activity has not been correctly configured.
-          </p>
-          <p class="validation-text" *ngIf="itemData.item.permissions | allowsEditingChildren" i18n>
-            You need to set a url in editing mode.
-          </p>
-        </ng-template>
-      </ng-container>
+      <ng-template #noUrl>
+        <p class="validation-text" i18n>
+          This activity has not been correctly configured.
+        </p>
+        <p class="validation-text" *ngIf="itemData.item.permissions | allowsEditingChildren" i18n>
+          You need to set a url in editing mode.
+        </p>
+      </ng-template>
     </ng-container>
   </ng-container>
 
-  <ng-template #notAllowedToViewContent>
+  <ng-container *ngIf="!(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry">
     <div class="message-info">
       <alg-message-info>
         <span *ngIf="itemData.item.type === 'Chapter'" i18n>
@@ -97,24 +95,22 @@
       </alg-message-info>
     </div>
 
-    <alg-item-unlock-access
-      [itemData]="itemData"
-      *ngIf="(itemData.item.permissions | allowsViewingInfo) && !(itemData.item.permissions | allowsViewingContent)"
-    ></alg-item-unlock-access>
-  </ng-template>
+    <alg-item-unlock-access [itemData]="itemData"></alg-item-unlock-access>
+  </ng-container>
 
-  <ng-template #noCurrentResult>
-    <p class="validation-text" *ngIf="itemData.item.requiresExplicitEntry; else noRequiresExplicitEntry">
+  <alg-task-loader
+    *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && !itemData.currentResult"
+    i18n-label label="Starting the activity"
+    [algFullHeightContent]="true"
+  ></alg-task-loader>
+
+  <ng-container *ngIf="itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && !itemData.currentResult))">
+    <p class="validation-text">
       <span>
         <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
         <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
       </span>
     </p>
-    <ng-template #noRequiresExplicitEntry>
-      <alg-task-loader
-        i18n-label label="Starting the activity"
-        [algFullHeightContent]="true"
-      ></alg-task-loader>
-    </ng-template>
-  </ng-template>
+  </ng-container>
+
 </ng-container>
