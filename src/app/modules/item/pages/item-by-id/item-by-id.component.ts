@@ -13,7 +13,6 @@ import {
   catchError,
   mergeWith,
   takeUntil,
-  withLatestFrom
 } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState, isFetchingOrError } from 'src/app/shared/helpers/state';
@@ -148,17 +147,21 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly fullFrame$ = this.layoutService.fullFrame$;
   readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
-  unknownError?: unknown;
-
-  readonly answerError$ = this.initialAnswerDataSource.forbidden$.pipe(
-    withLatestFrom(this.itemRouteState$.pipe(readyData())),
-    map(([ _, route ]) => ({ fallbackLink: route.answer ? urlArrayForItemRoute({ ...route, answer: undefined }) : undefined })),
+  readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
+    switchMap(answerErr => this.itemRouteState$.pipe(
+      readyData(),
+      map((route, idx) => (idx === 0 && answerErr !== undefined ? {
+        isForbidden: errorIsHTTPForbidden(answerErr.error),
+        fallbackLink: route.answer ? urlArrayForItemRoute({ ...route, answer: undefined }) : undefined,
+      } : undefined /* reset error if we navigate */)))
+    ),
   );
 
   readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(readyData()).pipe(
     switchMap(data => {
       if (!isTask(data.item)) return of(null); // config for non-task's is null
       return this.initialAnswerDataSource.answer$.pipe(
+        filter(isNotUndefined), // undefined is for not-known-yet and so have to be skipped
         catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
         map(initialAnswer => ({
           readOnly: !!data.route.answer && !data.route.answer.loadAsCurrent,
@@ -211,8 +214,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       .subscribe({
         error: () => { /* Errors cannot be handled before unloading page. */ },
       }),
-    this.initialAnswerDataSource.unknownError$.subscribe(e => this.unknownError = e),
-
 
     // drop "answer" route arg when switching "watching" off
     this.groupWatchingService.isWatching$.pipe(
@@ -227,7 +228,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemRouteState$.subscribe(state => {
       if (state.isReady) {
         // configure initialAnswerDataSource
-        this.initialAnswerDataSource.setRoute(state.data);
         // just publish to current content the new route we are navigating to (without knowing any info)
         this.currentContent.replace(itemInfo({
           route: state.data,
@@ -245,8 +245,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemDataSource.state$.subscribe(state => {
       if (state.isReady) {
         const fullRoute = routeWithSelfAttempt(state.data.route, state.data.currentResult?.attemptId);
-        this.initialAnswerDataSource.setRoute(fullRoute);
-        this.initialAnswerDataSource.setIsTask(isTask(state.data.item));
         this.hasRedirected = false;
         this.currentContent.replace(itemInfo({
           breadcrumbs: {
@@ -305,6 +303,15 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.layoutService.configure({ fullFrameActive: activateFullFrame });
     }),
 
+    combineLatest([ this.itemRouteState$.pipe(readyData()), this.itemDataSource.state$.pipe(startWith(undefined)) ]).pipe(
+      map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
+        { route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId), isTask: isTask(itemState.data.item) }:
+        { route, isTask: undefined }
+      ))
+    ).subscribe(({ route, isTask }) => {
+      this.initialAnswerDataSource.setInfo(route, isTask);
+    }),
+
     merge(
       this.itemDataSource.state$.pipe(readyData()),
       this.layoutService.fullFrame$,
@@ -321,8 +328,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   editorUrl?: string;
 
-  errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
-    $localize`:@@contactUs:If the problem persists, please contact us.`;
+  errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   showItemThreadWidget = !!appConfig.forumServerUrl;
 
