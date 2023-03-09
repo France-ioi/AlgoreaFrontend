@@ -57,7 +57,7 @@
                     {{ rowData.title }}
                   </a>
 
-                  <ng-container *ngIf="rowData.type === 'Task' && rowData.currentUserPermissions">
+                  <ng-container *ngIf="rowData.type === 'Task'">
                     <a
                       pButton
                       class="alg-button p-button-rounded p-small-button p-button-outlined load-answer-button"
@@ -65,8 +65,8 @@
                         watchingGroup: 'View the best answer',
                         other: 'Reload the best answer'
                       }"
-                      [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path.concat([ itemData.item.id ]) | withParentAttempt : parentAttemptId | url : [ 'progress', 'chapter-user-progress' ]"
-                      *ngIf="!watchedGroup || rowData.currentUserPermissions | allowsWatchingAnswers"
+                      [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path : (itemData.item.id === rowData.id ? undefined : itemData.item.id) | withParentAttempt : parentAttemptId | url : itemData.item.id === rowData.id ? [] : [ 'progress', 'chapter-user-progress' ]"
+                      *ngIf="!watchedGroup || (rowData.currentUserPermissions | allowsWatchingAnswers)"
                     ></a>
                   </ng-container>
                 </div>

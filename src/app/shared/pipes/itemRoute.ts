@@ -33,7 +33,7 @@ export class ItemRouteWithParentAttemptPipe implements PipeTransform {
 
 @Pipe({ name: 'withPath', pure: true })
 export class ItemRouteWithPathPipe implements PipeTransform {
-  transform<T extends RawItemRoute>(route: T, path: string[]): T {
-    return { ...route, path };
+  transform<T extends RawItemRoute>(route: T, path: string[], root?: string): T {
+    return { ...route, path: [ ...path, ...(root ? [ root ] : []) ] };
   }
 }
