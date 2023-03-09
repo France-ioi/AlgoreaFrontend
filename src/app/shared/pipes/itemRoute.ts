@@ -23,3 +23,17 @@ export class ItemRouteWithAnswerPipe implements PipeTransform {
     return { ...route, answer };
   }
 }
+
+@Pipe({ name: 'withParentAttempt', pure: true })
+export class ItemRouteWithParentAttemptPipe implements PipeTransform {
+  transform<T extends RawItemRoute>(route: T, parentAttemptId: ItemRoute['parentAttemptId']): T {
+    return { ...route, parentAttemptId };
+  }
+}
+
+@Pipe({ name: 'withPath', pure: true })
+export class ItemRouteWithPathPipe implements PipeTransform {
+  transform<T extends RawItemRoute>(route: T, path: string[]): T {
+    return { ...route, path };
+  }
+}

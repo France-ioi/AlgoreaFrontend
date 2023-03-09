@@ -18,6 +18,7 @@
       [loading]="state.isFetching"
       [tableStyle]="{'min-width': '479px'}"
       responsiveLayout="scroll"
+      *ngrxLet="watchedGroup$; let watchedGroup"
     >
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr>
@@ -47,11 +48,11 @@
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'title'">
-                <div class="title">
+                <div class="title" *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
                   <a
                     class="alg-link"
-                    [ngClass]="{'disabled': rowData.id === itemData?.item?.id}"
-                    (click)="onClick(rowData)"
+                    [ngClass]="{'disabled': rowData.id === itemData.item.id}"
+                    [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path.concat([ itemData.item.id ]) | withParentAttempt : parentAttemptId | url : [ 'progress', 'chapter-user-progress' ]"
                   >
                     {{ rowData.title }}
                   </a>
@@ -60,12 +61,12 @@
                     <button
                       pButton
                       class="alg-button p-button-rounded p-small-button p-button-outlined load-answer-button"
-                      [label]="(!!(watchedGroup$ | async) ? 'watchingGroup' : '') | i18nSelect : {
+                      [label]="(!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
                         watchingGroup: 'View the best answer',
                         other: 'Reload the best answer'
                       }"
-                      (click)="onClick(rowData)"
-                      *ngIf="rowData.currentUserPermissions | allowsWatchingAnswers"
+                      [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path.concat([ itemData.item.id ]) | withParentAttempt : parentAttemptId | url : [ 'progress', 'chapter-user-progress' ]"
+                      *ngIf="!watchedGroup || rowData.currentUserPermissions | allowsWatchingAnswers"
                     ></button>
                   </ng-container>
                 </div>
