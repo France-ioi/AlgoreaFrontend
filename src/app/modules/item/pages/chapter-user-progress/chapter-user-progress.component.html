@@ -58,7 +58,7 @@
                   </a>
 
                   <ng-container *ngIf="rowData.type === 'Task' && rowData.currentUserPermissions">
-                    <button
+                    <a
                       pButton
                       class="alg-button p-button-rounded p-small-button p-button-outlined load-answer-button"
                       [label]="(!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
@@ -67,7 +67,7 @@
                       }"
                       [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path.concat([ itemData.item.id ]) | withParentAttempt : parentAttemptId | url : [ 'progress', 'chapter-user-progress' ]"
                       *ngIf="!watchedGroup || rowData.currentUserPermissions | allowsWatchingAnswers"
-                    ></button>
+                    ></a>
                   </ng-container>
                 </div>
               </ng-container>
