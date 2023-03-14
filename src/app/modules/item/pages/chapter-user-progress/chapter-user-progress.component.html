@@ -65,7 +65,7 @@
                         watchingGroup: 'View the best answer',
                         other: 'Reload the best answer'
                       }"
-                      [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path : (itemData.item.id === rowData.id ? undefined : itemData.item.id) | withParentAttempt : parentAttemptId | url : itemData.item.id === rowData.id ? [] : [ 'progress', 'chapter-user-progress' ]"
+                      [routerLink]="rowData | rawItemRoute | withAnswer: { best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined } | withPath : itemData.route.path : (itemData.item.id === rowData.id ? undefined : itemData.item.id) | withParentAttempt : parentAttemptId | url"
                       *ngIf="!watchedGroup || (rowData.currentUserPermissions | allowsWatchingAnswers)"
                     ></a>
                   </ng-container>
