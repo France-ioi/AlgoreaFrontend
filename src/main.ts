@@ -1,6 +1,6 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import * as Sentry from '@sentry/angular';
+import * as Sentry from '@sentry/angular-ivy';
 
 import { AppModule } from './app/core/app.module';
 import { appConfig } from './app/shared/helpers/config';
