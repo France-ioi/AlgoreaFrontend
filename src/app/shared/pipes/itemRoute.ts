@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ItemType, typeCategoryOfItem } from '../helpers/item-type';
-import { ItemRoute, RawItemRoute, rawItemRoute } from '../routing/item-route';
+import { AttemptId, ItemRoute, RawItemRoute, rawItemRoute } from '../routing/item-route';
 
 /**
  * Functions using full item route should always be preferred to raw item route!
@@ -26,14 +26,14 @@ export class ItemRouteWithAnswerPipe implements PipeTransform {
 
 @Pipe({ name: 'withParentAttempt', pure: true })
 export class ItemRouteWithParentAttemptPipe implements PipeTransform {
-  transform<T extends RawItemRoute>(route: T, parentAttemptId: ItemRoute['parentAttemptId']): T {
+  transform<T extends RawItemRoute>(route: T, parentAttemptId: AttemptId): T {
     return { ...route, parentAttemptId };
   }
 }
 
 @Pipe({ name: 'withPath', pure: true })
 export class ItemRouteWithPathPipe implements PipeTransform {
-  transform<T extends RawItemRoute>(route: T, path: string[], root?: string): T {
+  transform<T extends RawItemRoute>(route: T, path: string[], root?: string): ItemRoute {
     return { ...route, path: [ ...path, ...(root ? [ root ] : []) ] };
   }
 }
