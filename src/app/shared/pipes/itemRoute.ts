@@ -1,6 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ItemType, typeCategoryOfItem } from '../helpers/item-type';
-import { AttemptId, ItemRoute, RawItemRoute, rawItemRoute } from '../routing/item-route';
+import {
+  AttemptId,
+  fullItemRoute,
+  FullItemRoute,
+  isFullItemRoute,
+  isRawRouteItemRoute,
+  isRouteWithSelfAttempt,
+  itemRoute,
+  ItemRoute,
+  RawItemRoute,
+  rawItemRoute
+} from '../routing/item-route';
 
 /**
  * Functions using full item route should always be preferred to raw item route!
@@ -24,16 +35,30 @@ export class ItemRouteWithAnswerPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'withParentAttempt', pure: true })
-export class ItemRouteWithParentAttemptPipe implements PipeTransform {
-  transform<T extends RawItemRoute>(route: T, parentAttemptId: AttemptId): T {
-    return { ...route, parentAttemptId };
-  }
-}
-
-@Pipe({ name: 'withPath', pure: true })
-export class ItemRouteWithPathPipe implements PipeTransform {
-  transform<T extends RawItemRoute>(route: T, path: string[], root?: string): ItemRoute {
-    return { ...route, path: [ ...path, ...(root ? [ root ] : []) ] };
+@Pipe({ name: 'itemRoute', pure: true })
+export class ItemRoutePipe implements PipeTransform {
+  transform<T extends RawItemRoute>(
+    route: T,
+    params: {
+      answer?: ItemRoute['answer'],
+      attemptId?: AttemptId,
+      parentAttemptId?: AttemptId,
+      path?: string[],
+    }
+  ): ItemRoute | FullItemRoute {
+    const rawRouteWithParams = { ...route, ...params };
+    if (!isRawRouteItemRoute(rawRouteWithParams)) {
+      throw new Error('Unexpected: Must be ItemRoute or FullItemRoute');
+    }
+    return {
+      ...isFullItemRoute(rawRouteWithParams) ? fullItemRoute(
+        rawRouteWithParams.contentType,
+        rawRouteWithParams.id,
+        rawRouteWithParams.path,
+        isRouteWithSelfAttempt(rawRouteWithParams)
+          ? { attemptId: rawRouteWithParams.attemptId } : { parentAttemptId: rawRouteWithParams.parentAttemptId },
+      ) : itemRoute(rawRouteWithParams.contentType, rawRouteWithParams.id, rawRouteWithParams.path),
+      ...(params.answer ? { answer: params.answer } : {}),
+    };
   }
 }

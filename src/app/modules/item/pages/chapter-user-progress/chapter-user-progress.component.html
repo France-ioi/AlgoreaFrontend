@@ -52,7 +52,10 @@
                   <a
                     class="alg-link"
                     [ngClass]="{'disabled': rowData.id === itemData.item.id}"
-                    [routerLink]="rowData | rawItemRoute | withPath : itemData.route.path.concat([ itemData.item.id ]) | withParentAttempt : parentAttemptId | url : [ 'progress', 'chapter-user-progress' ]"
+                    [routerLink]="rowData | rawItemRoute | itemRoute: {
+                      path: itemData.route.path.concat([ itemData.item.id ]),
+                      parentAttemptId: parentAttemptId
+                    } | url : [ 'progress', 'chapter-user-progress' ]"
                   >
                     {{ rowData.title }}
                   </a>
@@ -65,7 +68,13 @@
                         watchingGroup: 'View the best answer',
                         other: 'Reload the best answer'
                       }"
-                      [routerLink]="rowData | rawItemRoute | withAnswer: { best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined } | withPath : itemData.route.path : (itemData.item.id === rowData.id ? undefined : itemData.item.id) | withParentAttempt : parentAttemptId | url"
+                      [routerLink]="rowData | rawItemRoute | itemRoute: {
+                        answer: {
+                          best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined
+                        },
+                        path: itemData.item.id === rowData.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]),
+                        parentAttemptId: parentAttemptId
+                      } | url"
                       *ngIf="!watchedGroup || (rowData.currentUserPermissions | allowsWatchingAnswers)"
                     ></a>
                   </ng-container>

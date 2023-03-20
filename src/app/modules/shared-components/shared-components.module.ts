@@ -72,12 +72,7 @@ import { MessageInfoComponent } from './components/message-info/message-info.com
 import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
 import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
 import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnippet';
-import {
-  RawItemRoutePipe,
-  ItemRouteWithAnswerPipe,
-  ItemRouteWithParentAttemptPipe,
-  ItemRouteWithPathPipe,
-} from 'src/app/shared/pipes/itemRoute';
+import { RawItemRoutePipe, ItemRouteWithAnswerPipe, ItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 import { WatchButtonComponent } from './components/watch-button/watch-button.component';
 import { LetModule } from '@ngrx/component';
@@ -104,8 +99,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     FormErrorComponent,
     RawItemRoutePipe,
     ItemRouteWithAnswerPipe,
-    ItemRouteWithParentAttemptPipe,
-    ItemRouteWithPathPipe,
+    ItemRoutePipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
@@ -193,8 +187,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     FormErrorComponent,
     RawItemRoutePipe,
     ItemRouteWithAnswerPipe,
-    ItemRouteWithParentAttemptPipe,
-    ItemRouteWithPathPipe,
+    ItemRoutePipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
