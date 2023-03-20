@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from './group-watching.service';
-import { setUser, addBreadcrumb, setTag, setTags } from '@sentry/browser';
+import { setUser, addBreadcrumb, setTag, setTags } from '@sentry/angular-ivy';
 import { LocaleService } from './localeService';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 
