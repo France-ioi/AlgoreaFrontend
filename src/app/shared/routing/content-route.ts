@@ -2,7 +2,7 @@ import { ParamMap } from '@angular/router';
 import { UrlCommandParameters } from '../helpers/url';
 
 /* for url */
-const pathParamName = 'path';
+const pathParamName = 'p';
 
 type Id = string;
 

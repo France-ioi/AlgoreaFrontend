@@ -9,8 +9,8 @@ import { UrlCommand } from '../helpers/url';
 // url parameter names
 export const activityPrefix = 'a';
 export const skillPrefix = 's';
-const parentAttemptParamName = 'parentAttempId';
-const attemptParamName = 'attempId';
+const parentAttemptParamName = 'pa';
+const attemptParamName = 'a';
 const answerParamName = 'answerId';
 const answerBestParamName = 'answerBest';
 const answerBestParticipantParamName = 'answerParticipantId';
