@@ -44,7 +44,7 @@ export class ItemRouter {
    * Return undefined if we are not on an "item" page
    */
   private currentItemPage(): string[]|undefined {
-    const page = this.currentItemPagePath()?.slice(3);
+    const page = this.currentItemPagePath()?.slice(2);
     return page && page.length > 0 ? page : undefined;
   }
 
@@ -53,9 +53,8 @@ export class ItemRouter {
     if (!primary) return undefined;
     const { segments } = primary;
     if (
-      segments.length < 3 ||
-      itemCategoryFromPrefix(ensureDefined(segments[0]).path) === null ||
-      ensureDefined(segments[1]).path !== 'by-id'
+      segments.length < 2 ||
+      itemCategoryFromPrefix(ensureDefined(segments[0]).path) === null
     ) return undefined;
     return segments.map(segment => segment.path);
   }

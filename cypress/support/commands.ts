@@ -8,7 +8,7 @@ Cypress.Commands.add('navigateTo', (relativeUrl: string) => {
 
 Cypress.Commands.add('navigateToActivity', (itemId: string, path?: string[]) => {
   const url = [
-    `/activities/by-id/${itemId}`,
+    `/activities/${itemId}`,
     path && `;path=${path.join(',')}`,
     ';parentAttempId=0',
   ].filter(Boolean).join('');

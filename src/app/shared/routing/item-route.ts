@@ -142,5 +142,5 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;
-  return [ '/', prefix, 'by-id', route.id, params, ...pagePath ];
+  return [ '/', prefix, route.id, params, ...pagePath ];
 }
