@@ -3,8 +3,8 @@ import { boolToQueryParamValue, queryParamValueToBool, urlStringFromArray } from
 
 describe('urlStringFromArray', () => {
   it('should convert correctly a complex absolute case', () => {
-    expect(urlStringFromArray([ '/', 'activities', '123', { attemptId: '99', path: [ '4','5','6' ] }]))
-      .toEqual('/activities/123;attemptId=99;path=4,5,6');
+    expect(urlStringFromArray([ '/', 'a', '123', { attemptId: '99', path: [ '4','5','6' ] }]))
+      .toEqual('/a/123;attemptId=99;path=4,5,6');
   });
 
   it('should convert correctly a complex relative case', () => {

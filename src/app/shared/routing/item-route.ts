@@ -7,8 +7,8 @@ import { isString } from '../helpers/type-checkers';
 import { UrlCommand } from '../helpers/url';
 
 // url parameter names
-const activityPrefix = 'activities';
-const skillPrefix = 'skills';
+export const activityPrefix = 'a';
+export const skillPrefix = 's';
 const parentAttemptParamName = 'parentAttempId';
 const attemptParamName = 'attempId';
 const answerParamName = 'answerId';
