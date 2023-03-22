@@ -99,9 +99,16 @@ export function decodeItemRouterParameters(params: ParamMap): {
   answerParticipantId: string|null,
   answerLoadAsCurrent: boolean,
 } {
+  let idOrAlias = params.get('idOrAlias');
+  let path = pathFromRouterParameters(params);
+  if (idOrAlias !== null && isAnAlias(idOrAlias)) {
+    const res = aliasToId(idOrAlias);
+    if (res?.id) idOrAlias = res?.id;
+    if (res?.path && !path) path = res.path;
+  }
   return {
-    id: params.get('id'),
-    path: pathFromRouterParameters(params),
+    id: idOrAlias,
+    path,
     attemptId: params.get(attemptParamName),
     parentAttemptId: params.get(parentAttemptParamName),
     answerId: params.get(answerParamName),
@@ -117,6 +124,22 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
     case skillPrefix: return 'skill';
     default: return null;
   }
+}
+
+function isAnAlias(idOrAlias: string): boolean {
+  return !(/^\d*$/.test(idOrAlias));
+}
+
+/**
+ * Iterate all alias to map to id. Could be optimized with a cache for better performance
+ */
+function aliasToId(alias: string): { id: ItemId, path?: string[] } | null {
+  const redirects = appConfig.redirects;
+  if (!redirects) return null;
+  for (const [ k, v ] of Object.entries(redirects)) {
+    if (k.replace('/', '-') === alias) return v;
+  }
+  return null;
 }
 
 /* **********************************************************************************************************
