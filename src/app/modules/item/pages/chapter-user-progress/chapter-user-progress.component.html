@@ -52,7 +52,9 @@
                   <a
                     class="alg-link"
                     [ngClass]="{'disabled': rowData.id === itemData.item.id}"
-                    [routerLink]="rowData | rawItemRoute | itemRoute: {
+                    [routerLink]="{
+                      id: rowData.id,
+                      contentType: rowData | contentTypeFromItem,
                       path: itemData.route.path.concat([ itemData.item.id ]),
                       parentAttemptId: parentAttemptId
                     } | url : [ 'progress', 'chapter-user-progress' ]"
@@ -68,12 +70,14 @@
                         watchingGroup: 'View the best answer',
                         other: 'Reload the best answer'
                       }"
-                      [routerLink]="rowData | rawItemRoute | itemRoute: {
+                      [routerLink]="{
+                        id: rowData.id,
+                        contentType: rowData | contentTypeFromItem,
+                        path: itemData.item.id === rowData.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]),
+                        parentAttemptId: parentAttemptId,
                         answer: {
                           best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined
-                        },
-                        path: itemData.item.id === rowData.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]),
-                        parentAttemptId: parentAttemptId
+                        }
                       } | url"
                       *ngIf="!watchedGroup || (rowData.currentUserPermissions | allowsWatchingAnswers)"
                     ></a>
