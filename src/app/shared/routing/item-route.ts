@@ -5,6 +5,7 @@ import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './conte
 import { ItemTypeCategory } from '../helpers/item-type';
 import { isString } from '../helpers/type-checkers';
 import { UrlCommand } from '../helpers/url';
+import { arraysEqual } from '../helpers/array';
 
 // url parameter names
 export const activityPrefix = 'a';
@@ -150,7 +151,8 @@ function aliasToId(alias: string): { id: ItemId, path?: string[] } | null {
  * Return a url array (`commands` array) to the given item, on the given page.
  */
 export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = []): UrlCommand {
-  const params = route.path ? pathAsParameter(route.path) : {};
+  const itemAlias = aliasFor(route.id, route.path);
+  const params = route.path && !itemAlias?.validPath ? pathAsParameter(route.path) : {};
   if (route.attemptId) params[attemptParamName] = route.attemptId;
   else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
   if (route.answer) {
@@ -165,5 +167,14 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
 
   const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;
-  return [ '/', prefix, route.id, params, ...pagePath ];
+  return [ '/', prefix, itemAlias ? itemAlias.alias : route.id, params, ...pagePath ];
+}
+
+function aliasFor(itemId: ItemId, path: string[]|undefined): { alias: string, validPath: boolean } | null {
+  const redirects = appConfig.redirects;
+  if (!redirects) return null;
+  for (const [ k, v ] of Object.entries(redirects)) {
+    if (v.id === itemId) return { alias: k.replace('/', '-'), validPath: !!v.path && !!path && arraysEqual(path, v.path) };
+  }
+  return null;
 }
