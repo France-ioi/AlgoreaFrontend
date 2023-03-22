@@ -55,7 +55,7 @@ const presetQueryParam = 'config_preset';
 /**
  * Escape hatch to start the platform with the provided configuration preset. (presets are declared in each environment file)
  * @example `http://dev.algorea.org/?config_preset=demo`
- * @example `http://dev.algorea.org/activities/etc/?config_preset=demo`
+ * @example `http://dev.algorea.org/a/etc/?config_preset=demo`
  * Should be used only by Algorea teams, for testing or demo purposes only.
  */
 function getPresetNameFromQuery(): string | null {

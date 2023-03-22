@@ -7,7 +7,7 @@ import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 @NgModule({
   imports: [ RouterModule.forChild([
     {
-      path: 'by-id/:id',
+      path: ':idOrAlias',
       component: ItemByIdComponent,
       canDeactivate: [ BeforeUnloadGuard, PendingChangesGuard ],
       // Children below do not use routing but there are defined here so that the router can validate the route exists

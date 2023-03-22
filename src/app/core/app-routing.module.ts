@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, UrlSegment } from '@angular/router';
 import { urlStringFromArray } from '../shared/helpers/url';
-import { appDefaultItemRoute, urlArrayForItemRoute } from '../shared/routing/item-route';
+import { activityPrefix, appDefaultItemRoute, skillPrefix, urlArrayForItemRoute } from '../shared/routing/item-route';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.component';
 
@@ -16,11 +16,11 @@ const routes: Routes = [
     loadChildren: (): Promise<any> => import('../modules/group/group.module').then(m => m.GroupModule)
   },
   {
-    path: 'activities',
+    path: activityPrefix,
     loadChildren: (): Promise<any> => import('../modules/item/item.module').then(m => m.ItemModule)
   },
   {
-    path: 'skills',
+    path: skillPrefix,
     loadChildren: (): Promise<any> => import('../modules/item/item.module').then(m => m.ItemModule)
   },
   {
