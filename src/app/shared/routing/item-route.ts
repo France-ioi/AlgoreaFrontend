@@ -18,7 +18,7 @@ const answerLoadAsCurrentParamName = 'answerLoadAsCurrent';
 
 // alias for better readibility
 type ItemId = string;
-export type AttemptId = string;
+type AttemptId = string;
 type AnswerId = string;
 
 /* **********************************************************************************************************
