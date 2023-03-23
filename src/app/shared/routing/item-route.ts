@@ -48,10 +48,6 @@ export function isItemRoute(route: ContentRoute): route is ItemRoute {
   return ([ 'activity', 'skill' ].includes(route.contentType));
 }
 
-export function isRawRouteItemRoute(route: RawItemRoute): route is ItemRoute {
-  return Array.isArray(route.path);
-}
-
 export function isFullItemRoute(route: ItemRoute): route is FullItemRoute {
   return !!route.attemptId || !!route.parentAttemptId;
 }
