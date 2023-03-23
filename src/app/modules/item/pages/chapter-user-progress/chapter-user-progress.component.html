@@ -79,7 +79,7 @@
                           best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined
                         }
                       } | url"
-                      *ngIf="!watchedGroup || (rowData.currentUserPermissions | allowsWatchingAnswers)"
+                      *ngIf="!watchedGroup || watchedGroup.route.isUser && rowData.submissions > 0 && (rowData.currentUserPermissions | allowsWatchingAnswers)"
                     ></a>
                   </ng-container>
                 </div>

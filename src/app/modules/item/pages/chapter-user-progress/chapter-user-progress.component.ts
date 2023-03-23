@@ -24,7 +24,7 @@ interface RowData {
   timeSpent: number,
   submissions: number,
   score: number,
-  currentUserPermissions?: ItemPermWithWatch,
+  currentUserPermissions: ItemPermWithWatch,
 }
 
 @Component({
