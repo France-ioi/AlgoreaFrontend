@@ -29,3 +29,13 @@ tr {
     }
   }
 }
+
+.title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.load-answer-button {
+  margin-left: 1rem;
+}

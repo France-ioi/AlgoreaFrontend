@@ -5,9 +5,11 @@ import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { FetchState } from '../../../../shared/helpers/state';
-import { ItemType, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
+import { ItemType } from '../../../../shared/helpers/item-type';
 import { ItemData } from '../../services/item-datasource.service';
 import { ItemRouter } from '../../../../shared/routing/item-router';
+import { GroupWatchingService } from '../../../../core/services/group-watching.service';
+import { ItemPermWithWatch } from '../../../../shared/models/domain/item-watch-permission';
 
 interface Column {
   field: string,
@@ -22,6 +24,7 @@ interface RowData {
   timeSpent: number,
   submissions: number,
   score: number,
+  currentUserPermissions: ItemPermWithWatch,
 }
 
 @Component({
@@ -45,6 +48,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           timeSpent: participantProgress.item.timeSpent,
           submissions: participantProgress.item.submissions,
           score: participantProgress.item.score,
+          currentUserPermissions: item.permissions,
         },
         ...participantProgress.children.map(itemData => ({
           id: itemData.itemId,
@@ -54,11 +58,13 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           timeSpent: itemData.timeSpent,
           submissions: itemData.submissions,
           score: itemData.score,
+          currentUserPermissions: itemData.currentUserPermissions,
         })),
       ])))
     ),
     mapToFetchState({ resetter: this.refresh$ }),
   );
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   columns: Column[] = [
     {
@@ -86,6 +92,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   constructor(
     private getParticipantProgressService: GetParticipantProgressService,
     private itemRouter: ItemRouter,
+    private groupWatchingService: GroupWatchingService,
   ) { }
 
   ngOnChanges(): void {
@@ -101,27 +108,6 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
-  }
-
-  onClick(rowData: RowData): void {
-    if (!this.itemData) {
-      throw new Error('Unexpected: Missed input itemData of component');
-    }
-
-    if (this.itemData.item.id === rowData.id) {
-      return;
-    }
-
-    const parentAttemptId = this.itemData.currentResult?.attemptId;
-
-    if (!parentAttemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
-
-    this.itemRouter.navigateTo({
-      contentType: typeCategoryOfItem(rowData),
-      id: rowData.id,
-      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
-      parentAttemptId,
-    });
   }
 
 }

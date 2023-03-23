@@ -8,8 +8,7 @@
     <ng-container *ngIf="(!isWatching && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
 
       <ng-container *ngIf="selectors$ | async as selectors">
-
-        <div [hidden]="selectors === 'none'">
+        <div [hidden]="selectors === 'none' && !chapterUserProgressTab.isActive">
           <div class="selection-center">
             <nav class="tab-rounded">
               <a class="tab-rounded-item"
@@ -32,10 +31,10 @@
               </a>
 
               <a class="tab-rounded-item"
-                [ngClass]="{'active': !!chapterUserProgressTab?.isActive}"
+                [ngClass]="{'active': !!chapterUserProgressTab.isActive}"
                 [routerLink]="'./progress/chapter-user-progress'"
                 routerLinkActive #chapterUserProgressTab="routerLinkActive"
-                *ngIf="selectors === 'withUserProgress'"
+                [style.display]="(selectors === 'withUserProgress' || !!chapterUserProgressTab.isActive) ? 'flex' : 'none'"
                 i18n
               >
                 Chapter view

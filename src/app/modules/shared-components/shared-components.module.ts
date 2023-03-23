@@ -67,12 +67,12 @@ import {
 } from 'src/app/shared/models/domain/item-view-permission';
 import { AllowsGrantingContentViewItemPipe, AllowsGrantingViewItemPipe } from 'src/app/shared/models/domain/item-grant-view-permission';
 import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
-import { AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
+import { AllowsWatchingItemAnswersPipe, AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
 import { MessageInfoComponent } from './components/message-info/message-info.component';
 import { HasHTMLDirective } from '../../shared/directives/has-html.directive';
 import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
 import { AllowDisplayCodeSnippet } from '../../shared/pipes/allowDisplayCodeSnippet';
-import { RawItemRoutePipe, ItemRouteWithAnswerPipe } from 'src/app/shared/pipes/itemRoute';
+import { RawItemRoutePipe, ItemRouteWithAnswerPipe, ContentTypeFromItemPipe } from 'src/app/shared/pipes/itemRoute';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 import { WatchButtonComponent } from './components/watch-button/watch-button.component';
 import { LetModule } from '@ngrx/component';
@@ -99,6 +99,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     FormErrorComponent,
     RawItemRoutePipe,
     ItemRouteWithAnswerPipe,
+    ContentTypeFromItemPipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
@@ -128,6 +129,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
     AllowsWatchingItemResultsPipe,
+    AllowsWatchingItemAnswersPipe,
     AllowDisplayCodeSnippet,
     MessageInfoComponent,
     SuggestionOfActivitiesComponent,
@@ -185,6 +187,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     FormErrorComponent,
     RawItemRoutePipe,
     ItemRouteWithAnswerPipe,
+    ContentTypeFromItemPipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
@@ -214,6 +217,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
     AllowsWatchingItemResultsPipe,
+    AllowsWatchingItemAnswersPipe,
     MessageInfoComponent,
     AllowDisplayCodeSnippet,
     SuggestionOfActivitiesComponent,

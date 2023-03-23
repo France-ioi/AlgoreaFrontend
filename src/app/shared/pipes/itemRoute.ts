@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ItemType, typeCategoryOfItem } from '../helpers/item-type';
+import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../helpers/item-type';
 import { ItemRoute, RawItemRoute, rawItemRoute } from '../routing/item-route';
 
 /**
@@ -21,5 +21,12 @@ export class RawItemRoutePipe implements PipeTransform {
 export class ItemRouteWithAnswerPipe implements PipeTransform {
   transform<T extends RawItemRoute>(route: T, answer: ItemRoute['answer']): T {
     return { ...route, answer };
+  }
+}
+
+@Pipe({ name: 'contentTypeFromItem', pure: true })
+export class ContentTypeFromItemPipe implements PipeTransform {
+  transform({ type } : { type: ItemType }): ItemTypeCategory {
+    return typeCategoryOfItem({ type });
   }
 }
