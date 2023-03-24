@@ -5,7 +5,7 @@ import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, thro
 import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
-import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
+import { FullItemRoute, rawItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { AskHintService } from '../http-services/ask-hint.service';
 import { Answer as GetAnswerType } from '../http-services/get-answer.service';
@@ -114,10 +114,11 @@ export class ItemTaskService implements OnDestroy {
       updateDisplay: display => this.viewsService.updateDisplay(display),
       showView: view => this.viewsService.showView(view),
       openUrl: params => {
-        if (typeof params === 'string') return this.navigateToItem(params);
-        if ('path' in params) return this.navigateToItem(params.path, params.newTab);
-        if ('itemId' in params) return this.navigateToItem(params.itemId);
-        return this.navigate(params.url, params.newTab);
+        if (typeof params === 'string') return this.navigateToItem({ path: params }, false);
+        if ('path' in params) return this.navigateToItem(params, params.newTab ?? false);
+        if ('itemId' in params) return this.navigateToItem(params, params.newTab ?? false);
+        if ('textId' in params) return this.navigateToItem(params, params.newTab ?? false);
+        if ('url' in params) return this.navigateToUrl(params.url, params.newTab ?? true);
       },
       askHint: (hintToken: string) => combineLatest([ this.askHint(hintToken), this.task$ ]).pipe(
         take(1),
@@ -168,17 +169,19 @@ export class ItemTaskService implements OnDestroy {
     return animationFrames().pipe(take(1), tap(() => window.scrollTo({ behavior: 'smooth', top: 0 })), map(() => undefined));
   }
 
-  private navigateToItem(path: string, newTab = false): void {
-    const ids = path.split('/');
-    const id = ids.pop();
-    if (!id) throw new Error(`id must be defined. Received path: '${path}'.`);
-
-    const route = itemRoute('activity', id, ids);
-    if (newTab) this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true);
+  private navigateToItem(dst: { path: string }|{ itemId: string }|{ textId: string }, newTab: boolean): void {
+    if ('textId' in dst) throw new Error('text_id is not supported yet');
+    let id: string, path: string[]|undefined;
+    if ('path' in dst) {
+      path = dst.path.split('/'); // always return a non-empty array
+      id = path.pop()!;
+    } else id = dst.itemId;
+    const route = rawItemRoute('activity', id, { path });
+    if (newTab) this.navigateToUrl(this.router.serializeUrl(this.itemRouter.url(route)), true);
     else this.itemRouter.navigateTo(route);
   }
 
-  private navigate(href: string, newTab = false): void {
+  private navigateToUrl(href: string, newTab: boolean): void {
     if (newTab) openNewTab(href, this.location);
     else replaceWindowUrl(href, this.location);
   }
