@@ -1,12 +1,10 @@
 import { Location } from '@angular/common';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, throwError } from 'rxjs';
+import { animationFrames, combineLatest, EMPTY, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
-import { FullItemRoute, rawItemRoute } from 'src/app/shared/routing/item-route';
-import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { AskHintService } from '../http-services/ask-hint.service';
 import { Answer as GetAnswerType } from '../http-services/get-answer.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
@@ -42,6 +40,14 @@ export class ItemTaskService implements OnDestroy {
     return this.initService.initialized;
   }
 
+  private readonly navigateTo = new Subject<(
+    { url: string } |
+    { id: string, path?: string[] } |
+    { textId: string } |
+    { nextActivity: true }
+  ) & { newTab: boolean }>();
+  readonly navigateTo$ = this.navigateTo.asObservable();
+
   readonly views$ = this.viewsService.views$;
   readonly display$ = this.viewsService.display$;
   readonly activeView$ = this.viewsService.activeView$;
@@ -62,15 +68,14 @@ export class ItemTaskService implements OnDestroy {
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
     private viewsService: ItemTaskViewsService,
-    private itemRouter: ItemRouter,
     private activityNavTreeService: ActivityNavTreeService,
-    private router: Router,
     private location: Location,
     private askHintService: AskHintService,
   ) {}
 
   ngOnDestroy(): void {
     this.hintError$.complete();
+    this.navigateTo.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
@@ -156,13 +161,8 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private navigateToNextItem(): Observable<void> {
-    return this.navigateToNext$.pipe(
-      take(1),
-      tap(nav => {
-        if (nav) nav();
-      }),
-      map(() => undefined),
-    );
+    this.navigateTo.next({ nextActivity: true, newTab: false });
+    return of(undefined);
   }
 
   private scrollTop(): Observable<void> {
@@ -170,15 +170,13 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private navigateToItem(dst: { path: string }|{ itemId: string }|{ textId: string }, newTab: boolean): void {
-    if ('textId' in dst) throw new Error('text_id is not supported yet');
-    let id: string, path: string[]|undefined;
+    if ('textId' in dst) this.navigateTo.next({ textId: dst.textId, newTab });
+    if ('itemId' in dst) this.navigateTo.next({ id: dst.itemId, newTab });
     if ('path' in dst) {
-      path = dst.path.split('/'); // always return a non-empty array
-      id = path.pop()!;
-    } else id = dst.itemId;
-    const route = rawItemRoute('activity', id, { path });
-    if (newTab) this.navigateToUrl(this.router.serializeUrl(this.itemRouter.url(route)), true);
-    else this.itemRouter.navigateTo(route);
+      const path = dst.path.split('/'); // always return a non-empty array
+      const id = path.pop()!;
+      this.navigateTo.next({ id, path, newTab: newTab });
+    }
   }
 
   private navigateToUrl(href: string, newTab: boolean): void {

@@ -12,6 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of, Subject } from 'rxjs';
+import { Location } from '@angular/common';
 import {
   catchError,
   distinctUntilChanged,
@@ -22,16 +23,17 @@ import {
   shareReplay,
   startWith,
   switchMap,
-  takeUntil
+  takeUntil,
+  withLatestFrom
 } from 'rxjs/operators';
 import { HOURS, SECONDS } from 'src/app/shared/helpers/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
-import { mapToFetchState } from 'src/app/shared/operators/state';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { capitalize } from 'src/app/shared/helpers/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
-import { FullItemRoute } from 'src/app/shared/routing/item-route';
+import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.service';
@@ -39,6 +41,12 @@ import { PublishResultsService } from '../../http-services/publish-result.servic
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { ItemPermWithEdit, ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
+import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
+import { Router } from '@angular/router';
+import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
+import { GetBreadcrumbsFromRootsService } from '../../http-services/get-breadcrumbs-from-roots.service';
+import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 
 export interface TaskTab {
   name: string,
@@ -140,16 +148,66 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     }),
 
     this.taskService.hintError$.subscribe(() => this.actionFeedbackService.error($localize`Hint request failed`)),
+
+    // case "navigation to next"
+    this.taskService.navigateTo$.pipe(
+      filter(dst => 'nextActivity' in dst),
+      withLatestFrom(this.activityNavTreeService.navigationNeighbors$.pipe(readyData())),
+    ).subscribe(([ , navNeighbors ]) => (navNeighbors?.next ?? navNeighbors?.parent)?.navigateTo()),
+
+    // case "navigation for known target"
+    this.taskService.navigateTo$.pipe(
+      filter((d): d is ({ id: string, path: string[] }|{ url: string })&{ newTab: boolean} => 'url' in d || ('id' in d && !!d.path))
+    ).subscribe(dst => {
+      if ('id' in dst) {
+        const route = itemRoute('activity', dst.id, dst.path);
+        if (dst.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
+        else this.itemRouter.navigateTo(route);
+      }
+      if ('url' in dst) {
+        if (dst.newTab) openNewTab(dst.url, this.location);
+        else replaceWindowUrl(dst.url, this.location);
+      }
+    }),
+
+    // case "navigation to item without path"
+    this.taskService.navigateTo$.pipe(
+      filter((dst): dst is ({ id: string }|{ textId: string })&{ newTab: boolean} => ('id' in dst && !dst.path) || 'textId' in dst),
+      switchMap(dst => {
+        const getBreadcrumbs$ = 'id' in dst ? this.breadcrumbsService.get(dst.id) : this.breadcrumbsService.getByTextId(dst.textId);
+        return getBreadcrumbs$.pipe(map(breadcrumbs => ({ breadcrumbs, newTab: dst.newTab })), mapToFetchState());
+      })
+    ).subscribe(state => {
+      if (state.isError) {
+        if (errorIsHTTPForbidden(state.error)) this.actionFeedbackService.error($localize`You cannot access this page.`);
+        else this.actionFeedbackService.error($localize`Unable to get linked page information. If the problem persists, contact us.`);
+      }
+      if (state.isReady) {
+        // TODO: if there are several possible breadcrumb, we should ask the user which path he wants to use
+        const breadcrumbs = state.data.breadcrumbs[0];
+        if (!breadcrumbs) throw new Error('unexpected: get all breadcrumbs services are expected to return >=1 proposal or "forbidden"');
+        const lastElement = breadcrumbs.pop();
+        if (!lastElement) throw new Error('unexpected: get all breadcrumbs services are expected to return non-empty breadcrumbs');
+        const route = itemRoute(typeCategoryOfItem(lastElement), lastElement.id, breadcrumbs.map(b => b.id));
+        if (state.data.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
+        else this.itemRouter.navigateTo(route);
+      }
+    }),
   ];
 
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
     $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   constructor(
+    private router: Router,
+    private itemRouter: ItemRouter,
+    private location: Location,
     private taskService: ItemTaskService,
     private sanitizer: DomSanitizer,
     private actionFeedbackService: ActionFeedbackService,
     private publishResultService: PublishResultsService,
+    private activityNavTreeService: ActivityNavTreeService,
+    private breadcrumbsService: GetBreadcrumbsFromRootsService,
     private ltiDataSource: LTIDataSource,
   ) {}
 

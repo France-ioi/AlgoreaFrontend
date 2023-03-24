@@ -1,9 +1,10 @@
-import { Observable } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 import { appConfig } from '../../../shared/helpers/config';
 import { decodeSnakeCase } from '../../../shared/operators/decode';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as D from 'io-ts/Decoder';
+import { errorIsBadRequest } from 'src/app/shared/helpers/errors';
 
 const breadcrumbsFromRootDecoder = D.struct({
   id: D.string,
@@ -23,6 +24,21 @@ export class GetBreadcrumbsFromRootsService {
 
   get(id: string): Observable<BreadcrumbsFromRoot[][]> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}/breadcrumbs-from-roots`).pipe(
+      decodeSnakeCase(D.array(D.array(breadcrumbsFromRootDecoder))),
+    );
+  }
+
+  getByTextId(textId: string): Observable<BreadcrumbsFromRoot[][]> {
+    return this.http.get<unknown>(`${appConfig.apiUrl}/items/by-text-id/${encodeURIComponent(textId)}/breadcrumbs-from-roots`).pipe(
+      catchError(err => {
+        // convert a specific 400 error to 403
+        if (!(err instanceof HttpErrorResponse) || !errorIsBadRequest(err)) throw err;
+        const errorBody: unknown = err.error;
+        if (typeof errorBody !== 'object' || errorBody === null || !('error_text' in errorBody)) throw err;
+        const errorText = errorBody.error_text;
+        if (typeof errorText === 'string' && /No item found with text_id/.test(errorText)) throw new HttpErrorResponse({ status: 403 });
+        throw err;
+      }),
       decodeSnakeCase(D.array(D.array(breadcrumbsFromRootDecoder))),
     );
   }
