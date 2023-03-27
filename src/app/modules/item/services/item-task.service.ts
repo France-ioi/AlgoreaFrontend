@@ -1,12 +1,10 @@
 import { Location } from '@angular/common';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { animationFrames, combineLatest, EMPTY, merge, Observable, Subject, throwError } from 'rxjs';
+import { animationFrames, combineLatest, EMPTY, merge, Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
-import { FullItemRoute, itemRoute } from 'src/app/shared/routing/item-route';
-import { ItemRouter } from 'src/app/shared/routing/item-router';
+import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { AskHintService } from '../http-services/ask-hint.service';
 import { Answer as GetAnswerType } from '../http-services/get-answer.service';
 import { Task, TaskPlatform } from '../task-communication/task-proxy';
@@ -42,6 +40,14 @@ export class ItemTaskService implements OnDestroy {
     return this.initService.initialized;
   }
 
+  private readonly navigateTo = new Subject<(
+    { url: string } |
+    { id: string, path?: string[] } |
+    { textId: string } |
+    { nextActivity: true }
+  ) & { newTab: boolean }>();
+  readonly navigateTo$ = this.navigateTo.asObservable();
+
   readonly views$ = this.viewsService.views$;
   readonly display$ = this.viewsService.display$;
   readonly activeView$ = this.viewsService.activeView$;
@@ -62,15 +68,14 @@ export class ItemTaskService implements OnDestroy {
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
     private viewsService: ItemTaskViewsService,
-    private itemRouter: ItemRouter,
     private activityNavTreeService: ActivityNavTreeService,
-    private router: Router,
     private location: Location,
     private askHintService: AskHintService,
   ) {}
 
   ngOnDestroy(): void {
     this.hintError$.complete();
+    this.navigateTo.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
@@ -114,10 +119,11 @@ export class ItemTaskService implements OnDestroy {
       updateDisplay: display => this.viewsService.updateDisplay(display),
       showView: view => this.viewsService.showView(view),
       openUrl: params => {
-        if (typeof params === 'string') return this.navigateToItem(params);
-        if ('path' in params) return this.navigateToItem(params.path, params.newTab);
-        if ('itemId' in params) return this.navigateToItem(params.itemId);
-        return this.navigate(params.url, params.newTab);
+        if (typeof params === 'string') return this.navigateToItem({ path: params }, false);
+        if ('path' in params) return this.navigateToItem(params, params.newTab ?? false);
+        if ('itemId' in params) return this.navigateToItem(params, params.newTab ?? false);
+        if ('textId' in params) return this.navigateToItem(params, params.newTab ?? false);
+        if ('url' in params) return this.navigateToUrl(params.url, params.newTab ?? true);
       },
       askHint: (hintToken: string) => combineLatest([ this.askHint(hintToken), this.task$ ]).pipe(
         take(1),
@@ -155,30 +161,25 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private navigateToNextItem(): Observable<void> {
-    return this.navigateToNext$.pipe(
-      take(1),
-      tap(nav => {
-        if (nav) nav();
-      }),
-      map(() => undefined),
-    );
+    this.navigateTo.next({ nextActivity: true, newTab: false });
+    return of(undefined);
   }
 
   private scrollTop(): Observable<void> {
     return animationFrames().pipe(take(1), tap(() => window.scrollTo({ behavior: 'smooth', top: 0 })), map(() => undefined));
   }
 
-  private navigateToItem(path: string, newTab = false): void {
-    const ids = path.split('/');
-    const id = ids.pop();
-    if (!id) throw new Error(`id must be defined. Received path: '${path}'.`);
-
-    const route = itemRoute('activity', id, ids);
-    if (newTab) this.navigate(this.router.serializeUrl(this.itemRouter.url(route)), true);
-    else this.itemRouter.navigateTo(route);
+  private navigateToItem(dst: { path: string }|{ itemId: string }|{ textId: string }, newTab: boolean): void {
+    if ('textId' in dst) this.navigateTo.next({ textId: dst.textId, newTab });
+    if ('itemId' in dst) this.navigateTo.next({ id: dst.itemId, newTab });
+    if ('path' in dst) {
+      const path = dst.path.split('/'); // always return a non-empty array
+      const id = path.pop()!;
+      this.navigateTo.next({ id, path, newTab: newTab });
+    }
   }
 
-  private navigate(href: string, newTab = false): void {
+  private navigateToUrl(href: string, newTab: boolean): void {
     if (newTab) openNewTab(href, this.location);
     else replaceWindowUrl(href, this.location);
   }

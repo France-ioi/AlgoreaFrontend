@@ -78,16 +78,15 @@ export type TaskResources = unknown;
 export const openUrlParamsDecoder = D.union(
   D.string,
   pipe(
-    D.struct({ path: D.string }),
+    D.union(
+      D.struct({ path: D.string }),
+      D.struct({ url: D.string }),
+      D.struct({ itemId: D.string }),
+      D.struct({ textId: D.string }),
+    ),
     D.intersect(D.partial({ newTab: D.boolean }))
   ),
-  pipe(
-    D.struct({ url: D.string }),
-    D.intersect(D.partial({ newTab: D.boolean }))
-  ),
-  pipe(
-    D.struct({ itemId: D.string }),
-  ),
+
 );
 
 export type OpenUrlParams = D.TypeOf<typeof openUrlParamsDecoder>;
