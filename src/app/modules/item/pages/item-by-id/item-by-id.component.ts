@@ -15,7 +15,7 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
-import { errorState, fetchingState, FetchState, isFetchingOrError } from 'src/app/shared/helpers/state';
+import { errorState, fetchingState, FetchState, isFetchingOrError, readyState } from 'src/app/shared/helpers/state';
 import { ResultActionsService } from 'src/app/shared/http-services/result-actions.service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
 import { breadcrumbServiceTag } from '../../http-services/get-breadcrumb.service';
@@ -31,7 +31,7 @@ import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
-import { ItemRoute, RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
+import { FullItemRoute, ItemRoute, RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
 import { ItemEditWrapperComponent } from '../../components/item-edit-wrapper/item-edit-wrapper.component';
@@ -100,11 +100,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       const item = this.getItemRoute(params);
       if (isItemRouteError(item)) {
         if (!item.id) throw new Error('unexpected: no id in item page');
-        return this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answer);
+        return this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answer).pipe(mapToFetchState());
       }
-      return of(item);
+      return of<FetchState<FullItemRoute>>(readyState(item));
     }),
-    mapToFetchState(),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
