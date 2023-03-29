@@ -47,6 +47,7 @@ import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { GetBreadcrumbsFromRootsService } from '../../http-services/get-breadcrumbs-from-roots.service';
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
+import { closestBreadcrumbs } from 'src/app/shared/routing/content-route';
 
 export interface TaskTab {
   name: string,
@@ -176,16 +177,14 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
       switchMap(dst => {
         const getBreadcrumbs$ = 'id' in dst ? this.breadcrumbsService.get(dst.id) : this.breadcrumbsService.getByTextId(dst.textId);
         return getBreadcrumbs$.pipe(map(breadcrumbs => ({ breadcrumbs, newTab: dst.newTab })), mapToFetchState());
-      })
+      }),
     ).subscribe(state => {
       if (state.isError) {
         if (errorIsHTTPForbidden(state.error)) this.actionFeedbackService.error($localize`You cannot access this page.`);
         else this.actionFeedbackService.error($localize`Unable to get linked page information. If the problem persists, contact us.`);
       }
       if (state.isReady) {
-        // TODO: if there are several possible breadcrumb, we should ask the user which path he wants to use
-        const breadcrumbs = state.data.breadcrumbs[0];
-        if (!breadcrumbs) throw new Error('unexpected: get all breadcrumbs services are expected to return >=1 proposal or "forbidden"');
+        const breadcrumbs = closestBreadcrumbs(this.route.path, state.data.breadcrumbs); // choose the closest, TODO: ask the user instead
         const lastElement = breadcrumbs.pop();
         if (!lastElement) throw new Error('unexpected: get all breadcrumbs services are expected to return non-empty breadcrumbs');
         const route = itemRoute(typeCategoryOfItem(lastElement), lastElement.id, breadcrumbs.map(b => b.id));
