@@ -144,15 +144,10 @@ export class ItemDataSource implements OnDestroy {
         const attemptId = isRouteWithSelfAttempt(itemRoute) ? itemRoute.attemptId : itemRoute.parentAttemptId;
         if (!attemptId) return EMPTY; // unexpected
         return this.resultActionsService.start(itemRoute.path.concat([ itemRoute.id ]), attemptId).pipe(
-          // once a result has been created, fetch it
-          switchMap(() => this.getResultsService.getResults(itemRoute).pipe(
-            map(results => {
-              // this time we are sure to have a started result as we just started it
-              const currentResult = bestAttemptFromResults(results);
-              if (currentResult === null) throw new Error('Unexpected: result just created not found');
-              return { results: results, currentResult: currentResult };
-            }),
-          )),
+          map(() => {
+            const result = { attemptId, latestActivityAt: new Date(), startedAt: new Date(), score: 0, validated: false };
+            return { results: [ ...results, result ], currentResult: result };
+          })
         );
       }),
     );
