@@ -9,6 +9,7 @@ import { itemWatchPermMax } from '../../../../shared/models/domain/item-watch-pe
 import { itemEditPermMax } from '../../../../shared/models/domain/item-edit-permission';
 import { itemGrantViewPermMax } from '../../../../shared/models/domain/item-grant-view-permission';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { ItemData } from '../../services/item-datasource.service';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -16,10 +17,10 @@ import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predic
   styleUrls: [ './item-children-edit-list.component.scss' ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
+  @Input() itemData?: ItemData;
   @Input() type: ItemTypeCategory = 'activity';
   @Input() data: PossiblyInvisibleChildData[] = [];
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
-  @Output() linkClick = new EventEmitter<PossiblyInvisibleChildData>();
 
   @ViewChild('op') op?: OverlayPanel;
 
@@ -96,9 +97,5 @@ export class ItemChildrenEditListComponent implements OnChanges {
       return c;
     }));
     this.propagationEditItemIdx = undefined;
-  }
-
-  onClick(child: PossiblyInvisibleChildData): void {
-    this.linkClick.emit(child);
   }
 }

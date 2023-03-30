@@ -13,8 +13,8 @@
           <alg-item-children-edit-list
             type="skill"
             [data]="skills"
+            [itemData]="itemData"
             (childrenChanges)="onDataChange($event, 'skill')"
-            (linkClick)="onClick($event)"
           ></alg-item-children-edit-list>
         </alg-section>
 
@@ -26,8 +26,8 @@
         >
           <alg-item-children-edit-list
             [data]="activities"
+            [itemData]="itemData"
             (childrenChanges)="onDataChange($event)"
-            (linkClick)="onClick($event)"
           ></alg-item-children-edit-list>
         </alg-section>
       </ng-container>
@@ -35,8 +35,8 @@
       <ng-template #childrenEditWithNoTitle>
         <alg-item-children-edit-list
           [data]="activities"
+          [itemData]="itemData"
           (childrenChanges)="onDataChange($event)"
-          (linkClick)="onClick($event)"
         ></alg-item-children-edit-list>
       </ng-template>
 
