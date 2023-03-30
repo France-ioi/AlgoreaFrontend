@@ -1,6 +1,18 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
-import { catchError, delayWhen, filter, map, shareReplay, switchMap, takeUntil, timeout, withLatestFrom } from 'rxjs/operators';
+import {
+  catchError,
+  delayWhen,
+  distinctUntilChanged,
+  filter,
+  map,
+  pairwise,
+  shareReplay,
+  switchMap,
+  takeUntil,
+  timeout,
+  withLatestFrom
+} from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
@@ -15,7 +27,7 @@ export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
   attemptId: string,
-  initialAnswer: Answer | null,
+  initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   readOnly: boolean,
   locale?: string,
 }
@@ -29,11 +41,23 @@ export class ItemTaskInitService implements OnDestroy {
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    switchMap(({ readOnly, initialAnswer, attemptId, route }) => {
-      if (readOnly && initialAnswer) return this.taskTokenService.generateForAnswer(initialAnswer.id);
-      // if we are no observing (= not in readOnly) -> we need a token for our user and the task may be edited by ourself
+    // build strategy separately from switchMap to prevent cancellation of the request
+    map(({ readOnly, initialAnswer, attemptId, route }) => {
+      if (readOnly) {
+        // if readonly -> if initialAnswer is still unknown, wait the next config update to generate token
+        if (initialAnswer === undefined) return { strategy: 'wait' as const };
+        // if readonly -> if there is an initial answer,
+        if (initialAnswer !== null) return { strategy: 'answerToken' as const, answerId: initialAnswer.id };
+      }
+      // if we are editing (= not in readOnly) -> we need a token for our user
       // if there are no answer loaded -> we currently want an empty task, so using our own task token
-      else return this.taskTokenService.generate(route.id, attemptId);
+      return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
+    }),
+    distinctUntilChanged((prev, cur) => prev.strategy === cur.strategy),
+    switchMap(s => {
+      if (s.strategy === 'answerToken') return this.taskTokenService.generateForAnswer(s.answerId);
+      if (s.strategy === 'regularToken') return this.taskTokenService.generate(s.itemId, s.attemptId);
+      return EMPTY; // s.strategy === 'wait'
     }),
     shareReplay(1),
   );
@@ -71,7 +95,17 @@ export class ItemTaskInitService implements OnDestroy {
   ) as Observable<Error>;
 
   initialized = false;
-  configured = false;
+
+  /** Guard: throw exception if the config changes, except `initialAnswer` */
+  subscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
+    if (
+      prev.attemptId !== cur.attemptId ||
+      prev.readOnly !== cur.readOnly ||
+      prev.locale !== cur.locale ||
+      prev.route !== cur.route ||
+      prev.url !== cur.url
+    ) throw new Error('cannot change task config, except for initialAnswer');
+  });
 
   constructor(
     private taskTokenService: TaskTokenService,
@@ -86,12 +120,15 @@ export class ItemTaskInitService implements OnDestroy {
     this.destroyed$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId: string, initialAnswer: Answer | null, locale?: string, readOnly = false): void {
-    if (this.configured) throw new Error('task init service can be configured once only');
-    this.configured = true;
-
+  configure(
+    route: FullItemRoute,
+    url: string,
+    attemptId: string,
+    initialAnswer: Answer | undefined | null,
+    locale?: string,
+    readOnly = false
+  ): void {
     this.configFromItem$.next({ route, url, attemptId, initialAnswer, locale, readOnly });
-    this.configFromItem$.complete();
   }
 
   initTask(iframe: HTMLIFrameElement, bindPlatform: (task: Task) => void): void {

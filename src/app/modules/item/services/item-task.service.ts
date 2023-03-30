@@ -16,7 +16,7 @@ export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score
 
 export interface TaskConfig {
   readOnly: boolean,
-  initialAnswer: Answer | null,
+  initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   locale?: string,
 }
 

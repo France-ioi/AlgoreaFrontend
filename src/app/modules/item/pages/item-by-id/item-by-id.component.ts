@@ -160,7 +160,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     switchMap(data => {
       if (!isTask(data.item)) return of(null); // config for non-task's is null
       return this.initialAnswerDataSource.answer$.pipe(
-        filter(isNotUndefined), // undefined is for not-known-yet and so have to be skipped
         catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
         map(initialAnswer => ({
           readOnly: !!data.route.answer && !data.route.answer.loadAsCurrent,
@@ -226,7 +225,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     this.itemRouteState$.subscribe(state => {
       if (state.isReady) {
-        // configure initialAnswerDataSource
         // just publish to current content the new route we are navigating to (without knowing any info)
         this.currentContent.replace(itemInfo({
           route: state.data,

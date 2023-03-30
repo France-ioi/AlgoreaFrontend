@@ -6,7 +6,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -61,13 +60,13 @@ const heightSyncInterval = 0.2*SECONDS;
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
 })
-export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges, OnDestroy {
+export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;
   @Input() url!: string;
   @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
   @Input() attemptId!: string;
   @Input() view?: TaskTab['view'];
-  @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: null };
+  @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: undefined };
   @Input() savingAnswer = false;
 
   @Output() scoreChange = this.taskService.scoreChange$;
@@ -211,18 +210,14 @@ export class ItemDisplayComponent implements OnInit, AfterViewChecked, OnChanges
     private ltiDataSource: LTIDataSource,
   ) {}
 
-  ngOnInit(): void {
-    this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
-    this.taskService.showView(this.view ?? 'task');
-  }
-
   ngAfterViewChecked(): void {
     if (!this.iframe || this.taskService.initialized) return;
     this.taskService.initTask(this.iframe.nativeElement);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.view && this.view) this.taskService.showView(this.view);
+    if (changes.taskConfig) this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
+    if (changes.view) this.taskService.showView(this.view ?? 'task');
     if (
       changes.route &&
       !changes.route.firstChange &&
