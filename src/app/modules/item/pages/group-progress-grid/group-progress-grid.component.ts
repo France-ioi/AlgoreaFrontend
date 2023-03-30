@@ -147,6 +147,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     if (!this.group) {
       throw new Error('Unexpected: Missed group');
     }
+    const attemptId = this.itemData.currentResult?.attemptId;
+    if (!attemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
     this.progressOverlay = {
       target,
       progress: userProgress,
@@ -157,8 +159,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           typeCategoryOfItem(col),
           col.id,
           [ ...this.itemData.route.path, ...(col.id !== this.itemData.route.id ? [ this.itemData.route.id ] : []) ],
-          {
-            parentAttemptId: this.itemData.route.parentAttemptId!,
+          col.id === this.itemData.route.id ? {
+            attemptId,
+          } : {
+            parentAttemptId: attemptId,
           }
         ),
         permissions: col.permissions,
