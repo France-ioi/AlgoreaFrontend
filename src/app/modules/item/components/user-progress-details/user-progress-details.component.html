@@ -16,24 +16,18 @@
               [isValidated]="progress.validated"
             ></alg-score-ring>
           </span>
-          <ng-container *ngIf="progressData && progressData.progress.submissions > 0 && progressData.taskDetails as taskDetails">
+          <ng-container
+            *ngIf="progressData && progressData.currentFilter !== 'Groups' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
+          >
             <ng-container *ngIf="currentUser$ | async as currentUser">
               <div
                 i18n-pTooltip pTooltip="You cannot view answers for this content."
-                [tooltipDisabled]="(taskDetails.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
+                [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
               >
                 <a
                   class="clickable"
-                  [ngClass]="{ 'disabled': !(taskDetails.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
-                  [routerLink]="{
-                    id: taskDetails.route.id,
-                    contentType: taskDetails.route.contentType,
-                    path: taskDetails.route.id === progressData.itemRoute.id ? progressData.itemRoute.path : progressData.itemRoute.path.concat([ progressData.itemRoute.id ]),
-                    parentAttemptId: progressData.itemRoute.parentAttemptId,
-                    answer: {
-                      best: true, participantId: progress.groupId
-                    }
-                  } | url"
+                  [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
+                  [routerLink]="progressData.colItem.fullRoute | withAnswer: { best: true, participantId: progress.groupId } | url"
                 >
                   <i class="pi pi-code"></i>
                   <span i18n>View answer</span>

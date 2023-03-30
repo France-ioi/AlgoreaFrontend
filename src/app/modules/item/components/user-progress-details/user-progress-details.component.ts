@@ -3,18 +3,21 @@ import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@a
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { delay, take } from 'rxjs';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
-import { FullItemRoute, RawItemRoute } from '../../../../shared/routing/item-route';
+import { FullItemRoute } from '../../../../shared/routing/item-route';
 import { ItemPermWithWatch } from '../../../../shared/models/domain/item-watch-permission';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { ItemChildType } from '../../http-services/get-item-children.service';
+import { TypeFilter } from '../../helpers/composition-filter';
 
 export interface ProgressData {
   progress: TeamUserProgress,
   target: Element,
-  taskDetails?: {
-    route: RawItemRoute,
+  currentFilter: TypeFilter,
+  colItem: {
+    type: ItemChildType,
+    fullRoute: FullItemRoute,
     permissions: ItemPermWithWatch,
   },
-  itemRoute: FullItemRoute,
 }
 
 @Component({

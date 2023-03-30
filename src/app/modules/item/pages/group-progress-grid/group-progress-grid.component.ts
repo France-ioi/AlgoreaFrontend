@@ -23,7 +23,7 @@ import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
-import { rawItemRoute } from '../../../../shared/routing/item-route';
+import { fullItemRoute } from '../../../../shared/routing/item-route';
 
 const progressListLimit = 25;
 
@@ -150,13 +150,19 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.progressOverlay = {
       target,
       progress: userProgress,
-      ...(this.currentFilter !== 'Groups' && col.type === 'Task' ? {
-        taskDetails: {
-          route: rawItemRoute(typeCategoryOfItem(col), col.id),
-          permissions: col.permissions,
-        }
-      } : {}),
-      itemRoute: this.itemData.route,
+      currentFilter: this.currentFilter,
+      colItem: {
+        type: col.type,
+        fullRoute: fullItemRoute(
+          typeCategoryOfItem(col),
+          col.id,
+          [ ...this.itemData.route.path, ...(col.id !== this.itemData.route.id ? [ this.itemData.route.id ] : []) ],
+          {
+            parentAttemptId: this.itemData.route.parentAttemptId!,
+          }
+        ),
+        permissions: col.permissions,
+      },
     };
     this.progressDataDialog = {
       item: {
