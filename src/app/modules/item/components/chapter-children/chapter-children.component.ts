@@ -4,7 +4,6 @@ import { GetItemChildrenService, ItemChild } from '../../http-services/get-item-
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/shared/helpers/attempts';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
@@ -62,19 +61,6 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
         attemptId: this.itemData.currentResult.attemptId,
       });
     }
-  }
-
-  click(child: ItemChildWithAdditions): void {
-    if (!this.itemData) return;
-    const attemptId = child.result?.attemptId;
-    const parentAttemptId = this.itemData.currentResult?.attemptId;
-    if (!parentAttemptId) return; // unexpected: children have been loaded, so we are sure this item has an attempt
-    this.itemRouter.navigateTo({
-      contentType: typeCategoryOfItem(child),
-      id: child.id,
-      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
-      ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
-    });
   }
 
   ngOnDestroy(): void {

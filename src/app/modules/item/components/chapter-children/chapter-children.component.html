@@ -23,7 +23,16 @@
         *ngIf="data.children.length > 0"
       >
         <div class="grid-item" *ngFor="let item of data.children; let i = index">
-          <div class="grid-card" (click)="click(item)">
+          <a class="grid-card"
+            [routerLink]="{
+              id: item.id,
+              contentType: item | contentTypeFromItem,
+              path: itemData.route.path.concat([ itemData.item.id ])
+            } | withAttempt: (item.result && item.result.attemptId ? {
+              attemptId : item.result.attemptId
+            } : { parentAttemptId: attemptId }) | url"
+            *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
+          >
             <div class="grid-card-title text-dots">{{ i + 1 }}. {{ item.string.title }}</div>
             <div class="grid-card-image-section">
               <ng-container *ngIf="item.isLocked">
@@ -53,13 +62,17 @@
                 ></alg-score-ring>
               </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </ng-container>
 
     <ng-template #listSection>
-      <alg-item-children-list [children]="data.children" [showStateWidget]="true" (clickEvent)="click($event)"></alg-item-children-list>
+      <alg-item-children-list
+        [itemData]="itemData"
+        [children]="data.children"
+        [showStateWidget]="true"
+      ></alg-item-children-list>
     </ng-template>
 
   </ng-container>
