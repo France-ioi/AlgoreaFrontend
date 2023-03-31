@@ -376,7 +376,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="1601880004921589799" datatype="html">
         <source>Could not load more results, are you connected to the internet?</source><target state="new">Could not load more results, are you connected to the internet?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">98</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/floating-save/floating-save.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
@@ -1539,7 +1539,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="7182192298964223312" datatype="html">
         <source>via</source><target state="new">via</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="7136816175934806999" datatype="html">
         <source>You have no path to this content.</source><target state="new">You have no path to this content.</target>
 
@@ -1551,7 +1551,7 @@
               Skill: 'skill',
               other: 'activity'
             } }}"/> </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="4475993768283951722" datatype="html">
         <source>Sub-skills</source><target state="translated">Sous-compétences</target>
 
@@ -2234,11 +2234,26 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">
         <source>Not started</source><target state="new">Not started</target>
-        
-      <note from="description" priority="1">In progress matrix, explanation when cell is empty</note><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="6629094035123468873" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      <note from="description" priority="1">In progress matrix, explanation when cell is empty</note></trans-unit><trans-unit id="7894478830808730680" datatype="html">
+        <source>You cannot view answers for this content.</source><target state="new">You cannot view answers for this content.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="3935757628740535532" datatype="html">
+        <source>View answer</source><target state="new">View answer</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="6629094035123468873" datatype="html">
         <source>ACCESS</source><target state="translated">ACCÈS</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
         <source>This user has this permission via one of the other group he is member of, or one of their ancestors.</source><target state="new">This user has this permission via one of the other group he is member of, or one of their ancestors.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/helpers/computed-permissions.ts</context>
