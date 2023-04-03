@@ -17,10 +17,20 @@
 
       <ul *ngIf="parents.length > 0" class="data-list-container sub-skill">
         <li *ngFor="let item of parents">
-          <div class="skill-content" (click)="click(item)" [ngClass]="{ locked: item.isLocked }">
-            <a class="skill-title alg-link">
+          <a
+            class="skill-content alg-link"
+            [ngClass]="{ locked: item.isLocked }"
+            [routerLink]="{
+              id: item.id,
+              contentType: item | contentTypeFromItem,
+              path: itemData.route.path | slice :0 : -1,
+              attemptId: item.result.attemptId
+            } | url"
+            *ngIf="itemData"
+          >
+            <span class="skill-title">
               {{ item.string.title }}
-            </a>
+            </span>
             <span *ngIf="item.isLocked" class="skill-status">
               <i *ngIf="item.isLocked" class="fa fa-lock"></i>
             </span>
@@ -30,7 +40,7 @@
               [bestScore]="item.bestScore"
               [currentScore]="item.result.scoreComputed"
             ></alg-skill-progress>
-          </div>
+          </a>
         </li>
       </ul>
 
