@@ -86,22 +86,22 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // CASE 2B: the fetched content and new one are the same -> keep the content
       // Test case: on loading a page -> no navigation re-fetches are done (while the content is "built-up", so resubmitted several times)
       //                              -> children are shown after a while
-      if (!reload && areSameElements(prev.fetchedContent, content)) {
+      if (areSameElements(prev.fetchedContent, content)) {
         return { content, fetchedContent: content, l1Fetch$: prev.l1Fetch$, l2Fetch$: prev.l2Fetch$ ?? this.fetchChildrenNav(content) };
       }
       // CASE 2C: the fetched content and new one are siblings -> keep the content, change l2
       // Test case: navigating to a sibling -> the l1 is not re-fetched
-      if (!reload && areSiblings(prev.fetchedContent, content)) {
+      if (areSiblings(prev.fetchedContent, content)) {
         return { content, fetchedContent: content, l1Fetch$: prev.l1Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
       }
       // CASE 2D: the fetched content is the parent of the new one -> use previous l2 as new l1
       // Test case: navigating to a children -> only the new l2 (if any) is fetched, not the l1
-      if (!reload && areParentChild({ parent: prev.fetchedContent, child: content }) && prev.l2Fetch$) {
+      if (areParentChild({ parent: prev.fetchedContent, child: content }) && prev.l2Fetch$) {
         return { content, fetchedContent: content, l1Fetch$: prev.l2Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
       }
       // CASE 2E: the fetched content is the child of the new one -> use previous l1 as l2
       // Test case: navigating to the parent -> only the new l1 is fetched, not the new l2 (children are shown immediately)
-      if (!reload && areParentChild({ parent: content, child: prev.fetchedContent })) {
+      if (areParentChild({ parent: content, child: prev.fetchedContent })) {
         return { content, fetchedContent: content, l1Fetch$: this.fetchNav(content), l2Fetch$: prev.l1Fetch$ };
       }
       // CASE 2F: no fetched info could be reused -> fetch all nav
