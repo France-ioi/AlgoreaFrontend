@@ -19,4 +19,5 @@ export interface ItemChildWithAdditions {
     validated: boolean,
     score: number,
   },
+  noScore?: boolean,
 }

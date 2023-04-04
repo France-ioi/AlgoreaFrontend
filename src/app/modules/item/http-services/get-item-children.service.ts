@@ -43,6 +43,7 @@ const itemChildDecoder = pipe(
         scoreComputed: D.number,
         validated: D.boolean,
       })),
+      noScore: D.boolean,
     }),
   ),
   D.intersect(

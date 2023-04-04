@@ -6,7 +6,7 @@
   <li class="data-list-item" *ngFor="let item of children; let i = index">
     <div class="activity-progress" *ngIf="type === 'activity'">
       <alg-score-ring
-        *ngIf="(!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)"
+        *ngIf="!item.noScore && (!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)"
         [diameter]="30"
         [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
         [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
