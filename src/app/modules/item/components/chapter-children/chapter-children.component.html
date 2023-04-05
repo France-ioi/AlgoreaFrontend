@@ -45,7 +45,7 @@
               <div></div>
               <div class="grid-card-activity-progress">
                 <alg-score-ring
-                  *ngIf="(!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)"
+                  *ngIf="!item.noScore && ((!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined))"
                   [diameter]="30"
                   [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
                   [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
