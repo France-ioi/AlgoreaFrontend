@@ -72,6 +72,13 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       { content, reload } // the scan input
     ) => {
 
+      // CASE 0: reload -> force the same fetches to re-run
+      // Test case: trigger a reload -> see all refetchs
+      if (reload) {
+        const l2Fetch$ = prev.l2Fetch$ ? reusable(prev.l2Fetch$?.initial) : undefined;
+        return { content, fetchedContent: prev.fetchedContent, l1Fetch$: reusable(prev.l1Fetch$.initial), l2Fetch$ };
+      }
+
       // CASE 1: The current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
       //         In such a case, we never display the l2, so no need to fetch it if it is not already available.
       if (!content) {
@@ -80,11 +87,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
         // Test case: opening the group tab while an activity was initially displayed -> should call the group root service only
         if (!prev.fetchedContent) return { content, fetchedContent: this.dummyRootContent(), l1Fetch$: this.fetchRootNav() };
 
-        // CASE 1B: "reload" (l2 is not refetched as not displayed)
-        // Test case: trigger a reload -> see l1 refetch
-        if (reload) return { content, fetchedContent: prev.fetchedContent, l1Fetch$: this.fetchNav(prev.fetchedContent) };
-
-        // CASE 1C: otherwise -> keep the previous fetches (l2 is kept but will not be shown)
+        // CASE 1B: otherwise -> keep the previous fetches (l2 is kept but will not be shown)
         // Test case: loading an chapter with children, then select a group -> the l1 of the activity menu stays as it was
         //            reselect the activity -> the activity menu does not trigger any refetches even for showing the children
         return { ...prev, content };
@@ -92,10 +95,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
       // CASE 2: the content type matches the type of this nav tree
 
-      // CASE 2A: if first iteration or reload: fetch everything (equivalent to case 2F)
+      // CASE 2A: if first iteration: fetch everything (equivalent to case 2F)
       // Test case: trigger a reload
       // Test case: opening the app through a specific non-root content -> only required requests are done (1 or 2 calls to nav service)
-      if (reload || !prev.fetchedContent) {
+      if (!prev.fetchedContent) {
         return { content, fetchedContent: content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
       }
       // CASE 2B: the fetched content and new one are the same -> keep the content
