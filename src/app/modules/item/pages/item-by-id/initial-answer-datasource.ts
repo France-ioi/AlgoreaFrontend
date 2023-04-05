@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import {
   catchError,
   combineLatest,
+  concat,
   distinctUntilChanged,
   map,
   Observable,
@@ -45,9 +46,11 @@ export class InitialAnswerDataSource implements OnDestroy {
     distinctUntilChanged((s1, s2) => JSON.stringify(s1) === JSON.stringify(s2)),
     switchMap(strategy => {
       if (strategy.tag === 'EmptyInitialAnswer') return of(null); // null -> no initial answer
-      if (strategy.tag === 'LoadCurrent') return this.getCurrentAnswer(strategy.itemId, strategy.attemptId);
-      if (strategy.tag === 'LoadById') return this.getAnswerService.get(strategy.answerId);
-      if (strategy.tag === 'LoadBest') return this.getAnswerService.getBest(strategy.itemId, { watchedGroupId: strategy.participantId });
+      if (strategy.tag === 'LoadCurrent') return concat(of(undefined), this.getCurrentAnswer(strategy.itemId, strategy.attemptId));
+      if (strategy.tag === 'LoadById') return concat(of(undefined), this.getAnswerService.get(strategy.answerId));
+      if (strategy.tag === 'LoadBest') {
+        return concat(of(undefined), this.getAnswerService.getBest(strategy.itemId, { watchedGroupId: strategy.participantId }));
+      }
       return of(undefined); // "Wait" and "NotApplicable" cases - undefined -> not defined yet
     }),
     takeUntil(this.destroyed$),

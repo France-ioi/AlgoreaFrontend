@@ -101,7 +101,7 @@
         [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
       >
         <ng-container *ngIf="contentTab.isActive || editChildrenTab.isActive || taskTabs.length > 0">
-          <alg-error *ngIf="answerLoadingError$ | async as error">
+          <alg-error *ngIf="answerLoadingError$ | async as error; else noAnswerLoadingError">
             <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
             <ng-template #fallback>
               <ng-container i18n>
@@ -111,24 +111,27 @@
             <p *ngIf="!error.isForbidden">{{ errorMessageContactUs }}</p>
           </alg-error>
 
-          <ng-container *ngrxLet="taskConfig$ as taskConfig">
-            <div *ngIf="taskConfig && taskConfig.readOnly && contentTab.isActive" class="indicator">
-              <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
-            </div>
-            <alg-item-content
-              [hidden]="!contentTab.isActive && !editChildrenTab.isActive"
-              [itemData]="itemData"
-              [taskConfig]="taskConfig"
-              [savingAnswer]="(savingAnswer$ | async) ?? false"
-              [(taskView)]="taskView"
-              [editModeEnabled]="editChildrenTab.isActive"
-              (taskTabsChange)="setTaskTabs($event)"
-              (scoreChange)="onScoreChange($event)"
-              (skipSave)="skipBeforeUnload()"
-              (refresh)="reloadItem()"
-              (editorUrl)="editorUrl = $event"
-            ></alg-item-content>
-          </ng-container>
+          <ng-template #noAnswerLoadingError>
+            <ng-container *ngrxLet="taskConfig$ as taskConfig">
+              <div *ngIf="taskConfig && taskConfig.readOnly && contentTab.isActive" class="indicator">
+                <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
+              </div>
+              <alg-item-content
+                [hidden]="!contentTab.isActive && !editChildrenTab.isActive"
+                [itemData]="itemData"
+                [taskConfig]="taskConfig"
+                [savingAnswer]="(savingAnswer$ | async) ?? false"
+                [(taskView)]="taskView"
+                [editModeEnabled]="editChildrenTab.isActive"
+                (taskTabsChange)="setTaskTabs($event)"
+                (scoreChange)="onScoreChange($event)"
+                (skipSave)="skipBeforeUnload()"
+                (refresh)="reloadItem()"
+                (editorUrl)="editorUrl = $event"
+              ></alg-item-content>
+            </ng-container>
+          </ng-template>
+
         </ng-container>
         <alg-item-progress
           *ngIf="progressTab?.isActive"

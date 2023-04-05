@@ -48,6 +48,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, initialAnswer }) => {
+      if (initialAnswer === undefined) return EMPTY;
       if (route.answer?.loadAsCurrent && initialAnswer) {
         return this.loadAsNewCurrentAnswer(route.id, attemptId, initialAnswer);
       }
@@ -61,7 +62,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private initializedTaskState$ = combineLatest([
     this.initialAnswer$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
     this.task$,
-    this.config$,
+    this.config$.pipe(take(1)),
   ]).pipe(
     switchMap(([ initialAnswer, task, { readOnly }]) =>
       (initialAnswer?.state && !readOnly ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
