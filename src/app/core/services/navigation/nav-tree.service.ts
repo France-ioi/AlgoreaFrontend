@@ -18,6 +18,21 @@ export interface NavigationNeighbors {
   next: NeighborInfo|null,
 }
 
+interface ReusableFetch {
+  initial: Observable<NavTreeData>,
+  shared: Observable<FetchState<NavTreeData>>,
+}
+
+function reusable(fetch: Observable<NavTreeData>): ReusableFetch {
+  return {
+    initial: fetch,
+    shared: fetch.pipe(
+      mapToFetchState(),
+      shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
+    ),
+  };
+}
+
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
@@ -51,8 +66,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       prev: {
         content: ContentT | undefined, // The "input" content. Not to be used in the scan accumulator, only for part 3
         fetchedContent: ContentT | undefined, // What content corresponds to the fetches. Only for accumulator use, not to be used in part 3
-        l1Fetch$: Observable<FetchState<NavTreeData>>,
-        l2Fetch$?: Observable<FetchState<NavTreeData>>, /* undefined if l2 cannot (currently) be fetched */
+        l1Fetch$: ReusableFetch,
+        l2Fetch$?: ReusableFetch, /* undefined if l2 cannot (currently) be fetched */
       },
       { content, reload } // the scan input
     ) => {
@@ -108,7 +123,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // Test case: navigating to a completely new content
       return { content, fetchedContent: content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
 
-    }, { content: undefined, fetchedContent: undefined, l1Fetch$: EMPTY } /* the scan seed */),
+    }, { content: undefined, fetchedContent: undefined, l1Fetch$: { initial: EMPTY, shared: EMPTY } } /* the scan seed */),
 
     /**
      * PART 3 - EXECUTE AND COMBINE FETCHES
@@ -128,7 +143,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * - visit a chapter with children, visit a skill -> the children of the chapter are not shown anymore
     */
     switchMap(({ content, l1Fetch$, l2Fetch$ }) =>
-      combineLatest([ l1Fetch$, l2Fetch$ ?? of(undefined) ]).pipe(
+      combineLatest([ l1Fetch$.shared, l2Fetch$?.shared ?? of(undefined) ]).pipe(
         map(([ l1FetchState, l2FetchState ]) => {
           if (!l1FetchState.isReady) return l1FetchState; // l1 is fetching or in error -> just show the fetching or error
           if (!content) return readyState(l1FetchState.data.withNoSelection()); // no selected element -> only l1 shown
@@ -209,31 +224,25 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   protected abstract fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
-  private fetchChildrenNav(content: RoutedContentInfo): Observable<FetchState<NavTreeData>>|undefined {
+  private fetchChildrenNav(content: RoutedContentInfo): ReusableFetch|undefined {
     if (!this.canFetchChildren(content)) return undefined;
-    return this.fetchNavData(content.route).pipe(
-      map(data => new NavTreeData(data.elements, [ ...content.route.path, content.route.id ], data.parent)),
-      mapToFetchState(),
-      shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
+    return reusable(
+      this.fetchNavData(content.route).pipe(
+        map(data => new NavTreeData(data.elements, [ ...content.route.path, content.route.id ], data.parent)),
+      )
     );
   }
 
-  private fetchRootNav(): Observable<FetchState<NavTreeData>> {
-    return this.fetchRootTreeData().pipe(
-      map(elements => new NavTreeData(elements, [])),
-      mapToFetchState(),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
+  private fetchRootNav(): ReusableFetch {
+    return reusable(this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
   }
 
-  private fetchNav(content: ContentT): Observable<FetchState<NavTreeData>> {
+  private fetchNav(content: ContentT): ReusableFetch {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
-      return this.fetchNavDataFromChild(parentId, content).pipe(
-        map(data => new NavTreeData(data.elements, route.path, data.parent)),
-        mapToFetchState(),
-        shareReplay({ refCount: true, bufferSize: 1 }),
+      return reusable(
+        this.fetchNavDataFromChild(parentId, content).pipe(map(data => new NavTreeData(data.elements, route.path, data.parent)))
       );
     } else return this.fetchRootNav();
   }
