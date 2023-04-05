@@ -16,7 +16,7 @@
         type="skill"
         i18n-emptyMessage emptyMessage="This skill does not have subskills."
         [children]="data.skills"
-        (clickEvent)="click($event)"
+        [itemData]="itemData"
       ></alg-item-children-list>
     </alg-section>
 
@@ -25,7 +25,7 @@
         class="for-section"
         i18n-emptyMessage emptyMessage="This skill does not have related activities."
         [children]="data.activities"
-        (clickEvent)="click($event)"
+        [itemData]="itemData"
       ></alg-item-children-list>
     </alg-section>
   </ng-container>

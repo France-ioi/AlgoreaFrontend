@@ -63,7 +63,19 @@
               <th *ngFor="let col of columns">
                 <div class="slanted-header">
                   <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-                    <span class="slanted-header-link alg-link cursor-pointer" (click)="navigateToItem(col)">{{ col.title }}</span>
+                    <a
+                      class="slanted-header-link alg-link cursor-pointer"
+                      [routerLink]="{
+                        id: col.id,
+                        contentType: col | contentTypeFromItem,
+                        path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ])
+                      } | withAttempt: (itemData.item.id === col.id ? {
+                        attemptId: attemptId
+                      } : {
+                        parentAttemptId: attemptId
+                      }) | url : [ 'progress', 'chapter' ]"
+                      *ngIf="itemData && itemData.currentResult && itemData.currentResult.attemptId as attemptId"
+                    >{{ col.title }}</a>
                   </div>
                 </div>
               </th>
@@ -77,7 +89,10 @@
           >
             <tr>
               <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-                <span class="alg-link cursor-pointer" (click)="navigateToGroup(row)">{{ row.header }}</span>
+                <a
+                  class="alg-link cursor-pointer"
+                  [routerLink]="{ id: row.id, isUser: currentFilter === 'Users' } | groupLink"
+                >{{ row.header }}</a>
               </td>
               <td
                 class="cursor-pointer user-progress"

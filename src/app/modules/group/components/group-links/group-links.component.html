@@ -2,7 +2,7 @@
     *ngFor="let item of items | slice : 0 : (items || []).length > maxItemsDisplay ? maxItemsDisplay - 1 : maxItemsDisplay; let i = index; last as isLast;">
   <a
     class="alg-link base-color"
-    (click)="onButtonClick(item)"
+    [routerLink]="{ id: item.id, isUser: false } | groupLink"
   >
     <strong>{{ item.name }}</strong>
   </a>

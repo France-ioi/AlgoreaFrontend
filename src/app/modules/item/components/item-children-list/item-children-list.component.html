@@ -13,14 +13,21 @@
         [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
       ></alg-score-ring>
     </div>
-    <div
-      class="item-content"
-      (click)="click(item)"
+    <a
+      class="item-content alg-link"
       [ngClass]="{ locked: item.isLocked }"
+      [routerLink]="{
+        id: item.id,
+        contentType: item | contentTypeFromItem,
+        path: itemData.route.path.concat([ itemData.item.id ])
+      } | withAttempt: (item.result && item.result.attemptId ? {
+       attemptId : item.result.attemptId
+      } : { parentAttemptId: attemptId }) | url"
+      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
     >
-      <a class="item-title alg-link">
+      <span class="item-title">
         {{ i + 1 }}. {{ item.string.title }}
-      </a>
+      </span>
       <span *ngIf="item.isLocked" class="item-status">
         <i *ngIf="item.isLocked" class="fa fa-lock"></i>
       </span>
@@ -35,7 +42,7 @@
         [type]="item.category"
         *ngIf="showStateWidget"
       ></alg-state-widget>
-    </div>
+    </a>
   </li>
 </ul>
 

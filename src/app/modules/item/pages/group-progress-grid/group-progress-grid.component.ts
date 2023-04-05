@@ -14,8 +14,6 @@ import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from '../../../../shared/http-services/progress-csv.service';
 import { downloadFile } from '../../../../shared/helpers/download-file';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
-import { ItemRouter } from '../../../../shared/routing/item-router';
-import { GroupRouter } from '../../../../shared/routing/group-router';
 import { RawGroupRoute, rawGroupRoute } from '../../../../shared/routing/group-route';
 import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
@@ -116,8 +114,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     private getGroupChildrenService: GetGroupChildrenService,
     private actionFeedbackService: ActionFeedbackService,
     private progressCSVService: ProgressCSVService,
-    private itemRouter: ItemRouter,
-    private groupRouter: GroupRouter,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -300,27 +296,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           if (!(err instanceof HttpErrorResponse)) throw err;
         },
       });
-  }
-
-  navigateToItem(item: { id: string, title: string | null }): void {
-    if (!this.itemData) {
-      throw new Error('Unexpected: Missed input itemData of component');
-    }
-
-    const parentAttemptId = this.itemData.currentResult?.attemptId;
-
-    if (!parentAttemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
-
-    this.itemRouter.navigateTo({
-      contentType: typeCategoryOfItem(this.itemData.item),
-      id: item.id,
-      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
-      parentAttemptId,
-    });
-  }
-
-  navigateToGroup(row: { header: string, id: string, data: (TeamUserProgress|undefined)[] }): void {
-    this.groupRouter.navigateTo(rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }));
   }
 
   private getColumns(itemData: ItemData): Observable<DataColumn[]> {

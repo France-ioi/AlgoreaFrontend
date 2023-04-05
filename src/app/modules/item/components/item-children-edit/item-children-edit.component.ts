@@ -3,8 +3,7 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService, isVisibleItemChild } from '../../http-services/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
-import { isASkill, isSkill, ItemType, ItemTypeCategory, typeCategoryOfItem } from '../../../../shared/helpers/item-type';
-import { ItemRouter } from '../../../../shared/routing/item-router';
+import { isASkill, isSkill, ItemType, ItemTypeCategory } from '../../../../shared/helpers/item-type';
 import { bestAttemptFromResults } from '../../../../shared/helpers/attempts';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
@@ -110,7 +109,6 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private itemRouter: ItemRouter,
   ) {}
 
   ngOnInit(): void {
@@ -141,27 +139,6 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
 
   reset(): void {
     this.reloadData();
-  }
-
-  onClick(child: PossiblyInvisibleChildData): void {
-    if (!this.itemData || !child.id || !child.isVisible) {
-      return;
-    }
-
-    const attemptId = child.result?.attemptId;
-    const parentAttemptId = this.itemData.currentResult?.attemptId;
-
-    // unexpected: children have been loaded, so we are sure this item has an attempt
-    if (!parentAttemptId) {
-      return;
-    }
-
-    this.itemRouter.navigateTo({
-      contentType: typeCategoryOfItem(child),
-      id: child.id,
-      path: this.itemData.route.path.concat([ this.itemData.item.id ]),
-      ...attemptId ? { attemptId: attemptId } : { parentAttemptId: parentAttemptId }
-    });
   }
 
   onDataChange(children: PossiblyInvisibleChildData[], type: ItemTypeCategory = 'activity'): void {
