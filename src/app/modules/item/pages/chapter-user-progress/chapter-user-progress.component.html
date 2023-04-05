@@ -103,7 +103,7 @@
                 </ng-container>
               </ng-container>
               <ng-container *ngSwitchCase="'score'">
-                <div class="score-ring" *ngIf="rowData.latestActivityAt">
+                <div class="score-ring" *ngIf="!rowData.noScore && rowData.latestActivityAt">
                   <alg-score-ring [diameter]="42" [currentScore]="rowData.score"></alg-score-ring>
                 </div>
               </ng-container>

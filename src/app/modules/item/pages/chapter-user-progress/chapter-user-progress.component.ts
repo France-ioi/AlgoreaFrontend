@@ -49,6 +49,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           submissions: participantProgress.item.submissions,
           score: participantProgress.item.score,
           currentUserPermissions: item.permissions,
+          noScore: item.noScore,
         },
         ...participantProgress.children.map(itemData => ({
           id: itemData.itemId,
@@ -59,6 +60,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           submissions: itemData.submissions,
           score: itemData.score,
           currentUserPermissions: itemData.currentUserPermissions,
+          noScore: item.noScore,
         })),
       ])))
     ),
