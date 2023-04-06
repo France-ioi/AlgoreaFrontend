@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, UrlTree } from '@angular/router';
 import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay } from 'rxjs';
 import {
@@ -346,7 +346,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private discussionService: DiscussionService,
+    private renderer: Renderer2,
   ) {}
+
+  ngOnInit(): void {
+    this.renderer.setStyle(document.documentElement, 'overflow-y', 'scroll');
+  }
 
   ngOnDestroy(): void {
     this.currentContent.clear();
@@ -360,6 +365,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.beforeUnload$.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.renderer.removeStyle(document.documentElement, 'overflow-y');
   }
 
 
