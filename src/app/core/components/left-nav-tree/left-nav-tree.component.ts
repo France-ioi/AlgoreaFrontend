@@ -27,8 +27,10 @@ export class LeftNavTreeComponent implements OnChanges {
         label: e.title,
         type: this.typeForElement(e),
         leaf: e.hasChildren,
-        expanded: !!(isSelected && e.children),
-        children: isSelected && e.children ? this.mapItemToNodes(new NavTreeData(e.children, pathToChildren)) : undefined,
+        expanded: !!e.children,
+        children: e.children ?
+          this.mapItemToNodes(new NavTreeData(e.children, pathToChildren, undefined, data.selectedElementId)) :
+          undefined,
         partialSelected: isSelected
       };
     });
