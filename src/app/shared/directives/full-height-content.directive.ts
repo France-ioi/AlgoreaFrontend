@@ -36,7 +36,6 @@ export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
 
   setHeight(): void {
     const top = this.el.nativeElement.getBoundingClientRect().top + globalThis.scrollY;
-    this.renderer.removeStyle(this.el.nativeElement, 'height');
     this.renderer.setStyle(this.el.nativeElement, 'min-height', `calc(100vh - ${top}px)`);
   }
 }
