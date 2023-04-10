@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
@@ -15,6 +15,18 @@ import { PendingChangesService } from '../../../../shared/services/pending-chang
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
+
+interface ServerValidationError extends HttpErrorResponse {
+  error: {
+    errors: ValidationErrors,
+  },
+}
+
+function isServerValidationErrors(e: HttpErrorResponse): e is ServerValidationError {
+  const errorBody: unknown = e.error;
+  return errorBody !== null && typeof errorBody === 'object'
+    && 'errors' in errorBody && errorBody.errors !== null && typeof errorBody.errors === 'object';
+}
 
 @Component({
   selector: 'alg-item-edit-wrapper',
@@ -296,8 +308,12 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         this.itemDataSource.refreshItem(); // which will re-enable the form
         this.currentContentService.forceNavMenuReload();
       },
-      error: err => {
+      error: (err: unknown) => {
         this.itemForm.enable();
+        if (err instanceof HttpErrorResponse && isServerValidationErrors(err)) {
+          this.itemForm.setErrors(err.error.errors);
+          return;
+        }
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }

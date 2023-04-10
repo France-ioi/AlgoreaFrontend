@@ -19,6 +19,9 @@
       <span class="form-item-label">TextID</span>
       <div class="form-item-control">
         <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id" size="small"></alg-input>
+        <small class="alg-validation-error" *ngIf="parentForm.errors?.text_id.includes('text_id must be unique')" i18n>
+          This value is already used by another content. The text id must be unique across the platform.
+        </small>
       </div>
     </div>
   </alg-section>
