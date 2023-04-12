@@ -1,8 +1,10 @@
-import { combineLatest, EMPTY, merge, Observable, of, Subject } from 'rxjs';
+import { combineLatest, merge, Observable, of, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, switchMap, shareReplay, startWith, scan } from 'rxjs/operators';
+import { arraysEqual } from 'src/app/shared/helpers/array';
+import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { FetchState, readyState } from 'src/app/shared/helpers/state';
-import { areParentChild, areSameElements, areSiblings, ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
+import { ContentInfo, RoutedContentInfo } from 'src/app/shared/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/shared/operators/state';
 import { ContentRoute } from 'src/app/shared/routing/content-route';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
@@ -16,6 +18,28 @@ export interface NavigationNeighbors {
   parent: NeighborInfo|null,
   previous: NeighborInfo|null,
   next: NeighborInfo|null,
+}
+
+interface FetchInfo {
+  path: ContentRoute['path'], /* path to the fetched elements */
+  initial: Observable<NavTreeData>,
+  shared: Observable<FetchState<NavTreeData>>,
+}
+
+function fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
+  return {
+    path: path,
+    initial: fetch,
+    shared: fetch.pipe(
+      mapToFetchState(),
+      // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
+      // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
+      // subscribers, and so that new subscribers get the latest results on subscription.
+      // (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
+      // will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
+      shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
+    ),
+  };
 }
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
@@ -47,68 +71,72 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * - level 2 (l2): this is an optional list which shows the children of one the l1 element when it is selected.
      *   Note that providing l2Fetch in part 2 does not mean it will be shown (or even executed) as it is part 3 running the fetches.
     */
-    scan((
-      prev: {
-        content: ContentT | undefined, // The "input" content. Not to be used in the scan accumulator, only for part 3
-        fetchedContent: ContentT | undefined, // What content corresponds to the fetches. Only for accumulator use, not to be used in part 3
-        l1Fetch$: Observable<FetchState<NavTreeData>>,
-        l2Fetch$?: Observable<FetchState<NavTreeData>>, /* undefined if l2 cannot (currently) be fetched */
-      },
-      { content, reload } // the scan input
-    ) => {
+    scan<
+      { content: ContentT | undefined, reload: boolean },
+      { content: ContentT | undefined, l1Fetch$: FetchInfo, l2Fetch$?: FetchInfo },
+      { content: ContentT | undefined, l1Fetch$?: FetchInfo, l2Fetch$?: FetchInfo }
+    >((prev, { content, reload }) => {
 
-      // CASE 1: The current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
-      //         In such a case, we never display the l2, so no need to fetch it if it is not already available.
-      if (!content) {
-
-        // CASE 1A: At first iteration, if no content, display the root.
-        // Test case: opening the group tab while an activity was initially displayed -> should call the group root service only
-        if (!prev.fetchedContent) return { content, fetchedContent: this.dummyRootContent(), l1Fetch$: this.fetchRootNav() };
-
-        // CASE 1B: "reload" (l2 is not refetched as not displayed)
-        // Test case: trigger a reload -> see l1 refetch
-        if (reload) return { content, fetchedContent: prev.fetchedContent, l1Fetch$: this.fetchNav(prev.fetchedContent) };
-
-        // CASE 1C: otherwise -> keep the previous fetches (l2 is kept but will not be shown)
-        // Test case: loading an chapter with children, then select a group -> the l1 of the activity menu stays as it was
-        //            reselect the activity -> the activity menu does not trigger any refetches even for showing the children
-        return { ...prev, content };
+      // CASE 1: initial iteration
+      if (!prev.l1Fetch$) {
+        // CASE 1A: if no content matching the tab type, display the root
+        // Test case: open the group tab while an activity was initially displayed -> should call the group root service only
+        if (!content) return { content, l1Fetch$: this.fetchRootNav() };
+        // CASE 1B: if content, just fetch it
+        // Test case: open the app through a specific non-root content -> only required requests are done (1 or 2 calls to nav service)
+        return { content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
       }
 
-      // CASE 2: the content type matches the type of this nav tree
+      // CASE 2: reload -> force the same fetches to re-execute
+      // Test case: trigger a reload -> see all refetches
+      if (reload) {
+        const l2Fetch$ = prev.l2Fetch$ ? fetch(prev.l2Fetch$.path, prev.l2Fetch$.initial) : undefined;
+        return { content, l1Fetch$: fetch(prev.l1Fetch$.path, prev.l1Fetch$.initial), l2Fetch$ };
+      }
 
-      // CASE 2A: if first iteration or reload: fetch everything (equivalent to case 2F)
-      // Test case: trigger a reload
-      // Test case: opening the app through a specific non-root content -> only required requests are done (1 or 2 calls to nav service)
-      if (reload || !prev.fetchedContent) {
-        return { content, fetchedContent: content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
+      // CASE 3: The current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
+      //         -> keep the previous fetches
+      // Test case: loading a chapter with children, then select a group -> the activity tab does not trigger any refetches
+      if (!content) return { content, l1Fetch$: prev.l1Fetch$, l2Fetch$: prev.l2Fetch$ };
+
+      // CASE 4: The l1 AND l2 needed are exactly what was fetched in the previous step -> reuse the fetches
+      // Test cases:
+      //  1) on loading content -> no navigation re-fetches are done while the content is "built-up" and children are shown after a while
+      //  2) navigate from a l1 content to a children which does not have children -> no fetch at all
+      //  3) navigate to l2 content without children to a sibling without children -> no fetch at all
+      //  4) navigate from a l2 content to a sibling of the parent -> no fetch at all
+      if (
+        prev.l2Fetch$ && (
+          // either the path to content children matches previous l2 path (so l1 will)
+          arraysEqual([ ...content.route.path, content.route.id ], prev.l2Fetch$.path) ||
+          // or the content is on l2 (it is a leaf), and so its path matches the previous l2 path (so l1 will)
+          (!this.canFetchChildren(content) && arraysEqual(content.route.path, prev.l2Fetch$.path))
+        )
+      ) return { content, l1Fetch$: prev.l1Fetch$, l2Fetch$: prev.l2Fetch$ };
+
+      // CASE 5: The l1 needed is the same as the previous l1. L2 is new (or empty) -> reuse l1
+      // Test case: navigate from a l1 content to a sibling should only fetch the children
+      if (arraysEqual(content.route.path, prev.l1Fetch$.path)) {
+        return { content, l1Fetch$: prev.l1Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
       }
-      // CASE 2B: the fetched content and new one are the same -> keep the content
-      // Test case: on loading a page -> no navigation re-fetches are done (while the content is "built-up", so resubmitted several times)
-      //                              -> children are shown after a while
-      if (!reload && areSameElements(prev.fetchedContent, content)) {
-        return { content, fetchedContent: content, l1Fetch$: prev.l1Fetch$, l2Fetch$: prev.l2Fetch$ ?? this.fetchChildrenNav(content) };
+
+      // CASE 6: The previous l2 becomes the new l1 (i.e., we navigate to a child content with children) -> reuse l2 as l1
+      // Test case: navigate to a children -> only the new l2 (if any) is fetched, not the l1
+      if (prev.l2Fetch$ && arraysEqual(content.route.path, prev.l2Fetch$.path)) {
+        return { content, l1Fetch$: prev.l2Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
       }
-      // CASE 2C: the fetched content and new one are siblings -> keep the content, change l2
-      // Test case: navigating to a sibling -> the l1 is not re-fetched
-      if (!reload && areSiblings(prev.fetchedContent, content)) {
-        return { content, fetchedContent: content, l1Fetch$: prev.l1Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
-      }
-      // CASE 2D: the fetched content is the parent of the new one -> use previous l2 as new l1
-      // Test case: navigating to a children -> only the new l2 (if any) is fetched, not the l1
-      if (!reload && areParentChild({ parent: prev.fetchedContent, child: content }) && prev.l2Fetch$) {
-        return { content, fetchedContent: content, l1Fetch$: prev.l2Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
-      }
-      // CASE 2E: the fetched content is the child of the new one -> use previous l1 as l2
+
+      // CASE 7: The previous l1 becomes the new l2 (i.e., we navigate to the parent) -> reuse l1 as l2
       // Test case: navigating to the parent -> only the new l1 is fetched, not the new l2 (children are shown immediately)
-      if (!reload && areParentChild({ parent: content, child: prev.fetchedContent })) {
-        return { content, fetchedContent: content, l1Fetch$: this.fetchNav(content), l2Fetch$: prev.l1Fetch$ };
+      if (arraysEqual([ ...content.route.path, content.route.id ], prev.l1Fetch$.path)) {
+        return { content, l1Fetch$: this.fetchNav(content), l2Fetch$: prev.l1Fetch$ };
       }
-      // CASE 2F: no fetched info could be reused -> fetch all nav
-      // Test case: navigating to a completely new content
-      return { content, fetchedContent: content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
 
-    }, { content: undefined, fetchedContent: undefined, l1Fetch$: EMPTY } /* the scan seed */),
+      // CASE 8: no fetched info could be reused -> fetch all nav
+      // Test case: navigating to a completely new content
+      return { content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
+
+    }, { content: undefined } /* the scan seed */),
 
     /**
      * PART 3 - EXECUTE AND COMBINE FETCHES
@@ -128,12 +156,11 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * - visit a chapter with children, visit a skill -> the children of the chapter are not shown anymore
     */
     switchMap(({ content, l1Fetch$, l2Fetch$ }) =>
-      combineLatest([ l1Fetch$, l2Fetch$ ?? of(undefined) ]).pipe(
+      combineLatest([ l1Fetch$.shared, l2Fetch$?.shared ?? of(undefined) ]).pipe(
         map(([ l1FetchState, l2FetchState ]) => {
           if (!l1FetchState.isReady) return l1FetchState; // l1 is fetching or in error -> just show the fetching or error
-          if (!content) return readyState(l1FetchState.data.withNoSelection()); // no selected element -> only l1 shown
-
           let data = l1FetchState.data;
+          if (!content) return readyState(data.withNoSelection()); // no selected element -> only l1 shown
           if (l2FetchState?.isReady) data = data.withChildren(content.route, l2FetchState.data.elements);
           data = data.withUpdatedElement(content.route, el => this.addDetailsToTreeElement(el, content));
           data = data.withSelection(content.route.id);
@@ -157,16 +184,17 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
     mapStateData(navData => {
       if (!navData.selectedElementId) return undefined;
-      const idx = navData.elements.findIndex(e => e.route.id === navData.selectedElementId);
-      if (idx < 0) return undefined;
-
-      const parent = navData.parent;
-      if (parent && navData.pathToElements.length < 1) throw new Error('Unexpected: empty path with a parent');
-      const prev = navData.elements[idx-1];
-      const next = navData.elements[idx+1];
-
+      const l1Idx = navData.elements.findIndex(
+        e => e.route.id === navData.selectedElementId || e.children?.find(c => c.route.id === navData.selectedElementId)
+      );
+      if (l1Idx < 0) return undefined;
+      const inL1 = navData.elements[l1Idx]?.route.id === navData.selectedElementId; // otherwise, in L2
+      const l2Idx = inL1 ? -1 : ensureDefined(navData.elements[l1Idx]?.children).findIndex(e => e.route.id === navData.selectedElementId);
+      const parent = inL1 ? navData.parent : navData.elements[l1Idx];
+      const prev = inL1 ? navData.elements[l1Idx-1] : navData.elements[l1Idx]?.children?.[l2Idx-1];
+      const next = inL1 ? navData.elements[l1Idx+1] : navData.elements[l1Idx]?.children?.[l2Idx+1];
       return {
-        parent: parent && parent.route.id !== this.navigationNeighborsRestrictedToDescendantOfElementId
+        parent: (parent && parent.route.id !== this.navigationNeighborsRestrictedToDescendantOfElementId)
           ? { navigateTo: (): void => parent.navigateTo() }
           : null,
         previous: prev ? { navigateTo: (): void => prev.navigateTo() } : null,
@@ -209,31 +237,24 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   protected abstract fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
-  private fetchChildrenNav(content: RoutedContentInfo): Observable<FetchState<NavTreeData>>|undefined {
+  private fetchChildrenNav(content: RoutedContentInfo): FetchInfo|undefined {
     if (!this.canFetchChildren(content)) return undefined;
-    return this.fetchNavData(content.route).pipe(
-      map(data => new NavTreeData(data.elements, [ ...content.route.path, content.route.id ], data.parent)),
-      mapToFetchState(),
-      shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
-    );
+    const path = [ ...content.route.path, content.route.id ];
+    return fetch(path, this.fetchNavData(content.route).pipe(
+      map(data => new NavTreeData(data.elements, path, data.parent)),
+    ));
   }
 
-  private fetchRootNav(): Observable<FetchState<NavTreeData>> {
-    return this.fetchRootTreeData().pipe(
-      map(elements => new NavTreeData(elements, [])),
-      mapToFetchState(),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
+  private fetchRootNav(): FetchInfo {
+    return fetch([], this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
   }
 
-  private fetchNav(content: ContentT): Observable<FetchState<NavTreeData>> {
+  private fetchNav(content: ContentT): FetchInfo {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
-      return this.fetchNavDataFromChild(parentId, content).pipe(
-        map(data => new NavTreeData(data.elements, route.path, data.parent)),
-        mapToFetchState(),
-        shareReplay({ refCount: true, bufferSize: 1 }),
+      return fetch(route.path,
+        this.fetchNavDataFromChild(parentId, content).pipe(map(data => new NavTreeData(data.elements, route.path, data.parent)))
       );
     } else return this.fetchRootNav();
   }
