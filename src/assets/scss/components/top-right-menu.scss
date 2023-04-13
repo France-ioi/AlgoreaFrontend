@@ -14,9 +14,16 @@
   &.p-menu {
     width: auto;
 
+    .p-menuitem {
+      &:not(:last-child) {
+        border-bottom: toRem(1) solid var(--alg-border-light-color);
+      }
+    }
+
     .p-menuitem-link {
+      margin: var(--alg-space-size-6);
       flex-direction: row-reverse;
-      border-bottom: toRem(1) solid var(--alg-border-light-color);
+      border-radius: toRem(10);
 
       &:active, &:focus {
         outline: none;
@@ -38,7 +45,7 @@
       }
 
       &:not(.p-disabled):hover {
-        background: var(--alg-primary-color);
+        background-color: var(--alg-primary-dark-color);
 
         .p-menuitem-text, .p-menuitem-icon {
           color: white;
