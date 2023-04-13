@@ -1,4 +1,4 @@
-@import 'src/colors.scss';
+@import 'src/variables';
 
 .progress-level-container {
   display: flex;
@@ -35,7 +35,7 @@
 
       &.revert {
         background-color: var(--dark-base-color);
-  
+
         &.active {
           background-color: white;
         }

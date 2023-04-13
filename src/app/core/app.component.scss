@@ -1,4 +1,4 @@
-@import "src/colors.scss";
+@import "../../variables";
 @import "src/geometry.scss";
 
 :host {
@@ -41,7 +41,7 @@ a:hover {
   overflow: hidden;
 
   .left {
-    width: $left-panel-size;
+    width: var(--left-panel-size);
     position: fixed;
     left: 0;
     top: 0;
@@ -62,7 +62,8 @@ a:hover {
   }
 
   .top-bar {
-    position: fixed;
+// Todo: Remove after check
+/*    position: fixed;
     left: $left-panel-size;
     top: 0;
     right: 0;
@@ -71,7 +72,7 @@ a:hover {
     align-items: flex-start;
     border-bottom: 0.1rem solid #e0e1e5;
     background-color: var(--base-bk-color);
-    z-index: 900;
+    z-index: 900;*/
 
     &.animated {
       transition: left 1s;
@@ -90,10 +91,11 @@ a:hover {
   }
 
   .right {
-    margin-left: 34rem;
+    margin-left: var(--left-panel-size);
     padding-top: 3.75rem;
     padding-bottom: 0;
     position: relative;
+
     &.animated {
       transition: margin-left 1s;
       -webkit-transition: margin-left 1s;

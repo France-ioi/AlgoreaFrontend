@@ -1,35 +1,29 @@
 <div class="breadcrumb-container">
-  <ul *ngIf="contentBreadcrumb"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
+  <ul class="breadcrumb-list" *ngIf="contentBreadcrumb"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
 
     <!-- category -->
-    <li class="home"><i class="fa fa-folder"></i></li>
+    <li class="breadcrumb-item home"><i class="ph ph-house-line"></i></li>
     <li
-        [pTooltip]="contentBreadcrumb.category"
-        tooltipPosition="bottom"
+      class="breadcrumb-item"
+      [pTooltip]="contentBreadcrumb.category"
+      tooltipPosition="bottom"
     >
       <span class="label">{{ contentBreadcrumb.category }}</span>
     </li>
 
     <!-- elements -->
     <ng-container *ngFor="let element of contentBreadcrumb.path; index as idx;">
-      <li class="separator" [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx}">
-        <ng-container *ngIf="idx === 0; then arrowBlock else slashBlock">
-        </ng-container>
-        <ng-template #arrowBlock>
-          <i class="fa fa-arrow-right"></i>
-        </ng-template>
-        <ng-template #slashBlock>
-          \
-        </ng-template>
+      <li class="breadcrumb-item separator" [ngClass]="{ 'active': idx === contentBreadcrumb.currentPageIdx }">
+        <i class="ph ph-caret-right separator-icon"></i>
       </li>
       <li
-          [ngClass]="{'active': idx === contentBreadcrumb.currentPageIdx, 'routable': element.navigateTo }"
-          (click)="onElementClick(element)"
-          [pTooltip]="element.title"
-          tooltipPosition="bottom"
+        class="breadcrumb-item"
+        [ngClass]="{ 'active': idx === contentBreadcrumb.currentPageIdx, 'routable': element.navigateTo }"
+        (click)="onElementClick(element)"
+        [pTooltip]="element.title"
+        tooltipPosition="bottom"
       >
-        <span class="label">{{element.title}}</span>
-        <span *ngIf="element.hintNumber" class="attempt-badge">{{element.hintNumber}}</span>
+        <span class="label">{{ element.title }}</span>
       </li>
     </ng-container>
   </ul>

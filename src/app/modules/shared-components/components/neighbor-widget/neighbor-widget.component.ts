@@ -18,9 +18,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
       transition(':enter', [
         style({
           marginRight: '-2.6rem',
+          opacity: 0,
         }),
         animate('.2s .2s ease-in-out', style({
           marginRight: 0,
+          opacity: 1,
         })),
       ]),
     ]),

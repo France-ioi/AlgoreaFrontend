@@ -1,9 +1,9 @@
 <alg-observation-bar *ngIf="!!(watchedGroup$ | async)"></alg-observation-bar>
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
-  <div class="breadcrumb-bar" *ngIf="!fullFrameContent?.active && !scrolled">
+  <ng-container *ngIf="!fullFrameContent?.active && !scrolled">
     <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-  </div>
+  </ng-container>
   <div class="full-frame-content-top-bar" *ngIf="fullFrameContent?.active || scrolled">
     <div class="score-placeholder" *ngIf="currentContent.type === 'item'">
       <alg-score-ring
@@ -11,7 +11,7 @@
         [bestScore]="$any(currentContent).details.bestScore"
         [currentScore]="$any(currentContent).details.currentScore"
         [isValidated]="$any(currentContent).details.validated"
-        [diameter]="34"
+        [diameter]="32"
       ></alg-score-ring>
     </div>
     <div class="right-pane-title">
@@ -19,20 +19,21 @@
     </div>
     <button
       *ngIf="discussionState$ | async as discussion"
-      class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size large-icon-size"
+      class="alg-button-icon no-bg primary-color margin-left"
       [ngClass]="{ 'active': discussion.visible, 'margin-right': !(navigationNeighbors$ | async) }"
       pButton
       type="button"
-      icon="pi pi-comments"
+      icon="ph ph-chat-circle-dots"
       (click)="toggleThreadVisibility(!discussion.visible)"
     ></button>
     <alg-watch-button
+      class="margin-left"
       [ngClass]="{ 'margin-right': !(navigationNeighbors$ | async) }"
       *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
     ></alg-watch-button>
     <alg-neighbor-widget
-      class="neighbor-widget"
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
+      class="margin-left"
       [navigationMode]="{
         parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
         left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,

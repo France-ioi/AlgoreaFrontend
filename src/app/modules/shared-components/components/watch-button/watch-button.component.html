@@ -1,10 +1,10 @@
 <ng-container *ngIf="currentGroupContent$ | async as currentGroupContent">
   <button
-    class="p-button-raised p-button-rounded alg-round-button-icon top-bar-size"
+    class="alg-button-icon no-bg primary-color"
     [ngClass]="{ 'active-secondary': currentGroupContent.isBeingWatched }"
     pButton
     type="button"
-    icon="fa fa-eye"
+    icon="ph ph-eye"
     (click)="toggleWatchingMode($event, currentGroupContent)"
   ></button>
 

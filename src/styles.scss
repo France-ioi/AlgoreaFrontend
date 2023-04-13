@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'src/colors.scss';
-@import 'src/geometry.scss';
+@import 'src/variables';
+@import 'src/geometry';
 @import 'assets/scss/helpers';
 @import 'assets/scss/components/page-header';
 @import 'assets/scss/components/table';
@@ -31,22 +31,25 @@
 @import 'assets/scss/components/tooltip';
 @import 'assets/scss/components/path-suggestion-overlay';
 
+// New Design
+@import 'assets/fonts/roboto/stylesheet';
+@import 'assets/scss/text-colors';
+
 /* Custom themes */
 @import 'assets/scss/themes/coursera-pt';
 
 html {
   height: 100%;
-  font-size: 62.5%;
+  font-size: 16px;
   overflow-y: scroll;
 }
 
 body {
-  font-size: 1.2rem;
   margin: 0;
   background-color: var(--base-bk-color);
   min-height: 100%;
 
-  --font-family: "titillium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+  --font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
@@ -173,7 +176,7 @@ body .p-component {
   }
 }
 
-  .top-bar-overlay-panel {
+.top-bar-overlay-panel {
     width: 450px;
 
     @media screen and (max-width: 479px) {
@@ -181,7 +184,7 @@ body .p-component {
     }
 }
 
-@media screen and (max-width: 800px) {
+/*@media screen and (max-width: 800px) {
   html { font-size: 55.66%; }
 }
 @media screen and (min-width: 1200px) {
@@ -216,4 +219,4 @@ body .p-component {
 }
 @media screen and (min-width: 4000px) {
   html { font-size: 153.32%; }
-}
+}*/

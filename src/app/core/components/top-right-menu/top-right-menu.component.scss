@@ -1,1 +1,11 @@
+@import 'src/assets/scss/functions';
 
+.user-container {
+  display: flex;
+  align-items: center;
+}
+
+.user-login {
+  font-size: toRem(12);
+  margin-right: toRem(10);
+}

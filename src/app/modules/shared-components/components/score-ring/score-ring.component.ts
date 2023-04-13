@@ -38,7 +38,7 @@ export class ScoreRingComponent implements OnChanges {
   iconFill = 'white';
 
   textFill = ScoreRingColor.DefaultText;
-  fontSize = 1;
+  fontSize = 12;
 
   private pathFromScore(score: number): string {
     if (score === 0) {
@@ -95,7 +95,5 @@ export class ScoreRingComponent implements OnChanges {
     } else {
       this.icon = undefined;
     }
-
-    this.fontSize = (2 * this.diameter) / 56;
   }
 }
