@@ -5,6 +5,14 @@
     <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
   </ng-container>
   <div class="full-frame-content-top-bar" *ngIf="fullFrameContent?.active || scrolled">
+    <button
+      class="alg-button-icon no-bg primary-color left-menu margin-right"
+      pButton
+      type="button"
+      icon="ph ph-list"
+      (click)="unsetFullFrameContent()"
+      *ngIf="fullFrameContent?.active"
+    ></button>
     <div class="score-placeholder" *ngIf="currentContent.type === 'item'">
       <alg-score-ring
         *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
@@ -20,7 +28,7 @@
     <button
       *ngIf="discussionState$ | async as discussion"
       class="alg-button-icon no-bg primary-color margin-left"
-      [ngClass]="{ 'active': discussion.visible, 'margin-right': !(navigationNeighbors$ | async) }"
+      [ngClass]="{ 'active': discussion.visible }"
       pButton
       type="button"
       icon="ph ph-chat-circle-dots"
@@ -28,7 +36,6 @@
     ></button>
     <alg-watch-button
       class="margin-left"
-      [ngClass]="{ 'margin-right': !(navigationNeighbors$ | async) }"
       *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
     ></alg-watch-button>
     <alg-neighbor-widget

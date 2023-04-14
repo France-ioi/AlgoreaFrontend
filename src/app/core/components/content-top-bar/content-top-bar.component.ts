@@ -5,7 +5,7 @@ import { CurrentContentService } from '../../../shared/services/current-content.
 import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
-import { FullFrameContent } from 'src/app/shared/services/layout.service';
+import { FullFrameContent, LayoutService } from 'src/app/shared/services/layout.service';
 import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
@@ -50,11 +50,16 @@ export class ContentTopBarComponent {
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,
-    private discussionService: DiscussionService
+    private discussionService: DiscussionService,
+    private layoutService: LayoutService,
   ) {}
 
   toggleThreadVisibility(visible: boolean): void {
     this.discussionService.toggleVisibility(visible);
+  }
+
+  unsetFullFrameContent(): void {
+    this.layoutService.configure({ fullFrameActive: false });
   }
 
 }
