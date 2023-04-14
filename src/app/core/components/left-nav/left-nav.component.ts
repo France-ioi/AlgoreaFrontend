@@ -65,8 +65,8 @@ export class LeftNavComponent {
     private groupNavTreeService: GroupNavTreeService,
   ) { }
 
-  onSelectionChangedByIdx(e: { index: number }): void {
-    this.manualTabChange.next(e.index);
+  onSelectionChangedByIdx(e: number): void {
+    this.manualTabChange.next(e);
   }
 
   retryError(tabIndex: number): void {
