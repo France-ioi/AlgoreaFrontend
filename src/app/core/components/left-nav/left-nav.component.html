@@ -41,17 +41,19 @@
     </div>
   </ng-container>
 
+  <hr class="divider">
+
   <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
     <div class="spinner" *ngIf="state.isFetching">
-      <alg-loading size="medium"></alg-loading>
+      <alg-loading></alg-loading>
     </div>
 
     <alg-error
       *ngIf="state.isError"
-      class="light"
       i18n-message message="Unable to load the list."
+      icon="ph-duotone ph-traffic-sign"
       [showRefreshButton]="true"
-      refreshButtonType="retry"
+      buttonCaption="Retry"
       (refresh)="retryError(activeTab.index)"
     ></alg-error>
 

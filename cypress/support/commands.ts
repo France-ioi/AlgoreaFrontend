@@ -1,5 +1,5 @@
 Cypress.Commands.add('displayFirstActivity', () => {
-  cy.get('.p-treenode-content').first().should('be.visible').should('have.text', ' Parcours officiels ');
+  cy.get('.p-treenode-content').first().should('be.visible').should('have.text', 'Parcours officiels');
 });
 
 Cypress.Commands.add('navigateTo', (relativeUrl: string) => {

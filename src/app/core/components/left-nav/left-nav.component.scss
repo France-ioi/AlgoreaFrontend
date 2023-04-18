@@ -82,3 +82,15 @@
   font-size: toRem(16);
   font-weight: 400;
 }
+
+.divider {
+  margin: 0 var(--alg-space-size-5) var(--alg-space-size-6) var(--alg-space-size-5);
+  padding: 0;
+  height: toRem(1);
+  border: none;
+  background: rgb(255,255,255);
+  background: -moz-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
+}
