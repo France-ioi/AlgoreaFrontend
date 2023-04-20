@@ -163,9 +163,12 @@ export class ItemDataSource implements OnDestroy {
         count: 1,
         delay: (err: unknown) => {
           if (!errorIsHTTPForbidden(err)) throw err;
-          return this.resultActionsService.startWithoutAttempt(itemRoute.path).pipe(
+          const path = itemRoute.attemptId !== undefined ? [ ...itemRoute.path, itemRoute.id ] : itemRoute.path;
+          return this.resultActionsService.startWithoutAttempt(path).pipe(
             tap(() => this.resultPathStarted.next()), // side effect: inform this operation has been done
-            catchError(() => of(err))
+            catchError(() => {
+              throw err; // if `startWithoutAttempt` fails as well, do not retry and fail with the initial breadcrumb error
+            })
           );
         }
       })
