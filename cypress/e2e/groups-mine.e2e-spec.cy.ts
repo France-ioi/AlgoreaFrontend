@@ -4,6 +4,6 @@ describe('groups mine page', () => {
   });
 
   it('should display default activities in the left nav', () => {
-    cy.get('.left .tab-left-nav [role=tab][aria-selected=true]').should('be.visible').should('have.text', 'Groups');
+    cy.get('[data-cy="main-menu-group-btn"]').should('be.visible').should('have.text', 'Groups');
   });
 });

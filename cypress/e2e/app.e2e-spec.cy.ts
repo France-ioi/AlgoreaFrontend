@@ -13,7 +13,7 @@ describe('Algorea Frontend', () => {
     });
 
     it('should have a working collapse button', () => {
-      cy.get('.nav-collapse').should('be.visible').click();
+      cy.get('[data-cy="left-menu-btn"]').should('be.visible').click();
     });
   });
 
