@@ -4,6 +4,10 @@
   border: none;
   cursor: pointer;
 
+  .p-button-icon {
+    font-size: toRem(18);
+  }
+
   &.base-color {
     i {
       color: var(--base-color);
