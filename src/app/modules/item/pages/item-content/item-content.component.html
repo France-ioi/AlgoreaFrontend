@@ -1,10 +1,6 @@
 <ng-container *ngIf="itemData">
 
-  <alg-section
-    icon="fa fa-book"
-    i18n-label label="Description"
-    *ngIf="itemData.item.type !== 'Task' && itemData.item.string.description"
-  >
+  <ng-container *ngIf="itemData.item.type !== 'Task' && itemData.item.string.description">
     <ng-container
       *algHasHTML="itemData.item.string.description; else textContent"
     >
@@ -14,9 +10,9 @@
       ></div>
     </ng-container>
     <ng-template #textContent>
-      <p>{{ itemData.item.string.description }}</p>
+      <p class="description alg-text-body-1">{{ itemData.item.string.description }}</p>
     </ng-template>
-  </alg-section>
+  </ng-container>
 
   <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && itemData.currentResult">
 
