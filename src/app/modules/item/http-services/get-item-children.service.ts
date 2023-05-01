@@ -32,10 +32,17 @@ const itemChildDecoder = pipe(
   D.intersect(
     D.struct({
       bestScore: D.number,
-      string: D.struct({
-        title: D.nullable(D.string),
-        imageUrl: D.nullable(D.string),
-      }),
+      string: pipe(
+        D.struct({
+          title: D.nullable(D.string),
+          imageUrl: D.nullable(D.string),
+        }),
+        D.intersect(
+          D.partial({
+            subtitle: D.nullable(D.string),
+          }),
+        ),
+      ),
       results: D.array(D.struct({
         attemptId: D.string,
         latestActivityAt: dateDecoder,
