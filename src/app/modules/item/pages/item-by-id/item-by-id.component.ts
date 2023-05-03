@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterLinkActive, UrlTree } from '@angular/router';
 import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -23,7 +23,7 @@ import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { isATask, isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -86,6 +86,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
   @ViewChild('contentContainer') contentContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild('historyTab') historyTab?: RouterLinkActive;
+  @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;
+  @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
   private destroyed$ = new Subject<void>();
 
@@ -145,6 +148,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   readonly fullFrame$ = this.layoutService.fullFrame$;
   readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
+  readonly isWatching$ = this.groupWatchingService.isWatching$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
     switchMap(answerErr => this.itemRouteState$.pipe(
@@ -191,6 +195,16 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
   threadOpened$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
+
+  selectors$ = combineLatest([ this.state$.pipe(readyData()), this.groupWatchingService.watchedGroup$ ]).pipe(
+    map(([ itemData, watchedGroup ]) => {
+      if (!watchedGroup || watchedGroup.route.isUser) {
+        return isATask(itemData.item) ? 'none' : 'withUserProgress';
+      } else {
+        return 'withGroupProgress';
+      }
+    }),
+  );
 
   contentContainerTop = 0;
 
