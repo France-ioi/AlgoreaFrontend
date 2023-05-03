@@ -10,11 +10,11 @@
       [routerLink]="{
         id: item.id,
         contentType: item | contentTypeFromItem,
-        path: itemData.route.path.concat([ itemData.item.id ])
+        path: routeParams.path
       } | withAttempt: (item.result && item.result.attemptId ? {
         attemptId : item.result.attemptId
-      } : { parentAttemptId: attemptId }) | url"
-      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
+      } : { parentAttemptId: routeParams.parentAttemptId }) | url"
+      *ngIf="routeParams"
     >
       <div class="left-container">
         <div class="item-number">

@@ -10,23 +10,29 @@
   ></alg-error>
 
   <ng-container *ngIf="state.isReady && state.data as data">
-    <alg-section i18n-label label="Sub-skills" icon="fa fa-graduation-cap">
-      <alg-item-children-list
-        class="for-section"
-        type="skill"
-        i18n-emptyMessage emptyMessage="This skill does not have subskills."
-        [children]="data.skills"
-        [itemData]="itemData"
-      ></alg-item-children-list>
-    </alg-section>
+    <div class="section-title alg-h2" i18n>
+      Sub-skills
+    </div>
 
-    <alg-section i18n-label label="Activities to learn or reinforce this skill" icon="fa fa-graduation-cap">
-      <alg-item-children-list
-        class="for-section"
-        i18n-emptyMessage emptyMessage="This skill does not have related activities."
-        [children]="data.activities"
-        [itemData]="itemData"
-      ></alg-item-children-list>
-    </alg-section>
+    <alg-item-children-list
+      class="no-padding"
+      type="skill"
+      i18n-emptyMessage emptyMessage="This skill does not have subskills."
+      [children]="data.skills"
+      [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
+    ></alg-item-children-list>
+
+    <div class="section-title alg-h2" i18n>
+      Activities to learn or reinforce this skill
+    </div>
+
+    <alg-item-children-list
+      class="no-padding"
+      i18n-emptyMessage emptyMessage="This skill does not have related activities."
+      [children]="data.activities"
+      [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
+    ></alg-item-children-list>
   </ng-container>
 </ng-container>
