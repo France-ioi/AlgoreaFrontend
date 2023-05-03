@@ -8,6 +8,7 @@
 
 .container {
   width: 100%;
+  min-height: 100vh;
   position: relative;
   overflow: hidden;
 }
@@ -54,8 +55,12 @@
   padding-top: 3.75rem;
   margin-left: var(--left-panel-size);
   position: relative;
-  border-radius: 0 0 0 toRem(16);
+  min-height: 100vh;
+  border-radius: toRem(16) 0 0 toRem(16);
   background-color: #fff;
+  box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
 
   &.animated {
     transition: margin-left 1s;
@@ -66,20 +71,14 @@
 
   &.with-mode-bar {
     padding-top: 7.5rem;
-
-    .main-content {
-      &.type-2 {
-        margin-top: -11.6667rem;
-      }
-    }
   }
 
   &.collapsed {
     margin-left: 0;
+    border-radius: 0;
 
     .main-content {
       margin-top: 1rem;
-      padding-left: 0 !important;
     }
   }
 }
