@@ -221,7 +221,10 @@
 
   </ng-container>
 
-  <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <div class="loading-section" *ngIf="state.isFetching" [algFullHeightContent]="true">
+    <alg-loading></alg-loading>
+  </div>
+
 
   <ng-container *ngIf="state.isError">
     <p class="alg-error-message" *ngIf="state.error && ($any(state.error).status === 403 || $any(state.error).status === 404); else unknownError" i18n>
