@@ -1,51 +1,5 @@
 @import 'src/assets/scss/functions';
 
-:host {
-  &.light {
-    .message {
-      color: var(--base-bk-color);
-    }
-
-    .retry {
-      color: var(--base-bk-color);
-    }
-
-    .icon {
-      color: var(--base-bk-color);
-    }
-  }
-
-  &.dark {
-    .message {
-      color: var(--base-text-color);
-    }
-
-    .retry {
-      color: var(--base-text-color);
-    }
-
-    .icon {
-      color: var(--base-text-color);
-    }
-  }
-
-  &.warning {
-    .message {
-      color: var(--notify-error-color);
-    }
-
-    .icon {
-      color: var(--notify-error-color);
-    }
-  }
-
-  &.small {
-    .message {
-      font-size: 1.2rem;
-    }
-  }
-}
-
 .wrapper {
   margin: 0;
   padding: 1rem;
@@ -74,6 +28,6 @@
 }
 
 .refresh-button {
-  margin-top: toRem(12);
+  margin-top: toRem(17);
   font-size: toRem(16);
 }
