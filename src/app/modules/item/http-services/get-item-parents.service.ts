@@ -12,6 +12,7 @@ const itemParentDecoder = D.struct({
   bestScore: D.number,
   string: D.struct({
     title: D.nullable(D.string),
+    imageUrl: D.nullable(D.string),
   }),
   category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
   type: D.literal('Chapter','Task','Skill'),

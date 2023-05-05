@@ -8,11 +8,16 @@
       <ng-content *ngIf="!message"></ng-content>
     </span>
   </div>
-  <p-button
-    *ngIf="showRefreshButton"
-    class="refresh-button"
-    i18n-label [label]="buttonCaption"
+  <button
+    class="alg-button primary refresh-button"
+    pButton
     (click)="onRefresh()"
-    styleClass="p-button-sm"
-  ></p-button>
+    *ngIf="showRefreshButton && !link"
+  >{{ buttonCaption }}</button>
+  <a
+    class="alg-button primary refresh-button"
+    pButton
+    [routerLink]="link"
+    *ngIf="link"
+  >{{ buttonCaption }}</a>
 </div>

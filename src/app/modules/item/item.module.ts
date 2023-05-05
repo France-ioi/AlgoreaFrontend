@@ -8,7 +8,6 @@ import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ItemContentComponent } from './pages/item-content/item-content.component';
 import { ChapterChildrenComponent } from './components/chapter-children/chapter-children.component';
-import { ItemProgressComponent } from './pages/item-progress/item-progress.component';
 import { ItemLogViewComponent } from './pages/item-log-view/item-log-view.component';
 import { SubSkillsComponent } from './components/sub-skills/sub-skills.component';
 import { ParentSkillsComponent } from './components/parent-skills/parent-skills.component';
@@ -60,13 +59,11 @@ import { ItemChildrenListComponent } from './components/item-children-list/item-
     ItemHeaderComponent,
     ItemContentComponent,
     ChapterChildrenComponent,
-    ItemProgressComponent,
     ItemLogViewComponent,
     SubSkillsComponent,
     ParentSkillsComponent,
     ItemEditContentComponent,
     ItemChildrenEditComponent,
-    ItemProgressComponent,
     ChapterGroupProgressComponent,
     GroupProgressGridComponent,
     CompositionFilterComponent,

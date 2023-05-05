@@ -10,8 +10,7 @@ import {
   styleUrls: [ './skill-progress.component.scss' ],
 })
 export class SkillProgressComponent implements OnChanges {
-  /**@deprecated**/
-  @Input() type?: string;
+  @Input() type: 'thin' | 'bold' | 'thick-horizontal' = 'thin';
   @Input() currentScore = 0;
   @Input() bestScore = 0;
 
