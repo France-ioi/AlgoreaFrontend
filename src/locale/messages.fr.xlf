@@ -86,16 +86,22 @@
           <context context-type="sourcefile">src/app/core/components/observation-bar/observation-bar.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
+      </trans-unit><trans-unit id="4688500034796204855" datatype="html">
+        <source>Oups… We didn’t find that page</source><target state="new">Oups… We didn’t find that page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
       </trans-unit><trans-unit id="6592131321269769114" datatype="html">
         <source>This page does not exist!</source><target state="translated">Cette page n'existe pas!</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
         <source>Go back to the </source><target state="translated">Retour à la </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">232</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.html</context><context context-type="linenumber">232</context></context-group></trans-unit><trans-unit id="4465003478966998593" datatype="html">
         <source>home page</source><target state="translated">accueil</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="9167217071684260011" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pages/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="9167217071684260011" datatype="html">
         <source>Create a new group</source><target state="translated">Créer un nouveau groupe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/add-group/add-group.component.html</context>

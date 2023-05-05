@@ -26,4 +26,18 @@
       font-size: toRem(16);
     }
   }
+
+  &.primary {
+    &.p-button {
+      padding: 0 toRem(18);
+      flex-direction: row-reverse;
+      color: var(--alg-light-bg-color);
+      font-size: toRem(16);
+      text-decoration: none;
+      border-radius: toRem(20);
+      border-color: var(--alg-light-color);
+      background: var(--alg-primary-color);
+      height: toRem(40);
+    }
+  }
 }
