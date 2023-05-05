@@ -19,7 +19,9 @@
         (changed)="reloadItem()"
       ></alg-item-permissions>
 
-      <nav class="alg-nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive">
+      <nav
+        class="alg-nav-tab"
+        [style.display]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive ? 'none' : 'flex'">
         <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
