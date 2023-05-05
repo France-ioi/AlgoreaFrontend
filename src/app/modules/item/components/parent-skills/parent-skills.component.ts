@@ -19,7 +19,15 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
   readonly state$ = this.params$.pipe(
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) => this.getItemParentsService.get(id, attemptId)),
-    map(parents => parents.map(parent => ({ ...parent, isLocked: !canCurrentUserViewContent(parent) }))),
+    map(parents => parents.map(parent => ({
+      ...parent,
+      isLocked: !canCurrentUserViewContent(parent),
+      result: parent.result === null ? undefined : {
+        attemptId: parent.result.attemptId,
+        validated: parent.result.validated,
+        score: parent.result.scoreComputed,
+      },
+    }))),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 

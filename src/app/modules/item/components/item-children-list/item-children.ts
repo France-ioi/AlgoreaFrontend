@@ -4,6 +4,7 @@ export interface ItemChildWithAdditions {
   id: string,
   string: {
     title: string | null,
+    subtitle?: string | null,
     imageUrl: string | null,
   },
   category: BaseItemChildCategory,
