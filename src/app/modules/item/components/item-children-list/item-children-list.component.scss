@@ -3,6 +3,10 @@
 :host {
   display: block;
   padding: var(--alg-space-size-4) 0;
+
+  &.no-padding {
+    padding: 0;
+  }
 }
 
 .data-list-container {

@@ -9,3 +9,9 @@
   margin-top: toRem(30);
   margin-bottom: 0;
 }
+
+.loading-section {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
