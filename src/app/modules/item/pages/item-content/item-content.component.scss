@@ -1,4 +1,4 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
 .validation-text {
   display: flex;
@@ -30,4 +30,8 @@
 
 .message-info {
   padding: 1rem;
+}
+
+.description, .html-container {
+  margin: toRem(30) 0 0 0;
 }
