@@ -1,42 +1,9 @@
-<div class="task-header-container" *ngIf="itemData">
-  <div class="task-header">
-    <div class="task-score-ring" *ngIf="itemData.item.type !== 'Skill'">
-      <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && (!itemData.item.watchedGroup || itemData.item.watchedGroup.averageScore !== undefined); else noscore">
-        <alg-score-ring
-          *ngIf="itemData.currentResult"
-          [bestScore]="itemData.item.watchedGroup && itemData.item.watchedGroup.averageScore !== undefined ? itemData.item.watchedGroup!.averageScore! : itemData.item.bestScore"
-          [currentScore]="itemData.item.watchedGroup && itemData.item.watchedGroup.averageScore !== undefined ? itemData.item.watchedGroup!.averageScore! : itemData.currentResult.score"
-          [isValidated]="itemData.item.watchedGroup && itemData.item.watchedGroup.averageScore !== undefined ? itemData.item.watchedGroup!.averageScore! === 100 : itemData.currentResult.validated"
-          [diameter]="70"
-        ></alg-score-ring>
-      </ng-container>
-      <ng-template #noscore>
-        <span class="no-score-icon">
-          <i class="fa fa-eye-slash" *ngIf="itemData.item.watchedGroup && itemData.item.watchedGroup.averageScore === undefined; else lock"></i>
-          <ng-template #lock>
-            <i class="fa fa-lock"></i>
-          </ng-template>
-        </span>
-      </ng-template>
+<div class="item-header-container" *ngIf="itemData">
+  <div class="item-header">
+    <div class="item-title-container">
+      <p class="item-title alg-h1" data-cy="item-title">{{ itemData.item.string.title }}</p>
+      <span class="item-subtitle" *ngIf="itemData.item.string.subtitle">{{ itemData.item.string.subtitle }}</span>
     </div>
-    <alg-skill-progress
-      *ngIf="itemData.item.type === 'Skill' && itemData.currentResult"
-      [bestScore]="itemData.item.bestScore"
-      [currentScore]="itemData.currentResult.score"
-    ></alg-skill-progress>
-    <div class="task-title">
-      <p>{{itemData.item.string.title}}</p>
-      <span *ngIf="itemData.item.string.subtitle">{{itemData.item.string.subtitle}}</span>
-    </div>
-    <button
-      *ngIf="discussionState$ | async as discussion"
-      class="p-button-raised p-button-rounded alg-round-button-icon large-icon-size"
-      [ngClass]="{'active': discussion.visible }"
-      pButton
-      type="button"
-      icon="pi pi-comments"
-      (click)="toggleThreadVisibility(!discussion.visible)"
-    ></button>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
       [allowFullScreen]="false"
@@ -49,5 +16,14 @@
       (left)="navigationNeighbors?.data?.previous?.navigateTo()"
       (right)="navigationNeighbors?.data?.next?.navigateTo()"
     ></alg-page-navigator>
+    <button
+      *ngIf="discussionState$ | async as discussion"
+      class="alg-button-icon no-bg primary-color margin-left"
+      [ngClass]="{'active': discussion.visible }"
+      pButton
+      type="button"
+      icon="ph-duotone ph-chats-circle"
+      (click)="toggleThreadVisibility(!discussion.visible)"
+    ></button>
   </div>
 </div>
