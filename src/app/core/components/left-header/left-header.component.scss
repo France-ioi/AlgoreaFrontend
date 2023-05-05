@@ -1,51 +1,16 @@
-@import "../../../../variables";
+@import 'src/assets/scss/functions';
 
-$nav-control-border: #5c5c5c;
-
-.nav-header {
+.container {
   position: relative;
+  height: toRem(57);
+  padding: 0 var(--alg-space-size-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.nav-control {
-  color: white;
-  height: 3.75rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  border-bottom: 0.1rem solid $nav-control-border;
-  position: relative;
-  text-align: center;
-  display: flex;
-  align-items: flex-start;
-
-  &.alt {
-    background-color: var(--nav-bk-color);
-  }
-
-  span {
-    display: block;
-    height: 3.75rem;
-    line-height: 3.75rem;
-  }
-
-  .nav-collapse {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    > i {
-      font-size: 2rem;
-    }
-  }
-
-  .platform-info {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .platform-name {
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-  }
+.platform-name {
+  color: var(--alg-primary-color);
+  text-transform: uppercase;
+  font-size: toRem(16);
 }

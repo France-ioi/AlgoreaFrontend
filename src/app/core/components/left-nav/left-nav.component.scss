@@ -1,7 +1,4 @@
-@import '../../../../variables';
-@import "src/geometry";
-
-$border-radius: .5rem;
+@import 'src/assets/scss/functions';
 
 :host {
   display: block;
@@ -20,7 +17,7 @@ $border-radius: .5rem;
   justify-content: center;
   color: var(--dark-secondary-color);
   background-color: var(--section-warning-color);
-  border-radius: $border-radius;
+  border-radius: var(--border-radius);
   margin: 1rem;
 
   .content {
@@ -28,5 +25,60 @@ $border-radius: .5rem;
     align-items: center;
     padding: .5rem 1rem;
   }
+}
 
+.tab-view-container {
+  margin: toRem(25) 0 toRem(42) 0;
+  padding: 0 var(--alg-space-size-3);
+}
+
+.main-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-menu-button {
+  margin: 0 var(--alg-space-size-6);
+  padding: 0 toRem(12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  &.active {
+    .main-menu-icon-wrapper {
+      background-color: var(--alg-white-color);
+    }
+
+    .main-menu-icon {
+      color: var(--alg-primary-color);
+    }
+  }
+}
+
+.main-menu-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: toRem(48);
+  height: toRem(48);
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.main-menu-icon {
+  color: var(--alg-secondary-color);
+  font-size: toRem(24);
+}
+
+.main-menu-title {
+  margin-top: var(--alg-space-size-6);
+  color: var(--alg-secondary-color);
+  font-size: toRem(16);
+  font-weight: 400;
 }

@@ -1,44 +1,47 @@
 <ng-container *ngIf="activeTab$ | async as activeTab;">
-
   <ng-container *ngIf="currentUser$ | async as currentUser">
+    <div class="tab-view-container">
+      <div class="main-menu" *ngIf="!skillsDisabled || activeTab.index === 2 || !currentUser.tempUser">
+        <button
+          class="main-menu-button active"
+          [ngClass]="{ 'active': activeTab.index === 0 }"
+          (click)="onSelectionChangedByIdx(0)"
+        >
+          <div class="main-menu-icon-wrapper">
+            <i class="ph ph-presentation main-menu-icon"></i>
+          </div>
+          <span class="main-menu-title" i18n="|Tab name">Content</span>
+        </button>
 
-    <p-tabView
-      styleClass="dark tab-left-nav"
-      (onChange)="onSelectionChangedByIdx($event)"
-      [activeIndex]="activeTab.index"
-      *ngIf="!skillsDisabled || activeTab.index === 2 || !currentUser.tempUser"
-    >
+        <button
+          class="main-menu-button"
+          [ngClass]="{ 'active': activeTab.index === 1 }"
+          [hidden]="skillsDisabled"
+          (click)="onSelectionChangedByIdx(1)"
+        >
+          <div class="main-menu-icon-wrapper">
+            <i class="ph ph-graduation-cap main-menu-icon"></i>
+          </div>
+          <span class="main-menu-title" i18n="|Tab name">Skills</span>
+        </button>
 
-      <p-tabPanel>
-        <ng-template pTemplate="header" tabindex="5">
-          <span class="indicator dark"></span>
-          <i class="fa fa-hand-paper"></i>
-          <span class="p-tabview-title" i18n="|Tab name">Activities</span>
-        </ng-template>
-      </p-tabPanel>
-
-      <p-tabPanel [headerStyleClass]="skillsDisabled ? 'hidden' : ''">
-        <ng-template pTemplate="header" tabindex="6">
-          <span class="indicator dark"></span>
-          <i class="fa fa-graduation-cap"></i>
-          <span class="p-tabview-title" i18n="|Tab name">Skills</span>
-        </ng-template>
-      </p-tabPanel>
-
-      <p-tabPanel *ngIf="activeTab.index === 2 || !currentUser.tempUser">
-        <ng-template pTemplate="header" tabindex="7">
-          <span class="indicator dark"></span>
-          <i class="fa fa-users"></i>
-          <span class="p-tabview-title" i18n="|Tab name">Groups</span>
-        </ng-template>
-      </p-tabPanel>
-
-    </p-tabView>
-
+        <button
+          class="main-menu-button"
+          [ngClass]="{ 'active': activeTab.index === 2 }"
+          data-cy="main-menu-group-btn"
+          (click)="onSelectionChangedByIdx(2)"
+          *ngIf="activeTab.index === 2 || !currentUser.tempUser"
+        >
+          <div class="main-menu-icon-wrapper">
+            <i class="ph ph-users main-menu-icon"></i>
+          </div>
+          <span class="main-menu-title" i18n="|Tab name">Groups</span>
+        </button>
+      </div>
+    </div>
   </ng-container>
 
   <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
-
     <div class="spinner" *ngIf="state.isFetching">
       <alg-loading size="medium"></alg-loading>
     </div>
@@ -63,7 +66,5 @@
       [data]="state.data"
       [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
     ></alg-left-nav-tree>
-
   </ng-container>
-
 </ng-container>

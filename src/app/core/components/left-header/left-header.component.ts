@@ -12,7 +12,6 @@ export class LeftHeaderComponent {
 
   @Input() compactMode = false;
 
-  showHeaders = true;
   title = this.titleService.getTitle();
 
   constructor(
@@ -25,16 +24,8 @@ export class LeftHeaderComponent {
     this.layoutService.configure({ fullFrameActive: true });
   }
 
-  unsetFullFrameContent(): void {
-    this.layoutService.configure({ fullFrameActive: false });
-  }
-
   login(): void {
     this.authService.startAuthLogin();
-  }
-
-  logout(): void {
-    this.authService.logoutAuthUser();
   }
 
 }

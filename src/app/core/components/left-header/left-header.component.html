@@ -1,16 +1,11 @@
-<div class="nav-header" *ngIf="!compactMode">
-  <div class="nav-control">
-    <span class="platform-info">
-      <span class="platform-name">{{ title }}</span>
-    </span>
-    <span class="nav-collapse" (click)="setFullFrameContent()" tabindex="0">
-      <i class="fas fa-chevron-circle-left"></i>
-    </span>
-  </div>
-</div>
-
-<div class="nav-control alt" *ngIf="compactMode">
-  <span class="nav-collapse" (click)="unsetFullFrameContent()" tabindex="0">
-    <i class="fas fa-chevron-circle-right"></i>
-  </span>
+<div class="container" *ngIf="!compactMode">
+  <span class="platform-name">{{ title }}</span>
+  <button
+    class="alg-button-icon no-bg primary-color left-menu"
+    pButton
+    type="button"
+    icon="ph ph-list"
+    data-cy="left-menu-btn"
+    (click)="setFullFrameContent()"
+  ></button>
 </div>
