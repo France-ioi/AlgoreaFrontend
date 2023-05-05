@@ -1,41 +1,30 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  padding: var(--alg-space-size-4) 0;
+}
 
 .spinner {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
 }
 
-.error {
-  margin: 0;
-  padding: 1rem;
-  color: var(--base-color);
-  font-size: 1.6rem;
-  text-align: center;
+.refresh-button {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: toRem(13);
 }
 
 .score-ring {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: .4rem;
 }
 
-tr {
-  &:first-child {
-    td {
-      background-color: #f6f6f6;
-    }
-  }
-}
-
-.title {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.load-answer-button {
-  margin-left: 1rem;
+.item-title-link {
+  display: inline-block;
+  margin-top: toRem(5);
 }

@@ -10,15 +10,12 @@
 }
 
 .alg-link {
-  font-family: var(--font-family);
+  color: var(--alg-secondary-color);
   text-decoration: none;
 
-  color: var(--base-text-color);
-
-  cursor: pointer;
-
-  &:hover {
-    color: var(--base-color);
+  &:not(.disabled) {
+    cursor: pointer;
+    color: var(--alg-primary-color);
   }
 
   &.disabled {
@@ -27,24 +24,6 @@
 
     &:hover {
       color: initial;
-    }
-  }
-
-  &.base-color {
-    color: var(--base-color);
-  }
-
-  &.white-color {
-    color: #fff;
-  }
-
-  &.underline {
-    text-decoration: underline;
-  }
-
-  &.hover-underline {
-    &:hover {
-      text-decoration: underline;
     }
   }
 
@@ -75,6 +54,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text-black {
+  color: var(--alg-light-text-color);
+}
+
+.font-bold {
+  font-weight: 700;
 }
 
 .alg-error-text {

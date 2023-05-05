@@ -10,9 +10,14 @@
     (refresh)="refresh()"
   ></alg-error>
 
-  <div *ngIf="state.data">
+  <ng-container *ngIf="state.data">
+    <div class="refresh-button">
+      <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+        Refresh
+      </button>
+    </div>
     <p-table
-      class="alg-table chapter-user-progress"
+      class="alg-table"
       [columns]="columns"
       [value]="state.data"
       [loading]="state.isFetching"
@@ -21,55 +26,42 @@
       *ngrxLet="watchedGroup$; let watchedGroup"
     >
       <ng-template pTemplate="header" let-rowData let-columns>
-        <tr>
-          <th [colSpan]="columns.length">
-            <div class="header-container header-refresh">
-              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
-            </div>
-          </th>
-        </tr>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
             <th>
-              <div class="header-container">
-                {{ col.header }}
-              </div>
+              {{ col.header }}
             </th>
           </ng-container>
         </tr>
       </ng-template>
 
       <ng-template
-          pTemplate="body"
-          let-rowData
-          let-columns="columns"
+        pTemplate="body"
+        let-rowData
+        let-columns="columns"
       >
         <tr>
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'title'">
-                <div class="title" *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
-                  <a
-                    class="alg-link"
-                    [ngClass]="{'disabled': rowData.id === itemData.item.id}"
-                    [routerLink]="{
-                      id: rowData.id,
-                      contentType: rowData | contentTypeFromItem,
-                      path: itemData.route.path.concat([ itemData.item.id ]),
-                      parentAttemptId: parentAttemptId
-                    } | url : [ 'progress', 'chapter-user-progress' ]"
-                  >
-                    {{ rowData.title }}
-                  </a>
-
+                <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
+                  <div>
+                    <a
+                      class="alg-link"
+                      [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData.item.id }"
+                      [routerLink]="{
+                        id: rowData.id,
+                        contentType: rowData | contentTypeFromItem,
+                        path: itemData.route.path.concat([ itemData.item.id ]),
+                        parentAttemptId: parentAttemptId
+                      } | url : [ 'progress', 'chapter-user-progress' ]"
+                    >
+                      {{ rowData.title }}
+                    </a>
+                  </div>
                   <ng-container *ngIf="rowData.type === 'Task'">
                     <a
-                      pButton
-                      class="alg-button p-button-rounded p-small-button p-button-outlined load-answer-button"
-                      [label]="(!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
-                        watchingGroup: 'View the best answer',
-                        other: 'Reload the best answer'
-                      }"
+                      class="alg-link item-title-link"
                       [routerLink]="{
                         id: rowData.id,
                         contentType: rowData | contentTypeFromItem,
@@ -80,9 +72,14 @@
                         }
                       } | url"
                       *ngIf="rowData.submissions > 0 && (!watchedGroup || (watchedGroup.route.isUser && (rowData.currentUserPermissions | allowsWatchingAnswers)))"
-                    ></a>
+                    >
+                      {{ (!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
+                        watchingGroup: 'View the best answer',
+                        other: 'Reload the best answer'
+                      } }}
+                    </a>
                   </ng-container>
-                </div>
+                </ng-container>
               </ng-container>
               <ng-container *ngSwitchCase="'latestActivityAt'">
                 <ng-container *ngIf="rowData.latestActivityAt; else notStarted">
@@ -91,6 +88,9 @@
                 <ng-template #notStarted>
                   <span i18n>Not started</span>
                 </ng-template>
+              </ng-container>
+              <ng-container *ngSwitchCase="'hintsRequested'">
+                {{ rowData.hintsRequested }}
               </ng-container>
               <ng-container *ngSwitchCase="'timeSpent'">
                 <ng-container *ngIf="rowData.latestActivityAt">
@@ -104,7 +104,7 @@
               </ng-container>
               <ng-container *ngSwitchCase="'score'">
                 <div class="score-ring" *ngIf="!rowData.noScore && rowData.latestActivityAt">
-                  <alg-score-ring [diameter]="42" [currentScore]="rowData.score"></alg-score-ring>
+                  <alg-score-ring [currentScore]="rowData.score"></alg-score-ring>
                 </div>
               </ng-container>
               <ng-container *ngSwitchDefault>
@@ -122,5 +122,5 @@
         </tr>
       </ng-template>
     </p-table>
-  </div>
+  </ng-container>
 </ng-container>

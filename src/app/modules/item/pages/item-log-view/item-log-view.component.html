@@ -1,5 +1,7 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-loading size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
+  <div class="spinner" *ngIf="state.isFetching && !state.data">
+    <alg-loading size="medium"></alg-loading>
+  </div>
 
   <alg-error
     *ngIf="state.isError"
@@ -11,8 +13,13 @@
   ></alg-error>
 
   <ng-container *ngIf="state.data">
+    <div class="refresh-button">
+      <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+        Refresh
+      </button>
+    </div>
     <p-table
-      class="alg-table item-log-view"
+      class="alg-table"
       [columns]="state.data.columns"
       [value]="state.data.rowData"
       [loading]="state.isFetching"
@@ -21,56 +28,50 @@
       *ngIf="{ isWatching: isWatching$ | async, canWatchAnswers: canWatchAnswers$ | async } as meta"
     >
       <ng-template pTemplate="header" let-rowData let-columns>
-        <tr>
-          <th [colSpan]="columns.length">
-            <div class="header-container header-refresh">
-              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
-            </div>
-          </th>
-        </tr>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
             <th>
-              <div class="header-container">
-                {{ col.header }}
-              </div>
+              {{ col.header }}
             </th>
           </ng-container>
         </tr>
       </ng-template>
 
       <ng-template
-          pTemplate="body"
-          let-rowData
-          let-columns="columns"
+        pTemplate="body"
+        let-rowData
+        let-columns="columns"
       >
         <tr>
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
-                <div class="activity-container">
-                  <div class="activity-left">
-                    <span class="activity-progress">
-                      <alg-score-ring
-                        [currentScore]="rowData.score"
-                        [diameter]="32"
-                        *ngIf="rowData.score"
-                      ></alg-score-ring>
-                    </span>
-
-                    {{ rowData.activityType | logActionDisplay }}
+                <div class="item-title-section">
+                  <div class="item-title-section-left">
+                    <alg-score-ring
+                      [currentScore]="rowData.score"
+                      *ngIf="rowData.score; else iconSection"
+                    ></alg-score-ring>
+                    <ng-template #iconSection>
+                      <i class="ph-duotone item-icon" [ngClass]="{
+                        'ph-flag-checkered': rowData.activityType === 'result_started',
+                        'ph-floppy-disk-back': rowData.activityType === 'saved_answer'
+                      }"></i>
+                    </ng-template>
                   </div>
-
-                  <button
-                    pButton
-                    class="alg-button p-button-rounded p-small-button p-button-outlined"
-                    [label]="(meta.isWatching ? 'watchingMode' : '') | i18nSelect : {
-                      watchingMode: 'View answer',
-                      other: 'Reload answer'
-                    }"
-                    [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isWatching ? undefined : true } | url"
-                    *ngIf="(!meta.isWatching || meta.canWatchAnswers) && rowData.answerId"
-                  ></button>
+                  <div class="item-title">
+                    <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
+                    <a
+                      class="alg-link item-title-link"
+                      [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isWatching ? undefined : true } | url"
+                      *ngIf="(!meta.isWatching || meta.canWatchAnswers) && rowData.answerId"
+                    >
+                      {{ (meta.isWatching ? 'watchingMode' : '') | i18nSelect : {
+                        watchingMode: 'View answer',
+                        other: 'Reload answer'
+                      } }}
+                    </a>
+                  </div>
                 </div>
               </ng-container>
               <ng-container *ngSwitchCase="'item.string.title'">
