@@ -1,74 +1,125 @@
-@import "../../../../variables";
-@import "src/geometry";
+@import "src/assets/scss/functions";
 
-.tree-header {
-  background-color: var(--nav-bg-color);
-  height: 6rem;
+.container {
+  padding: 0 var(--alg-space-size-5);
+}
+
+.back-button-container {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  border-bottom: .1rem solid var(--nav-border-secondary-color);
+  padding: 0 var(--alg-space-size-6);
+}
+
+.back-button-title {
+  margin-left: toRem(12);
+  color: var(--alg-secondary-color);
+  font-size: toRem(16);
+  font-weight: 700;
+}
+
+.tree-nav-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   cursor: pointer;
+  position: relative;
+  padding: toRem(11) var(--alg-space-size-5);
+  border-radius: toRem(10);
 
-  .tree-header-handle {
-    display: flex;
-    height: 3.5rem;
-    width: 5rem;
-    margin-right: 1rem;
-    background-color: var(--nav-bg-handle-color);
-    border-top-right-radius: 1.5rem;
-    border-bottom-right-radius: 1.5rem;
-    color: white;
-    align-items: center;
-    font-size: 1.5rem;
+  &.selected {
+    border-radius: toRem(10);
+    background-color: var(--alg-tree-selected-color);
+  }
 
-    i:first-child {
-      margin-right: 1rem;
-      margin-left: .5rem;
-      color: rgb(255, 255, 255, .6);
-    }
-
-    .icon-folder {
-      padding-right: 1rem;
-      height: 2.1rem;
+  &.locked {
+    .tree-nav-caption {
+      opacity: .5;
     }
   }
 
-  .tree-header-mygroups {
-    display: flex;
-    height: 3.5rem;
-    margin-right: 1rem;
-    background-color: var(--nav-bg-secondary-color);
-    border-top-right-radius: 1.5rem;
-    border-bottom-right-radius: 1.5rem;
-    color: white;
-    align-items: center;
-    font-size: 1.5rem;
-
-    i:first-child {
-      margin-right: 1rem;
-      margin-left: .5rem;
+  &.chapter {
+    .children-caption {
+      margin-left: toRem(4);
     }
-  }
-
-  .tree-header-title {
-    font-size: 1.6rem;
-    letter-spacing: .01em;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: white;
-
-    @extend .line-clamp-2;
   }
 }
 
-.tree-header.selected-header {
-  background-color: var(--base-bk-color);
+.tree-nav-left {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 
-  .tree-header-title {
-    color: var(--nav-bg-secondary-color);
+.tree-nav-icon {
+  color: var(--alg-primary-color);
+  font-size: toRem(16);
+
+  &.fade {
+    opacity: .5;
   }
 }
 
-:host i .fa {
-  font-size: 1.2rem;
+.tree-sub-nav-icon {
+  margin-left: var(--alg-space-size-6);
+  color: var(--alg-primary-color);
+}
+
+.tree-nav-caption-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.tree-nav-caption {
+  margin-left: var(--alg-space-size-5);
+
+  &.children-caption {
+    margin-left: toRem(14);
+    font-size: toRem(12);
+  }
+}
+
+.tree-nav-dot-wrapper {
+  width: toRem(16);
+  display: flex;
+  justify-content: center;
+}
+
+.tree-nav-dot {
+  width: toRem(6);
+  height: toRem(6);
+  background-color: var(--alg-tree-line-color);
+  border-radius: 50%;
+
+  &:before {
+    content: '';
+    display: block;
+    margin-left: toRem(calc(5 / 2));
+    width: toRem(1);
+    height: 50%;
+    position: absolute;
+    top: 0;
+    background-color: var(--alg-tree-line-color);
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    margin-left: toRem(calc(5 / 2));
+    width: toRem(1);
+    height: 50%;
+    position: absolute;
+    bottom: 0;
+    background-color: var(--alg-tree-line-color);
+  }
+}
+
+.tree-nav-right {
+  margin-left: var(--alg-space-size-6);
+}
+
+.tree-nav-skill-progress {
+  width: toRem(32);
 }

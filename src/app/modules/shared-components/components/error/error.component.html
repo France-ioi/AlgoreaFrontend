@@ -1,17 +1,18 @@
 <div class="wrapper">
+  <div class="icon-container" *ngIf="icon">
+    <i class="icon" [ngClass]="icon"></i>
+  </div>
   <div class="message-container">
-    <i *ngIf="icon" class="icon" [ngClass]="icon"></i>
     <span class="message">
       {{ message }}
       <ng-content *ngIf="!message"></ng-content>
     </span>
-    <p-button
-      *ngIf="showRefreshButton && refreshButtonType === 'refresh'"
-      class="refresh-button"
-      icon="pi pi-refresh"
-      (click)="onRefresh()"
-      styleClass="p-button-sm"
-    ></p-button>
   </div>
-  <span *ngIf="showRefreshButton && refreshButtonType === 'retry'" class="retry cursor-pointer" (click)="onRefresh()" i18n>Retry now</span>
+  <p-button
+    *ngIf="showRefreshButton"
+    class="refresh-button"
+    i18n-label [label]="buttonCaption"
+    (click)="onRefresh()"
+    styleClass="p-button-sm"
+  ></p-button>
 </div>

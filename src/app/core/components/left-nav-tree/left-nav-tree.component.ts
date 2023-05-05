@@ -19,6 +19,10 @@ export class LeftNavTreeComponent implements OnChanges {
   }
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
+    const inL1 = data.elements.some(
+      e => !data.selectedElementId || e.hasChildren
+        && (e.route.id === data.selectedElementId || e.children?.find(c => c.route.id === data.selectedElementId))
+    );
     return data.elements.map(e => {
       const isSelected = !!data.selectedElementId && data.selectedElementId === e.route.id;
       const pathToChildren = data.pathToElements.concat([ e.route.id ]);
@@ -27,11 +31,13 @@ export class LeftNavTreeComponent implements OnChanges {
         label: e.title,
         type: this.typeForElement(e),
         leaf: e.hasChildren,
+        hasChildren: e.hasChildren,
         expanded: !!e.children,
         children: e.children ?
           this.mapItemToNodes(new NavTreeData(e.children, pathToChildren, undefined, data.selectedElementId)) :
           undefined,
-        partialSelected: isSelected
+        partialSelected: isSelected,
+        inL1,
       };
     });
   }

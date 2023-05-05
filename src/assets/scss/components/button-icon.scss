@@ -1,3 +1,5 @@
+@import 'src/assets/scss/functions';
+
 .alg-button-icon {
   border: none;
   cursor: pointer;
@@ -14,9 +16,27 @@
     box-shadow: none;
   }
 
+  &.rounded {
+    width: toRem(24);
+    height: toRem(24);
+    border-radius: 50%;
+
+    .p-button-icon {
+      font-size: toRem(16);
+    }
+  }
+
   &.primary-color {
     .p-button-icon {
-      color: var(--alg-primary-color);
+      color: var(--alg-white-color);
+    }
+
+    background-color: var(--alg-primary-color);
+
+    &.no-bg {
+      .p-button-icon {
+        color: var(--alg-primary-color);
+      }
     }
   }
 
@@ -40,6 +60,18 @@
   &.left-menu {
     .p-button-icon {
       font-size: 1.5rem;
+    }
+  }
+
+  &.back-button {
+    .p-button-icon {
+      color: var(--alg-primary-color);
+    }
+
+    background-color: #dbe1f3;
+
+    &:hover {
+      background-color: #dbe1f3;
     }
   }
 }

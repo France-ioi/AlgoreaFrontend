@@ -111,23 +111,6 @@ body .p-component {
 
 }
 
-.left-nav-theme {
-  &.dark {
-    --nav-bg-color: var(--nav-dark-bg-color);
-    --nav-bg-secondary-color: var(--nav-dark-bg-secondary-color);
-    --nav-bg-child-color: var(--nav-dark-bg-child-color);
-    --nav-child-border-color: var(--nav-dark-child-border-color);
-    --nav-bg-handle-color: var(--nav-dark-bg-handle-color);
-    --nav-border-color: var(--nav-dark-border-color);
-    --nav-border-secondary-color: var(--nav-dark-border-secondary-color);
-    --nav-branch-border-color: var(--nav-dark-branch-border-color);
-    --nav-handle-icon-color: var(--nav-dark-handle-icon-color);
-    --nav-bg-hover-color: var(--nav-dark-bg-hover-color);
-    --nav-bg-hover-secondary-color: var(--nav-dark-bg-hover-secondary-color);
-    --nav-text-color: var(--nav-dark-text-color);
-  }
-}
-
 .common-confirm-popup {
   margin-left: 2rem;
   margin-right: 2rem;

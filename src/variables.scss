@@ -8,14 +8,11 @@
   --warning-color: #f5a623;
   --danger-color: #ff001f;
 
-  --secondary-btn-color: #4a4a4a;
-
   --base-color-hover: #779CCA;
   --base-dark-color-hover: #3B73B4;
   --hover-mask: rgba(white, 0.1);
 
   --light-text-color: #dbdbdb;
-  // $light-color: #DBE9F9;
   --light-color: #DFE7F4;
   --light-border-color: #EBEBEB;
 
@@ -28,34 +25,6 @@
   --input-transparency-color: rgba(0,0,0,.05);
 
   --nav-bk-color: #4E4E4E;
-
-  // Light nav theme
-  --nav-bg-color: #4A90E2;
-  --nav-bg-secondary-color: #3B73B4;
-  --nav-bg-child-color: #3c7ac1;
-  --nav-child-border-color: #2f6fc1;
-  --nav-bg-handle-color: #3B73B4;
-  --nav-border-color: #2e5e95;
-  --nav-border-secondary-color: #4587D4;
-  --nav-branch-border-color: #2e5e95;
-  --nav-handle-icon-color: rgb(99, 150, 209);
-  --nav-bg-hover-color: #779CCA;
-  --nav-bg-hover-secondary-color: #578CCA;
-  --nav-text-color: #4A90E2;
-
-  // Dark nav theme
-  --nav-dark-bg-color: #373738;
-  --nav-dark-bg-secondary-color: #474747;
-  --nav-dark-bg-child-color: #2c2b2b;
-  --nav-dark-child-border-color: #313132;
-  --nav-dark-bg-handle-color: #2C2C2C;
-  --nav-dark-border-color: #313132;
-  --nav-dark-border-secondary-color: #313132;
-  --nav-dark-branch-border-color: rgba(255, 255, 255, .6);
-  --nav-dark-handle-icon-color: rgba(255, 255, 255, .6);
-  --nav-dark-bg-hover-color: #373738;
-  --nav-dark-bg-hover-secondary-color: #676767;
-  --nav-dark-text-color: #464646;
 
   // Section colors
   --section-color: #DFE7F4;
@@ -78,7 +47,7 @@
 
   --border-radius: .5rem;
 
-  // Variables
+  // New Variables
   --left-panel-size: 23%;
 
   // Re-Design colors
@@ -90,6 +59,11 @@
   --alg-light-color: #EEEEEE;
   --alg-border-light-color: rgba(0, 0, 0, .1);
   --alg-light-bg-color: #e8efff;
+  --alg-tree-line-color: #d7d7d7;
+  --alg-tree-selected-color: #d4e1ff;
+  --alg-loading-bg: #d2dfff;
+  --alg-light-text-color: #000;
+  --alg-dark-text-color: #fff;
 
   // Spacers
   --alg-space-size-1: 4rem;

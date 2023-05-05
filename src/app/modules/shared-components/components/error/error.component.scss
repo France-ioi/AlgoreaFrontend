@@ -1,4 +1,4 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
 :host {
   &.light {
@@ -62,17 +62,18 @@
 }
 
 .icon {
-  margin-right: 0.25rem;
-  font-size: 1.6rem;
-  color: var(--base-color);
+  font-size: toRem(96);
+  color: var(--alg-primary-color);
 }
 
 .message {
-  color: var(--base-color);
-  font-size: 1.6rem;
+  margin-top: toRem(12);
+  color: var(--alg-secondary-color);
+  font-size: toRem(16);
   text-align: center;
 }
 
 .refresh-button {
-  margin-left: 0.5rem;
+  margin-top: toRem(12);
+  font-size: toRem(16);
 }
