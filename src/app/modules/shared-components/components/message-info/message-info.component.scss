@@ -1,19 +1,22 @@
+@import 'src/assets/scss/functions';
+
 .container {
-  padding: .4rem;
+  padding: 0 toRem(12);
+  height: toRem(40);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background-color: var(--warning-color);
-  border-radius: 1rem;
+  background-color: var(--alg-accent-color);
+  border-radius: toRem(8);
 }
 
 .message-icon {
-  margin: 0 1rem;
-  color: #ffffff;
-  font-size: 1.4rem;
+  margin: 0 toRem(10) 0 0;
+  color: var(--alg-accent-dark-color);
+  font-size: toRem(17);
 }
 
 .message-text {
-  color: #ffffff;
-  font-size: 1.4rem;
+  color: var(--alg-secondary-color);
+  font-size: toRem(14);
 }

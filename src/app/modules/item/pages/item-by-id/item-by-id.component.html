@@ -19,7 +19,9 @@
         (changed)="reloadItem()"
       ></alg-item-permissions>
 
-      <nav class="alg-nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive">
+      <nav
+        class="alg-nav-tab"
+        [style.display]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive ? 'none' : 'flex'">
         <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
@@ -221,7 +223,10 @@
 
   </ng-container>
 
-  <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <div class="loading-section" *ngIf="state.isFetching" [algFullHeightContent]="true">
+    <alg-loading></alg-loading>
+  </div>
+
 
   <ng-container *ngIf="state.isError">
     <p class="alg-error-message" *ngIf="state.error && ($any(state.error).status === 403 || $any(state.error).status === 404); else unknownError" i18n>
