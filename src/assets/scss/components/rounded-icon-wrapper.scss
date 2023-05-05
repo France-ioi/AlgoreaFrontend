@@ -1,0 +1,12 @@
+@import 'src/assets/scss/functions';
+
+.alg-rounded-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: toRem(32);
+  height: toRem(32);
+  background-color: #EEEEEE;
+  border-radius: 50%;
+  color: var(--alg-secondary-color);
+}

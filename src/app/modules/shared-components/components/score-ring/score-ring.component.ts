@@ -6,7 +6,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   styleUrls: [ './score-ring.component.scss' ],
 })
 export class ScoreRingComponent implements OnChanges {
-  @Input() diameter = 60;
+  @Input() diameter = 32;
   @Input() currentScore = 0;
   @Input() bestScore = 0;
   @Input() isValidated = false;
