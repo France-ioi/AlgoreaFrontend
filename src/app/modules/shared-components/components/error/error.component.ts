@@ -11,8 +11,8 @@ export class ErrorComponent {
   @Input() message?: string;
   @Input() icon?: string;
   @Input() showRefreshButton = false;
-  @Input() refreshButtonType: 'refresh' | 'retry' = 'refresh';
   @Input() buttonCaption = 'Back home';
+  @Input() link?: string;
 
   onRefresh(): void {
     this.refresh.emit();

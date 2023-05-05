@@ -1,49 +1,26 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-section i18n-label label="Parent skills" icon="fa fa-link">
+  <div class="section-title alg-h2" i18n>
+    Parent skills
+  </div>
 
-    <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <alg-loading *ngIf="state.isFetching"></alg-loading>
 
-    <alg-error
-      *ngIf="state.isError"
-      class="dark"
-      i18n-message message="Error while loading the skill parents"
-      [showRefreshButton]="true"
-      (refresh)="refresh()"
-    ></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    class="dark"
+    i18n-message message="Error while loading the skill parents"
+    [showRefreshButton]="true"
+    (refresh)="refresh()"
+  ></alg-error>
 
-    <ng-container *ngIf="state.isReady && state.data as parents">
-
-      <p *ngIf="parents.length === 0" i18n>This skill does not have parent skills.</p>
-
-      <ul *ngIf="parents.length > 0" class="data-list-container sub-skill">
-        <li *ngFor="let item of parents">
-          <a
-            class="skill-content alg-link"
-            [ngClass]="{ locked: item.isLocked }"
-            [routerLink]="{
-              id: item.id,
-              contentType: item | contentTypeFromItem,
-              path: itemData.route.path | slice :0 : -1,
-              attemptId: item.result.attemptId
-            } | url"
-            *ngIf="itemData"
-          >
-            <span class="skill-title">
-              {{ item.string.title }}
-            </span>
-            <span *ngIf="item.isLocked" class="skill-status">
-              <i *ngIf="item.isLocked" class="fa fa-lock"></i>
-            </span>
-            <alg-skill-progress
-              style="width: 25%;"
-              type="thick-horizontal"
-              [bestScore]="item.bestScore"
-              [currentScore]="item.result.scoreComputed"
-            ></alg-skill-progress>
-          </a>
-        </li>
-      </ul>
-
-    </ng-container>
-  </alg-section>
+  <ng-container *ngIf="state.isReady && state.data as parents">
+    <alg-item-children-list
+      class="no-padding"
+      type="skill"
+      i18n-emptyMessage emptyMessage="This skill does not have parent skills."
+      [children]="parents"
+      [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path | slice :0 : -1 }"
+      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
+    ></alg-item-children-list>
+  </ng-container>
 </ng-container>
