@@ -1,16 +1,47 @@
-@import '../../../variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
-.nav-tab {
+.alg-nav-tab {
   display: flex;
-  font-family: inherit;
-  overflow: hidden;
+  align-items: center;
+  position: relative;
 
-  .nav-tab-item {
-    @include main-tabs;
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    height: toRem(1);
+    background: rgb(255,255,255);
+    background: -moz-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
+  }
+}
 
-    &.active {
-      @include main-tab-active;
-    }
+.alg-nav-tab-item {
+  padding-bottom: toRem(8);
+  color: var(--alg-secondary-color);
+  font-size: toRem(16);
+  font-weight: 400;
+  text-decoration: none;
+  border-bottom: toRem(3) solid transparent;
+  opacity: .5;
+  position: relative;
+  z-index: 1;
+
+  &:not(:first-child) {
+    margin-left: toRem(16);
+  }
+
+  &:not(:last-child) {
+    margin-right: toRem(16);
+  }
+
+  &.active {
+    color: var(--alg-primary-color);
+    border-bottom: toRem(3) solid var(--alg-primary-color);
+    opacity: 1;
   }
 }

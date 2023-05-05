@@ -19,9 +19,9 @@
         (changed)="reloadItem()"
       ></alg-item-permissions>
 
-      <nav class="nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !progressTab.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive">
+      <nav class="alg-nav-tab" [hidden]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !progressTab.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive">
         <a
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #contentTab="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored' }"
@@ -32,7 +32,7 @@
           Content
         </a>
         <a
-            class="nav-tab-item"
+            class="alg-nav-tab-item"
             [routerLink]="'./edit-children'"
             routerLinkActive #editChildrenTab="routerLinkActive"
             [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored' }"
@@ -45,7 +45,7 @@
         <ng-container *ngIf="taskTabs.length > 1">
           <a
             *ngFor="let tab of taskTabs"
-            class="nav-tab-item cursor-pointer"
+            class="alg-nav-tab-item cursor-pointer"
             [routerLink]="'./'"
             [class.active]="contentTab.isActive && tab.view === taskView"
             (click)="setTaskTabActive(tab)"
@@ -55,7 +55,7 @@
         </ng-container>
         <a
           [hidden]="(!editorUrl || !(itemData.item.permissions | allowsEditingAll)) && !taskEditTab.isActive"
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./edit'"
           routerLinkActive #taskEditTab="routerLinkActive"
           [class.active]="taskEditTab?.isActive"
@@ -64,18 +64,16 @@
         </a>
         <a
           [hidden]="!(showProgressTab$ | async) && !progressTab.isActive"
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./progress'"
           routerLinkActive #progressTab="routerLinkActive"
           [class.active]="progressTab?.isActive"
         >
-          <i class="fa fa-chart-line"></i>
-          &nbsp;
           <span i18n>Progress</span>
         </a>
         <a
           [hidden]="!(itemData.item.permissions | allowsEditingAll) && !dependenciesTab.isActive"
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./dependencies'"
           routerLinkActive #dependenciesTab="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored' }"
@@ -85,7 +83,7 @@
         </a>
         <a
             [hidden]="!(itemData.item.permissions | allowsEditingAll) && !parametersTab.isActive"
-            class="nav-tab-item"
+            class="alg-nav-tab-item"
             [routerLink]="'./parameters'"
             routerLinkActive #parametersTab="routerLinkActive"
             [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
