@@ -5,11 +5,13 @@
   margin-right: 2rem;
 }
 
-.compensate-margin {
-  margin-top: -1rem;
-}
-
 .stats-title {
   margin-top: toRem(30);
   margin-bottom: 0;
+}
+
+.loading-section {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
 }

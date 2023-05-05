@@ -1,13 +1,17 @@
 @import 'src/assets/scss/functions';
 
 .progress-bar-wrapper {
-  width: 100%;
+  width: toRem(32);
   height: toRem(4);
   border-radius: toRem(4);
   position: relative;
   margin: 0;
   overflow: hidden;
   background-color: var(--alg-border-light-color);
+
+  &.bold {
+    height: toRem(8);
+  }
 }
 
 .progress-current-score {

@@ -73,9 +73,9 @@
 
     <ng-template #listSection>
       <alg-item-children-list
-        [itemData]="itemData"
         [children]="data.children"
-        [showStateWidget]="true"
+        [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+        *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
       ></alg-item-children-list>
     </ng-template>
 
