@@ -48,7 +48,13 @@
           <div class="tree-sub-nav-icon" *ngIf="!node.inL1">
             <i class="ph-duotone ph-caret-right"></i>
           </div>
-          <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">{{ node.label }}</div>
+          <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
+            {{ node.label }}
+            <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+              (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+              {{ node.data.associatedGroupNames.join(', ') }})
+            </span>
+          </div>
         </div>
       </div>
       <div class="tree-nav-right">
@@ -99,7 +105,13 @@
           <div class="tree-sub-nav-icon" *ngIf="!node.inL1">
             <i class="ph-duotone ph-caret-right"></i>
           </div>
-          <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">{{ node.label }}</div>
+          <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
+            {{ node.label }}
+            <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+              (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+              {{ node.data.associatedGroupNames.join(', ') }})
+            </span>
+          </div>
         </div>
       </div>
       <div class="tree-nav-right">
@@ -136,7 +148,13 @@
             <div class="tree-nav-dot"></div>
           </div>
         </ng-template>
-        <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">{{ node.label }}</div>
+        <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
+          {{ node.label }}
+          <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+            (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+            {{ node.data.associatedGroupNames.join(', ') }})
+          </span>
+        </div>
       </div>
       <div class="tree-nav-right">
         <alg-skill-progress
@@ -231,7 +249,13 @@
             <div class="tree-nav-dot"></div>
           </div>
         </ng-template>
-        <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">{{ node.label }}</div>
+        <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
+          {{ node.label }}
+          <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
+            (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+            {{ node.data.associatedGroupNames.join(', ') }})
+          </span>
+        </div>
       </div>
       <div class="tree-nav-right">
         <alg-score-ring
