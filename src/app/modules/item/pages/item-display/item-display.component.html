@@ -1,4 +1,4 @@
-<div class="item-display" *ngIf="state$ | async as state">
+<div class="item-display" [ngClass]="{ 'full-frame': (fullFrame$ | async)?.active }" *ngIf="state$ | async as state">
   <div class="error-container" *ngIf="(state.isError || (metadataError$ | async)) && !showTaskAnyway" [algFullHeightContent]="true">
     <ng-template #defaultErrorMessage>
       <alg-error

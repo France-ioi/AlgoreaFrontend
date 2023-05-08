@@ -4,6 +4,10 @@
 :host {
   .item-display {
     background-color: var(--base-bk-color);
+
+    &.full-frame {
+      margin: 0 calc(-1 * var(--alg-space-size-2)) calc(-1 * var(--alg-space-size-1)) calc(-1 * var(--alg-space-size-2));
+    }
   }
 
   .iframe-container {
