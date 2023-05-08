@@ -15,14 +15,10 @@ export class LeftNavTreeComponent implements OnChanges {
   nodes: TreeNode<NavTreeElement>[] = [];
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.nodes = this.data ? this.mapItemToNodes(this.data) : [];
+    this.nodes = this.data ? this.mapItemToNodes(this.data).map(n => ({ ...n, inL1: true })) : [];
   }
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
-    const inL1 = data.elements.some(
-      e => !data.selectedElementId || e.hasChildren
-        && (e.route.id === data.selectedElementId || e.children?.find(c => c.route.id === data.selectedElementId))
-    );
     return data.elements.map(e => {
       const isSelected = !!data.selectedElementId && data.selectedElementId === e.route.id;
       const pathToChildren = data.pathToElements.concat([ e.route.id ]);
@@ -37,7 +33,7 @@ export class LeftNavTreeComponent implements OnChanges {
           this.mapItemToNodes(new NavTreeData(e.children, pathToChildren, undefined, data.selectedElementId)) :
           undefined,
         partialSelected: isSelected,
-        inL1,
+        inL1: false,
       };
     });
   }
