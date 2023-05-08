@@ -1,7 +1,7 @@
 <div class="item-header-container" *ngIf="itemData">
   <div class="item-header">
     <div class="item-title-container">
-      <p class="item-title alg-h1" data-cy="item-title">{{ itemData.item.string.title }}</p>
+      <h1 class="item-title alg-h1" data-cy="item-title">{{ itemData.item.string.title }}</h1>
       <span class="item-subtitle" *ngIf="itemData.item.string.subtitle">{{ itemData.item.string.subtitle }}</span>
     </div>
     <alg-page-navigator
