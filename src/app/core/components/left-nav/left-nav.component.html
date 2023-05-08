@@ -51,7 +51,7 @@
     <alg-error
       *ngIf="state.isError"
       i18n-message message="Unable to load the list."
-      icon="ph-duotone ph-traffic-sign"
+      icon="ph-duotone ph-warning-circle"
       [showRefreshButton]="true"
       buttonCaption="Retry"
       (refresh)="retryError(activeTab.index)"

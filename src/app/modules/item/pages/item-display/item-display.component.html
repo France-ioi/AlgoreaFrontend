@@ -3,7 +3,7 @@
     <ng-template #defaultErrorMessage>
       <alg-error
         i18n-message message="Unable to load the task"
-        icon="ph-duotone ph-traffic-sign"
+        icon="ph-duotone ph-warning-circle"
       ></alg-error>
     </ng-template>
 
@@ -11,14 +11,14 @@
       <alg-error
         *ngIf="initError$ | async; else urlError"
         i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
-        icon="ph-duotone ph-traffic-sign"
+        icon="ph-duotone ph-warning-circle"
       ></alg-error>
 
       <ng-template #urlError>
         <alg-error
           *ngIf="urlError$ | async as error; else metadataError"
           message="{{ error.message }}"
-          icon="ph-duotone ph-traffic-sign"
+          icon="ph-duotone ph-warning-circle"
         ></alg-error>
       </ng-template>
 
@@ -26,7 +26,7 @@
         <alg-error
         *ngIf="metadataError$ | async; else unknownError"
         i18n-message message="Error while requesting task metadata"
-        icon="ph-duotone ph-traffic-sign"
+        icon="ph-duotone ph-warning-circle"
       ></alg-error>
       </ng-template>
 
@@ -34,7 +34,7 @@
         <alg-error
           *ngIf="unknownError$ | async"
           [message]="errorMessage"
-          icon="ph-duotone ph-traffic-sign"
+          icon="ph-duotone ph-warning-circle"
         ></alg-error>
       </ng-template>
 
