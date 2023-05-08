@@ -85,7 +85,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
     },
     {
       field: 'timeSpent',
-      header: $localize`Time`,
+      header: $localize`Time spent`,
     },
     {
       field: 'submissions',
