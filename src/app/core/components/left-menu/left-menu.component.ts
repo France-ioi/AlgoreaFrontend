@@ -10,14 +10,9 @@ import { debounceTime, Subject } from 'rxjs';
 export class LeftMenuComponent implements OnDestroy {
   @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
 
-  isNavThemeDark = false;
   private selectedElement$ = new Subject<string>();
 
   private subscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(id => this.scrollToContent(id));
-
-  onNavThemeChange(dark: boolean): void {
-    this.isNavThemeDark = dark;
-  }
 
   onSelectedElementChange(id: string | undefined): void {
     if (id !== undefined) this.selectedElement$.next(id);

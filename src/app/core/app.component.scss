@@ -15,10 +15,10 @@
 
 .top-bar {
   &.animated {
-    transition: left 1s;
-    -webkit-transition: left 1s;
-    -moz-transition: left 1s;
-    -o-transition: left 1s;
+    transition: left var(--left-menu-animation);
+    -webkit-transition: left var(--left-menu-animation);
+    -moz-transition: left var(--left-menu-animation);
+    -o-transition: left var(--left-menu-animation);
   }
 
   &.with-mode-bar {
@@ -40,10 +40,10 @@
   height: 100%;
 
   &.animated {
-    transition: left 1s;
-    -webkit-transition: left 1s;
-    -moz-transition: left 1s;
-    -o-transition: left 1s;
+    transition: left var(--left-menu-animation);
+    -webkit-transition: left var(--left-menu-animation);
+    -moz-transition: left var(--left-menu-animation);
+    -o-transition: left var(--left-menu-animation);
   }
 
   &.collapsed {
@@ -63,10 +63,10 @@
   -moz-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
 
   &.animated {
-    transition: margin-left 1s;
-    -webkit-transition: margin-left 1s;
-    -moz-transition: margin-left 1s;
-    -o-transition: margin-left 1s;
+    transition: margin-left var(--left-menu-animation);
+    -webkit-transition: margin-left var(--left-menu-animation);
+    -moz-transition: margin-left var(--left-menu-animation);
+    -o-transition: margin-left var(--left-menu-animation);
   }
 
   &.with-mode-bar {

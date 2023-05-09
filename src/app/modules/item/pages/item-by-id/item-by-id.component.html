@@ -21,7 +21,7 @@
 
       <nav
         class="alg-nav-tab"
-        [style.display]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive ? 'none' : 'flex'">
+        [style.display]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !chapterGroupProgressTab?.isActive && !historyTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive ? 'none' : 'flex'">
         <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
@@ -188,15 +188,10 @@
                 [itemData]="itemData"
               ></alg-chapter-group-progress>
 
-              <div *ngIf="!!chapterUserProgressTab?.isActive">
-                <p class="alg-h5 alg-secondary-color stats-title" i18n>
-                  This tab gives details about the date, time and number of attempts for each item in this chapter.
-                </p>
-
-                <alg-chapter-user-progress
-                  [itemData]="itemData"
-                ></alg-chapter-user-progress>
-              </div>
+              <alg-chapter-user-progress
+                *ngIf="!!chapterUserProgressTab?.isActive"
+                [itemData]="itemData"
+              ></alg-chapter-user-progress>
 
             </ng-container>
             <ng-template #unallowed>
