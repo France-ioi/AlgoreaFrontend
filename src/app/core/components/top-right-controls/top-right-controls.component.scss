@@ -1,20 +1,14 @@
-@import "src/colors.scss";
+@import "../../../../variables";
 
 .controls-zone {
-  background-color: var(--nav-bk-color);
-  color: #fff;
-  height: 3.75rem;
   display: flex;
   align-items: center;
-  padding-right: 0.5rem;
-  > * + * {
-    margin-left: 0.25rem;
-  }
 }
 
 .no-left-border {
   padding-left: -0.5rem;
 }
+
 .with-left-border {
   padding-left: 1rem;
   border-bottom-left-radius: 1rem;

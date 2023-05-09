@@ -12,12 +12,12 @@
   <span *ngIf="allowFullScreen" class="top-bar-expand">
     <i class="fa fa-expand-arrows-alt"></i>
   </span>
-  <span class="navigator" *ngIf="navigationMode">
-    <span class="p-buttonset">
-      <button pButton type="button" icon="fa fa-arrow-up" (click)="parent.emit()" *ngIf="navigationMode.parent"></button>
-      <button pButton type="button" icon="fa fa-chevron-left" (click)="left.emit()" [disabled]="!navigationMode.left"></button>
-      <button pButton type="button" icon="fa fa-chevron-right" (click)="right.emit()" [disabled]="!navigationMode.right"></button>
-    </span>
-  </span>
+  <alg-neighbor-widget
+    class="navigator"
+    [navigationMode]="navigationMode"
+    (parent)="parent.emit()"
+    (left)="left.emit()"
+    (right)="right.emit()"
+  ></alg-neighbor-widget>
 </div>
 

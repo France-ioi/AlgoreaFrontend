@@ -1,13 +1,13 @@
-@import 'src/colors.scss';
+@import 'src/variables';
 @import 'src/geometry.scss';
 
 :host {
   .item-display {
     background-color: var(--base-bk-color);
-  }
 
-  .errors {
-    background-color: white;
+    &.full-frame {
+      margin: 0 calc(-1 * var(--alg-space-size-2)) calc(-1 * var(--alg-space-size-1)) calc(-1 * var(--alg-space-size-2));
+    }
   }
 
   .iframe-container {
@@ -46,6 +46,14 @@
     height: 0;
     width: 100%;
     border: none;
+  }
+
+  .error-container {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #fff;
   }
 
   .error-buttons {

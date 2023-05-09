@@ -1,5 +1,6 @@
-@import "src/colors.scss";
+@import "src/variables";
 @import "src/geometry.scss";
+@import "src/assets/scss/functions";
 
 :host {
   width: 100%;
@@ -11,29 +12,13 @@
   overflow: hidden;
 }
 
-.breadcrumb-bar {
-  display: flex;
-  align-items: center;
-  flex: 1;
-
-  alg-breadcrumb {
-    flex: 1;
-  }
-}
-
 .full-frame-content-top-bar {
-  margin-left: 0.8rem;
   display: flex;
   align-items: center;
-  height: 3.75rem;
-  flex: 1;
-  min-width: 0;
 
   .right-pane-title {
+    font-size: toRem(12);
     flex: 1;
-    font-size: 1.6rem;
-    margin-bottom: 0.4167rem;
-    min-width: 0;
 
     p {
       color: var(--base-text-color);
@@ -42,16 +27,16 @@
       white-space: nowrap;
     }
   }
-
-  .neighbor-widget {
-    margin: 0 1rem;
-  }
 }
 
 .margin-right {
-  margin-right: 1rem;
+  margin-right: var(--alg-space-size-5);
+}
+
+.margin-left {
+  margin-left: var(--alg-space-size-5);
 }
 
 .score-placeholder {
-  width: 3.45rem;
+  margin-right: var(--alg-space-size-5);
 }

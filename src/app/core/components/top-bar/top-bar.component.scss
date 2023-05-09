@@ -1,25 +1,16 @@
-@import "src/colors.scss";
-@import "src/geometry.scss";
+@import 'src/assets/scss/functions';
 
 :host {
   position: fixed;
-  left: $left-panel-size;
+  left: var(--left-panel-size);
   top: 0;
   right: 0;
-  height: 3.75rem;
+  height: toRem(57);
+  padding: 0 var(--alg-space-size-3);
   display: flex;
-  align-items: flex-start;
-  border-bottom: 0.1rem solid #e0e1e5;
-  background-color: var(--base-bk-color);
+  align-items: center;
+  border-bottom: 0.1rem solid var(--alg-light-color);
+  background-color: var(--alg-white-color);
   z-index: 900;
-}
-
-.content-top-bar {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow: hidden;
+  border-radius: toRem(16) 0 0 0;
 }

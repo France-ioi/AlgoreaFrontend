@@ -1,30 +1,46 @@
-@import "src/colors.scss";
-@import "src/geometry.scss";
+@import 'src/assets/scss/functions';
 
 :host {
-  position: relative;
   display: block;
-
-  padding-top: 2rem;
+  padding: var(--alg-space-size-4) 0;
 }
 
-.header-refresh {
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.refresh-button {
+  display: flex;
   justify-content: flex-end;
+  align-items: center;
+  margin-bottom: toRem(13);
 }
 
-.activity-container {
+.item-title-section {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.item-title-section-left {
+  margin-right: toRem(20);
+  width: toRem(34);
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.activity-left {
-  display: flex;
-  align-items: center;
-  margin-right: 1rem;
+.item-icon {
+  color: var(--alg-primary-color);
+  font-size: toRem(24);
 }
 
-.activity-progress {
-  width: 2.66667rem;
-  margin-right: 1rem;
+.item-title-caption {
+  margin: 0;
+}
+
+.item-title-link {
+  display: inline-block;
+  margin-top: toRem(5);
 }

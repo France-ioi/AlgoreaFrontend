@@ -1,4 +1,4 @@
-@import 'src/colors.scss';
+@import 'src/assets/scss/functions';
 
 :host {
   max-width: 100%;
@@ -6,81 +6,52 @@
 
 .breadcrumb-container {
   position: relative;
+}
+
+.breadcrumb-list {
+  list-style: none;
+  margin: 0;
   padding: 0;
+  display: flex;
+}
 
-  ul {
-    list-style: none;
-    margin: 0;
-    height: 100%;
-    padding-left: 1.25rem;
-    display: flex;
+.breadcrumb-item {
+  display: flex;
+  margin: 0;
+  color: var(--alg-secondary-color);
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
-    li {
-      display: flex;
-      margin: 0 .25em;
-      color: var(--base-text-color);
-      align-items: center;
-      height: 3.75rem;
-      overflow: hidden;
-      min-width: 0;
-      border-top: 0.25rem solid transparent;
+  &.routable {
+    cursor: pointer;
+  }
 
-      text-overflow: ellipsis;
-      white-space: nowrap;
+  &.active {
+    color: var(--alg-black-color);
+  }
 
-      &.routable {
-        cursor: pointer;
-      }
+  &.separator {
+    margin: 0 toRem(8) 0 toRem(12);
 
-      &.active {
-        border-top: 0.25rem solid var(--base-color);
-        color: var(--base-color);
-        &.separator {
-          border-top: 0.25rem solid transparent;
-
-          i.fa-arrow-right {
-            color: var(--base-color);
-          }
-        }
-      }
-
-      &.separator {
-        i.fa-arrow-right {
-          color: var(--base-color);
-        }
-      }
-
-      &.home {
-        color: var(--base-color);
-        margin-right: 1rem;
-      }
-
-      span {
-        padding: 0 0.4167rem;
-        font-size: 1.2rem;
-        border-radius: 1rem;
-        display: inline-block;
-        vertical-align: middle;
-        line-height: normal;
-
-        &.label {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          min-width: 0;
-          flex: 1;
-        }
-
-        &.attempt-badge {
-          background-color: var(--base-color);
-          color: white;
-          height: 2rem;
-          line-height: 1.9rem;
-          text-align: center;
-          font-weight: 700;
-          padding: 0 .7rem;
-        }
-      }
+    .separator-icon {
+      color: var(--alg-primary-color);
+      font-size: toRem(12);
     }
+  }
+
+  &.home {
+    color: var(--alg-primary-color);
+    margin-right: var(--alg-space-size-5);
+  }
+
+  .label {
+    padding: 0;
+    font-size: toRem(12);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
   }
 }

@@ -1,3 +1,5 @@
+@import 'src/assets/scss/functions';
+
 :host {
   display: flex;
   justify-content: center;
@@ -9,8 +11,17 @@
   }
 }
 
-.spinner {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.dot {
+  margin: 0 toRem(2);
+  width: toRem(12);
+  height: toRem(12);
+  background-color: #d2dfff;
+  border: toRem(3) solid var(--alg-primary-color);
+  border-radius: 50%;
 }

@@ -1,31 +1,31 @@
 <div class="neighbor-widget" *ngIf="navigationMode">
-  <div class="neighbor-widget-wrapper">
-    <span class="p-buttonset">
-      <button
-        pButton
-        type="button"
-        icon="fa fa-arrow-up"
-        class="neighbor-widget-button up-button"
-        (click)="parent.emit()"
-        *ngIf="navigationMode.parent"
-        @buttonAnimation
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa fa-chevron-left"
-        class="neighbor-widget-button"
-        (click)="left.emit()"
-        [disabled]="!navigationMode.left"
-      ></button>
-      <button
-        pButton
-        type="button"
-        icon="fa fa-chevron-right"
-        class="neighbor-widget-button"
-        (click)="right.emit()"
-        [disabled]="!navigationMode.right"
-      ></button>
-    </span>
+  <div class="neighbor-widget-button" @buttonAnimation *ngIf="navigationMode.parent">
+    <button
+      pButton
+      type="button"
+      icon="ph-bold ph-caret-up"
+      class="alg-button-icon no-bg primary-color"
+      (click)="parent.emit()"
+    ></button>
+  </div>
+  <div class="neighbor-widget-button">
+    <button
+      pButton
+      type="button"
+      icon="ph-bold ph-caret-left"
+      class="alg-button-icon no-bg primary-color"
+      (click)="left.emit()"
+      [disabled]="!navigationMode.left"
+    ></button>
+  </div>
+  <div class="neighbor-widget-button">
+    <button
+      pButton
+      type="button"
+      icon="ph-bold ph-caret-right"
+      class="alg-button-icon no-bg primary-color"
+      (click)="right.emit()"
+      [disabled]="!navigationMode.right"
+    ></button>
   </div>
 </div>

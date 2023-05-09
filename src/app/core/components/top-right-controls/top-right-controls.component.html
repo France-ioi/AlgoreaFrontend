@@ -1,5 +1,4 @@
 <div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
-
   <ng-container
     *ngIf="session && !session.tempUser; then authenticated else notAuthenticated"
   ></ng-container>
@@ -10,12 +9,11 @@
 
   <ng-template #notAuthenticated>
     <alg-language-picker *ngIf="languages.length > 1"></alg-language-picker>
-    <p-button
-      i18n-label label="Log in / Sign in"
-      icon="pi pi-power-off"
-      iconPos="right"
-      styleClass="alg-login-button"
+    <button
+      class="alg-button-icon primary-color no-bg"
+      icon="ph ph-power"
       (click)="login()"
-    ></p-button>
+      pButton
+    ></button>
   </ng-template>
 </div>

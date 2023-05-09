@@ -1,11 +1,12 @@
 <ng-container *ngIf="menuItems$ | async as menuItems">
-  <p-menu styleClass="alg-top-right-menu" #menu [popup]="true" [model]="menuItems"></p-menu>
-  <p-button
-      *ngIf="userLogin$ | async as userLogin"
-      icon="pi pi-chevron-down"
-      iconPos="right"
-      [label]="userLogin"
+  <p-menu styleClass="alg-top-right-menu" #menu [popup]="true" [model]="menuItems" appendTo="body"></p-menu>
+  <div class="user-container" *ngIf="userLogin$ | async as userLogin">
+    <span class="alg-secondary-color user-login">{{ userLogin }}</span>
+    <button
+      class="alg-button-icon no-bg primary-color user-menu"
+      icon="ph-duotone ph-user-circle"
       (click)="menu.toggle($event)"
-      styleClass="alg-top-right-menu-button"
-  ></p-button>
+      pButton
+    ></button>
+  </div>
 </ng-container>

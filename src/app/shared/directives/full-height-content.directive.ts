@@ -6,6 +6,8 @@ import { AfterViewChecked, Directive, ElementRef, HostListener, Input, NgZone, O
 export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
   @Input() algFullHeightContent = true;
 
+  mainContainerEl = document.querySelector('#main-container');
+
   @HostListener('window:resize')
   resize(): void {
     this.setHeight();
@@ -36,6 +38,11 @@ export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
 
   setHeight(): void {
     const top = this.el.nativeElement.getBoundingClientRect().top + globalThis.scrollY;
-    this.renderer.setStyle(this.el.nativeElement, 'min-height', `calc(100vh - ${top}px)`);
+    if (this.mainContainerEl) {
+      const mainContainerPadding = window.getComputedStyle(this.mainContainerEl);
+      this.renderer.setStyle(
+        this.el.nativeElement, 'min-height', `calc(100vh - ${top + parseInt(mainContainerPadding.paddingBottom)}px)`
+      );
+    }
   }
 }

@@ -1,5 +1,9 @@
-<p i18n>This page does not exist!</p>
-<p>
-  <span i18n>Go back to the </span>
-  <a class="alg-link base-color" routerLink="/" i18n>home page</a>
-</p>
+<div class="container" [algFullHeightContent]="true">
+  <alg-error
+    i18n-message message="Oops… We didn’t find that page"
+    icon="ph-duotone ph-warning-circle"
+    link="/"
+    i18n-buttonCaption buttonCaption="Back to home page"
+  ></alg-error>
+</div>
+

@@ -1,5 +1,4 @@
-@import 'src/colors.scss';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 // Main titles
 @mixin h2-title {
@@ -7,4 +6,40 @@
   margin-left: 1.25rem;
   color: var(--dark-text-color);
   font-family: inherit;
+}
+
+.alg-h1-title {
+  font-size : 3rem;
+}
+
+.alg-h2-title {
+  font-size : 2.5rem;
+}
+
+.alg-h3-title {
+  font-size : 2rem;
+}
+
+.alg-h4-title {
+  font-size : 1.5rem;
+}
+
+.alg-h5-title {
+  font-size : 1.25rem;
+}
+
+.alg-text-large {
+  font-size: 1.25rem;
+}
+
+.alg-text-regular {
+  font-size: toRem(16);
+}
+
+.alg-text-tiny {
+  font-size: .75rem;
+}
+
+.alg-text-bold {
+  font-weight: 700;
 }

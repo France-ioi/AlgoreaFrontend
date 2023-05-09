@@ -1,41 +1,39 @@
-<div class="ring-container" [ngStyle]="{width: forTree ? '100%' : diameter / 12 + 'rem', height: forTree ? '100%' : diameter / 12 + 'rem'}">
-  <svg
-    viewBox="0 0 65 65"
-  >
-    <path
-      stroke="black"
-      d="M32,2 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60"
-      fill="none"
-      stroke-width="4"
-      stroke-opacity="0.2"
-    />
-    <path
-      attr.stroke="{{ scoreFill }}"
-      attr.d="{{ scorePath }}"
-      fill="none"
-      stroke-width="4"
-      stroke-linecap="round"
-      transform="translate(32,32)"
-    />
-    <path
-      attr.stroke="{{ greyedFill }}"
-      attr.d="{{ greyedPath }}"
-      fill="none"
-      stroke-width="4"
-      stroke-linecap="round"
-      transform="translate(32,32)"
-    />
-    <path
-      *ngIf="isDark"
-      d="M32,4 a28,28 0 0,1 0,56  a28,28 0 1,1 0,-56"
-      fill="black"
-      fill-opacity="0.4"
-    />
-  </svg>
-  <span class="ring-data" [ngStyle]="{color: icon ? iconFill : textFill}">
-    <i *ngIf="icon" class="fa fa-{{icon}}" [ngStyle]="{'font-size.rem': fontSize}"></i>
-    <ng-container *ngIf="!icon">
-      <span class="ring-digits" [ngStyle]="{'font-size.rem': fontSize}">{{currentScore | number:'1.0-0'}}</span>
-    </ng-container>
-  </span>
+<div
+  class="score-container"
+  [ngStyle]="{ width: (compact ? 14 / 16 : diameter / 16) + 'rem', height: (compact ? 14 / 16 : diameter / 16) + 'rem' }"
+>
+  <ng-container *ngIf="!isValidated; else validatedSection">
+    <svg class="svg-element" [attr.viewBox]="compact ? '-2 -2 69 69' : '0 0 65 65'">
+      <path
+        class="round-path"
+        d="M32,2 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60"
+        fill="none"
+        [attr.stroke-width]="compact ? 8 : 4"
+      />
+      <path
+        class="best-score-path"
+        [attr.d]="bestScorePath"
+        fill="none"
+        [attr.stroke-width]="compact ? 8 : 4"
+        stroke-linecap="round"
+        transform="translate(32,32)"
+      />
+      <path
+        class="current-score-path"
+        [attr.d]="currentScorePath"
+        fill="none"
+        [attr.stroke-width]="compact ? 8 : 4"
+        stroke-linecap="round"
+        transform="translate(32,32)"
+      />
+    </svg>
+    <div class="score-data">
+      <span class="score-caption" *ngIf="!compact">
+        {{ currentScore | number:'1.0-0' }}
+      </span>
+    </div>
+  </ng-container>
+  <ng-template #validatedSection>
+    <i class="ph-bold ph-check alg-primary-color icon"></i>
+  </ng-template>
 </div>

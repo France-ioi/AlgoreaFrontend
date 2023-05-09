@@ -1,14 +1,17 @@
-.refresh-button {
-  margin-left: .5rem;
-}
+@import 'src/assets/scss/functions';
 
 .indicator {
   padding: 1rem;
   margin-right: 2rem;
 }
-.nav-tab[hidden] {
-  display: none;
+
+.stats-title {
+  margin-top: toRem(30);
+  margin-bottom: 0;
 }
-.compensate-margin {
-  margin-top: -1rem;
+
+.loading-section {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
 }

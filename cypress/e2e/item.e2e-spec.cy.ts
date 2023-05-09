@@ -15,7 +15,7 @@ describe('item page', () => {
     for (const useCase of pageLoadUseCases) {
       it(`should load ${useCase.label}`, () => {
         cy.navigateToActivity(motifArt.id, useCase.path);
-        cy.get('alg-item-header .task-title').should('be.visible').should('have.text', motifArt.title);
+        cy.get('[data-cy="item-title"]').should('be.visible').should('have.text', motifArt.title);
       });
     }
   });

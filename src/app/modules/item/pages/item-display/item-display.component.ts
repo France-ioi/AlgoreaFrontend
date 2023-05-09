@@ -47,6 +47,7 @@ import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
 import { GetBreadcrumbsFromRootsService } from '../../http-services/get-breadcrumbs-from-roots.service';
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { closestBreadcrumbs } from 'src/app/shared/routing/content-route';
+import { LayoutService } from '../../../../shared/services/layout.service';
 
 export interface TaskTab {
   name: string,
@@ -109,6 +110,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     }),
     distinctUntilChanged(),
   );
+  fullFrame$ = this.layoutService.fullFrame$;
 
   showTaskAnyway = false;
 
@@ -207,6 +209,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     private activityNavTreeService: ActivityNavTreeService,
     private breadcrumbsService: GetBreadcrumbsFromRootsService,
     private ltiDataSource: LTIDataSource,
+    private layoutService: LayoutService,
   ) {}
 
   ngAfterViewChecked(): void {

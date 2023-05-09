@@ -18,11 +18,11 @@ export class TopRightMenuComponent {
     map(profile => ([
       {
         label: 'Profile',
-        icon: 'pi pi-user',
+        icon: 'ph ph-user-list',
         routerLink: this.groupRouter.urlArray(rawGroupRoute(profile), [ 'personal-data' ]),
       },
       ...this.getDevelopmentMenuItems(),
-      { label: 'Log out', icon: 'pi pi-power-off', command: ():void => this.sessionService.logout() },
+      { label: 'Log out', icon: 'ph ph-sign-out', command: ():void => this.sessionService.logout() },
     ]))
   );
 
@@ -42,7 +42,7 @@ export class TopRightMenuComponent {
   private getDevelopmentMenuItems(): MenuItem[] {
     if (appConfig.production) return [];
     return [
-      { label: 'Invalidate token', icon: 'pi pi-refresh', command: (): void => this.invalidateToken() },
+      { label: 'Invalidate token', icon: 'ph ph-arrow-clockwise', command: (): void => this.invalidateToken() },
     ];
   }
 

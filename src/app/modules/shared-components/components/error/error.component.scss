@@ -1,50 +1,4 @@
-@import 'src/colors';
-
-:host {
-  &.light {
-    .message {
-      color: var(--base-bk-color);
-    }
-
-    .retry {
-      color: var(--base-bk-color);
-    }
-
-    .icon {
-      color: var(--base-bk-color);
-    }
-  }
-
-  &.dark {
-    .message {
-      color: var(--base-text-color);
-    }
-
-    .retry {
-      color: var(--base-text-color);
-    }
-
-    .icon {
-      color: var(--base-text-color);
-    }
-  }
-
-  &.warning {
-    .message {
-      color: var(--notify-error-color);
-    }
-
-    .icon {
-      color: var(--notify-error-color);
-    }
-  }
-
-  &.small {
-    .message {
-      font-size: 1.2rem;
-    }
-  }
-}
+@import 'src/assets/scss/functions';
 
 .wrapper {
   margin: 0;
@@ -62,17 +16,18 @@
 }
 
 .icon {
-  margin-right: 0.25rem;
-  font-size: 1.6rem;
-  color: var(--base-color);
+  font-size: toRem(96);
+  color: var(--alg-primary-color);
 }
 
 .message {
-  color: var(--base-color);
-  font-size: 1.6rem;
+  margin-top: toRem(12);
+  color: var(--alg-secondary-color);
+  font-size: toRem(16);
   text-align: center;
 }
 
 .refresh-button {
-  margin-left: 0.5rem;
+  margin-top: toRem(17);
+  font-size: toRem(16);
 }

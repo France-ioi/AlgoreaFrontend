@@ -24,7 +24,7 @@ describe('groups/users page', () => {
     });
 
     it('should present nav bar with active tab "groups"', () => {
-      cy.get('.left .tab-left-nav [role=tab][aria-selected=true]').should('be.visible').should('have.text', 'Groups');
+      cy.get('[data-cy="main-menu-group-btn"]').should('be.visible').should('have.text', 'Groups');
     });
   });
 
@@ -35,7 +35,7 @@ describe('groups/users page', () => {
     });
 
     it('should have an empty left nav with an error message and retry cta', () => {
-      cy.get('.left .tab-left-nav [role=tab][aria-selected=true]').should('be.visible').should('have.text', 'Groups');
+      cy.get('[data-cy="main-menu-group-btn"]').should('be.visible').should('have.text', 'Groups');
     });
   });
 });

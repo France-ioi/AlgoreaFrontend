@@ -1,15 +1,13 @@
-@import "src/colors.scss";
-
 .alg-language-picker-dropdown {
   &.base {
     &.p-dropdown {
       .p-dropdown-label {
-        color: var(--base-color);
+        color: var(--alg-primary-color);
       }
 
       .p-dropdown-item {
         &:not(.p-highlight) {
-          color: var(--base-text-color);
+          color: var(--alg-secondary-color);
           background-color: white;
         }
       }
@@ -28,7 +26,7 @@
     .p-dropdown-label {
       text-transform: uppercase;
       text-overflow: clip;
-      color: white;
+      color: var(--alg-secondary-color);
     }
 
     .p-dropdown-panel {

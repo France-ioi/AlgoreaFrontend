@@ -1,49 +1,16 @@
-@import 'src/colors.scss';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 .neighbor-widget {
   display: flex;
   align-items: center;
-  height: 2.2rem;
-}
-
-.neighbor-widget-wrapper {
-  border-radius: 2.2rem;
-  overflow: hidden;
 }
 
 .neighbor-widget-button {
-  background-color: var(--base-color);
-  color: #fff;
-  border: none;
-  outline: none;
-  border-radius: 0;
-  width: 2.6rem;
-  height: 100%;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-
-  &:hover:not(:disabled) {
-    background-color: var(--base-dark-color-hover);
+  &:not(:last-child) {
+    &:after {
+      content: '|';
+      color: var(--alg-border-light-color);
+      margin: 0 toRem(12);
+    }
   }
-
-  &:disabled {
-    cursor: not-allowed;
-    background: #a1c1ee;
-    opacity: 1;
-  }
-
-  &:first-child {
-    padding-left: .2rem;
-    z-index: 1;
-  }
-
-  &:last-child {
-    padding-right: .2rem;
-  }
-}
-
-.up-button {
-  background-color: var(--dark-base-color);
 }

@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="left" *ngIf="fullFrame$ | async as fullFrame" [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated }">
+  <div class="left-panel" *ngIf="fullFrame$ | async as fullFrame" [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngrxLet="isWatching$ as isWatching">
@@ -13,11 +13,11 @@
       [showTopRightControls]="!!(showTopRightControls$ | async)"
     ></alg-top-bar>
     <div
-      class="right"
+      class="right-panel"
       *ngIf="fullFrame$ | async as fullFrame"
       [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': isWatching }"
-      >
-      <div class="main-content">
+    >
+      <div class="main-content" id="main-container">
         <router-outlet></router-outlet>
       </div>
     </div>

@@ -1,4 +1,4 @@
 <alg-left-header></alg-left-header>
-<perfect-scrollbar class="left-nav-theme scrollbar" [ngClass]="{'dark': isNavThemeDark}">
-  <alg-left-nav (themeChange)="onNavThemeChange($event.isDark)" (selectElement)="onSelectedElementChange($event)"></alg-left-nav>
+<perfect-scrollbar>
+  <alg-left-nav (selectElement)="onSelectedElementChange($event)"></alg-left-nav>
 </perfect-scrollbar>

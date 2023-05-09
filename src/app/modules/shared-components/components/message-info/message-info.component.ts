@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: [ 'message-info.component.scss' ],
 })
 export class MessageInfoComponent {
-  @Input() icon = 'pi pi-exclamation-circle';
+  @Input() icon = 'ph-duotone ph-lock-key';
 
   constructor() {
   }

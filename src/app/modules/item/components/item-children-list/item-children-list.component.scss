@@ -1,66 +1,87 @@
-@import 'src/colors.scss';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 :host {
-  &.for-section {
-    .data-list-container {
-      margin-left: -3.3333rem;
-      padding: 0;
+  display: block;
+  padding: var(--alg-space-size-4) 0;
 
-      &.activity-type {
-        margin-left: -4.3rem;
-      }
-    }
+  &.no-padding {
+    padding: 0;
   }
 }
 
 .data-list-container {
   list-style: none;
   margin: 0;
-  padding: 1.6667rem;
-  color: var(--dark-text-color);
-}
-
-.data-list-item {
-  border-bottom: none;
-  display: flex;
-  align-items: center;
   padding: 0;
 }
 
-.activity-progress {
-  width: 4.2rem;
-}
+.data-list-item {
+  border-radius: toRem(8);
 
-.item-icon {
-  width: 2.9167rem;
-}
+  &:hover {
+    background-color: var(--children-item-hover-color);
 
-.item-content {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  height: 3.5rem;
-  border-bottom: .1rem solid var(--light-border-color);
-  cursor: pointer;
+    .item-link {
+      border-color: transparent !important;
+    }
+  }
 
-  &.locked {
-    color: var(--light-text-color);
-    cursor: default;
+  &:not(:last-child) {
+    .item-link {
+      border-bottom: toRem(1) solid var(--alg-border-light-color);
+    }
   }
 }
 
-.item-title {
+.item-link {
+  padding: 0 toRem(16);
+  display: flex;
+  text-decoration: none;
+
+  &.locked {
+    opacity: .3;
+  }
+}
+
+.left-container {
+  padding: toRem(18) 0;
+  display: flex;
   flex: 1;
 }
 
-.item-icon {
-  margin-right: 0.4167rem;
-}
-
-.item-status {
+.right-container {
+  min-width: toRem(32);
+  min-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 2rem;
+}
+
+.item-number {
+  color: var(--alg-primary-color);
+  font-size: toRem(20);
+}
+
+.item-title-section {
+  margin-left: toRem(11);
+  text-decoration: none;
+  flex: 1;
+}
+
+.item-title {
+  color: #000;
+  font-size: toRem(20);
+  font-weight: 400;
+}
+
+.item-subtitle {
+  margin-top: toRem(10);
+  color: var(--alg-secondary-color);
+  font-size: toRem(12);
+  font-weight: 400;
+}
+
+.item-icon {
+  color: var(--alg-primary-color);
+  font-size: toRem(24);
 }

@@ -1,4 +1,4 @@
-@import 'src/colors.scss';
+@import 'src/assets/scss/functions';
 
 .validation-text {
   display: flex;
@@ -29,5 +29,9 @@
 }
 
 .message-info {
-  padding: 1rem;
+  margin-top: var(--alg-space-size-3);
+}
+
+.description, .html-container {
+  margin: toRem(30) 0 0 0;
 }

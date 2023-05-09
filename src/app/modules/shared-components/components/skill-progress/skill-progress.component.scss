@@ -1,51 +1,35 @@
+@import 'src/assets/scss/functions';
+
 .progress-bar-wrapper {
-  width: 100%;
-  border-radius: 9rem;
+  width: toRem(32);
+  height: toRem(4);
+  border-radius: toRem(4);
   position: relative;
   margin: 0;
+  overflow: hidden;
+  background-color: var(--alg-border-light-color);
+
+  &.bold {
+    height: toRem(8);
+  }
 }
 
-.progress-bar-wrapper .progress-current {
+.progress-current-score {
+  height: 100%;
+  border-radius: toRem(4);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: var(--alg-primary-color);
+}
+
+.progress-best-score {
   height: 100%;
   border-radius: 9rem;
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-}
-
-.progress-bar-wrapper .progress-displayed {
-  height: 100%;
-  border-radius: 9rem;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-}
-
-.progress-bar-wrapper .progress-label {
-  color: white;
-  position: absolute;
-  left: 5px;
-  top: 0;
-  bottom: 0;
-  font-weight: bold;
-  line-height: 1.3333rem;
-}
-
-.progress-bar-wrapper .progress-label.vertical-label {
-  left: 0;
-  top: 1rem;
-  right: 0;
-  word-wrap: break-word;
-  font-size: 1.2rem;
-}
-
-.vertical {
-  height: 100%;
-  width: 0.5833rem;
-}
-
-.vertical-progress {
-  width: 100%;
+  background-color: #a7bdef;
 }

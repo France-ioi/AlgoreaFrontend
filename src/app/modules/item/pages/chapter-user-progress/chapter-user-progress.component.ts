@@ -45,6 +45,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           type: item.type,
           title: item.string.title || '',
           latestActivityAt: participantProgress.item.latestActivityAt,
+          hintsRequested: participantProgress.item.hintsRequested,
           timeSpent: participantProgress.item.timeSpent,
           submissions: participantProgress.item.submissions,
           score: participantProgress.item.score,
@@ -56,6 +57,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           type: itemData.type,
           title: itemData.string.title || '',
           latestActivityAt: itemData.latestActivityAt,
+          hintsRequested: itemData.hintsRequested,
           timeSpent: itemData.timeSpent,
           submissions: itemData.submissions,
           score: itemData.score,
@@ -78,12 +80,16 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
       header: $localize`Latest activity`,
     },
     {
+      field: 'hintsRequested',
+      header: $localize`Hints`,
+    },
+    {
       field: 'timeSpent',
       header: $localize`Time spent`,
     },
     {
       field: 'submissions',
-      header: $localize`:Truncated title (little space available) for 'number of submissions':# subm.`,
+      header: $localize`:Truncated title (little space available) for 'number of submissions':# Subm.`,
     },
     {
       field: 'score',

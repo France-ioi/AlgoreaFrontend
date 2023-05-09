@@ -1,13 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
-
-enum ScoreRingColor {
-  Success = '#69ce4d',
-  DarkSuccess = '#B8E986',
-  Initial = '#F90223',
-  DefaultText = '#4A4A4A',
-  DarkText = '#FFF',
-  DarkBk = '#2E5E95',
-}
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'alg-score-ring',
@@ -15,30 +6,21 @@ enum ScoreRingColor {
   styleUrls: [ './score-ring.component.scss' ],
 })
 export class ScoreRingComponent implements OnChanges {
-  @Input() diameter = 60;
+  @Input() diameter = 32;
   @Input() currentScore = 0;
   @Input() bestScore = 0;
   @Input() isValidated = false;
+  /**@deprecated**/
   @Input() isDark = false;
+  /**@deprecated**/
   @Input() icon?: string; // a font-awesome icon identifier
+  /**@deprecated**/
   @Input() scoreFillColor?: string;
-  @Input() forTree = false;
-  @Input() forDarkBg = false;
-
-  @ViewChild('svg') svg?: ElementRef;
-
-  greyedPath?: string;
-  greyedFill?: string;
-
-  scorePath?: string;
-  scoreFill?: string;
+  @Input() compact = false;
 
   svgRadius = 30;
-
-  iconFill = 'white';
-
-  textFill = ScoreRingColor.DefaultText;
-  fontSize = 1;
+  currentScorePath?: string;
+  bestScorePath?: string;
 
   private pathFromScore(score: number): string {
     if (score === 0) {
@@ -55,47 +37,7 @@ export class ScoreRingComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    if (this.scoreFillColor) {
-      this.greyedFill = this.scoreFillColor;
-      this.textFill = ScoreRingColor.DarkText;
-    } else {
-      if (this.isDark) {
-        this.textFill = ScoreRingColor.DarkText;
-      } else {
-        this.textFill = ScoreRingColor.DefaultText;
-      }
-    }
-
-    this.greyedPath = this.pathFromScore(this.currentScore);
-    this.scorePath = this.pathFromScore(this.bestScore);
-    if (this.currentScore === 100) {
-      if (this.forDarkBg) {
-        this.greyedFill = ScoreRingColor.DarkSuccess;
-      } else {
-        this.greyedFill = ScoreRingColor.Success;
-      }
-    } else if (!this.scoreFillColor) {
-      this.greyedFill = `hsl(${this.currentScore * 0.4 }, 100%, 50%)`;
-      this.scoreFill = '#8E8E8E';
-    }
-
-    if (this.icon) {
-      if (this.isDark) {
-        this.iconFill = 'white';
-      } else {
-        this.iconFill = ScoreRingColor.DefaultText;
-      }
-    } else if (this.isValidated) {
-      this.icon = 'check';
-      if (this.forDarkBg) {
-        this.iconFill = ScoreRingColor.DarkSuccess;
-      } else {
-        this.iconFill = ScoreRingColor.Success;
-      }
-    } else {
-      this.icon = undefined;
-    }
-
-    this.fontSize = (2 * this.diameter) / 56;
+    this.currentScorePath = this.pathFromScore(this.currentScore);
+    this.bestScorePath = this.pathFromScore(this.bestScore);
   }
 }
