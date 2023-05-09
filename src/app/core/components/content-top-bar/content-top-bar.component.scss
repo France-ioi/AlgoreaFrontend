@@ -17,6 +17,23 @@
   align-items: center;
 }
 
+.right-pane-title {
+  overflow: hidden;
+  flex: 1;
+}
+
+.right-pane-title-text {
+  font-size: toRem(12);
+  color: var(--base-text-color);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.neighbor-widget {
+  display: block;
+}
+
 .breadcrumb {
   flex: 1;
 }

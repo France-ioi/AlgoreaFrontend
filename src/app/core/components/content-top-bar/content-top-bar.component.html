@@ -19,6 +19,9 @@
         [diameter]="32"
       ></alg-score-ring>
     </div>
+    <div class="right-pane-title">
+      <p class="right-pane-title-text" *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
+    </div>
     <alg-breadcrumb class="breadcrumb margin-right" [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
     <button
       *ngIf="discussionState$ | async as discussion"
@@ -36,7 +39,7 @@
     <ng-container *ngIf="fullFrameContent?.active || scrolled">
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-        class="margin-left"
+        class="neighbor-widget margin-left"
         [navigationMode]="{
           parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
           left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
