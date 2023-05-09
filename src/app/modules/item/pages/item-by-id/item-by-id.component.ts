@@ -13,6 +13,7 @@ import {
   catchError,
   mergeWith,
   takeUntil,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState, isFetchingOrError, readyState } from 'src/app/shared/helpers/state';
@@ -312,8 +313,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       pairwise(),
       filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
       map(([ , current ]) => ensureDefined(current).item),
-    ).subscribe(item => {
-      const isInitFromMobile = !this.layoutService.fullFrameValue.animated && this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
+      withLatestFrom(this.layoutService.fullFrame$)
+    ).subscribe(([ item, fullFrame ]) => {
+      const isInitFromMobile = !fullFrame.animated && this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
       const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
       this.layoutService.configure({ fullFrameActive: isInitFromMobile || activateFullFrame });

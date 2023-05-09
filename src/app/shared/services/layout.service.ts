@@ -23,10 +23,6 @@ export class LayoutService {
   private showTopRightControls = new BehaviorSubject(false);
   showTopRightControls$ = this.showTopRightControls.pipe(distinctUntilChanged());
 
-  get fullFrameValue(): FullFrameContent {
-    return this.fullFrame.value;
-  }
-
   /**
    * Configure layout, expectedly called by routes.
    */
