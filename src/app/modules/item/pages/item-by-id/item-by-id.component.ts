@@ -51,7 +51,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -313,7 +313,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
       map(([ , current ]) => ensureDefined(current).item),
     ).subscribe(item => {
-      const isInitFromMobile = !this.layoutService.fullFrameValue.animated && this.breakpointObserver.isMatched('(max-width: 479px)');
+      const isInitFromMobile = !this.layoutService.fullFrameValue.animated && this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
       const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
       this.layoutService.configure({ fullFrameActive: isInitFromMobile || activateFullFrame });
