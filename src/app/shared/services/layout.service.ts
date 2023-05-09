@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 export interface FullFrameContent {
   active: boolean,
@@ -17,10 +18,14 @@ export class LayoutService {
 
   /** Expands the content by hiding the left menu and select headers */
   private fullFrame = new BehaviorSubject<FullFrameContent>({ active: true, canToggle: false, animated: false });
-  fullFrame$ = this.fullFrame.pipe(distinctUntilChanged((a, b) => a.active === b.active && a.canToggle === b.canToggle));
+  fullFrame$ = this.fullFrame.pipe(distinctUntilChanged((a, b) => a.active === b.active && a.canToggle === b.canToggle), shareReplay(1));
 
   private showTopRightControls = new BehaviorSubject(false);
   showTopRightControls$ = this.showTopRightControls.pipe(distinctUntilChanged());
+
+  get fullFrameValue(): FullFrameContent {
+    return this.fullFrame.value;
+  }
 
   /**
    * Configure layout, expectedly called by routes.
