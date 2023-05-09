@@ -23,7 +23,7 @@
       ></alg-score-ring>
     </div>
     <div class="right-pane-title">
-      <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
+      <p class="right-pane-title-text" *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>
     <button
       *ngIf="discussionState$ | async as discussion"
@@ -40,7 +40,7 @@
     ></alg-watch-button>
     <alg-neighbor-widget
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      class="margin-left"
+      class="neighbor-widget margin-left"
       [navigationMode]="{
         parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
         left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
