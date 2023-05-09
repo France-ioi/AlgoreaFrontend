@@ -41,6 +41,10 @@
   &.locked {
     opacity: .3;
   }
+
+  @media screen and (max-width: 479px) {
+    padding: 0;
+  }
 }
 
 .left-container {
