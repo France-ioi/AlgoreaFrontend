@@ -33,17 +33,19 @@
       class="margin-left"
       *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
     ></alg-watch-button>
-    <alg-neighbor-widget
-      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      class="margin-left"
-      [navigationMode]="{
-        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
-        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
-        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
-      }"
-      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
-      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
-      (right)="navigationNeighbors?.data?.next?.navigateTo()"
-    ></alg-neighbor-widget>
+    <ng-container *ngIf="fullFrameContent?.active || scrolled">
+      <alg-neighbor-widget
+        *ngIf="navigationNeighbors$ | async as navigationNeighbors"
+        class="margin-left"
+        [navigationMode]="{
+          parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
+          left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
+          right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
+        }"
+        (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
+        (left)="navigationNeighbors?.data?.previous?.navigateTo()"
+        (right)="navigationNeighbors?.data?.next?.navigateTo()"
+      ></alg-neighbor-widget>
+    </ng-container>
   </div>
 </ng-container>
