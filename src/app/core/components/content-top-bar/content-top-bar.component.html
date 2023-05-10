@@ -1,10 +1,7 @@
 <alg-observation-bar *ngIf="!!(watchedGroup$ | async)"></alg-observation-bar>
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
-  <ng-container *ngIf="!fullFrameContent?.active && !scrolled">
-    <alg-breadcrumb [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
-  </ng-container>
-  <div class="full-frame-content-top-bar" *ngIf="fullFrameContent?.active || scrolled">
+  <div class="content-top-bar">
     <button
       class="alg-button-icon no-bg primary-color left-menu margin-right"
       pButton
@@ -13,7 +10,7 @@
       (click)="unsetFullFrameContent()"
       *ngIf="fullFrameContent?.active"
     ></button>
-    <div class="score-placeholder" *ngIf="currentContent.type === 'item'">
+    <div class="margin-right" *ngIf="currentContent.type === 'item'">
       <alg-score-ring
         *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
         [bestScore]="$any(currentContent).details.bestScore"
@@ -22,9 +19,7 @@
         [diameter]="32"
       ></alg-score-ring>
     </div>
-    <div class="right-pane-title">
-      <p *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
-    </div>
+    <alg-breadcrumb class="breadcrumb margin-right" [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
     <button
       *ngIf="discussionState$ | async as discussion"
       class="alg-button-icon no-bg primary-color margin-left"
