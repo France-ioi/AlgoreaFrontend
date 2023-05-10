@@ -3,3 +3,9 @@
   width: 100%;
   height: calc(100% - 2rem); /* 2rem is half of the height of the top-bar nav control */
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
