@@ -112,6 +112,7 @@
   display: flex;
   flex-direction: column;
   height: toRem(248);
+  border: toRem(1) solid #DEDEDE;
   border-radius: toRem(10);
   cursor: pointer;
   text-decoration: none;

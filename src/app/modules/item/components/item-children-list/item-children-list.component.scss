@@ -19,7 +19,7 @@
   border-radius: toRem(8);
 
   &:hover {
-    background-color: var(--children-item-hover-color);
+    background-color: var(--alg-children-item-hover-color);
 
     .item-link {
       border-color: transparent !important;
