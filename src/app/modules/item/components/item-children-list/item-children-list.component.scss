@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  margin: 0 toRem(-16);
   padding: var(--alg-space-size-4) 0;
 
   &.no-padding {
