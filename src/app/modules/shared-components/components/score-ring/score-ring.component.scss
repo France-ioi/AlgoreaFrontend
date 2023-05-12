@@ -56,4 +56,8 @@
 .score-caption {
   color: var(--alg-primary-color);
   font-size: toRem(14);
+
+  &.zero-value {
+    color: var(--dark-text-color);
+  }
 }
