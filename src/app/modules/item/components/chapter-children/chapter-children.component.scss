@@ -1,6 +1,12 @@
 @import 'src/assets/scss/functions';
 @import 'src/geometry.scss';
 
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: var(--alg-space-size-4) 0;
+}
+
 .validation-text {
   color: var(--base-color);
   font-size: 1.6rem;
@@ -8,65 +14,11 @@
   padding: 2rem 0;
   text-align: center;
 }
+
 .validation-text+* {
   margin-top: 0;
   padding-top: 0 !important;
 }
-
-/*
-.data-list-container {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  color: var(--dark-text-color);
-
-  &.activity {
-    padding: 1.6667rem;
-
-    li {
-      display: flex;
-      align-items: center;
-      border-bottom: none;
-      padding: 0;
-
-      .activity-progress {
-        width: 4.1667rem;
-      }
-
-      .activity-content {
-        display: flex;
-        align-items: center;
-        flex: 1;
-        box-sizing: border-box;
-        height: 4rem;
-        border-bottom: .1rem solid var(--light-border-color);
-        cursor: pointer;
-
-        &.locked {
-          color: var(--light-text-color);
-          cursor: default;
-        }
-
-        .activity-weight {
-          margin-right: 2rem;
-          width: 3.3333rem;
-        }
-
-        .activity-title {
-          flex: 1;
-        }
-
-        .activity-status {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 2rem;
-        }
-      }
-    }
-  }
-}
-*/
 
 .grid-container {
   display: flex;

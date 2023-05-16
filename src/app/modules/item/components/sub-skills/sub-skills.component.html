@@ -1,12 +1,12 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
 
   <alg-error
-    *ngIf="state.isError"
-    class="dark"
+    class="alg-flex-1"
     i18n-message message="Error while loading content"
     [showRefreshButton]="true"
     (refresh)="refresh()"
+    *ngIf="state.isError"
   ></alg-error>
 
   <ng-container *ngIf="state.isReady && state.data as data">

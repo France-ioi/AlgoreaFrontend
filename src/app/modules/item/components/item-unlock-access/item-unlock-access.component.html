@@ -1,13 +1,13 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
+  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching"></alg-loading>
 
   <alg-error
-    *ngIf="state.isError"
-    class="dark"
+    class="alg-flex-1"
     icon="fa fa-exclamation-triangle"
     i18n-message message="Unable to load the dependencies"
     [showRefreshButton]="true"
     (refresh)="refresh()"
+    *ngIf="state.isError"
   ></alg-error>
 
   <ng-container *ngIf="!state.isFetching && (state.data || []).length > 0">

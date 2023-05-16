@@ -123,7 +123,7 @@
         </a>
       </nav>
       <div
-        class="bg-white"
+        class="content-container"
         #contentContainer
         [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
       >
@@ -144,6 +144,7 @@
                 <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
               </div>
               <alg-item-content
+                class="alg-flex-1"
                 [hidden]="!contentTab.isActive && !editChildrenTab.isActive"
                 [itemData]="itemData"
                 [taskConfig]="taskConfig"
@@ -179,16 +180,19 @@
               </div>
 
               <alg-item-log-view
+                class="alg-flex-1"
                 *ngIf="!!historyTab?.isActive"
                 [itemData]="itemData"
               ></alg-item-log-view>
 
               <alg-chapter-group-progress
+                class="alg-flex-1"
                 *ngIf="!!chapterGroupProgressTab?.isActive"
                 [itemData]="itemData"
               ></alg-chapter-group-progress>
 
               <alg-chapter-user-progress
+                class="alg-flex-1"
                 *ngIf="!!chapterUserProgressTab?.isActive"
                 [itemData]="itemData"
               ></alg-chapter-user-progress>
@@ -218,10 +222,7 @@
 
   </ng-container>
 
-  <div class="loading-section" *ngIf="state.isFetching" [algFullHeightContent]="true">
-    <alg-loading></alg-loading>
-  </div>
-
+  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
 
   <ng-container *ngIf="state.isError">
     <p class="alg-error-message" *ngIf="state.error && ($any(state.error).status === 403 || $any(state.error).status === 404); else unknownError" i18n>

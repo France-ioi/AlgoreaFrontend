@@ -1,14 +1,9 @@
 @import 'src/assets/scss/functions';
 
 :host {
-  display: block;
-  padding: var(--alg-space-size-4) 0;
-}
-
-.spinner {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  padding: var(--alg-space-size-4) 0;
 }
 
 .refresh-button {

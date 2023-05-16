@@ -1,5 +1,12 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .wrapper {
   margin: 0;
   padding: 1rem;

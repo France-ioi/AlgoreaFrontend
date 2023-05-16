@@ -24,10 +24,10 @@
 
       <ng-template #metadataError>
         <alg-error
-        *ngIf="metadataError$ | async; else unknownError"
-        i18n-message message="Error while requesting task metadata"
-        icon="ph-duotone ph-warning-circle"
-      ></alg-error>
+          *ngIf="metadataError$ | async; else unknownError"
+          i18n-message message="Error while requesting task metadata"
+          icon="ph-duotone ph-warning-circle"
+        ></alg-error>
       </ng-template>
 
       <ng-template #unknownError>

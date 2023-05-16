@@ -35,13 +35,13 @@
       ></alg-item-children-edit-form>
 
       <alg-chapter-children
+        class="alg-flex-1"
         [itemData]="itemData"
-        [algFullHeightContent]="true"
         *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
       ></alg-chapter-children>
 
-      <alg-sub-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
-      <alg-parent-skills [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
+      <alg-sub-skills class="alg-flex-1" [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
+      <alg-parent-skills class="alg-flex-1" [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
     </ng-container>
 
     <ng-container *ngIf="taskConfig">
@@ -91,13 +91,13 @@
       </alg-message-info>
     </div>
 
-    <alg-item-unlock-access [itemData]="itemData"></alg-item-unlock-access>
+    <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData"></alg-item-unlock-access>
   </ng-container>
 
   <alg-task-loader
+    class="alg-flex-1"
     *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && !itemData.currentResult"
     i18n-label label="Starting the activity"
-    [algFullHeightContent]="true"
   ></alg-task-loader>
 
   <ng-container *ngIf="itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && !itemData.currentResult))">

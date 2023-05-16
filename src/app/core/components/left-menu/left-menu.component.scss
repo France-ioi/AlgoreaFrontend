@@ -1,7 +1,7 @@
-.scrollbar {
-  background-color: var(--alg-light-bg-color);
-  width: 100%;
-  height: calc(100% - 2rem); /* 2rem is half of the height of the top-bar nav control */
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .container {
