@@ -47,6 +47,7 @@
     <ng-container *ngIf="taskConfig">
       <ng-container *ngIf="itemData.item.url; else noUrl">
         <alg-item-display
+          class="alg-flex-1"
           [route]="itemData.route"
           [editingPermission]="itemData.item.permissions"
           [url]="itemData.item.url"
