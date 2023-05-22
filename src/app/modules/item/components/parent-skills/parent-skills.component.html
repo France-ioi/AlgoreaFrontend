@@ -15,7 +15,6 @@
 
   <ng-container *ngIf="state.isReady && state.data as parents">
     <alg-item-children-list
-      class="no-padding"
       type="skill"
       i18n-emptyMessage emptyMessage="This skill does not have parent skills."
       [children]="parents"
