@@ -15,9 +15,9 @@
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
     <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
-      <div class="nav-tab">
+      <div class="alg-nav-tab">
         <a
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #overviewTab="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
@@ -28,7 +28,7 @@
         </a>
         <a
           [hidden]="!group.isCurrentUserManager && !compositionTab?.isActive"
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./members'"
           routerLinkActive #compositionTab="routerLinkActive"
           [class.active]="compositionTab.isActive"
@@ -38,7 +38,7 @@
         </a>
         <a
           [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab?.isActive"
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./managers'"
           routerLinkActive #adminTab="routerLinkActive"
           [class.active]="adminTab.isActive"
@@ -47,18 +47,18 @@
           Managers
         </a>
         <a
-            [hidden]="(hideAccessTab || !group.currentUserCanGrantGroupAccess) && !accessTab?.isActive"
-            class="nav-tab-item"
-            [routerLink]="'./access'"
-            routerLinkActive #accessTab="routerLinkActive"
-            [class.active]="accessTab.isActive"
-            i18n
+          [hidden]="(hideAccessTab || !group.currentUserCanGrantGroupAccess) && !accessTab?.isActive"
+          class="alg-nav-tab-item"
+          [routerLink]="'./access'"
+          routerLinkActive #accessTab="routerLinkActive"
+          [class.active]="accessTab.isActive"
+          i18n
         >
           Access
         </a>
         <a
           [hidden]="!group.canCurrentUserManageGroup && !settingsTab?.isActive"
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./settings'"
           routerLinkActive #settingsTab="routerLinkActive"
           [class.active]="settingsTab.isActive"
