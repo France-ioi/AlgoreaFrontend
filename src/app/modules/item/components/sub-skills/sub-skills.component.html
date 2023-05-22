@@ -15,7 +15,6 @@
     </div>
 
     <alg-item-children-list
-      class="no-padding"
       type="skill"
       i18n-emptyMessage emptyMessage="This skill does not have subskills."
       [children]="data.skills"
@@ -28,7 +27,6 @@
     </div>
 
     <alg-item-children-list
-      class="no-padding"
       i18n-emptyMessage emptyMessage="This skill does not have related activities."
       [children]="data.activities"
       [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
