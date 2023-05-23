@@ -1,8 +1,8 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-loading size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
-
+  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
   <alg-error
     *ngIf="state.isError"
+    class="alg-flex-1"
     [class.dark]="$any(state).error.status !== 403"
     [icon]="$any(state).error.status !== 403 ? 'fa fa-exclamation-triangle' : undefined"
     [showRefreshButton]="$any(state).error.status !== 403"
@@ -17,6 +17,11 @@
   </alg-error>
 
   <ng-container *ngIf="state.data">
+    <div class="refresh-button">
+      <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+        Refresh
+      </button>
+    </div>
     <p-table
       class="alg-table"
       [columns]="state.data.columns"
@@ -26,13 +31,6 @@
       responsiveLayout="scroll"
     >
       <ng-template pTemplate="header" let-rowData let-columns>
-        <tr>
-          <th [colSpan]="columns.length">
-            <div class="header-container header-refresh">
-              <p-button icon="pi pi-refresh" (click)="refresh()"></p-button>
-            </div>
-          </th>
-        </tr>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
             <th>
@@ -54,17 +52,22 @@
           <td *ngFor="let col of columns" (mouseleave)="onMouseLeave($event, col.field)">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'activityType'">
-                <div class="activity-container">
-                  <div class="activity-left">
-                    <span class="activity-progress">
-                      <alg-score-ring
-                        [currentScore]="rowData.score"
-                        [diameter]="32"
-                        *ngIf="rowData.score"
-                      ></alg-score-ring>
-                    </span>
-
-                    {{ rowData.activityType | logActionDisplay }}
+                <div class="item-title-section">
+                  <div class="item-title-section-left">
+                    <alg-score-ring
+                      [currentScore]="rowData.score"
+                      [diameter]="32"
+                      *ngIf="rowData.score; else iconSection"
+                    ></alg-score-ring>
+                    <ng-template #iconSection>
+                      <i class="ph-duotone item-icon" [ngClass]="{
+                        'ph-flag-checkered': rowData.activityType === 'result_started',
+                        'ph-floppy-disk-back': rowData.activityType === 'saved_answer'
+                      }"></i>
+                    </ng-template>
+                  </div>
+                  <div class="item-title">
+                    <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
                   </div>
                 </div>
               </ng-container>
