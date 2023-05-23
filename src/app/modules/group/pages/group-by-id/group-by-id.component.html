@@ -69,28 +69,32 @@
       </div>
     </div>
 
-    <div class="bg-white">
-      <alg-group-overview
-        *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'"
-        [group]="group"
-        (groupRefreshRequired)="onGroupRefreshRequired()"
-        (leftGroup)="refreshNav()"
-      ></alg-group-overview>
-      <alg-group-composition *ngIf="!!compositionTab?.isActive" [groupData]="state.data" (groupRefreshRequired)="onGroupRefreshRequired()" (addedGroup)="refreshNav()" (removedGroup)="refreshNav()"></alg-group-composition>
-      <alg-group-managers *ngIf="!!adminTab?.isActive" [groupData]="state.data"></alg-group-managers>
-      <alg-group-access *ngIf="!!accessTab?.isActive" [group]="group"></alg-group-access>
-      <alg-group-edit *ngIf="!!settingsTab?.isActive" #groupEdit></alg-group-edit>
-    </div>
-
+    <alg-group-overview
+      *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'"
+      class="alg-flex-1"
+      [group]="group"
+      (groupRefreshRequired)="onGroupRefreshRequired()"
+      (leftGroup)="refreshNav()"
+    ></alg-group-overview>
+    <alg-group-composition
+      *ngIf="!!compositionTab?.isActive"
+      class="alg-flex-1"
+      [groupData]="state.data"
+      (groupRefreshRequired)="onGroupRefreshRequired()"
+      (addedGroup)="refreshNav()"
+      (removedGroup)="refreshNav()"
+    ></alg-group-composition>
+    <alg-group-managers *ngIf="!!adminTab?.isActive" class="alg-flex-1" [groupData]="state.data"></alg-group-managers>
+    <alg-group-access *ngIf="!!accessTab?.isActive" class="alg-flex-1" [group]="group"></alg-group-access>
+    <alg-group-edit *ngIf="!!settingsTab?.isActive" class="alg-flex-1" #groupEdit></alg-group-edit>
   </ng-container>
 
-  <alg-loading *ngIf="state.isFetching && !state.data"></alg-loading>
+  <alg-loading class="alg-flex-1" *ngIf="state.isFetching && !state.data"></alg-loading>
 
   <alg-error
     *ngIf="state.isError"
-    class="dark"
+    class="alg-flex-1"
     [showRefreshButton]="$any(state.error).status !== 403"
-    refreshButtonType="refresh"
     (refresh)="onGroupRefreshRequired()"
   >
     <ng-container *ngIf="$any(state.error).status === 403; else otherError;" i18n>

@@ -1,14 +1,15 @@
 <ng-container *ngIf="groupWithPermissions">
   <ng-container *ngIf="groupWithPermissions.isCurrentUserManager; else noPermission">
-    <alg-section icon="fa fa-users" i18n-label label="Current Composition">
-      <alg-member-list #memberList [groupData]="groupData" (removedGroup)="removedGroup.emit()"></alg-member-list>
-      <alg-add-sub-group
-          *ngIf="groupData?.group?.currentUserCanManage !== 'none'"
-          [loading]="state === 'addingGroup'"
-          (addGroup)="addGroup($event)"
-          #addSubGroupComponent
-      ></alg-add-sub-group>
-    </alg-section>
+    <h2 class="alg-h2" i18n>Current Composition</h2>
+<!--    <alg-section icon="fa fa-users" i18n-label label="Current Composition">-->
+    <alg-member-list #memberList [groupData]="groupData" (removedGroup)="removedGroup.emit()"></alg-member-list>
+    <alg-add-sub-group
+        *ngIf="groupData?.group?.currentUserCanManage !== 'none'"
+        [loading]="state === 'addingGroup'"
+        (addGroup)="addGroup($event)"
+        #addSubGroupComponent
+    ></alg-add-sub-group>
+<!--    </alg-section>-->
     <alg-group-join-by-code [group]="groupData?.group" (refreshRequired)="refreshGroupInfo()" *ngIf="groupWithPermissions.canCurrentUserManageMembers">
     </alg-group-join-by-code>
 
