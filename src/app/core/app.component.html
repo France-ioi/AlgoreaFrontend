@@ -15,7 +15,7 @@
     <div
       class="right-panel"
       *ngIf="fullFrame$ | async as fullFrame"
-      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': isWatching }"
+      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': isWatching, mobile: !!(isMobile$ | async) }"
     >
       <div class="main-content" id="main-container">
         <router-outlet></router-outlet>

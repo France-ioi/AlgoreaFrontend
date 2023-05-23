@@ -208,6 +208,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     }),
   );
 
+  isMobile$ = this.breakpointObserver.observe(Breakpoints.HandsetPortrait).pipe(map(results => results.matches));
+
   contentContainerTop = 0;
 
   private subscriptions: Subscription[] = [
