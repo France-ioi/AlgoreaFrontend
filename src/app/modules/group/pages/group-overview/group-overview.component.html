@@ -5,7 +5,7 @@
 
   <ng-container *ngIf="group.currentUserCanWatchMembers">
     <h2 class="alg-h2" i18n>Progress</h2>
-    <alg-group-log-view [groupId]="group.id"></alg-group-log-view>
+    <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
   </ng-container>
 
   <ng-container *ngIf="group.currentUserMembership !== 'none'">
