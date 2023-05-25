@@ -76,6 +76,7 @@
 .tree-nav-caption {
   margin-left: var(--alg-space-size-5);
   flex: 1;
+  word-break: break-word;
 
   &.children-caption {
     margin-left: toRem(14);
