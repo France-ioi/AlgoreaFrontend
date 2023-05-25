@@ -1,5 +1,10 @@
 @import 'src/variables';
 
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .add-manager-button-wrapper {
   display: flex;
   align-items: center;
@@ -14,119 +19,6 @@
   }
 }
 
-:host .slanted-grid {
-  margin-left: -4.8rem;
-
-  .p-datatable-wrapper {
-    overflow: hidden;
-  }
-
-  .p-datatable-thead > tr {
-    height: 100%;
-  }
-
-  tr > th {
-    border-left: none;
-    border-right: none;
-    height: 13rem;
-    transform: skewX(-45deg);
-    transform-origin: 0 100%;
-    position: relative;
-    background-color: #f8f8f8;
-    min-width: 3.3333rem;
-    flex: auto;
-
-    .slanted-header {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      transform: translate(50%, 50%) skewX(45deg) rotate(-45deg);
-      transform-origin: 0 50%;
-      text-align: left;
-      padding-left: 3rem;
-      color: #8c8c8c;
-      overflow: visible;
-      font-size: 1.2rem;
-
-      &-content {
-        width: 15rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        text-transform: initial;
-      }
-    }
-
-    &:nth-child(odd) {
-      background-color: white;
-    }
-
-    &:first-child {
-      background-color: white;
-    }
-  }
-
-  tr > td {
-    background-color: #f8f8f8;
-    padding: 0;
-    text-align: center;
-    font-size: 1.2rem;
-    justify-content: center;
-    height: auto;
-    max-height: none;
-
-    &:nth-child(odd) {
-      background-color: white;
-      text-align: center;
-    }
-
-    &:first-child {
-      background-color: white;
-    }
-
-    .table-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      i {
-        font-size: 1.2rem;
-      }
-
-      &.edit {
-        color: var(--base-color);
-      }
-
-      &.locked {
-        color: #9acc68;
-      }
-
-      &.unlocked {
-        color: var(--notify-error-color);
-      }
-    }
-
-    .can-manage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      > span {
-        margin-bottom: 0.4167rem;
-      }
-    }
-  }
-
-  tr {
-    height: 5rem;
-  }
-
-  @media screen and (max-width: 599.98px) {
-    margin-left: -1.8rem;
-  }
-}
-
 .error {
   padding: 1rem;
 }
@@ -135,4 +27,18 @@
   color: var(--base-color);
   font-size: 1.6rem;
   text-align: center;
+}
+
+.table-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-locked {
+  color: var(--notify-error-color);
+}
+
+.icon-unlocked {
+  color: var(--alg-success-color);
 }
