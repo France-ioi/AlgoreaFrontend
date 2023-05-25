@@ -8,6 +8,8 @@
   }
 
   .p-dropdown-trigger {
+    padding: 0 toRem(5);
+    width: auto;
     color: var(--alg-primary-color);
   }
 
@@ -63,6 +65,7 @@
       font-size: toRem(12);
       font-weight: 500;
       text-transform: capitalize;
+      text-align: center;
 
       &:active, &:focus {
         outline: none;
