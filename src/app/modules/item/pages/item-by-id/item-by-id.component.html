@@ -2,7 +2,7 @@
   <ng-container *ngIf="state.isReady && state.data as itemData">
 
     <ng-container *ngIf="taskTabs$ | async as taskTabs">
-      <alg-item-header [itemData]="itemData" *ngIf="!(fullFrame$ | async)?.active && !(isMobile$ | async)"></alg-item-header>
+      <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
 
       <alg-access-code-view
         *ngIf="showAccessCodeField$ | async"
@@ -156,6 +156,7 @@
                 (skipSave)="skipBeforeUnload()"
                 (refresh)="reloadItem()"
                 (editorUrl)="editorUrl = $event"
+                (fullFrameTask)="fullFrameContent$.next($event)"
               ></alg-item-content>
             </ng-container>
           </ng-template>

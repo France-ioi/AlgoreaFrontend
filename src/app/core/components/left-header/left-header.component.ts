@@ -20,8 +20,8 @@ export class LeftHeaderComponent {
     private titleService: Title,
   ) { }
 
-  setFullFrameContent(): void {
-    this.layoutService.configure({ fullFrameActive: true });
+  hideLeftMenu(): void {
+    this.layoutService.toggleLeftMenu(false);
   }
 
   login(): void {

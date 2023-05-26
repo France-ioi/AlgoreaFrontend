@@ -75,7 +75,16 @@
     padding-top: 7.5rem;
   }
 
-  &.collapsed, &.mobile {
+  &.collapsed {
+    margin-left: 0;
+    border-radius: 0;
+
+    .main-content {
+      margin-top: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 599.98px) {
     margin-left: 0;
     border-radius: 0;
 

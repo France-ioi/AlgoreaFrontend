@@ -1,6 +1,7 @@
-<alg-left-header *ngIf="fullFrameContent?.active && fullFrameContent?.canToggle" [compactMode]="true"></alg-left-header>
+<alg-left-header *ngIf="showLeftMenuOpener" [compactMode]="true"></alg-left-header>
 <alg-content-top-bar
-  [fullFrameContent]="fullFrameContent"
+  [fullFrameContentDisplayed]="fullFrameContentDisplayed"
+  [showLeftMenuOpener]="showLeftMenuOpener"
   [scrolled]="scrolled"
 ></alg-content-top-bar>
 <alg-top-right-controls *ngIf="showTopRightControls" [drawLeftBorder]="!modeBarDisplayed"></alg-top-right-controls>

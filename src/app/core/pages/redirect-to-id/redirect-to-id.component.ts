@@ -5,7 +5,6 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { rawItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { LayoutService } from 'src/app/shared/services/layout.service';
 
 @Component({
   selector: 'alg-redirect-to-id',
@@ -33,10 +32,8 @@ export class RedirectToIdComponent implements OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private itemRouter: ItemRouter,
-    private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
   ) {
-    this.layoutService.configure({ fullFrameActive: false });
     this.currentContentService.clear();
   }
 

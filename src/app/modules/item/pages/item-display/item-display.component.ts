@@ -110,7 +110,10 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     }),
     distinctUntilChanged(),
   );
-  fullFrame$ = this.layoutService.fullFrame$;
+  fullFrame$ = this.metadata$.pipe(
+    map(({ autoHeight }) => autoHeight)
+  );
+  @Output() fullFrame = this.fullFrame$;
 
   showTaskAnyway = false;
 

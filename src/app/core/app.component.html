@@ -1,21 +1,20 @@
-<div class="container">
-  <div class="left-panel" *ngIf="fullFrame$ | async as fullFrame" [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated }">
+<div class="container" *ngIf="leftMenu$ | async as leftMenu">
+  <div class="left-panel" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngrxLet="isWatching$ as isWatching">
     <alg-top-bar
       class="top-bar"
-      *ngIf="fullFrame$ | async as fullFrame"
-      [ngClass]="{ 'with-mode-bar': isWatching, collapsed: fullFrame.active, animated: fullFrame.animated }"
+      [ngClass]="{ 'with-mode-bar': isWatching, collapsed: !leftMenu.shown, animated: leftMenu.animated }"
       [scrolled]="scrolled"
       [modeBarDisplayed]="isWatching"
-      [fullFrameContent]="fullFrame"
+      [fullFrameContentDisplayed]="!!(fullFrameContentDisplayed$ | async)"
+      [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
       [showTopRightControls]="!!(showTopRightControls$ | async)"
     ></alg-top-bar>
     <div
       class="right-panel"
-      *ngIf="fullFrame$ | async as fullFrame"
-      [ngClass]="{ collapsed: fullFrame.active, animated: fullFrame.animated, 'with-mode-bar': isWatching, mobile: !!(isMobile$ | async) }"
+      [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'with-mode-bar': isWatching }"
     >
       <div class="main-content" id="main-container">
         <router-outlet></router-outlet>

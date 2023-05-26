@@ -18,8 +18,7 @@
 
     <ng-container *ngIf="itemData && itemData.item.childrenLayout === 'Grid'; else listSection">
       <div
-        class="grid-container"
-        [ngClass]="{ 'full-frame': (fullFrame$ | async)?.active }"
+        class="grid-container full-frame"
         *ngIf="data.children.length > 0"
       >
         <div class="grid-item" *ngFor="let item of data.children; let i = index">

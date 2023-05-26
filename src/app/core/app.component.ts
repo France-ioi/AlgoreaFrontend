@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
-import { delay, map, switchMap, tap } from 'rxjs/operators';
+import { delay, switchMap, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
@@ -14,7 +14,6 @@ import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
 import { Location } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'alg-root',
@@ -33,8 +32,9 @@ export class AppComponent implements OnInit, OnDestroy {
     tap(err => console.error('fatal:', err))
   );
 
-  fullFrame$ = this.layoutService.fullFrame$.pipe(delay(0));
-  isMobile$ = this.breakpointObserver.observe(Breakpoints.HandsetPortrait).pipe(map(results => results.matches));
+  leftMenu$ = this.layoutService.leftMenu$;
+  fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
+  canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
@@ -57,7 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
     private chunkErrorService: ChunkErrorService,
-    private breakpointObserver: BreakpointObserver,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;

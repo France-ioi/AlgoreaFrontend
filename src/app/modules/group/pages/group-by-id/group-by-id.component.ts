@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterLinkActive, UrlTree } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/group/http-services/get-group-path.service';
@@ -8,7 +8,6 @@ import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
-import { LayoutService } from 'src/app/shared/services/layout.service';
 import { withManagementAdditions } from '../../helpers/group-management';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { GroupEditComponent } from '../group-edit/group-edit.component';
@@ -21,13 +20,12 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
   styleUrls: [ './group-by-id.component.scss' ],
   providers: [ GroupDataSource ],
 })
-export class GroupByIdComponent implements OnInit, OnDestroy {
+export class GroupByIdComponent implements OnDestroy {
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => ({
     ...state,
     group: withManagementAdditions(state.group),
   })));
-  fullFrame$ = this.layoutService.fullFrame$;
   hideAccessTab = !appConfig.featureFlags.showGroupAccessTab;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
@@ -65,7 +63,6 @@ export class GroupByIdComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
-    private layoutService: LayoutService,
     private groupDataSource: GroupDataSource,
     private groupRouter: GroupRouter,
     private getGroupPath: GetGroupPathService,
@@ -73,10 +70,6 @@ export class GroupByIdComponent implements OnInit, OnDestroy {
   ) {
     // on route change: refetch group if needed
     this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));
-  }
-
-  ngOnInit(): void {
-    this.layoutService.configure({ fullFrameActive: false });
   }
 
   ngOnDestroy(): void {

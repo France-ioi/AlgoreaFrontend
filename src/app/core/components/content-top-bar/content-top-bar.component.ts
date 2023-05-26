@@ -5,7 +5,7 @@ import { CurrentContentService } from '../../../shared/services/current-content.
 import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
-import { FullFrameContent, LayoutService } from 'src/app/shared/services/layout.service';
+import { LayoutService } from 'src/app/shared/services/layout.service';
 import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
@@ -17,8 +17,9 @@ import { isGroupInfo } from '../../../shared/models/content/group-info';
   styleUrls: [ './content-top-bar.component.scss' ],
 })
 export class ContentTopBarComponent {
-  @Input() fullFrameContent?: FullFrameContent;
   @Input() scrolled = false;
+  @Input() fullFrameContentDisplayed = false;
+  @Input() showLeftMenuOpener = false;
 
   discussionState$ = this.discussionService.state$;
 
@@ -58,8 +59,8 @@ export class ContentTopBarComponent {
     this.discussionService.toggleVisibility(visible);
   }
 
-  unsetFullFrameContent(): void {
-    this.layoutService.configure({ fullFrameActive: false });
+  showLeftMenu(): void {
+    this.layoutService.toggleLeftMenu(true);
   }
 
 }

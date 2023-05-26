@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { FullFrameContent } from 'src/app/shared/services/layout.service';
 
 @Component({
   selector: 'alg-top-bar',
@@ -9,6 +8,7 @@ import { FullFrameContent } from 'src/app/shared/services/layout.service';
 export class TopBarComponent {
   @Input() scrolled = false;
   @Input() modeBarDisplayed = false;
-  @Input() fullFrameContent?: FullFrameContent;
   @Input() showTopRightControls = true;
+  @Input() fullFrameContentDisplayed = false;
+  @Input() showLeftMenuOpener = true;
 }

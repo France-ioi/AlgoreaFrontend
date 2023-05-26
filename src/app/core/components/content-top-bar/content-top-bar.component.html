@@ -7,8 +7,8 @@
       pButton
       type="button"
       icon="ph ph-list"
-      (click)="unsetFullFrameContent()"
-      *ngIf="fullFrameContent?.active"
+      (click)="showLeftMenu()"
+      *ngIf="showLeftMenuOpener"
     ></button>
     <div class="margin-right" *ngIf="currentContent.type === 'item'">
       <alg-score-ring
@@ -22,7 +22,11 @@
     <div class="right-pane-title">
       <p class="right-pane-title-text" *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>
-    <alg-breadcrumb class="breadcrumb margin-right" [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
+    <alg-breadcrumb
+      class="breadcrumb margin-right"
+      [contentBreadcrumb]="currentContent?.breadcrumbs"
+      *ngIf="!fullFrameContentDisplayed && !scrolled"
+    ></alg-breadcrumb>
     <button
       *ngIf="discussionState$ | async as discussion"
       class="alg-button-icon no-bg primary-color margin-left"

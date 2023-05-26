@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, RouterLinkActive, UrlTree } from '@angular/router';
-import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay } from 'rxjs';
+import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -13,7 +13,6 @@ import {
   catchError,
   mergeWith,
   takeUntil,
-  withLatestFrom,
 } from 'rxjs/operators';
 import { defaultAttemptId } from 'src/app/shared/helpers/attempts';
 import { errorState, fetchingState, FetchState, isFetchingOrError, readyState } from 'src/app/shared/helpers/state';
@@ -31,7 +30,6 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
-import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { FullItemRoute, ItemRoute, RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
 import { ItemContentComponent } from '../item-content/item-content.component';
@@ -52,7 +50,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -148,7 +145,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   );
   taskView?: TaskTab['view'];
 
-  readonly fullFrame$ = this.layoutService.fullFrame$;
+  readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
   readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
   readonly isWatching$ = this.groupWatchingService.isWatching$;
 
@@ -208,8 +205,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     }),
   );
 
-  isMobile$ = this.breakpointObserver.observe(Breakpoints.HandsetPortrait).pipe(map(results => results.matches));
-
   contentContainerTop = 0;
 
   private subscriptions: Subscription[] = [
@@ -217,6 +212,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       // submission reloads the item data. Here we handle the progress tab existence only when the item loads, not when it reloads.
       distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
     ).subscribe(state => {
+      // task change: consider it is not fullFrame until the info is given by the task
+      this.fullFrameContent$.next(false);
       // reset tabs when item changes. By default do not display it unless we currently are on progress page
       this.editorUrl = undefined;
       if (state.isFetching) this.tabs.next(this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
@@ -251,7 +248,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         // trigger the fetch of the item (which will itself re-update the current content)
         this.itemDataSource.fetchItem(state.data);
       } else if (state.isError) {
-        this.layoutService.configure({ fullFrameActive: false });
         this.currentContent.clear();
       }
     }),
@@ -307,22 +303,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.currentContent.clear();
     }),
 
-
-    this.itemDataSource.state$.pipe(
-      readyData(),
-      distinctUntilChanged((a, b) => a.item.id === b.item.id),
-      startWith(undefined),
-      pairwise(),
-      filter(([ previous, current ]) => (!!current && (!previous || isTask(previous.item) || isTask(current.item)))),
-      map(([ , current ]) => ensureDefined(current).item),
-      withLatestFrom(this.layoutService.fullFrame$)
-    ).subscribe(([ item, fullFrame ]) => {
-      const isInitFromMobile = !fullFrame.animated && this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
-      const activateFullFrame = isTask(item) && !(typeof history.state === 'object' && history.state?.preventFullFrame);
-      this.layoutService.configure({ fullFrameActive: isInitFromMobile || activateFullFrame });
-    }),
-
     combineLatest([ this.itemRouteState$.pipe(readyData()), this.itemDataSource.state$.pipe(startWith(undefined)) ]).pipe(
       map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
         { route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId), isTask: isTask(itemState.data.item) }:
@@ -334,7 +314,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     merge(
       this.itemDataSource.state$.pipe(readyData()),
-      this.layoutService.fullFrame$,
+      this.fullFrameContent$.pipe(distinctUntilChanged()),
       this.taskTabs$,
       fromEvent(window, 'resize'),
     ).pipe(
@@ -343,6 +323,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       distinctUntilChanged(),
     ).subscribe(contentContainerTop =>
       this.contentContainerTop = contentContainerTop
+    ),
+
+    this.fullFrameContent$.pipe(
+      distinctUntilChanged()
+    ).subscribe(fullFrameContent =>
+      this.layoutService.configure({ fullFrameContent })
     ),
   ];
 
@@ -366,15 +352,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private discussionService: DiscussionService,
-    private breakpointObserver: BreakpointObserver,
   ) {}
 
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.layoutService.fullFrame$
-      .pipe(take(1), filter(fullFrame => fullFrame.active)) // if layout is in full frame and we quit an item page => disable full frame
-      .subscribe(() => this.layoutService.configure({ fullFrameActive: false }));
+    this.layoutService.configure({ fullFrameContent: false });
     this.tabs.complete();
     this.skipBeforeUnload$.complete();
     this.retryBeforeUnload$.complete();
