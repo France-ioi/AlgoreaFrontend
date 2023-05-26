@@ -327,9 +327,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     this.fullFrameContent$.pipe(
       distinctUntilChanged()
-    ).subscribe(fullFrameContent =>
-      this.layoutService.configure({ fullFrameContent })
-    ),
+    ).subscribe(fullFrameContent => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const leftMenuNavigation = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame);
+      // full content is displayed full frame only if it has not been visited using the left menu
+      this.layoutService.configure({ fullFrameContent: fullFrameContent && !leftMenuNavigation });
+    }),
   ];
 
   editorUrl?: string;
