@@ -1,5 +1,8 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Injectable, OnDestroy } from '@angular/core';
+import { CanActivate } from '@angular/router';
+import { BehaviorSubject, Subject, combineLatest, concat, distinctUntilChanged } from 'rxjs';
+import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
 
 export interface FullFrameContent {
   active: boolean,
@@ -10,39 +13,90 @@ export interface FullFrameContent {
 @Injectable({
   providedIn: 'root'
 })
-export class LayoutService {
-  // Service allowing modifications of the layout
+export class LayoutService implements OnDestroy {
 
-  private initialized = false;
+  /* state variables used to make decisions */
+  private fullFrameContentDisplayed = new BehaviorSubject<boolean>(false);
+  private manualMenuToggle$ = new Subject<boolean>();
 
-  /** Expands the content by hiding the left menu and select headers */
-  private fullFrame = new BehaviorSubject<FullFrameContent>({ active: true, canToggle: false, animated: false });
-  fullFrame$ = this.fullFrame.pipe(distinctUntilChanged((a, b) => a.active === b.active && a.canToggle === b.canToggle));
+  /* independant variables */
+  private showTopRightControls = new BehaviorSubject(true);
+  private canShowLeftMenu = new BehaviorSubject<boolean>(true);
 
-  private showTopRightControls = new BehaviorSubject(false);
-  showTopRightControls$ = this.showTopRightControls.pipe(distinctUntilChanged());
+  /* variables to be used by other services and components */
+  isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
+    map(results => results.matches),
+    distinctUntilChanged(),
+  );
+  fullFrameContentDisplayed$ = this.fullFrameContentDisplayed.asObservable();
+  showTopRightControls$ = this.showTopRightControls.asObservable();
+  canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
+  leftMenu$ = combineLatest([
+    this.isNarrowScreen$,
+    this.canShowLeftMenu,
+    this.fullFrameContentDisplayed$
+  ]).pipe(
+    debounceTime(0), // as the sources are not independant, prevent some very-transient inconsistent cases
+    // each time manualMenuToggle$ emits, emit its (bool) value, otherwise emit `undefined`
+    switchMap(values => concat(this.manualMenuToggle$, this.fullFrameContentDisplayed$.pipe(map(() => true))).pipe(
+      map<boolean,[ boolean, boolean, boolean, boolean|undefined ]>(manualMenuToggle => [ ...values, manualMenuToggle ]),
+      startWith<[ boolean, boolean, boolean, boolean|undefined ]>([ ...values, undefined ])
+    )),
+    scan((prev, [ isNarrowScreen, canShowLeftMenu, isFullFrameContent, manualMenuToggle ], idx) => {
+      if (!canShowLeftMenu) return { shown: false, animated: false, isNarrowScreen };
+      if (idx === 0) return { shown: !isNarrowScreen, animated: false, isNarrowScreen };
+      if (prev.isNarrowScreen !== isNarrowScreen) return { shown: !isNarrowScreen && !isFullFrameContent, animated: true, isNarrowScreen };
+      if (manualMenuToggle !== undefined) return { shown: manualMenuToggle, animated: true, isNarrowScreen };
+      if (isFullFrameContent) return { shown: false, animated: true, isNarrowScreen };
+      return { ...prev, isNarrowScreen };
+    }, { shown: false, animated: false, isNarrowScreen: false }),
+    map(({ shown, animated }) => ({ shown, animated })),
+    distinctUntilChanged((x, y) => x.shown === y.shown),
+  );
 
-  /**
-   * Configure layout, expectedly called by routes.
-   */
-  configure({ fullFrameActive, showTopRightControls, canToggleFullFrame }: {
-    fullFrameActive: boolean,
-    canToggleFullFrame?: boolean,
-    showTopRightControls?: boolean,
-  }): void {
-    const canToggleFallback = !this.initialized || this.fullFrame.value.canToggle;
-    const canToggle = canToggleFullFrame ?? canToggleFallback;
-    this.fullFrame.next({
-      canToggle,
-      active: canToggle ? fullFrameActive : this.fullFrame.value.active,
-      animated: this.initialized,
-    });
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+  ){}
 
-
-    if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
-    else if (!this.initialized) this.showTopRightControls.next(true);
-
-    if (!this.initialized) this.initialized = true;
+  ngOnDestroy(): void {
+    this.fullFrameContentDisplayed.complete();
+    this.manualMenuToggle$.complete();
+    this.showTopRightControls.complete();
+    this.canShowLeftMenu.complete();
   }
 
+  /**
+   * Configure layout.
+   * The layout is considered not initialized (so not using animation) only until the first call.
+   */
+  configure({ fullFrameContent, canShowLeftMenu, showTopRightControls }: {
+    fullFrameContent?: boolean,
+    canShowLeftMenu?: boolean,
+    showTopRightControls?: boolean,
+  }): void {
+    if (fullFrameContent !== undefined) this.fullFrameContentDisplayed.next(fullFrameContent);
+    if (canShowLeftMenu !== undefined) this.canShowLeftMenu.next(canShowLeftMenu);
+    if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
+  }
+
+  toggleLeftMenu(visible: boolean): void {
+    this.manualMenuToggle$.next(visible);
+  }
+
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DefaultLayoutInitService implements CanActivate {
+
+  constructor(
+    private layoutService: LayoutService
+  ) {}
+
+  /** just init the default layout */
+  canActivate(): boolean {
+    this.layoutService.configure({});
+    return true;
+  }
 }

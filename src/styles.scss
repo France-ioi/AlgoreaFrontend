@@ -39,6 +39,16 @@
 /* Custom themes */
 @import 'assets/scss/themes/coursera-pt';
 
+@media screen and (max-width: 599.98px) {
+  :root {
+    --alg-space-size-1: 2rem;
+    --alg-space-size-2: 1.5rem;
+    --alg-space-size-3: 1rem;
+    --alg-space-size-4: .75rem;
+    --alg-space-size-5: .5rem;
+  }
+}
+
 html {
   height: 100%;
   font-size: 16px;
@@ -156,7 +166,7 @@ body {
 .top-bar-overlay-panel {
     width: 450px;
 
-    @media screen and (max-width: 479px) {
+    @media screen and (max-width: 599.98px) {
       width: 100% !important;
     }
 }

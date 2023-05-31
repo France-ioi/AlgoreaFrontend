@@ -13,7 +13,7 @@
 
   <ng-container *ngIf="state.isReady">
 
-    <alg-user-header [user]="state.data.user" [route]="state.data.route" *ngIf="!(fullFrame$ | async)?.active"></alg-user-header>
+    <alg-user-header [user]="state.data.user" [route]="state.data.route"></alg-user-header>
 
     <alg-user-indicator
       class="user-indicator"

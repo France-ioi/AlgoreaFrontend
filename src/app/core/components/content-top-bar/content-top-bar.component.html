@@ -2,14 +2,15 @@
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
   <div class="content-top-bar">
-    <button
-      class="alg-button-icon no-bg primary-color left-menu margin-right"
-      pButton
-      type="button"
-      icon="ph ph-list"
-      (click)="unsetFullFrameContent()"
-      *ngIf="fullFrameContent?.active"
-    ></button>
+    <div class="margin-right" *ngIf="showLeftMenuOpener">
+      <button
+        class="alg-button-icon no-bg primary-color left-menu"
+        pButton
+        type="button"
+        icon="ph ph-list"
+        (click)="showLeftMenu()"
+      ></button>
+    </div>
     <div class="margin-right" *ngIf="currentContent.type === 'item'">
       <alg-score-ring
         *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
@@ -19,7 +20,18 @@
         [diameter]="32"
       ></alg-score-ring>
     </div>
-    <alg-breadcrumb class="breadcrumb margin-right" [contentBreadcrumb]="currentContent?.breadcrumbs"></alg-breadcrumb>
+    <div class="right-pane-title">
+      <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
+      <ng-template #onlyTitle>
+        <p class="right-pane-title-text">{{ currentContent.title }}</p>
+      </ng-template>
+      <ng-template #breadcrumbs>
+        <alg-breadcrumb
+          class="breadcrumb margin-right"
+          [contentBreadcrumb]="currentContent?.breadcrumbs"
+        ></alg-breadcrumb>
+      </ng-template>
+    </div>
     <button
       *ngIf="discussionState$ | async as discussion"
       class="alg-button-icon no-bg primary-color margin-left"
@@ -33,10 +45,10 @@
       class="margin-left"
       *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
     ></alg-watch-button>
-    <ng-container *ngIf="fullFrameContent?.active || scrolled">
+    <ng-container *ngIf="showHeaderControls">
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-        class="margin-left"
+        class="neighbor-widget margin-left"
         [navigationMode]="{
           parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
           left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,

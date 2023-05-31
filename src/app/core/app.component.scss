@@ -83,6 +83,15 @@
       margin-top: 1rem;
     }
   }
+
+  @media screen and (max-width: 599.98px) {
+    margin-left: 0;
+    border-radius: 0;
+
+    .main-content {
+      margin-top: 1rem;
+    }
+  }
 }
 
 .main-content {
@@ -105,7 +114,7 @@
   font-size: 1rem;
 }
 
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 599.98px) {
   .left-panel {
     width: 100%;
     z-index: 999;

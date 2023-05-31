@@ -45,7 +45,6 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     })),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-  fullFrame$ = this.layoutService.fullFrame$;
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,

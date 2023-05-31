@@ -110,6 +110,8 @@ export class ItemTaskService implements OnDestroy {
       getTaskParams: () => ({
         minScore: 0,
         maxScore: 100,
+        hideTitle: true,
+        supportsTabs: true,
         randomSeed,
         noScore: 0,
         readOnly: this.readOnly,

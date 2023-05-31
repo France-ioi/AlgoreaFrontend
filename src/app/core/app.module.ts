@@ -44,6 +44,7 @@ import { AuthenticationInterceptor } from '../shared/interceptors/authentication
 import { AlgErrorHandler } from '../shared/error-handling/error-handler';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.component';
+import { LayoutModule } from '@angular/cdk/layout';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -85,6 +86,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
     ConfirmPopupModule,
     OverlayPanelModule,
+    LayoutModule,
   ],
   providers: [
     ConfirmationService,

@@ -32,6 +32,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   @Output() skipSave = new EventEmitter<void>();
   @Output() refresh = new EventEmitter<void>();
   @Output() editorUrl = new EventEmitter<string|undefined>();
+  @Output() fullFrameTask = new EventEmitter<boolean>();
 
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent?.dirty;

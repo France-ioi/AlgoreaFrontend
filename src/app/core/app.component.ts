@@ -32,8 +32,11 @@ export class AppComponent implements OnInit, OnDestroy {
     tap(err => console.error('fatal:', err))
   );
 
-  fullFrame$ = this.layoutService.fullFrame$.pipe(delay(0));
+  leftMenu$ = this.layoutService.leftMenu$;
+  fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
+  canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
+  isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
   watchedGroupError$ = this.groupWatchingService.watchedGroupError$;

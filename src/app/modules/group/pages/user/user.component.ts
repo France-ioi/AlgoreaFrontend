@@ -8,7 +8,6 @@ import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { formatUser } from '../../../../shared/helpers/user';
-import { LayoutService } from '../../../../shared/services/layout.service';
 import { GetGroupBreadcrumbsService } from '../../http-services/get-group-breadcrumbs.service';
 import { groupRoute, groupRouteFromParams, isGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
@@ -47,8 +46,6 @@ export class UserComponent implements OnInit, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
 
-  readonly fullFrame$ = this.layoutService.fullFrame$;
-
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
     map(() => this.router.url),
@@ -71,12 +68,9 @@ export class UserComponent implements OnInit, OnDestroy {
     private getUserService: GetUserService,
     private userSessionService: UserSessionService,
     private currentContent: CurrentContentService,
-    private layoutService: LayoutService,
     private groupRouter: GroupRouter,
     private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
-  ) {
-    this.layoutService.configure({ fullFrameActive: false });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.subscription = combineLatest([
