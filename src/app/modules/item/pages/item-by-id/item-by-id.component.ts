@@ -28,7 +28,7 @@ import { itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { isItemRouteError, itemRouteFromParams } from './item-route-validation';
-import { LayoutService } from 'src/app/shared/services/layout.service';
+import { ContentDisplayType, LayoutService } from 'src/app/shared/services/layout.service';
 import { mapStateData, mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FullItemRoute, ItemRoute, RawItemRoute, routeWithSelfAttempt } from 'src/app/shared/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/shared/guards/before-unload-guard';
@@ -325,14 +325,14 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.contentContainerTop = contentContainerTop
     ),
 
-    this.fullFrameContent$.pipe(
-      distinctUntilChanged()
-    ).subscribe(fullFrameContent => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const leftMenuNavigation = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame);
-      // full content is displayed full frame only if it has not been visited using the left menu
-      this.layoutService.configure({ fullFrameContent: fullFrameContent && !leftMenuNavigation });
-    }),
+    combineLatest([ this.itemDataSource.state$.pipe(readyData()), this.fullFrameContent$ ]).pipe(
+      map(([ data, fullFrame ]) => {
+        if (fullFrame) return ContentDisplayType.ShowFullFrame;
+        return isTask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default;
+      }),
+      distinctUntilChanged(),
+    ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
+
   ];
 
   editorUrl?: string;
@@ -360,7 +360,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.layoutService.configure({ fullFrameContent: false });
+    this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });
     this.tabs.complete();
     this.skipBeforeUnload$.complete();
     this.retryBeforeUnload$.complete();
