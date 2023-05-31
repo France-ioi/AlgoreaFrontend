@@ -45,7 +45,7 @@ export class LayoutService implements OnDestroy {
     scan((prev, [ isNarrowScreen, canShowLeftMenu, isFullFrameContent, manualMenuToggle ], idx) => {
       if (!canShowLeftMenu) return { shown: false, animated: false, isNarrowScreen };
       if (idx === 0) return { shown: !isNarrowScreen, animated: false, isNarrowScreen };
-      if (!prev.isNarrowScreen && isNarrowScreen) return { shown: false, animated: true, isNarrowScreen };
+      if (prev.isNarrowScreen !== isNarrowScreen) return { shown: !isNarrowScreen && !isFullFrameContent, animated: true, isNarrowScreen };
       if (manualMenuToggle !== undefined) return { shown: manualMenuToggle, animated: true, isNarrowScreen };
       if (isFullFrameContent) return { shown: false, animated: true, isNarrowScreen };
       return { ...prev, isNarrowScreen };
