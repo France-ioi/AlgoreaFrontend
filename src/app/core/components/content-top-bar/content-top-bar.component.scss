@@ -18,13 +18,15 @@
 }
 
 .right-pane-title {
+  display: flex;
+  align-items: center;
   overflow: hidden;
   flex: 1;
 }
 
 .right-pane-title-text {
   font-size: toRem(12);
-  color: var(--base-text-color);
+  color: var(--alg-black-color);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

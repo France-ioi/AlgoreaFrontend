@@ -20,14 +20,14 @@
         [diameter]="32"
       ></alg-score-ring>
     </div>
-    <div class="right-pane-title" *ngIf="scrolled">
-      <p class="right-pane-title-text" *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
+    <div class="right-pane-title">
+      <p class="right-pane-title-text" *ngIf="scrolled && currentContent && currentContent.title">{{ currentContent.title }}</p>
+      <alg-breadcrumb
+        class="breadcrumb margin-right"
+        [contentBreadcrumb]="currentContent?.breadcrumbs"
+        *ngIf="!fullFrameContentDisplayed && !scrolled"
+      ></alg-breadcrumb>
     </div>
-    <alg-breadcrumb
-      class="breadcrumb margin-right"
-      [contentBreadcrumb]="currentContent?.breadcrumbs"
-      *ngIf="!fullFrameContentDisplayed && !scrolled"
-    ></alg-breadcrumb>
     <button
       *ngIf="discussionState$ | async as discussion"
       class="alg-button-icon no-bg primary-color margin-left"
