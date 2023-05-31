@@ -2,14 +2,15 @@
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
   <div class="content-top-bar">
-    <button
-      class="alg-button-icon no-bg primary-color left-menu margin-right"
-      pButton
-      type="button"
-      icon="ph ph-list"
-      (click)="showLeftMenu()"
-      *ngIf="showLeftMenuOpener"
-    ></button>
+    <div class="margin-right" *ngIf="showLeftMenuOpener">
+      <button
+        class="alg-button-icon no-bg primary-color left-menu"
+        pButton
+        type="button"
+        icon="ph ph-list"
+        (click)="showLeftMenu()"
+      ></button>
+    </div>
     <div class="margin-right" *ngIf="currentContent.type === 'item'">
       <alg-score-ring
         *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
