@@ -17,8 +17,8 @@ import { isGroupInfo } from '../../../shared/models/content/group-info';
   styleUrls: [ './content-top-bar.component.scss' ],
 })
 export class ContentTopBarComponent {
-  @Input() scrolled = false;
-  @Input() fullFrameContentDisplayed = false;
+  @Input() showBreadcrumbs = true;
+  @Input() showHeaderControls = false;
   @Input() showLeftMenuOpener = false;
 
   discussionState$ = this.discussionService.state$;

@@ -3,12 +3,12 @@
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngrxLet="isWatching$ as isWatching">
-    <alg-top-bar
+    <alg-top-bar *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed"
       class="top-bar"
       [ngClass]="{ 'with-mode-bar': isWatching, collapsed: !leftMenu.shown, animated: leftMenu.animated }"
-      [scrolled]="scrolled"
+      [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async)"
+      [showHeaderControls]="scrolled || fullFrameContentDisplayed"
       [modeBarDisplayed]="isWatching"
-      [fullFrameContentDisplayed]="!!(fullFrameContentDisplayed$ | async)"
       [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
       [showTopRightControls]="!!(showTopRightControls$ | async)"
     ></alg-top-bar>

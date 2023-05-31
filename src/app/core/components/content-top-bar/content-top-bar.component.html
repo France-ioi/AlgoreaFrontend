@@ -21,12 +21,16 @@
       ></alg-score-ring>
     </div>
     <div class="right-pane-title">
-      <p class="right-pane-title-text" *ngIf="scrolled && currentContent && currentContent.title">{{ currentContent.title }}</p>
-      <alg-breadcrumb
-        class="breadcrumb margin-right"
-        [contentBreadcrumb]="currentContent?.breadcrumbs"
-        *ngIf="!fullFrameContentDisplayed && !scrolled"
-      ></alg-breadcrumb>
+      <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
+      <ng-template #onlyTitle>
+        <p class="right-pane-title-text">{{ currentContent.title }}</p>
+      </ng-template>
+      <ng-template #breadcrumbs>
+        <alg-breadcrumb
+          class="breadcrumb margin-right"
+          [contentBreadcrumb]="currentContent?.breadcrumbs"
+        ></alg-breadcrumb>
+      </ng-template>
     </div>
     <button
       *ngIf="discussionState$ | async as discussion"
@@ -41,7 +45,7 @@
       class="margin-left"
       *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
     ></alg-watch-button>
-    <ng-container *ngIf="scrolled">
+    <ng-container *ngIf="showHeaderControls">
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
         class="neighbor-widget margin-left"

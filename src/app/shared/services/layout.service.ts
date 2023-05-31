@@ -17,10 +17,6 @@ export class LayoutService implements OnDestroy {
 
   /* state variables used to make decisions */
   private fullFrameContentDisplayed = new BehaviorSubject<boolean>(false);
-  private isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
-    map(results => results.matches),
-    distinctUntilChanged(),
-  );
   private manualMenuToggle$ = new Subject<boolean>();
 
   /* independant variables */
@@ -28,6 +24,10 @@ export class LayoutService implements OnDestroy {
   private canShowLeftMenu = new BehaviorSubject<boolean>(true);
 
   /* variables to be used by other services and components */
+  isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
+    map(results => results.matches),
+    distinctUntilChanged(),
+  );
   fullFrameContentDisplayed$ = this.fullFrameContentDisplayed.asObservable();
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
