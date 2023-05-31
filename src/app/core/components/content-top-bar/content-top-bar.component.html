@@ -19,7 +19,7 @@
         [diameter]="32"
       ></alg-score-ring>
     </div>
-    <div class="right-pane-title">
+    <div class="right-pane-title" *ngIf="scrolled">
       <p class="right-pane-title-text" *ngIf="currentContent && currentContent.title">{{ currentContent.title }}</p>
     </div>
     <alg-breadcrumb
@@ -40,7 +40,7 @@
       class="margin-left"
       *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
     ></alg-watch-button>
-    <ng-container *ngIf="fullFrameContent?.active || scrolled">
+    <ng-container *ngIf="scrolled">
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
         class="neighbor-widget margin-left"
