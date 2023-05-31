@@ -1,5 +1,5 @@
-<div class="item-display" [ngClass]="{ 'full-frame': (fullFrame$ | async)?.active }" *ngIf="state$ | async as state">
-  <div class="error-container" *ngIf="(state.isError || (metadataError$ | async)) && !showTaskAnyway" [algFullHeightContent]="true">
+<div class="item-display alg-flex-1" [ngClass]="{ 'full-frame': (fullFrame$ | async)?.active }" *ngIf="state$ | async as state">
+  <div class="error-container alg-flex-1" *ngIf="(state.isError || (metadataError$ | async)) && !showTaskAnyway" [algFullHeightContent]="true">
     <ng-template #defaultErrorMessage>
       <alg-error
         i18n-message message="Unable to load the task"
@@ -56,9 +56,8 @@
     </div>
   </div>
   <div
-    class="iframe-container"
-    [style.display]="(state.isError || (metadataError$ | async)) && !showTaskAnyway ? 'none' : 'block'"
-    [algFullHeightContent]="true"
+    class="iframe-container alg-flex-1"
+    [style.display]="(state.isError || (metadataError$ | async)) && !showTaskAnyway ? 'none' : 'flex'"
   >
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
@@ -69,10 +68,11 @@
     </div>
     <iframe
       *ngIf="iframeSrc$ | async as iframeSrc"
+      class="iframe-element"
+      [class.alg-flex-1]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
       [style.height]="(state.isReady || showTaskAnyway) ? (iframeHeight$ | async) : undefined"
       [src]="iframeSrc"
       #iframe
-      [algFullHeightContent]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
       allowfullscreen
     ></iframe>
 
