@@ -39,16 +39,18 @@ export class LayoutService implements OnDestroy {
     debounceTime(0), // as the sources are not independant, prevent some very-transient inconsistent cases
     // each time manualMenuToggle$ emits, emit its (bool) value, otherwise emit `undefined`
     switchMap(values => concat(this.manualMenuToggle$, this.fullFrameContentDisplayed$.pipe(map(() => true))).pipe(
-      map(manualMenuToggle => [ ...values, manualMenuToggle ]),
-      startWith([ ...values, undefined ])
+      map<boolean,[ boolean, boolean, boolean, boolean|undefined ]>(manualMenuToggle => [ ...values, manualMenuToggle ]),
+      startWith<[ boolean, boolean, boolean, boolean|undefined ]>([ ...values, undefined ])
     )),
     scan((prev, [ isNarrowScreen, canShowLeftMenu, isFullFrameContent, manualMenuToggle ], idx) => {
-      if (!canShowLeftMenu) return { shown: false, animated: false };
-      if (idx === 0) return { shown: !isNarrowScreen, animated: false };
-      if (manualMenuToggle !== undefined) return { shown: manualMenuToggle, animated: true };
-      if (isFullFrameContent) return { shown: false, animated: true };
-      return prev;
-    }, { shown: false, animated: false }),
+      if (!canShowLeftMenu) return { shown: false, animated: false, isNarrowScreen };
+      if (idx === 0) return { shown: !isNarrowScreen, animated: false, isNarrowScreen };
+      if (!prev.isNarrowScreen && isNarrowScreen) return { shown: false, animated: true, isNarrowScreen };
+      if (manualMenuToggle !== undefined) return { shown: manualMenuToggle, animated: true, isNarrowScreen };
+      if (isFullFrameContent) return { shown: false, animated: true, isNarrowScreen };
+      return { ...prev, isNarrowScreen };
+    }, { shown: false, animated: false, isNarrowScreen: false }),
+    map(({ shown, animated }) => ({ shown, animated })),
     distinctUntilChanged((x, y) => x.shown === y.shown),
   );
 
