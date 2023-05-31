@@ -1,9 +1,20 @@
-import { AfterViewChecked, Directive, ElementRef, HostListener, Input, NgZone, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
+import {
+  AfterViewChecked,
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  OnInit,
+  OnChanges,
+  Renderer2,
+  SimpleChanges
+} from '@angular/core';
 
 @Directive({
   selector: '[algFullHeightContent]',
 })
-export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
+export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnChanges {
   @Input() algFullHeightContent = true;
 
   mainContainerEl = document.querySelector('#main-container');
@@ -16,8 +27,14 @@ export class FullHeightContentDirective implements AfterViewChecked, OnChanges {
   constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private ngZone: NgZone) {
   }
 
+  ngOnInit(): void {
+    if (window.getComputedStyle(this.el.nativeElement).display === 'inline') {
+      this.renderer.setStyle(this.el.nativeElement, 'display', 'block');
+    }
+    if (this.algFullHeightContent) this.setHeight();
+  }
+
   ngAfterViewChecked(): void {
-    this.renderer.setStyle(this.el.nativeElement, 'display', 'block');
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
         if (this.algFullHeightContent) this.setHeight();

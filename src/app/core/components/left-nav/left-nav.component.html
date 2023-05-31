@@ -44,17 +44,15 @@
   <hr class="divider">
 
   <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
-    <div class="spinner" *ngIf="state.isFetching">
-      <alg-loading></alg-loading>
-    </div>
-
+    <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
     <alg-error
-      *ngIf="state.isError"
+      class="alg-flex-1"
       i18n-message message="Unable to load the list."
       icon="ph-duotone ph-warning-circle"
       [showRefreshButton]="true"
       buttonCaption="Retry"
       (refresh)="retryError(activeTab.index)"
+      *ngIf="state.isError"
     ></alg-error>
 
     <div class="watching-warning" *ngIf="state.isReady && (isWatching$ | async) && [0, 1].includes(activeTab.index)">
@@ -63,10 +61,15 @@
       </div>
     </div>
 
-    <alg-left-nav-tree
-      *ngIf="state.isReady"
-      [data]="state.data"
-      [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
-    ></alg-left-nav-tree>
+    <div class="alg-flex-1 scroll-wrapper" *ngIf="state.isReady">
+      <div class="scroll-container">
+        <perfect-scrollbar>
+          <alg-left-nav-tree
+            [data]="state.data"
+            [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
+          ></alg-left-nav-tree>
+        </perfect-scrollbar>
+      </div>
+    </div>
   </ng-container>
 </ng-container>

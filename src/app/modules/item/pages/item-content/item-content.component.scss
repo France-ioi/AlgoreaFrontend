@@ -1,5 +1,11 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: var(--alg-space-size-4) 0;
+}
+
 .validation-text {
   display: flex;
   justify-content: center;

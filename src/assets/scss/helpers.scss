@@ -34,7 +34,7 @@
   }
 }
 
-.flex-1 {
+.flex-1, .alg-flex-1 {
   flex: 1;
 }
 
@@ -76,4 +76,10 @@
 
 .alg-warning-message {
   color: var(--warning-color);
+}
+
+.alg-full-centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

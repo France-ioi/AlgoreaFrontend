@@ -1,13 +1,11 @@
 <ng-container *ngIf="state$ | async as state">
-  <div class="spinner" *ngIf="state.isFetching && !state.data">
-    <alg-loading size="medium"></alg-loading>
-  </div>
-
+  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
   <alg-error
-    *ngIf="state.isError"
+    class="alg-flex-1"
     i18n-message message="Error while loading the user progress"
     [showRefreshButton]="true"
     (refresh)="refresh()"
+    *ngIf="state.isError"
   ></alg-error>
 
   <ng-container *ngIf="state.data">
