@@ -1,5 +1,6 @@
 <div class="input-wrapper" [ngClass]="{ large: size === 'large', light: !isDark }" *ngIf="parentForm" [formGroup]="parentForm">
   <input
+    class="input-element"
     #input
     [type]="inputType"
     [placeholder]="placeholder"
@@ -12,16 +13,20 @@
     [tooltipPosition]="tooltipPosition"
     [tooltipDisabled]="tooltipDisabled"
   >
-  <span *ngIf="hasClearButton && input.value" class="clear-button">
-    <button type="button" (click)="clearInput(); input.focus()" tabindex="-1">
-      <i class="pi pi-times"></i>
-    </button>
-  </span>
-  <span class="icon">
-    <i class="fa fa-{{inputIcon}}"></i>
+  <button
+    class="icon-wrapper clear-button"
+    type="button"
+    (click)="clearInput(); input.focus()"
+    tabindex="-1"
+    *ngIf="hasClearButton && input.value"
+  >
+    <i class="icon ph ph-x"></i>
+  </button>
+  <span class="icon-wrapper">
+    <i class="icon {{ inputIcon }}"></i>
   </span>
   <span *ngIf="buttonIcon" class="input-button" (click)="onButtonClick()">
-    <i class="fa fa-{{buttonIcon}}"></i>
+    <i class="{{ buttonIcon }}"></i>
   </span>
 </div>
 

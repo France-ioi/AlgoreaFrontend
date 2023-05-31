@@ -18,25 +18,25 @@ export class AddGroupComponent {
   allowedNewGroupTypes: NewContentType<GroupType>[] = [
     {
       type: 'Class',
-      icon: 'fa fa-book',
+      icon: 'ph-duotone ph-chalkboard-teacher',
       title: $localize`Class`,
       description: '',
     },
     {
       type: 'Club',
-      icon: 'fa fa-book',
+      icon: 'ph-duotone ph-address-book',
       title: $localize`Club`,
       description: '',
     },
     {
       type: 'Friends',
-      icon: 'fa fa-users',
+      icon: 'ph-duotone ph-users',
       title: $localize`Friends`,
       description: '',
     },
     {
       type: 'Other',
-      icon: 'fa fa-book',
+      icon: 'ph-duotone ph-users-three',
       title: $localize`Other`,
       description: '',
     },

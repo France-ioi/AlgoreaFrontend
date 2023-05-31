@@ -1,5 +1,6 @@
 <div class="add-content-wrapper">
   <alg-input
+    class="alg-flex-1"
     [parentForm]="addContentForm"
     [hasClearButton]="true"
     (focus)="onNewFocus()"
@@ -10,12 +11,14 @@
     i18n-pTooltip pTooltip="Enter at least 3 characters"
     tooltipEvent="focus"
     tooltipPosition="bottom"
+    inputIcon="ph-duotone ph-pen"
     [tooltipDisabled]="trimmedInputsValue.title.length >= minInputLength"
     *ngIf="showCreateUI"
   >
   </alg-input>
-  <span class="label" i18n *ngIf="showCreateUI && showSearchUI">or</span>
+  <p class="label" i18n *ngIf="showCreateUI && showSearchUI">or</p>
   <alg-input
+    class="alg-flex-1"
     [parentForm]="addContentForm"
     [hasClearButton]="true"
     (focus)="onExistingFocus()"
@@ -26,66 +29,68 @@
     i18n-pTooltip pTooltip="Enter at least 3 characters"
     tooltipEvent="focus"
     tooltipPosition="bottom"
+    inputIcon="ph-duotone ph-magnifying-glass"
     [tooltipDisabled]="trimmedInputsValue.searchExisting.length >= minInputLength"
     *ngIf="showSearchUI"
   >
   </alg-input>
 </div>
 
-<ng-container *ngIf="loading; else ready" style="text-align: center;">
-  <alg-loading size="medium"></alg-loading>
-</ng-container>
+<alg-loading class="loading" size="medium" *ngIf="loading; else ready"></alg-loading>
 <ng-template #ready>
-  <div *ngIf="trimmedInputsValue.title.length >= minInputLength" class="new-content-type">
-    <div class="new-content-container">
-      <div
-        *ngFor="let newContent of allowedTypesForNewContent"
-        class="content-type-item-container"
-        [ngClass]="{'selected': newContent === selected}"
-        (click)="onSelect(newContent)"
-      >
-        <div class="item-image-wrapper">
-          <span><i class="{{newContent.icon}}"></i></span>
+  <ng-container *ngIf="trimmedInputsValue.title.length >= minInputLength">
+    <p class="select-caption" i18n>Select the type of group to create</p>
+    <div class="new-content-type">
+      <div class="new-content-container">
+        <div
+          *ngFor="let newContent of allowedTypesForNewContent"
+          class="content-type-item-container alg-flex-1"
+          [ngClass]="{'selected': newContent === selected}"
+          (click)="onSelect(newContent)"
+        >
+          <div class="item-image-wrapper">
+            <i class="{{ newContent.icon }}"></i>
+          </div>
+          <div class="item-title">{{ newContent.title }}</div>
+          <div class="item-description">{{ newContent.description }}</div>
         </div>
-        <div class="item-title">{{newContent.title}}</div>
-        <div class="item-description">{{newContent.description}}</div>
+      </div>
+      <div class="input-group" *ngIf="selected">
+        <alg-input class="input-group-control" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm"></alg-input>
+        <p-button styleClass="alg-button primary" (onClick)="addNew(selected.type)">Add Task</p-button>
       </div>
     </div>
-    <div class="input-group" *ngIf="selected">
-      <alg-input class="input-group-control" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm"></alg-input>
-      <p-button styleClass="alg-button p-button-rounded" (onClick)="addNew(selected.type)">Add Task</p-button>
-    </div>
-  </div>
+  </ng-container>
 
   <ng-container *ngIf="state">
-    <div *ngIf="state.isError">
-      <div class="text-center" i18n>An error occurred while searching. If the problem persists, please contact us.</div>
+    <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
+
+    <div class="text-center" *ngIf="state.isError" i18n>
+      An error occurred while searching. If the problem persists, please contact us.
     </div>
 
-    <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && !state.isError">
-      <h3 i18n>Select a Content</h3>
-      <p-table class="alg-table --add-content" [value]="(state.data || []) | slice : 0 : 10" [loading]="state.isFetching">
-        <ng-template pTemplate="body" let-item>
-          <tr style="background-color: #dfe7f4">
-            <td><span class="type">{{ item.type }}</span></td>
-            <td class="main">{{ item.title }}</td>
-            <td>
-              <p-button
-                styleClass="alg-button p-small-button p-button-rounded"
-                [icon]="addedIds.includes(item.id) ? 'fa fa-check' : selectExistingText === 'Add' ? 'fa fa-plus' : ''"
-                [label]="addedIds.includes(item.id) ? addedText : selectExistingText"
-                [disabled]="addedIds.includes(item.id)"
-                (onClick)="addExisting(item)"
-              ></p-button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td [attr.colspan]="1" i18n>No records found</td>
-          </tr>
-        </ng-template>
-      </p-table>
+    <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && state.isReady">
+      <p class="select-caption" i18n>Select a content among those wiches already exist</p>
+      <ul class="add-content-list" *ngIf="(state.data || []).length > 0; else emptyMessage">
+        <li class="add-content-list-item" *ngFor="let item of (state.data || []) | slice : 0 : 10">
+          <div class="add-content-list-left">
+            <span class="add-content-type">{{ item.type }}</span>
+            <span class="add-content-title">{{ item.title }}</span>
+          </div>
+          <div class="add-content-list-right">
+            <button
+              pButton
+              class="add-content-button alg-button primary small"
+              [label]="addedIds.includes(item.id || '') ? addedText : selectExistingText"
+              [disabled]="addedIds.includes(item.id || '')"
+              (click)="addExisting(item)"
+            ></button>
+          </div>
+        </li>
+      </ul>
+      <ng-template #emptyMessage>
+        <span i18n>No records found</span>
+      </ng-template>
       <p class="more-items text-center" *ngIf="(state.data || []).length > 10" i18n>
         More than 10 results match your search terms. If you have not found what you are looking for, make your search more specific.
       </p>

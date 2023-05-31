@@ -19,7 +19,7 @@ export class InputComponent {
   @Input() isDark = true;
   @Input() size: 'small' | 'large' = 'small';
   @Input() inputType = 'text';
-  @Input() inputIcon = 'font'; // a font-awesome icon identifier
+  @Input() inputIcon = 'fa fa-font';
   @Input() buttonIcon?: string; // a font-awesome icon identifier for the input button
   @Input() hasClearButton = false;
 

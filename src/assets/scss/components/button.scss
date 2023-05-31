@@ -44,4 +44,12 @@
       height: toRem(40);
     }
   }
+
+  &.small {
+    &.p-button {
+      height: toRem(32);
+      font-size: toRem(12);
+      font-weight: 500;
+    }
+  }
 }
