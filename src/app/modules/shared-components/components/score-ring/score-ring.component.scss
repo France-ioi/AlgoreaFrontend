@@ -47,13 +47,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: toRem(14);
-  font-weight: 400;
-  font-family: var(--alg-primary-color);
   z-index: 2;
 }
 
 .score-caption {
   color: var(--alg-primary-color);
-  font-size: toRem(14);
+  font-size: toRem(12);
+  font-weight: 400;
+  font-family: var(--alg-primary-color);
+
+  &.zero-value {
+    color: var(--dark-text-color);
+  }
 }

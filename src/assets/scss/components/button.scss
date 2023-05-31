@@ -25,6 +25,10 @@
       color: var(--alg-primary-color);
       font-size: toRem(16);
     }
+
+    &:hover {
+      background: var(--alg-light-color);
+    }
   }
 
   &.primary {

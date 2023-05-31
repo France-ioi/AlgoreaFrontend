@@ -2,7 +2,7 @@
   <div class="item-header">
     <div class="item-title-container">
       <h1 class="item-title alg-h1" data-cy="item-title">{{ itemData.item.string.title }}</h1>
-      <span class="item-subtitle" *ngIf="itemData.item.string.subtitle">{{ itemData.item.string.subtitle }}</span>
+      <p class="item-subtitle" *ngIf="itemData.item.string.subtitle">{{ itemData.item.string.subtitle }}</p>
     </div>
     <alg-page-navigator
       *ngIf="navigationNeighbors$ | async as navigationNeighbors"

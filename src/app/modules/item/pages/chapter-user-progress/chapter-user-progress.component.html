@@ -28,7 +28,7 @@
       <ng-template pTemplate="header" let-rowData let-columns>
         <tr *ngIf="rowData.length > 0">
           <ng-container *ngFor="let col of columns">
-            <th>
+            <th [class.text-center]="[ 'hintsRequested', 'timeSpent', 'submissions' ].includes(col.field)">
               {{ col.header }}
             </th>
           </ng-container>
@@ -41,7 +41,7 @@
         let-columns="columns"
       >
         <tr>
-          <td *ngFor="let col of columns">
+          <td *ngFor="let col of columns" [class.text-center]="[ 'hintsRequested', 'timeSpent', 'submissions' ].includes(col.field)">
             <ng-container [ngSwitch]="col.field">
               <ng-container *ngSwitchCase="'title'">
                 <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
@@ -103,9 +103,11 @@
                 </ng-container>
               </ng-container>
               <ng-container *ngSwitchCase="'score'">
-                <div class="score-ring" *ngIf="!rowData.noScore && rowData.latestActivityAt">
-                  <alg-score-ring [currentScore]="rowData.score"></alg-score-ring>
-                </div>
+                <alg-score-ring
+                  [currentScore]="rowData.score"
+                  [isValidated]="rowData.validated"
+                  *ngIf="!rowData.noScore && rowData.latestActivityAt"
+                ></alg-score-ring>
               </ng-container>
               <ng-container *ngSwitchDefault>
                 {{ rowData[col.field] }}

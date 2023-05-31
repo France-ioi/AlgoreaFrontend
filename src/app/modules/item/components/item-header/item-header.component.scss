@@ -23,8 +23,11 @@
 }
 
 .item-subtitle {
+  margin: 0 0 2rem 0;
   color: var(--base-text-color);
   font-size: 1.6rem;
+  font-weight: 300;
+  line-height: toRem(24);
 }
 
 .margin-left {

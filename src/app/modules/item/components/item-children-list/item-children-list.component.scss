@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  margin: 0 toRem(-16);
   padding: var(--alg-space-size-4) 0;
 
   &.no-padding {
@@ -19,7 +20,7 @@
   border-radius: toRem(8);
 
   &:hover {
-    background-color: var(--children-item-hover-color);
+    background-color: var(--alg-children-item-hover-color);
 
     .item-link {
       border-color: transparent !important;

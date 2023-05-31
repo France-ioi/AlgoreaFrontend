@@ -1,19 +1,8 @@
 <div class="breadcrumb-container">
   <ul class="breadcrumb-list" *ngIf="contentBreadcrumb"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
-
-    <!-- category -->
-    <li class="breadcrumb-item home"><i class="ph-duotone ph-house-line"></i></li>
-    <li
-      class="breadcrumb-item"
-      [pTooltip]="contentBreadcrumb.category"
-      tooltipPosition="bottom"
-    >
-      <span class="label">{{ contentBreadcrumb.category }}</span>
-    </li>
-
     <!-- elements -->
     <ng-container *ngFor="let element of contentBreadcrumb.path; index as idx;">
-      <li class="breadcrumb-item separator" [ngClass]="{ 'active': idx === contentBreadcrumb.currentPageIdx }">
+      <li class="breadcrumb-item separator" [ngClass]="{ 'active': idx === contentBreadcrumb.currentPageIdx }" *ngIf="idx > 0">
         <i class="ph ph-caret-right separator-icon"></i>
       </li>
       <li

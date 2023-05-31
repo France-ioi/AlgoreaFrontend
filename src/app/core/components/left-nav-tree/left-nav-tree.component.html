@@ -11,11 +11,6 @@
 
 <div class="container" *ngIf="!data?.parent && elementType === 'group'" [routerLink]="['groups', 'mine']">
   <div class="back-button-container cursor-pointer">
-    <button
-        class="alg-button-icon back-button rounded"
-        icon="ph ph-arrow-left"
-        pButton
-    ></button>
     <p class="back-button-title">My groups</p>
   </div>
 </div>

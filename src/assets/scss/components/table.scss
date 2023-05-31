@@ -1,6 +1,9 @@
 @import 'src/assets/scss/functions';
 
 .alg-table {
+  display: block;
+  margin: 0 toRem(-18);
+
   .p-datatable-thead > tr > th {
     padding: toRem(13) toRem(19);
     color: var(--alg-secondary-color);

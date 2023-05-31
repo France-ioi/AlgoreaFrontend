@@ -12,21 +12,13 @@
   overflow: hidden;
 }
 
-.full-frame-content-top-bar {
+.content-top-bar {
   display: flex;
   align-items: center;
+}
 
-  .right-pane-title {
-    font-size: toRem(12);
-    flex: 1;
-
-    p {
-      color: var(--base-text-color);
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-  }
+.breadcrumb {
+  flex: 1;
 }
 
 .margin-right {
@@ -35,8 +27,4 @@
 
 .margin-left {
   margin-left: var(--alg-space-size-5);
-}
-
-.score-placeholder {
-  margin-right: var(--alg-space-size-5);
 }
