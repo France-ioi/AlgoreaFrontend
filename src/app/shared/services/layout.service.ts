@@ -1,7 +1,7 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Injectable, OnDestroy } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { BehaviorSubject, Subject, combineLatest, concat, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, distinctUntilChanged } from 'rxjs';
 import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
 
 export interface FullFrameContent {
@@ -40,7 +40,7 @@ export class LayoutService implements OnDestroy {
   ]).pipe(
     debounceTime(0), // as the sources are not independant, prevent some very-transient inconsistent cases
     // each time manualMenuToggle$ emits, emit its (bool) value, otherwise emit `undefined`
-    switchMap(values => concat(this.manualMenuToggle$).pipe(
+    switchMap(values => this.manualMenuToggle$.pipe(
       map<boolean,[ boolean, boolean, ContentDisplayType, boolean|undefined ]>(manualMenuToggle => [ ...values, manualMenuToggle ]),
       startWith<[ boolean, boolean, ContentDisplayType, boolean|undefined ]>([ ...values, undefined ])
     )),
