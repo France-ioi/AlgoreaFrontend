@@ -33,6 +33,21 @@ export class LayoutService implements OnDestroy {
   fullFrameContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.ShowFullFrame));
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
+  /**
+   * Left menu: expected behavior
+   * (note that in the following, a narrow window as the same behavior as mobile)
+   * - cannot show left menu (e.g., using LTI) -> never show the menu
+   * - on app launch -> hide the menu on mobile, show otherwise
+   * - when reducing the window size to mobile: hide the menu
+   * - when enlarging the window size from mobile to non-mobile: show the menu if not showing a full-frame task
+   * - when clicking on the show/hide hamburger menu, show/hide the menu
+   * - on mobile, when clicking on a task in the left menu, close the menu
+   * - on non-mobile, hide the menu when opening a full-frame task (known when the task has been loaded), except if the it was open using
+   *   the left menu
+   * - otherwise, leave the menu as it is
+   * Interesting case to be tested: on mobile, if opening a task via the menu (the menu hides) and closing the menu manually, the menu does
+   * not re-hide when it knows it is a full-frame task
+   */
   leftMenu$ = combineLatest([
     this.isNarrowScreen$,
     this.canShowLeftMenu,
