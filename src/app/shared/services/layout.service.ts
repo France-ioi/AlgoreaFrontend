@@ -51,7 +51,12 @@ export class LayoutService implements OnDestroy {
         return { shown: !isNarrowScreen && displayType !== ContentDisplayType.ShowFullFrame, animated: true, isNarrowScreen };
       }
       if (manualMenuToggle !== undefined) return { shown: manualMenuToggle, animated: true, isNarrowScreen };
-      if (displayType === ContentDisplayType.ShowFullFrame || (isNarrowScreen && displayType === ContentDisplayType.Show)) {
+      if (isNarrowScreen && displayType === ContentDisplayType.Show) {
+        return { shown: false, animated: true, isNarrowScreen };
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const preventFullFrame = typeof history.state === 'object' && Boolean(history.state?.preventFullFrame);
+      if (!preventFullFrame && displayType === ContentDisplayType.ShowFullFrame) {
         return { shown: false, animated: true, isNarrowScreen };
       }
       return { ...prev, isNarrowScreen };
