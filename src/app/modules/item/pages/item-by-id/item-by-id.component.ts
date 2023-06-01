@@ -327,10 +327,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     combineLatest([ this.itemDataSource.state$.pipe(readyData()), this.fullFrameContent$ ]).pipe(
       map(([ data, fullFrame ]) => {
-        if (fullFrame) return ContentDisplayType.ShowFullFrame;
-        return isTask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default;
+        if (fullFrame) return { id: data.route.id, display: ContentDisplayType.ShowFullFrame };
+        return { id: data.route.id, display: isTask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default };
       }),
-      distinctUntilChanged(),
+      distinctUntilChanged((x, y) => x.id === y.id && x.display === y.display), // emit once per item for a same display
+      map(({ display }) => display),
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
   ];
