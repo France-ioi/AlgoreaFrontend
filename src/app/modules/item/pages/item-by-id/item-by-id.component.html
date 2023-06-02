@@ -145,7 +145,7 @@
               </div>
               <alg-item-content
                 class="alg-flex-1"
-                [hidden]="!contentTab.isActive && !editChildrenTab.isActive"
+                [style.display]="contentTab.isActive || editChildrenTab.isActive ? 'flex' : 'none'"
                 [itemData]="itemData"
                 [taskConfig]="taskConfig"
                 [savingAnswer]="(savingAnswer$ | async) ?? false"
