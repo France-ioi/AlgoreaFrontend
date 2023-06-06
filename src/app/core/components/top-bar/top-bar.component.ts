@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 
 @Component({
   selector: 'alg-top-bar',
@@ -11,4 +11,7 @@ export class TopBarComponent {
   @Input() modeBarDisplayed = false;
   @Input() showTopRightControls = true;
   @Input() showLeftMenuOpener = true;
+
+  constructor(public elementRef: ElementRef<HTMLElement>) {
+  }
 }

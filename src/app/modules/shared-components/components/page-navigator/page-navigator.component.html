@@ -13,11 +13,13 @@
     <i class="fa fa-expand-arrows-alt"></i>
   </span>
   <alg-neighbor-widget
+    id="page-navigator-neighbor-widget"
     class="navigator"
     [navigationMode]="navigationMode"
     (parent)="parent.emit()"
     (left)="left.emit()"
     (right)="right.emit()"
+    *ngIf="navigationMode"
   ></alg-neighbor-widget>
 </div>
 
