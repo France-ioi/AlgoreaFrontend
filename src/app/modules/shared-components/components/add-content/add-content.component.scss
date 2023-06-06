@@ -1,47 +1,36 @@
 @import 'src/variables';
 @import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .add-content-wrapper {
   display: flex;
   align-items: center;
-  margin-bottom: 1.5rem;
+}
 
-  span.label {
-    font-style: italic;
-    margin-left: 1.6667rem;
-    margin-right: 2rem;
-  }
-
-  alg-input {
-    flex: 1;
-  }
+.label {
+  margin: 0 toRem(20);
+  font-size: toRem(16);
 }
 
 .input-light {
   opacity: 0.5;
 }
 
-.main {
-  flex: 1;
-}
-
-.type {
-  color: var(--base-color);
-}
-
 .new-content-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
 
-  .new-content-type {
-    display: block;
-    margin: 1rem;
-    flex: 1 0 calc(25% - 1.6667rem);
-  }
+.new-content-type {
+  display: block;
+  flex: 1 0 calc(25% - 1.6667rem);
 }
 
 .content-type-item-container {
@@ -51,65 +40,49 @@
   padding: 1rem;
   background-color: transparent;
   cursor: pointer;
-  max-width: 12.5rem;
-  margin: 0 auto;
+  min-width: toRem(128);
+  min-height: toRem(128);
+  margin: 0 toRem(20);
+  border: toRem(2) solid var(--alg-border-color);
+  border-radius: var(--border-radius);
 
-  .item-image-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 7.0833rem;
-      height: 7.0833rem;
-      background-color: var(--base-color);
-      color: white;
-      border-radius: 7.0833rem;
-      font-size: 3.3333rem;
-    }
+  &:first-child {
+    margin-left: 0;
   }
 
-  .item-title {
-    font-size: 1.1667rem;
-    font-weight: bold;
-    color: var(--dark-text-color);
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-  }
-
-  .item-description {
-    font-size: 1.2rem;
-    color: var(--base-text-color);
-    text-align: center;
-    flex: 1;
-    overflow: hidden;
+  &:last-child {
+    margin-right: 0;
   }
 
   &:hover, &.selected {
-    background-color: var(--base-color);
-    .item-image-wrapper {
-      span {
-        background-color: white;
-        color: var(--base-color);
-      }
-    }
-
-    .item-title {
-      color: white;
-    }
-
-    .item-description {
-      color: white;
-    }
+    border: toRem(2) solid var(--alg-primary-color) ;
   }
 }
 
+.item-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: toRem(60);
+  color: var(--alg-primary-color);
+}
+
+.item-title {
+  margin-top: toRem(10);
+  color: var(--alg-secondary-color);
+}
+
+.item-description {
+  margin-top: toRem(10);
+  font-size: toRem(14);
+  text-align: center;
+  flex: 1;
+  overflow: hidden;
+}
+
 .more-items {
-  color: var(--base-text-color);
-  font-size: 1.2rem;
+  color: var(--alg-secondary-color);
+  font-size: toRem(12);
 }
 
 .input-group {
@@ -122,37 +95,38 @@
   flex: 1;
 }
 
-@media screen and (min-width: 1220px) {
-  .new-content-container {
-    .new-content-type {
-      max-width: calc(25% - 1.6667rem);
-    }
-  }
+.add-content-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
-@media screen and (min-width: 1040px) and (max-width: 1220px) {
-  .new-content-container {
-    .new-content-type {
-      flex: 1 0 calc(33.33% - 1.6667rem);
-      max-width: calc(33.33% - 1.6667rem);
-    }
-  }
+.add-content-list-item {
+  padding: toRem(8) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: toRem(1) solid var(--alg-border-color);
 }
 
-@media screen and (min-width: 860px) and (max-width: 1040px) {
-  .new-content-container {
-    .new-content-type {
-      flex: 1 0 calc(50% - 1.6667rem);
-      max-width: calc(50% - 1.6667rem);
-    }
-  }
+.add-content-type {
+  margin-right: toRem(32);
+  color: #545454;
+  opacity: .5;
 }
 
-@media screen and (max-width: 860px) {
-  .new-content-container {
-    .new-content-type {
-      flex: 1 0 calc(100% - 1.6667rem);
-      max-width: calc(100% - 1.6667rem);
-    }
-  }
+.add-content-title {
+  color: #545454;
+  font-weight: 700;
+}
+
+.select-caption {
+  margin: toRem(30) 0 toRem(16) 0;
+  color: var(--alg-secondary-color);
+  font-size: toRem(12);
+}
+
+.loading {
+  margin-top: toRem(16);
 }

@@ -1,11 +1,9 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 .input-wrapper {
   display: flex;
-  border-radius: $border-radius;
-  height: 3rem;
   position: relative;
+  border-radius: var(--border-radius);
 
   &.large {
     height: 3.75rem;
@@ -28,61 +26,21 @@
     }
   }
 
-  .icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    margin-top: -.5em;
-    font-size: 1.2rem;
-    height: 1rem;
-    line-height: 1rem;
-    color: var(--base-text-color);
-  }
-
   input {
-    font-family: var(--font-family);
-    width: 100%;
-    display: flex;
-    background-color: rgba(0, 0, 0, 0.05);
-    border: none;
-    box-shadow: 0 .1rem #00000019 inset;
-    border-radius: $border-radius;
-    padding-left: 2.5rem;
-    font-size: 1.2rem;
-    line-height: 3rem;
-    color: var(--base-text-color);
-
     &.has-button {
       border-top-right-radius: unset;
       border-bottom-right-radius: unset;
     }
-
-    &:focus {
-      outline: none;
-    }
-
-    &::placeholder {
-      font-style: italic;
-      color: rgb(118, 118, 121);
-      font-size: 1.2rem;
-    }
-
-
   }
 
   .clear-button {
-    margin-left: -3rem;
-    margin-top: .6rem;
-
-    button {
-      cursor: pointer;
-      border: none;
-      outline: none;
-      position: relative;
-      width: 0;
-      color: #787878;
-      background-color: transparent;
-    }
+    right: toRem(4);
+    left: auto;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: toRem(24);
   }
 
   input::-webkit-outer-spin-button,
@@ -99,9 +57,44 @@
     width: 3rem;
     color: white;
     background-color: var(--base-color);
-    border-top-right-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
     cursor: pointer;
   }
+}
 
+.icon-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: toRem(24);
+  width: toRem(40);
+  height: toRem(40);
+  color: var(--alg-primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-element {
+  width: 100%;
+  height: toRem(40);
+  display: flex;
+  background-color: #fff;
+  border: none;
+  border-radius: var(--border-radius);
+  padding-left: toRem(40);
+  font-size: toRem(16);
+  color: var(--alg-secondary-color);
+
+  &:focus {
+    outline: toRem(2) solid var(--alg-primary-color);
+  }
+
+  &::placeholder {
+    color: var(--alg-secondary-color);
+    font-size: toRem(16);
+    font-style: italic;
+    opacity: .5;
+  }
 }

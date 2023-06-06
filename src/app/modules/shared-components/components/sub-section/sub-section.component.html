@@ -1,10 +1,7 @@
 <div class="section-container">
-  <div class="section-header">
-    <span class="section-handler">
-      <i class="fa fa-{{icon}}"></i>
-    </span>
-    <span class="section-title">{{label}}</span>
-    <span class="section-help" *ngIf="tooltip" title="{{tooltip}}">
+  <div>
+    <span class="section-title">{{ label }}</span>
+    <span class="section-help" *ngIf="tooltip" [title]="tooltip">
       <i class="fa fa-question"></i>
     </span>
     <span class="section-close" *ngIf="canClose" (click)="onCloseEvent($event)">

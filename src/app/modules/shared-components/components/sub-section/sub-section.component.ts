@@ -6,7 +6,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: [ './sub-section.component.scss' ],
 })
 export class SubSectionComponent {
-  @Input() icon?: string; // font awesome identifier
   @Input() label?: string;
   @Input() tooltip?: string;
   @Input() canClose = false;

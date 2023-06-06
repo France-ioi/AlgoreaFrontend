@@ -78,6 +78,12 @@
       background-color: #dbe1f3;
     }
   }
+
+  &.small {
+    .p-button-icon {
+      font-size: .8rem;
+    }
+  }
 }
 
 .alg-round-button-icon {

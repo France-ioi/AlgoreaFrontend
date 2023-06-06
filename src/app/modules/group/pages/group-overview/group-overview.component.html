@@ -1,14 +1,15 @@
 <ng-container *ngIf="group">
-  <alg-section icon="fa fa-users" i18n-label label="Presentation">
-    <p *ngIf="group.description ; else noDesc">{{ group.description }}</p>
-    <ng-template #noDesc i18n>This group has no description</ng-template>
-  </alg-section>
+  <h2 class="alg-h2" i18n>Presentation</h2>
+  <p *ngIf="group.description ; else noDesc">{{ group.description }}</p>
+  <ng-template #noDesc><span i18n>This group has no description</span></ng-template>
 
-  <alg-section icon="fa fa-chart-line" i18n-label label="Progress" *ngIf="group.currentUserCanWatchMembers">
-    <alg-group-log-view [groupId]="group.id"></alg-group-log-view>
-  </alg-section>
+  <ng-container *ngIf="group.currentUserCanWatchMembers">
+    <h2 class="alg-h2" i18n>Progress</h2>
+    <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
+  </ng-container>
 
-  <alg-section icon="fa fa-sign-out-alt" i18n-label label="Leave the group?" *ngIf="group.currentUserMembership !== 'none'">
+  <ng-container *ngIf="group.currentUserMembership !== 'none'">
+    <h2 class="alg-h2" i18n>Leave the group?</h2>
     <alg-group-leave [group]="group" (leave)="onLeave()"></alg-group-leave>
-  </alg-section>
+  </ng-container>
 </ng-container>
