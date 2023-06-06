@@ -21,42 +21,32 @@
 }
 
 .grid-container {
-  display: flex;
-  flex-flow: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+  row-gap: 1rem;
 
-  &.full-frame {
-    .grid-item {
-      width: 50%;
-
-      @media screen and (min-width: 599.98px) {
-        width: 33.3%;
-      }
-      @media screen and (min-width: 800px) {
-        width: 25%;
-      }
-      @media screen and (min-width: 980px) {
-        width: 20%;
-      }
-      @media screen and (min-width: 1200px) {
-        width: 16.6%;
-      }
-    }
+  // The standard of values was taken form Material Design:
+  // https://material.angular.io/cdk/layout/overview#predefined-breakpoints
+  @media screen and (max-width: 599.98px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (min-width: 600px) and (max-width: 959.98px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (min-width: 960px) and (max-width: 1279.98px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media screen and (min-width: 1280px) and (max-width: 1919.98px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @media screen and (min-width: 1920px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
 
 .grid-item {
-  width: 50%;
-  padding: .5rem;
-
-  @media screen and (min-width: 980px) {
-    width: 33.3%;
-  }
-  @media screen and (min-width: 1230px) {
-    width: 33.3%;
-  }
-  @media screen and (min-width: 1400px) {
-    width: 25%;
-  }
+  overflow: hidden;
 }
 
 .grid-card {
