@@ -1,5 +1,16 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  &.transparent {
+    .input-element {
+      background-color: transparent;
+      &::placeholder {
+        opacity: 1;
+      }
+    }
+  }
+}
+
 .input-wrapper {
   display: flex;
   position: relative;
@@ -8,7 +19,7 @@
   &.large {
     height: 3.75rem;
 
-    input {
+    .input-element {
       font-size: 2.5rem;
       font-weight: 300;
       padding-left: 3.75rem;
@@ -21,12 +32,12 @@
   }
 
   &.light {
-    input {
+    .input-element {
       background-color: white;
     }
   }
 
-  input {
+  .input-element {
     &.has-button {
       border-top-right-radius: unset;
       border-bottom-right-radius: unset;
@@ -43,8 +54,8 @@
     font-size: toRem(24);
   }
 
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
+  .input-element::-webkit-outer-spin-button,
+  .input-element::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
