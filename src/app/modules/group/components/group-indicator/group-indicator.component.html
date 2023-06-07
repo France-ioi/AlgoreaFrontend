@@ -1,10 +1,12 @@
 <div class="container">
   <ng-container [ngSwitch]="group?.currentUserMembership">
-    <div class="content" *ngSwitchCase="'direct'" i18n>
-      You are a member of this group.
+    <div class="content" *ngSwitchCase="'direct'">
+      <i class="icon ph-duotone ph-crown"></i>
+      <span i18n>You are a member of this group.</span>
     </div>
 
     <div class="content" *ngSwitchCase="'descendant'" i18n>
+      <i class="icon ph-duotone ph-crown"></i>
       As a member of <alg-group-links class="links" [items]="group?.descendantsCurrentUserIsMemberOf"></alg-group-links>
       you are a member of this group.
     </div>
@@ -12,15 +14,18 @@
 
   <ng-container [ngSwitch]="group?.currentUserManagership">
     <div class="content" *ngSwitchCase="'direct'" i18n>
+      <i class="icon ph-duotone ph-crown"></i>
       You are a manager of this group.
     </div>
 
     <div class="content" *ngSwitchCase="'ancestor'" i18n>
+      <i class="icon ph-duotone ph-crown"></i>
       As a manager of <alg-group-links class="links" [items]="group?.ancestorsCurrentUserIsManagerOf"></alg-group-links>
       you can manage this group.
     </div>
 
     <div class="content" *ngSwitchCase="'descendant'" i18n>
+      <i class="icon ph-duotone ph-crown"></i>
       As a manager of <alg-group-links class="links" [items]="group?.descendantsCurrentUserIsManagerOf"></alg-group-links>
       you can view this group.
     </div>

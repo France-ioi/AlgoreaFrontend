@@ -1,16 +1,16 @@
-@import 'src/variables';
-@import 'src/geometry';
+@import 'src/assets/scss/functions';
 
 .container {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
-  color: var(--base-color);
-  background-color: var(--section-color);
-  border-radius: $border-radius;
+  color: var(--alg-secondary-color);
   white-space: nowrap;
-  overflow-x: scroll;
+  border-radius: toRem(8);
+  background-color: #e6eeff;
+  min-height: toRem(40);
+  overflow: hidden;
 }
 
 .content {
@@ -21,4 +21,9 @@
 
 .links {
   margin-left: .4rem;
+}
+
+.icon {
+  margin-right: toRem(8);
+  color: var(--alg-primary-color);
 }
