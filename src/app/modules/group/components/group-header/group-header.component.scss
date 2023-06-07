@@ -1,99 +1,21 @@
 @import 'src/variables';
 
 .group-header-container {
+  padding: var(--alg-space-size-3) 0;
   display: flex;
   flex-direction: column;
+}
 
-  .group-header {
-    display: flex;
-    align-items: center;
-    margin-top: 1.6667rem;
-    margin-bottom: 2.5rem;
-    background-color: var(--base-bk-color);
+.group-header {
+  display: flex;
+  align-items: center;
+}
 
-    &.small {
-      height: 3.5833rem;
-    }
+.group-title-container {
+  margin-right: var(--alg-space-size-5);
+  flex: 1;
+}
 
-    .user-image {
-      border-radius: 9rem;
-
-      img {
-        border-radius: 9rem;
-      }
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      margin-left: 1.6667rem;
-
-      .user-name {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-
-        span {
-          color: #4A4A4A;
-          font-size: 2rem;
-          line-height: 2rem;
-          margin-top: 0;
-          margin-right: 2rem;
-        }
-
-      }
-
-      .two-columns {
-        display: flex;
-        flex-wrap: wrap;
-
-        > span {
-          flex-basis: 50%;
-          min-width: 0;
-
-          &.assoc-skill {
-            alg-score-ring {
-              margin-left: 1.6667rem;
-            }
-          }
-        }
-      }
-
-      span {
-        display: flex;
-        align-items: center;
-        color: var(--base-text-color);
-        // margin-bottom: 0.6667rem;
-        font-size: 1.2rem;
-        line-height: 2rem;
-        height: 2rem;
-        // overflow: hidden;
-        padding-right: 1rem;
-
-        i {
-          margin-right: 1rem;
-          width: 1rem;
-        }
-
-        span, a {
-          margin-bottom: 0;
-          display: inline-block;
-
-          min-width: 0;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-
-          &.no-wrap {
-            overflow: unset;
-          }
-        }
-      }
-    }
-
-    .certificates {
-      margin-right: 2.0833rem;
-    }
-  }
+.group-title {
+  margin: 0;
 }
