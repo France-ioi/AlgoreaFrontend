@@ -43,6 +43,12 @@
       background: var(--alg-primary-color);
       height: toRem(40);
     }
+
+    .p-button-icon {
+      margin-left: toRem(7);
+      color: var(--alg-light-color);
+      font-size: toRem(16);
+    }
   }
 
   &.small {
