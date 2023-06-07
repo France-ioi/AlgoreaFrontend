@@ -40,6 +40,7 @@ export interface Environment {
     hideTaskTabs: string[],
     skillsDisabled: boolean,
     showGroupAccessTab?: boolean,
+    menuSearchDisabled?: boolean,
   },
 
   /* paths to be matched must not have a trailing slash */
