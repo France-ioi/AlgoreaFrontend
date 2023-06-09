@@ -10,6 +10,7 @@ export interface Environment {
 
   apiUrl: string, // full url (not including the trailing slash) of the backend
   forumServerUrl?: string,
+  searchApiUrl?: string,
 
   oauthServerUrl: string, // full url (not including the trailing slash) of the oauth server
   oauthClientId: string,
@@ -40,7 +41,6 @@ export interface Environment {
     hideTaskTabs: string[],
     skillsDisabled: boolean,
     showGroupAccessTab?: boolean,
-    menuSearchDisabled?: boolean,
   },
 
   /* paths to be matched must not have a trailing slash */
