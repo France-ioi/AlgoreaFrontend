@@ -137,6 +137,12 @@
   justify-content: space-between;
   align-items: center;
   height: toRem(56);
+
+  &.slanted {
+    .alg-table-summary-checkbox {
+      margin-left: toRem(14);
+    }
+  }
 }
 
 .alg-table-summary-left {
@@ -146,7 +152,7 @@
 }
 
 .alg-table-summary-checkbox {
-  margin-left: toRem(14);
+  margin-left: toRem(3);
 }
 
 .alg-table-summary-select-all {

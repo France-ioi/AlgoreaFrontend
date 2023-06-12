@@ -24,10 +24,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class SwitchComponent implements ControlValueAccessor {
-
   @Input() checked = false;
-  @Input() mode: 'dark' | 'white' | 'circular' | 'dark-circular' = 'dark';
-  @Input() type = 'square';
 
   @Output() change = new EventEmitter<boolean>();
 

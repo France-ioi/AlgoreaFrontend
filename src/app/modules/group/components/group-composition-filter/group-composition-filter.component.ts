@@ -18,59 +18,43 @@ export interface Filter {
   styleUrls: [ './group-composition-filter.component.scss' ]
 })
 export class GroupCompositionFilterComponent implements OnInit{
-
   @Input() defaultValue?: Filter;
 
   @Output() change = new EventEmitter<Filter>();
 
   value: Filter = { type: TypeFilter.Users, directChildren: true };
 
-  selectedChildrenFilter = 0;
+  allDescendantsChecked = false;
   selectedTypeFilter = 0;
 
-  readonly childrenFilters: { label:string, value: boolean }[] = [
-    {
-      label: $localize`Direct Children Only`,
-      value: true,
-    },
-    {
-      label: $localize`All Descendants`,
-      value: false,
-    },
-  ];
-
-  readonly allDescendantsTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
+  readonly allDescendantsTypeFilters: { label: string, value: TypeFilter }[] = [
     /*    {
       icon: 'fa fa-users',
       label: $localize`teams`,
       value: TypeFilter.Teams
     },*/
     {
-      icon: 'fa fa-user',
-      label: $localize`users`,
+      label: $localize`Users`,
       value: TypeFilter.Users
     },
   ];
 
-  readonly directChildrenTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
+  readonly directChildrenTypeFilters: { label: string, value: TypeFilter }[] = [
     {
-      icon: 'fa fa-users',
-      label: $localize`sub-groups`,
+      label: $localize`Sub-groups`,
       value: TypeFilter.Groups
     },
     /*    {
       icon: 'fa fa-calendar',
       label: $localize`sessions`,
       value: TypeFilter.Sessions
-    },
-    {
-      icon: 'fa fa-users',
-      label: $localize`teams`,
-      value: TypeFilter.Teams
     },*/
     {
-      icon: 'fa fa-user',
-      label: $localize`users`,
+      label: $localize`Team`,
+      value: TypeFilter.Teams
+    },
+    {
+      label: $localize`Users`,
       value: TypeFilter.Users
     },
   ];
@@ -85,7 +69,7 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   public setFilter(filter: Filter): void {
     this.value = filter;
-    this.selectedChildrenFilter = this.childrenFilters.findIndex(childrenFilter => childrenFilter.value === this.value.directChildren);
+    this.allDescendantsChecked = !this.value.directChildren;
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = Math.max(0, typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
   }
@@ -97,15 +81,15 @@ export class GroupCompositionFilterComponent implements OnInit{
     this.change.emit(this.value);
   }
 
-  onChildrenFilterChanged(index: number): void {
-    this.value.directChildren = ensureDefined(this.childrenFilters[index]).value;
-    this.selectedChildrenFilter = index;
-
+  onChildrenFilterChanged(checked: boolean): void {
+    this.value.directChildren = !checked;
     const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
-      (this.value.type === 'teams' ? 'teams' : 'users'));
+      (this.value.directChildren
+        ? this.value.type === TypeFilter.Users ? TypeFilter.Users : TypeFilter.Groups
+        : TypeFilter.Users)
+    );
     this.value.type = ensureDefined(typeFilters[this.selectedTypeFilter]).value;
-
     this.change.emit(this.value);
   }
 }

@@ -1,12 +1,10 @@
-@import 'src/variables';
-@import "src/geometry.scss";
+@import 'src/assets/scss/functions';
 
 :host {
-  position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
-.error {
-  display: block;
-  margin-bottom: 2rem;
+.member-list-table {
+  margin-top: toRem(20);
 }
