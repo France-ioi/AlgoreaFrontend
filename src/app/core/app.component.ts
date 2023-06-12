@@ -1,4 +1,4 @@
-import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
@@ -14,6 +14,7 @@ import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
 import { Location } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
+import { TopBarComponent } from './components/top-bar/top-bar.component';
 
 @Component({
   selector: 'alg-root',
@@ -21,6 +22,7 @@ import { ChunkErrorService } from './services/chunk-error.service';
   styleUrls: [ './app.component.scss' ]
 })
 export class AppComponent implements OnInit, OnDestroy {
+  @ViewChild(TopBarComponent) topBarComponent?: TopBarComponent;
 
   fatalError$ = merge(
     this.authService.failure$,
@@ -94,11 +96,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onScrollContent(): void {
-    if (window.scrollY > 65 && !this.scrolled) {
+    const topBarHeight = Number(this.topBarComponent?.elementRef.nativeElement.clientHeight || 0);
+    const pageNavigatorNeighborWidgetRect
+      = document.querySelector('#page-navigator-neighbor-widget')?.getBoundingClientRect();
+    const gap = pageNavigatorNeighborWidgetRect
+      ? ((pageNavigatorNeighborWidgetRect.top + pageNavigatorNeighborWidgetRect.height) + window.scrollY) - topBarHeight
+      : topBarHeight;
+    if (window.scrollY > gap && !this.scrolled) {
       this.ngZone.run(() => {
         this.scrolled = true;
       });
-    } else if (window.scrollY <= 65 && this.scrolled) {
+    } else if (window.scrollY <= gap && this.scrolled) {
       this.ngZone.run(() => {
         this.scrolled = false;
       });
