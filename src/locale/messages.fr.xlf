@@ -21,7 +21,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">340</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">202</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">341</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">202</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="translated">Mauvaise langue?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
@@ -44,11 +44,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="8346185139474651251" datatype="html">
         <source>Search ?</source><target state="new">Search ?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/left-menu-search/left-menu-search.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="8675432263399119284" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-menu-search/left-menu-search.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
         <source>My groups</source><target state="translated">Mes groupes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.ts</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.ts</context><context context-type="linenumber">20</context></context-group></trans-unit>
@@ -74,13 +71,19 @@
         <source>Groups</source><target state="translated">Groupes</target>
 
         <note priority="1" from="description">Tab name</note>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="5347017799397630231" datatype="html">
+        <source>Unable to perform the search.</source><target state="new">Unable to perform the search.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="2192178401851161061" datatype="html">
         <source>Unable to load the list.</source><target state="translated">Erreur lors du chargement de la liste.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="6206098913491165963" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="6206098913491165963" datatype="html">
         <source> This menu is filtered by the observation mode. </source><target state="new"> This menu is filtered by the observation mode. </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="4219108310098283044" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="4219108310098283044" datatype="html">
         <source>Observation Mode</source><target state="translated">Mode observation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/observation-bar/observation-bar.component.html</context>
