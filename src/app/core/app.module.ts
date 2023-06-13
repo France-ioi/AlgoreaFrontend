@@ -46,6 +46,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { LeftMenuSearchComponent } from './components/left-menu-search/left-menu-search.component';
+import { LeftSearchResultComponent } from './components/left-search-result/left-search-result.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -59,6 +60,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftMenuComponent,
     LeftMenuSearchComponent,
     LeftNavComponent,
+    LeftSearchResultComponent,
     LeftHeaderComponent,
     LeftNavTreeComponent,
     TopRightControlsComponent,

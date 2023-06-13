@@ -1,0 +1,17 @@
+<a class="alg-link base-color" (click)="close.emit()">(X) close</a>
+
+<p *ngIf="data === undefined">
+  Type at least 3 char to search content
+</p>
+
+<p *ngIf="data !== undefined && data.length === 0">empty</p>
+
+<ng-container *ngFor="let item of data;">
+  <ul>
+    <li>
+      <a [routerLink]="item | rawItemRoute | url">
+        {{ item.title }} ({{ item.type }})
+      </a>
+    </li>
+  </ul>
+</ng-container>

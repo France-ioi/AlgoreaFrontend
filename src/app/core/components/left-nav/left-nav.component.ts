@@ -1,7 +1,7 @@
 
-import { Component, Output } from '@angular/core';
-import { merge, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { merge, of, ReplaySubject, Subject } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ContentInfo } from 'src/app/shared/models/content/content-info';
 import { isGroupInfo, isMyGroupsInfo } from 'src/app/shared/models/content/group-info';
@@ -12,18 +12,39 @@ import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.se
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { environment } from '../../../../environments/environment';
 import { GroupWatchingService } from '../../services/group-watching.service';
-import { readyData } from 'src/app/shared/operators/state';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
+import { SearchService } from 'src/app/shared/http-services/search.service';
+import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
+import { appConfig } from 'src/app/shared/helpers/config';
+import { readyState } from 'src/app/shared/helpers/state';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
 const groupsTabIdx = 2;
+
+const minQueryLength = 3;
 
 @Component({
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ]
 })
-export class LeftNavComponent {
+export class LeftNavComponent implements OnChanges {
+
+  @Input() searchQuery = '';
+  private searchQuery$ = new ReplaySubject<string>(1);
+  private retrySearch$ = new Subject<void>();
+  searchResultState$ = this.searchQuery$.pipe(
+    debounceTime(300),
+    repeatLatestWhen(this.retrySearch$),
+    switchMap(q => (q && q.length >= minQueryLength ?
+      this.searchService!.search(q).pipe(
+        map(q => q.searchResults),
+        mapToFetchState()
+      ) : of(readyState(undefined)) /* return a ready state containing `undefined` when the query is too short for searching */)),
+  );
+
+  searchService = appConfig.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
 
   private manualTabChange = new Subject<number>();
   activeTab$ = merge(
@@ -47,6 +68,7 @@ export class LeftNavComponent {
     map(navTreeData => navTreeData.selectedElementId),
     distinctUntilChanged(),
   );
+  @Output() closeSearch = new EventEmitter<void>();
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
@@ -62,7 +84,12 @@ export class LeftNavComponent {
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,
-  ) { }
+    private injector : Injector,
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.searchQuery) this.searchQuery$.next(this.searchQuery);
+  }
 
   onSelectionChangedByIdx(e: number): void {
     this.manualTabChange.next(e);
@@ -70,6 +97,10 @@ export class LeftNavComponent {
 
   retryError(tabIndex: number): void {
     this.navTreeServices[tabIndex]?.retry();
+  }
+
+  retrySearch(): void {
+    this.retrySearch$.next();
   }
 
 }

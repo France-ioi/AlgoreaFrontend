@@ -15,6 +15,8 @@ export class LeftMenuComponent implements OnDestroy {
 
   private selectedElement$ = new Subject<string>();
 
+  searchQuery = '';
+
   private subscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(id => this.scrollToContent(id));
 
   onSelectedElementChange(id: string | undefined): void {
