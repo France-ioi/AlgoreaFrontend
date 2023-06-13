@@ -1,10 +1,9 @@
 <alg-selection
-  [items]="value.directChildren ? directChildrenTypeFilters : allDescendantsTypeFilters"
+  [items]="typeFilters"
   [selected]="selectedTypeFilter"
   (change)="onTypeFilterChanged($event)"
 ></alg-selection>
-
-<div class="switch-control">
+<div class="switch-control" *ngIf="allowToCheckAllDescendants">
   <alg-switch
     [(ngModel)]="allDescendantsChecked"
     (ngModelChange)="onChildrenFilterChanged($event)"

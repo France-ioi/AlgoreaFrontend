@@ -24,25 +24,15 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   value: Filter = { type: TypeFilter.Users, directChildren: true };
 
+  allowToCheckAllDescendants = false;
   allDescendantsChecked = false;
   selectedTypeFilter = 0;
 
-  readonly allDescendantsTypeFilters: { label: string, value: TypeFilter }[] = [
-    /*    {
-      icon: 'fa fa-users',
-      label: $localize`teams`,
-      value: TypeFilter.Teams
-    },*/
-    {
-      label: $localize`Users`,
-      value: TypeFilter.Users
-    },
-  ];
-
-  readonly directChildrenTypeFilters: { label: string, value: TypeFilter }[] = [
+  readonly typeFilters: { label: string, value: TypeFilter, directOnly: boolean }[] = [
     {
       label: $localize`Sub-groups`,
-      value: TypeFilter.Groups
+      value: TypeFilter.Groups,
+      directOnly: true,
     },
     /*{
       icon: 'fa fa-calendar',
@@ -55,7 +45,8 @@ export class GroupCompositionFilterComponent implements OnInit{
     },*/
     {
       label: $localize`Users`,
-      value: TypeFilter.Users
+      value: TypeFilter.Users,
+      directOnly: false,
     },
   ];
 
@@ -70,26 +61,22 @@ export class GroupCompositionFilterComponent implements OnInit{
   public setFilter(filter: Filter): void {
     this.value = filter;
     this.allDescendantsChecked = !this.value.directChildren;
-    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    this.selectedTypeFilter = Math.max(0, typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
+    this.selectedTypeFilter = Math.max(0, this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
   }
 
   onTypeFilterChanged(index: number): void {
-    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = index;
-    this.value.type = ensureDefined(typeFilters[index]).value;
+    this.value.type = ensureDefined(this.typeFilters[index]).value;
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[index]).directOnly;
     this.change.emit(this.value);
   }
 
   onChildrenFilterChanged(checked: boolean): void {
     this.value.directChildren = !checked;
-    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
-      (this.value.directChildren
-        ? this.value.type === TypeFilter.Users ? TypeFilter.Users : TypeFilter.Groups
-        : TypeFilter.Users)
-    );
-    this.value.type = ensureDefined(typeFilters[this.selectedTypeFilter]).value;
+    this.selectedTypeFilter = this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type);
+    this.value.type = ensureDefined(this.typeFilters[this.selectedTypeFilter]).value;
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
     this.change.emit(this.value);
   }
 }
