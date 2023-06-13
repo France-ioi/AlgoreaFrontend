@@ -44,15 +44,15 @@ export class GroupCompositionFilterComponent implements OnInit{
       label: $localize`Sub-groups`,
       value: TypeFilter.Groups
     },
-    /*    {
+    /*{
       icon: 'fa fa-calendar',
       label: $localize`sessions`,
       value: TypeFilter.Sessions
-    },*/
+    },
     {
       label: $localize`Team`,
       value: TypeFilter.Teams
-    },
+    },*/
     {
       label: $localize`Users`,
       value: TypeFilter.Users
