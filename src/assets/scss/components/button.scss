@@ -1,6 +1,8 @@
 @import 'src/assets/scss/functions';
 
 .alg-button {
+  border: none;
+
   &.p-button {
     &:enabled:focus {
       outline: none;
@@ -15,7 +17,7 @@
       color: var(--alg-secondary-color);
       font-size: toRem(12);
       border-radius: toRem(12);
-      border-color: var(--alg-light-color);
+      border: toRem(1) solid var(--alg-light-color);
       background: none;
       height: toRem(24);
     }
@@ -35,11 +37,10 @@
     &.p-button {
       padding: 0 toRem(18);
       flex-direction: row-reverse;
-      color: var(--alg-light-bg-color);
+      color: var(--alg-white-color);
       font-size: toRem(16);
       text-decoration: none;
       border-radius: toRem(20);
-      border-color: var(--alg-light-color);
       background: var(--alg-primary-color);
       height: toRem(40);
     }
