@@ -1801,35 +1801,23 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="4668438620611828414" datatype="html">
         <source>You are a member of this group.</source><target state="new">You are a member of this group.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6350999595816280001" datatype="html">
+        <source> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </source><target state="new"> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="564761827354025129" datatype="html">
-        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
-          <context context-type="linenumber">9,12</context>
+          <context context-type="linenumber">7,10</context>
         </context-group>
       </trans-unit><trans-unit id="1652019840559664368" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> You are a manager of this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> You are a manager of this group. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
-          <context context-type="linenumber">17,19</context>
-        </context-group>
-      </trans-unit><trans-unit id="124212312752448442" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="124212312752448442" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can manage this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can manage this group. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
-          <context context-type="linenumber">22,25</context>
-        </context-group>
-      </trans-unit><trans-unit id="1346986250563505366" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="1346986250563505366" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can view this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can view this group. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context>
-          <context context-type="linenumber">28,31</context>
-        </context-group>
-      </trans-unit><trans-unit id="8953033926734869941" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source><target state="translated">Nom</target>
 
 
