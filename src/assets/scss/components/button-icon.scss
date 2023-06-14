@@ -67,7 +67,7 @@
     }
   }
 
-  &.back-button {
+  &.back-button, &.close-button {
     .p-button-icon {
       color: var(--alg-primary-color);
     }

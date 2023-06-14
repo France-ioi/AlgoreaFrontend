@@ -1,17 +1,42 @@
-<a class="alg-link base-color" (click)="close.emit()">(X) close</a>
+<div class="container" (click)="close.emit()">
+  <div class="close-button-container cursor-pointer">
+    <button
+      class="alg-button-icon close-button rounded"
+      icon="ph-duotone ph-x-circle"
+      pButton
+    ></button>
+    <p class="close-button-title" i18n>Close</p>
+  </div>
+</div>
 
-<p *ngIf="data === undefined">
-  Type at least 3 char to search content
-</p>
+<div class="container" *ngIf="data === undefined">
+  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+    Type at least 3 char to search content
+  </alg-message-info>
+</div>
 
-<p *ngIf="data !== undefined && data.length === 0">empty</p>
+<div class="container" *ngIf="data !== undefined && data.length === 0">
+  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+    No results
+  </alg-message-info>
+</div>
 
 <ng-container *ngFor="let item of data;">
-  <ul>
-    <li>
-      <a [routerLink]="item | rawItemRoute | url">
-        {{ item.title }} ({{ item.type }})
-      </a>
-    </li>
-  </ul>
+  <div class="container">
+    <ul class="result-list">
+      <li class="result-list-item">
+        <a class="result-list-link" [routerLink]="item | rawItemRoute | url" routerLinkActive="selected">
+          <i
+            class="result-list-icon ph-duotone"
+            [ngClass]="{
+            'ph-files': item.type === 'Task',
+            'ph-folders': item.type === 'Chapter'
+          }"
+          ></i>
+          <span class="result-list-link-caption">{{ item.title }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </ng-container>
+
