@@ -1,9 +1,7 @@
 <div class="group-header-container" *ngIf="groupData">
-  <div class="group-header unfolded">
-    <div class="user-info">
-      <div class="user-name">
-        <span>{{ groupData.group.name }}</span>
-      </div>
+  <div class="group-header">
+    <div class="group-title-container">
+      <h1 class="group-title">{{ groupData.group.name }}</h1>
     </div>
     <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
       <alg-page-navigator

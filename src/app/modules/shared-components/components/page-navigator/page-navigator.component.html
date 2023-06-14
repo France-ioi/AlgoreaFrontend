@@ -15,6 +15,7 @@
   <alg-neighbor-widget
     id="page-navigator-neighbor-widget"
     class="navigator"
+    [ngClass]="{ 'margin-left': allowWatching || allowFullScreen }"
     [navigationMode]="navigationMode"
     (parent)="parent.emit()"
     (left)="left.emit()"
