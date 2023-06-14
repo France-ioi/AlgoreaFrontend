@@ -1,12 +1,10 @@
 <div class="container">
   <ng-container [ngSwitch]="group?.currentUserMembership">
     <div class="content" *ngSwitchCase="'direct'">
-      <i class="icon ph-duotone ph-crown"></i>
       <span i18n>You are a member of this group.</span>
     </div>
 
     <div class="content" *ngSwitchCase="'descendant'" i18n>
-      <i class="icon ph-duotone ph-crown"></i>
       As a member of <alg-group-links class="links" [items]="group?.descendantsCurrentUserIsMemberOf"></alg-group-links>
       you are a member of this group.
     </div>
