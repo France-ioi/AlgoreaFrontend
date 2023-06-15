@@ -10,7 +10,7 @@
   border-radius: toRem(8);
   background-color: #e6eeff;
   min-height: toRem(40);
-  overflow: hidden;
+  overflow-x: scroll;
 }
 
 .content {

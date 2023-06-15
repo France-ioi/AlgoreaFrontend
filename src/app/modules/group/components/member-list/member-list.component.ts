@@ -71,7 +71,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   @Input() groupData? : GroupData;
   @Output() removedGroup = new EventEmitter<void>();
 
-  defaultFilter: Filter = { type: TypeFilter.Groups, directChildren: true };
+  defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
 
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
