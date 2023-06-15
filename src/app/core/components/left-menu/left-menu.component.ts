@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { debounceTime, Subject } from 'rxjs';
+import { appConfig } from 'src/app/shared/helpers/config';
 
 @Component({
   selector: 'alg-left-menu',
@@ -10,7 +11,11 @@ import { debounceTime, Subject } from 'rxjs';
 export class LeftMenuComponent implements OnDestroy {
   @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
 
+  menuSearchEnabled = !!appConfig.searchApiUrl;
+
   private selectedElement$ = new Subject<string>();
+
+  searchQuery = '';
 
   private subscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(id => this.scrollToContent(id));
 

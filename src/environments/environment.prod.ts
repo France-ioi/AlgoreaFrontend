@@ -7,6 +7,7 @@ export const environment: Environment = {
   oauthServerUrl: 'https://login.france-ioi.org',
   oauthClientId: '43',
   sentryDsn: 'https://6295834d69104f54b55cc0ebe4ada310@o1167067.ingest.sentry.io/6257761',
+  searchApiUrl: 'https://jyz57q4k3ytekopv6tvg5bdxaq0vlgso.lambda-url.eu-west-3.on.aws',
 
   defaultActivityId: '4702',
 

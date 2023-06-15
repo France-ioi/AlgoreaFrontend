@@ -42,34 +42,66 @@
   </ng-container>
 
   <hr class="divider">
+  <ng-container *ngrxLet="searchResultState$ as searchResultState">
+    <ng-container *ngIf="searchQuery.length > 0 else navTree">
+      <ng-container *ngIf="searchResultState.isFetching || searchResultState.isError || !searchResultState.data">
+        <div class="container">
+          <alg-left-menu-back-button (close)="closeSearch.emit()">
+            {{ searchQuery }}
+          </alg-left-menu-back-button>
+        </div>
+        <alg-loading class="alg-flex-1" *ngIf="searchResultState.isFetching"></alg-loading>
+        <alg-error
+          class="alg-flex-1"
+          i18n-message message="Unable to perform the search."
+          icon="ph-duotone ph-warning-circle"
+          [showRefreshButton]="true"
+          buttonCaption="Retry"
+          (refresh)="retrySearch()"
+          *ngIf="searchResultState.isError"
+        ></alg-error>
+      </ng-container>
 
-  <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
-    <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
-    <alg-error
-      class="alg-flex-1"
-      i18n-message message="Unable to load the list."
-      icon="ph-duotone ph-warning-circle"
-      [showRefreshButton]="true"
-      buttonCaption="Retry"
-      (refresh)="retryError(activeTab.index)"
-      *ngIf="state.isError"
-    ></alg-error>
-
-    <div class="watching-warning" *ngIf="state.isReady && (isWatching$ | async) && [0, 1].includes(activeTab.index)">
-      <div class="content" i18n>
-        This menu is filtered by the observation mode.
+      <div class="alg-flex-1 scroll-wrapper" *ngIf="searchResultState.isReady">
+        <div class="scroll-container">
+          <perfect-scrollbar>
+            <alg-left-search-result [data]="searchResultState.data" (close)="closeSearch.emit()"></alg-left-search-result>
+          </perfect-scrollbar>
+        </div>
       </div>
-    </div>
-
-    <div class="alg-flex-1 scroll-wrapper" *ngIf="state.isReady">
-      <div class="scroll-container">
-        <perfect-scrollbar>
-          <alg-left-nav-tree
-            [data]="state.data"
-            [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
-          ></alg-left-nav-tree>
-        </perfect-scrollbar>
-      </div>
-    </div>
+    </ng-container>
   </ng-container>
+
+  <ng-template #navTree>
+    <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
+      <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
+      <alg-error
+        class="alg-flex-1"
+        i18n-message message="Unable to load the list."
+        icon="ph-duotone ph-warning-circle"
+        [showRefreshButton]="true"
+        buttonCaption="Retry"
+        (refresh)="retryError(activeTab.index)"
+        *ngIf="state.isError"
+      ></alg-error>
+
+      <div class="watching-warning" *ngIf="state.isReady && (isWatching$ | async) && [0, 1].includes(activeTab.index)">
+        <div class="content" i18n>
+          This menu is filtered by the observation mode.
+        </div>
+      </div>
+
+      <div class="alg-flex-1 scroll-wrapper" *ngIf="state.isReady">
+        <div class="scroll-container">
+          <perfect-scrollbar>
+            <alg-left-nav-tree
+              [data]="state.data"
+              [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
+            ></alg-left-nav-tree>
+          </perfect-scrollbar>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+
 </ng-container>

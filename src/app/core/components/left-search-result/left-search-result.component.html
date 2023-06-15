@@ -1,0 +1,42 @@
+<div class="container" *ngIf="data !== undefined">
+  <alg-left-menu-back-button (close)="close.emit()">
+    {{ data.length }}
+    {{ data.length | i18nPlural: {
+      '=0': 'activities found',
+      '=1': 'activity found',
+      'other': 'activities found'
+    } }}
+  </alg-left-menu-back-button>
+</div>
+
+<div class="container" *ngIf="data === undefined">
+  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+    Type at least 3 letters to search content
+  </alg-message-info>
+</div>
+
+<div class="container" *ngIf="data !== undefined && data.length === 0">
+  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+    No results
+  </alg-message-info>
+</div>
+
+<ng-container *ngFor="let item of data;">
+  <div class="container">
+    <ul class="result-list">
+      <li class="result-list-item">
+        <a class="result-list-link" [routerLink]="item | rawItemRoute | url" routerLinkActive="selected">
+          <i
+            class="result-list-icon ph-duotone"
+            [ngClass]="{
+            'ph-files': item.type === 'Task',
+            'ph-folders': item.type === 'Chapter'
+          }"
+          ></i>
+          <span class="result-list-link-caption">{{ item.title }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</ng-container>
+

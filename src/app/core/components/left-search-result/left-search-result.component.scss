@@ -1,0 +1,39 @@
+@import 'src/assets/scss/functions';
+
+.container {
+  padding: 0 var(--alg-space-size-5);
+}
+
+.result-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.result-list-icon {
+  color: var(--alg-primary-color);
+  font-size: toRem(16);
+}
+
+.result-list-link {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding: toRem(11) var(--alg-space-size-5);
+  border-radius: toRem(10);
+  text-decoration: none;
+
+  &.selected {
+    border-radius: toRem(10);
+    background-color: var(--alg-tree-selected-color);
+  }
+}
+
+.result-list-link-caption {
+  margin-left: var(--alg-space-size-5);
+  flex: 1;
+  word-break: break-word;
+  color: #545454;
+}
