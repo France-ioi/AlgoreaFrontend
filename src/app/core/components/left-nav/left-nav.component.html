@@ -44,16 +44,23 @@
   <hr class="divider">
   <ng-container *ngrxLet="searchResultState$ as searchResultState">
     <ng-container *ngIf="searchQuery.length > 0 else navTree">
-      <alg-loading class="alg-flex-1" *ngIf="searchResultState.isFetching"></alg-loading>
-      <alg-error
-        class="alg-flex-1"
-        i18n-message message="Unable to perform the search."
-        icon="ph-duotone ph-warning-circle"
-        [showRefreshButton]="true"
-        buttonCaption="Retry"
-        (refresh)="retrySearch()"
-        *ngIf="searchResultState.isError"
-      ></alg-error>
+      <ng-container *ngIf="searchResultState.isFetching || searchResultState.isError || !searchResultState.data">
+        <div class="container">
+          <alg-left-menu-back-button (close)="closeSearch.emit()">
+            {{ searchQuery }}
+          </alg-left-menu-back-button>
+        </div>
+        <alg-loading class="alg-flex-1" *ngIf="searchResultState.isFetching"></alg-loading>
+        <alg-error
+          class="alg-flex-1"
+          i18n-message message="Unable to perform the search."
+          icon="ph-duotone ph-warning-circle"
+          [showRefreshButton]="true"
+          buttonCaption="Retry"
+          (refresh)="retrySearch()"
+          *ngIf="searchResultState.isError"
+        ></alg-error>
+      </ng-container>
 
       <div class="alg-flex-1 scroll-wrapper" *ngIf="searchResultState.isReady">
         <div class="scroll-container">

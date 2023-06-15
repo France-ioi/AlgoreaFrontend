@@ -1,0 +1,10 @@
+<div class="back-button-container cursor-pointer" (click)="close.emit()">
+  <button
+    class="alg-button-icon back-button rounded"
+    [icon]="icon"
+    pButton
+  ></button>
+  <p class="back-button-title">
+    <ng-content></ng-content>
+  </p>
+</div>

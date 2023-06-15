@@ -1,23 +1,17 @@
-<div class="container" (click)="close.emit()" *ngIf="data !== undefined">
-  <div class="back-button-container cursor-pointer">
-    <button
-      class="alg-button-icon back-button rounded"
-      icon="ph ph-arrow-left"
-      pButton
-    ></button>
-    <p class="back-button-title" i18n>
-      {{ data.length }}
-      {{ data.length | i18nPlural: {
-        '=1': 'activity found',
-        'other': 'activities found'
-      } }}
-    </p>
-  </div>
+<div class="container" *ngIf="data !== undefined">
+  <alg-left-menu-back-button (close)="close.emit()">
+    {{ data.length }}
+    {{ data.length | i18nPlural: {
+      '=0': 'activity found',
+      '=1': 'activity found',
+      'other': 'activities found'
+    } }}
+  </alg-left-menu-back-button>
 </div>
 
 <div class="container" *ngIf="data === undefined">
   <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
-    Type at least 3 char to search content
+    Type at least 3 letters to search content
   </alg-message-info>
 </div>
 

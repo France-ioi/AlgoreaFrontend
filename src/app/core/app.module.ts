@@ -47,6 +47,7 @@ import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.com
 import { LayoutModule } from '@angular/cdk/layout';
 import { LeftMenuSearchComponent } from './components/left-menu-search/left-menu-search.component';
 import { LeftSearchResultComponent } from './components/left-search-result/left-search-result.component';
+import { LeftMenuBackButtonComponent } from './components/left-menu-back-button/left-menu-back-button.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: false,
@@ -63,6 +64,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LeftSearchResultComponent,
     LeftHeaderComponent,
     LeftNavTreeComponent,
+    LeftMenuBackButtonComponent,
     TopRightControlsComponent,
     TopRightMenuComponent,
     ObservationBarComponent,
