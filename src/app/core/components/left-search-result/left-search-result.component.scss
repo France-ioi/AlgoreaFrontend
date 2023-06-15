@@ -1,17 +1,17 @@
 @import 'src/assets/scss/functions';
 
-.container, .validation {
+.container {
   padding: 0 var(--alg-space-size-5);
 }
 
-.close-button-container {
+.back-button-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 0 var(--alg-space-size-6);
 }
 
-.close-button-title {
+.back-button-title {
   margin-left: toRem(12);
   color: var(--alg-secondary-color);
   font-size: toRem(16);

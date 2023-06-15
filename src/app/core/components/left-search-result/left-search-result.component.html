@@ -1,11 +1,17 @@
-<div class="container" (click)="close.emit()">
-  <div class="close-button-container cursor-pointer">
+<div class="container" (click)="close.emit()" *ngIf="data !== undefined">
+  <div class="back-button-container cursor-pointer">
     <button
-      class="alg-button-icon close-button rounded"
-      icon="ph-duotone ph-x-circle"
+      class="alg-button-icon back-button rounded"
+      icon="ph ph-arrow-left"
       pButton
     ></button>
-    <p class="close-button-title" i18n>Close</p>
+    <p class="back-button-title" i18n>
+      {{ data.length }}
+      {{ data.length | i18nPlural: {
+        '=1': 'activity found',
+        'other': 'activities found'
+      } }}
+    </p>
   </div>
 </div>
 
