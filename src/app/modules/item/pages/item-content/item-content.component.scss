@@ -35,5 +35,7 @@
 }
 
 .description, .html-container {
-  margin: toRem(30) 0 0 0;
+  margin: toRem(30) 0 2rem 0;
+  font-weight: 300;
+  line-height: toRem(24);
 }
