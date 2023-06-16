@@ -61,8 +61,8 @@ export class GroupCompositionFilterComponent implements OnInit{
   public setFilter(filter: Filter): void {
     this.value = filter;
     this.allDescendantsChecked = !this.value.directChildren;
-    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
     this.selectedTypeFilter = Math.max(0, this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
   }
 
   onTypeFilterChanged(index: number): void {
