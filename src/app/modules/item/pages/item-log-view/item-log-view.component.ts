@@ -29,11 +29,12 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() itemData?: ItemData;
 
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
   readonly state$ = combineLatest([
     this.item$.pipe(distinctUntilChanged()),
-    this.groupWatchingService.watchedGroup$,
+    this.watchedGroup$,
   ]).pipe(
     switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup)),
     mapToFetchState({ resetter: this.refresh$ }),

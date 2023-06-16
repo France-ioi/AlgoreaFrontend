@@ -6,9 +6,9 @@
   padding: var(--alg-space-size-4) 0;
 }
 
-.refresh-button {
+.operation-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: toRem(13);
 }

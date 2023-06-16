@@ -1,10 +1,9 @@
 <div class="container" *ngIf="data !== undefined">
   <alg-left-menu-back-button (close)="close.emit()">
-    {{ data.length }}
     {{ data.length | i18nPlural: {
-      '=0': 'activities found',
-      '=1': 'activity found',
-      'other': 'activities found'
+      '=0': '# activities found',
+      '=1': '# activity found',
+      'other': '# activities found'
     } }}
   </alg-left-menu-back-button>
 </div>

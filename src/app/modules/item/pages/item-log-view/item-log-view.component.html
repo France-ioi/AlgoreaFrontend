@@ -10,7 +10,30 @@
   ></alg-error>
 
   <ng-container *ngIf="state.data">
-    <div class="refresh-button">
+    <div class="operation-buttons">
+      <div>
+        <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
+          <ng-container *ngIf="itemData && itemData.item.type === 'Task'">
+            <a class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise"
+              [routerLink]="{
+                id: itemData.item.id,
+                contentType: itemData.item | contentTypeFromItem,
+                path: itemData.route.path,
+                parentAttemptId: parentAttemptId,
+                answer: {
+                  best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined
+                }
+              } | url"
+              *ngrxLet="watchedGroup$; let watchedGroup"
+            >
+              {{ (!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
+                watchingGroup: 'View the best answer',
+                other: 'Reload the best answer'
+              } }}
+            </a>
+          </ng-container>
+        </ng-container>
+      </div>
       <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
         Refresh
       </button>
