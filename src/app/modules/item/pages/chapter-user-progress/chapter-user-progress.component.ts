@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { GetParticipantProgressService } from '../../http-services/get-participant-progress.service';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { FetchState } from '../../../../shared/helpers/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
@@ -10,11 +10,6 @@ import { ItemData } from '../../services/item-datasource.service';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupWatchingService } from '../../../../core/services/group-watching.service';
 import { ItemPermWithWatch } from '../../../../shared/models/domain/item-watch-permission';
-
-interface Column {
-  field: string,
-  header: string,
-}
 
 interface RowData {
   id: string,
@@ -70,34 +65,35 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
     ),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
-  columns: Column[] = [
-    {
-      field: 'title',
-      header: $localize`Content`,
-    },
-    {
-      field: 'latestActivityAt',
-      header: $localize`Latest activity`,
-    },
-    {
-      field: 'hintsRequested',
-      header: $localize`Hints`,
-    },
-    {
-      field: 'timeSpent',
-      header: $localize`Time spent`,
-    },
-    {
-      field: 'submissions',
-      header: $localize`:Truncated title (little space available) for 'number of submissions':# Subm.`,
-    },
-    {
-      field: 'score',
-      header: $localize`Score`,
-    }
-  ];
+  columns$ = this.state$.pipe(
+    readyData(),
+    map(items =>
+      [
+        {
+          field: 'title',
+          header: $localize`Content`,
+        },
+        {
+          field: 'latestActivityAt',
+          header: $localize`Latest activity`,
+        },
+        {
+          field: 'timeSpent',
+          header: $localize`Time spent`,
+        },
+        {
+          field: 'submissions',
+          header: $localize`:Truncated title (little space available) for 'number of submissions':# Subm.`,
+          disabled: !items.some(item => item.type !== 'Chapter'),
+        },
+        {
+          field: 'score',
+          header: $localize`Score`,
+        }
+      ].filter(column => !column.disabled),
+    ),
+  );
 
   constructor(
     private getParticipantProgressService: GetParticipantProgressService,

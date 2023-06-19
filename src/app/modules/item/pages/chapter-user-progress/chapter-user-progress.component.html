@@ -14,113 +14,97 @@
         Refresh
       </button>
     </div>
-    <p-table
-      class="alg-table"
-      [columns]="columns"
-      [value]="state.data"
-      [loading]="state.isFetching"
-      [tableStyle]="{'min-width': '599.98px'}"
-      responsiveLayout="scroll"
-      *ngrxLet="watchedGroup$; let watchedGroup"
-    >
-      <ng-template pTemplate="header" let-rowData let-columns>
-        <tr *ngIf="rowData.length > 0">
-          <ng-container *ngFor="let col of columns">
-            <th [class.text-center]="[ 'hintsRequested', 'timeSpent', 'submissions' ].includes(col.field)">
-              {{ col.header }}
-            </th>
-          </ng-container>
-        </tr>
-      </ng-template>
-
-      <ng-template
-        pTemplate="body"
-        let-rowData
-        let-columns="columns"
+    <ng-container *ngIf="columns$ | async as columns">
+      <p-table
+        class="alg-table"
+        [columns]="columns"
+        [value]="state.data"
+        [loading]="state.isFetching"
+        [tableStyle]="{'min-width': '599.98px'}"
+        responsiveLayout="scroll"
       >
-        <tr>
-          <td *ngFor="let col of columns" [class.text-center]="[ 'hintsRequested', 'timeSpent', 'submissions' ].includes(col.field)">
-            <ng-container [ngSwitch]="col.field">
-              <ng-container *ngSwitchCase="'title'">
-                <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
-                  <div>
-                    <a
-                      class="alg-link"
-                      [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData.item.id }"
-                      [routerLink]="{
-                        id: rowData.id,
-                        contentType: rowData | contentTypeFromItem,
-                        path: itemData.route.path.concat([ itemData.item.id ]),
-                        parentAttemptId: parentAttemptId
-                      } | url : [ 'progress', 'chapter-user-progress' ]"
-                    >
-                      {{ rowData.title }}
-                    </a>
-                  </div>
-                  <ng-container *ngIf="rowData.type === 'Task'">
-                    <a
-                      class="alg-link item-title-link"
-                      [routerLink]="{
-                        id: rowData.id,
-                        contentType: rowData | contentTypeFromItem,
-                        path: itemData.item.id === rowData.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]),
-                        parentAttemptId: parentAttemptId,
-                        answer: {
-                          best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined
-                        }
-                      } | url"
-                      *ngIf="rowData.submissions > 0 && (!watchedGroup || (watchedGroup.route.isUser && (rowData.currentUserPermissions | allowsWatchingAnswers)))"
-                    >
-                      {{ (!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
-                        watchingGroup: 'View the best answer',
-                        other: 'Reload the best answer'
-                      } }}
-                    </a>
+        <ng-template pTemplate="header" let-rowData let-columns>
+          <tr *ngIf="rowData.length > 0">
+            <ng-container *ngFor="let col of columns">
+              <th [class.text-center]="[ 'timeSpent', 'submissions' ].includes(col.field)">
+                {{ col.header }}
+              </th>
+            </ng-container>
+          </tr>
+        </ng-template>
+
+        <ng-template
+          pTemplate="body"
+          let-rowData
+          let-columns="columns"
+        >
+          <tr>
+            <td *ngFor="let col of columns" [class.text-center]="[ 'timeSpent', 'submissions' ].includes(col.field)">
+              <ng-container [ngSwitch]="col.field">
+                <ng-container *ngSwitchCase="'title'">
+                  <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
+                    <div>
+                      <a
+                        class="alg-link"
+                        [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData.item.id }"
+                        [routerLink]="{
+                          id: rowData.id,
+                          contentType: rowData | contentTypeFromItem,
+                          path: itemData.route.path.concat([ itemData.item.id ]),
+                          parentAttemptId: parentAttemptId
+                        } | url : [ 'progress', 'chapter-user-progress' ]"
+                      >
+                        {{ rowData.title }}
+                      </a>
+                    </div>
                   </ng-container>
                 </ng-container>
-              </ng-container>
-              <ng-container *ngSwitchCase="'latestActivityAt'">
-                <ng-container *ngIf="rowData.latestActivityAt; else notStarted">
-                  {{ rowData.latestActivityAt | date:'short' }}
+                <ng-container *ngSwitchCase="'latestActivityAt'">
+                  <ng-container *ngIf="rowData.latestActivityAt; else notStarted">
+                    {{ rowData.latestActivityAt | date:'short' }}
+                  </ng-container>
+                  <ng-template #notStarted>
+                    <span i18n>Not started</span>
+                  </ng-template>
                 </ng-container>
-                <ng-template #notStarted>
-                  <span i18n>Not started</span>
-                </ng-template>
-              </ng-container>
-              <ng-container *ngSwitchCase="'hintsRequested'">
-                {{ rowData.hintsRequested }}
-              </ng-container>
-              <ng-container *ngSwitchCase="'timeSpent'">
-                <ng-container *ngIf="rowData.latestActivityAt">
-                  {{ rowData.timeSpent | duration }}
+                <ng-container *ngSwitchCase="'timeSpent'">
+                  <ng-container *ngIf="rowData.latestActivityAt">
+                    {{ rowData.timeSpent | duration }}
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'submissions'">
+                  <ng-container *ngIf="!['Chapter', 'Skill'].includes(rowData.type) && rowData.latestActivityAt">
+                    {{ rowData.submissions }}
+                    <span *ngIf="rowData.hintsRequested > 0" i18n>
+                      (using {{ rowData.hintsRequested | i18nPlural : {
+                        '=1': 'hint',
+                        'other': '# hints'
+                      } }})
+                    </span>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'score'">
+                  <alg-score-ring
+                    [currentScore]="rowData.score"
+                    [isValidated]="rowData.validated"
+                    *ngIf="!rowData.noScore && rowData.latestActivityAt"
+                  ></alg-score-ring>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{ rowData[col.field] }}
                 </ng-container>
               </ng-container>
-              <ng-container *ngSwitchCase="'submissions'">
-                <ng-container *ngIf="!['Chapter', 'Skill'].includes(rowData.type) && rowData.latestActivityAt">
-                  {{ rowData.submissions }}
-                </ng-container>
-              </ng-container>
-              <ng-container *ngSwitchCase="'score'">
-                <alg-score-ring
-                  [currentScore]="rowData.score"
-                  [isValidated]="rowData.validated"
-                  *ngIf="!rowData.noScore && rowData.latestActivityAt"
-                ></alg-score-ring>
-              </ng-container>
-              <ng-container *ngSwitchDefault>
-                {{ rowData[col.field] }}
-              </ng-container>
-            </ng-container>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage" let-columns>
-        <tr>
-          <td [attr.colspan]="columns.length">
-            <span i18n>There is no progress to report for this group/user.</span>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              <span i18n>There is no progress to report for this group/user.</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
   </ng-container>
 </ng-container>
