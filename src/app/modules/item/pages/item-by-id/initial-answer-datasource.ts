@@ -7,6 +7,7 @@ import {
   map,
   Observable,
   of,
+  ReplaySubject,
   shareReplay,
   Subject,
   switchMap,
@@ -28,7 +29,7 @@ type Strategy =
 @Injectable()
 export class InitialAnswerDataSource implements OnDestroy {
 
-  private readonly itemInfo$ = new Subject<{ route: FullItemRoute, isTask: boolean|undefined }>();
+  private readonly itemInfo$ = new ReplaySubject<{ route: FullItemRoute, isTask: boolean|undefined }>();
   private readonly destroyed$ = new Subject<void>();
 
   readonly answer$ = combineLatest([ this.itemInfo$, this.groupWatchingService.isWatching$ ]).pipe(
