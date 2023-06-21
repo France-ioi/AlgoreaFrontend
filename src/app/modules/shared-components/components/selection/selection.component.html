@@ -1,32 +1,15 @@
 <div class="selection-container">
-  <ul *ngIf="type === 'square'" class="square">
+  <ul class="tabs">
     <li
       *ngFor="let item of items; index as idx"
-      [ngClass]="{active: idx === selected}"
+      class="tabs-item alg-flex-1"
+      [ngClass]="{ active: idx === selected, next: idx === selected + 1 }"
       (click)="itemChanged(idx)"
       [pTooltip]="item.tooltip ?? ''"
       tooltipPosition="top"
       tooltipEvent="hover"
     >
-      <span *ngIf="item.icon" class="icon">
-        <i class="{{item.icon}}"></i>
-      </span>
-      <span class="label">{{item.label}}</span>
-    </li>
-  </ul>
-  <ul *ngIf="type === 'rounded'" class="rounded" [ngClass]="{dark: mode === 'dark', basic: mode === 'basic'}">
-    <li
-      *ngFor="let item of items; index as idx"
-      [ngClass]="{active: idx === selected, previous: idx === selected - 1}"
-      (click)="itemChanged(idx)"
-      [pTooltip]="item.tooltip ?? ''"
-      tooltipPosition="top"
-      tooltipEvent="hover"
-    >
-      <span *ngIf="item.icon" class="icon">
-        <i class="{{item.icon}}"></i>
-      </span>
-      <span class="label">{{item.label}}</span>
+      <span class="label">{{ item.label }}</span>
     </li>
   </ul>
 </div>

@@ -12,7 +12,7 @@
 
   <ng-template #noError>
     <p-table #table
-      class="alg-table --member-list"
+      class="alg-table member-list-table"
       [columns]="columns"
       [value]="state?.data ?? []"
       [customSort]="true"
@@ -110,18 +110,26 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="summary" *ngIf="groupData?.group?.currentUserCanManage !== 'none'">
-        <div class="summary">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-          <span class="select-all" (click)="onSelectAll(state.data ?? [])" i18n>
-            Select all
-          </span>
-          <span class="filler"></span>
-          <div class="summary-actions">
-              <span (click)="onRemove($event)" [class.disabled]="(removalInProgress$ | async) || !state.isReady || selection.length === 0">
-              <span i18n>{{ currentFilter.type === 'users' ? 'Remove': 'Remove from group' }}</span>
-              <i class="fa fa-trash-alt"></i>
+        <div class="alg-table-summary">
+          <div class="alg-table-summary-left">
+            <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
+            <span class="alg-table-summary-select-all" (click)="onSelectAll(state.data ?? [])" i18n>
+              Select all
             </span>
           </div>
+          <button
+            class="alg-button primary small"
+            pButton
+            type="button"
+            icon="fa fa-trash-alt"
+            (click)="onRemove($event)"
+            [disabled]="(removalInProgress$ | async) || !state.isReady || selection.length === 0"
+          >
+            {{ currentFilter.type | i18nSelect : {
+              users: 'Remove',
+              other: 'Remove from group'
+            } }}
+          </button>
         </div>
       </ng-template>
     </p-table>

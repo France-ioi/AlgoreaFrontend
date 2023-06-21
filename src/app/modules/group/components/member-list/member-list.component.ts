@@ -120,7 +120,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   fetchRows(): void {
     this.datapager.reset();
-    this.datapager.load();
   }
 
   fetchMoreRows(): void {

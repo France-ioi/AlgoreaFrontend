@@ -1,13 +1,12 @@
-<div class="selection-tool">
-  <alg-selection style="margin: 10px;"
-    [items]="childrenFilters"
-    [selected]="selectedChildrenFilter"
-    (change)="onChildrenFilterChanged($event)"
-  ></alg-selection>
-  <alg-selection
-    [items]="value.directChildren ? directChildrenTypeFilters : allDescendantsTypeFilters"
-    [selected]="selectedTypeFilter"
-    type="square"
-    (change)="onTypeFilterChanged($event)"
-  ></alg-selection>
+<alg-selection
+  [items]="typeFilters"
+  [selected]="selectedTypeFilter"
+  (change)="onTypeFilterChanged($event)"
+></alg-selection>
+<div class="switch-control" *ngIf="allowToCheckAllDescendants">
+  <alg-switch
+    [(ngModel)]="allDescendantsChecked"
+    (ngModelChange)="onChildrenFilterChanged($event)"
+  ></alg-switch>
+  <p class="switch-control-caption" i18n>All descendants</p>
 </div>

@@ -44,7 +44,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="8346185139474651251" datatype="html">
         <source>Search ?</source><target state="new">Search ?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-menu-search/left-menu-search.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
         <source>My groups</source><target state="translated">Mes groupes</target>
 
@@ -56,10 +56,7 @@
         <source>Your current access rights do not allow you to list the content of this skill.</source><target state="translated">Vos permissions actuelles ne vous permettent pas d'afficher le contenu de cette compétence.</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="lter.type === 'users' ? 'Remove': 'Remove from group' }}"/></source><target state="translated"><x id="INTERPOLATION" equiv-text="{{ node.data.element.currentUserManagership === 'descendant' ? 'Vous êtes gestionnaire d'un des descendants de ce groupe' : 'Vous êtes gestionnaire de ce groupe' }}"/></target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="3691777843862279458" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="3691777843862279458" datatype="html">
         <source>Your current access rights do not allow you to start the activity.</source><target state="translated">Vos permissions actuelles ne vous permettent pas de commencer l'activité.</target>
         
         
@@ -73,7 +70,7 @@
         <note priority="1" from="description">Tab name</note>
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-by-id/group-by-id.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="5347017799397630231" datatype="html">
         <source>Unable to perform the search.</source><target state="new">Unable to perform the search.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
         <source>Unable to load the list.</source><target state="translated">Erreur lors du chargement de la liste.</target>
 
@@ -82,7 +79,7 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="2419193533364061980" datatype="html">
         <source> Type at least 3 letters to search content </source><target state="new"> Type at least 3 letters to search content </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4213825410774196775" datatype="html">
         <source> No results </source><target state="new"> No results </target>
         
@@ -149,7 +146,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="3542042671420335679" datatype="html">
         <source>No</source><target state="translated">Non</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">114</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">109</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">270</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">284</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">345</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">74</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/collapsible-section/switch-field/switch-field.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="7720833515469075698" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">114</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">109</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">269</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">283</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">344</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">74</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/collapsible-section/switch-field/switch-field.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/guards/pending-changes-guard.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="7720833515469075698" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> manager(s) have been removed</source><target state="new"><x id="PH" equiv-text="result.countSuccess"/> manager(s) have been removed</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-removal-response-handling.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1892052022101596974" datatype="html">
@@ -617,6 +614,12 @@
           <context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.ts</context>
           <context context-type="linenumber">79,76</context>
         </context-group>
+      </trans-unit><trans-unit id="4698805386402618801" datatype="html">
+        <source>All descendants</source><target state="new">All descendants</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit><trans-unit id="4378796785985219718" datatype="html">
         <source>Class</source><target state="translated">Classe</target>
 
@@ -899,7 +902,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="2807800733729323332" datatype="html">
         <source>Yes</source><target state="new">Yes</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">268</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">282</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">343</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">68</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/collapsible-section/switch-field/switch-field.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="465834534537881731" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">267</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">281</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">342</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">68</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/shared-components/components/collapsible-section/switch-field/switch-field.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="465834534537881731" datatype="html">
         <source>Unable to remove the selected user(s)</source><target state="translated">Erreur lors de la suppression des utilisateurs sélectionés du groupe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/user-removal-response-handling.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4648900870671159218" datatype="html">
@@ -1075,7 +1078,7 @@
       <source> Select all </source>
       <target state="translated"> Tout sélectionner </target>
 
-    <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">139</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">116</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="8905995985388209337" datatype="html">
+    <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">139</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">117</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="8905995985388209337" datatype="html">
        <source>Accept</source><target state="translated">Accepter</target>
 
      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/pending-request/pending-request.component.html</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="7378878529334768232" datatype="html">
@@ -1792,15 +1795,7 @@
           <context context-type="sourcefile">src/app/modules/group/components/associated-item/associated-item.component.html</context>
           <context context-type="linenumber">13,17</context>
         </context-group>
-      </trans-unit><trans-unit id="871322351859596725" datatype="html">
-        <source>Direct Children Only</source><target state="translated">Enfants directs</target>
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="4958238341510165820" datatype="html">
-        <source>All Descendants</source><target state="translated">Tous les descendants</target>
-
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="2863460046387544768" datatype="html">
+      </trans-unit><trans-unit id="2863460046387544768" datatype="html">
         <source>teams</source><target state="translated">équipes</target>
 
 
@@ -1808,12 +1803,12 @@
         <source>users</source><target state="translated">utilisateurs</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="6388953296711657780" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="6388953296711657780" datatype="html">
         <source>sub-groups</source><target state="translated">sous-groupes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="4668438620611828414" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/composition-filter/composition-filter.component.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="4668438620611828414" datatype="html">
         <source>You are a member of this group.</source><target state="new">You are a member of this group.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6350999595816280001" datatype="html">
         <source> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </source><target state="new"> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </target>
         <context-group purpose="location">
@@ -1822,13 +1817,13 @@
         </context-group>
       </trans-unit><trans-unit id="1652019840559664368" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> You are a manager of this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> You are a manager of this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="124212312752448442" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can manage this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can manage this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="1346986250563505366" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can view this group. </source><target state="new"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> As a manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you can view this group. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-indicator/group-indicator.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source><target state="translated">Nom</target>
 
@@ -1861,7 +1856,7 @@
        This operation cannot be undone.</source><target state="new">Are you sure you want to permanently delete <x id="PH" equiv-text="getSelectedGroupChildCaptions(this.selection as GroupChild[])"/>?
        This operation cannot be undone.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">266</context></context-group></trans-unit><trans-unit id="2807800733729323332" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">265</context></context-group></trans-unit><trans-unit id="2807800733729323332" datatype="html">
         <source>Yes</source><target state="new">Yes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context>
@@ -1880,13 +1875,13 @@
        manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?</source><target state="new">By removing <x id="PH" equiv-text="getSelectedGroupChildCaptions(this.selection as GroupChild[])"/> from the group, you may loose
        manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">280</context></context-group></trans-unit><trans-unit id="4412194770794692560" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">279</context></context-group></trans-unit><trans-unit id="4412194770794692560" datatype="html">
         <source>Do you also want to delete the group?</source><target state="new">Do you also want to delete the group?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">341</context></context-group></trans-unit><trans-unit id="4695823889219736930" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">340</context></context-group></trans-unit><trans-unit id="4695823889219736930" datatype="html">
         <source>These groups are all empty. Do you also want to delete them?</source><target state="new">These groups are all empty. Do you also want to delete them?</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">342</context></context-group></trans-unit><trans-unit id="1014802581352129434" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">341</context></context-group></trans-unit><trans-unit id="1014802581352129434" datatype="html">
         <source>Error while loading the group members</source><target state="translated">Error lors du chargement des membres du groupes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="33149636091572968" datatype="html">
@@ -2328,13 +2323,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/my-groups/my-groups.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="8471940861423120175" datatype="html">
         <source>Group successfully added as child group</source><target state="translated">Group ajouter avec succès</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-composition/group-composition.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="4042194348005773962" datatype="html">
-        <source>Current Composition</source><target state="translated">Composition actuelle</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/group/pages/group-composition/group-composition.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="4930506384627295710" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/group-composition/group-composition.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source><target state="translated">Paramètres</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">120</context></context-group></trans-unit><trans-unit id="955425775818627867" datatype="html">
@@ -2358,7 +2347,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source><target state="new">Users</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="4139147089479340367" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/pages/user/user.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="675810879960225346" datatype="html">
+        <source>Sub-groups</source><target state="new">Sub-groups</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="4139147089479340367" datatype="html">
         <source>Enter a title to create a new dependency</source><target state="new">Enter a title to create a new dependency</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/modules/item/components/add-dependency/add-dependency.component.html</context>

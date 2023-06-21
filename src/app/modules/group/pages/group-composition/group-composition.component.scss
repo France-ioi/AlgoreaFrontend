@@ -1,6 +1,5 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
-alg-grid {
-  margin-right: -1.6667rem;
-  margin-left: -3.3333rem;
+.member-list {
+  margin: var(--alg-space-size-3) auto;
 }

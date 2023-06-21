@@ -1,11 +1,5 @@
 <p-inputSwitch
   class="alg-switch"
   [(ngModel)]="checked"
-  [ngClass]="{
-    dark: mode === 'dark',
-    circular: mode === 'circular',
-    white: mode === 'white',
-    'dark-circular': mode === 'dark-circular'
-  }"
   (onChange)="handleChange(checked)"
 ></p-inputSwitch>

@@ -1,142 +1,51 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
-.selection-container {
+:host {
+  display: flex;
+  flex-direction: column;
+}
 
-  max-width: 56rem;
+.tabs {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+  border-radius: toRem(20);
+  overflow: hidden;
+  background-color: var(--alg-light-color);
+}
 
-  ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    padding: 0;
-    margin-bottom: 0;
-    margin-top: 0;
+.tabs-item {
+  position: relative;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: toRem(40);
+  color: var(--alg-secondary-color);
+  cursor: pointer;
 
-    li {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: row;
-      color: var(--base-text-color);
-      cursor: pointer;
-      transition: .2s;
-      font-size: 1.2rem;
-      font-weight: bold;
-      padding: 0 1rem;
+  &.active {
+    color: var(--alg-light-color);
+    font-weight: 500;
+    background-color: var(--alg-primary-color);
+    border-radius: toRem(20);
+  }
 
-      &.active {
-        background-color: var(--base-color);
-        box-shadow: 0 .1rem var(--dark-base-color) inset;
-        color: white;
-      }
-
-      span {
-        &.label {
-          text-transform: uppercase;
-          white-space: nowrap;
-        }
-      }
-    }
-
-    &.square {
-      height: 7rem;
-
-      li {
-        flex-direction: column;
-        border-right: 0.1rem solid var(--dark-transparency-color);
-
-        &.active {
-          border-right: none;
-        }
-
-        span {
-          &.icon {
-            margin-bottom: 0.4167rem;
-          }
-        }
-
-        &:last-child {
-          border-right: none;
-          border-radius: 0 $border-radius $border-radius 0;
-        }
-        &:first-child {
-          border-radius: $border-radius 0 0 $border-radius;
-        }
-      }
-    }
-
-    &.rounded {
-      background-color: var(--dark-transparency-color);
-      border-radius: 9rem;
-      height: 3rem;
-      box-shadow: 0 .1rem var(--dark-transparency-color) inset;
-      // margin-left: 1rem;
-      // margin-right: 1rem;
-
-      &.basic {
-        background-color: #424242;
-        box-shadow: 0 .1rem #3B3B3B inset;
-
-        li {
-          color: #7B7B7B;
-          border-right: .1rem solid #3B3B3B;
-
-          &:last-child {
-            border-right: none;
-          }
-
-          &.active {
-            background-color: var(--base-color);
-            color: white;
-          }
-        }
-      }
-
-      &.dark {
-        background-color: var(--dark-base-color);
-        box-shadow: 0 .1rem #295485 inset;
-
-        li {
-          color: #577EAA;
-          border-right: .1rem solid transparent;
-          font-size: 1.2rem;
-
-          &:last-child {
-            border-right: none;
-          }
-
-          &.active {
-            background-color: var(--secondary-color);
-            color: white;
-          }
-        }
-      }
-
-      li {
-        border-right: .1rem solid #BBB;
-
-        &:last-child {
-          border-right: none;
-        }
-
-        &.previous {
-          border-right: none;
-        }
-
-        &.active {
-          box-shadow: none;
-          border-radius: 9rem;
-        }
-
-        span {
-          &.icon {
-            margin-right: 0.5833rem;
-          }
-        }
-      }
-    }
+  &:not(.active, .next, :first-child):before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: toRem(1);
+    height: 100%;
+    background: rgb(255, 255, 255);
+    background: -moz-linear-gradient(0, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
+    background: -webkit-linear-gradient(0, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(0, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff", GradientType=1);
   }
 }

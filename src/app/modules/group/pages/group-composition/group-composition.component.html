@@ -1,7 +1,6 @@
 <ng-container *ngIf="groupWithPermissions">
   <ng-container *ngIf="groupWithPermissions.isCurrentUserManager; else noPermission">
-    <h2 class="alg-h2" i18n>Current Composition</h2>
-    <alg-member-list #memberList [groupData]="groupData" (removedGroup)="removedGroup.emit()"></alg-member-list>
+    <alg-member-list class="member-list" #memberList [groupData]="groupData" (removedGroup)="removedGroup.emit()"></alg-member-list>
     <alg-add-sub-group
         *ngIf="groupData?.group?.currentUserCanManage !== 'none'"
         [loading]="state === 'addingGroup'"

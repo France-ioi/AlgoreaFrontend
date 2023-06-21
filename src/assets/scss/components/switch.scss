@@ -1,105 +1,42 @@
-@import '../../../variables';
+@import 'src/assets/scss/functions';
 
-$circular: 1.2rem;
+.alg-switch {
+  display: inline-block;
+  height: toRem(24);
 
-@mixin custom-switch($bk-color, $shadow, $handle-shadow, $switch-width, $handler-width, $handler-height) {
-
-  %custom-pattern {
-    background-color: $bk-color;
-    box-shadow: 0 .1rem $shadow inset;
+  .p-inputswitch {
+    width: toRem(48);
+    height: toRem(24);
   }
 
-  &.p-inputswitch-checked {
-    &.p-inputswitch-focus .p-inputswitch-slider {
-      @extend %custom-pattern;
-    }
-    .p-inputswitch-slider {
-      background-color: var(--dark-transparency-color);
-
-      &::before {
-        background-color: var(--base-color);
-        width: $handler-width;
-        border-radius: 9rem;
-        height: $handler-height;
-        bottom: .1rem;
-        transform: translateX(calc(#{$switch-width} - #{$handler-width}));
-        box-shadow: 0 .1rem $handle-shadow;
-      }
-    }
-  }
-
-  &.p-inputswitch-focus .p-inputswitch-slider {
-    @extend %custom-pattern;
-  }
-
-  &:not(.p-disabled):hover .p-inputswitch-slider {
-    @extend %custom-pattern;
+  .p-inputswitch.p-focus .p-inputswitch-slider {
+    box-shadow: none;
   }
 
   .p-inputswitch-slider {
-    @extend %custom-pattern;
+    background-color: var(--alg-switch-input-bg);
+    border-radius: toRem(12);
 
-    &::before {
-      background-color: #9B9B9B;
-      width: $handler-width;
-      border-radius: 9rem;
-      height: $handler-height;
-      bottom: .1rem;
-      position: absolute;
-      left: 0rem;
-      box-shadow: 0 0.1rem #727272;
+    &:before {
+      width: toRem(18);
+      height: toRem(18);
+      margin-top: toRem(calc(-1 * 18 / 2));
+      background-color: var(--alg-white-color);
     }
   }
 
-  &:hover .p-inputswitch-slider {
-    @extend %custom-pattern;
-  }
-
-  &.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider {
-    @extend %custom-pattern;
-  }
-}
-
-.alg-switch {
-  display: flex;
-  width: fit-content;
-  height: 1.5rem;
-
-  &.dark-circular {
-    height: 1.25rem;
-  }
-
-  &.white .p-inputswitch {
-    width: 5rem;
-    height: 1.2rem;
-
-    @include custom-switch(var(--dark-transparency-color), #DADADA, var(--dark-base-color), 5rem, 2.5rem, 1.2rem);
-  }
-
-  &.dark .p-inputswitch {
-    width: 5rem;
-    height: 1rem;
-
-    @include custom-switch(#464646, #3F3F3F, #31649E, 5rem, 2rem, 1rem);
-  }
-
-  &.circular .p-inputswitch {
-    width: 2.4rem;
-    height: 1.2rem;
-
-    @include custom-switch(var(--dark-transparency-color), #DADADA, var(--dark-base-color), 2.5rem, $circular, $circular);
-  }
-
-  &.dark-circular .p-inputswitch {
-    width: 2.4rem;
-    height: 1.2rem;
-
-    @include custom-switch(#2C5687, #152A43, var(--dark-base-color), 2.5rem, $circular, $circular);
-
+  .p-inputswitch-checked {
     .p-inputswitch-slider {
-      &::before {
-        box-shadow: none;
+      background-color: var(--alg-primary-color);
+
+      &:before {
+        background-color: var(--alg-white-color);
+        transform: translateX(toRem(22));
       }
     }
+  }
+
+  .p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider {
+    background-color: var(--alg-primary-color);
   }
 }

@@ -18,60 +18,35 @@ export interface Filter {
   styleUrls: [ './group-composition-filter.component.scss' ]
 })
 export class GroupCompositionFilterComponent implements OnInit{
-
   @Input() defaultValue?: Filter;
 
   @Output() change = new EventEmitter<Filter>();
 
   value: Filter = { type: TypeFilter.Users, directChildren: true };
 
-  selectedChildrenFilter = 0;
+  allowToCheckAllDescendants = false;
+  allDescendantsChecked = false;
   selectedTypeFilter = 0;
 
-  readonly childrenFilters: { label:string, value: boolean }[] = [
+  readonly typeFilters: { label: string, value: TypeFilter, directOnly: boolean }[] = [
     {
-      label: $localize`Direct Children Only`,
-      value: true,
+      label: $localize`Sub-groups`,
+      value: TypeFilter.Groups,
+      directOnly: true,
     },
-    {
-      label: $localize`All Descendants`,
-      value: false,
-    },
-  ];
-
-  readonly allDescendantsTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
-    /*    {
-      icon: 'fa fa-users',
-      label: $localize`teams`,
-      value: TypeFilter.Teams
-    },*/
-    {
-      icon: 'fa fa-user',
-      label: $localize`users`,
-      value: TypeFilter.Users
-    },
-  ];
-
-  readonly directChildrenTypeFilters: { icon: string, label: string, value: TypeFilter }[] = [
-    {
-      icon: 'fa fa-users',
-      label: $localize`sub-groups`,
-      value: TypeFilter.Groups
-    },
-    /*    {
+    /*{
       icon: 'fa fa-calendar',
       label: $localize`sessions`,
       value: TypeFilter.Sessions
     },
     {
-      icon: 'fa fa-users',
-      label: $localize`teams`,
+      label: $localize`Team`,
       value: TypeFilter.Teams
     },*/
     {
-      icon: 'fa fa-user',
-      label: $localize`users`,
-      value: TypeFilter.Users
+      label: $localize`Users`,
+      value: TypeFilter.Users,
+      directOnly: false,
     },
   ];
 
@@ -85,27 +60,23 @@ export class GroupCompositionFilterComponent implements OnInit{
 
   public setFilter(filter: Filter): void {
     this.value = filter;
-    this.selectedChildrenFilter = this.childrenFilters.findIndex(childrenFilter => childrenFilter.value === this.value.directChildren);
-    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    this.selectedTypeFilter = Math.max(0, typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
+    this.allDescendantsChecked = !this.value.directChildren;
+    this.selectedTypeFilter = Math.max(0, this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
   }
 
   onTypeFilterChanged(index: number): void {
-    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
     this.selectedTypeFilter = index;
-    this.value.type = ensureDefined(typeFilters[index]).value;
+    this.value.type = ensureDefined(this.typeFilters[index]).value;
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[index]).directOnly;
     this.change.emit(this.value);
   }
 
-  onChildrenFilterChanged(index: number): void {
-    this.value.directChildren = ensureDefined(this.childrenFilters[index]).value;
-    this.selectedChildrenFilter = index;
-
-    const typeFilters = this.value.directChildren ? this.directChildrenTypeFilters : this.allDescendantsTypeFilters;
-    this.selectedTypeFilter = typeFilters.findIndex(typeFilter => typeFilter.value ===
-      (this.value.type === 'teams' ? 'teams' : 'users'));
-    this.value.type = ensureDefined(typeFilters[this.selectedTypeFilter]).value;
-
+  onChildrenFilterChanged(checked: boolean): void {
+    this.value.directChildren = !checked;
+    this.selectedTypeFilter = this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type);
+    this.value.type = ensureDefined(this.typeFilters[this.selectedTypeFilter]).value;
+    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
     this.change.emit(this.value);
   }
 }
