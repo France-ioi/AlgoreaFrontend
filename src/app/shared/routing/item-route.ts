@@ -138,7 +138,7 @@ function aliasToId(alias: string): { id: ItemId, path?: string[] } | null {
   const redirects = appConfig.redirects;
   if (!redirects) return null;
   for (const [ k, v ] of Object.entries(redirects)) {
-    if (k.replace('/', '-') === alias) return v;
+    if (pathToAlias(k) === alias) return v;
   }
   return null;
 }
@@ -174,7 +174,11 @@ function aliasFor(itemId: ItemId, path: string[]|undefined): { alias: string, va
   const redirects = appConfig.redirects;
   if (!redirects) return null;
   for (const [ k, v ] of Object.entries(redirects)) {
-    if (v.id === itemId) return { alias: k.replace('/', '-'), validPath: !!v.path && !!path && arraysEqual(path, v.path) };
+    if (v.id === itemId) return { alias: pathToAlias(k), validPath: !!v.path && !!path && arraysEqual(path, v.path) };
   }
   return null;
+}
+
+function pathToAlias(path: string): string {
+  return path.replace(/\//g, '--');
 }
