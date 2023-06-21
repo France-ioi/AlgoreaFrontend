@@ -64,9 +64,9 @@
 
       <div class="alg-flex-1 scroll-wrapper" *ngIf="searchResultState.isReady">
         <div class="scroll-container">
-          <perfect-scrollbar>
+          <ng-scrollbar>
             <alg-left-search-result [data]="searchResultState.data" (close)="closeSearch.emit()"></alg-left-search-result>
-          </perfect-scrollbar>
+          </ng-scrollbar>
         </div>
       </div>
     </ng-container>
@@ -93,12 +93,12 @@
 
       <div class="alg-flex-1 scroll-wrapper" *ngIf="state.isReady">
         <div class="scroll-container">
-          <perfect-scrollbar>
+          <ng-scrollbar>
             <alg-left-nav-tree
               [data]="state.data"
               [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
             ></alg-left-nav-tree>
-          </perfect-scrollbar>
+          </ng-scrollbar>
         </div>
       </div>
     </ng-container>

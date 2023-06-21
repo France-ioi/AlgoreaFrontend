@@ -44,14 +44,14 @@ export class GridComponent implements OnChanges {
   @Input() columns: GridColumn[] = [];
   @Input() groupInfo: GridColumnGroup[] = [];
 
-  @Input() sortMode = 'multiple';
+  @Input() sortMode: 'single' | 'multiple' = 'multiple';
   @Input() multiSortMeta: SortMeta[] = [];
   @Input() customSort = true;
 
   @Input() scrollWhenExpanded = false;
   @Input() scrollable = false;
 
-  @Input() selectionMode?: string;
+  @Input() selectionMode?: 'single' | 'multiple';
   @Input() dataKey?: string;
   @Input() frozenWidth?: string;
   @Input() showGear = true;

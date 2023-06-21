@@ -25,7 +25,7 @@ export class InputComponent {
 
   @Input() pTooltip = '';
   @Input() tooltipEvent = 'hover';
-  @Input() tooltipPosition = 'right';
+  @Input() tooltipPosition: 'left' | 'right' | 'top' | 'bottom' = 'right';
   @Input() tooltipDisabled = false;
 
   @Output() click = new EventEmitter<void>();

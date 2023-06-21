@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 export interface BeforeUnloadComponent {
@@ -10,7 +10,7 @@ export interface BeforeUnloadComponent {
 }
 
 @Injectable()
-export class BeforeUnloadGuard implements CanDeactivate<BeforeUnloadComponent> {
+export class BeforeUnloadGuard  {
 
   constructor() {}
 
