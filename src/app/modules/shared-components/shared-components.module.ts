@@ -80,7 +80,7 @@ import {
 } from 'src/app/shared/pipes/itemRoute';
 import { SuggestionOfActivitiesComponent } from './components/suggestion-of-activities/suggestion-of-activities.component';
 import { WatchButtonComponent } from './components/watch-button/watch-button.component';
-import { LetModule } from '@ngrx/component';
+import { LetDirective } from '@ngrx/component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
@@ -167,7 +167,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     TooltipModule,
     InputNumberModule,
     InputMaskModule,
-    LetModule,
+    LetDirective,
     OverlayPanelModule,
   ],
   exports: [

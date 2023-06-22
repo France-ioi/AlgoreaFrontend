@@ -20,7 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TreeModule } from 'primeng/tree';
 import { LeftNavTreeComponent } from './components/left-nav-tree/left-nav-tree.component';
-import { LetModule } from '@ngrx/component';
+import { LetDirective } from '@ngrx/component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -74,7 +74,7 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   ],
   imports: [
     BrowserModule,
-    LetModule,
+    LetDirective,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
