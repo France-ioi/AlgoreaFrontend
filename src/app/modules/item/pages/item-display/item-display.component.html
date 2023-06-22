@@ -1,4 +1,9 @@
-<div class="item-display alg-flex-1" [ngClass]="{ 'full-frame': fullFrame$ | async }" *ngIf="state$ | async as state">
+<div
+  class="item-display alg-flex-1"
+  [ngClass]="{ 'full-frame': fullFrame$ | async }"
+  [style.display]="!state.isFetching ? 'flex' : 'none'"
+  *ngIf="state$ | async as state"
+>
   <div class="error-container alg-flex-1" *ngIf="(state.isError || (metadataError$ | async)) && !showTaskAnyway" [algFullHeightContent]="true">
     <ng-template #defaultErrorMessage>
       <alg-error
@@ -75,11 +80,5 @@
       #iframe
       allowfullscreen
     ></iframe>
-
-    <alg-task-loader
-      *ngIf="state.isFetching"
-      i18n-label label="Loading the task"
-      i18n-delayedLabel delayedLabel="The task is taking an unexpected long time to load... please wait..."
-    ></alg-task-loader>
   </div>
 </div>

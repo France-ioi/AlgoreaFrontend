@@ -55,6 +55,7 @@
           [view]="taskView"
           [taskConfig]="taskConfig"
           [savingAnswer]="savingAnswer"
+          [style.display]="(isTaskLoaded$ | async) ? 'flex' : 'none'"
           (viewChange)="taskViewChange.emit($event)"
           (tabsChange)="taskTabsChange.emit($event)"
           (scoreChange)="onScoreChange($event)"
@@ -62,6 +63,7 @@
           (refresh)="refresh.emit()"
           (editorUrl)="editorUrl.emit($event)"
           (fullFrame)="fullFrameTask.emit($event)"
+          (loadingComplete)="isTaskLoaded$.next($event)"
         ></alg-item-display>
       </ng-container>
 
@@ -96,8 +98,9 @@
 
   <alg-task-loader
     class="alg-flex-1"
-    *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && !itemData.currentResult"
-    i18n-label label="Starting the activity"
+    *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && (!itemData.currentResult || (itemData.item.type === 'Task' && !(isTaskLoaded$ | async)))"
+    i18n-label label="Loading the content"
+    i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
   ></alg-task-loader>
 
   <ng-container *ngIf="itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && !itemData.currentResult))">
