@@ -10,7 +10,7 @@ export interface BeforeUnloadComponent {
 }
 
 @Injectable()
-export class BeforeUnloadGuard  {
+export class BeforeUnloadGuard {
 
   constructor() {}
 

@@ -33,7 +33,7 @@ export class LeftMenuComponent implements OnDestroy {
 
     if ((menuItemEl.offsetTop + menuItemEl.offsetHeight) >= (scrollbarElement.offsetHeight + scrollbarElement.scrollTop)
       || menuItemEl.offsetTop - scrollbarElement.scrollTop <= 0) {
-      scrollbarDirectiveRef.scrollToElement(`#nav-${ id }`);
+      void scrollbarDirectiveRef.scrollToElement(`#nav-${ id }`);
     }
   }
 

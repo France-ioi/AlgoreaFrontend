@@ -114,7 +114,7 @@ export class LayoutService implements OnDestroy {
 @Injectable({
   providedIn: 'root'
 })
-export class DefaultLayoutInitService  {
+export class DefaultLayoutInitService {
 
   constructor(
     private layoutService: LayoutService
