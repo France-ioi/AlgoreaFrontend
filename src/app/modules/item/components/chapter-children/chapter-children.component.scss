@@ -74,7 +74,7 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: toRem(25);
+    height: toRem(20);
     background: rgb(255,255,255);
     background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8001794467787114) 50%, rgba(255,255,255,0.6) 70%, rgba(255,255,255,0.4) 80%, rgba(255,255,255,0.2) 90%, rgba(255,255,255,0) 100%);
   }
@@ -96,7 +96,7 @@
   position: relative;
   max-width: 100%;
   background-color: var(--dark-transparency-color);
-  min-height: toRem(150);
+  min-height: toRem(140);
 }
 
 .grid-card-image {
