@@ -22,8 +22,7 @@ export interface NavigationNeighbors {
 
 interface FetchInfo {
   path: ContentRoute['path'], /* path to the fetched elements */
-  initial: Observable<NavTreeData>,
-  shared: Observable<FetchState<NavTreeData>>,
+  fetch: Observable<FetchState<NavTreeData>>,
 }
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
@@ -131,7 +130,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * - visit a chapter with children, visit a skill -> the children of the chapter are not shown anymore
     */
     switchMap(({ content, l1Fetch$, l2Fetch$ }) =>
-      combineLatest([ l1Fetch$.shared, l2Fetch$?.shared ?? of(undefined) ]).pipe(
+      combineLatest([ l1Fetch$.fetch, l2Fetch$?.fetch ?? of(undefined) ]).pipe(
         debounceTime(0),
         map(([ l1FetchState, l2FetchState ]) => {
           if (!l1FetchState.data) return l1FetchState; // l1 is fetching without data or in error -> just show the fetching or error
@@ -238,8 +237,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   private fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
     return {
       path: path,
-      initial: fetch,
-      shared: fetch.pipe(
+      fetch: fetch.pipe(
         mapToFetchState({ resetter: this.reload$ }),
         // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
         // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
