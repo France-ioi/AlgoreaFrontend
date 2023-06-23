@@ -248,7 +248,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       path: path,
       initial: fetch,
       shared: fetch.pipe(
-        mapToFetchState({}),
+        mapToFetchState({ resetter: this.reload$ }),
         // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
         // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
         // subscribers, and so that new subscribers get the latest results on subscription.
