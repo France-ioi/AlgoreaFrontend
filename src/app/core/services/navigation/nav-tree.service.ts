@@ -134,10 +134,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       combineLatest([ l1Fetch$.shared, l2Fetch$?.shared ?? of(undefined) ]).pipe(
         debounceTime(0),
         map(([ l1FetchState, l2FetchState ]) => {
-          if (!l1FetchState.isReady) return l1FetchState; // l1 is fetching or in error -> just show the fetching or error
+          if (!l1FetchState.data) return l1FetchState; // l1 is fetching without data or in error -> just show the fetching or error
           let data = l1FetchState.data;
           if (!content) return readyState(data.withNoSelection()); // no selected element -> only l1 shown
-          if (l2FetchState?.isReady) data = data.withChildren(content.route, l2FetchState.data.elements);
+          if (l2FetchState?.data) data = data.withChildren(content.route, l2FetchState.data.elements);
           data = data.withUpdatedElement(content.route, el => this.addDetailsToTreeElement(el, content));
           data = data.withSelection(content.route.id);
           return readyState(data);
