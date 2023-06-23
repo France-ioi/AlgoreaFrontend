@@ -1,5 +1,5 @@
 import { combineLatest, merge, Observable, of, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, switchMap, shareReplay, startWith, scan } from 'rxjs/operators';
+import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan } from 'rxjs/operators';
 import { arraysEqual } from 'src/app/shared/helpers/array';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -42,8 +42,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      */
     map(content => (this.isOfContentType(content) ? content : undefined)), // map those which are not of interest to `undefined`
     distinctUntilChanged(), // remove multiple `undefined`
-    // emits the content+reload:false immediately, emit content+reload:true when/if `reloadTrigger` emits
-    switchMap(content => this.reload$.pipe(map(() => ({ content, reload: true })), startWith({ content, reload: false }))),
 
     /**
      * PART 2 - PREPARING FETCHES
@@ -56,10 +54,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      *   Note that providing l2Fetch in part 2 does not mean it will be shown (or even executed) as it is part 3 running the fetches.
     */
     scan<
-      { content: ContentT | undefined, reload: boolean },
+      ContentT | undefined,
       { content: ContentT | undefined, l1Fetch$: FetchInfo, l2Fetch$?: FetchInfo },
       { content: ContentT | undefined, l1Fetch$?: FetchInfo, l2Fetch$?: FetchInfo }
-    >((prev, { content, reload }) => {
+    >((prev, content) => {
 
       // CASE 1: initial iteration
       if (!prev.l1Fetch$) {
@@ -69,13 +67,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
         // CASE 1B: if content, just fetch it
         // Test case: open the app through a specific non-root content -> only required requests are done (1 or 2 calls to nav service)
         return { content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
-      }
-
-      // CASE 2: reload -> force the same fetches to re-execute
-      // Test case: trigger a reload -> see all refetches
-      if (reload) {
-        const l2Fetch$ = prev.l2Fetch$ ? fetch(prev.l2Fetch$.path, prev.l2Fetch$.initial) : undefined;
-        return { content, l1Fetch$: fetch(prev.l1Fetch$.path, prev.l1Fetch$.initial), l2Fetch$ };
       }
 
       // CASE 3: The current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
