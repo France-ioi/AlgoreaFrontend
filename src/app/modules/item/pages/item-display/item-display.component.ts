@@ -78,6 +78,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
   state$ = merge(this.taskService.task$, this.taskService.error$).pipe(mapToFetchState());
+  @Output() loadingComplete = this.state$.pipe(map(s => !s.isFetching), distinctUntilChanged());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
   unknownError$ = this.taskService.unknownError$;

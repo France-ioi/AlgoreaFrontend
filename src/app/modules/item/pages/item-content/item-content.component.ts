@@ -9,6 +9,7 @@ import {
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
 import { DiscussionService } from '../../services/discussion.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'alg-item-content',
@@ -33,6 +34,8 @@ export class ItemContentComponent implements PendingChangesComponent {
   @Output() refresh = new EventEmitter<void>();
   @Output() editorUrl = new EventEmitter<string|undefined>();
   @Output() fullFrameTask = new EventEmitter<boolean>();
+
+  isTaskLoaded$ = new BehaviorSubject(false); // whether the task has finished loading, i.e. is ready or in error
 
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent?.dirty;
