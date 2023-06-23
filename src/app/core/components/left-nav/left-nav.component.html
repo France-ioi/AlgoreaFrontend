@@ -47,7 +47,7 @@
       <ng-container *ngIf="searchResultState.isFetching || searchResultState.isError || !searchResultState.data">
         <div class="container">
           <alg-left-menu-back-button (close)="closeSearch.emit()">
-            {{ searchQuery }}
+            Searching: "{{ searchQuery }}"
           </alg-left-menu-back-button>
         </div>
         <alg-loading class="alg-flex-1" *ngIf="searchResultState.isFetching"></alg-loading>
