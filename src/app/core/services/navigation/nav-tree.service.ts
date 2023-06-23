@@ -1,5 +1,5 @@
 import { combineLatest, merge, Observable, of, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan } from 'rxjs/operators';
+import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan, debounceTime } from 'rxjs/operators';
 import { arraysEqual } from 'src/app/shared/helpers/array';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -132,6 +132,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     */
     switchMap(({ content, l1Fetch$, l2Fetch$ }) =>
       combineLatest([ l1Fetch$.shared, l2Fetch$?.shared ?? of(undefined) ]).pipe(
+        debounceTime(0),
         map(([ l1FetchState, l2FetchState ]) => {
           if (!l1FetchState.isReady) return l1FetchState; // l1 is fetching or in error -> just show the fetching or error
           let data = l1FetchState.data;
