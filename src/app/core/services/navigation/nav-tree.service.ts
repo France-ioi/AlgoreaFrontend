@@ -26,22 +26,6 @@ interface FetchInfo {
   shared: Observable<FetchState<NavTreeData>>,
 }
 
-function fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
-  return {
-    path: path,
-    initial: fetch,
-    shared: fetch.pipe(
-      mapToFetchState(),
-      // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
-      // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
-      // subscribers, and so that new subscribers get the latest results on subscription.
-      // (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
-      // will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
-      shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
-    ),
-  };
-}
-
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   private reloadTrigger = new Subject<void>();
@@ -240,23 +224,39 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   private fetchChildrenNav(content: RoutedContentInfo): FetchInfo|undefined {
     if (!this.canFetchChildren(content)) return undefined;
     const path = [ ...content.route.path, content.route.id ];
-    return fetch(path, this.fetchNavData(content.route).pipe(
+    return this.fetch(path, this.fetchNavData(content.route).pipe(
       map(data => new NavTreeData(data.elements, path, data.parent)),
     ));
   }
 
   private fetchRootNav(): FetchInfo {
-    return fetch([], this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
+    return this.fetch([], this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
   }
 
   private fetchNav(content: ContentT): FetchInfo {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
-      return fetch(route.path,
+      return this.fetch(route.path,
         this.fetchNavDataFromChild(parentId, content).pipe(map(data => new NavTreeData(data.elements, route.path, data.parent)))
       );
     } else return this.fetchRootNav();
+  }
+
+  private fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
+    return {
+      path: path,
+      initial: fetch,
+      shared: fetch.pipe(
+        mapToFetchState({}),
+        // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
+        // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
+        // subscribers, and so that new subscribers get the latest results on subscription.
+        // (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
+        // will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
+        shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
+      ),
+    };
   }
 
 }
