@@ -3,6 +3,10 @@ import { TreeNode } from 'primeng/api';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 
+export interface CustomTreeNode<T> extends TreeNode {
+  data: T,
+}
+
 @Component({
   selector: 'alg-left-nav-tree',
   templateUrl: './left-nav-tree.component.html',
@@ -12,13 +16,13 @@ export class LeftNavTreeComponent implements OnChanges {
   @Input() data?: NavTreeData;
   @Input() elementType: ItemTypeCategory | 'group' = 'activity';
 
-  nodes: TreeNode<NavTreeElement>[] = [];
+  nodes: CustomTreeNode<NavTreeElement>[] = [];
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.data ? this.mapItemToNodes(this.data).map(n => ({ ...n, inL1: true })) : [];
   }
 
-  private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
+  private mapItemToNodes(data: NavTreeData): CustomTreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
       const isSelected = !!data.selectedElementId && data.selectedElementId === e.route.id;
       const pathToChildren = data.pathToElements.concat([ e.route.id ]);
@@ -45,7 +49,7 @@ export class LeftNavTreeComponent implements OnChanges {
     parent.navigateTo(true);
   }
 
-  selectNode(node: TreeNode<NavTreeElement>): void {
+  selectNode(node: CustomTreeNode<NavTreeElement>): void {
     if (!this.data) throw new Error('Unexpected: missing data for left nav tree (selectNode)');
     node.data?.navigateTo(true);
   }
