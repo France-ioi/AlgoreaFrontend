@@ -74,7 +74,7 @@
 
   <ng-template #navTree>
     <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
-      <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
+      <alg-loading class="alg-flex-1" *ngIf="state.isFetching && !state.data"></alg-loading>
       <alg-error
         class="alg-flex-1"
         i18n-message message="Unable to load the list."
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <div class="alg-flex-1 scroll-wrapper" *ngIf="state.isReady">
+      <div class="alg-flex-1 scroll-wrapper" *ngIf="state.data">
         <div class="scroll-container">
           <perfect-scrollbar>
             <alg-left-nav-tree

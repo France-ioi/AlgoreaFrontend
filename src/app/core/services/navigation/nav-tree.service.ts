@@ -1,5 +1,5 @@
 import { combineLatest, merge, Observable, of, Subject } from 'rxjs';
-import { delay, distinctUntilChanged, map, switchMap, shareReplay, startWith, scan } from 'rxjs/operators';
+import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan, debounceTime } from 'rxjs/operators';
 import { arraysEqual } from 'src/app/shared/helpers/array';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { isDefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -22,24 +22,7 @@ export interface NavigationNeighbors {
 
 interface FetchInfo {
   path: ContentRoute['path'], /* path to the fetched elements */
-  initial: Observable<NavTreeData>,
-  shared: Observable<FetchState<NavTreeData>>,
-}
-
-function fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
-  return {
-    path: path,
-    initial: fetch,
-    shared: fetch.pipe(
-      mapToFetchState(),
-      // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
-      // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
-      // subscribers, and so that new subscribers get the latest results on subscription.
-      // (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
-      // will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
-      shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
-    ),
-  };
+  fetch: Observable<FetchState<NavTreeData>>,
 }
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
@@ -58,8 +41,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      */
     map(content => (this.isOfContentType(content) ? content : undefined)), // map those which are not of interest to `undefined`
     distinctUntilChanged(), // remove multiple `undefined`
-    // emits the content+reload:false immediately, emit content+reload:true when/if `reloadTrigger` emits
-    switchMap(content => this.reload$.pipe(map(() => ({ content, reload: true })), startWith({ content, reload: false }))),
 
     /**
      * PART 2 - PREPARING FETCHES
@@ -72,10 +53,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      *   Note that providing l2Fetch in part 2 does not mean it will be shown (or even executed) as it is part 3 running the fetches.
     */
     scan<
-      { content: ContentT | undefined, reload: boolean },
+      ContentT | undefined,
       { content: ContentT | undefined, l1Fetch$: FetchInfo, l2Fetch$?: FetchInfo },
       { content: ContentT | undefined, l1Fetch$?: FetchInfo, l2Fetch$?: FetchInfo }
-    >((prev, { content, reload }) => {
+    >((prev, content) => {
 
       // CASE 1: initial iteration
       if (!prev.l1Fetch$) {
@@ -85,13 +66,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
         // CASE 1B: if content, just fetch it
         // Test case: open the app through a specific non-root content -> only required requests are done (1 or 2 calls to nav service)
         return { content, l1Fetch$: this.fetchNav(content), l2Fetch$: this.fetchChildrenNav(content) };
-      }
-
-      // CASE 2: reload -> force the same fetches to re-execute
-      // Test case: trigger a reload -> see all refetches
-      if (reload) {
-        const l2Fetch$ = prev.l2Fetch$ ? fetch(prev.l2Fetch$.path, prev.l2Fetch$.initial) : undefined;
-        return { content, l1Fetch$: fetch(prev.l1Fetch$.path, prev.l1Fetch$.initial), l2Fetch$ };
       }
 
       // CASE 3: The current-content does not match the type of this nav tree (so `content` has been mapped to `undefined`)
@@ -156,12 +130,13 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
      * - visit a chapter with children, visit a skill -> the children of the chapter are not shown anymore
     */
     switchMap(({ content, l1Fetch$, l2Fetch$ }) =>
-      combineLatest([ l1Fetch$.shared, l2Fetch$?.shared ?? of(undefined) ]).pipe(
+      combineLatest([ l1Fetch$.fetch, l2Fetch$?.fetch ?? of(undefined) ]).pipe(
+        debounceTime(0),
         map(([ l1FetchState, l2FetchState ]) => {
-          if (!l1FetchState.isReady) return l1FetchState; // l1 is fetching or in error -> just show the fetching or error
+          if (!l1FetchState.data) return l1FetchState; // l1 is fetching without data or in error -> just show the fetching or error
           let data = l1FetchState.data;
           if (!content) return readyState(data.withNoSelection()); // no selected element -> only l1 shown
-          if (l2FetchState?.isReady) data = data.withChildren(content.route, l2FetchState.data.elements);
+          if (l2FetchState?.data) data = data.withChildren(content.route, l2FetchState.data.elements);
           data = data.withUpdatedElement(content.route, el => this.addDetailsToTreeElement(el, content));
           data = data.withSelection(content.route.id);
           return readyState(data);
@@ -240,23 +215,38 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   private fetchChildrenNav(content: RoutedContentInfo): FetchInfo|undefined {
     if (!this.canFetchChildren(content)) return undefined;
     const path = [ ...content.route.path, content.route.id ];
-    return fetch(path, this.fetchNavData(content.route).pipe(
+    return this.fetch(path, this.fetchNavData(content.route).pipe(
       map(data => new NavTreeData(data.elements, path, data.parent)),
     ));
   }
 
   private fetchRootNav(): FetchInfo {
-    return fetch([], this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
+    return this.fetch([], this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
   }
 
   private fetchNav(content: ContentT): FetchInfo {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
-      return fetch(route.path,
+      return this.fetch(route.path,
         this.fetchNavDataFromChild(parentId, content).pipe(map(data => new NavTreeData(data.elements, route.path, data.parent)))
       );
     } else return this.fetchRootNav();
+  }
+
+  private fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
+    return {
+      path: path,
+      fetch: fetch.pipe(
+        mapToFetchState({ resetter: this.reload$ }),
+        // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
+        // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
+        // subscribers, and so that new subscribers get the latest results on subscription.
+        // (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
+        // will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
+        shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
+      ),
+    };
   }
 
 }
