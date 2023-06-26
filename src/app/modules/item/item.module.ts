@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LetModule } from '@ngrx/component';
+
 import { ItemRoutingModule } from './item-routing.module';
 import { SharedComponentsModule } from '../shared-components/shared-components.module';
 import { ItemHeaderComponent } from './components/item-header/item-header.component';
@@ -52,6 +52,7 @@ import { ThreadMessageComponent } from './components/thread-message/thread-messa
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ItemChildrenEditListComponent } from './components/item-children-edit-list/item-children-edit-list.component';
 import { ItemChildrenListComponent } from './components/item-children-list/item-children-list.component';
+import { LetDirective } from '@ngrx/component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,7 @@ import { ItemChildrenListComponent } from './components/item-children-list/item-
     ItemRoutingModule,
     SharedComponentsModule,
     ReactiveFormsModule,
-    LetModule,
+    LetDirective,
     FormsModule,
     TooltipModule,
     DialogModule,

@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { merge, of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
@@ -17,6 +17,7 @@ import { SearchService } from 'src/app/shared/http-services/search.service';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { readyState } from 'src/app/shared/helpers/state';
+import { NgScrollbar } from 'ngx-scrollbar';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -30,6 +31,7 @@ const minQueryLength = 3;
   styleUrls: [ './left-nav.component.scss' ]
 })
 export class LeftNavComponent implements OnChanges {
+  @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
 
   @Input() searchQuery = '';
   private searchQuery$ = new ReplaySubject<string>(1);

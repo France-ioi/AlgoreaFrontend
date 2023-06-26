@@ -6,9 +6,6 @@ import { SharedComponentsModule } from '../modules/shared-components/shared-comp
 import { AccordionModule } from 'primeng/accordion';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { DialogModule } from 'primeng/dialog';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 import { LeftHeaderComponent } from './components/left-header/left-header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TreeModule } from 'primeng/tree';
 import { LeftNavTreeComponent } from './components/left-nav-tree/left-nav-tree.component';
-import { LetModule } from '@ngrx/component';
+import { LetDirective } from '@ngrx/component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -48,9 +45,11 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { LeftMenuSearchComponent } from './components/left-menu-search/left-menu-search.component';
 import { LeftSearchResultComponent } from './components/left-search-result/left-search-result.component';
 import { LeftMenuBackButtonComponent } from './components/left-menu-back-button/left-menu-back-button.component';
+import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
+import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: false,
+const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
+  visibility: 'hover',
 };
 
 @NgModule({
@@ -75,13 +74,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   imports: [
     BrowserModule,
-    LetModule,
+    LetDirective,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     BreadcrumbModule,
     AccordionModule,
-    PerfectScrollbarModule,
+    NgScrollbarModule,
     SharedComponentsModule,
     TreeModule,
     TooltipModule,
@@ -98,8 +97,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ConfirmationService,
     MessageService,
     {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
+      provide: NG_SCROLLBAR_OPTIONS,
+      useValue: DEFAULT_SCROLLBAR_OPTIONS,
     },
     {
       provide: HTTP_INTERCEPTORS,

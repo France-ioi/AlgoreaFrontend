@@ -1,7 +1,7 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
+import { LeftNavComponent } from '../left-nav/left-nav.component';
 
 @Component({
   selector: 'alg-left-menu',
@@ -9,7 +9,7 @@ import { appConfig } from 'src/app/shared/helpers/config';
   styleUrls: [ './left-menu.component.scss' ]
 })
 export class LeftMenuComponent implements OnDestroy {
-  @ViewChild(PerfectScrollbarComponent, { static: false }) componentRef?: PerfectScrollbarComponent;
+  @ViewChild(LeftNavComponent, { static: false }) componentRef?: LeftNavComponent;
 
   menuSearchEnabled = !!appConfig.searchApiUrl;
 
@@ -24,16 +24,16 @@ export class LeftMenuComponent implements OnDestroy {
   }
 
   private scrollToContent(id: string): void {
-    const scrollbarDirectiveRef = this.componentRef?.directiveRef;
+    const scrollbarDirectiveRef = this.componentRef?.scrollbarRef;
     if (!scrollbarDirectiveRef) return;
-    const scrollbarElement = (scrollbarDirectiveRef.elementRef as ElementRef<HTMLElement>).nativeElement;
+    const scrollbarElement = scrollbarDirectiveRef.nativeElement;
     const menuItemEl = scrollbarElement.querySelector<HTMLElement>(`#nav-${ id }`);
 
     if (!menuItemEl) return;
 
     if ((menuItemEl.offsetTop + menuItemEl.offsetHeight) >= (scrollbarElement.offsetHeight + scrollbarElement.scrollTop)
       || menuItemEl.offsetTop - scrollbarElement.scrollTop <= 0) {
-      scrollbarDirectiveRef.scrollToElement(`#nav-${ id }`, -8, 300);
+      void scrollbarDirectiveRef.scrollToElement(`#nav-${ id }`);
     }
   }
 

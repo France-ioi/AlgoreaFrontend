@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Injectable, OnDestroy } from '@angular/core';
-import { CanActivate } from '@angular/router';
+
 import { BehaviorSubject, Subject, combineLatest, distinctUntilChanged } from 'rxjs';
 import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
 
@@ -114,7 +114,7 @@ export class LayoutService implements OnDestroy {
 @Injectable({
   providedIn: 'root'
 })
-export class DefaultLayoutInitService implements CanActivate {
+export class DefaultLayoutInitService {
 
   constructor(
     private layoutService: LayoutService
