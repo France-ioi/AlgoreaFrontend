@@ -1,10 +1,15 @@
 <div class="container" *ngIf="data !== undefined">
   <alg-left-menu-back-button (close)="close.emit()">
-    {{ data.length | i18nPlural: {
-      '=0': '# activities found',
-      '=1': '# activity found',
-      'other': '# activities found'
-    } }}
+    <ng-container *ngIf="data.length < 10; else moreResultsCaption">
+      {{ data.length | i18nPlural: {
+        '=0': 'No result found',
+        '=1': '# result found',
+        'other': '# results found'
+      } }}
+    </ng-container>
+    <ng-template #moreResultsCaption>
+      <span i18n>First {{ data.length }} results</span>
+    </ng-template>
   </alg-left-menu-back-button>
 </div>
 

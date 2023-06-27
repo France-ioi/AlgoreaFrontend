@@ -77,13 +77,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="6206098913491165963" datatype="html">
         <source> This menu is filtered by the observation mode. </source><target state="new"> This menu is filtered by the observation mode. </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="2419193533364061980" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="5630181057184644670" datatype="html">
+        <source>First <x id="INTERPOLATION" equiv-text="{{ data.length }}"/> results</source><target state="new">First <x id="INTERPOLATION" equiv-text="{{ data.length }}"/> results</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="2419193533364061980" datatype="html">
         <source> Type at least 3 letters to search content </source><target state="new"> Type at least 3 letters to search content </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4213825410774196775" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="4213825410774196775" datatype="html">
         <source> No results </source><target state="new"> No results </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="4219108310098283044" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4219108310098283044" datatype="html">
         <source>Observation Mode</source><target state="translated">Mode observation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/observation-bar/observation-bar.component.html</context>
