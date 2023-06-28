@@ -272,10 +272,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
           type: data.item.type,
           permissions: data.item.permissions,
           attemptId: data.currentResult?.attemptId,
-          bestScore: data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.item.bestScore,
-          currentScore: data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.currentResult?.score,
-          validated: data.item.watchedGroup ?
-            data.item.watchedGroup.averageScore === 100 : data.currentResult?.validated,
+          bestScore: data.item.noScore ? undefined : (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.item.bestScore),
+          currentScore: data.item.noScore ? undefined :
+            (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.currentResult?.score),
+          validated: data.item.noScore ? undefined :
+            (data.item.watchedGroup ? data.item.watchedGroup.averageScore === 100 : data.currentResult?.validated),
         },
       }));
 
