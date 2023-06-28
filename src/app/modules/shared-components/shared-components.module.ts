@@ -82,6 +82,7 @@ import { SuggestionOfActivitiesComponent } from './components/suggestion-of-acti
 import { WatchButtonComponent } from './components/watch-button/watch-button.component';
 import { LetDirective } from '@ngrx/component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { HtmlElLoadedDirective } from '../../shared/directives/html-el-loaded.directive';
 
 @NgModule({
   declarations: [
@@ -126,6 +127,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     NeighborWidgetComponent,
     FullHeightContentDirective,
     HasHTMLDirective,
+    HtmlElLoadedDirective,
     SectionHeaderComponent,
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,
@@ -215,6 +217,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     NeighborWidgetComponent,
     FullHeightContentDirective,
     HasHTMLDirective,
+    HtmlElLoadedDirective,
     SectionHeaderComponent,
     PathSuggestionComponent,
     AllowsViewingItemContentPipe,

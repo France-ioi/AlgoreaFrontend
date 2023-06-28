@@ -1,23 +1,27 @@
 <div class="container" *ngIf="leftMenu$ | async as leftMenu">
-  <div class="left-panel" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
+  <div class="left-menu" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngrxLet="isWatching$ as isWatching">
-    <alg-top-bar *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed"
-      class="top-bar"
-      [ngClass]="{ 'with-mode-bar': isWatching, collapsed: !leftMenu.shown, animated: leftMenu.animated }"
-      [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async)"
-      [showHeaderControls]="scrolled || fullFrameContentDisplayed"
-      [modeBarDisplayed]="isWatching"
-      [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
-      [showTopRightControls]="!!(showTopRightControls$ | async)"
-    ></alg-top-bar>
-    <div
-      class="right-panel"
-      [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'with-mode-bar': isWatching }"
-    >
-      <div class="main-content" id="main-container">
-        <router-outlet></router-outlet>
+    <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
+      <alg-top-bar
+        *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed"
+        [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async)"
+        [showHeaderControls]="scrolled || fullFrameContentDisplayed"
+        [modeBarDisplayed]="isWatching"
+        [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
+        [showTopRightControls]="!!(showTopRightControls$ | async)"
+      ></alg-top-bar>
+      <div
+        class="main-content-wrapper alg-flex-1"
+        algHtmlElLoaded
+        (elLoaded)="onLoaded($event)"
+      >
+        <div class="main-content" id="main-container">
+          <div class="main-content-bottom-padding">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
       </div>
     </div>
   </ng-container>
