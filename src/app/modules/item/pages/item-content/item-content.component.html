@@ -98,7 +98,7 @@
 
   <alg-task-loader
     class="alg-flex-1"
-    *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && (!itemData.currentResult || (itemData.item.type === 'Task' && !(isTaskLoaded$ | async)))"
+    *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && (!itemData.currentResult || (itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)))"
     i18n-label label="Loading the content"
     i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
   ></alg-task-loader>
