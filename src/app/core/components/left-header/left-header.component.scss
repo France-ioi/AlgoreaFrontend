@@ -9,7 +9,13 @@
   align-items: center;
 }
 
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
 .platform-name {
+  margin-left: toRem(14);
   color: var(--alg-primary-color);
   text-transform: uppercase;
   text-decoration: none;

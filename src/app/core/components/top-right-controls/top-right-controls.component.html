@@ -8,10 +8,14 @@
   </ng-template>
 
   <ng-template #notAuthenticated>
-    <alg-language-picker class="lang-button" *ngIf="languages.length > 1"></alg-language-picker>
+    <alg-language-picker
+      class="lang-button"
+      [styleClass]="languagePickerStyleClass"
+      *ngIf="languages.length > 1"
+    ></alg-language-picker>
     <button
-      class="alg-button-icon primary-color no-bg"
-      icon="ph ph-power"
+      class="alg-button-icon primary-color no-bg login"
+      icon="ph-bold ph-power"
       (click)="login()"
       pButton
     ></button>

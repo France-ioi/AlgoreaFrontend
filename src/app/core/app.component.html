@@ -10,7 +10,7 @@
         [showHeaderControls]="scrolled || fullFrameContentDisplayed"
         [modeBarDisplayed]="isWatching"
         [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
-        [showTopRightControls]="!!(showTopRightControls$ | async)"
+        [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
       ></alg-top-bar>
       <div
         class="main-content-wrapper alg-flex-1"

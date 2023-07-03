@@ -1,11 +1,17 @@
 <div class="container" *ngIf="!compactMode">
-  <a class="platform-name" routerLink="/">{{ title }}</a>
-  <button
-    class="alg-button-icon no-bg primary-color left-menu"
-    pButton
-    type="button"
-    icon="ph ph-list"
-    data-cy="left-menu-btn"
-    (click)="hideLeftMenu()"
-  ></button>
+  <div class="left-section">
+    <button
+      class="alg-button-icon no-bg primary-color left-menu"
+      pButton
+      type="button"
+      icon="ph ph-list"
+      data-cy="left-menu-btn"
+      (click)="hideLeftMenu()"
+    ></button>
+    <a class="platform-name" routerLink="/">{{ title }}</a>
+  </div>
+  <alg-top-right-controls
+    languagePickerStyleClass="alg-language-picker-dropdown dark-gray-border"
+    *ngIf="!!(showTopRightControls$ | async) && !!(isNarrowScreen$ | async)"
+  ></alg-top-right-controls>
 </div>
