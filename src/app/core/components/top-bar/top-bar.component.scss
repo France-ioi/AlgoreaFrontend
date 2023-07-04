@@ -1,10 +1,6 @@
 @import 'src/assets/scss/functions';
 
 :host {
-  position: fixed;
-  left: var(--left-panel-size);
-  top: 0;
-  right: 0;
   height: toRem(57);
   padding: 0 var(--alg-space-size-3);
   display: flex;

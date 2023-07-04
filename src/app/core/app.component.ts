@@ -83,34 +83,36 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this.sessionService.userChanged$.pipe(
       switchMap(() => this.router.navigateByUrl('/')),
     ).subscribe();
-
-    this.ngZone.runOutsideAngular(() => {
-      window.addEventListener('scroll', () => {
-        this.onScrollContent();
-      });
-    });
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  onScrollContent(): void {
+  onScrollContent(scrollEl: HTMLElement): void {
     const topBarHeight = Number(this.topBarComponent?.elementRef.nativeElement.clientHeight || 0);
     const pageNavigatorNeighborWidgetRect
       = document.querySelector('#page-navigator-neighbor-widget')?.getBoundingClientRect();
     const gap = pageNavigatorNeighborWidgetRect
-      ? ((pageNavigatorNeighborWidgetRect.top + pageNavigatorNeighborWidgetRect.height) + window.scrollY) - topBarHeight
+      ? ((pageNavigatorNeighborWidgetRect.top + pageNavigatorNeighborWidgetRect.height) + scrollEl.scrollTop) - topBarHeight
       : topBarHeight;
-    if (window.scrollY > gap && !this.scrolled) {
+    if (scrollEl.scrollTop > gap && !this.scrolled) {
       this.ngZone.run(() => {
         this.scrolled = true;
       });
-    } else if (window.scrollY <= gap && this.scrolled) {
+    } else if (scrollEl.scrollTop <= gap && this.scrolled) {
       this.ngZone.run(() => {
         this.scrolled = false;
       });
     }
+  }
+
+  onLoaded(scrollEl: HTMLElement): void {
+    this.ngZone.runOutsideAngular(() => {
+      scrollEl.addEventListener('scroll', () => {
+        this.onScrollContent(scrollEl);
+      });
+    });
   }
 
   closeWatchGroupErrorDialog(): void {
