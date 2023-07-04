@@ -27,7 +27,7 @@
 
 <ng-container *ngFor="let item of data;">
   <div class="container">
-    <ul class="result-list">
+    <ul class="result-list alg-search-result">
       <li class="result-list-item" (mouseleave)="onMouseLeave($event)">
         <a class="result-list-link" [routerLink]="item | rawItemRoute | url" routerLinkActive="selected">
           <i
@@ -38,9 +38,13 @@
           }"
           ></i>
           <span class="result-list-link-caption" (mouseenter)="onMouseEnter($event, item.id, contentRef)" #contentRef>
-            {{ item.title }}
+            <span [innerHTML]="titleHighlight" *ngIf="item.titleHighlight as titleHighlight; else noTitleHighlight"></span>
+            <ng-template #noTitleHighlight>{{ item.title }}</ng-template>
           </span>
         </a>
+        <div class="result-list-description-wrapper" *ngIf="item.highlights.length > 0">
+          <p class="result-list-description" *ngFor="let highlight of item.highlights" [innerHTML]="highlight"></p>
+        </div>
       </li>
     </ul>
   </div>

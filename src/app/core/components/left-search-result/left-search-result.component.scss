@@ -37,3 +37,19 @@
   word-break: break-word;
   color: #545454;
 }
+
+.result-list-description {
+  margin: toRem(11) var(--alg-space-size-5);
+  padding-left: toRem(32);
+  color: #616F8280;
+  font-size: toRem(12);
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: toRem(20);
+    border-bottom: toRem(1) solid rgba(0, 0, 0, .1);
+  }
+}
