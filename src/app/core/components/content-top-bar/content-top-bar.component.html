@@ -32,20 +32,20 @@
         ></alg-breadcrumb>
       </ng-template>
     </div>
-    <button
-      *ngIf="discussionState$ | async as discussion"
-      class="alg-button-icon no-bg primary-color margin-left"
-      [ngClass]="{ 'active': discussion.visible }"
-      pButton
-      type="button"
-      icon="ph-duotone ph-chat-circle-dots"
-      (click)="toggleThreadVisibility(!discussion.visible)"
-    ></button>
-    <alg-watch-button
-      class="margin-left"
-      *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
-    ></alg-watch-button>
     <ng-container *ngIf="showHeaderControls">
+      <button
+        *ngIf="discussionState$ | async as discussion"
+        class="alg-button-icon no-bg primary-color margin-left"
+        [ngClass]="{ 'active': discussion.visible }"
+        pButton
+        type="button"
+        icon="ph-duotone ph-chats-circle"
+        (click)="toggleThreadVisibility(!discussion.visible)"
+      ></button>
+      <alg-watch-button
+        class="margin-left"
+        *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
+      ></alg-watch-button>
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
         class="neighbor-widget margin-left"
