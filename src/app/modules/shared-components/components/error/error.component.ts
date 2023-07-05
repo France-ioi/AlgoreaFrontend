@@ -12,6 +12,7 @@ export class ErrorComponent {
   @Input() icon?: string;
   @Input() showRefreshButton = false;
   @Input() buttonCaption = 'Back home';
+  @Input() buttonStyleClass?: string;
   @Input() link?: string;
 
   onRefresh(): void {

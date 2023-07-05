@@ -60,4 +60,12 @@
       font-weight: 500;
     }
   }
+
+  &.light-border {
+    border: toRem(1) solid var(--alg-white-color);
+
+    &:hover {
+      border: toRem(1) solid var(--alg-white-color) !important;
+    }
+  }
 }

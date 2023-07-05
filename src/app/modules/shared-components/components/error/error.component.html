@@ -9,7 +9,7 @@
     </span>
   </div>
   <button
-    class="alg-button primary refresh-button"
+    [class]="buttonStyleClass || 'alg-button primary refresh-button'"
     pButton
     (click)="onRefresh()"
     *ngIf="showRefreshButton && !link"

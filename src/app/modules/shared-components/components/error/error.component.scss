@@ -5,6 +5,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  &.light {
+    .icon {
+      color: var(--alg-white-color);
+    }
+
+    .message {
+      color: var(--alg-white-color)
+    }
+  }
 }
 
 .wrapper {

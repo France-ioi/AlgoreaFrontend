@@ -3,14 +3,16 @@
     <alg-loading size="small"></alg-loading>
   </div>
   <alg-error
-      *ngIf="state.isError"
-      class="dark small"
-      icon="fa fa-exclamation-triangle"
-      [showRefreshButton]="$any(state.error).status !== 403"
-      (refresh)="refresh()"
+    *ngIf="state.isError"
+    class="alg-flex-1 light"
+    icon="ph-duotone ph-warning-circle"
+    i18n-buttonCaption buttonCaption="Retry"
+    [showRefreshButton]="$any(state.error).status !== 403"
+    buttonStyleClass="alg-button primary refresh-button light-border"
+    (refresh)="refresh()"
   >
     <ng-container *ngIf="$any(state.error).status === 403; else otherError;">
-      <span i18n>There is currently no way for you to access this content.</span>
+      <span class="no-access" i18n>There is currently no way for you to access this content.</span>
     </ng-container>
     <ng-template #otherError>
       <span i18n>Error while loading path suggestion</span>
@@ -19,7 +21,7 @@
   <ng-container *ngIf="state.isReady">
     <ng-container *ngIf="state.data; else noPath">
       <ng-container *ngIf="state.data?.length === 1 && state.data?.[0]?.length === 1; else pathsSection">
-        <alg-error class="dark small" *ngIf="state.data?.[0]?.[0] as rootItem">
+        <alg-error class="alg-flex-1 light" *ngIf="state.data?.[0]?.[0] as rootItem">
           <span i18n>
             This content is one of your root
             {{ rootItem.type | i18nSelect : {
@@ -30,11 +32,12 @@
         </alg-error>
       </ng-container>
       <ng-template #pathsSection>
+        <p class="breadcrumbs-title" i18n>This content can be found in...</p>
         <div class="breadcrumbs-container" *ngFor="let breadcrumbs of state.data">
-          <span class="breadcrumbs-prefix" i18n>via</span>
+          <i class="ph-duotone ph-link breadcrumbs-prefix-icon"></i>
           <ul class="breadcrumbs">
             <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs">
-              <a class="alg-link" [routerLink]="item.url">
+              <a class="breadcrumbs-item-link alg-link" [routerLink]="item.url">
                 {{ item.title }}
               </a>
             </li>

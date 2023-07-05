@@ -28,7 +28,7 @@
 <ng-container *ngFor="let item of data;">
   <div class="container">
     <ul class="result-list">
-      <li class="result-list-item">
+      <li class="result-list-item" (mouseleave)="onMouseLeave($event)">
         <a class="result-list-link" [routerLink]="item | rawItemRoute | url" routerLinkActive="selected">
           <i
             class="result-list-icon ph-duotone"
@@ -37,10 +37,21 @@
             'ph-folders': item.type === 'Chapter'
           }"
           ></i>
-          <span class="result-list-link-caption">{{ item.title }}</span>
+          <span class="result-list-link-caption" (mouseenter)="onMouseEnter($event, item.id, contentRef)" #contentRef>
+            {{ item.title }}
+          </span>
         </a>
       </li>
     </ul>
   </div>
 </ng-container>
+
+<p-overlayPanel
+  styleClass="alg-path-suggestion-overlay"
+  #op
+>
+  <ng-container *ngIf="op.overlayVisible">
+    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+  </ng-container>
+</p-overlayPanel>
 
