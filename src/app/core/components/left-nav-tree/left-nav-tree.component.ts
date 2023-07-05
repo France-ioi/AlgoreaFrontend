@@ -42,6 +42,13 @@ export class LeftNavTreeComponent implements OnChanges {
     });
   }
 
+  toggleFolder(node: CustomTreeNode<NavTreeElement>): void {
+    // if this is the "selected" node of the menu, expand/collapse it... otherwise just select it
+    if (node.data.route.id === this.data?.selectedElementId) {
+      this.nodes = this.nodes.map(n => (n == node ? { ...n, expanded: !n.expanded } : n));
+    } else this.selectNode(node);
+  }
+
   navigateToParent(): void {
     if (!this.data) throw new Error('Unexpected: missing data for left nav tree (navigateToParent)');
     if (!this.data.parent) throw new Error('Unexpected: missing parent when navigating to parent');
