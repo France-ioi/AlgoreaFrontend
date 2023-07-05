@@ -1,7 +1,7 @@
 <ng-container *ngIf="menuItems$ | async as menuItems">
   <p-menu styleClass="alg-top-right-menu" #menu [popup]="true" [model]="menuItems" appendTo="body"></p-menu>
   <div class="user-container" *ngIf="userLogin$ | async as userLogin">
-    <span class="alg-secondary-color user-login">{{ userLogin }}</span>
+    <span class="alg-secondary-color user-login" *ngIf="!(isNarrowScreen$ | async)">{{ userLogin }}</span>
     <button
       class="alg-button-icon no-bg primary-color user-menu"
       icon="ph-duotone ph-user-circle"

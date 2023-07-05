@@ -53,4 +53,12 @@
       }
     }
   }
+
+  .p-submenu-header {
+    background-color: var(--alg-primary-dark-color);
+    color: white;
+    font-size: toRem(12);
+    font-weight: 500;
+    text-align: right;
+  }
 }
