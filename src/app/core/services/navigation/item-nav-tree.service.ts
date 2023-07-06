@@ -97,7 +97,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         bestScore: details.bestScore,
         currentScore: details.bestScore,
         validated: details.validated,
-      } : undefined,
+      } : treeElement.score,
     };
   }
 
