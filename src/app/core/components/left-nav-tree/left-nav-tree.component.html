@@ -22,7 +22,7 @@
     >
       <div class="tree-nav-left">
         <div class="tree-nav-icon" *ngIf="node.inL1; else dotsWithLine">
-          <i class="ph-duotone" [ngClass]="{
+          <i class="ph-duotone" (click)="toggleFolder(node)" [ngClass]="{
             'ph-caret-right': !node.expanded,
             'ph-caret-down': node.expanded
           }"></i>
