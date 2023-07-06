@@ -76,10 +76,11 @@
   flex-direction: column;
   padding: 0 var(--alg-space-size-2);
   height: 0;
-  margin-bottom: var(--alg-space-size-1);
 }
 
 .main-content-bottom-padding {
+  display: flex;
+  flex-direction: column;
   padding-bottom: var(--alg-space-size-1);
 }
 
