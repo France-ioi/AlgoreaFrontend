@@ -2,45 +2,14 @@
 @import "src/geometry.scss";
 @import "src/assets/scss/functions";
 
-:host {
-  display: block;
-}
-
 .container {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
-.right-container {
-  margin-left: var(--left-panel-size);
-  position: relative;
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  border-radius: toRem(16) 0 0 toRem(16);
-  background-color: var(--alg-white-color);
   overflow: hidden;
-  box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
-  -webkit-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
-  -moz-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
-
-  &.animated {
-    transition: margin-left var(--left-menu-animation);
-    -webkit-transition: margin-left var(--left-menu-animation);
-    -moz-transition: margin-left var(--left-menu-animation);
-    -o-transition: margin-left var(--left-menu-animation);
-  }
-
-  &.collapsed {
-    margin-left: 0;
-    border-radius: 0;
-  }
-
-  @media screen and (max-width: 599.98px) {
-    margin-left: 0;
-  }
 }
 
 .left-menu {
@@ -64,6 +33,36 @@
   }
 }
 
+.right-container {
+  margin-left: var(--left-panel-size);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: toRem(16) 0 0 toRem(16);
+  background-color: var(--alg-white-color);
+  overflow: hidden;
+  flex: 1;
+  box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
+
+  &.animated {
+    transition: margin-left var(--left-menu-animation);
+    -webkit-transition: margin-left var(--left-menu-animation);
+    -moz-transition: margin-left var(--left-menu-animation);
+    -o-transition: margin-left var(--left-menu-animation);
+  }
+
+  &.collapsed {
+    margin-left: 0;
+    border-radius: 0;
+  }
+
+  @media screen and (max-width: 599.98px) {
+    margin-left: 0;
+  }
+}
+
 .main-content-wrapper {
   display: flex;
   flex-direction: column;
@@ -77,10 +76,11 @@
   flex-direction: column;
   padding: 0 var(--alg-space-size-2);
   height: 0;
-  margin-bottom: var(--alg-space-size-1);
 }
 
 .main-content-bottom-padding {
+  display: flex;
+  flex-direction: column;
   padding-bottom: var(--alg-space-size-1);
 }
 

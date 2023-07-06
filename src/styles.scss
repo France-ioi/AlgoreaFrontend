@@ -49,16 +49,24 @@
   }
 }
 
-html {
+* {
+  box-sizing: content-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
   height: 100%;
+  overflow: hidden;
+}
+
+html {
   font-size: 16px;
-  overflow-y: hidden;
 }
 
 body {
-  margin: 0;
   background-color: var(--alg-light-bg-color);
-  min-height: 100%;
   font-family: var(--font-family);
 }
 
@@ -189,40 +197,3 @@ body {
     border-color: transparent transparent var(--alg-primary-color) transparent;
   }
 }
-
-/*@media screen and (max-width: 800px) {
-  html { font-size: 55.66%; }
-}
-@media screen and (min-width: 1200px) {
-  html { font-size: 67.87%; }
-}
-@media screen and (min-width: 1400px) {
-  html { font-size: 73.97%; }
-}
-@media screen and (min-width: 1600px) {
-  html { font-size: 80.08%; }
-}
-@media screen and (min-width: 1920px) {
-  html { font-size: 89.84%; }
-}
-@media screen and (min-width: 2200px) {
-  html { font-size: 98.39%; }
-}
-@media screen and (min-width: 2400px) {
-  html { font-size: 104.49%; }
-}
-@media screen and (min-width: 2700px) {
-  html { font-size: 113.65%; }
-}
-@media screen and (min-width: 3000px) {
-  html { font-size: 122.80%; }
-}
-@media screen and (min-width: 3300px) {
-  html { font-size: 131.96%; }
-}
-@media screen and (min-width: 3600px) {
-  html { font-size: 141.11%; }
-}
-@media screen and (min-width: 4000px) {
-  html { font-size: 153.32%; }
-}*/
