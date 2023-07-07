@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -15,6 +15,8 @@ import { LayoutService } from '../../../shared/services/layout.service';
   styleUrls: [ './top-right-menu.component.scss' ],
 })
 export class TopRightMenuComponent {
+  @Input() styleClass?: string;
+
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
   readonly menuItems$ = combineLatest([
