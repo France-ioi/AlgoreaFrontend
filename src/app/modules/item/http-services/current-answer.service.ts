@@ -7,7 +7,7 @@ import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { ActionResponse, assertSuccess } from 'src/app/shared/http-services/action-response';
 import { map } from 'rxjs/operators';
 
-export const answerDecoder = D.struct({
+const existingCurrentAnswerDecoder = D.struct({
   answer: D.nullable(D.string),
   attemptId: D.nullable(D.string),
   authorId: D.string,
@@ -18,7 +18,10 @@ export const answerDecoder = D.struct({
   type: D.literal('Submission', 'Saved', 'Current'),
 });
 
-export type Answer = D.TypeOf<typeof answerDecoder>;
+const noCurrentAnswerDecoder = D.struct({ type: D.literal(null) });
+const currentAnswerDecoder = D.union(existingCurrentAnswerDecoder, noCurrentAnswerDecoder);
+
+type ExistingCurrentAnswer = D.TypeOf<typeof existingCurrentAnswerDecoder>;
 
 interface UpdateCurrentAnswerBody {
   answer: string,
@@ -32,13 +35,14 @@ export class CurrentAnswerService {
 
   constructor(private http: HttpClient) {}
 
-  get(itemId: string, attemptId: string, asTeamId?: string): Observable<Answer> {
+  get(itemId: string, attemptId: string, asTeamId?: string): Observable<ExistingCurrentAnswer|null> {
     const params = new HttpParams({
       fromObject: asTeamId ? { attempt_id: attemptId, as_team_id: asTeamId } : { attempt_id: attemptId },
     });
-    return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/current-answer`, { params })
-      .pipe(decodeSnakeCase(answerDecoder));
+    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/current-answer`, { params }).pipe(
+      decodeSnakeCase(currentAnswerDecoder),
+      map(a => (a.type === null ? null : a)), // convert "no current answer" response to "null"
+    );
   }
 
   update(itemId: string, attemptId: string, body: UpdateCurrentAnswerBody, asTeamId?: string): Observable<void> {

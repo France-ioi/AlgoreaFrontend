@@ -17,7 +17,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/shared/helpers/duration';
-import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotNull } from 'src/app/shared/helpers/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { AnswerTokenService } from '../http-services/answer-token.service';
@@ -226,7 +225,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   }
 
   private loadAsNewCurrentAnswer(itemId: string, attemptId: string, newAnswer: Answer): Observable<Answer> {
-    return this.getCurrentAnswer(itemId, attemptId).pipe(
+    return this.currentAnswerService.get(itemId, attemptId).pipe(
       filter(isNotNull),
       switchMap(current => this.answerService.save(itemId, attemptId, { answer: current.answer ?? '', state: current.state ?? '' })),
       defaultIfEmpty(undefined),
@@ -237,15 +236,6 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  private getCurrentAnswer(itemId: string, attemptId: string): Observable<Answer | null> {
-    return this.currentAnswerService.get(itemId, attemptId).pipe(
-      catchError(error => {
-        // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
-        if (errorIsHTTPForbidden(error)) return of(null);
-        throw error;
-      })
-    );
-  }
 }
 
 declare global {

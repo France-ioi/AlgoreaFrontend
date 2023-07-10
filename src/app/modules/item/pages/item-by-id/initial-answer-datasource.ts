@@ -14,11 +14,9 @@ import {
   takeUntil
 } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
-import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { CurrentAnswerService } from '../../http-services/current-answer.service';
 import { GetAnswerService } from '../../http-services/get-answer.service';
-import { Answer } from '../../services/item-task.service';
 
 type Strategy =
   { tag: 'EmptyInitialAnswer'|'Wait'|'NotApplicable' } |
@@ -47,7 +45,7 @@ export class InitialAnswerDataSource implements OnDestroy {
     distinctUntilChanged((s1, s2) => JSON.stringify(s1) === JSON.stringify(s2)),
     switchMap(strategy => {
       if (strategy.tag === 'EmptyInitialAnswer') return of(null); // null -> no initial answer
-      if (strategy.tag === 'LoadCurrent') return concat(of(undefined), this.getCurrentAnswer(strategy.itemId, strategy.attemptId));
+      if (strategy.tag === 'LoadCurrent') return concat(of(undefined), this.currentAnswerService.get(strategy.itemId, strategy.attemptId));
       if (strategy.tag === 'LoadById') return concat(of(undefined), this.getAnswerService.get(strategy.answerId));
       if (strategy.tag === 'LoadBest') {
         return concat(of(undefined), this.getAnswerService.getBest(strategy.itemId, { watchedGroupId: strategy.participantId }));
@@ -78,16 +76,6 @@ export class InitialAnswerDataSource implements OnDestroy {
     this.itemInfo$.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
-  }
-
-  private getCurrentAnswer(itemId: string, attemptId: string): Observable<Answer | null> {
-    return this.currentAnswerService.get(itemId, attemptId).pipe(
-      catchError(error => {
-        // currently, the backend returns a 403 status when no current answer exist for user+item+attempt
-        if (errorIsHTTPForbidden(error)) return of(null);
-        throw error;
-      })
-    );
   }
 
 }
