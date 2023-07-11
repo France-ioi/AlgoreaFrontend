@@ -67,6 +67,12 @@
     }
   }
 
+  &.login {
+    .p-button-icon {
+      font-size: toRem(24);
+    }
+  }
+
   &.back-button {
     .p-button-icon {
       color: var(--alg-primary-color);

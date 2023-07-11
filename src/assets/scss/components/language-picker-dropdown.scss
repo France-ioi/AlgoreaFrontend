@@ -1,6 +1,9 @@
 @import "src/assets/scss/functions";
 
 .alg-language-picker-dropdown {
+  &.dark-gray-border {
+    border: toRem(1) solid #0000001a !important;
+  }
 
   &.p-focus {
     box-shadow: none !important;
@@ -22,7 +25,7 @@
   }
 
   &.p-dropdown {
-    border: toRem(1) solid var(--alg-light-color) !important;
+    border: toRem(1) solid var(--alg-light-color);
     border-radius: toRem(12);
     height: toRem(24);
     background-color: transparent;
@@ -34,6 +37,10 @@
     &:active, &:focus {
       outline: none;
       box-shadow: none;
+    }
+
+    &:not(.p-disabled) {
+      border: toRem(1) solid var(--alg-light-color);
     }
 
     .p-dropdown-panel {

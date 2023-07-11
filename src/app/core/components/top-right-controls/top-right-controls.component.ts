@@ -11,6 +11,8 @@ import { LocaleService } from '../../services/localeService';
 export class TopRightControlsComponent{
 
   @Input() drawLeftBorder = true;
+  @Input() topRightMenuStyleClass?: string;
+  @Input() languagePickerStyleClass?: string;
   session$ = this.sessionService.session$.pipe(delay(0));
   readonly languages = this.localeService.languages;
 

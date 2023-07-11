@@ -9,7 +9,23 @@
   align-items: center;
 }
 
+.left-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.for-mobile {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+
+    .platform-name {
+      margin-left: toRem(14);
+    }
+  }
+}
+
 .platform-name {
+  margin-right: toRem(14);
   color: var(--alg-primary-color);
   text-transform: uppercase;
   text-decoration: none;
