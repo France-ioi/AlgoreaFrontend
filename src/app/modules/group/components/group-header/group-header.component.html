@@ -3,21 +3,5 @@
     <div class="group-title-container">
       <h1 class="group-title">{{ groupData.group.name }}</h1>
     </div>
-    <ng-container *ngIf="navigationNeighbors$ | async as navigationNeighbors">
-      <alg-page-navigator
-        *ngIf="groupWithManagement"
-        [allowWatching]="!!groupWithManagement.currentUserCanWatchMembers"
-        [showNewStartWatchButton]="true"
-        [allowFullScreen]="false"
-        [navigationMode]="{
-          parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
-          left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
-          right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
-        }"
-        (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
-        (left)="navigationNeighbors?.data?.previous?.navigateTo()"
-        (right)="navigationNeighbors?.data?.next?.navigateTo()"
-      ></alg-page-navigator>
-    </ng-container>
   </div>
 </div>
