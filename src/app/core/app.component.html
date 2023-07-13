@@ -7,7 +7,6 @@
       <alg-top-bar
         *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed"
         [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async)"
-        [showHeaderControls]="scrolled || fullFrameContentDisplayed"
         [modeBarDisplayed]="isWatching"
         [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
         [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"

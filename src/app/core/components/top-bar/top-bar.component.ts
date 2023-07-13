@@ -7,7 +7,6 @@ import { Component, ElementRef, Input } from '@angular/core';
 })
 export class TopBarComponent {
   @Input() showBreadcrumbs = true;
-  @Input() showHeaderControls = false;
   @Input() modeBarDisplayed = false;
   @Input() showTopRightControls = true;
   @Input() showLeftMenuOpener = true;

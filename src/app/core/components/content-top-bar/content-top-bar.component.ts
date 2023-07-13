@@ -18,7 +18,6 @@ import { isGroupInfo } from '../../../shared/models/content/group-info';
 })
 export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
-  @Input() showHeaderControls = false;
   @Input() showLeftMenuOpener = false;
 
   discussionState$ = this.discussionService.state$;

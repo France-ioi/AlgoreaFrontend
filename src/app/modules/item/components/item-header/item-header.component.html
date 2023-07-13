@@ -4,26 +4,5 @@
       <h1 class="item-title alg-h1" data-cy="item-title">{{ itemData.item.string.title }}</h1>
       <p class="item-subtitle" *ngIf="itemData.item.string.subtitle">{{ itemData.item.string.subtitle }}</p>
     </div>
-    <alg-page-navigator
-      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      [allowFullScreen]="false"
-      [navigationMode]="{
-        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
-        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
-        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
-      }"
-      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
-      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
-      (right)="navigationNeighbors?.data?.next?.navigateTo()"
-    ></alg-page-navigator>
-    <button
-      *ngIf="discussionState$ | async as discussion"
-      class="alg-button-icon no-bg primary-color margin-left"
-      [ngClass]="{'active': discussion.visible }"
-      pButton
-      type="button"
-      icon="ph-duotone ph-chats-circle"
-      (click)="toggleThreadVisibility(!discussion.visible)"
-    ></button>
   </div>
 </div>
