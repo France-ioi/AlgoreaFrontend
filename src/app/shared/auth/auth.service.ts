@@ -52,7 +52,7 @@ export class AuthService implements OnDestroy {
           // there may not be any (valid) token (we cannot know)... in such a case the service create a temp user (using the given language)
           const defaultLanguage = this.localeService.currentLang?.tag;
           if (!defaultLanguage) throw new Error('default language should be defined');
-          return this.authHttp.refreshAuth(defaultLanguage);
+          return this.authHttp.refreshAuth({ createTempUserOnRefreshFailure: true, tempUserDefaultLanguage: defaultLanguage });
         }
       }),
       catchError(_e => {
@@ -87,10 +87,7 @@ export class AuthService implements OnDestroy {
     switchMap(auth => {
       const isExpired = auth.expiration.valueOf() < Date.now();
       if (isExpired) return of({ auth, tokenIsExpired: true }); // don't even try to refresh the token if it is expired
-      const defaultLanguage = this.localeService.currentLang?.tag;
-      if (!defaultLanguage) throw new Error('default language should be defined');
-      // FIXME: we should not call the service with a lang as we do not want to create a temp user in case of expiration!
-      return this.authHttp.refreshAuth(defaultLanguage).pipe(
+      return this.authHttp.refreshAuth().pipe(
         catchError(err => {
           // For any http error, ignore it since the token is valid. Another try will occur the next minute.
           if (err instanceof HttpErrorResponse || err instanceof TimeoutError) return EMPTY;

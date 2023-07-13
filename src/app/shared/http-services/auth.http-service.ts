@@ -11,6 +11,8 @@ interface CookieAuthPayload { expires_in: number }
 interface TokenAuthPayload { access_token: string, expires_in: number }
 type AuthPayload = CookieAuthPayload|TokenAuthPayload;
 
+type RefreshAuthOpts = { createTempUserOnRefreshFailure: true, tempUserDefaultLanguage: string }|{ createTempUserOnRefreshFailure: false };
+
 const longAuthServicesTimeout = 6000;
 
 @Injectable({
@@ -83,10 +85,13 @@ export class AuthHttpService {
       );
   }
 
-  refreshAuth(defaultLanguage: string): Observable<AuthResult> {
+  refreshAuth(options: RefreshAuthOpts = { createTempUserOnRefreshFailure: false }): Observable<AuthResult> {
     return this.http
       .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
-        params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
+        params: new HttpParams({ fromObject: options.createTempUserOnRefreshFailure ?
+          { ...this.cookieParams, create_temp_user_if_not_authorized: 1, default_language: options.tempUserDefaultLanguage } :
+          this.cookieParams
+        }),
         context: new HttpContext()
           .set(requestTimeout, longAuthServicesTimeout)
           .set(retryOnceOn401, false)
