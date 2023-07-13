@@ -47,7 +47,13 @@ export class AuthService implements OnDestroy {
         // (2) use the ongoing authentication if any
         if (appConfig.allowForcedToken && hasForcedToken()) return of(forcedTokenAuthFromStorage());
         else if (appConfig.authType === 'tokens') return of(tokenAuthFromStorage());
-        else return this.authHttp.refreshAuth(); // will fail if the browser has no cookie
+        else {
+          // try to refresh the cookie-stored token
+          // there may not be any (valid) token (we cannot know)... in such a case the service create a temp user (using the given language)
+          const defaultLanguage = this.localeService.currentLang?.tag;
+          if (!defaultLanguage) throw new Error('default language should be defined');
+          return this.authHttp.refreshAuth({ createTempUserOnRefreshFailure: true, tempUserDefaultLanguage: defaultLanguage });
+        }
       }),
       catchError(_e => {
         // (3) otherwise, create a temp session
