@@ -83,10 +83,10 @@ export class AuthHttpService {
       );
   }
 
-  refreshAuth(): Observable<AuthResult> {
+  refreshAuth(defaultLanguage: string): Observable<AuthResult> {
     return this.http
       .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
-        params: new HttpParams({ fromObject: this.cookieParams }),
+        params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
         context: new HttpContext()
           .set(requestTimeout, longAuthServicesTimeout)
           .set(retryOnceOn401, false)
