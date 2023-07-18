@@ -1,0 +1,95 @@
+<ng-container *ngrxLet="selected$; let selected">
+  <h2 class="title alg-h2">Help requests</h2>
+  <alg-selection
+    [items]="options"
+    [selected]="selected"
+    (change)="onChange($event, options)"
+    *ngIf="options$ | async as options"
+  ></alg-selection>
+
+  <alg-error
+    class="alg-flex-1"
+    i18n-message message="You are not currently observing any group."
+    *ngIf="selected === 2 && !(isWatching$ | async); else contentSection"
+  ></alg-error>
+
+  <ng-template #contentSection>
+    <ng-container *ngIf="state$ | async as state">
+      <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
+      <alg-error
+        *ngIf="state.isError"
+        class="alg-flex-1"
+        icon="fa fa-exclamation-triangle"
+        i18n-message message="Unable to load the recent threads"
+        i18n-buttonCaption buttonCaption="Retry"
+        [showRefreshButton]="true"
+        (refresh)="refresh()"
+      ></alg-error>
+
+      <ng-container *ngIf="state.data">
+        <div class="operation-buttons">
+          <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+            Refresh
+          </button>
+        </div>
+        <p-table
+          class="alg-table"
+          [columns]="state.data.columns"
+          [value]="state.data.rowData"
+          [loading]="state.isFetching"
+          [tableStyle]="{'min-width': '599.98px'}"
+          responsiveLayout="scroll"
+        >
+          <ng-template pTemplate="header" let-rowData let-columns>
+            <tr *ngIf="rowData.length > 0">
+              <ng-container *ngFor="let col of columns">
+                <th>
+                  {{ col.header }}
+                </th>
+              </ng-container>
+            </tr>
+          </ng-template>
+
+          <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+          >
+            <tr>
+              <td *ngFor="let col of columns">
+                <ng-container [ngSwitch]="col.field">
+                  <ng-container *ngSwitchCase="'item.title'">
+                    <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
+                      {{ rowData.item.title }}
+                    </a>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'participant'">
+                    <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
+                      {{ rowData.participant | userCaption }}
+                    </a>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'status'">
+                    {{ rowData.status | threadStatusDisplay }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'latestUpdateAt'">
+                    {{ rowData.latestUpdateAt | date:'short' }}
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ rowData[col.field] }}
+                  </ng-container>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                <span i18n>There are no threads for this item.</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</ng-container>

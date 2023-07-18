@@ -205,6 +205,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     }),
   );
 
+  userProfile$ = this.userSessionService.userProfile$;
+
   contentContainerTop = 0;
 
   private subscriptions: Subscription[] = [
