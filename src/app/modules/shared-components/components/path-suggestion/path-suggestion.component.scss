@@ -1,31 +1,72 @@
+@import 'src/assets/scss/functions';
+
+.breadcrumbs-title {
+  margin: 0;
+  padding: 0 toRem(6) 0 toRem(15);
+  display: flex;
+  align-items: center;
+  height: toRem(30);
+  color: var(--alg-white-color);
+  font-size: toRem(12);
+  font-weight: 500;
+}
+
 .breadcrumbs-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0.571rem 1rem;
+  padding: 0 toRem(6) 0 toRem(15);
+  border-top: toRem(1) solid rgba(0, 0, 0, 0.1);
+  height: toRem(30);
 }
 
-.breadcrumbs-prefix {
-  color: var(--base-text-color);
+.breadcrumbs-prefix-icon {
+  margin-right: toRem(11);
+  color: var(--alg-white-color);
+  font-size: toRem(16);
 }
 
 .breadcrumbs {
   display: flex;
   align-items: center;
-  margin: 0 0 0 .5rem;
+  margin: 0;
   padding: 0;
   list-style-type: none;
   overflow: hidden;
 }
 
 .breadcrumbs-item {
+  display: flex;
+  overflow: hidden;
+
+  &:not(:first-child):before {
+    content: '›';
+    display: inline;
+    margin: 0 toRem(8);
+    color: var(--alg-primary-dark-color);
+    font-size: toRem(16);
+  }
+}
+
+.breadcrumbs-item-link {
+  padding: toRem(5);
+  border-radius: toRem(8);
+  color: var(--alg-white-color);
+  font-size: toRem(12);
+  font-weight: 500;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  &:not(:first-child):before {
-    content: '/';
-    display: inline;
-    margin: 0 .3rem;
+  &:hover {
+    background-color: var(--alg-primary-dark-color);
   }
+}
+
+.no-access {
+  color: var(--alg-white-color);
+}
+
+.error-caption {
+  font-size: toRem(12);
 }
