@@ -53,6 +53,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ItemChildrenEditListComponent } from './components/item-children-edit-list/item-children-edit-list.component';
 import { ItemChildrenListComponent } from './components/item-children-list/item-children-list.component';
 import { LetDirective } from '@ngrx/component';
+import { ItemForumComponent } from './pages/item-forum/item-forum.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { LetDirective } from '@ngrx/component';
     ItemTaskEditComponent,
     ItemChildrenEditListComponent,
     ItemChildrenListComponent,
+    ItemForumComponent,
   ],
   imports: [
     CommonModule,

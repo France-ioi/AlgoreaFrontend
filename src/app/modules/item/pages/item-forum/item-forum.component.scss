@@ -1,0 +1,19 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: var(--alg-space-size-4) 0;
+}
+
+.title {
+  margin-top: 0;
+}
+
+.operation-buttons {
+  margin-top: var(--alg-space-size-4);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: toRem(13);
+}
