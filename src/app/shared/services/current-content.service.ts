@@ -41,5 +41,6 @@ export class CurrentContentService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.content.complete();
+    this.navMenuReload.complete();
   }
 }
