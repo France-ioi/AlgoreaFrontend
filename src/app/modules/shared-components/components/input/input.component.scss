@@ -5,7 +5,10 @@
     .input-element {
       background-color: transparent;
       &::placeholder {
-        opacity: 1;
+        opacity: .5;
+      }
+      &:active, &:focus {
+        background-color: var(--alg-white-color);
       }
     }
   }

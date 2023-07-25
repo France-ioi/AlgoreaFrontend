@@ -14,13 +14,13 @@
 </div>
 
 <div class="container" *ngIf="data === undefined">
-  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+  <alg-message-info class="search" icon="ph-duotone ph-warning-circle" i18n>
     Type at least 3 letters to search content
   </alg-message-info>
 </div>
 
 <div class="container" *ngIf="data !== undefined && data.length === 0">
-  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+  <alg-message-info class="search" icon="ph-duotone ph-warning-circle" i18n>
     No results
   </alg-message-info>
 </div>

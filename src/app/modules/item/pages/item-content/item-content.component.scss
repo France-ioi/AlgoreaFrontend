@@ -3,7 +3,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: var(--alg-space-size-4) 0 0 0;
+  padding: 0;
 }
 
 .validation-text {
@@ -35,7 +35,8 @@
 }
 
 .description, .html-container {
-  margin: toRem(30) 0 2rem 0;
+  margin: toRem(30) 0 0 0;
   font-weight: 300;
   line-height: toRem(24);
+  max-width: toRem(920);
 }

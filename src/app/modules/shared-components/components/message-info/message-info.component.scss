@@ -1,5 +1,13 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  &.search {
+    .container {
+      padding: .719rem toRem(12);
+    }
+  }
+}
+
 .container {
   padding: 0 toRem(12);
   height: toRem(40);
@@ -17,6 +25,6 @@
 }
 
 .message-text {
-  color: var(--alg-secondary-color);
+  color: RGBA(0, 0, 0, .5);
   font-size: toRem(14);
 }
