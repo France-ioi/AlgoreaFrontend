@@ -20,11 +20,17 @@
     .item-link {
       border-color: transparent !important;
     }
+
+    + .data-list-item {
+      .item-link {
+        border-color: transparent !important;
+      }
+    }
   }
 
-  &:not(:last-child) {
+  &:not(:first-child) {
     .item-link {
-      border-bottom: toRem(1) solid var(--alg-border-light-color);
+      border-top: toRem(1) solid var(--alg-border-light-color);
     }
   }
 }
@@ -35,7 +41,9 @@
   text-decoration: none;
 
   &.locked {
-    opacity: .3;
+    .left-container, .right-container {
+      opacity: .3;
+    }
   }
 
   @media screen and (max-width: 599.98px) {
