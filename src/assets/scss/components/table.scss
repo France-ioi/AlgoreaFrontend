@@ -29,20 +29,18 @@
   .p-datatable-thead > tr > th {
     padding: toRem(13) toRem(19);
     color: var(--alg-secondary-color);
-    font-size: toRem(12);
+    font-size: toRem(16);
     font-weight: 400;
     border: none;
     background: none;
   }
 
-  .p-datatable-tbody > tr {
-    td {
-      padding: 0 toRem(19);
-      color: var(--alg-secondary-color);
-      font-size: toRem(12);
-      border: none;
-      height: toRem(56);
-    }
+  .p-datatable-tbody > tr > td {
+    padding: 0 toRem(19);
+    color: var(--alg-secondary-color);
+    font-size: toRem(16);
+    border: none;
+    height: toRem(56);
   }
 
   .p-datatable .p-datatable-tbody > tr.p-highlight {
@@ -166,4 +164,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-width: 599.98px) {
+  .alg-table {
+    .p-datatable-thead > tr > th {
+      font-size: toRem(12);
+    }
+    .p-datatable-tbody > tr > td {
+      font-size: toRem(12);
+    }
+  }
 }
