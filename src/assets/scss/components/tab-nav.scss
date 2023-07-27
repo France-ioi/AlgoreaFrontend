@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  margin-bottom: var(--alg-space-size-4);
 
   &:after {
     content: '';
