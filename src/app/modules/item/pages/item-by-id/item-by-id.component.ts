@@ -41,7 +41,6 @@ import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
@@ -49,8 +48,6 @@ import { TabService } from 'src/app/shared/services/tab.service';
 import { ItemTabs } from './item-tabs';
 
 const itemBreadcrumbCat = $localize`Items`;
-
-const animationTiming = '.6s .2s ease-in-out';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -60,22 +57,6 @@ const animationTiming = '.6s .2s ease-in-out';
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
   providers: [ ItemDataSource, InitialAnswerDataSource, ItemTabs ],
-  animations: [
-    trigger('threadOpenClose', [
-      state('opened', style({
-        marginRight: '25rem',
-      })),
-      state('closed', style({
-        marginRight: 0,
-      })),
-      transition('opened => closed', [
-        animate(animationTiming)
-      ]),
-      transition('closed => opened', [
-        animate(animationTiming)
-      ]),
-    ]),
-  ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
 
@@ -183,11 +164,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   userProfile$ = this.userSessionService.userProfile$;
 
-  contentContainerTop = 0;
-
   private subscriptions: Subscription[] = [
 
     this.itemChanged$.subscribe(() => {
+      this.discussionService.toggleVisibility(false);
       this.fullFrameContent$.next(false);
       this.editorUrl = undefined;
       this.itemTabs.itemChanged();
@@ -284,19 +264,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.initialAnswerDataSource.setInfo(route, isTask);
     }),
 
-    merge(
-      this.itemDataSource.state$.pipe(readyData()),
-      this.fullFrameContent$.pipe(distinctUntilChanged()),
-      this.shouldDisplayTabBar$,
-      fromEvent(window, 'resize'),
-    ).pipe(
-      delay(0),
-      map(() => this.contentContainer?.nativeElement.offsetTop || 0),
-      distinctUntilChanged(),
-    ).subscribe(contentContainerTop =>
-      this.contentContainerTop = contentContainerTop
-    ),
-
     combineLatest([ this.itemDataSource.state$.pipe(readyData()), this.fullFrameContent$ ]).pipe(
       map(([ data, fullFrame ]) => {
         if (fullFrame) return { id: data.route.id, display: ContentDisplayType.ShowFullFrame };
@@ -341,6 +308,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.beforeUnload$.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.discussionService.toggleVisibility(false);
   }
 
 

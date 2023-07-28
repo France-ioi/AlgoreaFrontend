@@ -1,7 +1,7 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap, tap } from 'rxjs/operators';
-import { merge, Subscription } from 'rxjs';
+import { filter, map, merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
 import { Router } from '@angular/router';
 import { LocaleService } from './services/localeService';
@@ -15,6 +15,8 @@ import { CrashReportingService } from './services/crash-reporting.service';
 import { Location } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
+import { isNotUndefined } from '../shared/helpers/null-undefined-predicates';
+import { DiscussionService } from '../modules/item/services/discussion.service';
 
 @Component({
   selector: 'alg-root',
@@ -39,10 +41,12 @@ export class AppComponent implements OnInit, OnDestroy {
   canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
+  threadOpened$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
   watchedGroupError$ = this.groupWatchingService.watchedGroupError$;
   showWatchedGroupErrorDialog = true;
+  showItemThreadWidget = !!appConfig.forumServerUrl;
 
   private subscription?: Subscription;
 
@@ -60,6 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
     private chunkErrorService: ChunkErrorService,
+    private discussionService: DiscussionService,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;

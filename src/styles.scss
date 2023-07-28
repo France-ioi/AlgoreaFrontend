@@ -157,7 +157,7 @@ body {
 }
 
 .alg-code {
-  color: var(--base-color);
+  color: var(--alg-white-color);
   white-space: break-spaces;
 
   &.with-bg {
@@ -168,7 +168,7 @@ body {
   }
 
   &.dark {
-    color: #fff;
+    color: var(--alg-secondary-color);
   }
 }
 
@@ -197,4 +197,16 @@ body {
     border-width: 0 toRem(8) toRem(8) toRem(8);
     border-color: transparent transparent var(--alg-primary-color) transparent;
   }
+}
+
+.alg-divider {
+  margin: 0;
+  padding: 0;
+  height: toRem(1);
+  border: none;
+  background: rgb(255,255,255);
+  background: -moz-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
 }

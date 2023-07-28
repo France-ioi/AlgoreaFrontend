@@ -38,7 +38,6 @@ import { AnswerAuthorIndicatorComponent } from './components/answer-author-indic
 import { ItemPermissionsComponent } from './components/item-permissions/item-permissions.component';
 import { TaskLoaderComponent } from './components/task-loader/task-loader.component';
 import { ItemChildrenEditFormComponent } from './components/item-children-edit-form/item-children-edit-form.component';
-import { ThreadComponent } from './components/thread/thread.component';
 import { ItemDependenciesComponent } from './components/item-dependencies/item-dependencies.component';
 import { ItemEditWrapperComponent } from './components/item-edit-wrapper/item-edit-wrapper.component';
 import { AddDependencyComponent } from './components/add-dependency/add-dependency.component';
@@ -47,8 +46,6 @@ import {
 } from './components/permissions-edit-dialog-form/permissions-edit-form.component';
 import { ItemUnlockAccessComponent } from './components/item-unlock-access/item-unlock-access.component';
 import { ItemTaskEditComponent } from './pages/item-task-edit/item-task-edit.component';
-import { ThreadContainerComponent } from './components/thread-container/thread-container.component';
-import { ThreadMessageComponent } from './components/thread-message/thread-message.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ItemChildrenEditListComponent } from './components/item-children-edit-list/item-children-edit-list.component';
 import { ItemChildrenListComponent } from './components/item-children-list/item-children-list.component';
@@ -84,9 +81,6 @@ import { ItemForumComponent } from './pages/item-forum/item-forum.component';
     ItemPermissionsComponent,
     TaskLoaderComponent,
     ItemChildrenEditFormComponent,
-    ThreadComponent,
-    ThreadContainerComponent,
-    ThreadMessageComponent,
     ItemDependenciesComponent,
     ItemEditWrapperComponent,
     AddDependencyComponent,

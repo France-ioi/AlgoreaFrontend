@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ThreadService } from '../../services/threads.service';
+import { ThreadService } from '../../../modules/item/services/threads.service';
 import { FormBuilder } from '@angular/forms';
-import { readyData } from '../../../../shared/operators/state';
+import { readyData } from '../../../shared/operators/state';
 import { Subscription, filter, delay, combineLatest, of } from 'rxjs';
-import { DiscussionService } from '../../services/discussion.service';
-import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
+import { DiscussionService } from '../../../modules/item/services/discussion.service';
+import { isNotUndefined } from '../../../shared/helpers/null-undefined-predicates';
 import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
@@ -105,5 +105,4 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       this.messagesScroll.nativeElement.scrollHeight - this.messagesScroll.nativeElement.offsetHeight
     );
   }
-
 }

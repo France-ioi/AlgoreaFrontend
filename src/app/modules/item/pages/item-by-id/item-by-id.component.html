@@ -23,7 +23,6 @@
       <div
         class="content-container"
         #contentContainer
-        [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
         *ngrxLet="currentTab$ as currentTab"
       >
         <ng-container *ngIf="(itemContentComponent?.isTaskLoaded$ | async) || currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit'">
@@ -130,7 +129,6 @@
           </ng-template>
         </ng-container>
       </div>
-      <alg-thread-container [topCompensation]="contentContainerTop" *ngIf="showItemThreadWidget"></alg-thread-container>
     </ng-container>
 
   </ng-container>

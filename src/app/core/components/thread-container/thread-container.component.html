@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="header">
+    <span class="header-title" i18n>Forum</span>
+    <div>
+      <button
+        class="header-button alg-button-icon primary-color no-bg"
+        type="submit"
+        icon="ph-duotone ph-question"
+        pButton
+      ></button>
+      <button
+        class="header-button alg-button-icon primary-color no-bg"
+        type="submit"
+        icon="ph ph-x"
+        pButton
+        (click)="onClose()"
+      ></button>
+    </div>
+  </div>
+  <alg-thread class="thread"></alg-thread>
+</div>

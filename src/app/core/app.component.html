@@ -3,7 +3,7 @@
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngrxLet="isWatching$ as isWatching">
-    <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
+    <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'thread-opened': !!(threadOpened$ | async) }">
       <alg-top-bar
         *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed"
         [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async)"
@@ -24,6 +24,13 @@
       </div>
     </div>
   </ng-container>
+  <div
+    class="right-thread"
+    [ngClass]="{ 'opened': !!(threadOpened$ | async) }"
+    *ngIf="showItemThreadWidget"
+  >
+    <alg-thread-container></alg-thread-container>
+  </div>
 </div>
 <p-toast position="bottom-left"></p-toast>
 <p-confirmDialog></p-confirmDialog>
