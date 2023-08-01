@@ -49,7 +49,6 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
   private readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
-  private readonly destroyed$ = new Subject<void>();
   isWatching$ = this.groupWatchingService.isWatching$;
   selected$ = new ReplaySubject<number>(1);
   options$ = combineLatest([
@@ -68,9 +67,9 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.watchedGroup$,
   ]).pipe(
     switchMap(([ selected, item, watchedGroup ]) =>
-      this.getThreadService.get(selected === 2 && watchedGroup
-        ? { itemId: item.id, watchedGroupId: watchedGroup.route.id }
-        : { itemId: item.id, isMine: selected === 0 }).pipe(
+      this.getThreadService.get(item.id, selected === 2 && watchedGroup
+        ? { watchedGroupId: watchedGroup.route.id }
+        : { isMine: selected === 0 }).pipe(
         map(threads => ({
           columns: this.getThreadColumns(item.type),
           rowData: threads,
@@ -115,8 +114,6 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.item$.complete();
     this.selected$.complete();
     this.refresh$.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   onChange(selected: number, options: typeof OPTIONS): void {

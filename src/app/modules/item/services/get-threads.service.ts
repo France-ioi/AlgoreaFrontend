@@ -42,13 +42,13 @@ export class GetThreadsService {
   constructor(private http: HttpClient) {
   }
 
-  get(payload: { itemId: string, isMine: boolean } | { itemId: string, watchedGroupId: string }): Observable<Thread[]> {
-    let params = new HttpParams({ fromObject: { item_id: payload.itemId } });
-    if ('isMine' in payload) {
-      params = params.set('is_mine', payload.isMine ? 1 : 0);
+  get(itemId: string, options: { isMine: boolean } | { watchedGroupId: string }): Observable<Thread[]> {
+    let params = new HttpParams({ fromObject: { item_id: itemId } });
+    if ('isMine' in options) {
+      params = params.set('is_mine', options.isMine ? 1 : 0);
     }
-    if ('watchedGroupId' in payload) {
-      params = params.set('watched_group_id', payload.watchedGroupId);
+    if ('watchedGroupId' in options) {
+      params = params.set('watched_group_id', options.watchedGroupId);
     }
     return this.http.get<unknown>(`${appConfig.apiUrl}/threads`, {
       params,
