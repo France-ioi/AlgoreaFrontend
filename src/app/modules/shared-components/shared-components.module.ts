@@ -83,6 +83,7 @@ import { WatchButtonComponent } from './components/watch-button/watch-button.com
 import { LetDirective } from '@ngrx/component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { HtmlElLoadedDirective } from '../../shared/directives/html-el-loaded.directive';
+import { ThreadStatusDisplayPipe } from '../../shared/pipes/threadStatusDisplay';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { HtmlElLoadedDirective } from '../../shared/directives/html-el-loaded.di
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    ThreadStatusDisplayPipe,
     GroupPermissionCaptionPipe,
     SubSectionComponent,
     AddContentComponent,
@@ -201,6 +203,7 @@ import { HtmlElLoadedDirective } from '../../shared/directives/html-el-loaded.di
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    ThreadStatusDisplayPipe,
     GroupPermissionCaptionPipe,
     SubSectionComponent,
     AddContentComponent,

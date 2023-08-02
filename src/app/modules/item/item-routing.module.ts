@@ -53,6 +53,28 @@ import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
           path: 'dependencies',
           children: [],
         },
+        {
+          path: 'forum',
+          children: [
+            {
+              path: '',
+              redirectTo: 'my-threads',
+              pathMatch: 'full',
+            },
+            {
+              path: 'my-threads',
+              children: [],
+            },
+            {
+              path: 'others',
+              children: [],
+            },
+            {
+              path: 'group',
+              children: [],
+            },
+          ],
+        },
       ]
     }
   ]) ],
