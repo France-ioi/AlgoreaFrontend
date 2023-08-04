@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router, RouterLinkActive, UrlTree } from '@angular/router';
-import { combineLatest, of, ReplaySubject, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
+import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
+import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
@@ -23,7 +23,7 @@ import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { isATask, isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -40,16 +40,13 @@ import { TaskConfig } from '../../services/item-task.service';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
-import { allowsWatchingResults } from 'src/app/shared/models/domain/item-watch-permission';
-import {
-  allowsViewingContent,
-  canCurrentUserViewContent,
-  canCurrentUserViewSolution
-} from 'src/app/shared/models/domain/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DiscussionService } from '../../services/discussion.service';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
+import { TabService } from 'src/app/shared/services/tab.service';
+import { ItemTabs } from './item-tabs';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -62,7 +59,7 @@ const animationTiming = '.6s .2s ease-in-out';
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
-  providers: [ ItemDataSource, InitialAnswerDataSource ],
+  providers: [ ItemDataSource, InitialAnswerDataSource, ItemTabs ],
   animations: [
     trigger('threadOpenClose', [
       state('opened', style({
@@ -85,9 +82,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
   @ViewChild('contentContainer') contentContainer?: ElementRef<HTMLDivElement>;
-  @ViewChild('historyTab') historyTab?: RouterLinkActive;
-  @ViewChild('chapterGroupProgressTab') chapterGroupProgressTab?: RouterLinkActive;
-  @ViewChild('chapterUserProgressTab') chapterUserProgressTab?: RouterLinkActive;
 
   private destroyed$ = new Subject<void>();
 
@@ -128,26 +122,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     map(state => state.isReady && state.data),
   );
 
-  private tabs = new ReplaySubject<TaskTab[]>(1);
-  tabs$ = combineLatest([ this.tabs, this.state$.pipe(readyData()) ]).pipe(
-    map(([ tabs, data ]) => (
-      canCurrentUserViewSolution(data.item, data.currentResult) ? tabs : tabs.filter(tab => tab.view !== 'solution')
-    )),
-    map(tabs => tabs.filter(tab => !appConfig.featureFlags.hideTaskTabs.includes(tab.view))),
-    shareReplay(1),
-  );
-  readonly taskTabs$ = this.tabs$.pipe(map(tabs => tabs.filter(tab => tab.view !== 'progress')));
-  readonly showProgressTab$ = combineLatest([ this.state$.pipe(readyData()), this.groupWatchingService.isWatching$, this.tabs$ ]).pipe(
-    map(([ itemData, isWatching, tabs ]) =>
-      (!isWatching && allowsViewingContent(itemData.item.permissions) && tabs.some(tab => tab.view === 'progress')) ||
-      (isWatching && allowsWatchingResults(itemData.item.permissions))
-    ),
-  );
-  taskView?: TaskTab['view'];
+  currentTab$ = this.itemTabs.currentTab$;
+  currentTaskView$ = this.itemTabs.currentTaskView$;
 
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
   readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
   readonly isWatching$ = this.groupWatchingService.isWatching$;
+  readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
     switchMap(answerErr => this.itemRouteState$.pipe(
@@ -195,14 +176,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   threadOpened$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
 
-  selectors$ = combineLatest([ this.state$.pipe(readyData()), this.groupWatchingService.watchedGroup$ ]).pipe(
-    map(([ itemData, watchedGroup ]) => {
-      if (!watchedGroup || watchedGroup.route.isUser) {
-        return isATask(itemData.item) ? 'none' : 'withUserProgress';
-      } else {
-        return 'withGroupProgress';
-      }
-    }),
+  private itemChanged$ = this.itemDataSource.state$.pipe(
+    distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
+    map(() => {}),
   );
 
   userProfile$ = this.userSessionService.userProfile$;
@@ -210,20 +186,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   contentContainerTop = 0;
 
   private subscriptions: Subscription[] = [
-    this.itemDataSource.state$.pipe(
-      // submission reloads the item data. Here we handle the progress tab existence only when the item loads, not when it reloads.
-      distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
-    ).subscribe(state => {
-      // task change: consider it is not fullFrame until the info is given by the task
+
+    this.itemChanged$.subscribe(() => {
       this.fullFrameContent$.next(false);
-      // reset tabs when item changes. By default do not display it unless we currently are on progress page
       this.editorUrl = undefined;
-      if (state.isFetching) this.tabs.next(this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
-      // update tabs when item is fetched
-      // Case 1: item is not a task: display the progress tab anyway
-      // Case 2: item is a task: delegate tab display to item task service, start with no tabs
-      if (state.isReady) this.tabs.next(isTask(state.data.item) && this.showTaskTab() ? [] : [{ view: 'progress', name: 'Progress' }]);
+      this.itemTabs.itemChanged();
     }),
+
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
       .subscribe({
@@ -318,7 +287,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     merge(
       this.itemDataSource.state$.pipe(readyData()),
       this.fullFrameContent$.pipe(distinctUntilChanged()),
-      this.taskTabs$,
+      this.shouldDisplayTabBar$,
       fromEvent(window, 'resize'),
     ).pipe(
       delay(0),
@@ -346,12 +315,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   showItemThreadWidget = !!appConfig.forumServerUrl;
 
   constructor(
-    private router: Router,
     private itemRouter: ItemRouter,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
     private itemDataSource: ItemDataSource,
     private initialAnswerDataSource: InitialAnswerDataSource,
+    private itemTabs: ItemTabs,
     private userSessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private resultActionsService: ResultActionsService,
@@ -359,13 +328,14 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private discussionService: DiscussionService,
+    private tabService: TabService,
   ) {}
 
   ngOnDestroy(): void {
+    this.tabService.setTabs([]);
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });
-    this.tabs.complete();
     this.skipBeforeUnload$.complete();
     this.retryBeforeUnload$.complete();
     this.beforeUnload$.complete();
@@ -386,15 +356,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   onScoreChange(score: number): void {
     this.currentContentService.forceNavMenuReload();
     this.itemDataSource.patchItemScore(score);
-  }
-
-  setTaskTabs(tabs: TaskTab[]): void {
-    this.tabs.next(tabs);
-    if (tabs.every(tab => tab.view !== this.taskView)) this.taskView = tabs[0]?.view;
-  }
-
-  setTaskTabActive(tab: TaskTab): void {
-    this.taskView = tab.view;
   }
 
   beforeUnload(): Observable<boolean> {
@@ -418,20 +379,24 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemRouter.navigateTo(route, { page: [] });
   }
 
-  private showTaskTab(): boolean {
-    return !this.isProgressPage() && !this.isDependenciesPage() && !this.isParametersPage();
+  setTaskTabs(tabs: TaskTab[]): void {
+    this.itemTabs.setTaskTabs(tabs);
   }
 
-  private isProgressPage(): boolean {
-    return this.router.url.includes('/progress/');
+  editorUrlChanged(url: string|undefined): void {
+    this.itemTabs.editTabEnabledChange(!!url);
+    this.editorUrl = url;
   }
 
-  private isDependenciesPage(): boolean {
-    return this.router.url.includes('/dependencies');
+  disablePlatformProgressChanged(value: boolean): void {
+    this.itemTabs.disablePlatformProgressChanged(value);
   }
 
-  private isParametersPage(): boolean {
-    return this.router.url.includes('/parameters');
+  /**
+   * Called when a task request an active tab change
+   */
+  setTaskView(view: string): void {
+    this.tabService.setActiveTab(view);
   }
 
   private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {

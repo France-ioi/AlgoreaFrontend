@@ -82,8 +82,10 @@ import { SuggestionOfActivitiesComponent } from './components/suggestion-of-acti
 import { WatchButtonComponent } from './components/watch-button/watch-button.component';
 import { LetDirective } from '@ngrx/component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TabMenuModule } from 'primeng/tabmenu';
 import { HtmlElLoadedDirective } from '../../shared/directives/html-el-loaded.directive';
 import { ThreadStatusDisplayPipe } from '../../shared/pipes/threadStatusDisplay';
+import { TabBarComponent } from './components/tab-bar/tab-bar.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +146,7 @@ import { ThreadStatusDisplayPipe } from '../../shared/pipes/threadStatusDisplay'
     MessageInfoComponent,
     SuggestionOfActivitiesComponent,
     WatchButtonComponent,
+    TabBarComponent,
   ],
   imports: [
     CommonModule,
@@ -173,6 +176,7 @@ import { ThreadStatusDisplayPipe } from '../../shared/pipes/threadStatusDisplay'
     InputMaskModule,
     LetDirective,
     OverlayPanelModule,
+    TabMenuModule,
   ],
   exports: [
     SectionComponent,
@@ -235,6 +239,7 @@ import { ThreadStatusDisplayPipe } from '../../shared/pipes/threadStatusDisplay'
     AllowDisplayCodeSnippet,
     SuggestionOfActivitiesComponent,
     WatchButtonComponent,
+    TabBarComponent,
   ],
   providers: [],
 })

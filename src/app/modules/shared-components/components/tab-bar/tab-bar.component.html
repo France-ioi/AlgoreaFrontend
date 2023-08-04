@@ -1,0 +1,6 @@
+<p-tabMenu
+  *ngrxLet="tabs$ as tabs"
+  [model]="tabs"
+  [scrollable]="true"
+  (activeItemChange)="onChange($event)"
+/>

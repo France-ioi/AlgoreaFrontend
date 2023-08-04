@@ -98,6 +98,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   metadata$ = this.metadata.pipe(catchError(() => EMPTY)); /* never emit errors */
 
   @Output() editorUrl = this.metadata$.pipe(map(({ editorUrl }) => editorUrl));
+  @Output() disablePlatformProgress = this.metadata$.pipe(map(({ disablePlatformProgress }) => disablePlatformProgress ?? false));
 
   iframeHeight$ = this.metadata$.pipe(
     switchMap(({ autoHeight }) => {

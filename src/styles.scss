@@ -197,3 +197,10 @@ body {
     border-color: transparent transparent var(--alg-primary-color) transparent;
   }
 }
+
+.alg-tab-bar-active {
+
+  .p-element {
+    background: red !important;
+  }
+}

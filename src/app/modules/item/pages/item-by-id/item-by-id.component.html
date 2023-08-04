@@ -1,269 +1,159 @@
-<ng-container *ngIf="userProfile$ | async as userProfile">
-  <ng-container *ngIf="state$ | async as state">
-    <ng-container *ngIf="state.isReady && state.data as itemData">
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.isReady && state.data as itemData">
 
-      <ng-container *ngIf="taskTabs$ | async as taskTabs">
-        <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
+    <ng-container>
+      <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
 
-        <alg-access-code-view
-          *ngIf="showAccessCodeField$ | async"
-          i18n-sectionLabel sectionLabel="Access to activity"
-          i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
-          [itemData]="itemData"
-          (groupJoined)="reloadItem()"
-        ></alg-access-code-view>
+      <alg-access-code-view
+        *ngIf="showAccessCodeField$ | async"
+        i18n-sectionLabel sectionLabel="Access to activity"
+        i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
+        [itemData]="itemData"
+        (groupJoined)="reloadItem()"
+      ></alg-access-code-view>
 
-        <alg-item-permissions
-          *ngIf="watchedGroup$ | async as watchedGroup"
-          [itemData]="itemData"
-          [watchedGroup]="watchedGroup"
-          (changed)="reloadItem()"
-        ></alg-item-permissions>
+      <alg-item-permissions
+        *ngIf="watchedGroup$ | async as watchedGroup"
+        [itemData]="itemData"
+        [watchedGroup]="watchedGroup"
+        (changed)="reloadItem()"
+      ></alg-item-permissions>
 
-        <nav
-          class="alg-nav-tab"
-          [style.display]="!(showProgressTab$ | async) && taskTabs.length <= 1 && !(itemData.item.permissions | allowsEditingAll) && !chapterUserProgressTab?.isActive && !chapterGroupProgressTab?.isActive && !historyTab?.isActive && !dependenciesTab.isActive && !parametersTab.isActive && !taskEditTab.isActive ? 'none' : 'flex'">
-          <a
-            class="alg-nav-tab-item"
-            [routerLink]="'./'"
-            routerLinkActive #contentTab="routerLinkActive"
-            [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored' }"
-            [class.active]="contentTab.isActive"
-            [hidden]="taskTabs.length > 1 || editChildrenTab.isActive"
-            i18n
-          >
-            Content
-          </a>
-          <a
-            class="alg-nav-tab-item"
-            [routerLink]="'./edit-children'"
-            routerLinkActive #editChildrenTab="routerLinkActive"
-            [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored' }"
-            [class.active]="editChildrenTab.isActive"
-            [hidden]="taskTabs.length > 1 || !editChildrenTab.isActive"
-            i18n
-          >
-            Content
-          </a>
-          <ng-container *ngIf="taskTabs.length > 1">
-            <a
-              *ngFor="let tab of taskTabs"
-              class="alg-nav-tab-item cursor-pointer"
-              [routerLink]="'./'"
-              [class.active]="contentTab.isActive && tab.view === taskView"
-              (click)="setTaskTabActive(tab)"
-            >
-              {{ tab.name }}
-            </a>
-          </ng-container>
-          <a
-            [hidden]="(!editorUrl || !(itemData.item.permissions | allowsEditingAll)) && !taskEditTab.isActive"
-            class="alg-nav-tab-item"
-            [routerLink]="'./edit'"
-            routerLinkActive #taskEditTab="routerLinkActive"
-            [class.active]="taskEditTab?.isActive"
-          >
-            <span i18n>Edit</span>
-          </a>
-
-          <ng-container *ngIf="selectors$ | async as selectors">
-            <a
-              [hidden]="!(showProgressTab$ | async) && !chapterUserProgressTab.isActive"
-              class="alg-nav-tab-item"
-              [ngClass]="{'active': !!chapterGroupProgressTab.isActive, 'prev': !!chapterUserProgressTab?.isActive}"
-              [routerLink]="'./progress/chapter'"
-              routerLinkActive #chapterGroupProgressTab="routerLinkActive"
-              *ngIf="selectors === 'withGroupProgress'"
-              i18n
-            >
-              Stats
-            </a>
-
-            <a
-              class="alg-nav-tab-item"
-              [ngClass]="{'active': !!chapterUserProgressTab.isActive}"
-              [routerLink]="'./progress/chapter-user-progress'"
-              routerLinkActive #chapterUserProgressTab="routerLinkActive"
-              [style.display]="((showProgressTab$ | async) && selectors === 'withUserProgress' || !!chapterUserProgressTab.isActive) ? 'flex' : 'none'"
-              i18n
-            >
-              Stats
-            </a>
-
-            <a
-              [hidden]="!(showProgressTab$ | async) && !historyTab.isActive"
-              class="alg-nav-tab-item"
-              [ngClass]="{'active': !!historyTab.isActive}"
-              [routerLink]="'./progress/history'"
-              routerLinkActive #historyTab="routerLinkActive"
-              i18n
-            >
-              History
-            </a>
-          </ng-container>
-
-          <a
-            [hidden]="!(itemData.item.permissions | allowsEditingAll) && !dependenciesTab.isActive"
-            class="alg-nav-tab-item"
-            [routerLink]="'./dependencies'"
-            routerLinkActive #dependenciesTab="routerLinkActive"
-            [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored' }"
-            [class.active]="dependenciesTab.isActive"
-          >
-            <span i18n>Dependencies</span>
-          </a>
-          <a
-            [hidden]="!(itemData.item.permissions | allowsEditingAll) && !parametersTab.isActive"
-            class="alg-nav-tab-item"
-            [routerLink]="'./parameters'"
-            routerLinkActive #parametersTab="routerLinkActive"
-            [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
-            [class.active]="parametersTab.isActive"
-          >
-            <span i18n>Parameters</span>
-          </a>
-          <a
-            [hidden]="(userProfile.tempUser || !showItemThreadWidget) && !forumTab.isActive"
-            class="alg-nav-tab-item"
-            [routerLink]="'./forum'"
-            routerLinkActive #forumTab="routerLinkActive"
-            [class.active]="forumTab.isActive"
-          >
-            <span i18n>Forum</span>
-          </a>
-        </nav>
-        <div
-          class="content-container"
-          #contentContainer
-          [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
-        >
-          <ng-container *ngIf="contentTab.isActive || editChildrenTab.isActive || taskTabs.length > 0">
-            <alg-error *ngIf="answerLoadingError$ | async as error; else noAnswerLoadingError">
-              <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
-              <ng-template #fallback>
-                <ng-container i18n>
-                  Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
-                </ng-container>
-              </ng-template>
-              <p *ngIf="!error.isForbidden">{{ errorMessageContactUs }}</p>
-            </alg-error>
-
-            <ng-template #noAnswerLoadingError>
-              <ng-container *ngrxLet="taskConfig$ as taskConfig">
-                <div *ngIf="taskConfig && taskConfig.readOnly && contentTab.isActive" class="indicator">
-                  <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
-                </div>
-                <alg-item-content
-                  class="alg-flex-1"
-                  [style.display]="contentTab.isActive || editChildrenTab.isActive ? 'flex' : 'none'"
-                  [itemData]="itemData"
-                  [taskConfig]="taskConfig"
-                  [savingAnswer]="(savingAnswer$ | async) ?? false"
-                  [(taskView)]="taskView"
-                  [editModeEnabled]="editChildrenTab.isActive"
-                  (taskTabsChange)="setTaskTabs($event)"
-                  (scoreChange)="onScoreChange($event)"
-                  (skipSave)="skipBeforeUnload()"
-                  (refresh)="reloadItem()"
-                  (editorUrl)="editorUrl = $event"
-                  (fullFrameTask)="fullFrameContent$.next($event)"
-                ></alg-item-content>
+      <alg-tab-bar *ngIf="shouldDisplayTabBar$ | async" />
+      <div
+        class="content-container"
+        #contentContainer
+        [@threadOpenClose]="(threadOpened$ | async) ? 'opened' : 'closed'"
+        *ngrxLet="currentTab$ as currentTab"
+      >
+        <ng-container *ngIf="itemData.item.type === 'Task' || currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit'">
+          <alg-error *ngIf="answerLoadingError$ | async as error; else noAnswerLoadingError">
+            <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
+            <ng-template #fallback>
+              <ng-container i18n>
+                Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
               </ng-container>
             </ng-template>
+            <p *ngIf="!error.isForbidden">{{ errorMessageContactUs }}</p>
+          </alg-error>
 
-          </ng-container>
-
-          <alg-item-task-edit
-            *ngIf="taskEditTab?.isActive"
-            [editorUrl]="editorUrl"
-            (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
-          ></alg-item-task-edit>
-
-          <ng-container *ngIf="!!historyTab?.isActive || !!chapterGroupProgressTab?.isActive || !!chapterUserProgressTab?.isActive">
-            <ng-container *ngrxLet="isWatching$ as isWatching">
-              <ng-container *ngIf="(!isWatching && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
-                <div *ngIf="(savingAnswer$ | async) ?? false" class="save-answer-loader">
-                  <p class="save-answer-loader-message">
-                    <span i18n>Saving answer before loading submission...</span>
-                    <alg-loading size="medium"></alg-loading>
-                    <p-button type="button" (click)="skipBeforeUnload()" i18n-label label="Skip"></p-button>
-                  </p>
-                </div>
-
-                <alg-item-log-view
-                  class="alg-flex-1"
-                  *ngIf="!!historyTab?.isActive"
-                  [itemData]="itemData"
-                ></alg-item-log-view>
-
-                <alg-chapter-group-progress
-                  class="alg-flex-1"
-                  *ngIf="!!chapterGroupProgressTab?.isActive"
-                  [itemData]="itemData"
-                ></alg-chapter-group-progress>
-
-                <alg-chapter-user-progress
-                  class="alg-flex-1"
-                  *ngIf="!!chapterUserProgressTab?.isActive"
-                  [itemData]="itemData"
-                ></alg-chapter-user-progress>
-
-              </ng-container>
-              <ng-template #unallowed>
-                <p class="not-allow-caption" *ngIf="isWatching" i18n>
-                  You are not allowed to view the progress of other users on this content.
-                </p>
-                <p class="not-allow-caption" *ngIf="!isWatching" i18n>
-                  You are not allowed to view this content.
-                </p>
-              </ng-template>
+          <ng-template #noAnswerLoadingError>
+            <ng-container *ngrxLet="taskConfig$ as taskConfig">
+              <div *ngIf="taskConfig && taskConfig.readOnly && currentTab?.tag ==='alg-content'" class="indicator">
+                <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
+              </div>
+              <alg-item-content
+                class="alg-flex-1"
+                [style.display]="currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit' || currentTab?.isTaskTab ? 'flex' : 'none'"
+                [itemData]="itemData"
+                [taskConfig]="taskConfig"
+                [savingAnswer]="(savingAnswer$ | async) ?? false"
+                [taskView]="(currentTaskView$ | async) ?? undefined"
+                [editModeEnabled]="currentTab?.tag ==='alg-children-edit'"
+                (taskViewChange)="setTaskView($event)"
+                (taskTabsChange)="setTaskTabs($event)"
+                (scoreChange)="onScoreChange($event)"
+                (skipSave)="skipBeforeUnload()"
+                (refresh)="reloadItem()"
+                (editorUrl)="editorUrlChanged($event)"
+                (disablePlatformProgress)="disablePlatformProgressChanged($event)"
+                (fullFrameTask)="fullFrameContent$.next($event)"
+              ></alg-item-content>
             </ng-container>
-          </ng-container>
+          </ng-template>
 
-          <ng-container *ngIf="dependenciesTab.isActive">
-            <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>
-          </ng-container>
+        </ng-container>
 
-          <ng-container *ngIf="parametersTab.isActive">
-            <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
-          </ng-container>
+        <alg-item-task-edit
+          *ngIf="currentTab?.tag ==='alg-task-edit'"
+          [editorUrl]="editorUrl"
+          (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
+        ></alg-item-task-edit>
 
-          <ng-container *ngIf="forumTab.isActive">
-            <alg-error
-              class="alg-flex-1"
-              i18n-message message="You are not allowed to view this content."
-              *ngIf="userProfile.tempUser || !showItemThreadWidget; else forumContent"
-            ></alg-error>
-            <ng-template #forumContent>
-              <alg-item-forum class="alg-flex-1" [itemData]="itemData"></alg-item-forum>
+        <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-progress-matrix', 'alg-chapter-summary'].includes(currentTab.tag)">
+          <ng-container *ngrxLet="isWatching$ as isWatching">
+            <ng-container *ngIf="(!isWatching && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
+              <div *ngIf="(savingAnswer$ | async) ?? false" class="save-answer-loader">
+                <p class="save-answer-loader-message">
+                  <span i18n>Saving answer before loading submission...</span>
+                  <alg-loading size="medium"></alg-loading>
+                  <p-button type="button" (click)="skipBeforeUnload()" i18n-label label="Skip"></p-button>
+                </p>
+              </div>
+
+              <alg-item-log-view
+                class="alg-flex-1"
+                *ngIf="currentTab?.tag ==='alg-log'"
+                [itemData]="itemData"
+              ></alg-item-log-view>
+
+              <alg-chapter-group-progress
+                class="alg-flex-1"
+                *ngIf="currentTab?.tag === 'alg-progress-matrix'"
+                [itemData]="itemData"
+              ></alg-chapter-group-progress>
+
+              <alg-chapter-user-progress
+                class="alg-flex-1"
+                *ngIf="currentTab?.tag ==='alg-chapter-summary'"
+                [itemData]="itemData"
+              ></alg-chapter-user-progress>
+
+            </ng-container>
+            <ng-template #unallowed>
+              <p class="not-allow-caption" *ngIf="isWatching" i18n>
+                You are not allowed to view the progress of other users on this content.
+              </p>
+              <p class="not-allow-caption" *ngIf="!isWatching" i18n>
+                You are not allowed to view this content.
+              </p>
             </ng-template>
           </ng-container>
-        </div>
-        <alg-thread-container [topCompensation]="contentContainerTop" *ngIf="showItemThreadWidget"></alg-thread-container>
-      </ng-container>
+        </ng-container>
 
+        <ng-container *ngIf="currentTab?.tag ==='alg-dependencies'">
+          <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab?.tag ==='alg-parameters'">
+          <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab?.tag === 'alg-forum'">
+          <alg-error
+            class="alg-flex-1"
+            i18n-message message="You are not allowed to view this content."
+            *ngIf="(userProfile$ | async)?.tempUser || !showItemThreadWidget; else forumContent"
+          ></alg-error>
+          <ng-template #forumContent>
+            <alg-item-forum class="alg-flex-1" [itemData]="itemData"></alg-item-forum>
+          </ng-template>
+        </ng-container>
+      </div>
+      <alg-thread-container [topCompensation]="contentContainerTop" *ngIf="showItemThreadWidget"></alg-thread-container>
     </ng-container>
 
-    <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
+  </ng-container>
 
-    <ng-container *ngIf="state.isError">
-      <p class="alg-error-message" *ngIf="state.error && ($any(state.error).status === 403 || $any(state.error).status === 404); else unknownError" i18n>
-        This content does not exist or you are not allowed to view it.
-      </p>
-      <ng-template #unknownError><p class="alg-error-message" i18n>Error while loading the item.</p></ng-template>
-      <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
-        <span i18n>Go back to the </span>
-        <a
-          class="alg-link base-color"
-          routerLink="/"
-          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
-          routerLinkActive #backToHome="routerLinkActive"
-          i18n
-        >
-          home page
-        </a>
-      </p>
-    </ng-container>
+  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
+
+  <ng-container *ngIf="state.isError">
+    <p class="alg-error-message" *ngIf="state.error && ($any(state.error).status === 403 || $any(state.error).status === 404); else unknownError" i18n>
+      This content does not exist or you are not allowed to view it.
+    </p>
+    <ng-template #unknownError><p class="alg-error-message" i18n>Error while loading the item.</p></ng-template>
+    <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
+      <span i18n>Go back to the </span>
+      <a
+        class="alg-link base-color"
+        routerLink="/"
+        [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+        routerLinkActive #backToHome="routerLinkActive"
+        i18n
+      >
+        home page
+      </a>
+    </p>
   </ng-container>
 </ng-container>
 
