@@ -20,12 +20,13 @@
 
 .item-title {
   margin: 0;
+  line-height: 1em;
 }
 
 .item-subtitle {
-  margin: 0 0 2rem 0;
+  margin: .5rem 0 0 0;
   color: var(--base-text-color);
-  font-size: 1.6rem;
   font-weight: 300;
-  line-height: toRem(24);
+  font-size: 1.25rem;
+  line-height: 1em;
 }
