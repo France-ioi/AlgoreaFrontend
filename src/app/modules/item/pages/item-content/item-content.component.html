@@ -62,6 +62,7 @@
           (skipSave)="skipSave.emit()"
           (refresh)="refresh.emit()"
           (editorUrl)="editorUrl.emit($event)"
+          (disablePlatformProgress)="disablePlatformProgress.emit($event)"
           (fullFrame)="fullFrameTask.emit($event)"
           (loadingComplete)="isTaskLoaded$.next($event)"
         ></alg-item-display>

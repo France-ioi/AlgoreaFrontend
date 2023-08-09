@@ -33,6 +33,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   @Output() skipSave = new EventEmitter<void>();
   @Output() refresh = new EventEmitter<void>();
   @Output() editorUrl = new EventEmitter<string|undefined>();
+  @Output() disablePlatformProgress = new EventEmitter<boolean>();
   @Output() fullFrameTask = new EventEmitter<boolean>();
 
   isTaskLoaded$ = new BehaviorSubject(false); // whether the task has finished loading, i.e. is ready or in error

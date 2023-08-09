@@ -43,7 +43,7 @@ export class ItemRouter {
    * Extract (bit hacky) the item page from what is currently displayed.
    * Return undefined if we are not on an "item" page
    */
-  private currentItemPage(): string[]|undefined {
+  currentItemPage(): string[]|undefined {
     const page = this.currentItemPagePath()?.slice(2);
     return page && page.length > 0 ? page : undefined;
   }
