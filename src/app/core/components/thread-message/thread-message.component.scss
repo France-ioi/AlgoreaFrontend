@@ -68,8 +68,6 @@
   &.transparent {
     .bubble {
       color: var(--alg-secondary-color);
-      font-size: toRem(16);
-      font-weight: 400;
       line-height: toRem(24);
       background-color: transparent;
     }
@@ -84,6 +82,10 @@
   &.started {
     margin-bottom: toRem(24);
     opacity: .5;
+
+    .bubble {
+      font-size: toRem(16);
+    }
 
     .date {
       text-align: center;
@@ -115,6 +117,8 @@
   position: relative;
   border-radius: toRem(8) toRem(8) toRem(8) 0;
   max-width: 100%;
+  font-size: 0.9rem;
+  font-weight: 300;
 }
 
 .date {
@@ -124,7 +128,6 @@
 .classical-event {
   display: flex;
   align-items: center;
-  font-size: 1rem;
   line-height: 1rem;
 }
 
@@ -133,8 +136,7 @@
 }
 
 .message-event {
-  margin: toRem(7) toRem(16) toRem(9) toRem(16);
-  font-size: toRem(16);
+  margin: toRem(4) toRem(16) toRem(6) toRem(16);
   line-height: toRem(24);
   font-weight: 400;
 }
