@@ -1,6 +1,6 @@
 
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs';
 import { TabService } from 'src/app/shared/services/tab.service';
 import { TaskTab } from '../item-display/item-display.component';
 import { appConfig } from 'src/app/shared/helpers/config';
@@ -55,7 +55,8 @@ export class ItemTabs implements OnDestroy {
     this.disablePlatformProgressOnTasks$,
     this.editTabEnabled$,
     this.userSession.userProfile$,
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)), // so that displayed but forbidden tabs are hidden after nav
+    // so that displayed but forbidden tabs are hidden after nav:
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith()),
   ]).pipe(
     debounceTime(0),
     map(([ state, taskTabs, watchedGroup, disablePlatformProgressOnTasks, editTabEnabled, userProfile ]) => {

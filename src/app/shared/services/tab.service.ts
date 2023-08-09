@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, filter, map, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, startWith, withLatestFrom } from 'rxjs';
 import { UrlCommand } from '../helpers/url';
 
 interface Tab {
@@ -25,7 +25,7 @@ export class TabService implements OnDestroy {
 
   subscription = combineLatest([
     this.tabs$,
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {})),
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith()),
   ]).pipe(
     withLatestFrom(this.activeTab$)
   ).subscribe(([ [ tabs ], activeTab ]) => {
