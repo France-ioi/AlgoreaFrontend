@@ -93,8 +93,8 @@ export class ThreadService implements OnDestroy {
         contentWatchPermission: content.details.permissions,
       };
     }),
-    startWith(undefined),
     distinctUntilChanged((x, y) => x?.participant.id === y?.participant.id && x?.itemRoute.id === y?.itemRoute.id),
+    startWith(undefined),
     shareReplay(1),
   );
   private threadSubscriptionSub = this.threadInfo$.pipe(
