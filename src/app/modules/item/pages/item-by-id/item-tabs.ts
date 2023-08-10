@@ -56,7 +56,7 @@ export class ItemTabs implements OnDestroy {
     this.editTabEnabled$,
     this.userSession.userProfile$,
     // so that displayed but forbidden tabs are hidden after nav:
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith()),
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith(undefined)),
   ]).pipe(
     debounceTime(0),
     map(([ state, taskTabs, watchedGroup, disablePlatformProgressOnTasks, editTabEnabled, userProfile ]) => {

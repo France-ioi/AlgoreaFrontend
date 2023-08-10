@@ -25,7 +25,7 @@ export class TabService implements OnDestroy {
 
   subscription = combineLatest([
     this.tabs$,
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith()),
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith(undefined)),
   ]).pipe(
     withLatestFrom(this.activeTab$)
   ).subscribe(([ [ tabs ], activeTab ]) => {
