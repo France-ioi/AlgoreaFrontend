@@ -15,6 +15,7 @@ import { CrashReportingService } from './services/crash-reporting.service';
 import { Location } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
+import { DiscussionService } from '../modules/item/services/discussion.service';
 
 @Component({
   selector: 'alg-root',
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
   canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
+  threadState$ = this.discussionService.state$;
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
   watchedGroupError$ = this.groupWatchingService.watchedGroupError$;
@@ -60,6 +62,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
     private chunkErrorService: ChunkErrorService,
+    private discussionService: DiscussionService,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;

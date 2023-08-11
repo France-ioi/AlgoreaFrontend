@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { RawItemRoute } from 'src/app/shared/routing/item-route';
-import { IncomingThreadEvent } from '../../services/threads-inbound-events';
+import { IncomingThreadEvent } from '../../../modules/item/services/threads-inbound-events';
 import { UserInfo } from './thread-user-info';
 
 @Component({

@@ -1,0 +1,34 @@
+@import 'src/assets/scss/functions';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 toRem(14);
+  height: toRem(57);
+  border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+}
+
+.header-title {
+  color: var(--alg-light-text-color);
+  font-size: toRem(20);
+}
+
+.header-button {
+  margin-left: toRem(15);
+}
+
+.thread {
+  flex: 1;
+  overflow: hidden;
+}
+
+.divider {
+  margin: 0 var(--alg-space-size-5) var(--alg-space-size-6) var(--alg-space-size-5);
+}

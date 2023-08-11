@@ -1,6 +1,6 @@
-@import "../../variables";
-@import "src/geometry.scss";
-@import "src/assets/scss/functions";
+@import '../../variables';
+@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 .container {
   position: absolute;
@@ -14,7 +14,7 @@
 
 .left-menu {
   position: fixed;
-  width: var(--left-panel-size);
+  width: var(--left-panel-width);
   height: 100%;
   left: 0;
   top: 0;
@@ -22,7 +22,7 @@
   background-color: var(--alg-light-bg-color);
 
   &.collapsed {
-    left: calc(0rem - var(--left-panel-size));
+    left: calc(0rem - var(--left-panel-width));
   }
 
   &.animated {
@@ -33,8 +33,24 @@
   }
 }
 
+.right-thread {
+  width: var(--right-thread-width);
+  height: 100%;
+  margin-right: calc(0rem - var(--right-thread-width));
+  background-color: var(--alg-light-bg-color);
+
+  transition: margin-right var(--right-thread-animation);
+  -webkit-transition: margin-right var(--right-thread-animation);
+  -moz-transition: margin-right var(--right-thread-animation);
+  -o-transition: margin-right var(--right-thread-animation);
+
+  &.opened {
+    margin-right: 0;
+  }
+}
+
 .right-container {
-  margin-left: var(--left-panel-size);
+  margin-left: var(--left-panel-width);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -58,8 +74,15 @@
     border-radius: 0;
   }
 
+  &.thread-opened {
+    margin-right: toRem(--right-thread-menu-animation);
+    border-top-right-radius: toRem(16);
+    border-bottom-right-radius: toRem(16);
+  }
+
   @media screen and (max-width: 599.98px) {
     margin-left: 0;
+    margin-right: 0;
   }
 }
 
@@ -104,5 +127,22 @@
     &.collapsed {
       left: -100%;
     }
+  }
+
+  .right-thread {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 100%;
+    z-index: 999;
+
+    &.collapsed {
+      right: -100%;
+    }
+  }
+
+  .right-container {
+    border-radius: 0 !important;
   }
 }

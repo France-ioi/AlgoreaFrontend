@@ -31,7 +31,7 @@ import { TopRightControlsComponent } from './components/top-right-controls/top-r
 import { DropdownModule } from 'primeng/dropdown';
 import { MenuModule } from 'primeng/menu';
 import { TopRightMenuComponent } from './components/top-right-menu/top-right-menu.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ObservationBarComponent } from './components/observation-bar/observation-bar.component';
 import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
@@ -45,8 +45,12 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { LeftMenuSearchComponent } from './components/left-menu-search/left-menu-search.component';
 import { LeftSearchResultComponent } from './components/left-search-result/left-search-result.component';
 import { LeftMenuBackButtonComponent } from './components/left-menu-back-button/left-menu-back-button.component';
+import { ThreadComponent } from './components/thread/thread.component';
+import { ThreadContainerComponent } from './components/thread-container/thread-container.component';
+import { ThreadMessageComponent } from './components/thread-message/thread-message.component';
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -71,6 +75,9 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
     TopBarComponent,
     ContentTopBarComponent,
     RedirectToIdComponent,
+    ThreadComponent,
+    ThreadContainerComponent,
+    ThreadMessageComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,6 +99,8 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
     ConfirmPopupModule,
     OverlayPanelModule,
     LayoutModule,
+    InputTextareaModule,
+    ReactiveFormsModule,
   ],
   providers: [
     ConfirmationService,

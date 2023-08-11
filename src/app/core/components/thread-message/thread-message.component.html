@@ -1,0 +1,70 @@
+<div
+  class="message-container"
+  [ngClass]="{
+    'left': !userInfo?.isThreadParticipant && event.label === 'message',
+    'right': userInfo?.isThreadParticipant && event.label === 'message',
+    'full-width transparent': ['result_started', 'submission'].includes(event.label),
+    'started': event.label === 'result_started'
+  }"
+>
+  <div class="message">
+    <div class="name-section" *ngIf="event.label === 'message'">
+      <span class="name" *ngIf="!userInfo?.isCurrentUser">{{ userInfo?.name }}</span>
+      <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
+    </div>
+    <div class="bubble">
+      <div
+        class="message-event"
+        [innerHTML]="event.data.content | allowDisplayCodeSnippet : userInfo?.isCurrentUser && event.label === 'message' ? 'light' : 'dark'"
+        *ngIf="event.label === 'message'"
+      ></div>
+      <ng-container *ngIf="['result_started', 'submission'].includes(event.label)">
+        <hr class="divider alg-divider" *ngIf="event.label === 'submission'">
+        <div class="classical-event">
+          <alg-score-ring
+            class="score-ring"
+            [currentScore]="event.data.score"
+            [diameter]="32"
+            *ngIf="event.label === 'submission' && event.data.score !== undefined"
+          ></alg-score-ring>
+          <div>
+            <div>
+              <span *ngIf="userInfo?.isCurrentUser; else notCurrentUser" i18n>
+                You
+              </span>
+              <ng-template #notCurrentUser>
+                <span *ngIf="userInfo?.isThreadParticipant; else anotherUser" i18n>
+                  The user
+                </span>
+              </ng-template>
+              <ng-template #anotherUser>
+                <span>
+                  {{ userInfo?.name }}
+                </span>
+              </ng-template>
+              <span *ngIf="event.label === 'result_started'" i18n>started the activity</span>
+              <ng-container *ngIf="event.label === 'submission'">
+                <span i18n>submitted a</span>
+                <a
+                  class="alg-link"
+                  [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers }"
+                  [routerLink]="itemRoute | withAnswer: { id: event.data.answerId } | url"
+                  *ngIf="itemRoute"
+                  i18n
+                >
+                  solution
+                </a>
+              </ng-container>
+            </div>
+            <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
+          </div>
+        </div>
+        <hr class="divider alg-divider" *ngIf="event.label === 'submission'">
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #sentAt>
+  <span i18n>Sent at {{ event.time | date : 'short' }}</span>
+</ng-template>
