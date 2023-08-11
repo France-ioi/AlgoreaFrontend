@@ -11,7 +11,7 @@ export class ErrorComponent {
   @Input() message?: string;
   @Input() icon?: string;
   @Input() showRefreshButton = false;
-  @Input() buttonCaption = 'Back home';
+  @Input() buttonCaption = 'Retry';
   @Input() buttonStyleClass?: string;
   @Input() link?: string;
 
