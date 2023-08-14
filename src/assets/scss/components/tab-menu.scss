@@ -1,6 +1,8 @@
 @import 'src/assets/scss/functions';
 
 .alg-tab-menu {
+  margin-bottom: var(--alg-space-size-4);
+
   .p-tabmenu-nav {
     &:after {
       content: '';
@@ -59,6 +61,13 @@
       font-weight: 300 !important;
       text-decoration: none;
       opacity: .5;
+    }
+  }
+
+  .p-tabmenu-nav-btn {
+    &.p-link {
+      background: var(--alg-white-color);
+      color: var(--alg-primary-color);
     }
   }
 
