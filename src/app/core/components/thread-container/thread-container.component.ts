@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { DiscussionService } from '../../../modules/item/services/discussion.service';
-import { filter, map, Subscription } from 'rxjs';
-import { isNotUndefined } from '../../../shared/helpers/null-undefined-predicates';
+import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
+import { filter, Subscription } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
 
 @Component({
@@ -12,7 +11,9 @@ import { ThreadComponent } from '../thread/thread.component';
 export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   @ViewChild(ThreadComponent) threadComponent?: ThreadComponent;
 
-  visible$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
+  @Input() topCompensation = 0;
+
+  visible$ = this.discussionService.visible$;
 
   private subscription?: Subscription;
 
