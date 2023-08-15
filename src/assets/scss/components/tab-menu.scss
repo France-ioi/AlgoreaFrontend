@@ -1,7 +1,24 @@
 @import 'src/assets/scss/functions';
 
 .alg-tab-menu {
-  margin-bottom: var(--alg-space-size-4);
+  &.for-header {
+    height: 100%;
+
+    .p-tabmenu-nav-container, .p-tabmenu-nav-content, .p-tabmenu-nav {
+      height: 100%;
+    }
+
+    .p-tabmenu-nav {
+      &:after {
+        content: none;
+      }
+    }
+
+    .p-menuitem-link {
+      margin: 0 toRem(7.5) !important;
+      padding-bottom: 0 !important;
+    }
+  }
 
   .p-tabmenu-nav {
     &:after {

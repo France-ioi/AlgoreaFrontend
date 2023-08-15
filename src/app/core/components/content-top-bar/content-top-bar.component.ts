@@ -10,6 +10,7 @@ import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../../shared/models/content/group-info';
+import { TabService } from '../../../shared/services/tab.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -42,6 +43,9 @@ export class ContentTopBarComponent {
     }),
     filter(navigationNeighbors => !!navigationNeighbors?.isReady),
   );
+  readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
+  readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
+  readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   constructor(
     private groupWatchingService: GroupWatchingService,
@@ -51,6 +55,7 @@ export class ContentTopBarComponent {
     private groupNavTreeService: GroupNavTreeService,
     private discussionService: DiscussionService,
     private layoutService: LayoutService,
+    private tabService: TabService,
   ) {}
 
   toggleThreadVisibility(visible: boolean): void {
@@ -60,5 +65,4 @@ export class ContentTopBarComponent {
   showLeftMenu(): void {
     this.layoutService.toggleLeftMenu(true);
   }
-
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Observable, combineLatest, map } from 'rxjs';
 import { TabService } from 'src/app/shared/services/tab.service';
@@ -9,6 +9,7 @@ import { TabService } from 'src/app/shared/services/tab.service';
   styleUrls: [ './tab-bar.component.scss' ],
 })
 export class TabBarComponent {
+  @Input() styleClass?: string;
 
   tabs$: Observable<MenuItem[]> = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
     map(([ tabs, active ]) => tabs.map(tab => ({
