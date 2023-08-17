@@ -48,7 +48,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           currentUserPermissions: item.permissions,
           noScore: item.noScore,
         },
-        ...participantProgress.children.map(itemData => ({
+        ...(participantProgress.children || []).map(itemData => ({
           id: itemData.itemId,
           type: itemData.type,
           title: itemData.string.title || '',
