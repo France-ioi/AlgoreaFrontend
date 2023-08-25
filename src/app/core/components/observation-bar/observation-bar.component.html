@@ -1,19 +1,21 @@
-<div class="modebar-wrapper editor-bar-wrapper" *ngIf="watchedGroup$ | async as watchedGroup">
-  <span class="modebar-left-icon">
-    <i class="fa fa-eye"></i>
-  </span>
-  <span class="modebar-title">
-    <ng-container i18n>Observation Mode</ng-container>
-    <ng-container *ngIf="watchedGroup.name">
-      : <a
-        class="modebar-link alg-link white-color hover-underline"
-        [routerLink]="watchedGroup.route | groupLink">
-        {{ watchedGroup.name }}
-      </a>
-    </ng-container>
-  </span>
-
-  <button pButton type="button" icon="pi pi-times" class="p-button-rounded" (click)="onCancelClick()"></button>
-
-  <div class="right-border-adapter">&nbsp;</div>
+<div class="wrapper" [ngClass]="{ 'only-icon-mode': onlyIcon }" *ngIf="watchedGroup$ | async as watchedGroup">
+  <div class="left-section alg-flex-1">
+    <i class="left-icon alg-secondary-color ph-duotone ph-eye"></i>
+    <span class="title" *ngIf="!onlyIcon">
+      <ng-container *ngIf="caption; else watchedGroupName">
+        <span class="alg-secondary-color">{{ caption }}</span>
+      </ng-container>
+      <ng-template #watchedGroupName>
+        <ng-container *ngIf="watchedGroup.name">
+          <a
+            class="link alg-link hover-underline"
+            [routerLink]="watchedGroup.route | groupLink"
+          >
+            {{ caption || watchedGroup.name }}
+          </a>
+        </ng-container>
+      </ng-template>
+    </span>
+  </div>
+  <button pButton type="button" icon="ph ph-x" class="alg-button-icon secondary-color no-bg" (click)="onCancelClick()"></button>
 </div>

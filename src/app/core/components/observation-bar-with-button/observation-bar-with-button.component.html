@@ -1,0 +1,22 @@
+<div class="container" #containerRef>
+  <alg-observation-bar [onlyIcon]="!!(isNarrowScreen$ | async)" *ngIf="!!(watchedGroup$ | async)"></alg-observation-bar>
+  <ng-container *ngrxLet="currentGroupContent$; let currentGroupContent">
+    <button
+      class="alg-button-icon no-bg primary-color start-watch-button"
+      [ngClass]="{ 'active-secondary': currentGroupContent.isBeingWatched }"
+      pButton
+      type="button"
+      icon="ph ph-eye"
+      (click)="toggleWatchingMode($event, containerRef, currentGroupContent)"
+      *ngIf="currentGroupContent !== undefined && !currentGroupContent.isBeingWatched"
+    ></button>
+  </ng-container>
+</div>
+<p-overlayPanel
+  #op
+  [style]="{ width: '450px' }"
+  appendTo="body"
+>
+  <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>
+</p-overlayPanel>
+

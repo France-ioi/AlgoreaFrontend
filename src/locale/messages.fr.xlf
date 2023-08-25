@@ -74,10 +74,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="2192178401851161061" datatype="html">
         <source>Unable to load the list.</source><target state="translated">Erreur lors du chargement de la liste.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="6206098913491165963" datatype="html">
-        <source> This menu is filtered by the observation mode. </source><target state="new"> This menu is filtered by the observation mode. </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="5630181057184644670" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="3502389172320555501" datatype="html">
+        <source>Observation mode</source><target state="new">Observation mode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit><trans-unit id="5630181057184644670" datatype="html">
         <source>First <x id="INTERPOLATION" equiv-text="{{ data.length }}"/> results</source><target state="new">First <x id="INTERPOLATION" equiv-text="{{ data.length }}"/> results</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context>
@@ -89,13 +92,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="4213825410774196775" datatype="html">
         <source> No results </source><target state="new"> No results </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4219108310098283044" datatype="html">
-        <source>Observation Mode</source><target state="translated">Mode observation</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/components/observation-bar/observation-bar.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit><trans-unit id="3863946283840310958" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="3863946283840310958" datatype="html">
         <source>Oops… We didn’t find that page</source><target state="new">Oops… We didn’t find that page</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pages/page-not-found/page-not-found.component.html</context>

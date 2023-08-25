@@ -44,6 +44,12 @@
     }
   }
 
+  &.secondary-color {
+    .p-button-icon {
+      color: var(--alg-secondary-color);
+    }
+  }
+
   &.no-bg {
     width: auto;
     margin: 0;

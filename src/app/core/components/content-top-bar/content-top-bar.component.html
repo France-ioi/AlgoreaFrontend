@@ -1,5 +1,3 @@
-<alg-observation-bar *ngIf="!!(watchedGroup$ | async)"></alg-observation-bar>
-
 <ng-container *ngIf="currentContent$ | async as currentContent">
   <div class="content-top-bar">
     <div class="left-pane">
@@ -44,6 +42,7 @@
       </ng-container>
     </div>
     <div class="right-pane">
+      <alg-observation-bar-with-button></alg-observation-bar-with-button>
       <button
         *ngIf="discussionState$ | async as discussion"
         class="alg-button-icon no-bg primary-color margin-left"
@@ -53,10 +52,6 @@
         icon="ph-duotone ph-chats-circle"
         (click)="toggleThreadVisibility(!discussion.visible)"
       ></button>
-      <alg-watch-button
-        class="margin-left"
-        *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
-      ></alg-watch-button>
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
         class="neighbor-widget margin-left"

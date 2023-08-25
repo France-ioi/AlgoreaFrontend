@@ -86,9 +86,7 @@
       ></alg-error>
 
       <div class="watching-warning" *ngIf="state.isReady && (isWatching$ | async) && [0, 1].includes(activeTab.index)">
-        <div class="content" i18n>
-          This menu is filtered by the observation mode.
-        </div>
+        <alg-observation-bar [caption]="!!(isNarrowScreen$ | async) ? undefined : observationModeCaption"></alg-observation-bar>
       </div>
 
       <div class="alg-flex-1 scroll-wrapper" *ngIf="state.data">

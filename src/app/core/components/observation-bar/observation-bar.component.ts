@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupWatchingService } from '../../services/group-watching.service';
 
 @Component({
@@ -8,6 +8,8 @@ import { GroupWatchingService } from '../../services/group-watching.service';
 })
 export class ObservationBarComponent {
   @Output() cancel = new EventEmitter<void>();
+  @Input() caption?: string;
+  @Input() onlyIcon = false;
 
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
