@@ -1,7 +1,6 @@
 <div
   class="item-display alg-flex-1"
   [ngClass]="{ 'full-frame': fullFrame$ | async }"
-  [style.display]="!state.isFetching ? 'flex' : 'none'"
   *ngIf="state$ | async as state"
 >
   <div class="error-container alg-flex-1" *ngIf="(state.isError || (metadataError$ | async)) && !showTaskAnyway" [algFullHeightContent]="true">
@@ -62,7 +61,6 @@
   </div>
   <div
     class="iframe-container alg-flex-1"
-    [style.display]="(state.isError || (metadataError$ | async)) && !showTaskAnyway ? 'none' : 'flex'"
   >
     <div class="saving-answer" *ngIf="savingAnswer">
       <p class="saving-answer-message">
