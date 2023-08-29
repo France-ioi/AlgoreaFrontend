@@ -48,6 +48,7 @@
       <ng-container *ngIf="itemData.item.url; else noUrl">
         <alg-item-display
           class="alg-flex-1"
+          [ngClass]="{ 'alg-opacity-0': !(isTaskLoaded$ | async) }"
           [route]="itemData.route"
           [editingPermission]="itemData.item.permissions"
           [url]="itemData.item.url"
@@ -55,7 +56,6 @@
           [view]="taskView"
           [taskConfig]="taskConfig"
           [savingAnswer]="savingAnswer"
-          [style.display]="(isTaskLoaded$ | async) ? 'flex' : 'none'"
           (viewChange)="taskViewChange.emit($event)"
           (tabsChange)="taskTabsChange.emit($event)"
           (scoreChange)="onScoreChange($event)"
@@ -98,7 +98,7 @@
   </ng-container>
 
   <alg-task-loader
-    class="alg-flex-1"
+    class="alg-flex-1 task-loader"
     *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && (!itemData.currentResult || (itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)))"
     i18n-label label="Loading the content"
     i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
