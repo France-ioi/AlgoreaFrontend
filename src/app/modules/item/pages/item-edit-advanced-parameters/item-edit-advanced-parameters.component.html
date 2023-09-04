@@ -4,7 +4,7 @@
     <div class="form-item-view">
       <span class="form-item-label" i18n>Url</span>
       <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder name="url" size="small"></alg-input>
+        <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder name="url"></alg-input>
       </div>
     </div>
 
@@ -18,7 +18,7 @@
     <div class="form-item-view">
       <span class="form-item-label">TextID</span>
       <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id" size="small"></alg-input>
+        <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id"></alg-input>
         <small class="alg-validation-error" *ngIf="parentForm.errors?.text_id.includes('text_id must be unique')" i18n>
           This value is already used by another content. The text id must be unique across the platform.
         </small>
@@ -87,7 +87,7 @@
         <ng-container i18n>Thumbnail url</ng-container>
       </span>
       <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url" size="small"></alg-input>
+        <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url"></alg-input>
         <ng-container *ngIf="parentForm.get('image_url')?.value as imageUrlValue">
           <span
             class="alg-warning-message"
@@ -163,11 +163,11 @@
           <ng-container *ngIf="!!parentForm.get('entering_time_min_enabled')?.value">
             <div class="input-wrapper">
               <p-calendar
-                  class="alg-calendar"
-                  formControlName="entering_time_min"
-                  [showIcon]="true"
-                  [showTime]="true"
-                  (ngModelChange)="onDateChange()"
+                styleClass="alg-calendar"
+                formControlName="entering_time_min"
+                [showIcon]="true"
+                [showTime]="true"
+                (ngModelChange)="onDateChange()"
               >
               </p-calendar>
             </div>
@@ -187,7 +187,7 @@
           <ng-container *ngIf="!!parentForm.get('entering_time_max_enabled')?.value">
             <div class="input-wrapper">
               <p-calendar
-                  class="alg-calendar"
+                  styleClass="alg-calendar"
                   formControlName="entering_time_max"
                   [showIcon]="true"
                   [showTime]="true"
