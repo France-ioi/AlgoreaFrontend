@@ -25,14 +25,15 @@
   justify-content: center;
   align-items: center;
   height: toRem(40);
-  color: var(--alg-secondary-color);
   cursor: pointer;
 
   &.active {
-    color: var(--alg-light-color);
-    font-weight: 500;
     background-color: var(--alg-primary-color);
     border-radius: toRem(20);
+
+    .label {
+      color: var(--alg-light-color);
+    }
   }
 
   &:not(.active, .next, :first-child):before {
@@ -48,4 +49,11 @@
     background: linear-gradient(0, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff", GradientType=1);
   }
+}
+
+.label {
+  color: var(--alg-secondary-color);
+  text-align: center;
+  line-height: toRem(14);
+  font-size: toRem(16);
 }
