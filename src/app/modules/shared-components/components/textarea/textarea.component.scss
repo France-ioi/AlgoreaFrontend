@@ -8,9 +8,9 @@
 
 textarea {
   width: 100%;
-  background-color: var(--input-transparency-color);
-  box-shadow: .1rem .1rem #00000019 inset;
-  border-radius: $border-radius;
+  padding: toRem(16);
+  background-color: var(--alg-light-color);
+  border-radius: var(--border-radius);
   border: none;
   font-size: 1.2rem;
   padding-left: 2.5rem;

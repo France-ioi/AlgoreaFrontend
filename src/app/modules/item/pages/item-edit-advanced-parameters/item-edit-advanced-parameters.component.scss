@@ -1,42 +1,45 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
+
+.title {
+  margin-top: toRem(38);
+  margin-bottom: 0;
+}
 
 .form-item-view {
   display: flex;
   align-items: center;
   margin: 1.25rem;
 
-  .form-item-label {
-    display: block;
-    font-size: 1.2rem;
-    width: 21rem;
-    color: var(--dark-text-color);
-    font-weight: bold;
-  }
+.form-item-label {
+  width: 21rem;
+  display: block;
+  font-size: toRem(16);
+  color: #545454;
+}
 
-  .form-item-control {
-    flex: 1;
+.form-item-control {
+  flex: 1;
 
-    &.another-input {
+  &.another-input {
+    display: flex;
+    align-items: center;
+
+    .first-child {
+      margin-right: 2rem;
+
+      &.stretch {
+        flex: 1;
+      }
+    }
+
+    .date-pickers {
       display: flex;
       align-items: center;
+      font-size: 1.2rem;
 
-      .first-child {
-        margin-right: 2rem;
-
-        &.stretch {
-          flex: 1;
-        }
-      }
-
-      .date-pickers {
-        display: flex;
-        align-items: center;
-        font-size: 1.2rem;
-
-        .date-label {
-          margin-left: 1rem;
-          margin-right: 1rem;
-        }
+      .date-label {
+        margin-left: 1rem;
+        margin-right: 1rem;
       }
     }
   }

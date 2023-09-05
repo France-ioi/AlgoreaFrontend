@@ -1,6 +1,7 @@
 <form *ngIf="item && parentForm" [formGroup]="parentForm">
-  <alg-section icon="fa fa-cogs" i18n-label label="Global parameters"
-    *ngIf="item.type === 'Task'">
+  <div *ngIf="item.type === 'Task'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
+
     <div class="form-item-view">
       <span class="form-item-label" i18n>Url</span>
       <div class="form-item-control">
@@ -24,10 +25,10 @@
         </small>
       </div>
     </div>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-book" i18n-label label="Score & Validation"
-    *ngIf="['Chapter','Skill'].includes(item.type)">
+  <div *ngIf="['Chapter','Skill'].includes(item.type)">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Score & Validation</h2>
     <div class="form-item-view">
       <span class="form-item-label" i18n>Validation criteria</span>
       <div class="form-item-control">
@@ -46,10 +47,10 @@
         <alg-switch formControlName="no_score" mode="white"></alg-switch>
       </div>
     </div>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-desktop" i18n-label label="Display"
-    *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Display</h2>
     <div class="form-item-view">
       <span class="form-item-label">
         <ng-container i18n>Display header</ng-container>&nbsp;
@@ -99,9 +100,10 @@
         </ng-container>
       </div>
     </div>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-desktop" i18n-label label="Participation" *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Participation</h2>
     <div class="form-item-view">
       <span class="form-item-label">
         <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
@@ -200,9 +202,10 @@
         </div>
       </div>
     </ng-container>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-users" i18n-label label="Team" *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Team</h2>
     <div class="form-item-view">
       <span class="form-item-label">
         <ng-container i18n>Participation as a team (only)</ng-container>&nbsp;
@@ -238,7 +241,7 @@
         </div>
       </div>
     </ng-container>
-  </alg-section>
+  </div>
 </form>
 
 <div class="delete-button">

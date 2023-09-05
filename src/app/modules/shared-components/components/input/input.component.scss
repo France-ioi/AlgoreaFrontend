@@ -3,7 +3,7 @@
 :host {
   &.transparent {
     .input-element {
-      background-color: transparent;
+      background-color: transparent !important;
       &::placeholder {
         opacity: .5;
       }
