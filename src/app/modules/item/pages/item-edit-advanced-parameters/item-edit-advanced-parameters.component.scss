@@ -1,17 +1,21 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
+
+.title {
+  margin-top: toRem(38);
+  margin-bottom: 0;
+}
 
 .form-item-view {
   display: flex;
   align-items: center;
-  margin: 1.25rem 0;
+  margin: toRem(16) 0;
 }
 
 .form-item-label {
+  width: 30%;
   display: block;
-  font-size: 1.2rem;
-  width: 21rem;
-  color: var(--dark-text-color);
-  font-weight: bold;
+  font-size: toRem(16);
+  color: #545454;
 }
 
 .form-item-control {
@@ -43,13 +47,11 @@
 }
 
 .form-item-duration {
-  margin: .25rem 1.25rem;
-  height: 6rem;
+  margin: toRem(16) 0;
 }
 
 .form-item-datepicker {
-  margin: .25rem 1.25rem;
-  height: 3rem;
+  margin: toRem(16) 0;
 }
 
 .delete-button {

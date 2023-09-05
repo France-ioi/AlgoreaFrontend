@@ -1,4 +1,10 @@
+@import 'src/assets/scss/functions';
+
 .disabled {
   pointer-events: none !important;
   opacity: 0.5;
+}
+
+.title {
+  margin: 0 0 toRem(16) 0;
 }

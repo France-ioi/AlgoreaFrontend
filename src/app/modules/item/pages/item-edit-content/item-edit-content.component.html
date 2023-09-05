@@ -1,5 +1,6 @@
 <ng-container *ngIf="itemData && itemData.currentResult">
-  <alg-section icon="fa fa-book" i18n-label label="Description" *ngIf="itemData.item.permissions | allowsEditingAll">
+  <div *ngIf="itemData.item.permissions | allowsEditingAll">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Description</h2>
     <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
-  </alg-section>
+  </div>
 </ng-container>

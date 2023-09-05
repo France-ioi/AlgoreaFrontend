@@ -1,6 +1,7 @@
 <ng-container *ngIf="itemData">
   <form [formGroup]="itemForm" *ngIf="itemData.item.permissions | allowsEditingChildren; else notAuthorized">
-    <alg-section icon="fa fa-cog" i18n-label label="Information" *ngIf="itemData.item.permissions | allowsEditingAll">
+    <div *ngIf="itemData.item.permissions | allowsEditingAll">
+      <h2 class="alg-h2 alg-text-normal title" i18n>Information</h2>
       <div class="field">
         <div class="field-name">
           <label i18n>Item title</label>
@@ -17,8 +18,9 @@
           <alg-input [parentForm]="itemForm" name="subtitle"></alg-input>
         </div>
       </div>
-    </alg-section>
+    </div>
     <alg-item-edit-content
+      class="item-edit-content"
       [parentForm]="itemForm"
       [itemData]="itemData"
       *ngIf="itemData.item.type !== 'Task'"

@@ -1,19 +1,21 @@
+@import 'src/assets/scss/functions';
+
+.title {
+  margin: toRem(6) 0 toRem(16) 0;
+}
+
 .error {
   padding: 1rem 0;
 }
 
 .field {
   display: flex;
+  align-items: center;
 
   .field-name {
     float: left;
-    width: 20%;
-    margin-top: 6px;
-
-    label {
-      padding: 12px 12px 12px 0;
-      display: inline-block;
-    }
+    width: 30%;
+    margin-top: 0;
   }
 
   .field-value {
@@ -21,4 +23,9 @@
     width: 80%;
     margin-top: 6px;
   }
+}
+
+.item-edit-content {
+  display: block;
+  margin-top: toRem(38);
 }
