@@ -1,23 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Injector, OnDestroy } from '@angular/core';
-import {
-  combineLatestWith,
-  distinctUntilChanged,
-  EMPTY,
-  filter,
-  map,
-  merge,
-  Observable,
-  of,
-  shareReplay,
-  Subject,
-  Subscription,
-  switchMap,
-  take
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, combineLatestWith, EMPTY, filter, map, Observable, Subscription, switchMap, take } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { readyData } from 'src/app/shared/operators/state';
 import { ThreadService } from './threads.service';
+
+type ThreadId = Parameters<ThreadService['setThread']>[0];
 
 /**
  * DiscussionService is a proxy to the "thread" service so that it can be loaded only if enabled and so that the UI can use it more easily.
@@ -29,16 +17,21 @@ export class DiscussionService implements OnDestroy {
 
   private readonly enabled = !!appConfig.forumServerUrl;
 
-  private manualVisibilityToggle = new Subject<boolean>();
+  private visible = new BehaviorSubject(false);
+  visible$ = this.visible.asObservable();
 
   private readonly threadService?: ThreadService; // only injected if forum is enabled
 
-  /**
-    * Whether a thread is currently available (i.e., enabled at app level + allowed for the current page) and
-    * visible (i.e., currently shown) for this page.
-    * Emit `undefined` if not available, `{ visible: boolean }` otherwise.
-    */
-  state$: Observable<{ visible: boolean }|undefined>; // set in constructor when the threadService has been injected
+  private canShowInCurrentPage = new BehaviorSubject(false);
+  canShowInCurrentPage$ = this.canShowInCurrentPage.asObservable();
+
+  private configuredThread: ThreadId|null = null;
+  private hasForcedThread = false;
+
+  /** combination of `canShowInCurrentPage$` and `visible$` which can be useful for some components */
+  state$ = combineLatest([ this.canShowInCurrentPage$, this.visible$ ]).pipe(
+    map(([ canShowInCurrentPage, visible ]) => (canShowInCurrentPage ? { visible } : undefined))
+  );
 
   /**
    * When a thread is available but currently not visible, the number of events that arrive since the thread was last opened in this session
@@ -51,20 +44,15 @@ export class DiscussionService implements OnDestroy {
     private injector : Injector,
   ) {
     if (!this.enabled) {
-      this.state$ = of(undefined);
       this.unreadCount$ = EMPTY;
       return;
     }
 
     this.threadService = this.injector.get<ThreadService>(ThreadService);
 
-    this.state$ = merge(
-      this.manualVisibilityToggle.pipe(distinctUntilChanged((x, y) => x === y), map(visible => ({ visible }))),
-      this.threadService.threadInfo$.pipe(map(info => (info ? { visible: false } : undefined)))
-    ).pipe(shareReplay(1)); // keep the last value for latecomers
-    this.unreadCount$ = this.state$.pipe(
+    this.unreadCount$ = this.visible$.pipe(
       // when hidden (manually or because thread changes), store the current time as the last read time
-      map(state => (state && !state.visible ? Date.now() : Number.MAX_SAFE_INTEGER)),
+      map(visible => (visible ? Number.MAX_SAFE_INTEGER : Date.now())),
       combineLatestWith(this.threadService.eventsState$ ?? EMPTY),
       map(([ lastOpen, state ]) => {
         if (lastOpen === Number.MAX_SAFE_INTEGER || !state.isReady) return 0;
@@ -72,8 +60,8 @@ export class DiscussionService implements OnDestroy {
       })
     );
     this.subscriptions.add(
-      this.state$.pipe(
-        filter(state => !!state && state.visible), // each time a discussion becomes visible
+      this.visible$.pipe(
+        filter(visible => visible), // each time a discussion becomes visible
         switchMap(() => this.threadService?.eventsState$.pipe(readyData(), take(1)) ?? EMPTY), // take the next ready data
         filter(events => events.length === 0), // if there were no event in the list
         switchMap(() => this.threadService?.syncEvents() ?? EMPTY), // resync the event log with the server
@@ -87,11 +75,31 @@ export class DiscussionService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.manualVisibilityToggle.complete();
+    this.visible.complete();
+    this.canShowInCurrentPage.complete();
   }
 
-  toggleVisibility(visible: boolean): void {
-    this.manualVisibilityToggle.next(visible);
+  /**
+   * Toggle visibily of the thread panel
+   * `info` is given only if `visible` and if different from what has been configured by `configureThread`, so if we want to show a thread
+   * that does not correspond to the current page.
+   */
+  toggleVisibility(visible: boolean, thread?: ThreadId): void {
+    if (!this.threadService) throw new Error('not supposed to toggle forum visibility when disabled');
+    this.visible.next(visible);
+    this.hasForcedThread = visible && !!thread;
+    this.threadService.setThread(thread ? thread : this.configuredThread);
+  }
+
+  /**
+   * Configure the thread info (while the thread panel is closed)
+   * `info` is null if threads are disabled on the current page
+   */
+  configureThread(thread: ThreadId|null): void {
+    if (!this.threadService) return;
+    this.canShowInCurrentPage.next(!!thread);
+    this.configuredThread = thread;
+    if (!this.hasForcedThread) this.threadService.setThread(thread);
   }
 
   resyncEventLog(): void {

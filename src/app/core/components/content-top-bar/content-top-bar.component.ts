@@ -21,7 +21,6 @@ export class ContentTopBarComponent {
   @Input() showLeftMenuOpener = false;
 
   discussionState$ = this.discussionService.state$;
-
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(

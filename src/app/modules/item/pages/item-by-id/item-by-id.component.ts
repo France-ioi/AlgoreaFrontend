@@ -23,7 +23,7 @@ import { GetItemPathService } from '../../http-services/get-item-path.service';
 import { ItemDataSource, ItemData } from '../../services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
-import { isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
+import { isATask, isTask, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { itemInfo } from 'src/app/shared/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
@@ -42,10 +42,10 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
 import { DiscussionService } from '../../services/discussion.service';
-import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
 import { TabService } from 'src/app/shared/services/tab.service';
 import { ItemTabs } from './item-tabs';
+import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -155,7 +155,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
-  threadOpened$ = this.discussionService.state$.pipe(filter(isNotUndefined), map(({ visible }) => visible));
+  threadOpened$ = this.discussionService.visible$;
 
   private itemChanged$ = this.itemDataSource.state$.pipe(
     distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
@@ -273,6 +273,17 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       map(({ display }) => display),
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
+    // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
+    // TODO as soon as the backend service has implemented it: check that the current/observed user "can request help" on this item
+    combineLatest([ this.itemDataSource.state$, this.userProfile$, this.watchedGroup$ ]).pipe(
+      map(([ state, userProfile, watchedGroup ]) => {
+        if (!state.data || !isATask(state.data.item)) return null;
+        if (watchedGroup && !allowsWatchingAnswers(state.data.item.permissions)) return null;
+        return { participantId: watchedGroup ? watchedGroup.route.id : userProfile.groupId, itemId: state.data.item.id };
+      }),
+      distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
+    ).subscribe(threadId => this.discussionService.configureThread(threadId)),
+
   ];
 
   editorUrl?: string;
@@ -300,6 +311,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   ngOnDestroy(): void {
     this.tabService.setTabs([]);
+    this.discussionService.configureThread(null);
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });

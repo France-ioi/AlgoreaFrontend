@@ -49,6 +49,7 @@
     "fp-ts": "^2.13.1",
     "io-ts": "^2.2.20",
     "jschannel": "^1.0.2",
+    "jwt-decode": "^3.1.2",
     "ngx-scrollbar": "^13.0.0",
     "primeicons": "^6.0.1",
     "primeng": "^16.0.2",

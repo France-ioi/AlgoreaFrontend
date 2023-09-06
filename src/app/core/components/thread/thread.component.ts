@@ -3,15 +3,14 @@ import { ThreadService } from '../../../modules/item/services/threads.service';
 import { FormBuilder } from '@angular/forms';
 import { readyData } from '../../../shared/operators/state';
 import { Subscription, filter, delay, combineLatest, of } from 'rxjs';
-import { DiscussionService } from '../../../modules/item/services/discussion.service';
-import { isNotUndefined } from '../../../shared/helpers/null-undefined-predicates';
+import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetUserService } from 'src/app/modules/group/http-services/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
-import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
+import { rawItemRoute } from 'src/app/shared/routing/item-route';
 
 @Component({
   selector: 'alg-thread',
@@ -57,11 +56,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
   readonly canCurrentUserLoadAnswers$ = this.threadService.threadInfo$.pipe(
-    map(t => !!t && (t.currentUserId === t.participant.id || allowsWatchingAnswers(t.contentWatchPermission)),
-    )
+    map(t => t?.isMine || t?.canWatch), // for future: others should be able to load as well using the answer stored in msg data
   );
   readonly itemRoute$ = this.threadService.threadInfo$.pipe(
-    map(t => t?.itemRoute),
+    map(t => (t ? rawItemRoute('activity', t.itemId) : undefined)),
   );
 
   private subscription?: Subscription;
@@ -78,8 +76,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.subscription = this.state$.pipe(
       readyData(),
-      withLatestFrom(this.discussionService.state$.pipe(filter(isNotUndefined))),
-      filter(([ events, { visible }]) => visible && events.length > 0),
+      withLatestFrom(this.discussionService.visible$),
+      filter(([ events, visible ]) => visible && events.length > 0),
       delay(0),
     ).subscribe(() => this.scrollDown());
   }
