@@ -85,7 +85,7 @@ export class DiscussionService implements OnDestroy {
    * that does not correspond to the current page.
    */
   toggleVisibility(visible: boolean, thread?: ThreadId): void {
-    if (!this.threadService) throw new Error('not supposed to toggle forum visibility when disabled');
+    if (!this.threadService) return;
     this.visible.next(visible);
     this.hasForcedThread = visible && !!thread;
     this.threadService.setThread(thread ? thread : this.configuredThread);
