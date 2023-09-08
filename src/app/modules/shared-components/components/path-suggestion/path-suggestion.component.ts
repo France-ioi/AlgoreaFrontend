@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import {
-  BreadcrumbsFromRoot,
+  BreadcrumbsFromRootElement,
   GetBreadcrumbsFromRootsService
 } from '../../../item/http-services/get-breadcrumbs-from-roots.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
@@ -10,7 +10,7 @@ import { itemRoute, urlArrayForItemRoute } from '../../../../shared/routing/item
 import { UrlCommand } from '../../../../shared/helpers/url';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 
-const getItemRouteUrl = (item: BreadcrumbsFromRoot, breadcrumbs: BreadcrumbsFromRoot[]): UrlCommand => {
+const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand => {
   const path = breadcrumbs.map(item => item.id);
   return urlArrayForItemRoute(itemRoute(typeCategoryOfItem(item), item.id, path));
 };
