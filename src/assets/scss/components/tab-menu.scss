@@ -17,6 +17,10 @@
     .p-menuitem-link {
       margin: 0 toRem(7.5) !important;
       padding-bottom: 0 !important;
+
+      .p-menuitem-text {
+        font-size: toRem(12);
+      }
     }
   }
 
