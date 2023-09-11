@@ -1860,6 +1860,9 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="9159686752653762421" datatype="html">
         <source>Could not load more members, are you connected to the internet?</source><target state="new">Could not load more members, are you connected to the internet?</target>
 
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="2630957731586222068" datatype="html">
+      <source>Could not load more logs, are you connected to the internet?</source><target state="new">Could not load more logs, are you connected to the internet?</target>
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.ts</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="6377599608108067281" datatype="html">
         <source>Are you sure you want to permanently delete <x id="PH" equiv-text="getSelectedGroupChildCaptions(this.selection as GroupChild[])"/>?
        This operation cannot be undone.</source><target state="new">Are you sure you want to permanently delete <x id="PH" equiv-text="getSelectedGroupChildCaptions(this.selection as GroupChild[])"/>?

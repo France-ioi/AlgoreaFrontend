@@ -9,7 +9,8 @@ import { Item } from '../../http-services/get-item-by-id.service';
 import { GroupWatchingService, WatchedGroup } from 'src/app/core/services/group-watching.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
-
+import { DataPager } from 'src/app/shared/helpers/data-pager';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 interface Column {
   field: string,
   header: string,
@@ -18,7 +19,10 @@ interface Column {
 interface Data {
   columns: Column[],
   rowData: ActivityLog[],
+  isFetching: boolean,
 }
+
+const logsLimit = 20;
 
 @Component({
   selector: 'alg-item-log-view',
@@ -45,10 +49,19 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     map(item => allowsWatchingAnswers(item.permissions))
   );
 
+  datapager = new DataPager({
+    fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
+    pageSize: logsLimit,
+    onLoadMoreError: (): void => {
+      this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
+    },
+  });
+
   constructor(
     private activityLogService: ActivityLogService,
     private groupWatchingService: GroupWatchingService,
     private sessionService: UserSessionService,
+    private actionFeedbackService: ActionFeedbackService,
   ) {}
 
   ngOnChanges(): void {
@@ -57,6 +70,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     }
 
     this.item$.next(this.itemData.item);
+    this.resetRows();
   }
 
   ngOnDestroy(): void {
@@ -66,20 +80,54 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+    this.resetRows();
   }
 
   private getData$(item: Item, watchingGroup: WatchedGroup|null): Observable<Data> {
     return combineLatest([
-      this.activityLogService.getActivityLog(item.id, { watchedGroupId: watchingGroup?.route.id }),
+      this.datapager.list$,
       this.sessionService.userProfile$,
     ]).pipe(
-      map(([ data, profile ]) => ({
+      map(([ fetchData, profile ]) => ({
         columns: this.getLogColumns(item.type, watchingGroup),
-        rowData: data
-          .filter(log => !this.isSelfCurrentAnswer(log, profile.groupId))
+        rowData: fetchData.data?.filter(log => !this.isSelfCurrentAnswer(log, profile.groupId)) ?? [],
+        isFetching: fetchData.isFetching,
       }))
     );
   }
+
+  getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
+    return this.watchedGroup$.pipe(
+      switchMap(watchedGroup => {
+
+        const paginationParams = latestRow === undefined ? undefined : {
+          fromItemId: latestRow.item.id,
+          fromParticipantId: latestRow.participant.id,
+          fromAttemptId: latestRow.attemptId,
+          fromAnswerId: latestRow.answerId ?? '0',
+          fromActivityType: latestRow.activityType,
+        };
+
+        return this.activityLogService.getActivityLog(
+          this.itemData?.item.id ?? '', {
+            limit: pageSize,
+            pagination: paginationParams,
+            watchedGroupId: watchedGroup?.route.id,
+          }
+        );
+      }),
+    );
+  }
+
+  resetRows(): void {
+    this.datapager.reset();
+  }
+
+  fetchMoreRows(): void {
+    this.datapager.load();
+  }
+
+
   private isSelfCurrentAnswer(log: ActivityLog, profileId: string): boolean {
     return log.activityType === 'current_answer' && log.participant.id === profileId;
   }

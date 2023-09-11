@@ -42,7 +42,7 @@
       class="alg-table"
       [columns]="state.data.columns"
       [value]="state.data.rowData"
-      [loading]="state.isFetching"
+      [loading]="state.data.isFetching"
       [tableStyle]="{'min-width': '599.98px'}"
       responsiveLayout="scroll"
       *ngIf="{ isWatching: isWatching$ | async, canWatchAnswers: canWatchAnswers$ | async } as meta"
@@ -116,6 +116,22 @@
         <tr>
           <td [attr.colspan]="columns.length">
             <span i18n>There is no progress to report for this item.</span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <tr *ngIf="datapager.canLoadMore$ | async">
+          <td colspan="3">
+            <div class="text-center">
+              <button
+                pButton
+                class="p-button-rounded"
+                i18n-label label="Load more"
+                (click)="fetchMoreRows()"
+                [disabled]="state.data.isFetching"
+              ></button>
+            </div>
           </td>
         </tr>
       </ng-template>
