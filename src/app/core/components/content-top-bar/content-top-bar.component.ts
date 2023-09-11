@@ -42,6 +42,8 @@ export class ContentTopBarComponent {
     }),
     filter(navigationNeighbors => !!navigationNeighbors?.isReady),
   );
+  readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
+  readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
   constructor(
     private groupWatchingService: GroupWatchingService,
@@ -60,5 +62,4 @@ export class ContentTopBarComponent {
   showLeftMenu(): void {
     this.layoutService.toggleLeftMenu(true);
   }
-
 }

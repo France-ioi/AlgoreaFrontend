@@ -2,60 +2,73 @@
 
 <ng-container *ngIf="currentContent$ | async as currentContent">
   <div class="content-top-bar">
-    <div class="margin-right" *ngIf="showLeftMenuOpener">
+    <div class="left-pane">
+      <div class="margin-right" *ngIf="showLeftMenuOpener">
+        <button
+          class="alg-button-icon no-bg primary-color left-menu"
+          pButton
+          type="button"
+          icon="ph ph-list"
+          (click)="showLeftMenu()"
+        ></button>
+      </div>
+      <div class="margin-right score-section" *ngIf="currentContent.type === 'item'">
+        <alg-score-ring
+          *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
+          [bestScore]="$any(currentContent).details.bestScore"
+          [currentScore]="$any(currentContent).details.currentScore"
+          [isValidated]="$any(currentContent).details.validated"
+          [diameter]="32"
+        ></alg-score-ring>
+      </div>
+      <ng-container *ngrxLet="fullFrameContentDisplayed$; let fullFrameContentDisplayed">
+        <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
+          <div class="left-pane-title margin-right" *ngIf="!isNarrowScreen || isNarrowScreen && !fullFrameContentDisplayed">
+            <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
+            <ng-template #onlyTitle>
+              <p class="left-pane-title-text">{{ currentContent.title }}</p>
+            </ng-template>
+            <ng-template #breadcrumbs>
+              <alg-breadcrumb
+                class="breadcrumb"
+                [contentBreadcrumb]="currentContent?.breadcrumbs"
+              ></alg-breadcrumb>
+            </ng-template>
+          </div>
+          <alg-tab-bar
+            class="tab-bar"
+            styleClass="alg-tab-menu for-header"
+            *ngIf="fullFrameContentDisplayed"
+          ></alg-tab-bar>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div class="right-pane">
       <button
-        class="alg-button-icon no-bg primary-color left-menu"
+        *ngIf="discussionState$ | async as discussion"
+        class="alg-button-icon no-bg primary-color margin-left"
+        [ngClass]="{ 'active': discussion.visible }"
         pButton
         type="button"
-        icon="ph ph-list"
-        (click)="showLeftMenu()"
+        icon="ph-duotone ph-chats-circle"
+        (click)="toggleThreadVisibility(!discussion.visible)"
       ></button>
+      <alg-watch-button
+        class="margin-left"
+        *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
+      ></alg-watch-button>
+      <alg-neighbor-widget
+        *ngIf="navigationNeighbors$ | async as navigationNeighbors"
+        class="neighbor-widget margin-left"
+        [navigationMode]="{
+          parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
+          left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
+          right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
+        }"
+        (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
+        (left)="navigationNeighbors?.data?.previous?.navigateTo()"
+        (right)="navigationNeighbors?.data?.next?.navigateTo()"
+      ></alg-neighbor-widget>
     </div>
-    <div class="margin-right score-section" *ngIf="currentContent.type === 'item'">
-      <alg-score-ring
-        *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
-        [bestScore]="$any(currentContent).details.bestScore"
-        [currentScore]="$any(currentContent).details.currentScore"
-        [isValidated]="$any(currentContent).details.validated"
-        [diameter]="32"
-      ></alg-score-ring>
-    </div>
-    <div class="right-pane-title">
-      <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
-      <ng-template #onlyTitle>
-        <p class="right-pane-title-text">{{ currentContent.title }}</p>
-      </ng-template>
-      <ng-template #breadcrumbs>
-        <alg-breadcrumb
-          class="breadcrumb margin-right"
-          [contentBreadcrumb]="currentContent?.breadcrumbs"
-        ></alg-breadcrumb>
-      </ng-template>
-    </div>
-    <button
-      *ngIf="discussionState$ | async as discussion"
-      class="alg-button-icon no-bg primary-color margin-left"
-      [ngClass]="{ 'active': discussion.visible }"
-      pButton
-      type="button"
-      icon="ph-duotone ph-chats-circle"
-      (click)="toggleThreadVisibility(!discussion.visible)"
-    ></button>
-    <alg-watch-button
-      class="margin-left"
-      *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
-    ></alg-watch-button>
-    <alg-neighbor-widget
-      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      class="neighbor-widget margin-left"
-      [navigationMode]="{
-        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
-        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
-        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
-      }"
-      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
-      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
-      (right)="navigationNeighbors?.data?.next?.navigateTo()"
-    ></alg-neighbor-widget>
   </div>
 </ng-container>

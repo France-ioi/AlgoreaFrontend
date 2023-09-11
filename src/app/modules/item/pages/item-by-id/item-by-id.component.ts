@@ -155,14 +155,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
-  threadOpened$ = this.discussionService.visible$;
-
   private itemChanged$ = this.itemDataSource.state$.pipe(
     distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
     map(() => {}),
   );
 
   userProfile$ = this.userSessionService.userProfile$;
+  fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
 
   private subscriptions: Subscription[] = [
 

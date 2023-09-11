@@ -75,7 +75,6 @@
   }
 
   &.thread-opened {
-    margin-right: toRem(--right-thread-menu-animation);
     border-top-right-radius: toRem(16);
     border-bottom-right-radius: toRem(16);
   }
@@ -132,13 +131,19 @@
   .right-thread {
     position: absolute;
     top: 0;
-    right: 0;
+    right: -100%;
+    margin-right: 0;
 
     width: 100%;
     z-index: 999;
 
-    &.collapsed {
-      right: -100%;
+    transition: right var(--right-thread-animation);
+    -webkit-transition: right var(--right-thread-animation);
+    -moz-transition: right var(--right-thread-animation);
+    -o-transition: right var(--right-thread-animation);
+
+    &.opened {
+      right: 0;
     }
   }
 

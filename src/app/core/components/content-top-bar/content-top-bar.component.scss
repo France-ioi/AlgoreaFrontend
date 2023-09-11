@@ -14,18 +14,20 @@
 
 .content-top-bar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  height: 100%;
 }
 
-.right-pane-title {
+.left-pane-title {
   display: flex;
   align-items: center;
   overflow: hidden;
-  flex: 1;
+  height: 100%;
 }
 
-.right-pane-title-text {
-  font-size: toRem(12);
+.left-pane-title-text {
+  font-size: toRem(16);
   color: var(--alg-black-color);
   text-overflow: ellipsis;
   overflow: hidden;
@@ -50,4 +52,23 @@
 
 .score-section {
   width: toRem(32);
+}
+
+.tab-bar {
+  max-width: 100%;
+  height: 100%
+}
+
+.left-pane {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+}
+
+.right-pane {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
