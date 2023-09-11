@@ -5,6 +5,8 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
+import { DataPager } from 'src/app/shared/helpers/data-pager';
+import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 
 interface Column {
   field: string,
@@ -14,7 +16,10 @@ interface Column {
 interface Data {
   columns: Column[],
   rowData: ActivityLog[],
+  isFetching: boolean,
 }
+
+const logsLimit = 20;
 
 @Component({
   selector: 'alg-group-log-view',
@@ -32,7 +37,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   private readonly groupId$ = new ReplaySubject<string | undefined>(1);
   private readonly refresh$ = new Subject<void>();
   readonly state$ = this.groupId$.pipe(
-    switchMap((groupId: string | undefined) => this.getData$(groupId)),
+    switchMap(() => this.getData$()),
     mapToFetchState({ resetter: this.refresh$ }),
   );
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
@@ -45,9 +50,22 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
     data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
   });
 
+  datapager = new DataPager({
+    fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
+    pageSize: logsLimit,
+    onLoadMoreError: (): void => {
+      this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
+    },
+  });
+
   constructor(
     private activityLogService: ActivityLogService,
+    private actionFeedbackService: ActionFeedbackService
   ) {}
+
+  ngOnInit(): void{
+    this.resetRows();
+  }
 
   ngOnChanges(): void {
     this.groupId$.next(this.groupId);
@@ -62,14 +80,37 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+    this.resetRows();
   }
 
-  private getData$(groupId?: string): Observable<Data> {
-    return this.activityLogService.getAllActivityLog(groupId).pipe(
-      map((data: ActivityLog[]) => ({
+  private getData$(): Observable<Data> {
+    return this.datapager.list$.pipe(
+      map(fetchData => ({
         columns: this.getLogColumns(),
-        rowData: data
+        rowData: fetchData.data ?? [],
+        isFetching: fetchData.isFetching,
       }))
+    );
+  }
+
+  getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
+    return this.groupId$.pipe(
+      switchMap(groupId => {
+        const paginationParams = latestRow === undefined ? undefined : {
+          fromItemId: latestRow.item.id,
+          fromParticipantId: latestRow.participant.id,
+          fromAttemptId: latestRow.attemptId,
+          fromAnswerId: latestRow.answerId ?? '0',
+          fromActivityType: latestRow.activityType,
+        };
+
+        return this.activityLogService.getAllActivityLog(
+          groupId , {
+            limit: pageSize,
+            pagination: paginationParams,
+          }
+        );
+      }),
     );
   }
 
@@ -98,6 +139,14 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       field: col.field,
       header: col.header,
     }));
+  }
+
+  resetRows(): void {
+    this.datapager.reset();
+  }
+
+  fetchMoreRows(): void {
+    this.datapager.load();
   }
 
   onMouseEnter(event: Event, itemId: string, index: number): void {

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
 import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
@@ -29,7 +29,7 @@ const logsLimit = 20;
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
 })
-export class ItemLogViewComponent implements OnChanges, OnDestroy {
+export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   @Input() itemData?: ItemData;
 
@@ -64,13 +64,16 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
     private actionFeedbackService: ActionFeedbackService,
   ) {}
 
+  ngOnInit(): void{
+    this.resetRows();
+  }
+
   ngOnChanges(): void {
     if (!this.itemData) {
       return;
     }
 
     this.item$.next(this.itemData.item);
-    this.resetRows();
   }
 
   ngOnDestroy(): void {
@@ -98,8 +101,8 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy {
 
   getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
     return this.watchedGroup$.pipe(
-      switchMap(watchedGroup => {
 
+      switchMap(watchedGroup => {
         const paginationParams = latestRow === undefined ? undefined : {
           fromItemId: latestRow.item.id,
           fromParticipantId: latestRow.participant.id,
