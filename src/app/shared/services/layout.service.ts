@@ -24,6 +24,7 @@ export class LayoutService implements OnDestroy {
   /* independant variables */
   private showTopRightControls = new BehaviorSubject(true);
   private canShowLeftMenu = new BehaviorSubject<boolean>(true);
+  private canShowBreadcrumbs = new BehaviorSubject<boolean>(false);
 
   /* variables to be used by other services and components */
   isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
@@ -33,6 +34,7 @@ export class LayoutService implements OnDestroy {
   fullFrameContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.ShowFullFrame));
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
+  canShowBreadcrumbs$ = this.canShowBreadcrumbs.asObservable();
   /**
    * Left menu: expected behavior
    * (note that in the following, a narrow window as the same behavior as mobile)
@@ -89,19 +91,22 @@ export class LayoutService implements OnDestroy {
     this.manualMenuToggle$.complete();
     this.showTopRightControls.complete();
     this.canShowLeftMenu.complete();
+    this.canShowBreadcrumbs.complete();
   }
 
   /**
    * Configure layout.
    * The layout is considered not initialized (so not using animation) only until the first call.
    */
-  configure({ contentDisplayType, canShowLeftMenu, showTopRightControls }: {
+  configure({ contentDisplayType, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls }: {
     contentDisplayType?: ContentDisplayType,
     canShowLeftMenu?: boolean,
+    canShowBreadcrumbs?: boolean,
     showTopRightControls?: boolean,
   }): void {
     if (contentDisplayType !== undefined) this.contentDisplayType$.next(contentDisplayType);
     if (canShowLeftMenu !== undefined) this.canShowLeftMenu.next(canShowLeftMenu);
+    if (canShowBreadcrumbs !== undefined) this.canShowBreadcrumbs.next(canShowBreadcrumbs);
     if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
   }
 

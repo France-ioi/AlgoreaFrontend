@@ -6,7 +6,7 @@
     <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'thread-opened': (threadState$ | async)?.visible }">
       <alg-top-bar
         *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed"
-        [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async)"
+        [showBreadcrumbs]="!scrolled && !fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
         [modeBarDisplayed]="isWatching"
         [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
         [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
