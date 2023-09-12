@@ -78,6 +78,10 @@
   color: var(--warning-color);
 }
 
+.alg-validation-error {
+  color: var(--danger-color);
+}
+
 .alg-full-centered-container {
   display: flex;
   justify-content: center;
