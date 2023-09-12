@@ -49,7 +49,6 @@
   }
 
   &:last-child {
-    padding-bottom: toRem(20);
-    border-bottom: toRem(1) solid rgba(0, 0, 0, .1);
+    margin-bottom: toRem(16);
   }
 }
