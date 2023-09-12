@@ -8,7 +8,7 @@
       <ng-template #watchedGroupName>
         <ng-container *ngIf="watchedGroup.name">
           <a
-            class="link alg-link hover-underline"
+            class="link alg-link hover-underline alg-secondary-color"
             [routerLink]="watchedGroup.route | groupLink"
           >
             {{ caption || watchedGroup.name }}
