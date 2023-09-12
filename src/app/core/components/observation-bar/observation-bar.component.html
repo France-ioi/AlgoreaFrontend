@@ -1,6 +1,11 @@
 <div class="wrapper" [ngClass]="{ 'only-icon-mode': onlyIcon }" *ngIf="watchedGroup$ | async as watchedGroup">
   <div class="left-section alg-flex-1">
-    <i class="left-icon alg-secondary-color ph-duotone ph-eye"></i>
+    <i
+      class="left-icon alg-secondary-color ph-duotone ph-eye"
+      i18n-pTooltip pTooltip="This menu is currently filtered by {{ watchedGroup.name }} access…"
+      [tooltipDisabled]="!showTooltip"
+      tooltipStyleClass="alg-tooltip"
+    ></i>
     <span class="title" *ngIf="!onlyIcon">
       <ng-container *ngIf="caption; else watchedGroupName">
         <span class="alg-secondary-color">{{ caption }}</span>

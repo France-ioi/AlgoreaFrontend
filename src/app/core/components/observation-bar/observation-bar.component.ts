@@ -10,6 +10,7 @@ export class ObservationBarComponent {
   @Output() cancel = new EventEmitter<void>();
   @Input() caption?: string;
   @Input() onlyIcon = false;
+  @Input() showTooltip = false;
 
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
