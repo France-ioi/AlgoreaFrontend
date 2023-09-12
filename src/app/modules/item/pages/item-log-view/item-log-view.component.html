@@ -129,7 +129,7 @@
                 class="p-button-rounded"
                 i18n-label label="Load more"
                 (click)="fetchMoreRows()"
-                [disabled]="state.data.isFetching"
+                [disabled]="state.data.isFetching || state.data.hasError"
               ></button>
             </div>
           </td>

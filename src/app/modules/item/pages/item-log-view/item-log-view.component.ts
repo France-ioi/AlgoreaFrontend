@@ -18,8 +18,9 @@ interface Column {
 
 interface Data {
   columns: Column[],
-  rowData: ActivityLog[],
+  hasError: boolean,
   isFetching: boolean,
+  rowData: ActivityLog[],
 }
 
 const logsLimit = 20;
@@ -95,6 +96,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
         columns: this.getLogColumns(item.type, watchingGroup),
         rowData: fetchData.data?.filter(log => !this.isSelfCurrentAnswer(log, profile.groupId)) ?? [],
         isFetching: fetchData.isFetching,
+        hasError: fetchData.isError,
       }))
     );
   }

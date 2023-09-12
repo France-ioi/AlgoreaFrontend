@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { BehaviorSubject, debounceTime, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
@@ -17,6 +17,7 @@ interface Data {
   columns: Column[],
   rowData: ActivityLog[],
   isFetching: boolean,
+  hasError: boolean,
 }
 
 const logsLimit = 20;
@@ -26,7 +27,7 @@ const logsLimit = 20;
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
 })
-export class GroupLogViewComponent implements OnChanges, OnDestroy {
+export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   @Input() groupId?: string;
   @Input() showUserColumn = true;
@@ -89,6 +90,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
         columns: this.getLogColumns(),
         rowData: fetchData.data ?? [],
         isFetching: fetchData.isFetching,
+        hasError: fetchData.isError,
       }))
     );
   }
