@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GroupWatchingService } from '../../../../core/services/group-watching.service';
-import { GetThreadsService } from '../../services/get-threads.service';
-import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
+import { GetThreadsService, Thread } from '../../services/get-threads.service';
+import { ReplaySubject, switchMap, combineLatest, Subject, first, BehaviorSubject } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { ItemRouter } from '../../../../shared/routing/item-router';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
+import { DiscussionService } from '../../services/discussion.service';
 
 interface Column {
   field: string,
@@ -51,6 +51,7 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   private readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
   isWatching$ = this.groupWatchingService.isWatching$;
   selected$ = new ReplaySubject<number>(1);
+  openThreadRowIndex$ = new BehaviorSubject<number | undefined>(undefined);
   options$ = combineLatest([
     this.watchedGroup$,
     this.url$,
@@ -61,7 +62,8 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
         ? [{ label: `${ watchedGroup?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
     ]),
   );
-  state$ = combineLatest([
+
+  fetchState$ = combineLatest([
     this.selected$,
     this.item$,
     this.watchedGroup$,
@@ -79,12 +81,31 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     ),
   );
 
+  state$ = combineLatest([
+    this.fetchState$,
+    this.openThreadRowIndex$,
+  ]).pipe(
+    map(([ state2, openThreadRowIndex ]) =>
+      ({
+        ...state2,
+        data: {
+          ...state2.data,
+          rowData: state2.data?.rowData.map((thread, index) => ({
+            ...thread,
+            rowIndex: index,
+            isOpened: index === openThreadRowIndex,
+          }))
+        }
+      })
+    )
+  );
+
   constructor(
     private groupWatchingService: GroupWatchingService,
     private getThreadService: GetThreadsService,
-    private itemRouter: ItemRouter,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private discussionService: DiscussionService,
   ) {
   }
 
@@ -132,8 +153,24 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
+  toggleThread(
+    { rowData, itemId, participantId }
+    :{ rowData: Thread & {isOpened: boolean, rowIndex: number},itemId: string, participantId: string }): void{
+    this.discussionService.configureThread({
+      itemId,
+      participantId,
+    });
+    this.discussionService.toggleVisibility(rowData.isOpened === false);
+    this.openThreadRowIndex$.next(rowData.isOpened === false ? rowData.rowIndex : undefined);
+  }
+
   private getThreadColumns(type: ItemType): Column[] {
     const columns = [
+      {
+        field: 'openThread',
+        header: $localize`Open thread`,
+        enabled: true,
+      },
       {
         field: 'item.title',
         header: $localize`Content`,

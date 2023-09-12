@@ -26,7 +26,7 @@
         (refresh)="refresh()"
       ></alg-error>
 
-      <ng-container *ngIf="state.data">
+      <ng-container *ngIf="state.data && state.data.rowData">
         <div class="operation-buttons">
           <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
             Refresh
@@ -58,6 +58,13 @@
             <tr>
               <td *ngFor="let col of columns">
                 <ng-container [ngSwitch]="col.field">
+                  <ng-container *ngSwitchCase="'openThread'">
+                    <button pButton type="button" [ngClass]="{'p-button-danger': rowData.isOpened}" class="p-button-rounded" (click)="toggleThread({
+                      rowData,
+                      itemId: rowData.item.id,
+                      participantId: rowData.participant.id,
+                    })">{{ rowData.isOpened ? 'Close' : 'Open' }}</button>
+                  </ng-container>
                   <ng-container *ngSwitchCase="'item.title'">
                     <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
                       {{ rowData.item.title }}

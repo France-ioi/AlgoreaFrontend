@@ -59,6 +59,7 @@ export class ThreadService implements OnDestroy {
     startWith(undefined),
     shareReplay(1),
   );
+
   private threadSubscriptionSub = this.threadInfo$.pipe(
     map(t => t?.token),
     pairwise(),
