@@ -51,7 +51,7 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   private readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
   isWatching$ = this.groupWatchingService.isWatching$;
   selected$ = new ReplaySubject<number>(1);
-  openThreadRowIndex$ = new BehaviorSubject<number | undefined>(undefined);
+  nextRowIndexOpenThread$ = new BehaviorSubject<number | undefined>(undefined);
   options$ = combineLatest([
     this.watchedGroup$,
     this.url$,
@@ -83,17 +83,17 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
 
   state$ = combineLatest([
     this.fetchState$,
-    this.openThreadRowIndex$,
+    this.nextRowIndexOpenThread$,
   ]).pipe(
-    map(([ state2, openThreadRowIndex ]) =>
+    map(([ fetchState, nextRowIndexOpenThread ]) =>
       ({
-        ...state2,
+        ...fetchState,
         data: {
-          ...state2.data,
-          rowData: state2.data?.rowData.map((thread, index) => ({
+          ...fetchState.data,
+          rowData: fetchState.data?.rowData.map((thread, index) => ({
             ...thread,
             rowIndex: index,
-            isOpened: index === openThreadRowIndex,
+            isOpened: index === nextRowIndexOpenThread,
           }))
         }
       })
@@ -153,15 +153,21 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  toggleThread(
-    { rowData, itemId, participantId }
-    :{ rowData: Thread & {isOpened: boolean, rowIndex: number},itemId: string, participantId: string }): void{
-    this.discussionService.configureThread({
+  toggleThread({
+    rowData,
+    itemId,
+    participantId
+  }:{
+      rowData: Thread & { isOpened: boolean, rowIndex: number },
+      itemId: string,
+      participantId: string,
+    }
+  ): void{
+    this.discussionService.toggleVisibility(rowData.isOpened === false, {
       itemId,
       participantId,
     });
-    this.discussionService.toggleVisibility(rowData.isOpened === false);
-    this.openThreadRowIndex$.next(rowData.isOpened === false ? rowData.rowIndex : undefined);
+    this.nextRowIndexOpenThread$.next(rowData.isOpened === false ? rowData.rowIndex : undefined);
   }
 
   private getThreadColumns(type: ItemType): Column[] {

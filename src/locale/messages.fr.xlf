@@ -293,6 +293,9 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">154</context></context-group></trans-unit><trans-unit id="4915667673980407083" datatype="html">
         <source>Latest update</source><target state="new">Latest update</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">177</context></context-group></trans-unit><trans-unit id="8128615991690290354" datatype="html">
+        <source>Open thread</source><target state="new">Open thread</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">159</context></context-group></trans-unit><trans-unit id="186460519743457757" datatype="html">
         <source>Global parameters</source><target>Paramètres globaux</target>
