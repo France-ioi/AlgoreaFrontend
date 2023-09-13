@@ -24,9 +24,9 @@
     </div>
     <p-table
       class="alg-table"
-      [columns]="state.data.columns"
-      [value]="state.data.rowData"
-      [loading]="state.data.isFetching"
+      [columns]="columns"
+      [value]="state.data"
+      [loading]="state.isFetching"
       [tableStyle]="{'min-width': '599.98px'}"
       responsiveLayout="scroll"
     >
@@ -111,7 +111,7 @@
                 class="p-button-rounded"
                 i18n-label label="Load more"
                 (click)="fetchMoreRows()"
-                [disabled]="state.data.isFetching || state.data.hasError"
+                [disabled]="state.isFetching || state.isError"
               ></button>
             </div>
           </td>

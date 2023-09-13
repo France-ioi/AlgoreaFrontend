@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { ActivityLog, ActivityLogService } from 'src/app/shared/http-services/activity-log.service';
-import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
-import { mapToFetchState } from 'src/app/shared/operators/state';
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { GroupWatchingService, WatchedGroup } from 'src/app/core/services/group-watching.service';
@@ -14,13 +13,6 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 interface Column {
   field: string,
   header: string,
-}
-
-interface Data {
-  columns: Column[],
-  hasError: boolean,
-  isFetching: boolean,
-  rowData: ActivityLog[],
 }
 
 const logsLimit = 20;
@@ -35,20 +27,6 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   @Input() itemData?: ItemData;
 
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
-  private readonly refresh$ = new Subject<void>();
-  private readonly item$ = new ReplaySubject<Item>(1);
-  readonly state$ = combineLatest([
-    this.item$.pipe(distinctUntilChanged()),
-    this.watchedGroup$,
-  ]).pipe(
-    switchMap(([ item, watchedGroup ]) => this.getData$(item, watchedGroup)),
-    mapToFetchState({ resetter: this.refresh$ }),
-  );
-
-  isWatching$ = this.groupWatchingService.isWatching$;
-  canWatchAnswers$ = this.item$.pipe(
-    map(item => allowsWatchingAnswers(item.permissions))
-  );
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
@@ -57,6 +35,29 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
       this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
     },
   });
+
+  private readonly item$ = new ReplaySubject<Item>(1);
+  readonly state$ = combineLatest([
+    this.datapager.list$,
+    this.sessionService.userProfile$,
+  ]).pipe(
+    map(([ fetchData, profile ]) => ({
+      ...fetchData,
+      data: fetchData.data?.filter(log => !this.isSelfCurrentAnswer(log, profile.groupId)),
+    }))
+  );
+
+  readonly columns$ = combineLatest([
+    this.item$.pipe(distinctUntilChanged()),
+    this.watchedGroup$,
+  ]).pipe(
+    map(([ item, watchedGroup ]) => this.getLogColumns(item.type, watchedGroup)),
+  );
+
+  isWatching$ = this.groupWatchingService.isWatching$;
+  canWatchAnswers$ = this.item$.pipe(
+    map(item => allowsWatchingAnswers(item.permissions))
+  );
 
   constructor(
     private activityLogService: ActivityLogService,
@@ -79,26 +80,10 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.item$.complete();
-    this.refresh$.complete();
   }
 
   refresh(): void {
-    this.refresh$.next();
     this.resetRows();
-  }
-
-  private getData$(item: Item, watchingGroup: WatchedGroup|null): Observable<Data> {
-    return combineLatest([
-      this.datapager.list$,
-      this.sessionService.userProfile$,
-    ]).pipe(
-      map(([ fetchData, profile ]) => ({
-        columns: this.getLogColumns(item.type, watchingGroup),
-        rowData: fetchData.data?.filter(log => !this.isSelfCurrentAnswer(log, profile.groupId)) ?? [],
-        isFetching: fetchData.isFetching,
-        hasError: fetchData.isError,
-      }))
-    );
   }
 
   getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {

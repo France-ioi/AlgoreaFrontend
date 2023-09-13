@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { BehaviorSubject, debounceTime, merge, Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, shareReplay, switchMap } from 'rxjs/operators';
-import { mapToFetchState } from '../../../../shared/operators/state';
+import { BehaviorSubject, debounceTime, merge, Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged, filter, shareReplay, switchMap } from 'rxjs/operators';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
@@ -11,13 +10,6 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 interface Column {
   field: string,
   header: string,
-}
-
-interface Data {
-  columns: Column[],
-  rowData: ActivityLog[],
-  isFetching: boolean,
-  hasError: boolean,
 }
 
 const logsLimit = 20;
@@ -36,10 +28,8 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
   private readonly groupId$ = new ReplaySubject<string | undefined>(1);
-  private readonly refresh$ = new Subject<void>();
   readonly state$ = this.groupId$.pipe(
-    switchMap(() => this.getData$()),
-    mapToFetchState({ resetter: this.refresh$ }),
+    switchMap(() => this.datapager.list$),
   );
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
   showOverlay$ = merge(
@@ -50,6 +40,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
   private readonly showOverlaySubscription = this.showOverlay$.subscribe(data => {
     data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
   });
+  columns: Column[] = this.getLogColumns();
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
@@ -74,25 +65,12 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.groupId$.complete();
-    this.refresh$.complete();
     this.showOverlaySubject$.complete();
     this.showOverlaySubscription.unsubscribe();
   }
 
   refresh(): void {
-    this.refresh$.next();
     this.resetRows();
-  }
-
-  private getData$(): Observable<Data> {
-    return this.datapager.list$.pipe(
-      map(fetchData => ({
-        columns: this.getLogColumns(),
-        rowData: fetchData.data ?? [],
-        isFetching: fetchData.isFetching,
-        hasError: fetchData.isError,
-      }))
-    );
   }
 
   getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
