@@ -12,7 +12,9 @@ export default defineConfig({
         config.env.E2E_AUTH_TOKEN_VALUE = authTokenValue;
       }
       return config;
-    }
+    },
+    defaultCommandTimeout: 10000,
+    experimentalMemoryManagement: true,
   },
   video: false,
   screenshotOnRunFailure: false,

@@ -9,7 +9,7 @@ describe('Algorea Frontend', () => {
     });
 
     it('should have clickable activity', () => {
-      cy.get('.p-treenode-content').first().should('be.visible').click();
+      cy.get('p-treenode').first().should('be.visible').click();
     });
 
     it('should have a working collapse button', () => {
