@@ -171,7 +171,6 @@ import { TabBarComponent } from './components/tab-bar/tab-bar.component';
 
     ReactiveFormsModule,
     TooltipModule,
-    TooltipModule,
     InputNumberModule,
     InputMaskModule,
     LetDirective,

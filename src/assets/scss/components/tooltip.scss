@@ -1,6 +1,10 @@
 @import 'src/assets/scss/functions';
 
 .alg-tooltip {
+  &.observation-mode {
+    min-width: toRem(280);
+  }
+
   &.p-tooltip-right .p-tooltip-arrow {
     border-right-color: var(--alg-primary-color);
   }

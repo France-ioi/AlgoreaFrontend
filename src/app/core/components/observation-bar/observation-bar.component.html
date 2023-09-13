@@ -2,10 +2,19 @@
   <div class="left-section alg-flex-1">
     <i
       class="left-icon alg-secondary-color ph-duotone ph-eye"
-      i18n-pTooltip pTooltip="This menu is currently filtered by {{ watchedGroup.name }} access…"
+      [pTooltip]="observationModeTooltip"
       [tooltipDisabled]="!showTooltip"
-      tooltipStyleClass="alg-tooltip"
+      [positionLeft]="5"
+      tooltipStyleClass="alg-tooltip observation-mode"
     ></i>
+    <ng-template #observationModeTooltip>
+      <span *ngIf="watchedGroup.route.isUser; else groupName" i18n>
+        Only the content visible by the user you are observing ({{ watchedGroup.name }}) is shown.
+      </span>
+      <ng-template #groupName>
+        Only the content visible by the group you are observing ({{ watchedGroup.name }}) is shown.
+      </ng-template>
+    </ng-template>
     <span class="title" *ngIf="!onlyIcon">
       <ng-container *ngIf="caption; else watchedGroupName">
         <span class="alg-secondary-color">{{ caption }}</span>
