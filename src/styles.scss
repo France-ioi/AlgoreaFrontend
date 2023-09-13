@@ -211,3 +211,13 @@ body {
   background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
 }
+
+.alg-search-result {
+  em {
+    padding: toRem(1);
+    color: var(--alg-primary-color);
+    background-color: var(--alg-search-result-highlight);
+    font-style: normal;
+    font-weight: 300;
+  }
+}

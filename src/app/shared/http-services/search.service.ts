@@ -10,6 +10,8 @@ const searchResponseDecoder = D.struct({
     D.struct({
       id: D.string,
       title: D.string,
+      titleHighlight: D.nullable(D.string),
+      highlights: D.array(D.string),
       type: D.literal('Task', 'Chapter'),
       score: D.number,
     }),
