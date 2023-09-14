@@ -39,6 +39,11 @@
                 "glob": "**/*",
                 "input": "src/assets/images/",
                 "output": "/images/"
+              },
+              {
+                "glob": "site.webmanifest",
+                "input": "src/assets/",
+                "output": "/assets/"
               }
             ],
             "styles": [
