@@ -20,6 +20,10 @@
       }
     }
 
+    .p-menuitem-content {
+      background: none !important;
+    }
+
     .p-menuitem-link {
       margin: var(--alg-space-size-6);
       flex-direction: row-reverse;
@@ -31,7 +35,7 @@
       }
 
       .p-menuitem-text, .p-menuitem-icon {
-        color: white;
+        color: var(--alg-white-color) !important;
         font-weight: 400;
       }
 
