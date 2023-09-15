@@ -21,7 +21,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">291</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">204</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">290</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">204</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="translated">Mauvaise langue?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
@@ -92,11 +92,11 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="4213825410774196775" datatype="html">
         <source> No results </source><target state="new"> No results </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="1427999324631306637" datatype="html">
-        <source>This menu is currently filtered by <x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/> access…</source><target state="new">This menu is currently filtered by <x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/> access…</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-search-result/left-search-result.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="7248248386950217161" datatype="html">
+        <source> Only the content visible by the user you are observing (<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>) is shown. </source><target state="new"> Only the content visible by the user you are observing (<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>) is shown. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/components/observation-bar/observation-bar.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">11,13</context>
         </context-group>
       </trans-unit><trans-unit id="3863946283840310958" datatype="html">
         <source>Oops… We didn’t find that page</source><target state="new">Oops… We didn’t find that page</target>
