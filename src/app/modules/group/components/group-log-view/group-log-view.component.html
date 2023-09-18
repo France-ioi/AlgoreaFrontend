@@ -29,7 +29,7 @@
       [tableStyle]="{'min-width': '599.98px'}"
       responsiveLayout="scroll"
     >
-      <ng-template pTemplate="header" let-rowData let-columns>
+      <ng-template pTemplate="header" let-rowData>
         <tr *ngIf="state.data.length > 0">
           <th i18n>Action</th>
           <th i18n>Content</th>
@@ -81,9 +81,9 @@
           <td>{{ rowData.at | date:'short' }}</td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="emptymessage" let-columns>
+      <ng-template pTemplate="emptymessage">
         <tr>
-          <td [attr.colspan]="columns.length">
+          <td>
             <span i18n>There is no progress to report for this group/user.</span>
           </td>
         </tr>
