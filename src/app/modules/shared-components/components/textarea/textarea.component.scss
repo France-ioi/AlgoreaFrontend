@@ -1,31 +1,34 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 :host {
   display: block;
   position: relative;
 }
 
-textarea {
+.textarea-element {
   width: 100%;
-  background-color: var(--input-transparency-color);
-  box-shadow: .1rem .1rem #00000019 inset;
-  border-radius: $border-radius;
+  padding: toRem(16);
+  background-color: var(--alg-light-color);
+  border-radius: var(--border-radius);
   border: none;
-  font-size: 1.2rem;
-  padding-left: 2.5rem;
-  padding-top: 0.5rem;
-
-  color: var(--nav-bk-color);
-
-  &::placeholder {
-    font-style: italic;
-    color: #C6C2C2;
-  }
+  font-size: toRem(16);
+  color: var(--alg-secondary-color);
 
   &.no-icon {
     padding-left: 1rem;
     padding-top: 1rem;
+  }
+
+  &:focus, &:active {
+    outline: toRem(2) solid var(--alg-primary-color);
+    box-shadow: none;
+  }
+
+  &::placeholder {
+    color: var(--alg-secondary-color);
+    font-size: toRem(16);
+    font-style: italic;
+    opacity: .5;
   }
 }
 
@@ -35,8 +38,4 @@ textarea {
   top: 0.6667rem;
   color: var(--base-text-color);
   font-size: 1.2rem;
-}
-
-.p-inputtext:enabled:focus:not(.p-error) {
-  box-shadow: .1rem .1rem #C9CFD7 inset;
 }
