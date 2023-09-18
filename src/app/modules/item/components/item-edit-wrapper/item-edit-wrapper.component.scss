@@ -11,18 +11,20 @@
 .field {
   display: flex;
   align-items: center;
+}
 
-  .field-name {
-    float: left;
-    width: 30%;
-    margin-top: 0;
-  }
+.field-name {
+  float: left;
+  width: 30%;
+  margin-top: 0;
+  color: var(--alg-form-item-label);
+}
 
-  .field-value {
-    float: left;
-    width: 80%;
-    margin-top: 6px;
-  }
+.field-value {
+  float: left;
+  width: 70%;
+  margin-top: 6px;
+  margin-left: toRem(16);
 }
 
 .item-edit-content {

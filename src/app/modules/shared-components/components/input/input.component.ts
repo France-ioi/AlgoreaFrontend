@@ -17,7 +17,7 @@ export class InputComponent {
 
   @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
   @Input() inputType = 'text';
-  @Input() inputIcon = 'fa fa-font';
+  @Input() inputIcon = '';
   @Input() buttonIcon?: string; // a phosphor-icon identifier for the input button
   @Input() hasClearButton = false;
 

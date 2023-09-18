@@ -4,7 +4,7 @@
     #input
     [type]="inputType"
     [placeholder]="placeholder"
-    [ngClass]="{ 'has-button': buttonIcon }"
+    [ngClass]="{ 'has-button': buttonIcon, 'has-input-icon': inputIcon }"
     [formControlName]="name"
     (focus)="focus.emit($event)"
     (blur)="blur.emit($event)"
@@ -22,7 +22,7 @@
   >
     <i class="icon ph ph-x"></i>
   </button>
-  <span class="icon-wrapper">
+  <span class="icon-wrapper" *ngIf="inputIcon">
     <i class="icon {{ inputIcon }}"></i>
   </span>
   <span *ngIf="buttonIcon" class="input-button" (click)="onButtonClick()">

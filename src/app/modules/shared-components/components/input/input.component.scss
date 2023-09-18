@@ -74,5 +74,8 @@
 
 .input-element {
   @include input-base;
-  padding-left: toRem(40);
+
+  &.has-input-icon {
+    padding-left: toRem(40);
+  }
 }
