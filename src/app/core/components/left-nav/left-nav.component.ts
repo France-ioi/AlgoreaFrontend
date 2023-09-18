@@ -18,6 +18,7 @@ import { repeatLatestWhen } from 'src/app/shared/helpers/repeatLatestWhen';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { readyState } from 'src/app/shared/helpers/state';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { LayoutService } from '../../../shared/services/layout.service';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -76,8 +77,10 @@ export class LeftNavComponent implements OnChanges {
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
   isWatching$ = this.groupWatchingService.isWatching$;
+  isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
   skillsDisabled = environment.featureFlags.skillsDisabled;
+  observationModeCaption = $localize`Observation mode`;
 
   constructor(
     private sessionService: UserSessionService,
@@ -87,6 +90,7 @@ export class LeftNavComponent implements OnChanges {
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,
     private injector : Injector,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {

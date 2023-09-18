@@ -51,6 +51,7 @@ import { ThreadMessageComponent } from './components/thread-message/thread-messa
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ObservationBarWithButtonComponent } from './components/observation-bar-with-button/observation-bar-with-button.component';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -71,6 +72,7 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
     TopRightControlsComponent,
     TopRightMenuComponent,
     ObservationBarComponent,
+    ObservationBarWithButtonComponent,
     LanguageMismatchComponent,
     TopBarComponent,
     ContentTopBarComponent,

@@ -1,0 +1,11 @@
+@import 'src/assets/scss/functions';
+
+.container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.start-watch-button {
+  margin-left: toRem(8);
+}
