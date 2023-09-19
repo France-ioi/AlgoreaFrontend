@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Injector, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatestWith, EMPTY, filter, map, Observable, Subscription, switchMap, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, combineLatestWith, EMPTY, filter, map, Observable, Subscription, switchMap, take } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { readyData } from 'src/app/shared/operators/state';
 import { ThreadService } from './threads.service';
@@ -29,8 +29,6 @@ export class DiscussionService implements OnDestroy {
   private currentItemId = new BehaviorSubject<string | undefined>(undefined);
   currentItemId$ = this.currentItemId.asObservable();
   private hasForcedThread = false;
-
-  state$ = this.visible$.pipe(map(visible => ({ visible })));
 
   /**
    * When a thread is available but currently not visible, the number of events that arrive since the thread was last opened in this session
