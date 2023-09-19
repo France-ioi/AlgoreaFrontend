@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
   canShowBreadcrumbs$ = this.layoutService.canShowBreadcrumbs$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
-  threadState$ = this.discussionService.state$;
+  isDiscussionVisible$ = this.discussionService.visible$;
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
   watchedGroupError$ = this.groupWatchingService.watchedGroupError$;

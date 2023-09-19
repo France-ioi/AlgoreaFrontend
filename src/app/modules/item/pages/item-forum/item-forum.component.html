@@ -26,7 +26,7 @@
         (refresh)="refresh()"
       ></alg-error>
 
-      <ng-container *ngIf="state.data && state.data.rowData">
+      <ng-container *ngIf="state.data">
         <div class="operation-buttons">
           <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
             Refresh
@@ -34,63 +34,51 @@
         </div>
         <p-table
           class="alg-table"
-          [columns]="state.data.columns"
-          [value]="state.data.rowData"
+          [value]="state.data"
           [loading]="state.isFetching"
           [tableStyle]="{'min-width': '599.98px'}"
           responsiveLayout="scroll"
         >
-          <ng-template pTemplate="header" let-rowData let-columns>
-            <tr *ngIf="rowData.length > 0">
-              <ng-container *ngFor="let col of columns">
-                <th>
-                  {{ col.header }}
-                </th>
-              </ng-container>
+          <ng-template pTemplate="header">
+            <tr *ngIf="state.data.length > 0">
+              <th></th>
+              <th *ngIf="itemData?.item?.type !== 'Task'" i18n>Content</th>
+              <th i18n>User</th>
+              <th i18n>Status</th>
+              <th i18n># msgs</th>
+              <th i18n>Latest update</th>
             </tr>
           </ng-template>
 
           <ng-template
             pTemplate="body"
             let-rowData
-            let-columns="columns"
           >
             <tr>
-              <td *ngFor="let col of columns">
-                <ng-container [ngSwitch]="col.field">
-                  <ng-container *ngSwitchCase="'openThread'">
-                    <button pButton type="button" [ngClass]="{'p-button-danger': rowData.isOpened}" class="p-button-rounded" (click)="toggleThread({
-                      rowData,
-                      itemId: rowData.item.id,
-                      participantId: rowData.participant.id,
-                    })">{{ rowData.isOpened ? 'Close' : 'Open' }}</button>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'item.title'">
-                    <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
-                      {{ rowData.item.title }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'participant'">
-                    <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
-                      {{ rowData.participant | userCaption }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'status'">
-                    {{ rowData.status | threadStatusDisplay }}
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'latestUpdateAt'">
-                    {{ rowData.latestUpdateAt | date:'short' }}
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
-                    {{ rowData[col.field] }}
-                  </ng-container>
-                </ng-container>
+              <td>
+                <button pButton type="button" [ngClass]="{'p-button-danger': (itemIdOpen$ | async) ===  rowData.item.id}" class="p-button-rounded" (click)="toggleItem({
+                  itemId: rowData.item.id,
+                  participantId: rowData.participant.id,
+                })" i18n>{{ (itemIdOpen$ | async) ===  rowData.item.id ? 'Close' : 'Open' }}</button>
               </td>
+              <td *ngIf="itemData?.item?.type !== 'Task'">
+                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
+                  {{ rowData.item.title }}
+                </a>
+              </td>
+              <td>
+                <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
+                  {{ rowData.participant | userCaption }}
+                </a>
+              </td>
+              <td>{{ rowData.status | threadStatusDisplay }}</td>
+              <td>{{ rowData['messageCount'] }}</td>
+              <td>{{ rowData.latestUpdateAt | date:'short' }}</td>
             </tr>
           </ng-template>
-          <ng-template pTemplate="emptymessage" let-columns>
+          <ng-template pTemplate="emptymessage">
             <tr>
-              <td [attr.colspan]="columns.length">
+              <td>
                 <span i18n>There are no threads for this item.</span>
               </td>
             </tr>

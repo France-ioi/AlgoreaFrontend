@@ -45,22 +45,18 @@
       <alg-observation-bar-with-button></alg-observation-bar-with-button>
       <ng-container
         *ngIf="{
-          canBeVisible: discussionCanBeVisible$ | async,
+          canBeShown: canDiscussionBeShown$ | async,
           isVisible: isDiscussionVisible$ | async
         } as discussion">
         <button
-          *ngIf="discussion.canBeVisible === true"
+          *ngIf="discussion.canBeShown"
           class="alg-button-icon no-bg primary-color margin-left"
           pButton
           type="button"
           icon="ph-duotone ph-chats-circle"
-          (click)="toggleThreadVisibility(!discussion.isVisible)"
+          (click)="toggleDiscussionPanelVisibility(!discussion.isVisible)"
         ></button>
       </ng-container>
-      <alg-watch-button
-        class="margin-left"
-        *ngIf="currentContent.type === 'group' && !!$any(currentContent).details?.currentUserCanWatchMembers"
-      ></alg-watch-button>
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
         class="neighbor-widget margin-left"

@@ -1,19 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
 import { GroupWatchingService } from '../../../../core/services/group-watching.service';
-import { GetThreadsService, Thread } from '../../services/get-threads.service';
-import { ReplaySubject, switchMap, combineLatest, Subject, first, BehaviorSubject } from 'rxjs';
+import { GetThreadsService } from '../../services/get-threads.service';
+import { ReplaySubject, switchMap, combineLatest, Subject, first, BehaviorSubject, Subscription } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { DiscussionService } from '../../services/discussion.service';
-
-interface Column {
-  field: string,
-  header: string,
-}
 
 enum ForumTabUrls {
   MyThreads= '/forum/my-threads',
@@ -46,12 +40,12 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     startWith(this.router.url),
     distinctUntilChanged(),
   );
+  private subscription?: Subscription;
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
   private readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
   isWatching$ = this.groupWatchingService.isWatching$;
   selected$ = new ReplaySubject<number>(1);
-  nextRowIndexOpenThread$ = new BehaviorSubject<number | undefined>(undefined);
   options$ = combineLatest([
     this.watchedGroup$,
     this.url$,
@@ -62,8 +56,7 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
         ? [{ label: `${ watchedGroup?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
     ]),
   );
-
-  fetchState$ = combineLatest([
+  state$ = combineLatest([
     this.selected$,
     this.item$,
     this.watchedGroup$,
@@ -72,33 +65,12 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       this.getThreadService.get(item.id, selected === 2 && watchedGroup
         ? { watchedGroupId: watchedGroup.route.id }
         : { isMine: selected === 0 }).pipe(
-        map(threads => ({
-          columns: this.getThreadColumns(item.type),
-          rowData: threads,
-        })),
         mapToFetchState({ resetter: this.refresh$ }),
       ),
     ),
   );
 
-  state$ = combineLatest([
-    this.fetchState$,
-    this.nextRowIndexOpenThread$,
-  ]).pipe(
-    map(([ fetchState, nextRowIndexOpenThread ]) =>
-      ({
-        ...fetchState,
-        data: {
-          ...fetchState.data,
-          rowData: fetchState.data?.rowData.map((thread, index) => ({
-            ...thread,
-            rowIndex: index,
-            isOpened: index === nextRowIndexOpenThread,
-          }))
-        }
-      })
-    )
-  );
+  itemIdOpen$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor(
     private groupWatchingService: GroupWatchingService,
@@ -106,8 +78,7 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private discussionService: DiscussionService,
-  ) {
-  }
+  ) {}
 
   ngOnChanges(): void {
     if (this.itemData) {
@@ -129,12 +100,16 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       }
       this.selected$.next(0);
     });
+
+    this.subscription = this.discussionService.currentItemId$.subscribe(itemId => this.itemIdOpen$.next(itemId));
   }
 
   ngOnDestroy(): void {
+    this.itemIdOpen$.complete();
     this.item$.complete();
     this.selected$.complete();
     this.refresh$.complete();
+    this.subscription?.unsubscribe();
   }
 
   onChange(selected: number, options: typeof OPTIONS): void {
@@ -153,60 +128,12 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  toggleThread({
-    rowData,
-    itemId,
-    participantId
-  }:{
-      rowData: Thread & { isOpened: boolean, rowIndex: number },
-      itemId: string,
-      participantId: string,
-    }
-  ): void{
-    this.discussionService.toggleVisibility(rowData.isOpened === false, {
+  toggleItem({ itemId, participantId }:{ itemId: string, participantId: string }): void {
+    const haveToBeOpened = itemId !== this.itemIdOpen$.value;
+    this.discussionService.toggleVisibility(haveToBeOpened, {
       itemId,
       participantId,
     });
-    this.nextRowIndexOpenThread$.next(rowData.isOpened === false ? rowData.rowIndex : undefined);
-  }
-
-  private getThreadColumns(type: ItemType): Column[] {
-    const columns = [
-      {
-        field: 'openThread',
-        header: $localize`Open thread`,
-        enabled: true,
-      },
-      {
-        field: 'item.title',
-        header: $localize`Content`,
-        enabled: type !== 'Task',
-      },
-      {
-        field: 'participant',
-        header: $localize`User`,
-        enabled: true,
-      },
-      {
-        field: 'status',
-        header: $localize`Status`,
-        enabled: true,
-      },
-      {
-        field: 'messageCount',
-        header: $localize`# msgs`,
-        enabled: true,
-      },
-      {
-        field: 'latestUpdateAt',
-        header: $localize`Latest update`,
-        enabled: true,
-      }
-    ];
-
-    return columns.filter(item => item.enabled).map(item => ({
-      field: item.field,
-      header: item.header,
-    }));
+    this.itemIdOpen$.next(haveToBeOpened ? itemId : undefined);
   }
 }

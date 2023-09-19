@@ -20,7 +20,7 @@ export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
-  discussionCanBeVisible$ = this.discussionService.canShowInCurrentPage$;
+  canDiscussionBeShown$ = this.discussionService.canShowInCurrentPage$;
   isDiscussionVisible$ = this.discussionService.visible$;
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
@@ -56,8 +56,8 @@ export class ContentTopBarComponent {
     private layoutService: LayoutService,
   ) {}
 
-  toggleThreadVisibility(isDiscussionVisible: boolean): void {
-    this.discussionService.toggleVisibility(isDiscussionVisible);
+  toggleDiscussionPanelVisibility(visible: boolean): void {
+    this.discussionService.toggleVisibility(visible);
   }
 
   showLeftMenu(): void {

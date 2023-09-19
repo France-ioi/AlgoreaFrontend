@@ -26,6 +26,8 @@ export class DiscussionService implements OnDestroy {
   canShowInCurrentPage$ = this.canShowInCurrentPage.asObservable();
 
   private configuredThread: ThreadId|null = null;
+  private currentItemId = new BehaviorSubject<string | undefined>(undefined);
+  currentItemId$ = this.currentItemId.asObservable();
   private hasForcedThread = false;
 
   state$ = this.visible$.pipe(map(visible => ({ visible })));
@@ -85,6 +87,10 @@ export class DiscussionService implements OnDestroy {
     if (!this.threadService) return;
     this.visible.next(visible);
     this.hasForcedThread = visible && !!thread;
+    this.currentItemId.next(visible ?
+      thread !== null && thread !== undefined ?
+        thread.itemId : this.configuredThread?.itemId
+      : undefined);
     this.threadService.setThread(thread ? thread : this.configuredThread);
   }
 
