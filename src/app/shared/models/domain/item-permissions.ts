@@ -1,4 +1,4 @@
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from '../../helpers/decoders';
 import { allowsGrantingEdition, ItemPermWithEdit, itemEditPermDecoder } from './item-edit-permission';

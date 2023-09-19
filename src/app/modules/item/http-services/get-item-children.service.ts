@@ -7,7 +7,7 @@ import { decodeSnakeCase } from 'src/app/shared/operators/decode';
 import { dateDecoder } from 'src/app/shared/helpers/decoders';
 import { canCurrentUserViewInfo, itemViewPermDecoder, ItemWithViewPerm } from 'src/app/shared/models/domain/item-view-permission';
 import { itemCorePermDecoder } from 'src/app/shared/models/domain/item-permissions';
-import { pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/function';
 
 const baseItemChildCategory = D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge');
 
