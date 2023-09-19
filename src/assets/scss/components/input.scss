@@ -1,0 +1,14 @@
+@import 'src/assets/scss/components/input-base';
+@import 'src/assets/scss/functions';
+
+.alg-input-number {
+  .p-inputnumber-input {
+    @include input-base;
+  }
+}
+
+.alg-input {
+  .p-inputtext {
+    @include input-base;
+  }
+}

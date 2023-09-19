@@ -39,6 +39,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   @Input() inputCreatePlaceholder = $localize`Enter a title to create a new child`;
   @Input() showCreateUI = true;
   @Input() showSearchUI = true;
+  @Input() isLight = false;
 
   @Output() contentAdded = new EventEmitter<AddedContent<Type>>();
 

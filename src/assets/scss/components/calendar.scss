@@ -1,9 +1,33 @@
 @import 'src/assets/scss/components/input-base';
+@import 'src/assets/scss/functions';
 
 .alg-calendar {
-  @include input-base;
-
   .p-datepicker-trigger {
     width: 3rem;
+  }
+
+  .p-calendar-w-btn {
+    display: flex;
+    position: relative;
+    border-radius: var(--border-radius);
+  }
+
+  .p-inputtext {
+    @include input-base;
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
+  .p-button-icon-only {
+    background-color: var(--alg-primary-color);
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+
+    &:hover {
+      background-color: var(--alg-primary-color);
+    }
   }
 }

@@ -1,15 +1,22 @@
+@import 'src/assets/scss/components/input-base';
 @import 'src/assets/scss/functions';
 
 :host {
   &.transparent {
     .input-element {
-      background-color: transparent;
+      background-color: transparent !important;
       &::placeholder {
         opacity: .5;
       }
       &:active, &:focus {
         background-color: var(--alg-white-color);
       }
+    }
+  }
+
+  &.white-bg {
+    .input-element {
+      background-color: var(--alg-white-color) !important;
     }
   }
 }
@@ -19,28 +26,9 @@
   position: relative;
   border-radius: var(--border-radius);
 
-  &.large {
-    height: 3.75rem;
-
-    .input-element {
-      font-size: 2.5rem;
-      font-weight: 300;
-      padding-left: 3.75rem;
-      line-height: 3.75rem;
-    }
-
-    .icon {
-      left: 1.4167rem;
-    }
-  }
-
-  &.light {
-    .input-element {
-      background-color: white;
-    }
-  }
-
   .input-element {
+    background-color: var(--alg-light-color);
+
     &.has-button {
       border-top-right-radius: unset;
       border-bottom-right-radius: unset;
@@ -55,12 +43,6 @@
     outline: none;
     background-color: transparent;
     font-size: toRem(24);
-  }
-
-  .input-element::-webkit-outer-spin-button,
-  .input-element::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
   }
 
   .input-button {
@@ -91,24 +73,9 @@
 }
 
 .input-element {
-  width: 100%;
-  height: toRem(40);
-  display: flex;
-  background-color: #fff;
-  border: none;
-  border-radius: var(--border-radius);
-  padding-left: toRem(40);
-  font-size: toRem(16);
-  color: var(--alg-secondary-color);
+  @include input-base;
 
-  &:focus {
-    outline: toRem(2) solid var(--alg-primary-color);
-  }
-
-  &::placeholder {
-    color: var(--alg-secondary-color);
-    font-size: toRem(16);
-    font-style: italic;
-    opacity: .5;
+  &.has-input-icon {
+    padding-left: toRem(40);
   }
 }

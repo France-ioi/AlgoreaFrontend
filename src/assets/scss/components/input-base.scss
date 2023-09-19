@@ -1,31 +1,31 @@
-@import '../../../variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
 @mixin input-base {
-  input {
-    font-family: var(--font-family);
-    width: 100%;
-    display: flex;
-    background-color: var(--input-transparency-color);
-    border: none;
-    box-shadow: 0 .1rem #00000019 inset;
-    border-radius: $border-radius;
-    font-size: 1.2rem;
-    color: var(--base-text-color);
+  width: 100%;
+  height: toRem(40);
+  display: flex;
+  padding: 0 toRem(16);
+  background-color: var(--alg-light-color);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: toRem(16);
+  color: var(--alg-secondary-color);
 
-    &:focus, &:active {
-      outline: none;
-    }
-
-    &::placeholder {
-      font-style: italic;
-      color: rgb(118, 118, 121);
-      font-size: 1.2rem;
-    }
+  &:focus {
+    outline: toRem(2) solid var(--alg-primary-color);
+    box-shadow: none;
   }
 
-  .p-button {
-    background-color: var(--base-color);
-    border-color: var(--base-color);
+  &::placeholder {
+    color: var(--alg-secondary-color);
+    font-size: toRem(16);
+    font-style: italic;
+    opacity: .5;
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

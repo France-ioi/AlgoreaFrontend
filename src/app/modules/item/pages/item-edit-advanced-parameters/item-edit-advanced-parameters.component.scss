@@ -1,55 +1,63 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
+
+.title {
+  margin-top: toRem(38);
+  margin-bottom: 0;
+}
 
 .form-item-view {
   display: flex;
   align-items: center;
-  margin: 1.25rem;
+  margin: toRem(16) 0;
+}
 
-  .form-item-label {
-    display: block;
-    font-size: 1.2rem;
-    width: 21rem;
-    color: var(--dark-text-color);
-    font-weight: bold;
-  }
+.form-item-label {
+  width: 30%;
+  display: block;
+  font-size: toRem(16);
+  color: var(--alg-form-item-label);
+}
 
-  .form-item-control {
-    flex: 1;
+.form-item-control {
+  margin-left: toRem(16);
+  flex: 1;
 
-    &.another-input {
+  &.another-input {
+    display: flex;
+    align-items: center;
+
+    .first-child {
+      margin-right: 2rem;
+
+      &.stretch {
+        flex: 1;
+      }
+    }
+
+    .date-pickers {
       display: flex;
       align-items: center;
+      font-size: 1.2rem;
 
-      .first-child {
-        margin-right: 2rem;
-
-        &.stretch {
-          flex: 1;
-        }
-      }
-
-      .date-pickers {
-        display: flex;
-        align-items: center;
-        font-size: 1.2rem;
-
-        .date-label {
-          margin-left: 1rem;
-          margin-right: 1rem;
-        }
+      .date-label {
+        margin-left: 1rem;
+        margin-right: 1rem;
       }
     }
   }
 }
 
 .form-item-duration {
-  margin: .25rem 1.25rem;
-  height: 6rem;
+  margin: toRem(16) 0;
+}
+
+.input-wrapper-duration {
+  height: toRem(78);
 }
 
 .form-item-datepicker {
-  margin: .25rem 1.25rem;
-  height: 3rem;
+  margin: toRem(16) 0;
+  height: toRem(40);
 }
 
 .delete-button {

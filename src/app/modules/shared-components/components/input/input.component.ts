@@ -16,11 +16,9 @@ export class InputComponent {
   @Input() parentForm?: UntypedFormGroup;
 
   @Input() placeholder = ''; // avoid 'undefined' if no placeholder specified
-  @Input() isDark = true;
-  @Input() size: 'small' | 'large' = 'small';
   @Input() inputType = 'text';
-  @Input() inputIcon = 'fa fa-font';
-  @Input() buttonIcon?: string; // a font-awesome icon identifier for the input button
+  @Input() inputIcon = '';
+  @Input() buttonIcon?: string; // a phosphor-icon identifier for the input button
   @Input() hasClearButton = false;
 
   @Input() pTooltip = '';

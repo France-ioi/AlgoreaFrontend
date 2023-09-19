@@ -1,9 +1,11 @@
-<div class="elements">
-  <div class="element" *ngIf="showField.days">
-    <p class="label">
-      <small i18n>Days</small>
-    </p>
-    <p-inputMask
+<div class="container">
+  <div class="elements">
+    <div class="element alg-flex-1" *ngIf="showField.days">
+      <p class="label">
+        <small i18n>Days</small>
+      </p>
+      <p-inputMask
+        class="alg-input"
         placeholder="DDD"
         slotChar="DDD"
         mask="9?99"
@@ -11,14 +13,15 @@
         [size]="8"
         [(ngModel)]="days"
         (ngModelChange)="handleChange()"
-    >
-    </p-inputMask>
-  </div>
-  <div class="element" *ngIf="showField.hours">
-    <p class="label">
-      <small i18n>Hours</small>
-    </p>
-    <p-inputMask
+      >
+      </p-inputMask>
+    </div>
+    <div class="element alg-flex-1" *ngIf="showField.hours">
+      <p class="label">
+        <small i18n>Hours</small>
+      </p>
+      <p-inputMask
+        class="alg-input"
         [placeholder]="showField.days ? 'HH' : 'HHH'"
         [slotChar]="showField.days ? 'HH' : 'HHH'"
         [mask]="showField.days ? '9?9' : '9?99'"
@@ -26,14 +29,15 @@
         [size]="8"
         [(ngModel)]="hours"
         (ngModelChange)="handleChange()"
-    >
-    </p-inputMask>
-  </div>
-  <div class="element" *ngIf="showField.minutes">
-    <p class="label">
-      <small i18n>Minutes</small>
-    </p>
-    <p-inputMask
+      >
+      </p-inputMask>
+    </div>
+    <div class="element alg-flex-1" *ngIf="showField.minutes">
+      <p class="label">
+        <small i18n>Minutes</small>
+      </p>
+      <p-inputMask
+        class="alg-input"
         placeholder="MM"
         slotChar="MM"
         mask="9?9"
@@ -41,14 +45,15 @@
         [size]="8"
         [(ngModel)]="minutes"
         (ngModelChange)="handleChange()"
-    >
-    </p-inputMask>
-  </div>
-  <div class="element" *ngIf="showField.seconds">
-    <p class="label">
-      <small i18n>Seconds</small>
-    </p>
-    <p-inputMask
+      >
+      </p-inputMask>
+    </div>
+    <div class="element alg-flex-1" *ngIf="showField.seconds">
+      <p class="label">
+        <small i18n>Seconds</small>
+      </p>
+      <p-inputMask
+        class="alg-input"
         placeholder="SS"
         slotChar="SS"
         mask="9?9"
@@ -56,10 +61,10 @@
         [size]="8"
         [(ngModel)]="seconds"
         (ngModelChange)="handleChange()"
-    >
-    </p-inputMask>
+      >
+      </p-inputMask>
+    </div>
   </div>
+  <alg-input-error [control]="control"></alg-input-error>
+  <div *ngIf="!control?.invalid">&nbsp;</div>
 </div>
-
-<alg-input-error [control]="control"></alg-input-error>
-<div *ngIf="!control?.invalid">&nbsp;</div>

@@ -1,10 +1,11 @@
 <form *ngIf="item && parentForm" [formGroup]="parentForm">
-  <alg-section icon="fa fa-cogs" i18n-label label="Global parameters"
-    *ngIf="item.type === 'Task'">
+  <div *ngIf="item.type === 'Task'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
+
     <div class="form-item-view">
       <span class="form-item-label" i18n>Url</span>
       <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder name="url" size="small"></alg-input>
+        <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder name="url"></alg-input>
       </div>
     </div>
 
@@ -18,16 +19,16 @@
     <div class="form-item-view">
       <span class="form-item-label">TextID</span>
       <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id" size="small"></alg-input>
+        <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id"></alg-input>
         <small class="alg-validation-error" *ngIf="parentForm.errors?.text_id.includes('text_id must be unique')" i18n>
           This value is already used by another content. The text id must be unique across the platform.
         </small>
       </div>
     </div>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-book" i18n-label label="Score & Validation"
-    *ngIf="['Chapter','Skill'].includes(item.type)">
+  <div *ngIf="['Chapter','Skill'].includes(item.type)">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Score & Validation</h2>
     <div class="form-item-view">
       <span class="form-item-label" i18n>Validation criteria</span>
       <div class="form-item-control">
@@ -46,10 +47,10 @@
         <alg-switch formControlName="no_score" mode="white"></alg-switch>
       </div>
     </div>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-desktop" i18n-label label="Display"
-    *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Display</h2>
     <div class="form-item-view">
       <span class="form-item-label">
         <ng-container i18n>Display header</ng-container>&nbsp;
@@ -87,7 +88,7 @@
         <ng-container i18n>Thumbnail url</ng-container>
       </span>
       <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url" size="small"></alg-input>
+        <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url"></alg-input>
         <ng-container *ngIf="parentForm.get('image_url')?.value as imageUrlValue">
           <span
             class="alg-warning-message"
@@ -99,9 +100,10 @@
         </ng-container>
       </div>
     </div>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-desktop" i18n-label label="Participation" *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Participation</h2>
     <div class="form-item-view">
       <span class="form-item-label">
         <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
@@ -136,7 +138,7 @@
               (ngModelChange)="onDurationEnabledChange()"
           >
           </alg-switch>
-          <div class="input-wrapper">
+          <div class="input-wrapper-duration">
             <alg-duration
                 class="alg-duration"
                 formControlName="duration"
@@ -161,13 +163,13 @@
           >
           </alg-switch>
           <ng-container *ngIf="!!parentForm.get('entering_time_min_enabled')?.value">
-            <div class="input-wrapper">
+            <div>
               <p-calendar
-                  class="alg-calendar"
-                  formControlName="entering_time_min"
-                  [showIcon]="true"
-                  [showTime]="true"
-                  (ngModelChange)="onDateChange()"
+                styleClass="alg-calendar"
+                formControlName="entering_time_min"
+                [showIcon]="true"
+                [showTime]="true"
+                (ngModelChange)="onDateChange()"
               >
               </p-calendar>
             </div>
@@ -185,14 +187,14 @@
           >
           </alg-switch>
           <ng-container *ngIf="!!parentForm.get('entering_time_max_enabled')?.value">
-            <div class="input-wrapper">
+            <div>
               <p-calendar
-                  class="alg-calendar"
-                  formControlName="entering_time_max"
-                  [showIcon]="true"
-                  [showTime]="true"
-                  [minDate]="minEnteringTimeMaxDate"
-                  (ngModelChange)="onDateChange()"
+                styleClass="alg-calendar"
+                formControlName="entering_time_max"
+                [showIcon]="true"
+                [showTime]="true"
+                [minDate]="minEnteringTimeMaxDate"
+                (ngModelChange)="onDateChange()"
               >
               </p-calendar>
             </div>
@@ -200,9 +202,10 @@
         </div>
       </div>
     </ng-container>
-  </alg-section>
+  </div>
 
-  <alg-section icon="fa fa-users" i18n-label label="Team" *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'">
+    <h2 class="alg-h2 alg-text-normal title" i18n>Team</h2>
     <div class="form-item-view">
       <span class="form-item-label">
         <ng-container i18n>Participation as a team (only)</ng-container>&nbsp;
@@ -238,7 +241,7 @@
         </div>
       </div>
     </ng-container>
-  </alg-section>
+  </div>
 </form>
 
 <div class="delete-button">
