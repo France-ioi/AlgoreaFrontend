@@ -34,56 +34,44 @@
         </div>
         <p-table
           class="alg-table"
-          [columns]="state.data.columns"
-          [value]="state.data.rowData"
+          [value]="state.data"
           [loading]="state.isFetching"
           [tableStyle]="{'min-width': '599.98px'}"
           responsiveLayout="scroll"
         >
-          <ng-template pTemplate="header" let-rowData let-columns>
-            <tr *ngIf="rowData.length > 0">
-              <ng-container *ngFor="let col of columns">
-                <th>
-                  {{ col.header }}
-                </th>
-              </ng-container>
+          <ng-template pTemplate="header">
+            <tr *ngIf="state.data.length > 0">
+              <th *ngIf="itemData?.item?.type !== 'Task'" i18n>Content</th>
+              <th i18n>User</th>
+              <th i18n>Status</th>
+              <th i18n># msgs</th>
+              <th i18n>Latest update</th>
             </tr>
           </ng-template>
 
           <ng-template
             pTemplate="body"
             let-rowData
-            let-columns="columns"
           >
             <tr>
-              <td *ngFor="let col of columns">
-                <ng-container [ngSwitch]="col.field">
-                  <ng-container *ngSwitchCase="'item.title'">
-                    <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
-                      {{ rowData.item.title }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'participant'">
-                    <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
-                      {{ rowData.participant | userCaption }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'status'">
-                    {{ rowData.status | threadStatusDisplay }}
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'latestUpdateAt'">
-                    {{ rowData.latestUpdateAt | date:'short' }}
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
-                    {{ rowData[col.field] }}
-                  </ng-container>
-                </ng-container>
+              <td *ngIf="itemData?.item?.type !== 'Task'">
+                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
+                  {{ rowData.item.title }}
+                </a>
               </td>
+              <td>
+                <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
+                  {{ rowData.participant | userCaption }}
+                </a>
+              </td>
+              <td>{{ rowData.status | threadStatusDisplay }}</td>
+              <td>{{ rowData['messageCount'] }}</td>
+              <td>{{ rowData.latestUpdateAt | date:'short' }}</td>
             </tr>
           </ng-template>
-          <ng-template pTemplate="emptymessage" let-columns>
+          <ng-template pTemplate="emptymessage">
             <tr>
-              <td [attr.colspan]="columns.length">
+              <td>
                 <span i18n>There are no threads for this item.</span>
               </td>
             </tr>
