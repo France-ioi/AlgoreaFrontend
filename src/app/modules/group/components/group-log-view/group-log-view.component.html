@@ -64,7 +64,7 @@
               </div>
             </div>
           </td>
-          <td (mouseleave)="onMouseLeave()">
+          <td (mouseleave)="onMouseLeave($event)">
             <a
               class="alg-link"
               [ngClass]="{'disabled': !rowData.item}"

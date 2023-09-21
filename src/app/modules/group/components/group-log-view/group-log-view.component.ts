@@ -5,6 +5,7 @@ import { ActivityLog, ActivityLogService } from '../../../../shared/http-service
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { canCloseOverlay } from 'src/app/shared/helpers/overlay';
 
 const logsLimit = 20;
 
@@ -98,8 +99,10 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
     this.showOverlaySubject$.next({ event, itemId, target: targetRef.nativeElement });
   }
 
-  onMouseLeave(): void {
-    this.closeOverlay();
+  onMouseLeave(event: MouseEvent): void {
+    if (canCloseOverlay(event)) {
+      this.closeOverlay();
+    }
   }
 
   closeOverlay(): void {
