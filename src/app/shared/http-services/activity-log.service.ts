@@ -59,13 +59,31 @@ export class ActivityLogService {
 
   constructor(private http: HttpClient) { }
 
-  getActivityLog(itemId: string, options?: { watchedGroupId?: string, limit?: number }): Observable<ActivityLog[]> {
+  getActivityLog(itemId: string, options?: {
+    watchedGroupId?: string,
+    limit?: number,
+    pagination?: {
+      fromItemId: string,
+      fromParticipantId: string,
+      fromAttemptId: string,
+      fromAnswerId: string,
+      fromActivityType: string,
+    },
+  }): Observable<ActivityLog[]> {
     let params = new HttpParams();
     const limit = options?.limit ?? logDefaultLimit;
     params = params.set('limit', limit.toString());
 
-    if (options?.watchedGroupId) {
+    if (options?.watchedGroupId !== undefined) {
       params = params.set('watched_group_id', options.watchedGroupId);
+    }
+
+    if (options?.pagination !== undefined) {
+      params = params.set('from.item_id', options.pagination.fromItemId);
+      params = params.set('from.answer_id', options.pagination.fromAnswerId);
+      params = params.set('from.participant_id', options.pagination.fromParticipantId);
+      params = params.set('from.attempt_id', options.pagination.fromAttemptId);
+      params = params.set('from.activity_type', options.pagination.fromActivityType);
     }
 
     return this.http
@@ -78,12 +96,31 @@ export class ActivityLogService {
 
   getAllActivityLog(
     watchedGroupId?: string,
+    options?: {
+      limit?: number,
+      pagination?: {
+        fromItemId: string,
+        fromParticipantId: string,
+        fromAttemptId: string,
+        fromAnswerId: string,
+        fromActivityType: string,
+      },
+    }
   ): Observable<ActivityLog[]> {
     let params = new HttpParams();
-    params = params.set('limit', '20');
+    const limit = options?.limit ?? logDefaultLimit;
+    params = params.set('limit', limit.toString());
 
     if (watchedGroupId) {
       params = params.set('watched_group_id', watchedGroupId);
+    }
+
+    if (options?.pagination !== undefined) {
+      params = params.set('from.item_id', options.pagination.fromItemId);
+      params = params.set('from.answer_id', options.pagination.fromAnswerId);
+      params = params.set('from.participant_id', options.pagination.fromParticipantId);
+      params = params.set('from.attempt_id', options.pagination.fromAttemptId);
+      params = params.set('from.activity_type', options.pagination.fromActivityType);
     }
 
     return this.http
