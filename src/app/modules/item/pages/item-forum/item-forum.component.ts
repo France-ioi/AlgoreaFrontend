@@ -5,7 +5,6 @@ import { GetThreadsService } from '../../services/get-threads.service';
 import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { ItemRouter } from '../../../../shared/routing/item-router';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { DiscussionService } from '../../services/discussion.service';
@@ -76,7 +75,6 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private groupWatchingService: GroupWatchingService,
     private getThreadService: GetThreadsService,
-    private itemRouter: ItemRouter,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private discussionService: DiscussionService,
