@@ -1,16 +1,10 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { BehaviorSubject, debounceTime, merge, Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, filter, shareReplay, switchMap } from 'rxjs/operators';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { BehaviorSubject, debounceTime, merge, Observable } from 'rxjs';
+import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { canCloseOverlay } from '../../../../shared/helpers/overlay';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
-
-interface Column {
-  field: string,
-  header: string,
-}
 
 const logsLimit = 20;
 
@@ -19,7 +13,7 @@ const logsLimit = 20;
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
 })
-export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
+export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   @Input() groupId?: string;
   @Input() showUserColumn = true;
@@ -27,10 +21,6 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
   @ViewChild('op') op?: OverlayPanel;
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
 
-  private readonly groupId$ = new ReplaySubject<string | undefined>(1);
-  readonly state$ = this.groupId$.pipe(
-    switchMap(() => this.datapager.list$),
-  );
   private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
   showOverlay$ = merge(
     this.showOverlaySubject$.pipe(debounceTime(750)),
@@ -40,7 +30,6 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
   private readonly showOverlaySubscription = this.showOverlay$.subscribe(data => {
     data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
   });
-  columns: Column[] = this.getLogColumns();
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
@@ -50,21 +39,24 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
     },
   });
 
+  readonly state$ = this.datapager.list$;
+
   constructor(
     private activityLogService: ActivityLogService,
     private actionFeedbackService: ActionFeedbackService
   ) {}
 
-  ngOnInit(): void{
-    this.resetRows();
-  }
 
-  ngOnChanges(): void {
-    this.groupId$.next(this.groupId);
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('groupId' in changes && !changes.groupId?.isFirstChange()) {
+      throw new Error('Unexpected: groupId should not change');
+    }
+    if ('groupId' in changes && changes.groupId?.isFirstChange()) {
+      this.resetRows();
+    }
   }
 
   ngOnDestroy(): void {
-    this.groupId$.complete();
     this.showOverlaySubject$.complete();
     this.showOverlaySubscription.unsubscribe();
   }
@@ -74,51 +66,20 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
-    return this.groupId$.pipe(
-      switchMap(groupId => {
-        const paginationParams = latestRow === undefined ? undefined : {
-          fromItemId: latestRow.item.id,
-          fromParticipantId: latestRow.participant.id,
-          fromAttemptId: latestRow.attemptId,
-          fromAnswerId: latestRow.answerId ?? '0',
-          fromActivityType: latestRow.activityType,
-        };
+    const paginationParams = latestRow === undefined ? undefined : {
+      fromItemId: latestRow.item.id,
+      fromParticipantId: latestRow.participant.id,
+      fromAttemptId: latestRow.attemptId,
+      fromAnswerId: latestRow.answerId ?? '0',
+      fromActivityType: latestRow.activityType,
+    };
 
-        return this.activityLogService.getAllActivityLog(
-          groupId , {
-            limit: pageSize,
-            pagination: paginationParams,
-          }
-        );
-      }),
-    );
-  }
-
-  private getLogColumns(): Column[] {
-    const columns = [
-      {
-        field: 'activityType',
-        header: $localize`Action`,
-      },
-      {
-        field: 'item.string.title',
-        header: $localize`Content`,
-      },
-      {
-        field: 'item.user',
-        header: $localize`:User column label:User`,
-        disabled: !this.showUserColumn,
-      },
-      {
-        field: 'at',
-        header: $localize`Time`,
+    return this.activityLogService.getAllActivityLog(
+      this.groupId, {
+        limit: pageSize,
+        pagination: paginationParams,
       }
-    ];
-
-    return columns.filter(col => !col.disabled).map(col => ({
-      field: col.field,
-      header: col.header,
-    }));
+    );
   }
 
   resetRows(): void {
@@ -137,14 +98,11 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy, OnInit {
     this.showOverlaySubject$.next({ event, itemId, target: targetRef.nativeElement });
   }
 
-  onMouseLeave(event: MouseEvent, field: string): void {
-    if (field === 'item.string.title' && canCloseOverlay(event)) {
-      this.closeOverlay();
-    }
+  onMouseLeave(): void {
+    this.closeOverlay();
   }
 
   closeOverlay(): void {
     this.showOverlaySubject$.next(undefined);
   }
-
 }

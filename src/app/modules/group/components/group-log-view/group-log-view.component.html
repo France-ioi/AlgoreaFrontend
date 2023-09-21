@@ -24,75 +24,62 @@
     </div>
     <p-table
       class="alg-table"
-      [columns]="columns"
       [value]="state.data"
       [loading]="state.isFetching"
       [tableStyle]="{'min-width': '599.98px'}"
       responsiveLayout="scroll"
     >
       <ng-template pTemplate="header" let-rowData let-columns>
-        <tr *ngIf="rowData.length > 0">
-          <ng-container *ngFor="let col of columns">
-            <th>
-              <div class="header-container">
-                {{ col.header }}
-              </div>
-            </th>
-          </ng-container>
+        <tr *ngIf="state.data.length > 0">
+          <th i18n>Action</th>
+          <th i18n>Content</th>
+          <th i18n *ngIf="this.showUserColumn">User</th>
+          <th i18n>Time</th>
         </tr>
       </ng-template>
 
       <ng-template
           pTemplate="body"
           let-rowData
-          let-columns="columns"
+          let-columns
           let-index="rowIndex"
       >
         <tr>
-          <td *ngFor="let col of columns" (mouseleave)="onMouseLeave($event, col.field)">
-            <ng-container [ngSwitch]="col.field">
-              <ng-container *ngSwitchCase="'activityType'">
-                <div class="item-title-section">
-                  <div class="item-title-section-left">
-                    <alg-score-ring
-                      [currentScore]="rowData.score"
-                      [diameter]="32"
-                      *ngIf="rowData.score; else iconSection"
-                    ></alg-score-ring>
-                    <ng-template #iconSection>
-                      <i class="ph-duotone item-icon" [ngClass]="{
-                        'ph-flag-checkered': rowData.activityType === 'result_started',
-                        'ph-floppy-disk-back': rowData.activityType === 'saved_answer'
-                      }"></i>
-                    </ng-template>
-                  </div>
-                  <div class="item-title">
-                    <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                  </div>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'item.string.title'">
-                <a
-                  class="alg-link"
-                  [ngClass]="{'disabled': !rowData.item}"
-                  [routerLink]="rowData.item | rawItemRoute | url"
-                  (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
-                  #contentRef
-                >
-                  {{ rowData.item.string.title }}
-                </a>
-              </ng-container>
-              <ng-container *ngSwitchCase="'item.user'">
-                <a class="alg-link" [routerLink]="rowData.user | groupLink">{{ rowData.user | userCaption }}</a>
-              </ng-container>
-              <ng-container *ngSwitchCase="'at'">
-                {{ rowData.at | date:'short' }}
-              </ng-container>
-              <ng-container *ngSwitchDefault>
-                {{ rowData[col.field] }}
-              </ng-container>
-            </ng-container>
+          <td>
+            <div class="item-title-section">
+              <div class="item-title-section-left">
+                <alg-score-ring
+                  [currentScore]="rowData.score"
+                  [diameter]="32"
+                  *ngIf="rowData.score; else iconSection"
+                ></alg-score-ring>
+                <ng-template #iconSection>
+                  <i class="ph-duotone item-icon" [ngClass]="{
+                    'ph-flag-checkered': rowData.activityType === 'result_started',
+                    'ph-floppy-disk-back': rowData.activityType === 'saved_answer'
+                  }"></i>
+                </ng-template>
+              </div>
+              <div class="item-title">
+                <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
+              </div>
+            </div>
           </td>
+          <td (mouseleave)="onMouseLeave()">
+            <a
+              class="alg-link"
+              [ngClass]="{'disabled': !rowData.item}"
+              [routerLink]="rowData.item | rawItemRoute | url"
+              (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
+              #contentRef
+            >
+              {{ rowData.item.string.title }}
+            </a>
+          </td>
+          <td *ngIf="this.showUserColumn">
+            <a class="alg-link" [routerLink]="rowData.user | groupLink">{{ rowData.user | userCaption }}</a>
+          </td>
+          <td>{{ rowData.at | date:'short' }}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>
