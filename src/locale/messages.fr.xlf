@@ -5,23 +5,23 @@
       <trans-unit id="auth-error-modal-title" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="7364788018890982994" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="7364788018890982994" datatype="html">
         <source> The application has been updated since you opened it, it needs to be reloaded. </source><target state="new"> The application has been updated since you opened it, it needs to be reloaded. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="auth-error-modal-context" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="auth-error-modal-context" datatype="html">
         <source> Oops, we are unable to make the site work properly. Are you connected to the Internet? </source><target state="translated">Impossible de démarrer une session. Êtes-vous bien connecté à Internet ?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="1337415050811257869" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="1337415050811257869" datatype="html">
         <source>Reload the application.</source><target state="new">Reload the application.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="contactUs" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="contactUs" datatype="html">
         <source> If the problem persists, please contact us. </source><target state="translated">Si le problème persiste, contactez-nous.</target>
 
 
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">290</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">204</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-by-id.component.ts</context><context context-type="linenumber">290</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-display/item-display.component.ts</context><context context-type="linenumber">204</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/lti/pages/lti/lti.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="727030606410719950" datatype="html">
         <source>Language mismatch</source><target state="translated">Mauvaise langue?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6895619751331935307" datatype="html">
@@ -266,35 +266,26 @@
         </context-group>
       </trans-unit><trans-unit id="4476519178649315667" datatype="html">
         <source>There are no threads for this item.</source><target state="new">There are no threads for this item.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context>
-          <context context-type="linenumber">87</context>
-        </context-group>
-      </trans-unit><trans-unit id="6694402180665796987" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="6694402180665796987" datatype="html">
         <source>My threads</source><target state="new">My threads</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit><trans-unit id="6929603416180749109" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="6929603416180749109" datatype="html">
         <source>Other's</source><target state="new">Other's</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit><trans-unit id="8623978917681527907" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="8623978917681527907" datatype="html">
         <source>Group</source><target state="new">Group</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="5611592591303869712" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="5611592591303869712" datatype="html">
         <source>Status</source><target state="new">Status</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">149</context></context-group></trans-unit><trans-unit id="989713090179506197" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="989713090179506197" datatype="html">
         <source># msgs</source><target state="new"># msgs</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">154</context></context-group></trans-unit><trans-unit id="4915667673980407083" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="4915667673980407083" datatype="html">
         <source>Latest update</source><target state="new">Latest update</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">159</context></context-group></trans-unit><trans-unit id="186460519743457757" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="186460519743457757" datatype="html">
         <source>Global parameters</source><target>Paramètres globaux</target>
         
         
@@ -891,7 +882,7 @@
 
         <source>Error</source><target state="translated">Erreur</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">73</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
           Chapter: 'Only empty chapters can be deleted.',
           other: 'Only empty skills can be deleted.'
@@ -899,13 +890,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8286483904887493596" datatype="html">
         <source>You are not allowed to watch the group for which you have requested watching.</source><target state="new">You are not allowed to watch the group for which you have requested watching.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="1223537461642312433" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="1223537461642312433" datatype="html">
         <source>Something went wrong while enabling group watching. If the problem persists, please contact us.</source><target state="new">Something went wrong while enabling group watching. If the problem persists, please contact us.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="new">Close</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
           Chapter: 'Only empty chapters can be deleted.',
           other: 'Only empty skills can be deleted.'
@@ -1401,11 +1392,8 @@
         </context-group>
       </trans-unit><trans-unit id="7593555694782789615" datatype="html">
         <source>Open</source><target state="new">Open</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/modules/item/components/propagation-edit-menu/propagation-edit-menu.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit><trans-unit id="146991741218180729" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="146991741218180729" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut attacher des sessions officielles à cet élément qui seront visibles dans son onglet contenu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="3303008548461857588" datatype="html">
@@ -1649,7 +1637,7 @@
         <source>Content</source><target state="translated">Contenu</target>
 
 
-      <note from="description" priority="1">Tab name</note><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.ts</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/helpers/permissions-string.ts</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/helpers/permissions-string.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-tabs.ts</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-tabs.ts</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">139</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+      <note from="description" priority="1">Tab name</note><context-group purpose="location"><context context-type="sourcefile">src/app/core/components/left-nav/left-nav.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.ts</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/helpers/permissions-string.ts</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/helpers/permissions-string.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-tabs.ts</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-by-id/item-tabs.ts</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir le contenu de cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/helpers/permissions-texts.ts</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
@@ -2221,7 +2209,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.ts</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="2392488717875840729" datatype="html">
         <source>User</source><target state="new">User</target>
 
-      <note from="description" priority="1">User column label</note><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.ts</context><context context-type="linenumber">88</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.ts</context><context context-type="linenumber">144</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
+      <note from="description" priority="1">User column label</note><context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.ts</context><context context-type="linenumber">88</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
         <source>Time</source><target state="translated">Date/Heure</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/group-log-view/group-log-view.component.ts</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="2739370419840410792" datatype="html">

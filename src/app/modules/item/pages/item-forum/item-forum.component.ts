@@ -5,15 +5,10 @@ import { GetThreadsService } from '../../services/get-threads.service';
 import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { ItemRouter } from '../../../../shared/routing/item-router';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ItemType } from '../../../../shared/helpers/item-type';
 import { Item } from '../../http-services/get-item-by-id.service';
+import { DiscussionService } from '../../services/discussion.service';
 
-interface Column {
-  field: string,
-  header: string,
-}
 
 enum ForumTabUrls {
   MyThreads= '/forum/my-threads',
@@ -70,21 +65,19 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       this.getThreadService.get(item.id, selected === 2 && watchedGroup
         ? { watchedGroupId: watchedGroup.route.id }
         : { isMine: selected === 0 }).pipe(
-        map(threads => ({
-          columns: this.getThreadColumns(item.type),
-          rowData: threads,
-        })),
         mapToFetchState({ resetter: this.refresh$ }),
       ),
     ),
   );
+  currentThreadInfo$ = this.discussionService.threadId$;
+  isDiscussionVisible$ = this.discussionService.visible$;
 
   constructor(
     private groupWatchingService: GroupWatchingService,
     private getThreadService: GetThreadsService,
-    private itemRouter: ItemRouter,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private discussionService: DiscussionService,
   ) {
   }
 
@@ -132,38 +125,12 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  private getThreadColumns(type: ItemType): Column[] {
-    const columns = [
-      {
-        field: 'item.title',
-        header: $localize`Content`,
-        enabled: type !== 'Task',
-      },
-      {
-        field: 'participant',
-        header: $localize`User`,
-        enabled: true,
-      },
-      {
-        field: 'status',
-        header: $localize`Status`,
-        enabled: true,
-      },
-      {
-        field: 'messageCount',
-        header: $localize`# msgs`,
-        enabled: true,
-      },
-      {
-        field: 'latestUpdateAt',
-        header: $localize`Latest update`,
-        enabled: true,
-      }
-    ];
-
-    return columns.filter(item => item.enabled).map(item => ({
-      field: item.field,
-      header: item.header,
-    }));
+  /**
+   * Toggle visibily of the thread panel, optionally force the thead displayed
+   */
+  toggleVisibility(visible: boolean, thread?: Parameters<DiscussionService['toggleVisibility']>[1]): void {
+    this.discussionService.toggleVisibility(visible, thread);
   }
+
+
 }

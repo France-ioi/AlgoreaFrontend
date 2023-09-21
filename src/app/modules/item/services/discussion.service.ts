@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, Injector, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, combineLatestWith, EMPTY, filter, map, Observable, Subscription, switchMap, take } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, EMPTY, filter, map, Observable, Subscription, switchMap, take } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { readyData } from 'src/app/shared/operators/state';
 import { ThreadService } from './threads.service';
@@ -21,17 +21,13 @@ export class DiscussionService implements OnDestroy {
   visible$ = this.visible.asObservable();
 
   private readonly threadService?: ThreadService; // only injected if forum is enabled
+  threadId$: Observable<ThreadId|undefined> = EMPTY;
 
   private canShowInCurrentPage = new BehaviorSubject(false);
   canShowInCurrentPage$ = this.canShowInCurrentPage.asObservable();
 
   private configuredThread: ThreadId|null = null;
   private hasForcedThread = false;
-
-  /** combination of `canShowInCurrentPage$` and `visible$` which can be useful for some components */
-  state$ = combineLatest([ this.canShowInCurrentPage$, this.visible$ ]).pipe(
-    map(([ canShowInCurrentPage, visible ]) => (canShowInCurrentPage ? { visible } : undefined))
-  );
 
   /**
    * When a thread is available but currently not visible, the number of events that arrive since the thread was last opened in this session
@@ -49,6 +45,7 @@ export class DiscussionService implements OnDestroy {
     }
 
     this.threadService = this.injector.get<ThreadService>(ThreadService);
+    this.threadId$ = this.threadService.threadId$;
 
     this.unreadCount$ = this.visible$.pipe(
       // when hidden (manually or because thread changes), store the current time as the last read time
