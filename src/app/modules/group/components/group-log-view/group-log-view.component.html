@@ -90,7 +90,7 @@
       </ng-template>
       <ng-template pTemplate="footer">
         <tr *ngIf="datapager.canLoadMore$ | async">
-          <td colspan="4">
+          <td [attr.colspan]="this.showUserColumn ? 4 : 3">
             <div class="text-center">
               <button
                 pButton
