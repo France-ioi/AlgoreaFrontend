@@ -8,6 +8,7 @@ import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rx
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Item } from '../../http-services/get-item-by-id.service';
+import { DiscussionService } from '../../services/discussion.service';
 
 
 enum ForumTabUrls {
@@ -69,6 +70,8 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       ),
     ),
   );
+  currentThreadInfo$ = this.discussionService.threadId$;
+  isDiscussionVisible$ = this.discussionService.visible$;
 
   constructor(
     private groupWatchingService: GroupWatchingService,
@@ -76,6 +79,7 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     private itemRouter: ItemRouter,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private discussionService: DiscussionService,
   ) {
   }
 
@@ -122,5 +126,13 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   refresh(): void {
     this.refresh$.next();
   }
+
+  /**
+   * Toggle visibily of the thread panel, optionally force the thead displayed
+   */
+  toggleVisibility(visible: boolean, thread?: Parameters<DiscussionService['toggleVisibility']>[1]): void {
+    this.discussionService.toggleVisibility(visible, thread);
+  }
+
 
 }

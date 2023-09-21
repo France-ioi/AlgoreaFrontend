@@ -46,8 +46,9 @@ export class ThreadService implements OnDestroy {
   private configuredThreadId = new BehaviorSubject<ThreadId|null>(null);
   private clearEvents$ = new ReplaySubject<void>(1);
 
+  threadId$ = this.configuredThreadId.pipe(distinctUntilChanged((x,y) => x?.participantId === y?.participantId && x?.itemId === y?.itemId));
   threadInfo$ = combineLatest([
-    this.configuredThreadId.pipe(distinctUntilChanged((x, y) => x?.participantId === y?.participantId && x?.itemId === y?.itemId)),
+    this.threadId$,
     fromEvent(window, 'beforeunload').pipe(map(() => true), startWith(false)),
   ]).pipe(
     switchMap(([ threadId, unloading ]) => {

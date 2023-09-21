@@ -43,15 +43,16 @@
     </div>
     <div class="right-pane">
       <alg-observation-bar-with-button></alg-observation-bar-with-button>
-      <button
-        *ngIf="discussionState$ | async as discussion"
-        class="alg-button-icon no-bg primary-color margin-left"
-        [ngClass]="{ 'active': discussion.visible }"
-        pButton
-        type="button"
-        icon="ph-duotone ph-chats-circle"
-        (click)="toggleThreadVisibility(!discussion.visible)"
-      ></button>
+      <ng-container *ngrxLet="{ canBeShown: canDiscussionBeShown$, isVisible: isDiscussionVisible$ } as discussion">
+        <button
+          *ngIf="discussion.canBeShown"
+          class="alg-button-icon no-bg primary-color margin-left"
+          pButton
+          type="button"
+          icon="ph-duotone ph-chats-circle"
+          (click)="toggleDiscussionPanelVisibility(!discussion.isVisible)"
+        ></button>
+      </ng-container>
       <alg-neighbor-widget
         *ngIf="navigationNeighbors$ | async as navigationNeighbors"
         class="neighbor-widget margin-left"
