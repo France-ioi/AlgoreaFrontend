@@ -24,7 +24,7 @@ export class LayoutService implements OnDestroy {
   /* independant variables */
   private showTopRightControls = new BehaviorSubject(true);
   private canShowLeftMenu = new BehaviorSubject<boolean>(true);
-  private canShowBreadcrumbs = new BehaviorSubject<boolean>(false);
+  private canShowBreadcrumbs = new BehaviorSubject<boolean>(true);
 
   /* variables to be used by other services and components */
   isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
