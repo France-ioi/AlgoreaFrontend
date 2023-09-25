@@ -1,16 +1,21 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ThreadService } from '../../../modules/item/services/threads.service';
 import { FormBuilder } from '@angular/forms';
-import { readyData } from '../../../shared/operators/state';
-import { Subscription, filter, delay, combineLatest, of } from 'rxjs';
+import { mapStateData, mapToFetchState, readyData } from '../../../shared/operators/state';
+import { filter, delay, combineLatest, of, merge, switchMap, Subject } from 'rxjs';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
-import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetUserService } from 'src/app/modules/group/http-services/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
 import { rawItemRoute } from 'src/app/shared/routing/item-route';
+import { GetItemByIdService } from '../../../modules/item/http-services/get-item-by-id.service';
+import { isNotUndefined } from '../../../shared/helpers/null-undefined-predicates';
+import { allowsWatchingAnswers } from '../../../shared/models/domain/item-watch-permission';
+import { ActionFeedbackService } from '../../../shared/services/action-feedback.service';
+import { readyState } from '../../../shared/helpers/state';
 
 @Component({
   selector: 'alg-thread',
@@ -24,6 +29,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     messageToSend: [ '' ],
   });
 
+  readonly destroyed$ = new Subject<void>();
   readonly state$ = this.threadService.eventsState$;
 
   private distinctUsersInThread = this.state$.pipe(
@@ -61,8 +67,35 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly itemRoute$ = this.threadService.threadInfo$.pipe(
     map(t => (t ? rawItemRoute('activity', t.itemId) : undefined)),
   );
-
-  private subscription?: Subscription;
+  readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe(
+    map(t => (t ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.status) : false)),
+  );
+  readonly isCurrentUserThreadParticipant$ = this.userCache$.pipe(
+    map(userCache => userCache.some(u => u.isCurrentUser && u.isThreadParticipant)),
+  );
+  allowToOpenThreadState$ = merge(
+    of(readyState(false)),
+    combineLatest([
+      this.threadService.threadInfo$.pipe(filter(isNotUndefined)),
+      this.discussionService.visible$.pipe(filter(visible => visible)),
+    ]).pipe(
+      withLatestFrom(
+        this.isThreadStatusOpened$.pipe(filter(isThreadOpened => !isThreadOpened)),
+        this.itemRoute$.pipe(filter(isNotUndefined)),
+        this.isCurrentUserThreadParticipant$,
+        this.groupWatchingService.watchedGroup$,
+      ),
+      switchMap(([ , , itemRoute, isCurrentUserThreadParticipant, watchedGroup ]) =>
+        this.getItemByIdService.get(itemRoute.id, watchedGroup?.route.id).pipe(
+          mapToFetchState(),
+          mapStateData(itemData =>
+            isCurrentUserThreadParticipant && itemData.permissions.canRequestHelp
+            || !!watchedGroup && allowsWatchingAnswers(itemData.permissions)
+          ),
+        ),
+      ),
+    ),
+  );
 
   constructor(
     private threadService: ThreadService,
@@ -70,20 +103,32 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private userSessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private userService: GetUserService,
+    private getItemByIdService: GetItemByIdService,
+    private actionFeedbackService: ActionFeedbackService,
     private fb: FormBuilder,
   ) {}
 
   ngAfterViewInit(): void {
-    this.subscription = this.state$.pipe(
+    this.state$.pipe(
       readyData(),
       withLatestFrom(this.discussionService.visible$),
       filter(([ events, visible ]) => visible && events.length > 0),
       delay(0),
+      takeUntil(this.destroyed$),
     ).subscribe(() => this.scrollDown());
+
+    this.isThreadStatusOpened$.pipe(delay(0), takeUntil(this.destroyed$)).subscribe(isThreadStatusOpened => {
+      if (!isThreadStatusOpened) {
+        this.form.get('messageToSend')?.disable();
+        return;
+      }
+      this.form.get('messageToSend')?.enable();
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   sendMessage(): void {
@@ -102,5 +147,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       0,
       this.messagesScroll.nativeElement.scrollHeight - this.messagesScroll.nativeElement.offsetHeight
     );
+  }
+
+  changeThreadStatus(): void {
+    this.actionFeedbackService.error($localize`Not implemented`);
   }
 }

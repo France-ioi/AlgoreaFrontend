@@ -25,6 +25,10 @@ export const itemEntryUntilPermDecoder = D.struct({
 export const itemEntryTimePermDecoder = D.intersect(itemEntryFromPermDecoder)(itemEntryUntilPermDecoder);
 export type ItemEntryTimePerm = D.TypeOf<typeof itemEntryTimePermDecoder>;
 
+export const itemCanRequestHelpDecoder = D.struct({
+  canRequestHelp: D.boolean,
+});
+
 export const itemCorePermDecoder = pipe(
   itemViewPermDecoder,
   D.intersect(itemGrantViewPermDecoder),

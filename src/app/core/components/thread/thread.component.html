@@ -17,24 +17,66 @@
             *ngFor="let event of state.data"
           ></alg-thread-message>
         </ng-container>
-        <form class="footer-panel" [formGroup]="form" (ngSubmit)="sendMessage()">
-          <textarea
-            class="textarea"
-            placeholder="Send a message..."
-            pInputTextarea
-            formControlName="messageToSend"
-            [rows]="1"
-            [autoResize]="true"
-            (keydown.enter)="$event.preventDefault(); sendMessage()"
-          ></textarea>
-          <button
-            class="alg-button-icon primary-color rounded send-button"
-            type="submit"
-            icon="pi pi-send"
-            pButton
-            [disabled]="!form.get('messageToSend')?.value?.trim()"
-          ></button>
-        </form>
+        <div class="footer-panel" *ngrxLet="isThreadStatusOpened$; let isThreadStatusOpened">
+          <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage()">
+            <textarea
+              class="textarea"
+              placeholder="Send a message..."
+              pInputTextarea
+              formControlName="messageToSend"
+              [rows]="1"
+              [autoResize]="true"
+              (keydown.enter)="$event.preventDefault(); sendMessage()"
+            ></textarea>
+            <button
+              class="alg-button-icon primary-color rounded send-button"
+              type="submit"
+              icon="pi pi-send"
+              pButton
+              [disabled]="!form.get('messageToSend')?.value?.trim() || !isThreadStatusOpened"
+            ></button>
+          </form>
+          <div class="thread-status">
+            <div class="thread-status-caption">
+              <ng-container *ngIf="isThreadStatusOpened; else notOpenedStatusCaption">
+                <span i18n>This thread is open</span>
+              </ng-container>
+              <ng-template #notOpenedStatusCaption>
+                <span i18n>This thread is closed</span>
+              </ng-template>
+            </div>
+            <ng-container *ngrxLet="isCurrentUserThreadParticipant$; let isCurrentUserThreadParticipant">
+              <ng-container *ngrxLet="allowToOpenThreadState$; let allowToOpenThreadState">
+                <div
+                  [pTooltip]="threadStatusTooltip"
+                  [tooltipDisabled]="allowToOpenThreadState.isFetching || (isThreadStatusOpened && isCurrentUserThreadParticipant) || (!isThreadStatusOpened && !!allowToOpenThreadState.data)"
+                  tooltipPosition="top"
+                  tooltipStyleClass="alg-tooltip"
+                >
+                  <button
+                    class="alg-button primary small"
+                    [disabled]="allowToOpenThreadState.isFetching || (isThreadStatusOpened && !isCurrentUserThreadParticipant) || (!isThreadStatusOpened && !allowToOpenThreadState.data)"
+                    pButton
+                    (click)="changeThreadStatus()"
+                  >
+                    <span *ngIf="isThreadStatusOpened; else openThreadCaption" i18n>Close this thread</span>
+                    <ng-template #openThreadCaption>
+                      <span i18n>Open this thread</span>
+                    </ng-template>
+                  </button>
+                </div>
+                <ng-template #threadStatusTooltip>
+                  <span *ngIf="isThreadStatusOpened; else notOpenedTooltipCaption" i18n>
+                    Only the user of the thread can close it.
+                  </span>
+                  <ng-template #notOpenedTooltipCaption>
+                    <span i18n>You are not allowed to open this thread.</span>
+                  </ng-template>
+                </ng-template>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </ng-template>
