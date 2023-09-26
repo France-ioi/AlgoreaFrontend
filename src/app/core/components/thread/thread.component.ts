@@ -76,16 +76,19 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   allowToOpenThreadState$ = merge(
     of(readyState(false)),
     combineLatest([
-      this.threadService.threadInfo$.pipe(filter(isNotUndefined)),
-      this.discussionService.visible$.pipe(filter(visible => visible)),
+      this.threadService.threadInfo$.pipe(
+        filter(isNotUndefined),
+        map(t => [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.status)),
+        filter(isThreadOpened => !isThreadOpened),
+      ),
+      this.discussionService.visible$.pipe(distinctUntilChanged(), filter(visible => visible)),
     ]).pipe(
       withLatestFrom(
-        this.isThreadStatusOpened$.pipe(filter(isThreadOpened => !isThreadOpened)),
         this.itemRoute$.pipe(filter(isNotUndefined)),
         this.isCurrentUserThreadParticipant$,
         this.groupWatchingService.watchedGroup$,
       ),
-      switchMap(([ , , itemRoute, isCurrentUserThreadParticipant, watchedGroup ]) =>
+      switchMap(([ , itemRoute, isCurrentUserThreadParticipant, watchedGroup ]) =>
         this.getItemByIdService.get(itemRoute.id, watchedGroup?.route.id).pipe(
           mapToFetchState(),
           mapStateData(itemData =>
