@@ -17,7 +17,7 @@
             *ngFor="let event of state.data"
           ></alg-thread-message>
         </ng-container>
-        <div class="footer-panel" *ngrxLet="isThreadStatusOpened$; let isThreadStatusOpened">
+        <div class="footer-panel" *ngrxLet="threadStatus$ as threadStatus">
           <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage()">
             <textarea
               class="textarea"
@@ -33,49 +33,55 @@
               type="submit"
               icon="pi pi-send"
               pButton
-              [disabled]="!form.get('messageToSend')?.value?.trim() || !isThreadStatusOpened"
+              [disabled]="!form.get('messageToSend')?.value?.trim() || !threadStatus?.data?.open"
             ></button>
           </form>
           <div class="thread-status">
-            <div class="thread-status-caption">
-              <ng-container *ngIf="isThreadStatusOpened === true">
+            <div class="thread-status-caption" >
+              <ng-container *ngIf="threadStatus?.data?.open">
                 <span i18n>This thread is open</span>
               </ng-container>
-              <ng-container *ngIf="isThreadStatusOpened === false">
+              <ng-container *ngIf="threadStatus?.data?.open === false">
                 <span i18n>This thread is closed</span>
               </ng-container>
-            </div>
-            <ng-container *ngrxLet="isCurrentUserThreadParticipant$; let isCurrentUserThreadParticipant">
-              <ng-container *ngrxLet="allowToOpenThreadState$; let allowToOpenThreadState">
-                <div
-                  *ngIf="isThreadStatusOpened !== undefined"
-                  [pTooltip]="threadStatusTooltip"
-                  [tooltipDisabled]="allowToOpenThreadState.isFetching || (isThreadStatusOpened && isCurrentUserThreadParticipant) || (!isThreadStatusOpened && !!allowToOpenThreadState.data)"
-                  tooltipPosition="top"
-                  tooltipStyleClass="alg-tooltip"
-                >
-                  <button
-                    class="alg-button primary small"
-                    [disabled]="allowToOpenThreadState.isFetching || (isThreadStatusOpened && !isCurrentUserThreadParticipant) || (!isThreadStatusOpened && !allowToOpenThreadState.data)"
-                    pButton
-                    (click)="changeThreadStatus()"
-                  >
-                    <span *ngIf="isThreadStatusOpened; else openThreadCaption" i18n>Close this thread</span>
-                    <ng-template #openThreadCaption>
-                      <span i18n>Open this thread</span>
-                    </ng-template>
-                  </button>
-                </div>
-                <ng-template #threadStatusTooltip>
-                  <span *ngIf="isThreadStatusOpened; else notOpenedTooltipCaption" i18n>
-                    Only the user of the thread can close it.
-                  </span>
-                  <ng-template #notOpenedTooltipCaption>
-                    <span i18n>You are not allowed to open this thread.</span>
-                  </ng-template>
-                </ng-template>
+              <ng-container *ngIf="threadStatus?.isFetching">
+                <span i18n>Loading thread status...</span>
               </ng-container>
-            </ng-container>
+              <ng-container *ngIf="threadStatus?.isError">
+                <span i18n>Error while loading thread info</span>
+              </ng-container>
+              <ng-container *ngIf="threadStatus === undefined">
+                <span i18n>Could not load thread</span>
+              </ng-container>
+            </div>
+            <div
+              *ngrxLet="!!threadStatus && !!threadStatus.data && ((threadStatus.data.open && threadStatus.data.canClose) || (!threadStatus.data.open && threadStatus.data.canOpen)) as canSwitch"
+              [pTooltip]="threadStatusTooltip"
+              [tooltipDisabled]="canSwitch"
+              tooltipPosition="top"
+              tooltipStyleClass="alg-tooltip"
+            >
+              <button
+                class="alg-button primary small"
+                [disabled]="!canSwitch"
+                pButton
+                (click)="changeThreadStatus()"
+                *ngIf="threadStatus && threadStatus.data"
+              >
+              <span *ngIf="threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
+              <ng-template #openThreadCaption>
+                <span i18n>Open this thread</span>
+              </ng-template>
+              </button>
+            </div>
+            <ng-template #threadStatusTooltip>
+              <span *ngIf="threadStatus?.data?.open; else notOpenedTooltipCaption" i18n>
+                Only the user of the thread can close it.
+              </span>
+              <ng-template #notOpenedTooltipCaption>
+                <span i18n>You are not allowed to open this thread.</span>
+              </ng-template>
+            </ng-template>
           </div>
         </div>
       </div>
