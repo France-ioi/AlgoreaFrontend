@@ -62,13 +62,15 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
   readonly canCurrentUserLoadAnswers$ = this.threadService.threadInfo$.pipe(
+    readyData(),
     map(t => t?.isMine || t?.canWatch), // for future: others should be able to load as well using the answer stored in msg data
   );
   readonly itemRoute$ = this.threadService.threadInfo$.pipe(
+    readyData(),
     map(t => (t ? rawItemRoute('activity', t.itemId) : undefined)),
   );
-  readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe(
-    map(t => (t ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.status) : false)),
+  readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe( // may be true, false or undefined!
+    map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
   );
   readonly isCurrentUserThreadParticipant$ = this.userCache$.pipe(
     map(userCache => userCache.some(u => u.isCurrentUser && u.isThreadParticipant)),
@@ -76,10 +78,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   allowToOpenThreadState$ = merge(
     of(readyState(false)),
     combineLatest([
-      this.threadService.threadInfo$.pipe(
-        filter(isNotUndefined),
-        map(t => [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.status)),
-        filter(isThreadOpened => !isThreadOpened),
+      this.isThreadStatusOpened$.pipe(
+        filter(open => open === false),
       ),
       this.discussionService.visible$.pipe(distinctUntilChanged(), filter(visible => visible)),
     ]).pipe(

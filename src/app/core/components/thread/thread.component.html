@@ -38,16 +38,17 @@
           </form>
           <div class="thread-status">
             <div class="thread-status-caption">
-              <ng-container *ngIf="isThreadStatusOpened; else notOpenedStatusCaption">
+              <ng-container *ngIf="isThreadStatusOpened === true">
                 <span i18n>This thread is open</span>
               </ng-container>
-              <ng-template #notOpenedStatusCaption>
+              <ng-container *ngIf="isThreadStatusOpened === false">
                 <span i18n>This thread is closed</span>
-              </ng-template>
+              </ng-container>
             </div>
             <ng-container *ngrxLet="isCurrentUserThreadParticipant$; let isCurrentUserThreadParticipant">
               <ng-container *ngrxLet="allowToOpenThreadState$; let allowToOpenThreadState">
                 <div
+                  *ngIf="isThreadStatusOpened !== undefined"
                   [pTooltip]="threadStatusTooltip"
                   [tooltipDisabled]="allowToOpenThreadState.isFetching || (isThreadStatusOpened && isCurrentUserThreadParticipant) || (!isThreadStatusOpened && !!allowToOpenThreadState.data)"
                   tooltipPosition="top"
