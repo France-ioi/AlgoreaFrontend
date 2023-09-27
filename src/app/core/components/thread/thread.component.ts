@@ -72,8 +72,11 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe( // may be true, false or undefined!
     map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
   );
-  readonly isCurrentUserThreadParticipant$ = this.userCache$.pipe(
-    map(userCache => userCache.some(u => u.isCurrentUser && u.isThreadParticipant)),
+  readonly isCurrentUserThreadParticipant$ = combineLatest([
+    this.userSessionService.userProfile$,
+    this.threadService.threadId$
+  ]).pipe(
+    map(([ user, threadId ]) => user.groupId === threadId?.participantId)
   );
   allowToOpenThreadState$ = merge(
     of(readyState(false)),
