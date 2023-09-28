@@ -285,7 +285,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="4915667673980407083" datatype="html">
         <source>Latest update</source><target state="new">Latest update</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="186460519743457757" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="8461842260159597706" datatype="html">
+        <source>Show</source><target state="new">Show</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit><trans-unit id="8461609631969932886" datatype="html">
+        <source>Hide</source><target state="new">Hide</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit><trans-unit id="186460519743457757" datatype="html">
         <source>Global parameters</source><target>Paramètres globaux</target>
         
         
@@ -884,7 +896,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="new">Close</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/app.component.html</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
           Chapter: 'Only empty chapters can be deleted.',
           other: 'Only empty skills can be deleted.'
@@ -1381,7 +1393,7 @@
       </trans-unit><trans-unit id="7593555694782789615" datatype="html">
         <source>Open</source><target state="new">Open</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/pages/item-forum/item-forum.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="146991741218180729" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="146991741218180729" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{targetTypeString}}"/> peut attacher des sessions officielles à cet élément qui seront visibles dans son onglet contenu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="3303008548461857588" datatype="html">
