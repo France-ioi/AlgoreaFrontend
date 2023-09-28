@@ -277,7 +277,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     combineLatest([ this.itemDataSource.state$, this.userProfile$, this.watchedGroup$ ]).pipe(
       map(([ state, userProfile, watchedGroup ]) => {
         if (!state.data || !isATask(state.data.item)) return null;
-        if (watchedGroup && !allowsWatchingAnswers(state.data.item.permissions)) return null;
+        if (watchedGroup && (!allowsWatchingAnswers(state.data.item.permissions) || !watchedGroup.route.isUser)) return null;
         return { participantId: watchedGroup ? watchedGroup.route.id : userProfile.groupId, itemId: state.data.item.id };
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
