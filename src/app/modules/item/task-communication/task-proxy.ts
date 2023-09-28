@@ -261,5 +261,5 @@ export interface TaskPlatform {
   updateDisplay(data: UpdateDisplayParams): void,
   openUrl(url: OpenUrlParams): void,
   log(data: TaskLog): void,
-  getTaskParams(keyAndDefaultValue: TaskParamsKeyDefault): TaskParamsValue,
+  getTaskParams(keyAndDefaultValue: TaskParamsKeyDefault): Observable<TaskParamsValue>,
 }
