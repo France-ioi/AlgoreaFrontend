@@ -2,9 +2,9 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { ThreadService } from '../../../modules/item/services/threads.service';
 import { FormBuilder } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../shared/operators/state';
-import { filter, delay, combineLatest, of, switchMap, Subject, Observable } from 'rxjs';
+import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
-import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { formatUser } from 'src/app/shared/helpers/user';
@@ -28,7 +28,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     messageToSend: [ '' ],
   });
 
-  readonly destroyed$ = new Subject<void>();
+  readonly subscriptions = new Subscription();
   readonly state$ = this.threadService.eventsState$;
 
   private distinctUsersInThread = this.state$.pipe(
@@ -122,26 +122,28 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    this.state$.pipe(
-      readyData(),
-      withLatestFrom(this.discussionService.visible$),
-      filter(([ events, visible ]) => visible && events.length > 0),
-      delay(0),
-      takeUntil(this.destroyed$),
-    ).subscribe(() => this.scrollDown());
+    this.subscriptions.add(
+      this.state$.pipe(
+        readyData(),
+        withLatestFrom(this.discussionService.visible$),
+        filter(([ events, visible ]) => visible && events.length > 0),
+        delay(0),
+      ).subscribe(() => this.scrollDown())
+    );
 
-    this.isThreadStatusOpened$.pipe(delay(0), takeUntil(this.destroyed$)).subscribe(isThreadStatusOpened => {
-      if (!isThreadStatusOpened) {
-        this.form.get('messageToSend')?.disable();
-        return;
-      }
-      this.form.get('messageToSend')?.enable();
-    });
+    this.subscriptions.add(
+      this.isThreadStatusOpened$.pipe(delay(0)).subscribe(isThreadStatusOpened => {
+        if (!isThreadStatusOpened) {
+          this.form.get('messageToSend')?.disable();
+          return;
+        }
+        this.form.get('messageToSend')?.enable();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.subscriptions.unsubscribe();
   }
 
   sendMessage(): void {
