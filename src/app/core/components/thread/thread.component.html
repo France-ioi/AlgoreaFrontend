@@ -63,6 +63,7 @@
             >
               <ng-container *ngIf="threadInfo$ | async as threadInfo">
                 <button
+                  type="button"
                   class="alg-button primary small"
                   [disabled]="!canSwitch"
                   pButton
