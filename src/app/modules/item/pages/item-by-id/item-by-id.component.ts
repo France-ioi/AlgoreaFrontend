@@ -273,12 +273,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
     // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
-    // TODO as soon as the backend service has implemented it: check that the current/observed user "can request help" on this item
     combineLatest([ this.itemDataSource.state$, this.userProfile$, this.watchedGroup$ ]).pipe(
       map(([ state, userProfile, watchedGroup ]) => {
         if (userProfile.tempUser) return null;
         if (!state.data || !isATask(state.data.item)) return null;
         if (watchedGroup && (!allowsWatchingAnswers(state.data.item.permissions) || !watchedGroup.route.isUser)) return null;
+        if (!watchedGroup && !state.data.item.permissions.canRequestHelp) return null;
         return { participantId: watchedGroup ? watchedGroup.route.id : userProfile.groupId, itemId: state.data.item.id };
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
