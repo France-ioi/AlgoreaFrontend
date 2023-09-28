@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../shared/operators/state';
 import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
-import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { formatUser } from 'src/app/shared/helpers/user';
@@ -83,9 +83,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   >> = combineLatest([
       this.isThreadStatusOpened$,
       this.isCurrentUserThreadParticipant$,
-      this.discussionService.threadId$,
+      this.threadService.threadId$,
       this.discussionService.visible$,
     ]).pipe(
+      debounceTime(0), // to prevent race condition (service call immediately aborted)
       switchMap(([ open, isCurrentUserParticipant, threadId, visible ]) => {
         if (!visible || open === undefined || !threadId) return of(undefined);
         if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
