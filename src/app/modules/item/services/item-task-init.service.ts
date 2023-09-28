@@ -26,7 +26,7 @@ const loadTaskTimeout = 15 * SECONDS;
 export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
-  attemptId: string,
+  attemptId?: string,
   initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   readOnly: boolean,
   locale?: string,
@@ -49,6 +49,8 @@ export class ItemTaskInitService implements OnDestroy {
         // if readonly -> if there is an initial answer,
         if (initialAnswer !== null) return { strategy: 'answerToken' as const, answerId: initialAnswer.id };
       }
+      // if the attempt id is not known yet: wait
+      if (attemptId === undefined) return { strategy: 'wait' as const };
       // if we are editing (= not in readOnly) -> we need a token for our user
       // if there are no answer loaded -> we currently want an empty task, so using our own task token
       return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
@@ -96,10 +98,9 @@ export class ItemTaskInitService implements OnDestroy {
 
   initialized = false;
 
-  /** Guard: throw exception if the config changes, except `initialAnswer` */
+  /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
   subscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
     if (
-      prev.attemptId !== cur.attemptId ||
       prev.readOnly !== cur.readOnly ||
       prev.locale !== cur.locale ||
       prev.route !== cur.route ||
@@ -123,7 +124,7 @@ export class ItemTaskInitService implements OnDestroy {
   configure(
     route: FullItemRoute,
     url: string,
-    attemptId: string,
+    attemptId: string | undefined,
     initialAnswer: Answer | undefined | null,
     locale?: string,
     readOnly = false

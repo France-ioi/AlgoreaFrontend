@@ -23,10 +23,13 @@ import { AnswerTokenService } from '../http-services/answer-token.service';
 import { AnswerService } from '../http-services/answer.service';
 import { CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
-import { ItemTaskInitService } from './item-task-init.service';
+import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
 import { Answer } from './item-task.service';
 
 const answerAndStateSaveInterval = 5*SECONDS;
+
+/** config of a task which has been started, so which has an attempt id set */
+type RunningItemTaskConfig = ItemTaskConfig & { attemptId: string };
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
@@ -42,7 +45,10 @@ export class ItemTaskAnswerService implements OnDestroy {
   private saveError$ = new Subject<Error>();
 
   private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
-  private config$ = this.taskInitService.config$.pipe(takeUntil(this.error$));
+  private config$ = this.taskInitService.config$.pipe(
+    takeUntil(this.error$),
+    filter((config): config is RunningItemTaskConfig => config.attemptId !== undefined)
+  );
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(

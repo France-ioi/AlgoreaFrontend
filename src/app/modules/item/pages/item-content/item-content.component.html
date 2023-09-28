@@ -14,9 +14,9 @@
     </ng-template>
   </ng-container>
 
-  <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && itemData.currentResult">
+  <ng-container *ngIf="itemData.item.permissions | allowsViewingContent">
 
-    <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
+    <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type) && itemData.currentResult">
       <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
         <label class="edit-label">
           <span class="alg-base-text-color" i18n>Edit content</span>
@@ -52,7 +52,7 @@
           [route]="itemData.route"
           [editingPermission]="itemData.item.permissions"
           [url]="itemData.item.url"
-          [attemptId]="itemData.currentResult.attemptId"
+          [attemptId]="itemData.currentResult ? itemData.currentResult.attemptId : undefined"
           [view]="taskView"
           [taskConfig]="taskConfig"
           [savingAnswer]="savingAnswer"

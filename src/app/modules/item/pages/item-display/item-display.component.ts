@@ -57,7 +57,7 @@ export interface TaskTab {
 const heightSyncInterval = 0.2*SECONDS;
 
 @Component({
-  selector: 'alg-item-display[url][attemptId][route]',
+  selector: 'alg-item-display[url][route]',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
@@ -66,7 +66,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   @Input() route!: FullItemRoute;
   @Input() url!: string;
   @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
-  @Input() attemptId!: string;
+  @Input() attemptId?: string;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: undefined };
   @Input() savingAnswer = false;
@@ -223,7 +223,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.taskConfig) this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
+    if (changes.taskConfig || changes.attemptId) this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
     if (changes.view) this.taskService.showView(this.view ?? 'task');
     if (
       changes.route &&
@@ -233,9 +233,6 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
       throw new Error('this component does not support changing its route input');
     }
     if (changes.url && !changes.url.firstChange) throw new Error('this component does not support changing its url input');
-    if (changes.attemptId && !changes.attemptId.firstChange) {
-      throw new Error('this component does not support changing its attemptId input');
-    }
   }
 
   ngOnDestroy(): void {

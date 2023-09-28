@@ -80,7 +80,7 @@ export class ItemTaskService implements OnDestroy {
     this.destroyed$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId?: string, options: TaskConfig): void {
+  configure(route: FullItemRoute, url: string, attemptId: string | undefined, options: TaskConfig): void {
     this.readOnly = options.readOnly;
     this.attemptId$.next(attemptId);
     this.initService.configure(route, url, attemptId, options.initialAnswer, options.locale, options.readOnly);
