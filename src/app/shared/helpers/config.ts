@@ -21,6 +21,9 @@ export interface Environment {
   // this item MUST be on one of all users' root and be implicitely startable
   defaultActivityId: string,
 
+  // groupId of the all-users group used by the backend (used while the backend cannot provide us with it)
+  allUsersGroupId: string,
+
   // To add a default/fallback language, use a config with path = "/" and place it at the end.
   languages: LanguageConfig[],
 

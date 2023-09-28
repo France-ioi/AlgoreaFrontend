@@ -10,6 +10,7 @@ export const environment: Environment = {
   searchApiUrl: 'https://jyz57q4k3ytekopv6tvg5bdxaq0vlgso.lambda-url.eu-west-3.on.aws',
 
   defaultActivityId: '4702',
+  allUsersGroupId: '3',
 
   languages: [
     { tag: 'fr', path: '/fr/' },

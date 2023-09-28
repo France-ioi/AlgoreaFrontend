@@ -15,6 +15,9 @@ import { GetItemByIdService } from '../../../modules/item/http-services/get-item
 import { ActionFeedbackService } from '../../../shared/services/action-feedback.service';
 import { FetchState, fetchingState, readyState } from '../../../shared/helpers/state';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
+import { UpdateThreadService } from '../../../modules/item/http-services/update-thread.service';
+import { ThreadInfo } from '../../../modules/item/http-services/thread.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'alg-thread',
@@ -110,6 +113,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         );
       }),
     );
+  threadInfo$ = this.threadService.threadInfo$;
 
   constructor(
     private threadService: ThreadService,
@@ -119,6 +123,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private userService: GetUserService,
     private getItemByIdService: GetItemByIdService,
     private actionFeedbackService: ActionFeedbackService,
+    private updateThreadService: UpdateThreadService,
     private fb: FormBuilder,
   ) {}
 
@@ -165,7 +170,19 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  changeThreadStatus(): void {
-    this.actionFeedbackService.error($localize`Not implemented`);
+  changeThreadStatus(open: boolean, threadInfo: ThreadInfo): void {
+    this.updateThreadService.update(threadInfo.itemId, threadInfo.participantId, open ? {
+      status: 'waiting_for_trainer',
+      helperGroupId: environment.allUsersGroupId,
+    } : { status: 'closed' }).subscribe({
+      next: () => this.actionFeedbackService.error($localize`Not implemented: refresh`),
+      error: error => {
+        if (errorIsHTTPForbidden(error)) {
+          this.actionFeedbackService.error($localize`Unable to open the thread`);
+          return;
+        }
+        this.actionFeedbackService.unexpectedError();
+      }
+    });
   }
 }

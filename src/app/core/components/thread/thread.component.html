@@ -61,18 +61,20 @@
               tooltipPosition="top"
               tooltipStyleClass="alg-tooltip"
             >
-              <button
-                class="alg-button primary small"
-                [disabled]="!canSwitch"
-                pButton
-                (click)="changeThreadStatus()"
-                *ngIf="threadStatus && threadStatus.data"
-              >
-              <span *ngIf="threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
-              <ng-template #openThreadCaption>
-                <span i18n>Open this thread</span>
-              </ng-template>
-              </button>
+              <ng-container *ngIf="threadInfo$ | async as threadInfo">
+                <button
+                  class="alg-button primary small"
+                  [disabled]="!canSwitch"
+                  pButton
+                  (click)="changeThreadStatus(!threadStatus.data.open, threadInfo.data)"
+                  *ngIf="threadStatus && threadStatus.data && threadInfo.data"
+                >
+                  <span *ngIf="threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
+                  <ng-template #openThreadCaption>
+                    <span i18n>Open this thread</span>
+                  </ng-template>
+                </button>
+              </ng-container>
             </div>
             <ng-template #threadStatusTooltip>
               <span *ngIf="threadStatus?.data?.open; else notOpenedTooltipCaption" i18n>
