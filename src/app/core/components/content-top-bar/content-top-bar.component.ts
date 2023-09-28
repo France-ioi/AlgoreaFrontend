@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ContentInfo } from '../../../shared/models/content/content-info';
 import { Observable, of } from 'rxjs';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
-import { delay, switchMap, filter } from 'rxjs/operators';
+import { delay, switchMap, filter, map } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../../shared/models/content/item-info';
 import { LayoutService } from 'src/app/shared/services/layout.service';
@@ -10,6 +10,7 @@ import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../../shared/models/content/group-info';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -23,6 +24,7 @@ export class ContentTopBarComponent {
   canDiscussionBeShown$ = this.discussionService.canShowInCurrentPage$;
   isDiscussionVisible$ = this.discussionService.visible$;
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
+  isTempUser$ = this.userSessionService.userProfile$.pipe(map(user => user.tempUser));
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
@@ -54,6 +56,7 @@ export class ContentTopBarComponent {
     private groupNavTreeService: GroupNavTreeService,
     private discussionService: DiscussionService,
     private layoutService: LayoutService,
+    private userSessionService: UserSessionService,
   ) {}
 
   toggleDiscussionPanelVisibility(visible: boolean): void {

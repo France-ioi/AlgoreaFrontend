@@ -45,7 +45,7 @@
       <alg-observation-bar-with-button></alg-observation-bar-with-button>
       <ng-container *ngrxLet="{ canBeShown: canDiscussionBeShown$, isVisible: isDiscussionVisible$ } as discussion">
         <button
-          *ngIf="discussion.canBeShown"
+          *ngIf="discussion.canBeShown && !(isTempUser$ | async)"
           class="alg-button-icon no-bg primary-color margin-left"
           pButton
           type="button"
