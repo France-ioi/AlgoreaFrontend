@@ -1609,7 +1609,55 @@
       </trans-unit><trans-unit id="4672292365306876208" datatype="html">
         <source>An unknown user</source><target state="new">An unknown user</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread-message/thread-message.component.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread-message/thread-message.component.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="6814866706683747731" datatype="html">
+        <source>This thread is open</source><target state="new">This thread is open</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="7026225147837703446" datatype="html">
+        <source>This thread is closed</source><target state="new">This thread is closed</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="7081022654245598030" datatype="html">
+        <source>Loading thread status...</source><target state="new">Loading thread status...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit><trans-unit id="6336236085368327816" datatype="html">
+        <source>Error while loading thread info</source><target state="new">Error while loading thread info</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="622893788827542307" datatype="html">
+        <source>Could not load thread</source><target state="new">Could not load thread</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="3179590434682638610" datatype="html">
+        <source>Close this thread</source><target state="new">Close this thread</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
+        <source>Open this thread</source><target state="new">Open this thread</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
+        <source> Only the user of the thread can close it. </source><target state="new"> Only the user of the thread can close it. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context>
+          <context context-type="linenumber">78,80</context>
+        </context-group>
+      </trans-unit><trans-unit id="6788707780009559106" datatype="html">
+        <source>You are not allowed to open this thread.</source><target state="new">You are not allowed to open this thread.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="1291696088945307456" datatype="html">
+        <source>Not implemented</source><target state="new">Not implemented</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.ts</context><context context-type="linenumber">166</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
         <source>Error while loading this chapter's children</source><target state="translated">Erreur lors du chargement des enfants de ce chapitre</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/chapter-children/chapter-children.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7143643956716496978" datatype="html">

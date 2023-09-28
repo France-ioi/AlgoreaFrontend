@@ -27,7 +27,7 @@ import { ActivityLogService } from 'src/app/shared/http-services/activity-log.se
 import { isNotNull, isNotUndefined } from 'src/app/shared/helpers/null-undefined-predicates';
 import { ForumService } from './forum.service';
 import { publishEventsAction, subscribeAction, unsubscribeAction } from './threads-outbound-actions';
-import { mapToFetchState } from 'src/app/shared/operators/state';
+import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { messageEvent } from './threads-events';
 import { IncomingThreadEvent, incomingThreadEventDecoder } from './threads-inbound-events';
 import { ThreadService as ThreadHttpService } from '../http-services/thread.service';
@@ -58,9 +58,11 @@ export class ThreadService implements OnDestroy {
       return this.threadHttpService.get(threadId.itemId, threadId.participantId);
     }),
     startWith(undefined),
+    mapToFetchState(),
     shareReplay(1),
   );
   private threadSubscriptionSub = this.threadInfo$.pipe(
+    readyData(),
     map(t => t?.token),
     pairwise(),
     switchMap(([ prevToken, newToken ]) => concat(...[
@@ -114,6 +116,7 @@ export class ThreadService implements OnDestroy {
   syncEvents(): Observable<void> {
     return this.threadInfo$.pipe(
       take(1),
+      readyData(),
       filter(isNotUndefined),
       map(t => ({
         itemId: t.itemId,
@@ -146,6 +149,7 @@ export class ThreadService implements OnDestroy {
     this.subscriptions.add(
       this.threadInfo$.pipe(
         take(1), // send on the current thread (if any) only
+        readyData(),
         filter(isNotUndefined),
         map(t => t.token),
       ).subscribe(token => this.forumService.send(publishEventsAction(token, [ messageEvent(message) ])))

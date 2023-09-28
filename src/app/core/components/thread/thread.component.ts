@@ -1,16 +1,20 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ThreadService } from '../../../modules/item/services/threads.service';
 import { FormBuilder } from '@angular/forms';
-import { readyData } from '../../../shared/operators/state';
-import { Subscription, filter, delay, combineLatest, of } from 'rxjs';
+import { mapToFetchState, readyData } from '../../../shared/operators/state';
+import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
-import { catchError, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { formatUser } from 'src/app/shared/helpers/user';
 import { GetUserService } from 'src/app/modules/group/http-services/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
 import { rawItemRoute } from 'src/app/shared/routing/item-route';
+import { GetItemByIdService } from '../../../modules/item/http-services/get-item-by-id.service';
+import { ActionFeedbackService } from '../../../shared/services/action-feedback.service';
+import { FetchState, fetchingState, readyState } from '../../../shared/helpers/state';
+import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 
 @Component({
   selector: 'alg-thread',
@@ -24,6 +28,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     messageToSend: [ '' ],
   });
 
+  readonly subscriptions = new Subscription();
   readonly state$ = this.threadService.eventsState$;
 
   private distinctUsersInThread = this.state$.pipe(
@@ -56,13 +61,55 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
   readonly canCurrentUserLoadAnswers$ = this.threadService.threadInfo$.pipe(
+    readyData(),
     map(t => t?.isMine || t?.canWatch), // for future: others should be able to load as well using the answer stored in msg data
   );
   readonly itemRoute$ = this.threadService.threadInfo$.pipe(
+    readyData(),
     map(t => (t ? rawItemRoute('activity', t.itemId) : undefined)),
   );
-
-  private subscription?: Subscription;
+  private readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe( // may be true, false or undefined!
+    map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
+  );
+  private readonly isCurrentUserThreadParticipant$ = combineLatest([
+    this.userSessionService.userProfile$,
+    this.threadService.threadId$
+  ]).pipe(
+    map(([ user, threadId ]) => user.groupId === threadId?.participantId)
+  );
+  readonly threadStatus$ : Observable<undefined | FetchState<
+    { open: true, canClose: boolean } |
+    { open: false, canOpen: boolean }
+  >> = combineLatest([
+      this.isThreadStatusOpened$,
+      this.isCurrentUserThreadParticipant$,
+      this.threadService.threadId$,
+      this.discussionService.visible$,
+    ]).pipe(
+      debounceTime(0), // to prevent race condition (service call immediately aborted)
+      switchMap(([ open, isCurrentUserParticipant, threadId, visible ]) => {
+        if (!visible || open === undefined || !threadId) return of(undefined);
+        if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
+        return this.getItemByIdService.get(threadId.itemId, isCurrentUserParticipant ? undefined : threadId.participantId).pipe(
+          mapToFetchState(),
+          map(state => {
+            switch (state.tag) {
+              case 'ready':
+                if (isCurrentUserParticipant) return readyState({ open: false as const, canOpen: state.data.permissions.canRequestHelp });
+                return readyState({ open: false as const, canOpen: true });
+              case 'fetching':
+                return fetchingState(); // fetching with no data
+              case 'error':
+                // 403 on that service means that they cannot watch the participant
+                if (!isCurrentUserParticipant && errorIsHTTPForbidden(state.error)) {
+                  return readyState({ open: false as const, canOpen: false });
+                }
+                return state;
+            }
+          })
+        );
+      }),
+    );
 
   constructor(
     private threadService: ThreadService,
@@ -70,20 +117,34 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private userSessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private userService: GetUserService,
+    private getItemByIdService: GetItemByIdService,
+    private actionFeedbackService: ActionFeedbackService,
     private fb: FormBuilder,
   ) {}
 
   ngAfterViewInit(): void {
-    this.subscription = this.state$.pipe(
-      readyData(),
-      withLatestFrom(this.discussionService.visible$),
-      filter(([ events, visible ]) => visible && events.length > 0),
-      delay(0),
-    ).subscribe(() => this.scrollDown());
+    this.subscriptions.add(
+      this.state$.pipe(
+        readyData(),
+        withLatestFrom(this.discussionService.visible$),
+        filter(([ events, visible ]) => visible && events.length > 0),
+        delay(0),
+      ).subscribe(() => this.scrollDown())
+    );
+
+    this.subscriptions.add(
+      this.isThreadStatusOpened$.pipe(delay(0)).subscribe(isThreadStatusOpened => {
+        if (!isThreadStatusOpened) {
+          this.form.get('messageToSend')?.disable();
+          return;
+        }
+        this.form.get('messageToSend')?.enable();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   sendMessage(): void {
@@ -102,5 +163,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       0,
       this.messagesScroll.nativeElement.scrollHeight - this.messagesScroll.nativeElement.offsetHeight
     );
+  }
+
+  changeThreadStatus(): void {
+    this.actionFeedbackService.error($localize`Not implemented`);
   }
 }

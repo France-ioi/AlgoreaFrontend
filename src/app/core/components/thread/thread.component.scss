@@ -42,11 +42,28 @@
 .footer-panel {
   margin: toRem(22) toRem(6) 0 toRem(6);
   display: flex;
+  flex-direction: column;
+}
+
+.send-form {
+  display: flex;
   justify-content: flex-start;
   align-items: center;
   background-color: rgba(0, 0, 0, .05);
   border-radius: toRem(8);
   padding: toRem(12) toRem(12) toRem(12) toRem(16);
+}
+
+.thread-status {
+  margin-top: toRem(8);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.thread-status-caption {
+  color: var(--alg-secondary-color);
+  font-size: .9rem;
 }
 
 .textarea {
