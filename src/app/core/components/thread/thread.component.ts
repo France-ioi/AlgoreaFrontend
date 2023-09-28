@@ -175,7 +175,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       status: 'waiting_for_trainer',
       helperGroupId: environment.allUsersGroupId,
     } : { status: 'closed' }).subscribe({
-      next: () => this.actionFeedbackService.error($localize`Not implemented: refresh`),
+      next: () => this.threadService.refresh(),
       error: error => {
         if (errorIsHTTPForbidden(error)) {
           this.actionFeedbackService.error($localize`Unable to open the thread`);
