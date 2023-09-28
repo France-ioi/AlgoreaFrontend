@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ThreadService } from '../../../modules/item/services/threads.service';
+import { ThreadId, ThreadService } from '../../../modules/item/services/threads.service';
 import { FormBuilder } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../shared/operators/state';
 import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
@@ -16,7 +16,6 @@ import { ActionFeedbackService } from '../../../shared/services/action-feedback.
 import { FetchState, fetchingState, readyState } from '../../../shared/helpers/state';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { UpdateThreadService } from '../../../modules/item/http-services/update-thread.service';
-import { ThreadInfo } from '../../../modules/item/http-services/thread.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -113,7 +112,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         );
       }),
     );
-  threadInfo$ = this.threadService.threadInfo$;
+  threadId$ = this.threadService.threadId$;
 
   constructor(
     private threadService: ThreadService,
@@ -170,19 +169,13 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  changeThreadStatus(open: boolean, threadInfo: ThreadInfo): void {
-    this.updateThreadService.update(threadInfo.itemId, threadInfo.participantId, open ? {
+  changeThreadStatus(open: boolean, threadId: ThreadId): void {
+    this.updateThreadService.update(threadId.itemId, threadId.participantId, open ? {
       status: 'waiting_for_trainer',
       helperGroupId: environment.allUsersGroupId,
     } : { status: 'closed' }).subscribe({
       next: () => this.threadService.refresh(),
-      error: error => {
-        if (errorIsHTTPForbidden(error)) {
-          this.actionFeedbackService.error($localize`Unable to open the thread`);
-          return;
-        }
-        this.actionFeedbackService.unexpectedError();
-      }
+      error: () => this.actionFeedbackService.unexpectedError(),
     });
   }
 }

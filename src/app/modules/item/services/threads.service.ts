@@ -34,7 +34,7 @@ import { IncomingThreadEvent, incomingThreadEventDecoder } from './threads-inbou
 import { ThreadService as ThreadHttpService } from '../http-services/thread.service';
 
 
-interface ThreadId {
+export interface ThreadId {
   itemId: string,
   participantId: string,
 }
