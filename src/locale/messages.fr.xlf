@@ -1641,10 +1641,10 @@
         </context-group>
       </trans-unit><trans-unit id="3179590434682638610" datatype="html">
         <source>Close this thread</source><target state="new">Close this thread</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
         <source>Open this thread</source><target state="new">Open this thread</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
         <source> Only the user of the thread can close it. </source><target state="new"> Only the user of the thread can close it. </target>
         <context-group purpose="location">
@@ -1653,10 +1653,10 @@
         </context-group>
       </trans-unit><trans-unit id="6788707780009559106" datatype="html">
         <source>You are not allowed to open this thread.</source><target state="new">You are not allowed to open this thread.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="1291696088945307456" datatype="html">
         <source>Not implemented</source><target state="new">Not implemented</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/core/components/thread/thread.component.ts</context><context context-type="linenumber">166</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
         <source>Error while loading this chapter's children</source><target state="translated">Erreur lors du chargement des enfants de ce chapitre</target>
 
