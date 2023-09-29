@@ -48,6 +48,7 @@ import { GetBreadcrumbsFromRootsService } from '../../http-services/get-breadcru
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { closestBreadcrumbs } from 'src/app/shared/routing/content-route';
 import { LayoutService } from '../../../../shared/services/layout.service';
+import { ItemTaskTokenService } from '../../services/item-task-token.service';
 
 export interface TaskTab {
   name: string,
@@ -60,7 +61,7 @@ const heightSyncInterval = 0.2*SECONDS;
   selector: 'alg-item-display[url][route]',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
-  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
+  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService, ItemTaskTokenService ],
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;

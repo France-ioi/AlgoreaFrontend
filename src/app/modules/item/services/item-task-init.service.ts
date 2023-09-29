@@ -3,7 +3,6 @@ import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError 
 import {
   catchError,
   delayWhen,
-  distinctUntilChanged,
   filter,
   map,
   pairwise,
@@ -15,7 +14,6 @@ import {
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
-import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 import { Answer } from './item-task.service';
 
@@ -39,29 +37,6 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
-  readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    // build strategy separately from switchMap to prevent cancellation of the request
-    map(({ readOnly, initialAnswer, attemptId, route }) => {
-      if (readOnly) {
-        // if readonly -> if initialAnswer is still unknown, wait the next config update to generate token
-        if (initialAnswer === undefined) return { strategy: 'wait' as const };
-        // if readonly -> if there is an initial answer,
-        if (initialAnswer !== null) return { strategy: 'answerToken' as const, answerId: initialAnswer.id };
-      }
-      // if the attempt id is not known yet: wait
-      if (attemptId === undefined) return { strategy: 'wait' as const };
-      // if we are editing (= not in readOnly) -> we need a token for our user
-      // if there are no answer loaded -> we currently want an empty task, so using our own task token
-      return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
-    }),
-    distinctUntilChanged((prev, cur) => prev.strategy === cur.strategy),
-    switchMap(s => {
-      if (s.strategy === 'answerToken') return this.taskTokenService.generateForAnswer(s.answerId);
-      if (s.strategy === 'regularToken') return this.taskTokenService.generate(s.itemId, s.attemptId);
-      return EMPTY; // s.strategy === 'wait'
-    }),
-    shareReplay(1),
-  );
 
   readonly iframeSrc$ = this.config$.pipe(
     map(({ url, locale }) => taskUrlWithParameters(this.checkUrl(url), appConfig.itemPlatformId, taskChannelIdPrefix, locale)),
@@ -103,10 +78,6 @@ export class ItemTaskInitService implements OnDestroy {
       prev.url !== cur.url
     ) throw new Error('cannot change task config, except for initialAnswer');
   });
-
-  constructor(
-    private taskTokenService: TaskTokenService,
-  ) {}
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.

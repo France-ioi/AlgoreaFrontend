@@ -11,6 +11,7 @@ import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
+import { ItemTaskTokenService } from './item-task-token.service';
 
 export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
 
@@ -68,6 +69,7 @@ export class ItemTaskService implements OnDestroy {
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
     private viewsService: ItemTaskViewsService,
+    private tokenService: ItemTaskTokenService,
     private activityNavTreeService: ActivityNavTreeService,
     private location: Location,
     private askHintService: AskHintService,
@@ -201,7 +203,7 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private askHint(hintToken: string): Observable<string> {
-    return this.initService.taskToken$.pipe(
+    return this.tokenService.taskToken$.pipe(
       switchMap(taskToken => this.askHintService.ask(taskToken, hintToken)),
       map(data => data.taskToken),
       catchError(err => {
