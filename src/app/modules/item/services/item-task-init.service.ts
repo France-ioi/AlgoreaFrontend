@@ -11,7 +11,6 @@ import {
   switchMap,
   takeUntil,
   timeout,
-  withLatestFrom
 } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
@@ -64,11 +63,8 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1),
   );
 
-  readonly iframeSrc$ = this.taskToken$.pipe(
-    withLatestFrom(this.config$),
-    map(([ taskToken, { url, locale }]) =>
-      taskUrlWithParameters(this.checkUrl(url), taskToken, appConfig.itemPlatformId, taskChannelIdPrefix, locale)
-    ),
+  readonly iframeSrc$ = this.config$.pipe(
+    map(({ url, locale }) => taskUrlWithParameters(this.checkUrl(url), appConfig.itemPlatformId, taskChannelIdPrefix, locale)),
     shareReplay(1), // avoid duplicate xhr calls
   );
 

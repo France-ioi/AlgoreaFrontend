@@ -36,11 +36,10 @@ function getRandomID(): string {
 }
 
 /** Get URL for a task with specific parameters */
-export function taskUrlWithParameters(taskUrl: string, token: string, platform: string, prefix = '', locale?: string): string {
+export function taskUrlWithParameters(taskUrl: string, platform: string, prefix = '', locale?: string): string {
   const channelId = prefix + getRandomID();
   const url = new URL(taskUrl);
 
-  url.searchParams.set('sToken', token);
   url.searchParams.set('sPlatform', platform);
   url.searchParams.set('channelId', channelId);
   if (locale) url.searchParams.set('sLocale', locale);
