@@ -1,8 +1,8 @@
 <div
   class="message-container"
   [ngClass]="{
-    'left': !userInfo?.isThreadParticipant && event.label === 'message',
-    'right': userInfo?.isThreadParticipant && event.label === 'message',
+    'left': !userInfo?.isCurrentUser && event.label === 'message',
+    'right': userInfo?.isCurrentUser && event.label === 'message',
     'full-width transparent': ['result_started', 'submission'].includes(event.label),
     'started': event.label === 'result_started'
   }"
