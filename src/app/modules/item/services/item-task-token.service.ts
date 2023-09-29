@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { ItemTaskInitService } from './item-task-init.service';
 
@@ -31,8 +31,8 @@ export class ItemTaskTokenService implements OnDestroy {
     shareReplay(1),
   );
 
-  private readonly taskTokenUpdate$ = combineLatest([ this.taskToken$, this.initService.task$ ]).pipe(
-    switchMap(([ token, task ]) => task.updateToken(token)),
+  private readonly taskTokenUpdate$ = combineLatest([ this.taskToken$, this.initService.taskLoading$.pipe(take(1)) ]).pipe(
+    switchMap(([ token, { task }]) => task.updateToken(token)),
     map(() => undefined),
   );
 

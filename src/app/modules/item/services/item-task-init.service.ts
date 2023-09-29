@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
+import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
   delayWhen,
@@ -45,17 +45,25 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1), // avoid duplicate xhr calls
   );
 
-  readonly task$ = this.configFromIframe$.pipe(
+  readonly taskLoading$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
     switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
         bindPlatform(task);
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-        return task.load(initialViews).pipe(map(() => task));
+        return merge(
+          task.load(initialViews).pipe(map(() => ({ task, loaded: true }))),
+          of({ task, loaded: false }), // will be emitted immediately after `task.load` has been called (possibly not answered yet)
+        );
       }),
     )),
     takeUntil(this.destroyed$),
     shareReplay(1),
+  );
+
+  readonly task$ = this.taskLoading$.pipe(
+    filter(({ loaded }) => loaded),
+    map(({ task }) => task),
   );
 
   readonly initError$ = this.configFromIframe$.pipe(switchMap(({ iframe }) => fromEvent(iframe, 'load'))).pipe(
