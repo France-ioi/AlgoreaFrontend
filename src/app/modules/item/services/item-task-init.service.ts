@@ -3,6 +3,7 @@ import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError 
 import {
   catchError,
   delayWhen,
+  distinctUntilChanged,
   filter,
   map,
   pairwise,
@@ -39,6 +40,7 @@ export class ItemTaskInitService implements OnDestroy {
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
 
   readonly iframeSrc$ = this.config$.pipe(
+    distinctUntilChanged((c1, c2) => c1.url === c2.url && c1.locale === c2.locale),
     map(({ url, locale }) => taskUrlWithParameters(this.checkUrl(url), appConfig.itemPlatformId, taskChannelIdPrefix, locale)),
     shareReplay(1), // avoid duplicate xhr calls
   );
