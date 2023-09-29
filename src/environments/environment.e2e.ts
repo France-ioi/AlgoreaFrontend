@@ -12,6 +12,7 @@ export const environment: Environment = {
   oauthClientId: '43',
 
   defaultActivityId: '4702',
+  allUsersGroupId: '3',
 
   languages: [
     { tag: 'fr', path: '/fr/' },

@@ -18,6 +18,7 @@ import {
   scan,
   shareReplay,
   startWith,
+  Subject,
   Subscription,
   switchMap,
   take,
@@ -33,7 +34,7 @@ import { IncomingThreadEvent, incomingThreadEventDecoder } from './threads-inbou
 import { ThreadService as ThreadHttpService } from '../http-services/thread.service';
 
 
-interface ThreadId {
+export interface ThreadId {
   itemId: string,
   participantId: string,
 }
@@ -46,6 +47,7 @@ export class ThreadService implements OnDestroy {
   private configuredThreadId = new BehaviorSubject<ThreadId|null>(null);
   private clearEvents$ = new ReplaySubject<void>(1);
 
+  private refresh$ = new Subject<void>();
   threadId$ = this.configuredThreadId.pipe(distinctUntilChanged((x,y) => x?.participantId === y?.participantId && x?.itemId === y?.itemId));
   threadInfo$ = combineLatest([
     this.threadId$,
@@ -58,7 +60,7 @@ export class ThreadService implements OnDestroy {
       return this.threadHttpService.get(threadId.itemId, threadId.participantId);
     }),
     startWith(undefined),
-    mapToFetchState(),
+    mapToFetchState({ resetter: this.refresh$ }),
     shareReplay(1),
   );
   private threadSubscriptionSub = this.threadInfo$.pipe(
@@ -106,6 +108,7 @@ export class ThreadService implements OnDestroy {
   ngOnDestroy(): void {
     this.configuredThreadId.complete();
     this.clearEvents$.complete();
+    this.refresh$.complete();
     this.threadSubscriptionSub.unsubscribe();
     this.subscriptions.unsubscribe();
   }
@@ -158,6 +161,10 @@ export class ThreadService implements OnDestroy {
 
   setThread(thread: ThreadId|null): void {
     this.configuredThreadId.next(thread);
+  }
+
+  refresh(): void {
+    this.refresh$.next();
   }
 
 }
