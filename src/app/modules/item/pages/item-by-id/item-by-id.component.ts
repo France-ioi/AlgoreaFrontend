@@ -166,7 +166,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private subscriptions: Subscription[] = [
 
     this.itemChanged$.subscribe(() => {
-      this.discussionService.toggleVisibility(false);
       this.fullFrameContent$.next(false);
       this.editorUrl = undefined;
       this.itemTabs.itemChanged();
@@ -311,7 +310,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   ngOnDestroy(): void {
     this.tabService.setTabs([]);
-    this.discussionService.configureThread(null);
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });
@@ -320,7 +318,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.beforeUnload$.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
-    this.discussionService.toggleVisibility(false);
   }
 
 

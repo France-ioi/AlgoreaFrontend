@@ -23,11 +23,8 @@ export class DiscussionService implements OnDestroy {
   private readonly threadService?: ThreadService; // only injected if forum is enabled
   threadId$: Observable<ThreadId|undefined> = EMPTY;
 
-  private canShowInCurrentPage = new BehaviorSubject(false);
-  canShowInCurrentPage$ = this.canShowInCurrentPage.asObservable();
-
-  private configuredThread: ThreadId|null = null;
-  private hasForcedThread = false;
+  private configuredThreadSubject = new BehaviorSubject<ThreadId|null>(null);
+  readonly configuredThread$ = this.configuredThreadSubject.asObservable();
 
   /**
    * When a thread is available but currently not visible, the number of events that arrive since the thread was last opened in this session
@@ -73,7 +70,6 @@ export class DiscussionService implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.visible.complete();
-    this.canShowInCurrentPage.complete();
   }
 
   /**
@@ -84,8 +80,7 @@ export class DiscussionService implements OnDestroy {
   toggleVisibility(visible: boolean, thread?: ThreadId): void {
     if (!this.threadService) return;
     this.visible.next(visible);
-    this.hasForcedThread = visible && !!thread;
-    this.threadService.setThread(thread ? thread : this.configuredThread);
+    this.threadService.setThread(thread ? thread : this.configuredThreadSubject.value);
   }
 
   /**
@@ -94,9 +89,7 @@ export class DiscussionService implements OnDestroy {
    */
   configureThread(thread: ThreadId|null): void {
     if (!this.threadService) return;
-    this.canShowInCurrentPage.next(!!thread);
-    this.configuredThread = thread;
-    if (!this.hasForcedThread) this.threadService.setThread(thread);
+    this.configuredThreadSubject.next(thread);
   }
 
   resyncEventLog(): void {

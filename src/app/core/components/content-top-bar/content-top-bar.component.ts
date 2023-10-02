@@ -10,6 +10,7 @@ import { GroupWatchingService } from '../../services/group-watching.service';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../../shared/models/content/group-info';
+import { ThreadId } from '../../../modules/item/services/threads.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -20,7 +21,7 @@ export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
-  canDiscussionBeShown$ = this.discussionService.canShowInCurrentPage$;
+  configuredThread$ = this.discussionService.configuredThread$;
   isDiscussionVisible$ = this.discussionService.visible$;
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
@@ -56,8 +57,8 @@ export class ContentTopBarComponent {
     private layoutService: LayoutService,
   ) {}
 
-  toggleDiscussionPanelVisibility(visible: boolean): void {
-    this.discussionService.toggleVisibility(visible);
+  toggleDiscussionPanelVisibility(visible: boolean, thread: ThreadId): void {
+    this.discussionService.toggleVisibility(visible, visible ? thread : undefined);
   }
 
   showLeftMenu(): void {
