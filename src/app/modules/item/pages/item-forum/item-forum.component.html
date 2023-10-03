@@ -44,7 +44,7 @@
             <tr *ngIf="state.data.length > 0">
               <th></th>
               <th *ngIf="itemData?.item?.type !== 'Task'" i18n>Content</th>
-              <th i18n>User</th>
+              <th i18n *ngIf="selected !== 0">User</th>
               <th i18n>Status</th>
               <th i18n># msgs</th>
               <th i18n>Latest update</th>
@@ -69,7 +69,7 @@
                   {{ rowData.item.title }}
                 </a>
               </td>
-              <td>
+              <td *ngIf="selected !== 0">
                 <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
                   {{ rowData.participant | userCaption }}
                 </a>
