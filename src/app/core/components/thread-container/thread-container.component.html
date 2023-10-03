@@ -1,6 +1,17 @@
 <div class="container">
   <div class="header">
-    <span class="header-title" i18n>Forum</span>
+    <div>
+      <span class="header-icon ph-duotone ph-chats-circle"></span>
+      <ng-container  *ngIf="threadItem$ | async as threadItem">
+        <a
+          class="alg-link header-title"
+          [routerLink]="threadItem | rawItemRoute | url"
+          *ngIf="threadItem.string.title as itemTitle"
+        >
+          {{ itemTitle }}
+        </a>
+      </ng-container>
+    </div>
     <button
       class="header-button alg-button-icon primary-color no-bg"
       type="submit"

@@ -15,9 +15,17 @@
   border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
 }
 
-.header-title {
-  color: var(--alg-light-text-color);
+.header-title, .header-icon {
   font-size: toRem(20);
+}
+
+.header-icon {
+  color: var(--alg-primary-color);
+}
+
+.header-title {
+  margin-left: toRem(14);
+  color: var(--alg-black-color);
 }
 
 .header-button {
