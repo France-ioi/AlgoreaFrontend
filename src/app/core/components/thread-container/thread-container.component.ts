@@ -3,7 +3,6 @@ import { DiscussionService } from 'src/app/modules/item/services/discussion.serv
 import { combineLatest, distinctUntilChanged, filter, of, Subscription, switchMap } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
 import { ThreadService } from '../../../modules/item/services/threads.service';
-import { UserSessionService } from '../../../shared/services/user-session.service';
 import { GetItemByIdService } from '../../../modules/item/http-services/get-item-by-id.service';
 import { isNotNull } from '../../../shared/helpers/null-undefined-predicates';
 import { catchError } from 'rxjs/operators';
@@ -36,7 +35,6 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   constructor(
     private discussionService: DiscussionService,
     private threadService: ThreadService,
-    private userSessionService: UserSessionService,
     private getItemByIdService: GetItemByIdService,
   ) {
   }
