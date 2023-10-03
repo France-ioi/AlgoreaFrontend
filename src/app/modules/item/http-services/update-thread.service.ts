@@ -14,18 +14,22 @@ interface CloseThread {
   status: 'closed',
 }
 
+export interface IncrementMessageCount {
+  messageCountIncrement: number,
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class UpdateThreadService {
   constructor(private http: HttpClient) {}
 
-  update(itemId: string, participantId: string, payload: OpenThread | CloseThread): Observable<void> {
-    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/items/${itemId}/participant/${participantId}/thread`, {
-      status: payload.status,
-      ...('helperGroupId' in payload ? { helper_group_id: payload.helperGroupId } : {}),
-    }).pipe(
-      map(assertSuccess),
-    );
+  update(itemId: string, participantId: string, payload: OpenThread | CloseThread | IncrementMessageCount): Observable<void> {
+    return this.http.put<SimpleActionResponse>(
+      `${appConfig.apiUrl}/items/${itemId}/participant/${participantId}/thread`,
+      'messageCountIncrement' in payload ? { message_count_increment: payload.messageCountIncrement } : {
+        status: payload.status,
+        ...('helperGroupId' in payload ? { helper_group_id: payload.helperGroupId } : {}),
+      }).pipe(map(assertSuccess));
   }
 }

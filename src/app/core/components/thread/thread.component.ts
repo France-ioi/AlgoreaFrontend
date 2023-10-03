@@ -151,10 +151,11 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  sendMessage(): void {
+  sendMessage(threadId: ThreadId): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
     this.threadService.sendMessage(messageToSend);
+    this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
     this.form.reset({
       messageToSend: '',
     });
