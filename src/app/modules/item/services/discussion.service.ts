@@ -80,7 +80,7 @@ export class DiscussionService implements OnDestroy {
   toggleVisibility(visible: boolean, thread?: ThreadId): void {
     if (!this.threadService) return;
     this.visible.next(visible);
-    this.threadService.setThread(thread ? thread : this.configuredThreadSubject.value);
+    this.threadService.setThread(thread ?? this.configuredThreadSubject.value);
   }
 
   /**
