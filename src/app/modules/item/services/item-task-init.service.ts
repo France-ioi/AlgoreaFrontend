@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
+import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
   delayWhen,
@@ -11,12 +11,10 @@ import {
   switchMap,
   takeUntil,
   timeout,
-  withLatestFrom
 } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
-import { TaskTokenService, TaskToken } from '../http-services/task-token.service';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 import { Answer } from './item-task.service';
 
@@ -26,7 +24,7 @@ const loadTaskTimeout = 15 * SECONDS;
 export interface ItemTaskConfig {
   route: FullItemRoute,
   url: string,
-  attemptId: string,
+  attemptId?: string,
   initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   readOnly: boolean,
   locale?: string,
@@ -40,47 +38,32 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
-  readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
-    // build strategy separately from switchMap to prevent cancellation of the request
-    map(({ readOnly, initialAnswer, attemptId, route }) => {
-      if (readOnly) {
-        // if readonly -> if initialAnswer is still unknown, wait the next config update to generate token
-        if (initialAnswer === undefined) return { strategy: 'wait' as const };
-        // if readonly -> if there is an initial answer,
-        if (initialAnswer !== null) return { strategy: 'answerToken' as const, answerId: initialAnswer.id };
-      }
-      // if we are editing (= not in readOnly) -> we need a token for our user
-      // if there are no answer loaded -> we currently want an empty task, so using our own task token
-      return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
-    }),
-    distinctUntilChanged((prev, cur) => prev.strategy === cur.strategy),
-    switchMap(s => {
-      if (s.strategy === 'answerToken') return this.taskTokenService.generateForAnswer(s.answerId);
-      if (s.strategy === 'regularToken') return this.taskTokenService.generate(s.itemId, s.attemptId);
-      return EMPTY; // s.strategy === 'wait'
-    }),
-    shareReplay(1),
-  );
 
-  readonly iframeSrc$ = this.taskToken$.pipe(
-    withLatestFrom(this.config$),
-    map(([ taskToken, { url, locale }]) =>
-      taskUrlWithParameters(this.checkUrl(url), taskToken, appConfig.itemPlatformId, taskChannelIdPrefix, locale)
-    ),
+  readonly iframeSrc$ = this.config$.pipe(
+    distinctUntilChanged((c1, c2) => c1.url === c2.url && c1.locale === c2.locale),
+    map(({ url, locale }) => taskUrlWithParameters(this.checkUrl(url), appConfig.itemPlatformId, taskChannelIdPrefix, locale)),
     shareReplay(1), // avoid duplicate xhr calls
   );
 
-  readonly task$ = this.configFromIframe$.pipe(
+  readonly taskLoading$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
     switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(
       switchMap(task => {
         bindPlatform(task);
         const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-        return task.load(initialViews).pipe(map(() => task));
+        return merge(
+          task.load(initialViews).pipe(map(() => ({ task, loaded: true }))),
+          of({ task, loaded: false }), // will be emitted immediately after `task.load` has been called (possibly not answered yet)
+        );
       }),
     )),
     takeUntil(this.destroyed$),
     shareReplay(1),
+  );
+
+  readonly task$ = this.taskLoading$.pipe(
+    filter(({ loaded }) => loaded),
+    map(({ task }) => task),
   );
 
   readonly initError$ = this.configFromIframe$.pipe(switchMap(({ iframe }) => fromEvent(iframe, 'load'))).pipe(
@@ -96,20 +79,15 @@ export class ItemTaskInitService implements OnDestroy {
 
   initialized = false;
 
-  /** Guard: throw exception if the config changes, except `initialAnswer` */
+  /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
   subscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
     if (
-      prev.attemptId !== cur.attemptId ||
       prev.readOnly !== cur.readOnly ||
       prev.locale !== cur.locale ||
       prev.route !== cur.route ||
       prev.url !== cur.url
     ) throw new Error('cannot change task config, except for initialAnswer');
   });
-
-  constructor(
-    private taskTokenService: TaskTokenService,
-  ) {}
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
@@ -123,7 +101,7 @@ export class ItemTaskInitService implements OnDestroy {
   configure(
     route: FullItemRoute,
     url: string,
-    attemptId: string,
+    attemptId: string | undefined,
     initialAnswer: Answer | undefined | null,
     locale?: string,
     readOnly = false

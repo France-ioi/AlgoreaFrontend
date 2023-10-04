@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Injectable, OnDestroy } from '@angular/core';
-import { animationFrames, combineLatest, EMPTY, merge, Observable, of, Subject, throwError } from 'rxjs';
+import { animationFrames, combineLatest, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
@@ -11,6 +11,7 @@ import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
+import { ItemTaskTokenService } from './item-task-token.service';
 
 export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
 
@@ -62,12 +63,13 @@ export class ItemTaskService implements OnDestroy {
   );
 
   private readOnly = false;
-  private attemptId?: string;
+  private attemptId$ = new ReplaySubject(1);
 
   constructor(
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
     private viewsService: ItemTaskViewsService,
+    private tokenService: ItemTaskTokenService,
     private activityNavTreeService: ActivityNavTreeService,
     private location: Location,
     private askHintService: AskHintService,
@@ -80,9 +82,9 @@ export class ItemTaskService implements OnDestroy {
     this.destroyed$.complete();
   }
 
-  configure(route: FullItemRoute, url: string, attemptId: string, options: TaskConfig): void {
+  configure(route: FullItemRoute, url: string, attemptId: string | undefined, options: TaskConfig): void {
     this.readOnly = options.readOnly;
-    this.attemptId = attemptId;
+    this.attemptId$.next(attemptId);
     this.initService.configure(route, url, attemptId, options.initialAnswer, options.locale, options.readOnly);
   }
 
@@ -99,24 +101,9 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private bindPlatform(task: Task): void {
-    if (!this.attemptId) throw new Error('attemptId must be defined. The "configure" method has probably not been called as expected');
-    // attempt id can be used as a seed as these are currently assigned incrementally by participant id
-    // If this changes, this needs to be adapted.
-    const randomSeed = Number(this.attemptId);
-    if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
-
     const platform: TaskPlatform = {
       validate: mode => (this.readOnly ? this.validateReadOnly(mode) : this.validate(mode)).pipe(map(() => undefined)),
-      getTaskParams: () => ({
-        minScore: 0,
-        maxScore: 100,
-        hideTitle: true,
-        supportsTabs: true,
-        randomSeed,
-        noScore: 0,
-        readOnly: this.readOnly,
-        options: {},
-      }),
+      getTaskParams: () => this.getTaskParams() ,
       updateHeight: height => platform.updateDisplay({ height }),
       updateDisplay: display => this.viewsService.updateDisplay(display),
       showView: view => this.viewsService.showView(view),
@@ -162,6 +149,35 @@ export class ItemTaskService implements OnDestroy {
     }
   }
 
+  private getTaskParams(): ReturnType<TaskPlatform['getTaskParams']> {
+    /** Note that getTaskParams() will never respond if no attempt_id is configured */
+    return this.task$.pipe(
+      switchMap(task => task.getMetaData()),
+      switchMap(({ usesRandomSeed }) => {
+        if (!usesRandomSeed) return of({ randomSeed: 0 });
+        else return this.attemptId$.pipe(
+          map(attemptId => {
+            const randomSeed = Number(attemptId);
+            // attempt id can be used as a seed as these are currently assigned incrementally by participant id
+            // If this changes, this needs to be adapted.
+            if (Number.isNaN(randomSeed)) throw new Error('random seed must be a number');
+            return { randomSeed };
+          })
+        );
+      }),
+      map(({ randomSeed }) => ({
+        minScore: 0,
+        maxScore: 100,
+        hideTitle: true,
+        supportsTabs: true,
+        randomSeed,
+        noScore: 0,
+        readOnly: this.readOnly,
+        options: {},
+      }))
+    );
+  }
+
   private navigateToNextItem(): Observable<void> {
     this.navigateTo.next({ nextActivity: true, newTab: false });
     return of(undefined);
@@ -187,7 +203,7 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private askHint(hintToken: string): Observable<string> {
-    return this.initService.taskToken$.pipe(
+    return this.tokenService.taskToken$.pipe(
       switchMap(taskToken => this.askHintService.ask(taskToken, hintToken)),
       map(data => data.taskToken),
       catchError(err => {

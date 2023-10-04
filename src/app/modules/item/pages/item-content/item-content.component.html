@@ -14,9 +14,9 @@
     </ng-template>
   </ng-container>
 
-  <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && itemData.currentResult">
+  <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && !(itemData.item.requiresExplicitEntry && itemData.results !== undefined && !itemData.currentResult)">
 
-    <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type)">
+    <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type) && itemData.currentResult">
       <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
         <label class="edit-label">
           <span class="alg-base-text-color" i18n>Edit content</span>
@@ -52,7 +52,7 @@
           [route]="itemData.route"
           [editingPermission]="itemData.item.permissions"
           [url]="itemData.item.url"
-          [attemptId]="itemData.currentResult.attemptId"
+          [attemptId]="itemData.currentResult ? itemData.currentResult.attemptId : undefined"
           [view]="taskView"
           [taskConfig]="taskConfig"
           [savingAnswer]="savingAnswer"
@@ -99,12 +99,12 @@
 
   <alg-task-loader
     class="alg-flex-1 task-loader"
-    *ngIf="(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry && (!itemData.currentResult || (itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)))"
+    *ngIf="(itemData.item.permissions | allowsViewingContent) && (!itemData.item.requiresExplicitEntry && (itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)) || (itemData.item.requiresExplicitEntry && (itemData.results === undefined || (itemData.results !== undefined && itemData.currentResult && itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)))) )"
     i18n-label label="Loading the content"
     i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
   ></alg-task-loader>
 
-  <ng-container *ngIf="itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && !itemData.currentResult))">
+  <ng-container *ngIf="itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && itemData.results !== undefined && !itemData.currentResult))">
     <p class="validation-text">
       <span>
         <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
