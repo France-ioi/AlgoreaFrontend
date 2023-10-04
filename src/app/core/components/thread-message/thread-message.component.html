@@ -4,7 +4,8 @@
     'left': !userInfo?.isCurrentUser && event.label === 'message',
     'right': userInfo?.isCurrentUser && event.label === 'message',
     'full-width transparent': ['result_started', 'submission'].includes(event.label),
-    'started': event.label === 'result_started'
+    'started': event.label === 'result_started',
+    'participant': !userInfo?.isCurrentUser && userInfo?.isThreadParticipant && event.label === 'message'
   }"
 >
   <div class="message">

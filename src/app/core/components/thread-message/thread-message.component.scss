@@ -92,6 +92,12 @@
       opacity: 1;
     }
   }
+
+  &.participant {
+    .bubble {
+      background-color: var(--alg-observation-button-bg-color);
+    }
+  }
 }
 
 .message {
