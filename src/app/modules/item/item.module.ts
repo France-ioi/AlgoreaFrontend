@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ItemRoutingModule } from './item-routing.module';
-import { SharedComponentsModule } from '../shared-components/shared-components.module';
+
 import { ItemHeaderComponent } from './components/item-header/item-header.component';
 import { ItemByIdComponent } from './pages/item-by-id/item-by-id.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -56,7 +56,6 @@ import { ItemForumComponent } from './pages/item-forum/item-forum.component';
   imports: [
     CommonModule,
     ItemRoutingModule,
-    SharedComponentsModule,
     ReactiveFormsModule,
     LetDirective,
     FormsModule,

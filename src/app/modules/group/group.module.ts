@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedComponentsModule } from '../shared-components/shared-components.module';
-
 import { GroupRoutingModule } from './group-routing.module';
 
 import { GroupHeaderComponent } from './components/group-header/group-header.component';
@@ -55,7 +53,6 @@ import { UserIndicatorComponent } from './components/user-indicator/user-indicat
   imports: [
     CommonModule,
     GroupRoutingModule,
-    SharedComponentsModule,
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,

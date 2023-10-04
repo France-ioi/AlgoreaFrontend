@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 
-import { SharedComponentsModule } from '../modules/shared-components/shared-components.module';
-
 import { AccordionModule } from 'primeng/accordion';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { DialogModule } from 'primeng/dialog';
@@ -51,7 +49,9 @@ import { ThreadMessageComponent } from './components/thread-message/thread-messa
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ToastModule } from 'primeng/toast';
 import { ObservationBarWithButtonComponent } from './components/observation-bar-with-button/observation-bar-with-button.component';
+import { HtmlElLoadedDirective } from '../shared/directives/html-el-loaded.directive';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -68,7 +68,6 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
     BreadcrumbModule,
     AccordionModule,
     NgScrollbarModule,
-    SharedComponentsModule,
     TreeModule,
     TooltipModule,
     ConfirmDialogModule,
@@ -101,6 +100,8 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
     ThreadComponent,
     ThreadContainerComponent,
     ThreadMessageComponent,
+    ToastModule,
+    HtmlElLoadedDirective,
   ],
   providers: [
     ConfirmationService,
