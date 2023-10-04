@@ -4,8 +4,8 @@ import { Thread } from '../../modules/item/services/get-threads.service';
 function formatThreadStatus(type: Thread['status']): string {
   switch (type) {
     case 'not_started': return $localize`Not started`;
-    case 'waiting_for_participant': return $localize`Waiting for participant`;
-    case 'waiting_for_trainer': return $localize`Waiting for trainer`;
+    case 'waiting_for_participant': return $localize`Open`;
+    case 'waiting_for_trainer': return $localize`Open`;
     case 'closed': return $localize`Closed`;
     default: return type;
   }
