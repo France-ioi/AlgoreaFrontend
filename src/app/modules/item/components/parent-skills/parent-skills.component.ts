@@ -5,11 +5,17 @@ import { GetItemParentsService } from '../../http-services/get-item-parents.serv
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
+import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, AsyncPipe, SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'alg-parent-skills',
   templateUrl: './parent-skills.component.html',
-  styleUrls: [ './parent-skills.component.scss' ]
+  styleUrls: [ './parent-skills.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
 export class ParentSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

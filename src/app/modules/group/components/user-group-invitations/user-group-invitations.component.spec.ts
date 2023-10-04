@@ -36,7 +36,7 @@ describe('UserGroupInvitationsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserGroupInvitationsComponent ],
+      imports: [ UserGroupInvitationsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GetRequestsService, useValue: {
@@ -46,10 +46,10 @@ describe('UserGroupInvitationsComponent', () => {
           processGroupInvitations: (_groupId: any[], _action: any) => serviceResponder$.asObservable()
         } },
         { provide: ActionFeedbackService, useValue: {
-          success: (_m: any) => {},
-          partial: (_m: any) => {},
-          error: (_m: any) => {},
-          unexpectedError: () => {},
+          success: (_m: any) => { },
+          partial: (_m: any) => { },
+          error: (_m: any) => { },
+          unexpectedError: () => { },
         } }
       ]
     }).compileComponents();

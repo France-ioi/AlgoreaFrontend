@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from '../../../../shared/helpers/item-type';
 import { ItemCorePerm } from '../../../../shared/models/domain/item-permissions';
@@ -10,11 +10,39 @@ import { itemEditPermMax } from '../../../../shared/models/domain/item-edit-perm
 import { itemGrantViewPermMax } from '../../../../shared/models/domain/item-grant-view-permission';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
 import { ItemData } from '../../services/item-datasource.service';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/shared/pipes/itemRoute';
+import { PropagationEditMenuComponent } from '../propagation-edit-menu/propagation-edit-menu.component';
+import { AddItemComponent } from '../add-item/add-item.component';
+import { RouterLink } from '@angular/router';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { NgIf, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
 
 @Component({
   selector: 'alg-item-children-edit-list',
   templateUrl: './item-children-edit-list.component.html',
   styleUrls: [ './item-children-edit-list.component.scss' ],
+  standalone: true,
+  imports: [
+    SwitchComponent,
+    FormsModule,
+    NgIf,
+    TableModule,
+    SharedModule,
+    InputNumberModule,
+    NgClass,
+    RouterLink,
+    AddItemComponent,
+    OverlayPanelModule,
+    PropagationEditMenuComponent,
+    ItemRouteWithAttemptPipe,
+    ContentTypeFromItemPipe,
+    RouteUrlPipe,
+  ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
   @Input() itemData?: ItemData;

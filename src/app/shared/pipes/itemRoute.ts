@@ -6,7 +6,10 @@ import { AttemptId, FullItemRoute, ItemRoute, RawItemRoute, rawItemRoute } from 
  * Functions using full item route should always be preferred to raw item route!
  * (requests will be required to fetch path and attempt information)
  */
-@Pipe({ name: 'rawItemRoute', pure: true })
+@Pipe({
+  name: 'rawItemRoute', pure: true,
+  standalone: true
+})
 export class RawItemRoutePipe implements PipeTransform {
   transform({ id, type }: { id: string, type: ItemType }): RawItemRoute {
     return rawItemRoute(typeCategoryOfItem({ type }), id);
@@ -17,21 +20,30 @@ export class RawItemRoutePipe implements PipeTransform {
  * Functions using full item route should always be preferred to raw item route!
  * (requests will be required to fetch path and attempt information)
  */
-@Pipe({ name: 'withAnswer', pure: true })
+@Pipe({
+  name: 'withAnswer', pure: true,
+  standalone: true
+})
 export class ItemRouteWithAnswerPipe implements PipeTransform {
   transform<T extends RawItemRoute>(route: T, answer: ItemRoute['answer']): T {
     return { ...route, answer };
   }
 }
 
-@Pipe({ name: 'contentTypeFromItem', pure: true })
+@Pipe({
+  name: 'contentTypeFromItem', pure: true,
+  standalone: true
+})
 export class ContentTypeFromItemPipe implements PipeTransform {
   transform({ type } : { type: ItemType }): ItemTypeCategory {
     return typeCategoryOfItem({ type });
   }
 }
 
-@Pipe({ name: 'withAttempt', pure: true })
+@Pipe({
+  name: 'withAttempt', pure: true,
+  standalone: true
+})
 export class ItemRouteWithAttemptPipe implements PipeTransform {
   transform<T extends ItemRoute>(route: T, attempt: { attemptId: AttemptId } | { parentAttemptId: AttemptId }): FullItemRoute {
     return { ...route, ...attempt };

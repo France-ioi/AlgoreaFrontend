@@ -8,7 +8,7 @@ describe('ProgressLevelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProgressLevelComponent ]
+      imports: [ ProgressLevelComponent ]
     })
       .compileComponents();
   }));

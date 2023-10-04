@@ -10,10 +10,10 @@ describe('BreadcrumbComponent', () => {
   beforeEach(waitForAsync(() => {
     const routerSpy = jasmine.createSpyObj<Router>('Router', [ 'parseUrl' ]);
     TestBed.configureTestingModule({
+      imports: [ BreadcrumbComponent ],
       providers: [
         { provide: Router, useValue: routerSpy },
-      ],
-      declarations: [ BreadcrumbComponent ]
+      ]
     })
       .compileComponents();
   }));

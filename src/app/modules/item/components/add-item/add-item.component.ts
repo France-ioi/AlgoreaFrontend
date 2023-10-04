@@ -8,11 +8,15 @@ import {
 import { isSkill, ItemType, ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { getAllowedNewItemTypes } from 'src/app/shared/helpers/new-item-types';
 import { SearchItemService } from '../../http-services/search-item.service';
+import { AddContentComponent as AddContentComponent_1 } from '../../../shared-components/components/add-content/add-content.component';
+import { SubSectionComponent } from '../../../shared-components/components/sub-section/sub-section.component';
 
 @Component({
   selector: 'alg-add-item',
   templateUrl: './add-item.component.html',
-  styleUrls: [ './add-item.component.scss' ]
+  styleUrls: [ './add-item.component.scss' ],
+  standalone: true,
+  imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddItemComponent implements OnChanges {
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;

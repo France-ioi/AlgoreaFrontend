@@ -1,10 +1,13 @@
 import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/api';
+import { MessagesModule } from 'primeng/messages';
 
 @Component({
   selector: 'alg-message',
   templateUrl: './message.component.html',
-  styleUrls: [ './message.component.scss' ]
+  styleUrls: [ './message.component.scss' ],
+  standalone: true,
+  imports: [ MessagesModule ]
 })
 export class MessageComponent implements OnChanges {
 

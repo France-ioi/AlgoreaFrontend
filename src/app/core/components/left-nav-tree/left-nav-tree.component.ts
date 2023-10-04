@@ -1,7 +1,14 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { TreeNode } from 'primeng/api';
+import { TreeNode, SharedModule } from 'primeng/api';
 import { ItemTypeCategory } from 'src/app/shared/helpers/item-type';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
+import { SkillProgressComponent } from '../../../modules/shared-components/components/skill-progress/skill-progress.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { ScoreRingComponent } from '../../../modules/shared-components/components/score-ring/score-ring.component';
+import { TreeModule } from 'primeng/tree';
+import { RouterLink } from '@angular/router';
+import { LeftMenuBackButtonComponent } from '../left-menu-back-button/left-menu-back-button.component';
+import { NgIf, NgClass, I18nPluralPipe, I18nSelectPipe } from '@angular/common';
 
 export interface CustomTreeNode<T> extends TreeNode {
   data: T,
@@ -10,7 +17,21 @@ export interface CustomTreeNode<T> extends TreeNode {
 @Component({
   selector: 'alg-left-nav-tree',
   templateUrl: './left-nav-tree.component.html',
-  styleUrls: [ './left-nav-tree.component.scss' ]
+  styleUrls: [ './left-nav-tree.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LeftMenuBackButtonComponent,
+    RouterLink,
+    TreeModule,
+    SharedModule,
+    NgClass,
+    ScoreRingComponent,
+    TooltipModule,
+    SkillProgressComponent,
+    I18nPluralPipe,
+    I18nSelectPipe
+  ],
 })
 export class LeftNavTreeComponent implements OnChanges {
   @Input() data?: NavTreeData;

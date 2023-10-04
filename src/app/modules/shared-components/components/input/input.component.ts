@@ -4,12 +4,24 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormErrorComponent } from '../form-error/form-error.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-input',
   templateUrl: './input.component.html',
   styleUrls: [ './input.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    NgClass,
+    TooltipModule,
+    FormErrorComponent,
+  ],
 })
 export class InputComponent {
   @Input() name = ''; // name of the input in the parent form

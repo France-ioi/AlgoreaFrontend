@@ -1,15 +1,33 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { GroupWatchingService } from '../../services/group-watching.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { LayoutService } from '../../../shared/services/layout.service';
 import { combineLatest, map } from 'rxjs';
 import { GroupInfo, isGroupInfo } from '../../../shared/models/content/group-info';
 import { CurrentContentService } from '../../../shared/services/current-content.service';
+import {
+  SuggestionOfActivitiesComponent
+} from '../../../modules/shared-components/components/suggestion-of-activities/suggestion-of-activities.component';
+import { ButtonModule } from 'primeng/button';
+import { LetDirective } from '@ngrx/component';
+import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-observation-bar-with-button',
   templateUrl: 'observation-bar-with-button.component.html',
   styleUrls: [ './observation-bar-with-button.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ObservationBarComponent,
+    LetDirective,
+    ButtonModule,
+    NgClass,
+    OverlayPanelModule,
+    SuggestionOfActivitiesComponent,
+    AsyncPipe,
+  ],
 })
 export class ObservationBarWithButtonComponent implements OnDestroy {
   @ViewChild('op') op?: OverlayPanel;

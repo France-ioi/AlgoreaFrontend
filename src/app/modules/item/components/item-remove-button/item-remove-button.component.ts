@@ -8,11 +8,24 @@ import { ConfirmationService } from 'primeng/api';
 import { RemoveItemService } from '../../http-services/remove-item.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, AsyncPipe, I18nSelectPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-remove-button',
   templateUrl: './item-remove-button.component.html',
   styleUrls: [ './item-remove-button.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    ButtonModule,
+    AsyncPipe,
+    I18nSelectPipe,
+  ],
 })
 export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
   @Output() confirmRemoval = new EventEmitter<void>();

@@ -10,6 +10,20 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
+import { LogActionDisplayPipe } from '../../../../shared/pipes/logActionDisplay';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe, ItemRouteWithAnswerPipe, ContentTypeFromItemPipe } from 'src/app/shared/pipes/itemRoute';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { LetDirective } from '@ngrx/component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
 interface Column {
   field: string,
   header: string,
@@ -21,6 +35,33 @@ const logsLimit = 20;
   selector: 'alg-item-log-view',
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    LetDirective,
+    ButtonModule,
+    RouterLink,
+    TableModule,
+    SharedModule,
+    NgFor,
+    NgSwitch,
+    NgSwitchCase,
+    ScoreRingComponent,
+    NgClass,
+    NgSwitchDefault,
+    AsyncPipe,
+    DatePipe,
+    I18nSelectPipe,
+    RawItemRoutePipe,
+    ItemRouteWithAnswerPipe,
+    ContentTypeFromItemPipe,
+    RouteUrlPipe,
+    GroupLinkPipe,
+    UserCaptionPipe,
+    LogActionDisplayPipe,
+  ],
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 

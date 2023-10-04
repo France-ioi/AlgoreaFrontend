@@ -19,6 +19,14 @@ import { appConfig } from 'src/app/shared/helpers/config';
 import { readyState } from 'src/app/shared/helpers/state';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { LayoutService } from '../../../shared/services/layout.service';
+import { LeftNavTreeComponent } from '../left-nav-tree/left-nav-tree.component';
+import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
+import { LeftSearchResultComponent } from '../left-search-result/left-search-result.component';
+import { ErrorComponent } from '../../../modules/shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../modules/shared-components/components/loading/loading.component';
+import { LeftMenuBackButtonComponent } from '../left-menu-back-button/left-menu-back-button.component';
+import { LetDirective } from '@ngrx/component';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -29,7 +37,21 @@ const minQueryLength = 3;
 @Component({
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
-  styleUrls: [ './left-nav.component.scss' ]
+  styleUrls: [ './left-nav.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgClass,
+    LetDirective,
+    LeftMenuBackButtonComponent,
+    LoadingComponent,
+    ErrorComponent,
+    NgScrollbar,
+    LeftSearchResultComponent,
+    ObservationBarComponent,
+    LeftNavTreeComponent,
+    AsyncPipe
+  ],
 })
 export class LeftNavComponent implements OnChanges {
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;

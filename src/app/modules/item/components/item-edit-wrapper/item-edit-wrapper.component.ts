@@ -1,6 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
-import { AbstractControl, UntypedFormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { ItemChanges, UpdateItemService } from '../../http-services/update-item.service';
 import { ItemStringChanges, UpdateItemStringService } from '../../http-services/update-item-string.service';
@@ -12,6 +20,12 @@ import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
+import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
+import { FloatingSaveComponent } from '../../../shared-components/components/floating-save/floating-save.component';
+import { ItemEditAdvancedParametersComponent } from '../../pages/item-edit-advanced-parameters/item-edit-advanced-parameters.component';
+import { ItemEditContentComponent } from '../../pages/item-edit-content/item-edit-content.component';
+import { InputComponent } from '../../../shared-components/components/input/input.component';
+import { NgIf } from '@angular/common';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -32,6 +46,18 @@ function isServerValidationErrors(e: HttpErrorResponse): e is ServerValidationEr
   selector: 'alg-item-edit-wrapper',
   templateUrl: './item-edit-wrapper.component.html',
   styleUrls: [ './item-edit-wrapper.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    InputComponent,
+    ItemEditContentComponent,
+    ItemEditAdvancedParametersComponent,
+    FloatingSaveComponent,
+    AllowsEditingAllItemPipe,
+    AllowsEditingChildrenItemPipe,
+  ],
 })
 export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
   @Input() itemData?: ItemData;

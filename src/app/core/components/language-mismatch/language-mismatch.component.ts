@@ -4,11 +4,25 @@ import { catchError, filter, map, retry, switchMap, takeUntil } from 'rxjs/opera
 import { mapPending } from 'src/app/shared/operators/map-pending';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { LocaleService } from '../../services/localeService';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { LoadingComponent } from '../../../modules/shared-components/components/loading/loading.component';
+import { DialogModule } from 'primeng/dialog';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-language-mismatch',
   templateUrl: './language-mismatch.component.html',
   styleUrls: [ './language-mismatch.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    DialogModule,
+    LoadingComponent,
+    ButtonModule,
+    SharedModule,
+    AsyncPipe,
+  ],
 })
 export class LanguageMismatchComponent implements OnDestroy {
 

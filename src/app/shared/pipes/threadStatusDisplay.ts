@@ -11,7 +11,10 @@ function formatThreadStatus(type: Thread['status']): string {
   }
 }
 
-@Pipe({ name: 'threadStatusDisplay' })
+@Pipe({
+  name: 'threadStatusDisplay',
+  standalone: true
+})
 export class ThreadStatusDisplayPipe implements PipeTransform {
   transform = formatThreadStatus;
 }

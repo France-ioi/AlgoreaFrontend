@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, RouterLinkActive, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, RouterLinkActive, UrlTree, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { GetGroupPathService } from 'src/app/modules/group/http-services/get-group-path.service';
 import { appConfig } from 'src/app/shared/helpers/config';
@@ -11,6 +11,15 @@ import { CurrentContentService } from 'src/app/shared/services/current-content.s
 import { withManagementAdditions } from '../../helpers/group-management';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { GroupEditComponent } from '../group-edit/group-edit.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { GroupAccessComponent } from '../group-access/group-access.component';
+import { GroupManagersComponent } from '../group-managers/group-managers.component';
+import { GroupCompositionComponent } from '../group-composition/group-composition.component';
+import { GroupOverviewComponent } from '../group-overview/group-overview.component';
+import { GroupIndicatorComponent } from '../../components/group-indicator/group-indicator.component';
+import { GroupHeaderComponent } from '../../components/group-header/group-header.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 
@@ -19,6 +28,22 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
   providers: [ GroupDataSource ],
+  standalone: true,
+  imports: [
+    NgIf,
+    GroupHeaderComponent,
+    GroupIndicatorComponent,
+    RouterLinkActive,
+    RouterLink,
+    GroupOverviewComponent,
+    GroupCompositionComponent,
+    GroupManagersComponent,
+    GroupAccessComponent,
+    GroupEditComponent,
+    LoadingComponent,
+    ErrorComponent,
+    AsyncPipe,
+  ],
 })
 export class GroupByIdComponent implements OnDestroy {
 

@@ -3,11 +3,21 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
 import { LocaleService } from '../../../../core/services/localeService';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LanguagePickerComponent } from '../../../../core/components/language-picker/language-picker.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-platform-settings',
   templateUrl: './platform-settings.component.html',
   styleUrls: [ './platform-settings.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    SectionComponent,
+    LanguagePickerComponent,
+    AsyncPipe,
+  ],
 })
 export class PlatformSettingsComponent {
   currentUser$ = this.userSessionService.userProfile$;

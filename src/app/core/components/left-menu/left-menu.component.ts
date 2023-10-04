@@ -2,11 +2,16 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
+import { LeftMenuSearchComponent } from '../left-menu-search/left-menu-search.component';
+import { NgIf } from '@angular/common';
+import { LeftHeaderComponent } from '../left-header/left-header.component';
 
 @Component({
   selector: 'alg-left-menu',
   templateUrl: './left-menu.component.html',
-  styleUrls: [ './left-menu.component.scss' ]
+  styleUrls: [ './left-menu.component.scss' ],
+  standalone: true,
+  imports: [ LeftHeaderComponent, LeftNavComponent, NgIf, LeftMenuSearchComponent ]
 })
 export class LeftMenuComponent implements OnDestroy {
   @ViewChild(LeftNavComponent, { static: false }) componentRef?: LeftNavComponent;

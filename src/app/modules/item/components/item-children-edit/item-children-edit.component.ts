@@ -9,6 +9,11 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { ItemChildrenEditListComponent } from '../item-children-edit-list/item-children-edit-list.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 interface BaseChildData {
   contentViewPropagation?: 'none' | 'as_info' | 'as_content',
@@ -49,7 +54,9 @@ export const DEFAULT_SCORE_WEIGHT = 1;
 @Component({
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
-  styleUrls: [ './item-children-edit.component.scss' ]
+  styleUrls: [ './item-children-edit.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, SectionComponent, ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   @Input() itemData?: ItemData;

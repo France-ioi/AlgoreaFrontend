@@ -3,11 +3,18 @@ import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { delay } from 'rxjs/operators';
+import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
+import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { LetDirective } from '@ngrx/component';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
-  styleUrls: [ './left-header.component.scss' ]
+  styleUrls: [ './left-header.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, LetDirective, NgClass, RouterLink, ButtonModule, TopRightControlsComponent, AsyncPipe ]
 })
 export class LeftHeaderComponent {
 

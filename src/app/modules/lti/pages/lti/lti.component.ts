@@ -22,6 +22,9 @@ import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { LayoutService } from 'src/app/shared/services/layout.service';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { LTIDataSource } from '../../services/lti-datasource.service';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 enum LTIError {
   FetchError = 'fetch_error',
@@ -42,6 +45,13 @@ const loginIdParam = 'user_id';
   selector: 'alg-lti',
   templateUrl: './lti.component.html',
   styleUrls: [ './lti.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    AsyncPipe,
+  ],
 })
 export class LTIComponent implements OnDestroy {
 

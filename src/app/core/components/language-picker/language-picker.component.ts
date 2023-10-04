@@ -1,10 +1,15 @@
 import { Component, Input, OnChanges, Output, EventEmitter, OnInit } from '@angular/core';
 import { LocaleService } from '../../services/localeService';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-language-picker',
   templateUrl: './language-picker.component.html',
-  styleUrls: [ './language-picker.component.scss' ]
+  styleUrls: [ './language-picker.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, DropdownModule, FormsModule ]
 })
 export class LanguagePickerComponent implements OnInit, OnChanges {
   @Input() styleClass?: string;

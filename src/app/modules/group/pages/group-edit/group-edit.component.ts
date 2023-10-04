@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/shared/operators/state';
 import { of, Subscription, combineLatest } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
@@ -15,11 +15,35 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { FloatingSaveComponent } from '../../../shared-components/components/floating-save/floating-save.component';
+import { GroupRemoveButtonComponent } from '../../components/group-remove-button/group-remove-button.component';
+import { AssociatedItemComponent } from '../../components/associated-item/associated-item.component';
+import { TextareaComponent } from '../../../shared-components/components/textarea/textarea.component';
+import { InputComponent } from '../../../shared-components/components/input/input.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-group-edit',
   templateUrl: './group-edit.component.html',
-  styleUrls: [ './group-edit.component.scss' ]
+  styleUrls: [ './group-edit.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SectionComponent,
+    InputComponent,
+    TextareaComponent,
+    AssociatedItemComponent,
+    GroupRemoveButtonComponent,
+    FloatingSaveComponent,
+    AsyncPipe
+  ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
   groupForm = this.formBuilder.group({

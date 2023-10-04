@@ -1,11 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { SECONDS } from 'src/app/shared/helpers/duration';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-task-loader',
   templateUrl: './task-loader.component.html',
-  styleUrls: [ './task-loader.component.scss' ]
+  styleUrls: [ './task-loader.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, LoadingComponent ]
 })
 export class TaskLoaderComponent implements OnInit, OnDestroy {
 

@@ -8,7 +8,7 @@ describe('CodeTokenComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CodeTokenComponent ]
+      imports: [ CodeTokenComponent ]
     })
       .compileComponents();
   }));

@@ -8,7 +8,7 @@ describe('StateWidgetComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ StateWidgetComponent ]
+      imports: [ StateWidgetComponent ]
     })
       .compileComponents();
   }));

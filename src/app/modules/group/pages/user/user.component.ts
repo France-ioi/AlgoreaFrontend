@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GetUserService } from '../../http-services/get-user.service';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
-import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { contentInfo } from '../../../../shared/models/content/content-info';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
@@ -11,13 +11,37 @@ import { formatUser } from '../../../../shared/helpers/user';
 import { GetGroupBreadcrumbsService } from '../../http-services/get-group-breadcrumbs.service';
 import { groupRoute, groupRouteFromParams, isGroupRoute, rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
+import { PlatformSettingsComponent } from '../platform-settings/platform-settings.component';
+import { CurrentUserComponent } from '../current-user/current-user.component';
+import { GroupLogViewComponent } from '../../components/group-log-view/group-log-view.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { UserIndicatorComponent } from '../../components/user-indicator/user-indicator.component';
+import { UserHeaderComponent } from '../../components/user-header/user-header.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 const breadcrumbHeader = $localize`Users`;
 
 @Component({
   selector: 'alg-user',
   templateUrl: './user.component.html',
-  styleUrls: [ './user.component.scss' ]
+  styleUrls: [ './user.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    UserHeaderComponent,
+    UserIndicatorComponent,
+    RouterLinkActive,
+    RouterLink,
+    SectionComponent,
+    GroupLogViewComponent,
+    CurrentUserComponent,
+    PlatformSettingsComponent,
+    AsyncPipe
+  ],
 })
 export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('progress') progress?: RouterLinkActive;

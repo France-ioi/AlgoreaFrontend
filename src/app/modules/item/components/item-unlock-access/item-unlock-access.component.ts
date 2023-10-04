@@ -1,17 +1,41 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
 import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GetItemPrerequisitesService } from '../../http-services/get-item-prerequisites.service';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
 import { canCurrentUserViewContent } from '../../../../shared/models/domain/item-view-permission';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
+import { PathSuggestionComponent } from '../../../shared-components/components/path-suggestion/path-suggestion.component';
+import { RouterLink } from '@angular/router';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-unlock-access',
   templateUrl: './item-unlock-access.component.html',
   styleUrls: [ './item-unlock-access.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    SectionComponent,
+    NgFor,
+    ScoreRingComponent,
+    RouterLink,
+    OverlayPanelModule,
+    PathSuggestionComponent,
+    AsyncPipe,
+    RawItemRoutePipe,
+    RouteUrlPipe,
+  ],
 })
 export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

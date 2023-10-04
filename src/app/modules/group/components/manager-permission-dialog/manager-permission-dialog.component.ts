@@ -1,19 +1,38 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { Manager } from '../../http-services/get-group-managers.service';
-import { ProgressSelectValue } from
+import { ProgressSelectValue, ProgressSelectComponent } from
   '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../../http-services/update-group-managers.service';
 import { formatUser } from '../../../../shared/helpers/user';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
-import { UntypedFormBuilder } from '@angular/forms';
-import { ConfirmationService } from 'primeng/api';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmationService, SharedModule } from 'primeng/api';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { ButtonModule } from 'primeng/button';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { SwitchFieldComponent } from '../../../shared-components/components/collapsible-section/switch-field/switch-field.component';
+import { CollapsibleSectionComponent } from '../../../shared-components/components/collapsible-section/collapsible-section.component';
+import { DialogModule } from 'primeng/dialog';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
   templateUrl: './manager-permission-dialog.component.html',
   styleUrls: [ './manager-permission-dialog.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    DialogModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CollapsibleSectionComponent,
+    ProgressSelectComponent,
+    SwitchFieldComponent,
+    LoadingComponent,
+    ButtonModule,
+  ],
 })
 export class ManagerPermissionDialogComponent implements OnChanges {
   @Input() visible?: boolean;

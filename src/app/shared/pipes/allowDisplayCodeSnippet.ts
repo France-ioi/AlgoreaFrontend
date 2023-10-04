@@ -4,7 +4,10 @@ function replaceHTML(text: string): string {
   return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-@Pipe({ name: 'allowDisplayCodeSnippet', pure: true })
+@Pipe({
+  name: 'allowDisplayCodeSnippet', pure: true,
+  standalone: true
+})
 export class AllowDisplayCodeSnippet implements PipeTransform {
 
   transform(text: string, theme: 'dark' | 'light' = 'light'): string {

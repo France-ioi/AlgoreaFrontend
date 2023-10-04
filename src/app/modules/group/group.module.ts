@@ -52,7 +52,17 @@ import { PlatformSettingsComponent } from './pages/platform-settings/platform-se
 import { UserIndicatorComponent } from './components/user-indicator/user-indicator.component';
 
 @NgModule({
-  declarations: [
+  imports: [
+    CommonModule,
+    GroupRoutingModule,
+    SharedComponentsModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonModule,
+    RippleModule,
+    TooltipModule,
+    OverlayPanelModule,
+    DialogModule,
     GroupHeaderComponent,
     GroupOverviewComponent,
     GroupCompositionComponent,
@@ -89,18 +99,6 @@ import { UserIndicatorComponent } from './components/user-indicator/user-indicat
     GroupLeaveComponent,
     GroupManagerAddComponent,
     PlatformSettingsComponent,
-  ],
-  imports: [
-    CommonModule,
-    GroupRoutingModule,
-    SharedComponentsModule,
-    ReactiveFormsModule,
-    FormsModule,
-    ButtonModule,
-    RippleModule,
-    TooltipModule,
-    OverlayPanelModule,
-    DialogModule,
   ],
   exports: [
     GroupIndicatorComponent,

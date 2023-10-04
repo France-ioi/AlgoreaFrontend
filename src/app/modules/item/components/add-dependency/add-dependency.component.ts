@@ -8,11 +8,14 @@ import { getAllowedNewItemTypes } from '../../../../shared/helpers/new-item-type
 import { ItemType } from '../../../../shared/helpers/item-type';
 import { Observable } from 'rxjs';
 import { SearchItemService } from '../../http-services/search-item.service';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
 
 @Component({
   selector: 'alg-add-dependency',
   templateUrl: './add-dependency.component.html',
-  styleUrls: [ './add-dependency.component.scss' ]
+  styleUrls: [ './add-dependency.component.scss' ],
+  standalone: true,
+  imports: [ SectionComponent, AddContentComponent ]
 })
 export class AddDependencyComponent implements OnChanges {
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;

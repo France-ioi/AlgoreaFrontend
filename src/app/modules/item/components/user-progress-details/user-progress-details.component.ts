@@ -1,6 +1,6 @@
 import { AfterViewInit, SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { delay, take } from 'rxjs';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
 import { FullItemRoute } from '../../../../shared/routing/item-route';
@@ -8,6 +8,15 @@ import { ItemPermWithWatch } from '../../../../shared/models/domain/item-watch-p
 import { UserSessionService } from '../../../../shared/services/user-session.service';
 import { ItemChildType } from '../../http-services/get-item-children.service';
 import { TypeFilter } from '../../helpers/composition-filter';
+import { DurationToReadable } from 'src/app/shared/pipes/duration';
+import { AllowsWatchingItemAnswersPipe } from 'src/app/shared/models/domain/item-watch-permission';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { ItemRouteWithAnswerPipe } from 'src/app/shared/pipes/itemRoute';
+import { RouterLink } from '@angular/router';
+import { TooltipModule } from 'primeng/tooltip';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { SharedModule } from 'primeng/api';
 
 export interface ProgressData {
   progress: TeamUserProgress,
@@ -24,6 +33,21 @@ export interface ProgressData {
   selector: 'alg-user-progress-details',
   templateUrl: './user-progress-details.component.html',
   styleUrls: [ './user-progress-details.component.scss' ],
+  standalone: true,
+  imports: [
+    OverlayPanelModule,
+    SharedModule,
+    NgIf,
+    ScoreRingComponent,
+    TooltipModule,
+    NgClass,
+    RouterLink,
+    AsyncPipe,
+    ItemRouteWithAnswerPipe,
+    RouteUrlPipe,
+    AllowsWatchingItemAnswersPipe,
+    DurationToReadable,
+  ],
 })
 export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
 

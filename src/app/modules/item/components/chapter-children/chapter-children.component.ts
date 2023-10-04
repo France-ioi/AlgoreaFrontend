@@ -10,11 +10,33 @@ import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-vie
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { ItemChildWithAdditions } from '../item-children-list/item-children';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/shared/pipes/itemRoute';
+import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { RouterLink } from '@angular/router';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
   styleUrls: [ './chapter-children.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    NgFor,
+    RouterLink,
+    ScoreRingComponent,
+    ItemChildrenListComponent,
+    AsyncPipe,
+    ItemRouteWithAttemptPipe,
+    ContentTypeFromItemPipe,
+    RouteUrlPipe,
+  ],
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

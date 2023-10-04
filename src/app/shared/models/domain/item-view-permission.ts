@@ -62,11 +62,17 @@ export function canCurrentUserViewSolution(i: ItemWithViewPerm, result?: { valid
 // Pipes for templates
 // ********************************************
 
-@Pipe({ name: 'allowsViewingInfo', pure: true })
+@Pipe({
+  name: 'allowsViewingInfo', pure: true,
+  standalone: true
+})
 export class AllowsViewingItemInfoPipe implements PipeTransform {
   transform = allowsViewingInfo;
 }
-@Pipe({ name: 'allowsViewingContent', pure: true })
+@Pipe({
+  name: 'allowsViewingContent', pure: true,
+  standalone: true
+})
 export class AllowsViewingItemContentPipe implements PipeTransform {
   transform = allowsViewingContent;
 }

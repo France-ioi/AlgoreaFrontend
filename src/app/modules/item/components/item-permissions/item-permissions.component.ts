@@ -2,15 +2,38 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { ItemData } from '../../services/item-datasource.service';
 import { WatchedGroup } from 'src/app/core/services/group-watching.service';
 import {
-  ProgressSelectValue
+  ProgressSelectValue,
+  ProgressSelectComponent,
 } from '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
 import { generateCanViewValues } from '../../helpers/permissions-texts';
 import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/shared/models/domain/item-permissions';
+import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/shared/models/domain/item-view-permission';
+import { PermissionsEditDialogComponent } from '../permissions-edit-dialog/permissions-edit-dialog.component';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { FormsModule } from '@angular/forms';
+import { SectionHeaderComponent } from '../../../shared-components/components/section-header/section-header.component';
+import { SectionParagraphComponent } from '../../../shared-components/components/section-paragrah/section-paragraph.component';
+import { NgIf, I18nSelectPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-permissions',
   templateUrl: './item-permissions.component.html',
   styleUrls: [ './item-permissions.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    SectionParagraphComponent,
+    SectionHeaderComponent,
+    ProgressSelectComponent,
+    FormsModule,
+    TooltipModule,
+    ButtonModule,
+    PermissionsEditDialogComponent,
+    I18nSelectPipe,
+    AllowsViewingItemContentPipe,
+    AllowsViewingItemInfoPipe,
+  ],
 })
 export class ItemPermissionsComponent implements OnChanges {
   @Output() changed = new EventEmitter<void>();

@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of, Subject } from 'rxjs';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
 import {
   catchError,
   distinctUntilChanged,
@@ -39,7 +39,7 @@ import { LTIDataSource } from 'src/app/modules/lti/services/lti-datasource.servi
 import { PublishResultsService } from '../../http-services/publish-result.service';
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { isNotUndefined } from '../../../../shared/helpers/null-undefined-predicates';
-import { ItemPermWithEdit, ItemEditPerm } from 'src/app/shared/models/domain/item-edit-permission';
+import { ItemPermWithEdit, ItemEditPerm, AllowsEditingAllItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { Router } from '@angular/router';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
@@ -49,6 +49,10 @@ import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { closestBreadcrumbs } from 'src/app/shared/routing/content-route';
 import { LayoutService } from '../../../../shared/services/layout.service';
 import { ItemTaskTokenService } from '../../services/item-task-token.service';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { ButtonModule } from 'primeng/button';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { FullHeightContentDirective } from '../../../../shared/directives/full-height-content.directive';
 
 export interface TaskTab {
   name: string,
@@ -62,6 +66,17 @@ const heightSyncInterval = 0.2*SECONDS;
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService, ItemTaskTokenService ],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgClass,
+    FullHeightContentDirective,
+    ErrorComponent,
+    ButtonModule,
+    LoadingComponent,
+    AsyncPipe,
+    AllowsEditingAllItemPipe,
+  ],
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;

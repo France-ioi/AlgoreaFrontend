@@ -1,10 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService, ManageType } from '../../../../core/http-services/managed-groups.service';
+import { RouterLink } from '@angular/router';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-managed-group-list',
   templateUrl: './managed-group-list.component.html',
   styleUrls: [ './managed-group-list.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ErrorComponent,
+    TableModule,
+    SharedModule,
+    RouterLink,
+    NgClass,
+  ],
 })
 export class ManagedGroupListComponent implements OnInit {
 

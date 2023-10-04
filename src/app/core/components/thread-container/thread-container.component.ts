@@ -6,11 +6,26 @@ import { ThreadService } from '../../../modules/item/services/threads.service';
 import { GetItemByIdService } from '../../../modules/item/http-services/get-item-by-id.service';
 import { isNotNull } from '../../../shared/helpers/null-undefined-predicates';
 import { catchError } from 'rxjs/operators';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
+import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-thread-container',
   templateUrl: './thread-container.component.html',
   styleUrls: [ './thread-container.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    RouterLink,
+    ButtonModule,
+    ThreadComponent,
+    AsyncPipe,
+    RawItemRoutePipe,
+    RouteUrlPipe,
+  ],
 })
 export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   @ViewChild(ThreadComponent) threadComponent?: ThreadComponent;

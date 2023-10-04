@@ -10,6 +10,17 @@ import { ItemData } from '../../services/item-datasource.service';
 import { ItemRouter } from '../../../../shared/routing/item-router';
 import { GroupWatchingService } from '../../../../core/services/group-watching.service';
 import { ItemPermWithWatch } from '../../../../shared/models/domain/item-watch-permission';
+import { DurationToReadable } from 'src/app/shared/pipes/duration';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { ContentTypeFromItemPipe } from 'src/app/shared/pipes/itemRoute';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { RouterLink } from '@angular/router';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nPluralPipe } from '@angular/common';
 
 interface RowData {
   id: string,
@@ -25,7 +36,29 @@ interface RowData {
 @Component({
   selector: 'alg-chapter-user-progress',
   templateUrl: './chapter-user-progress.component.html',
-  styleUrls: [ './chapter-user-progress.component.scss' ]
+  styleUrls: [ './chapter-user-progress.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    ButtonModule,
+    TableModule,
+    SharedModule,
+    NgFor,
+    NgSwitch,
+    NgSwitchCase,
+    NgClass,
+    RouterLink,
+    ScoreRingComponent,
+    NgSwitchDefault,
+    AsyncPipe,
+    DatePipe,
+    I18nPluralPipe,
+    ContentTypeFromItemPipe,
+    RouteUrlPipe,
+    DurationToReadable
+  ],
 })
 export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

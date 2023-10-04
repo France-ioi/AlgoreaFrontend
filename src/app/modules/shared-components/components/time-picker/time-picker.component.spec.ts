@@ -12,8 +12,8 @@ describe('TimePickerComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-      ],
-      declarations: [ TimePickerComponent ]
+        TimePickerComponent,
+      ]
     })
       .compileComponents();
   }));

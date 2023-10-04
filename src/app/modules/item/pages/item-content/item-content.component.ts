@@ -10,11 +10,39 @@ import { PendingChangesComponent } from '../../../../shared/guards/pending-chang
 import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
 import { DiscussionService } from '../../services/discussion.service';
 import { BehaviorSubject } from 'rxjs';
+import { AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
+import { AllowsViewingItemContentPipe } from 'src/app/shared/models/domain/item-view-permission';
+import { TaskLoaderComponent } from '../../components/task-loader/task-loader.component';
+import { ItemUnlockAccessComponent } from '../../components/item-unlock-access/item-unlock-access.component';
+import { MessageInfoComponent } from '../../../shared-components/components/message-info/message-info.component';
+import { ParentSkillsComponent } from '../../components/parent-skills/parent-skills.component';
+import { SubSkillsComponent } from '../../components/sub-skills/sub-skills.component';
+import { ChapterChildrenComponent } from '../../components/chapter-children/chapter-children.component';
+import { HasHTMLDirective } from '../../../../shared/directives/has-html.directive';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
-  styleUrls: [ './item-content.component.scss' ]
+  styleUrls: [ './item-content.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    HasHTMLDirective,
+    SwitchComponent,
+    ItemChildrenEditFormComponent,
+    ChapterChildrenComponent,
+    SubSkillsComponent,
+    ParentSkillsComponent,
+    ItemDisplayComponent,
+    NgClass,
+    MessageInfoComponent,
+    ItemUnlockAccessComponent,
+    TaskLoaderComponent,
+    AsyncPipe,
+    AllowsViewingItemContentPipe,
+    AllowsEditingChildrenItemPipe
+  ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;

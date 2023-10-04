@@ -2,11 +2,15 @@ import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Observable, combineLatest, map } from 'rxjs';
 import { TabService } from 'src/app/shared/services/tab.service';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { LetDirective } from '@ngrx/component';
 
 @Component({
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
+  standalone: true,
+  imports: [ LetDirective, TabMenuModule ],
 })
 export class TabBarComponent {
   @Input() styleClass?: string;

@@ -42,12 +42,18 @@ export function allowsGrantingWatch(p: ItemPermWithWatch): boolean {
 // Pipes for templates
 // ********************************************
 
-@Pipe({ name: 'allowsWatchingResults', pure: true })
+@Pipe({
+  name: 'allowsWatchingResults', pure: true,
+  standalone: true
+})
 export class AllowsWatchingItemResultsPipe implements PipeTransform {
   transform = allowsWatchingResults;
 }
 
-@Pipe({ name: 'allowsWatchingAnswers', pure: true })
+@Pipe({
+  name: 'allowsWatchingAnswers', pure: true,
+  standalone: true
+})
 export class AllowsWatchingItemAnswersPipe implements PipeTransform {
   transform = allowsWatchingAnswers;
 }

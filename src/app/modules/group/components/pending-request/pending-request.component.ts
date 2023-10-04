@@ -7,13 +7,36 @@ import {
   ContentChild, TemplateRef, Output, EventEmitter
 } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
-import { GridColumn, GridColumnGroup } from '../../../shared-components/components/grid/grid.component';
+import { GridColumn, GridColumnGroup, GridComponent } from '../../../shared-components/components/grid/grid.component';
 import { Action } from 'src/app/modules/group/http-services/request-actions.service';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { TableModule } from 'primeng/table';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { NgIf, NgTemplateOutlet, NgFor, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault, DatePipe } from '@angular/common';
+import { SectionParagraphComponent } from '../../../shared-components/components/section-paragrah/section-paragraph.component';
 
 @Component({
   selector: 'alg-pending-request',
   templateUrl: './pending-request.component.html',
   styleUrls: [ './pending-request.component.scss' ],
+  standalone: true,
+  imports: [
+    SectionParagraphComponent,
+    NgIf,
+    NgTemplateOutlet,
+    ErrorComponent,
+    GridComponent,
+    NgFor,
+    TableModule,
+    NgClass,
+    NgSwitch,
+    NgSwitchCase,
+    NgSwitchDefault,
+    LoadingComponent,
+    DatePipe,
+    UserCaptionPipe,
+  ],
 })
 export class PendingRequestComponent<T> implements OnInit, OnChanges {
 

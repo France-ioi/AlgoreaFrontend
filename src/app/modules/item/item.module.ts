@@ -53,7 +53,20 @@ import { LetDirective } from '@ngrx/component';
 import { ItemForumComponent } from './pages/item-forum/item-forum.component';
 
 @NgModule({
-  declarations: [
+  imports: [
+    CommonModule,
+    ItemRoutingModule,
+    SharedComponentsModule,
+    ReactiveFormsModule,
+    LetDirective,
+    FormsModule,
+    TooltipModule,
+    DialogModule,
+    ButtonModule,
+    CalendarModule,
+    InputNumberModule,
+    OverlayPanelModule,
+    InputTextareaModule,
     ItemByIdComponent,
     ItemHeaderComponent,
     ItemContentComponent,
@@ -89,21 +102,6 @@ import { ItemForumComponent } from './pages/item-forum/item-forum.component';
     ItemChildrenEditListComponent,
     ItemChildrenListComponent,
     ItemForumComponent,
-  ],
-  imports: [
-    CommonModule,
-    ItemRoutingModule,
-    SharedComponentsModule,
-    ReactiveFormsModule,
-    LetDirective,
-    FormsModule,
-    TooltipModule,
-    DialogModule,
-    ButtonModule,
-    CalendarModule,
-    InputNumberModule,
-    OverlayPanelModule,
-    InputTextareaModule,
   ],
   exports: [],
   providers: [

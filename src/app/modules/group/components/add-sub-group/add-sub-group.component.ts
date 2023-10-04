@@ -8,13 +8,17 @@ import {
 } from 'src/app/modules/shared-components/components/add-content/add-content.component';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { SearchGroupService } from '../../http-services/search-group.service';
+import { AddContentComponent as AddContentComponent_1 } from '../../../shared-components/components/add-content/add-content.component';
+import { SubSectionComponent } from '../../../shared-components/components/sub-section/sub-section.component';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
 
 @Component({
   selector: 'alg-add-sub-group',
   templateUrl: './add-sub-group.component.html',
-  styleUrls: [ './add-sub-group.component.scss' ]
+  styleUrls: [ './add-sub-group.component.scss' ],
+  standalone: true,
+  imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddSubGroupComponent {
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<GroupType>;

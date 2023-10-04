@@ -9,11 +9,34 @@ import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.s
 import { of } from 'rxjs';
 import { CodeLifetime } from '../../helpers/code-lifetime';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DurationToMinPipe } from 'src/app/shared/pipes/duration';
+import { TooltipModule } from 'primeng/tooltip';
+import { FormsModule } from '@angular/forms';
+import { DurationComponent } from '../../../shared-components/components/duration/duration.component';
+import { SelectionComponent } from '../../../shared-components/components/selection/selection.component';
+import { CodeTokenComponent } from '../../../shared-components/components/code-token/code-token.component';
+import { ButtonModule } from 'primeng/button';
+import { SectionParagraphComponent } from '../../../shared-components/components/section-paragrah/section-paragraph.component';
+import { NgIf, DecimalPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: [ './group-join-by-code.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    SectionParagraphComponent,
+    ButtonModule,
+    CodeTokenComponent,
+    SelectionComponent,
+    DurationComponent,
+    FormsModule,
+    TooltipModule,
+    DecimalPipe,
+    DatePipe,
+    DurationToMinPipe,
+  ],
 })
 
 export class GroupJoinByCodeComponent implements OnChanges {

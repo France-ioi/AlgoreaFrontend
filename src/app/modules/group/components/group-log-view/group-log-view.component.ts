@@ -2,10 +2,24 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, SimpleCh
 import { BehaviorSubject, debounceTime, merge, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
 import { ActivityLog, ActivityLogService } from '../../../../shared/http-services/activity-log.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { canCloseOverlay } from 'src/app/shared/helpers/overlay';
+import { LogActionDisplayPipe } from '../../../../shared/pipes/logActionDisplay';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
+import { PathSuggestionComponent } from '../../../shared-components/components/path-suggestion/path-suggestion.component';
+import { RouterLink } from '@angular/router';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
 
 const logsLimit = 20;
 
@@ -13,6 +27,27 @@ const logsLimit = 20;
   selector: 'alg-group-log-view',
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    ButtonModule,
+    TableModule,
+    SharedModule,
+    ScoreRingComponent,
+    NgClass,
+    RouterLink,
+    OverlayPanelModule,
+    PathSuggestionComponent,
+    AsyncPipe,
+    DatePipe,
+    RawItemRoutePipe,
+    RouteUrlPipe,
+    GroupLinkPipe,
+    UserCaptionPipe,
+    LogActionDisplayPipe,
+  ],
 })
 export class GroupLogViewComponent implements OnChanges, OnDestroy {
 

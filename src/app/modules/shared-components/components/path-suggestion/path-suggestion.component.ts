@@ -9,6 +9,10 @@ import { map } from 'rxjs/operators';
 import { itemRoute, urlArrayForItemRoute } from '../../../../shared/routing/item-route';
 import { UrlCommand } from '../../../../shared/helpers/url';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
+import { RouterLink } from '@angular/router';
+import { ErrorComponent } from '../error/error.component';
+import { LoadingComponent } from '../loading/loading.component';
+import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
 
 const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand => {
   const path = breadcrumbs.map(item => item.id);
@@ -19,6 +23,16 @@ const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: Breadcru
   selector: 'alg-path-suggestion',
   templateUrl: './path-suggestion.component.html',
   styleUrls: [ './path-suggestion.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    NgFor,
+    RouterLink,
+    AsyncPipe,
+    I18nSelectPipe,
+  ],
 })
 export class PathSuggestionComponent implements OnDestroy, OnChanges {
   @Input() itemId?: string;

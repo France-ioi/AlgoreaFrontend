@@ -1,14 +1,37 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { SearchResponse } from 'src/app/shared/http-services/search.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { canCloseOverlay } from '../../../shared/helpers/overlay';
 import { BehaviorSubject, debounceTime, merge } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
+import { PathSuggestionComponent } from '../../../modules/shared-components/components/path-suggestion/path-suggestion.component';
+import { RouterLinkActive, RouterLink } from '@angular/router';
+import { MessageInfoComponent } from '../../../modules/shared-components/components/message-info/message-info.component';
+import { LeftMenuBackButtonComponent } from '../left-menu-back-button/left-menu-back-button.component';
+import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-left-search-result',
   templateUrl: './left-search-result.component.html',
-  styleUrls: [ './left-search-result.component.scss' ]
+  styleUrls: [ './left-search-result.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LeftMenuBackButtonComponent,
+    MessageInfoComponent,
+    NgFor,
+    RouterLinkActive,
+    RouterLink,
+    NgClass,
+    OverlayPanelModule,
+    PathSuggestionComponent,
+    AsyncPipe,
+    I18nPluralPipe,
+    RawItemRoutePipe,
+    RouteUrlPipe
+  ],
 })
 export class LeftSearchResultComponent implements OnDestroy {
   @ViewChild('op') op?: OverlayPanel;

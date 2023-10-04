@@ -6,11 +6,17 @@ import { mapToFetchState } from '../../../../shared/operators/state';
 import { isNotNull } from '../../../../shared/helpers/null-undefined-predicates';
 import { Subject } from 'rxjs';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { GroupProgressGridComponent } from '../group-progress-grid/group-progress-grid.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-chapter-group-progress',
   templateUrl: './chapter-group-progress.component.html',
-  styleUrls: [ './chapter-group-progress.component.scss' ]
+  styleUrls: [ './chapter-group-progress.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ChapterGroupProgressComponent implements OnDestroy {
 

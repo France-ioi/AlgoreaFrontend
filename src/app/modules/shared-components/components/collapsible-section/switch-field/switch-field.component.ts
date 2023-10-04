@@ -1,5 +1,8 @@
 import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
+import { SwitchComponent } from '../../switch/switch.component';
+import { NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
 
 /**
  * This component is to be used in a `collapsible-section` component.
@@ -25,7 +28,9 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
       useExisting: forwardRef(() => SwitchFieldComponent),
       multi: true,
     }
-  ]
+  ],
+  standalone: true,
+  imports: [ NgIf, NgTemplateOutlet, SwitchComponent, NgClass, TooltipModule ]
 })
 export class SwitchFieldComponent implements ControlValueAccessor {
 

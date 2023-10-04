@@ -7,13 +7,11 @@ import { SharedComponentsModule } from '../shared-components/shared-components.m
 
 
 @NgModule({
-  declarations: [
-    LTIComponent,
-  ],
   imports: [
     CommonModule,
     SharedComponentsModule,
     LTIRoutingModule,
+    LTIComponent,
   ],
 })
 export class LTIModule { }

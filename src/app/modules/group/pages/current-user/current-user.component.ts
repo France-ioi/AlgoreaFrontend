@@ -3,12 +3,21 @@ import { UserSessionService } from 'src/app/shared/services/user-session.service
 import { appConfig } from 'src/app/shared/helpers/config';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Location } from '@angular/common';
+import { Location, NgIf, AsyncPipe } from '@angular/common';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'alg-current-user',
   templateUrl: './current-user.component.html',
   styleUrls: [ './current-user.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ButtonModule,
+    SectionComponent,
+    AsyncPipe,
+  ],
 })
 export class CurrentUserComponent {
   currentUser$ = this.userSessionService.userProfile$;

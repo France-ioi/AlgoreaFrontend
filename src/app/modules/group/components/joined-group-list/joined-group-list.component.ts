@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ConfirmationService, SortEvent } from 'primeng/api';
+import { ConfirmationService, SortEvent, SharedModule } from 'primeng/api';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
 import { GroupMembership, JoinedGroupsService } from 'src/app/core/http-services/joined-groups.service';
@@ -7,11 +7,34 @@ import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/a
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { GroupLeaveService } from 'src/app/core/http-services/group-leave.service';
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
+import { RippleModule } from 'primeng/ripple';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { RouterLink } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'alg-joined-group-list',
   templateUrl: './joined-group-list.component.html',
-  styleUrls: [ './joined-group-list.component.scss' ]
+  styleUrls: [ './joined-group-list.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ErrorComponent,
+    TableModule,
+    SharedModule,
+    RouterLink,
+    NgSwitch,
+    NgSwitchCase,
+    TooltipModule,
+    NgSwitchDefault,
+    ButtonModule,
+    RippleModule,
+    AsyncPipe,
+    DatePipe
+  ],
 })
 export class JoinedGroupListComponent implements OnDestroy {
   private refresh$ = new Subject<void>();

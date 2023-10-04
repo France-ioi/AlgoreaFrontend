@@ -9,7 +9,7 @@ describe('SectionParagrahComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SectionParagraphComponent ],
+      imports: [ SectionParagraphComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
       .compileComponents();

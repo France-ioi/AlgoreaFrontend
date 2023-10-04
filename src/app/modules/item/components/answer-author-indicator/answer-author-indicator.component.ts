@@ -6,11 +6,26 @@ import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { groupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { Answer } from '../../services/item-task.service';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { RouterLink } from '@angular/router';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    RouterLink,
+    AsyncPipe,
+    DatePipe,
+    UserCaptionPipe,
+  ],
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 

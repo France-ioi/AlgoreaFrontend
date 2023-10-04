@@ -5,11 +5,30 @@ import { ReplaySubject, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { GrantedPermissionsService } from '../../http-services/granted-permissions.service';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { GroupPermissionsComponent } from '../../components/group-permissions/group-permissions.component';
+import { RouterLink } from '@angular/router';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-group-access',
   templateUrl: './group-access.component.html',
   styleUrls: [ './group-access.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    SectionComponent,
+    LoadingComponent,
+    ErrorComponent,
+    NgFor,
+    RouterLink,
+    GroupPermissionsComponent,
+    AsyncPipe,
+    GroupLinkPipe,
+  ],
 })
 export class GroupAccessComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;

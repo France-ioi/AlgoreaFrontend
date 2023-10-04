@@ -2,6 +2,7 @@ import { Directive, Input, OnChanges, TemplateRef, ViewContainerRef } from '@ang
 
 @Directive({
   selector: '[algHasHTML]',
+  standalone: true,
 })
 export class HasHTMLDirective implements OnChanges {
   @Input() algHasHTML!: string;
