@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'lti/:contentId',
-    loadChildren: (): Promise<any> => import('../modules/lti/lti.module').then(m => m.LTIModule),
+    loadChildren: () => import('../modules/lti/lti.routes'),
   },
   {
     // "r/**" -> the parameter may contain slashes
