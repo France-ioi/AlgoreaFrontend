@@ -3,7 +3,7 @@ import { UserSessionService } from '../shared/services/user-session.service';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
 import { AuthService } from '../shared/auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from '../shared/services/layout.service';
 import { Title } from '@angular/platform-browser';
@@ -12,15 +12,45 @@ import { urlToRedirectTo } from '../shared/helpers/redirect-to-sub-path-at-init'
 import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { DiscussionService } from '../modules/item/services/discussion.service';
+import { SharedModule } from 'primeng/api';
+import { LanguageMismatchComponent } from './components/language-mismatch/language-mismatch.component';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ThreadContainerComponent } from './components/thread-container/thread-container.component';
+import { HtmlElLoadedDirective } from '../shared/directives/html-el-loaded.directive';
+import { LetDirective } from '@ngrx/component';
+import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
-  styleUrls: [ './app.component.scss' ]
+  styleUrls: [ './app.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgClass,
+    LeftMenuComponent,
+    LetDirective,
+    TopBarComponent,
+    HtmlElLoadedDirective,
+    RouterOutlet,
+    ThreadContainerComponent,
+    ToastModule,
+    ConfirmDialogModule,
+    ConfirmPopupModule,
+    DialogModule,
+    ButtonModule,
+    LanguageMismatchComponent,
+    SharedModule,
+    AsyncPipe
+  ],
 })
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild(TopBarComponent) topBarComponent?: TopBarComponent;
