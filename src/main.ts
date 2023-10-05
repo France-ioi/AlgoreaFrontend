@@ -19,7 +19,6 @@ import { TreeModule } from 'primeng/tree';
 import { AccordionModule } from 'primeng/accordion';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app/core/app-routing.module';
 import { LetDirective } from '@ngrx/component';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { AlgErrorHandler } from './app/shared/error-handling/error-handler';
@@ -30,6 +29,8 @@ import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient } from '@a
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import routes from './app/app.routes';
+import { provideRouter } from '@angular/router';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -75,7 +76,6 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       BrowserModule,
       LetDirective,
-      AppRoutingModule,
       BreadcrumbModule,
       AccordionModule,
       NgScrollbarModule,
@@ -119,6 +119,7 @@ bootstrapApplication(AppComponent, {
       useClass: AlgErrorHandler,
     },
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    provideRouter(routes),
   ]
 }).catch(err => console.error(err));
