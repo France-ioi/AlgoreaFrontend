@@ -34,7 +34,7 @@ const formatTime = (locale?: string) => (value: string | Date) => {
   return formatter.format(Math.trunc(diffInMS / MONTHS), 'months');
 }
 
-@Pipe({ name: 'relativeTime', pure: true })
+@Pipe({ name: 'relativeTime', pure: true, standalone: true })
 export class RelativeTimePipe {
 
   constructor(private localeService: LocaleService) {
