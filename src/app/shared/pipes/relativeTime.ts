@@ -1,8 +1,8 @@
-import { Pipe } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { DAYS, HOURS, MINUTES, MONTHS } from '../helpers/duration';
 import { LocaleService } from '../../core/services/localeService';
 
-const formatTime = (locale?: string) => (value: string | Date) => {
+const formatTime = (locale?: string) => (value: string | Date): string => {
   const valueDate = new Date(value);
   const currentDate = new Date();
   const currentLocale = locale || 'en';
@@ -32,10 +32,10 @@ const formatTime = (locale?: string) => (value: string | Date) => {
   }
 
   return formatter.format(Math.trunc(diffInMS / MONTHS), 'months');
-}
+};
 
 @Pipe({ name: 'relativeTime', pure: true, standalone: true })
-export class RelativeTimePipe {
+export class RelativeTimePipe implements PipeTransform {
 
   constructor(private localeService: LocaleService) {
   }
