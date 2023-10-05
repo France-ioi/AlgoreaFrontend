@@ -40,4 +40,9 @@ describe('RelativeTimePipe', () => {
     const currentDate = new Date();
     expect(pipe.transform(new Date(currentDate.getTime() - (MONTHS + 1)))).toBe('1 month ago');
   });
+
+  it('transforms to "2 months ago"', () => {
+    const currentDate = new Date();
+    expect(pipe.transform(new Date(currentDate.getTime() - (MONTHS * 2)))).toBe('2 months ago');
+  });
 });
