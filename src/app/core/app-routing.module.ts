@@ -5,6 +5,8 @@ import { activityPrefix, appDefaultItemRoute, skillPrefix, urlArrayForItemRoute 
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.component';
 import { DefaultLayoutInitService } from '../shared/services/layout.service';
+import { PendingChangesGuard } from '../shared/guards/pending-changes-guard';
+import { BeforeUnloadGuard } from '../shared/guards/before-unload-guard';
 
 const routes: Routes = [
   {
@@ -19,13 +21,15 @@ const routes: Routes = [
   },
   {
     path: activityPrefix,
-    loadChildren: (): Promise<any> => import('../modules/item/item.module').then(m => m.ItemModule),
-    canActivate: [ DefaultLayoutInitService ]
+    loadChildren: () => import('../modules/item/item.routes'),
+    canActivate: [ DefaultLayoutInitService ],
+    providers: [ PendingChangesGuard, BeforeUnloadGuard ],
   },
   {
     path: skillPrefix,
-    loadChildren: (): Promise<any> => import('../modules/item/item.module').then(m => m.ItemModule),
-    canActivate: [ DefaultLayoutInitService ]
+    loadChildren: () => import('../modules/item/item.routes'),
+    canActivate: [ DefaultLayoutInitService ],
+    providers: [ PendingChangesGuard, BeforeUnloadGuard ],
   },
   {
     path: 'lti/:contentId',
