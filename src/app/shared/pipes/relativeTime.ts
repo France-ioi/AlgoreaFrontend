@@ -4,6 +4,10 @@ import { LocaleService } from '../../core/services/localeService';
 
 const formatTime = (locale?: string) => (value: string | Date): string => {
   const valueDate = new Date(value);
+  if (isNaN(valueDate.getTime())) {
+    throw new Error(`Unexpected: Invalid date value: '${ value.toString() }'`);
+  }
+
   const currentDate = new Date();
   const currentLocale = locale || 'en';
 

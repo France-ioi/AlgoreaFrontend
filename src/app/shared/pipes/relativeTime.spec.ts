@@ -45,4 +45,8 @@ describe('RelativeTimePipe', () => {
     const currentDate = new Date();
     expect(pipe.transform(new Date(currentDate.getTime() - (MONTHS * 2)))).toBe('2 months ago');
   });
+
+  it('should throw error', () => {
+    expect(() => pipe.transform('invalid value')).toThrow(new Error('Unexpected: Invalid date value: \'invalid value\''));
+  });
 });
