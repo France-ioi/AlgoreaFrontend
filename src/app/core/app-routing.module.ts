@@ -7,6 +7,7 @@ import { RedirectToIdComponent } from './pages/redirect-to-id/redirect-to-id.com
 import { DefaultLayoutInitService } from '../shared/services/layout.service';
 import { PendingChangesGuard } from '../shared/guards/pending-changes-guard';
 import { BeforeUnloadGuard } from '../shared/guards/before-unload-guard';
+import { GroupDeleteService } from '../modules/group/services/group-delete.service';
 
 const routes: Routes = [
   {
@@ -16,8 +17,9 @@ const routes: Routes = [
   },
   {
     path: 'groups',
-    loadChildren: (): Promise<any> => import('../modules/group/group.module').then(m => m.GroupModule),
-    canActivate: [ DefaultLayoutInitService ]
+    loadChildren: () => import('../modules/group/group.routes'),
+    canActivate: [ DefaultLayoutInitService ],
+    providers: [ PendingChangesGuard, GroupDeleteService ],
   },
   {
     path: activityPrefix,
