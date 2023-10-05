@@ -28,7 +28,7 @@ describe('PendingRequestComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PendingRequestComponent ],
+      imports: [ PendingRequestComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
     }).compileComponents();
   }));

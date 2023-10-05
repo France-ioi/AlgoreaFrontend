@@ -10,13 +10,39 @@ import { ConfirmationService } from 'primeng/api';
 import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { ManagerPermissionDialogComponent } from '../manager-permission-dialog/manager-permission-dialog.component';
+import { GroupManagerAddComponent } from '../group-manager-add/group-manager-add.component';
+import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { GridComponent } from '../../../shared-components/components/grid/grid.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 
 const managersLimit = 25;
 
 @Component({
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
-  styleUrls: [ './group-manager-list.component.scss' ]
+  styleUrls: [ './group-manager-list.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    LoadingComponent,
+    ErrorComponent,
+    GridComponent,
+    TableModule,
+    RouterLink,
+    NgClass,
+    ButtonModule,
+    GroupManagerAddComponent,
+    ManagerPermissionDialogComponent,
+    AsyncPipe,
+    GroupLinkPipe,
+    UserCaptionPipe ],
 })
 export class GroupManagerListComponent implements OnChanges {
 

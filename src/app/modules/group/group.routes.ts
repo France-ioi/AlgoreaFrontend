@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
+import { PendingChangesGuard } from 'src/app/shared/guards/pending-changes-guard';
 import { MyGroupsComponent } from './pages/my-groups/my-groups.component';
-import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 import { UserComponent } from './pages/user/user.component';
-import { PendingChangesGuard } from '../../shared/guards/pending-changes-guard';
+import { GroupByIdComponent } from './pages/group-by-id/group-by-id.component';
 
 const routes: Routes = [
   {
@@ -54,8 +53,4 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({
-  imports: [ RouterModule.forChild(routes) ],
-  exports: [ RouterModule ],
-})
-export class GroupRoutingModule {}
+export default routes;

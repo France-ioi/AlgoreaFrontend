@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, UrlTree } from '@angular/router';
+import { ActivatedRoute, ParamMap, UrlTree, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -40,12 +40,30 @@ import { TaskConfig } from '../../services/item-task.service';
 import { urlArrayForItemRoute } from 'src/app/shared/routing/item-route';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
-import { canCurrentUserViewContent } from 'src/app/shared/models/domain/item-view-permission';
+import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/shared/models/domain/item-view-permission';
 import { DiscussionService } from '../../services/discussion.service';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
 import { TabService } from 'src/app/shared/services/tab.service';
 import { ItemTabs } from './item-tabs';
-import { allowsWatchingAnswers } from 'src/app/shared/models/domain/item-watch-permission';
+import { allowsWatchingAnswers, AllowsWatchingItemResultsPipe } from 'src/app/shared/models/domain/item-watch-permission';
+import { SharedModule } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { ItemForumComponent } from '../item-forum/item-forum.component';
+import { ItemDependenciesComponent } from '../../components/item-dependencies/item-dependencies.component';
+import { ChapterUserProgressComponent } from '../chapter-user-progress/chapter-user-progress.component';
+import { ChapterGroupProgressComponent } from '../chapter-group-progress/chapter-group-progress.component';
+import { ItemLogViewComponent } from '../item-log-view/item-log-view.component';
+import { ButtonModule } from 'primeng/button';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { ItemTaskEditComponent } from '../item-task-edit/item-task-edit.component';
+import { AnswerAuthorIndicatorComponent } from '../../components/answer-author-indicator/answer-author-indicator.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LetDirective } from '@ngrx/component';
+import { TabBarComponent } from '../../../shared-components/components/tab-bar/tab-bar.component';
+import { ItemPermissionsComponent } from '../../components/item-permissions/item-permissions.component';
+import { AccessCodeViewComponent } from '../../../shared-components/components/access-code-view/access-code-view.component';
+import { ItemHeaderComponent } from '../../components/item-header/item-header.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -57,6 +75,34 @@ const itemBreadcrumbCat = $localize`Items`;
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
   providers: [ ItemDataSource, InitialAnswerDataSource, ItemTabs ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ItemHeaderComponent,
+    AccessCodeViewComponent,
+    ItemPermissionsComponent,
+    TabBarComponent,
+    LetDirective,
+    ErrorComponent,
+    RouterLink,
+    AnswerAuthorIndicatorComponent,
+    ItemContentComponent,
+    ItemTaskEditComponent,
+    LoadingComponent,
+    ButtonModule,
+    ItemLogViewComponent,
+    ChapterGroupProgressComponent,
+    ChapterUserProgressComponent,
+    ItemDependenciesComponent,
+    ItemEditWrapperComponent,
+    ItemForumComponent,
+    RouterLinkActive,
+    DialogModule,
+    SharedModule,
+    AsyncPipe,
+    AllowsViewingItemContentPipe,
+    AllowsWatchingItemResultsPipe,
+  ],
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
 

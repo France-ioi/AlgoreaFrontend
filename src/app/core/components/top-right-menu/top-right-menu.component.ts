@@ -8,11 +8,21 @@ import { rawGroupRoute } from 'src/app/shared/routing/group-route';
 import { GroupRouter } from 'src/app/shared/routing/group-router';
 import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { LayoutService } from '../../../shared/services/layout.service';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-top-right-menu',
   templateUrl: './top-right-menu.component.html',
   styleUrls: [ './top-right-menu.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    MenuModule,
+    ButtonModule,
+    AsyncPipe,
+  ],
 })
 export class TopRightMenuComponent {
   @Input() styleClass?: string;

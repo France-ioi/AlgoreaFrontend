@@ -15,13 +15,27 @@ import { ProgressCSVService } from '../../../../shared/http-services/progress-cs
 import { downloadFile } from '../../../../shared/helpers/download-file';
 import { typeCategoryOfItem } from '../../../../shared/helpers/item-type';
 import { RawGroupRoute, rawGroupRoute } from '../../../../shared/routing/group-route';
-import { ProgressData } from '../../components/user-progress-details/user-progress-details.component';
+import { ProgressData, UserProgressDetailsComponent } from '../../components/user-progress-details/user-progress-details.component';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { mapToFetchState, readyData } from 'src/app/shared/operators/state';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { fullItemRoute } from '../../../../shared/routing/item-route';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/shared/pipes/itemRoute';
+import { PermissionsEditDialogComponent } from '../../components/permissions-edit-dialog/permissions-edit-dialog.component';
+import { UserProgressComponent } from '../../components/user-progress/user-progress.component';
+import { RouterLink } from '@angular/router';
+import { TooltipModule } from 'primeng/tooltip';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { NgIf, NgSwitch, NgSwitchCase, NgFor, AsyncPipe } from '@angular/common';
+import { CompositionFilterComponent } from '../../components/composition-filter/composition-filter.component';
 
 const progressListLimit = 25;
 
@@ -59,7 +73,29 @@ interface ProgressDataDialog {
 @Component({
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
-  styleUrls: [ './group-progress-grid.component.scss' ]
+  styleUrls: [ './group-progress-grid.component.scss' ],
+  standalone: true,
+  imports: [
+    CompositionFilterComponent,
+    NgIf,
+    ErrorComponent,
+    LoadingComponent,
+    NgSwitch,
+    NgSwitchCase,
+    ButtonModule,
+    UserProgressDetailsComponent,
+    TableModule,
+    SharedModule,
+    NgFor,
+    TooltipModule,
+    RouterLink,
+    UserProgressComponent,
+    PermissionsEditDialogComponent,
+    AsyncPipe,
+    ItemRouteWithAttemptPipe,
+    ContentTypeFromItemPipe,
+    RouteUrlPipe,
+    GroupLinkPipe ],
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 

@@ -7,11 +7,16 @@ import { GroupCreateManagerService } from '../../http-services/group-create-mana
 import { ActionFeedbackService } from '../../../../shared/services/action-feedback.service';
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from '../../../../shared/helpers/errors';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { SectionParagraphComponent } from '../../../shared-components/components/section-paragrah/section-paragraph.component';
 
 @Component({
   selector: 'alg-group-manager-add',
   templateUrl: './group-manager-add.component.html',
-  styleUrls: [ './group-manager-add.component.scss' ]
+  styleUrls: [ './group-manager-add.component.scss' ],
+  standalone: true,
+  imports: [ SectionParagraphComponent, FormsModule, ButtonModule ]
 })
 export class GroupManagerAddComponent {
 

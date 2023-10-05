@@ -38,7 +38,7 @@ describe('PendingJoinRequestsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PendingJoinRequestsComponent ],
+      imports: [ PendingJoinRequestsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: GetRequestsService, useValue: {
@@ -48,10 +48,10 @@ describe('PendingJoinRequestsComponent', () => {
           processJoinRequests: (_ids: Map<string, string[]>, _action: any) => serviceResponder$.asObservable(),
         } },
         { provide: ActionFeedbackService, useValue: {
-          success: (_m: any) => {},
-          partial: (_m: any) => {},
-          error: (_m: any) => {},
-          unexpectedError: () => {},
+          success: (_m: any) => { },
+          partial: (_m: any) => { },
+          error: (_m: any) => { },
+          unexpectedError: () => { },
         } }
       ]
     }).compileComponents();

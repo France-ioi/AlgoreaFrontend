@@ -1,9 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-state-widget',
   templateUrl: './state-widget.component.html',
   styleUrls: [ './state-widget.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, NgClass ],
 })
 export class StateWidgetComponent implements OnChanges {
 

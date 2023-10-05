@@ -9,11 +9,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TypeFilter } from '../../helpers/composition-filter';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { PermissionsEditFormComponent } from '../permissions-edit-dialog-form/permissions-edit-form.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { SharedModule } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group][permReceiverName]',
   templateUrl: './permissions-edit-dialog.component.html',
-  styleUrls: [ './permissions-edit-dialog.component.scss' ]
+  styleUrls: [ './permissions-edit-dialog.component.scss' ],
+  standalone: true,
+  imports: [ DialogModule, SharedModule, NgIf, ErrorComponent, LoadingComponent, PermissionsEditFormComponent, AsyncPipe ]
 })
 export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   @Output() close = new EventEmitter<boolean>();

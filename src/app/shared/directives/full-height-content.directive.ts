@@ -13,6 +13,7 @@ import {
 
 @Directive({
   selector: '[algFullHeightContent]',
+  standalone: true,
 })
 export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnChanges {
   @Input() algFullHeightContent = true;

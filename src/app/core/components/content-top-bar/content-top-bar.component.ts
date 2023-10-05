@@ -11,11 +11,31 @@ import { DiscussionService } from 'src/app/modules/item/services/discussion.serv
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../../shared/models/content/group-info';
 import { ThreadId } from '../../../modules/item/services/threads.service';
+import { NeighborWidgetComponent } from '../../../modules/shared-components/components/neighbor-widget/neighbor-widget.component';
+import { ObservationBarWithButtonComponent } from '../observation-bar-with-button/observation-bar-with-button.component';
+import { TabBarComponent } from '../../../modules/shared-components/components/tab-bar/tab-bar.component';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { LetDirective } from '@ngrx/component';
+import { ScoreRingComponent } from '../../../modules/shared-components/components/score-ring/score-ring.component';
+import { ButtonModule } from 'primeng/button';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-content-top-bar',
   templateUrl: './content-top-bar.component.html',
   styleUrls: [ './content-top-bar.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ButtonModule,
+    ScoreRingComponent,
+    LetDirective,
+    BreadcrumbComponent,
+    TabBarComponent,
+    ObservationBarWithButtonComponent,
+    NeighborWidgetComponent,
+    AsyncPipe,
+  ],
 })
 export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;

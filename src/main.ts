@@ -1,10 +1,40 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode, ErrorHandler, importProvidersFrom } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
 
-import { AppModule } from './app/core/app.module';
 import { appConfig } from './app/shared/helpers/config';
 import { version } from './version';
+import { AppComponent } from './app/core/app.component';
+import { ToastModule } from 'primeng/toast';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { LayoutModule } from '@angular/cdk/layout';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MenuModule } from 'primeng/menu';
+import { DropdownModule } from 'primeng/dropdown';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { TreeModule } from 'primeng/tree';
+import { AccordionModule } from 'primeng/accordion';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { LetDirective } from '@ngrx/component';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { AlgErrorHandler } from './app/shared/error-handling/error-handler';
+import { WithCredentialsInterceptor } from './app/shared/interceptors/with_credentials.interceptor';
+import { AuthenticationInterceptor } from './app/shared/interceptors/authentication.interceptor';
+import { TimeoutInterceptor } from './app/shared/interceptors/timeout.interceptor';
+import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
+import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import routes from './app/app.routes';
+import { provideRouter } from '@angular/router';
+
+const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
+  visibility: 'hover',
+};
 
 Sentry.init({
   dsn: appConfig.sentryDsn,
@@ -41,5 +71,55 @@ if (appConfig.production) {
 }
 
 /* eslint-disable no-console */ /* console call authorized here (?) */
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(
+      BrowserModule,
+      LetDirective,
+      BreadcrumbModule,
+      AccordionModule,
+      NgScrollbarModule,
+      TreeModule,
+      TooltipModule,
+      ConfirmDialogModule,
+      DialogModule,
+      DropdownModule,
+      MenuModule,
+      FormsModule,
+      ConfirmPopupModule,
+      OverlayPanelModule,
+      LayoutModule,
+      InputTextareaModule,
+      ReactiveFormsModule,
+      ToastModule
+    ),
+    ConfirmationService,
+    MessageService,
+    {
+      provide: NG_SCROLLBAR_OPTIONS,
+      useValue: DEFAULT_SCROLLBAR_OPTIONS,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TimeoutInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: WithCredentialsInterceptor,
+      multi: true,
+    },
+    {
+      provide: ErrorHandler,
+      useClass: AlgErrorHandler,
+    },
+    provideAnimations(),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideRouter(routes),
+  ]
+}).catch(err => console.error(err));

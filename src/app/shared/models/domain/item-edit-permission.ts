@@ -40,12 +40,18 @@ export function allowsGrantingEdition(p: ItemPermWithEdit): boolean {
 // Pipes for templates
 // ********************************************
 
-@Pipe({ name: 'allowsEditingChildren', pure: true })
+@Pipe({
+  name: 'allowsEditingChildren', pure: true,
+  standalone: true
+})
 export class AllowsEditingChildrenItemPipe implements PipeTransform {
   transform = allowsEditingChildren;
 }
 
-@Pipe({ name: 'allowsEditingAll', pure: true })
+@Pipe({
+  name: 'allowsEditingAll', pure: true,
+  standalone: true
+})
 export class AllowsEditingAllItemPipe implements PipeTransform {
   transform = allowsEditingAll;
 }

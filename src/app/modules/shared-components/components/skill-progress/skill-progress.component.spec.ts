@@ -8,7 +8,7 @@ describe('SkillProgressComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SkillProgressComponent ]
+      imports: [ SkillProgressComponent ]
     })
       .compileComponents();
   }));

@@ -19,6 +19,12 @@ import {
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/shared/helpers/errors';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { getAllowedNewItemTypes } from '../../../../shared/helpers/new-item-types';
+import { RouterLink } from '@angular/router';
+import { AddContentComponent } from '../../../shared-components/components/add-content/add-content.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, I18nSelectPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-associated-item',
@@ -30,7 +36,21 @@ import { getAllowedNewItemTypes } from '../../../../shared/helpers/new-item-type
       useExisting: forwardRef(() => AssociatedItemComponent),
       multi: true,
     }
-  ]
+  ],
+  standalone: true,
+  imports: [
+    NgIf,
+    SectionComponent,
+    LoadingComponent,
+    ErrorComponent,
+    NgSwitch,
+    NgSwitchCase,
+    AddContentComponent,
+    RouterLink,
+    NgClass,
+    AsyncPipe,
+    I18nSelectPipe
+  ],
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnChanges, OnDestroy {
   @Input() contentType: ItemTypeCategory = 'activity';

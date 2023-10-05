@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 /**
  * To use inside form, just set the formControlName
@@ -21,7 +22,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       useExisting: forwardRef(() => SwitchComponent),
       multi: true,
     }
-  ]
+  ],
+  standalone: true,
+  imports: [ InputSwitchModule, FormsModule ]
 })
 export class SwitchComponent implements ControlValueAccessor {
   @Input() checked = false;

@@ -2,6 +2,8 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
+import { TooltipModule } from 'primeng/tooltip';
+import { NgFor, NgClass } from '@angular/common';
 
 /**
  * To use inside form, just set the formControlName
@@ -23,7 +25,9 @@ import { ensureDefined } from 'src/app/shared/helpers/assert';
       useExisting: forwardRef(() => SelectionComponent),
       multi: true,
     }
-  ]
+  ],
+  standalone: true,
+  imports: [ NgFor, NgClass, TooltipModule ]
 })
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
   @Input() items: { label: string, value: T, icon?: string, tooltip?: string }[] = [];

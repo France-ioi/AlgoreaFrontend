@@ -1,8 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownOption } from 'src/app/modules/shared-components/components/dropdown/dropdown.component';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { HOURS } from 'src/app/shared/helpers/duration';
+import { ItemRemoveButtonComponent } from '../../components/item-remove-button/item-remove-button.component';
+import { FormErrorComponent } from '../../../shared-components/components/form-error/form-error.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
+import { DurationComponent } from '../../../shared-components/components/duration/duration.component';
+import { SelectionComponent } from '../../../shared-components/components/selection/selection.component';
+import { DropdownComponent } from '../../../shared-components/components/dropdown/dropdown.component';
+import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
+import { InputComponent } from '../../../shared-components/components/input/input.component';
+import { NgIf } from '@angular/common';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -10,7 +20,22 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 @Component({
   selector: 'alg-item-edit-advanced-parameters',
   templateUrl: './item-edit-advanced-parameters.component.html',
-  styleUrls: [ './item-edit-advanced-parameters.component.scss' ]
+  styleUrls: [ './item-edit-advanced-parameters.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    InputComponent,
+    SwitchComponent,
+    DropdownComponent,
+    SelectionComponent,
+    DurationComponent,
+    CalendarModule,
+    InputNumberModule,
+    FormErrorComponent,
+    ItemRemoveButtonComponent
+  ],
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Output() confirmRemoval = new EventEmitter<void>();

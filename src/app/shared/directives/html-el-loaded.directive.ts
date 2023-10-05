@@ -2,6 +2,7 @@ import { AfterViewInit, Directive, ElementRef, EventEmitter, Output } from '@ang
 
 @Directive({
   selector: '[algHtmlElLoaded]',
+  standalone: true,
 })
 export class HtmlElLoadedDirective implements AfterViewInit {
   @Output() elLoaded = new EventEmitter<HTMLElement>();

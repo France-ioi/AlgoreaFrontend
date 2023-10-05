@@ -5,9 +5,22 @@ import { GetThreadsService } from '../../services/get-threads.service';
 import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
 import { mapToFetchState } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Item } from '../../http-services/get-item-by-id.service';
 import { DiscussionService } from '../../services/discussion.service';
+import { ThreadStatusDisplayPipe } from '../../../../shared/pipes/threadStatusDisplay';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
+import { SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { SelectionComponent } from '../../../shared-components/components/selection/selection.component';
+import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { LetDirective } from '@ngrx/component';
 
 
 enum ForumTabUrls {
@@ -31,6 +44,26 @@ const OPTIONS = [
   selector: 'alg-item-forum',
   templateUrl: './item-forum.component.html',
   styleUrls: [ './item-forum.component.scss' ],
+  standalone: true,
+  imports: [
+    LetDirective,
+    NgIf,
+    SelectionComponent,
+    ErrorComponent,
+    LoadingComponent,
+    ButtonModule,
+    TableModule,
+    SharedModule,
+    NgClass,
+    RouterLink,
+    AsyncPipe,
+    DatePipe,
+    RawItemRoutePipe,
+    RouteUrlPipe,
+    GroupLinkPipe,
+    UserCaptionPipe,
+    ThreadStatusDisplayPipe,
+  ],
 })
 export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

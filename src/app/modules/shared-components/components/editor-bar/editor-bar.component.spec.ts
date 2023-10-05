@@ -8,7 +8,7 @@ describe('EditorBarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditorBarComponent ]
+      imports: [ EditorBarComponent ]
     })
       .compileComponents();
   }));

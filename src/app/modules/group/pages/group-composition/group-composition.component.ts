@@ -10,6 +10,10 @@ import { Group } from '../../http-services/get-group-by-id.service';
 import { GroupCreationService } from '../../http-services/group-creation.service';
 import { GroupData } from '../../services/group-datasource.service';
 import { AddSubGroupComponent } from '../../components/add-sub-group/add-sub-group.component';
+import { GroupNoPermissionComponent } from '../../components/group-no-permission/group-no-permission.component';
+import { GroupInviteUsersComponent } from '../../components/group-invite-users/group-invite-users.component';
+import { GroupJoinByCodeComponent } from '../../components/group-join-by-code/group-join-by-code.component';
+import { NgIf } from '@angular/common';
 
 export interface GroupChildData {
   id?: string,
@@ -20,7 +24,16 @@ export interface GroupChildData {
 @Component({
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
-  styleUrls: [ './group-composition.component.scss' ]
+  styleUrls: [ './group-composition.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    MemberListComponent,
+    AddSubGroupComponent,
+    GroupJoinByCodeComponent,
+    GroupInviteUsersComponent,
+    GroupNoPermissionComponent
+  ],
 })
 export class GroupCompositionComponent implements OnChanges {
   @ViewChild('addSubGroupComponent') addSubGroupComponent?: AddSubGroupComponent;

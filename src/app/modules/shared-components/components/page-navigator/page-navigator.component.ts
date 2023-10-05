@@ -1,9 +1,19 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { NeighborWidgetComponent } from '../neighbor-widget/neighbor-widget.component';
+import { WatchButtonComponent } from '../watch-button/watch-button.component';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-page-navigator',
   templateUrl: './page-navigator.component.html',
   styleUrls: [ './page-navigator.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    WatchButtonComponent,
+    NgClass,
+    NeighborWidgetComponent,
+  ],
 })
 export class PageNavigatorComponent {
   @Input() allowWatching = false;

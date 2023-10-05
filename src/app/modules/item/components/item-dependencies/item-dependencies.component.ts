@@ -3,7 +3,7 @@ import { GetItemPrerequisitesService } from '../../http-services/get-item-prereq
 import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from '../../../../shared/operators/state';
 import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ItemData } from '../../services/item-datasource.service';
 import { canCloseOverlay } from '../../../../shared/helpers/overlay';
 import { AddedContent } from '../../../shared-components/components/add-content/add-content.component';
@@ -14,11 +14,37 @@ import { ActionFeedbackService } from '../../../../shared/services/action-feedba
 import { RemoveItemPrerequisiteService } from '../../http-services/remove-item-prerequisite.service';
 import { AddDependencyComponent } from '../add-dependency/add-dependency.component';
 import { GetItemDependenciesService } from '../../http-services/get-item-dependencies.service';
+import { RouteUrlPipe } from 'src/app/shared/pipes/routeUrl';
+import { RawItemRoutePipe } from 'src/app/shared/pipes/itemRoute';
+import { PathSuggestionComponent } from '../../../shared-components/components/path-suggestion/path-suggestion.component';
+import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
+import { SectionComponent } from '../../../shared-components/components/section/section.component';
+import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-dependencies',
   templateUrl: './item-dependencies.component.html',
   styleUrls: [ './item-dependencies.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    SectionComponent,
+    LoadingComponent,
+    ErrorComponent,
+    NgFor,
+    RouterLink,
+    ButtonModule,
+    AddDependencyComponent,
+    OverlayPanelModule,
+    PathSuggestionComponent,
+    AsyncPipe,
+    I18nSelectPipe,
+    RawItemRoutePipe,
+    RouteUrlPipe,
+  ],
 })
 export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

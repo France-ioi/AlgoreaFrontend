@@ -8,7 +8,7 @@ describe('SubSectionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubSectionComponent ]
+      imports: [ SubSectionComponent ]
     })
       .compileComponents();
   }));

@@ -8,7 +8,7 @@ describe('GroupNoPermissionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupNoPermissionComponent ]
+      imports: [ GroupNoPermissionComponent ]
     })
       .compileComponents();
   }));

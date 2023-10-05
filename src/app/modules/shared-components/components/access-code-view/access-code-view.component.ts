@@ -4,11 +4,17 @@ import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../../../shared/http-services/join-by-code.service';
 import { ItemData } from '../../../item/services/item-datasource.service';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
+import { SectionParagraphComponent } from '../section-paragrah/section-paragraph.component';
 
 @Component({
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
-  styleUrls: [ './access-code-view.component.scss' ]
+  styleUrls: [ './access-code-view.component.scss' ],
+  standalone: true,
+  imports: [ SectionParagraphComponent, NgClass, FormsModule, ButtonModule ]
 })
 export class AccessCodeViewComponent {
   @Input() sectionLabel = '';

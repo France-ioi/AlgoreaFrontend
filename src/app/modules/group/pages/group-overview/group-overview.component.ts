@@ -1,11 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Group } from '../../http-services/get-group-by-id.service';
 import { Router } from '@angular/router';
+import { GroupLeaveComponent } from '../../components/group-leave/group-leave.component';
+import { GroupLogViewComponent } from '../../components/group-log-view/group-log-view.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
   styleUrls: [ './group-overview.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    GroupLogViewComponent,
+    GroupLeaveComponent,
+  ],
 })
 export class GroupOverviewComponent {
   @Output() groupRefreshRequired = new EventEmitter<void>();

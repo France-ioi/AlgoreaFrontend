@@ -1,14 +1,22 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { appConfig } from 'src/app/shared/helpers/config';
 import { rawItemRoute } from 'src/app/shared/routing/item-route';
 import { ItemRouter } from 'src/app/shared/routing/item-router';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { LoadingComponent } from '../../../modules/shared-components/components/loading/loading.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-redirect-to-id',
   templateUrl: './redirect-to-id.component.html',
+  standalone: true,
+  imports: [
+    NgIf,
+    RouterLink,
+    LoadingComponent,
+  ],
 })
 export class RedirectToIdComponent implements OnDestroy {
 

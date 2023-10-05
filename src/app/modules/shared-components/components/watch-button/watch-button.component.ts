@@ -1,14 +1,26 @@
 import { Component, ViewChild } from '@angular/core';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { GroupWatchingService } from '../../../../core/services/group-watching.service';
 import { combineLatest, map } from 'rxjs';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
 import { GroupInfo, isGroupInfo } from '../../../../shared/models/content/group-info';
+import { SuggestionOfActivitiesComponent } from '../suggestion-of-activities/suggestion-of-activities.component';
+import { ButtonModule } from 'primeng/button';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-watch-button',
   templateUrl: './watch-button.component.html',
   styleUrls: [ './watch-button.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ButtonModule,
+    NgClass,
+    OverlayPanelModule,
+    SuggestionOfActivitiesComponent,
+    AsyncPipe,
+  ],
 })
 export class WatchButtonComponent {
   @ViewChild('op') op?: OverlayPanel;

@@ -16,7 +16,10 @@ const PERMISSION_CAPTIONS = {
   answer_with_grant: $localize`Answer with grant`,
 };
 
-@Pipe({ name: 'groupPermissionCaption', pure: true })
+@Pipe({
+  name: 'groupPermissionCaption', pure: true,
+  standalone: true
+})
 export class GroupPermissionCaptionPipe implements PipeTransform {
   constructor() {}
 

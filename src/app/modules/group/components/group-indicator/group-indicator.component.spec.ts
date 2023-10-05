@@ -8,7 +8,7 @@ describe('GroupIndicatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GroupIndicatorComponent ]
+      imports: [ GroupIndicatorComponent ]
     })
       .compileComponents();
   });

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ThreadId, ThreadService } from '../../../modules/item/services/threads.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../shared/operators/state';
 import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
 import { DiscussionService } from 'src/app/modules/item/services/discussion.service';
@@ -17,11 +17,30 @@ import { FetchState, fetchingState, readyState } from '../../../shared/helpers/s
 import { errorIsHTTPForbidden } from 'src/app/shared/helpers/errors';
 import { UpdateThreadService } from '../../../modules/item/http-services/update-thread.service';
 import { environment } from '../../../../environments/environment';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { LetDirective } from '@ngrx/component';
+import { ThreadMessageComponent } from '../thread-message/thread-message.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-thread',
   templateUrl: './thread.component.html',
   styleUrls: [ './thread.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    ThreadMessageComponent,
+    LetDirective,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextareaModule,
+    ButtonModule,
+    TooltipModule,
+    AsyncPipe,
+  ],
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;

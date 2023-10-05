@@ -5,6 +5,11 @@ import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
 import { ItemCorePerm } from 'src/app/shared/models/domain/item-permissions';
 import { mapToFetchState } from 'src/app/shared/operators/state';
 import { FetchState } from '../../../../shared/helpers/state';
+import { ButtonModule } from 'primeng/button';
+import { LoadingComponent } from '../loading/loading.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputComponent } from '../input/input.component';
+import { NgIf, NgClass, NgFor, SlicePipe } from '@angular/common';
 
 export interface AddedContent<T> {
   id?: string,
@@ -28,6 +33,17 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    InputComponent,
+    TooltipModule,
+    NgClass,
+    LoadingComponent,
+    NgFor,
+    ButtonModule,
+    SlicePipe,
+  ],
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];

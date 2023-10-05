@@ -3,11 +3,21 @@ import { User } from '../../http-services/get-user.service';
 import { map } from 'rxjs/operators';
 import { GroupWatchingService } from 'src/app/core/services/group-watching.service';
 import { RawGroupRoute } from 'src/app/shared/routing/group-route';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { PageNavigatorComponent } from '../../../shared-components/components/page-navigator/page-navigator.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-user-header[user][route]',
   templateUrl: './user-header.component.html',
   styleUrls: [ './user-header.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    PageNavigatorComponent,
+    AsyncPipe,
+    UserCaptionPipe,
+  ],
 })
 export class UserHeaderComponent {
   @Input() user!: User;

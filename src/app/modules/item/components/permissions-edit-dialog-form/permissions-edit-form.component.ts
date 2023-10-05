@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../helpers/permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from '../../../../shared/http-services/group-permissions.service';
 import { ItemCorePerm } from '../../../../shared/models/domain/item-permissions';
@@ -13,11 +13,28 @@ import { ItemEditPerm } from '../../../../shared/models/domain/item-edit-permiss
 import { merge, Subject } from 'rxjs';
 import { permissionsConstraintsValidator } from '../../helpers/permissions-constraints-validator';
 import { withComputePermissions } from '../../helpers/computed-permissions';
+import { ButtonModule } from 'primeng/button';
+import { SwitchFieldComponent } from '../../../shared-components/components/collapsible-section/switch-field/switch-field.component';
+import {
+  ProgressSelectComponent
+} from '../../../shared-components/components/collapsible-section/progress-select/progress-select.component';
+import { CollapsibleSectionComponent } from '../../../shared-components/components/collapsible-section/collapsible-section.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-permissions-edit-form[giverPermissions]',
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    FormsModule,
+    ReactiveFormsModule,
+    CollapsibleSectionComponent,
+    ProgressSelectComponent,
+    SwitchFieldComponent,
+    ButtonModule,
+  ],
 })
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   @Input() permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;

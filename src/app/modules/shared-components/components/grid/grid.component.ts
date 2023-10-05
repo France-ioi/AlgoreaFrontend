@@ -1,8 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges, ContentChild, ViewChild, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { DomHandler } from 'primeng/dom';
-import { Table, TableService } from 'primeng/table';
+import { Table, TableService, TableModule } from 'primeng/table';
 import { SortEvent } from 'primeng/api/sortevent';
 import { SortMeta } from 'primeng/api/sortmeta';
+import { SwitchComponent } from '../switch/switch.component';
+import { SharedModule } from 'primeng/api';
+import { NgClass, NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
 
 export function tableFactory(wrapper: GridComponent): Table|undefined {
   return wrapper.table;
@@ -24,12 +27,22 @@ export interface GridColumnGroup {
   styleUrls: [ './grid.component.scss' ],
   providers: [
     DomHandler,
-    TableService, // from old imports
+    TableService,
     {
-      provide: Table, // providing table class
-      useFactory: tableFactory, // using new function
+      provide: Table,
+      useFactory: tableFactory,
       deps: [ GridComponent ], // new function depends on your wrapper
     },
+  ],
+  standalone: true,
+  imports: [
+    TableModule,
+    NgClass,
+    NgIf,
+    SharedModule,
+    NgTemplateOutlet,
+    NgFor,
+    SwitchComponent,
   ],
 })
 export class GridComponent implements OnChanges {

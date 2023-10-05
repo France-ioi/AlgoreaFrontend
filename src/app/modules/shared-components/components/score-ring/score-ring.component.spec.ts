@@ -8,7 +8,7 @@ describe('ScoreRingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScoreRingComponent ]
+      imports: [ ScoreRingComponent ]
     })
       .compileComponents();
   }));

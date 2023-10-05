@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
 import { TypeFilter } from '../../helpers/composition-filter';
+import { SelectionComponent } from '../../../shared-components/components/selection/selection.component';
 
 @Component({
   selector: 'alg-composition-filter',
   templateUrl: './composition-filter.component.html',
-  styleUrls: [ './composition-filter.component.scss' ]
+  styleUrls: [ './composition-filter.component.scss' ],
+  standalone: true,
+  imports: [ SelectionComponent ]
 })
 export class CompositionFilterComponent implements OnInit {
 

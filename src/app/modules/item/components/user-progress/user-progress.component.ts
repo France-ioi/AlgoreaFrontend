@@ -1,11 +1,15 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { mustNotBeUndefined } from 'src/app/shared/helpers/assert';
 import { TeamUserProgress } from 'src/app/shared/http-services/get-group-progress.service';
+import { ScoreRingComponent } from '../../../shared-components/components/score-ring/score-ring.component';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-user-progress[userProgress]',
   templateUrl: './user-progress.component.html',
-  styleUrls: [ './user-progress.component.scss' ]
+  styleUrls: [ './user-progress.component.scss' ],
+  standalone: true,
+  imports: [ NgClass, NgIf, ScoreRingComponent ]
 })
 export class UserProgressComponent implements OnInit, OnChanges {
 

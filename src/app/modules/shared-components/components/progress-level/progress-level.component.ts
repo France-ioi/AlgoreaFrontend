@@ -1,9 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-progress-level',
   templateUrl: './progress-level.component.html',
-  styleUrls: [ './progress-level.component.scss' ]
+  styleUrls: [ './progress-level.component.scss' ],
+  standalone: true,
+  imports: [ NgClass, NgFor, NgIf ]
 })
 export class ProgressLevelComponent implements OnChanges {
 

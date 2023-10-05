@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ConfirmationService, SortEvent } from 'primeng/api';
-import { Table } from 'primeng/table';
+import { ConfirmationService, SortEvent, SharedModule } from 'primeng/api';
+import { Table, TableModule } from 'primeng/table';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/shared/http-services/get-group-descendants.service';
@@ -18,6 +18,12 @@ import { RemoveGroupService } from '../../http-services/remove-group.service';
 import { FetchState } from 'src/app/shared/helpers/state';
 import { DataPager } from 'src/app/shared/helpers/data-pager';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserCaptionPipe } from '../../../../shared/pipes/userCaption';
+import { GroupLinkPipe } from 'src/app/shared/pipes/groupLink';
+import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { ErrorComponent } from '../../../shared-components/components/error/error.component';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
@@ -64,7 +70,26 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
 @Component({
   selector: 'alg-member-list',
   templateUrl: './member-list.component.html',
-  styleUrls: [ './member-list.component.scss' ]
+  styleUrls: [ './member-list.component.scss' ],
+  standalone: true,
+  imports: [
+    GroupCompositionFilterComponent,
+    NgIf,
+    ErrorComponent,
+    TableModule,
+    SharedModule,
+    NgFor,
+    NgSwitch,
+    NgSwitchCase,
+    RouterLink,
+    NgSwitchDefault,
+    ButtonModule,
+    AsyncPipe,
+    DatePipe,
+    I18nSelectPipe,
+    GroupLinkPipe,
+    UserCaptionPipe
+  ],
 })
 export class MemberListComponent implements OnChanges, OnDestroy {
 

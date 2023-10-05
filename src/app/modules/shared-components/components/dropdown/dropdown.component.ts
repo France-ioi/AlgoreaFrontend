@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { NgIf } from '@angular/common';
 
 export interface DropdownOption {
   label: string,
@@ -9,7 +11,9 @@ export interface DropdownOption {
 @Component({
   selector: 'alg-dropdown',
   templateUrl: './dropdown.component.html',
-  styleUrls: [ './dropdown.component.scss' ]
+  styleUrls: [ './dropdown.component.scss' ],
+  standalone: true,
+  imports: [ NgIf, DropdownModule, FormsModule, ReactiveFormsModule ]
 })
 export class DropdownComponent implements OnInit {
   @Input() options: DropdownOption[] = [];

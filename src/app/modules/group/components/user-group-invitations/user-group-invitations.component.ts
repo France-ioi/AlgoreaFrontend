@@ -9,11 +9,14 @@ import { Action, parseGroupInvitationResults, RequestActionsService } from '../.
 import { ActionFeedbackService } from 'src/app/shared/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from '../../../../shared/services/current-content.service';
+import { PendingRequestComponent } from '../pending-request/pending-request.component';
 
 @Component({
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
-  styleUrls: [ './user-group-invitations.component.scss' ]
+  styleUrls: [ './user-group-invitations.component.scss' ],
+  standalone: true,
+  imports: [ PendingRequestComponent ]
 })
 export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   requests: PendingRequest[] = [];

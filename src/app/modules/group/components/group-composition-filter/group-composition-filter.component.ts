@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ensureDefined } from 'src/app/shared/helpers/assert';
+import { FormsModule } from '@angular/forms';
+import { SwitchComponent } from '../../../shared-components/components/switch/switch.component';
+import { NgIf } from '@angular/common';
+import { SelectionComponent } from '../../../shared-components/components/selection/selection.component';
 
 export enum TypeFilter {
   Groups = 'groups',
@@ -15,7 +19,9 @@ export interface Filter {
 @Component({
   selector: 'alg-group-composition-filter',
   templateUrl: './group-composition-filter.component.html',
-  styleUrls: [ './group-composition-filter.component.scss' ]
+  styleUrls: [ './group-composition-filter.component.scss' ],
+  standalone: true,
+  imports: [ SelectionComponent, NgIf, SwitchComponent, FormsModule ]
 })
 export class GroupCompositionFilterComponent implements OnInit{
   @Input() defaultValue?: Filter;

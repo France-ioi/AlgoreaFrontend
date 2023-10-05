@@ -32,11 +32,17 @@ export function allowsGrantingContentView(p: ItemPermWithGrantView): boolean {
 // Pipes for templates
 // ********************************************
 
-@Pipe({ name: 'allowsGrantingView', pure: true })
+@Pipe({
+  name: 'allowsGrantingView', pure: true,
+  standalone: true
+})
 export class AllowsGrantingViewItemPipe implements PipeTransform {
   transform = allowsGrantingView;
 }
-@Pipe({ name: 'allowsGrantingContentView', pure: true })
+@Pipe({
+  name: 'allowsGrantingContentView', pure: true,
+  standalone: true
+})
 export class AllowsGrantingContentViewItemPipe implements PipeTransform {
   transform = allowsGrantingContentView;
 }

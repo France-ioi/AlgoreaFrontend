@@ -4,7 +4,10 @@ import { UrlCommand } from '../helpers/url';
 import { isRawGroupRoute, RawGroupRoute, urlArrayForGroupRoute } from '../routing/group-route';
 import { RawItemRoute, urlArrayForItemRoute } from '../routing/item-route';
 
-@Pipe({ name: 'url', pure: true })
+@Pipe({
+  name: 'url', pure: true,
+  standalone: true
+})
 export class RouteUrlPipe implements PipeTransform {
   transform(route: RawItemRoute|RawGroupRoute, page?: string|string[]): UrlCommand {
     return isRawGroupRoute(route) ? urlArrayForGroupRoute(route, isString(page) ? [ page ] : page) : urlArrayForItemRoute(route, page);

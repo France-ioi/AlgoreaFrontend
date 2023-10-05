@@ -15,11 +15,22 @@ import { ItemChanges, UpdateItemService } from '../../http-services/update-item.
 import { PendingChangesComponent } from '../../../../shared/guards/pending-changes-guard';
 import { PendingChangesService } from '../../../../shared/services/pending-changes-service';
 import { CurrentContentService } from 'src/app/shared/services/current-content.service';
+import { AllowsEditingChildrenItemPipe } from 'src/app/shared/models/domain/item-edit-permission';
+import { FloatingSaveComponent } from '../../../shared-components/components/floating-save/floating-save.component';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-item-children-edit-form',
   templateUrl: './item-children-edit-form.component.html',
   styleUrls: [ './item-children-edit-form.component.scss' ],
+  standalone: true,
+  imports: [
+    NgIf,
+    ItemChildrenEditComponent,
+    NgClass,
+    FloatingSaveComponent,
+    AllowsEditingChildrenItemPipe,
+  ],
 })
 export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComponent, OnDestroy {
   @Input() itemData?: ItemData;
