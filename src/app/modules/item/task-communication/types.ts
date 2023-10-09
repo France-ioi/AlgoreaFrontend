@@ -72,6 +72,7 @@ export const metadataDecoder = D.partial({
   disablePlatformProgress: D.boolean,
   editorUrl: D.string,
   usesRandomSeed: D.boolean,
+  usesTokens: D.boolean,
 });
 export type TaskMetaData = D.TypeOf<typeof metadataDecoder>;
 export type TaskResources = unknown;

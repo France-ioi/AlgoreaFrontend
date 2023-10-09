@@ -24,7 +24,6 @@ import { AnswerService } from '../http-services/answer.service';
 import { CurrentAnswerService } from '../http-services/current-answer.service';
 import { GradeService } from '../http-services/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
-import { ItemTaskTokenService } from './item-task-token.service';
 import { Answer } from './item-task.service';
 
 const answerAndStateSaveInterval = 5*SECONDS;
@@ -45,12 +44,12 @@ export class ItemTaskAnswerService implements OnDestroy {
   private saved$ = new ReplaySubject<{ answer: string, state: string }>();
   private saveError$ = new Subject<Error>();
 
-  private task$ = this.taskInitService.task$.pipe(takeUntil(this.error$));
+  private loadedTask$ = this.taskInitService.loadedTask$.pipe(takeUntil(this.error$));
   private config$ = this.taskInitService.config$.pipe(
     takeUntil(this.error$),
     filter((config): config is RunningItemTaskConfig => config.attemptId !== undefined)
   );
-  private taskToken$ = this.tokenService.taskToken$.pipe(takeUntil(this.error$));
+  private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, initialAnswer }) => {
@@ -67,7 +66,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private initializedTaskState$ = combineLatest([
     this.initialAnswer$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
-    this.task$,
+    this.loadedTask$,
     this.config$.pipe(take(1)),
   ]).pipe(
     switchMap(([ initialAnswer, task, { readOnly }]) =>
@@ -78,7 +77,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
   private initializedTaskAnswer$ = combineLatest([
     this.initialAnswer$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
-    this.task$,
+    this.loadedTask$,
   ]).pipe(
     delayWhen(() => this.initializedTaskState$),
     switchMap(([ initialAnswer, task ]) =>
@@ -98,7 +97,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private refreshAnswerAndStatePeriod = Math.max(answerAndStateSaveInterval, (window.taskSaveIntervalInSec ?? 0)*SECONDS);
   private answerOrStateChange$ = interval(this.refreshAnswerAndStatePeriod).pipe(
     takeUntil(this.destroyed$),
-    switchMap(() => this.task$),
+    switchMap(() => this.loadedTask$),
     switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
     distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
   );
@@ -143,7 +142,6 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   constructor(
     private taskInitService: ItemTaskInitService,
-    private tokenService: ItemTaskTokenService,
     private currentAnswerService: CurrentAnswerService,
     private answerService: AnswerService,
     private answerTokenService: AnswerTokenService,
@@ -159,7 +157,7 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   submitAnswer(): Observable<unknown> {
     // Step 1: get answer from task
-    const answer$ = this.task$.pipe(take(1), switchMap(task => task.getAnswer()), takeUntil(this.destroyed$), shareReplay(1));
+    const answer$ = this.loadedTask$.pipe(take(1), switchMap(task => task.getAnswer()), takeUntil(this.destroyed$), shareReplay(1));
 
     // Step 2: generate answer token with backend
     const answerToken$ = combineLatest([ this.taskToken$, answer$ ]).pipe(
@@ -170,7 +168,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
 
     // Step 3: get answer grade with answer token from task
-    const grade$ = combineLatest([ this.task$, answer$, answerToken$ ]).pipe(
+    const grade$ = combineLatest([ this.loadedTask$, answer$, answerToken$ ]).pipe(
       take(1),
       switchMap(([ task, answer, answerToken ]) => task.gradeAnswer(answer, answerToken)),
       takeUntil(this.destroyed$),
@@ -198,11 +196,11 @@ export class ItemTaskAnswerService implements OnDestroy {
   }
 
   clearAnswer(): Observable<unknown> {
-    return this.task$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
+    return this.loadedTask$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
   }
 
   saveAnswerAndState(): Observable<{ saving: boolean }> {
-    return combineLatest([ this.saved$, this.task$, this.config$ ]).pipe(
+    return combineLatest([ this.saved$, this.loadedTask$, this.config$ ]).pipe(
       take(1),
       // save action must applied straight away ONLY if there is an available config & task & saved-value couple
       // if such couple is not available straight away, it means the user has navigated so quickly that the task could not be initialized
