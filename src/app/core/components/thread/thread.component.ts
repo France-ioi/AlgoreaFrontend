@@ -44,6 +44,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
+  @ViewChild('messageToSendEl') messageToSendEl?: ElementRef<HTMLTextAreaElement>;
 
   form = this.fb.nonNullable.group({
     messageToSend: [ '' ],
@@ -162,6 +163,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
           return;
         }
         this.form.get('messageToSend')?.enable();
+        this.messageToSendEl?.nativeElement.focus();
       })
     );
   }

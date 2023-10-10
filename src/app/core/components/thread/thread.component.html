@@ -28,6 +28,7 @@
                 [rows]="1"
                 [autoResize]="true"
                 (keydown.enter)="$event.preventDefault(); sendMessage(threadId)"
+                #messageToSendEl
               ></textarea>
               <button
                 class="alg-button-icon primary-color rounded send-button"
