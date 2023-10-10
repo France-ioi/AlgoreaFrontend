@@ -65,6 +65,7 @@ export class ThreadService implements OnDestroy {
   );
   private threadSubscriptionSub = this.threadInfo$.pipe(
     readyData(),
+    distinctUntilChanged((prev, next) => prev?.participantId === next?.participantId && prev?.itemId === next?.itemId),
     map(t => t?.token),
     pairwise(),
     switchMap(([ prevToken, newToken ]) => concat(...[
