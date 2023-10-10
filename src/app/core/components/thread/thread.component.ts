@@ -53,6 +53,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly subscriptions = new Subscription();
   readonly state$ = this.threadService.eventsState$;
 
+  readonly isWsOpen$ = this.discussionService.isWsOpen$;
+
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
     map(events => events.map(e => e.createdBy)),

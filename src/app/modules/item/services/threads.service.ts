@@ -47,6 +47,8 @@ export class ThreadService implements OnDestroy {
   private configuredThreadId = new BehaviorSubject<ThreadId|null>(null);
   private clearEvents$ = new ReplaySubject<void>(1);
 
+  isWsOpen$ = this.forumService.isWsOpen$;
+
   private refresh$ = new Subject<void>();
   threadId$ = this.configuredThreadId.pipe(distinctUntilChanged((x,y) => x?.participantId === y?.participantId && x?.itemId === y?.itemId));
   threadInfo$ = combineLatest([

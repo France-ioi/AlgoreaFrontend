@@ -7,7 +7,7 @@
   overflow: hidden;
 }
 
-.widget-loading, .widget-error, .no-events {
+.widget-loading, .widget-error, .no-events, .ws-error {
   display: flex;
   flex-direction: column;
   justify-content: center;
