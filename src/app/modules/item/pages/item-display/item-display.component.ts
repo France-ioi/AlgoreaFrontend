@@ -48,7 +48,6 @@ import { GetBreadcrumbsFromRootsService } from '../../http-services/get-breadcru
 import { typeCategoryOfItem } from 'src/app/shared/helpers/item-type';
 import { closestBreadcrumbs } from 'src/app/shared/routing/content-route';
 import { LayoutService } from '../../../../shared/services/layout.service';
-import { ItemTaskTokenService } from '../../services/item-task-token.service';
 import { LoadingComponent } from '../../../shared-components/components/loading/loading.component';
 import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from '../../../shared-components/components/error/error.component';
@@ -65,7 +64,7 @@ const heightSyncInterval = 0.2*SECONDS;
   selector: 'alg-item-display[url][route]',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
-  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService, ItemTaskTokenService ],
+  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
   standalone: true,
   imports: [
     NgIf,
@@ -93,7 +92,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
 
-  state$ = merge(this.taskService.task$, this.taskService.error$).pipe(mapToFetchState());
+  state$ = merge(this.taskService.loadedTask$, this.taskService.error$).pipe(mapToFetchState());
   @Output() loadingComplete = this.state$.pipe(map(s => !s.isFetching), distinctUntilChanged());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;

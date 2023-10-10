@@ -12,10 +12,10 @@ export class ItemTaskViewsService implements OnDestroy {
 
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
   readonly display$ = this.displaySubject.asObservable().pipe(takeUntil(this.error$));
-  private task$ = this.initService.task$.pipe(takeUntil(this.error$));
+  private loadedTask$ = this.initService.loadedTask$.pipe(takeUntil(this.error$));
 
   private readonly views = merge(
-    this.task$.pipe(switchMap(task => task.getViews())),
+    this.loadedTask$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
   ).pipe(
     map(views => this.getAvailableViews(views)),
@@ -25,11 +25,11 @@ export class ItemTaskViewsService implements OnDestroy {
   private activeViewSubject = new ReplaySubject<string>(1);
   readonly activeView$ = this.activeViewSubject.pipe(
     distinctUntilChanged(),
-    delayWhen(() => this.task$), // start emitting only when task is loaded since it makes no sense to emit before
+    delayWhen(() => this.loadedTask$), // start emitting only when task is loaded since it makes no sense to emit before
   );
 
   // By default, load 'task' view when the task is initialized
-  private showViews$ = combineLatest([ this.initService.task$, this.activeView$ ]).pipe(
+  private showViews$ = combineLatest([ this.loadedTask$, this.activeView$ ]).pipe(
     switchMap(([ task, view ]) => task.showViews({ [view]: true })),
   );
 

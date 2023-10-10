@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
+import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
   delayWhen,
@@ -10,6 +10,7 @@ import {
   shareReplay,
   switchMap,
   takeUntil,
+  tap,
   timeout,
 } from 'rxjs/operators';
 import { appConfig } from 'src/app/shared/helpers/config';
@@ -17,6 +18,7 @@ import { SECONDS } from 'src/app/shared/helpers/duration';
 import { FullItemRoute } from 'src/app/shared/routing/item-route';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../task-communication/task-proxy';
 import { Answer } from './item-task.service';
+import { TaskToken, TaskTokenService } from '../http-services/task-token.service';
 
 const taskChannelIdPrefix = 'task-';
 const loadTaskTimeout = 15 * SECONDS;
@@ -45,29 +47,56 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1), // avoid duplicate xhr calls
   );
 
-  readonly taskLoading$ = this.configFromIframe$.pipe(
+  // the task (i.e., a client to the task in the iframe), for which the iframe has been loaded but the "load()" function may have not been
+  // called yet.
+  readonly task$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
-    switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(
-      switchMap(task => {
-        bindPlatform(task);
-        const initialViews = { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true };
-        return merge(
-          task.load(initialViews).pipe(map(() => ({ task, loaded: true }))),
-          of({ task, loaded: false }), // will be emitted immediately after `task.load` has been called (possibly not answered yet)
-        );
-      }),
-    )),
+    switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(tap(task => bindPlatform(task)))),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
-  readonly task$ = this.taskLoading$.pipe(
-    filter(({ loaded }) => loaded),
-    map(({ task }) => task),
+  readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
+    // build strategy separately from switchMap to prevent cancellation of the request
+    map(({ readOnly, initialAnswer, attemptId, route }) => {
+      if (readOnly) {
+        // if readonly -> if initialAnswer is still unknown, wait the next config update to generate token
+        if (initialAnswer === undefined) return { strategy: 'wait' as const };
+        // if readonly -> if there is an initial answer,
+        if (initialAnswer !== null) return { strategy: 'answerToken' as const, answerId: initialAnswer.id };
+      }
+      // if the attempt id is not known yet: wait
+      if (attemptId === undefined) return { strategy: 'wait' as const };
+      // if we are editing (= not in readOnly) -> we need a token for our user
+      // if there are no answer loaded -> we currently want an empty task, so using our own task token
+      return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
+    }),
+    distinctUntilChanged((prev, cur) => prev.strategy === cur.strategy),
+    switchMap(s => {
+      if (s.strategy === 'answerToken') return this.taskTokenService.generateForAnswer(s.answerId);
+      if (s.strategy === 'regularToken') return this.taskTokenService.generate(s.itemId, s.attemptId);
+      return EMPTY; // s.strategy === 'wait'
+    }),
+    takeUntil(this.destroyed$),
+    shareReplay(1),
+  );
+
+  // the task (i.e., a client to the task in the iframe) which has been loaded
+  readonly loadedTask$ = this.task$.pipe(
+    switchMap(task => task.getMetaData().pipe(map(({ usesTokens }) => ({ usesTokens: usesTokens ?? true, task })))),
+    switchMap(({ usesTokens, task }) => (usesTokens ? this.taskToken$.pipe(
+      switchMap(token => task.updateToken(token)),
+      map(() => task)
+    ): of(task))),
+    switchMap(task => task.load(
+      { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true }
+    ).pipe(map(() => task))),
+    takeUntil(this.destroyed$),
+    shareReplay(1),
   );
 
   readonly initError$ = this.configFromIframe$.pipe(switchMap(({ iframe }) => fromEvent(iframe, 'load'))).pipe(
-    switchMap(() => this.task$),
+    switchMap(() => this.loadedTask$),
     timeout({ first: loadTaskTimeout }), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
     catchError(timeoutError => of(timeoutError)),
     filter(error => error instanceof TimeoutError),
@@ -80,7 +109,7 @@ export class ItemTaskInitService implements OnDestroy {
   initialized = false;
 
   /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
-  subscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
+  guardSubscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
     if (
       prev.readOnly !== cur.readOnly ||
       prev.locale !== cur.locale ||
@@ -89,11 +118,20 @@ export class ItemTaskInitService implements OnDestroy {
     ) throw new Error('cannot change task config, except for initialAnswer');
   });
 
+  // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
+  tokenSubscription = this.taskToken$.subscribe();
+
+  constructor(
+    private taskTokenService: TaskTokenService,
+  ) {}
+
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
     this.task$.pipe(timeout(0), catchError(() => EMPTY)).subscribe(task => task.destroy());
     if (!this.configFromItem$.closed) this.configFromItem$.complete();
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
+    this.guardSubscription.unsubscribe();
+    this.tokenSubscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

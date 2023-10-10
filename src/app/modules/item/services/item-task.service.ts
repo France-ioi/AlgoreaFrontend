@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Injectable, OnDestroy } from '@angular/core';
-import { animationFrames, combineLatest, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
+import { animationFrames, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/core/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/shared/helpers/url';
@@ -11,7 +11,6 @@ import { Task, TaskPlatform } from '../task-communication/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
-import { ItemTaskTokenService } from './item-task-token.service';
 
 export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
 
@@ -36,6 +35,7 @@ export class ItemTaskService implements OnDestroy {
   ).pipe(switchMap(error => throwError(() => error)));
 
   readonly task$ = this.initService.task$;
+  readonly loadedTask$ = this.initService.loadedTask$;
   readonly iframeSrc$ = this.initService.iframeSrc$;
   get initialized(): boolean {
     return this.initService.initialized;
@@ -69,7 +69,6 @@ export class ItemTaskService implements OnDestroy {
     private initService: ItemTaskInitService,
     private answerService: ItemTaskAnswerService,
     private viewsService: ItemTaskViewsService,
-    private tokenService: ItemTaskTokenService,
     private activityNavTreeService: ActivityNavTreeService,
     private location: Location,
     private askHintService: AskHintService,
@@ -114,9 +113,9 @@ export class ItemTaskService implements OnDestroy {
         if ('textId' in params) return this.navigateToItem(params, params.newTab ?? false);
         if ('url' in params) return this.navigateToUrl(params.url, params.newTab ?? true);
       },
-      askHint: (hintToken: string) => combineLatest([ this.askHint(hintToken), this.task$ ]).pipe(
+      askHint: (hintToken: string) => this.askHint(hintToken).pipe(
         take(1),
-        switchMap(([ taskToken, task ]) => task.updateToken(taskToken)),
+        switchMap(taskToken => task.updateToken(taskToken)),
         map(() => undefined),
         takeUntil(this.destroyed$),
         shareReplay(1),
@@ -203,7 +202,7 @@ export class ItemTaskService implements OnDestroy {
   }
 
   private askHint(hintToken: string): Observable<string> {
-    return this.tokenService.taskToken$.pipe(
+    return this.initService.taskToken$.pipe(
       switchMap(taskToken => this.askHintService.ask(taskToken, hintToken)),
       map(data => data.taskToken),
       catchError(err => {
