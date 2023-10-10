@@ -22,6 +22,7 @@ export class DiscussionService implements OnDestroy {
 
   private readonly threadService?: ThreadService; // only injected if forum is enabled
   threadId$: Observable<ThreadId|undefined> = EMPTY;
+  isWsOpen$: Observable<boolean> = EMPTY;
 
   private configuredThreadSubject = new BehaviorSubject<ThreadId|null>(null);
   readonly configuredThread$ = this.configuredThreadSubject.asObservable();
@@ -43,6 +44,7 @@ export class DiscussionService implements OnDestroy {
 
     this.threadService = this.injector.get<ThreadService>(ThreadService);
     this.threadId$ = this.threadService.threadId$;
+    this.isWsOpen$ = this.threadService.isWsOpen$;
 
     this.unreadCount$ = this.visible$.pipe(
       // when hidden (manually or because thread changes), store the current time as the last read time

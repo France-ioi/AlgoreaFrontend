@@ -1,11 +1,12 @@
-<div class="widget" *ngIf="state$ | async as state">
-  <div class="widget-loading" *ngIf="state.isFetching">Loading...</div>
-  <div class="widget-error" *ngIf="state.isError">Error!</div>
-  <div class="no-events" *ngIf="state.isReady && state.data.length === 0; else eventsBlock">
+<div class="widget" *ngrxLet="{ state: state$, isWsOpen: isWsOpen$ } as thread">
+  <div class="widget-loading" *ngIf="thread.isWsOpen && thread.state.isFetching">Loading...</div>
+  <div class="widget-error" *ngIf="thread.isWsOpen && thread.state.isError">Error!</div>
+  <div class="ws-error" *ngIf="!thread.isWsOpen" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
+  <div class="no-events" *ngIf="thread.state.isReady && thread.state.data.length === 0; else eventsBlock">
     There are currently no events
   </div>
   <ng-template #eventsBlock>
-    <div class="widget-body">
+    <div class="widget-body" *ngIf="thread.isWsOpen">
       <div class="widget-scroll" #messagesScroll>
         <ng-container *ngIf="{ userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async, itemRoute: itemRoute$ | async } as threadMetadata">
           <alg-thread-message
@@ -14,7 +15,7 @@
             [userCache]="threadMetadata.userCache ?? []"
             [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
             [itemRoute]="threadMetadata.itemRoute ?? undefined"
-            *ngFor="let event of state.data"
+            *ngFor="let event of thread.state.data"
           ></alg-thread-message>
         </ng-container>
         <ng-container *ngIf="threadId$ | async as threadId">
