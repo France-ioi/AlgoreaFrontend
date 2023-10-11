@@ -1,9 +1,9 @@
 import { enableProdMode, ErrorHandler, importProvidersFrom } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
 
-import { appConfig } from './app/shared/helpers/config';
+import { appConfig } from './app/utils/config';
 import { version } from './version';
-import { AppComponent } from './app/core/app.component';
+import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -21,10 +21,10 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { LetDirective } from '@ngrx/component';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { AlgErrorHandler } from './app/shared/error-handling/error-handler';
-import { WithCredentialsInterceptor } from './app/shared/interceptors/with_credentials.interceptor';
-import { AuthenticationInterceptor } from './app/shared/interceptors/authentication.interceptor';
-import { TimeoutInterceptor } from './app/shared/interceptors/timeout.interceptor';
+import { AlgErrorHandler } from './app/utils/error-handling/error-handler';
+import { WithCredentialsInterceptor } from './app/interceptors/with_credentials.interceptor';
+import { AuthenticationInterceptor } from './app/interceptors/authentication.interceptor';
+import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
 import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';

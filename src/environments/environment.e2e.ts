@@ -2,7 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
+import { Environment, PartialDeep } from 'src/app/utils/config';
 
 export const environment: Environment = {
   production: false,

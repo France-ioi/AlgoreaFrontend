@@ -1,4 +1,4 @@
-import { Environment, PartialDeep } from 'src/app/shared/helpers/config';
+import { Environment, PartialDeep } from 'src/app/utils/config';
 
 export const environment: Environment = {
   production: true,

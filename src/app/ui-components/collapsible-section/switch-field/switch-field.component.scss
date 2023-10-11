@@ -1,0 +1,69 @@
+@import "../../../../variables";
+
+$inactive-bk-color: #d8d8d8;
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .item {
+    display: flex;
+    position: relative;
+    height: 5rem;
+
+    &:first-child {
+      height: 3rem;
+    }
+
+    .switch {
+      height: 3rem;
+      margin-right: 1.8rem;
+      width: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: column;
+      padding-left: 1.5rem;
+    }
+
+    .desc {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      font-size: 1.2rem;
+      color: var(--base-text-color);
+      min-height: 2.5rem;
+
+      &.header-comment {
+        padding-top: 0.4167rem;
+      }
+
+      .desc-name {
+        color: var(--dark-text-color);
+        font-weight: bold;
+        // margin-bottom: 0.4167rem;
+        cursor: pointer;
+
+        &.active {
+          color: var(--base-color);
+        }
+      }
+    }
+
+    .gray-overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.5;
+      background-color: white;
+    }
+  }
+}
