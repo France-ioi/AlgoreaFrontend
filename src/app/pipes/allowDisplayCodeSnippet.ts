@@ -17,6 +17,6 @@ export class AllowDisplayCodeSnippet implements PipeTransform {
       return matchedWithTripleQuotes ? `
         <pre class="alg-code-wrapper"><code class="alg-code ${ theme }">${ matchedWithTripleQuotes }</code></pre>
       ` : matchedWithSingleQuotes ? `<code class="alg-code with-bg ${ theme }">${ matchedWithSingleQuotes }</code>` : '';
-    }).replace(/(\r\n|\n|\r)/gm, '<br>');
+    });
   }
 }

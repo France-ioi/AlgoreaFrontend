@@ -8,6 +8,7 @@ import { ItemRouteWithAnswerPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { NgClass, NgIf, NgTemplateOutlet, DatePipe } from '@angular/common';
+import { BreakLinesPipe } from '../../../shared/pipes/breakLines';
 
 @Component({
   selector: 'alg-thread-message[event]',
@@ -24,6 +25,7 @@ import { NgClass, NgIf, NgTemplateOutlet, DatePipe } from '@angular/common';
     ItemRouteWithAnswerPipe,
     RouteUrlPipe,
     AllowDisplayCodeSnippet,
+    BreakLinesPipe,
   ],
 })
 export class ThreadMessageComponent implements OnChanges {
