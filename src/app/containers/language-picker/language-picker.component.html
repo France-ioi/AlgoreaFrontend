@@ -3,7 +3,8 @@
   [options]="languages"
   [ngModel]="current"
   [styleClass]="styleClass || 'alg-select-dropdown lang'"
-  panelStyleClass="alg-dropdown-triangle"
+  panelStyleClass="alg-select-dropdown-panel alg-dropdown-triangle"
   dropdownIcon="ph-duotone ph-caret-down"
+  appendTo="body"
   (onChange)="languageChanged($event)"
 ></p-dropdown>
