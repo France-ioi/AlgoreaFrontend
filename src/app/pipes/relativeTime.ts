@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DAYS, HOURS, MINUTES, MONTHS } from '../helpers/duration';
-import { LocaleService } from '../../core/services/localeService';
+import { DAYS, HOURS, MINUTES, MONTHS } from '../utils/duration';
+import { LocaleService } from '../services/localeService';
 
 const formatTime = (locale?: string) => (value: string | Date): string => {
   const valueDate = new Date(value);

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, DatePipe } from '@angular/common';
-import { RelativeTimePipe } from '../../../../shared/pipes/relativeTime';
+import { RelativeTimePipe } from '../../pipes/relativeTime';
 
 @Component({
   selector: 'alg-relative-time',

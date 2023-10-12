@@ -1,7 +1,7 @@
 import { RelativeTimePipe } from './relativeTime';
-import { DAYS, MINUTES, MONTHS } from '../helpers/duration';
+import { DAYS, MINUTES, MONTHS } from '../utils/duration';
 import { TestBed } from '@angular/core/testing';
-import { LocaleService } from '../../core/services/localeService';
+import { LocaleService } from '../services/localeService';
 
 describe('RelativeTimePipe', () => {
   let localeService: LocaleService;
