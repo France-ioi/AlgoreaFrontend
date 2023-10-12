@@ -119,7 +119,7 @@ export class ItemTaskInitService implements OnDestroy {
   });
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
-  tokenSubscription = this.taskToken$.subscribe();
+  tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY)).subscribe();
 
   constructor(
     private taskTokenService: TaskTokenService,
