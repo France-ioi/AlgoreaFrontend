@@ -1,0 +1,19 @@
+@import "../../../variables";
+
+.controls-zone {
+  display: flex;
+  align-items: center;
+}
+
+.no-left-border {
+  padding-left: 1rem;
+}
+
+.with-left-border {
+  padding-left: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.lang-button {
+  margin-right: 1rem;
+}
