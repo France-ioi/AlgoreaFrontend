@@ -1,11 +1,12 @@
 <p-dropdown
   *ngIf="formControl"
   styleClass="alg-select-dropdown"
-  panelStyleClass="alg-dropdown-triangle"
+  panelStyleClass="alg-select-dropdown-panel alg-dropdown-triangle"
   [options]="options"
   optionLabel="label"
   optionValue="value"
   [overlayOptions]="{ showTransitionOptions: '0s', hideTransitionOptions: '0s' }"
   [placeholder]="placeholder"
   [formControl]="formControl"
+  appendTo="body"
 ></p-dropdown>
