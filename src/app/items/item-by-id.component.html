@@ -25,7 +25,7 @@
         #contentContainer
         *ngrxLet="currentTab$ as currentTab"
       >
-        <ng-container *ngIf="(itemContentComponent?.isTaskLoaded$ | async) || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit'">
+        <ng-container *ngIf="currentTab?.isTaskTab || (itemContentComponent?.isTaskLoaded$ | async) || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit'">
           <alg-error *ngIf="answerLoadingError$ | async as error; else noAnswerLoadingError">
             <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
             <ng-template #fallback>
