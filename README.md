@@ -6,11 +6,33 @@ It is recommended to run this project on a recent node version (continuous integ
 
 Run `npm install` first to use latest packages.
 
-## Project Structure
+## Project (Files & Directories ) Structure
 
-The work-in-progress and proof-of-concept design is in the `design` part of this repository (auto-deployed on `http://dev.algorea.org/branch/design/`)
+Globally the project follows the recommended structure of an Angular project.
 
-The rest of the project follow the recommended structure of an Angular project.
+The app code stands in the `src/app` directory. In this root directory and all of the feature directories, the structure is the following:
+```
+.
+└── store: ngrx store related files
+    └── rootstore.reducer|state|action|selector.ts
+    └── anotherstore
+        └── anotherstore.reducer|state|action|selector.ts
+└── containers: smart-component, i.e. organizational wrappers around presentational or other container component
+    └── my-first-comp
+        └── my-first-comp.component.html|scss|spec.ts|ts
+└── ui-components: "dumb/presentational components", i.e., purely concerned with looks, don’t maintain state, depend on services or perform computations
+└── pipes
+└── directives
+└── guards
+└── models: domain models (classes, types, ..)
+└── data-access (http, ws services and related files)
+└── services: regular angular services (non http related) (should disappear in favor of stores)
+└── utils: general utility functions
+└── feature1: sub-feature of the current directory, which contains the same file structure
+└── feature2
+└── ...
+```
+For each non-feature directory, if it is almost empty, you may consider putting all files directly in parent directory as long as their type is included in their file name, e.g. stuff.model.ts.
 
 ## Contributing
 
