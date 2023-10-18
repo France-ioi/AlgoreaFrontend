@@ -95,7 +95,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   private readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe( // may be true, false or undefined!
     map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
   );
-  private readonly isCurrentUserThreadParticipant$ = combineLatest([
+  readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,
     this.threadService.threadId$
   ]).pipe(
@@ -135,6 +135,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       }),
     );
   threadId$ = this.threadService.threadId$;
+  messagesCount$ = this.threadService.eventsState$.pipe(
+    readyData(),
+    map(events => events.filter(event => event.label === 'message').length),
+  );
 
   constructor(
     private threadService: ThreadService,

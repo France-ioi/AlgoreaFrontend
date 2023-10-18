@@ -1,25 +1,38 @@
-<div class="widget" *ngrxLet="{ state: state$, isWsOpen: isWsOpen$ } as thread">
+<div class="widget" *ngrxLet="{
+    state: state$,
+    isWsOpen: isWsOpen$,
+    threadStatus: threadStatus$,
+    messagesCount: messagesCount$,
+    isCurrentUserThreadParticipant: isCurrentUserThreadParticipant$,
+  } as thread"
+>
   <div class="widget-loading" *ngIf="thread.isWsOpen && thread.state.isFetching">Loading...</div>
   <div class="widget-error" *ngIf="thread.isWsOpen && thread.state.isError">Error!</div>
   <div class="ws-error" *ngIf="!thread.isWsOpen" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
-  <div class="no-events" *ngIf="thread.state.isReady && thread.state.data.length === 0; else eventsBlock">
+  <div class="no-events" *ngIf="thread.state.isReady && thread.state.data.length === 0; else eventsBlock" i18n>
     There are currently no events
   </div>
   <ng-template #eventsBlock>
     <div class="widget-body" *ngIf="thread.isWsOpen">
       <div class="widget-scroll" #messagesScroll>
-        <ng-container *ngIf="{ userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async, itemRoute: itemRoute$ | async } as threadMetadata">
-          <alg-thread-message
-            class="thread-message"
-            [event]="event"
-            [userCache]="threadMetadata.userCache ?? []"
-            [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
-            [itemRoute]="threadMetadata.itemRoute ?? undefined"
-            *ngFor="let event of thread.state.data"
-          ></alg-thread-message>
-        </ng-container>
+        <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && !thread.threadStatus?.data?.open && thread.messagesCount === 0; else messagesBlock" i18n>
+          In this panel, you can request help from other users about the content you are on.
+          People who have already validated this item will see your request and be able to answer.
+        </div>
+        <ng-template #messagesBlock>
+          <ng-container *ngIf="{ userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async, itemRoute: itemRoute$ | async } as threadMetadata">
+            <alg-thread-message
+              class="thread-message"
+              [event]="event"
+              [userCache]="threadMetadata.userCache ?? []"
+              [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
+              [itemRoute]="threadMetadata.itemRoute ?? undefined"
+              *ngFor="let event of thread.state.data"
+            ></alg-thread-message>
+          </ng-container>
+        </ng-template>
         <ng-container *ngIf="threadId$ | async as threadId">
-          <div class="footer-panel" *ngrxLet="threadStatus$ as threadStatus">
+          <div class="footer-panel">
             <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId)">
               <textarea
                 class="textarea"
@@ -36,29 +49,29 @@
                 type="submit"
                 icon="pi pi-send"
                 pButton
-                [disabled]="!form.get('messageToSend')?.value?.trim() || !threadStatus?.data?.open"
+                [disabled]="!form.get('messageToSend')?.value?.trim() || !thread.threadStatus?.data?.open"
               ></button>
             </form>
             <div class="thread-status">
               <div class="thread-status-caption" >
-                <ng-container *ngIf="threadStatus?.data?.open">
+                <ng-container *ngIf="thread.threadStatus?.data?.open">
                   <span i18n>This thread is open</span>
                 </ng-container>
-                <ng-container *ngIf="threadStatus?.data?.open === false">
+                <ng-container *ngIf="thread.threadStatus?.data?.open === false">
                   <span i18n>This thread is closed</span>
                 </ng-container>
-                <ng-container *ngIf="threadStatus?.isFetching">
+                <ng-container *ngIf="thread.threadStatus?.isFetching">
                   <span i18n>Loading thread status...</span>
                 </ng-container>
-                <ng-container *ngIf="threadStatus?.isError">
+                <ng-container *ngIf="thread.threadStatus?.isError">
                   <span i18n>Error while loading thread info</span>
                 </ng-container>
-                <ng-container *ngIf="threadStatus === undefined">
+                <ng-container *ngIf="thread.threadStatus === undefined">
                   <span i18n>Could not load thread</span>
                 </ng-container>
               </div>
               <div
-                *ngrxLet="!!threadStatus && !!threadStatus.data && ((threadStatus.data.open && threadStatus.data.canClose) || (!threadStatus.data.open && threadStatus.data.canOpen)) as canSwitch"
+                *ngrxLet="!!thread.threadStatus && !!thread.threadStatus.data && ((thread.threadStatus.data.open && thread.threadStatus.data.canClose) || (!thread.threadStatus.data.open && thread.threadStatus.data.canOpen)) as canSwitch"
                 [pTooltip]="threadStatusTooltip"
                 [tooltipDisabled]="canSwitch"
                 tooltipPosition="top"
@@ -69,17 +82,17 @@
                   class="alg-button primary small"
                   [disabled]="!canSwitch"
                   pButton
-                  (click)="changeThreadStatus(!threadStatus.data.open, threadId)"
-                  *ngIf="threadStatus && threadStatus.data"
+                  (click)="changeThreadStatus(!thread.threadStatus.data.open, threadId)"
+                  *ngIf="thread.threadStatus && thread.threadStatus.data"
                 >
-                  <span *ngIf="threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
+                  <span *ngIf="thread.threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
                   <ng-template #openThreadCaption>
                     <span i18n>Open this thread</span>
                   </ng-template>
                 </button>
               </div>
               <ng-template #threadStatusTooltip>
-                <span *ngIf="threadStatus?.data?.open; else notOpenedTooltipCaption" i18n>
+                <span *ngIf="thread.threadStatus?.data?.open; else notOpenedTooltipCaption" i18n>
                   Only the user of the thread can close it.
                 </span>
                 <ng-template #notOpenedTooltipCaption>
