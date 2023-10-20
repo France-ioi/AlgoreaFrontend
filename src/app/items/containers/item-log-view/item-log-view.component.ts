@@ -24,6 +24,7 @@ import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
+import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 interface Column {
   field: string,
   header: string,
@@ -61,6 +62,7 @@ const logsLimit = 20;
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    RelativeTimeComponent,
   ],
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {

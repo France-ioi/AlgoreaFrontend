@@ -104,7 +104,7 @@
                   <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
                 </ng-container>
                 <ng-container *ngSwitchCase="'at'">
-                  {{ rowData.at | date:'short' }}
+                  <alg-relative-time [value]="rowData.at"></alg-relative-time>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
                   {{ rowData[col.field] }}
