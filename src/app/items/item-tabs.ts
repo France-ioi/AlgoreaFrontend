@@ -20,8 +20,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
 const editTab = { title: $localize`Edit`, routerLink: [ 'edit' ], tag: 'alg-task-edit' };
-const groupStatsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter' ], tag: 'alg-progress-matrix' };
-const userStatsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter-user-progress' ], tag: 'alg-chapter-summary' };
+const userOrGroupStatsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter' ], tag: 'alg-chapter-progress' };
 const historyTab = { title: $localize`History`, routerLink: [ 'progress', 'history' ], tag: 'alg-log' };
 const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'dependencies' ], tag: 'alg-dependencies' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
@@ -79,8 +78,7 @@ export class ItemTabs implements OnDestroy {
         filteredTaskTabs.length === 0 && this.isCurrentTab(childrenEditTab) ? childrenEditTab : null,
         ...taskTabs.map(t => ({ title: t.name, routerLink: [], tag: t.view })),
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
-        this.isCurrentTab(groupStatsTab) || (canViewGroupStats && !isTask) ? groupStatsTab : null,
-        this.isCurrentTab(userStatsTab) || (canViewUserStats && !isTask) ? userStatsTab : null,
+        this.isCurrentTab(userOrGroupStatsTab) || (canViewGroupStats || canViewUserStats) && !isTask ? userOrGroupStatsTab : null,
         this.isCurrentTab(historyTab) || showProgress ? historyTab : null,
         this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
