@@ -1356,37 +1356,49 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread-message/thread-message.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="4672292365306876208" datatype="html">
         <source>An unknown user</source><target state="new">An unknown user</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread-message/thread-message.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="5431013772554598311" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread-message/thread-message.component.ts</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="5431013772554598311" datatype="html">
         <source>The connection with the forum has been lost, try to refresh the current page.</source><target state="new">The connection with the forum has been lost, try to refresh the current page.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6814866706683747731" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="6113781660128924635" datatype="html">
+        <source> There are currently no events </source><target state="new"> There are currently no events </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/containers/thread/thread.component.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit><trans-unit id="934631686934017933" datatype="html">
+        <source> In this panel, you can request help from other users about the content you are on. People who have already validated this activity will see your request and be able to answer. </source><target state="new"> In this panel, you can request help from other users about the content you are on. People who have already validated this activity will see your request and be able to answer. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/containers/thread/thread.component.html</context>
+          <context context-type="linenumber">18,21</context>
+        </context-group>
+      </trans-unit><trans-unit id="6814866706683747731" datatype="html">
         <source>This thread is open</source><target state="new">This thread is open</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
         <source>This thread is closed</source><target state="new">This thread is closed</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
         <source>Loading thread status...</source><target state="new">Loading thread status...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
         <source>Error while loading thread info</source><target state="new">Error while loading thread info</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
         <source>Could not load thread</source><target state="new">Could not load thread</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
         <source>Close this thread</source><target state="new">Close this thread</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
         <source>Open this thread</source><target state="new">Open this thread</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
         <source> Only the user of the thread can close it. </source><target state="new"> Only the user of the thread can close it. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
         <source>You are not allowed to open this thread.</source><target state="new">You are not allowed to open this thread.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/thread/thread.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
         <source>Error while loading this chapter's children</source><target state="translated">Erreur lors du chargement des enfants de ce chapitre</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-children/chapter-children.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7143643956716496978" datatype="html">

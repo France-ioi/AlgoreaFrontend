@@ -83,3 +83,10 @@
     box-shadow: none !important;
   }
 }
+
+.no-messages {
+  padding: 0 toRem(6);
+  color: var(--alg-secondary-color);
+  font-size: toRem(14);
+  text-align: center;
+}
