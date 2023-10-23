@@ -20,7 +20,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
 const editTab = { title: $localize`Edit`, routerLink: [ 'edit' ], tag: 'alg-task-edit' };
-const userOrGroupStatsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter' ], tag: 'alg-chapter-progress' };
+const statsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter' ], tag: 'alg-chapter-progress' };
 const historyTab = { title: $localize`History`, routerLink: [ 'progress', 'history' ], tag: 'alg-log' };
 const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'dependencies' ], tag: 'alg-dependencies' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
@@ -66,9 +66,8 @@ export class ItemTabs implements OnDestroy {
       const canViewSolution = state.isReady ? canCurrentUserViewSolution(state.data.item, state.data.currentResult) : false;
       const canWatchResults = state.isReady ? allowsWatchingResults(state.data.item.permissions) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
-      const canViewGroupStats = watchedGroup && !watchedGroup.route.isUser && canWatchResults;
-      const canViewUserStats = (watchedGroup && watchedGroup.route.isUser && canWatchResults) || (!watchedGroup && canViewContent);
-      const showProgress = (!isTask || !disablePlatformProgressOnTasks) && (canViewGroupStats || canViewUserStats);
+      const canViewStats = watchedGroup ? canWatchResults : canViewContent;
+      const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewStats;
 
       const shouldHideTab = (v: string): boolean => appConfig.featureFlags.hideTaskTabs.includes(v);
       const filteredTaskTabs = taskTabs.filter(({ view }) => !shouldHideTab(view) && (canViewSolution || view !== solutionTabView));
@@ -78,7 +77,7 @@ export class ItemTabs implements OnDestroy {
         filteredTaskTabs.length === 0 && this.isCurrentTab(childrenEditTab) ? childrenEditTab : null,
         ...taskTabs.map(t => ({ title: t.name, routerLink: [], tag: t.view })),
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
-        this.isCurrentTab(userOrGroupStatsTab) || (canViewGroupStats || canViewUserStats) && !isTask ? userOrGroupStatsTab : null,
+        this.isCurrentTab(statsTab) || canViewStats && !isTask ? statsTab : null,
         this.isCurrentTab(historyTab) || showProgress ? historyTab : null,
         this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
