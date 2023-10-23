@@ -7,7 +7,6 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { DiscussionService } from 'src/app/services/discussion.service';
 import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
@@ -21,6 +20,9 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
+import { Store } from '@ngrx/store';
+import { forumActions, forumFeature } from 'src/app/forum/store';
+import { ThreadId } from 'src/app/forum/models/threads';
 
 
 enum ForumTabUrls {
@@ -102,15 +104,15 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       ),
     ),
   );
-  currentThreadInfo$ = this.discussionService.threadId$;
-  isDiscussionVisible$ = this.discussionService.visible$;
+  currentThreadInfo$ = this.store.select(forumFeature.selectThreadId);
+  isDiscussionVisible$ = this.store.select(forumFeature.selectVisible);
 
   constructor(
+    private store: Store,
     private groupWatchingService: GroupWatchingService,
     private getThreadService: GetThreadsService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private discussionService: DiscussionService,
   ) {
   }
 
@@ -161,8 +163,9 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Toggle visibily of the thread panel, optionally force the thead displayed
    */
-  toggleVisibility(visible: boolean, thread?: Parameters<DiscussionService['toggleVisibility']>[1]): void {
-    this.discussionService.toggleVisibility(visible, thread);
+  toggleVisibility(visible: boolean, thread?: ThreadId): void {
+    if (thread) this.store.dispatch(forumActions.idChange({ id: thread }));
+    this.store.dispatch(forumActions.visibilityChange({ visible }));
   }
 
 

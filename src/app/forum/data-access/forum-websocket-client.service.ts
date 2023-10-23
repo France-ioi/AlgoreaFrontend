@@ -9,9 +9,9 @@ const heartbeatStartDelay = 1*MINUTES;
 const heartbeatStartPeriod = 4*MINUTES; // API gatetway closes the connection after 10min without activity
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ForumService implements OnDestroy {
+export class ForumWebsocketClient implements OnDestroy {
 
   private openEvents$ = new Subject<Event>();
   private closeEvents$ = new Subject<CloseEvent>();
@@ -27,9 +27,6 @@ export class ForumService implements OnDestroy {
 
   inputMessages$ = this.ws$.pipe(retry({ delay: wsRetryDelay }));
 
-  // subscribe to the ws so that it stays open until 'destroy'
-  private subscription = this.inputMessages$.subscribe();
-
   private heartbeatSubscription = this.isWsOpen$.pipe(
     switchMap(open => {
       if (!open) return EMPTY;
@@ -37,11 +34,8 @@ export class ForumService implements OnDestroy {
     })
   ).subscribe(() => this.send({ action: 'heartbeat' })); // the action is not necessarily recognized, it is used to keep the connection up
 
-  constructor() {}
-
   ngOnDestroy(): void {
     this.heartbeatSubscription.unsubscribe();
-    this.subscription.unsubscribe();
     this.ws$.complete();
     this.openEvents$.complete();
     this.closeEvents$.complete();

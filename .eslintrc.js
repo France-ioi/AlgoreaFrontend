@@ -9,6 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended',
     'plugin:cypress/recommended',
+    'plugin:@ngrx/all-requiring-type-checking'
   ],
   plugins: ['rxjs', 'jasmine', 'deprecation', 'cypress'],
   rules: {
@@ -89,6 +90,7 @@ module.exports = {
     }],
     'jasmine/no-focused-tests': ['error'],
     'deprecation/deprecation': ['error'],
+    '@ngrx/prefer-effect-callback-in-block-statement': 'off',
     "cypress/no-assigning-return-values": "error",
     "cypress/no-unnecessary-waiting": "error",
     "cypress/assertion-before-screenshot": "warn",

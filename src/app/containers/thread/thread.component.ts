@@ -1,10 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ThreadId, ThreadService } from '../../services/threads.service';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../utils/operators/state';
 import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
-import { DiscussionService } from '../../services/discussion.service';
-import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, take, withLatestFrom } from 'rxjs/operators';
 import { UserSessionService } from '../../services/user-session.service';
 import { GroupWatchingService } from '../../services/group-watching.service';
 import { formatUser } from 'src/app/models/user';
@@ -23,6 +21,13 @@ import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { appConfig } from 'src/app/utils/config';
+import { Store } from '@ngrx/store';
+import { forumActions, forumFeature } from 'src/app/forum/store';
+import { ThreadId } from 'src/app/forum/models/threads';
+import { ForumWebsocketClient } from 'src/app/forum/data-access/forum-websocket-client.service';
+import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { publishEventsAction } from 'src/app/services/threads-outbound-actions';
+import { messageEvent } from 'src/app/services/threads-events';
 
 @Component({
   selector: 'alg-thread',
@@ -51,9 +56,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   });
 
   readonly subscriptions = new Subscription();
-  readonly state$ = this.threadService.eventsState$;
+  readonly state$ = this.store.select(forumFeature.selectEvents);
 
-  readonly isWsOpen$ = this.discussionService.isWsOpen$;
+  readonly isWsOpen$ = this.store.select(forumFeature.selectWebsocketOpen);
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
@@ -84,20 +89,20 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
-  readonly canCurrentUserLoadAnswers$ = this.threadService.threadInfo$.pipe(
+  readonly canCurrentUserLoadAnswers$ = this.store.select(forumFeature.selectInfo).pipe(
     readyData(),
     map(t => t?.isMine || t?.canWatch), // for future: others should be able to load as well using the answer stored in msg data
   );
-  readonly itemRoute$ = this.threadService.threadInfo$.pipe(
+  readonly itemRoute$ = this.store.select(forumFeature.selectInfo).pipe(
     readyData(),
-    map(t => (t ? rawItemRoute('activity', t.itemId) : undefined)),
+    map(t => rawItemRoute('activity', t.itemId)),
   );
-  private readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe( // may be true, false or undefined!
+  private readonly isThreadStatusOpened$ = this.store.select(forumFeature.selectInfo).pipe( // may be true, false or undefined!
     map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
   );
   readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,
-    this.threadService.threadId$
+    this.store.select(forumFeature.selectThreadId),
   ]).pipe(
     map(([ user, threadId ]) => user.groupId === threadId?.participantId)
   );
@@ -107,8 +112,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   >> = combineLatest([
       this.isThreadStatusOpened$,
       this.isCurrentUserThreadParticipant$,
-      this.threadService.threadId$,
-      this.discussionService.visible$,
+      this.store.select(forumFeature.selectThreadId),
+      this.store.select(forumFeature.selectVisible),
     ]).pipe(
       debounceTime(0), // to prevent race condition (service call immediately aborted)
       switchMap(([ open, isCurrentUserParticipant, threadId, visible ]) => {
@@ -134,21 +139,17 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         );
       }),
     );
-  threadId$ = this.threadService.threadId$;
-  messagesCount$ = this.threadService.eventsState$.pipe(
-    readyData(),
-    map(events => events.filter(event => event.label === 'message').length),
-  );
+  threadId$ = this.store.select(forumFeature.selectThreadId);
 
   constructor(
-    private threadService: ThreadService,
-    private discussionService: DiscussionService,
+    private store: Store,
     private userSessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private userService: GetUserService,
     private getItemByIdService: GetItemByIdService,
     private actionFeedbackService: ActionFeedbackService,
     private updateThreadService: UpdateThreadService,
+    private forumWebsocketClient: ForumWebsocketClient,
     private fb: FormBuilder,
   ) {}
 
@@ -156,7 +157,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(
       this.state$.pipe(
         readyData(),
-        withLatestFrom(this.discussionService.visible$),
+        withLatestFrom(this.store.select(forumFeature.selectVisible)),
         filter(([ events, visible ]) => visible && events.length > 0),
         delay(0),
       ).subscribe(() => this.scrollDown())
@@ -181,7 +182,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   sendMessage(threadId: ThreadId): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
-    this.threadService.sendMessage(messageToSend);
+    this.store.select(forumFeature.selectInfo).pipe(
+      take(1), // send on the current thread (if any) only
+      readyData(),
+      filter(isNotUndefined),
+      map(t => t.token),
+    ).subscribe(token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])));
     this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
     this.form.reset({
       messageToSend: '',
@@ -202,7 +208,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       status: 'waiting_for_trainer',
       helperGroupId: appConfig.allUsersGroupId,
     } : { status: 'closed' }).subscribe({
-      next: () => this.threadService.refresh(),
+      next: () => this.store.dispatch(forumActions.needInfoRefresh()),
       error: () => this.actionFeedbackService.unexpectedError(),
     });
   }

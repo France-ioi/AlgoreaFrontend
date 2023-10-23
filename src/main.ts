@@ -1,4 +1,4 @@
-import { enableProdMode, ErrorHandler, importProvidersFrom } from '@angular/core';
+import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
 
 import { appConfig } from './app/utils/config';
@@ -31,6 +31,10 @@ import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
+import { provideState, provideStore } from '@ngrx/store';
+import { forumEffects, forumFeature } from './app/forum/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideEffects } from '@ngrx/effects';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -118,6 +122,10 @@ bootstrapApplication(AppComponent, {
       provide: ErrorHandler,
       useClass: AlgErrorHandler,
     },
+    provideStore(),
+    provideState(forumFeature),
+    provideEffects(forumEffects),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes),
