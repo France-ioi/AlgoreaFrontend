@@ -6,7 +6,7 @@ import { areSameThreads } from '../../models/threads';
 import { currentThreadActions } from './current-thread.actions';
 import { forumFeature } from '..';
 import { ForumWebsocketClient } from '../../data-access/forum-websocket-client.service';
-import { subscribeAction, unsubscribeAction } from 'src/app/services/threads-outbound-actions';
+import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { readyData } from 'src/app/utils/operators/state';
 

@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
-import { IncomingThreadEvent } from '../../services/threads-inbound-events';
+import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 import { UserInfo } from './thread-user-info';
-import { AllowDisplayCodeSnippet } from '../../pipes/allowDisplayCodeSnippet';
+import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithAnswerPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
-import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
+import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
 import { NgClass, NgIf, NgTemplateOutlet, DatePipe } from '@angular/common';
-import { BreakLinesPipe } from '../../pipes/breakLines';
+import { BreakLinesPipe } from '../../../pipes/breakLines';
 
 @Component({
   selector: 'alg-thread-message[event]',

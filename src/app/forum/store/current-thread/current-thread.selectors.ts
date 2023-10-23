@@ -2,7 +2,7 @@ import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from './current-thread.store';
 import { Thread, ThreadId } from '../../models/threads';
 import { FetchState } from 'src/app/utils/state';
-import { IncomingThreadEvent } from 'src/app/services/threads-inbound-events';
+import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,

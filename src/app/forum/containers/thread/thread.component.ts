@@ -1,19 +1,19 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { mapToFetchState, readyData } from '../../utils/operators/state';
+import { mapToFetchState, readyData } from '../../../utils/operators/state';
 import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, take, withLatestFrom } from 'rxjs/operators';
-import { UserSessionService } from '../../services/user-session.service';
-import { GroupWatchingService } from '../../services/group-watching.service';
+import { UserSessionService } from '../../../services/user-session.service';
+import { GroupWatchingService } from '../../../services/group-watching.service';
 import { formatUser } from 'src/app/models/user';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
 import { rawItemRoute } from 'src/app/models/routing/item-route';
-import { GetItemByIdService } from '../../data-access/get-item-by-id.service';
-import { ActionFeedbackService } from '../../services/action-feedback.service';
-import { FetchState, fetchingState, readyState } from '../../utils/state';
-import { errorIsHTTPForbidden } from '../../utils/errors';
-import { UpdateThreadService } from '../../data-access/update-thread.service';
+import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
+import { ActionFeedbackService } from '../../../services/action-feedback.service';
+import { FetchState, fetchingState, readyState } from '../../../utils/state';
+import { errorIsHTTPForbidden } from '../../../utils/errors';
+import { UpdateThreadService } from '../../../data-access/update-thread.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -26,8 +26,8 @@ import { forumActions, forumFeature } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { ForumWebsocketClient } from 'src/app/forum/data-access/forum-websocket-client.service';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { publishEventsAction } from 'src/app/services/threads-outbound-actions';
-import { messageEvent } from 'src/app/services/threads-events';
+import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
+import { messageEvent } from '../../data-access/websocket-messages/threads-events';
 
 @Component({
   selector: 'alg-thread',

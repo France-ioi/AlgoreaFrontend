@@ -1,6 +1,6 @@
 import { Thread, ThreadId } from '../../models/threads';
 import { FetchState, fetchingState } from 'src/app/utils/state';
-import { IncomingThreadEvent } from 'src/app/services/threads-inbound-events';
+import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 
 export interface State {
   visible: boolean, // must not be `true` if `id` is not defined

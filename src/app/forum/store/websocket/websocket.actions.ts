@@ -1,5 +1,5 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { IncomingThreadEvent } from 'src/app/services/threads-inbound-events';
+import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 
 export const websocketClientActions = createActionGroup({
   source: 'Forum Websocket',

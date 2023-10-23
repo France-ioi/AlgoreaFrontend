@@ -22,7 +22,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
-import { ThreadContainerComponent } from './containers/thread-container/thread-container.component';
+import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
 import { LetDirective } from '@ngrx/component';
 import { LeftMenuComponent } from './containers/left-menu/left-menu.component';

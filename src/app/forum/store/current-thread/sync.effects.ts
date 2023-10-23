@@ -7,7 +7,7 @@ import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { readyData } from 'src/app/utils/operators/state';
 import { ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-import { publishEventsAction } from 'src/app/services/threads-outbound-actions';
+import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 
 /**
  * Synchronization of the events in the forum thread with the events from the backend

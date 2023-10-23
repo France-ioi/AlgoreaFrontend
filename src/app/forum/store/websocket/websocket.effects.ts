@@ -5,7 +5,7 @@ import { EMPTY, catchError, map } from 'rxjs';
 import { websocketClientActions } from './websocket.actions';
 import { decode, decodeOrNull } from 'src/app/utils/decoders';
 import * as D from 'io-ts/Decoder';
-import { incomingThreadEventDecoder } from 'src/app/services/threads-inbound-events';
+import { incomingThreadEventDecoder } from '../../data-access/websocket-messages/threads-inbound-events';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 export const changeOpenStatusWebsocketClient = createEffect(

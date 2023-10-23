@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { combineLatest, distinctUntilChanged, filter, of, Subscription, switchMap } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
-import { GetItemByIdService } from '../../data-access/get-item-by-id.service';
-import { isNotNull } from '../../utils/null-undefined-predicates';
+import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
+import { isNotNull } from '../../../utils/null-undefined-predicates';
 import { catchError } from 'rxjs/operators';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
