@@ -13,13 +13,12 @@ import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/nei
 import { ObservationBarWithButtonComponent } from '../observation-bar-with-button/observation-bar-with-button.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
-import { LetDirective } from '@ngrx/component';
+import { LetDirective, PushPipe } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { ButtonModule } from 'primeng/button';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { forumActions, forumFeature } from 'src/app/forum/store';
-import { ThreadId } from 'src/app/forum/models/threads';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -36,14 +35,14 @@ import { ThreadId } from 'src/app/forum/models/threads';
     ObservationBarWithButtonComponent,
     NeighborWidgetComponent,
     AsyncPipe,
+    PushPipe,
   ],
 })
 export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
-  configuredThread$ = this.store.select(forumFeature.selectThreadId);
-  isDiscussionVisible$ = this.store.select(forumFeature.selectVisible);
+  hasForumThreadConfigured$ = this.store.select(forumFeature.selectHasThreadConfigured);
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
@@ -78,9 +77,8 @@ export class ContentTopBarComponent {
     private layoutService: LayoutService,
   ) {}
 
-  toggleDiscussionPanelVisibility(visible: boolean, thread: ThreadId): void {
-    this.store.dispatch(forumActions.idChange({ id: thread }));
-    this.store.dispatch(forumActions.visibilityChange({ visible }));
+  toggleDiscussionPanelVisibility(): void {
+    this.store.dispatch(forumActions.toggleVisibility());
   }
 
   showLeftMenu(): void {

@@ -39,6 +39,11 @@ const reducer = createReducer(
     return { ...state, info: fetchState };
   }),
 
+  on(currentThreadActions.toggleVisibility, (state): State => {
+    if (state.id === undefined) throw new Error('cannot set the current thread visible if the id has not been set');
+    return { ...state, visible: !state.visible };
+  }),
+
 );
 
 export default reducer;

@@ -7,6 +7,7 @@ import { IncomingThreadEvent } from '../../data-access/websocket-messages/thread
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
   selectThreadId: MemoizedSelector<T, ThreadId | null>,
+  selectHasThreadConfigured: MemoizedSelector<T, boolean>,
   selectInfo: MemoizedSelector<T, FetchState<Thread>>,
   selectEvents: MemoizedSelector<T, FetchState<IncomingThreadEvent[]>>,
 }
@@ -20,6 +21,10 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
   selectThreadId: createSelector(
     selectCurrentThread,
     state => state.id
+  ),
+  selectHasThreadConfigured: createSelector(
+    selectCurrentThread,
+    state => state.id !== null
   ),
   selectInfo: createSelector(
     selectCurrentThread,
