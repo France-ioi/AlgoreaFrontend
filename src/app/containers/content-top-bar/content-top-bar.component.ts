@@ -42,7 +42,7 @@ export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
-  hasForumThreadConfigured$ = this.store.select(forumFeature.selectHasThreadConfigured);
+  hasForumThreadConfigured$ = this.store.select(forumFeature.selectHasCurrentThread);
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(

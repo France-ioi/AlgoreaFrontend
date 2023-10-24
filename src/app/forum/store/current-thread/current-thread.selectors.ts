@@ -8,14 +8,14 @@ import { RawItemRoute, rawItemRoute } from 'src/app/models/routing/item-route';
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
   selectThreadId: MemoizedSelector<T, ThreadId | null>,
-  selectHasThreadConfigured: MemoizedSelector<T, boolean>,
+  selectHasCurrentThread: MemoizedSelector<T, boolean>,
   selectItemRoute: MemoizedSelector<T, RawItemRoute | null>,
   selectInfo: MemoizedSelector<T, FetchState<Thread>>,
   selectThreadStatus: MemoizedSelector<T, { id: ThreadId, visible: boolean, open: boolean } | undefined>,
-  selectToken: MemoizedSelector<T, string | undefined>,
-  selectCanCurrentUserLoadAnswers: MemoizedSelector<T, boolean>,
+  selectThreadToken: MemoizedSelector<T, string | undefined>,
+  selectCanCurrentUserLoadThreadAnswers: MemoizedSelector<T, boolean>,
   selectThreadStatusOpen: MemoizedSelector<T, boolean>,
-  selectEvents: MemoizedSelector<T, FetchState<IncomingThreadEvent[]>>,
+  selectThreadEvents: MemoizedSelector<T, FetchState<IncomingThreadEvent[]>>,
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
@@ -33,13 +33,13 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectCurrentThread,
     state => state.info
   );
-  const selectEvents = createSelector(
+  const selectThreadEvents = createSelector(
     selectCurrentThread,
     state => state.events
   );
 
   // composed selectors
-  const selectHasThreadConfigured = createSelector(
+  const selectHasCurrentThread = createSelector(
     selectThreadId,
     id => id !== null
   );
@@ -57,11 +57,11 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectThreadStatusOpen,
     (id, visible, open) => (id ? { id, visible, open } : undefined)
   );
-  const selectToken = createSelector(
+  const selectThreadToken = createSelector(
     selectInfo,
     info => (info.data ? info.data.token : undefined)
   );
-  const selectCanCurrentUserLoadAnswers = createSelector(
+  const selectCanCurrentUserLoadThreadAnswers = createSelector(
     selectInfo,
     info => !!info.data && canCurrentUserLoadAnswers(info.data)
   );
@@ -69,12 +69,12 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectVisible,
     selectThreadId,
     selectInfo,
-    selectEvents,
-    selectHasThreadConfigured,
+    selectThreadEvents,
+    selectHasCurrentThread,
     selectItemRoute,
     selectThreadStatusOpen,
     selectThreadStatus,
-    selectToken,
-    selectCanCurrentUserLoadAnswers,
+    selectThreadToken,
+    selectCanCurrentUserLoadThreadAnswers,
   };
 };

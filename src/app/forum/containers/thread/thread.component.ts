@@ -55,7 +55,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   });
 
   readonly subscriptions = new Subscription();
-  readonly state$ = this.store.select(forumFeature.selectEvents);
+  readonly state$ = this.store.select(forumFeature.selectThreadEvents);
 
   readonly isWsOpen$ = this.store.select(forumFeature.selectWebsocketOpen);
 
@@ -89,7 +89,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
   // for future: others should be able to load as well using the answer stored in msg data
-  readonly canCurrentUserLoadAnswers$ = this.store.select(forumFeature.selectCanCurrentUserLoadAnswers);
+  readonly canCurrentUserLoadAnswers$ = this.store.select(forumFeature.selectCanCurrentUserLoadThreadAnswers);
   readonly itemRoute$ = this.store.select(forumFeature.selectItemRoute);
   private readonly isThreadStatusOpened$ = this.store.select(forumFeature.selectThreadStatusOpen);
   private readonly isCurrentUserThreadParticipant$ = combineLatest([
@@ -173,7 +173,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   sendMessage(threadId: ThreadId): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
-    this.store.select(forumFeature.selectToken).pipe(
+    this.store.select(forumFeature.selectThreadToken).pipe(
       take(1), // send on the current thread (if any) only
       filter(isNotUndefined),
     ).subscribe(token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])));
