@@ -3,11 +3,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: var(--alg-space-size-4) 0;
-}
-
-.title {
-  margin-top: 0;
+  padding: 0 0 var(--alg-space-size-4) 0;
 }
 
 .operation-buttons {
@@ -16,4 +12,14 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: toRem(13);
+}
+
+.empty-message {
+  padding: toRem(12) 0;
+}
+
+.chat-icon {
+  margin: 0 0.2rem;
+  color: var(--alg-primary-color);
+  font-size: toRem(18);
 }

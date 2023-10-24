@@ -1,5 +1,4 @@
 <ng-container *ngrxLet="selected$; let selected">
-  <h2 class="title alg-h2">Help requests</h2>
   <alg-selection
     [items]="options"
     [selected]="selected"
@@ -82,7 +81,29 @@
           <ng-template pTemplate="emptymessage">
             <tr>
               <td>
-                <span i18n>There are no threads for this item.</span>
+                <div class="empty-message">
+                  <ng-container *ngIf="selected === 0 && itemData">
+                    <span *ngIf="itemData.item.type === 'Chapter'" i18n>
+                      You have not requested any help for activities in this chapter. <br>To request help on an activity, click on the
+                      <span class="chat-icon ph-duotone ph-chats-circle"></span> button at the top of the page when visiting this activity.
+                      You cannot request help on a chapter.
+                    </span>
+                    <ng-container *ngIf="itemData.item.type === 'Task'">
+                      <span *ngIf="itemData.item.permissions.canRequestHelp; else cannotRequestHelpMessage" i18n>
+                        You have not requested any help for this activity. <br>To request help on this activity, click on the
+                        <span class="chat-icon ph-duotone ph-chats-circle"></span> button at the top of the page.
+                      </span>
+                      <ng-template #cannotRequestHelpMessage>
+                        <span i18n>You do not have permission to ask for help on this activity.</span>
+                      </ng-template>
+                    </ng-container>
+                  </ng-container>
+                  <span *ngIf="selected === 1" i18n>
+                    You don’t have access to any help request for this item. You may only view requests attached to content you have already
+                    validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted
+                    to members of specific groups.
+                  </span>
+                </div>
               </td>
             </tr>
           </ng-template>
