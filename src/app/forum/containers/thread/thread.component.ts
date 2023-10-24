@@ -8,7 +8,6 @@ import { GroupWatchingService } from '../../../services/group-watching.service';
 import { formatUser } from 'src/app/models/user';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
-import { rawItemRoute } from 'src/app/models/routing/item-route';
 import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
 import { ActionFeedbackService } from '../../../services/action-feedback.service';
 import { FetchState, fetchingState, readyState } from '../../../utils/state';
@@ -89,18 +88,11 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
-  readonly canCurrentUserLoadAnswers$ = this.store.select(forumFeature.selectInfo).pipe(
-    readyData(),
-    map(t => t?.isMine || t?.canWatch), // for future: others should be able to load as well using the answer stored in msg data
-  );
-  readonly itemRoute$ = this.store.select(forumFeature.selectInfo).pipe(
-    readyData(),
-    map(t => rawItemRoute('activity', t.itemId)),
-  );
-  private readonly isThreadStatusOpened$ = this.store.select(forumFeature.selectInfo).pipe( // may be true, false or undefined!
-    map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
-  );
-  readonly isCurrentUserThreadParticipant$ = combineLatest([
+  // for future: others should be able to load as well using the answer stored in msg data
+  readonly canCurrentUserLoadAnswers$ = this.store.select(forumFeature.selectCanCurrentUserLoadAnswers);
+  readonly itemRoute$ = this.store.select(forumFeature.selectItemRoute);
+  private readonly isThreadStatusOpened$ = this.store.select(forumFeature.selectThreadStatusOpen);
+  private readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,
     this.store.select(forumFeature.selectThreadId),
   ]).pipe(
@@ -110,16 +102,15 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     { open: true, canClose: boolean } |
     { open: false, canOpen: boolean }
   >> = combineLatest([
-      this.isThreadStatusOpened$,
+      this.store.select(forumFeature.selectThreadStatus),
       this.isCurrentUserThreadParticipant$,
-      this.store.select(forumFeature.selectThreadId),
-      this.store.select(forumFeature.selectVisible),
     ]).pipe(
       debounceTime(0), // to prevent race condition (service call immediately aborted)
-      switchMap(([ open, isCurrentUserParticipant, threadId, visible ]) => {
-        if (!visible || open === undefined || !threadId) return of(undefined);
+      switchMap(([ threadStatus, isCurrentUserParticipant ]) => {
+        if (!threadStatus || !threadStatus?.visible) return of(undefined);
+        const { id, open } = threadStatus;
         if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
-        return this.getItemByIdService.get(threadId.itemId, isCurrentUserParticipant ? undefined : threadId.participantId).pipe(
+        return this.getItemByIdService.get(id.itemId, isCurrentUserParticipant ? undefined : id.participantId).pipe(
           mapToFetchState(),
           map(state => {
             switch (state.tag) {
@@ -182,11 +173,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   sendMessage(threadId: ThreadId): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
-    this.store.select(forumFeature.selectInfo).pipe(
+    this.store.select(forumFeature.selectToken).pipe(
       take(1), // send on the current thread (if any) only
-      readyData(),
       filter(isNotUndefined),
-      map(t => t.token),
     ).subscribe(token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])));
     this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
     this.form.reset({

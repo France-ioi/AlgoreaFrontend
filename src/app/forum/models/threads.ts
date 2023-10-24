@@ -26,3 +26,11 @@ const threadTokenDecoder = D.struct({
 });
 
 export type Thread = D.TypeOf<typeof threadDecoder> & D.TypeOf<typeof threadTokenDecoder>;
+
+export function canCurrentUserLoadAnswers(thread: Thread): boolean {
+  return thread.isMine || thread.canWatch;
+}
+
+export function statusOpen(thread: Thread): boolean {
+  return [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(thread.status);
+}
