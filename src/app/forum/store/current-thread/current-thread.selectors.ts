@@ -19,49 +19,62 @@ interface CurrentThreadSelectors<T> {
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
-export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, State>): CurrentThreadSelectors<T> => ({
-  selectVisible: createSelector(
+export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, State>): CurrentThreadSelectors<T> => {
+  // raw selectors
+  const selectVisible = createSelector(
     selectCurrentThread,
     state => state.visible
-  ),
-  selectThreadId: createSelector(
+  );
+  const selectThreadId = createSelector(
     selectCurrentThread,
     state => state.id
-  ),
-  selectHasThreadConfigured: createSelector(
-    selectCurrentThread,
-    state => state.id !== null
-  ),
-  selectItemRoute: createSelector(
-    selectCurrentThread,
-    state => (state.id ? rawItemRoute('activity', state.id.itemId) : null),
-  ),
-  selectInfo: createSelector(
+  );
+  const selectInfo = createSelector(
     selectCurrentThread,
     state => state.info
-  ),
-  selectThreadStatus: createSelector(
-    selectCurrentThread,
-    state => (state.id ? {
-      id: state.id,
-      visible: state.visible,
-      open: !!state.info.data && statusOpen(state.info.data),
-    } : undefined)
-  ),
-  selectToken: createSelector(
-    selectCurrentThread,
-    state => (state.info.data ? state.info.data.token : undefined)
-  ),
-  selectCanCurrentUserLoadAnswers: createSelector(
-    selectCurrentThread,
-    state => !!state.info.data && canCurrentUserLoadAnswers(state.info.data)
-  ),
-  selectThreadStatusOpen: createSelector(
-    selectCurrentThread,
-    state => !!state.info.data && statusOpen(state.info.data)
-  ),
-  selectEvents: createSelector(
+  );
+  const selectEvents = createSelector(
     selectCurrentThread,
     state => state.events
-  )
-});
+  );
+
+  // composed selectors
+  const selectHasThreadConfigured = createSelector(
+    selectThreadId,
+    id => id !== null
+  );
+  const selectItemRoute = createSelector(
+    selectThreadId,
+    id => (id ? rawItemRoute('activity', id.itemId) : null),
+  );
+  const selectThreadStatusOpen = createSelector(
+    selectInfo,
+    info => !!info.data && statusOpen(info.data)
+  );
+  const selectThreadStatus = createSelector(
+    selectThreadId,
+    selectVisible,
+    selectThreadStatusOpen,
+    (id, visible, open) => (id ? { id, visible, open } : undefined)
+  );
+  const selectToken = createSelector(
+    selectInfo,
+    info => (info.data ? info.data.token : undefined)
+  );
+  const selectCanCurrentUserLoadAnswers = createSelector(
+    selectInfo,
+    info => !!info.data && canCurrentUserLoadAnswers(info.data)
+  );
+  return {
+    selectVisible,
+    selectThreadId,
+    selectInfo,
+    selectEvents,
+    selectHasThreadConfigured,
+    selectItemRoute,
+    selectThreadStatusOpen,
+    selectThreadStatus,
+    selectToken,
+    selectCanCurrentUserLoadAnswers,
+  };
+};
