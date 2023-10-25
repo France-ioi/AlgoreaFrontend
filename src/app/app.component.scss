@@ -34,27 +34,30 @@
 }
 
 .right-thread {
+  position: fixed;
   width: var(--right-thread-width);
   height: 100%;
-  margin-right: calc(0rem - var(--right-thread-width));
+  right: 0;
+  top: 0;
   background-color: var(--alg-light-bg-color);
 
-  transition: margin-right var(--right-thread-animation);
-  -webkit-transition: margin-right var(--right-thread-animation);
-  -moz-transition: margin-right var(--right-thread-animation);
-  -o-transition: margin-right var(--right-thread-animation);
+  transition: right var(--right-thread-animation);
+  -webkit-transition: right var(--right-thread-animation);
+  -moz-transition: right var(--right-thread-animation);
+  -o-transition: right var(--right-thread-animation);
 
-  &.opened {
-    margin-right: 0;
+  &.collapsed {
+   right: calc(0rem - var(--right-thread-width));
   }
 }
 
 .right-container {
   margin-left: var(--left-panel-width);
+  margin-right: var(--right-thread-width);
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: toRem(16) 0 0 toRem(16);
+  border-radius: toRem(16);
   background-color: var(--alg-white-color);
   overflow: hidden;
   flex: 1;
@@ -63,20 +66,22 @@
   -moz-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
 
   &.animated {
-    transition: margin-left var(--left-menu-animation);
-    -webkit-transition: margin-left var(--left-menu-animation);
-    -moz-transition: margin-left var(--left-menu-animation);
-    -o-transition: margin-left var(--left-menu-animation);
+    transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
+    -webkit-transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
+    -moz-transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
+    -o-transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
   }
 
   &.collapsed {
     margin-left: 0;
-    border-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 
-  &.thread-opened {
-    border-top-right-radius: toRem(16);
-    border-bottom-right-radius: toRem(16);
+  &.thread-collapsed {
+    margin-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   @media screen and (max-width: 599.98px) {
@@ -129,21 +134,11 @@
   }
 
   .right-thread {
-    position: absolute;
-    top: 0;
-    right: -100%;
-    margin-right: 0;
-
     width: 100%;
     z-index: 999;
 
-    transition: right var(--right-thread-animation);
-    -webkit-transition: right var(--right-thread-animation);
-    -moz-transition: right var(--right-thread-animation);
-    -o-transition: right var(--right-thread-animation);
-
-    &.opened {
-      right: 0;
+    &.collapsed {
+      right: -100%;
     }
   }
 
