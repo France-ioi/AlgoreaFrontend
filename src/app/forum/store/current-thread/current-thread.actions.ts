@@ -9,7 +9,7 @@ export const topBarActions = createActionGroup({
 });
 
 export const forumThreadListActions = createActionGroup({
-  source: 'Forum Thread List',
+  source: 'Forum Thread List Page',
   events: {
     showAsCurrentThread: props<{ id: ThreadId }>(),
     hideCurrentThread: emptyProps(),
