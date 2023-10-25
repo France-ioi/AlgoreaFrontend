@@ -2,7 +2,7 @@
     state: state$,
     isWsOpen: isWsOpen$,
     threadStatus: threadStatus$,
-    messagesCount: messagesCount$,
+    hasNoMessages: hasNoMessages$,
     isCurrentUserThreadParticipant: isCurrentUserThreadParticipant$,
   } as thread"
 >
@@ -15,7 +15,7 @@
   <ng-template #eventsBlock>
     <div class="widget-body" *ngIf="thread.isWsOpen">
       <div class="widget-scroll" #messagesScroll>
-        <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && !thread.threadStatus?.data?.open && thread.messagesCount === 0; else messagesBlock" i18n>
+        <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && !thread.threadStatus?.data?.open && thread.hasNoMessages; else messagesBlock" i18n>
           In this panel, you can request help from other users about the content you are on.
           People who have already validated this activity will see your request and be able to answer.
         </div>

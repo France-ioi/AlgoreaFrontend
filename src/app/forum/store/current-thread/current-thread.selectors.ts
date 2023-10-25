@@ -16,6 +16,7 @@ interface CurrentThreadSelectors<T> {
   selectCanCurrentUserLoadThreadAnswers: MemoizedSelector<T, boolean>,
   selectThreadStatusOpen: MemoizedSelector<T, boolean>,
   selectThreadEvents: MemoizedSelector<T, FetchState<IncomingThreadEvent[]>>,
+  selectThreadNoMessages: MemoizedSelector<T, boolean>,
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
@@ -65,6 +66,10 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectInfo,
     info => !!info.data && canCurrentUserLoadAnswers(info.data)
   );
+  const selectThreadNoMessages = createSelector(
+    selectThreadEvents,
+    events => (events.data ? events.data.filter(event => event.label === 'message').length === 0 : false),
+  );
   return {
     selectVisible,
     selectThreadId,
@@ -76,5 +81,6 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectThreadStatus,
     selectThreadToken,
     selectCanCurrentUserLoadThreadAnswers,
+    selectThreadNoMessages,
   };
 };

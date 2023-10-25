@@ -92,7 +92,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly canCurrentUserLoadAnswers$ = this.store.select(forum.selectCanCurrentUserLoadThreadAnswers);
   readonly itemRoute$ = this.store.select(forum.selectItemRoute);
   private readonly isThreadStatusOpened$ = this.store.select(forum.selectThreadStatusOpen);
-  private readonly isCurrentUserThreadParticipant$ = combineLatest([
+  readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,
     this.store.select(forum.selectThreadId),
   ]).pipe(
@@ -131,6 +131,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       }),
     );
   threadId$ = this.store.select(forum.selectThreadId);
+  hasNoMessages$ = this.store.select(forum.selectThreadNoMessages);
 
   constructor(
     private store: Store,
