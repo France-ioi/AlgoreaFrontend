@@ -18,7 +18,7 @@ import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.co
 import { ButtonModule } from 'primeng/button';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { forumActions, forumFeature } from 'src/app/forum/store';
+import forum from 'src/app/forum/store';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -42,7 +42,7 @@ export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
-  hasForumThreadConfigured$ = this.store.select(forumFeature.selectHasCurrentThread);
+  hasForumThreadConfigured$ = this.store.select(forum.selectHasCurrentThread);
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
@@ -78,7 +78,7 @@ export class ContentTopBarComponent {
   ) {}
 
   toggleDiscussionPanelVisibility(): void {
-    this.store.dispatch(forumActions.toggleVisibility());
+    this.store.dispatch(forum.topBarActions.toggleCurrentThreadVisibility());
   }
 
   showLeftMenu(): void {

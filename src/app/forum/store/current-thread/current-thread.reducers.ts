@@ -2,9 +2,9 @@ import { createReducer, on } from '@ngrx/store';
 import { websocketClientActions } from '../websocket/websocket.actions';
 import { areSameThreads } from '../../models/threads';
 import { fetchingState, readyState } from 'src/app/utils/state';
-import { currentThreadActions } from './current-thread.actions';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { State, initialState } from './current-thread.store';
+import { forumThreadListActions, itemPageActions, threadPanelActions, topBarActions } from './current-thread.actions';
 
 const reducer = createReducer(
   initialState,
@@ -18,7 +18,24 @@ const reducer = createReducer(
     )
   })),
 
-  on(currentThreadActions.idChange, (state, { id }): State => {
+  on(topBarActions.toggleCurrentThreadVisibility, (state): State => ({ ...state, visible: !state.visible })),
+
+  on(forumThreadListActions.showAsCurrentThread, (state, { id }): State => {
+    if (state.id && areSameThreads(state.id, id)) return state;
+    else return {
+      ...state,
+      visible: true,
+      id,
+      info: fetchingState(),
+      events: fetchingState(),
+    };
+  }),
+
+  on(forumThreadListActions.hideCurrentThread, (state): State => ({ ...state, visible: false })),
+
+  on(threadPanelActions.close, (state): State => ({ ...state, visible: false })),
+
+  on(itemPageActions.currentThreadIdChange, (state, { id }): State => {
     if (state.id && areSameThreads(state.id, id)) return state;
     else return {
       ...state,
@@ -28,20 +45,10 @@ const reducer = createReducer(
     };
   }),
 
-  on(currentThreadActions.visibilityChange, (state, { visible }): State => {
-    if (state.id === undefined) throw new Error('cannot set the current thread visible if the id has not been set');
-    return { ...state, visible };
-  }),
-
   on(fetchThreadInfoActions.fetchStateChange, (state, { fetchState }): State => {
     if (!state.id) throw new Error('unexpected: no state id while changing thread info');
     if (fetchState.data && !areSameThreads(state.id, fetchState.data)) throw new Error('unexpected: fetch state thread <> state id');
     return { ...state, info: fetchState };
-  }),
-
-  on(currentThreadActions.toggleVisibility, (state): State => {
-    if (state.id === undefined) throw new Error('cannot set the current thread visible if the id has not been set');
-    return { ...state, visible: !state.visible };
   }),
 
 );

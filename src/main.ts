@@ -32,7 +32,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';
-import { forumEffects, forumFeature } from './app/forum/store';
+import forum, { forumEffects } from './app/forum/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 
@@ -123,7 +123,7 @@ bootstrapApplication(AppComponent, {
       useClass: AlgErrorHandler,
     },
     provideStore(),
-    provideState(forumFeature),
+    provideState(forum),
     provideEffects(forumEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideAnimations(),

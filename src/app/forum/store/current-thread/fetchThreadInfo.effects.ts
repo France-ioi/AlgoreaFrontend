@@ -4,10 +4,10 @@ import { switchMap, map, distinctUntilChanged, filter, withLatestFrom } from 'rx
 import { ThreadService } from 'src/app/data-access/thread.service';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { currentThreadActions } from './current-thread.actions';
+import { forumThreadListActions, itemPageActions, threadPanelActions } from './current-thread.actions';
 import { areSameThreads } from '../../models/threads';
 import { Store } from '@ngrx/store';
-import { forumFeature } from '..';
+import forum from '..';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 export const fetchThreadInfo = createEffect(
@@ -15,7 +15,7 @@ export const fetchThreadInfo = createEffect(
     actions$ = inject(Actions),
     threadHttpService = inject(ThreadService),
   ) => actions$.pipe(
-    ofType(currentThreadActions.idChange),
+    ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.currentThreadIdChange),
     map(({ id }) => id),
     distinctUntilChanged(areSameThreads),
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(
@@ -32,8 +32,8 @@ export const refreshThreadInfo = createEffect(
     store$ = inject(Store),
     threadHttpService = inject(ThreadService),
   ) => actions$.pipe(
-    ofType(currentThreadActions.needInfoRefresh),
-    withLatestFrom(store$.select(forumFeature.selectThreadId)),
+    ofType(threadPanelActions.threadStatusChanged),
+    withLatestFrom(store$.select(forum.selectThreadId)),
     map(([ , threadId ]) => threadId),
     filter(isNotNull),
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(

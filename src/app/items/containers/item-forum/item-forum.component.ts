@@ -21,7 +21,7 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
-import { forumActions, forumFeature } from 'src/app/forum/store';
+import forum from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 
 
@@ -104,8 +104,8 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       ),
     ),
   );
-  currentThreadInfo$ = this.store.select(forumFeature.selectThreadId);
-  isDiscussionVisible$ = this.store.select(forumFeature.selectVisible);
+  currentThreadInfo$ = this.store.select(forum.selectThreadId);
+  isDiscussionVisible$ = this.store.select(forum.selectVisible);
 
   constructor(
     private store: Store,
@@ -160,13 +160,12 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.refresh$.next();
   }
 
-  /**
-   * Toggle visibily of the thread panel, optionally force the thead displayed
-   */
-  toggleVisibility(visible: boolean, thread?: ThreadId): void {
-    if (thread) this.store.dispatch(forumActions.idChange({ id: thread }));
-    this.store.dispatch(forumActions.visibilityChange({ visible }));
+  hideThreadPanel(): void {
+    this.store.dispatch(forum.forumThreadListActions.hideCurrentThread());
   }
 
+  showThreadPanel(id: ThreadId): void {
+    this.store.dispatch(forum.forumThreadListActions.showAsCurrentThread({ id }));
+  }
 
 }

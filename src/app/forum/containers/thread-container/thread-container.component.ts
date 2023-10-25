@@ -9,7 +9,7 @@ import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { forumActions, forumFeature } from 'src/app/forum/store';
+import forum from 'src/app/forum/store';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -32,9 +32,9 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
 
   @Input() topCompensation = 0;
 
-  visible$ = this.store.select(forumFeature.selectVisible);
+  visible$ = this.store.select(forum.selectVisible);
   readonly threadItem$ = combineLatest([
-    this.store.select(forumFeature.selectThreadId).pipe(
+    this.store.select(forum.selectThreadId).pipe(
       filter(isNotNull),
       distinctUntilChanged((x,y) => x?.participantId === y?.participantId && x?.itemId === y?.itemId),
     ),
@@ -64,6 +64,6 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   }
 
   onClose(): void {
-    this.store.dispatch(forumActions.visibilityChange({ visible: false }));
+    this.store.dispatch(forum.threadPanelActions.close());
   }
 }

@@ -4,7 +4,7 @@ import { IncomingThreadEvent } from '../../data-access/websocket-messages/thread
 export const websocketClientActions = createActionGroup({
   source: 'Forum Websocket',
   events: {
-    websocketStatusChange: props<{ open: boolean }>(),
+    statusChange: props<{ open: boolean }>(),
     eventsReceived: props<{ events: IncomingThreadEvent[] }>(),
   },
 });

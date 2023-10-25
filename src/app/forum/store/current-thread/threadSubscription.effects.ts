@@ -3,12 +3,12 @@ import { inject } from '@angular/core';
 import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { areSameThreads } from '../../models/threads';
-import { currentThreadActions } from './current-thread.actions';
-import { forumFeature } from '..';
+import forum from '..';
 import { ForumWebsocketClient } from '../../data-access/forum-websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { readyData } from 'src/app/utils/operators/state';
+import { forumThreadListActions, itemPageActions } from './current-thread.actions';
 
 /**
  * Unsubscribe from the thread in two cases:
@@ -25,12 +25,12 @@ export const threadUnsubscriptionEffect = createEffect(
     merge(
       fromEvent(window, 'beforeunload'),
       actions$.pipe(
-        ofType(currentThreadActions.idChange),
+        ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.currentThreadIdChange),
         map(({ id }) => id),
         distinctUntilChanged(areSameThreads), // only when the id really changes
       )
     ).pipe(
-      withLatestFrom(store.select(forumFeature.selectCurrentThread)),
+      withLatestFrom(store.select(forum.selectCurrentThread)),
       tap(([ , state ]) => {
         const thread = state.info.data;
         if (thread) {

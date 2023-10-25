@@ -27,7 +27,7 @@ import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
 import { LetDirective } from '@ngrx/component';
 import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
 import { Store } from '@ngrx/store';
-import { forumFeature } from './forum/store';
+import forum from './forum/store';
 
 @Component({
   selector: 'alg-root',
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
   canShowBreadcrumbs$ = this.layoutService.canShowBreadcrumbs$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
-  isDiscussionVisible$ = this.store.select(forumFeature.selectVisible);
+  isDiscussionVisible$ = this.store.select(forum.selectVisible);
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
   watchedGroupError$ = this.groupWatchingService.watchedGroupError$;

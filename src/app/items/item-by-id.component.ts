@@ -64,7 +64,7 @@ import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/acc
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { forumActions } from '../forum/store';
+import forum from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 
 const itemBreadcrumbCat = $localize`Items`;
@@ -330,7 +330,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
       filter(isNotNull), // leave the forum as it is if no new value
-    ).subscribe(threadId => this.store.dispatch(forumActions.idChange({ id: threadId }))),
+    ).subscribe(threadId => this.store.dispatch(forum.itemPageActions.currentThreadIdChange({ id: threadId }))),
 
   ];
 

@@ -10,7 +10,7 @@ import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 export const changeOpenStatusWebsocketClient = createEffect(
   (wsClient$ = inject(ForumWebsocketClient)) => wsClient$.isWsOpen$.pipe(
-    map(open => websocketClientActions.websocketStatusChange({ open }))
+    map(open => websocketClientActions.statusChange({ open }))
   ),
   { functional: true }
 );
