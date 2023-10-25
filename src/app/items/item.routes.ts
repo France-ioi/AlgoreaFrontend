@@ -43,7 +43,8 @@ const routes: Routes = [
           },
           {
             path: 'chapter-user-progress',
-            children: [],
+            redirectTo: 'chapter',
+            pathMatch: 'full',
           }
         ]
       },

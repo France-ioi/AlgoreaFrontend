@@ -69,7 +69,7 @@
           (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
         ></alg-item-task-edit>
 
-        <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-progress-matrix', 'alg-chapter-summary'].includes(currentTab.tag)">
+        <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-chapter-progress'].includes(currentTab.tag)">
           <ng-container *ngrxLet="isWatching$ as isWatching">
             <ng-container *ngIf="(!isWatching && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
               <div *ngIf="(savingAnswer$ | async) ?? false" class="save-answer-loader">
@@ -86,17 +86,19 @@
                 [itemData]="itemData"
               ></alg-item-log-view>
 
-              <alg-chapter-group-progress
-                class="alg-flex-1"
-                *ngIf="currentTab?.tag === 'alg-progress-matrix'"
-                [itemData]="itemData"
-              ></alg-chapter-group-progress>
+              <ng-container *ngIf="currentTab?.tag === 'alg-chapter-progress'">
+                <alg-chapter-group-progress
+                  class="alg-flex-1"
+                  *ngIf="isWatching"
+                  [itemData]="itemData"
+                ></alg-chapter-group-progress>
 
-              <alg-chapter-user-progress
-                class="alg-flex-1"
-                *ngIf="currentTab?.tag ==='alg-chapter-summary'"
-                [itemData]="itemData"
-              ></alg-chapter-user-progress>
+                <alg-chapter-user-progress
+                  class="alg-flex-1"
+                  *ngIf="!isWatching"
+                  [itemData]="itemData"
+                ></alg-chapter-user-progress>
+              </ng-container>
 
             </ng-container>
             <ng-template #unallowed>
