@@ -4,7 +4,7 @@ import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge } from
 import { Store } from '@ngrx/store';
 import { areSameThreads } from '../../models/threads';
 import forum from '..';
-import { ForumWebsocketClient } from '../../data-access/forum-websocket-client.service';
+import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { readyData } from 'src/app/utils/operators/state';
@@ -20,7 +20,7 @@ export const threadUnsubscriptionEffect = createEffect(
   (
     actions$ = inject(Actions),
     store = inject(Store),
-    websocketClient = inject(ForumWebsocketClient),
+    websocketClient = inject(WebsocketClient),
   ) =>
     merge(
       fromEvent(window, 'beforeunload'),
@@ -47,7 +47,7 @@ export const threadUnsubscriptionEffect = createEffect(
 export const threadSubscriptionEffect = createEffect(
   (
     actions$ = inject(Actions),
-    websocketClient = inject(ForumWebsocketClient),
+    websocketClient = inject(WebsocketClient),
   ) => actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChange),
     map(({ fetchState }) => fetchState),

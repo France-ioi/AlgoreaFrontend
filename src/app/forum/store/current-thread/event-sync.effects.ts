@@ -2,7 +2,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 import { areSameThreads } from '../../models/threads';
-import { ForumWebsocketClient } from '../../data-access/forum-websocket-client.service';
+import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { readyData } from 'src/app/utils/operators/state';
 import { ActivityLogService } from 'src/app/data-access/activity-log.service';
@@ -16,7 +16,7 @@ export const syncEventsEffect = createEffect(
   (
     actions$ = inject(Actions),
     activityLogService = inject(ActivityLogService),
-    websocketClient = inject(ForumWebsocketClient),
+    websocketClient = inject(WebsocketClient),
   ) => actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChange),
     map(({ fetchState }) => fetchState),

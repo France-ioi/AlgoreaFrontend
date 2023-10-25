@@ -1,7 +1,7 @@
 import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@angular/core';
 import * as Sentry from '@sentry/angular-ivy';
 
-import { appConfig } from './app/utils/config';
+import { appConfig, WEBSOCKET_URL } from './app/utils/config';
 import { version } from './version';
 import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
@@ -117,6 +117,10 @@ bootstrapApplication(AppComponent, {
       provide: HTTP_INTERCEPTORS,
       useClass: WithCredentialsInterceptor,
       multi: true,
+    },
+    {
+      provide: WEBSOCKET_URL,
+      useValue: appConfig.forumServerUrl
     },
     {
       provide: ErrorHandler,

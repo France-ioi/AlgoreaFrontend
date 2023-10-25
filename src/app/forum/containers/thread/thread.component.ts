@@ -23,7 +23,7 @@ import { appConfig } from 'src/app/utils/config';
 import { Store } from '@ngrx/store';
 import forum from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
-import { ForumWebsocketClient } from 'src/app/forum/data-access/forum-websocket-client.service';
+import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { messageEvent } from '../../data-access/websocket-messages/threads-events';
@@ -140,7 +140,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private getItemByIdService: GetItemByIdService,
     private actionFeedbackService: ActionFeedbackService,
     private updateThreadService: UpdateThreadService,
-    private forumWebsocketClient: ForumWebsocketClient,
+    private forumWebsocketClient: WebsocketClient,
     private fb: FormBuilder,
   ) {}
 
