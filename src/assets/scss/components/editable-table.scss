@@ -1,97 +1,49 @@
-@import "../../../variables";
-@import "src/geometry.scss";
+@import "src/assets/scss/functions";
 
 .alg-editable-table {
   .p-datatable-tbody > tr > td.p-editing-cell p-celleditor > * {
     width: 2.5rem;
   }
 
-  .p-checkbox {
-    width: 1.0833rem;
-    height: 1.0833rem;
-
-    .p-checkbox-box {
-      background-color: #E5E5E5;
-      box-shadow: 0 .1rem #BBB inset;
-      width: 1.0833rem;
-      height: 1.0833rem;
-      border: none;
-      position: relative;
-
-      &:hover {
-        background-color: #D0D0D0;
-      }
-
-      &.p-highlight:not(.p-disabled):hover {
-        background-color: #D0D0D0;
-      }
-
-      .p-checkbox-icon {
-        overflow: visible;
-        color: #505050;
-        position: absolute;
-        top: -0.5rem;
-        left: -0.3333rem;
-        font-size: 1.8333rem;
-      }
-    }
-  }
-
   .p-datatable-tbody > tr {
-    background-color: #EFEFEF;
     display: flex;
-    border-bottom: $border-filet;
-    margin-bottom: 5px;
-    border-radius: 1rem;
+    border-radius: toRem(12);
+    margin-bottom: toRem(4);
     height: 3rem;
+    transition: none;
+    box-shadow: none;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.04);
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
   }
 
   .p-datatable-tbody > tr:last-child {
     border: none;
   }
 
-  .p-datatable-tbody > tr:nth-child(even) {
-    background-color: #EFEFEF;
-  }
-
   .p-datatable-tbody > tr > td {
-    color: var(--base-text-color);
+    color: var(--alg-secondary-color);
     border: none;
     background-color: transparent;
     display: flex;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: toRem(16);
 
-    p-tableCheckbox {
-      display: flex;
-      align-items: center;
-    }
-
-    &.p-editable-column {
-      display: flex;
-      align-items: center;
-      padding-left: 0.4167rem;
-      padding-right: 0.4167rem;
-
-      input:focus {
-        outline: none;
-      }
+    &.p-datatable-reorderablerow-handle {
+      padding-right: 0;
     }
   }
 
   .p-datatable-tbody > tr.p-highlight {
-    background-color: #EFEFEF;
+    background-color: rgba(0, 0, 0, 0.08);
   }
 
-  .p-datatable-tbody > tr:nth-child(even).p-highlight {
-    background-color: #EFEFEF;
-  }
-
-  .p-datatable-footer {
-    background-color: transparent;
+  .p-datatable .p-datatable-footer {
+    padding: 0 toRem(16);
     border: none;
-    padding-left: 0.4167rem;
-    padding-right: 0;
-    font-weight: 700;
   }
 }

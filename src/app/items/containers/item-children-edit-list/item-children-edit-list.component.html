@@ -21,7 +21,7 @@
     <ng-template pTemplate="body" let-rowData let-index="rowIndex">
       <tr [pSelectableRow]="rowData" [pReorderableRow]="index">
         <td class="reorder-handle" pReorderableRowHandle>
-          <i class="fa fa-sort" pReorderableRowHandle></i>
+          <i class="ph-duotone ph-arrows-down-up" pReorderableRowHandle></i>
         </td>
         <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
         <ng-container *ngIf="scoreWeightEnabled">
@@ -65,36 +65,36 @@
         <ng-template #invisibleChildCells>
           <td class="flex-1"><ng-container i18n>Non-visible content</ng-container> ({{ rowData.id }})</td>
         </ng-template>
-
         <td>
-          <div class="propagation-state-wrapper" #propagationStateWrapperTarget>
-            <button
-              class="alg-button-icon base-color"
-              type="button"
-              (click)="openPropagationEditMenu($event, propagationStateWrapperTarget, index)"
-            >
-              <i class="fa" [ngClass]="{
-                'fa-eye': rowData.contentViewPropagation === 'as_content',
-                'fa-lock': rowData.contentViewPropagation === 'as_info',
-                'fa-eye-slash': rowData.contentViewPropagation === 'none'
-              }"></i>
-            </button>
-          </div>
+          <button
+            class="alg-button-icon primary-color no-bg"
+            type="button"
+            icon="{{
+              rowData.contentViewPropagation === 'as_content' ? 'ph-duotone ph-eye' : rowData.contentViewPropagation === 'as_info'
+              ? 'ph-duotone ph-lock-simple' : rowData.contentViewPropagation === 'none' ? 'ph-duotone ph-eye-slash' : ''
+            }}"
+            (click)="openPropagationEditMenu($event, index)"
+            pButton
+          ></button>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="summary">
-        <span class="spacer"></span>
-        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        <span class="select-all" (click)="onSelectAll()" i18n>Select all</span>
-        <span class="filler"></span>
-        <div class="summary-actions">
-          <span (click)="onRemove()" [ngClass]="{disabled: selectedRows.length === 0}">
-            <span i18n>Remove selected</span>
-            <i class="fa fa-trash-alt"></i>
+      <div class="alg-table-summary">
+        <div class="alg-table-summary-left">
+          <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
+          <span class="alg-table-summary-select-all" (click)="onSelectAll()" i18n>
+            Select all
           </span>
         </div>
+        <button
+          class="alg-button-icon no-bg primary-color"
+          pButton
+          type="button"
+          icon="ph-duotone ph-trash"
+          (click)="onRemove()"
+          [disabled]="selectedRows.length === 0"
+        ></button>
       </div>
     </ng-template>
   </p-table>
@@ -111,7 +111,7 @@
   ></alg-add-item>
 </div>
 
-<p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-propagation-edit-menu" #op appendTo="body">
+<p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-menu-overlay" #op appendTo="body">
   <ng-template pTemplate>
     <alg-propagation-edit-menu
       *ngIf="propagationEditItemIdx !== undefined"

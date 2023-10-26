@@ -1,13 +1,13 @@
+<div class="header" i18n>
+  Default access
+</div>
 <ul class="menu">
-  <li class="menu-item menu-header no-hover">
-    <div class="menu-item-title uppercase text-center" i18n>Default access</div>
-  </li>
   <li class="menu-item cursor-pointer"
       [ngClass]="{'active': childData?.contentViewPropagation === 'none'}"
       (click)="onClick('none')">
     <div class="menu-item-title" i18n>Locked and hidden</div>
     <div class="menu-item-icon">
-      <i class="fa fa-eye-slash"></i>
+      <i class="ph-duotone ph-eye-slash"></i>
     </div>
   </li>
   <li
@@ -18,7 +18,7 @@
   >
     <div class="menu-item-title" i18n>Locked</div>
     <div class="menu-item-icon">
-      <i class="fa fa-lock"></i>
+      <i class="ph-duotone ph-lock-simple"></i>
     </div>
   </li>
   <li
@@ -29,7 +29,7 @@
   >
     <div class="menu-item-title" i18n>Open</div>
     <div class="menu-item-icon">
-      <i class="fa fa-eye"></i>
+      <i class="ph-duotone ph-eye"></i>
     </div>
   </li>
 </ul>

@@ -21,6 +21,7 @@ import { TableModule } from 'primeng/table';
 import { NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -42,6 +43,7 @@ import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
     ItemRouteWithAttemptPipe,
     ContentTypeFromItemPipe,
     RouteUrlPipe,
+    ButtonModule,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
@@ -108,9 +110,9 @@ export class ItemChildrenEditListComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  openPropagationEditMenu(event: MouseEvent, actualTarget: HTMLDivElement, itemIdx: number): void {
+  openPropagationEditMenu(event: MouseEvent, itemIdx: number): void {
     this.propagationEditItemIdx = itemIdx;
-    this.op?.toggle(event, actualTarget);
+    this.op?.toggle(event);
   }
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {

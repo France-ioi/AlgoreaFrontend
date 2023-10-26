@@ -907,7 +907,7 @@
       <source> Select all </source>
       <target state="translated"> Tout sélectionner </target>
 
-    <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">138</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">116</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="8905995985388209337" datatype="html">
+    <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">138</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">116</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="8905995985388209337" datatype="html">
        <source>Accept</source><target state="translated">Accepter</target>
 
      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="7378878529334768232" datatype="html">
@@ -1149,10 +1149,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">147</context></context-group></trans-unit><trans-unit id="1850357961340956981" datatype="html">
         <source>Failed to save permissions.</source><target state="new">Failed to save permissions.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="1195043541071899024" datatype="html">
-        <source>Default access</source><target state="new">Default access</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="4691747963442507127" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">152</context></context-group></trans-unit><trans-unit id="4691747963442507127" datatype="html">
         <source>Locked and hidden</source><target state="new">Locked and hidden</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="7870689051450450957" datatype="html">
@@ -1183,13 +1180,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="3453601508060500845" datatype="html">
         <source>Non-visible content</source><target state="new">Non-visible content</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="1494518490116523821" datatype="html">
-        <source>Select all</source><target state="translated">Sélectionner tout</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="2334552041798930017" datatype="html">
-        <source>Remove selected</source><target state="translated">Supprimer la sélection</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="1005876274703669844" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="1005876274703669844" datatype="html">
         <source>No children for this chapter.</source><target state="translated">Aucun enfant dans ce chapitre.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="8390631426570727629" datatype="html">
@@ -1285,7 +1276,15 @@
         <source>Permissions successfully updated.</source><target state="new">Permissions successfully updated.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.ts</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="1519954996184640001" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.ts</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="5878383840362917581" datatype="html">
+        <source> Default access
+</source><target state="new"> Default access
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit><trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source><target state="translated">Erreur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="1804772566828112386" datatype="html">
