@@ -252,8 +252,8 @@
           <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-      </trans-unit><trans-unit id="693135295056453023" datatype="html">
-        <source> You don’t have access to any help request for this item. You may only view requests attached to content you have already validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted to members of specific groups. </source><target state="new"> You don’t have access to any help request for this item. You may only view requests attached to content you have already validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted to members of specific groups. </target>
+      </trans-unit><trans-unit id="4520887340339440443" datatype="html">
+        <source> You don’t have access to any help request for this activity. You may only view requests attached to content you have already validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted to members of specific groups. </source><target state="new"> You don’t have access to any help request for this activity. You may only view requests attached to content you have already validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted to members of specific groups. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context>
           <context context-type="linenumber">101,105</context>
