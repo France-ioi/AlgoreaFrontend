@@ -31,11 +31,11 @@ enum ForumTabUrls {
 
 const OPTIONS = [
   {
-    label: $localize`My threads`,
+    label: $localize`My help requests`,
     value: ForumTabUrls.MyThreads,
   },
   {
-    label: $localize`Other's`,
+    label: $localize`Other users' requests`,
     value: ForumTabUrls.Others,
   },
 ];

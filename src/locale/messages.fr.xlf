@@ -213,37 +213,64 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="7657899273911095693" datatype="html">
         <source>You are not currently observing any group.</source><target state="new">You are not currently observing any group.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="7526011216469102541" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="7526011216469102541" datatype="html">
         <source>Unable to load the recent threads</source><target state="new">Unable to load the recent threads</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4476519178649315667" datatype="html">
-        <source>There are no threads for this item.</source><target state="new">There are no threads for this item.</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="6694402180665796987" datatype="html">
-        <source>My threads</source><target state="new">My threads</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="6929603416180749109" datatype="html">
-        <source>Other's</source><target state="new">Other's</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="8623978917681527907" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="8623978917681527907" datatype="html">
         <source>Group</source><target state="new">Group</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="5611592591303869712" datatype="html">
         <source>Status</source><target state="new">Status</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="989713090179506197" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="989713090179506197" datatype="html">
         <source># msgs</source><target state="new"># msgs</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="4915667673980407083" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="4915667673980407083" datatype="html">
         <source>Latest update</source><target state="new">Latest update</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="8461842260159597706" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="8461842260159597706" datatype="html">
         <source>Show</source><target state="new">Show</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="8461609631969932886" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="8461609631969932886" datatype="html">
         <source>Hide</source><target state="new">Hide</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="186460519743457757" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="1493586474607607923" datatype="html">
+        <source> You have not requested any help for activities in this chapter. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>To request help on an activity, click on the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;chat-icon ph-duotone ph-chats-circle&quot;>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="button at t"/> button at the top of the page when visiting this activity. You cannot request help on a chapter. </source><target state="new"> You have not requested any help for activities in this chapter. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>To request help on an activity, click on the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;chat-icon ph-duotone ph-chats-circle&quot;>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="button at t"/> button at the top of the page when visiting this activity. You cannot request help on a chapter. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context>
+          <context context-type="linenumber">86,90</context>
+        </context-group>
+      </trans-unit><trans-unit id="3273150764956378289" datatype="html">
+        <source> You have not requested any help for this activity. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>To request help on this activity, click on the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;chat-icon ph-duotone ph-chats-circle&quot;>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="button at t"/> button at the top of the page. </source><target state="new"> You have not requested any help for this activity. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>To request help on this activity, click on the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;chat-icon ph-duotone ph-chats-circle&quot;>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="button at t"/> button at the top of the page. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context>
+          <context context-type="linenumber">92,95</context>
+        </context-group>
+      </trans-unit><trans-unit id="996410300131463994" datatype="html">
+        <source>You do not have permission to ask for help on this activity.</source><target state="new">You do not have permission to ask for help on this activity.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit><trans-unit id="4520887340339440443" datatype="html">
+        <source> You don’t have access to any help request for this activity. You may only view requests attached to content you have already validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted to members of specific groups. </source><target state="new"> You don’t have access to any help request for this activity. You may only view requests attached to content you have already validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted to members of specific groups. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context>
+          <context context-type="linenumber">101,105</context>
+        </context-group>
+      </trans-unit><trans-unit id="1698940941671080889" datatype="html">
+        <source>My help requests</source><target state="new">My help requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="3850217645057360146" datatype="html">
+        <source>Other users' requests</source><target state="new">Other users' requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="186460519743457757" datatype="html">
         <source>Global parameters</source><target>Paramètres globaux</target>
 
 
@@ -431,7 +458,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/item-by-id.component.html</context><context context-type="linenumber">171</context></context-group></trans-unit><trans-unit id="7934833136974560675" datatype="html">
         <source>Retry</source><target state="translated">Réessayer</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-display/item-display.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-by-id.component.html</context><context context-type="linenumber">176</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-display/item-display.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-by-id.component.html</context><context context-type="linenumber">176</context></context-group></trans-unit><trans-unit id="unknownError" datatype="html">
         <source>An unknown error occurred. </source><target state="translated">Une erreur est survenue. </target>
 
 
@@ -1429,7 +1456,7 @@
         <source>Content</source><target state="translated">Contenu</target>
 
 
-      <note from="description" priority="1">Tab name</note><context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav/left-nav.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">108</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">177</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+      <note from="description" priority="1">Tab name</note><context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav/left-nav.component.html</context><context context-type="linenumber">13</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">108</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">177</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir le contenu de cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-texts.ts</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
@@ -1935,7 +1962,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">172</context></context-group></trans-unit><trans-unit id="2392488717875840729" datatype="html">
         <source>User</source><target state="new">User</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">182</context></context-group></trans-unit><trans-unit id="8497528947328199741" datatype="html">
         <source>Time</source><target state="translated">Date/Heure</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">187</context></context-group></trans-unit><trans-unit id="2739370419840410792" datatype="html">
