@@ -5,8 +5,7 @@
 }
 
 .add-item-container {
-  padding-left: 5.8333rem;
-  padding-right: 1.6667rem;
+  margin-top: toRem(16);
 }
 
 .reorder-handle {
@@ -21,10 +20,6 @@
 .type {
   color: var(--alg-secondary-color);
   font-size: toRem(16);
-}
-
-.spacer {
-  width: 2.9rem;
 }
 
 .score-weight-container {

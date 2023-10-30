@@ -81,7 +81,7 @@
     </ng-template>
     <ng-template pTemplate="summary">
       <div class="alg-table-summary">
-        <div class="alg-table-summary-left">
+        <div class="alg-table-summary-left editable">
           <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
           <span class="alg-table-summary-select-all" (click)="onSelectAll()" i18n>
             Select all
@@ -104,7 +104,6 @@
 
 <div class="add-item-container">
   <alg-add-item
-    class="item-children-edit"
     [type]="type"
     [addedItemIds]="addedItemIds"
     (contentAdded)="addChild($event)"
