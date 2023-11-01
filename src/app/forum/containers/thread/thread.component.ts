@@ -27,6 +27,7 @@ import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { messageEvent } from '../../data-access/websocket-messages/threads-events';
+import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 
 @Component({
   selector: 'alg-thread',
@@ -41,6 +42,7 @@ import { messageEvent } from '../../data-access/websocket-messages/threads-event
     FormsModule,
     ReactiveFormsModule,
     InputTextareaModule,
+    RawItemRoutePipe,
     ButtonModule,
     TooltipModule,
     AsyncPipe,
@@ -90,7 +92,6 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   );
   // for future: others should be able to load as well using the answer stored in msg data
   readonly canCurrentUserLoadAnswers$ = this.store.select(forum.selectCanCurrentUserLoadThreadAnswers);
-  readonly itemRoute$ = this.store.select(forum.selectItemRoute);
   private readonly isThreadStatusOpened$ = this.store.select(forum.selectThreadStatusOpen);
   readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,

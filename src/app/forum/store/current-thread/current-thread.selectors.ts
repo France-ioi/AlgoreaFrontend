@@ -3,13 +3,11 @@ import { State } from './current-thread.store';
 import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../models/threads';
 import { FetchState } from 'src/app/utils/state';
 import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
-import { RawItemRoute, rawItemRoute } from 'src/app/models/routing/item-route';
 
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
   selectThreadId: MemoizedSelector<T, ThreadId | null>,
   selectHasCurrentThread: MemoizedSelector<T, boolean>,
-  selectItemRoute: MemoizedSelector<T, RawItemRoute | null>,
   selectInfo: MemoizedSelector<T, FetchState<Thread>>,
   selectThreadStatus: MemoizedSelector<T, { id: ThreadId, visible: boolean, open: boolean } | undefined>,
   selectThreadToken: MemoizedSelector<T, string | undefined>,
@@ -44,10 +42,6 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectThreadId,
     id => id !== null
   );
-  const selectItemRoute = createSelector(
-    selectThreadId,
-    id => (id ? rawItemRoute('activity', id.itemId) : null),
-  );
   const selectThreadStatusOpen = createSelector(
     selectInfo,
     info => !!info.data && statusOpen(info.data)
@@ -76,7 +70,6 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
     selectInfo,
     selectThreadEvents,
     selectHasCurrentThread,
-    selectItemRoute,
     selectThreadStatusOpen,
     selectThreadStatus,
     selectThreadToken,
