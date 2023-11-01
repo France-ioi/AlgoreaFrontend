@@ -21,7 +21,11 @@ export const receiveWebsocketMessagEffect = createEffect(
   ) => wsClient$.inputMessages$.pipe(
     // if the incoming message is not array, just ignore it. Otherwise return a list of messages which we were able to decode as events
     map(message => decode(D.UnknownArray)(message).map(e => decodeOrNull(incomingThreadEventDecoder)(e)).filter(isNotNull)),
-    catchError(() => EMPTY), // ignore undecoded messages
+    catchError(err => {
+      // eslint-disable-next-line no-console
+      console.warn(err);
+      return EMPTY; // ignore undecoded messages
+    }),
     map(events => websocketClientActions.eventsReceived({ events }))
   ),
   { functional: true }
