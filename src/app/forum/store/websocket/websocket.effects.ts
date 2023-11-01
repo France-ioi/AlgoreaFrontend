@@ -8,14 +8,14 @@ import * as D from 'io-ts/Decoder';
 import { incomingThreadEventDecoder } from '../../data-access/websocket-messages/threads-inbound-events';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
-export const changeOpenStatusWebsocketClient = createEffect(
+export const changeOpenStatusWebsocketClientEffect = createEffect(
   (wsClient$ = inject(WebsocketClient)) => wsClient$.isWsOpen$.pipe(
     map(open => websocketClientActions.statusChange({ open }))
   ),
   { functional: true }
 );
 
-export const receiveWebsocketMessage = createEffect(
+export const receiveWebsocketMessagEffect = createEffect(
   (
     wsClient$ = inject(WebsocketClient)
   ) => wsClient$.inputMessages$.pipe(

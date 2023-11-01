@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import forum from '..';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
-export const fetchThreadInfo = createEffect(
+export const fetchThreadInfoEffect = createEffect(
   (
     actions$ = inject(Actions),
     threadHttpService = inject(ThreadService),
@@ -26,7 +26,7 @@ export const fetchThreadInfo = createEffect(
   { functional: true }
 );
 
-export const refreshThreadInfo = createEffect(
+export const refreshThreadInfoEffect = createEffect(
   (
     actions$ = inject(Actions),
     store$ = inject(Store),
