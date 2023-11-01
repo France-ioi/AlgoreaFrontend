@@ -11,5 +11,5 @@ export const initialState: State = {
 
 export const reducer = createReducer(
   initialState,
-  on(websocketClientActions.statusChange, (state, { open }): State => ({ ...state, open })),
+  on(websocketClientActions.statusChanged, (state, { open }): State => ({ ...state, open })),
 );
