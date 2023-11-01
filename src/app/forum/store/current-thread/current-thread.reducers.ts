@@ -20,16 +20,13 @@ const reducer = createReducer(
 
   on(topBarActions.toggleCurrentThreadVisibility, (state): State => ({ ...state, visible: !state.visible })),
 
-  on(forumThreadListActions.showAsCurrentThread, (state, { id }): State => {
-    if (state.id && areSameThreads(state.id, id)) return state;
-    else return {
-      ...state,
-      visible: true,
-      id,
-      info: fetchingState(),
-      events: fetchingState(),
-    };
-  }),
+  on(forumThreadListActions.showAsCurrentThread, (state, { id }): State => ({
+    ...state,
+    visible: true,
+    id,
+    info: state.id && areSameThreads(state.id, id) ? state.info : fetchingState(),
+    events: state.id && areSameThreads(state.id, id) ? state.events : fetchingState(),
+  })),
 
   on(forumThreadListActions.hideCurrentThread, (state): State => ({ ...state, visible: false })),
 
