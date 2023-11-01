@@ -20,27 +20,26 @@ const reducer = createReducer(
 
   on(topBarActions.toggleCurrentThreadVisibility, (state): State => ({ ...state, visible: !state.visible })),
 
-  on(forumThreadListActions.showAsCurrentThread, (state, { id }): State => ({
-    ...state,
-    visible: true,
-    id,
-    info: state.id && areSameThreads(state.id, id) ? state.info : fetchingState(),
-    events: state.id && areSameThreads(state.id, id) ? state.events : fetchingState(),
-  })),
+  on(forumThreadListActions.showAsCurrentThread, (state): State => ({ ...state, visible: true })),
 
-  on(forumThreadListActions.hideCurrentThread, (state): State => ({ ...state, visible: false })),
+  on(
+    forumThreadListActions.hideCurrentThread,
+    threadPanelActions.close,
+    (state): State => ({ ...state, visible: false })
+  ),
 
   on(threadPanelActions.close, (state): State => ({ ...state, visible: false })),
 
-  on(itemPageActions.currentThreadIdChange, (state, { id }): State => {
-    if (state.id && areSameThreads(state.id, id)) return state;
-    else return {
+  on(
+    itemPageActions.currentThreadIdChange,
+    forumThreadListActions.showAsCurrentThread,
+    (state, { id }): State => ({
       ...state,
       id,
-      info: fetchingState(),
-      events: fetchingState(),
-    };
-  }),
+      info: state.id && areSameThreads(state.id, id) ? state.info : fetchingState(),
+      events: state.id && areSameThreads(state.id, id) ? state.events : fetchingState(),
+    })
+  ),
 
   on(fetchThreadInfoActions.fetchStateChange, (state, { fetchState }): State => ({ ...state, info: fetchState })),
 
