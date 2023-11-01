@@ -45,11 +45,7 @@ const reducer = createReducer(
     };
   }),
 
-  on(fetchThreadInfoActions.fetchStateChange, (state, { fetchState }): State => {
-    if (!state.id) throw new Error('unexpected: no state id while changing thread info');
-    if (fetchState.data && !areSameThreads(state.id, fetchState.data)) throw new Error('unexpected: fetch state thread <> state id');
-    return { ...state, info: fetchState };
-  }),
+  on(fetchThreadInfoActions.fetchStateChange, (state, { fetchState }): State => ({ ...state, info: fetchState })),
 
 );
 
