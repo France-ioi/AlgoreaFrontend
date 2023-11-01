@@ -44,7 +44,11 @@ export class ItemTaskAnswerService implements OnDestroy {
   private saved$ = new ReplaySubject<{ answer: string, state: string }>();
   private saveError$ = new Subject<Error>();
 
-  private loadedTask$ = this.taskInitService.loadedTask$.pipe(takeUntil(this.error$));
+  private loadedTask$ = this.taskInitService.loadedTask$.pipe(
+    catchError(() => EMPTY), // error handled in subscriptions
+    takeUntil(this.error$)
+  );
+
   private config$ = this.taskInitService.config$.pipe(
     takeUntil(this.error$),
     filter((config): config is RunningItemTaskConfig => config.attemptId !== undefined)
@@ -127,6 +131,9 @@ export class ItemTaskAnswerService implements OnDestroy {
       error: err => this.errorSubject.next(err),
     }),
     this.initializedTaskState$.subscribe({
+      error: err => this.errorSubject.next(err),
+    }),
+    this.taskInitService.loadedTask$.subscribe({
       error: err => this.errorSubject.next(err),
     }),
     this.initialAnswer$
