@@ -7,18 +7,18 @@ import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navi
 import { isItemInfo } from '../../models/content/item-info';
 import { LayoutService } from '../../services/layout.service';
 import { GroupWatchingService } from '../../services/group-watching.service';
-import { DiscussionService } from '../../services/discussion.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../models/content/group-info';
-import { ThreadId } from '../../services/threads.service';
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
 import { ObservationBarWithButtonComponent } from '../observation-bar-with-button/observation-bar-with-button.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
-import { LetDirective } from '@ngrx/component';
+import { LetDirective, PushPipe } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { ButtonModule } from 'primeng/button';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import forum from 'src/app/forum/store';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -35,14 +35,14 @@ import { NgIf, AsyncPipe } from '@angular/common';
     ObservationBarWithButtonComponent,
     NeighborWidgetComponent,
     AsyncPipe,
+    PushPipe,
   ],
 })
 export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
-  configuredThread$ = this.discussionService.configuredThread$;
-  isDiscussionVisible$ = this.discussionService.visible$;
+  hasForumThreadConfigured$ = this.store.select(forum.selectHasCurrentThread);
   watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
@@ -68,17 +68,17 @@ export class ContentTopBarComponent {
   readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
   constructor(
+    private store: Store,
     private groupWatchingService: GroupWatchingService,
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,
-    private discussionService: DiscussionService,
     private layoutService: LayoutService,
   ) {}
 
-  toggleDiscussionPanelVisibility(visible: boolean, thread: ThreadId): void {
-    this.discussionService.toggleVisibility(visible, visible ? thread : undefined);
+  toggleDiscussionPanelVisibility(): void {
+    this.store.dispatch(forum.topBarActions.toggleCurrentThreadVisibility());
   }
 
   showLeftMenu(): void {

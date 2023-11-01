@@ -15,7 +15,6 @@ import { CrashReportingService } from './services/crash-reporting.service';
 import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
-import { DiscussionService } from './services/discussion.service';
 import { SharedModule } from 'primeng/api';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
 import { ButtonModule } from 'primeng/button';
@@ -23,10 +22,12 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
-import { ThreadContainerComponent } from './containers/thread-container/thread-container.component';
+import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
 import { LetDirective } from '@ngrx/component';
 import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
+import { Store } from '@ngrx/store';
+import forum from './forum/store';
 
 @Component({
   selector: 'alg-root',
@@ -71,7 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
   canShowBreadcrumbs$ = this.layoutService.canShowBreadcrumbs$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
-  isDiscussionVisible$ = this.discussionService.visible$;
+  isDiscussionVisible$ = this.store.select(forum.selectVisible);
   scrolled = false;
   isWatching$ = this.groupWatchingService.isWatching$;
   watchedGroupError$ = this.groupWatchingService.watchedGroupError$;
@@ -80,6 +81,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
 
   constructor(
+    private store: Store,
     private router: Router,
     private sessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
@@ -93,7 +95,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private el: ElementRef,
     private chunkErrorService: ChunkErrorService,
-    private discussionService: DiscussionService,
   ) {
     const title = appConfig.languageSpecificTitles && this.localeService.currentLang ?
       appConfig.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;

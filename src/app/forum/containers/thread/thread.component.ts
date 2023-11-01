@@ -1,21 +1,18 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ThreadId, ThreadService } from '../../services/threads.service';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { mapToFetchState, readyData } from '../../utils/operators/state';
+import { mapToFetchState, readyData } from '../../../utils/operators/state';
 import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
-import { DiscussionService } from '../../services/discussion.service';
-import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, withLatestFrom } from 'rxjs/operators';
-import { UserSessionService } from '../../services/user-session.service';
-import { GroupWatchingService } from '../../services/group-watching.service';
+import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, take, withLatestFrom } from 'rxjs/operators';
+import { UserSessionService } from '../../../services/user-session.service';
+import { GroupWatchingService } from '../../../services/group-watching.service';
 import { formatUser } from 'src/app/models/user';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
-import { rawItemRoute } from 'src/app/models/routing/item-route';
-import { GetItemByIdService } from '../../data-access/get-item-by-id.service';
-import { ActionFeedbackService } from '../../services/action-feedback.service';
-import { FetchState, fetchingState, readyState } from '../../utils/state';
-import { errorIsHTTPForbidden } from '../../utils/errors';
-import { UpdateThreadService } from '../../data-access/update-thread.service';
+import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
+import { ActionFeedbackService } from '../../../services/action-feedback.service';
+import { FetchState, fetchingState, readyState } from '../../../utils/state';
+import { errorIsHTTPForbidden } from '../../../utils/errors';
+import { UpdateThreadService } from '../../../data-access/update-thread.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -23,6 +20,14 @@ import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { appConfig } from 'src/app/utils/config';
+import { Store } from '@ngrx/store';
+import forum from 'src/app/forum/store';
+import { ThreadId } from 'src/app/forum/models/threads';
+import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
+import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
+import { messageEvent } from '../../data-access/websocket-messages/threads-events';
+import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 
 @Component({
   selector: 'alg-thread',
@@ -37,6 +42,7 @@ import { appConfig } from 'src/app/utils/config';
     FormsModule,
     ReactiveFormsModule,
     InputTextareaModule,
+    RawItemRoutePipe,
     ButtonModule,
     TooltipModule,
     AsyncPipe,
@@ -51,9 +57,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   });
 
   readonly subscriptions = new Subscription();
-  readonly state$ = this.threadService.eventsState$;
+  readonly state$ = this.store.select(forum.selectThreadEvents);
 
-  readonly isWsOpen$ = this.discussionService.isWsOpen$;
+  readonly isWsOpen$ = this.store.select(forum.selectWebsocketOpen);
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
@@ -84,20 +90,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
-  readonly canCurrentUserLoadAnswers$ = this.threadService.threadInfo$.pipe(
-    readyData(),
-    map(t => t?.isMine || t?.canWatch), // for future: others should be able to load as well using the answer stored in msg data
-  );
-  readonly itemRoute$ = this.threadService.threadInfo$.pipe(
-    readyData(),
-    map(t => (t ? rawItemRoute('activity', t.itemId) : undefined)),
-  );
-  private readonly isThreadStatusOpened$ = this.threadService.threadInfo$.pipe( // may be true, false or undefined!
-    map(t => (t.data ? [ 'waiting_for_participant', 'waiting_for_trainer' ].includes(t.data.status) : undefined)),
-  );
+  // for future: others should be able to load as well using the answer stored in msg data
+  readonly canCurrentUserLoadAnswers$ = this.store.select(forum.selectCanCurrentUserLoadThreadAnswers);
+  private readonly isThreadStatusOpened$ = this.store.select(forum.selectThreadStatusOpen);
   readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,
-    this.threadService.threadId$
+    this.store.select(forum.selectThreadId),
   ]).pipe(
     map(([ user, threadId ]) => user.groupId === threadId?.participantId)
   );
@@ -105,16 +103,15 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     { open: true, canClose: boolean } |
     { open: false, canOpen: boolean }
   >> = combineLatest([
-      this.isThreadStatusOpened$,
+      this.store.select(forum.selectThreadStatus),
       this.isCurrentUserThreadParticipant$,
-      this.threadService.threadId$,
-      this.discussionService.visible$,
     ]).pipe(
       debounceTime(0), // to prevent race condition (service call immediately aborted)
-      switchMap(([ open, isCurrentUserParticipant, threadId, visible ]) => {
-        if (!visible || open === undefined || !threadId) return of(undefined);
+      switchMap(([ threadStatus, isCurrentUserParticipant ]) => {
+        if (!threadStatus || !threadStatus?.visible) return of(undefined);
+        const { id, open } = threadStatus;
         if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
-        return this.getItemByIdService.get(threadId.itemId, isCurrentUserParticipant ? undefined : threadId.participantId).pipe(
+        return this.getItemByIdService.get(id.itemId, isCurrentUserParticipant ? undefined : id.participantId).pipe(
           mapToFetchState(),
           map(state => {
             switch (state.tag) {
@@ -134,21 +131,18 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         );
       }),
     );
-  threadId$ = this.threadService.threadId$;
-  messagesCount$ = this.threadService.eventsState$.pipe(
-    readyData(),
-    map(events => events.filter(event => event.label === 'message').length),
-  );
+  threadId$ = this.store.select(forum.selectThreadId);
+  hasNoMessages$ = this.store.select(forum.selectThreadNoMessages);
 
   constructor(
-    private threadService: ThreadService,
-    private discussionService: DiscussionService,
+    private store: Store,
     private userSessionService: UserSessionService,
     private groupWatchingService: GroupWatchingService,
     private userService: GetUserService,
     private getItemByIdService: GetItemByIdService,
     private actionFeedbackService: ActionFeedbackService,
     private updateThreadService: UpdateThreadService,
+    private forumWebsocketClient: WebsocketClient,
     private fb: FormBuilder,
   ) {}
 
@@ -156,7 +150,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(
       this.state$.pipe(
         readyData(),
-        withLatestFrom(this.discussionService.visible$),
+        withLatestFrom(this.store.select(forum.selectVisible)),
         filter(([ events, visible ]) => visible && events.length > 0),
         delay(0),
       ).subscribe(() => this.scrollDown())
@@ -181,7 +175,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   sendMessage(threadId: ThreadId): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
-    this.threadService.sendMessage(messageToSend);
+    this.store.select(forum.selectThreadToken).pipe(
+      take(1), // send on the current thread (if any) only
+      filter(isNotUndefined),
+    ).subscribe(token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])));
     this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
     this.form.reset({
       messageToSend: '',
@@ -202,7 +199,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       status: 'waiting_for_trainer',
       helperGroupId: appConfig.allUsersGroupId,
     } : { status: 'closed' }).subscribe({
-      next: () => this.threadService.refresh(),
+      next: () => this.store.dispatch(forum.threadPanelActions.threadStatusChanged()),
       error: () => this.actionFeedbackService.unexpectedError(),
     });
   }

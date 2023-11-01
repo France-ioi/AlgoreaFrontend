@@ -1,9 +1,12 @@
 import { environment, presets, getPresetNameByOrigin } from 'src/environments/environment';
+import { InjectionToken } from '@angular/core';
 
 export interface LanguageConfig {
   tag: string,
   path: string,
 }
+
+export const WEBSOCKET_URL = new InjectionToken<string>('websocket url');
 
 export interface Environment {
   production: boolean,

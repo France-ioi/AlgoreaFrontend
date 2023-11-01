@@ -8,7 +8,6 @@ import {
 } from '../../containers/item-children-edit-form/item-children-edit-form.component';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
-import { DiscussionService } from 'src/app/services/discussion.service';
 import { BehaviorSubject } from 'rxjs';
 import { AllowsEditingChildrenItemPipe } from 'src/app/models/item-edit-permission';
 import { AllowsViewingItemContentPipe } from 'src/app/models/item-view-permission';
@@ -20,6 +19,8 @@ import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.compo
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
 import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import forum from 'src/app/forum/store';
 
 @Component({
   selector: 'alg-item-content',
@@ -71,9 +72,9 @@ export class ItemContentComponent implements PendingChangesComponent {
   }
 
   constructor(
+    private store: Store,
     private router: Router,
     private route: ActivatedRoute,
-    private discussionService: DiscussionService,
   ) {}
 
   onEditModeEnableChange(editModeEnabled: boolean): void {
@@ -88,7 +89,7 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onScoreChange(score: number): void {
     this.scoreChange.emit(score);
-    this.discussionService.resyncEventLog();
+    this.store.dispatch(forum.itemPageEventSyncActions.currentThreadEventsSync());
   }
 
 }

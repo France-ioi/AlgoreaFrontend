@@ -1,5 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { appConfig } from 'src/app/utils/config';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { WEBSOCKET_URL } from 'src/app/utils/config';
 import { EMPTY, map, merge, retry, shareReplay, startWith, Subject, switchMap, timer } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 import { MINUTES, SECONDS } from 'src/app/utils/duration';
@@ -9,13 +9,13 @@ const heartbeatStartDelay = 1*MINUTES;
 const heartbeatStartPeriod = 4*MINUTES; // API gatetway closes the connection after 10min without activity
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ForumService implements OnDestroy {
+export class WebsocketClient implements OnDestroy {
 
   private openEvents$ = new Subject<Event>();
   private closeEvents$ = new Subject<CloseEvent>();
-  private ws$ = webSocket<unknown>({ url: appConfig.forumServerUrl!, openObserver: this.openEvents$, closeObserver: this.closeEvents$ });
+  private ws$ = webSocket<unknown>({ url: this.websocketUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ });
 
   isWsOpen$ = merge(
     this.openEvents$.pipe(map(() => true)),
@@ -27,9 +27,6 @@ export class ForumService implements OnDestroy {
 
   inputMessages$ = this.ws$.pipe(retry({ delay: wsRetryDelay }));
 
-  // subscribe to the ws so that it stays open until 'destroy'
-  private subscription = this.inputMessages$.subscribe();
-
   private heartbeatSubscription = this.isWsOpen$.pipe(
     switchMap(open => {
       if (!open) return EMPTY;
@@ -37,11 +34,10 @@ export class ForumService implements OnDestroy {
     })
   ).subscribe(() => this.send({ action: 'heartbeat' })); // the action is not necessarily recognized, it is used to keep the connection up
 
-  constructor() {}
+  constructor(@Inject(WEBSOCKET_URL) private websocketUrl: string) {}
 
   ngOnDestroy(): void {
     this.heartbeatSubscription.unsubscribe();
-    this.subscription.unsubscribe();
     this.ws$.complete();
     this.openEvents$.complete();
     this.closeEvents$.complete();

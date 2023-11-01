@@ -41,7 +41,6 @@ import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
 import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/models/item-view-permission';
-import { DiscussionService } from 'src/app/services/discussion.service';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
@@ -64,6 +63,9 @@ import { ItemPermissionsComponent } from './containers/item-permissions/item-per
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import forum from '../forum/store';
+import { isNotNull } from '../utils/null-undefined-predicates';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -327,7 +329,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         return { participantId: watchedGroup ? watchedGroup.route.id : userProfile.groupId, itemId: state.data.item.id };
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
-    ).subscribe(threadId => this.discussionService.configureThread(threadId)),
+      filter(isNotNull), // leave the forum as it is if no new value
+    ).subscribe(threadId => this.store.dispatch(forum.itemPageActions.currentThreadIdChange({ id: threadId }))),
 
   ];
 
@@ -338,6 +341,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   showItemThreadWidget = !!appConfig.forumServerUrl;
 
   constructor(
+    private store: Store,
     private itemRouter: ItemRouter,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
@@ -350,7 +354,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private getItemPathService: GetItemPathService,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
-    private discussionService: DiscussionService,
     private tabService: TabService,
   ) {}
 
