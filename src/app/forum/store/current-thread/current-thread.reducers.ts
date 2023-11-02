@@ -31,7 +31,7 @@ const reducer = createReducer(
   on(threadPanelActions.close, (state): State => ({ ...state, visible: false })),
 
   on(
-    itemPageActions.currentThreadIdChange,
+    itemPageActions.changeCurrentThreadId,
     forumThreadListActions.showAsCurrentThread,
     (state, { id }): State => ({
       ...state,

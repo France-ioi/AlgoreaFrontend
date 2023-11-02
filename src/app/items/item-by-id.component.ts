@@ -330,7 +330,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
       filter(isNotNull), // leave the forum as it is if no new value
-    ).subscribe(threadId => this.store.dispatch(forum.itemPageActions.currentThreadIdChange({ id: threadId }))),
+    ).subscribe(threadId => this.store.dispatch(forum.itemPageActions.changeCurrentThreadId({ id: threadId }))),
 
   ];
 

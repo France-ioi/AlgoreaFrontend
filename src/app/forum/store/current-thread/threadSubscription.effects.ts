@@ -25,7 +25,7 @@ export const threadUnsubscriptionEffect = createEffect(
     merge(
       fromEvent(window, 'beforeunload'),
       actions$.pipe(
-        ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.currentThreadIdChange),
+        ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.changeCurrentThreadId),
         map(({ id }) => id),
         distinctUntilChanged(areSameThreads), // only when the id really changes
       )
