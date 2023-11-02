@@ -1,7 +1,7 @@
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { dateDecoder } from 'src/app/utils/decoders';
-import { threadEventDecoder } from './threads-events';
+import { threadEventDecoder } from '../../models/thread-events';
 
 export const incomingThreadEventDecoder = pipe(
   D.struct({

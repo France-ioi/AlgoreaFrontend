@@ -26,7 +26,7 @@ import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
-import { messageEvent } from '../../data-access/websocket-messages/threads-events';
+import { messageEvent } from '../../models/thread-events';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 
 @Component({

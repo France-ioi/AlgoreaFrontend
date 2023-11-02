@@ -1,4 +1,4 @@
-import { ThreadEvent } from './threads-events';
+import { ThreadEvent } from '../../models/thread-events';
 
 export type ThreadAction = (
   | { action: 'unsubscribe' }

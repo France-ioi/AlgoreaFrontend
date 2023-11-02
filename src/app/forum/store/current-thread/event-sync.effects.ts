@@ -11,6 +11,7 @@ import { Store } from '@ngrx/store';
 import forumFeature from '..';
 import { Thread, areSameThreads } from '../../models/threads';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
+import { attemptStartedEvent, submissionEvent } from '../../models/thread-events';
 
 /**
  * Synchronization of the events from the backend with the forum
@@ -25,11 +26,11 @@ function syncThread(activityLogService: ActivityLogService, websocketClient: Web
     switchMap(({ itemId, token, watchedGroupId }) => activityLogService.getActivityLog(itemId, { watchedGroupId, limit: 100 }).pipe(
       map(log => log.map(e => {
         switch (e.activityType) {
-          case 'result_started': return { label: 'result_started' as const, time: e.at.valueOf(), data: { attemptId: e.attemptId } };
+          case 'result_started': return { ...attemptStartedEvent({ attemptId: e.attemptId }), time: e.at.valueOf() };
           case 'submission': {
             if (!e.answerId) return null;
             const { attemptId, answerId, at, score } = e;
-            return { label: 'submission' as const, time: at.valueOf(), data: { attemptId, answerId, score } };
+            return { ...submissionEvent({ attemptId, answerId, score }), time: at.valueOf() };
           }
           default: return null;
         }
