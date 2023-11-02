@@ -21,7 +21,7 @@ export const fetchThreadInfoEffect = createEffect(
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(
       mapToFetchState(),
     )),
-    map(fetchState => fetchThreadInfoActions.fetchStateChange({ fetchState }))
+    map(fetchState => fetchThreadInfoActions.fetchStateChanged({ fetchState }))
   ),
   { functional: true }
 );
@@ -39,7 +39,7 @@ export const refreshThreadInfoEffect = createEffect(
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(
       mapToFetchState(),
     )),
-    map(fetchState => fetchThreadInfoActions.fetchStateChange({ fetchState }))
+    map(fetchState => fetchThreadInfoActions.fetchStateChanged({ fetchState }))
   ),
   { functional: true }
 );

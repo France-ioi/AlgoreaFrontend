@@ -5,6 +5,6 @@ import { FetchState } from 'src/app/utils/state';
 export const fetchThreadInfoActions = createActionGroup({
   source: 'Forum API',
   events: {
-    fetchStateChange: props<{ fetchState: FetchState<ThreadInfo> }>(),
+    fetchStateChanged: props<{ fetchState: FetchState<ThreadInfo> }>(),
   },
 });

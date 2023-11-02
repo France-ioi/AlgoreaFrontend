@@ -41,7 +41,7 @@ const reducer = createReducer(
     })
   ),
 
-  on(fetchThreadInfoActions.fetchStateChange, (state, { fetchState }): State => ({ ...state, info: fetchState })),
+  on(fetchThreadInfoActions.fetchStateChanged, (state, { fetchState }): State => ({ ...state, info: fetchState })),
 
 );
 

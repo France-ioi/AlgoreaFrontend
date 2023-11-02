@@ -49,7 +49,7 @@ export const threadSubscriptionEffect = createEffect(
     actions$ = inject(Actions),
     websocketClient = inject(WebsocketClient),
   ) => actions$.pipe(
-    ofType(fetchThreadInfoActions.fetchStateChange),
+    ofType(fetchThreadInfoActions.fetchStateChanged),
     map(({ fetchState }) => fetchState),
     readyData(),
     distinctUntilChanged(areSameThreads),
