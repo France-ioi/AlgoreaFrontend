@@ -89,7 +89,7 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onScoreChange(score: number): void {
     this.scoreChange.emit(score);
-    this.store.dispatch(forum.itemPageEventSyncActions.currentThreadEventsSync());
+    this.store.dispatch(forum.itemPageEventSyncActions.forceSyncCurrentThreadEvents());
   }
 
 }
