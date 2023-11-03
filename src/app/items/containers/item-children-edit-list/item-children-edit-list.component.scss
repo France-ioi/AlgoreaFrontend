@@ -1,12 +1,11 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
 .section-chapter-wrapper {
-  padding: 0 2rem;
+  padding: 0;
 }
 
 .add-item-container {
-  padding-left: 5.8333rem;
-  padding-right: 1.6667rem;
+  margin-top: toRem(16);
 }
 
 .reorder-handle {
@@ -15,14 +14,12 @@
 
 .main {
   flex: 1;
+  font-size: toRem(16);
 }
 
 .type {
-  color: var(--base-color);
-}
-
-.spacer {
-  width: 2.9rem;
+  color: var(--alg-secondary-color);
+  font-size: toRem(16);
 }
 
 .score-weight-container {
@@ -38,11 +35,4 @@
 
 .score-weight-label {
   margin-right: 1rem;
-}
-
-.propagation-state-wrapper {
-  width: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

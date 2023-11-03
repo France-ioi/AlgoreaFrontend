@@ -1,6 +1,6 @@
 @import 'src/assets/scss/functions';
 
-.alg-path-suggestion-overlay {
+.alg-path-suggestion-overlay, .alg-menu-overlay {
   min-width: 30rem;
   max-width: 50rem;
   background-color: var(--alg-primary-color);
