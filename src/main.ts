@@ -128,7 +128,7 @@ bootstrapApplication(AppComponent, {
     },
     provideStore(),
     provideState(forum),
-    provideEffects(forumEffects),
+    provideEffects(forumEffects()),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
