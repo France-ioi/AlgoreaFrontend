@@ -11,7 +11,7 @@ export const fetchStateChangeGuardEffect = createEffect(
     actions$ = inject(Actions),
     store$ = inject(Store),
   ) => actions$.pipe(
-    ofType(fetchThreadInfoActions.fetchStateChange),
+    ofType(fetchThreadInfoActions.fetchStateChanged),
     withLatestFrom(store$.select(forumFeature.selectThreadId)),
     tap(([{ fetchState } , id ]) => {
       if (id === null) throw new Error('unexpected: no state id while changing thread info');

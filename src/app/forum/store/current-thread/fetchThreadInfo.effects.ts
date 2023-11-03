@@ -15,13 +15,13 @@ export const fetchThreadInfoEffect = createEffect(
     actions$ = inject(Actions),
     threadHttpService = inject(ThreadService),
   ) => actions$.pipe(
-    ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.currentThreadIdChange),
+    ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.changeCurrentThreadId),
     map(({ id }) => id),
     distinctUntilChanged(areSameThreads),
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(
       mapToFetchState(),
     )),
-    map(fetchState => fetchThreadInfoActions.fetchStateChange({ fetchState }))
+    map(fetchState => fetchThreadInfoActions.fetchStateChanged({ fetchState }))
   ),
   { functional: true }
 );
@@ -39,7 +39,7 @@ export const refreshThreadInfoEffect = createEffect(
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(
       mapToFetchState(),
     )),
-    map(fetchState => fetchThreadInfoActions.fetchStateChange({ fetchState }))
+    map(fetchState => fetchThreadInfoActions.fetchStateChanged({ fetchState }))
   ),
   { functional: true }
 );

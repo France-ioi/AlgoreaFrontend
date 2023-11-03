@@ -25,7 +25,7 @@ export const threadUnsubscriptionEffect = createEffect(
     merge(
       fromEvent(window, 'beforeunload'),
       actions$.pipe(
-        ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.currentThreadIdChange),
+        ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.changeCurrentThreadId),
         map(({ id }) => id),
         distinctUntilChanged(areSameThreads), // only when the id really changes
       )
@@ -49,7 +49,7 @@ export const threadSubscriptionEffect = createEffect(
     actions$ = inject(Actions),
     websocketClient = inject(WebsocketClient),
   ) => actions$.pipe(
-    ofType(fetchThreadInfoActions.fetchStateChange),
+    ofType(fetchThreadInfoActions.fetchStateChanged),
     map(({ fetchState }) => fetchState),
     readyData(),
     distinctUntilChanged(areSameThreads),
