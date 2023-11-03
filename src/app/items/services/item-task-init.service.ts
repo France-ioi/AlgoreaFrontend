@@ -56,6 +56,7 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1),
   );
 
+  // task token generation (possibly after some delay) (may fail!)
   readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
     // build strategy separately from switchMap to prevent cancellation of the request
     map(({ readOnly, initialAnswer, attemptId, route }) => {
@@ -81,7 +82,7 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1),
   );
 
-  // the task (i.e., a client to the task in the iframe) which has been loaded
+  // the task (i.e., a client to the task in the iframe) which has been loaded (may fail!)
   readonly loadedTask$ = this.task$.pipe(
     switchMap(task => task.getMetaData().pipe(map(({ usesTokens }) => ({ usesTokens: usesTokens ?? true, task })))),
     switchMap(({ usesTokens, task }) => (usesTokens ? this.taskToken$.pipe(

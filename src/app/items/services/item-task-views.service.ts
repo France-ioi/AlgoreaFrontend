@@ -12,7 +12,7 @@ export class ItemTaskViewsService implements OnDestroy {
 
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
   readonly display$ = this.displaySubject.asObservable().pipe(takeUntil(this.error$));
-  private loadedTask$ = this.initService.loadedTask$.pipe(takeUntil(this.error$));
+  private loadedTask$ = this.initService.loadedTask$.pipe(catchError(() => EMPTY), takeUntil(this.error$));
 
   private readonly views = merge(
     this.loadedTask$.pipe(switchMap(task => task.getViews())),
