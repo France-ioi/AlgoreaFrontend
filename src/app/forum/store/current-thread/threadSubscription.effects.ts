@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge } from 'rxjs';
+import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge, filter, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { areSameThreads } from '../../models/threads';
 import forum from '..';
@@ -43,16 +43,23 @@ export const threadUnsubscriptionEffect = createEffect(
 
 /**
  * Subscribe to the thread if there is a new thread id for which the token is known.
+ * We must also re-subscribe when the websocket reconnects.
  */
 export const threadSubscriptionEffect = createEffect(
   (
     actions$ = inject(Actions),
+    store$ = inject(Store),
     websocketClient = inject(WebsocketClient),
   ) => actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChanged),
     map(({ fetchState }) => fetchState),
     readyData(),
     distinctUntilChanged(areSameThreads),
+    // re-emit the thread each time the websocket comes back to `open = true` status
+    switchMap(thread => store$.select(forum.selectWebsocketOpen).pipe(
+      filter(open => open),
+      map(() => thread),
+    )),
     tap(thread => {
       websocketClient.send(subscribeAction(thread.token));
     })

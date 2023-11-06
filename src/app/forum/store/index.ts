@@ -9,14 +9,15 @@ import { getCurrentThreadSelectors } from './current-thread/current-thread.selec
 import { topBarActions, forumThreadListActions, threadPanelActions, itemPageActions } from './current-thread/current-thread.actions';
 import { itemPageEventSyncActions } from './current-thread/event-sync.actions';
 import { getWebsocketSelectors } from './websocket/websocket.selectors';
+import { FunctionalEffect } from '@ngrx/effects';
 
-export const forumEffects = {
+export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...websocketEffects,
   ...fetchThreadInfoEffects,
   ...syncEffects,
   ...threadSubscriptionEffects,
   ...currentThreadEffects,
-};
+});
 
 const forumFeature = {
   ...createFeature({
