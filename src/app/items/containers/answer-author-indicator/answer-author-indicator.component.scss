@@ -1,20 +1,27 @@
-@import 'src/variables';
-@import 'src/geometry';
+@import 'src/assets/scss/functions';
 
 .container {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
-  color: var(--base-text-color);
-  background-color: var(--section-color);
-  border-radius: $border-radius;
+  color: var(--alg-secondary-color);
+  background-color: var(--alg-light-bg-color);
+  border-radius: var(--border-radius);
 }
 
-.content {
+.content, .content-text {
   display: flex;
   align-items: center;
   padding: .5rem 1rem;
+}
+
+.score-ring {
+  margin-right: toRem(8);
+}
+
+.button {
+  margin-right: toRem(6);
 }
 
 .links, .score {

@@ -50,7 +50,7 @@ import forum from './forum/store';
     ButtonModule,
     LanguageMismatchComponent,
     SharedModule,
-    AsyncPipe
+    AsyncPipe,
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -68,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   leftMenu$ = this.layoutService.leftMenu$;
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
+  fullFrameWithLeftPaddingContentDisplayed$ = this.layoutService.fullFrameWithLeftPaddingContentDisplayed$;
   canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
   canShowBreadcrumbs$ = this.layoutService.canShowBreadcrumbs$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));

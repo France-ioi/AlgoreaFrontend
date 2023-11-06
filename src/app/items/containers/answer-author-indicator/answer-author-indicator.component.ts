@@ -11,9 +11,15 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
+import { UserProfile } from '../../../data-access/current-user.service';
+import { ButtonModule } from 'primeng/button';
+import { ItemRouteWithAnswerPipe, RawItemRoutePipe } from '../../../pipes/itemRoute';
+import { ItemData } from '../../services/item-datasource.service';
+import { RouteUrlPipe } from '../../../pipes/routeUrl';
 
 @Component({
-  selector: 'alg-answer-author-indicator[answer]',
+  selector: 'alg-answer-author-indicator[answer][isWatching]',
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
   standalone: true,
@@ -25,13 +31,21 @@ import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
     AsyncPipe,
     DatePipe,
     UserCaptionPipe,
+    ScoreRingComponent,
+    ButtonModule,
+    RawItemRoutePipe,
+    ItemRouteWithAnswerPipe,
+    RouteUrlPipe,
   ],
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 
   @Input() answer!: Answer;
+  @Input() isWatching!: boolean;
+  @Input() userProfile?: UserProfile;
+  @Input() itemData?: ItemData;
 
-  private answer$ = new ReplaySubject<Answer>(1);
+  answer$ = new ReplaySubject<Answer>(1);
   readonly author$ = this.answer$.pipe(
     switchMap(answer => this.getUserService.getForId(answer.authorId)),
     mapToFetchState(),
