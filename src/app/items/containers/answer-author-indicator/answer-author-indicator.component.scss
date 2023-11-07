@@ -16,6 +16,15 @@
   padding: .5rem 1rem;
 }
 
+.content {
+  justify-content: space-between;
+}
+
+.content-left {
+  display: flex;
+  align-items: center;
+}
+
 .score-ring {
   margin-right: toRem(8);
 }

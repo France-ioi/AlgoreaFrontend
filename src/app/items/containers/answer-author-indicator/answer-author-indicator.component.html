@@ -4,12 +4,24 @@
     <alg-error *ngIf="author.isError" i18n-message message="Error while fetching author info"></alg-error>
 
     <div class="content" *ngIf="author.isReady && author.data as author">
-      <alg-score-ring
-        class="score-ring"
-        [currentScore]="answer.score"
-        [diameter]="32"
-        *ngIf="answer.score || answer.score === 0"
-      ></alg-score-ring>
+      <div class="content-left">
+        <alg-score-ring
+          class="score-ring"
+          [currentScore]="answer.score"
+          [diameter]="32"
+          *ngIf="answer.score || answer.score === 0"
+        ></alg-score-ring>
+        <div class="description" i18n>
+          Submitted by
+          <ng-container *ngIf="author.groupId === userProfile?.groupId; else otherUser">
+            yourself
+          </ng-container>
+          <ng-template #otherUser>
+            <a [routerLink]="groupLink$ | async" class="alg-link base-color">{{ author | userCaption }}</a>
+          </ng-template>
+          on {{ answer.createdAt | date:'short' }}.
+        </div>
+      </div>
       <div class="buttons" *ngIf="!isWatching && author.groupId === userProfile?.groupId && itemData">
         <a
           class="alg-button primary mini button"
@@ -27,16 +39,6 @@
         >
           Back to your current answer
         </a>
-      </div>
-      <div class="description" i18n>
-        Submitted by
-        <ng-container *ngIf="author.groupId === userProfile?.groupId; else otherUser">
-          yourself
-        </ng-container>
-        <ng-template #otherUser>
-          <a [routerLink]="groupLink$ | async" class="alg-link base-color">{{ author | userCaption }}</a>
-        </ng-template>
-        on {{ answer.createdAt | date:'short' }}.
       </div>
     </div>
   </div>
