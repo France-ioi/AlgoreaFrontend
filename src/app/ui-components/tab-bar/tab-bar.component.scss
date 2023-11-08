@@ -1,3 +1,109 @@
+@import 'src/assets/scss/functions';
+
 :host {
   overflow: hidden;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.tabs {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: scroll;
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    height: toRem(1);
+    background: rgb(255,255,255);
+    background: -moz-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
+  }
+
+  &.for-header {
+    height: 100%;
+
+    &:after {
+      content: none;
+    }
+
+    .tabs-item {
+      margin: 0 toRem(7.5) toRem(3) toRem(7.5) !important;
+
+      &:first-child {
+        margin-left: 0 !important;
+      }
+
+      &:last-child {
+        margin-right: 0 !important;
+      }
+    }
+
+    .tabs-item-link {
+      padding-bottom: 0 !important;
+      font-size: toRem(12);
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.tabs-item {
+  position: relative;
+  z-index: 1;
+  margin: 0 toRem(16) !important;
+
+  &.alg-tab-bar-active {
+    .tabs-item-link {
+      color: var(--alg-primary-color) !important;
+      opacity: 1 !important;
+      border-bottom: toRem(3) solid var(--alg-primary-color) !important;
+    }
+  }
+
+  &:first-child {
+    margin-left: 0 !important;
+  }
+
+  &:last-child {
+    margin-right: 0 !important;
+  }
+}
+
+.tabs-item-link {
+  display: inline-block;
+  padding-bottom: toRem(10);
+  border-bottom: toRem(3) solid transparent;
+  z-index: 1;
+  color: var(--alg-secondary-color) !important;
+  font-size: toRem(16);
+  font-weight: 300;
+  text-decoration: none;
+  opacity: .5;
+}
+
+.prev-button {
+  position: absolute;
+  left: 0;
+  z-index: 2;
+}
+
+.next-button {
+  position: absolute;
+  right: 0;
+  z-index: 1;
 }

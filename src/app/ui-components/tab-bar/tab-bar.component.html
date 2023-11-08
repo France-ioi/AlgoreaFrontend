@@ -1,6 +1,23 @@
-<p-tabMenu
-  *ngrxLet="tabs$ as tabs"
-  [styleClass]="styleClass || 'alg-tab-menu'"
-  [model]="tabs"
-  (activeItemChange)="onChange($event)"
-/>
+<div class="container">
+  <button
+    class="alg-button-icon secondary-bg-color tab-arrow prev-button"
+    type="button"
+    icon="ph-bold ph-caret-left"
+    pButton
+    (click)="onPrev()"
+    *ngIf="showPrevButton"
+  ></button>
+  <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs" #tabsContainer>
+    <li class="tabs-item" [ngClass]="tab.styleClass" *ngFor="let tab of tabs">
+      <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab)">{{ tab.label }}</a>
+    </li>
+  </ul>
+  <button
+    class="alg-button-icon secondary-bg-color tab-arrow next-button"
+    type="button"
+    icon="ph-bold ph-caret-right"
+    pButton
+    (click)="onNext()"
+    *ngIf="showNextButton"
+  ></button>
+</div>

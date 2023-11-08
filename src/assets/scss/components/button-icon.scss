@@ -50,6 +50,18 @@
     }
   }
 
+  &.secondary-bg-color {
+    .p-button-icon {
+      color: var(--alg-white-color);
+    }
+
+    &.p-button:enabled:hover {
+      background-color: var(--alg-secondary-color);
+    }
+
+    background-color: var(--alg-secondary-color);
+  }
+
   &.no-bg {
     width: auto;
     margin: 0;
@@ -104,5 +116,10 @@
     .p-button-icon {
       font-size: toRem(18);
     }
+  }
+
+  &.tab-arrow {
+    width: toRem(20);
+    height: 100%;
   }
 }
