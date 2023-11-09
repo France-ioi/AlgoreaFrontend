@@ -94,7 +94,7 @@
 
       <div class="alg-flex-1 scroll-wrapper" *ngIf="state.data">
         <div class="scroll-container">
-          <ng-scrollbar>
+          <ng-scrollbar [sensorDebounce]="1">
             <alg-left-nav-tree
               [data]="state.data"
               [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
