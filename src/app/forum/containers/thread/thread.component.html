@@ -20,9 +20,10 @@
           People who have already validated this activity will see your request and be able to answer.
         </div>
         <ng-template #messagesBlock>
-          <ng-container>
+          <ng-container *ngIf="threadMetadata.id">
             <alg-thread-message
               class="thread-message"
+              [threadId]="threadMetadata.id"
               [event]="event"
               [userCache]="threadMetadata.userCache ?? []"
               [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
