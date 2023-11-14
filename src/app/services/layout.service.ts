@@ -32,7 +32,7 @@ export class LayoutService implements OnDestroy {
     distinctUntilChanged(),
   );
   fullFrameContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.ShowFullFrame));
-  fullFrameWithLeftPaddingContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.Show));
+  withLeftPaddingContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.Show));
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
   canShowBreadcrumbs$ = this.canShowBreadcrumbs.asObservable();

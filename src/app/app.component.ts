@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   leftMenu$ = this.layoutService.leftMenu$;
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
-  fullFrameWithLeftPaddingContentDisplayed$ = this.layoutService.fullFrameWithLeftPaddingContentDisplayed$;
+  withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
   canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
   canShowBreadcrumbs$ = this.layoutService.canShowBreadcrumbs$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
