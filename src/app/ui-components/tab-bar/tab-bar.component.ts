@@ -46,7 +46,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     if (!this.tabsContainer) return;
     this.subscriptions.add(
       fromEvent(this.tabsContainer.nativeElement, 'scroll').pipe(
-        debounceTime(250),
+        debounceTime(30),
       ).subscribe(() =>
         this.handleArrows()
       )
@@ -74,7 +74,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     const boundingClientRect = tabsContainer.nativeElement.getBoundingClientRect();
     const scrollLeft = tabsContainer.nativeElement.scrollLeft;
     const tabContainerWidth = Math.round(boundingClientRect.width);
-    const gap = 20;
+    const gap = 5;
     this.showPrevButton = Math.round(boundingClientRect.width) !== Math.round(scrollWidth) && scrollLeft > gap;
     this.showNextButton = Math.round(boundingClientRect.width) !== Math.round(scrollWidth)
       && (scrollLeft + tabContainerWidth) < (Math.round(scrollWidth) - gap);
