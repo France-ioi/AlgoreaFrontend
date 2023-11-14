@@ -50,7 +50,7 @@
                 >
                   <ng-container *ngIf="userProfile$ | async as userProfile">
                     <alg-answer-author-indicator
-                      *ngIf="taskConfig.initialAnswer"
+                      *ngIf="!!currentTab?.isTaskTab && taskConfig.initialAnswer"
                       [answer]="taskConfig.initialAnswer"
                       [userProfile]="userProfile"
                       [itemData]="itemData"

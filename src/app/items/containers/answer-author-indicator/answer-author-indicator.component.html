@@ -1,6 +1,6 @@
 <ng-container *ngIf="answer$ | async as answer">
   <div class="container" *ngIf="author$ | async as author">
-    <alg-loading *ngIf="author.isFetching && !author.data" size="small"></alg-loading>
+    <alg-loading class="no-padding" *ngIf="author.isFetching && !author.data" size="small"></alg-loading>
     <alg-error *ngIf="author.isError" i18n-message message="Error while fetching author info"></alg-error>
 
     <div class="content" *ngIf="author.isReady && author.data as author">
