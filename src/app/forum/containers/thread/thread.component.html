@@ -4,6 +4,7 @@
     threadStatus: threadStatus$,
     hasNoMessages: hasNoMessages$,
     isCurrentUserThreadParticipant: isCurrentUserThreadParticipant$,
+    isMine: isMine$,
   } as thread"
 >
   <div class="widget-loading" *ngIf="thread.isWsOpen && thread.state.isFetching">Loading...</div>
@@ -14,6 +15,16 @@
   </div>
   <ng-template #eventsBlock>
     <div class="widget-body" *ngIf="thread.isWsOpen">
+      <ng-container *ngIf="!thread?.isMine">
+        <ng-container *ngIf="participantUser$ | async as participantUser">
+          <div class="user-indicator-container" *ngIf="participantUser.name">
+            <div class="user-indicator">
+              <span i18n>You are helping</span>
+              <a class="alg-link user-indicator-link" [routerLink]="[ '/groups/users', participantUser.id ]">{{ participantUser.name }}</a>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
       <div class="widget-scroll" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
         <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && !thread.threadStatus?.data?.open && thread.hasNoMessages; else messagesBlock" i18n>
           In this panel, you can request help from other users about the content you are on.

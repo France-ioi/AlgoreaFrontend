@@ -24,10 +24,11 @@ import { Store } from '@ngrx/store';
 import forum from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
-import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { messageEvent } from '../../models/thread-events';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'alg-thread',
@@ -46,6 +47,7 @@ import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
     ButtonModule,
     TooltipModule,
     AsyncPipe,
+    RouterLink,
   ],
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
@@ -69,16 +71,19 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     distinctUntilChanged((prev, cur) => JSON.stringify(prev) === JSON.stringify(cur))
   );
   readonly userCache$ = combineLatest([
+    this.store.select(forum.selectThreadId).pipe(filter(isNotNull)),
     this.distinctUsersInThread,
     this.userSessionService.userProfile$,
     this.groupWatchingService.watchedGroup$
   ]).pipe(
-    map(([ users, currentUser, watchedGroup ]) => users.map(id => ({
-      id,
-      isCurrentUser: id === currentUser.groupId,
-      isThreadParticipant: id === watchedGroup?.route.id || (!watchedGroup && id === currentUser.groupId),
-      name: id === currentUser.groupId ? formatUser(currentUser) : id === watchedGroup?.route.id ? watchedGroup.name : undefined,
-    }))),
+    map(([ threadId, users, currentUser, watchedGroup ]) =>
+      [ threadId.participantId, ...users.filter(id => threadId.participantId !== id) ].map(id => ({
+        id,
+        isCurrentUser: id === currentUser.groupId,
+        isThreadParticipant: id === watchedGroup?.route.id || (!watchedGroup && id === currentUser.groupId),
+        name: id === currentUser.groupId ? formatUser(currentUser) : id === watchedGroup?.route.id ? watchedGroup.name : undefined,
+      })),
+    ),
     mergeScan((acc: UserInfo[], users) => combineLatest(users.map(u => {
       if (u.name !== undefined) return of({ ...u, notVisibleUser: false });
       const lookup = acc.find(user => user.id === u.id);
@@ -89,6 +94,16 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         catchError(() => of({ ...u, notVisibleUser: true })),
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
+  );
+  isMine$ = combineLatest([
+    this.store.select(forum.selectThreadId).pipe(filter(isNotNull)),
+    this.userSessionService.userProfile$,
+  ]).pipe(map(([ threadId, userProfile ]) => threadId.participantId === userProfile.groupId));
+  readonly participantUser$ = combineLatest([
+    this.userCache$,
+    this.store.select(forum.selectThreadId),
+  ]).pipe(
+    map(([ users, threadId ]) => users.find(u => u.id === threadId?.participantId)),
   );
   // for future: others should be able to load as well using the answer stored in msg data
   readonly canCurrentUserLoadAnswers$ = this.store.select(forum.selectCanCurrentUserLoadThreadAnswers);
