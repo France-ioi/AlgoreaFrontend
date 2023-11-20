@@ -56,6 +56,7 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.subscription = this.visible$.pipe(filter(visible => visible)).subscribe(() => {
       this.threadComponent?.scrollDown();
+      this.threadComponent?.focusOnInput();
     });
   }
 
