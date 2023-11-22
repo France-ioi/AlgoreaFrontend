@@ -50,6 +50,18 @@
     }
   }
 
+  &.secondary-bg-color {
+    .p-button-icon {
+      color: var(--alg-white-color);
+    }
+
+    &.p-button:enabled:hover {
+      background-color: var(--alg-secondary-color);
+    }
+
+    background-color: var(--alg-secondary-color);
+  }
+
   &.no-bg {
     width: auto;
     margin: 0;
@@ -103,6 +115,29 @@
 
     .p-button-icon {
       font-size: toRem(18);
+    }
+  }
+
+  &.tab-arrow {
+    width: toRem(30);
+    height: 100%;
+    border-radius: 0;
+    background-color: var(--alg-white-color);
+
+    .p-button-icon {
+      color: var(--alg-primary-color);
+    }
+
+    &.p-button:enabled:hover {
+      background-color: var(--alg-white-color);
+    }
+
+    &.tab-prev {
+      box-shadow: toRem(1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
+    }
+
+    &.tab-next {
+      box-shadow: toRem(-1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
     }
   }
 }
