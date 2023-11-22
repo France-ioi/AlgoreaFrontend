@@ -11,11 +11,6 @@
   background-color: var(--base-bk-color);
   display: flex;
   flex-direction: column;
-  margin: calc(-1 * var(--alg-space-size-4)) calc(-1 * var(--alg-space-size-2)) calc(-1 * var(--alg-space-size-1)) 0;
-
-  &.full-frame {
-    margin: calc(-1 * var(--alg-space-size-4)) calc(-1 * var(--alg-space-size-2)) calc(-1 * var(--alg-space-size-1)) calc(-1 * var(--alg-space-size-2));
-  }
 }
 
 .iframe-container {

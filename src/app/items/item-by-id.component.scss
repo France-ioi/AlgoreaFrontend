@@ -11,11 +11,24 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  &.no-top-padding {
+    padding-top: 0;
+  }
+  &.side-padding {
+    padding-right: var(--alg-space-size-2);
+    padding-left: var(--alg-space-size-2);
+  }
+  &.right-padding {
+    padding-right: var(--alg-space-size-2);
+  }
 }
 
 .indicator {
-  padding: 1rem;
-  margin-right: 2rem;
+  padding: toRem(16);
+
+  &.no-left-padding {
+    padding-left: 0;
+  }
 }
 
 .stats-title {

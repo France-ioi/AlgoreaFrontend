@@ -61,6 +61,15 @@
     }
   }
 
+  &.mini {
+    &.p-button {
+      padding: toRem(8);
+      height: toRem(20);
+      font-size: toRem(12);
+      font-weight: 500;
+    }
+  }
+
   &.light-border {
     border: toRem(1) solid var(--alg-white-color);
 

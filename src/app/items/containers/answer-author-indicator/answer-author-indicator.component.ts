@@ -11,6 +11,14 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
+import { ButtonModule } from 'primeng/button';
+import { ItemRouteWithAnswerPipe, RawItemRoutePipe } from '../../../pipes/itemRoute';
+import { ItemData } from '../../services/item-datasource.service';
+import { RouteUrlPipe } from '../../../pipes/routeUrl';
+import { UserSessionService } from '../../../services/user-session.service';
+import { GroupWatchingService } from '../../../services/group-watching.service';
+import { LetDirective } from '@ngrx/component';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',
@@ -25,13 +33,20 @@ import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
     AsyncPipe,
     DatePipe,
     UserCaptionPipe,
+    ScoreRingComponent,
+    ButtonModule,
+    RawItemRoutePipe,
+    ItemRouteWithAnswerPipe,
+    RouteUrlPipe,
+    LetDirective,
   ],
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 
   @Input() answer!: Answer;
+  @Input() itemData?: ItemData;
 
-  private answer$ = new ReplaySubject<Answer>(1);
+  answer$ = new ReplaySubject<Answer>(1);
   readonly author$ = this.answer$.pipe(
     switchMap(answer => this.getUserService.getForId(answer.authorId)),
     mapToFetchState(),
@@ -41,10 +56,16 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
     readyData(),
     map(user => this.groupRouter.urlArray(groupRoute({ id: user.groupId, isUser: true }, [])))
   );
+  readonly currentUserId$ = this.userSessionService.userProfile$.pipe(
+    map(userProfile => userProfile.groupId),
+  );
+  readonly isWatching$ = this.groupWatchingService.isWatching$;
 
   constructor(
     private groupRouter: GroupRouter,
     private getUserService: GetUserService,
+    private groupWatchingService: GroupWatchingService,
+    private userSessionService: UserSessionService,
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {

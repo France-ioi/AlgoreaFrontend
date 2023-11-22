@@ -62,7 +62,7 @@ import { TabBarComponent } from 'src/app/ui-components/tab-bar/tab-bar.component
 import { ItemPermissionsComponent } from './containers/item-permissions/item-permissions.component';
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { NgIf, AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import forum from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
@@ -80,6 +80,7 @@ const itemBreadcrumbCat = $localize`Items`;
   standalone: true,
   imports: [
     NgIf,
+    NgClass,
     ItemHeaderComponent,
     AccessCodeViewComponent,
     ItemPermissionsComponent,

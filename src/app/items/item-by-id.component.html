@@ -1,76 +1,88 @@
 <ng-container *ngIf="state$ | async as state">
   <ng-container *ngIf="state.isReady && state.data as itemData">
+    <ng-container *ngrxLet="isWatching$ as isWatching">
+      <ng-container *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed">
+        <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
 
-    <ng-container>
-      <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
+        <alg-access-code-view
+          *ngIf="showAccessCodeField$ | async"
+          i18n-sectionLabel sectionLabel="Access to activity"
+          i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
+          [itemData]="itemData"
+          (groupJoined)="reloadItem()"
+        ></alg-access-code-view>
 
-      <alg-access-code-view
-        *ngIf="showAccessCodeField$ | async"
-        i18n-sectionLabel sectionLabel="Access to activity"
-        i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
-        [itemData]="itemData"
-        (groupJoined)="reloadItem()"
-      ></alg-access-code-view>
+        <alg-item-permissions
+          *ngIf="watchedGroup$ | async as watchedGroup"
+          [itemData]="itemData"
+          [watchedGroup]="watchedGroup"
+          (changed)="reloadItem()"
+        ></alg-item-permissions>
 
-      <alg-item-permissions
-        *ngIf="watchedGroup$ | async as watchedGroup"
-        [itemData]="itemData"
-        [watchedGroup]="watchedGroup"
-        (changed)="reloadItem()"
-      ></alg-item-permissions>
+        <alg-tab-bar *ngIf="!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed" />
+        <div
+          class="content-container"
+          [ngClass]="{
+            'no-top-padding': itemData.item.type === 'Task' && !!currentTab?.isTaskTab,
+            'side-padding': itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed,
+            'right-padding': itemData.item.type === 'Task' && !currentTab?.isTaskTab && !fullFrameContentDisplayed
+          }"
+          #contentContainer
+          *ngrxLet="currentTab$ as currentTab"
+        >
+          <ng-container *ngIf="currentTab?.isTaskTab || (itemContentComponent?.isTaskLoaded$ | async) || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit'">
+            <alg-error *ngIf="answerLoadingError$ | async as error; else noAnswerLoadingError">
+              <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
+              <ng-template #fallback>
+                <ng-container i18n>
+                  Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
+                </ng-container>
+              </ng-template>
+              <p *ngIf="!error.isForbidden">{{ errorMessageContactUs }}</p>
+            </alg-error>
 
-      <alg-tab-bar *ngIf="!!(shouldDisplayTabBar$ | async) && !(fullFrameContentDisplayed$ | async)" />
-      <div
-        class="content-container"
-        #contentContainer
-        *ngrxLet="currentTab$ as currentTab"
-      >
-        <ng-container *ngIf="currentTab?.isTaskTab || (itemContentComponent?.isTaskLoaded$ | async) || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit'">
-          <alg-error *ngIf="answerLoadingError$ | async as error; else noAnswerLoadingError">
-            <ng-container *ngIf="!error.fallbackLink; else fallback" i18n>Unable to load the answer</ng-container>
-            <ng-template #fallback>
-              <ng-container i18n>
-                Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
+            <ng-template #noAnswerLoadingError>
+              <ng-container *ngrxLet="taskConfig$ as taskConfig">
+                <div
+                  *ngIf="taskConfig && taskConfig.readOnly && currentTab && ['alg-content', 'task'].includes(currentTab.tag)"
+                  class="indicator"
+                  [ngClass]="{ 'no-left-padding': !fullFrameContentDisplayed }"
+                >
+                  <alg-answer-author-indicator
+                    *ngIf="!!currentTab?.isTaskTab && taskConfig.initialAnswer"
+                    [answer]="taskConfig.initialAnswer"
+                    [itemData]="itemData"
+                  ></alg-answer-author-indicator>
+                </div>
+                <alg-item-content
+                  class="alg-flex-1"
+                  [style.display]="currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit' || currentTab?.isTaskTab ? 'flex' : 'none'"
+                  [itemData]="itemData"
+                  [taskConfig]="taskConfig"
+                  [savingAnswer]="(savingAnswer$ | async) ?? false"
+                  [taskView]="(currentTaskView$ | async) ?? undefined"
+                  [editModeEnabled]="currentTab?.tag ==='alg-children-edit'"
+                  (taskViewChange)="setTaskView($event)"
+                  (taskTabsChange)="setTaskTabs($event)"
+                  (scoreChange)="onScoreChange($event)"
+                  (skipSave)="skipBeforeUnload()"
+                  (refresh)="reloadItem()"
+                  (editorUrl)="editorUrlChanged($event)"
+                  (disablePlatformProgress)="disablePlatformProgressChanged($event)"
+                  (fullFrameTask)="fullFrameContent$.next($event)"
+                ></alg-item-content>
               </ng-container>
             </ng-template>
-            <p *ngIf="!error.isForbidden">{{ errorMessageContactUs }}</p>
-          </alg-error>
 
-          <ng-template #noAnswerLoadingError>
-            <ng-container *ngrxLet="taskConfig$ as taskConfig">
-              <div *ngIf="taskConfig && taskConfig.readOnly && currentTab?.tag ==='alg-content'" class="indicator">
-                <alg-answer-author-indicator *ngIf="taskConfig.initialAnswer" [answer]="taskConfig.initialAnswer"></alg-answer-author-indicator>
-              </div>
-              <alg-item-content
-                class="alg-flex-1"
-                [style.display]="currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit' || currentTab?.isTaskTab ? 'flex' : 'none'"
-                [itemData]="itemData"
-                [taskConfig]="taskConfig"
-                [savingAnswer]="(savingAnswer$ | async) ?? false"
-                [taskView]="(currentTaskView$ | async) ?? undefined"
-                [editModeEnabled]="currentTab?.tag ==='alg-children-edit'"
-                (taskViewChange)="setTaskView($event)"
-                (taskTabsChange)="setTaskTabs($event)"
-                (scoreChange)="onScoreChange($event)"
-                (skipSave)="skipBeforeUnload()"
-                (refresh)="reloadItem()"
-                (editorUrl)="editorUrlChanged($event)"
-                (disablePlatformProgress)="disablePlatformProgressChanged($event)"
-                (fullFrameTask)="fullFrameContent$.next($event)"
-              ></alg-item-content>
-            </ng-container>
-          </ng-template>
+          </ng-container>
 
-        </ng-container>
+          <alg-item-task-edit
+            *ngIf="currentTab?.tag ==='alg-task-edit'"
+            [editorUrl]="editorUrl"
+            (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
+          ></alg-item-task-edit>
 
-        <alg-item-task-edit
-          *ngIf="currentTab?.tag ==='alg-task-edit'"
-          [editorUrl]="editorUrl"
-          (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
-        ></alg-item-task-edit>
-
-        <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-chapter-progress'].includes(currentTab.tag)">
-          <ng-container *ngrxLet="isWatching$ as isWatching">
+          <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-chapter-progress'].includes(currentTab.tag)">
             <ng-container *ngIf="(!isWatching && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
               <div *ngIf="(savingAnswer$ | async) ?? false" class="save-answer-loader">
                 <p class="save-answer-loader-message">
@@ -110,29 +122,28 @@
               </p>
             </ng-template>
           </ng-container>
-        </ng-container>
 
-        <ng-container *ngIf="currentTab?.tag ==='alg-dependencies'">
-          <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>
-        </ng-container>
+          <ng-container *ngIf="currentTab?.tag ==='alg-dependencies'">
+            <alg-item-dependencies [itemData]="itemData"></alg-item-dependencies>
+          </ng-container>
 
-        <ng-container *ngIf="currentTab?.tag ==='alg-parameters'">
-          <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
-        </ng-container>
+          <ng-container *ngIf="currentTab?.tag ==='alg-parameters'">
+            <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
+          </ng-container>
 
-        <ng-container *ngIf="currentTab?.tag === 'alg-forum'">
-          <alg-error
-            class="alg-flex-1"
-            i18n-message message="You are not allowed to view this content."
-            *ngIf="(userProfile$ | async)?.tempUser || !showItemThreadWidget; else forumContent"
-          ></alg-error>
-          <ng-template #forumContent>
-            <alg-item-forum class="alg-flex-1" [itemData]="itemData"></alg-item-forum>
-          </ng-template>
-        </ng-container>
-      </div>
+          <ng-container *ngIf="currentTab?.tag === 'alg-forum'">
+            <alg-error
+              class="alg-flex-1"
+              i18n-message message="You are not allowed to view this content."
+              *ngIf="(userProfile$ | async)?.tempUser || !showItemThreadWidget; else forumContent"
+            ></alg-error>
+            <ng-template #forumContent>
+              <alg-item-forum class="alg-flex-1" [itemData]="itemData"></alg-item-forum>
+            </ng-template>
+          </ng-container>
+        </div>
+      </ng-container>
     </ng-container>
-
   </ng-container>
 
   <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
