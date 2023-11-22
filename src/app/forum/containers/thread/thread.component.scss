@@ -101,14 +101,15 @@
 
 .user-indicator {
   margin: 0 toRem(16);
-  padding: 0 toRem(8);
+  padding: 0 toRem(16);
   height: toRem(32);
   display: flex;
   justify-content: start;
   align-items: center;
+  border-radius: toRem(20);
   background-color: var(--alg-observation-button-bg-color);
-  border-radius: toRem(8);
   color: var(--alg-secondary-color);
+  font-size: toRem(12);
 }
 
 .user-indicator-link {
