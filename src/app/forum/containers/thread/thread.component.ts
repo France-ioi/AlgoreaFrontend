@@ -172,14 +172,19 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
 
     this.subscriptions.add(
-      this.isThreadStatusOpened$.pipe(delay(0)).subscribe(isThreadStatusOpened => {
-        if (!isThreadStatusOpened) {
-          this.form.get('messageToSend')?.disable();
+      this.threadStatus$.pipe(delay(0)).subscribe(status => {
+        if (status?.data && (status.data.open || status.data.canOpen)) {
+          this.form.get('messageToSend')?.enable();
+          this.focusOnInput();
           return;
         }
-        this.form.get('messageToSend')?.enable();
-        this.focusOnInput();
+        this.form.get('messageToSend')?.disable();
       })
+    );
+    this.subscriptions.add(
+      this.isThreadStatusOpened$.pipe(delay(0), filter(isThreadStatusOpened => isThreadStatusOpened)).subscribe(() =>
+        this.messageToSendEl?.nativeElement.focus()
+      )
     );
   }
 
@@ -187,14 +192,22 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  sendMessage(threadId: ThreadId): void {
+  sendMessage(threadId: ThreadId, isThreadOpened: boolean): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
     this.store.select(forum.selectThreadToken).pipe(
       take(1), // send on the current thread (if any) only
       filter(isNotUndefined),
     ).subscribe(token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])));
-    this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
+    if (isThreadOpened) {
+      this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
+    } else {
+      this.changeThreadStatus({
+        open: true,
+        threadId,
+        messageCountIncrement: 1,
+      });
+    }
     this.form.reset({
       messageToSend: '',
     });
@@ -209,17 +222,20 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  focusOnInput(): void {
-    this.messageToSendEl?.nativeElement.focus();
-  }
-
-  changeThreadStatus(open: boolean, threadId: ThreadId): void {
-    this.updateThreadService.update(threadId.itemId, threadId.participantId, open ? {
+  changeThreadStatus(
+    params: { open: true, threadId: ThreadId, messageCountIncrement?: number } | { open: false, threadId: ThreadId }
+  ): void {
+    this.updateThreadService.update(params.threadId.itemId, params.threadId.participantId, params.open ? {
       status: 'waiting_for_trainer',
       helperGroupId: appConfig.allUsersGroupId,
+      ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {})
     } : { status: 'closed' }).subscribe({
       next: () => this.store.dispatch(forum.threadPanelActions.threadStatusChanged()),
       error: () => this.actionFeedbackService.unexpectedError(),
     });
+  }
+
+  focusOnInput(): void {
+    this.messageToSendEl?.nativeElement.focus();
   }
 }

@@ -8,6 +8,7 @@ import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-
 export interface OpenThread {
   status: 'waiting_for_trainer',
   helperGroupId: string,
+  messageCountIncrement?: number,
 }
 
 interface CloseThread {
@@ -27,9 +28,14 @@ export class UpdateThreadService {
   update(itemId: string, participantId: string, payload: OpenThread | CloseThread | IncrementMessageCount): Observable<void> {
     return this.http.put<SimpleActionResponse>(
       `${appConfig.apiUrl}/items/${itemId}/participant/${participantId}/thread`,
-      'messageCountIncrement' in payload ? { message_count_increment: payload.messageCountIncrement } : {
+      'status' in payload && payload.status === 'closed' ? {
         status: payload.status,
-        ...('helperGroupId' in payload ? { helper_group_id: payload.helperGroupId } : {}),
+      } : 'status' in payload && payload.status === 'waiting_for_trainer' ? {
+        status: payload.status,
+        helper_group_id: payload.helperGroupId,
+        ...(payload.messageCountIncrement ? { message_count_increment: payload.messageCountIncrement } : {}),
+      } : {
+        message_count_increment: payload.messageCountIncrement,
       }).pipe(map(assertSuccess));
   }
 }

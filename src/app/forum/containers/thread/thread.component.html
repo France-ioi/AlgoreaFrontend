@@ -44,8 +44,8 @@
           </ng-container>
         </ng-template>
         <ng-container *ngIf="threadMetadata.id as threadId">
-          <div class="footer-panel">
-            <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId)">
+          <div class="footer-panel" *ngrxLet="!!(thread.threadStatus && !!thread.threadStatus.data && !!thread.threadStatus.data.open) as isThreadOpened">
+            <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId, isThreadOpened)">
               <textarea
                 class="textarea"
                 placeholder="Send a message..."
@@ -53,7 +53,7 @@
                 formControlName="messageToSend"
                 [rows]="1"
                 [autoResize]="true"
-                (keydown.enter)="$event.preventDefault(); sendMessage(threadId)"
+                (keydown.enter)="$event.preventDefault(); sendMessage(threadId, isThreadOpened)"
                 #messageToSendEl
               ></textarea>
               <button
@@ -61,7 +61,7 @@
                 type="submit"
                 icon="pi pi-send"
                 pButton
-                [disabled]="!form.get('messageToSend')?.value?.trim() || !thread.threadStatus?.data?.open"
+                [disabled]="!form.get('messageToSend')?.value?.trim()"
               ></button>
             </form>
             <div class="thread-status">
@@ -94,7 +94,7 @@
                   class="alg-button primary small"
                   [disabled]="!canSwitch"
                   pButton
-                  (click)="changeThreadStatus(!thread.threadStatus.data.open, threadId)"
+                  (click)="changeThreadStatus({ open: !thread.threadStatus.data.open, threadId: threadId })"
                   *ngIf="thread.threadStatus && thread.threadStatus.data"
                 >
                   <span *ngIf="thread.threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
