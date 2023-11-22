@@ -48,15 +48,11 @@
                   class="indicator"
                   [ngClass]="{ 'no-left-padding': !fullFrameContentDisplayed }"
                 >
-                  <ng-container *ngIf="userProfile$ | async as userProfile">
-                    <alg-answer-author-indicator
-                      *ngIf="!!currentTab?.isTaskTab && taskConfig.initialAnswer"
-                      [answer]="taskConfig.initialAnswer"
-                      [userProfile]="userProfile"
-                      [itemData]="itemData"
-                      [isWatching]="isWatching"
-                    ></alg-answer-author-indicator>
-                  </ng-container>
+                  <alg-answer-author-indicator
+                    *ngIf="!!currentTab?.isTaskTab && taskConfig.initialAnswer"
+                    [answer]="taskConfig.initialAnswer"
+                    [itemData]="itemData"
+                  ></alg-answer-author-indicator>
                 </div>
                 <alg-item-content
                   class="alg-flex-1"

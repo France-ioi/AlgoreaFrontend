@@ -1,45 +1,47 @@
-<ng-container *ngIf="answer$ | async as answer">
-  <div class="container" *ngIf="author$ | async as author">
-    <alg-loading class="no-padding" *ngIf="author.isFetching && !author.data" size="small"></alg-loading>
-    <alg-error *ngIf="author.isError" i18n-message message="Error while fetching author info"></alg-error>
+<ng-container *ngrxLet="{ currentUserId: currentUserId$, isWatching: isWatching$ } as info">
+  <ng-container *ngIf="answer$ | async as answer">
+    <div class="container" *ngIf="author$ | async as author">
+      <alg-loading class="no-padding" *ngIf="author.isFetching && !author.data" size="small"></alg-loading>
+      <alg-error *ngIf="author.isError" i18n-message message="Error while fetching author info"></alg-error>
 
-    <div class="content" *ngIf="author.isReady && author.data as author">
-      <div class="content-left">
-        <alg-score-ring
-          class="score-ring"
-          [currentScore]="answer.score"
-          [diameter]="32"
-          *ngIf="answer.score || answer.score === 0"
-        ></alg-score-ring>
-        <div class="description" i18n>
-          Submitted by
-          <ng-container *ngIf="author.groupId === userProfile?.groupId; else otherUser">
-            yourself
-          </ng-container>
-          <ng-template #otherUser>
-            <a [routerLink]="groupLink$ | async" class="alg-link base-color">{{ author | userCaption }}</a>
-          </ng-template>
-          on {{ answer.createdAt | date:'short' }}.
+      <div class="content" *ngIf="author.isReady && author.data as author">
+        <div class="content-left">
+          <alg-score-ring
+            class="score-ring"
+            [currentScore]="answer.score"
+            [diameter]="32"
+            *ngIf="answer.score || answer.score === 0"
+          ></alg-score-ring>
+          <div class="description" i18n>
+            Submitted by
+            <ng-container *ngIf="author.groupId === info.currentUserId; else otherUser">
+              yourself
+            </ng-container>
+            <ng-template #otherUser>
+              <a [routerLink]="groupLink$ | async" class="alg-link base-color">{{ author | userCaption }}</a>
+            </ng-template>
+            on {{ answer.createdAt | date:'short' }}.
+          </div>
+        </div>
+        <div class="buttons" *ngIf="!info.isWatching && author.groupId === info.currentUserId && itemData">
+          <a
+            class="alg-button primary mini button"
+            pButton
+            [routerLink]="itemData.item | rawItemRoute | withAnswer : { id: answer.id, loadAsCurrent: true } | url"
+            i18n
+          >
+            Edit it
+          </a>
+          <a
+            class="alg-button primary mini button"
+            pButton
+            [routerLink]="itemData.item | rawItemRoute | url"
+            i18n
+          >
+            Back to your current answer
+          </a>
         </div>
       </div>
-      <div class="buttons" *ngIf="!isWatching && author.groupId === userProfile?.groupId && itemData">
-        <a
-          class="alg-button primary mini button"
-          pButton
-          [routerLink]="itemData.item | rawItemRoute | withAnswer : { id: answer.id, loadAsCurrent: true } | url"
-          i18n
-        >
-          Edit it
-        </a>
-        <a
-          class="alg-button primary mini button"
-          pButton
-          [routerLink]="itemData.item | rawItemRoute | url"
-          i18n
-        >
-          Back to your current answer
-        </a>
-      </div>
     </div>
-  </div>
+  </ng-container>
 </ng-container>
