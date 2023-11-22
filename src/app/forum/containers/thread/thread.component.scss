@@ -22,6 +22,7 @@
   justify-content: flex-end;
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .widget-scroll {
@@ -89,4 +90,28 @@
   color: var(--alg-secondary-color);
   font-size: toRem(14);
   text-align: center;
+}
+
+.user-indicator-container {
+  width: 100%;
+  position: absolute;
+  top: toRem(8);
+  z-index: 999;
+}
+
+.user-indicator {
+  margin: 0 toRem(16);
+  padding: 0 toRem(16);
+  height: toRem(32);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  border-radius: toRem(20);
+  background-color: var(--alg-observation-button-bg-color);
+  color: var(--alg-secondary-color);
+  font-size: toRem(12);
+}
+
+.user-indicator-link {
+  margin-left: toRem(4);
 }
