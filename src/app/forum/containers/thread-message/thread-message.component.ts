@@ -11,6 +11,7 @@ import { NgClass, NgIf, NgTemplateOutlet, DatePipe } from '@angular/common';
 import { BreakLinesPipe } from '../../../pipes/breakLines';
 import { ThreadId } from '../../models/threads';
 import { isAttemptStartedEvent, isSubmissionEvent } from '../../models/thread-events';
+import { RelativeTimePipe } from '../../../pipes/relativeTime';
 
 @Component({
   selector: 'alg-thread-message',
@@ -28,6 +29,7 @@ import { isAttemptStartedEvent, isSubmissionEvent } from '../../models/thread-ev
     RouteUrlPipe,
     AllowDisplayCodeSnippet,
     BreakLinesPipe,
+    RelativeTimePipe,
   ],
 })
 export class ThreadMessageComponent implements OnChanges {
