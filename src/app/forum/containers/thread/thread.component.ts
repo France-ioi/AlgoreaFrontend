@@ -178,7 +178,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
           return;
         }
         this.form.get('messageToSend')?.enable();
-        this.messageToSendEl?.nativeElement.focus();
+        this.focusOnInput();
       })
     );
   }
@@ -207,6 +207,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       0,
       this.messagesScroll.nativeElement.scrollHeight - this.messagesScroll.nativeElement.offsetHeight
     );
+  }
+
+  focusOnInput(): void {
+    this.messageToSendEl?.nativeElement.focus();
   }
 
   changeThreadStatus(open: boolean, threadId: ThreadId): void {
