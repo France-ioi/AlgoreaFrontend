@@ -61,7 +61,7 @@
                 type="submit"
                 icon="pi pi-send"
                 pButton
-                [disabled]="!form.get('messageToSend')?.value?.trim()"
+                [disabled]="!form.get('messageToSend')?.value?.trim() || !!(disableControls$ | async)"
               ></button>
             </form>
             <div class="thread-status">
