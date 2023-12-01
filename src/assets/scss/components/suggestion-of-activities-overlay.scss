@@ -1,0 +1,23 @@
+@import 'src/assets/scss/functions';
+
+.alg-suggestion-of-activities-overlay, .alg-menu-overlay {
+  background-color: var(--alg-primary-color);
+  border-radius: toRem(10);
+  border: none;
+
+  &:before {
+    border-bottom-color: var(--alg-primary-color);
+  }
+
+  &:after {
+    border-bottom-color: var(--alg-primary-color);
+  }
+
+  .p-overlaypanel-content {
+    padding: 0;
+  }
+
+  @media screen and (max-width: 1100px) {
+    max-width: 15rem;
+  }
+}

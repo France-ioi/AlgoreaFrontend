@@ -1,11 +1,53 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
-.type {
-  color: var(--base-color);
+.list {
+  margin: toRem(6) toRem(16);
+  padding: 0;
+  list-style-type: none;
+  overflow: hidden;
 }
 
-.spinner-container {
+.list-item {
+  display: flex;
+  align-items: center;
+}
+
+.item-type {
+  color: var(--alg-white-color);
+  font-size: toRem(12);
+
+  &:after {
+    content: '›';
+    display: inline;
+    margin: 0 toRem(8);
+    color: var(--alg-primary-dark-color);
+    font-size: toRem(16);
+  }
+}
+
+.item-link {
+  padding: toRem(5);
+  border-radius: toRem(8);
+  color: var(--alg-white-color);
+  font-size: toRem(12);
+  font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background-color: var(--alg-primary-dark-color);
+  }
+}
+
+.empty-list {
+  font-size: toRem(12);
+  color: var(--alg-white-color);
+}
+
+.spinner-container, .empty-list {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: toRem(40);
 }

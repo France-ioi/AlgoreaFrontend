@@ -11,7 +11,7 @@
   <button
     [class]="buttonStyleClass || 'alg-button primary refresh-button'"
     pButton
-    (click)="onRefresh()"
+    (click)="onRefresh($event)"
     *ngIf="showRefreshButton && !link"
   >{{ buttonCaption }}</button>
   <a

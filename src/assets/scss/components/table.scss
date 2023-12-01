@@ -2,7 +2,16 @@
 
 .alg-table {
   display: block;
-  margin: 0 toRem(-18);
+
+  &:not(.overlay-panel) {
+    margin: 0 toRem(-18);
+  }
+
+  &.overlay-panel {
+    .p-datatable-table {
+      table-layout: fixed;
+    }
+  }
 
   &:not(.slanted) {
     .p-datatable-thead > tr > th {

@@ -14,7 +14,8 @@
 </div>
 <p-overlayPanel
   #op
-  [style]="{ width: '450px' }"
+  [style]="{ minWidth: '15rem', maxWidth: '20rem' }"
+  styleClass="alg-suggestion-of-activities-overlay"
   appendTo="body"
 >
   <alg-suggestion-of-activities *ngIf="op.overlayVisible"></alg-suggestion-of-activities>

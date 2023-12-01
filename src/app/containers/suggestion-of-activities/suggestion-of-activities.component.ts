@@ -9,10 +9,9 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { NgIf, AsyncPipe, NgFor } from '@angular/common';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -23,12 +22,12 @@ import { NgIf, AsyncPipe } from '@angular/common';
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    TableModule,
     SharedModule,
     RouterLink,
     AsyncPipe,
     RawItemRoutePipe,
     RouteUrlPipe,
+    NgFor,
   ],
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {
@@ -55,7 +54,8 @@ export class SuggestionOfActivitiesComponent implements OnDestroy {
     this.refresh$.complete();
   }
 
-  refresh(): void {
+  refresh(event: MouseEvent): void {
+    event.stopPropagation();
     this.refresh$.next();
   }
 
