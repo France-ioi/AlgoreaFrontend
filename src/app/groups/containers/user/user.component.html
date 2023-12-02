@@ -59,14 +59,13 @@
 
     <ng-container *ngIf="activeRoute$ | async as activeRoute">
       <ng-container *ngIf="activeRoute === 'progress'">
-        <div class="bg-white" *ngIf="currentUserGroupId$ | async as currentUserGroupId">
-          <alg-section icon="fa fa-chart-line" i18n-label label="Progress">
-            <alg-group-log-view
-                [groupId]="currentUserGroupId !== state.data.user.groupId ? state.data.user.groupId : undefined"
-                [showUserColumn]="false"
-            ></alg-group-log-view>
-          </alg-section>
-        </div>
+        <ng-container *ngIf="currentUserGroupId$ | async as currentUserGroupId">
+          <h2 class="alg-h2 alg-text-normal title" i18n>Progress</h2>
+          <alg-group-log-view
+            [groupId]="currentUserGroupId !== state.data.user.groupId ? state.data.user.groupId : undefined"
+            [showUserColumn]="false"
+          ></alg-group-log-view>
+        </ng-container>
       </ng-container>
 
       <ng-container *ngIf="activeRoute === 'personal-data'">
