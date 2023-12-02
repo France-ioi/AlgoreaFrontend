@@ -1,7 +1,29 @@
-.web-site {
-  margin-left: .4rem;
+@import 'src/assets/scss/functions';
+
+.user-header-container {
+  padding: var(--alg-space-size-3) 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.free-text {
-  margin-top: 1rem;
+.user-header {
+  display: flex;
+  align-items: center;
+}
+
+.user-title-container {
+  margin-right: var(--alg-space-size-5);
+  flex: 1;
+}
+
+.user-title {
+  margin: 0;
+}
+
+.user-subtitle {
+  margin-top: toRem(16);
+}
+
+.user-subtitle-icon {
+  margin-right: var(--alg-space-size-5);
 }

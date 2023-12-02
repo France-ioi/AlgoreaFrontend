@@ -1,4 +1,4 @@
-@import '../../../variables';
+@import 'src/assets/scss/functions';
 
 .alg-data-list {
   list-style: none;
@@ -10,14 +10,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: .1rem solid rgba(74,74,74,.1);
-  height: 3rem;
+  border-bottom: .1rem solid var(--alg-light-color);
+  height: toRem(48);
 }
 
 .alg-data-list-item-caption {
-  color: #787878;
+  color: var(--alg-secondary-color);
 }
 
 .alg-data-list-item-value {
-  color: #4a90e2;
+  color: var(--alg-primary-color);
 }

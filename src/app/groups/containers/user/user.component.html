@@ -1,11 +1,12 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <alg-loading *ngIf="state.isFetching"></alg-loading>
+  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
 
   <alg-error
     *ngIf="state.isError"
-    class="dark"
+    class="dark alg-flex-1"
     i18n-message message="Error while loading the user info"
+    icon="ph-duotone ph-warning-circle"
     [showRefreshButton]="true"
     refreshButtonType="refresh"
     (refresh)="refresh()"
@@ -21,9 +22,9 @@
       *ngIf="!state.data.user.isCurrentUser && state.data.user.ancestorsCurrentUserIsManagerOf.length > 0"
     ></alg-user-indicator>
 
-    <nav class="nav-tab" *ngIf="(currentUserGroupId$ | async) === state.data.user.groupId || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
+    <nav class="alg-nav-tab" *ngIf="(currentUserGroupId$ | async) === state.data.user.groupId || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
       <a
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #progress="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
@@ -33,7 +34,7 @@
         Progress
       </a>
       <a
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./personal-data'"
           routerLinkActive #personalData="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
@@ -44,7 +45,7 @@
         Personal data
       </a>
       <a
-          class="nav-tab-item"
+          class="alg-nav-tab-item"
           [routerLink]="'./settings'"
           routerLinkActive #settings="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
@@ -81,9 +82,7 @@
       </ng-container>
 
       <ng-template #forbidden>
-        <div class="bg-white">
-          <alg-error i18n-message message="You cannot access this page for this user"></alg-error>
-        </div>
+        <alg-error class="alg-flex-1" i18n-message message="You cannot access this page for this user"></alg-error>
       </ng-template>
     </ng-container>
   </ng-container>
