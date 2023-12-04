@@ -2,6 +2,10 @@
 
 .container {
   padding: 0 var(--alg-space-size-5);
+
+  &.margin-bottom {
+    margin-bottom: toRem(8);
+  }
 }
 
 .tree-nav-wrapper {

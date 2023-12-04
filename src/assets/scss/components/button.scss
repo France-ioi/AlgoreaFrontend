@@ -77,4 +77,18 @@
       border: toRem(1) solid var(--alg-white-color) !important;
     }
   }
+
+  &.stroke {
+    &.p-button {
+      color: var(--alg-primary-color);
+      background-color: transparent;
+      border: toRem(1) solid var(--alg-primary-color);
+      justify-content: center;
+    }
+  }
+
+  &.full-width {
+    width: 100%;
+    justify-content: center;
+  }
 }
