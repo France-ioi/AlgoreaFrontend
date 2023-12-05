@@ -140,4 +140,32 @@
       box-shadow: toRem(-1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
     }
   }
+
+  &.stroke {
+    border: toRem(1) solid rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    &.primary-color {
+      .p-button-icon {
+        color: var(--alg-primary-color);
+      }
+
+      &:hover {
+        border: toRem(1) solid var(--alg-primary-color);
+      }
+    }
+
+    &.regular-size {
+      width: toRem(40);
+      height: toRem(40);
+
+      .p-button-icon {
+        font-size: toRem(18);
+      }
+    }
+  }
 }

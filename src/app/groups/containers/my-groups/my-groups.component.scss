@@ -1,0 +1,21 @@
+.header-container {
+  padding: var(--alg-space-size-3) 0;
+}
+
+.header-title-container {
+  margin-right: var(--alg-space-size-5);
+  flex: 1;
+}
+
+.header-title {
+  margin: 0;
+  line-height: 1em;
+}
+
+.header-subtitle {
+  margin: .5rem 0 0 0;
+  color: var(--base-text-color);
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1em;
+}

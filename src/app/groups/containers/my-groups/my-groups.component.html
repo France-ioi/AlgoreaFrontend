@@ -1,30 +1,27 @@
-<div class="alg-page-header my-groups">
-  <span class="alg-page-header-title" i18n>My groups</span>
-  <span class="alg-page-header-subtitle" i18n>All the groups you have joined and you manage</span>
+<div class="header-container">
+  <div class="item-title-container">
+    <h1 class="header-title alg-h1 alg-text-normal" i18n>My groups</h1>
+    <p class="header-subtitle" i18n>All the groups you have joined and you manage</p>
+  </div>
 </div>
 
 <alg-user-group-invitations></alg-user-group-invitations>
 
 <!--<alg-pending-join-requests [showSwitch]="false"></alg-pending-join-requests>-->
 
-<div class="bg-white">
-  <alg-section i18n-label label="The groups you joined" icon="fa fa-users">
-    <alg-joined-group-list #joinedGroupList></alg-joined-group-list>
-  </alg-section>
-  <alg-access-code-view
-      sectionStyleClass="no-rounded-borders"
-      i18n-sectionLabel sectionLabel="Join a group by code"
-      i18n-buttonLabel="Button label for joining a group" buttonLabel="Join"
-      (groupJoined)="onGroupJoined()"
-  ></alg-access-code-view>
-  <alg-section label="The groups you manage" icon="fa fa-users">
-    <alg-managed-group-list></alg-managed-group-list>
-  </alg-section>
-</div>
+<h2 class="alg-h2 alg-text-normal" i18n>The groups you joined</h2>
+<alg-joined-group-list #joinedGroupList></alg-joined-group-list>
+<alg-access-code-view
+  sectionStyleClass="no-rounded-borders"
+  i18n-sectionLabel sectionLabel="Join a group by code"
+  i18n-buttonLabel="Button label for joining a group" buttonLabel="Join"
+  (groupJoined)="onGroupJoined()"
+></alg-access-code-view>
 
-<div class="bg-section">
-  <alg-add-group></alg-add-group>
-</div>
+<h2 class="alg-h2 alg-text-normal" i18n>The groups you manage</h2>
+<alg-managed-group-list></alg-managed-group-list>
+
+<alg-add-group></alg-add-group>
 
 
 
