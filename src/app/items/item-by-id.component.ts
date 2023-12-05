@@ -454,6 +454,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
           map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answer }))
         );
       }),
+      delay(0), // for fixing a bug when a navigation happens immediately (case: an alias at the root)
       switchMap(itemRoute => {
         this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
         return EMPTY;
