@@ -60,7 +60,6 @@
     <ng-container *ngIf="activeRoute$ | async as activeRoute">
       <ng-container *ngIf="activeRoute === 'progress'">
         <ng-container *ngIf="currentUserGroupId$ | async as currentUserGroupId">
-          <h2 class="alg-h2 alg-text-normal title" i18n>Progress</h2>
           <alg-group-log-view
             [groupId]="currentUserGroupId !== state.data.user.groupId ? state.data.user.groupId : undefined"
             [showUserColumn]="false"
