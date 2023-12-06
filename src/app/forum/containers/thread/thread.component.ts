@@ -228,9 +228,17 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         next: token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])),
         error: () => this.disableControls$.next(false),
       });
-      this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
-      this.clearMessageToSendControl();
-      this.disableControls$.next(false);
+      threadToken$.pipe(
+        switchMap(() =>
+          this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })
+        ),
+      ).subscribe({
+        next: () => {
+          this.disableControls$.next(false);
+          this.clearMessageToSendControl();
+        },
+        error: () => this.disableControls$.next(false)
+      });
       return;
     }
 
