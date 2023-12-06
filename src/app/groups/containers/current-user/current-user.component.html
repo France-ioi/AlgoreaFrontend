@@ -1,80 +1,69 @@
 <ng-container *ngIf="currentUser$ | async as currentUser">
-  <div class="bg-white">
-    <div class="modify-section">
-      <div class="flex-1 modify-description" i18n>
-        The following information is what we receive from France-IOI login platform.
-      </div>
-      <p-button
-        styleClass="alg-button p-button-rounded-full"
-        i18n-label label="Modify"
-        icon="fa fa-pen"
-        (click)="onModify(currentUser.groupId)"
-      ></p-button>
+  <div class="modify-section">
+    <div class="flex-1 modify-description" i18n>
+      The following information is what we receive from France-IOI login platform.
     </div>
+    <p-button
+      styleClass="alg-button primary"
+      i18n-label label="Modify"
+      icon="ph-duotone ph-pen"
+      (click)="onModify(currentUser.groupId)"
+    ></p-button>
   </div>
 
-  <div class="bg-white">
-    <alg-section i18n-label label="Personal Information" icon="fa fa-users">
-      <ul class="alg-data-list">
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Login</span>
-          <span class="alg-data-list-item-value">{{ currentUser.login }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>First Name</span>
-          <span class="alg-data-list-item-value">{{ currentUser.firstName }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Last Name</span>
-          <span class="alg-data-list-item-value">{{ currentUser.lastName }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Birth date</span>
-          <span class="alg-data-list-item-value">{{ currentUser.birthDate }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Student ID</span>
-          <span class="alg-data-list-item-value">{{ currentUser.studentId }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Gender</span>
-          <span class="alg-data-list-item-value">{{ currentUser.sex }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Nationality</span>
-          <span class="alg-data-list-item-value">{{ currentUser.countryCode }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Personal Web page</span>
-          <span class="alg-data-list-item-value">{{ currentUser.webSite }}</span>
-        </li>
-      </ul>
-    </alg-section>
-  </div>
+  <h2 class="alg-h2 alg-text-normal title" i18n>Personal Information</h2>
+  <ul class="alg-data-list">
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Login</span>
+      <span class="alg-data-list-item-value">{{ currentUser.login }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>First Name</span>
+      <span class="alg-data-list-item-value">{{ currentUser.firstName }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Last Name</span>
+      <span class="alg-data-list-item-value">{{ currentUser.lastName }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Birth date</span>
+      <span class="alg-data-list-item-value">{{ currentUser.birthDate }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Student ID</span>
+      <span class="alg-data-list-item-value">{{ currentUser.studentId }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Gender</span>
+      <span class="alg-data-list-item-value">{{ currentUser.sex }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Nationality</span>
+      <span class="alg-data-list-item-value">{{ currentUser.countryCode }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Personal Web page</span>
+      <span class="alg-data-list-item-value">{{ currentUser.webSite }}</span>
+    </li>
+  </ul>
 
-  <div class="bg-white">
-    <alg-section i18n-label label="School Information" icon="fa fa-graduation-cap">
-      <ul class="alg-data-list">
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Your grade</span>
-          <span class="alg-data-list-item-value">{{ currentUser.grade }}</span>
-        </li>
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Highschool graduation year</span>
-          <span class="alg-data-list-item-value">{{ currentUser.graduationYear }}</span>
-        </li>
-      </ul>
-    </alg-section>
-  </div>
+  <h2 class="alg-h2 alg-text-normal title" i18n>School Information</h2>
+  <ul class="alg-data-list">
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Your grade</span>
+      <span class="alg-data-list-item-value">{{ currentUser.grade }}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Highschool graduation year</span>
+      <span class="alg-data-list-item-value">{{ currentUser.graduationYear }}</span>
+    </li>
+  </ul>
 
-  <div class="bg-white">
-    <alg-section i18n-label label="Contact Information" icon="fa fa-envelope">
-      <ul class="alg-data-list">
-        <li class="alg-data-list-item">
-          <span class="alg-data-list-item-caption" i18n>Primary email</span>
-          <span class="alg-data-list-item-value">{{ currentUser.email }}</span>
-        </li>
-      </ul>
-    </alg-section>
-  </div>
+  <h2 class="alg-h2 alg-text-normal title" i18n>Contact Information</h2>
+  <ul class="alg-data-list">
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Primary email</span>
+      <span class="alg-data-list-item-value">{{ currentUser.email }}</span>
+    </li>
+  </ul>
 </ng-container>
