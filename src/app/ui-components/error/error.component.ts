@@ -16,7 +16,7 @@ import { NgIf, NgClass } from '@angular/common';
   ],
 })
 export class ErrorComponent {
-  @Output() refresh = new EventEmitter<void>();
+  @Output() refresh = new EventEmitter<MouseEvent>();
 
   @Input() message?: string;
   @Input() icon?: string;
@@ -25,7 +25,7 @@ export class ErrorComponent {
   @Input() buttonStyleClass?: string;
   @Input() link?: string;
 
-  onRefresh(): void {
-    this.refresh.emit();
+  onRefresh(event: MouseEvent): void {
+    this.refresh.emit(event);
   }
 }

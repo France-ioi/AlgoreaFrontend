@@ -9,10 +9,9 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -23,17 +22,19 @@ import { NgIf, AsyncPipe } from '@angular/common';
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    TableModule,
     SharedModule,
     RouterLink,
     AsyncPipe,
     RawItemRoutePipe,
     RouteUrlPipe,
+    NgFor,
+    I18nSelectPipe,
   ],
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
   private refresh$ = new Subject<void>();
-  readonly state$ = this.groupWatchingService.watchedGroup$.pipe(
+  readonly state$ = this.watchedGroup$.pipe(
     filter(isNotNull),
     switchMap(watchedGroup =>
       this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(
@@ -55,7 +56,8 @@ export class SuggestionOfActivitiesComponent implements OnDestroy {
     this.refresh$.complete();
   }
 
-  refresh(): void {
+  refresh(event: MouseEvent): void {
+    event.stopPropagation();
     this.refresh$.next();
   }
 
