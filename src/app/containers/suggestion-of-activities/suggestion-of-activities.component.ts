@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, NgFor } from '@angular/common';
+import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -28,11 +28,13 @@ import { NgIf, AsyncPipe, NgFor } from '@angular/common';
     RawItemRoutePipe,
     RouteUrlPipe,
     NgFor,
+    I18nSelectPipe,
   ],
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {
+  watchedGroup$ = this.groupWatchingService.watchedGroup$;
   private refresh$ = new Subject<void>();
-  readonly state$ = this.groupWatchingService.watchedGroup$.pipe(
+  readonly state$ = this.watchedGroup$.pipe(
     filter(isNotNull),
     switchMap(watchedGroup =>
       this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(

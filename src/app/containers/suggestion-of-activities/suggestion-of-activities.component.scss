@@ -1,7 +1,7 @@
 @import 'src/assets/scss/functions';
 
 .list {
-  margin: toRem(6) toRem(16);
+  margin: toRem(6);
   padding: 0;
   list-style-type: none;
   overflow: hidden;
@@ -10,19 +10,6 @@
 .list-item {
   display: flex;
   align-items: center;
-}
-
-.item-type {
-  color: var(--alg-white-color);
-  font-size: toRem(12);
-
-  &:after {
-    content: '›';
-    display: inline;
-    margin: 0 toRem(8);
-    color: var(--alg-primary-dark-color);
-    font-size: toRem(16);
-  }
 }
 
 .item-link {
@@ -41,6 +28,7 @@
 }
 
 .empty-list {
+  padding: 0 toRem(16);
   font-size: toRem(12);
   color: var(--alg-white-color);
 }

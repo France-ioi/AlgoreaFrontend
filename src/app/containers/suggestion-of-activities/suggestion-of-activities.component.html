@@ -13,11 +13,13 @@
     (refresh)="refresh($event)"
   ></alg-error>
   <div class="empty-list" *ngIf="state.isReady && state.data.length === 0" i18n>
-    There are no activities
+    There are no activities linked to this
+    <ng-container *ngIf="watchedGroup$ | async as watchedGroup">
+      {{ watchedGroup.route.isUser.toString() | i18nSelect: { true: 'user', other: 'group' } }}.
+    </ng-container>
   </div>
   <ul class="list" *ngIf="state.isReady && state.data.length > 0">
     <li class="list-item" *ngFor="let item of state.data">
-      <span class="item-type">{{ item.activity.type }}</span>
       <a class="alg-link dots item-link" [routerLink]="item.activity | rawItemRoute | url">
         {{ item.activity.string.title }} ({{ item.name }})
       </a>
