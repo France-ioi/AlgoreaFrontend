@@ -42,7 +42,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="7605133703064965893" datatype="html">
         <source>The language can always be modified through your profile page.</source><target state="translated">La langue peut toujours être modifiée via votre page de profil.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="8346185139474651251" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/language-mismatch/language-mismatch.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="6708441679987037570" datatype="html">
+        <source> My groups </source><target state="new"> My groups </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit><trans-unit id="8346185139474651251" datatype="html">
         <source>Search ?</source><target state="new">Search ?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/left-menu-search/left-menu-search.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8675432263399119284" datatype="html">
@@ -52,15 +58,15 @@
       <trans-unit id="1939752001297092762" datatype="html">
         <source>There is no content to display</source><target state="translated">Il n'y a rien à afficher</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="1679971178283595016" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="1679971178283595016" datatype="html">
         <source>Your current access rights do not allow you to list the content of this skill.</source><target state="translated">Vos permissions actuelles ne vous permettent pas d'afficher le contenu de cette compétence.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="3691777843862279458" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">164</context></context-group></trans-unit><trans-unit id="3691777843862279458" datatype="html">
         <source>Your current access rights do not allow you to start the activity.</source><target state="translated">Vos permissions actuelles ne vous permettent pas de commencer l'activité.</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">260</context></context-group></trans-unit><trans-unit id="4342625008558026850" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">267</context></context-group></trans-unit><trans-unit id="4342625008558026850" datatype="html">
         <source>Skills</source><target state="translated">Compétences</target>
 
         <note priority="1" from="description">Tab name</note>
@@ -891,7 +897,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">111</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">110</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">131</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">212</context></context-group></trans-unit><trans-unit id="7493155057912125679" datatype="html">
         <source>Your current access rights do not allow you to list the content of this chapter.</source><target state="new">Your current access rights do not allow you to list the content of this chapter.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
         <source> home page </source><target state="translated"> page d'accueil </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/item-by-id.component.html</context><context context-type="linenumber">164</context></context-group></trans-unit><trans-unit id="569741268651615075" datatype="html">
