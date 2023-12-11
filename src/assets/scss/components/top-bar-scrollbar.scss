@@ -1,0 +1,9 @@
+.alg-top-bar-scrollbar {
+  padding-bottom: 0 !important;
+  bottom: 0 !important;
+
+  .ng-scroll-content {
+    padding-bottom: 0 !important;
+    height: 100%;
+  }
+}

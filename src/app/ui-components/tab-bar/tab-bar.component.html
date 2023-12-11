@@ -7,11 +7,13 @@
     (click)="onPrev()"
     *ngIf="showPrevButton"
   ></button>
-  <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs" #tabsContainer>
-    <li class="tabs-item" [ngClass]="tab.styleClass" *ngFor="let tab of tabs">
-      <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab)">{{ tab.label }}</a>
-    </li>
-  </ul>
+  <ng-scrollbar viewClass="alg-top-bar-scrollbar" track="horizontal" [autoWidthDisabled]="false" appearance="standard">
+    <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs">
+      <li class="tabs-item" [ngClass]="tab.styleClass" *ngFor="let tab of tabs">
+        <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab)">{{ tab.label }}</a>
+      </li>
+    </ul>
+  </ng-scrollbar>
   <button
     class="alg-button-icon tab-arrow tab-next next-button"
     type="button"
