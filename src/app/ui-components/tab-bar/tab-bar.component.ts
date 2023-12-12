@@ -1,6 +1,15 @@
-import { AfterViewInit, Component, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Observable, combineLatest, map, Subscription, delay } from 'rxjs';
+import { Observable, combineLatest, map, Subscription, delay, Subject, merge } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
@@ -32,6 +41,11 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     }))),
   );
 
+  resizeEvent = new Subject<void>();
+  resizeObserver = new ResizeObserver(() =>
+    this.resizeEvent.next()
+  );
+
   readonly subscriptions = new Subscription();
 
   @HostListener('window:resize')
@@ -41,12 +55,18 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private tabService: TabService,
+    private elementRef: ElementRef<HTMLDivElement>,
+    private cd: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit(): void {
     if (!this.scrollbarRef) return;
+    this.resizeObserver.observe(this.elementRef.nativeElement);
     this.subscriptions.add(
-      this.scrollbarRef.scrolled.pipe(
+      merge(
+        this.resizeEvent.asObservable(),
+        this.scrollbarRef.scrolled,
+      ).pipe(
         debounceTime(30),
       ).subscribe(() =>
         this.handleArrows()
@@ -61,6 +81,8 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.resizeObserver.unobserve(this.elementRef.nativeElement);
+    this.resizeEvent.complete();
   }
 
   onChange(tab: MenuItem): void {
@@ -77,6 +99,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     this.showPrevButton = clientWidth !== Math.round(scrollWidth) && scrollLeft > gap;
     this.showNextButton = clientWidth !== Math.round(scrollWidth)
       && (scrollLeft + clientWidth) < (Math.round(scrollWidth) - gap);
+    this.cd.detectChanges();
   }
 
   onPrev(): void {
