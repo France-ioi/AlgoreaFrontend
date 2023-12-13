@@ -191,9 +191,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         if (status?.data && (status.data.open || status.data.canOpen) && !disableControls) {
           this.form.get('messageToSend')?.enable();
           this.focusOnInput();
-          return;
+        } else {
+          this.form.get('messageToSend')?.disable();
         }
-        this.form.get('messageToSend')?.disable();
       })
     );
     this.subscriptions.add(
@@ -239,30 +239,29 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         },
         error: () => this.disableControls$.next(false)
       });
-      return;
-    }
-
-    this.changeThreadStatus({
-      open: true,
-      threadId,
-      messageCountIncrement: 1,
-    }).subscribe({
-      error: () => this.disableControls$.next(false),
-    });
-    this.subscriptions.add(
-      this.store.select(forum.selectThreadStatusOpen).pipe(
-        filter(isOpened => isOpened),
-        take(1),
-        switchMap(() => threadToken$)
-      ).subscribe({
-        next: token => {
-          this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ]));
-          this.clearMessageToSendControl();
-          this.disableControls$.next(false);
-        },
+    } else {
+      this.changeThreadStatus({
+        open: true,
+        threadId,
+        messageCountIncrement: 1,
+      }).subscribe({
         error: () => this.disableControls$.next(false),
-      })
-    );
+      });
+      this.subscriptions.add(
+        this.store.select(forum.selectThreadStatusOpen).pipe(
+          filter(isOpened => isOpened),
+          take(1),
+          switchMap(() => threadToken$)
+        ).subscribe({
+          next: token => {
+            this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ]));
+            this.clearMessageToSendControl();
+            this.disableControls$.next(false);
+          },
+          error: () => this.disableControls$.next(false),
+        })
+      );
+    }
   }
 
   scrollDown(): void {
