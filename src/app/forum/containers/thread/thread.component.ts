@@ -1,8 +1,19 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
-import { filter, delay, combineLatest, of, switchMap, Observable, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, mergeScan, scan, startWith, take, withLatestFrom } from 'rxjs/operators';
+import { filter, delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  mergeScan,
+  scan,
+  share,
+  startWith,
+  take,
+  withLatestFrom
+} from 'rxjs/operators';
 import { UserSessionService } from '../../../services/user-session.service';
 import { GroupWatchingService } from '../../../services/group-watching.service';
 import { formatUser } from 'src/app/models/user';
@@ -57,6 +68,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   form = this.fb.nonNullable.group({
     messageToSend: [ '' ],
   });
+  disableControls$ = new BehaviorSubject<boolean>(false);
 
   readonly subscriptions = new Subscription();
   readonly state$ = this.store.select(forum.selectThreadEvents);
@@ -172,14 +184,22 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
 
     this.subscriptions.add(
-      this.isThreadStatusOpened$.pipe(delay(0)).subscribe(isThreadStatusOpened => {
-        if (!isThreadStatusOpened) {
+      combineLatest([
+        this.threadStatus$.pipe(delay(0)),
+        this.disableControls$,
+      ]).subscribe(([ status, disableControls ]) => {
+        if (status?.data && (status.data.open || status.data.canOpen) && !disableControls) {
+          this.form.get('messageToSend')?.enable();
+          this.focusOnInput();
+        } else {
           this.form.get('messageToSend')?.disable();
-          return;
         }
-        this.form.get('messageToSend')?.enable();
-        this.focusOnInput();
       })
+    );
+    this.subscriptions.add(
+      this.isThreadStatusOpened$.pipe(delay(0), filter(isThreadStatusOpened => isThreadStatusOpened)).subscribe(() =>
+        this.messageToSendEl?.nativeElement.focus()
+      )
     );
   }
 
@@ -187,17 +207,61 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  sendMessage(threadId: ThreadId): void {
-    const messageToSend = this.form.value.messageToSend?.trim();
-    if (!messageToSend) return;
-    this.store.select(forum.selectThreadToken).pipe(
-      take(1), // send on the current thread (if any) only
-      filter(isNotUndefined),
-    ).subscribe(token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])));
-    this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 }).subscribe();
+  clearMessageToSendControl(): void {
     this.form.reset({
       messageToSend: '',
     });
+  }
+
+  sendMessage(threadId: ThreadId, isThreadOpened: boolean): void {
+    const messageToSend = this.form.value.messageToSend?.trim();
+    if (!messageToSend) return;
+    this.disableControls$.next(true);
+
+    const threadToken$ = this.store.select(forum.selectThreadToken).pipe(
+      take(1), // send on the current thread (if any) only
+      filter(isNotUndefined),
+    );
+
+    if (isThreadOpened) {
+      threadToken$.subscribe({
+        next: token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])),
+        error: () => this.disableControls$.next(false),
+      });
+      threadToken$.pipe(
+        switchMap(() =>
+          this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })
+        ),
+      ).subscribe({
+        next: () => {
+          this.disableControls$.next(false);
+          this.clearMessageToSendControl();
+        },
+        error: () => this.disableControls$.next(false)
+      });
+    } else {
+      this.changeThreadStatus({
+        open: true,
+        threadId,
+        messageCountIncrement: 1,
+      }).subscribe({
+        error: () => this.disableControls$.next(false),
+      });
+      this.subscriptions.add(
+        this.store.select(forum.selectThreadStatusOpen).pipe(
+          filter(isOpened => isOpened),
+          take(1),
+          switchMap(() => threadToken$)
+        ).subscribe({
+          next: token => {
+            this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ]));
+            this.clearMessageToSendControl();
+            this.disableControls$.next(false);
+          },
+          error: () => this.disableControls$.next(false),
+        })
+      );
+    }
   }
 
   scrollDown(): void {
@@ -209,17 +273,22 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  focusOnInput(): void {
-    this.messageToSendEl?.nativeElement.focus();
-  }
-
-  changeThreadStatus(open: boolean, threadId: ThreadId): void {
-    this.updateThreadService.update(threadId.itemId, threadId.participantId, open ? {
+  changeThreadStatus(
+    params: { open: true, threadId: ThreadId, messageCountIncrement?: number } | { open: false, threadId: ThreadId }
+  ): Observable<void> {
+    const update$ = this.updateThreadService.update(params.threadId.itemId, params.threadId.participantId, params.open ? {
       status: 'waiting_for_trainer',
       helperGroupId: appConfig.allUsersGroupId,
-    } : { status: 'closed' }).subscribe({
+      ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {})
+    } : { status: 'closed' }).pipe(share());
+    update$.subscribe({
       next: () => this.store.dispatch(forum.threadPanelActions.threadStatusChanged()),
       error: () => this.actionFeedbackService.unexpectedError(),
     });
+    return update$;
+  }
+
+  focusOnInput(): void {
+    this.messageToSendEl?.nativeElement.focus();
   }
 }
