@@ -6,9 +6,10 @@ import { SkillProgressComponent } from '../../ui-components/skill-progress/skill
 import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { TreeModule } from 'primeng/tree';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
 import { NgIf, NgClass, I18nPluralPipe, I18nSelectPipe } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 
 export interface CustomTreeNode<T> extends TreeNode {
   data: T,
@@ -23,6 +24,7 @@ export interface CustomTreeNode<T> extends TreeNode {
     NgIf,
     LeftMenuBackButtonComponent,
     RouterLink,
+    RouterLinkActive,
     TreeModule,
     SharedModule,
     NgClass,
@@ -30,7 +32,8 @@ export interface CustomTreeNode<T> extends TreeNode {
     TooltipModule,
     SkillProgressComponent,
     I18nPluralPipe,
-    I18nSelectPipe
+    I18nSelectPipe,
+    ButtonModule,
   ],
 })
 export class LeftNavTreeComponent implements OnChanges {

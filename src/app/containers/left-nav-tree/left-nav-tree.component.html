@@ -2,10 +2,17 @@
   <alg-left-menu-back-button>{{ data.parent.title }}</alg-left-menu-back-button>
 </div>
 
-<div class="container" *ngIf="!data?.parent && elementType === 'group'" [routerLink]="['groups', 'mine']">
-  <div class="back-button-container cursor-pointer">
-    <p class="back-button-title">My groups</p>
-  </div>
+<div class="container" *ngIf="!data?.parent && elementType === 'group'">
+  <a
+    class="alg-button primary left-menu"
+    [routerLink]="['groups', 'mine']"
+    routerLinkActive="left-menu-selected"
+    pButton
+    icon="ph-duotone ph-users"
+    i18n
+  >
+    My groups
+  </a>
 </div>
 
 <p-tree styleClass="alg-tree-nav" [value]="nodes" i18n-emptyMessage emptyMessage="There is no content to display">

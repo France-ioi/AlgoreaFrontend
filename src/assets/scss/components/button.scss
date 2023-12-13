@@ -4,11 +4,9 @@
   border: none;
   text-decoration: none;
 
-  &.p-button {
-    &:enabled:focus {
-      outline: none;
-      box-shadow: none;
-    }
+  &:focus, &:active {
+    outline: none;
+    box-shadow: none;
   }
 
   &.basic {
@@ -75,6 +73,32 @@
 
     &:hover {
       border: toRem(1) solid var(--alg-white-color) !important;
+    }
+  }
+
+  &.left-menu {
+    width: 100%;
+
+    &.p-button {
+      padding-left: toRem(7.5);
+      padding-right: toRem(7.5);
+      flex-direction: row;
+      border-radius: toRem(10);
+      background-color: transparent;
+      color: rgb(84, 84, 84);
+      font-weight: 700;
+    }
+
+    .p-button-icon {
+      margin-right: toRem(7.5);
+      font-size: toRem(24);
+      color: var(--alg-primary-color);
+    }
+
+    &.left-menu-selected {
+      &.p-button {
+        background-color: var(--alg-tree-selected-color);
+      }
     }
   }
 }
