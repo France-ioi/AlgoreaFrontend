@@ -1,16 +1,18 @@
-<div class="alg-page-header" *ngIf="user">
-  <div>
-    <div class="alg-page-header-title">
-      {{ user | userCaption }}
-    </div>
+<div class="user-header-container" *ngIf="user">
+  <div class="user-header">
+    <div class="user-title-container">
+      <h1 class="user-title alg-h1">
+        {{ user | userCaption }}
+      </h1>
 
-    <div class="alg-page-header-subtitle" *ngIf="user.webSite">
-      <i class="fa fa-external-link-alt"></i>
-      <a class="web-site alg-link base-color" [attr.href]="user.webSite" target="_blank">{{ user.webSite }}</a>
-    </div>
+      <div class="user-subtitle" *ngIf="user.webSite">
+        <i class="fa fa-external-link-alt user-subtitle-icon"></i>
+        <a class="alg-link" [attr.href]="user.webSite" target="_blank">{{ user.webSite }}</a>
+      </div>
 
-    <div class="free-text alg-page-header-subtitle" *ngIf="user.freeText">
-      {{ user.freeText }}
+      <div class="user-subtitle" *ngIf="user.freeText">
+        {{ user.freeText }}
+      </div>
     </div>
   </div>
 

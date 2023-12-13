@@ -3,7 +3,7 @@ import { GetUserService } from '../../data-access/get-user.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
-import { catchError, delay, switchMap, map, startWith, filter, share, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { catchError, delay, switchMap, map, startWith, filter, shareReplay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { contentInfo } from 'src/app/models/content/content-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -62,7 +62,7 @@ export class UserComponent implements OnInit, OnDestroy {
     switchMap(route => this.getUserService.getForId(route.id).pipe(map(user => ({ route: route, user: user })))),
     mapToFetchState({ resetter: this.refresh$ }),
     takeUntil(this.destroyed$),
-    share(),
+    shareReplay(1),
   );
 
   readonly currentUserGroupId$ = this.userSessionService.userProfile$.pipe(
