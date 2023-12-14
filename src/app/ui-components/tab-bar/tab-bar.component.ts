@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Observable, combineLatest, map, Subscription, delay, Subject, merge } from 'rxjs';
+import { Observable, combineLatest, map, Subscription, Subject, merge } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
@@ -66,14 +66,10 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
       merge(
         this.resizeEvent.asObservable(),
         this.scrollbarRef.scrolled,
+        this.tabs$,
       ).pipe(
-        debounceTime(30),
+        debounceTime(50),
       ).subscribe(() =>
-        this.handleArrows()
-      )
-    );
-    this.subscriptions.add(
-      this.tabs$.pipe(delay(0)).subscribe(() =>
         this.handleArrows()
       )
     );
