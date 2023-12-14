@@ -1,6 +1,6 @@
 <form [formGroup]="form" *ngIf="form">
   <alg-collapsible-section
-      i18n-header header="Can view" icon="fa fa-eye"
+      i18n-header header="Can view" icon="ph-duotone ph-eyeglasses"
       [collapsible]="!form.errors?.canView"
       [errorMessage]="form.errors?.canView?.[0]"
   >
@@ -22,7 +22,7 @@
   </alg-switch-field>-->
 
   <alg-collapsible-section
-      i18n-header header="Can grant view" icon="fa fa-key"
+      i18n-header header="Can grant view" icon="ph-duotone ph-key"
       [collapsible]="!form.errors?.canGrantView"
       [errorMessage]="form.errors?.canGrantView?.[0]"
   >
@@ -36,7 +36,7 @@
   </alg-collapsible-section>
 
   <alg-collapsible-section
-      i18n-header header="Can watch" icon="fa fa-binoculars"
+      i18n-header header="Can watch" icon="ph-duotone ph-binoculars"
       [collapsible]="!form.errors?.canWatch"
       [errorMessage]="form.errors?.canWatch?.[0]"
   >
@@ -50,7 +50,7 @@
   </alg-collapsible-section>
 
   <alg-collapsible-section
-      i18n-header header="Can edit" icon="fa fa-pencil-alt"
+      i18n-header header="Can edit" icon="ph-duotone ph-pencil"
       [collapsible]="!form.errors?.canEdit"
       [errorMessage]="form.errors?.canEdit?.[0]"
   >
@@ -64,7 +64,7 @@
   </alg-collapsible-section>
 
   <alg-collapsible-section
-      i18n-header header="Can attach official sessions" icon="fa fa-paperclip"
+      i18n-header header="Can attach official sessions" icon="ph-duotone ph-paperclip"
       [collapsible]="!form.errors?.canMakeSessionOfficial"
       [errorMessage]="form.errors?.canMakeSessionOfficial?.[0]"
   >
@@ -82,7 +82,7 @@
   </alg-collapsible-section>
 
   <alg-collapsible-section
-      i18n-header header="Is owner" icon="fa fa-user-tie"
+      i18n-header header="Is owner" icon="ph-duotone ph-user"
       [collapsible]="!form.errors?.isOwner"
       [errorMessage]="form.errors?.isOwner?.[0]"
   >
@@ -102,14 +102,14 @@
   <div class="buttons">
     <p-button
       class="button"
-      icon="fa fa-times"
+      icon="ph-bold ph-x"
       i18n-label label="Cancel"
       styleClass="alg-button p-button-rounded p-button-danger"
       (onClick)="onCancel()"
     ></p-button>
     <p-button
       class="button"
-      icon="fa fa-check"
+      icon="ph-bold ph-check"
       i18n-label label="Proceed"
       styleClass="alg-button p-button-rounded"
       (onClick)="onAccept()"

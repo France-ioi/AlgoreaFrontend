@@ -1,14 +1,14 @@
-@import "../../../../variables";
-
-$inactive-bk-color: #d8d8d8;
+@import 'src/assets/scss/functions';
 
 .header-content {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
 
-  .selected-progress-level {
-    margin: 0 1rem;
-  }
+.selected-progress-level {
+  color: var(--alg-secondary-color);
+  font-size: toRem(12);
 }
 
 .progress-select-body {
@@ -43,7 +43,7 @@ $inactive-bk-color: #d8d8d8;
         border-radius: 1.25rem;
         font-size: 0.75rem;
         color: white;
-        background-color: $inactive-bk-color;
+        background-color: #fff;
         cursor: pointer;
 
         &.active {
@@ -65,7 +65,7 @@ $inactive-bk-color: #d8d8d8;
       .progress-branch {
         display: flex;
         width: 0.4167rem;
-        background-color: $inactive-bk-color;
+        background-color: #fff;
         flex: 1;
 
         &.active {

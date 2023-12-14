@@ -12,3 +12,13 @@
   width: 2.0833rem;
   height: 2.0833rem;
 }
+
+.content {
+  display: flex;
+}
+
+.template {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

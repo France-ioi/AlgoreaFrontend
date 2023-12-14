@@ -9,8 +9,6 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
   imports: [ NgClass, NgFor, NgIf ]
 })
 export class ProgressLevelComponent implements OnChanges {
-
-  @Input() theme : 'default' | 'revert' = 'default';
   @Input() value = 0;
   @Input() maximum = 4;
   @Input() colorTheme: 'success' | 'warning' | 'danger' = 'success';

@@ -9,7 +9,7 @@
     <p-header>
       <div class="dialog-header">
       <span class="dialog-handler">
-        <i class="fa fa-lock"></i>
+        <i class="ph-duotone ph-lock-simple"></i>
       </span>
         <span class="dialog-title" i18n>
         {{ group?.name }}: manager access given to {{ userCaption }}
@@ -30,7 +30,7 @@
         <alg-collapsible-section
           [collapsible]="false"
           i18n-header header="Management level"
-          icon="fa fa-users-cog"
+          icon="ph-duotone ph-user-gear"
         >
           <ng-template #content let-collapsed>
             <alg-progress-select
@@ -48,7 +48,7 @@
         <alg-collapsible-section
           [collapsible]="false"
           i18n-header header="Can grant access"
-          icon="fa fa-key"
+          icon="ph-duotone ph-key"
         >
           <ng-template #content let-collapsed>
             <alg-switch-field [collapsed]="collapsed" formControlName="canGrantGroupAccess">
@@ -64,7 +64,7 @@
         <alg-collapsible-section
           [collapsible]="false"
           i18n-header header="Can watch members"
-          icon="fa fa-binoculars"
+          icon="ph-duotone ph-binoculars"
         >
           <ng-template #content let-collapsed>
             <alg-switch-field [collapsed]="collapsed" formControlName="canWatchMembers">
@@ -88,13 +88,13 @@
 
         <ng-template #buttons>
           <p-button
-            icon="fa fa-times"
+            icon="ph-bold ph-x"
             i18n-label label="Cancel"
             styleClass="alg-button p-button-rounded p-button-danger"
             (onClick)="onClose()"
           ></p-button>
           <p-button
-            icon="fa fa-check"
+            icon="ph-bold ph-check"
             i18n-label label="Save"
             styleClass="alg-button p-button-rounded"
             (onClick)="onAccept()"
