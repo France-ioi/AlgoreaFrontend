@@ -1,22 +1,32 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Observable, combineLatest, map, fromEvent, Subscription, delay } from 'rxjs';
+import { Observable, combineLatest, map, Subscription, Subject, merge } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { debounceTime } from 'rxjs/operators';
+import { NgScrollbar } from 'ngx-scrollbar';
 
 @Component({
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
   standalone: true,
-  imports: [ LetDirective, AsyncPipe, NgForOf, NgClass, RouterLink, ButtonModule, NgIf ],
+  imports: [ LetDirective, AsyncPipe, NgForOf, NgClass, RouterLink, ButtonModule, NgIf, NgScrollbar ],
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('tabsContainer') tabsContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
   @Input() styleClass?: string;
 
   showPrevButton = false;
@@ -31,6 +41,11 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     }))),
   );
 
+  resizeEvent = new Subject<void>();
+  resizeObserver = new ResizeObserver(() =>
+    this.resizeEvent.next()
+  );
+
   readonly subscriptions = new Subscription();
 
   @HostListener('window:resize')
@@ -40,19 +55,21 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private tabService: TabService,
+    private elementRef: ElementRef<HTMLDivElement>,
+    private cd: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit(): void {
-    if (!this.tabsContainer) return;
+    if (!this.scrollbarRef) return;
+    this.resizeObserver.observe(this.elementRef.nativeElement);
     this.subscriptions.add(
-      fromEvent(this.tabsContainer.nativeElement, 'scroll').pipe(
-        debounceTime(30),
+      merge(
+        this.resizeEvent.asObservable(),
+        this.scrollbarRef.scrolled,
+        this.tabs$,
+      ).pipe(
+        debounceTime(50),
       ).subscribe(() =>
-        this.handleArrows()
-      )
-    );
-    this.subscriptions.add(
-      this.tabs$.pipe(delay(0)).subscribe(() =>
         this.handleArrows()
       )
     );
@@ -60,6 +77,8 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    this.resizeObserver.unobserve(this.elementRef.nativeElement);
+    this.resizeEvent.complete();
   }
 
   onChange(tab: MenuItem): void {
@@ -68,37 +87,32 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   }
 
   handleArrows(): void {
-    const tabsContainer = this.tabsContainer;
-    if (!tabsContainer) throw new Error('Unexpected: Missed tabs');
-    const scrollWidth = tabsContainer.nativeElement.scrollWidth;
-    const boundingClientRect = tabsContainer.nativeElement.getBoundingClientRect();
-    const scrollLeft = tabsContainer.nativeElement.scrollLeft;
-    const tabContainerWidth = Math.round(boundingClientRect.width);
+    if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
+    const scrollLeft = this.scrollbarRef.viewport.scrollLeft;
+    const scrollWidth = this.scrollbarRef.viewport.scrollWidth;
+    const clientWidth = this.scrollbarRef.viewport.clientWidth;
     const gap = 5;
-    this.showPrevButton = Math.round(boundingClientRect.width) !== Math.round(scrollWidth) && scrollLeft > gap;
-    this.showNextButton = Math.round(boundingClientRect.width) !== Math.round(scrollWidth)
-      && (scrollLeft + tabContainerWidth) < (Math.round(scrollWidth) - gap);
+    this.showPrevButton = clientWidth !== Math.round(scrollWidth) && scrollLeft > gap;
+    this.showNextButton = clientWidth !== Math.round(scrollWidth)
+      && (scrollLeft + clientWidth) < (Math.round(scrollWidth) - gap);
+    this.cd.detectChanges();
   }
 
   onPrev(): void {
-    const tabsContainer = this.tabsContainer;
-    if (!tabsContainer) throw new Error('Unexpected: Missed tabs');
-    const boundingClientRect = tabsContainer.nativeElement.getBoundingClientRect();
-    const tabContainerWidth = Math.round(boundingClientRect.width);
-    tabsContainer.nativeElement.scrollTo({
-      left: tabsContainer.nativeElement.scrollLeft - (tabContainerWidth / 2),
-      behavior: 'smooth',
+    if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
+    const scrollLeft = this.scrollbarRef.viewport.scrollLeft;
+    const clientWidth = this.scrollbarRef.viewport.clientWidth;
+    void this.scrollbarRef.scrollTo({
+      left: scrollLeft - (clientWidth / 2),
     });
   }
 
   onNext(): void {
-    const tabsContainer = this.tabsContainer;
-    if (!tabsContainer) throw new Error('Unexpected: Missed tabs');
-    const boundingClientRect = tabsContainer.nativeElement.getBoundingClientRect();
-    const tabContainerWidth = Math.round(boundingClientRect.width);
-    tabsContainer.nativeElement.scrollTo({
-      left: tabsContainer.nativeElement.scrollLeft + (tabContainerWidth / 2),
-      behavior: 'smooth',
+    if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
+    const scrollLeft = this.scrollbarRef.viewport.scrollLeft;
+    const clientWidth = this.scrollbarRef.viewport.clientWidth;
+    void this.scrollbarRef.scrollTo({
+      left: scrollLeft + (clientWidth / 2),
     });
   }
 }
