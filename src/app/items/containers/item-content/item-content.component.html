@@ -80,19 +80,24 @@
   </ng-container>
 
   <ng-container *ngIf="!(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry">
-    <alg-message-info>
-      <span *ngIf="itemData.item.type === 'Chapter'" i18n>
-        Your current access rights do not allow you to list the content of this chapter.
+    <div class="no-access-message alg-flex-1">
+      <span class="no-access-message-icon-container">
+        <i class="ph-duotone ph-lock-key no-access-message-icon"></i>
+        <span class="no-access-message-icon-bg"></span>
       </span>
 
-      <span *ngIf="itemData.item.type === 'Skill'" i18n>
-        Your current access rights do not allow you to list the content of this skill.
+      <span class="no-access-message-text alg-text-secondary" *ngIf="itemData.item.type === 'Chapter'" i18n>
+        Your current access rights do not allow you to list<br> the content of this chapter.
       </span>
 
-      <span *ngIf="itemData.item.type === 'Task'" i18n>
-        Your current access rights do not allow you to start the activity.
+      <span class="no-access-message-text alg-text-secondary" *ngIf="itemData.item.type === 'Skill'" i18n>
+        Your current access rights do not allow you to list<br> the content of this skill.
       </span>
-    </alg-message-info>
+
+      <span class="no-access-message-text alg-text-secondary" *ngIf="itemData.item.type === 'Task'" i18n>
+        Your current access rights do not allow you to start<br> the activity.
+      </span>
+    </div>
 
     <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData"></alg-item-unlock-access>
   </ng-container>

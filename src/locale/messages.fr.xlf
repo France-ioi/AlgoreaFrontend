@@ -542,7 +542,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">120</context></context-group></trans-unit><trans-unit id="3419681791450150574" datatype="html">
         <source>Progress</source><target state="translated">Avancement</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-overview/group-overview.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="2738733136413289671" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-overview/group-overview.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="2738733136413289671" datatype="html">
         <source>Leave the group?</source><target state="new">Leave the group?</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-overview/group-overview.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="3797570084942068182" datatype="html">
@@ -731,10 +731,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="8307140841776883735" datatype="html">
         <source>Join</source><target state="translated">Rejoindre</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/my-groups/my-groups.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="2032942917532130545" datatype="html">
-        <source>Platform settings</source><target state="new">Platform settings</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/platform-settings/platform-settings.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">70</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/my-groups/my-groups.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">92</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="7798083029915432586" datatype="html">
@@ -868,25 +865,34 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="7327354999532189308" datatype="html">
         <source> You need to set a url in editing mode. </source><target state="new"> You need to set a url in editing mode. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="9152383970834327178" datatype="html">
-        <source> Your current access rights do not allow you to list the content of this chapter. </source><target state="new"> Your current access rights do not allow you to list the content of this chapter. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="6557565374286675560" datatype="html">
-        <source> Your current access rights do not allow you to list the content of this skill. </source><target state="new"> Your current access rights do not allow you to list the content of this skill. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="8944765970586595001" datatype="html">
-        <source> Your current access rights do not allow you to start the activity. </source><target state="new"> Your current access rights do not allow you to start the activity. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="701018348223992755" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="6897999120381208807" datatype="html">
+        <source> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this chapter. </source><target state="new"> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this chapter. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">89,91</context>
+        </context-group>
+      </trans-unit><trans-unit id="8697596042386823142" datatype="html">
+        <source> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this skill. </source><target state="new"> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this skill. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">93,95</context>
+        </context-group>
+      </trans-unit><trans-unit id="5323780775476058848" datatype="html">
+        <source> Your current access rights do not allow you to start<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the activity. </source><target state="new"> Your current access rights do not allow you to start<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the activity. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">97,99</context>
+        </context-group>
+      </trans-unit><trans-unit id="701018348223992755" datatype="html">
         <source>Loading the content</source><target state="new">Loading the content</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">103</context></context-group></trans-unit><trans-unit id="1105872825687577539" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="1105872825687577539" datatype="html">
         <source>The content is taking an unexpected long time to load... please wait...</source><target state="new">The content is taking an unexpected long time to load... please wait...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">104</context></context-group></trans-unit><trans-unit id="6198202441206570236" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="6198202441206570236" datatype="html">
         <source>This activity requires explicit entry</source><target state="new">This activity requires explicit entry</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="notImplemented" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="notImplemented" datatype="html">
         <source>(not implemented)</source><target state="new">(not implemented)</target>
 
 
@@ -894,7 +900,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">111</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">110</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">131</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">212</context></context-group></trans-unit><trans-unit id="7493155057912125679" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">116</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">110</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">131</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.html</context><context context-type="linenumber">212</context></context-group></trans-unit><trans-unit id="7493155057912125679" datatype="html">
         <source>Your current access rights do not allow you to list the content of this chapter.</source><target state="new">Your current access rights do not allow you to list the content of this chapter.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav-tree/left-nav-tree.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="6518315916537207134" datatype="html">
@@ -1089,7 +1095,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/current-user/current-user.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="634301439602995598" datatype="html">
         <source>Platform language</source><target state="new">Platform language</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/platform-settings/platform-settings.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="8953033926734869941" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/platform-settings/platform-settings.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8953033926734869941" datatype="html">
        <source>Name</source><target state="translated">Nom</target>
 
 
@@ -2045,7 +2051,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="4426319772533875265" datatype="html">
         <source> Settings </source><target state="translated"> Paramètres </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">54</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="4710139977652705392" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="4710139977652705392" datatype="html">
         <source> You are not allowed to view this group page. </source><target state="new"> You are not allowed to view this group page. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="7288998356732151629" datatype="html">
@@ -2075,10 +2081,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2624846324402649932" datatype="html">
         <source> Progress </source><target state="new"> Progress </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="4301389120920899318" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="4301389120920899318" datatype="html">
         <source> Personal data </source><target state="new"> Personal data </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="4480933489956077341" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="4480933489956077341" datatype="html">
         <source>You cannot access this page for this user</source><target state="new">You cannot access this page for this user</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="4555457172864212828" datatype="html">
