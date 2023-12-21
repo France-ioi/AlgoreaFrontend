@@ -66,6 +66,7 @@ import { NgIf, AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import forum from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
+import { LocaleService } from '../services/localeService';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -173,12 +174,14 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(readyData()).pipe(
     switchMap(data => {
       if (!isTask(data.item)) return of(null); // config for non-task's is null
+      const userLocale = this.localeService.currentLang?.tag;
+      if (!userLocale) throw new Error('unexpected: locale not defined');
       return this.initialAnswerDataSource.answer$.pipe(
         catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
         map(initialAnswer => ({
           readOnly: !!data.route.answer && !data.route.answer.loadAsCurrent,
           initialAnswer,
-          locale: data.item.string.languageTag
+          locale: userLocale, // should use task locale if there is a way for the user to select it
         }))
       );
     })
@@ -356,6 +359,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private tabService: TabService,
+    private localeService: LocaleService,
   ) {}
 
   ngOnDestroy(): void {
