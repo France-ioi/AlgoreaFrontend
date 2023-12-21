@@ -19,7 +19,7 @@
           (changed)="reloadItem()"
         ></alg-item-permissions>
 
-        <alg-tab-bar *ngIf="!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed" />
+        <alg-tab-bar class="tab-bar" *ngIf="!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed" />
         <div
           class="content-container"
           [ngClass]="{
