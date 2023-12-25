@@ -54,6 +54,10 @@
   box-sizing: content-box;
 }
 
+.p-component, .p-component * {
+  box-sizing: border-box !important;
+}
+
 html, body {
   margin: 0;
   padding: 0;

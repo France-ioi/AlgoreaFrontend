@@ -33,15 +33,15 @@
 
   .p-treenode {
     padding: 0 !important;
+
+    &:focus {
+      .p-treenode-content {
+        box-shadow: none !important;
+      }
+    }
   }
 
   .p-treenode-label {
     flex: 1;
-  }
-
-  .p-treenode-content {
-    &:focus {
-      box-shadow: none !important;
-    }
   }
 }
