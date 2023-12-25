@@ -2,7 +2,7 @@
   <alg-error
     *ngIf="state.isError"
     class="dark"
-    icon="fa fa-exclamation-triangle"
+    icon="ph-duotone ph-warning-circle"
     i18n-message message="Error while loading the group you joined"
     [showRefreshButton]="true"
     refreshButtonType="refresh"
@@ -49,16 +49,16 @@
                     i18n-pTooltip pTooltip="This team membership is now frozen and cannot be modified."
                     tooltipPosition="left"
                     tooltipEvent="hover"
-                    class="fa fa-lock"
+                    class="ph-duotone ph-lock"
                   ></div>
                   <div
                     *ngSwitchCase="'would_break_entry_conditions'"
                     i18n-pTooltip pTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
                     tooltipPosition="left"
                     tooltipEvent="hover"
-                    class="fa fa-lock"
+                    class="ph-duotone ph-lock"
                   ></div>
-                  <div *ngSwitchDefault class="fa fa-lock"></div>
+                  <div *ngSwitchDefault class="ph-duotone ph-lock"></div>
                 </ng-container>
 
                 <ng-container *ngIf="membership.group.type !== 'Team'">
@@ -66,19 +66,18 @@
                     i18n-pTooltip pTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
                     tooltipPosition="left"
                     tooltipEvent="hover"
-                    class="fa fa-lock"
+                    class="ph-duotone ph-lock"
                   ></div>
                 </ng-container>
             </ng-template>
             <ng-template #canLeaveActions>
               <button
-                  pButton
-                  pRipple
-                  i18n-pTooltip pTooltip="Leave the group"
-                  type="button"
-                  icon="fa fa-sign-out-alt"
-                  class="p-button-rounded p-button-outlined"
-                  (click)="onGroupLeaveClick($event, membership)"
+                pButton
+                i18n-pTooltip pTooltip="Leave the group"
+                type="button"
+                icon="ph-duotone ph-sign-out"
+                class="alg-button-icon rounded primary-color stroke regular-size"
+                (click)="onGroupLeaveClick($event, membership)"
               ></button>
             </ng-template>
           </div>

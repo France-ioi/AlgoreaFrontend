@@ -1,16 +1,16 @@
 <alg-error
-    *ngIf="state === 'error'; else noError"
-    class="dark"
-    icon="fa fa-exclamation-triangle"
-    i18n-message message="Error while loading the group you manage"
-    [showRefreshButton]="true"
-    (refresh)="fetchData()"
+  *ngIf="state === 'error'; else noError"
+  class="dark"
+  icon="ph-duotone ph-warning-circle"
+  i18n-message message="Error while loading the group you manage"
+  [showRefreshButton]="true"
+  (refresh)="fetchData()"
 ></alg-error>
 
 <ng-template #noError>
   <p-table
     #table
-    class="alg-table --managed-group-list"
+    class="alg-table"
     [value]="data"
     [customSort]="true"
     sortMode="multiple"
@@ -39,19 +39,20 @@
             locked: group.canWatchMembers,
             unlocked: !group.canWatchMembers
           }">
-            <i *ngIf="!group.canWatchMembers" class="fa fa-times"></i>
-            <i *ngIf="group.canWatchMembers" class="fa fa-check"></i>
+            <i *ngIf="!group.canWatchMembers" class="ph-bold ph-x"></i>
+            <i *ngIf="group.canWatchMembers" class="ph-bold ph-check"></i>
           </span>
         </td>
         <td>
-          <span class="table-icon"
-                [ngClass]="{
-                locked: group.canGrantGroupAccess,
-                unlocked: !group.canGrantGroupAccess
-              }">
-              <i *ngIf="!group.canGrantGroupAccess" class="fa fa-times"></i>
-              <i *ngIf="group.canGrantGroupAccess" class="fa fa-check"></i>
-            </span>
+          <span
+            class="table-icon"
+            [ngClass]="{
+            locked: group.canGrantGroupAccess,
+            unlocked: !group.canGrantGroupAccess
+          }">
+            <i *ngIf="!group.canGrantGroupAccess" class="ph-bold ph-x"></i>
+            <i *ngIf="group.canGrantGroupAccess" class="ph-bold ph-check"></i>
+          </span>
         </td>
       </tr>
     </ng-template>
