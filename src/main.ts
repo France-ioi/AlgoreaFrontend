@@ -129,7 +129,7 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideState(forum),
     provideEffects(forumEffects()),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes),

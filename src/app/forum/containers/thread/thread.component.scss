@@ -104,7 +104,7 @@
   padding: 0 toRem(16);
   height: toRem(32);
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   border-radius: toRem(20);
   background-color: var(--alg-observation-button-bg-color);

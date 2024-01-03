@@ -110,5 +110,15 @@
       color: white;
       background-color: var(--alg-primary-dark-hover-color);
     }
+
+    &:not(.p-highlight):not(.p-disabled) {
+      &.p-focus {
+        background-color: var(--alg-primary-color);
+
+        &:hover {
+          background-color: var(--alg-primary-dark-hover-color);
+        }
+      }
+    }
   }
 }

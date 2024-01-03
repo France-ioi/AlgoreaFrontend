@@ -144,27 +144,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "algorea:build:en"
+            "buildTarget": "algorea:build:en"
           },
           "configurations": {
             "production-en": {
-              "browserTarget": "algorea:build:production-en"
+              "buildTarget": "algorea:build:production-en"
             },
             "e2e": {
-              "browserTarget": "algorea:build:e2e"
+              "buildTarget": "algorea:build:e2e"
             },
             "fr": {
-              "browserTarget": "algorea:build:fr"
+              "buildTarget": "algorea:build:fr"
             },
             "en": {
-              "browserTarget": "algorea:build:en"
+              "buildTarget": "algorea:build:en"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "algorea:build"
+            "buildTarget": "algorea:build"
           }
         },
         "test": {
