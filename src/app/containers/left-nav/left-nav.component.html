@@ -4,7 +4,7 @@
       <div class="main-menu">
         <button
           class="main-menu-button active"
-          [ngClass]="{ 'active': activeTab.index === 0 }"
+          [ngClass]="{ 'active': activeTab.index === 0, 'no-gap': currentLanguage === 'fr' }"
           (click)="onSelectionChangedByIdx(0)"
         >
           <div class="main-menu-icon-wrapper">
@@ -15,7 +15,7 @@
 
         <button
           class="main-menu-button"
-          [ngClass]="{ 'active': activeTab.index === 1 }"
+          [ngClass]="{ 'active': activeTab.index === 1, 'no-gap': currentLanguage === 'fr' }"
           *ngIf="!skillsDisabled"
           (click)="onSelectionChangedByIdx(1)"
         >
@@ -27,7 +27,7 @@
 
         <button
           class="main-menu-button"
-          [ngClass]="{ 'active': activeTab.index === 2 }"
+          [ngClass]="{ 'active': activeTab.index === 2, 'no-gap': currentLanguage === 'fr' }"
           data-cy="main-menu-group-btn"
           (click)="onSelectionChangedByIdx(2)"
           *ngIf="activeTab.index === 2 || !currentUser.tempUser"

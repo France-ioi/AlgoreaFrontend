@@ -26,6 +26,7 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
 import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { LocaleService } from '../../services/localeService';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -103,6 +104,8 @@ export class LeftNavComponent implements OnChanges {
   skillsDisabled = appConfig.featureFlags.skillsDisabled;
   observationModeCaption = $localize`Observation mode`;
 
+  currentLanguage = this.localeService.currentLang?.tag;
+
   constructor(
     private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
@@ -112,6 +115,7 @@ export class LeftNavComponent implements OnChanges {
     private groupNavTreeService: GroupNavTreeService,
     private injector : Injector,
     private layoutService: LayoutService,
+    private localeService: LocaleService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
