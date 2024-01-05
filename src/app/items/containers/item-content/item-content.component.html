@@ -69,12 +69,14 @@
       </ng-container>
 
       <ng-template #noUrl>
-        <p class="validation-text" i18n>
-          This activity has not been correctly configured.
-        </p>
-        <p class="validation-text" *ngIf="itemData.item.permissions | allowsEditingChildren" i18n>
-          You need to set a url in editing mode.
-        </p>
+        <alg-error class="alg-flex-1" icon="ph-duotone ph-wrench">
+          <p i18n>
+            This activity has not been correctly configured.
+          </p>
+          <p *ngIf="itemData.item.permissions | allowsEditingChildren" i18n>
+            You need to set a url in editing mode.
+          </p>
+        </alg-error>
       </ng-template>
     </ng-container>
   </ng-container>

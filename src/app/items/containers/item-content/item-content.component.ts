@@ -21,6 +21,7 @@ import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import forum from 'src/app/forum/store';
+import { ErrorComponent } from '../../../ui-components/error/error.component';
 
 @Component({
   selector: 'alg-item-content',
@@ -42,7 +43,8 @@ import forum from 'src/app/forum/store';
     TaskLoaderComponent,
     AsyncPipe,
     AllowsViewingItemContentPipe,
-    AllowsEditingChildrenItemPipe
+    AllowsEditingChildrenItemPipe,
+    ErrorComponent,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
