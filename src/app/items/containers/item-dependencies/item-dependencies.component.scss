@@ -1,17 +1,24 @@
+@import 'src/assets/scss/functions';
+
+.title {
+  margin: toRem(6) 0 toRem(16) 0;
+}
+
 .explanation {
   margin: 0;
-  font-size: 1.4rem;
+  color: var(--alg-secondary-color);
 }
 
 .note-caption {
-  margin: 1rem 0;
-  font-size: 1rem;
+  margin: var(--alg-space-size-5) 0;
+  color: var(--alg-secondary-color);
+  font-size: toRem(14);
   text-align: center;
 }
 
 .list {
   list-style-type: none;
-  margin: 1rem 0 0 0;
+  margin: var(--alg-space-size-5) 0 0 0;
   padding: 0;
 }
 
@@ -19,6 +26,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4rem;
+  height: toRem(48);
   border-bottom: .1rem solid var(--light-border-color);
+}
+
+.add-dependency {
+  display: block;
+  margin-top: toRem(38);
+}
+
+.depending-content-title {
+  margin: toRem(38) 0 toRem(16) 0;
+}
+
+.loading {
+  margin: toRem(--alg-space-size-3) 0;
 }
