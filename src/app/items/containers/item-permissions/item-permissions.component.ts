@@ -46,7 +46,7 @@ export class ItemPermissionsComponent implements OnChanges {
   isPermissionsDialogOpened = false;
   watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';
-  collapsed = false;
+  collapsed = true;
 
   constructor() {
   }
