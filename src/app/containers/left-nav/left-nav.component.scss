@@ -35,10 +35,16 @@
   border: none;
   background: none;
   cursor: pointer;
+  padding: 0 toRem(12);
 
-  &:not(.no-gap) {
+  &:not(.compact) {
     margin: 0 var(--alg-space-size-6);
-    padding: 0 toRem(12);
+  }
+
+  &.compact {
+    .main-menu-title {
+      font-size: toRem(14);
+    }
   }
 
   &.active {
