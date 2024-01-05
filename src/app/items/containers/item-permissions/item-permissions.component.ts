@@ -14,7 +14,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
-import { NgIf, I18nSelectPipe } from '@angular/common';
+import { NgIf, I18nSelectPipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -33,6 +33,7 @@ import { NgIf, I18nSelectPipe } from '@angular/common';
     I18nSelectPipe,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
+    NgClass,
   ],
 })
 export class ItemPermissionsComponent implements OnChanges {
@@ -45,6 +46,7 @@ export class ItemPermissionsComponent implements OnChanges {
   isPermissionsDialogOpened = false;
   watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';
+  collapsed = true;
 
   constructor() {
   }

@@ -1,13 +1,68 @@
-.permission-indicator-section {
-  margin-top: 2rem;
-}
+@import 'src/assets/scss/functions';
 
-.give-access-button {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
+.permission-indicator-section {
+  margin: toRem(16);
 }
 
 .note-caption {
   font-size: 1rem;
+}
+
+:host {
+  background-color: var(--alg-observation-button-bg-color);
+  border-radius: toRem(8);
+}
+
+.header {
+  padding: 0 toRem(16);
+  height: toRem(40);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.header-title {
+  flex: 1;
+  color: #545454;
+}
+
+.header-icon {
+  margin-right: toRem(8);
+  color: var(--alg-accent-dark-color);
+  font-size: toRem(16);
+}
+
+.header-arrow-icon {
+  color: var(--alg-accent-dark-color);
+  font-size: toRem(16);
+}
+
+.content {
+  border-top: toRem(1) solid rgba(0, 0, 0, 0.1);
+  border-bottom: toRem(1) solid rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+  padding: 0 toRem(16);
+  height: toRem(40);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-caption {
+  flex: 1;
+  color: var(--alg-secondary-color);
+  font-size: toRem(12);
+  font-style: italic;
+}
+
+.give-access-button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.no-access {
+  margin: toRem(16);
 }

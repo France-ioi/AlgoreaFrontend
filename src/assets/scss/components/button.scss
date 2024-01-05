@@ -101,4 +101,17 @@
       }
     }
   }
+
+  &.only-caption {
+    &.p-button {
+      padding: 0;
+      color: var(--alg-secondary-color);
+      background: none;
+    }
+
+    &.edit-permissions {
+      font-size: toRem(12);
+      color: var(--alg-accent-dark-color);
+    }
+  }
 }

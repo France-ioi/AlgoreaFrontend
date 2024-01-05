@@ -14,6 +14,7 @@
 
         <alg-item-permissions
           *ngIf="watchedGroup$ | async as watchedGroup"
+          class="item-permissions"
           [itemData]="itemData"
           [watchedGroup]="watchedGroup"
           (changed)="reloadItem()"

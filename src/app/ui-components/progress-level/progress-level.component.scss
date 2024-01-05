@@ -1,53 +1,42 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
 .progress-level-container {
   display: flex;
   align-items: center;
 
-  .progress-level-item {
-    display: flex;
-    width: 1rem;
-    height: 1rem;
-    background-color: var(--base-text-color);
-    border-radius: 1rem;
+  &.warning {
+    .progress-level-item-active {
+      background-color: var(--alg-accent-dark-color);
 
-    &.active {
-      background-color: var(--base-color);
-    }
-
-    &.revert {
-      background-color: var(--dark-base-color);
-
-      &.active {
-        background-color: white;
-      }
-    }
-
-    &-link {
-      display: flex;
-      width: 0.5833rem;
-      height: 0.25rem;
-      background-color: var(--base-text-color);
-
-      &.active {
-        background-color: var(--base-color);
-      }
-
-      &.revert {
-        background-color: var(--dark-base-color);
-
-        &.active {
-          background-color: white;
-        }
+      &:not(:first-child):before {
+        background-color: var(--alg-accent-dark-color);
       }
     }
   }
+}
 
-  &.warning {
-    .progress-level-item, .progress-level-item-link {
-      &.revert:not(&.active) {
-        background-color: var(--section-warning-handle-border-color);
-      }
-    }
+.progress-level-item {
+  display: flex;
+  margin-right: toRem(4);
+  width: toRem(8);
+  height: toRem(8);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+}
+
+.progress-level-item-active {
+  position: relative;
+  background-color: var(--alg-primary-color);
+
+  &:not(:first-child):before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: toRem(-1);
+    left: toRem(-5);
+    width: toRem(6);
+    height: toRem(2);
+    background-color: var(--alg-primary-color);
   }
 }
