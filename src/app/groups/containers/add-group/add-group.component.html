@@ -1,9 +1,8 @@
-<alg-section icon="fa fa-sign-in-alt" i18n-label label="Create a new group">
-  <alg-add-content
-      [allowedTypesForNewContent]="allowedNewGroupTypes"
-      (contentAdded)="addChild($event)"
-      [loading]="state === 'addingGroup'"
-      [showSearchUI]="false"
-      i18n-inputCreatePlaceholder inputCreatePlaceholder="Enter a title to create a new group"
-  ></alg-add-content>
-</alg-section>
+<h2 class="alg-h2 alg-text-normal title" i18n>Create a new group</h2>
+<alg-add-content
+  [allowedTypesForNewContent]="allowedNewGroupTypes"
+  (contentAdded)="addChild($event)"
+  [loading]="state === 'addingGroup'"
+  [showSearchUI]="false"
+  i18n-inputCreatePlaceholder inputCreatePlaceholder="Enter a title to create a new group"
+></alg-add-content>
