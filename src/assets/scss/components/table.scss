@@ -3,6 +3,11 @@
 .alg-table {
   display: block;
 
+  .p-checkbox .p-checkbox-box.p-highlight {
+    border-color: var(--alg-primary-color);
+    background: var(--alg-primary-color);
+  }
+
   &:not(.overlay-panel) {
     margin: 0 toRem(-18);
   }
