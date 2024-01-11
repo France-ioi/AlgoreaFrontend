@@ -11,11 +11,19 @@
 
   &.basic {
     &.p-button {
-      padding: 0 toRem(7) 0 toRem(15);
+      &:not([icon]) {
+        padding: 0 toRem(15);
+        border-radius: toRem(20);
+      }
+
+      &[icon] {
+        padding: 0 toRem(7) 0 toRem(15);
+        border-radius: toRem(12);
+      }
+
       flex-direction: row-reverse;
       color: var(--alg-secondary-color);
       font-size: toRem(12);
-      border-radius: toRem(12);
       border: toRem(1) solid var(--alg-light-color);
       background: none;
       height: toRem(24);

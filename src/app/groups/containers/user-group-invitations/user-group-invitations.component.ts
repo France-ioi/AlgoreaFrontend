@@ -10,13 +10,16 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { PendingRequestComponent } from '../pending-request/pending-request.component';
+import { LoadingComponent } from '../../../ui-components/loading/loading.component';
+import { NgIf } from '@angular/common';
+import { ErrorComponent } from '../../../ui-components/error/error.component';
 
 @Component({
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
   styleUrls: [ './user-group-invitations.component.scss' ],
   standalone: true,
-  imports: [ PendingRequestComponent ]
+  imports: [ PendingRequestComponent, LoadingComponent, NgIf, ErrorComponent ],
 })
 export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   requests: PendingRequest[] = [];
@@ -24,7 +27,7 @@ export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
   readonly columns: GridColumn[] = [
     { field: 'group.name', header: $localize`TITLE` },
     { field: 'group.type', header: $localize`TYPE` },
-    { field: 'at', header: $localize`REQUESTED ON` },
+    { field: 'at', header: $localize`REQUESTED ON`, sortKey: 'at' },
   ];
 
   state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';

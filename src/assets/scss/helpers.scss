@@ -1,4 +1,4 @@
-@import '../../variables';
+@import 'src/assets/scss/functions';
 
 .tri-tag {
   position: absolute;
@@ -90,4 +90,8 @@
 
 .alg-opacity-0 {
   opacity: 0 !important;
+}
+
+.alg-base-title-space {
+  margin: toRem(38) 0 toRem(16) 0;
 }

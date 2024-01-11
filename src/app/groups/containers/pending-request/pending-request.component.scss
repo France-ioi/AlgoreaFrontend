@@ -1,87 +1,15 @@
-@import 'src/variables';
-@import "src/geometry.scss";
+@import 'src/assets/scss/functions';
 
-.group-switch {
-  flex: 1;
-  flex-direction: row-reverse;
+.grid-user-info-field {
   display: flex;
-
-  alg-selection {
-    width: 25rem;
-  }
-}
-
-.pending-request-container {
-  margin-left: -4rem;
-  margin-right: -1.6667rem;
-
-  .grid-user-info-field {
-    display: flex;
-    align-items: center;
-    margin-left: 0.2rem;
-
-    img {
-      border-radius: 50%;
-      width: 7rem;
-      height: auto;
-      margin-right: 2rem;
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      font-size: 1.2rem;
-      color: inherit;
-
-      &-name {
-        font-weight: bold;
-        font-size: 1.2rem;
-      }
-
-      &-activity {
-        font-style: italic;
-      }
-
-      &-content {
-        white-space: normal;
-        margin-top: 1.2rem;
-        line-height: 1.5rem;
-      }
-    }
-  }
-
-  .disabled {
-    color: #BBB;
-    cursor: not-allowed !important;
-  }
-
-}
-
-// FIXME: find a more restrictive selector
-.all-disabled {
-  opacity: 70%;
-  pointer-events: none;
-
-  > * {
-    opacity: 70%;
-    pointer-events: none;
-  }
-}
-
-.grid-user-info-field .user-info {
-  color: white;
-}
-
-.small-column {
-  width: 13.3333rem;
-}
-
-.group-name {
-  white-space: initial;
+  align-items: flex-start;
+  flex-direction: column;
 }
 
 .no-pending-requests {
   text-align: center;
-  font-size: medium;
-  font-style: italic;
+}
+
+.margin-right {
+  margin-right: var(--alg-space-size-6);
 }

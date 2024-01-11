@@ -61,8 +61,12 @@
     height: toRem(56);
   }
 
-  .p-datatable .p-datatable-tbody > tr.p-highlight {
-    background: none;
+  .p-datatable .p-datatable-tbody > tr {
+    &:nth-child(even) {
+      &.p-highlight {
+         background: none;
+      }
+    }
   }
 
   &.slanted {

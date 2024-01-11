@@ -40,7 +40,6 @@ describe('PendingRequestComponent', () => {
     component.state = 'ready';
     spyOn(component.sort, 'emit');
     fixture.detectChanges();
-    component.ngOnChanges({});
   });
 
   it('should, when none is selected and "select all" is clicked, select all rows', () => {

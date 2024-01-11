@@ -1,13 +1,6 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ContentChild, TemplateRef, Output, EventEmitter
-} from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { SortEvent } from 'primeng/api/sortevent';
-import { GridColumn, GridColumnGroup, GridComponent } from 'src/app/ui-components/grid/grid.component';
+import { GridColumn, GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { Action } from 'src/app/groups/data-access/request-actions.service';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -15,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgTemplateOutlet, NgFor, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault, DatePipe } from '@angular/common';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'alg-pending-request',
@@ -36,14 +30,13 @@ import { SectionParagraphComponent } from 'src/app/ui-components/section-paragra
     LoadingComponent,
     DatePipe,
     UserCaptionPipe,
+    ButtonModule,
   ],
 })
-export class PendingRequestComponent<T> implements OnInit, OnChanges {
-
+export class PendingRequestComponent<T> {
   @Input() columns: GridColumn[] = [];
   @Input() requests: T[] = [];
   @Input() state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
-  @Input() label = '';
 
   @Output() sort = new EventEmitter<string[]>();
   @Output() processRequests = new EventEmitter<{ data: T[], type: Action }>();
@@ -51,18 +44,6 @@ export class PendingRequestComponent<T> implements OnInit, OnChanges {
   @ContentChild('sectionHeaderTemplate') sectionHeaderTemplate?: TemplateRef<any>;
 
   selection: T[] = [];
-  panel: GridColumnGroup[] = [];
-  collapsed = true;
-
-  ngOnInit(): void {
-    this.panel.push({
-      columns: this.columns,
-    });
-  }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.collapsed = this.requests.length === 0;
-  }
 
   onAccept(): void {
     this.onAcceptOrReject(Action.Accept);
