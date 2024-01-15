@@ -119,7 +119,11 @@
     #op
   >
     <ng-container *ngIf="op.overlayVisible">
-      <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+      <alg-path-suggestion
+        [itemId]="(showOverlay$ | async)?.itemId"
+        (mouseleave)="closeOverlay()"
+        (resize)="op.align()"
+      ></alg-path-suggestion>
     </ng-container>
   </p-overlayPanel>
 </ng-container>

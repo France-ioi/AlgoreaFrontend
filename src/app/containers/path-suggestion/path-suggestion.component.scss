@@ -1,5 +1,9 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  display: block;
+}
+
 .breadcrumbs-title {
   margin: 0;
   padding: 0 toRem(6) 0 toRem(15);
