@@ -25,8 +25,12 @@
       [tableStyle]="{'min-width': '599.98px'}"
       responsiveLayout="scroll"
     >
-      <ng-template pTemplate="sorticon">
-        <i class="ph-duotone ph-arrows-down-up"></i>
+      <ng-template pTemplate="sorticon" let-number>
+        <i class="ph-duotone" [ngClass]="{
+          'ph-arrows-down-up': number === 0,
+          'ph-sort-ascending': number === -1,
+          'ph-sort-descending': number === 1
+        }"></i>
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr *ngIf="state.data && state.data.length > 0">

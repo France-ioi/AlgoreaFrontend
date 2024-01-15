@@ -8,6 +8,10 @@
     background: var(--alg-primary-color);
   }
 
+  .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--alg-secondary-color);
+  }
+
   &:not(.overlay-panel) {
     margin: 0 toRem(-18);
   }
