@@ -23,7 +23,7 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe, NgClass } from '@angular/common';
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
@@ -88,7 +88,8 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
     DatePipe,
     I18nSelectPipe,
     GroupLinkPipe,
-    UserCaptionPipe
+    UserCaptionPipe,
+    NgClass,
   ],
 })
 export class MemberListComponent implements OnChanges, OnDestroy {

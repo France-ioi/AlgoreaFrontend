@@ -25,6 +25,13 @@
       [tableStyle]="{'min-width': '599.98px'}"
       responsiveLayout="scroll"
     >
+      <ng-template pTemplate="sorticon" let-number>
+        <i class="ph-duotone" [ngClass]="{
+          'ph-arrows-down-up': number === 0,
+          'ph-sort-ascending': number === -1,
+          'ph-sort-descending': number === 1
+        }"></i>
+      </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr *ngIf="state.data && state.data.length > 0">
           <th class="thin" *ngIf="groupData?.group?.currentUserCanManage !== 'none'"></th>
