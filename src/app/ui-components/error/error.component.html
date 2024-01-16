@@ -3,7 +3,7 @@
     <i class="icon" [ngClass]="icon"></i>
   </div>
   <div class="message-container">
-    <span class="message">
+    <span class="message" [ngClass]="{ 'no-margin-top': !icon }">
       {{ message }}
       <ng-content *ngIf="!message"></ng-content>
     </span>

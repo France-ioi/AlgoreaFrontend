@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import {
   BreadcrumbsFromRootElement,
   GetBreadcrumbsFromRootsService
@@ -34,8 +34,13 @@ const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: Breadcru
     I18nSelectPipe,
   ],
 })
-export class PathSuggestionComponent implements OnDestroy, OnChanges {
+export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {
+  @Output() resize = new EventEmitter<void>();
   @Input() itemId?: string;
+
+  resizeObserver = new ResizeObserver(() =>
+    this.resize.emit()
+  );
 
   private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
@@ -52,7 +57,11 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService) {
+  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService, private elementRef: ElementRef<HTMLDivElement>) {
+  }
+
+  ngAfterViewInit(): void {
+    this.resizeObserver.observe(this.elementRef.nativeElement);
   }
 
   ngOnChanges(): void {
@@ -64,6 +73,7 @@ export class PathSuggestionComponent implements OnDestroy, OnChanges {
   ngOnDestroy(): void {
     this.itemId$.complete();
     this.refresh$.complete();
+    this.resizeObserver.unobserve(this.elementRef.nativeElement);
   }
 
   refresh(): void {

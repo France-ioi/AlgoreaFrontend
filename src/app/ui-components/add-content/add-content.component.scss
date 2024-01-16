@@ -112,13 +112,11 @@
 
 .add-content-type {
   margin-right: toRem(32);
-  color: #545454;
-  opacity: .5;
+  color: var(--alg-secondary-color);
 }
 
 .add-content-title {
-  color: #545454;
-  font-weight: 700;
+  color: var(--alg-black-color);
 }
 
 .select-caption {

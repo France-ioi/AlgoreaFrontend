@@ -7,12 +7,24 @@
   border-radius: toRem(10);
   border: none;
 
-  &:before {
-    border-bottom-color: var(--alg-primary-color);
+  &:not(.p-overlaypanel-flipped) {
+    &:before {
+      border-bottom-color: var(--alg-primary-color);
+    }
+
+    &:after {
+      border-bottom-color: var(--alg-primary-color);
+    }
   }
 
-  &:after {
-    border-bottom-color: var(--alg-primary-color);
+  &.p-overlaypanel-flipped {
+    &:before {
+      border-top-color: var(--alg-primary-color);
+    }
+
+    &:after {
+      border-top-color: var(--alg-primary-color);
+    }
   }
 
   .p-overlaypanel-content {
