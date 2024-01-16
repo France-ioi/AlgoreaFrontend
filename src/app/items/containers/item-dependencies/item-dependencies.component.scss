@@ -30,6 +30,10 @@
   border-bottom: .1rem solid var(--light-border-color);
 }
 
+.list-item-link {
+  line-height: toRem(32);
+}
+
 .add-dependency {
   display: block;
   margin-top: toRem(38);
