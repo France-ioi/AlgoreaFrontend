@@ -88,6 +88,11 @@ module.exports = {
       avoidEscape: true,
       allowTemplateLiterals: false
     }],
+    'no-restricted-imports': ['error', {
+      patterns: [
+        { group: [ '*/store/*' ], message: 'Only store indexes can be imported' },
+      ]
+    }],
     'jasmine/no-focused-tests': ['error'],
     'deprecation/deprecation': ['error'],
     '@ngrx/prefer-effect-callback-in-block-statement': 'off',
