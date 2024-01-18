@@ -97,8 +97,8 @@ export function openNewTab(href: string, location: Location): void {
  * Interprets a query param value as a boolean (or null if not set)
  * Consider any value as true except "0". Assume `boolToQueryParamValue` was used to encode.
  */
-export function queryParamValueToBool(value: string | null): boolean | null {
-  if (value === null) return null;
+export function queryParamValueToBool(value: string | null | undefined): boolean | null {
+  if (value === null || value === undefined) return null;
   return value !== '0';
 }
 

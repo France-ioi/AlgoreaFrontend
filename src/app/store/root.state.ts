@@ -6,5 +6,5 @@ export interface State {
 }
 
 export const reducer: ActionReducerMap<State> = {
-  router: routerReducer
+  router: routerReducer,
 };
