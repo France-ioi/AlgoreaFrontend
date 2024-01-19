@@ -1,121 +1,101 @@
-<alg-section-paragraph
-  icon="fa fa-check"
-  [label]="label"
-  [collapsible]="true"
-  [collapsed]="collapsed"
+<ng-container *ngIf="sectionHeaderTemplate">
+  <ng-container [ngTemplateOutlet]="sectionHeaderTemplate" [ngTemplateOutletContext]="{ $implicit: state }"></ng-container>
+</ng-container>
+<alg-error
+  *ngIf="state === 'fetchingError'"
+  class="dark"
+  icon="fa fa-exclamation-triangle"
+  i18n-message message="Error while loading the pending requests."
+></alg-error>
+<p class="no-pending-requests" *ngIf="state === 'ready' && requests.length === 0" i18n>
+  No pending requests
+</p>
+<alg-grid
+  [selectedColumns]="columns"
+  [columns]="columns"
+  [data]="requests"
+  [(selection)]="selection"
+  [loading]="state === 'fetching'"
+  (sort)="onCustomSort($event)"
+  *ngIf="state !== 'fetchingError'"
 >
-
-  <ng-template #headerTemplate *ngIf="sectionHeaderTemplate">
-    <ng-container [ngTemplateOutlet]="sectionHeaderTemplate" [ngTemplateOutletContext]="{ $implicit: state }"></ng-container>
+  <ng-template #headerTemplate let-columns>
+    <tr>
+      <th></th>
+      @for(col of columns; track col.field) {
+        @if(col.sortKey) {
+          <th [pSortableColumn]="col.sortKey">
+            {{ col.header }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        }@else {
+          <th>{{ col.header }}</th>
+        }
+      }
+    </tr>
   </ng-template>
-
-  <alg-error
-    *ngIf="state === 'fetchingError'; else noFetchingError"
-    class="dark"
-    icon="fa fa-exclamation-triangle"
-    i18n-message message="Error while loading the pending requests."
-  ></alg-error>
-
-  <ng-template #noFetchingError>
-    <div class="pending-request-container" #noError>
-      <alg-grid
-        *ngIf="requests.length > 0"
-        [selectedColumns]="columns"
-        [columns]="columns"
-        [data]="requests"
-        [groupInfo]="panel"
-        tableStyle="--pending-request"
-        [(selection)]="selection"
-        (sort)="onCustomSort($event)"
-        [loading]="state !== 'ready'"
-      >
-        <ng-template #headerTemplate let-columns>
-          <tr>
-            <th></th>
-            <ng-container *ngFor="let col of columns">
-              <th
-                [pSortableColumn]="col.field"
-                [ngClass]="{'small-column' : ['at', 'group.name'].includes(col.field)}"
-              >
-                <div class="header-container">
-                  {{ col.header }}
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
-                </div>
-              </th>
-            </ng-container>
-          </tr>
-        </ng-template>
-        <ng-template
-          #bodyTemplate
-          let-rowData
-          let-columns="columns"
-          let-rowIndex="rowIndex"
-        >
-          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>
-              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-            </td>
-            <td *ngFor="let col of columns">
-              <ng-container [ngSwitch]="col.field">
-                <span class="group-name" *ngSwitchCase="'group.name'">
-                  {{ rowData.group.name }}
-                </span>
-                <ng-container *ngSwitchCase="'at'">
-                  {{ rowData.at | date: "d/MM/y" }}
-                </ng-container>
-                <div class="grid-user-info-field" *ngSwitchCase="'user.login'">
-                  <!-- <img
-                    src="{{ rowData.user.image }}"
-                    style="width: 7rem; height: 7rem;"
-                  /> -->
-                  <div class="user-info">
-                    <span class="user-info-name">
-                      {{ rowData.user | userCaption }}
-                    </span>
-                    <span class="user-info-activity" *ngIf="rowData.user.grade">
-                      <em><span i18n>Grade: </span>{{ rowData.user.grade }}</em>
-                    </span>
-                    <!-- <div class="user-info-content">
-                      {{ rowData.user.content }}
-                    </div> -->
-                  </div>
-                </div>
-                <ng-container *ngSwitchCase="'group.type'">
-                  {{ rowData.group.type }}
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                  {{ rowData[col.field] }}
-                </ng-container>
-              </ng-container>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template #summaryTemplate let-table>
-          <div class="summary">
-            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            <span class="select-all" (click)="onSelectAll()" i18n>
-              Select all
+  <ng-template
+    #bodyTemplate
+    let-rowData
+    let-columns="columns"
+    let-rowIndex="rowIndex"
+  >
+    <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+      <td>
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td>
+      <td *ngFor="let col of columns">
+        <ng-container [ngSwitch]="col.field">
+          <span *ngSwitchCase="'group.name'">
+            {{ rowData.group.name }}
+          </span>
+          <ng-container *ngSwitchCase="'at'">
+            {{ rowData.at | date: "d/MM/y" }}
+          </ng-container>
+          <div class="grid-user-info-field" *ngSwitchCase="'user.login'">
+            <span>
+              {{ rowData.user | userCaption }}
             </span>
-            <span class="filler"></span>
-            <div class="summary-actions">
-              <span [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onAccept()">
-                <span i18n>Accept</span>
-              </span>
-              <span [ngClass]="{disabled: selection.length === 0 || this.state !== 'ready'}" (click)="onReject()">
-                <span i18n>Reject</span>
-              </span>
-            </div>
+            <span class="font-bold" *ngIf="rowData.user.grade">
+              <em><span i18n>Grade: </span>{{ rowData.user.grade }}</em>
+            </span>
           </div>
-        </ng-template>
-      </alg-grid>
-      <p class="no-pending-requests" *ngIf="requests.length === 0" i18n>
-        No pending requests
-      </p>
+          <ng-container *ngSwitchCase="'group.type'">
+            {{ rowData.group.type }}
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            {{ rowData[col.field] }}
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #summaryTemplate let-table>
+    <div class="alg-table-summary">
+      <div class="alg-table-summary-left">
+        <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
+        <span class="alg-table-summary-select-all" (click)="onSelectAll()" i18n>
+          Select all
+        </span>
+      </div>
+      <div>
+        <button
+          class="alg-button primary small margin-right"
+          pButton
+          type="button"
+          (click)="onAccept()"
+          [disabled]="selection.length === 0 || this.state !== 'ready'"
+          i18n-label label="Accept"
+        ></button>
+        <button
+          class="alg-button basic small"
+          pButton
+          type="button"
+          (click)="onReject()"
+          [disabled]="selection.length === 0 || this.state !== 'ready'"
+          i18n-label label="Reject"
+        ></button>
+      </div>
     </div>
   </ng-template>
-
-</alg-section-paragraph>
-
-<ng-template #loading>
-  <alg-loading></alg-loading>
-</ng-template>
+</alg-grid>

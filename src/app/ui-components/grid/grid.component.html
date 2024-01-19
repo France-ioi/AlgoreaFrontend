@@ -21,6 +21,13 @@
   [tableStyle]="{'min-width': '599.98px'}"
   responsiveLayout="scroll"
 >
+  <ng-template pTemplate="sorticon" let-number>
+    <i class="ph-duotone" [ngClass]="{
+      'ph-arrows-down-up': number === 0,
+      'ph-sort-ascending': number === -1,
+      'ph-sort-descending': number === 1
+    }"></i>
+  </ng-template>
   <!-- <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: columns}"></ng-container> -->
   <ng-template *ngIf="frozenHeaderTemplate && frozenWidth && frozenWidth.length > 0" pTemplate="frozenheader">
     <ng-container [ngTemplateOutlet]="frozenHeaderTemplate"></ng-container>
@@ -51,39 +58,3 @@
     <ng-container [ngTemplateOutlet]="emptymessageTemplate"></ng-container>
   </ng-template>
 </p-table>
-<span
-  class="toggle-gear"
-  (click)="showColumns()"
-  *ngIf="!showColumnSelection && showGear"
->
-  <i class="fa fa-cog"></i>
-</span>
-<div class="select-column" *ngIf="showColumnSelection && showGear">
-  <div class="header" (click)="showColumns()">
-    <span class="fold-icon">
-      <i class="fa fa-caret-up"></i>
-    </span>
-    <span i18n>Customize</span>
-  </div>
-  <div class="column-group" *ngFor="let group of groupInfo">
-    <p>{{group.name}}</p>
-    <ul>
-      <li *ngFor="let col of group.columns">
-        <span [ngClass]="{ checked: selected[col.field] }" (click)="handleColumnChanges(col)">
-          {{ col.header }}
-        </span>
-        <alg-switch
-          [checked]="!!selected[col.field]"
-          (change)="handleColumnChanges(col)"
-        ></alg-switch>
-      </li>
-    </ul>
-  </div>
-</div>
-<div class="show-all" *ngIf="showGear && (toShow > 0 || expand)" (click)="showAll()">
-  <span class="missing-title" *ngIf="toShow > 0">{{ toShow }}</span>
-  <span class="show-icon">
-    <i *ngIf="!expand" class="fa fa-caret-right"></i>
-    <i *ngIf="expand" class="fa fa-caret-left"></i>
-  </span>
-</div>
