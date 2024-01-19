@@ -20,7 +20,7 @@ export const observationRouteChanged = createEffect(
   ) => store$.select(selectObservedGroupRouteFromRouter).pipe(
     filter(isNotUndefined),
     withLatestFrom(store$.select(fromObservation.selectObservedGroupId)),
-    filter(([ fromRouter, idFromStore ]) => (fromRouter === null && idFromStore === null) || fromRouter?.id === idFromStore),
+    filter(([ fromRouter, idFromStore ]) => (fromRouter?.id ?? null) !== idFromStore),
     map(([ fromRouter ]) => (fromRouter ? routerActions.enableObservation({ route: fromRouter }) : routerActions.disableObservation())),
   ),
   { functional: true }
