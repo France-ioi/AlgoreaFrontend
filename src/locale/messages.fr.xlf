@@ -930,28 +930,26 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="1412606488010803503" datatype="html">
        <source>Error while loading the pending requests.</source><target state="translated">Erreur lors du chargement des demandes.</target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="6381018926896431111" datatype="html">
-        <source> No pending requests
-</source><target state="new"> No pending requests
-</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context>
-          <context context-type="linenumber">10,12</context>
-        </context-group>
-      </trans-unit><trans-unit id="8438703600453964687" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="8438703600453964687" datatype="html">
        <source>Grade: </source><target state="translated">Année: </target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="3492417901129709355" datatype="html">
+        <source>No pending requests</source><target state="new">No pending requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit><trans-unit id="1916930465370171483" datatype="html">
       <source> Select all </source>
       <target state="translated"> Tout sélectionner </target>
 
-    <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">123</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="8905995985388209337" datatype="html">
+    <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">137</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">123</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="8905995985388209337" datatype="html">
        <source>Accept</source><target state="translated">Accepter</target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">87</context></context-group></trans-unit><trans-unit id="7378878529334768232" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit><trans-unit id="7378878529334768232" datatype="html">
        <source>Reject</source><target state="translated">Refuser</target>
 
-     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="4391050282469768523" datatype="html">
+     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/pending-request/pending-request.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="4391050282469768523" datatype="html">
         <source>Error while loading the activities</source><target state="new">Error while loading the activities</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="5856751044957815003" datatype="html">
