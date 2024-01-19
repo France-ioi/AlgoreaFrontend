@@ -62,10 +62,8 @@
   }
 
   .p-datatable .p-datatable-tbody > tr {
-    &:nth-child(even) {
-      &.p-highlight {
-         background: none;
-      }
+    &.p-highlight {
+       background: none;
     }
   }
 
@@ -185,11 +183,7 @@
 }
 
 .alg-table-selection-col {
-  width: auto;
-  min-width: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: toRem(80);
 }
 
 @media screen and (max-width: 599.98px) {

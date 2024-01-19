@@ -1,7 +1,7 @@
 <ng-container *ngIf="itemData">
   <form [formGroup]="itemForm" *ngIf="itemData.item.permissions | allowsEditingChildren; else notAuthorized">
     <div *ngIf="itemData.item.permissions | allowsEditingAll">
-      <h2 class="alg-h2 alg-text-normal title" i18n>Information</h2>
+      <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Information</h2>
       <div class="field">
         <div class="field-name">
           <label i18n>Item title</label>
