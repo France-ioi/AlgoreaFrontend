@@ -5,6 +5,7 @@ import { RawGroupRoute } from 'src/app/models/routing/group-route';
 
 interface ObservationSelectors<T> {
   selectObservedGroupId: MemoizedSelector<T, string|null>,
+  selectObservedGroupRoute: MemoizedSelector<T, RawGroupRoute|null>,
   selectObservedGroupInfo: MemoizedSelector<T, ({ route: RawGroupRoute } & GroupInfo) | null | undefined>,
   selectIsObserving: MemoizedSelector<T, boolean>,
   selectObservationError: MemoizedSelector<T, { isForbidden: boolean } | false>,
@@ -19,6 +20,14 @@ export const selectors = <T>(selectGroup: Selector<T, State['group']>): Observat
   selectObservedGroupId: createSelector(
     selectGroup,
     g => g?.route.id ?? null
+  ),
+
+  /**
+   * The observed-group route, null is observation not enabled
+   */
+  selectObservedGroupRoute: createSelector(
+    selectGroup,
+    g => g?.route ?? null
   ),
 
   /**

@@ -9,7 +9,7 @@
   <alg-error
     class="alg-flex-1"
     i18n-message message="You are not currently observing any group."
-    *ngIf="selected === 2 && !(isWatching$ | async); else contentSection"
+    *ngIf="selected === 2 && !(isObserving$ | async); else contentSection"
   ></alg-error>
 
   <ng-template #contentSection>

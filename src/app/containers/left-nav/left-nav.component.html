@@ -85,7 +85,7 @@
         *ngIf="state.isError"
       ></alg-error>
 
-      <div class="watching-warning" *ngIf="state.isReady && (isWatching$ | async) && [0, 1].includes(activeTab.index)">
+      <div class="watching-warning" *ngIf="state.isReady && (isObserving$ | async) && [0, 1].includes(activeTab.index)">
         <alg-observation-bar
           [caption]="!!(isNarrowScreen$ | async) ? undefined : observationModeCaption"
           [showTooltip]="true"

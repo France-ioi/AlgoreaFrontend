@@ -39,7 +39,6 @@ import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
 import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
@@ -67,6 +66,7 @@ import { Store } from '@ngrx/store';
 import forum from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
+import { fromObservation } from '../store';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -157,8 +157,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   currentTaskView$ = this.itemTabs.currentTaskView$;
 
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
-  readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
-  readonly isWatching$ = this.groupWatchingService.isWatching$;
+  readonly observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
+  readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
@@ -230,7 +230,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }),
 
     // drop "answer" route arg when switching "watching" off
-    this.groupWatchingService.isWatching$.pipe(
+    this.isObserving$.pipe(
       pairwise(),
       filter(([ old, cur ]) => old && !cur), // was "on", become "off"
       switchMap(() => this.itemRouteState$.pipe(take(1), readyData())),
@@ -324,13 +324,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
     // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
-    combineLatest([ this.itemDataSource.state$, this.userProfile$, this.watchedGroup$ ]).pipe(
-      map(([ state, userProfile, watchedGroup ]) => {
+    combineLatest([ this.itemDataSource.state$, this.userProfile$, this.store.select(fromObservation.selectObservedGroupRoute) ]).pipe(
+      map(([ state, userProfile, observedGroupRoute ]) => {
         if (userProfile.tempUser) return null;
         if (!state.data || !isATask(state.data.item)) return null;
-        if (watchedGroup && (!allowsWatchingAnswers(state.data.item.permissions) || !watchedGroup.route.isUser)) return null;
-        if (!watchedGroup && !state.data.item.permissions.canRequestHelp) return null;
-        return { participantId: watchedGroup ? watchedGroup.route.id : userProfile.groupId, itemId: state.data.item.id };
+        if (observedGroupRoute && (!allowsWatchingAnswers(state.data.item.permissions) || !observedGroupRoute.isUser)) return null;
+        if (!observedGroupRoute && !state.data.item.permissions.canRequestHelp) return null;
+        return { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
       filter(isNotNull), // leave the forum as it is if no new value
@@ -353,7 +353,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private initialAnswerDataSource: InitialAnswerDataSource,
     private itemTabs: ItemTabs,
     private userSessionService: UserSessionService,
-    private groupWatchingService: GroupWatchingService,
     private resultActionsService: ResultActionsService,
     private getItemPathService: GetItemPathService,
     private layoutService: LayoutService,

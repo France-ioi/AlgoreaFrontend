@@ -21,13 +21,13 @@
                 path: itemData.route.path,
                 parentAttemptId: parentAttemptId,
                 answer: {
-                  best: true, participantId: watchedGroup ? watchedGroup.route.id : undefined
+                  best: true, participantId: observedGroupId ? observedGroupId : undefined
                 }
               } | url"
-              *ngrxLet="watchedGroup$; let watchedGroup"
+              *ngrxLet="observedGroupId$; let observedGroupId"
             >
-              {{ (!!watchedGroup ? 'watchingGroup' : '') | i18nSelect : {
-                watchingGroup: 'View the best answer',
+              {{ (!!observedGroupId ? 'isObserving' : '') | i18nSelect : {
+                isObserving: 'View the best answer',
                 other: 'Reload the best answer'
               } }}
             </a>
@@ -46,7 +46,7 @@
         [loading]="state.isFetching"
         [tableStyle]="{'min-width': '599.98px'}"
         responsiveLayout="scroll"
-        *ngIf="{ isWatching: isWatching$ | async, canWatchAnswers: canWatchAnswers$ | async } as meta"
+        *ngIf="{ isObserving: isObserving$ | async, canWatchAnswers: canWatchAnswers$ | async } as meta"
       >
         <ng-template pTemplate="header" let-rowData let-columns>
           <tr *ngIf="rowData.length > 0">
@@ -84,11 +84,11 @@
                       <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
                       <a
                         class="alg-link item-title-link"
-                        [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isWatching ? undefined : true } | url"
-                        *ngIf="(!meta.isWatching || meta.canWatchAnswers) && rowData.answerId"
+                        [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true } | url"
+                        *ngIf="(!meta.isObserving || meta.canWatchAnswers) && rowData.answerId"
                       >
-                        {{ (meta.isWatching ? 'watchingMode' : '') | i18nSelect : {
-                          watchingMode: 'View answer',
+                        {{ (meta.isObserving ? 'observingMode' : '') | i18nSelect : {
+                          observingMode: 'View answer',
                           other: 'Reload answer'
                         } }}
                       </a>

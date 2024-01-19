@@ -1,18 +1,29 @@
 import { createReducer, on } from '@ngrx/store';
 import { fetchingState, readyState } from 'src/app/utils/state';
-import { groupInfoFetchedActions, routerActions, topBarActions } from './observation.actions';
+import {
+  groupInfoFetchedActions,
+  errorModalActions,
+  routerActions,
+  topBarActions,
+  userPageActions,
+  observationBarActions,
+} from './observation.actions';
 import { State, initialState } from './observation.state';
 
 export const reducer = createReducer(
   initialState,
 
   on(
-    topBarActions.disableObservation,
     routerActions.disableObservation,
+    errorModalActions.disableObservation,
+    userPageActions.disableObservation,
+    observationBarActions.disableObservation,
     (state): State => ({ ...state, group: null })
   ),
 
-  on(topBarActions.enableObservation,
+  on(
+    topBarActions.enableObservation,
+    userPageActions.enableObservation,
     (state, { route, name, currentUserCanGrantAccess }): State => ({
       ...state,
       group: { route, info: readyState({ name, currentUserCanGrantAccess }) }

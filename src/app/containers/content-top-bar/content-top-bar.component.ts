@@ -6,7 +6,6 @@ import { delay, switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../models/content/item-info';
 import { LayoutService } from '../../services/layout.service';
-import { GroupWatchingService } from '../../services/group-watching.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../models/content/group-info';
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
@@ -43,7 +42,6 @@ export class ContentTopBarComponent {
   @Input() showLeftMenuOpener = false;
 
   hasForumThreadConfigured$ = this.store.select(forum.selectHasCurrentThread);
-  watchedGroup$ = this.groupWatchingService.watchedGroup$;
 
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
@@ -69,7 +67,6 @@ export class ContentTopBarComponent {
 
   constructor(
     private store: Store,
-    private groupWatchingService: GroupWatchingService,
     private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,

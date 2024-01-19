@@ -4,7 +4,6 @@ import { switchMap, filter, map } from 'rxjs/operators';
 import { isNotNull } from '../../utils/null-undefined-predicates';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { Subject } from 'rxjs';
-import { GroupWatchingService } from '../../services/group-watching.service';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
@@ -12,6 +11,8 @@ import { SharedModule } from 'primeng/api';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -32,15 +33,15 @@ import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
   ],
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {
-  watchedGroup$ = this.groupWatchingService.watchedGroup$;
+  observedGroupRoute$ = this.store.select(fromObservation.selectObservedGroupRoute);
   private refresh$ = new Subject<void>();
-  readonly state$ = this.watchedGroup$.pipe(
+  readonly state$ = this.observedGroupRoute$.pipe(
     filter(isNotNull),
-    switchMap(watchedGroup =>
-      this.itemNavigationService.getRootActivities(watchedGroup.route.id).pipe(
+    switchMap(observedGroupRoute =>
+      this.itemNavigationService.getRootActivities(observedGroupRoute.id).pipe(
         map(rootActivities => [
-          ...rootActivities.filter(act => act.groupId === watchedGroup.route.id),
-          ...rootActivities.filter(act => act.groupId !== watchedGroup.route.id),
+          ...rootActivities.filter(act => act.groupId === observedGroupRoute.id),
+          ...rootActivities.filter(act => act.groupId !== observedGroupRoute.id),
         ].slice(0, 4))
       )
     ),
@@ -48,7 +49,7 @@ export class SuggestionOfActivitiesComponent implements OnDestroy {
   );
 
   constructor(
-    private groupWatchingService: GroupWatchingService,
+    private store: Store,
     private itemNavigationService: ItemNavigationService) {
   }
 

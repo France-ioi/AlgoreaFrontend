@@ -1,12 +1,34 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { GroupRoute, RawGroupRoute } from 'src/app/models/routing/group-route';
+import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { FetchState } from 'src/app/utils/state';
 
 export const topBarActions = createActionGroup({
   source: 'Top bar',
   events: {
+    enableObservation: props<{ route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean }>(),
+  },
+});
+
+export const observationBarActions = createActionGroup({
+  source: 'Observation bar',
+  events: {
     disableObservation: emptyProps(),
-    enableObservation: props<{ route: GroupRoute, name: string, currentUserCanGrantAccess: boolean }>(),
+  },
+});
+
+// supposed to be removed in favor of top bar soon
+export const userPageActions = createActionGroup({
+  source: 'User page',
+  events: {
+    disableObservation: emptyProps(),
+    enableObservation: props<{ route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean }>(),
+  },
+});
+
+export const errorModalActions = createActionGroup({
+  source: 'Observation Error Modal',
+  events: {
+    disableObservation: emptyProps(),
   },
 });
 

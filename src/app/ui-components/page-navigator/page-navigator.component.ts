@@ -14,7 +14,7 @@ import { NgIf, NgClass } from '@angular/common';
   ],
 })
 export class PageNavigatorComponent {
-  @Input() allowWatching = false;
+  @Input() allowObservation = false;
   @Input() isWatched = false;
   @Input() allowFullScreen = false;
 

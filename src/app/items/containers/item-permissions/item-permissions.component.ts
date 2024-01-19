@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { WatchedGroup } from 'src/app/services/group-watching.service';
 import {
   ProgressSelectValue,
   ProgressSelectComponent,
@@ -15,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { NgIf, I18nSelectPipe, NgClass } from '@angular/common';
+import { RawGroupRoute } from 'src/app/models/routing/group-route';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -40,7 +40,7 @@ export class ItemPermissionsComponent implements OnChanges {
   @Output() changed = new EventEmitter<void>();
 
   @Input() itemData?: ItemData;
-  @Input() watchedGroup?: WatchedGroup;
+  @Input() observedGroup?: { route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean };
 
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   isPermissionsDialogOpened = false;
@@ -57,7 +57,7 @@ export class ItemPermissionsComponent implements OnChanges {
       canMakeSessionOfficial: false,
     } : undefined;
 
-    const currentUserCanGrantAccess = this.watchedGroup?.currentUserCanGrantAccess;
+    const currentUserCanGrantAccess = this.observedGroup?.currentUserCanGrantAccess;
     const currentUserCanGivePermissions = this.itemData && allowsGivingPermToItem(this.itemData.item.permissions);
 
     this.lockEdit = currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'content' :

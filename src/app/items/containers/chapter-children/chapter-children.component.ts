@@ -3,12 +3,9 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/
 import { GetItemChildrenService, ItemChild } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/models/attempts';
-import { ItemRouter } from 'src/app/models/routing/item-router';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { canCurrentUserViewContent } from 'src/app/models/item-view-permission';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
-import { LayoutService } from 'src/app/services/layout.service';
 import { ItemChildWithAdditions } from '../item-children-list/item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
@@ -18,6 +15,8 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 @Component({
   selector: 'alg-chapter-children',
@@ -45,9 +44,10 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   private refresh$ = new Subject<void>();
   readonly state$ = combineLatest([
     this.params$.pipe(distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId)),
-    this.groupWatchingService.watchedGroup$.pipe(map(watchedGroup => watchedGroup?.route.id)),
+    this.store.select(fromObservation.selectObservedGroupId),
   ]).pipe(
-    switchMap(([{ id, attemptId }, watchedGroupId ]) => this.getItemChildrenService.get(id, attemptId, { watchedGroupId })),
+    switchMap(([{ id, attemptId }, observedGroupId ]) =>
+      this.getItemChildrenService.get(id, attemptId, { watchedGroupId: observedGroupId ?? undefined })),
     map<ItemChild[], ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
       const res = bestAttemptFromResults(child.results);
       return {
@@ -69,10 +69,8 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   );
 
   constructor(
+    private store: Store,
     private getItemChildrenService: GetItemChildrenService,
-    private groupWatchingService: GroupWatchingService,
-    private itemRouter: ItemRouter,
-    private layoutService: LayoutService,
   ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {

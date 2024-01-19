@@ -25,9 +25,10 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { buildUp } from 'src/app/utils/operators/build-up';
 import { FetchState } from 'src/app/utils/state';
 import { LocaleService } from 'src/app/services/localeService';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { canCurrentUserViewContent } from 'src/app/models/item-view-permission';
 import { errorIsHTTPForbidden } from 'src/app/utils/errors';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 export interface ItemData {
   route: FullItemRoute,
@@ -65,11 +66,11 @@ export class ItemDataSource implements OnDestroy {
   /* state to put outputted */
   readonly state$ = combineLatest([
     this.fetchOperation$,
-    this.groupWatchingService.watchedGroup$,
+    this.store.select(fromObservation.selectObservedGroupId),
   ]).pipe(
     delayWhen(() => this.profileLanguageMatchesAppLanguage$),
-    switchMap(([ item, watchedGroup ]) =>
-      this.fetchItemData(item, watchedGroup?.route.id).pipe(mapToFetchState({ resetter: this.refresh$ }))
+    switchMap(([ item, observedGroupId ]) =>
+      this.fetchItemData(item, observedGroupId ?? undefined).pipe(mapToFetchState({ resetter: this.refresh$ }))
     ),
     // maxScorePatch is a cold observable, and switchMap operator acts a subscriber here
     // so the max score patch is only valid for current item
@@ -84,12 +85,12 @@ export class ItemDataSource implements OnDestroy {
   private subscription = this.userSessionService.userChanged$.subscribe(_s => this.refreshItem());
 
   constructor(
+    private store: Store,
     private getBreadcrumbService: GetBreadcrumbService,
     private getItemByIdService: GetItemByIdService,
     private resultActionsService: ResultActionsService,
     private getResultsService: GetResultsService,
     private userSessionService: UserSessionService,
-    private groupWatchingService: GroupWatchingService,
     private localeService: LocaleService,
   ) {}
 

@@ -1,7 +1,7 @@
 <div class="page-nav">
   <!-- We need to keep this code for support watching group on user page, as content of user page is not UserInfo yet -->
   <span
-    *ngIf="allowWatching"
+    *ngIf="allowObservation"
     class="round-icon-action-button"
     [ngClass]="isWatched ? 'watched' : 'watch'"
     (click)="isWatched ? stopWatch.emit() : watch.emit($event)"
@@ -14,7 +14,7 @@
   <alg-neighbor-widget
     id="page-navigator-neighbor-widget"
     class="navigator"
-    [ngClass]="{ 'margin-left': allowWatching || allowFullScreen }"
+    [ngClass]="{ 'margin-left': allowObservation || allowFullScreen }"
     [navigationMode]="navigationMode"
     (parent)="parent.emit()"
     (left)="left.emit()"

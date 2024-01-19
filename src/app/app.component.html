@@ -3,11 +3,11 @@
     <alg-left-menu></alg-left-menu>
   </div>
   <ng-container *ngrxLet="{ fullFrameContentDisplayed: fullFrameContentDisplayed$, withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$ } as layout">
-    <ng-container *ngrxLet="isWatching$ as isWatching">
+    <ng-container *ngrxLet="isObserving$ as isObserving">
       <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'thread-collapsed': !(isDiscussionVisible$ | async) }">
         <alg-top-bar
           [showBreadcrumbs]="!scrolled && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
-          [modeBarDisplayed]="isWatching"
+          [modeBarDisplayed]="isObserving"
           [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
           [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
         ></alg-top-bar>
@@ -73,20 +73,21 @@
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>
 <p-dialog
-  *ngIf="watchedGroupError$ | async as watchedGroupError"
+  *ngIf="groupObservationError$ | async as groupObservationError"
   i18n-header header="Error"
-  [visible]="showWatchedGroupErrorDialog"
+  [visible]="showObservationErrorDialog"
   [modal]="true"
 >
-  <ng-container *ngIf="watchedGroupError.status === 403; else defaultErrorMessage" i18n>You are not allowed to watch the group for which you have requested watching.</ng-container>
-  <ng-template #defaultErrorMessage>
-    <ng-container i18n>Something went wrong while enabling group watching. If the problem persists, please contact us.</ng-container>
-  </ng-template>
+  @if(groupObservationError.isForbidden) {
+    <ng-container i18n>You are not allowed to watch the group for which you have requested observation.</ng-container>
+  } @else {
+    <ng-container i18n>Something went wrong while enabling group observation. If the problem persists, please contact us.</ng-container>
+  }
 
   <ng-template pTemplate="footer">
     <p-button
       i18n-label label="Close"
-      (click)="closeWatchGroupErrorDialog()"
+      (click)="closeObservationErrorDialog()"
     ></p-button>
   </ng-template>
 </p-dialog>
