@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NeighborWidgetComponent } from '../neighbor-widget/neighbor-widget.component';
-import { WatchButtonComponent } from '../../containers/watch-button/watch-button.component';
 import { NgIf, NgClass } from '@angular/common';
 
 @Component({
@@ -10,7 +9,6 @@ import { NgIf, NgClass } from '@angular/common';
   standalone: true,
   imports: [
     NgIf,
-    WatchButtonComponent,
     NgClass,
     NeighborWidgetComponent,
   ],
@@ -19,7 +17,6 @@ export class PageNavigatorComponent {
   @Input() allowWatching = false;
   @Input() isWatched = false;
   @Input() allowFullScreen = false;
-  @Input() showNewStartWatchButton = false;
 
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
 
