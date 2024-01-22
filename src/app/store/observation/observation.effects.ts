@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { withLatestFrom, filter, map, switchMap, Observable } from 'rxjs';
 import { fromObservation } from './observation.store';
-import { selectObservedGroupRouteFromRouter } from './router.selectors';
+import { selectObservedGroupRouteFromRouter } from './router-observation.selectors';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { FetchedObservedGroupInfo, groupInfoFetchedActions, routerActions } from './observation.actions';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';

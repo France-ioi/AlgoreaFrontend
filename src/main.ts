@@ -36,7 +36,7 @@ import forum, { forumEffects } from './app/forum/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore, RouterState } from '@ngrx/router-store';
-import { fromObservation, rootStoreEffects, rootStoreReducer } from './app/store';
+import { fromObservation, fromRouter, rootStoreEffects, RouterSerializer } from './app/store';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -129,10 +129,9 @@ bootstrapApplication(AppComponent, {
       useClass: AlgErrorHandler,
     },
     provideRouter(routes),
-    provideStore(rootStoreReducer),
-    provideRouterStore({
-      routerState: RouterState.Minimal,
-    }),
+    provideStore(),
+    provideRouterStore({ routerState: RouterState.Minimal, serializer: RouterSerializer }),
+    provideState(fromRouter),
     provideState(fromObservation),
     provideState(forum),
     provideEffects(rootStoreEffects(), forumEffects()),

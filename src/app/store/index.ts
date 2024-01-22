@@ -5,8 +5,7 @@ export const rootStoreEffects = (): Record<string, FunctionalEffect> => ({
   ...observationEffects,
 });
 
-export { State as RootState } from './root.state';
-export { reducer as rootStoreReducer } from './root.state';
-
-export * as routerFeature from './router/router.selectors';
+export { fromRouter } from './router/router.store';
 export { fromObservation } from './observation/observation.store';
+
+export { RouterSerializer } from './router/router-serializer';
