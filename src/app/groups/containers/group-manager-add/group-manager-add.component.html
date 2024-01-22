@@ -1,20 +1,19 @@
-<alg-section-paragraph icon="fa fa-sign-in-alt" i18n-label label="Add a manager">
-  <div class="input-wrapper">
-    <input
-      type="text"
-      i18n-placeholder="Placeholder of field for searching for user by login" placeholder="Login of a user"
-      [(ngModel)]="login"
-      [disabled]="state === 'loading'"
-    >
-    <span class="icon">
-      <i class="fa fa-font"></i>
-    </span>
-    <p-button
-      styleClass="alg-button p-button-rounded"
-      i18n-label label="Add"
-      icon="fa fa-plus"
+<h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Add a manager</h2>
+<div class="input-container">
+  <input
+    class="input-element"
+    type="text"
+    i18n-placeholder="Placeholder of field for searching for user by login" placeholder="Login of a user"
+    [(ngModel)]="login"
+    [disabled]="state === 'loading'"
+  >
+  <div class="button-section">
+    <button
+      class="alg-button primary"
+      icon="ph-bold ph-plus"
       [disabled]="login === '' || state === 'loading'"
-      (onClick)="onClick()"
-    ></p-button>
+      (click)="onClick()"
+      pButton
+    >Add</button>
   </div>
-</alg-section-paragraph>
+</div>
