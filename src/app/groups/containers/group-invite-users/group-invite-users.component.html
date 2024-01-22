@@ -1,22 +1,30 @@
-<alg-section-paragraph icon="fa fa-user-plus" i18n-label label="Invite users" [collapsible]="true">
-  <span i18n>Add users name list, separated by commas.</span>
-  <div class="invite-users">
-    <alg-textarea [parentForm]="inviteForm" inputName="logins" icon="show" i18n-placeholder placeholder="login_1, login_2...">
-    </alg-textarea>
+<h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Invite users</h2>
+<span class="alg-text-secondary" i18n>Add users name list, separated by commas.</span>
+<div class="invite-users">
+  <alg-textarea
+    [parentForm]="inviteForm"
+    inputName="logins"
+    i18n-placeholder placeholder="login_1, login_2..."
+  ></alg-textarea>
 
-    <alg-message *ngIf="state === 'too_many'" type="error" i18n-detail detail="You cannot invite more than 100 users at once"
-      [closable]="false">
-    </alg-message>
+  <alg-message *ngIf="state === 'too_many'" type="error" i18n-detail detail="You cannot invite more than 100 users at once"
+    [closable]="false">
+  </alg-message>
 
-    <p-button
+  <div class="button">
+    <button
+      class="alg-button primary"
       i18n-label label="Invite"
-      styleClass="p-button-rounded"
-      (onClick)="onInviteClicked()"
+      (click)="onInviteClicked()"
       [disabled]="state !== 'ready'"
-    ></p-button>
-
-    <alg-message *ngFor="let message of messages" [type]="message.type" [detail]="message.detail"
-      summary={{message.summary}}></alg-message>
-
+      pButton
+    ></button>
   </div>
-</alg-section-paragraph>
+
+  <alg-message
+    *ngFor="let message of messages"
+    [type]="message.type"
+    [detail]="message.detail"
+    summary={{message.summary}}
+  ></alg-message>
+</div>
