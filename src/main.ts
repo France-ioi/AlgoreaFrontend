@@ -32,7 +32,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';
-import forum, { forumEffects } from './app/forum/store';
+import { fromForum, forumEffects } from './app/forum/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore, RouterState } from '@ngrx/router-store';
@@ -133,7 +133,7 @@ bootstrapApplication(AppComponent, {
     provideRouterStore({ routerState: RouterState.Minimal, serializer: RouterSerializer }),
     provideState(fromRouter),
     provideState(fromObservation),
-    provideState(forum),
+    provideState(fromForum),
     provideEffects(rootStoreEffects(), forumEffects()),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),

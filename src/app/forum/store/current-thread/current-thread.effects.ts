@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { tap, withLatestFrom } from 'rxjs';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { Store } from '@ngrx/store';
-import forumFeature from '..';
+import { fromForum } from '..';
 import { areSameThreads } from '../../models/threads';
 
 export const fetchStateChangeGuardEffect = createEffect(
@@ -12,7 +12,7 @@ export const fetchStateChangeGuardEffect = createEffect(
     store$ = inject(Store),
   ) => actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChanged),
-    withLatestFrom(store$.select(forumFeature.selectThreadId)),
+    withLatestFrom(store$.select(fromForum.selectThreadId)),
     tap(([{ fetchState } , id ]) => {
       if (id === null) throw new Error('unexpected: no state id while changing thread info');
       if (fetchState.data && !areSameThreads(id, fetchState.data)) throw new Error('unexpected: fetch state thread <> state id');

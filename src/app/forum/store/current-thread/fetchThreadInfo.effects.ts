@@ -7,7 +7,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { forumThreadListActions, itemPageActions, threadPanelActions } from './current-thread.actions';
 import { areSameThreads } from '../../models/threads';
 import { Store } from '@ngrx/store';
-import forum from '..';
+import { fromForum } from '..';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 export const fetchThreadInfoEffect = createEffect(
@@ -33,7 +33,7 @@ export const refreshThreadInfoEffect = createEffect(
     threadHttpService = inject(ThreadService),
   ) => actions$.pipe(
     ofType(threadPanelActions.threadStatusChanged),
-    withLatestFrom(store$.select(forum.selectThreadId)),
+    withLatestFrom(store$.select(fromForum.selectThreadId)),
     map(([ , threadId ]) => threadId),
     filter(isNotNull),
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(

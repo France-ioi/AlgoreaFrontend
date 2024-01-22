@@ -20,7 +20,7 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
-import forum from 'src/app/forum/store';
+import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { fromObservation } from 'src/app/store';
 
@@ -101,8 +101,8 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       ),
     ),
   );
-  currentThreadInfo$ = this.store.select(forum.selectThreadId);
-  isDiscussionVisible$ = this.store.select(forum.selectVisible);
+  currentThreadInfo$ = this.store.select(fromForum.selectThreadId);
+  isDiscussionVisible$ = this.store.select(fromForum.selectVisible);
 
   constructor(
     private store: Store,
@@ -157,11 +157,11 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   hideThreadPanel(): void {
-    this.store.dispatch(forum.forumThreadListActions.hideCurrentThread());
+    this.store.dispatch(fromForum.forumThreadListActions.hideCurrentThread());
   }
 
   showThreadPanel(id: ThreadId): void {
-    this.store.dispatch(forum.forumThreadListActions.showAsCurrentThread({ id }));
+    this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({ id }));
   }
 
 }

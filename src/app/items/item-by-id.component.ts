@@ -63,7 +63,7 @@ import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/acc
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { NgIf, AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
-import forum from '../forum/store';
+import { fromForum } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
 import { fromObservation } from '../store';
@@ -334,7 +334,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }),
       distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
       filter(isNotNull), // leave the forum as it is if no new value
-    ).subscribe(threadId => this.store.dispatch(forum.itemPageActions.changeCurrentThreadId({ id: threadId }))),
+    ).subscribe(threadId => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId({ id: threadId }))),
 
   ];
 
