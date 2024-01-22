@@ -1,7 +1,7 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { GroupInfo, State } from './observation.state';
-import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
+import { isForbiddenObservationError } from './utils/errors';
 
 interface ObservationSelectors<T> {
   selectObservedGroupId: MemoizedSelector<T, string|null>,
@@ -52,7 +52,7 @@ export const selectors = <T>(selectGroup: Selector<T, State['group']>): Observat
    */
   selectObservationError: createSelector(
     selectGroup,
-    g => (g?.info.isError ? { isForbidden: errorIsHTTPForbidden(g.info.error) } : false)
+    g => (g?.info.isError ? { isForbidden: isForbiddenObservationError(g.info.error) } : false)
   ),
 
 });
