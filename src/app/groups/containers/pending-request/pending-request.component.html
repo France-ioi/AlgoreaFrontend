@@ -7,9 +7,6 @@
   icon="fa fa-exclamation-triangle"
   i18n-message message="Error while loading the pending requests."
 ></alg-error>
-<p class="no-pending-requests" *ngIf="state === 'ready' && requests.length === 0" i18n>
-  No pending requests
-</p>
 <alg-grid
   [selectedColumns]="columns"
   [columns]="columns"
@@ -67,6 +64,13 @@
             {{ rowData[col.field] }}
           </ng-container>
         </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessageTemplate>
+    <tr>
+      <td class="alg-table-empty-col" [attr.colspan]="columns.length + 1">
+        <p class="no-pending-requests" i18n>No pending requests</p>
       </td>
     </tr>
   </ng-template>

@@ -186,6 +186,10 @@
   width: toRem(80);
 }
 
+.alg-table-empty-col {
+  border-radius: toRem(10) !important;
+}
+
 @media screen and (max-width: 599.98px) {
   .alg-table {
     .p-datatable-thead > tr > th {
