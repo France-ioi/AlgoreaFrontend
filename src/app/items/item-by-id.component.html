@@ -84,7 +84,7 @@
           ></alg-item-task-edit>
 
           <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-chapter-progress'].includes(currentTab.tag)">
-            <ng-container *ngIf="(!isObserving$ && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
+            <ng-container *ngIf="(!isObserving && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
               <div *ngIf="(savingAnswer$ | async) ?? false" class="save-answer-loader">
                 <p class="save-answer-loader-message">
                   <span i18n>Saving answer before loading submission...</span>
@@ -102,23 +102,23 @@
               <ng-container *ngIf="currentTab?.tag === 'alg-chapter-progress'">
                 <alg-chapter-group-progress
                   class="alg-flex-1"
-                  *ngIf="isObserving$"
+                  *ngIf="isObserving"
                   [itemData]="itemData"
                 ></alg-chapter-group-progress>
 
                 <alg-chapter-user-progress
                   class="alg-flex-1"
-                  *ngIf="!isObserving$"
+                  *ngIf="!isObserving"
                   [itemData]="itemData"
                 ></alg-chapter-user-progress>
               </ng-container>
 
             </ng-container>
             <ng-template #unallowed>
-              <p class="not-allow-caption" *ngIf="isObserving$" i18n>
+              <p class="not-allow-caption" *ngIf="isObserving" i18n>
                 You are not allowed to view the progress of other users on this content.
               </p>
-              <p class="not-allow-caption" *ngIf="!isObserving$" i18n>
+              <p class="not-allow-caption" *ngIf="!isObserving" i18n>
                 You are not allowed to view this content.
               </p>
             </ng-template>
