@@ -18,6 +18,7 @@ import { CodeTokenComponent } from 'src/app/ui-components/code-token/code-token.
 import { ButtonModule } from 'primeng/button';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { NgIf, DecimalPipe, DatePipe } from '@angular/common';
+import { LoadingComponent } from '../../../ui-components/loading/loading.component';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -36,6 +37,7 @@ import { NgIf, DecimalPipe, DatePipe } from '@angular/common';
     DecimalPipe,
     DatePipe,
     DurationToMinPipe,
+    LoadingComponent,
   ],
 })
 

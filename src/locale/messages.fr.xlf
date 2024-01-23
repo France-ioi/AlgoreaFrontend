@@ -393,10 +393,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="6378470992307056425" datatype="html">
         <source>Generate a new code and reset expiration</source><target state="translated">Générer un nouveau code et réinitialiser l'expiration</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/code-token/code-token.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="344937797304326982" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/code-token/code-token.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="344937797304326982" datatype="html">
         <source>Disable code access</source><target state="translated">Désactiver l'accès par code</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/code-token/code-token.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="840951359074313455" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/code-token/code-token.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="840951359074313455" datatype="html">
         <source>Days</source><target state="translated">Jours</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/duration/duration.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8070396816726827304" datatype="html">
@@ -912,7 +912,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/item-by-id.component.html</context><context context-type="linenumber">156</context></context-group></trans-unit><trans-unit id="3249513483374643425" datatype="html">
         <source>Add</source><target state="translated">Ajouter</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="9165363087268857396" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="9165363087268857396" datatype="html">
         <source>This user is already a manager of this group.</source><target state="new">This user is already a manager of this group.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="3254413422317172455" datatype="html">
@@ -1784,7 +1784,15 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="8385107467455078164" datatype="html">
         <source><x id="PH" equiv-text="invalidInvites.length"/> user login(s) could not be invited: </source><target state="translated"><x id="PH" equiv-text="invalidInvites.length"/> utilisateur(s) n'a/ont pas pu être invité(s) : </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="3508946365635764054" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="5275881613335730136" datatype="html">
+        <source> Let user join using a code
+</source><target state="new"> Let user join using a code
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit><trans-unit id="3508946365635764054" datatype="html">
         <source>Invite users</source><target state="translated">Inviter des utilisateurs</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="5217546025338934271" datatype="html">
@@ -1793,23 +1801,23 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="9106233537687521844" datatype="html">
         <source>login_1, login_2...</source><target state="translated">identifiant_1, identifiant_2, ...</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="2515100901319484306" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="2515100901319484306" datatype="html">
         <source>You cannot invite more than 100 users at once</source><target state="translated">Vous ne pouvez pas inviter plus de 100 utilisateurs à la fois</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="3463797202358605584" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="3463797202358605584" datatype="html">
         <source>Invite</source><target state="translated">Inviter</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="4106690181112187643" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="4106690181112187643" datatype="html">
         <source>A new code has been generated</source><target state="translated">Un nouveau code a été généré</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">117</context></context-group></trans-unit><trans-unit id="2868875466439101736" datatype="html">
         <source>The validity has been changed</source><target state="translated">La validité a été modifiée</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">144</context></context-group></trans-unit><trans-unit id="844587251870961613" datatype="html">
         <source>Users will not be able to join with the former code.</source><target state="translated">Les utilisateurs ne pourront plus rejoindre le groupe avec le code précédent.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">172</context></context-group></trans-unit><trans-unit id="8839544110714813464" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">174</context></context-group></trans-unit><trans-unit id="8839544110714813464" datatype="html">
         <source> You are currently not allowed to leave this group. </source><target state="new"> You are currently not allowed to leave this group. </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-leave/group-leave.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="8973345892770149395" datatype="html">
@@ -1830,10 +1838,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-links/group-links.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="5605464836149047548" datatype="html">
         <source> You are not allowed to see activities of this user. </source><target state="new"> You are not allowed to see activities of this user. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="3968289428248654764" datatype="html">
-        <source>Let user join using a code</source><target state="translated">Rejoindre le groupe par code</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="1379209969797949085" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="1379209969797949085" datatype="html">
         <source>Let users access this group using a password you send them.</source><target state="translated">Permet aux utilisateurs de rejoindre ce groupe en utilisant un mot de passe que vous leur donnez.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="8529636661725267956" datatype="html">
@@ -1848,47 +1853,50 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="3593273375283998688" datatype="html">
         <source> This code has been activated <x id="INTERPOLATION" equiv-text="{{ codeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }}"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text="{{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes. </source><target state="translated"> Ce code a été activé il y a <x id="INTERPOLATION" equiv-text="tivated {{ groupExt.durationSinceFirstCodeUse! | toMin | number:'1"/> minutes, il sera désactivé dans <x id="INTERPOLATION_1" equiv-text=" be disabled in {{ groupExt.durationBeforeCodeExpiration! | toMin | n"/> minutes. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="5303281923373851605" datatype="html">
-        <source>This code will be disabled in <x id="INTERPOLATION" equiv-text="{{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes.</source><target state="new">This code will be disabled in <x id="INTERPOLATION" equiv-text="{{ codeAdditions.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes.</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="2565482429239064406" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="5717869780057366099" datatype="html">
+        <source> This code will be disabled in <x id="INTERPOLATION" equiv-text="{{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes. </source><target state="new"> This code will be disabled in <x id="INTERPOLATION" equiv-text="{{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+      </trans-unit><trans-unit id="2565482429239064406" datatype="html">
         <source> This code has expired on <x id="INTERPOLATION" equiv-text="{{ codeInfo.codeExpiration | date:'medium' }}"/> </source><target state="translated"> Ce code a expiré le <x id="INTERPOLATION" equiv-text="ired on {{ groupExt.codeExpiration | date:'m"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="8019333697666942316" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="8019333697666942316" datatype="html">
         <source>Generate a code</source><target state="new">Generate a code</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="8186013988289067040" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="8186013988289067040" datatype="html">
         <source>Code</source><target state="translated">Code</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="6912849366309653724" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="6912849366309653724" datatype="html">
         <source>Validity</source><target state="translated">Validité</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="872456877046948009" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="872456877046948009" datatype="html">
         <source>Infinite</source><target state="new">Infinite</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="552571672657294742" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="552571672657294742" datatype="html">
         <source>This code will never expire </source><target state="new">This code will never expire </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="resetCurrentExpiration" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="resetCurrentExpiration" datatype="html">
         <source>(reset current expiration)</source><target state="new">(reset current expiration)</target>
 
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="3604869065785906427" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">68</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="3604869065785906427" datatype="html">
         <source>Usable once</source><target state="new">Usable once</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="6200326105084443165" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="6200326105084443165" datatype="html">
         <source>This code will be usable only once </source><target state="new">This code will be usable only once </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="7590013429208346303" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source><target state="new">Custom</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="expireDuration" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="expireDuration" datatype="html">
         <source>This code will expire after the given duration </source><target state="new">This code will expire after the given duration </target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="8388874893104562881" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="8388874893104562881" datatype="html">
         <source>You are not allowed to see this page.</source><target state="translated">Vous n'êtes pas autorisé à visiter cette page.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-managers/group-managers.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-no-permission/group-no-permission.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="2245297782531854585" datatype="html">
@@ -1976,7 +1984,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="5489740898797957483" datatype="html">
         <source>Login of a user</source><target state="new">Login of a user</target>
         
-      <note from="description" priority="1">Placeholder of field for searching for user by login</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
+      <note from="description" priority="1">Placeholder of field for searching for user by login</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
         <source>Time spent</source><target state="translated">Temps écoulé</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">116</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">

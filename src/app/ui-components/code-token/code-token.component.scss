@@ -1,54 +1,14 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
-.code-generator {
+.container {
   display: flex;
   align-items: center;
-  width: 17rem;
-  height: 3rem;
-  border-radius: $border-radius;
+}
 
-  span {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.controls {
+  margin-left: var(--alg-space-size-5);
+}
 
-  .code {
-    background-color: var(--input-transparency-color);
-    color: var(--dark-text-color);
-    box-shadow: 0 .1rem #C9CFD7 inset;
-    border-top-left-radius: $border-radius;
-    border-bottom-left-radius: $border-radius;
-    flex: 1;
-    font-size: 1.2rem;
-
-    &.no-button {
-      border-top-right-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-    }
-  }
-
-  .refresh {
-    width: 3rem;
-    background-color: var(--base-color);
-    color: white;
-    cursor: pointer;
-
-    &.no-remove {
-      border-top-right-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
-    }
-  }
-
-  .remove {
-    width: 3rem;
-    background-color: var(--section-danger-handle-color);
-    color: white;
-    border-top-right-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
-    cursor: pointer;
-  }
-
+.button {
+  margin-right: var(--alg-space-size-6);
 }
