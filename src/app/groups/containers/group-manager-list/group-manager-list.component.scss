@@ -1,26 +1,8 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
 :host {
   display: flex;
   flex-direction: column;
-}
-
-.add-manager-button-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 0;
-  background-color: var(--light-color);
-  margin: 2rem -1.6667rem -3rem -5.8333rem;
-  position: relative;
-
-  .tri-tag {
-    left: 2.5rem;
-  }
-}
-
-.error {
-  padding: 1rem;
 }
 
 .validation-text {

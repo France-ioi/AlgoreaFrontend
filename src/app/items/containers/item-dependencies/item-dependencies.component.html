@@ -1,5 +1,5 @@
 <ng-container *ngIf="itemData">
-  <h2 class="alg-h2 alg-text-normal title" i18n>Prerequisites</h2>
+  <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Prerequisites</h2>
   <ng-container *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit); else notAllowToView">
     <div *ngIf="state$ | async as state">
       <alg-loading class="loading" size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
