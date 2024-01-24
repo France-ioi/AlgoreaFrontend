@@ -31,7 +31,7 @@ import { ThreadMessageComponent } from '../thread-message/thread-message.compone
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { appConfig } from 'src/app/utils/config';
 import { Store } from '@ngrx/store';
-import forum from 'src/app/forum/store';
+import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
@@ -71,9 +71,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   disableControls$ = new BehaviorSubject<boolean>(false);
 
   readonly subscriptions = new Subscription();
-  readonly state$ = this.store.select(forum.selectThreadEvents);
+  readonly state$ = this.store.select(fromForum.selectThreadEvents);
 
-  readonly isWsOpen$ = this.store.select(forum.selectWebsocketOpen);
+  readonly isWsOpen$ = this.store.select(fromForum.selectWebsocketOpen);
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
@@ -83,7 +83,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     distinctUntilChanged((prev, cur) => JSON.stringify(prev) === JSON.stringify(cur))
   );
   readonly userCache$ = combineLatest([
-    this.store.select(forum.selectThreadId).pipe(filter(isNotNull)),
+    this.store.select(fromForum.selectThreadId).pipe(filter(isNotNull)),
     this.distinctUsersInThread,
     this.userSessionService.userProfile$,
     this.store.select(fromObservation.selectObservedGroupInfo),
@@ -108,21 +108,21 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
   isMine$ = combineLatest([
-    this.store.select(forum.selectThreadId).pipe(filter(isNotNull)),
+    this.store.select(fromForum.selectThreadId).pipe(filter(isNotNull)),
     this.userSessionService.userProfile$,
   ]).pipe(map(([ threadId, userProfile ]) => threadId.participantId === userProfile.groupId));
   readonly participantUser$ = combineLatest([
     this.userCache$,
-    this.store.select(forum.selectThreadId),
+    this.store.select(fromForum.selectThreadId),
   ]).pipe(
     map(([ users, threadId ]) => users.find(u => u.id === threadId?.participantId)),
   );
   // for future: others should be able to load as well using the answer stored in msg data
-  readonly canCurrentUserLoadAnswers$ = this.store.select(forum.selectCanCurrentUserLoadThreadAnswers);
-  private readonly isThreadStatusOpened$ = this.store.select(forum.selectThreadStatusOpen);
+  readonly canCurrentUserLoadAnswers$ = this.store.select(fromForum.selectCanCurrentUserLoadThreadAnswers);
+  private readonly isThreadStatusOpened$ = this.store.select(fromForum.selectThreadStatusOpen);
   readonly isCurrentUserThreadParticipant$ = combineLatest([
     this.userSessionService.userProfile$,
-    this.store.select(forum.selectThreadId),
+    this.store.select(fromForum.selectThreadId),
   ]).pipe(
     map(([ user, threadId ]) => user.groupId === threadId?.participantId)
   );
@@ -130,7 +130,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     { open: true, canClose: boolean } |
     { open: false, canOpen: boolean }
   >> = combineLatest([
-      this.store.select(forum.selectThreadStatus),
+      this.store.select(fromForum.selectThreadStatus),
       this.isCurrentUserThreadParticipant$,
     ]).pipe(
       debounceTime(0), // to prevent race condition (service call immediately aborted)
@@ -158,8 +158,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         );
       }),
     );
-  threadId$ = this.store.select(forum.selectThreadId);
-  hasNoMessages$ = this.store.select(forum.selectThreadNoMessages);
+  threadId$ = this.store.select(fromForum.selectThreadId);
+  hasNoMessages$ = this.store.select(fromForum.selectThreadNoMessages);
 
   constructor(
     private store: Store,
@@ -176,7 +176,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(
       this.state$.pipe(
         readyData(),
-        withLatestFrom(this.store.select(forum.selectVisible)),
+        withLatestFrom(this.store.select(fromForum.selectVisible)),
         filter(([ events, visible ]) => visible && events.length > 0),
         delay(0),
       ).subscribe(() => this.scrollDown())
@@ -217,7 +217,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     if (!messageToSend) return;
     this.disableControls$.next(true);
 
-    const threadToken$ = this.store.select(forum.selectThreadToken).pipe(
+    const threadToken$ = this.store.select(fromForum.selectThreadToken).pipe(
       take(1), // send on the current thread (if any) only
       filter(isNotUndefined),
     );
@@ -247,7 +247,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         error: () => this.disableControls$.next(false),
       });
       this.subscriptions.add(
-        this.store.select(forum.selectThreadStatusOpen).pipe(
+        this.store.select(fromForum.selectThreadStatusOpen).pipe(
           filter(isOpened => isOpened),
           take(1),
           switchMap(() => threadToken$)
@@ -281,7 +281,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {})
     } : { status: 'closed' }).pipe(share());
     update$.subscribe({
-      next: () => this.store.dispatch(forum.threadPanelActions.threadStatusChanged()),
+      next: () => this.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
       error: () => this.actionFeedbackService.unexpectedError(),
     });
     return update$;

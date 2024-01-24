@@ -20,7 +20,7 @@ import { ChapterChildrenComponent } from '../../containers/chapter-children/chap
 import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import forum from 'src/app/forum/store';
+import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 
 @Component({
@@ -91,7 +91,7 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onScoreChange(score: number): void {
     this.scoreChange.emit(score);
-    this.store.dispatch(forum.itemPageEventSyncActions.forceSyncCurrentThreadEvents());
+    this.store.dispatch(fromForum.itemPageEventSyncActions.forceSyncCurrentThreadEvents());
   }
 
 }

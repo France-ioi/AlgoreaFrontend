@@ -1,5 +1,5 @@
 import { createFeature } from '@ngrx/store';
-import { reducer } from './forum.store';
+import { reducer } from './forum.reducer';
 import * as websocketEffects from './websocket/websocket.effects';
 import * as fetchThreadInfoEffects from './current-thread/fetchThreadInfo.effects';
 import * as syncEffects from './current-thread/event-sync.effects';
@@ -19,9 +19,9 @@ export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...currentThreadEffects,
 });
 
-const forumFeature = {
+export const fromForum = {
   ...createFeature({
-    name: 'forumFeature',
+    name: 'forum',
     reducer,
     extraSelectors: ({ selectWebsocket, selectCurrentThread }) => ({
       ...getWebsocketSelectors(selectWebsocket),
@@ -34,4 +34,3 @@ const forumFeature = {
   itemPageActions,
   itemPageEventSyncActions
 };
-export default forumFeature;

@@ -8,7 +8,7 @@ import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { itemPageEventSyncActions } from './event-sync.actions';
 import { Store } from '@ngrx/store';
-import forumFeature from '..';
+import { fromForum } from '..';
 import { Thread, areSameThreads } from '../../models/threads';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { attemptStartedEvent, submissionEvent } from '../../models/thread-events';
@@ -66,7 +66,7 @@ export const forceSyncEffect = createEffect(
     websocketClient = inject(WebsocketClient),
   ) => actions$.pipe(
     ofType(itemPageEventSyncActions.forceSyncCurrentThreadEvents),
-    switchMap(() => store$.select(forumFeature.selectInfo).pipe(take(1))), // take the current info
+    switchMap(() => store$.select(fromForum.selectInfo).pipe(take(1))), // take the current info
     readyData(), // only if current info is ready
     syncThread(activityLogService, websocketClient),
   ),
