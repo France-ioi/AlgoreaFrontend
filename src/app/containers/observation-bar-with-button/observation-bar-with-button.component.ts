@@ -1,5 +1,4 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { GroupWatchingService } from '../../services/group-watching.service';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { LayoutService } from '../../services/layout.service';
 import { combineLatest, map } from 'rxjs';
@@ -12,6 +11,8 @@ import { ButtonModule } from 'primeng/button';
 import { LetDirective } from '@ngrx/component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 @Component({
   selector: 'alg-observation-bar-with-button',
@@ -33,26 +34,26 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
   @ViewChild('op') op?: OverlayPanel;
 
   currentContent$ = this.currentContentService.content$;
-  watchedGroup$ = this.groupWatchingService.watchedGroup$;
+  isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   currentGroupContent$ = combineLatest([
     this.currentContent$,
-    this.watchedGroup$,
+    this.store.select(fromObservation.selectObservedGroupId),
   ]).pipe(
-    map(([ currentContent, watchedGroup ]) => (isGroupInfo(currentContent) && currentContent.details?.currentUserCanWatchMembers ? {
+    map(([ currentContent, observedGroupId ]) => (isGroupInfo(currentContent) && currentContent.details?.currentUserCanWatchMembers ? {
       ...currentContent,
-      isBeingWatched: currentContent.route.id === watchedGroup?.route.id,
+      isBeingWatched: currentContent.route.id === observedGroupId,
     } : undefined)),
   );
 
-  subscription = this.watchedGroup$.subscribe(watchedGroup => {
-    if (!watchedGroup && this.op?.overlayVisible) {
+  subscription = this.isObserving$.subscribe(isObserving => {
+    if (!isObserving && this.op?.overlayVisible) {
       this.op.hide();
     }
   });
 
   constructor(
-    private groupWatchingService: GroupWatchingService,
+    private store: Store,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
   ) {}
@@ -71,10 +72,9 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
     });
   }
 
-  toggleWatchingMode(event: Event, target: HTMLDivElement, groupInfo: GroupInfo & {isBeingWatched: boolean}): void {
+  toggleObservationMode(event: Event, target: HTMLDivElement, groupInfo: GroupInfo & {isBeingWatched: boolean}): void {
     if (groupInfo.isBeingWatched) {
       this.op?.hide();
-      this.groupWatchingService.stopWatching();
       return;
     }
 
@@ -82,11 +82,12 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
       throw new Error('Unexpected: group details in not set');
     }
 
-    this.groupWatchingService.startGroupWatching(groupInfo.route, {
-      id: groupInfo.route.id,
+    this.store.dispatch(fromObservation.topBarActions.enableObservation({
+      route: groupInfo.route,
       name: groupInfo.details.name,
-      currentUserCanGrantGroupAccess: groupInfo.details.currentUserCanGrantGroupAccess,
-    });
+      currentUserCanGrantAccess: groupInfo.details.currentUserCanGrantGroupAccess,
+    }));
+
     this.openSuggestionOfActivitiesOverlayPanel(event, target);
   }
 }

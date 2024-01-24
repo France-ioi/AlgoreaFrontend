@@ -1,10 +1,10 @@
-<ng-container *ngIf="watchedGroup">
+<ng-container *ngIf="observedGroup">
   <ng-container *ngIf="itemData">
     <div class="header" (click)="collapsed = !collapsed">
       <i class="header-icon ph-duotone ph-lock-open"></i>
       <div class="header-title">
         <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchLabel" label-section i18n>
-          «{{ watchedGroup.name }}»
+          «{{ observedGroup.name }}»
           {{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {
             true: 'can',
             other: 'can\'t'
@@ -30,14 +30,14 @@
       <div class="content">
         <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchContent">
           <div class="no-access" *ngIf="!(watchedGroupPermissions | allowsViewingInfo)" i18n>
-            The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
+            The {{ observedGroup.route.isUser.toString() | i18nSelect : {
               true: 'user',
               other: 'group'
             } }} cannot currently view this content.
           </div>
 
           <div class="no-access" *ngIf="(watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)" i18n>
-            The {{ watchedGroup.route.isUser.toString() | i18nSelect : {
+            The {{ observedGroup.route.isUser.toString() | i18nSelect : {
               true: 'user',
               other: 'group'
             } }}
@@ -80,7 +80,7 @@
         </ng-container>
       </div>
       <div class="footer">
-        <div class="footer-caption" *ngIf="!watchedGroup.route.isUser" i18n>
+        <div class="footer-caption" *ngIf="!observedGroup.route.isUser" i18n>
           Note that some subgroups or users of the groups may have higher permissions.
         </div>
         <ng-container *ngIf="itemData?.item?.permissions">
@@ -108,8 +108,8 @@
           <alg-permissions-edit-dialog
             [currentUserPermissions]="itemData.item.permissions"
             [item]="itemData.item"
-            [group]="watchedGroup.route"
-            [permReceiverName]="watchedGroup.name"
+            [group]="observedGroup.route"
+            [permReceiverName]="observedGroup.name"
             (close)="closePermissionsDialog($event)"
             *ngIf="isPermissionsDialogOpened"
           ></alg-permissions-edit-dialog>

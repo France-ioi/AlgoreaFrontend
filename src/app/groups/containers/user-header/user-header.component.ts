@@ -1,11 +1,13 @@
 import { Input, Component } from '@angular/core';
 import { User } from '../../data-access/get-user.service';
 import { map } from 'rxjs/operators';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { PageNavigatorComponent } from 'src/app/ui-components/page-navigator/page-navigator.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
+import { formatUser } from 'src/app/models/user';
 
 @Component({
   selector: 'alg-user-header[user][route]',
@@ -23,19 +25,23 @@ export class UserHeaderComponent {
   @Input() user!: User;
   @Input() route!: RawGroupRoute;
 
-  isCurrentGroupWatched$ = this.groupWatchingService.watchedGroup$.pipe(
-    map(watchedGroup => !!(watchedGroup && watchedGroup.route.id === this.user?.groupId)),
+  isCurrentGroupObserved$ = this.store.select(fromObservation.selectObservedGroupId).pipe(
+    map(observedGroupId => !!(observedGroupId === this.user?.groupId))
   );
 
   constructor(
-    private groupWatchingService: GroupWatchingService,
+    private store: Store,
   ) {}
 
   onStartWatchButtonClicked(): void {
-    this.groupWatchingService.startUserWatching(this.route, this.user);
+    this.store.dispatch(fromObservation.userPageActions.enableObservation({
+      route: this.route,
+      name: formatUser(this.user),
+      currentUserCanGrantAccess: this.user.currentUserCanGrantUserAccess || false,
+    }));
   }
 
   onStopWatchButtonClicked(): void {
-    this.groupWatchingService.stopWatching();
+    this.store.dispatch(fromObservation.userPageActions.disableObservation());
   }
 }

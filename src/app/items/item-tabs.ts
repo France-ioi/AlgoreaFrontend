@@ -8,7 +8,6 @@ import { isATask } from 'src/app/models/item-type';
 import { allowsWatchingResults } from 'src/app/models/item-watch-permission';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/models/item-view-permission';
 import { allowsEditingAll } from 'src/app/models/item-edit-permission';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { ItemDataSource } from './services/item-datasource.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { NavigationEnd, Router } from '@angular/router';
@@ -16,6 +15,8 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { arraysEqual } from 'src/app/utils/array';
 import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { UserSessionService } from 'src/app/services/user-session.service';
+import { Store } from '@ngrx/store';
+import { fromObservation } from '../store';
 
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
@@ -50,7 +51,7 @@ export class ItemTabs implements OnDestroy {
   private tabs$: Observable<Parameters<TabService['setTabs']>[0]> = combineLatest([
     this.itemDataSource.state$,
     this.taskTabs$,
-    this.groupWatchingService.watchedGroup$,
+    this.store.select(fromObservation.selectIsObserving),
     this.disablePlatformProgressOnTasks$,
     this.editTabEnabled$,
     this.userSession.userProfile$,
@@ -58,7 +59,7 @@ export class ItemTabs implements OnDestroy {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith(undefined)),
   ]).pipe(
     debounceTime(0),
-    map(([ state, taskTabs, watchedGroup, disablePlatformProgressOnTasks, editTabEnabled, userProfile ]) => {
+    map(([ state, taskTabs, isObserving, disablePlatformProgressOnTasks, editTabEnabled, userProfile ]) => {
       if (!state.isReady) return [];
 
       const hasEditionPerm = state.isReady ? allowsEditingAll(state.data.item.permissions) : false;
@@ -66,7 +67,7 @@ export class ItemTabs implements OnDestroy {
       const canViewSolution = state.isReady ? canCurrentUserViewSolution(state.data.item, state.data.currentResult) : false;
       const canWatchResults = state.isReady ? allowsWatchingResults(state.data.item.permissions) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
-      const canViewStats = watchedGroup ? canWatchResults : canViewContent;
+      const canViewStats = isObserving ? canWatchResults : canViewContent;
       const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewStats;
 
       const shouldHideTab = (v: string): boolean => appConfig.featureFlags.hideTaskTabs.includes(v);
@@ -94,11 +95,11 @@ export class ItemTabs implements OnDestroy {
   private tabUpdateSubscription = this.tabs$.subscribe(tabs => this.tabService.setTabs(tabs));
 
   constructor(
+    private store: Store,
     private router: Router,
     private itemRouter: ItemRouter,
     private itemDataSource: ItemDataSource,
     private tabService: TabService,
-    private groupWatchingService: GroupWatchingService,
     private userSession: UserSessionService,
   ) {}
 

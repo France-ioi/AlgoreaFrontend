@@ -17,8 +17,9 @@ import { ItemRouteWithAnswerPipe, RawItemRoutePipe } from '../../../pipes/itemRo
 import { ItemData } from '../../services/item-datasource.service';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
 import { UserSessionService } from '../../../services/user-session.service';
-import { GroupWatchingService } from '../../../services/group-watching.service';
 import { LetDirective } from '@ngrx/component';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',
@@ -59,12 +60,12 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   readonly currentUserId$ = this.userSessionService.userProfile$.pipe(
     map(userProfile => userProfile.groupId),
   );
-  readonly isWatching$ = this.groupWatchingService.isWatching$;
+  readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
 
   constructor(
+    private store: Store,
     private groupRouter: GroupRouter,
     private getUserService: GetUserService,
-    private groupWatchingService: GroupWatchingService,
     private userSessionService: UserSessionService,
   ) { }
 

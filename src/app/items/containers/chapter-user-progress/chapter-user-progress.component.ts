@@ -7,8 +7,6 @@ import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { FetchState } from 'src/app/utils/state';
 import { ItemType } from 'src/app/models/item-type';
 import { ItemData } from '../../services/item-datasource.service';
-import { ItemRouter } from 'src/app/models/routing/item-router';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { ItemPermWithWatch } from 'src/app/models/item-watch-permission';
 import { DurationToReadable } from 'src/app/pipes/duration';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -130,8 +128,6 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
 
   constructor(
     private getParticipantProgressService: GetParticipantProgressService,
-    private itemRouter: ItemRouter,
-    private groupWatchingService: GroupWatchingService,
   ) { }
 
   ngOnChanges(): void {

@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GroupWatchingService } from '../../services/group-watching.service';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 @Component({
   selector: 'alg-observation-bar',
@@ -19,14 +20,14 @@ export class ObservationBarComponent {
   @Input() onlyIcon = false;
   @Input() showTooltip = false;
 
-  watchedGroup$ = this.groupWatchingService.watchedGroup$;
+  observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
 
   constructor(
-    private groupWatchingService: GroupWatchingService,
+    private store: Store
   ) {}
 
   onCancelClick(): void {
-    this.groupWatchingService.stopWatching();
+    this.store.dispatch(fromObservation.observationBarActions.disableObservation());
   }
 
 }

@@ -13,10 +13,11 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GetAnswerService } from '../data-access/get-answer.service';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 type Strategy =
   { tag: 'EmptyInitialAnswer'|'Wait'|'NotApplicable' } |
@@ -30,12 +31,12 @@ export class InitialAnswerDataSource implements OnDestroy {
   private readonly itemInfo$ = new ReplaySubject<{ route: FullItemRoute, isTask: boolean|undefined }>();
   private readonly destroyed$ = new Subject<void>();
 
-  readonly answer$ = combineLatest([ this.itemInfo$, this.groupWatchingService.isWatching$ ]).pipe(
+  readonly answer$ = combineLatest([ this.itemInfo$, this.store.select(fromObservation.selectIsObserving) ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
-    map(([{ route, isTask }, isWatching ]): Strategy => {
+    map(([{ route, isTask }, isObserving ]): Strategy => {
       if (isTask === false) return { tag: 'NotApplicable' };
       if (!route.answer) {
-        if (isWatching) return { tag: 'EmptyInitialAnswer' };
+        if (isObserving) return { tag: 'EmptyInitialAnswer' };
         if (isTask === undefined) return { tag: 'Wait' };
         return route.attemptId ? { tag: 'LoadCurrent', itemId: route.id, attemptId: route.attemptId } : { tag: 'Wait' };
       }
@@ -63,7 +64,7 @@ export class InitialAnswerDataSource implements OnDestroy {
   );
 
   constructor(
-    private groupWatchingService: GroupWatchingService,
+    private store: Store,
     private currentAnswerService: CurrentAnswerService,
     private getAnswerService: GetAnswerService,
   ) {}

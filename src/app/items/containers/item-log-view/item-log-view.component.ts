@@ -5,7 +5,6 @@ import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { ItemType } from 'src/app/models/item-type';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { GroupWatchingService, WatchedGroup } from 'src/app/services/group-watching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { allowsWatchingAnswers } from 'src/app/models/item-watch-permission';
 import { DataPager } from 'src/app/utils/data-pager';
@@ -25,6 +24,9 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
+import { RawGroupRoute } from 'src/app/models/routing/group-route';
 interface Column {
   field: string,
   header: string,
@@ -69,7 +71,8 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   @Input() itemData?: ItemData;
 
-  watchedGroup$ = this.groupWatchingService.watchedGroup$;
+  observedGroupId$ = this.store.select(fromObservation.selectObservedGroupId);
+  isObserving$ = this.store.select(fromObservation.selectIsObserving);
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
@@ -92,19 +95,18 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   readonly columns$ = combineLatest([
     this.item$.pipe(distinctUntilChanged()),
-    this.watchedGroup$,
+    this.store.select(fromObservation.selectObservedGroupRoute),
   ]).pipe(
-    map(([ item, watchedGroup ]) => this.getLogColumns(item.type, watchedGroup)),
+    map(([ item, observedGroupRoute ]) => this.getLogColumns(item.type, observedGroupRoute)),
   );
 
-  isWatching$ = this.groupWatchingService.isWatching$;
   canWatchAnswers$ = this.item$.pipe(
     map(item => allowsWatchingAnswers(item.permissions))
   );
 
   constructor(
+    private store: Store,
     private activityLogService: ActivityLogService,
-    private groupWatchingService: GroupWatchingService,
     private sessionService: UserSessionService,
     private actionFeedbackService: ActionFeedbackService,
   ) {}
@@ -130,9 +132,9 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
-    return this.watchedGroup$.pipe(
+    return this.store.select(fromObservation.selectObservedGroupId).pipe(
 
-      switchMap(watchedGroup => {
+      switchMap(observedGroupId => {
         const paginationParams = latestRow === undefined ? undefined : {
           fromItemId: latestRow.item.id,
           fromParticipantId: latestRow.participant.id,
@@ -145,7 +147,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
           this.itemData?.item.id ?? '', {
             limit: pageSize,
             pagination: paginationParams,
-            watchedGroupId: watchedGroup?.route.id,
+            watchedGroupId: observedGroupId ?? undefined,
           }
         );
       }),
@@ -165,7 +167,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     return log.activityType === 'current_answer' && log.participant.id === profileId;
   }
 
-  private getLogColumns(type: ItemType, watchingGroup: WatchedGroup|null): Column[] {
+  private getLogColumns(type: ItemType, observedGroupRoute: RawGroupRoute|null): Column[] {
     const columns = [
       {
         field: 'activityType',
@@ -180,7 +182,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: watchingGroup && !watchingGroup.route.isUser,
+        enabled: observedGroupRoute && !observedGroupRoute.isUser,
       },
       {
         field: 'at',

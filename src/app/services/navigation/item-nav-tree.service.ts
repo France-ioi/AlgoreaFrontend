@@ -14,21 +14,22 @@ import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/models/item-view-permission';
-import { GroupWatchingService } from '../group-watching.service';
 import { isGroupTypeVisible } from 'src/app/models/group-types';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   constructor(
     private category: ItemTypeCategory,
     currentContent: CurrentContentService,
-    private groupWatchingService: GroupWatchingService,
     private itemNavService: ItemNavigationService,
     private itemRouter: ItemRouter,
+    private store: Store,
   ) {
     super(currentContent);
-    /* reload the item menus when watching changes */
-    this.groupWatchingService.watchedGroup$.pipe(
+    /* reload the item menus when observed group changes */
+    this.store.select(fromObservation.selectObservedGroupId).pipe(
       skip(1),
     ).subscribe(() => {
       this.retry();
@@ -55,19 +56,19 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
     const attemptId = route.attemptId;
     if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
-    return this.groupWatchingService.watchedGroup$.pipe(
+    return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
-      switchMap(watchedGroup => this.itemNavService.getItemNavigation(route.id,
-        { attemptId, skillOnly: isSkill(route.contentType), watchedGroupId: watchedGroup?.route.id }
+      switchMap(observedGroupId => this.itemNavService.getItemNavigation(route.id,
+        { attemptId, skillOnly: isSkill(route.contentType), watchedGroupId: observedGroupId ?? undefined }
       )),
       map(data => this.mapNavData(data, route.path)),
     );
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {
-    return this.groupWatchingService.watchedGroup$.pipe(
+    return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
-      switchMap(watchedGroup => this.itemNavService.getRoots(this.category, watchedGroup?.route.id)),
+      switchMap(observedGroupId => this.itemNavService.getRoots(this.category, observedGroupId ?? undefined)),
       map(items => items.map(i => ({
         ...this.mapChild(i, defaultAttemptId, []),
         associatedGroupNames: i.groups.filter(g => isGroupTypeVisible(g.type)).map(g => g.name),
@@ -77,10 +78,10 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   fetchNavDataFromChild(id: string, child: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (child.route.path.length === 0) throw new Error('unexpected empty path for child (fetchNavDataFromChild)');
-    return this.groupWatchingService.watchedGroup$.pipe(
+    return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
-      switchMap(watchedGroup => this.itemNavService.getItemNavigation(id,
-        { childRoute: child.route, skillOnly: isSkill(this.category), watchedGroupId: watchedGroup?.route.id }
+      switchMap(observedGroupId => this.itemNavService.getItemNavigation(id,
+        { childRoute: child.route, skillOnly: isSkill(this.category), watchedGroupId: observedGroupId ?? undefined }
       )),
       map(data => this.mapNavData(data, child.route.path.slice(0, -1)))
     );
@@ -154,11 +155,11 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 export class ActivityNavTreeService extends ItemNavTreeService {
   constructor(
     currentContent: CurrentContentService,
-    groupWatchingService: GroupWatchingService,
     itemNavService: ItemNavigationService,
-    itemRouter: ItemRouter
+    itemRouter: ItemRouter,
+    store: Store,
   ) {
-    super('activity', currentContent ,groupWatchingService, itemNavService, itemRouter);
+    super('activity', currentContent, itemNavService, itemRouter, store);
   }
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {
@@ -172,11 +173,11 @@ export class ActivityNavTreeService extends ItemNavTreeService {
 export class SkillNavTreeService extends ItemNavTreeService {
   constructor(
     currentContent: CurrentContentService,
-    groupWatchingService: GroupWatchingService,
     itemNavService: ItemNavigationService,
-    itemRouter: ItemRouter
+    itemRouter: ItemRouter,
+    store: Store
   ) {
-    super('skill', currentContent, groupWatchingService, itemNavService, itemRouter);
+    super('skill', currentContent, itemNavService, itemRouter, store);
   }
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {

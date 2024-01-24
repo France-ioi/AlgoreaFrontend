@@ -1,6 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
   <ng-container *ngIf="state.isReady && state.data as itemData">
-    <ng-container *ngrxLet="isWatching$ as isWatching">
+    <ng-container *ngrxLet="isObserving$ as isObserving">
       <ng-container *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed">
         <alg-item-header [itemData]="itemData" *ngIf="!(fullFrameContent$ | async)"></alg-item-header>
 
@@ -13,10 +13,10 @@
         ></alg-access-code-view>
 
         <alg-item-permissions
-          *ngIf="watchedGroup$ | async as watchedGroup"
+          *ngIf="observedGroup$ | async as observedGroup"
           class="item-permissions"
           [itemData]="itemData"
-          [watchedGroup]="watchedGroup"
+          [observedGroup]="observedGroup"
           (changed)="reloadItem()"
         ></alg-item-permissions>
 
@@ -84,7 +84,7 @@
           ></alg-item-task-edit>
 
           <ng-container *ngIf="currentTab && [ 'alg-log', 'alg-chapter-progress'].includes(currentTab.tag)">
-            <ng-container *ngIf="(!isWatching && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
+            <ng-container *ngIf="(!isObserving && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ; else unallowed">
               <div *ngIf="(savingAnswer$ | async) ?? false" class="save-answer-loader">
                 <p class="save-answer-loader-message">
                   <span i18n>Saving answer before loading submission...</span>
@@ -102,23 +102,23 @@
               <ng-container *ngIf="currentTab?.tag === 'alg-chapter-progress'">
                 <alg-chapter-group-progress
                   class="alg-flex-1"
-                  *ngIf="isWatching"
+                  *ngIf="isObserving"
                   [itemData]="itemData"
                 ></alg-chapter-group-progress>
 
                 <alg-chapter-user-progress
                   class="alg-flex-1"
-                  *ngIf="!isWatching"
+                  *ngIf="!isObserving"
                   [itemData]="itemData"
                 ></alg-chapter-user-progress>
               </ng-container>
 
             </ng-container>
             <ng-template #unallowed>
-              <p class="not-allow-caption" *ngIf="isWatching" i18n>
+              <p class="not-allow-caption" *ngIf="isObserving" i18n>
                 You are not allowed to view the progress of other users on this content.
               </p>
-              <p class="not-allow-caption" *ngIf="!isWatching" i18n>
+              <p class="not-allow-caption" *ngIf="!isObserving" i18n>
                 You are not allowed to view this content.
               </p>
             </ng-template>

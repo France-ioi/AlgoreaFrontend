@@ -15,7 +15,6 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { UserSessionService } from '../../../services/user-session.service';
-import { GroupWatchingService } from '../../../services/group-watching.service';
 import { formatUser } from 'src/app/models/user';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
@@ -40,6 +39,7 @@ import { publishEventsAction } from '../../data-access/websocket-messages/thread
 import { messageEvent } from '../../models/thread-events';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
+import { fromObservation } from 'src/app/store';
 
 @Component({
   selector: 'alg-thread',
@@ -86,14 +86,14 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.store.select(forum.selectThreadId).pipe(filter(isNotNull)),
     this.distinctUsersInThread,
     this.userSessionService.userProfile$,
-    this.groupWatchingService.watchedGroup$
+    this.store.select(fromObservation.selectObservedGroupInfo),
   ]).pipe(
-    map(([ threadId, users, currentUser, watchedGroup ]) =>
+    map(([ threadId, users, currentUser, observedGroup ]) =>
       [ threadId.participantId, ...users.filter(id => threadId.participantId !== id) ].map(id => ({
         id,
         isCurrentUser: id === currentUser.groupId,
-        isThreadParticipant: id === watchedGroup?.route.id || (!watchedGroup && id === currentUser.groupId),
-        name: id === currentUser.groupId ? formatUser(currentUser) : id === watchedGroup?.route.id ? watchedGroup.name : undefined,
+        isThreadParticipant: id === observedGroup?.route.id || (!observedGroup && id === currentUser.groupId),
+        name: id === currentUser.groupId ? formatUser(currentUser) : id === observedGroup?.route.id ? observedGroup.name : undefined,
       })),
     ),
     mergeScan((acc: UserInfo[], users) => combineLatest(users.map(u => {
@@ -164,7 +164,6 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   constructor(
     private store: Store,
     private userSessionService: UserSessionService,
-    private groupWatchingService: GroupWatchingService,
     private userService: GetUserService,
     private getItemByIdService: GetItemByIdService,
     private actionFeedbackService: ActionFeedbackService,

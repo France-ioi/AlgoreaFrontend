@@ -18,8 +18,8 @@
 
   <alg-page-navigator
     *ngIf="true"
-    [allowWatching]="!!user.currentUserCanWatchUser && !user.isCurrentUser"
-    [isWatched]="!!(isCurrentGroupWatched$ | async)"
+    [allowObservation]="!!user.currentUserCanWatchUser && !user.isCurrentUser"
+    [isWatched]="!!(isCurrentGroupObserved$ | async)"
     [allowFullScreen]="false"
     (watch)="onStartWatchButtonClicked()"
     (stopWatch)="onStopWatchButtonClicked()"

@@ -10,7 +10,6 @@ import { CurrentContentService } from '../../services/current-content.service';
 import { UserSessionService } from '../../services/user-session.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
-import { GroupWatchingService } from '../../services/group-watching.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { SearchService } from '../../data-access/search.service';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
@@ -27,6 +26,8 @@ import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-
 import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { LocaleService } from '../../services/localeService';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -98,7 +99,7 @@ export class LeftNavComponent implements OnChanges {
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
-  isWatching$ = this.groupWatchingService.isWatching$;
+  isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
   skillsDisabled = appConfig.featureFlags.skillsDisabled;
@@ -107,9 +108,9 @@ export class LeftNavComponent implements OnChanges {
   currentLanguage = this.localeService.currentLang?.tag;
 
   constructor(
+    private store: Store,
     private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
-    private groupWatchingService: GroupWatchingService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,

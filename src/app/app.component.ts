@@ -9,7 +9,6 @@ import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { appConfig } from './utils/config';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
-import { GroupWatchingService } from './services/group-watching.service';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
 import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
@@ -28,6 +27,7 @@ import { LetDirective } from '@ngrx/component';
 import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
 import { Store } from '@ngrx/store';
 import forum from './forum/store';
+import { fromObservation } from './store';
 
 @Component({
   selector: 'alg-root',
@@ -75,9 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   isDiscussionVisible$ = this.store.select(forum.selectVisible);
   scrolled = false;
-  isWatching$ = this.groupWatchingService.isWatching$;
-  watchedGroupError$ = this.groupWatchingService.watchedGroupError$;
-  showWatchedGroupErrorDialog = true;
+  isObserving$ = this.store.select(fromObservation.selectIsObserving);
+  groupObservationError$ = this.store.select(fromObservation.selectObservationError);
+  showObservationErrorDialog = true;
 
   private subscription?: Subscription;
 
@@ -85,7 +85,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private store: Store,
     private router: Router,
     private sessionService: UserSessionService,
-    private groupWatchingService: GroupWatchingService,
     private authService: AuthService,
     private localeService: LocaleService,
     private layoutService: LayoutService,
@@ -151,9 +150,9 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  closeWatchGroupErrorDialog(): void {
-    this.showWatchedGroupErrorDialog = false;
-    this.groupWatchingService.stopWatching();
+  closeObservationErrorDialog(): void {
+    this.showObservationErrorDialog = false;
+    this.store.dispatch(fromObservation.errorModalActions.disableObservation());
   }
 
   onRefresh(): void {

@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { GroupWatchingService } from 'src/app/services/group-watching.service';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
 import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
 import { mapToFetchState } from 'src/app/utils/operators/state';
@@ -23,6 +22,7 @@ import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import forum from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
+import { fromObservation } from 'src/app/store';
 
 
 enum ForumTabUrls {
@@ -78,28 +78,25 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   );
   private readonly refresh$ = new Subject<void>();
   private readonly item$ = new ReplaySubject<Item>(1);
-  private readonly watchedGroup$ = this.groupWatchingService.watchedGroup$;
-  isWatching$ = this.groupWatchingService.isWatching$;
+  isObserving$ = this.store.select(fromObservation.selectIsObserving);
   selected$ = new ReplaySubject<number>(1);
   options$ = combineLatest([
-    this.watchedGroup$,
+    this.store.select(fromObservation.selectGroup),
     this.url$,
   ]).pipe(
-    map(([ watchedGroup, url ]) => [
+    map(([ observedGroup, url ]) => [
       ...OPTIONS,
-      ...(watchedGroup || url.endsWith(ForumTabUrls.Group)
-        ? [{ label: `${ watchedGroup?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
+      ...(observedGroup || url.endsWith(ForumTabUrls.Group)
+        ? [{ label: `${ observedGroup?.info.data?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
     ]),
   );
   state$ = combineLatest([
     this.selected$,
     this.item$,
-    this.watchedGroup$,
+    this.store.select(fromObservation.selectObservedGroupId)
   ]).pipe(
-    switchMap(([ selected, item, watchedGroup ]) =>
-      this.getThreadService.get(item.id, selected === 2 && watchedGroup
-        ? { watchedGroupId: watchedGroup.route.id }
-        : { isMine: selected === 0 }).pipe(
+    switchMap(([ selected, item, watchedGroupId ]) =>
+      this.getThreadService.get(item.id, selected === 2 && watchedGroupId ? { watchedGroupId } : { isMine: selected === 0 }).pipe(
         mapToFetchState({ resetter: this.refresh$ }),
       ),
     ),
@@ -109,7 +106,6 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private store: Store,
-    private groupWatchingService: GroupWatchingService,
     private getThreadService: GetThreadsService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -124,10 +120,10 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.url$.pipe(
-      withLatestFrom(this.watchedGroup$),
+      withLatestFrom(this.store.select(fromObservation.selectObservedGroupId)),
       first(),
-    ).subscribe(([ url, watchedGroup ]) => {
-      if (watchedGroup || url.endsWith(ForumTabUrls.Group)) {
+    ).subscribe(([ url, observedGroupId ]) => {
+      if (observedGroupId || url.endsWith(ForumTabUrls.Group)) {
         this.selected$.next(2);
         return;
       } else if (this.itemData?.currentResult?.validated || url.endsWith(ForumTabUrls.Others)) {
