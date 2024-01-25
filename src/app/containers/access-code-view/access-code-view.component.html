@@ -1,22 +1,21 @@
-<alg-section-paragraph icon="fa fa-sign-in-alt" [label]="sectionLabel" [ngClass]="sectionStyleClass">
-  <div class="input-wrapper">
-    <input
-      #input
-      type="text"
-      i18n-placeholder placeholder="Group code"
-      (keyup)="0"
-      [(ngModel)]="code"
-      [disabled]="state === 'loading'"
-    >
-    <span class="icon">
-      <i class="fa fa-font"></i>
-    </span>
-    <p-button
-      styleClass="alg-button p-button-rounded"
-      icon="fa fa-check"
+<div class="input-container">
+  <input
+    class="input-element"
+    #input
+    type="text"
+    i18n-placeholder placeholder="Group code"
+    (keyup)="0"
+    [(ngModel)]="code"
+    [disabled]="state === 'loading'"
+  >
+  <div class="button-section">
+    <button
+      class="alg-button primary"
+      icon="ph-bold ph-check"
       [label]="buttonLabel"
       [disabled]="input.value === '' || state === 'loading'"
-      (onClick)="onClickAccess()"
-    ></p-button>
+      (click)="onClickAccess()"
+      pButton
+    ></button>
   </div>
-</alg-section-paragraph>
+</div>

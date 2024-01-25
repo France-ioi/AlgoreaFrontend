@@ -1,45 +1,13 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/components/input-base';
 
-.input-wrapper {
+.input-container {
   display: flex;
-  border-radius: $border-radius;
-  height: 3rem;
-  position: relative;
+}
 
-  .icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    margin-top: -.5em;
-    font-size: 1.2rem;
-    height: 1rem;
-    line-height: 1rem;
-    color: var(--base-text-color);
-  }
+.button-section {
+  margin-left: var(--alg-space-size-6);
+}
 
-  input {
-    font-family: var(--font-family);
-    width: 100%;
-    display: flex;
-    background-color: #D3DBE7;
-    border: none;
-    box-shadow: 0 .1rem #00000019 inset;
-    border-radius: $border-radius;
-    padding-left: 2.5rem;
-    margin-right: 2rem;
-    font-size: 1.2rem;
-    line-height: 3rem;
-    color: var(--base-text-color);
-
-    &:focus {
-      outline: none;
-    }
-
-    &::placeholder {
-      font-style: italic;
-      color: rgb(118, 118, 121);
-      font-size: 1.2rem;
-    }
-  }
+.input-element {
+  @include input-base;
 }
