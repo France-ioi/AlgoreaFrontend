@@ -1,6 +1,6 @@
 import { ParamMap } from '@angular/router';
 import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
-import { User } from 'src/app/groups/data-access/get-user.service';
+import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
 

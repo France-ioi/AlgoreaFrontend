@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { User } from '../../data-access/get-user.service';
+import { User } from '../../models/user';
 import { GroupLinksComponent } from '../group-links/group-links.component';
 import { NgIf } from '@angular/common';
 
