@@ -30,7 +30,7 @@ export function isUser(group: GroupLike): boolean {
 }
 
 function contentType(group: GroupLike): GroupTypeCategory {
-  return isUser(group) ? 'group' : 'user';
+  return isUser(group) ? 'user' : 'group';
 }
 
 export function rawGroupRoute(group: GroupLike): RawGroupRoute {
