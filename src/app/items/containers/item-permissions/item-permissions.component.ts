@@ -15,6 +15,7 @@ import { SectionHeaderComponent } from 'src/app/ui-components/section-header/sec
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { NgIf, I18nSelectPipe, NgClass } from '@angular/common';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
+import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -34,6 +35,7 @@ import { RawGroupRoute } from 'src/app/models/routing/group-route';
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
     NgClass,
+    GroupIsUserPipe,
   ],
 })
 export class ItemPermissionsComponent implements OnChanges {

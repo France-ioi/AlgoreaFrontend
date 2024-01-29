@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { ItemCorePerm } from 'src/app/models/item-permissions';
-import { RawGroupRoute } from 'src/app/models/routing/group-route';
+import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
 import { ReplaySubject, switchMap } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
@@ -15,13 +15,14 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
+import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 
 @Component({
   selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group][permReceiverName]',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ],
   standalone: true,
-  imports: [ DialogModule, SharedModule, NgIf, ErrorComponent, LoadingComponent, PermissionsEditFormComponent, AsyncPipe ]
+  imports: [ DialogModule, SharedModule, NgIf, ErrorComponent, LoadingComponent, PermissionsEditFormComponent, AsyncPipe, GroupIsUserPipe ]
 })
 export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   @Output() close = new EventEmitter<boolean>();
@@ -58,15 +59,15 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.group.isUser && !this.sourceGroup) {
+    if (isUser(this.group) && !this.sourceGroup) {
       return;
     }
 
-    if (this.sourceGroup?.isUser) {
+    if (this.sourceGroup && isUser(this.sourceGroup)) {
       throw new Error('Unexpected: Source group must not be a user');
     }
 
-    this.targetType = this.group.isUser ? 'Users' : 'Groups';
+    this.targetType = isUser(this.group) ? 'Users' : 'Groups';
     this.params$.next({
       sourceGroupId: this.sourceGroup?.id ?? this.group.id,
       groupId: this.group.id,
@@ -75,11 +76,11 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   }
 
   onPermissionsDialogSave(permissions: Partial<GroupPermissions>): void {
-    if (this.sourceGroup?.isUser) {
+    if (this.sourceGroup && isUser(this.sourceGroup)) {
       throw new Error('Unexpected: Source group must not be a user');
     }
 
-    if (this.group.isUser && !this.sourceGroup) {
+    if (isUser(this.group) && !this.sourceGroup) {
       throw new Error('Unexpected: A user group must be provided with source group');
     }
 

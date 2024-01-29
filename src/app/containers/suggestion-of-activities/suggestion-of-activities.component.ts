@@ -13,6 +13,7 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
 import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store';
+import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 
 @Component({
   selector: 'alg-suggestion-of-activities',
@@ -30,6 +31,7 @@ import { fromObservation } from 'src/app/store';
     RouteUrlPipe,
     NgFor,
     I18nSelectPipe,
+    GroupIsUserPipe,
   ],
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {

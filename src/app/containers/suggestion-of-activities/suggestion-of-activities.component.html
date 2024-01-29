@@ -15,7 +15,7 @@
   <div class="empty-list" *ngIf="state.isReady && state.data.length === 0" i18n>
     There are no activities linked to this
     <ng-container *ngIf="observedGroupRoute$ | async as observedGroupRoute">
-      {{ observedGroupRoute.isUser.toString() | i18nSelect: { true: 'user', other: 'group' } }}.
+      {{ (observedGroupRoute | isUser).toString() | i18nSelect: { true: 'user', other: 'group' } }}.
     </ng-container>
   </div>
   <ul class="list" *ngIf="state.isReady && state.data.length > 0">

@@ -19,7 +19,7 @@
 
   <alg-error
     i18n-message message="User permissions cannot be changed via this page for the moment"
-    *ngIf="group.isUser && !sourceGroup; else stateBlock"
+    *ngIf="(group | isUser) && !sourceGroup; else stateBlock"
   ></alg-error>
 
   <ng-template #stateBlock>
@@ -36,7 +36,7 @@
           <ng-container *ngIf="item.string.title">
             <p class="dialog-description" i18n>
               These are the permissions given by "{{ permReceiverName }}" to "{{ item.string.title }}"
-              <ng-container *ngIf="group.isUser && permGiverName">on "{{ permGiverName }}"</ng-container>
+              <ng-container *ngIf="(group | isUser) && permGiverName">on "{{ permGiverName }}"</ng-container>
             </p>
           </ng-container>
 

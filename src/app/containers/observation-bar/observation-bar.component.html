@@ -8,7 +8,7 @@
       tooltipStyleClass="alg-tooltip observation-mode"
     ></i>
     <ng-template #observationModeTooltip>
-      <span *ngIf="observedGroup.route.isUser; else groupName" i18n>
+      <span *ngIf="(observedGroup.route | isUser); else groupName" i18n>
         Only the content visible by the user you are observing ({{ observedGroup.name }}) is shown.
       </span>
       <ng-template #groupName>
