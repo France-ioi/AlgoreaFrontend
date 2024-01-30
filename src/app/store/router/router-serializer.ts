@@ -11,6 +11,18 @@ export class RouterSerializer implements RouterStateSerializer<State> {
       url,
       root: { queryParams },
     } = routerState;
-    return { url, queryParams };
+
+    // extract all params in the router state
+    let params = {};
+    let route = routerState.root;
+    while (route.firstChild) {
+      route = route.firstChild;
+      params = { ...params, ...route.params };
+    }
+
+    // extract path segments as string[]
+    const path = route.pathFromRoot.flatMap(({ url }) => url).map(({ path }) => path);
+
+    return { url, path, params, queryParams };
   }
 }
