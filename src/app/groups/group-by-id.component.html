@@ -1,7 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
 
   <ng-container *ngIf="state.data?.group as group">
-    <div *ngIf="state.isFetching" class="block-ui"></div>
     <alg-group-header [groupData]="state.data"></alg-group-header>
 <!--    <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"

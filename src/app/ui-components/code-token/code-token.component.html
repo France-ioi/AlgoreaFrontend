@@ -1,24 +1,28 @@
-<div class="code-generator">
-  <span class="code" [ngClass]="{'no-button': !showRefresh && !showRemove}">{{code}}</span>
-  <span
-    *ngIf="showRefresh"
-    class="refresh"
-    [ngClass]="{'no-remove': !showRemove}"
-    (click)="refreshCode()"
-    i18n-pTooltip pTooltip="Generate a new code and reset expiration"
-    tooltipPosition="top"
-    tooltipEvent="hover"
-  >
-    <i class="fa fa-redo"></i>
-  </span>
-  <span
-    *ngIf="showRemove"
-    class="remove"
-    (click)="removeCode()"
-    i18n-pTooltip pTooltip="Disable code access"
-    tooltipPosition="top"
-    tooltipEvent="hover"
-  >
-    <i class="fa fa-times "></i>
-  </span>
+<div class="container">
+  <div class="alg-text-secondary alg-text-bold" [ngClass]="{'no-button': !showRefresh && !showRemove}">{{ code }}</div>
+  <div class="controls">
+    <button
+      *ngIf="showRefresh"
+      class="alg-button-icon rounded primary-color stroke regular-size button"
+      [ngClass]="{'no-remove': !showRemove}"
+      (click)="refreshCode()"
+      i18n-pTooltip pTooltip="Generate a new code and reset expiration"
+      tooltipStyleClass="alg-tooltip"
+      tooltipPosition="top"
+      tooltipEvent="hover"
+      icon="ph ph-arrow-clockwise"
+      pButton
+    ></button>
+    <button
+      *ngIf="showRemove"
+      class="alg-button-icon rounded primary-color stroke regular-size"
+      (click)="removeCode()"
+      i18n-pTooltip pTooltip="Disable code access"
+      tooltipStyleClass="alg-tooltip"
+      tooltipPosition="top"
+      tooltipEvent="hover"
+      icon="ph ph-x"
+      pButton
+    ></button>
+  </div>
 </div>
