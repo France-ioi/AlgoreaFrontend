@@ -93,3 +93,8 @@
   color: var(--alg-primary-color);
   font-size: toRem(24);
 }
+
+.empty-message {
+  text-align: left;
+  margin-left: toRem(16);
+}
