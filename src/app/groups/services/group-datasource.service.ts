@@ -3,13 +3,14 @@ import { forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GroupRoute } from 'src/app/models/routing/group-route';
-import { GetGroupBreadcrumbsService, GroupBreadcrumb } from '../data-access/get-group-breadcrumbs.service';
+import { GetGroupBreadcrumbsService } from '../data-access/get-group-breadcrumbs.service';
 import { GetGroupByIdService, Group } from '../data-access/get-group-by-id.service';
+import { GroupBreadcrumbs } from '../models/group-breadcrumbs';
 
 export interface GroupData {
   route: GroupRoute,
   group: Group,
-  breadcrumbs: GroupBreadcrumb[],
+  breadcrumbs: GroupBreadcrumbs,
 }
 
 /**

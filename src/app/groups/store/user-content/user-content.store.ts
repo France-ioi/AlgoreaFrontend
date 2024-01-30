@@ -1,13 +1,13 @@
 import { createFeature } from '@ngrx/store';
 import { reducer } from './user-content.reducer';
+import { selectors } from './user-content.selectors';
 import * as actions from './user-content.actions';
-import * as selectors from './user-content.selectors';
 
 export const fromUserContent = {
   ...createFeature({
     name: 'userContent',
     reducer,
-    extraSelectors: () => selectors
+    extraSelectors: ({ selectUserContentState }) => ({ ...selectors(selectUserContentState) })
   }),
   ...actions
 };
