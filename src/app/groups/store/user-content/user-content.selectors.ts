@@ -4,7 +4,8 @@ import { GroupRoute, RawGroupRoute, contentTypeOfPath, groupRoute, rawGroupRoute
 import { fromRouter } from 'src/app/store';
 import { State } from './user-content.state';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
-import { FetchState } from 'src/app/utils/state';
+import { FetchState, fetchingState } from 'src/app/utils/state';
+import { User } from '../../models/user';
 
 type RootState = Record<string, any>;
 
@@ -13,6 +14,7 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentUserId: MemoizedSelector<T, string|null>,
   selectActiveContentUserRoute: MemoizedSelector<T, RawGroupRoute|null>,
   selectActiveContentUserFullRoute: MemoizedSelector<T, GroupRoute|null>,
+  selectUser: MemoizedSelector<T, FetchState<User>>,
   selectBreadcrumbs: MemoizedSelector<T, FetchState<GroupBreadcrumbs>|null>,
 }
 
@@ -48,6 +50,12 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     (id, path) => (id && path ? groupRoute({ id, isUser: true }, path) : null)
   );
 
+  const selectUser = createSelector(
+    selectState,
+    selectIsUserContentActive,
+    (state, active) => (active ? state.user : fetchingState())
+  );
+
   const selectBreadcrumbs = createSelector(
     selectState,
     selectActiveContentUserPath,
@@ -59,6 +67,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentUserId,
     selectActiveContentUserRoute,
     selectActiveContentUserFullRoute,
+    selectUser,
     selectBreadcrumbs,
   };
 }

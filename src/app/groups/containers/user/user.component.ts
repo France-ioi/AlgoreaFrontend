@@ -45,7 +45,7 @@ const breadcrumbHeader = $localize`Users`;
 })
 export class UserComponent implements OnInit, OnDestroy {
   userRoute$ = this.store.select(fromUserContent.selectActiveContentUserRoute).pipe(filter(isNotNull));
-  state$ = this.store.select(fromUserContent.selectUser).pipe(filter(isNotNull));
+  state$ = this.store.select(fromUserContent.selectUser);
 
   readonly currentUserGroupId$ = this.userSessionService.userProfile$.pipe(
     delay(0),
