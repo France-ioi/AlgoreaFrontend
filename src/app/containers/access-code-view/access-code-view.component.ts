@@ -20,7 +20,6 @@ export class AccessCodeViewComponent {
   @Input() sectionLabel = '';
   @Input() buttonLabel = '';
   @Input() itemData?: ItemData;
-  @Input() sectionStyleClass = '';
   @Output() groupJoined = new EventEmitter<void>();
 
   code = '';
