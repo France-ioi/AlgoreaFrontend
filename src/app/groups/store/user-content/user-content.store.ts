@@ -5,7 +5,7 @@ import * as selectors from './user-content.selectors';
 
 export const fromUserContent = {
   ...createFeature({
-    name: 'user-content',
+    name: 'userContent',
     reducer,
     extraSelectors: () => selectors
   }),
