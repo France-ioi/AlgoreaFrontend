@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { appConfig } from '../utils/config';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { HttpClient } from '@angular/common/http';
-import { User, userDecoder } from '../groups/data-access/get-user.service';
+import { User, userDecoder } from '../groups/models/user';
 
 @Injectable({
   providedIn: 'root'

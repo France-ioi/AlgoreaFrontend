@@ -1,5 +1,5 @@
 import { Input, Component } from '@angular/core';
-import { User } from '../../data-access/get-user.service';
+import { User } from '../../models/user';
 import { map } from 'rxjs/operators';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';

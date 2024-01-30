@@ -10,6 +10,7 @@ import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { cannotWatchError } from './utils/errors';
+import { isUser } from 'src/app/models/routing/group-route';
 
 /**
  * If the router has a observed group set (possibly 'none') AND it is different from the current one in the store, emit an
@@ -34,7 +35,7 @@ export const observationGroupFetching = createEffect(
     groupService = inject(GetGroupByIdService),
   ) => actions$.pipe(
     ofType(routerActions.enableObservation),
-    switchMap(({ route }) => (route.isUser ? fetchUser(userService, route.id) : fetchGroup(groupService, route.id)).pipe(
+    switchMap(({ route }) => (isUser(route) ? fetchUser(userService, route.id) : fetchGroup(groupService, route.id)).pipe(
       mapToFetchState(),
       map(fetchState => groupInfoFetchedActions.fetchStateChanged({ route, fetchState }))
     )),

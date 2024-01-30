@@ -1,12 +1,12 @@
 import { ParamMap } from '@angular/router';
 import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
-import { User } from 'src/app/groups/data-access/get-user.service';
+import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
+import { GroupTypeCategory } from '../group-types';
 
 export interface GroupRoute extends ContentRoute {
-  contentType: 'group',
-  isUser: boolean,
+  contentType: GroupTypeCategory,
 }
 export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<ContentRoute, 'path'>>;
 
@@ -16,19 +16,26 @@ export interface GroupRouteError {
   id?: string,
 }
 
-
 export type GroupLike =
+  | { id: Group['id'], contentType: GroupTypeCategory }
   | { id: Group['id'], isUser: boolean }
   | { id: Group['id'], type: string }
   | Pick<User, 'groupId' | 'login'>;
 
-function isUser(group: GroupLike): boolean {
-  return ('isUser' in group && group.isUser) || ('login' in group && !!group.login) || ('type' in group && group.type === 'User');
+export function isUser(group: GroupLike): boolean {
+  return ('contentType' in group && group.contentType === 'user') ||
+    ('isUser' in group && group.isUser) ||
+    ('login' in group && !!group.login) ||
+    ('type' in group && group.type === 'User');
+}
+
+function contentType(group: GroupLike): GroupTypeCategory {
+  return isUser(group) ? 'user' : 'group';
 }
 
 export function rawGroupRoute(group: GroupLike): RawGroupRoute {
   const groupId = 'id' in group ? group.id : group.groupId;
-  return { contentType: 'group', id: groupId, isUser: isUser(group) };
+  return { contentType: contentType(group), id: groupId };
 }
 
 export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
@@ -36,11 +43,13 @@ export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
 }
 
 export function isGroupRoute(route: ContentRoute | RawGroupRoute): route is GroupRoute {
-  return route.contentType === 'group' && route.path !== undefined;
+  return (route.contentType === 'group' || route.contentType === 'user') && route.path !== undefined;
 }
 
 export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {
-  return typeof route === 'object' && (route as Record<string, unknown> | null)?.contentType === 'group';
+  if (typeof route !== 'object') return false;
+  const contentType = (route as Record<string, unknown> | null)?.contentType;
+  return contentType === 'group' || contentType === 'user';
 }
 
 /**
@@ -51,8 +60,8 @@ export function urlArrayForGroupRoute(
   page?: string[],
 ): UrlCommand {
   const path = route.path ? pathAsParameter(route.path) : {};
-  const actualPage = page && ((route.isUser && isUserPage(page)) || (!route.isUser && isGroupPage(page))) ? page : [];
-  return [ '/', 'groups', route.isUser ? 'users' : 'by-id', route.id, path, ...actualPage ];
+  const actualPage = page && ((isUser(route) && isUserPage(page)) || (!isUser(route) && isGroupPage(page))) ? page : [];
+  return [ '/', 'groups', isUser(route) ? 'users' : 'by-id', route.id, path, ...actualPage ];
 }
 
 function isUserPage(page: string[]): boolean {

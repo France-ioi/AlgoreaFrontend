@@ -26,7 +26,7 @@ import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPip
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store';
-import { RawGroupRoute } from 'src/app/models/routing/group-route';
+import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 interface Column {
   field: string,
   header: string,
@@ -182,7 +182,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
       {
         field: 'item.user',
         header: $localize`User`,
-        enabled: observedGroupRoute && !observedGroupRoute.isUser,
+        enabled: observedGroupRoute && !isUser(observedGroupRoute),
       },
       {
         field: 'at',

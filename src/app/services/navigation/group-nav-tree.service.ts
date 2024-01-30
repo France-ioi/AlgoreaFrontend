@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/models/content/group-info';
 import { ContentRoute } from 'src/app/models/routing/content-route';
-import { groupRoute, isGroupRoute } from 'src/app/models/routing/group-route';
+import { groupRoute, isGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../data-access/group-navigation.service';
@@ -30,7 +30,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
   }
 
   canFetchChildren(content: GroupInfo): boolean {
-    return !content.route.isUser;
+    return !isUser(content.route);
   }
 
   fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
