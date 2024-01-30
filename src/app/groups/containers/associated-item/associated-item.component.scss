@@ -1,40 +1,8 @@
-@import 'src/variables';
-
 .item {
-
   width: 100%;
   display: flex;
+}
 
-  .remove {
-    white-space: nowrap;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 8rem;
-    color: var(--base-color);
-    cursor: pointer;
-
-  }
-
-  .fa {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .item-name {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: var(--font-family);
-    font-weight: 100;
-
-    &.clickable {
-      cursor: pointer;
-
-      &:hover {
-        color: var(--base-color);
-      }
-    }
-  }
+.note {
+  margin-bottom: var(--alg-space-size-3);
 }

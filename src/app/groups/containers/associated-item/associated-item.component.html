@@ -1,64 +1,62 @@
 <ng-container *ngIf="state$ | async as state">
-  <alg-section i18n-label label="Associated {{ contentType | i18nSelect : {
-    skill: 'Skill',
-    other: 'Activity'
-  } }}" icon="fa fa-book" styleClass="associated-item">
+  <h2 class="alg-h2 alg-text-normal title" i18n>
+    Associated {{ contentType | i18nSelect : {
+      skill: 'Skill',
+      other: 'Activity'
+    } }}
+  </h2>
 
-    <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
+  <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
-    <alg-error
-      *ngIf="state.isError"
-      class="dark"
-      icon="fa fa-exclamation-triangle"
-      i18n-message message="Error while loading the root {{ contentType | i18nSelect : {
-        skill: 'Skill',
-        other: 'activity'
-      } }}"
-      [showRefreshButton]="true"
-      refreshButtonType="refresh"
-      (refresh)="refresh()"
-    ></alg-error>
+  <alg-error
+    *ngIf="state.isError"
+    class="dark"
+    icon="ph-duotone ph-warning-circle"
+    i18n-message message="Error while loading the root {{ contentType | i18nSelect : {
+      skill: 'Skill',
+      other: 'activity'
+    } }}"
+    [showRefreshButton]="true"
+    refreshButtonType="refresh"
+    (refresh)="refresh()"
+  ></alg-error>
 
-    <ng-container *ngIf="state.isReady">
-      <ng-container [ngSwitch]="state.data.tag">
-
-        <ng-container *ngSwitchCase="'no-item'">
-          <p>There are currently no {{ contentType | i18nSelect : {
-              skill: 'skills',
-              other: 'activities'
-            } }} associated with this group.</p>
-          <alg-add-content
-            [allowedTypesForNewContent]="allowedNewItemTypes"
-            [searchFunction]="searchFunction"
-            (contentAdded)="setRootItem($event)"
-            i18n-selectExistingText selectExistingText="Select"
-          ></alg-add-content>
-        </ng-container>
-
-        <div class="item" *ngSwitchCase="'new-item'">
-          <span class="item-name">
-            {{state.data.name}}
-          </span>
-          <span class="remove" (click)="onRemove()">
-            <span i18n>Remove</span>
-            <i class="fa fa-trash-alt"></i>
-          </span>
-        </div>
-
-        <div class="item" *ngSwitchCase="'existing-item'">
-          <!--When rootActivity|rootSkill is an existing item, rootActivityData|rootSkillData is not null-->
-          <i class="fa fa-lock" *ngIf="!state.data.path"></i>
-          <span class="item-name"
-            [routerLink]="state.data.path"
-            [ngClass]="{clickable: !!state.data.path}"
-          >{{state.data.name}}</span>
-          <span class="remove" (click)="onRemove()">
-            <span i18n>Remove</span>
-            <i class="fa fa-trash-alt"></i>
-          </span>
-        </div>
-
+  <ng-container *ngIf="state.isReady">
+    <ng-container [ngSwitch]="state.data.tag">
+      <ng-container *ngSwitchCase="'no-item'">
+        <p class="note">There are currently no {{ contentType | i18nSelect : {
+            skill: 'skills',
+            other: 'activities'
+          } }} associated with this group.</p>
+        <alg-add-content
+          [allowedTypesForNewContent]="allowedNewItemTypes"
+          [searchFunction]="searchFunction"
+          (contentAdded)="setRootItem($event)"
+          i18n-selectExistingText selectExistingText="Select"
+        ></alg-add-content>
       </ng-container>
+
+      <div class="item" *ngSwitchCase="'new-item'">
+        <span class="alg-text-normal alg-flex-1">{{ state.data.name }}</span>
+        <ng-container *ngTemplateOutlet="removeButton"></ng-container>
+      </div>
+
+      <div class="item" *ngSwitchCase="'existing-item'">
+        <!--When rootActivity|rootSkill is an existing item, rootActivityData|rootSkillData is not null-->
+        <i class="ph-duotone ph-lock" *ngIf="!state.data.path"></i>
+        <a class="alg-link alg-flex-1" [routerLink]="state.data.path">{{ state.data.name }}</a>
+        <ng-container *ngTemplateOutlet="removeButton"></ng-container>
+      </div>
     </ng-container>
-  </alg-section>
+  </ng-container>
 </ng-container>
+
+<ng-template #removeButton>
+  <button
+    class="alg-button-icon no-bg primary-color"
+    pButton
+    type="button"
+    icon="ph-duotone ph-trash"
+    (click)="onRemove()"
+  ></button>
+</ng-template>

@@ -1,5 +1,3 @@
-@import 'src/variables';
-
 .container {
   display: flex;
   justify-content: flex-end;
@@ -7,6 +5,15 @@
 }
 
 .has-children {
-  margin-left: 1rem;
+  margin-right: var(--alg-space-size-5);
   color: var(--notify-error-color);
+}
+
+.button-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  margin-top: var(--alg-space-size-5);
 }

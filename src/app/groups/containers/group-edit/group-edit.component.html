@@ -11,31 +11,31 @@
   ></alg-error>
 
   <ng-container *ngIf="state.isReady">
-    <form class="group-edition" [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager && state.data.canCurrentUserManageGroup; else notAuthorized">
-      <alg-section icon="fa fa-cog" i18n-label label="Group information">
-        <div class="field">
-          <div class="field-name">
-            <label i18n>Name</label>
-          </div>
-          <div class="field-value">
-            <alg-input [parentForm]="groupForm" name="name"></alg-input>
-          </div>
+    <form [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager && state.data.canCurrentUserManageGroup; else notAuthorized">
+      <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Group information</h2>
+      <div class="field">
+        <div class="field-name" i18n>
+          Name
         </div>
-        <div class="field">
-          <div class="field-name">
-            <label i18n>Description</label>
-          </div>
-          <div class="field-value">
-            <alg-textarea [parentForm]="groupForm" inputName="description"></alg-textarea>
-          </div>
+        <div class="field-value">
+          <alg-input [parentForm]="groupForm" name="name"></alg-input>
         </div>
-      </alg-section>
+      </div>
+      <div class="field">
+        <div class="field-name" i18n>
+          Description
+        </div>
+        <div class="field-value">
+          <alg-textarea [parentForm]="groupForm" inputName="description"></alg-textarea>
+        </div>
+      </div>
       <alg-associated-item formControlName="rootActivity" contentType="activity"></alg-associated-item>
       <alg-associated-item formControlName="rootSkill" contentType="skill"></alg-associated-item>
-
-      <div class="remove-button-section">
-        <alg-group-remove-button [group]="state.data" (groupDeleted)="refreshNav()"></alg-group-remove-button>
-      </div>
+      <alg-group-remove-button
+        class="remove-button-section"
+        [group]="state.data"
+        (groupDeleted)="refreshNav()"
+      ></alg-group-remove-button>
     </form>
 
     <alg-floating-save
