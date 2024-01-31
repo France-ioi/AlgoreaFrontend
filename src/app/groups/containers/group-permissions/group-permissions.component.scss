@@ -11,12 +11,11 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  color: var(--secondary-color);
-  font-weight: bold;
+  color: var(--alg-accent-dark-color);
 }
 
 .caption {
   flex: 1;
-  margin-right: 2rem;
+  margin-right: var(--alg-space-size-3);
   text-align: right;
 }
