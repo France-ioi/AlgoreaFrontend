@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
-import { delay, map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
+import { map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
 import { contentInfo } from 'src/app/models/content/content-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { UserSessionService } from 'src/app/services/user-session.service';
 import { formatUser } from 'src/app/models/user';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
@@ -47,11 +46,6 @@ export class UserComponent implements OnInit, OnDestroy {
   userRoute$ = this.store.select(fromUserContent.selectActiveContentUserRoute).pipe(filter(isNotNull));
   state$ = this.store.select(fromUserContent.selectUser);
 
-  readonly currentUserGroupId$ = this.userSessionService.userProfile$.pipe(
-    delay(0),
-    map(userProfile => userProfile.groupId),
-  );
-
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
     map(() => this.router.url),
@@ -67,7 +61,6 @@ export class UserComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store,
     private router: Router,
-    private userSessionService: UserSessionService,
     private currentContent: CurrentContentService,
     private groupRouter: GroupRouter,
   ) {}
