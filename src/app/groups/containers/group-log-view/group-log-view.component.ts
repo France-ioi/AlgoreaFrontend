@@ -10,7 +10,7 @@ import { LogActionDisplayPipe } from 'src/app/pipes/logActionDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRouteWithAnswerPipe, RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -47,6 +47,7 @@ const logsLimit = 20;
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    ItemRouteWithAnswerPipe,
   ],
 })
 export class GroupLogViewComponent implements OnChanges, OnDestroy {

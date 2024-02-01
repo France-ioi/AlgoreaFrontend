@@ -55,12 +55,19 @@
                 <ng-template #iconSection>
                   <i class="ph-duotone item-icon" [ngClass]="{
                     'ph-flag-checkered': rowData.activityType === 'result_started',
-                    'ph-floppy-disk-back': rowData.activityType === 'saved_answer'
+                    'ph-floppy-disk-back': rowData.activityType === 'saved_answer' || rowData.activityType === 'current_answer'
                   }"></i>
                 </ng-template>
               </div>
               <div class="item-title">
                 <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
+                <a
+                  class="alg-link"
+                  [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: true } | url"
+                  *ngIf="rowData.activityType === 'saved_answer' && rowData.answerId"
+                >
+                  View answer
+                </a>
               </div>
             </div>
           </td>
