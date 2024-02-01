@@ -9,6 +9,8 @@ interface Selectors<T> {
   selectState: MemoizedSelector<T, State | undefined>,
   selectNavigationId: MemoizedSelector<T, RouterReducerState['navigationId'] | undefined>,
   /** extra ones */
+  selectPath: MemoizedSelector<T, string[] | undefined>,
+  selectParam: (param: string) => MemoizedSelector<T, string | null>,
   selectQueryParam: (param: string) => MemoizedSelector<T, string | null>,
 }
 
@@ -27,7 +29,23 @@ export function selectors<T>(baseSelectRouterState: Selector<T, RouterReducerSta
     routerState => routerState?.navigationId
   );
 
+  const selectPath = createSelector(
+    selectState,
+    state => state?.path
+  );
+
   const emptyParams: Params = [];
+  const selectParams = createSelector(
+    selectState,
+    state => (state ? state.params : emptyParams)
+  );
+  const selectParamMap = createSelector(
+    selectParams,
+    params => convertToParamMap(params)
+  );
+  const selectParam = (param: string): MemoizedSelector<T, string | null> =>
+    createSelector(selectParamMap, paramMap => paramMap.get(param));
+
   const selectQueryParams = createSelector(
     selectState,
     state => (state ? state.queryParams : emptyParams)
@@ -39,5 +57,5 @@ export function selectors<T>(baseSelectRouterState: Selector<T, RouterReducerSta
   const selectQueryParam = (param: string): MemoizedSelector<T, string | null> =>
     createSelector(selectQueryParamMap, paramMap => paramMap.get(param));
 
-  return { selectRouterState, selectState, selectNavigationId, selectQueryParam };
+  return { selectRouterState, selectState, selectNavigationId, selectPath, selectParam, selectQueryParam };
 }

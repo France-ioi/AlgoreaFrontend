@@ -14,15 +14,15 @@
 
   <ng-container *ngIf="state.isReady">
 
-    <alg-user-header [user]="state.data.user" [route]="state.data.route"></alg-user-header>
+    <alg-user-header *ngIf="userRoute$ | async as route" [user]="state.data" [route]="route" ></alg-user-header>
 
     <alg-user-indicator
       class="user-indicator"
-      [user]="state.data.user"
-      *ngIf="!state.data.user.isCurrentUser && state.data.user.ancestorsCurrentUserIsManagerOf.length > 0"
+      [user]="state.data"
+      *ngIf="!state.data.isCurrentUser && state.data.ancestorsCurrentUserIsManagerOf.length > 0"
     ></alg-user-indicator>
 
-    <nav class="alg-nav-tab" *ngIf="(currentUserGroupId$ | async) === state.data.user.groupId || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
+    <nav class="alg-nav-tab" *ngIf="(currentUserGroupId$ | async) === state.data.groupId || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
       <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
@@ -40,7 +40,7 @@
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="personalData.isActive"
           i18n
-          [hidden]="(currentUserGroupId$ | async) !== state.data.user.groupId && (activeRoute$ | async) !== 'personal-data'"
+          [hidden]="(currentUserGroupId$ | async) !== state.data.groupId && (activeRoute$ | async) !== 'personal-data'"
       >
         Personal data
       </a>
@@ -51,7 +51,7 @@
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="settings.isActive"
           i18n
-          [hidden]="(currentUserGroupId$ | async) !== state.data.user.groupId && (activeRoute$ | async) !== 'settings'"
+          [hidden]="(currentUserGroupId$ | async) !== state.data.groupId && (activeRoute$ | async) !== 'settings'"
       >
         Settings
       </a>
@@ -61,20 +61,20 @@
       <ng-container *ngIf="activeRoute === 'progress'">
         <ng-container *ngIf="currentUserGroupId$ | async as currentUserGroupId">
           <alg-group-log-view
-            [groupId]="currentUserGroupId !== state.data.user.groupId ? state.data.user.groupId : undefined"
+            [groupId]="currentUserGroupId !== state.data.groupId ? state.data.groupId : undefined"
             [showUserColumn]="false"
           ></alg-group-log-view>
         </ng-container>
       </ng-container>
 
       <ng-container *ngIf="activeRoute === 'personal-data'">
-        <ng-container *ngIf="(currentUserGroupId$ | async) === state.data.user.groupId; else forbidden">
+        <ng-container *ngIf="(currentUserGroupId$ | async) === state.data.groupId; else forbidden">
           <alg-current-user></alg-current-user>
         </ng-container>
       </ng-container>
 
       <ng-container *ngIf="activeRoute === 'settings'">
-        <ng-container *ngIf="(currentUserGroupId$ | async) === state.data.user.groupId; else forbidden">
+        <ng-container *ngIf="(currentUserGroupId$ | async) === state.data.groupId; else forbidden">
           <alg-platform-settings></alg-platform-settings>
         </ng-container>
       </ng-container>

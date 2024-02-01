@@ -37,6 +37,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore, RouterState } from '@ngrx/router-store';
 import { fromObservation, fromRouter, rootStoreEffects, RouterSerializer } from './app/store';
+import { fromUserContent, groupStoreEffects } from './app/groups/store';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -134,7 +135,8 @@ bootstrapApplication(AppComponent, {
     provideState(fromRouter),
     provideState(fromObservation),
     provideState(fromForum),
-    provideEffects(rootStoreEffects(), forumEffects()),
+    provideState(fromUserContent),
+    provideEffects(rootStoreEffects(), forumEffects(), groupStoreEffects()),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),

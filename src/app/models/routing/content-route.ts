@@ -15,7 +15,11 @@ export interface ContentRoute {
 export function pathFromRouterParameters(params: ParamMap): string[]|null {
   const pathAsString = params.get(pathParamName);
   if (pathAsString === null) return null;
-  return pathAsString === '' ? [] : pathAsString.split(',');
+  return pathFromParamValue(pathAsString);
+}
+
+export function pathFromParamValue(path: string): string[] {
+  return path === '' ? [] : path.split(',');
 }
 
 export function pathAsParameter(value: string[]): UrlCommandParameters {

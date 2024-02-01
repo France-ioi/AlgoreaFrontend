@@ -33,6 +33,11 @@ function contentType(group: GroupLike): GroupTypeCategory {
   return isUser(group) ? 'user' : 'group';
 }
 
+export function contentTypeOfPath(path: string[]): GroupTypeCategory | undefined {
+  if (path[0] !== 'groups') return undefined;
+  return path[1] === 'users' ? 'user' : 'group';
+}
+
 export function rawGroupRoute(group: GroupLike): RawGroupRoute {
   const groupId = 'id' in group ? group.id : group.groupId;
   return { contentType: contentType(group), id: groupId };
