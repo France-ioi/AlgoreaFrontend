@@ -1,11 +1,12 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { pathFromParamValue, pathParamName } from 'src/app/models/routing/content-route';
 import { GroupRoute, RawGroupRoute, contentTypeOfPath, groupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
-import { fromRouter } from 'src/app/store';
+import { ObservationInfo, fromRouter } from 'src/app/store';
 import { State } from './user-content.state';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
 import { FetchState, fetchingState } from 'src/app/utils/state';
 import { User } from '../../models/user';
+import { formatUser } from 'src/app/models/user';
 
 type RootState = Record<string, any>;
 
@@ -16,6 +17,11 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentUserFullRoute: MemoizedSelector<T, GroupRoute|null>,
   selectUser: MemoizedSelector<T, FetchState<User>>,
   selectBreadcrumbs: MemoizedSelector<T, FetchState<GroupBreadcrumbs>|null>,
+
+  /**
+   * Null if there is no user as active content, or if the user cannot be observed, or if user info is not fetched
+   */
+  selectObservationInfoForActiveContentUser: MemoizedSelector<T, ObservationInfo | null>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
@@ -62,6 +68,22 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     (state, path) => (path !== null ? state.breadcrumbs : null)
   );
 
+  const selectCanWatchActiveContentUser = createSelector(
+    selectUser,
+    ({ isReady, data }) => isReady && !!data.currentUserCanWatchUser && !data.isCurrentUser
+  );
+
+  const selectObservationInfoForActiveContentUser = createSelector(
+    selectCanWatchActiveContentUser,
+    selectActiveContentUserRoute,
+    selectUser,
+    (canWatchUser, route, { isReady, data }) => (canWatchUser && route && isReady ? {
+      route,
+      name: formatUser(data),
+      currentUserCanGrantAccess: data.currentUserCanGrantUserAccess ?? false
+    } : null)
+  );
+
   return {
     selectIsUserContentActive,
     selectActiveContentUserId,
@@ -69,5 +91,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentUserFullRoute,
     selectUser,
     selectBreadcrumbs,
+
+    selectObservationInfoForActiveContentUser,
   };
 }

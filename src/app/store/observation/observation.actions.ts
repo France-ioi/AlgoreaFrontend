@@ -2,10 +2,16 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { FetchState } from 'src/app/utils/state';
 
+export interface ObservationInfo {
+  route: RawGroupRoute,
+  name: string,
+  currentUserCanGrantAccess: boolean,
+}
+
 export const topBarActions = createActionGroup({
   source: 'Top bar',
   events: {
-    enableObservation: props<{ route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean }>(),
+    enableObservation: props<ObservationInfo>(),
   },
 });
 
@@ -21,7 +27,7 @@ export const userPageActions = createActionGroup({
   source: 'User page',
   events: {
     disableObservation: emptyProps(),
-    enableObservation: props<{ route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean }>(),
+    enableObservation: props<ObservationInfo>(),
   },
 });
 

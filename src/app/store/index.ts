@@ -9,3 +9,5 @@ export { fromRouter } from './router/router.store';
 export { fromObservation } from './observation/observation.store';
 
 export { RouterSerializer } from './router/router-serializer';
+
+export { ObservationInfo } from './observation/observation.actions';
