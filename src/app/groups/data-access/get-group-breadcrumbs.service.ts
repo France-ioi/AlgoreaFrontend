@@ -6,18 +6,7 @@ import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/utils/config';
 import { groupRoute, GroupRoute } from 'src/app/models/routing/group-route';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-
-const breadcrumbDecoder = D.struct({
-  id: D.string,
-  name: D.string,
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
-});
-
-type Breadcrumb = D.TypeOf<typeof breadcrumbDecoder>;
-
-export interface GroupBreadcrumb extends Breadcrumb {
-  route: GroupRoute,
-}
+import { breadcrumbDecoder, GroupBreadcrumbs } from '../models/group-breadcrumbs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +15,7 @@ export class GetGroupBreadcrumbsService {
 
   constructor(private http: HttpClient) {}
 
-  getBreadcrumbs(route: GroupRoute): Observable<GroupBreadcrumb[]> {
+  getBreadcrumbs(route: GroupRoute): Observable<GroupBreadcrumbs> {
     const groupIds = [ ...route.path, route.id ];
 
     return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupIds.join('/')}/breadcrumbs`).pipe(

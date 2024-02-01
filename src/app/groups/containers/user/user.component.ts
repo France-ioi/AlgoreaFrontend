@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
-import { catchError, delay, switchMap, map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
+import { delay, map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
 import { contentInfo } from 'src/app/models/content/content-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { formatUser } from 'src/app/models/user';
-import { GetGroupBreadcrumbsService } from '../../data-access/get-group-breadcrumbs.service';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { PlatformSettingsComponent } from '../platform-settings/platform-settings.component';
@@ -46,7 +45,7 @@ const breadcrumbHeader = $localize`Users`;
 })
 export class UserComponent implements OnInit, OnDestroy {
   userRoute$ = this.store.select(fromUserContent.selectActiveContentUserRoute).pipe(filter(isNotNull));
-  state$ = this.store.select(fromUserContent.selectUser).pipe(filter(isNotNull));
+  state$ = this.store.select(fromUserContent.selectUser);
 
   readonly currentUserGroupId$ = this.userSessionService.userProfile$.pipe(
     delay(0),
@@ -63,10 +62,6 @@ export class UserComponent implements OnInit, OnDestroy {
     map(url => this.getCurrentRoute(url)),
   );
 
-  private readonly breadcrumbs$ = this.userRoute$.pipe(
-    switchMap(route => (isGroupRoute(route) ? this.getGroupBreadcrumbsService.getBreadcrumbs(route) : of(undefined)))
-  );
-
   private subscription?: Subscription;
 
   constructor(
@@ -75,7 +70,6 @@ export class UserComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private currentContent: CurrentContentService,
     private groupRouter: GroupRouter,
-    private getGroupBreadcrumbsService: GetGroupBreadcrumbsService,
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +77,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userRoute$,
       this.activeRoute$.pipe(map(p => this.pageTitle(p))),
       this.state$,
-      this.breadcrumbs$.pipe(catchError(() => of(undefined))), // error is handled elsewhere
+      this.store.select(fromUserContent.selectBreadcrumbs),
     ])
       .pipe(
         map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => contentInfo({
@@ -91,11 +85,11 @@ export class UserComponent implements OnInit, OnDestroy {
           breadcrumbs: {
             category: breadcrumbHeader,
             path: state.isReady ? [
-              ...(breadcrumbs?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
+              ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
               { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
               { title: currentPageTitle }
             ] : [],
-            currentPageIdx: breadcrumbs ? breadcrumbs.length : 1,
+            currentPageIdx: breadcrumbs !== null && breadcrumbs.isReady ? breadcrumbs.data.length : 1,
           },
           route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
         }))
