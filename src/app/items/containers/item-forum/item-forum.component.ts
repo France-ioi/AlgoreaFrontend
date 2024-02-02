@@ -22,7 +22,7 @@ import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 
 enum ForumTabUrls {

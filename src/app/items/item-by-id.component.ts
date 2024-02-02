@@ -66,7 +66,7 @@ import { Store } from '@ngrx/store';
 import { fromForum } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
-import { fromObservation } from '../store';
+import { fromObservation } from 'src/app/store/observation';
 import { isUser } from '../models/routing/group-route';
 
 const itemBreadcrumbCat = $localize`Items`;

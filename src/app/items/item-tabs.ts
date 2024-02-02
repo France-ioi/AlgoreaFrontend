@@ -16,7 +16,7 @@ import { arraysEqual } from 'src/app/utils/array';
 import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { Store } from '@ngrx/store';
-import { fromObservation } from '../store';
+import { fromObservation } from 'src/app/store/observation';
 
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };

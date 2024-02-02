@@ -1,7 +1,8 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { pathFromParamValue, pathParamName } from 'src/app/models/routing/content-route';
 import { GroupRoute, RawGroupRoute, contentTypeOfPath, groupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
-import { ObservationInfo, fromRouter } from 'src/app/store';
+import { ObservationInfo } from 'src/app/store/observation';
+import { fromRouter } from 'src/app/store/router';
 import { State } from './user-content.state';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
 import { FetchState, fetchingState } from 'src/app/utils/state';

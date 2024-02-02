@@ -27,7 +27,7 @@ import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { LocaleService } from '../../services/localeService';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;

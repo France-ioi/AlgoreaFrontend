@@ -90,7 +90,7 @@ module.exports = {
     }],
     'no-restricted-imports': ['error', {
       patterns: [
-        { group: [ '*/store/*' ], message: 'Only store indexes can be imported' },
+        { group: [ '**/store/*', '!**/store/observation', '!**/store/router' ], message: 'Only store indexes can be imported' },
       ]
     }],
     'jasmine/no-focused-tests': ['error'],

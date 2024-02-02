@@ -12,7 +12,7 @@ import { LetDirective } from '@ngrx/component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { ObservationInfo, fromObservation } from 'src/app/store';
+import { ObservationInfo, fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-observation-bar-with-button',

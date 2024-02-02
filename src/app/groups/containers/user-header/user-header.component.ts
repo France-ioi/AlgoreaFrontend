@@ -6,7 +6,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { PageNavigatorComponent } from 'src/app/ui-components/page-navigator/page-navigator.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 import { formatUser } from 'src/app/models/user';
 
 @Component({

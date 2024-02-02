@@ -17,7 +17,7 @@ import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GetAnswerService } from '../data-access/get-answer.service';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 type Strategy =
   { tag: 'EmptyInitialAnswer'|'Wait'|'NotApplicable' } |

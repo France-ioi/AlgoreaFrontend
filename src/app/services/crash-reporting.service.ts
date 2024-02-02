@@ -3,7 +3,7 @@ import { UserSessionService } from './user-session.service';
 import { setUser, addBreadcrumb, setTag } from '@sentry/angular-ivy';
 import { LocaleService } from './localeService';
 import { Store } from '@ngrx/store';
-import { fromObservation } from '../store';
+import { fromObservation } from 'src/app/store/observation';
 
 @Injectable({
   providedIn: 'root'

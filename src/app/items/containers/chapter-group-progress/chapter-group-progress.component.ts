@@ -10,7 +10,7 @@ import { LoadingComponent } from 'src/app/ui-components//loading/loading.compone
 import { GroupProgressGridComponent } from '../group-progress-grid/group-progress-grid.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-chapter-group-progress',
