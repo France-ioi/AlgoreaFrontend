@@ -2,7 +2,6 @@ import { Input, Component } from '@angular/core';
 import { User } from '../../models/user';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
-import { PageNavigatorComponent } from 'src/app/ui-components/page-navigator/page-navigator.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -12,7 +11,6 @@ import { NgIf, AsyncPipe } from '@angular/common';
   standalone: true,
   imports: [
     NgIf,
-    PageNavigatorComponent,
     AsyncPipe,
     UserCaptionPipe,
   ],
