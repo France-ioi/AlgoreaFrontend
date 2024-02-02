@@ -4,8 +4,7 @@ import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { isForbiddenObservationError } from './utils/errors';
 import { fromUserContent } from 'src/app/groups/store';
 import { ObservationInfo } from './observation.actions';
-
-type RootState = Record<string, any>;
+import { RootState } from 'src/app/utils/store/root_state';
 
 interface ObservationSelectors<T extends RootState> {
   /**
@@ -35,7 +34,12 @@ interface ObservationSelectors<T extends RootState> {
   selectStartObservingActiveContentGroupInfo: MemoizedSelector<T, ObservationInfo | null>,
 }
 
-export function selectors<T extends RootState>(selectGroup: Selector<T, State['group']>): ObservationSelectors<T> {
+export function selectors<T extends RootState>(selectObservationState: Selector<T, State>): ObservationSelectors<T> {
+
+  const selectGroup = createSelector(
+    selectObservationState,
+    state => state.group
+  );
 
   const selectObservedGroupId = createSelector(
     selectGroup,

@@ -20,11 +20,11 @@ export class CrashReportingService {
     this.userSessionService.session$.subscribe(session => setUser(session ? { id: session.groupId, username: session.login } : null));
 
     // eslint-disable-next-line @ngrx/no-store-subscription
-    this.store.select(fromObservation.selectGroup).subscribe(g => addBreadcrumb({
+    this.store.select(fromObservation.selectObservedGroupId).subscribe(g => addBreadcrumb({
       category: 'group-watching',
       level: 'info',
       message: g ? 'start' : 'stop',
-      data: g ?? undefined,
+      data: { id: g },
     }));
 
     setTag('platform-lang', this.localeService.currentLang?.tag ?? '?');

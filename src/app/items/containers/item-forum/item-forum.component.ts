@@ -81,13 +81,13 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   selected$ = new ReplaySubject<number>(1);
   options$ = combineLatest([
-    this.store.select(fromObservation.selectGroup),
+    this.store.select(fromObservation.selectObservedGroupInfo),
     this.url$,
   ]).pipe(
     map(([ observedGroup, url ]) => [
       ...OPTIONS,
       ...(observedGroup || url.endsWith(ForumTabUrls.Group)
-        ? [{ label: `${ observedGroup?.info.data?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
+        ? [{ label: `${ observedGroup?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
     ]),
   );
   state$ = combineLatest([

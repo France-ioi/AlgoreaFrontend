@@ -4,11 +4,11 @@ import { Params, convertToParamMap } from '@angular/router';
 import { RouterReducerState } from '@ngrx/router-store';
 
 interface Selectors<T> {
-  /** override the auto-generated selectors as there do not handle correctly the fact that the state is `undefined` at app launch */
+  /** override the auto-generated selector as there do not handle correctly the fact that the state is `undefined` at app launch */
   selectRouterState: MemoizedSelector<T, RouterReducerState<State> | undefined>,
+
   selectState: MemoizedSelector<T, State | undefined>,
   selectNavigationId: MemoizedSelector<T, RouterReducerState['navigationId'] | undefined>,
-  /** extra ones */
   selectPath: MemoizedSelector<T, string[] | undefined>,
   selectParam: (param: string) => MemoizedSelector<T, string | null>,
   selectQueryParam: (param: string) => MemoizedSelector<T, string | null>,
