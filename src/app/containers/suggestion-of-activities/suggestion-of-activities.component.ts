@@ -12,7 +12,7 @@ import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 
 @Component({

@@ -19,7 +19,7 @@ import { RouteUrlPipe } from '../../../pipes/routeUrl';
 import { UserSessionService } from '../../../services/user-session.service';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',

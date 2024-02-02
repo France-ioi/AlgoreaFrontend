@@ -15,13 +15,4 @@
       </div>
     </div>
   </div>
-
-  <alg-page-navigator
-    *ngIf="true"
-    [allowObservation]="!!user.currentUserCanWatchUser && !user.isCurrentUser"
-    [isWatched]="!!(isCurrentGroupObserved$ | async)"
-    [allowFullScreen]="false"
-    (watch)="onStartWatchButtonClicked()"
-    (stopWatch)="onStopWatchButtonClicked()"
-  ></alg-page-navigator>
 </div>

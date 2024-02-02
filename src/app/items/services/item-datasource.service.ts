@@ -28,7 +28,7 @@ import { LocaleService } from 'src/app/services/localeService';
 import { canCurrentUserViewContent } from 'src/app/models/item-view-permission';
 import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 export interface ItemData {
   route: FullItemRoute,

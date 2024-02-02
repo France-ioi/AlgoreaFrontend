@@ -1,21 +1,27 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { pathFromParamValue, pathParamName } from 'src/app/models/routing/content-route';
 import { GroupRoute, RawGroupRoute, contentTypeOfPath, groupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
-import { fromRouter } from 'src/app/store';
+import { ObservationInfo } from 'src/app/store/observation';
+import { fromRouter } from 'src/app/store/router';
 import { State } from './user-content.state';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
 import { FetchState, fetchingState } from 'src/app/utils/state';
 import { User } from '../../models/user';
-
-type RootState = Record<string, any>;
+import { formatUser } from 'src/app/models/user';
+import { RootState } from 'src/app/utils/store/root_state';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsUserContentActive: MemoizedSelector<T, boolean>,
   selectActiveContentUserId: MemoizedSelector<T, string|null>,
   selectActiveContentUserRoute: MemoizedSelector<T, RawGroupRoute|null>,
   selectActiveContentUserFullRoute: MemoizedSelector<T, GroupRoute|null>,
-  selectUser: MemoizedSelector<T, FetchState<User>>,
-  selectBreadcrumbs: MemoizedSelector<T, FetchState<GroupBreadcrumbs>|null>,
+  selectActiveContentUser: MemoizedSelector<T, FetchState<User>>,
+  selectActiveContentBreadcrumbs: MemoizedSelector<T, FetchState<GroupBreadcrumbs>|null>,
+
+  /**
+   * Null if there is no user as active content, or if the user cannot be observed, or if user info is not fetched
+   */
+  selectObservationInfoForActiveContentUser: MemoizedSelector<T, ObservationInfo | null>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
@@ -50,16 +56,32 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     (id, path) => (id && path ? groupRoute({ id, isUser: true }, path) : null)
   );
 
-  const selectUser = createSelector(
+  const selectActiveContentUser = createSelector(
     selectState,
     selectIsUserContentActive,
     (state, active) => (active ? state.user : fetchingState())
   );
 
-  const selectBreadcrumbs = createSelector(
+  const selectActiveContentBreadcrumbs = createSelector(
     selectState,
     selectActiveContentUserPath,
     (state, path) => (path !== null ? state.breadcrumbs : null)
+  );
+
+  const selectCanWatchActiveContentUser = createSelector(
+    selectActiveContentUser,
+    ({ isReady, data }) => isReady && !!data.currentUserCanWatchUser && !data.isCurrentUser
+  );
+
+  const selectObservationInfoForActiveContentUser = createSelector(
+    selectCanWatchActiveContentUser,
+    selectActiveContentUserRoute,
+    selectActiveContentUser,
+    (canWatchUser, route, { isReady, data }) => (canWatchUser && route && isReady ? {
+      route,
+      name: formatUser(data),
+      currentUserCanGrantAccess: data.currentUserCanGrantUserAccess ?? false
+    } : null)
   );
 
   return {
@@ -67,7 +89,9 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentUserId,
     selectActiveContentUserRoute,
     selectActiveContentUserFullRoute,
-    selectUser,
-    selectBreadcrumbs,
+    selectActiveContentUser,
+    selectActiveContentBreadcrumbs,
+
+    selectObservationInfoForActiveContentUser,
   };
 }

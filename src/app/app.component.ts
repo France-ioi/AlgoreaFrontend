@@ -27,7 +27,7 @@ import { LetDirective } from '@ngrx/component';
 import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
-import { fromObservation } from './store';
+import { fromObservation } from './store/observation';
 
 @Component({
   selector: 'alg-root',

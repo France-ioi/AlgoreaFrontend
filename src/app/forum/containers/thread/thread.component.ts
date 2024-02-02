@@ -39,7 +39,7 @@ import { publishEventsAction } from '../../data-access/websocket-messages/thread
 import { messageEvent } from '../../models/thread-events';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-thread',

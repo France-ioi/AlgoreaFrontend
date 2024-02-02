@@ -16,7 +16,7 @@ import { NavTreeService } from './nav-tree.service';
 import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/models/item-view-permission';
 import { isGroupTypeVisible } from 'src/app/models/group-types';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 

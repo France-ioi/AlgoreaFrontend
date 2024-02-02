@@ -12,7 +12,7 @@ import { LetDirective } from '@ngrx/component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { ObservationInfo, fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-observation-bar-with-button',
@@ -45,6 +45,7 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
       isBeingWatched: currentContent.route.id === observedGroupId,
     } : undefined)),
   );
+  startObservingActiveContentGroupInfo$ = this.store.select(fromObservation.selectStartObservingActiveContentGroupInfo);
 
   subscription = this.isObserving$.subscribe(isObserving => {
     if (!isObserving && this.op?.overlayVisible) {
@@ -89,5 +90,9 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
     }));
 
     this.openSuggestionOfActivitiesOverlayPanel(event, target);
+  }
+
+  toggleObservation(observationInfo: ObservationInfo): void {
+    this.store.dispatch(fromObservation.topBarActions.enableObservation(observationInfo));
   }
 }

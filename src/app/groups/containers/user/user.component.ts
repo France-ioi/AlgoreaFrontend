@@ -44,7 +44,7 @@ const breadcrumbHeader = $localize`Users`;
 })
 export class UserComponent implements OnInit, OnDestroy {
   userRoute$ = this.store.select(fromUserContent.selectActiveContentUserRoute).pipe(filter(isNotNull));
-  state$ = this.store.select(fromUserContent.selectUser);
+  state$ = this.store.select(fromUserContent.selectActiveContentUser);
 
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -70,7 +70,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userRoute$,
       this.activeRoute$.pipe(map(p => this.pageTitle(p))),
       this.state$,
-      this.store.select(fromUserContent.selectBreadcrumbs),
+      this.store.select(fromUserContent.selectActiveContentBreadcrumbs),
     ])
       .pipe(
         map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => contentInfo({

@@ -25,7 +25,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
-import { fromObservation } from 'src/app/store';
+import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 interface Column {
   field: string,
