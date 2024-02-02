@@ -22,15 +22,6 @@ export const observationBarActions = createActionGroup({
   },
 });
 
-// supposed to be removed in favor of top bar soon
-export const userPageActions = createActionGroup({
-  source: 'User page',
-  events: {
-    disableObservation: emptyProps(),
-    enableObservation: props<ObservationInfo>(),
-  },
-});
-
 export const errorModalActions = createActionGroup({
   source: 'Observation Error Modal',
   events: {
