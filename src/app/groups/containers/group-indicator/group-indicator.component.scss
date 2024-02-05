@@ -8,7 +8,7 @@
   color: var(--alg-secondary-color);
   white-space: nowrap;
   border-radius: toRem(8);
-  background-color: #e6eeff;
+  background-color: var(--alg-primary-light-color);
   min-height: toRem(40);
   overflow-x: scroll;
 }

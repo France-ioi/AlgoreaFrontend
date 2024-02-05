@@ -1,15 +1,15 @@
-@import 'src/variables';
-@import 'src/geometry';
+@import 'src/assets/scss/functions';
 
 .container {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
-  color: var(--base-color);
-  background-color: var(--section-color);
-  border-radius: $border-radius;
+  color: var(--alg-secondary-color);
   white-space: nowrap;
+  border-radius: toRem(8);
+  background-color: var(--alg-primary-light-color);
+  min-height: toRem(40);
   overflow-x: scroll;
 }
 
