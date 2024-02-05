@@ -148,6 +148,11 @@
     padding: 0 toRem(16);
     border: none;
   }
+
+  .p-datatable .p-datatable-tfoot > tr > td {
+    border: none;
+    background: none;
+  }
 }
 
 .alg-table-summary {
