@@ -1,25 +1,27 @@
 <div class="container" *ngIf="state$ | async as state">
-
   <alg-loading size="small" *ngIf="state.isFetching || (deletionInProgress$ | async)"></alg-loading>
-
-  <button
-      pButton
-      type="button"
-      class="alg-button p-button-rounded p-button-danger"
-      i18n-label label="Delete this group"
-      (click)="onDeleteGroup()"
-      [disabled]="(state.isReady && state.data) || state.isFetching || state.isError || (deletionInProgress$ | async)"
-  ></button>
 
   <span class="has-children" *ngIf="state.isReady && state.data" i18n>
     Only an empty group can be deleted.
   </span>
-  <alg-error
-    *ngIf="state.isError"
-    class="warning small"
-    i18n-message message="Error while loading the group info"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="refresh()"
-  ></alg-error>
+
+  <div class="button-block">
+    <button
+      pButton
+      type="button"
+      class="alg-button danger"
+      i18n-label label="Delete this group"
+      (click)="onDeleteGroup()"
+      [disabled]="(state.isReady && state.data) || state.isFetching || state.isError || (deletionInProgress$ | async)"
+    ></button>
+
+    <alg-error
+      *ngIf="state.isError"
+      class="error"
+      i18n-message message="Error while loading the group info"
+      [showRefreshButton]="true"
+      refreshButtonType="refresh"
+      (refresh)="refresh()"
+    ></alg-error>
+  </div>
 </div>

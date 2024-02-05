@@ -1,31 +1,23 @@
-.group-edition {
-  background-color: white;
+@import 'src/assets/scss/functions';
 
-  .field {
-    display: flex;
+.field {
+  display: flex;
+}
 
-    .field-name {
-      float: left;
-      width: 20%;
-      margin-top: 6px;
+.field-name {
+  padding: toRem(12) toRem(12) toRem(12) 0;
+  float: left;
+  width: 20%;
+  margin-top: 6px;
+}
 
-      label {
-        padding: 12px 12px 12px 0;
-        display: inline-block;
-      }
-    }
-
-    .field-value {
-      float: left;
-      width: 80%;
-      margin-top: 6px;
-    }
-  }
+.field-value {
+  float: left;
+  width: 80%;
+  margin-top: 6px;
 }
 
 .remove-button-section {
-  padding: 1rem 1rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display: block;
+  margin-top: var(--alg-space-size-4);
 }
