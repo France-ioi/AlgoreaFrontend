@@ -63,7 +63,7 @@
                 <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
                 <a
                   class="alg-link"
-                  [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: true } | url"
+                  [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId } | url"
                   *ngIf="rowData.activityType === 'saved_answer' && rowData.answerId"
                 >
                   View answer
