@@ -1,8 +1,18 @@
+@import 'src/assets/scss/functions';
+
 .alg-permissions-edit-dialog {
   &.p-dialog {
-    max-height: 83rem;
-    min-width: 67rem;
-    max-width: 67rem;
+    max-height: 65vh;
+    width: toRem(760);
+    overflow: hidden;
+  }
+
+  .p-dialog-header {
+    padding: var(--alg-space-size-6) var(--alg-space-size-5);
+  }
+
+  .p-dialog-content {
+    overflow: hidden;
   }
 
   .p-dialog-footer {
@@ -11,8 +21,6 @@
   }
 
   .p-dialog-title {
-    margin-left: -1rem;
-
     width: 100%;
   }
 }

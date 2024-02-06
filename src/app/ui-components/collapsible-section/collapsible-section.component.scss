@@ -1,3 +1,11 @@
+:host {
+  &.header-with-padding-left {
+    .header {
+      padding-left: var(--alg-space-size-6);
+    }
+  }
+}
+
 .section-container {
   display: flex;
   flex-direction: column;

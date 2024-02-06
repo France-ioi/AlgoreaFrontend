@@ -1,36 +1,11 @@
-@import 'src/variables';
-@import "src/geometry.scss";
-@import "src/typography.scss";
-
 .footer {
   display: flex;
   justify-content: center;
 }
 
 .dialog-container {
-  max-height: 65vh;
-  overflow: auto;
   display: flex;
   flex-direction: column;
-  padding-left: 3.3333rem;
-  padding-right: 1.6667rem;
-
-  &::-webkit-scrollbar {
-    width: 0.5rem;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #f1f1f1;
-    border-radius: 1rem;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: #d1d1d1;
-  }
 }
 
 .dialog-header {
@@ -39,18 +14,9 @@
   position: relative;
 }
 
-.dialog-handler {
-  @include section-handler(var(--base-color),var(--dark-color));
-}
-
 .dialog-title {
-  @include h2-title;
-  font-family: var(--font-family);
+  font-size: toRem(20);
   flex: 1;
-}
-
-.dialog-close {
-  @include dialog-close;
 }
 
 .error-message {
