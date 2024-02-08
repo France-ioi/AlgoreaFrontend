@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 import { switchMap, distinctUntilChanged, map, filter, skip, shareReplay, retry } from 'rxjs/operators';
-import { CurrentUserHttpService, UpdateUserBody, UserProfile } from '../data-access/current-user.service';
+import { CurrentUserHttpService, UpdateUserBody, CurrentUserProfile } from '../data-access/current-user.service';
 import { isNotUndefined } from '../utils/null-undefined-predicates';
 import { repeatLatestWhen } from '../utils/operators/repeatLatestWhen';
 
@@ -11,7 +11,7 @@ import { repeatLatestWhen } from '../utils/operators/repeatLatestWhen';
 })
 export class UserSessionService implements OnDestroy {
 
-  session$ = new BehaviorSubject<UserProfile|undefined>(undefined);
+  session$ = new BehaviorSubject<CurrentUserProfile|undefined>(undefined);
   userProfileError$ = new Subject<Error>();
 
   /** currently-connected user profile, temporary or not, excluding transient (undefined) states */
@@ -32,7 +32,7 @@ export class UserSessionService implements OnDestroy {
     this.subscription = this.authService.status$.pipe(
       repeatLatestWhen(this.userProfileUpdated$),
       switchMap(auth => {
-        if (!auth.authenticated) return of<UserProfile | undefined>(undefined);
+        if (!auth.authenticated) return of<CurrentUserProfile | undefined>(undefined);
         return this.currentUserService.getProfileInfo().pipe(retry(1));
       }),
       distinctUntilChanged(), // skip two undefined values in a row
