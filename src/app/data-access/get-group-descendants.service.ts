@@ -43,11 +43,11 @@ export class GetGroupDescendantsService {
 
   constructor(private http: HttpClient) { }
 
-  getUserDescendants(groupId: string, options: { sort?: string[], limit?: number, fromId?: string }): Observable<UserDescendants> {
+  getUserDescendants(groupId: string, options?: { sort?: string[], limit?: number, fromId?: string }): Observable<UserDescendants> {
     let params = new HttpParams();
-    if (options.sort && options.sort.length > 0) params = params.set('sort', options.sort.join(','));
-    if (options.limit !== undefined) params = params.set('limit', options.limit);
-    if (options.fromId !== undefined) params = params.set('from.id', options.fromId);
+    if (options?.sort && options.sort.length > 0) params = params.set('sort', options.sort.join(','));
+    if (options?.limit !== undefined) params = params.set('limit', options.limit);
+    if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
       .pipe(
@@ -55,12 +55,9 @@ export class GetGroupDescendantsService {
       );
   }
 
-  getTeamDescendants(
-    groupId: string,
-    sort: string[] = [],
-  ): Observable<TeamDescendants> {
+  getTeamDescendants(groupId: string, options?: { sort: string[] }): Observable<TeamDescendants> {
     let params = new HttpParams();
-    if (sort.length > 0) params = params.set('sort', sort.join(','));
+    if (options?.sort && options.sort.length > 0) params = params.set('sort', options.sort.join(','));
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
       .pipe(

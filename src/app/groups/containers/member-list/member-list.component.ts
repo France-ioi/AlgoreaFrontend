@@ -175,7 +175,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           }))));
       case TypeFilter.Teams:
         if (!this.currentFilter.directChildren) {
-          return this.getGroupDescendantsService.getTeamDescendants(route.id, this.currentSort)
+          return this.getGroupDescendantsService.getTeamDescendants(route.id, { sort: this.currentSort })
             .pipe(map(descendantTeams => descendantTeams.map(descendantTeam => ({
               id: descendantTeam.id,
               name: descendantTeam.name,
