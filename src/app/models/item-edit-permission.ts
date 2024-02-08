@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 
 export enum ItemEditPerm {
   None = 'none',
@@ -11,6 +12,9 @@ export const itemEditPermMax = ItemEditPerm.AllWithGrant;
 const P = ItemEditPerm; // non-exported shorthand
 
 export const itemEditPermValues = [ P.None, P.Children, P.All, P.AllWithGrant ] as const;
+export const itemEditPermSchema = z.object({
+  canEdit: z.enum(itemEditPermValues)
+});
 export const itemEditPermDecoder = D.struct({
   canEdit: D.literal(...itemEditPermValues)
 });

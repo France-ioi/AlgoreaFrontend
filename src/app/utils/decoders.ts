@@ -1,6 +1,7 @@
 import { pipe } from 'fp-ts/function';
 import { fold } from 'fp-ts/Either';
 import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { Duration } from './duration';
 
 class DecodingError extends Error {
@@ -51,3 +52,15 @@ export const durationDecoder: D.Decoder<unknown, Duration> = pipe(
     return duration.isValid() ? D.success(duration) : D.failure(s, 'DurationFromString');
   })
 );
+
+export const durationSchema = z.string().transform((val, ctx) => {
+  const duration = Duration.fromString(val);
+  if (!duration.isValid()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Not a duration',
+    });
+    return z.NEVER;
+  }
+  return duration;
+});
