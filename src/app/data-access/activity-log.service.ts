@@ -2,52 +2,38 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../utils/config';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { dateDecoder } from '../utils/decoders';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
 import { SECONDS } from '../utils/duration';
 import { requestTimeout } from '../interceptors/interceptor_common';
+import { itemTypeSchema } from '../models/item-type';
+import { participantTypeSchema } from '../models/group-types';
+import { userSchema } from '../groups/models/user';
 
-const activityLogDecoder = pipe(
-  D.struct({
-    activityType: D.literal('result_started', 'submission', 'result_validated', 'saved_answer', 'current_answer'),
-    at: dateDecoder,
-    attemptId: D.string,
-    item: D.struct({
-      id: D.string,
-      string: D.struct({
-        title: D.string,
+const activityLogsSchema = z.array(
+  z.object({
+    activityType: z.enum([ 'result_started', 'submission', 'result_validated', 'saved_answer', 'current_answer' ]),
+    at: z.coerce.date(),
+    attemptId: z.string(),
+    item: z.object({
+      id: z.string(),
+      string: z.object({
+        title: z.string()
       }),
-      type: D.literal('Chapter', 'Task', 'Skill'),
+      type: itemTypeSchema
     }),
-    participant: D.struct({
-      id: D.string,
-      name: D.string,
-      type: D.literal('Team', 'User'),
+    participant: z.object({
+      id: z.string(),
+      name: z.string(),
+      type: participantTypeSchema,
     }),
-  }),
-  D.intersect(
-    D.partial({
-      answerId: D.string,
-      score: D.number,
-      user: pipe(
-        D.struct({
-          id: D.string,
-          login: D.string,
-        }),
-        D.intersect(
-          D.partial({
-            firstName: D.nullable(D.string),
-            lastName: D.nullable(D.string),
-          }),
-        ),
-      ),
-    }),
-  ),
+    answerId: z.string().optional(),
+    score: z.number().optional(),
+    user: userSchema.optional(),
+  })
 );
 
-export type ActivityLog = D.TypeOf<typeof activityLogDecoder>;
+export type ActivityLogs = z.infer<typeof activityLogsSchema>;
 
 const logServicesTimeout = 10 * SECONDS; // log services may be very slow
 const logDefaultLimit = 20;
@@ -69,7 +55,7 @@ export class ActivityLogService {
       fromAnswerId: string,
       fromActivityType: string,
     },
-  }): Observable<ActivityLog[]> {
+  }): Observable<ActivityLogs> {
     let params = new HttpParams();
     const limit = options?.limit ?? logDefaultLimit;
     params = params.set('limit', limit.toString());
@@ -91,12 +77,12 @@ export class ActivityLogService {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })
-      .pipe(decodeSnakeCase(D.array(activityLogDecoder)));
+      .pipe(decodeSnakeCaseZod(activityLogsSchema));
   }
 
   getAllActivityLog(
-    watchedGroupId?: string,
     options?: {
+      watchedGroupId?: string,
       limit?: number,
       pagination?: {
         fromItemId: string,
@@ -106,13 +92,13 @@ export class ActivityLogService {
         fromActivityType: string,
       },
     }
-  ): Observable<ActivityLog[]> {
+  ): Observable<ActivityLogs> {
     let params = new HttpParams();
     const limit = options?.limit ?? logDefaultLimit;
     params = params.set('limit', limit.toString());
 
-    if (watchedGroupId) {
-      params = params.set('watched_group_id', watchedGroupId);
+    if (options?.watchedGroupId) {
+      params = params.set('watched_group_id', options.watchedGroupId);
     }
 
     if (options?.pagination !== undefined) {
@@ -128,6 +114,6 @@ export class ActivityLogService {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })
-      .pipe(decodeSnakeCase(D.array(activityLogDecoder)));
+      .pipe(decodeSnakeCaseZod(activityLogsSchema));
   }
 }

@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ActivityLog } from '../data-access/activity-log.service';
+import { ActivityLogs } from '../data-access/activity-log.service';
 
-function formatLogAction (type: ActivityLog['activityType'], score?: number): string {
+function formatLogAction (type: ActivityLogs[number]['activityType'], score?: number): string {
   switch (type) {
     case 'submission': return score === undefined ? $localize`Submission` : $localize`Submission (score: ${ score })`;
     case 'result_started': return $localize`Activity started`;

@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { BehaviorSubject, debounceTime, merge, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
-import { ActivityLog, ActivityLogService } from 'src/app/data-access/activity-log.service';
+import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DataPager } from 'src/app/utils/data-pager';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -68,7 +68,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
   });
 
   datapager = new DataPager({
-    fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
+    fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> => this.getRows(pageSize, latestRow),
     pageSize: logsLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
@@ -101,7 +101,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
     this.resetRows();
   }
 
-  getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
+  getRows(pageSize: number, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> {
     const paginationParams = latestRow === undefined ? undefined : {
       fromItemId: latestRow.item.id,
       fromParticipantId: latestRow.participant.id,
@@ -110,12 +110,11 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       fromActivityType: latestRow.activityType,
     };
 
-    return this.activityLogService.getAllActivityLog(
-      this.groupId, {
-        limit: pageSize,
-        pagination: paginationParams,
-      }
-    );
+    return this.activityLogService.getAllActivityLog({
+      watchedGroupId: this.groupId,
+      limit: pageSize,
+      pagination: paginationParams,
+    });
   }
 
   resetRows(): void {
