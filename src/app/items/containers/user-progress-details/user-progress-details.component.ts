@@ -2,7 +2,7 @@ import { AfterViewInit, SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { delay, take } from 'rxjs';
-import { TeamUserProgress } from 'src/app/data-access/get-group-progress.service';
+import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -19,7 +19,7 @@ import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 
 export interface ProgressData {
-  progress: TeamUserProgress,
+  progress: ParticipantProgresses[number],
   target: Element,
   currentFilter: TypeFilter,
   colItem: {

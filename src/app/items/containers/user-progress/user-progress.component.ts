@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { mustNotBeUndefined } from 'src/app/utils/assert';
-import { TeamUserProgress } from 'src/app/data-access/get-group-progress.service';
+import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { NgClass, NgIf } from '@angular/common';
 
@@ -13,7 +13,7 @@ import { NgClass, NgIf } from '@angular/common';
 })
 export class UserProgressComponent implements OnInit, OnChanges {
 
-  @Input() userProgress!: TeamUserProgress;
+  @Input() userProgress!: ParticipantProgresses[number];
 
   state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
 
