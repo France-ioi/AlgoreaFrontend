@@ -2,39 +2,20 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { userSchema, withGrade } from '../models/user';
 
-export const userDecoder = pipe(
-  D.struct({
-    grade: D.nullable(D.number),
-    groupId: D.string,
-    login: D.string,
-  }),
-  D.intersect(
-    D.partial({
-      firstName: D.nullable(D.string),
-      lastName: D.nullable(D.string),
-    }),
-  ),
+const groupMembersSchema = z.array(
+  z.object({
+    id: z.string(),
+    user: withGrade(userSchema),
+    action: z.enum([ 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly' ]).optional(),
+    memberSince: z.coerce.date().optional(),
+  })
 );
 
-const memberDecoder = pipe(
-  D.struct({
-    id: D.string,
-    user: userDecoder,
-  }),
-  D.intersect(
-    D.partial({
-      action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly'),
-      memberSince: dateDecoder,
-    })
-  )
-);
-
-export type Member = D.TypeOf<typeof memberDecoder>;
+export type GroupMembers = z.infer<typeof groupMembersSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +29,7 @@ export class GetGroupMembersService {
     sort: string[] = [],
     limit?: number,
     fromId?: string,
-  ): Observable<Member[]> {
+  ): Observable<GroupMembers> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     if (limit !== undefined) params = params.set('limit', limit.toString());
@@ -56,7 +37,7 @@ export class GetGroupMembersService {
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(memberDecoder)),
+        decodeSnakeCaseZod(groupMembersSchema),
       );
   }
 }

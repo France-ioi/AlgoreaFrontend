@@ -7,7 +7,7 @@ import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descen
 import { groupRoute, rawGroupRoute, RawGroupRoute } from 'src/app/models/routing/group-route';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GetGroupChildrenService, GroupChild } from '../../data-access/get-group-children.service';
-import { GetGroupMembersService, Member } from '../../data-access/get-group-members.service';
+import { GetGroupMembersService, GroupMembers } from '../../data-access/get-group-members.service';
 import { GroupUsersService, parseResults } from '../../data-access/group-users.service';
 import { GroupData } from '../../services/group-datasource.service';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
@@ -24,6 +24,8 @@ import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe, NgClass } from '@angular/common';
+
+type Member = GroupMembers[number];
 
 function getSelectedGroupChildCaptions(selection: GroupChild[]): string {
   return selection.map(selected => selected.name).join(', ');
