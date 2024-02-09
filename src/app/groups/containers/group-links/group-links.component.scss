@@ -1,5 +1,3 @@
-@import 'src/assets/scss/functions';
-
 :host {
   display: flex;
   align-items: center;
@@ -16,8 +14,4 @@
 
 .more {
   margin-right: .4rem;
-}
-
-.link {
-  font-size: toRem(14);
 }
