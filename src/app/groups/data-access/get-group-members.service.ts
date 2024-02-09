@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
-import { userSchema, withGrade } from '../models/user';
+import { userBaseSchema, withGrade, withGroupId } from '../models/user';
 
 const groupMembersSchema = z.array(
   z.object({
     id: z.string(),
-    user: withGrade(userSchema),
+    user: withGrade(withGroupId(userBaseSchema)),
     action: z.enum([ 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly' ]).optional(),
     memberSince: z.coerce.date().optional(),
   })

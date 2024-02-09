@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
-import { userSchema, withGrade } from '../groups/models/user';
+import { withGrade, withGroupId, userBaseSchema } from '../groups/models/user';
 
 const parentsSchema = z.array(
   z.object({
@@ -17,7 +17,7 @@ const teamDescendantsSchema = z.array(
   z.object({
     grade: z.number(),
     id: z.string(),
-    members: z.array(withGrade(userSchema)),
+    members: z.array(withGrade(withGroupId(userBaseSchema))),
     name: z.string(),
     parents: parentsSchema,
   })
@@ -30,7 +30,7 @@ const userDescendantsSchema = z.array(
     id: z.string(),
     name: z.string(),
     parents: parentsSchema,
-    user: withGrade(userSchema),
+    user: withGrade(userBaseSchema),
   })
 );
 

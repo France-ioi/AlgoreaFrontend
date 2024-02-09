@@ -8,7 +8,7 @@ import { SECONDS } from '../utils/duration';
 import { requestTimeout } from '../interceptors/interceptor_common';
 import { itemTypeSchema } from '../models/item-type';
 import { participantTypeSchema } from '../models/group-types';
-import { userSchema } from '../groups/models/user';
+import { userBaseSchema, withId } from '../groups/models/user';
 
 const activityLogsSchema = z.array(
   z.object({
@@ -29,7 +29,7 @@ const activityLogsSchema = z.array(
     }),
     answerId: z.string().optional(),
     score: z.number().optional(),
-    user: userSchema.optional(),
+    user: withId(userBaseSchema).optional(),
   })
 );
 

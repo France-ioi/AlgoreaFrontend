@@ -2,20 +2,17 @@ import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 
-export const userSchema = z.object({
-  groupId: z.string(),
+export const userBaseSchema = z.object({
   login: z.string(),
   firstName: z.string().nullable().optional(),
   lastName: z.string().nullable().optional(),
 });
 
-// Let type inference guess the return type (would be very long to type)
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const withGrade = <T extends typeof userSchema>(user: T) => user.and(
-  z.object({
-    grade: z.number().nullable(),
-  })
-);
+/* eslint-disable @typescript-eslint/explicit-function-return-type */ // Let type inference guess the return type (would be very verbose)
+export const withGroupId = <T extends typeof userBaseSchema>(user: T) => user.extend({ groupId: z.string() });
+export const withId = <T extends typeof userBaseSchema>(user: T) => user.extend({ id: z.string() });
+export const withGrade = <T extends typeof userBaseSchema>(user: T) => user.extend({ grade: z.number().nullable() });
+/* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 /** former version (to be removed/transformed soon) */
 
