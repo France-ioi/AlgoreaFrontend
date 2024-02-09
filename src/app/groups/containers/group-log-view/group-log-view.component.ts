@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { BehaviorSubject, debounceTime, merge, Observable } from 'rxjs';
-import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, filter, shareReplay, map, withLatestFrom } from 'rxjs/operators';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DataPager } from 'src/app/utils/data-pager';
@@ -20,6 +20,7 @@ import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { UserSessionService } from '../../../services/user-session.service';
 
 const logsLimit = 20;
 
@@ -80,7 +81,8 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   constructor(
     private activityLogService: ActivityLogService,
-    private actionFeedbackService: ActionFeedbackService
+    private actionFeedbackService: ActionFeedbackService,
+    private sessionService: UserSessionService,
   ) {}
 
 
@@ -115,7 +117,13 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       watchedGroupId: this.groupId,
       limit: pageSize,
       pagination: paginationParams,
-    });
+    }).pipe(
+      withLatestFrom(this.sessionService.userProfile$),
+      map(([ logs, currentUserProfile ]) => logs.map(log => ({
+        ...log,
+        allowToViewAnswer: log.participant.id === currentUserProfile.groupId,
+      })))
+    );
   }
 
   resetRows(): void {
