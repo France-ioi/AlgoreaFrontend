@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 
 export enum ItemWatchPerm {
   None = 'none',
@@ -11,6 +12,9 @@ export const itemWatchPermMax = ItemWatchPerm.AnswerWithGrant;
 const P = ItemWatchPerm; // non-exported shorthand
 
 export const itemWatchPermValues = [ P.None, P.Result, P.Answer, P.AnswerWithGrant ] as const;
+export const itemWatchPermSchema = z.object({
+  canWatch: z.enum(itemWatchPermValues)
+});
 export const itemWatchPermDecoder = D.struct({
   canWatch: D.literal(...itemWatchPermValues)
 });

@@ -1,26 +1,27 @@
 import { catchError, map, Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { errorIsBadRequest } from 'src/app/utils/errors';
+import { itemTypeSchema } from '../models/item-type';
 
-const breadcrumbsFromRootElementDecoder = D.struct({
-  id: D.string,
-  languageTag: D.string,
-  title: D.string,
-  type: D.literal('Chapter','Task','Skill'),
+const breadcrumbsFromRootElementSchema = z.object({
+  id: z.string(),
+  languageTag: z.string(),
+  title: z.string(),
+  type: itemTypeSchema,
 });
 
-export type BreadcrumbsFromRootElement = D.TypeOf<typeof breadcrumbsFromRootElementDecoder>;
+export type BreadcrumbsFromRootElement = z.infer<typeof breadcrumbsFromRootElementSchema>;
 
-const breadcrumbsFromRootDecoder = D.struct({
-  startedByParticipant: D.boolean,
-  path: D.array(breadcrumbsFromRootElementDecoder)
+const breadcrumbsFromRootSchema = z.object({
+  startedByParticipant: z.boolean(),
+  path: z.array(breadcrumbsFromRootElementSchema)
 });
 
-const breadcrumbsListDecoder = D.array(breadcrumbsFromRootDecoder);
+const breadcrumbsListSchema = z.array(breadcrumbsFromRootSchema);
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class GetBreadcrumbsFromRootsService {
 
   get(id: string): Observable<BreadcrumbsFromRootElement[][]> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}/breadcrumbs-from-roots`).pipe(
-      decodeSnakeCase(breadcrumbsListDecoder),
+      decodeSnakeCaseZod(breadcrumbsListSchema),
       map(l => l.map(e => e.path))
     );
   }
@@ -47,7 +48,7 @@ export class GetBreadcrumbsFromRootsService {
         if (typeof errorText === 'string' && /No item found with text_id/.test(errorText)) throw new HttpErrorResponse({ status: 403 });
         throw err;
       }),
-      decodeSnakeCase(breadcrumbsListDecoder),
+      decodeSnakeCaseZod(breadcrumbsListSchema),
       map(l => l.map(e => e.path))
     );
   }

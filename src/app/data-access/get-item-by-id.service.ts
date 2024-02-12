@@ -2,61 +2,51 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { dateDecoder, durationDecoder } from 'src/app/utils/decoders';
-import { itemCanRequestHelpDecoder, itemCorePermDecoder } from 'src/app/models/item-permissions';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { durationSchema } from 'src/app/utils/decoders';
+import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/models/item-permissions';
+import { itemStringSchema } from '../models/item-string';
+import { itemTypeSchema } from '../models/item-type';
+import {
+  itemChildrenLayoutSchema,
+  itemEntryMinAdmittedMembersRatioSchema,
+  itemFullScreenSchema,
+  itemValidationTypeSchema
+} from '../models/item-properties';
+import { participantTypeSchema } from '../models/group-types';
 
-export const itemDecoder = pipe(
-  D.struct({
-    id: D.string,
-    requiresExplicitEntry: D.boolean,
-    string: pipe(
-      D.struct({
-        title: D.nullable(D.string),
-        languageTag: D.string,
-        imageUrl: D.nullable(D.string),
-      }),
-      D.intersect(
-        D.partial({
-          subtitle: D.nullable(D.string),
-          description: D.nullable(D.string),
-        })
-      )
-    ),
-    bestScore: D.number,
-    permissions: pipe(itemCorePermDecoder, D.intersect(itemCanRequestHelpDecoder)),
-    type: D.literal('Chapter','Task','Skill'),
-    promptToJoinGroupByCode: D.boolean,
-    textId: D.nullable(D.string),
-    validationType: D.literal('None','All','AllButOne','Categories','One','Manual'),
-    noScore: D.boolean,
-    titleBarVisible: D.boolean,
-    fullScreen: D.literal('forceYes','forceNo','default'),
-    childrenLayout: D.literal('List', 'Grid'),
-    allowsMultipleAttempts: D.boolean,
-    duration: D.nullable(durationDecoder),
-    enteringTimeMin: dateDecoder,
-    enteringTimeMax: dateDecoder,
-    entryParticipantType: D.literal('Team', 'User'),
-    entryFrozenTeams: D.boolean,
-    entryMaxTeamSize: D.number,
-    entryMinAdmittedMembersRatio: D.literal('All', 'Half', 'One', 'None'),
-  }),
-  D.intersect(
-    D.partial({
-      url: D.nullable(D.string),
-      usesApi: D.nullable(D.boolean),
-      watchedGroup: D.partial({
-        averageScore: D.number,
-        permissions: itemCorePermDecoder,
-      }),
-    })
-  )
-);
+const itemSchema = z.object({
+  id: z.string(),
+  requiresExplicitEntry: z.boolean(),
+  string: itemStringSchema,
+  bestScore: z.number(),
+  permissions: itemCorePermSchema.and(itemCanRequestHelpSchema),
+  type: itemTypeSchema,
+  promptToJoinGroupByCode: z.boolean(),
+  textId: z.string().nullable(),
+  validationType: itemValidationTypeSchema,
+  noScore: z.boolean(),
+  titleBarVisible: z.boolean(),
+  fullScreen: itemFullScreenSchema,
+  childrenLayout: itemChildrenLayoutSchema,
+  allowsMultipleAttempts: z.boolean(),
+  duration: durationSchema.nullable(),
+  enteringTimeMin: z.coerce.date(),
+  enteringTimeMax: z.coerce.date(),
+  entryParticipantType: participantTypeSchema,
+  entryFrozenTeams: z.boolean(),
+  entryMaxTeamSize: z.number(),
+  entryMinAdmittedMembersRatio: itemEntryMinAdmittedMembersRatioSchema,
+  url: z.string().nullable().optional(),
+  usesApi: z.boolean().nullable().optional(),
+  watchedGroup: z.object({
+    averageScore: z.number().optional(),
+    permissions: itemCorePermSchema.optional(),
+  }).optional()
+});
 
-export type Item = D.TypeOf<typeof itemDecoder>;
+export type Item = z.infer<typeof itemSchema>;
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +61,7 @@ export class GetItemByIdService {
       params = params.set('watched_group_id', watchedGroupId);
     }
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}`, { params }).pipe(
-      decodeSnakeCase(itemDecoder),
+      decodeSnakeCaseZod(itemSchema),
     );
   }
 

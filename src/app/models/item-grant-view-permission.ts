@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 
 export enum ItemGrantViewPerm {
   None = 'none',
@@ -14,6 +15,9 @@ export const itemGrantViewPermMax = ItemGrantViewPerm.SolutionWithGrant;
 const P = ItemGrantViewPerm; // non-exported shorthand
 
 export const itemGrantViewPermValues = [ P.None, P.Enter, P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ] as const;
+export const itemGrantViewPermSchema = z.object({
+  canGrantView: z.enum(itemGrantViewPermValues)
+});
 export const itemGrantViewPermDecoder = D.struct({
   canGrantView: D.literal(...itemGrantViewPermValues)
 });

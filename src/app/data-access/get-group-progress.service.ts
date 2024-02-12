@@ -2,34 +2,37 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { dateDecoder } from '../utils/decoders';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 
-const groupProgressDecoder = D.struct({
-  averageScore: D.number,
-  avgHintsRequested: D.number,
-  avgSubmissions: D.number,
-  avgTimeSpent: D.number,
-  groupId: D.string,
-  itemId: D.string,
-  validationRate: D.number,
-});
+const groupProgressesSchema = z.array(
+  z.object({
+    averageScore: z.number(),
+    avgHintsRequested: z.number(),
+    avgSubmissions: z.number(),
+    avgTimeSpent: z.number(),
+    groupId: z.string(),
+    itemId: z.string(),
+    validationRate: z.number()
+  })
+);
 
-export type GroupProgress = D.TypeOf<typeof groupProgressDecoder>;
+export type GroupProgresses = z.infer<typeof groupProgressesSchema>;
 
-const teamUserProgressDecoder = D.struct({
-  groupId: D.string,
-  hintsRequested: D.number,
-  itemId: D.string,
-  latestActivityAt: D.nullable(dateDecoder),
-  score: D.number,
-  submissions: D.number,
-  timeSpent: D.number,
-  validated: D.boolean,
-});
+const participantProgressesSchema = z.array(
+  z.object({
+    groupId: z.string(),
+    hintsRequested: z.number(),
+    itemId: z.string(),
+    latestActivityAt: z.coerce.date().nullable(),
+    score: z.number(),
+    submissions: z.number(),
+    timeSpent: z.number(),
+    validated: z.boolean()
+  })
+);
 
-export type TeamUserProgress = D.TypeOf<typeof teamUserProgressDecoder>;
+export type ParticipantProgresses = z.infer<typeof participantProgressesSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +48,7 @@ export class GetGroupProgressService {
       limit?: number,
       fromId?: string,
     },
-  ): Observable<TeamUserProgress[]> {
+  ): Observable<ParticipantProgresses> {
     let params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     if (options?.limit !== undefined) params = params.set('limit', options.limit);
     if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
@@ -53,31 +56,31 @@ export class GetGroupProgressService {
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-progress`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(teamUserProgressDecoder)),
+        decodeSnakeCaseZod(participantProgressesSchema),
       );
   }
 
   getTeamsProgress(
     groupId: string,
     parentItemIds: string[],
-  ): Observable<TeamUserProgress[]> {
+  ): Observable<ParticipantProgresses> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/team-progress`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(teamUserProgressDecoder)),
+        decodeSnakeCaseZod(participantProgressesSchema),
       );
   }
 
   getGroupsProgress(
     groupId: string,
     parentItemIds: string[],
-  ): Observable<GroupProgress[]> {
+  ): Observable<GroupProgresses> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/group-progress`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(groupProgressDecoder)),
+        decodeSnakeCaseZod(groupProgressesSchema),
       );
   }
 }

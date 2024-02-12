@@ -6,7 +6,7 @@ import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
 import { formatUser } from 'src/app/models/user';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
-import { GetGroupProgressService, TeamUserProgress } from 'src/app/data-access/get-group-progress.service';
+import { GetGroupProgressService, ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { TypeFilter } from '../../models/composition-filter';
 import { GetItemChildrenService, ItemChildType } from '../../../data-access/get-item-children.service';
@@ -42,7 +42,7 @@ const progressListLimit = 25;
 interface DataRow {
   header: string,
   id: string,
-  data: (TeamUserProgress|undefined)[],
+  data: (ParticipantProgresses[number]|undefined)[],
 }
 interface DataColumn {
   id: string,
@@ -172,7 +172,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     return row.id;
   }
 
-  showProgressDetail(target: HTMLElement, userProgress: TeamUserProgress, row: DataRow, col: DataColumn): void {
+  showProgressDetail(target: HTMLElement, userProgress: ParticipantProgresses[number], row: DataRow, col: DataColumn): void {
     if (!this.itemData) {
       throw new Error('Unexpected: Missed item data');
     }
@@ -223,7 +223,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.fetchMoreRows();
   }
 
-  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<TeamUserProgress[]> {
+  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<ParticipantProgresses> {
     switch (filter) {
       case 'Users':
         return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], { limit: pageSize, fromId });

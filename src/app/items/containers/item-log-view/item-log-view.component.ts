@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../services/item-datasource.service';
-import { ActivityLog, ActivityLogService } from 'src/app/data-access/activity-log.service';
+import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { ItemType } from 'src/app/models/item-type';
@@ -75,7 +75,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
 
   datapager = new DataPager({
-    fetch: (pageSize, latestRow?: ActivityLog): Observable<ActivityLog[]> => this.getRows(pageSize, latestRow),
+    fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> => this.getRows(pageSize, latestRow),
     pageSize: logsLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
@@ -131,7 +131,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     this.resetRows();
   }
 
-  getRows(pageSize: number, latestRow?: ActivityLog): Observable<ActivityLog[]> {
+  getRows(pageSize: number, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> {
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
 
       switchMap(observedGroupId => {
@@ -163,7 +163,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   }
 
 
-  private isSelfCurrentAnswer(log: ActivityLog, profileId: string): boolean {
+  private isSelfCurrentAnswer(log: ActivityLogs[number], profileId: string): boolean {
     return log.activityType === 'current_answer' && log.participant.id === profileId;
   }
 

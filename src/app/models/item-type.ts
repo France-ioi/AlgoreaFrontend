@@ -1,8 +1,12 @@
+import { z } from 'zod';
+
+export const itemTypeSchema = z.enum([ 'Chapter', 'Task', 'Skill' ]);
 
 export type ActivityType = 'Chapter'|'Task';
-export type ItemType = ActivityType|'Skill';
+export type ItemType = z.infer<typeof itemTypeSchema>;
 export type ItemTypeCategory = 'activity'|'skill';
 interface ItemWithType { type: ItemType }
+
 
 /* Helpers in Item-like */
 export function isASkill(item: ItemWithType): boolean {
