@@ -173,19 +173,21 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   );
 
   readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(readyData()).pipe(
-    switchMap(data => {
-      if (!isTask(data.item)) return of(null); // config for non-task's is null
+    map(data => ({ isTask: isTask(data.item), route: data.route })),
+    distinctUntilChanged((x, y) => JSON.stringify(x.route) === JSON.stringify(y.route)),
+    switchMap(({ isTask, route }) => {
+      if (!isTask) return of(null); // config for non-task's is null
       const userLocale = this.localeService.currentLang?.tag;
       if (!userLocale) throw new Error('unexpected: locale not defined');
       return this.initialAnswerDataSource.answer$.pipe(
         catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
         map(initialAnswer => ({
-          readOnly: !!data.route.answer && !data.route.answer.loadAsCurrent,
+          readOnly: !!route.answer && !route.answer.loadAsCurrent,
           initialAnswer,
           locale: userLocale, // should use task locale if there is a way for the user to select it
         }))
       );
-    })
+    }),
   );
 
   // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
