@@ -7,13 +7,14 @@
 >
   <p-header>
     <div class="dialog-header">
-      <span class="dialog-handler">
-        <i class="ph-duotone ph-lock-simple"></i>
-      </span>
       <span class="dialog-title" i18n>Permission editor</span>
-      <span class="dialog-close" (click)="onCancel()">
-        <img src="images/close.svg" alt="close">
-      </span>
+      <button
+        type="button"
+        class="alg-button-icon rounded primary-color stroke regular-size"
+        icon="ph-bold ph-x"
+        (click)="onCancel()"
+        pButton
+      ></button>
     </div>
   </p-header>
 

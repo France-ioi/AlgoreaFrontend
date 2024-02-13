@@ -4,8 +4,8 @@
 </div>
 
 <div *ngIf="!collapsed" class="body">
-  <div class="item">
-    <div class="desc header-comment" *ngIf="descriptionTemplate">
+  <div class="item" *ngIf="descriptionTemplate">
+    <div class="desc header-comment">
       <ng-container [ngTemplateOutlet]="descriptionTemplate"></ng-container>
     </div>
   </div>
@@ -25,7 +25,7 @@
     <div *ngIf="disabledTooltip.length" class="gray-overlay tool"
       [pTooltip]="disabledTooltip.join('\n') || ''"
       tooltipPosition="top"
-      tooltipStyleClass="permissions-dialog"
+      tooltipStyleClass="alg-tooltip"
       [escape]="false"
     ></div>
   </div>

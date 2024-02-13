@@ -15,107 +15,120 @@
   display: flex;
   flex-direction: column;
   position: relative;
+}
 
-  .progress-select-item {
-    display: flex;
-    position: relative;
-    height: 5rem;
-
-    &:first-child {
-      height: 3rem;
-    }
-
-    .progress-control {
-      margin-right: 1.8rem;
-      width: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex-direction: column;
-      padding-left: 1.5rem;
-
-      .progress-point {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.25rem;
-        height: 1.25rem;
-        border-radius: 1.25rem;
-        font-size: 0.75rem;
-        color: white;
-        background-color: #fff;
-        cursor: pointer;
-
-        &.active {
-          background-color: var(--base-color);
-        }
-
-        &.active-light {
-          background-color: #84bafd;
-        }
-
-        &.last {
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 2.5rem;
-          font-size: 1.2rem;
-        }
-      }
-
-      .progress-branch {
-        display: flex;
-        width: 0.4167rem;
-        background-color: #fff;
-        flex: 1;
-
-        &.active {
-          background-color: var(--base-color);
-        }
-
-        &.disabled {
-          opacity: 0.5;
-        }
-      }
-    }
-
-    .progress-desc {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      font-size: 1.2rem;
-      color: var(--base-text-color);
-      min-height: 2.5rem;
-
-      &.header-comment {
-        padding-top: 0.4167rem;
-      }
-
-      .progress-desc-name {
-        color: var(--dark-text-color);
-        font-weight: bold;
-        // margin-bottom: 0.4167rem;
-        cursor: pointer;
-
-        &.active {
-          color: var(--base-color);
-        }
-      }
-
-      .progress-desc-comment {
-        font-style: italic;
-        color: var(--base-text-color);
-        margin-bottom: 1rem;
-      }
+.progress-select-item {
+  &:first-child {
+    .progress-select-clickable-area {
+      height: toRem(48);
     }
   }
 
-  .gray-overlay {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+  &:hover {
+    &:not(:first-child) {
+      .progress-select-clickable-area {
+        &:not(.disabled) {
+          cursor: pointer;
+          background-color: var(--alg-light-color);
+        }
+      }
+    }
+  }
+}
+
+.progress-select-clickable-area {
+  display: flex;
+  position: relative;
+  height: toRem(60);
+  padding: toRem(6) toRem(6) 0 toRem(6);
+  border-radius: toRem(10);
+
+  &.disabled {
+    pointer-events: none;
     opacity: 0.5;
-    background-color: white;
   }
+}
+
+.progress-control {
+  position: relative;
+  z-index: 1;
+  margin-right: toRem(20);
+  margin-bottom: toRem(-6);
+  width: toRem(32);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.progress-point {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: toRem(16);
+  height: toRem(16);
+  border-radius: toRem(16);
+  font-size: toRem(12);
+  color: var(--alg-white-color);
+  background-color: var(--alg-tree-line-color);
+
+  &.active {
+    background-color: var(--alg-primary-color);
+  }
+
+  &.active-light {
+    background-color: var(--alg-tree-line-color);
+  }
+
+  &.last {
+    width: toRem(32);
+    height: toRem(32);
+    border-radius: toRem(32);
+    font-size: toRem(16);
+  }
+}
+
+.progress-branch {
+  display: flex;
+  width: toRem(4);
+  background-color: var(--alg-tree-line-color);
+  flex: 1;
+
+  &.active {
+    background-color: var(--alg-primary-color);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.progress-desc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color: var(--base-text-color);
+  min-height: toRem(32);
+
+  &.header-comment {
+    padding-top: toRem(6);
+  }
+}
+
+
+.progress-desc-name {
+  color: var(--dark-text-color);
+  font-weight: bold;
+  cursor: pointer;
+
+  &.active {
+    color: var(--alg-primary-color);
+  }
+}
+
+.progress-desc-comment {
+  font-style: italic;
+  font-size: toRem(14);
+  color: var(--base-text-color);
+  margin-bottom: var(--alg-space-size-5);
 }
