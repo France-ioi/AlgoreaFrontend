@@ -64,7 +64,7 @@
                 <a
                   class="alg-link"
                   [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId } | url"
-                  *ngIf="rowData.allowToViewAnswer && rowData.activityType === 'saved_answer' && rowData.answerId"
+                  *ngIf="rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId"
                 >
                   View answer
                 </a>
