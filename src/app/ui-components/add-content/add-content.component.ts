@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, merge, Observable, Subscription } from 'rxjs';
+import { map, filter, switchMap, debounceTime, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { ItemCorePerm } from '../../models/item-permissions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from '../../utils/state';
@@ -9,7 +9,10 @@ import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from '../loading/loading.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputComponent } from '../input/input.component';
-import { NgIf, NgClass, NgFor, SlicePipe } from '@angular/common';
+import { NgIf, NgClass, NgFor, SlicePipe, AsyncPipe } from '@angular/common';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { PathSuggestionComponent } from '../../containers/path-suggestion/path-suggestion.component';
+import { canCloseOverlay } from '../../utils/overlay';
 
 export interface AddedContent<T> {
   id?: string,
@@ -43,9 +46,13 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     NgFor,
     ButtonModule,
     SlicePipe,
+    OverlayPanelModule,
+    PathSuggestionComponent,
+    AsyncPipe,
   ],
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {
+  @ViewChild('op') op?: OverlayPanel;
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
   @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
   @Input() loading = false;
@@ -68,7 +75,17 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   focused?: 'create' | 'searchExisting';
   selected?: NewContentType<Type>;
 
-  private subscriptions: Subscription[] = [];
+  private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
+  showOverlay$ = merge(
+    this.showOverlaySubject$.pipe(debounceTime(750)),
+    this.showOverlaySubject$.pipe(filter(value => !value)), // this allows to close the overlay immediately and not after debounce delay
+  ).pipe(distinctUntilChanged(), shareReplay(1));
+
+  private subscriptions: Subscription[] = [
+    this.showOverlay$.subscribe(data => {
+      data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
+    }),
+  ];
 
   constructor(private formBuilder: UntypedFormBuilder) {}
 
@@ -105,6 +122,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.showOverlaySubject$.complete();
   }
 
   onNewFocus(): void {
@@ -154,5 +172,19 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   reset(focused?: 'searchExisting' | 'create'): void {
     this.addContentForm.reset(defaultFormValues);
     this.focused = focused;
+  }
+
+  onMouseEnter(event: Event, itemId: string, targetElement: HTMLElement): void {
+    this.showOverlaySubject$.next({ event, itemId, target: targetElement });
+  }
+
+  onMouseLeave(event: MouseEvent): void {
+    if (canCloseOverlay(event)) {
+      this.closeOverlay();
+    }
+  }
+
+  closeOverlay(): void {
+    this.showOverlaySubject$.next(undefined);
   }
 }
