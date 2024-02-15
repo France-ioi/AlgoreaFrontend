@@ -37,9 +37,7 @@
           <i class="ph-duotone ph-link breadcrumbs-prefix-icon"></i>
           <ul class="breadcrumbs">
             <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs">
-              <a class="breadcrumbs-item-link alg-link" [routerLink]="item.url">
-                {{ item.title }}
-              </a>
+              <a class="breadcrumbs-item-link alg-link" [routerLink]="item.url">{{ item.title }}</a>
             </li>
           </ul>
         </div>

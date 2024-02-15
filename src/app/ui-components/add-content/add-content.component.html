@@ -72,10 +72,22 @@
     <div *ngIf="trimmedInputsValue.searchExisting.length >= minInputLength && state.isReady">
       <p class="select-caption" i18n>Select a content among those wiches already exist</p>
       <ul class="add-content-list" *ngIf="(state.data || []).length > 0; else emptyMessage">
-        <li class="add-content-list-item" *ngFor="let item of (state.data || []) | slice : 0 : 10">
+        <li
+          class="add-content-list-item"
+          *ngFor="let item of (state.data || []) | slice : 0 : 10"
+          (mouseleave)="onMouseLeave($event)"
+        >
           <div class="add-content-list-left">
             <span class="add-content-type">{{ item.type }}</span>
-            <span class="add-content-title">{{ item.title }}</span>
+            <span class="add-content-title">
+              @if(item.id) {
+                <span (mouseenter)="onMouseEnter($event, item.id, contentRef)" #contentRef>
+                  {{ item.title }}
+                </span>
+              }@else {
+                {{ item.title }}
+              }
+            </span>
           </div>
           <div class="add-content-list-right">
             <button
@@ -98,3 +110,11 @@
   </ng-container>
 </ng-template>
 
+<p-overlayPanel
+  styleClass="alg-path-suggestion-overlay"
+  #op
+>
+  <ng-container *ngIf="op.overlayVisible">
+    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+  </ng-container>
+</p-overlayPanel>
