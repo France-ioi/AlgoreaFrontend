@@ -2,86 +2,49 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { canCurrentUserViewInfo, itemViewPermDecoder, ItemWithViewPerm } from 'src/app/models/item-view-permission';
-import { itemCorePermDecoder } from 'src/app/models/item-permissions';
-import { pipe } from 'fp-ts/function';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { canCurrentUserViewInfo, ItemViewPerm, itemViewPermSchema, ItemWithViewPerm } from 'src/app/models/item-view-permission';
+import { itemCorePermSchema } from 'src/app/models/item-permissions';
+import { itemChildCategorySchema } from '../models/item-properties';
+import { itemPermPropagationsSchema } from '../models/item-perm-propagation';
+import { itemTypeSchema } from '../models/item-type';
+import { itemStringSchema } from '../models/item-string';
 
-const baseItemChildCategory = D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge');
+const baseItemChildSchema = z.object({
+  id: z.string(),
+  type: itemTypeSchema,
+  order: z.number(),
+  category: itemChildCategorySchema,
+  permissions: itemCorePermSchema,
+  scoreWeight: z.number(),
+}).and(itemPermPropagationsSchema);
 
-const itemChildTypeDecoder = D.literal('Chapter','Task','Skill');
+/** an invisible item is an item which has a view perm set to 'none' */
+const invisibleItemChildSchema = baseItemChildSchema.and(z.object({ permissions: z.object({ canView: z.literal(ItemViewPerm.None) }) }));
 
-const baseItemChildDecoder = D.struct({
-  id: D.string,
-  order: D.number,
-  category: baseItemChildCategory,
-  permissions: itemCorePermDecoder,
-  scoreWeight: D.number,
-  contentViewPropagation: D.literal('none', 'as_info', 'as_content'),
-  editPropagation: D.boolean,
-  grantViewPropagation: D.boolean,
-  upperViewLevelsPropagation: D.literal('use_content_view_propagation', 'as_content_with_descendants', 'as_is'),
-  watchPropagation: D.boolean,
-  type: itemChildTypeDecoder,
-});
+const itemChildSchema = baseItemChildSchema.and(z.object({
+  bestScore: z.number(),
+  string: itemStringSchema,
+  results: z.array(z.object({
+    attemptId: z.string(),
+    latestActivityAt: z.coerce.date(),
+    startedAt: z.coerce.date().nullable(),
+    scoreComputed: z.number(),
+    validated: z.boolean(),
+  })),
+  noScore: z.boolean(),
+  watchedGroup: itemViewPermSchema.and(z.object({ allValidated: z.boolean().optional(), avgScore: z.number().optional() })).optional(),
+}));
 
-const itemChildDecoder = pipe(
-  baseItemChildDecoder,
-  D.intersect(
-    D.struct({
-      bestScore: D.number,
-      string: pipe(
-        D.struct({
-          title: D.nullable(D.string),
-          imageUrl: D.nullable(D.string),
-        }),
-        D.intersect(
-          D.partial({
-            subtitle: D.nullable(D.string),
-          }),
-        ),
-      ),
-      results: D.array(D.struct({
-        attemptId: D.string,
-        latestActivityAt: dateDecoder,
-        startedAt: D.nullable(dateDecoder),
-        scoreComputed: D.number,
-        validated: D.boolean,
-      })),
-      noScore: D.boolean,
-    }),
-  ),
-  D.intersect(
-    D.partial({
-      watchedGroup: pipe(
-        itemViewPermDecoder,
-        D.intersect(
-          D.partial({
-            allValidated: D.boolean,
-            avgScore: D.number,
-          })
-        )
-      ),
-    })
-  )
-);
+const itemChildrenSchema = z.array(itemChildSchema);
+export type ItemChildren = z.infer<typeof itemChildrenSchema>;
+const possiblyInvisibleItemChildrenSchema = z.array(z.union([ invisibleItemChildSchema, itemChildSchema ]));
+type PossiblyInvisibleItemChildren = z.infer<typeof possiblyInvisibleItemChildrenSchema>;
 
-const possiblyInvisibleItemChild = D.union(
-  itemChildDecoder,
-  baseItemChildDecoder,
-);
-
-export type BaseItemChildCategory = D.TypeOf<typeof baseItemChildCategory>;
-export type ItemChild = D.TypeOf<typeof itemChildDecoder>;
-type PossiblyInvisibleItemChild = D.TypeOf<typeof possiblyInvisibleItemChild>;
-export type ItemChildType = D.TypeOf<typeof itemChildTypeDecoder>;
-
-export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChild {
+export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChildren[number] {
   return canCurrentUserViewInfo(item);
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -98,15 +61,15 @@ export class GetItemChildrenService {
     return this.http.get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params });
   }
 
-  get(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<ItemChild[]> {
+  get(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<ItemChildren> {
     return this.getRaw(id, attemptId, options).pipe(
-      decodeSnakeCase(D.array(itemChildDecoder))
+      decodeSnakeCaseZod(itemChildrenSchema),
     );
   }
 
-  getWithInvisibleItems(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<PossiblyInvisibleItemChild[]> {
+  getWithInvisibleItems(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<PossiblyInvisibleItemChildren> {
     return this.getRaw(id, attemptId, { ...options, showInvisible: true }).pipe(
-      decodeSnakeCase(D.array(possiblyInvisibleItemChild))
+      decodeSnakeCaseZod(possiblyInvisibleItemChildrenSchema),
     );
   }
 }

@@ -1,4 +1,5 @@
-import { BaseItemChildCategory, ItemChildType } from '../../../data-access/get-item-children.service';
+import { ItemChildCategory } from 'src/app/models/item-properties';
+import { ItemType } from 'src/app/models/item-type';
 
 export interface ItemChildWithAdditions {
   id: string,
@@ -7,8 +8,8 @@ export interface ItemChildWithAdditions {
     subtitle?: string | null,
     imageUrl: string | null,
   },
-  category: BaseItemChildCategory,
-  type: ItemChildType,
+  category: ItemChildCategory,
+  type: ItemType,
   watchedGroup?: {
     allValidated?: boolean,
     avgScore?: number,
