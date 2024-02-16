@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { BehaviorSubject, debounceTime, merge, Observable } from 'rxjs';
-import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, filter, shareReplay, map, withLatestFrom } from 'rxjs/operators';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DataPager } from 'src/app/utils/data-pager';
@@ -10,7 +10,7 @@ import { LogActionDisplayPipe } from 'src/app/pipes/logActionDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRouteWithAnswerPipe, RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -20,6 +20,7 @@ import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { UserSessionService } from '../../../services/user-session.service';
 
 const logsLimit = 20;
 
@@ -47,6 +48,7 @@ const logsLimit = 20;
     GroupLinkPipe,
     UserCaptionPipe,
     LogActionDisplayPipe,
+    ItemRouteWithAnswerPipe,
   ],
 })
 export class GroupLogViewComponent implements OnChanges, OnDestroy {
@@ -79,7 +81,8 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
 
   constructor(
     private activityLogService: ActivityLogService,
-    private actionFeedbackService: ActionFeedbackService
+    private actionFeedbackService: ActionFeedbackService,
+    private sessionService: UserSessionService,
   ) {}
 
 
@@ -114,7 +117,13 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       watchedGroupId: this.groupId,
       limit: pageSize,
       pagination: paginationParams,
-    });
+    }).pipe(
+      withLatestFrom(this.sessionService.userProfile$),
+      map(([ logs, currentUserProfile ]) => logs.map(log => ({
+        ...log,
+        allowToViewAnswer: log.participant.id === currentUserProfile.groupId,
+      })))
+    );
   }
 
   resetRows(): void {
