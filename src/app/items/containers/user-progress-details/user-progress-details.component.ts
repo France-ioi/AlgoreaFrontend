@@ -6,7 +6,6 @@ import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.se
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { ItemChildType } from '../../../data-access/get-item-children.service';
 import { TypeFilter } from '../../models/composition-filter';
 import { DurationToReadable } from 'src/app/pipes/duration';
 import { AllowsWatchingItemAnswersPipe } from 'src/app/models/item-watch-permission';
@@ -17,13 +16,14 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
+import { ItemType } from 'src/app/models/item-type';
 
 export interface ProgressData {
   progress: ParticipantProgresses[number],
   target: Element,
   currentFilter: TypeFilter,
   colItem: {
-    type: ItemChildType,
+    type: ItemType,
     fullRoute: FullItemRoute,
     permissions: ItemPermWithWatch,
   },

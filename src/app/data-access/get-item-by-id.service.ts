@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { durationSchema } from 'src/app/utils/decoders';
 import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/models/item-permissions';
-import { itemStringSchema } from '../models/item-string';
+import { itemStringSchema, withDescription } from '../models/item-string';
 import { itemTypeSchema } from '../models/item-type';
 import {
   itemChildrenLayoutSchema,
@@ -19,7 +19,7 @@ import { participantTypeSchema } from '../models/group-types';
 const itemSchema = z.object({
   id: z.string(),
   requiresExplicitEntry: z.boolean(),
-  string: itemStringSchema,
+  string: withDescription(itemStringSchema),
   bestScore: z.number(),
   permissions: itemCorePermSchema.and(itemCanRequestHelpSchema),
   type: itemTypeSchema,

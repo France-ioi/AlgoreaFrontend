@@ -14,17 +14,13 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ItemChildrenEditListComponent } from '../item-children-edit-list/item-children-edit-list.component';
 import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { ItemPermPropagations } from 'src/app/models/item-perm-propagation';
 
-interface BaseChildData {
-  contentViewPropagation?: 'none' | 'as_info' | 'as_content',
-  editPropagation?: boolean,
-  grantViewPropagation?: boolean,
-  upperViewLevelsPropagation?: 'use_content_view_propagation' | 'as_content_with_descendants' | 'as_is',
+type BaseChildData = Partial<ItemPermPropagations> & {
   scoreWeight: number,
-  watchPropagation?: boolean,
   permissions?: ItemCorePerm,
   type: ItemType,
-}
+};
 interface InvisibleChildData extends BaseChildData {
   id: string,
   isVisible: false,

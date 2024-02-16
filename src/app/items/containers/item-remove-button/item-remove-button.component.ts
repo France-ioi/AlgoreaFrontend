@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@a
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { GetItemChildrenService, ItemChild } from '../../../data-access/get-item-children.service';
+import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { ConfirmationService } from 'primeng/api';
 import { RemoveItemService } from '../../data-access/remove-item.service';
@@ -39,7 +39,7 @@ export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
     switchMap(({ id, attemptId }) =>
       this.getItemChildrenService.get(id, attemptId).pipe(
-        map((itemChildren: ItemChild[]) => itemChildren.length > 0)
+        map((itemChildren: ItemChildren) => itemChildren.length > 0)
       )
     ),
     mapToFetchState({ resetter: this.refresh$ }),

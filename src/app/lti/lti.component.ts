@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, retry, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
-import { GetItemChildrenService, ItemChild } from 'src/app/data-access/get-item-children.service';
+import { GetItemChildrenService, ItemChildren } from 'src/app/data-access/get-item-children.service';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
 import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
@@ -161,7 +161,7 @@ export class LTIComponent implements OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  private getNavigationData(itemId: string): Observable<{ firstChild: ItemChild, path: string[], attemptId: string }> {
+  private getNavigationData(itemId: string): Observable<{ firstChild: ItemChildren[number], path: string[], attemptId: string }> {
     const path$ = this.getItemPathService.getItemPath(itemId).pipe(map(path => [ ...path, itemId ]), shareReplay(1));
 
     const attemptId$ = path$.pipe(

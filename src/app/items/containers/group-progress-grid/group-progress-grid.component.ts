@@ -9,11 +9,11 @@ import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descen
 import { GetGroupProgressService, ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { TypeFilter } from '../../models/composition-filter';
-import { GetItemChildrenService, ItemChildType } from '../../../data-access/get-item-children.service';
+import { GetItemChildrenService } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { ProgressCSVService } from 'src/app/data-access/progress-csv.service';
 import { downloadFile } from 'src/app/utils/download-file';
-import { typeCategoryOfItem } from 'src/app/models/item-type';
+import { ItemType, typeCategoryOfItem } from 'src/app/models/item-type';
 import { RawGroupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
 import { ProgressData, UserProgressDetailsComponent } from '../../containers/user-progress-details/user-progress-details.component';
 import { DataPager } from 'src/app/utils/data-pager';
@@ -47,7 +47,7 @@ interface DataRow {
 interface DataColumn {
   id: string,
   title: string|null,
-  type: ItemChildType,
+  type: ItemType,
   permissions: ItemCorePerm,
 }
 interface DataFetching {

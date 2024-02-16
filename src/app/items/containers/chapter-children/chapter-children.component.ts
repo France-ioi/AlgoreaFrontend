@@ -1,6 +1,6 @@
 import { combineLatest, ReplaySubject, Subject } from 'rxjs';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { GetItemChildrenService, ItemChild } from '../../../data-access/get-item-children.service';
+import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { bestAttemptFromResults } from 'src/app/models/attempts';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
@@ -48,7 +48,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   ]).pipe(
     switchMap(([{ id, attemptId }, observedGroupId ]) =>
       this.getItemChildrenService.get(id, attemptId, { watchedGroupId: observedGroupId ?? undefined })),
-    map<ItemChild[], ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
+    map<ItemChildren, ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
       const res = bestAttemptFromResults(child.results);
       return {
         ...child,
