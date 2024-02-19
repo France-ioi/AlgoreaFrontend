@@ -12,7 +12,6 @@ import {
   share,
   startWith,
   take,
-  withLatestFrom
 } from 'rxjs/operators';
 import { UserSessionService } from '../../../services/user-session.service';
 import { formatUser } from 'src/app/models/user';
@@ -176,8 +175,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(
       this.state$.pipe(
         readyData(),
-        withLatestFrom(this.store.select(fromForum.selectVisible)),
-        filter(([ events, visible ]) => visible && events.length > 0),
+        filter(events => events.length > 0),
         delay(0),
       ).subscribe(() => this.scrollDown())
     );
