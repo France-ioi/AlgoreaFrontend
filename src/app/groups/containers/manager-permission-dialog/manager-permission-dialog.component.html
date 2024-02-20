@@ -1,30 +1,29 @@
-<ng-container *ngIf="userCaption">
-  <p-dialog
-      [(visible)]="!!visible"
-      [modal]="true"
-      [draggable]="false"
-      [closable]="false"
-      styleClass="alg-permissions-edit-dialog">
+<p-dialog
+  [(visible)]="!!visible"
+  [modal]="true"
+  [draggable]="false"
+  [closable]="false"
+  styleClass="alg-permissions-edit-dialog"
+  *ngIf="userCaption"
+>
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-title" i18n>{{ group?.name }}: manager access given to {{ userCaption }}</span>
+      <button
+        type="button"
+        class="alg-button-icon rounded primary-color stroke regular-size"
+        icon="ph-bold ph-x"
+        (click)="onClose()"
+        pButton
+      ></button>
+    </div>
+  </p-header>
 
-    <p-header>
-      <div class="dialog-header">
-      <span class="dialog-handler">
-        <i class="ph-duotone ph-lock-simple"></i>
-      </span>
-        <span class="dialog-title" i18n>
-        {{ group?.name }}: manager access given to {{ userCaption }}
-      </span>
-        <span class="dialog-close" (click)="onClose()">
-        <img src="images/close.svg" alt="close">
-      </span>
-      </div>
-    </p-header>
-
-    <div class="dialog-container">
-      <div class="dialog-content">
-        <p i18n>
-          This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
-        </p>
+  <div class="dialog-container">
+    <div class="dialog-content">
+      <p class="dialog-description" i18n>
+        This panel lets you select what you allow the selected user or group of users to do on the current group and its descendants.
+      </p>
 
       <form [formGroup]="form">
         <alg-collapsible-section
@@ -53,13 +52,13 @@
           <ng-template #content let-collapsed>
             <alg-switch-field [collapsed]="collapsed" formControlName="canGrantGroupAccess">
               <ng-template #label>
-                <span label i18n>
+                <span i18n>
                   User(s) can give and revoke members access to some content
                 </span>
-                </ng-template>
-              </alg-switch-field>
-            </ng-template>
-          </alg-collapsible-section>
+              </ng-template>
+            </alg-switch-field>
+          </ng-template>
+        </alg-collapsible-section>
 
         <alg-collapsible-section
           [collapsible]="false"
@@ -70,38 +69,36 @@
             <alg-switch-field [collapsed]="collapsed" formControlName="canWatchMembers">
               <ng-template #label>
                 <span i18n>
-                  User(s) can watch the members' activity on some content
+                User(s) can watch the members' activity on some content
                 </span>
-                </ng-template>
-              </alg-switch-field>
-            </ng-template>
-          </alg-collapsible-section>
-        </form>
-      </div>
+              </ng-template>
+            </alg-switch-field>
+          </ng-template>
+        </alg-collapsible-section>
+      </form>
     </div>
+  </div>
 
-    <p-footer>
-      <div class="footer">
-        <ng-container *ngIf="isUpdating; else buttons">
-          <alg-loading size="medium"></alg-loading>
-        </ng-container>
-
-        <ng-template #buttons>
-          <p-button
-            icon="ph-bold ph-x"
-            i18n-label label="Cancel"
-            styleClass="alg-button p-button-rounded p-button-danger"
-            (onClick)="onClose()"
-          ></p-button>
-          <p-button
-            icon="ph-bold ph-check"
-            i18n-label label="Save"
-            styleClass="alg-button p-button-rounded"
-            (onClick)="onAccept()"
-            [disabled]="!form.dirty"
-          ></p-button>
-        </ng-template>
-      </div>
-    </p-footer>
-  </p-dialog>
-</ng-container>
+  <p-footer>
+    <div class="footer">
+      <alg-loading *ngIf="isUpdating; else buttonsSection"></alg-loading>
+      <ng-template #buttonsSection>
+        <button
+          class="alg-button basic small button"
+          icon="ph-bold ph-x"
+          i18n-label label="Cancel"
+          (click)="onClose()"
+          pButton
+        ></button>
+        <button
+          class="alg-button primary small button"
+          icon="ph-bold ph-check"
+          i18n-label label="Proceed"
+          (click)="onAccept()"
+          [disabled]="!form.dirty"
+          pButton
+        ></button>
+      </ng-template>
+    </div>
+  </p-footer>
+</p-dialog>
