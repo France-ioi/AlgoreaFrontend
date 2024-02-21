@@ -66,5 +66,10 @@
 </ul>
 
 <ng-template #noChildrenSection>
-  <p class="empty-message" *ngIf="emptyMessage">{{ emptyMessage }}</p>
+  <alg-message-icon
+    class="alg-flex-1"
+    icon="ph-duotone ph-folder-open"
+    [message]="emptyMessage"
+    *ngIf="emptyMessage"
+  ></alg-message-icon>
 </ng-template>

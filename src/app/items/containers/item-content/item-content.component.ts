@@ -22,6 +22,7 @@ import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
+import { MessageIconComponent } from '../../../ui-components/message-icon/message-icon.component';
 
 @Component({
   selector: 'alg-item-content',
@@ -45,6 +46,7 @@ import { ErrorComponent } from '../../../ui-components/error/error.component';
     AllowsViewingItemContentPipe,
     AllowsEditingChildrenItemPipe,
     ErrorComponent,
+    MessageIconComponent,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
