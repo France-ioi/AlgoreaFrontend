@@ -69,7 +69,30 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ### Running end-to-end tests
 
-Run `E2E_AUTH_USER=[sessionStorageKey],[sessionStorageTokenValue] ng e2e` to execute the end-to-end tests via [Cypress](https://docs.cypress.io/guides/overview/why-cypress).
+Set the user token in `.e2e.env` (start from the sample in `.e2e.env.sample`).
+Launch the web server (`ng serve`).
+Run all tests:
+```
+npx playwright test
+```
+Check [playwright doc](https://playwright.dev/docs/running-tests) for more options. 
+
+### Writing end-to-end tests
+
+E2E tests uses the "Playwright" lib. The easiest way to write E2E tests is to use VSCode extension, then:
+- launch the server manually `ng serve`
+- create a test and bootstrap it manually, for instance:
+```ts
+test('home page loaded as usual user', async ({ page }) => {
+  await initAsUsualUser(page);
+  await page.goto('/');
+  // keep your cursor here
+});
+```
+- in testing menu, check "show browser"
+- execute the test
+- press "record at cursor" so that all new actions in the browser are added where you cursor is
+- cleanup what has been generated
 
 ## Internationalization
 

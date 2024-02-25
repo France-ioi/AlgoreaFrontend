@@ -115,7 +115,6 @@ module.exports = {
     {
       files: ['*.spec.ts'],
       rules: {
-        '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/unbound-method': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/naming-convention': 'off',
