@@ -21,12 +21,12 @@
       (refresh)="refresh()"
     ></alg-error>
     <button
-        pButton
-        type="button"
-        class="p-button-rounded p-button-danger"
-        i18n-label label="Delete this item"
-        (click)="onDeleteItem()"
-        [disabled]="(state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)) || state.isFetching || state.isError || deletionInProgress || !item.permissions.isOwner"
+      pButton
+      type="button"
+      class="alg-button danger"
+      i18n-label label="Delete this item"
+      (click)="onDeleteItem()"
+      [disabled]="(state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)) || state.isFetching || state.isError || deletionInProgress || !item.permissions.isOwner"
     ></button>
   </div>
 </ng-container>
