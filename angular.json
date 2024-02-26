@@ -9,7 +9,6 @@
       "environment": "all"
     },
     "schematicCollections": [
-      "@cypress/schematic",
       "@schematics/angular"
     ],
     "analytics": false
@@ -190,58 +189,12 @@
             "eslintConfig": ".eslintrc.js",
             "tsConfig": [
               "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "cypress/tsconfig.json"
+              "tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
               "**/design/**"
             ]
-          }
-        },
-        "e2e": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "algorea:serve:e2e",
-            "watch": false,
-            "headless": false
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "algorea:serve:production-en"
-            }
-          }
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "algorea:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "algorea:serve:production-en"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false
-          }
-        },
-        "ct": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "algorea:serve",
-            "watch": true,
-            "headless": false,
-            "testingType": "component"
-          },
-          "configurations": {
-            "development": {
-              "devServerTarget": "algorea:serve:development"
-            }
           }
         }
       },

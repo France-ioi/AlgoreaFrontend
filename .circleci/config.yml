@@ -150,18 +150,6 @@ jobs:
           name: CodeCov (tool sending coverage reports (lcov.info) to Codecov.io)
           command: bash <(curl -s https://codecov.io/bash)
 
-  e2e:
-    docker: *node_browsers_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - run:
-          name: Install Cypress
-          command: |
-            npx cypress cache clear
-            npx cypress install
-      - run: npx ng e2e
-
 
   deploy-branch:
     docker:

@@ -8,10 +8,9 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended',
-    'plugin:cypress/recommended',
     'plugin:@ngrx/all-requiring-type-checking'
   ],
-  plugins: ['rxjs', 'jasmine', 'deprecation', 'cypress'],
+  plugins: ['rxjs', 'jasmine', 'deprecation'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -104,12 +103,6 @@ module.exports = {
     'jasmine/no-focused-tests': ['error'],
     'deprecation/deprecation': ['error'],
     '@ngrx/prefer-effect-callback-in-block-statement': 'off',
-    "cypress/no-assigning-return-values": "error",
-    "cypress/no-unnecessary-waiting": "error",
-    "cypress/assertion-before-screenshot": "warn",
-    "cypress/no-force": "warn",
-    "cypress/no-async-tests": "error",
-    "cypress/no-pause": "error"
   },
   overrides: [
     {

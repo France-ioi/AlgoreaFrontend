@@ -58,10 +58,6 @@ Thumbs.db
 ./firebase/*
 .firebase/*
 
-# Cypress
-/cypress/screenshots
-/cypress/videos
-
 # Playwright
 /test-results/
 /playwright-report/
