@@ -19,22 +19,31 @@
           [diameter]="32"
         ></alg-score-ring>
       </div>
-      <ng-container *ngrxLet="fullFrameContentDisplayed$; let fullFrameContentDisplayed">
-        <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
-          <div class="left-pane-title margin-right" *ngIf="!isNarrowScreen || isNarrowScreen && !fullFrameContentDisplayed">
-            <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
-            <ng-template #onlyTitle>
-              <p class="left-pane-title-text">{{ currentContent.title }}</p>
-            </ng-template>
-            <ng-template #breadcrumbs>
-              <alg-breadcrumb
-                class="breadcrumb"
-                [contentBreadcrumb]="currentContent?.breadcrumbs"
-              ></alg-breadcrumb>
-            </ng-template>
-          </div>
-          <alg-tab-bar class="tab-bar" styleClass="for-header" *ngIf="fullFrameContentDisplayed"></alg-tab-bar>
-        </ng-container>
+      <ng-container *ngrxLet="{
+        fullFrameContentDisplayed: fullFrameContentDisplayed$,
+        shouldDisplayTabBar: shouldDisplayTabBar$,
+        isNarrowScreen: isNarrowScreen$,
+      } as behaviourInfo">
+        <div
+          class="left-pane-title margin-right"
+          *ngIf="!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed"
+        >
+          <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
+          <ng-template #onlyTitle>
+            <p class="left-pane-title-text">{{ currentContent.title }}</p>
+          </ng-template>
+          <ng-template #breadcrumbs>
+            <alg-breadcrumb
+              class="breadcrumb"
+              [contentBreadcrumb]="currentContent?.breadcrumbs"
+            ></alg-breadcrumb>
+          </ng-template>
+        </div>
+        <alg-tab-bar
+          class="tab-bar"
+          styleClass="for-header"
+          *ngIf="behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed"
+        ></alg-tab-bar>
       </ng-container>
     </div>
     <div class="right-pane">

@@ -18,6 +18,7 @@ import { ButtonModule } from 'primeng/button';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
+import { TabService } from '../../services/tab.service';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -64,6 +65,7 @@ export class ContentTopBarComponent {
   );
   readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
+  readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   constructor(
     private store: Store,
@@ -72,6 +74,7 @@ export class ContentTopBarComponent {
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,
     private layoutService: LayoutService,
+    private tabService: TabService,
   ) {}
 
   toggleDiscussionPanelVisibility(): void {
