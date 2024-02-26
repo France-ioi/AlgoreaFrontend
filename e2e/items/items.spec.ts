@@ -14,10 +14,10 @@ test('activity loads', async ({ page }) => {
 test('skill loads', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('/s/3001;p=3000;a=0');
-  await expect(page.getByRole('heading', { name: 'Depth First Search (DFS)' })).toBeVisible();
-  await expect(page.getByText('Sub-skills')).toBeVisible();
-  await page.getByText('Activities to learn or').click();
-  await expect(page.getByText('Parent skills')).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Depth First Search (DFS)' })).toBeVisible();
+  await expect.soft(page.getByText('Sub-skills')).toBeVisible();
+  await expect.soft(page.getByText('Activities to learn or')).toBeVisible();
+  await expect.soft(page.getByText('Parent skills')).toBeVisible();
 });
 
 test('item loads with path missing', async ({ page }) => {

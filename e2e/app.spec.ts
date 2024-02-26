@@ -4,11 +4,11 @@ import { apiUrl } from './helpers/e2e_http';
 
 test('home page loaded', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Algorea Platform' })).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
+  await expect.soft(page.getByRole('link', { name: 'Algorea Platform' })).toBeVisible();
 
   await test.step('check children list', async () => {
-    await expect(page.locator('alg-item-children-list')).toContainText('ALGOREA SERIOUS GAME');
+    await expect.soft(page.locator('alg-item-children-list')).toContainText('ALGOREA SERIOUS GAME');
   });
 
   await test.step('check left menu', async () => {
@@ -19,8 +19,8 @@ test('home page loaded', async ({ page }) => {
 test('home page loaded as usual user', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
-  await expect(page.locator('alg-top-right-menu')).toContainText('arbonenfant');
+  await expect.soft(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
+  await expect.soft(page.locator('alg-top-right-menu')).toContainText('arbonenfant');
 });
 
 test('backend is down', async ({ page }) => {
