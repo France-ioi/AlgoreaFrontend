@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from './e2e_auth';
+import { initAsUsualUser } from './helpers/e2e_auth';
+import { apiUrl } from './helpers/e2e_http';
 
 test('home page loaded', async ({ page }) => {
   await page.goto('/');
@@ -22,3 +23,10 @@ test('home page loaded as usual user', async ({ page }) => {
   await expect(page.locator('alg-top-right-menu')).toContainText('arbonenfant');
 });
 
+test('backend is down', async ({ page }) => {
+  await page.route(`${apiUrl}/**`, route => {
+    route.abort();
+  });
+  await page.goto('/');
+  await expect(page.getByText('Oops, we are unable to make')).toBeVisible();
+});

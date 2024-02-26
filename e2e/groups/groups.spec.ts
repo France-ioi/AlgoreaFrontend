@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from '../e2e_auth';
+import { initAsUsualUser } from '../helpers/e2e_auth';
 
 /**
  * Just check the basics of groups
