@@ -150,6 +150,14 @@ jobs:
           name: CodeCov (tool sending coverage reports (lcov.info) to Codecov.io)
           command: bash <(curl -s https://codecov.io/bash)
 
+  e2e:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.41.1-jammy
+    parallelism: 4
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
 
   deploy-branch:
     docker:
