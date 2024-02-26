@@ -15,6 +15,7 @@
         <alg-item-permissions
           *ngIf="observedGroup$ | async as observedGroup"
           class="item-permissions"
+          [ngClass]="{ 'with-margin': fullFrameContentDisplayed, 'with-right-margin': !!(withLeftPaddingContentDisplayed$ | async) }"
           [itemData]="itemData"
           [observedGroup]="observedGroup"
           (changed)="reloadItem()"
