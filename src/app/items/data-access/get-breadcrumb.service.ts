@@ -6,26 +6,21 @@ import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/it
 import { appConfig } from 'src/app/utils/config';
 import { tagError } from 'src/app/utils/errors';
 import { ensureDefined } from 'src/app/utils/assert';
-import { typeCategoryOfItem } from 'src/app/models/item-type';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { itemTypeSchema, typeCategoryOfItem } from 'src/app/models/item-type';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 
 export const breadcrumbServiceTag = 'breadcrumbservice';
 
-const breadcrumbItemDecoder = pipe(
-  D.struct({
-    itemId: D.string,
-    languageTag: D.string,
-    title: D.string,
-    type: D.literal('Chapter', 'Task', 'Skill'),
-  }),
-  D.intersect(
-    D.partial({
-      attemptId: D.string, // set in all but the last one if parent_attempt_id param has been given
-      attemptNumber: D.string, // set in all but the last one if parent_attempt_id param has been given
-    })
-  )
+const breadcrumbsApiSchema = z.array(
+  z.object({
+    itemId: z.string(),
+    languageTag: z.string(),
+    title: z.string(),
+    type: itemTypeSchema,
+    attemptId: z.string().optional(), // set in all but the last one if parent_attempt_id param has been given
+    attemptNumber: z.string().optional(), // set in all but the last one if parent_attempt_id param has been given
+  })
 );
 
 export interface BreadcrumbItem {
@@ -48,7 +43,7 @@ export class GetBreadcrumbService {
         params: isRouteWithSelfAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(
-        decodeSnakeCase(D.array(breadcrumbItemDecoder)),
+        decodeSnakeCaseZod(breadcrumbsApiSchema),
         map(items => {
           const last = ensureDefined(items[items.length - 1]);
 
