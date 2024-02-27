@@ -151,17 +151,79 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash)
 
   e2e:
-    docker: *node_browsers_image
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.41.1-jammy
+    parallelism: 4
     steps:
       - attach_workspace:
           at: ./
-      - run:
-          name: Install Cypress
-          command: |
-            npx cypress cache clear
-            npx cypress install
-      - run: npx ng e2e
+      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - blob-report
 
+  e2e-gen-report:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npx playwright merge-reports --reporter html ./blob-report
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - playwright-report
+
+  e2e-upload-report:
+    docker:
+      - image: circleci/python:2.7
+    environment:
+      AWS_REGION: eu-central-1
+    steps:
+      - attach_workspace:
+          at: ./
+      - aws-s3/sync:
+          from: playwright-report
+          to: s3://$DEPLOYMENT_BUCKET/branch/<< pipeline.git.branch >>/playwright-report
+          overwrite: false
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=20'
+
+  e2e-comment-PR:
+    docker:
+      - image: circleci/ruby:2.6-node-browsers-legacy
+    steps:
+      - run:
+          name: Install GHI
+          command: |
+            curl -sL https://raw.githubusercontent.com/stephencelis/ghi/master/ghi > ghi
+            chmod 755 ghi
+            sudo mv ghi /usr/local/bin
+      - run:
+          name: Check Token
+          command: |
+            if [[ -z "${GHI_TOKEN}" ]]; then
+              echo "GHI_TOKEN not set"
+              /bin/false
+            fi
+      - run:
+          name: Send Comment
+          command: |
+            GH_LOGIN=$(curl -sS -H "Authorization: token $GHI_TOKEN" https://api.github.com/user | jq '.login' --raw-output)
+            echo "Authenticated with $GH_LOGIN"
+            PR_URL=${CIRCLE_PULL_REQUEST}
+            PR_ID=${PR_URL##*/}
+            echo "PR_ID=$"
+            if [ -z $PR_ID ]; then
+              echo "No PR found, skipping"
+            else
+              if [ $(ghi comment --list $PR_ID -- ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} | grep -c "E2E test report on:") -ge 1 ]; then
+              echo "Already commented, skip"
+              else
+              ghi comment -m "[auto-generated message] E2E test report on: https://algorea-static.s3.eu-central-1.amazonaws.com/branch/<< pipeline.git.branch >>/playwright-report/index.html" $PR_ID -- ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+              fi
+            fi
 
   deploy-branch:
     docker:
@@ -217,6 +279,18 @@ workflows:
       - e2e:
           requires:
             - deps
+      - e2e-gen-report:
+          requires:
+            - e2e
+          filters:
+            branches:
+              ignore: master
+      -  e2e-upload-report:
+          requires:
+            - e2e-gen-report
+      -  e2e-comment-PR:
+          requires:
+            - e2e-upload-report
       - deploy-branch:
           requires:
             - build-branch-en
