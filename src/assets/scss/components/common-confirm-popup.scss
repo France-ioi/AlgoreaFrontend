@@ -1,0 +1,42 @@
+@import 'src/assets/scss/functions';
+
+.alg-common-confirm-popup {
+  margin-left: var(--alg-space-size-3);
+  margin-right: var(--alg-space-size-3);
+  background-color: var(--alg-white-color);
+  border-radius: toRem(10);
+
+  &:before {
+    border-bottom-color: var(--alg-primary-color);
+  }
+
+  &:after {
+    border-bottom-color: var(--alg-primary-color);
+  }
+
+  .p-confirm-popup-message, .p-confirm-popup-icon {
+    color: var(--alg-secondary-color);
+  }
+
+  .p-confirm-popup-accept, .p-confirm-popup-reject {
+    height: toRem(32);
+    color: var(--alg-secondary-color);
+    background: none;
+    border-radius: toRem(32);
+    border: toRem(1) solid var(--alg-light-color);
+    font-size: toRem(14);
+
+    &.danger {
+      background: var(--danger-color);
+    }
+
+    i {
+      margin-right: toRem(4);
+    }
+  }
+
+  .p-confirm-popup-accept {
+    background: var(--alg-primary-color);
+    color: var(--alg-white-color);
+  }
+}

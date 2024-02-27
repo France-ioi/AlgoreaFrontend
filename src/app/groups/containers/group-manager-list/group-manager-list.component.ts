@@ -131,12 +131,12 @@ export class GroupManagerListComponent implements OnChanges {
       this.confirmationService.confirm({
         target: event.target || undefined,
         key: 'commonPopup',
-        icon: 'pi pi-exclamation-triangle',
+        icon: 'ph-duotone ph-warning-circle',
         message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and
           not be able to restore it.`,
         acceptLabel: $localize`Yes, remove me from the group managers`,
-        acceptButtonStyleClass: 'p-button-danger',
-        acceptIcon: 'fa fa-check',
+        acceptButtonStyleClass: 'danger',
+        acceptIcon: 'ph-bold ph-check',
         rejectLabel: $localize`No`,
         accept: () => this.remove(),
       });

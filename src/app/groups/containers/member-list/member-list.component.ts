@@ -289,7 +289,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.confirmationService.confirm({
       target: event.target || undefined,
       key: 'commonPopup',
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'ph-duotone ph-warning-circle',
       message: $localize`Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(this.selection as GroupChild[])}?
        This operation cannot be undone.`,
       acceptLabel: $localize`Yes`,
@@ -303,7 +303,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.confirmationService.confirm({
       target: event.target || undefined,
       key: 'commonPopup',
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'ph-duotone ph-warning-circle',
       message: $localize`By removing ${getSelectedGroupChildCaptions(this.selection as GroupChild[])} from the group, you may loose
        manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
       acceptLabel: $localize`Yes`,
