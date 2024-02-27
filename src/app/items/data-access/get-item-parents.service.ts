@@ -2,31 +2,32 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { itemCorePermDecoder } from 'src/app/models/item-permissions';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { itemCorePermSchema } from 'src/app/models/item-permissions';
+import { itemStringSchema } from 'src/app/models/item-string';
+import { itemChildCategorySchema } from 'src/app/models/item-properties';
+import { itemTypeSchema } from 'src/app/models/item-type';
 
-const itemParentDecoder = D.struct({
-  id: D.string,
-  bestScore: D.number,
-  string: D.struct({
-    title: D.nullable(D.string),
-    imageUrl: D.nullable(D.string),
-  }),
-  category: D.literal('Undefined', 'Discovery', 'Application', 'Validation', 'Challenge'),
-  type: D.literal('Chapter','Task','Skill'),
-  permissions: itemCorePermDecoder,
-  result: D.struct({
-    attemptId: D.string,
-    latestActivityAt: dateDecoder,
-    startedAt: D.nullable(dateDecoder),
-    scoreComputed: D.number,
-    validated: D.boolean,
+const itemParentsSchema = z.array(
+  z.object({
+    id: z.string(),
+    bestScore: z.number(),
+    string: itemStringSchema,
+    category: itemChildCategorySchema,
+    type: itemTypeSchema,
+    permissions: itemCorePermSchema,
+    result: z.object({
+      attemptId: z.string(),
+      latestActivityAt: z.coerce.date(),
+      startedAt: z.coerce.date().nullable(),
+      scoreComputed: z.number(),
+      validated: z.boolean()
+    })
   })
-});
+);
 
-export type ItemParent = D.TypeOf<typeof itemParentDecoder>;
+type ItemParents = z.infer<typeof itemParentsSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -35,13 +36,13 @@ export class GetItemParentsService {
 
   constructor(private http: HttpClient) { }
 
-  get(id: string, attemptId: string): Observable<ItemParent[]> {
+  get(id: string, attemptId: string): Observable<ItemParents> {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
       .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/parents`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(itemParentDecoder))
+        decodeSnakeCaseZod(itemParentsSchema)
       );
   }
 }
