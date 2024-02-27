@@ -4,10 +4,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
+import { userBaseSchema, withGroupId } from 'src/app/groups/models/user';
 
 export interface Result {
   attemptId: string,
@@ -17,35 +16,18 @@ export interface Result {
   validated: boolean,
 }
 
-const userDecoder = pipe(
-  D.struct({
-    groupId: D.string,
-    login: D.string,
-  }),
-  D.intersect(
-    D.partial({
-      firstName: D.nullable(D.string),
-      lastName: D.nullable(D.string),
-    })
-  ),
-);
-
-const resultDecoder = pipe(
-  D.struct({
-    id: D.string,
-    allowsSubmissionsUntil: dateDecoder,
-    createdAt: dateDecoder,
-    endedAt: D.nullable(dateDecoder),
-    latestActivityAt: dateDecoder,
-    scoreComputed: D.number,
-    startedAt: D.nullable(dateDecoder),
-    validated: D.boolean,
-  }),
-  D.intersect(
-    D.partial({
-      userCreator: userDecoder,
-    }),
-  ),
+const resultsSchema = z.array(
+  z.object({
+    id: z.string(),
+    allowsSubmissionsUntil: z.coerce.date(),
+    createdAt: z.coerce.date(),
+    endedAt: z.coerce.date().nullable(),
+    latestActivityAt: z.coerce.date(),
+    scoreComputed: z.number(),
+    startedAt: z.coerce.date().nullable(),
+    validated: z.boolean(),
+    userCreator: withGroupId(userBaseSchema).optional(),
+  })
 );
 
 @Injectable({
@@ -61,7 +43,7 @@ export class GetResultsService {
         params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId },
       })
       .pipe(
-        decodeSnakeCase(D.array(resultDecoder)),
+        decodeSnakeCaseZod(resultsSchema),
         map(results => results.map(r => ({
           attemptId: r.id,
           latestActivityAt: r.latestActivityAt,
