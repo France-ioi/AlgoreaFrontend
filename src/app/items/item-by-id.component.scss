@@ -42,4 +42,12 @@
 
 .item-permissions {
   margin-bottom: toRem(16);
+
+  &.with-margin {
+    margin: var(--alg-space-size-5);
+  }
+
+  &.with-right-margin {
+    margin-right: var(--alg-space-size-5);
+  }
 }

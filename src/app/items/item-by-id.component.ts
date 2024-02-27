@@ -217,6 +217,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   userProfile$ = this.userSessionService.userProfile$;
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
+  withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
 
   private subscriptions: Subscription[] = [
 
