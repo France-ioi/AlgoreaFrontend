@@ -427,10 +427,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="4337023717719639106" datatype="html">
         <source> An error occurred while searching. If the problem persists, please contact us. </source><target state="new"> An error occurred while searching. If the problem persists, please contact us. </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="7282443917104900296" datatype="html">
-        <source>Select a content among those wiches already exist</source><target state="new">Select a content among those wiches already exist</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="3781733569549468335" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="4670132225535615890" datatype="html">
+        <source>Select a content among those which already exist</source><target state="new">Select a content among those which already exist</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit><trans-unit id="3781733569549468335" datatype="html">
         <source>No records found</source><target state="translated">Aucun résultat</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">104</context></context-group></trans-unit><trans-unit id="4834436992204469960" datatype="html">
