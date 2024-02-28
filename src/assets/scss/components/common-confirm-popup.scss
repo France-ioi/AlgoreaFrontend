@@ -26,6 +26,11 @@
     border: toRem(1) solid var(--alg-light-color);
     font-size: toRem(14);
 
+    &:focus, &:active {
+      outline: none;
+      box-shadow: none;
+    }
+
     &.danger {
       background: var(--danger-color);
     }
