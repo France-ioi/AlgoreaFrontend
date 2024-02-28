@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../models/item-type';
+import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
 import { AttemptId, FullItemRoute, ItemRoute, RawItemRoute, rawItemRoute } from '../models/routing/item-route';
 
 /**

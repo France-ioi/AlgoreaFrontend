@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
-import { itemCorePermSchema } from 'src/app/models/item-permissions';
-import { itemStringSchema } from 'src/app/models/item-string';
-import { itemChildCategorySchema } from 'src/app/models/item-properties';
-import { itemTypeSchema } from 'src/app/models/item-type';
+import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
+import { itemStringSchema } from 'src/app/items/models/item-string';
+import { itemChildCategorySchema } from 'src/app/items/models/item-properties';
+import { itemTypeSchema } from 'src/app/items/models/item-type';
 
 const itemParentsSchema = z.array(
   z.object({

@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
-import { canCurrentUserViewInfo, ItemViewPerm, itemViewPermSchema, ItemWithViewPerm } from 'src/app/models/item-view-permission';
-import { itemCorePermSchema } from 'src/app/models/item-permissions';
-import { itemChildCategorySchema } from '../models/item-properties';
-import { itemPermPropagationsSchema } from '../models/item-perm-propagation';
-import { itemTypeSchema } from '../models/item-type';
-import { itemStringSchema } from '../models/item-string';
+import { canCurrentUserViewInfo, ItemViewPerm, itemViewPermSchema, ItemWithViewPerm } from 'src/app/items/models/item-view-permission';
+import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
+import { itemChildCategorySchema } from '../items/models/item-properties';
+import { itemPermPropagationsSchema } from '../items/models/item-perm-propagation';
+import { itemTypeSchema } from '../items/models/item-type';
+import { itemStringSchema } from '../items/models/item-string';
 
 const baseItemChildSchema = z.object({
   id: z.string(),

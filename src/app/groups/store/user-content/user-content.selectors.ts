@@ -7,7 +7,7 @@ import { State } from './user-content.state';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
 import { FetchState, fetchingState } from 'src/app/utils/state';
 import { User } from '../../models/user';
-import { formatUser } from 'src/app/models/user';
+import { formatUser } from 'src/app/groups/models/user';
 import { RootState } from 'src/app/utils/store/root_state';
 
 interface UserContentSelectors<T extends RootState> {

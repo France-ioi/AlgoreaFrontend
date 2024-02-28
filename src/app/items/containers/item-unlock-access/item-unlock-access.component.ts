@@ -6,7 +6,7 @@ import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/oper
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
 import { canCloseOverlay } from 'src/app/utils/overlay';
-import { canCurrentUserViewContent } from 'src/app/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';

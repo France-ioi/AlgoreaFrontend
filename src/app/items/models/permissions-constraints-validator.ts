@@ -1,6 +1,6 @@
 import { ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { GroupPermissions } from 'src/app/data-access/group-permissions.service';
-import { ItemCorePerm } from 'src/app/models/item-permissions';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { TypeFilter } from './composition-filter';
 import {
   validateCanView,

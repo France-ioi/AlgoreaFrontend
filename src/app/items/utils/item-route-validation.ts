@@ -1,5 +1,5 @@
 import { ParamMap } from '@angular/router';
-import { ItemTypeCategory } from 'src/app/models/item-type';
+import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { decodeItemRouterParameters, FullItemRoute, itemCategoryFromPrefix, ItemRoute } from 'src/app/models/routing/item-route';
 
 interface ItemRouteError extends Partial<ItemRoute> {

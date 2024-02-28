@@ -1,9 +1,9 @@
 import { GroupPermissions } from 'src/app/data-access/group-permissions.service';
-import { ItemEditPerm, ItemPermWithEdit } from 'src/app/models/item-edit-permission';
-import { ItemPermWithGrantView, itemGrantViewPermValues, ItemGrantViewPerm } from 'src/app/models/item-grant-view-permission';
-import { ItemOwnerPerm, ItemSessionPerm } from 'src/app/models/item-permissions';
-import { ItemViewPerm, itemViewPermValues, ItemPermWithView } from 'src/app/models/item-view-permission';
-import { ItemPermWithWatch, ItemWatchPerm } from 'src/app/models/item-watch-permission';
+import { ItemEditPerm, ItemPermWithEdit } from 'src/app/items/models/item-edit-permission';
+import { ItemPermWithGrantView, itemGrantViewPermValues, ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permission';
+import { ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
+import { ItemViewPerm, itemViewPermValues, ItemPermWithView } from 'src/app/items/models/item-view-permission';
+import { ItemPermWithWatch, ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
 
 /**
  * The permissions that are subject to a constraint

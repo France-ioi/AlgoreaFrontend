@@ -1,5 +1,5 @@
 import { ItemFound } from 'src/app/data-access/search-item.service';
-import { ActivityType, isASkill, ItemType } from 'src/app/models/item-type';
+import { ActivityType, isASkill, ItemType } from 'src/app/items/models/item-type';
 
 type AssociatedItemId = string;
 

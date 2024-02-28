@@ -1,7 +1,7 @@
 import { ItemNavigationData } from 'src/app/data-access/item-navigation.service';
-import { ItemType } from '../item-type';
+import { ItemType } from '../../items/models/item-type';
 import { FullItemRoute } from '../routing/item-route';
-import { ItemCorePerm } from '../item-permissions';
+import { ItemCorePerm } from '../../items/models/item-permissions';
 import { ContentInfo, RoutedContentInfo } from './content-info';
 
 export interface ItemInfo extends RoutedContentInfo {

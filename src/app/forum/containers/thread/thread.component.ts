@@ -14,7 +14,7 @@ import {
   take,
 } from 'rxjs/operators';
 import { UserSessionService } from '../../../services/user-session.service';
-import { formatUser } from 'src/app/models/user';
+import { formatUser } from 'src/app/groups/models/user';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { UserInfo } from '../thread-message/thread-user-info';
 import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';

@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, skip, switchMap, take } from 'rxjs/operators';
-import { bestAttemptFromResults, defaultAttemptId } from 'src/app/models/attempts';
-import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/models/item-type';
+import { bestAttemptFromResults, defaultAttemptId } from 'src/app/items/models/attempts';
+import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { ContentRoute } from 'src/app/models/routing/content-route';
 import { isActivityInfo, isItemInfo, itemInfo, ItemInfo } from 'src/app/models/content/item-info';
 import { fullItemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
-import { mayHaveChildren } from 'src/app/models/item-type';
+import { mayHaveChildren } from 'src/app/items/models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../data-access/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
-import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/models/item-view-permission';
-import { isGroupTypeVisible } from 'src/app/models/group-types';
+import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
+import { isGroupTypeVisible } from 'src/app/groups/models/group-types';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 

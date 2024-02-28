@@ -6,8 +6,8 @@ import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { SECONDS } from '../utils/duration';
 import { requestTimeout } from '../interceptors/interceptor_common';
-import { itemTypeSchema } from '../models/item-type';
-import { participantTypeSchema } from '../models/group-types';
+import { itemTypeSchema } from '../items/models/item-type';
+import { participantTypeSchema } from '../groups/models/group-types';
 import { userBaseSchema, withId } from '../groups/models/user';
 
 const activityLogsSchema = z.array(

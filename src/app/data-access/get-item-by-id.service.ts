@@ -5,16 +5,16 @@ import { appConfig } from 'src/app/utils/config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { durationSchema } from 'src/app/utils/decoders';
-import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/models/item-permissions';
-import { itemStringSchema, withDescription } from '../models/item-string';
-import { itemTypeSchema } from '../models/item-type';
+import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/items/models/item-permissions';
+import { itemStringSchema, withDescription } from '../items/models/item-string';
+import { itemTypeSchema } from '../items/models/item-type';
 import {
   itemChildrenLayoutSchema,
   itemEntryMinAdmittedMembersRatioSchema,
   itemFullScreenSchema,
   itemValidationTypeSchema
-} from '../models/item-properties';
-import { participantTypeSchema } from '../models/group-types';
+} from '../items/models/item-properties';
+import { participantTypeSchema } from '../groups/models/group-types';
 
 const itemSchema = z.object({
   id: z.string(),

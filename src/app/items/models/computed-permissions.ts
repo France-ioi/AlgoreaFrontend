@@ -4,10 +4,10 @@ import {
 import { TypeFilter } from './composition-filter';
 import { PermissionsDialogData } from './permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from 'src/app/data-access/group-permissions.service';
-import { itemViewPermValues } from 'src/app/models/item-view-permission';
-import { itemGrantViewPermValues } from 'src/app/models/item-grant-view-permission';
-import { itemWatchPermValues } from 'src/app/models/item-watch-permission';
-import { itemEditPermValues } from 'src/app/models/item-edit-permission';
+import { itemViewPermValues } from 'src/app/items/models/item-view-permission';
+import { itemGrantViewPermValues } from 'src/app/items/models/item-grant-view-permission';
+import { itemWatchPermValues } from 'src/app/items/models/item-watch-permission';
+import { itemEditPermValues } from 'src/app/items/models/item-edit-permission';
 
 export function hasHigherPermission<T extends readonly string[]>(permissionsSortedByLoosest: T, permission: T[number]) {
   return (minimumPermission: T[number]): boolean =>

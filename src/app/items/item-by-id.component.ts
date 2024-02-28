@@ -14,7 +14,7 @@ import {
   mergeWith,
   takeUntil,
 } from 'rxjs/operators';
-import { defaultAttemptId } from 'src/app/models/attempts';
+import { defaultAttemptId } from 'src/app/items/models/attempts';
 import { errorState, fetchingState, FetchState, isFetchingOrError, readyState } from 'src/app/utils/state';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -23,7 +23,7 @@ import { GetItemPathService } from '../data-access/get-item-path.service';
 import { ItemDataSource, ItemData } from './services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { ItemRouter } from 'src/app/models/routing/item-router';
-import { isATask, isTask, ItemTypeCategory } from 'src/app/models/item-type';
+import { isATask, isTask, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { itemInfo } from 'src/app/models/content/item-info';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -39,11 +39,11 @@ import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
 import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/models/item-view-permission';
+import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
-import { allowsWatchingAnswers, AllowsWatchingItemResultsPipe } from 'src/app/models/item-watch-permission';
+import { allowsWatchingAnswers, AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
 import { SharedModule } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { ItemForumComponent } from './containers/item-forum/item-forum.component';

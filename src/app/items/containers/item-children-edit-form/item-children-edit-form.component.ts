@@ -15,7 +15,7 @@ import { ItemChanges, UpdateItemService } from '../../data-access/update-item.se
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { AllowsEditingChildrenItemPipe } from 'src/app/models/item-edit-permission';
+import { AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
 import { NgIf, NgClass } from '@angular/common';
 

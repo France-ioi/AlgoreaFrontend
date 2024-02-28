@@ -13,11 +13,11 @@ import {
   validateCanMakeSessionOfficial,
   ConstraintError,
 } from './item-permissions-constraints';
-import { ItemViewPerm } from 'src/app/models/item-view-permission';
-import { ItemGrantViewPerm } from 'src/app/models/item-grant-view-permission';
-import { ItemEditPerm } from 'src/app/models/item-edit-permission';
-import { ItemWatchPerm } from 'src/app/models/item-watch-permission';
-import { ItemCorePerm } from 'src/app/models/item-permissions';
+import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
+import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permission';
+import { ItemEditPerm } from 'src/app/items/models/item-edit-permission';
+import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 
 export interface PermissionsDialogData {
   canViewValues: ProgressSelectValue<string>[],

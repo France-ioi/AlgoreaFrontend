@@ -5,7 +5,7 @@ import { decodeSnakeCase } from '../../utils/operators/decode';
 import { appConfig } from '../../utils/config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { pipe } from 'fp-ts/function';
-import { itemCorePermDecoder, itemEntryTimePermDecoder, itemSessionPermDecoder } from 'src/app/models/item-permissions';
+import { itemCorePermDecoder, itemEntryTimePermDecoder, itemSessionPermDecoder } from 'src/app/items/models/item-permissions';
 
 const groupPermissionsDecoder = pipe(
   itemCorePermDecoder,

@@ -5,7 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { z } from 'zod';
 import { errorIsBadRequest } from 'src/app/utils/errors';
-import { itemTypeSchema } from '../models/item-type';
+import { itemTypeSchema } from '../items/models/item-type';
 
 const breadcrumbsFromRootElementSchema = z.object({
   id: z.string(),

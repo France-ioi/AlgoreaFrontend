@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../models/permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from 'src/app/data-access/group-permissions.service';
-import { ItemCorePerm } from 'src/app/models/item-permissions';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { TypeFilter } from '../../models/composition-filter';
-import { ItemViewPerm } from 'src/app/models/item-view-permission';
-import { ItemGrantViewPerm } from 'src/app/models/item-grant-view-permission';
-import { ItemWatchPerm } from 'src/app/models/item-watch-permission';
-import { ItemEditPerm } from 'src/app/models/item-edit-permission';
+import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
+import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permission';
+import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
+import { ItemEditPerm } from 'src/app/items/models/item-edit-permission';
 import { merge, Subject } from 'rxjs';
 import { permissionsConstraintsValidator } from '../../models/permissions-constraints-validator';
 import { withComputePermissions } from '../../models/computed-permissions';

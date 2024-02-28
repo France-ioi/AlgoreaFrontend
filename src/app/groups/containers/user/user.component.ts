@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/ro
 import { map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
 import { contentInfo } from 'src/app/models/content/content-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { formatUser } from 'src/app/models/user';
+import { formatUser } from 'src/app/groups/models/user';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { PlatformSettingsComponent } from '../platform-settings/platform-settings.component';

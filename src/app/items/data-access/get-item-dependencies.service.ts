@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
-import { itemDependencySchema } from 'src/app/models/item-dependency';
+import { itemDependencySchema } from 'src/app/items/models/item-dependency';
 
 const itemDependenciesSchema = z.array(itemDependencySchema);
 

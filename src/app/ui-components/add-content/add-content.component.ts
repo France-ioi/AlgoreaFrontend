@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { BehaviorSubject, merge, Observable, Subscription } from 'rxjs';
 import { map, filter, switchMap, debounceTime, distinctUntilChanged, shareReplay } from 'rxjs/operators';
-import { ItemCorePerm } from '../../models/item-permissions';
+import { ItemCorePerm } from '../../items/models/item-permissions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from '../../utils/state';
 import { ButtonModule } from 'primeng/button';

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import { ItemType } from '../models/item-type';
+import { ItemType } from '../items/models/item-type';
 import { map } from 'rxjs/operators';
 import { ActionResponse, successData } from '../data-access/action-response';
 

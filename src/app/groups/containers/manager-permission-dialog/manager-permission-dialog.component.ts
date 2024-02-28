@@ -4,7 +4,7 @@ import { Manager } from '../../data-access/get-group-managers.service';
 import { ProgressSelectValue, ProgressSelectComponent } from
   'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
 import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../../data-access/update-group-managers.service';
-import { formatUser } from 'src/app/models/user';
+import { formatUser } from 'src/app/groups/models/user';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationService, SharedModule } from 'primeng/api';

@@ -1,5 +1,5 @@
-import { ItemChildCategory } from 'src/app/models/item-properties';
-import { ItemType } from 'src/app/models/item-type';
+import { ItemChildCategory } from 'src/app/items/models/item-properties';
+import { ItemType } from 'src/app/items/models/item-type';
 
 export interface ItemChildWithAdditions {
   id: string,

@@ -4,8 +4,8 @@ import {
   AddedContent,
   NewContentType
 } from 'src/app/ui-components/add-content/add-content.component';
-import { getAllowedNewItemTypes } from 'src/app/models/new-item-types';
-import { ItemType } from 'src/app/models/item-type';
+import { getAllowedNewItemTypes } from 'src/app/items/models/new-item-types';
+import { ItemType } from 'src/app/items/models/item-type';
 import { Observable } from 'rxjs';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
 import { SectionComponent } from 'src/app/ui-components/section/section.component';

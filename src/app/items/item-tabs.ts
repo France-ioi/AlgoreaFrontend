@@ -4,10 +4,10 @@ import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntil
 import { TabService } from 'src/app/services/tab.service';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { appConfig } from 'src/app/utils/config';
-import { isATask } from 'src/app/models/item-type';
-import { allowsWatchingResults } from 'src/app/models/item-watch-permission';
-import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/models/item-view-permission';
-import { allowsEditingAll } from 'src/app/models/item-edit-permission';
+import { isATask } from 'src/app/items/models/item-type';
+import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
+import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/items/models/item-view-permission';
+import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
 import { ItemDataSource } from './services/item-datasource.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { NavigationEnd, Router } from '@angular/router';

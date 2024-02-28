@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { isSkill, ItemTypeCategory } from 'src/app/models/item-type';
+import { isSkill, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/utils/decoders';
-import { itemViewPermDecoder } from 'src/app/models/item-view-permission';
-import { itemCorePermDecoder } from 'src/app/models/item-permissions';
+import { itemViewPermDecoder } from 'src/app/items/models/item-view-permission';
+import { itemCorePermDecoder } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
 
 const itemNavigationChildDecoderBase = pipe(

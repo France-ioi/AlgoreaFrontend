@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../utils/config';
-import { ItemType } from '../models/item-type';
+import { ItemType } from '../items/models/item-type';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../utils/operators/decode';
-import { ItemCorePerm, itemCorePermDecoder } from '../models/item-permissions';
+import { ItemCorePerm, itemCorePermDecoder } from '../items/models/item-permissions';
 
 export interface ItemFound<T> {
   id: string,

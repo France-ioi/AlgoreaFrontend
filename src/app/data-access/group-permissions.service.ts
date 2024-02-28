@@ -12,7 +12,7 @@ import {
   itemEntryFromPermDecoder,
   itemEntryUntilPermDecoder,
   itemSessionPermDecoder
-} from '../models/item-permissions';
+} from '../items/models/item-permissions';
 
 const groupPermissionsDecoder = pipe(
   itemCorePermDecoder,

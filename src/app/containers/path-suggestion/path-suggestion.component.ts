@@ -8,7 +8,7 @@ import { mapToFetchState } from '../../utils/operators/state';
 import { map } from 'rxjs/operators';
 import { itemRoute, urlArrayForItemRoute } from '../../models/routing/item-route';
 import { UrlCommand } from '../../utils/url';
-import { typeCategoryOfItem } from '../../models/item-type';
+import { typeCategoryOfItem } from '../../items/models/item-type';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';

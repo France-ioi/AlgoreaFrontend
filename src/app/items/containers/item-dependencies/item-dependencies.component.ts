@@ -7,7 +7,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ItemData } from '../../services/item-datasource.service';
 import { canCloseOverlay } from 'src/app/utils/overlay';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
-import { ItemType } from 'src/app/models/item-type';
+import { ItemType } from 'src/app/items/models/item-type';
 import { AddItemPrerequisiteService } from '../../data-access/add-item-prerequisite.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';

@@ -3,7 +3,7 @@ import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
 import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
-import { GroupTypeCategory } from '../group-types';
+import { GroupTypeCategory } from '../../groups/models/group-types';
 
 export interface GroupRoute extends ContentRoute {
   contentType: GroupTypeCategory,

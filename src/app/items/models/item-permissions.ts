@@ -1,7 +1,7 @@
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
-import { dateDecoder } from '../utils/decoders';
+import { dateDecoder } from '../../utils/decoders';
 import { allowsGrantingEdition, ItemPermWithEdit, itemEditPermDecoder, itemEditPermSchema } from './item-edit-permission';
 import { allowsGrantingView, ItemPermWithGrantView, itemGrantViewPermDecoder, itemGrantViewPermSchema } from './item-grant-view-permission';
 import { itemViewPermDecoder, itemViewPermSchema } from './item-view-permission';

@@ -14,6 +14,26 @@ export const withId = <T extends typeof userBaseSchema>(user: T) => user.extend(
 export const withGrade = <T extends typeof userBaseSchema>(user: T) => user.extend({ grade: z.number().nullable() });
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
+export type UserBase = z.infer<typeof userBaseSchema>;
+
+export function formatUser<T extends UserBase>(user: T) : string {
+  if (user.firstName || user.lastName) {
+    let fullName = '';
+
+    if (user.firstName) {
+      fullName += user.firstName;
+    }
+
+    if (user.lastName) {
+      fullName += user.firstName ? ` ${ user.lastName }` : user.lastName;
+    }
+
+    return `${ fullName } (${ user.login })`;
+  }
+
+  return user.login;
+}
+
 /** former version (to be removed/transformed soon) */
 
 export const userDecoder = pipe(

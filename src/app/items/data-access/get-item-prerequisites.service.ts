@@ -4,7 +4,7 @@ import { appConfig } from 'src/app/utils/config';
 import { HttpClient } from '@angular/common/http';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
-import { itemDependencySchema } from 'src/app/models/item-dependency';
+import { itemDependencySchema } from 'src/app/items/models/item-dependency';
 
 const itemPrerequisitesSchema = z.array(itemDependencySchema);
 

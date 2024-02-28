@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { TreeNode, SharedModule } from 'primeng/api';
-import { ItemTypeCategory } from 'src/app/models/item-type';
+import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { SkillProgressComponent } from '../../ui-components/skill-progress/skill-progress.component';
 import { TooltipModule } from 'primeng/tooltip';
