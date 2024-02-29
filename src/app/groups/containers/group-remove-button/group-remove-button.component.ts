@@ -68,12 +68,14 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
     this.confirmationService.confirm({
       message: $localize`Are you sure you want to delete the group "${ this.group.name }"`,
       header: $localize`Confirm Action`,
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'ph-duotone ph-warning-circle',
       acceptLabel: $localize`Delete it`,
+      acceptIcon: 'ph-bold ph-check',
       accept: () => {
         this.deleteGroup();
       },
       rejectLabel: $localize`No`,
+      rejectIcon: 'ph-bold ph-x',
     });
   }
 

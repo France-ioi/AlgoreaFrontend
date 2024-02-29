@@ -77,14 +77,16 @@ export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {
     this.confirmationService.confirm({
       message: $localize`Deleting it will also remove permanently all answers and results related with this content.`,
       header: $localize`Are you sure you want to delete this content?`,
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'ph-duotone ph-warning-circle',
       acceptLabel: $localize`Yes`,
-      acceptButtonStyleClass: 'p-button-danger',
+      acceptButtonStyleClass: 'danger',
+      acceptIcon: 'ph-bold ph-check',
       accept: () => {
         this.confirmRemoval.emit();
         this.deleteItem();
       },
       rejectLabel: $localize`No`,
+      rejectIcon: 'ph-bold ph-x',
     });
   }
 

@@ -121,11 +121,13 @@ export class ManagerPermissionDialogComponent implements OnChanges {
       header: $localize`Confirm Action`,
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: $localize`Yes, save these changes.`,
-      acceptButtonStyleClass: 'p-button-danger',
+      acceptButtonStyleClass: 'danger',
+      acceptIcon: 'ph-bold ph-check',
       accept: () => {
         this.update();
       },
       rejectLabel: $localize`No`,
+      rejectIcon: 'ph-bold ph-x',
     });
   }
 

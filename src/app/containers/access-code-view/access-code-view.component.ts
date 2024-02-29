@@ -67,8 +67,9 @@ export class AccessCodeViewComponent {
           header: $localize`Join the group "${response.group.name}"`,
           message: message,
           acceptLabel: $localize`Join`,
-          acceptIcon: 'fa fa-check',
+          acceptIcon: 'ph-bold ph-check',
           rejectLabel: $localize`Cancel`,
+          rejectIcon: 'ph-bold ph-x',
           accept: () => {
             this.joinGroup(this.code);
           }
