@@ -7,7 +7,8 @@
       <alg-error
         *ngIf="state.isError"
         icon="fa fa-exclamation-triangle"
-        i18n-message message="Unable to load the dependencies"
+        i18n-message message="Unable to load the prerequisites"
+        i18n-buttonCaption buttonCaption="Retry to load prerequisites"
         [showRefreshButton]="true"
         (refresh)="refresh()"
       ></alg-error>
@@ -62,6 +63,15 @@
   <h2 class="alg-h2 alg-text-normal depending-content-title" i18n>Content depending on this one</h2>
   <div *ngIf="dependenciesState$ | async as state">
     <alg-loading size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
+
+    <alg-error
+      *ngIf="state.isError"
+      icon="fa fa-exclamation-triangle"
+      i18n-message message="Unable to load the dependencies"
+      i18n-buttonCaption buttonCaption="Retry to load dependencies"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
 
     <ng-container *ngIf="!state.isFetching && !changeInProgress && state.data">
       <ng-container *ngIf="state.data.length > 0; else noOtherContent">

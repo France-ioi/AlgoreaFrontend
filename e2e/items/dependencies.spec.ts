@@ -16,14 +16,16 @@ test('error/retry on dependencies/prerequisites services', async ({ page }) => {
     await page.route(`${apiUrl}/items/7523720120450464843/dependencies`, route => route.abort());
     await initAsUsualUser(page);
     await page.goto('/a/7523720120450464843;p=7528142386663912287;pa=0/dependencies');
-    await expect.soft(page.getByText('Unable to load the dependencies')).toBeVisible(); // TODO: should be "prerequisites"
-    // TODO: There is no proper error messages when the dependencies service fails
+    await expect.soft(page.getByText('Unable to load the prerequisites')).toBeVisible();
+    await expect.soft(page.getByText('Unable to load the dependencies')).toBeVisible();
   });
   await test.step('test retry', async () => {
     await page.unroute(`${apiUrl}/items/7523720120450464843/prerequisites`);
-    await page.getByRole('button', { name: 'Retry' }).click(); // TODO make it more specific to press the right one
+    await page.getByRole('button', { name: 'Retry to load prerequisites' }).click();
     await expect.soft(page.getByText('There are no prerequisites')).toBeVisible();
-    // TODO: test retry on dependencies as well
+    await page.unroute(`${apiUrl}/items/7523720120450464843/dependencies`);
+    await page.getByRole('button', { name: 'Retry to load dependencies' }).click();
+    await expect.soft(page.getByText('There are no other content')).toBeVisible();
   });
 });
 
