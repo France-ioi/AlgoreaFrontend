@@ -16,6 +16,7 @@ interface Message
   type: 'success' | 'info' | 'error',
   summary?: string,
   detail: string,
+  icon?: string,
 }
 
 type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
@@ -106,6 +107,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         type: 'error',
         summary: $localize`${notFoundUsers.length} user login(s) not found: `,
         detail: `${notFoundUsers.join(', ')}`,
+        icon: 'ph-duotone ph-x-circle',
       });
 
     if (invalidInvites.length > 0)

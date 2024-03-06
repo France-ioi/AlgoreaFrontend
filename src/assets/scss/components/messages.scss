@@ -1,8 +1,39 @@
-@import '../../../variables';
+@import 'src/assets/scss/functions';
 
 .alg-messages {
-  border-radius: 9rem;
-  padding: 0.4167rem;
-  color: var(--base-color);
-  margin: 0.4167rem 0;
+  .p-message {
+    border-radius: toRem(10);
+    color: var(--alg-white-color);
+
+    .p-message-wrapper {
+      padding: toRem(8) toRem(16);
+    }
+
+    &.p-message-success  {
+      color: var(--alg-message-success-color);
+      background-color: var(--alg-message-success-bg-color);
+
+      .p-message-icon, .p-message-close-icon {
+        color: var(--alg-message-success-color);
+      }
+    }
+
+    &.p-message-info {
+      color: var(--alg-message-info-color);
+      background-color: var(--alg-message-info-bg-color);
+
+      .p-message-icon, .p-message-close-icon {
+        color: var(--alg-message-info-color);
+      }
+    }
+
+    &.p-message-error  {
+      color: var(--alg-message-error-color);
+      background-color: var(--alg-message-error-bg-color);
+
+      .p-message-icon, .p-message-close-icon {
+        color: var(--alg-message-error-color);
+      }
+    }
+  }
 }
