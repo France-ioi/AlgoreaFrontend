@@ -30,6 +30,13 @@ const safeList = [
     'p-tooltip-top',
     'p-tooltip-bottom',
     'tooltip-custom',
+    'p-message',
+    'p-message-wrapper',
+    'p-message-success',
+    'p-message-info',
+    'p-message-error',
+    'p-message-icon',
+    'p-message-close-icon',
 ];
 
 if (allCssFiles.length === 0) {
