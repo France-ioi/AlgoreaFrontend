@@ -5,13 +5,14 @@
   margin-right: var(--alg-space-size-3);
   background-color: var(--alg-white-color);
   border-radius: toRem(10);
+  border-color: var(--alg-border-color);
 
   &:before {
-    border-bottom-color: var(--alg-primary-color);
+    border-bottom-color: var(--alg-border-color);
   }
 
   &:after {
-    border-bottom-color: var(--alg-primary-color);
+    border-bottom-color: var(--alg-white-color);
   }
 
   .p-confirm-popup-message, .p-confirm-popup-icon {
