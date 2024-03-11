@@ -66,7 +66,7 @@ export class JoinedGroupListComponent implements OnDestroy {
       key: 'commonPopup',
       message: $localize`Are you sure you want to leave this group?`,
       header: $localize`Confirm Action`,
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'ph-duotone ph-warning-circle',
       acceptLabel: $localize`Yes, leave group`,
       accept: () => {
         this.leaveGroup(membership);

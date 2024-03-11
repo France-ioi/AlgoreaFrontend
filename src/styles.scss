@@ -31,6 +31,7 @@
 @import 'assets/scss/components/rounded-icon-wrapper';
 @import 'assets/scss/components/input';
 @import 'assets/scss/components/top-bar-scrollbar';
+@import 'assets/scss/components/common-confirm-popup';
 
 // New Design
 @import 'assets/fonts/roboto/stylesheet';
@@ -127,11 +128,6 @@ body {
     }
   }
 
-}
-
-.common-confirm-popup {
-  margin-left: 2rem;
-  margin-right: 2rem;
 }
 
 .html-container {
