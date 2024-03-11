@@ -14,7 +14,7 @@ import {
   takeUntil,
   tap
 } from 'rxjs/operators';
-import { bestAttemptFromResults, implicitResultStart } from 'src/app/models/attempts';
+import { bestAttemptFromResults, implicitResultStart } from 'src/app/items/models/attempts';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -25,7 +25,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { buildUp } from 'src/app/utils/operators/build-up';
 import { FetchState } from 'src/app/utils/state';
 import { LocaleService } from 'src/app/services/localeService';
-import { canCurrentUserViewContent } from 'src/app/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';

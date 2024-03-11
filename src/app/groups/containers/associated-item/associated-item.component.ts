@@ -8,7 +8,7 @@ import { SearchItemService } from 'src/app/data-access/search-item.service';
 import {
   AddedContent, NewContentType,
 } from 'src/app/ui-components/add-content/add-content.component';
-import { ItemType, ItemTypeCategory } from 'src/app/models/item-type';
+import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
 import {
   NoAssociatedItem,
   NewAssociatedItem,
@@ -18,7 +18,7 @@ import {
 } from './associated-item-types';
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { getAllowedNewItemTypes } from 'src/app/models/new-item-types';
+import { getAllowedNewItemTypes } from 'src/app/items/models/new-item-types';
 import { RouterLink } from '@angular/router';
 import { AddContentComponent } from 'src/app/ui-components/add-content/add-content.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';

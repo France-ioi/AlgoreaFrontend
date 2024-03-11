@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@a
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
-import { ItemType, ItemTypeCategory } from 'src/app/models/item-type';
-import { ItemCorePerm } from 'src/app/models/item-permissions';
-import { itemViewPermMax } from 'src/app/models/item-view-permission';
-import { itemWatchPermMax } from 'src/app/models/item-watch-permission';
-import { itemEditPermMax } from 'src/app/models/item-edit-permission';
-import { itemGrantViewPermMax } from 'src/app/models/item-grant-view-permission';
+import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
+import { itemViewPermMax } from 'src/app/items/models/item-view-permission';
+import { itemWatchPermMax } from 'src/app/items/models/item-watch-permission';
+import { itemEditPermMax } from 'src/app/items/models/item-edit-permission';
+import { itemGrantViewPermMax } from 'src/app/items/models/item-grant-view-permission';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemData } from '../../services/item-datasource.service';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';

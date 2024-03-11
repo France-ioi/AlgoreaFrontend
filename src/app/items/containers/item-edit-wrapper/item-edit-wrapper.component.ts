@@ -20,7 +20,7 @@ import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
-import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/models/item-edit-permission';
+import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';

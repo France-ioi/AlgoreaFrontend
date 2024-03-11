@@ -5,8 +5,8 @@ import {
   ProgressSelectComponent,
 } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
 import { generateCanViewValues } from '../../models/permissions-texts';
-import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/models/item-permissions';
-import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/models/item-view-permission';
+import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
+import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
 import { PermissionsEditDialogComponent } from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';

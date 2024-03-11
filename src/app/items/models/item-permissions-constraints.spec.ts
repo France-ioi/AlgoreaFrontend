@@ -1,7 +1,7 @@
-import { ItemGrantViewPerm, itemGrantViewPermValues } from 'src/app/models/item-grant-view-permission';
-import { ItemViewPerm, itemViewPermValues } from 'src/app/models/item-view-permission';
-import { ItemEditPerm, itemEditPermValues } from 'src/app/models/item-edit-permission';
-import { ItemWatchPerm, itemWatchPermValues } from 'src/app/models/item-watch-permission';
+import { ItemGrantViewPerm, itemGrantViewPermValues } from 'src/app/items/models/item-grant-view-permission';
+import { ItemViewPerm, itemViewPermValues } from 'src/app/items/models/item-view-permission';
+import { ItemEditPerm, itemEditPermValues } from 'src/app/items/models/item-edit-permission';
+import { ItemWatchPerm, itemWatchPermValues } from 'src/app/items/models/item-watch-permission';
 import {
   validateCanEdit,
   validateCanGrantView,

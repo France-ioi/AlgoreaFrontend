@@ -3,18 +3,18 @@ import { ItemData } from '../../services/item-datasource.service';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
-import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/models/item-type';
-import { bestAttemptFromResults } from 'src/app/models/attempts';
+import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { bestAttemptFromResults } from 'src/app/items/models/attempts';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
-import { ItemCorePerm } from 'src/app/models/item-permissions';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemChildrenEditListComponent } from '../item-children-edit-list/item-children-edit-list.component';
 import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { ItemPermPropagations } from 'src/app/models/item-perm-propagation';
+import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
 
 type BaseChildData = Partial<ItemPermPropagations> & {
   scoreWeight: number,

@@ -5,8 +5,8 @@ import {
   AddedContent,
   AddContentComponent
 } from 'src/app/ui-components/add-content/add-content.component';
-import { isSkill, ItemType, ItemTypeCategory } from 'src/app/models/item-type';
-import { getAllowedNewItemTypes } from 'src/app/models/new-item-types';
+import { isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { getAllowedNewItemTypes } from 'src/app/items/models/new-item-types';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
 import { AddContentComponent as AddContentComponent_1 } from 'src/app/ui-components/add-content/add-content.component';
 import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-section.component';

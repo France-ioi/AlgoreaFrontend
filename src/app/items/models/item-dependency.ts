@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { durationSchema } from '../utils/decoders';
-import { participantTypeSchema } from './group-types';
+import { durationSchema } from '../../utils/decoders';
+import { participantTypeSchema } from '../../groups/models/group-types';
 import { itemCorePermSchema } from './item-permissions';
 import { itemStringSchema } from './item-string';
 import { itemTypeSchema } from './item-type';

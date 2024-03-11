@@ -4,7 +4,7 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemParentsService } from '../../data-access/get-item-parents.service';
 import { ItemData } from '../../services/item-datasource.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { canCurrentUserViewContent } from 'src/app/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';

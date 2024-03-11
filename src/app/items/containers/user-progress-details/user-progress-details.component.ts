@@ -4,11 +4,11 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { delay, take } from 'rxjs';
 import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
-import { ItemPermWithWatch } from 'src/app/models/item-watch-permission';
+import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { TypeFilter } from '../../models/composition-filter';
 import { DurationToReadable } from 'src/app/pipes/duration';
-import { AllowsWatchingItemAnswersPipe } from 'src/app/models/item-watch-permission';
+import { AllowsWatchingItemAnswersPipe } from 'src/app/items/models/item-watch-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithAnswerPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
@@ -16,7 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
-import { ItemType } from 'src/app/models/item-type';
+import { ItemType } from 'src/app/items/models/item-type';
 
 export interface ProgressData {
   progress: ParticipantProgresses[number],

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { ItemCorePerm } from 'src/app/models/item-permissions';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
 import { ReplaySubject, switchMap } from 'rxjs';

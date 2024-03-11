@@ -1,8 +1,8 @@
 import { ParamMap } from '@angular/router';
-import { defaultAttemptId } from '../attempts';
+import { defaultAttemptId } from '../../items/models/attempts';
 import { appConfig } from '../../utils/config';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
-import { ItemTypeCategory } from '../item-type';
+import { ItemTypeCategory } from '../../items/models/item-type';
 import { isString } from '../../utils/type-checkers';
 import { UrlCommand } from '../../utils/url';
 import { arraysEqual } from '../../utils/array';

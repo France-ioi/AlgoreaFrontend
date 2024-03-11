@@ -6,7 +6,7 @@ import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/it
 import { appConfig } from 'src/app/utils/config';
 import { tagError } from 'src/app/utils/errors';
 import { ensureDefined } from 'src/app/utils/assert';
-import { itemTypeSchema, typeCategoryOfItem } from 'src/app/models/item-type';
+import { itemTypeSchema, typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 

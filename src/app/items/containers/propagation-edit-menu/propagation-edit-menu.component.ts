@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
-import { AllowsGrantingViewItemPipe, AllowsGrantingContentViewItemPipe } from 'src/app/models/item-grant-view-permission';
+import { AllowsGrantingViewItemPipe, AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { NgClass, NgIf } from '@angular/common';
 
 @Component({

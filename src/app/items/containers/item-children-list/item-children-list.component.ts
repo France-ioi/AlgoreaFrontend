@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ItemTypeCategory } from 'src/app/models/item-type';
+import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { ItemChildWithAdditions } from './item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';

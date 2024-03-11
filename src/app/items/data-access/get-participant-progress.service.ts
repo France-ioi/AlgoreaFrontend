@@ -5,7 +5,7 @@ import { appConfig } from 'src/app/utils/config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/utils/decoders';
-import { itemCorePermDecoder } from 'src/app/models/item-permissions';
+import { itemCorePermDecoder } from 'src/app/items/models/item-permissions';
 import { pipe } from 'fp-ts/function';
 
 const participantProgressDecoder = pipe(
