@@ -10,8 +10,12 @@
     color: var(--alg-secondary-color);
     background: none;
     border-radius: toRem(32);
-    border: toRem(1) solid var(--alg-light-color);
+    border: none;
     font-size: toRem(14);
+
+    &.p-confirm-dialog-reject {
+      border: toRem(1) solid var(--alg-light-color);
+    }
 
     &:focus, &:active {
       outline: none;
