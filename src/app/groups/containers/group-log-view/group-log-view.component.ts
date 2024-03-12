@@ -121,7 +121,7 @@ export class GroupLogViewComponent implements OnChanges, OnDestroy {
       withLatestFrom(this.sessionService.userProfile$),
       map(([ logs, currentUserProfile ]) => logs.map(log => ({
         ...log,
-        allowToViewAnswer: log.participant.id === currentUserProfile.groupId,
+        allowToViewAnswer: log.participant.id === currentUserProfile.groupId || log.canWatchItemAnswer,
       })))
     );
   }

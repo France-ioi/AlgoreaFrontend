@@ -6,7 +6,6 @@ import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { ItemType } from 'src/app/items/models/item-type';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { allowsWatchingAnswers } from 'src/app/items/models/item-watch-permission';
 import { DataPager } from 'src/app/utils/data-pager';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { LogActionDisplayPipe } from 'src/app/pipes/logActionDisplay';
@@ -98,10 +97,6 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     this.store.select(fromObservation.selectObservedGroupRoute),
   ]).pipe(
     map(([ item, observedGroupRoute ]) => this.getLogColumns(item.type, observedGroupRoute)),
-  );
-
-  canWatchAnswers$ = this.item$.pipe(
-    map(item => allowsWatchingAnswers(item.permissions))
   );
 
   constructor(
