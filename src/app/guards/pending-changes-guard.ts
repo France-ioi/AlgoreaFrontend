@@ -47,12 +47,14 @@ export class PendingChangesGuard implements OnDestroy {
     this.confirmationService.confirm({
       message: $localize`This page has unsaved changes. Do you want to leave this page and lose its changes?`,
       header: $localize`Confirm Navigation`,
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'ph-duotone ph-warning-circle',
       acceptLabel: $localize`Yes, leave page`,
+      acceptIcon: 'ph-bold ph-check',
       accept: () => {
         this.dialogResponse.next(true);
       },
       rejectLabel: $localize`No`,
+      rejectIcon: 'ph-bold ph-x',
       reject: () => {
         this.dialogResponse.next(false);
       },
