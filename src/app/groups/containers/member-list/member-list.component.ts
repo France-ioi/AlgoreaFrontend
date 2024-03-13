@@ -293,7 +293,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       message: $localize`Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(this.selection as GroupChild[])}?
        This operation cannot be undone.`,
       acceptLabel: $localize`Yes`,
-      acceptIcon: 'fa fa-check',
+      acceptIcon: 'ph-bold ph-check',
       rejectLabel: $localize`No`,
       accept: () => this.removeGroupsOrSubgroups(),
     });
@@ -307,7 +307,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       message: $localize`By removing ${getSelectedGroupChildCaptions(this.selection as GroupChild[])} from the group, you may loose
        manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
       acceptLabel: $localize`Yes`,
-      acceptIcon: 'fa fa-check',
+      acceptIcon: 'ph-bold ph-check',
       rejectLabel: $localize`No`,
       accept: () => this.removeGroupsOrSubgroups(groupId),
     });
@@ -368,7 +368,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         $localize`Do you also want to delete the group?` :
         $localize`These groups are all empty. Do you also want to delete them?`,
       acceptLabel: $localize`Yes`,
-      acceptIcon: 'fa fa-check',
+      acceptIcon: 'ph-bold ph-check',
       rejectLabel: $localize`No`,
       accept: () => {
         // ISSUE: https://github.com/primefaces/primeng/issues/10589
