@@ -5,7 +5,7 @@
     *ngIf="state.isError; else noError"
     class="error dark"
     i18n-message message="Error while loading the group members"
-    icon="fa fa-exclamation-triangle"
+    icon="ph-duotone ph-warning-circle"
     [showRefreshButton]="true"
     (refresh)="fetchRows()"
   ></alg-error>
