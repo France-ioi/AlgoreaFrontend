@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/angular-ivy';
 
-export function reportError(error: unknown): void {
+export function reportAnError(error: unknown): void {
   Sentry.captureException(error);
 }
