@@ -4,7 +4,7 @@
       <div class="content validated">
         <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
           <span>
-            <i class="fa fa-clock"></i>
+            <i class="ph ph-clock"></i>
             <span class="menu-label" i18n>Time spent</span>
             <span class="menu-value">{{ progress.timeSpent | duration }}</span>
           </span>
@@ -44,7 +44,7 @@
           class="clickable"
           (click)="editPermissions.emit()"
         >
-          <i class="fa fa-lock"></i>
+          <i class="ph-duotone ph-lock"></i>
           <span i18n>ACCESS</span>
         </span>
       </div>
