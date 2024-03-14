@@ -20,17 +20,17 @@ export class CompositionFilterComponent implements OnInit {
 
   readonly typeFilters: {icon:string, label:string, value:TypeFilter}[] = [
     {
-      icon: 'fa fa-users',
+      icon: 'ph-duotone ph-users',
       label: $localize`sub-groups`,
       value: 'Groups'
     },
     {
-      icon: 'fa fa-users',
+      icon: 'ph-duotone ph-users',
       label: $localize`teams`,
       value: 'Teams'
     },
     {
-      icon: 'fa fa-user',
+      icon: 'ph-duotone ph-users',
       label: $localize`users`,
       value: 'Users'
     },
