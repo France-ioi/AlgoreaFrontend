@@ -53,7 +53,6 @@
               "node_modules/@phosphor-icons/web/src/bold/style.css",
               "node_modules/primeng/resources/themes/nova/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles.scss",
               "src/assets/fonts/titillium/stylesheet.css",
               "src/assets/fonts/source-sans-pro/stylesheet.css"
