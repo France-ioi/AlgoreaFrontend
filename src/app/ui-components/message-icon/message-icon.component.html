@@ -1,0 +1,14 @@
+<div class="container alg-flex-1">
+  <span class="icon-container">
+    <i class="icon" [ngClass]="icon"></i>
+    <span class="message-icon-bg"></span>
+  </span>
+  <span class="message-text alg-text-secondary">
+    @if(message) {
+      {{ message }}
+    }@else {
+      <ng-content></ng-content>
+    }
+  </span>
+</div>
+
