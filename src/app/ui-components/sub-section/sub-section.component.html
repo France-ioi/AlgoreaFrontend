@@ -2,10 +2,10 @@
   <div>
     <span class="section-title">{{ label }}</span>
     <span class="section-help" *ngIf="tooltip" [title]="tooltip">
-      <i class="fa fa-question"></i>
+      <i class="ph ph-question"></i>
     </span>
     <span class="section-close" *ngIf="canClose" (click)="onCloseEvent($event)">
-      <i class="fa fa-times"></i>
+      <i class="ph-bold ph-x"></i>
     </span>
   </div>
   <div class="section-content">

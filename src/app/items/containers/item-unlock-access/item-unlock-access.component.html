@@ -3,7 +3,7 @@
 
   <alg-error
     class="alg-flex-1"
-    icon="fa fa-exclamation-triangle"
+    icon="ph-duotone ph-warning-circle"
     i18n-message message="Unable to load the dependencies"
     [showRefreshButton]="true"
     (refresh)="refresh()"
@@ -11,7 +11,7 @@
   ></alg-error>
 
   <ng-container *ngIf="!state.isFetching && (state.data || []).length > 0">
-    <alg-section icon="fa fa-list" i18n-label label="Prerequisites">
+    <alg-section icon="ph ph-list" i18n-label label="Prerequisites">
       <p i18n>You can unlock access by validating one of the following content.</p>
 
       <ul class="list">
@@ -37,7 +37,7 @@
               {{ item.string.title }}
             </a>
           </div>
-          <i class="lock-icon fa fa-lock" *ngIf="item.isLocked"></i>
+          <i class="lock-icon ph-duotone ph-lock" *ngIf="item.isLocked"></i>
         </li>
       </ul>
     </alg-section>

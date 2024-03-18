@@ -88,8 +88,8 @@
               class="table-icon"
               [ngClass]="{ 'icon-unlocked': rowData.canGrantGroupAccess, 'icon-locked': !rowData.canGrantGroupAccess }"
             >
-              <i *ngIf="!rowData.canGrantGroupAccess" class="fa fa-times"></i>
-              <i *ngIf="rowData.canGrantGroupAccess" class="fa fa-check"></i>
+              <i *ngIf="!rowData.canGrantGroupAccess" class="ph-bold ph-x"></i>
+              <i *ngIf="rowData.canGrantGroupAccess" class="ph-bold ph-check"></i>
             </div>
           </td>
           <td style="width: 5rem; max-width: 5rem;">
@@ -97,8 +97,8 @@
               class="table-icon"
               [ngClass]="{ 'icon-unlocked': rowData.canWatchMembers, 'icon-locked': !rowData.canWatchMembers }"
             >
-              <i *ngIf="!rowData.canWatchMembers" class="fa fa-times"></i>
-              <i *ngIf="rowData.canWatchMembers" class="fa fa-check"></i>
+              <i *ngIf="!rowData.canWatchMembers" class="ph-bold ph-x"></i>
+              <i *ngIf="rowData.canWatchMembers" class="ph-bold ph-check"></i>
             </span>
           </td>
           <td style="width: 11rem; max-width: 11rem;">

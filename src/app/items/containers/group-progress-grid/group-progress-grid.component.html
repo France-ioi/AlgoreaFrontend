@@ -9,7 +9,7 @@
       *ngIf="rowsState.isError || columnsState.isError; else noError"
       class="dark"
       i18n-message message="Error while loading the data"
-      icon="fa fa-exclamation-triangle"
+      icon="ph-duotone ph-warning-circle"
       [showRefreshButton]="true"
       (refresh)="fetchRows()"
     ></alg-error>
@@ -41,7 +41,7 @@
             pButton
             type="button"
             i18n-label label="Export as CSV"
-            icon="fa fa-file-download"
+            icon="ph ph-file-arrow-down"
             class="p-button-sm"
             (click)="onCSVExport()"
             [disabled]="isCSVDataFetching"

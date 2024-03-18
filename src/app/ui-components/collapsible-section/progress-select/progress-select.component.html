@@ -30,8 +30,8 @@
           class="progress-point"
           [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1, 'active-light': item.selected}"
         >
-          <i *ngIf="idx < selected || item.selected" class="fa fa-check"></i>
-          <i *ngIf="idx === selected" class="fa fa-check"></i>
+          <i *ngIf="idx < selected || item.selected" class="ph-bold ph-check"></i>
+          <i *ngIf="idx === selected" class="ph-bold ph-check"></i>
         </span>
         <span
           *ngIf="idx + 1 < values.length"

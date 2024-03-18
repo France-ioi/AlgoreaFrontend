@@ -4,7 +4,7 @@
     *ngIf="state.isError"
     class="alg-flex-1"
     [class.dark]="$any(state).error.status !== 403"
-    [icon]="$any(state).error.status !== 403 ? 'fa fa-exclamation-triangle' : undefined"
+    [icon]="$any(state).error.status !== 403 ? 'ph-duotone ph-warning-circle' : undefined"
     [showRefreshButton]="$any(state).error.status !== 403"
     (refresh)="refresh()"
   >
