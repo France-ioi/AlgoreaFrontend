@@ -46,7 +46,7 @@
         [loading]="state.isFetching"
         [tableStyle]="{'min-width': '599.98px'}"
         responsiveLayout="scroll"
-        *ngIf="{ isObserving: isObserving$ | async, canWatchAnswers: canWatchAnswers$ | async } as meta"
+        *ngIf="{ isObserving: isObserving$ | async } as meta"
       >
         <ng-template pTemplate="header" let-rowData let-columns>
           <tr *ngIf="rowData.length > 0">
@@ -85,7 +85,7 @@
                       <a
                         class="alg-link item-title-link"
                         [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true } | url"
-                        *ngIf="(!meta.isObserving || meta.canWatchAnswers) && rowData.answerId"
+                        *ngIf="(!meta.isObserving || rowData.canWatchItemAnswer) && rowData.answerId"
                       >
                         {{ (meta.isObserving ? 'observingMode' : '') | i18nSelect : {
                           observingMode: 'View answer',
