@@ -14,8 +14,7 @@ import {
   mergeWith,
   takeUntil,
 } from 'rxjs/operators';
-import { defaultAttemptId } from 'src/app/items/models/attempts';
-import { errorState, fetchingState, FetchState, isFetchingOrError, readyState } from 'src/app/utils/state';
+import { FetchState } from 'src/app/utils/state';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
@@ -23,14 +22,13 @@ import { GetItemPathService } from '../data-access/get-item-path.service';
 import { ItemDataSource, ItemData } from './services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { ItemRouter } from 'src/app/models/routing/item-router';
-import { isATask, isTask, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { isATask, isTask } from 'src/app/items/models/item-type';
 import { itemInfo } from 'src/app/models/content/item-info';
-import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { isItemRouteError, itemRouteFromParams } from './utils/item-route-validation';
+import { itemRouteFromParams } from './utils/item-route-validation';
 import { ContentDisplayType, LayoutService } from 'src/app/services/layout.service';
-import { mapStateData, mapToFetchState, readyData } from 'src/app/utils/operators/state';
-import { FullItemRoute, ItemRoute, RawItemRoute, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
+import { mapStateData, readyData } from 'src/app/utils/operators/state';
+import { RawItemRoute, itemCategoryFromPrefix, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/guards/before-unload-guard';
 import { ItemContentComponent } from './containers/item-content/item-content.component';
 import { ItemEditWrapperComponent } from './containers/item-edit-wrapper/item-edit-wrapper.component';
@@ -68,6 +66,7 @@ import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
 import { isUser } from '../models/routing/group-route';
+import { fromItemContent } from './store';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -116,31 +115,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   @ViewChild('contentContainer') contentContainer?: ElementRef<HTMLDivElement>;
 
   private destroyed$ = new Subject<void>();
-
-  private itemRouteState$ = this.activatedRoute.paramMap.pipe(
-    repeatLatestWhen(this.userSessionService.userChanged$),
-    // When loading a task with an answerId to be loaded as current, we need to remove the answerId from the url to avoid reloading
-    // a former answer if the user refreshes the page
-    // However, replacing the url should not retrigger an item fetch either, thus the use of history.state.preventRefetch
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/strict-boolean-expressions
-    filter(() => !(typeof history.state === 'object' && history.state?.preventRefetch)),
-    switchMap(params => {
-      const item = this.getItemRoute(params);
-      if (isItemRouteError(item)) {
-        if (!item.id) throw new Error('unexpected: no id in item page');
-        return this.solveMissingPathAttempt(item.contentType, item.id, item.path, item.answer).pipe(mapToFetchState());
-      }
-      return of<FetchState<FullItemRoute>>(readyState(item));
-    }),
-    takeUntil(this.destroyed$),
-    shareReplay(1),
-  );
+  private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
 
   state$: Observable<FetchState<ItemData>> = merge(
-    this.itemRouteState$.pipe(
-      filter(isFetchingOrError),
-      map(s => (s.isFetching ? fetchingState() : errorState(s.error)))
-    ),
+    this.store.select(fromItemContent.selectActiveContentRouteErrorHandlingState).pipe(filter(isNotNull)),
     this.itemDataSource.state$
   );
 
@@ -163,8 +141,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
-    switchMap(answerErr => this.itemRouteState$.pipe(
-      readyData(),
+    switchMap(answerErr => this.itemRoute$.pipe(
       map((route, idx) => (idx === 0 && answerErr !== undefined ? {
         isForbidden: errorIsHTTPForbidden(answerErr.error),
         fallbackLink: route.answer ? urlArrayForItemRoute({ ...route, answer: undefined }) : undefined,
@@ -237,22 +214,23 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.isObserving$.pipe(
       pairwise(),
       filter(([ old, cur ]) => old && !cur), // was "on", become "off"
-      switchMap(() => this.itemRouteState$.pipe(take(1), readyData())),
+      switchMap(() => this.itemRoute$.pipe(take(1))),
       delay(0),
     ).subscribe(route => {
       this.itemRouter.navigateTo({ ...route, answer: undefined });
     }),
 
-    this.itemRouteState$.subscribe(state => {
-      if (state.isReady) {
+    // eslint-disable-next-line @ngrx/no-store-subscription
+    this.store.select(fromItemContent.selectActiveContentRoute).subscribe(route => {
+      if (route) {
         // just publish to current content the new route we are navigating to (without knowing any info)
         this.currentContent.replace(itemInfo({
-          route: state.data,
+          route,
           breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
         }));
         // trigger the fetch of the item (which will itself re-update the current content)
-        this.itemDataSource.fetchItem(state.data);
-      } else if (state.isError) {
+        this.itemDataSource.fetchItem(route);
+      } else {
         this.currentContent.clear();
       }
     }),
@@ -284,13 +262,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
             (data.item.watchedGroup ? data.item.watchedGroup.averageScore === 100 : data.currentResult?.validated),
         },
       }));
-
-      if (data.route.answer?.loadAsCurrent) {
-        this.itemRouter.navigateTo(
-          { ...data.route, answer: undefined },
-          { navExtras: { replaceUrl: true, state: { preventRefetch: true } } },
-        );
-      }
     }),
 
     this.itemDataSource.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
@@ -309,7 +280,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.currentContent.clear();
     }),
 
-    combineLatest([ this.itemRouteState$.pipe(readyData()), this.itemDataSource.state$.pipe(startWith(undefined)) ]).pipe(
+    combineLatest([ this.itemRoute$, this.itemDataSource.state$.pipe(startWith(undefined)) ]).pipe(
       map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
         { route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId), isTask: isTask(itemState.data.item) }:
         { route, isTask: undefined }
@@ -437,36 +408,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     const snapshot = this.activatedRoute.snapshot;
     if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
     if (!snapshot.parent.url[0]) throw new Error('Unexpected: activated route snapshot parent has no url');
-    return itemRouteFromParams(snapshot.parent.url[0].path, params ?? snapshot.paramMap);
-  }
-
-  /**
-   * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
-   * Will redirect when relevant data has been fetched (and emit nothing).
-   * May emit errors.
-   */
-  private solveMissingPathAttempt(
-    contentType: ItemTypeCategory,
-    id: string,
-    path?: string[],
-    answer?: ItemRoute['answer']
-  ): Observable<never> {
-    return of(path).pipe(
-      switchMap(path => (path ? of(path) : this.getItemPathService.getItemPath(id))),
-      switchMap(path => {
-        // for empty path (root items), consider the item has a (fake) parent attempt id 0
-        if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answer });
-        // else, will start all path but the current item
-        return this.resultActionsService.startWithoutAttempt(path).pipe(
-          map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answer }))
-        );
-      }),
-      delay(0), // for fixing a bug when a navigation happens immediately (case: an alias at the root)
-      switchMap(itemRoute => {
-        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
-        return EMPTY;
-      })
-    );
+    const contentType = itemCategoryFromPrefix(snapshot.parent.url[0].path);
+    if (contentType === null) throw new Error('Unexpected item path prefix');
+    return itemRouteFromParams(contentType, params ?? snapshot.paramMap);
   }
 
 }
