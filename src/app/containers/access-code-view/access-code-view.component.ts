@@ -2,19 +2,22 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
+import { InvalidCodeReason, JoinByCodeGroupInfo, JoinByCodeService } from '../../data-access/join-by-code.service';
 import { ItemData } from '../../items/services/item-datasource.service';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { SectionParagraphComponent } from '../../ui-components/section-paragraph/section-paragraph.component';
+import {
+  PersonalInfoAccessDialogComponent
+} from '../personal-info-access-dialog/personal-info-access-dialog.component';
 
 @Component({
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
   standalone: true,
-  imports: [ SectionParagraphComponent, NgClass, FormsModule, ButtonModule ]
+  imports: [SectionParagraphComponent, NgClass, FormsModule, ButtonModule, PersonalInfoAccessDialogComponent, NgIf]
 })
 export class AccessCodeViewComponent {
   @Input() sectionLabel = '';
@@ -24,12 +27,16 @@ export class AccessCodeViewComponent {
 
   code = '';
   state: 'ready'|'loading' = 'ready';
+  showModal = false;
+  joinByCodeGroupInfo?: JoinByCodeGroupInfo;
 
   constructor(
     private joinByCodeService: JoinByCodeService,
     private actionFeedbackService: ActionFeedbackService,
     private confirmationService: ConfirmationService,
   ) { }
+
+  showConfirmationModal(): void {}
 
   onClickAccess(): void {
     this.state = 'loading';
@@ -63,6 +70,13 @@ export class AccessCodeViewComponent {
           }
         }
 
+        if (response.group && (response.group.requireLockMembershipApprovalUntil !== null
+          || response.group.requirePersonalInfoAccessApproval !== 'none' )) {
+          this.joinByCodeGroupInfo = response.group;
+          this.showModal = true;
+          return;
+        }
+
         this.confirmationService.confirm({
           header: $localize`Join the group "${response.group.name}"`,
           message: message,
@@ -78,9 +92,9 @@ export class AccessCodeViewComponent {
     });
   }
 
-  joinGroup(code: string): void {
-    this.joinByCodeService.joinGroupThroughCode(code).subscribe({
-      next: _result => {
+  joinGroup(code: string, approvals: string[] = []): void {
+    this.joinByCodeService.joinGroupThroughCode(code, approvals).subscribe({
+      next: () => {
         this.code = '';
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
@@ -90,6 +104,13 @@ export class AccessCodeViewComponent {
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
     });
+  }
+
+  onCloseModal(event?: string[]): void {
+    if (event) {
+      console.log('event', event);
+    }
+    this.showModal = false;
   }
 
   invalidCodeReasonToString(reason: InvalidCodeReason): string {

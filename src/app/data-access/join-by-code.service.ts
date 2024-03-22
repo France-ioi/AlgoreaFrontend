@@ -50,6 +50,8 @@ export type IsCodeValid = D.TypeOf<typeof isCodeValidDecoder>;
 
 export type InvalidCodeReason = D.TypeOf<typeof invalidReasonDecoder>;
 
+export type JoinByCodeGroupInfo = D.TypeOf<typeof groupDecoder>;
+
 @Injectable({
   providedIn: 'root'
 })

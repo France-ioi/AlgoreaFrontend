@@ -19,3 +19,7 @@
     ></button>
   </div>
 </div>
+
+@if (showModal && joinByCodeGroupInfo) {
+  <alg-personal-info-access-dialog [groupInfo]="joinByCodeGroupInfo" (closeEvent)="onCloseModal($event)"></alg-personal-info-access-dialog>
+}
