@@ -1,6 +1,6 @@
 import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
-import { errorState, fetchingState, FetchState, Ready, readyState } from '../state';
+import { errorState, FetchError, fetchingState, FetchState, Ready, readyState } from '../state';
 
 /**
  * Rx operator which first emits a loading state and then emit a ready or error state depending on the source. Never fails.
@@ -14,7 +14,7 @@ export function mapToFetchState<T>(config?: { resetter?: Observable<unknown> }):
   return pipe(
     map(val => readyState(val)),
     startWith(fetchingState()),
-    mapErrorToState<T>(),
+    mapErrorToState(),
     source => resetter.pipe(
       startWith(noop),
       switchMap(() => source),
@@ -53,7 +53,7 @@ export function mapStateData<T, U>(dataMapper: (data: T) => U): OperatorFunction
 /**
  * Rx operator which convert observable error to "error state". To be used when the state is built "manually".
  */
-export function mapErrorToState<T>(): OperatorFunction<FetchState<T>,FetchState<T>> {
+export function mapErrorToState<T>(): OperatorFunction<T, T|FetchError> {
   return pipe(
     catchError(e => of(errorState(e))),
   );

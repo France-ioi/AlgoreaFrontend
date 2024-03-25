@@ -182,3 +182,26 @@ function aliasFor(itemId: ItemId, path: string[]|undefined): { alias: string, va
 function pathToAlias(path: string): string {
   return path.replace(/\//g, '--');
 }
+
+/* **********************************************************************************************************
+ * Other utility functions
+ * ********************************************************************************************************** */
+
+/**
+ * Whether the 2 routes are equals
+ * If `prev` had a "command" (e.g., loadAsCurrent) and there is no `answer` in `cur`, route are considered equal
+ */
+export function routesEqualIgnoringCommands(prev: FullItemRoute, cur: FullItemRoute): boolean {
+  return prev.id === cur.id &&
+    arraysEqual(prev.path, cur.path) &&
+    prev.attemptId === cur.attemptId &&
+    prev.parentAttemptId === cur.parentAttemptId &&
+    (
+      (
+        prev.answer?.best === cur.answer?.best &&
+        prev.answer?.id === cur.answer?.id &&
+        prev.answer?.participantId === cur.answer?.participantId &&
+        prev.answer?.loadAsCurrent === cur.answer?.loadAsCurrent
+      ) || (!!prev.answer?.loadAsCurrent && !cur.answer)
+    );
+}
