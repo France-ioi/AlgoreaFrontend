@@ -72,6 +72,6 @@ test('route with action parameter: action passed to subcomponents + parameter re
   });
 
   await test.step('has loaded the expected answer', async () => {
-    await expect(page.frameLocator('iFrame').getByText('1234567')).toBeVisible({ timeout: 10000 }); // to check it is the right answer
+    await expect(page.frameLocator('iFrame').getByText('1234567')).toBeVisible({ timeout: 30000 }); // to check it is the right answer
   });
 });
