@@ -5,7 +5,7 @@ import { GetItemByIdService } from '../../../data-access/get-item-by-id.service'
 import { isNotNull } from '../../../utils/null-undefined-predicates';
 import { catchError } from 'rxjs/operators';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { NgIf, AsyncPipe } from '@angular/common';
@@ -23,7 +23,7 @@ import { Store } from '@ngrx/store';
     ButtonModule,
     ThreadComponent,
     AsyncPipe,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     RouteUrlPipe,
   ],
 })

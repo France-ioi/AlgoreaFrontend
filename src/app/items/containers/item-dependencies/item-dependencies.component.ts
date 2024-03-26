@@ -15,7 +15,7 @@ import { RemoveItemPrerequisiteService } from '../../data-access/remove-item-pre
 import { AddDependencyComponent } from '../add-dependency/add-dependency.component';
 import { GetItemDependenciesService } from '../../data-access/get-item-dependencies.service';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
@@ -42,7 +42,7 @@ import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
     PathSuggestionComponent,
     AsyncPipe,
     I18nSelectPipe,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     RouteUrlPipe,
   ],
 })

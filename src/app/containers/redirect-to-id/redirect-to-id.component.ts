@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import { rawItemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from '../../services/current-content.service';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
@@ -33,7 +33,7 @@ export class RedirectToIdComponent implements OnDestroy {
   private subscription = this.path$.pipe(
     map(path => (appConfig.redirects ? appConfig.redirects[path] : undefined))
   ).subscribe(route => {
-    if (route) this.itemRouter.navigateTo({ ...rawItemRoute('activity', route.id), path: route.path });
+    if (route) this.itemRouter.navigateTo(itemRoute('activity', route.id, { path: route.path }));
     else this.notExisting = true;
   });
 

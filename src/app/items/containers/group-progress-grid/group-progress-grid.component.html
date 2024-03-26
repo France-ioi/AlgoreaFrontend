@@ -65,15 +65,9 @@
                   <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
                     <a
                       class="slanted-header-link alg-link cursor-pointer"
-                      [routerLink]="{
-                        id: col.id,
-                        contentType: col | contentTypeFromItem,
-                        path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ])
-                      } | withAttempt: (itemData.item.id === col.id ? {
-                        attemptId: attemptId
-                      } : {
-                        parentAttemptId: attemptId
-                      }) | url : [ 'progress', 'chapter' ]"
+                      [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
+                        with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
+                        url : [ 'progress', 'chapter' ]"
                       *ngIf="itemData && itemData.currentResult && itemData.currentResult.attemptId as attemptId"
                     >{{ col.title }}</a>
                   </div>

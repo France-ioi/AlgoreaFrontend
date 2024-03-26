@@ -15,15 +15,10 @@
         <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
           <ng-container *ngIf="itemData && itemData.item.type === 'Task'">
             <a class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise"
-              [routerLink]="{
-                id: itemData.item.id,
-                contentType: itemData.item | contentTypeFromItem,
-                path: itemData.route.path,
-                parentAttemptId: parentAttemptId,
-                answer: {
-                  best: true, participantId: observedGroupId ? observedGroupId : undefined
-                }
-              } | url"
+              [routerLink]="itemData.route | with: {
+                  parentAttemptId,
+                  answer: { best: true, participantId: observedGroupId ? observedGroupId : undefined }
+                } | url"
               *ngrxLet="observedGroupId$; let observedGroupId"
             >
               {{ (!!observedGroupId ? 'isObserving' : '') | i18nSelect : {
@@ -84,7 +79,7 @@
                       <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
                       <a
                         class="alg-link item-title-link"
-                        [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true } | url"
+                        [routerLink]="rowData.item | itemRoute: { answer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true }} | url"
                         *ngIf="(!meta.isObserving || rowData.canWatchItemAnswer) && rowData.answerId"
                       >
                         {{ (meta.isObserving ? 'observingMode' : '') | i18nSelect : {
@@ -96,7 +91,7 @@
                   </div>
                 </ng-container>
                 <ng-container *ngSwitchCase="'item.string.title'">
-                  <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
+                  <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
                     {{ rowData.item.string.title }}
                   </a>
                 </ng-container>

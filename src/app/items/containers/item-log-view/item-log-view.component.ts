@@ -12,7 +12,7 @@ import { LogActionDisplayPipe } from 'src/app/pipes/logActionDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe, ItemRouteWithAnswerPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -56,9 +56,8 @@ const logsLimit = 20;
     AsyncPipe,
     DatePipe,
     I18nSelectPipe,
-    RawItemRoutePipe,
-    ItemRouteWithAnswerPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,

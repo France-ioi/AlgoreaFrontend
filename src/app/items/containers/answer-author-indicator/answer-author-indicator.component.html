@@ -27,7 +27,7 @@
           <a
             class="alg-button primary mini button"
             pButton
-            [routerLink]="itemData.item | rawItemRoute | withAnswer : { id: answer.id, loadAsCurrent: true } | url"
+            [routerLink]="itemData.item | itemRoute: { answer: { id: answer.id, loadAsCurrent: true } } | url"
             i18n
           >
             Edit it
@@ -35,7 +35,7 @@
           <a
             class="alg-button primary mini button"
             pButton
-            [routerLink]="itemData.item | rawItemRoute | url"
+            [routerLink]="itemData.item | itemRoute | url"
             i18n
           >
             Back to your current answer

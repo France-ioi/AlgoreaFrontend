@@ -5,7 +5,7 @@ import { canCloseOverlay } from '../../utils/overlay';
 import { BehaviorSubject, debounceTime, merge } from 'rxjs';
 import { distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from '../path-suggestion/path-suggestion.component';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { MessageInfoComponent } from '../../ui-components/message-info/message-info.component';
@@ -29,7 +29,7 @@ import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common
     PathSuggestionComponent,
     AsyncPipe,
     I18nPluralPipe,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     RouteUrlPipe
   ],
 })

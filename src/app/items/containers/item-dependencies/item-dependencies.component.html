@@ -26,7 +26,7 @@
             >
               <a
                 class="alg-link"
-                [routerLink]="item | rawItemRoute | url"
+                [routerLink]="item | itemRoute | url"
                 (mouseenter)="onMouseEnter($event, item.id, contentRef)"
                 #contentRef
               >
@@ -83,7 +83,7 @@
           >
             <a
                 class="alg-link list-item-link"
-                [routerLink]="item | rawItemRoute | url"
+                [routerLink]="item | itemRoute | url"
                 (mouseenter)="onMouseEnter($event, item.id, contentRef)"
                 #contentRef
             >

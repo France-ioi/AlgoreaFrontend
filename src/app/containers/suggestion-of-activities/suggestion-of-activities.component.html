@@ -20,7 +20,7 @@
   </div>
   <ul class="list" *ngIf="state.isReady && state.data.length > 0">
     <li class="list-item" *ngFor="let item of state.data">
-      <a class="alg-link dots item-link" [routerLink]="item.activity | rawItemRoute | url">
+      <a class="alg-link dots item-link" [routerLink]="item.activity | itemRoute | url">
         {{ item.activity.string.title }} ({{ item.name }})
       </a>
     </li>

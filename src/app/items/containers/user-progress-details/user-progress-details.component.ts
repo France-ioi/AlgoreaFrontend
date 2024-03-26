@@ -10,7 +10,7 @@ import { TypeFilter } from '../../models/composition-filter';
 import { DurationToReadable } from 'src/app/pipes/duration';
 import { AllowsWatchingItemAnswersPipe } from 'src/app/items/models/item-watch-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAnswerPipe } from 'src/app/pipes/itemRoute';
+import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -43,7 +43,7 @@ export interface ProgressData {
     NgClass,
     RouterLink,
     AsyncPipe,
-    ItemRouteWithAnswerPipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
     AllowsWatchingItemAnswersPipe,
     DurationToReadable,

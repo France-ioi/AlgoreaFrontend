@@ -8,7 +8,7 @@ import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequi
 import { canCloseOverlay } from 'src/app/utils/overlay';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -33,7 +33,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     RouteUrlPipe,
   ],
 })

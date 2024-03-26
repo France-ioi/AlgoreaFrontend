@@ -129,6 +129,7 @@ test('View answer in logs for current user', async ({ page }) => {
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();
   await expect.soft(page.locator('h1').getByText('Task with edit tab')).toBeVisible();
+  expect(page.url()).toContain('answerId=6216264238928088073');
 });
 
 test('View answer in logs for other user', async ({ page }) => {
@@ -141,6 +142,7 @@ test('View answer in logs for other user', async ({ page }) => {
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();
   await expect.soft(page.locator('h1').getByText('Blockly Basic Task')).toBeVisible();
+  expect(page.url()).toContain('answerId=113722894726386992');
 });
 
 test('View answer in logs for a group', async ({ page }) => {
@@ -153,6 +155,7 @@ test('View answer in logs for a group', async ({ page }) => {
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();
   await expect.soft(page.locator('h1').getByText('Task with edit tab')).toBeVisible();
+  expect(page.url()).toContain('answerId=6216264238928088073');
 });
 
 test('Reload answer in logs for a item', async ({ page }) => {
@@ -165,4 +168,5 @@ test('Reload answer in logs for a item', async ({ page }) => {
   await expect.soft(page.getByRole('link', { name: 'Reload answer' })).toBeVisible();
   await page.getByRole('link', { name: 'Reload answer' }).click();
   await expect.soft(page.locator('h1').getByText('Task with edit tab')).toBeVisible();
+  expect(page.url()).not.toContain('answerId=');
 });

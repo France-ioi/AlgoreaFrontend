@@ -10,7 +10,7 @@ import { ItemData } from '../../services/item-datasource.service';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { DurationToReadable } from 'src/app/pipes/duration';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
@@ -53,7 +53,7 @@ interface RowData {
     AsyncPipe,
     DatePipe,
     I18nPluralPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
     RouteUrlPipe,
     DurationToReadable
   ],

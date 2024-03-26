@@ -38,7 +38,7 @@
               [event]="event"
               [userCache]="threadMetadata.userCache ?? []"
               [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
-              [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | rawItemRoute) : undefined"
+              [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
               *ngFor="let event of thread.state.data"
             ></alg-thread-message>
           </ng-container>

@@ -1,51 +1,31 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
-import { AttemptId, FullItemRoute, ItemRoute, RawItemRoute, rawItemRoute } from '../models/routing/item-route';
+import { ItemType, typeCategoryOfItem } from '../items/models/item-type';
+import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route';
 
 /**
- * Functions using full item route should always be preferred to raw item route!
- * (requests will be required to fetch path and attempt information)
+ * Pipe for building a item route from an object
  */
 @Pipe({
-  name: 'rawItemRoute', pure: true,
+  name: 'itemRoute',
+  pure: true,
   standalone: true
 })
-export class RawItemRoutePipe implements PipeTransform {
-  transform({ id, type }: { id: string, type: ItemType }): RawItemRoute {
-    return rawItemRoute(typeCategoryOfItem({ type }), id);
+export class ItemRoutePipe implements PipeTransform {
+  transform(item: { id: string, type: ItemType }, extraAttrs?: Partial<ItemRoute>): RawItemRoute {
+    return itemRoute(typeCategoryOfItem(item), item.id, extraAttrs);
   }
 }
 
 /**
- * Functions using full item route should always be preferred to raw item route!
- * (requests will be required to fetch path and attempt information)
+ * Pipe for adding information to a route
  */
 @Pipe({
-  name: 'withAnswer', pure: true,
+  name: 'with',
+  pure: true,
   standalone: true
 })
-export class ItemRouteWithAnswerPipe implements PipeTransform {
-  transform<T extends RawItemRoute>(route: T, answer: ItemRoute['answer']): T {
-    return { ...route, answer };
-  }
-}
-
-@Pipe({
-  name: 'contentTypeFromItem', pure: true,
-  standalone: true
-})
-export class ContentTypeFromItemPipe implements PipeTransform {
-  transform({ type } : { type: ItemType }): ItemTypeCategory {
-    return typeCategoryOfItem({ type });
-  }
-}
-
-@Pipe({
-  name: 'withAttempt', pure: true,
-  standalone: true
-})
-export class ItemRouteWithAttemptPipe implements PipeTransform {
-  transform<T extends ItemRoute>(route: T, attempt: { attemptId: AttemptId } | { parentAttemptId: AttemptId }): FullItemRoute {
-    return { ...route, ...attempt };
+export class ItemRouteWithExtraPipe implements PipeTransform {
+  transform<T extends RawItemRoute>(route: T, attrs: Partial<ItemRoute>): T {
+    return { ...route, ...attrs };
   }
 }

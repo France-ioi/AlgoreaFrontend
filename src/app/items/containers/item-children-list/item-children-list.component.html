@@ -7,13 +7,9 @@
     <a
       class="item-link"
       [ngClass]="{ locked: item.isLocked }"
-      [routerLink]="{
-        id: item.id,
-        contentType: item | contentTypeFromItem,
-        path: routeParams.path
-      } | withAttempt: (item.result && item.result.attemptId ? {
-        attemptId : item.result.attemptId
-      } : { parentAttemptId: routeParams.parentAttemptId }) | url"
+      [routerLink]="item | itemRoute: { path: routeParams.path } |
+        with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: routeParams.parentAttemptId }) |
+        url"
       *ngIf="routeParams"
     >
       <div class="left-container">

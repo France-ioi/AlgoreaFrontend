@@ -5,7 +5,7 @@
       <ng-container  *ngIf="threadItem$ | async as threadItem">
         <a
           class="alg-link header-title"
-          [routerLink]="threadItem | rawItemRoute | url"
+          [routerLink]="threadItem | itemRoute | url"
           *ngIf="threadItem.string.title as itemTitle"
         >
           {{ itemTitle }}

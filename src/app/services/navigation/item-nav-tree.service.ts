@@ -6,7 +6,7 @@ import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/items/mod
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { ContentRoute } from 'src/app/models/routing/content-route';
 import { isActivityInfo, isItemInfo, itemInfo, ItemInfo } from 'src/app/models/content/item-info';
-import { fullItemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
+import { itemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { mayHaveChildren } from 'src/app/items/models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -41,7 +41,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
    * The element MUST have an attempt already, which should be the case for the parent.
    */
   contentInfoFromNavTreeParent(e: NavTreeElement): ItemInfo {
-    if (!isItemRoute(e.route) || !isFullItemRoute(e.route)) throw new Error('expecting an item route in an item nav tree element');
+    if (!isFullItemRoute(e.route)) throw new Error('expecting an item route in an item nav tree element');
     if (!isRouteWithSelfAttempt(e.route)) throw new Error('expecting nav menu parent route to have a self attempt');
     return itemInfo({ route: e.route });
   }
@@ -103,12 +103,12 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   }
 
   dummyRootContent(): ItemInfo {
-    return itemInfo({ route: fullItemRoute(this.category, 'dummy', [], { parentAttemptId: defaultAttemptId }) });
+    return itemInfo({ route: itemRoute(this.category, 'dummy', { path: [], parentAttemptId: defaultAttemptId }) });
   }
 
   private mapChild(child: ItemNavigationChild, parentAttemptId: string, path: string[]): NavTreeElement {
     const currentResult = bestAttemptFromResults(child.results);
-    const route = fullItemRoute(typeCategoryOfItem(child), child.id, path, { attemptId: currentResult?.attemptId, parentAttemptId });
+    const route = itemRoute(typeCategoryOfItem(child), child.id, { path, attemptId: currentResult?.attemptId, parentAttemptId });
     let score = undefined;
     if (!child.noScore) {
       if (child.watchedGroup && child.watchedGroup.avgScore !== undefined && child.watchedGroup.allValidated !== undefined) score = {
@@ -134,7 +134,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   }
 
   private mapNavData(data: ItemNavigationData, pathToParent: string[]): { parent: NavTreeElement, elements: NavTreeElement[] } {
-    const parentRoute = fullItemRoute(typeCategoryOfItem(data), data.id, pathToParent, { attemptId: data.attemptId });
+    const parentRoute = itemRoute(typeCategoryOfItem(data), data.id, { path: pathToParent, attemptId: data.attemptId });
     return {
       parent: {
         route: parentRoute,

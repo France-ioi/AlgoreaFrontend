@@ -11,7 +11,7 @@ import { itemGrantViewPermMax } from 'src/app/items/models/item-grant-view-permi
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemData } from '../../services/item-datasource.service';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PropagationEditMenuComponent } from '../propagation-edit-menu/propagation-edit-menu.component';
 import { AddItemComponent } from '../add-item/add-item.component';
 import { RouterLink } from '@angular/router';
@@ -40,8 +40,8 @@ import { ButtonModule } from 'primeng/button';
     AddItemComponent,
     OverlayPanelModule,
     PropagationEditMenuComponent,
-    ItemRouteWithAttemptPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
     ButtonModule,
   ],

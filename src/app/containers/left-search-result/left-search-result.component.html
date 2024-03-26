@@ -29,7 +29,7 @@
   <div class="container">
     <ul class="result-list alg-search-result">
       <li class="result-list-item" (mouseleave)="onMouseLeave($event)">
-        <a class="result-list-link" [routerLink]="item | rawItemRoute | url" routerLinkActive="selected">
+        <a class="result-list-link" [routerLink]="item | itemRoute | url" routerLinkActive="selected">
           <i
             class="result-list-icon ph-duotone"
             [ngClass]="{

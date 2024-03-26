@@ -17,7 +17,7 @@ import { boolToQueryParamValue, queryParamValueToBool } from 'src/app/utils/url'
 import { CheckLoginService } from 'src/app/data-access/check-login.service';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
-import { fullItemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { LayoutService } from 'src/app/services/layout.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -136,8 +136,8 @@ export class LTIComponent implements OnDestroy {
           void this.router.navigateByUrl(fromPath);
           return;
         }
-        const itemRoute = fullItemRoute('activity', firstChild.id, path, { parentAttemptId: attemptId });
-        this.itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+        const route = itemRoute('activity', firstChild.id, { path, parentAttemptId: attemptId });
+        this.itemRouter.navigateTo(route, { navExtras: { replaceUrl: true } });
       }),
   ];
 

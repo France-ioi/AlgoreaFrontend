@@ -23,15 +23,18 @@ export type AttemptId = string;
 type AnswerId = string;
 
 /* **********************************************************************************************************
- * Item Route: Object storing information required to navigate to an item without need for fetching a path
+ * Item Route: Object storing information required to navigate to an item
+ *
+ * It exists in 3 formats depending on how fully-defined it is:
+ * - `FullItemRoute` contains all required info (path and (self or parent) attempt) so that no more queries are required after navigation
+ * - `ItemRoute` may miss the (self and parent) attempt, will require fetching results to determine attempt after navigation
+ * - `RawItemRoute` may miss path and attempt (will require fetching the path and attempts after navigation). Is not a `ContentRoute`
+ *
+ * When navigating, as many information as possible should be given to the item router so that the navigation is not slowed down.
+ * So always prefer building a `FullItemRoute` over a `ItemRoute` over a `RawItemRoute` (if you have the info)
  * ********************************************************************************************************** */
 
-// FullItemRoute contains all required info (path and (self or parent) attempt) so that no more queries are required after navigation
-// ItemRoute may miss the (self and parent) attempt, will require fetching results to determine attempt after navigation.
-// RawItemRoute may miss path and attempt, will required fetching the path and attempts after navigation.
-//
-// When navigating, as many information as possible should be given to the item router so that the navigation is not slowed down.
-// So always prefer usage of FullItemRoute over ItemRoute over RawItemRoute.
+// STRUCTURES
 export interface ItemRoute extends ContentRoute {
   contentType: ItemTypeCategory,
   attemptId?: AttemptId,
@@ -40,33 +43,29 @@ export interface ItemRoute extends ContentRoute {
     { best?: undefined, id: AnswerId, participantId?: undefined, loadAsCurrent?: true } |
     { best: true, id?: undefined, participantId?: string /* not set if mine */, loadAsCurrent?: undefined },
 }
-type ItemRouteWithSelfAttempt = ItemRoute & { attemptId: AttemptId };
-type ItemRouteWithParentAttempt = ItemRoute & { parentAttemptId: AttemptId };
-export type FullItemRoute = ItemRouteWithSelfAttempt | ItemRouteWithParentAttempt;
+export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
 
+// TYPE ASSERT FUNCTIONS
 export function isItemRoute(route: ContentRoute): route is ItemRoute {
   return ([ 'activity', 'skill' ].includes(route.contentType));
 }
 
-export function isFullItemRoute(route: ItemRoute): route is FullItemRoute {
-  return !!route.attemptId || !!route.parentAttemptId;
+export function isFullItemRoute(route: ContentRoute): route is FullItemRoute {
+  return isItemRoute(route) && (!!route.attemptId || !!route.parentAttemptId);
 }
 
-export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRouteWithSelfAttempt {
+export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRoute & Required<Pick<ItemRoute, 'attemptId'>> {
   return item.attemptId !== undefined;
 }
 
-export function rawItemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Partial<ItemRoute>): RawItemRoute {
-  return { contentType, id, ...attrs };
-}
-export function itemRoute(contentType: ItemTypeCategory, id: ItemId, path: string[]): ItemRoute {
-  return { ...rawItemRoute(contentType, id), path };
-}
+// FACTORIES
+export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs: Omit<FullItemRoute, 'contentType'|'id'>): FullItemRoute;
+export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs: Omit<ItemRoute, 'contentType'|'id'>): ItemRoute;
+export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Omit<RawItemRoute, 'contentType'|'id'>): RawItemRoute;
 
-type RequiredAttempt = { attemptId: AttemptId } | { parentAttemptId: AttemptId };
-export function fullItemRoute(contentType: ItemTypeCategory, id: ItemId, path: string[], attempt: RequiredAttempt): FullItemRoute {
-  return { ...itemRoute(contentType, id, path), ...attempt };
+export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Omit<RawItemRoute, 'contentType'|'id'>): RawItemRoute {
+  return { ...attrs, contentType, id };
 }
 
 /**
@@ -79,12 +78,7 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
 /**
  * The route to the app default (see config) item
  */
-export const appDefaultItemRoute: FullItemRoute = {
-  contentType: 'activity',
-  id: appConfig.defaultActivityId,
-  path: [],
-  parentAttemptId: defaultAttemptId,
-};
+export const appDefaultItemRoute = itemRoute('activity', appConfig.defaultActivityId, { path: [], parentAttemptId: defaultAttemptId });
 
 
 /* **********************************************************************************************************
