@@ -33,7 +33,7 @@ export const routeErrorHandlingEffect = createEffect(
   { functional: true },
 );
 
-export const removeActionsFromRoute = createEffect(
+export const removeCommandsFromRoute = createEffect(
   (
     store$ = inject(Store),
     itemRouter = inject(ItemRouter),
