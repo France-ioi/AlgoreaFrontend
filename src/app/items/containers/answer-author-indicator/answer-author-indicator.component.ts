@@ -13,7 +13,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
 import { ButtonModule } from 'primeng/button';
-import { ItemRouteWithAnswerPipe, RawItemRoutePipe } from '../../../pipes/itemRoute';
+import { ItemRoutePipe } from '../../../pipes/itemRoute';
 import { ItemData } from '../../services/item-datasource.service';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
 import { UserSessionService } from '../../../services/user-session.service';
@@ -36,8 +36,7 @@ import { fromObservation } from 'src/app/store/observation';
     UserCaptionPipe,
     ScoreRingComponent,
     ButtonModule,
-    RawItemRoutePipe,
-    ItemRouteWithAnswerPipe,
+    ItemRoutePipe,
     RouteUrlPipe,
     LetDirective,
   ],

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { ItemChildWithAdditions } from './item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { SkillProgressComponent } from 'src/app/ui-components/skill-progress/skill-progress.component';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
@@ -20,8 +20,8 @@ import { NgIf, NgClass, NgFor } from '@angular/common';
     RouterLink,
     ScoreRingComponent,
     SkillProgressComponent,
-    ItemRouteWithAttemptPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
   ],
 })

@@ -30,7 +30,7 @@
             </span>
             <a
               class="alg-link"
-              [routerLink]="item | rawItemRoute | url"
+              [routerLink]="item | itemRoute | url"
               (mouseenter)="onMouseEnter($event, item.id, i)"
               #contentRef
             >

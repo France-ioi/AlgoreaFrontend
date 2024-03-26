@@ -49,13 +49,9 @@
             <a
               class="main alg-link"
               [ngClass]="{'disabled': !rowData.id}"
-              [routerLink]="{
-                id: rowData.id,
-                contentType: rowData.type | contentTypeFromItem,
-                path: itemData.route.path.concat([ itemData.item.id ])
-              } | withAttempt: (rowData.result?.attemptId ? {
-               attemptId : rowData.result.attemptId
-              } : { parentAttemptId: attemptId }) | url : ['edit-children']"
+              [routerLink]="rowData | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]) } |
+                with: (rowData.result?.attemptId ? { attemptId : rowData.result.attemptId } : { parentAttemptId: attemptId }) |
+                url: ['edit-children']"
               *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
             >
               {{ rowData.title }}

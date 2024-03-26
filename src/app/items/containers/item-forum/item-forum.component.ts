@@ -10,7 +10,7 @@ import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -60,7 +60,7 @@ const OPTIONS = [
     RouterLink,
     AsyncPipe,
     DatePipe,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,

@@ -63,7 +63,7 @@
                 <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
                 <a
                   class="alg-link"
-                  [routerLink]="rowData.item | rawItemRoute | withAnswer: { id: rowData.answerId } | url"
+                  [routerLink]="rowData.item | itemRoute: { answer: { id: rowData.answerId } } | url"
                   *ngIf="rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId"
                 >
                   View answer
@@ -75,7 +75,7 @@
             <a
               class="alg-link"
               [ngClass]="{'disabled': !rowData.item}"
-              [routerLink]="rowData.item | rawItemRoute | url"
+              [routerLink]="rowData.item | itemRoute | url"
               (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
               #contentRef
             >

@@ -47,12 +47,7 @@
                       <a
                         class="alg-link"
                         [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData.item.id }"
-                        [routerLink]="{
-                          id: rowData.id,
-                          contentType: rowData | contentTypeFromItem,
-                          path: itemData.route.path.concat([ itemData.item.id ]),
-                          parentAttemptId: parentAttemptId
-                        } | url : [ 'progress', 'chapter' ]"
+                        [routerLink]="rowData | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]), parentAttemptId } | url : [ 'progress', 'chapter' ]"
                       >
                         {{ rowData.title }}
                       </a>

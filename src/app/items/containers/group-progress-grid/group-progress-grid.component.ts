@@ -24,7 +24,7 @@ import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/items/models/item-
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PermissionsEditDialogComponent } from '../../containers/permissions-edit-dialog/permissions-edit-dialog.component';
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
 import { RouterLink } from '@angular/router';
@@ -92,8 +92,8 @@ interface ProgressDataDialog {
     UserProgressComponent,
     PermissionsEditDialogComponent,
     AsyncPipe,
-    ItemRouteWithAttemptPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
     GroupLinkPipe ],
 })

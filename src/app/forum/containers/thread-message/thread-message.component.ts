@@ -4,7 +4,7 @@ import { IncomingThreadEvent } from '../../data-access/websocket-messages/thread
 import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAnswerPipe } from 'src/app/pipes/itemRoute';
+import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
 import { NgClass, NgIf, NgTemplateOutlet, DatePipe } from '@angular/common';
@@ -25,7 +25,7 @@ import { RelativeTimePipe } from '../../../pipes/relativeTime';
     ScoreRingComponent,
     RouterLink,
     DatePipe,
-    ItemRouteWithAnswerPipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
     AllowDisplayCodeSnippet,
     BreakLinesPipe,
