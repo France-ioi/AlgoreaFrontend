@@ -16,7 +16,7 @@ import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
 
 const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand => {
   const path = breadcrumbs.map(item => item.id);
-  return urlArrayForItemRoute(itemRoute(typeCategoryOfItem(item), item.id, path));
+  return urlArrayForItemRoute(itemRoute(typeCategoryOfItem(item), item.id, { path }));
 };
 
 @Component({

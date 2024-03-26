@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { rawItemRoute, urlArrayForItemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute, urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
 import {
   AddedContent, NewContentType,
@@ -87,7 +87,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
           tag: 'existing-item',
           id,
           name,
-          path: urlArrayForItemRoute(rawItemRoute(this.contentType, id))
+          path: urlArrayForItemRoute(itemRoute(this.contentType, id))
         })),
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({

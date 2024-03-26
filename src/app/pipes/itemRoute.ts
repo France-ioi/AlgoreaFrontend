@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
-import { AttemptId, FullItemRoute, ItemRoute, RawItemRoute, rawItemRoute } from '../models/routing/item-route';
+import { AttemptId, FullItemRoute, ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route';
 
 /**
  * Functions using full item route should always be preferred to raw item route!
@@ -12,7 +12,7 @@ import { AttemptId, FullItemRoute, ItemRoute, RawItemRoute, rawItemRoute } from 
 })
 export class RawItemRoutePipe implements PipeTransform {
   transform({ id, type }: { id: string, type: ItemType }): RawItemRoute {
-    return rawItemRoute(typeCategoryOfItem({ type }), id);
+    return itemRoute(typeCategoryOfItem({ type }), id);
   }
 }
 
