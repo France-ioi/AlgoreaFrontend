@@ -1,97 +1,122 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { merge, of, Subject } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import { GridColumn } from 'src/app/ui-components/grid/grid.component';
-import { displayResponseToast } from 'src/app/groups/containers/pending-request/pending-request-response-handling';
-import { fetchingState, readyState } from 'src/app/utils/state';
+import { ReplaySubject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
-import { Action, parseGroupInvitationResults, RequestActionsService } from '../../data-access/request-actions.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { PendingRequestComponent } from '../pending-request/pending-request.component';
 import { LoadingComponent } from '../../../ui-components/loading/loading.component';
-import { NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
+import { ProcessGroupInvitationService } from '../../data-access/process-group-invitation.service';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { UserCaptionPipe } from '../../../pipes/userCaption';
+import { SortEvent } from 'primeng/api/sortevent';
+import { mapToFetchState } from '../../../utils/operators/state';
 
 @Component({
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
   styleUrls: [ './user-group-invitations.component.scss' ],
   standalone: true,
-  imports: [ PendingRequestComponent, LoadingComponent, NgIf, ErrorComponent ],
+  imports: [
+    PendingRequestComponent,
+    LoadingComponent,
+    NgIf,
+    ErrorComponent,
+    ButtonModule,
+    DatePipe,
+    NgForOf,
+    NgSwitchCase,
+    TableModule,
+    UserCaptionPipe,
+    NgSwitch,
+    NgSwitchDefault,
+    AsyncPipe,
+    NgClass,
+  ],
 })
-export class UserGroupInvitationsComponent implements OnDestroy, OnInit {
-  requests: PendingRequest[] = [];
-
-  readonly columns: GridColumn[] = [
-    { field: 'group.name', header: $localize`TITLE` },
-    { field: 'group.type', header: $localize`TYPE` },
-    { field: 'at', header: $localize`REQUESTED ON`, sortKey: 'at' },
-  ];
-
-  state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
+export class UserGroupInvitationsComponent implements OnInit, OnDestroy {
   currentSort: string[] = [];
+  processing = false;
 
-  private dataFetching = new Subject<{ sort: string[] }>();
+  private groupInvitationsSubject = new ReplaySubject<{ sort: string[] }>();
+  state$ = this.groupInvitationsSubject.pipe(
+    switchMap(params =>
+      this.getRequestsService.getGroupInvitations(params.sort).pipe(
+        mapToFetchState(),
+      )
+    )
+  );
 
   constructor(
     private getRequestsService: GetRequestsService,
-    private requestActionService: RequestActionsService,
     private actionFeedbackService: ActionFeedbackService,
     private currentContentService: CurrentContentService,
-  ) {
-    this.dataFetching.pipe(
-      switchMap(params =>
-        merge(
-          of(fetchingState()),
-          this.getRequestsService.getGroupInvitations(params.sort)
-            .pipe(map(readyState))
-        )
-      )
-    ).subscribe({
-      next: state => {
-        this.state = state.tag;
-        if (state.isReady) {
-          this.requests = state.data;
-        }
-      },
-      error: _err => {
-        this.state = 'fetchingError';
-      }
-    });
-  }
+    private processGroupInvitationService: ProcessGroupInvitationService,
+  ) {}
 
   ngOnInit(): void {
-    this.dataFetching.next({ sort: this.currentSort });
+    this.groupInvitationsSubject.next({ sort: this.currentSort });
   }
 
   ngOnDestroy(): void {
-    this.dataFetching.complete();
-  }
-
-  onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
-    this.state = 'processing';
-    this.requestActionService.processGroupInvitations(params.data.map(r => r.group.id), params.type)
-      .subscribe({
-        next: result => {
-          this.state = 'ready';
-          displayResponseToast(this.actionFeedbackService, parseGroupInvitationResults(result), params.type);
-          this.dataFetching.next({ sort: this.currentSort });
-          this.currentContentService.forceNavMenuReload();
-        },
-        error: err => {
-          this.state = 'ready';
-          this.actionFeedbackService.unexpectedError();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        }
-      });
+    this.groupInvitationsSubject.complete();
   }
 
   onFetch(sort: string[]): void {
     if (JSON.stringify(sort) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sort;
-      this.dataFetching.next({ sort: this.currentSort });
+      this.groupInvitationsSubject.next({ sort: this.currentSort });
     }
+  }
+
+  onCustomSort(event: SortEvent): void {
+    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
+    if (sortMeta) this.onFetch(sortMeta);
+  }
+
+  onAccept(pendingRequest: PendingRequest): void {
+    this.processing = true;
+    this.processGroupInvitationService.accept(pendingRequest.group.id).subscribe({
+      next: result => {
+        this.processing = false;
+        if (!result.changed) {
+          this.actionFeedbackService.error(`The ${ pendingRequest.group.name } group has not been accepted`);
+          return;
+        }
+        this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been accepted`);
+        this.groupInvitationsSubject.next({ sort: this.currentSort });
+        this.currentContentService.forceNavMenuReload();
+      },
+      error: err => {
+        this.processing = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
+    });
+  }
+
+  onReject(pendingRequest: PendingRequest): void {
+    this.processing = true;
+    this.processGroupInvitationService.reject(pendingRequest.group.id).subscribe({
+      next: result => {
+        this.processing = false;
+        if (!result.changed) {
+          this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been declined`);
+          return;
+        }
+        this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been declined`);
+        this.groupInvitationsSubject.next({ sort: this.currentSort });
+        this.currentContentService.forceNavMenuReload();
+      },
+      error: err => {
+        this.processing = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
+    });
   }
 }
