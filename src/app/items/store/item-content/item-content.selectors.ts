@@ -21,6 +21,10 @@ interface UserContentSelectors<T extends RootState> {
    * If the content is an item and there is no route error: the fully defined route
    */
   selectActiveContentRoute: MemoizedSelector<T, FullItemRoute|null>,
+  /**
+   * If the route defines that the answer should be loaded from store, its value
+   */
+  selectAnswer: MemoizedSelector<T, string|null>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
@@ -70,10 +74,17 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     result => (result && !isItemRouteError(result) ? result : null)
   );
 
+  const selectAnswer = createSelector(
+    selectState,
+    selectActiveContentRoute,
+    (state, route) => (route?.answer?.fromStore ? state.answer : null)
+  );
+
   return {
     selectIsItemContentActive,
     selectActiveContentRouteError,
     selectActiveContentRouteErrorHandlingState,
     selectActiveContentRoute,
+    selectAnswer,
   };
 }

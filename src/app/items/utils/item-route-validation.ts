@@ -10,11 +10,12 @@ import { ItemTypeCategory } from '../models/item-type';
 export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'id'|'contentType'> & Partial<ItemRoute>;
 
 export function itemRouteFromParams(contentType: ItemTypeCategory, params: ParamMap): FullItemRoute|ItemRouteError {
-  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId, answerLoadAsCurrent }
+  const { id, path, attemptId, parentAttemptId, answerId, answerFromStore, answerBest, answerParticipantId, answerLoadAsCurrent }
     = decodeItemRouterParameters(params);
   let answer: ItemRoute['answer']|undefined;
   if (answerBest) answer = { best: true, participantId: answerParticipantId ?? undefined };
   else if (answerId) answer = { id: answerId, loadAsCurrent: answerLoadAsCurrent ? true : undefined };
+  else if (answerFromStore) answer = { fromStore: true, loadAsCurrent: answerLoadAsCurrent ? true : undefined };
 
   if (!id) throw new Error('Unexpected missing id from item param');
   if (path === null) return { tag: 'error', contentType, id, answer };

@@ -16,6 +16,7 @@ const answerParamName = 'answerId';
 const answerBestParamName = 'answerBest';
 const answerBestParticipantParamName = 'answerParticipantId';
 const answerLoadAsCurrentParamName = 'answerLoadAsCurrent';
+const answerFromStoreParamName = 'answerFromStore';
 
 // alias for better readibility
 type ItemId = string;
@@ -40,8 +41,9 @@ export interface ItemRoute extends ContentRoute {
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?:
-    { best?: undefined, id: AnswerId, participantId?: undefined, loadAsCurrent?: true } |
-    { best: true, id?: undefined, participantId?: string /* not set if mine */, loadAsCurrent?: undefined },
+    { best?: undefined, participantId?: undefined, id: AnswerId, fromStore?: undefined, loadAsCurrent?: true } |
+    { best?: undefined, participantId?: undefined, id?: undefined, fromStore: true, loadAsCurrent?: true } |
+    { best: true, participantId?: string /* not set if mine */, id?: undefined, fromStore?: undefined, loadAsCurrent?: undefined },
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
@@ -90,6 +92,7 @@ export function decodeItemRouterParameters(params: ParamMap): {
   attemptId: string|null,
   parentAttemptId: string|null,
   answerId: string|null,
+  answerFromStore: boolean,
   answerBest: boolean,
   answerParticipantId: string|null,
   answerLoadAsCurrent: boolean,
@@ -107,6 +110,7 @@ export function decodeItemRouterParameters(params: ParamMap): {
     attemptId: params.get(attemptParamName),
     parentAttemptId: params.get(parentAttemptParamName),
     answerId: params.get(answerParamName),
+    answerFromStore: params.get(answerFromStoreParamName) === '1',
     answerBest: params.get(answerBestParamName) === '1',
     answerParticipantId: params.get(answerBestParticipantParamName),
     answerLoadAsCurrent: params.get(answerLoadAsCurrentParamName) === '1',
@@ -154,8 +158,9 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
       params[answerBestParamName] = '1';
       if (route.answer.participantId) params[answerBestParticipantParamName] = route.answer.participantId;
     } else {
-      params[answerParamName] = route.answer.id;
       if (route.answer.loadAsCurrent) params[answerLoadAsCurrentParamName] = '1';
+      if (route.answer.fromStore) params[answerFromStoreParamName] = '1';
+      else params[answerParamName] = route.answer.id;
     }
   }
 
@@ -194,6 +199,7 @@ export function routesEqualIgnoringCommands(prev: FullItemRoute, cur: FullItemRo
       (
         prev.answer?.best === cur.answer?.best &&
         prev.answer?.id === cur.answer?.id &&
+        prev.answer?.fromStore === cur.answer?.fromStore &&
         prev.answer?.participantId === cur.answer?.participantId &&
         prev.answer?.loadAsCurrent === cur.answer?.loadAsCurrent
       ) || (!!prev.answer?.loadAsCurrent && !cur.answer)
