@@ -8,7 +8,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { ItemChildWithAdditions } from '../item-children-list/item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
@@ -32,8 +32,8 @@ import { fromObservation } from 'src/app/store/observation';
     ScoreRingComponent,
     ItemChildrenListComponent,
     AsyncPipe,
-    ItemRouteWithAttemptPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
   ],
 })

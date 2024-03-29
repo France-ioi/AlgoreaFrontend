@@ -5,7 +5,7 @@ import { isNotNull } from '../../utils/null-undefined-predicates';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { Subject } from 'rxjs';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
 import { ErrorComponent } from '../../ui-components/error/error.component';
@@ -27,7 +27,7 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
     SharedModule,
     RouterLink,
     AsyncPipe,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     RouteUrlPipe,
     NgFor,
     I18nSelectPipe,

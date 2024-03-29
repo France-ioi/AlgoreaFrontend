@@ -36,7 +36,7 @@ import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { messageEvent } from '../../models/thread-events';
-import { RawItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { fromObservation } from 'src/app/store/observation';
 
@@ -53,7 +53,7 @@ import { fromObservation } from 'src/app/store/observation';
     FormsModule,
     ReactiveFormsModule,
     InputTextareaModule,
-    RawItemRoutePipe,
+    ItemRoutePipe,
     ButtonModule,
     TooltipModule,
     AsyncPipe,

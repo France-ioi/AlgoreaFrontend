@@ -64,7 +64,7 @@
                 <button pButton type="button" class="p-button-rounded p-button-danger" *ngIf="rowThread.isVisible" (click)="hideThreadPanel()" i18n>Hide</button>
               </td>
               <td *ngIf="itemData?.item?.type !== 'Task'">
-                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | rawItemRoute | url">
+                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
                   {{ rowData.item.title }}
                 </a>
               </td>

@@ -181,7 +181,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
       filter((d): d is ({ id: string, path: string[] }|{ url: string })&{ newTab: boolean} => 'url' in d || ('id' in d && !!d.path))
     ).subscribe(dst => {
       if ('id' in dst) {
-        const route = itemRoute('activity', dst.id, dst.path);
+        const route = itemRoute('activity', dst.id, { path: dst.path });
         if (dst.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
         else this.itemRouter.navigateTo(route);
       }
@@ -207,7 +207,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
         const breadcrumbs = closestBreadcrumbs(this.route.path, state.data.breadcrumbs); // choose the closest, TODO: ask the user instead
         const lastElement = breadcrumbs.pop();
         if (!lastElement) throw new Error('unexpected: get all breadcrumbs services are expected to return non-empty breadcrumbs');
-        const route = itemRoute(typeCategoryOfItem(lastElement), lastElement.id, breadcrumbs.map(b => b.id));
+        const route = itemRoute(typeCategoryOfItem(lastElement), lastElement.id, { path: breadcrumbs.map(b => b.id) });
         if (state.data.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
         else this.itemRouter.navigateTo(route);
       }

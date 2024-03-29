@@ -21,10 +21,10 @@ import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/items/models/item-permissions';
-import { fullItemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute } from 'src/app/models/routing/item-route';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRouteWithAttemptPipe, ContentTypeFromItemPipe } from 'src/app/pipes/itemRoute';
+import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PermissionsEditDialogComponent } from '../../containers/permissions-edit-dialog/permissions-edit-dialog.component';
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
 import { RouterLink } from '@angular/router';
@@ -92,8 +92,8 @@ interface ProgressDataDialog {
     UserProgressComponent,
     PermissionsEditDialogComponent,
     AsyncPipe,
-    ItemRouteWithAttemptPipe,
-    ContentTypeFromItemPipe,
+    ItemRoutePipe,
+    ItemRouteWithExtraPipe,
     RouteUrlPipe,
     GroupLinkPipe ],
 })
@@ -187,14 +187,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       currentFilter: this.currentFilter,
       colItem: {
         type: col.type,
-        fullRoute: fullItemRoute(
+        fullRoute: itemRoute(
           typeCategoryOfItem(col),
           col.id,
-          [ ...this.itemData.route.path, ...(col.id !== this.itemData.route.id ? [ this.itemData.route.id ] : []) ],
-          col.id === this.itemData.route.id ? {
-            attemptId,
-          } : {
-            parentAttemptId: attemptId,
+          {
+            path: [ ...this.itemData.route.path, ...(col.id !== this.itemData.route.id ? [ this.itemData.route.id ] : []) ],
+            ...col.id === this.itemData.route.id ? {
+              attemptId,
+            } : {
+              parentAttemptId: attemptId,
+            }
           }
         ),
         permissions: col.permissions,
