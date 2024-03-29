@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { initAsUsualUser } from './helpers/e2e_auth';
 import { apiUrl } from './helpers/e2e_http';
 
+test.describe.configure({ mode: 'parallel' });
+
 test('home page loaded', async ({ page }) => {
   await page.goto('/');
   await expect.soft(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();

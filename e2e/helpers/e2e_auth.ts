@@ -11,3 +11,7 @@ export function initAsUsualUser(page: Page): Promise<void> {
   if (!key) throw new Error('a key for the usual key should be provided in "E2E_USUALUSER_TOKEN" env var');
   return setForcedToken(page, key);
 }
+
+export function initAsDemoUser(page: Page, token: string): Promise<void> {
+  return setForcedToken(page, token);
+}
