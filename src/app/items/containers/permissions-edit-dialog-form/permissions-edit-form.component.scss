@@ -3,12 +3,9 @@
 .container {
   display: flex;
   flex-direction: column;
-  max-height: toRem(450);
-  overflow: hidden;
 }
 
 .controls-container {
-  overflow: auto;
   flex: 1;
 }
 
