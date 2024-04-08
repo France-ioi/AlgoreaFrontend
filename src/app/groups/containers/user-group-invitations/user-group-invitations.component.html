@@ -50,7 +50,7 @@
                 pButton
                 type="button"
                 icon="ph-bold ph-check"
-                (click)="onAccept(rowData)"
+                (click)="openJoinGroupConfirmationDialog(rowData)"
                 [disabled]="processing"
               ></button>
               <button
@@ -75,4 +75,12 @@
       </ng-template>
     </p-table>
   }
+}
+
+@if (joinGroupConfirmationDialog) {
+  <alg-join-group-confirmation-dialog
+    [params]="joinGroupConfirmationDialog"
+    (confirmEvent)="accept($event)"
+    (cancelEvent)="closeModal()"
+  ></alg-join-group-confirmation-dialog>
 }

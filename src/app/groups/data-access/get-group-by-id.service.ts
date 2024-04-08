@@ -14,6 +14,12 @@ const groupShortInfo = D.struct({
   name: D.string,
 });
 
+const groupApprovalsDecoder = D.struct({
+  requireLockMembershipApprovalUntil: D.nullable(dateDecoder),
+  requirePersonalInfoAccessApproval: D.literal('none', 'view', 'edit'),
+  requireWatchApproval: D.boolean,
+});
+
 const decoder = pipe(
   D.struct({
     id: D.string,
@@ -37,11 +43,13 @@ const decoder = pipe(
     openActivityWhenJoining: D.boolean,
   }),
   D.intersect(groupCodeDecoder),
-  D.intersect(groupManagershipDecoder)
+  D.intersect(groupManagershipDecoder),
+  D.intersect(groupApprovalsDecoder),
 );
 
 export type Group = D.TypeOf<typeof decoder>;
 export type GroupShortInfo = D.TypeOf<typeof groupShortInfo>;
+export type GroupApprovals = D.TypeOf<typeof groupApprovalsDecoder>;
 
 @Injectable({
   providedIn: 'root',
