@@ -15,6 +15,11 @@ import { TableModule } from 'primeng/table';
 import { UserCaptionPipe } from '../../../pipes/userCaption';
 import { SortEvent } from 'primeng/api/sortevent';
 import { mapToFetchState } from '../../../utils/operators/state';
+import {
+  JoinGroupConfirmEvent,
+  JoinGroupConfirmationDialogParams,
+  JoinGroupConfirmationDialogComponent,
+} from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -36,10 +41,12 @@ import { mapToFetchState } from '../../../utils/operators/state';
     NgSwitchDefault,
     AsyncPipe,
     NgClass,
+    JoinGroupConfirmationDialogComponent,
   ],
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
   processing = false;
+  joinGroupConfirmationDialog?: JoinGroupConfirmationDialogParams;
 
   private sortSubject = new BehaviorSubject<string[]>([]);
   state$ = this.sortSubject.pipe(
@@ -72,16 +79,31 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     if (sortMeta) this.onFetch(sortMeta);
   }
 
-  onAccept(pendingRequest: PendingRequest): void {
+  openJoinGroupConfirmationDialog(pendingRequest: PendingRequest): void {
+    this.joinGroupConfirmationDialog = {
+      id: pendingRequest.group.id,
+      name: pendingRequest.group.name,
+      requireLockMembershipApprovalUntil: null,
+      requirePersonalInfoAccessApproval: 'none',
+      requireWatchApproval: false,
+    };
+  }
+
+  closeModal(): void {
+    this.joinGroupConfirmationDialog = undefined;
+  }
+
+  accept(confirmEvent: JoinGroupConfirmEvent): void {
+    this.closeModal();
     this.processing = true;
-    this.processGroupInvitationService.accept(pendingRequest.group.id).subscribe({
+    this.processGroupInvitationService.accept(confirmEvent.id, confirmEvent.approvals).subscribe({
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ pendingRequest.group.name }"`);
+          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ confirmEvent.name }"`);
           return;
         }
-        this.actionFeedbackService.success($localize`The ${ pendingRequest.group.name } group has been accepted`);
+        this.actionFeedbackService.success($localize`The ${ confirmEvent.name } group has been accepted`);
         this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },
