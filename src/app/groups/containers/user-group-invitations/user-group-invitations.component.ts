@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
