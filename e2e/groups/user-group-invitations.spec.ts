@@ -122,3 +122,10 @@ test('Reject group invitation', async ({ page }) => {
     await rejectGroupInvitation(page);
   });
 });
+
+test('Error on group invitations service', async ({ page }) => {
+  await initAsUsualUser(page);
+  await page.route(`${apiUrl}/current-user/group-invitations`, route => route.abort());
+  await page.goto('/groups/mine');
+  await expect.soft(page.getByText('Error while loading the group invitations.')).toBeVisible();
+});
