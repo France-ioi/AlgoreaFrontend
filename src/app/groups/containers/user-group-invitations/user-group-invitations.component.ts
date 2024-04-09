@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -38,14 +38,13 @@ import { mapToFetchState } from '../../../utils/operators/state';
     NgClass,
   ],
 })
-export class UserGroupInvitationsComponent implements OnInit, OnDestroy {
-  currentSort: string[] = [];
+export class UserGroupInvitationsComponent implements OnDestroy {
   processing = false;
 
-  private groupInvitationsSubject = new ReplaySubject<{ sort: string[] }>();
-  state$ = this.groupInvitationsSubject.pipe(
-    switchMap(params =>
-      this.getRequestsService.getGroupInvitations(params.sort).pipe(
+  private sortSubject = new BehaviorSubject<string[]>([]);
+  state$ = this.sortSubject.pipe(
+    switchMap(sort =>
+      this.getRequestsService.getGroupInvitations(sort).pipe(
         mapToFetchState(),
       )
     )
@@ -58,18 +57,13 @@ export class UserGroupInvitationsComponent implements OnInit, OnDestroy {
     private processGroupInvitationService: ProcessGroupInvitationService,
   ) {}
 
-  ngOnInit(): void {
-    this.groupInvitationsSubject.next({ sort: this.currentSort });
-  }
-
   ngOnDestroy(): void {
-    this.groupInvitationsSubject.complete();
+    this.sortSubject.complete();
   }
 
   onFetch(sort: string[]): void {
-    if (JSON.stringify(sort) !== JSON.stringify(this.currentSort)) {
-      this.currentSort = sort;
-      this.groupInvitationsSubject.next({ sort: this.currentSort });
+    if (JSON.stringify(sort) !== JSON.stringify(this.sortSubject.value)) {
+      this.sortSubject.next(sort);
     }
   }
 
@@ -84,11 +78,11 @@ export class UserGroupInvitationsComponent implements OnInit, OnDestroy {
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error(`The ${ pendingRequest.group.name } group has not been accepted`);
+          this.actionFeedbackService.error(`Unable to accept invitation to group "${ pendingRequest.group.name }"`);
           return;
         }
         this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been accepted`);
-        this.groupInvitationsSubject.next({ sort: this.currentSort });
+        this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },
       error: err => {
@@ -105,11 +99,11 @@ export class UserGroupInvitationsComponent implements OnInit, OnDestroy {
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been declined`);
+          this.actionFeedbackService.error(`Unable to reject invitation to group "${ pendingRequest.group.name }"`);
           return;
         }
         this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been declined`);
-        this.groupInvitationsSubject.next({ sort: this.currentSort });
+        this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },
       error: err => {
