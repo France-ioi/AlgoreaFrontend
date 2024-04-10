@@ -12,6 +12,8 @@ export function initAsUsualUser(page: Page): Promise<void> {
   return setForcedToken(page, key);
 }
 
-export function initAsDemoUser(page: Page, token: string): Promise<void> {
-  return setForcedToken(page, token);
+export function initAsDemoUser(page: Page): Promise<void> {
+  const key = process.env.E2E_DEMOUSER_TOKEN;
+  if (!key) throw new Error('a key for the demo key should be provided in "E2E_DEMOUSER_TOKEN" env var');
+  return setForcedToken(page, key);
 }

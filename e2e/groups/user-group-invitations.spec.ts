@@ -4,7 +4,6 @@ import { apiUrl } from '../helpers/e2e_http';
 
 const groupName = 'E2EGroupInvitationProcess';
 const groupId = '4433009959583369709';
-const demoUserToken = 'demouser';
 const demoUserLogin = 'usr_5p020x2thuyu';
 
 test.describe.configure({ mode: 'serial' });
@@ -65,7 +64,7 @@ const rejectGroupInvitation = async (page: Page)=> {
 };
 
 test.beforeEach(async ({ page }) => {
-  await initAsDemoUser(page, demoUserToken);
+  await initAsDemoUser(page);
   if (await isUserInvitedToGroup(page)) {
     await rejectGroupInvitation(page);
   } else if (await isUserJoinedToGroup(page)) {
@@ -88,7 +87,7 @@ test('Accept group invitation flow', async ({ page }) => {
   });
 
   await test.step('Accept a group', async () => {
-    await initAsDemoUser(page, demoUserToken);
+    await initAsDemoUser(page);
     if (await isUserInvitedToGroup(page)) {
       await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
       await page.getByRole('row', { name: groupName }).getByTestId('accept-group').click();
@@ -106,7 +105,7 @@ test('Accept group invitation flow', async ({ page }) => {
   });
 
   await test.step('Leave a group', async () => {
-    await initAsDemoUser(page, demoUserToken);
+    await initAsDemoUser(page);
     await leaveGroup(page);
   });
 });
@@ -118,7 +117,7 @@ test('Reject group invitation', async ({ page }) => {
   });
 
   await test.step('Accept a group', async () => {
-    await initAsDemoUser(page, demoUserToken);
+    await initAsDemoUser(page);
     await rejectGroupInvitation(page);
   });
 });
