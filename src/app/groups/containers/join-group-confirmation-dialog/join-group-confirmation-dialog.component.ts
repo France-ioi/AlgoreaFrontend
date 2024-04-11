@@ -6,9 +6,9 @@ import { SwitchFieldComponent } from '../../../ui-components/collapsible-section
 import { DatePipe, I18nSelectPipe } from '@angular/common';
 import { GroupApprovals } from '../../data-access/get-group-by-id.service';
 
-export type JoinGroupConfirmationDialogParams = GroupApprovals & { id: string, name: string };
+export type JoinGroupConfirmationDialogParams = GroupApprovals & { id?: string, name: string };
 export type JoinGroupConfirmEvent = {
-  id: string,
+  id?: string,
   name: string,
   approvals: string[],
 };
