@@ -936,7 +936,31 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="3492417901129709355" datatype="html">
         <source>No pending requests</source><target state="new">No pending requests</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="3648275586699949989" datatype="html">
+        <source>Unable to accept invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="new">Unable to accept invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit><trans-unit id="921569788287925673" datatype="html">
+        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been accepted</source><target state="new">The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been accepted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit><trans-unit id="822411182236345828" datatype="html">
+        <source>Unable to reject invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="new">Unable to reject invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit><trans-unit id="4103778436647970622" datatype="html">
+        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been declined</source><target state="new">The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been declined</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+      </trans-unit><trans-unit id="1916930465370171483" datatype="html">
       <source> Select all </source>
       <target state="translated"> Tout sélectionner </target>
 

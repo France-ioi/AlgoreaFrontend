@@ -78,10 +78,10 @@ export class UserGroupInvitationsComponent implements OnDestroy {
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error(`Unable to accept invitation to group "${ pendingRequest.group.name }"`);
+          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ pendingRequest.group.name }"`);
           return;
         }
-        this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been accepted`);
+        this.actionFeedbackService.success($localize`The ${ pendingRequest.group.name } group has been accepted`);
         this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },
@@ -99,10 +99,10 @@ export class UserGroupInvitationsComponent implements OnDestroy {
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error(`Unable to reject invitation to group "${ pendingRequest.group.name }"`);
+          this.actionFeedbackService.error($localize`Unable to reject invitation to group "${ pendingRequest.group.name }"`);
           return;
         }
-        this.actionFeedbackService.success(`The ${ pendingRequest.group.name } group has been declined`);
+        this.actionFeedbackService.success($localize`The ${ pendingRequest.group.name } group has been declined`);
         this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },
