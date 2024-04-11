@@ -94,6 +94,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
   }
 
   accept(confirmEvent: JoinGroupConfirmEvent): void {
+    if (!confirmEvent.id) throw new Error('Unexpected: Missed group id');
     this.closeModal();
     this.processing = true;
     this.processGroupInvitationService.accept(confirmEvent.id, confirmEvent.approvals).subscribe({
