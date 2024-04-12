@@ -121,9 +121,12 @@
         <div class="alg-table-summary">
           <div class="alg-table-summary-left">
             <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
-            <span class="alg-table-summary-select-all" (click)="onSelectAll(state.data ?? [])" i18n>
-              Select all
-            </span>
+            <span
+              class="alg-table-summary-select-all"
+              (click)="onSelectAll(state.data ?? [])"
+              data-testid="member-list-select-all"
+              i18n
+            >Select all</span>
           </div>
           <button
             class="alg-button primary small"

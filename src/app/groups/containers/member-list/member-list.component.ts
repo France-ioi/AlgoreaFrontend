@@ -103,7 +103,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   currentSort: string[] = [];
   currentFilter: Filter = this.defaultFilter;
 
-  selection: (Member | (GroupChild & { isEmpty: boolean }))[] = [];
+  selection: (Member | GroupChild)[] = [];
 
   columns: Column[] = [];
   datapager = new DataPager({
@@ -159,7 +159,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     switch (this.currentFilter.type) {
       case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(
+        return this.getGroupChildrenService.getGroupChildren(
           route.id,
           this.currentSort,
           [],
@@ -169,7 +169,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           route: groupRoute(child, [ ...route.path, route.id ]),
         }))));
       case TypeFilter.Sessions:
-        return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, this.currentSort, [ 'Session' ])
+        return this.getGroupChildrenService.getGroupChildren(route.id, this.currentSort, [ 'Session' ])
           .pipe(map(children => children.map(child => ({
             ...child,
             route: groupRoute(child, [ ...route.path, route.id ]),
@@ -185,7 +185,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
               route: rawGroupRoute({ id: descendantTeam.id, isUser: false }),
             }))));
         } else {
-          return this.getGroupChildrenService.getGroupChildrenWithSubgroupCount(route.id, this.currentSort, [ 'Team' ])
+          return this.getGroupChildrenService.getGroupChildren(route.id, this.currentSort, [ 'Team' ])
             .pipe(map(children => children.map(child => ({
               ...child,
               route: groupRoute(child, [ ...route.path, route.id ]),
@@ -251,7 +251,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     if (this.selection.length === rows.length) {
       this.selection = [];
     } else {
-      this.selection = rows as (Member | (GroupChild & { isEmpty: boolean }))[];
+      this.selection = rows as (Member | GroupChild)[];
     }
   }
 
@@ -346,14 +346,12 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     }
 
     const groupId = this.groupData.group.id;
-
     if (this.currentFilter.type === 'users') {
       this.removeUsers(groupId);
       return;
     }
 
-    const isSubgroupsEmpty = !(this.selection as (GroupChild & { isEmpty: boolean })[]).some(g => !g.isEmpty);
-
+    const isSubgroupsEmpty = !(this.selection as GroupChild[]).some(g => !g.isEmpty);
     if (!isSubgroupsEmpty) {
       this.onRemoveSubgroups(event, groupId);
       return;
