@@ -1,0 +1,15 @@
+@import 'src/assets/scss/functions';
+
+.margin-right {
+  margin-right: var(--alg-space-size-6);
+}
+
+.operations {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty-message {
+  text-align: left;
+  margin-left: toRem(16);
+}

@@ -1,8 +1,78 @@
 <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Pending invitations</h2>
-<alg-pending-request
-  [state]="state"
-  [columns]="columns"
-  [requests]="requests"
-  (sort)="onFetch($event)"
-  (processRequests)="onProcessRequests($event)"
-></alg-pending-request>
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading></alg-loading>
+  } @else if (state.isError) {
+    <alg-error
+      class="dark"
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Error while loading the group invitations."
+    ></alg-error>
+  } @else if (state.isReady) {
+    <p-table
+      class="alg-table"
+      [value]="state.data"
+      sortMode="multiple"
+      [customSort]="true"
+      (sortFunction)="onCustomSort($event)"
+    >
+      <ng-template pTemplate="sorticon" let-number>
+        <i class="ph-duotone" [ngClass]="{
+          'ph-arrows-down-up': number === 0,
+          'ph-sort-ascending': number === -1,
+          'ph-sort-descending': number === 1
+        }"></i>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th><span i18n>Title</span></th>
+          <th><span i18n>Type</span></th>
+          <th pSortableColumn="at">
+            <span i18n>Requested On</span>
+            <p-sortIcon field="at"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template
+        pTemplate="body"
+        let-rowData
+      >
+        <tr>
+          <td>{{ rowData.group.name }}</td>
+          <td>{{ rowData.group.type }}</td>
+          <td>{{ rowData.at | date: "d/MM/y" }}</td>
+          <td>
+            <div class="operations">
+              <button
+                class="alg-button-icon rounded primary-color stroke regular-size margin-right"
+                data-testid="accept-group"
+                pButton
+                type="button"
+                icon="ph-bold ph-check"
+                (click)="onAccept(rowData)"
+                [disabled]="processing"
+              ></button>
+              <button
+                class="alg-button-icon rounded primary-color stroke regular-size"
+                data-testid="reject-group"
+                pButton
+                type="button"
+                icon="ph-bold ph-x"
+                (click)="onReject(rowData)"
+                [disabled]="processing"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <p class="empty-message" i18n>No pending requests</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+}
