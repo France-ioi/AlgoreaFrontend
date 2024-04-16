@@ -103,6 +103,9 @@ module.exports = {
     'jasmine/no-focused-tests': ['error'],
     'deprecation/deprecation': ['error'],
     '@ngrx/prefer-effect-callback-in-block-statement': 'off',
+    '@typescript-eslint/unbound-method': ['error', {
+      'ignoreStatic': true
+    }],
   },
   overrides: [
     {
