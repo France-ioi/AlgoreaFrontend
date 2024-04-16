@@ -39,12 +39,12 @@
         </div>
         <div class="field-value datepicker-value">
           <alg-switch
-            class="first-child"
+            data-testid="switch-require-lock-until-enabled"
             formControlName="requireLockMembershipApprovalUntilEnabled"
             (change)="onRequireLockMembershipApprovalUntilEnabledChange($event)"
           ></alg-switch>
           @if (!!groupForm.get('requireLockMembershipApprovalUntilEnabled')?.value) {
-            <div class="datepicker">
+            <div class="datepicker" data-testid="require-lock-until-datepicker">
               <p-calendar
                 styleClass="alg-calendar"
                 formControlName="requireLockMembershipApprovalUntil"
