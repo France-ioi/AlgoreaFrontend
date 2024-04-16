@@ -7,22 +7,22 @@ import { DatePipe, I18nSelectPipe } from '@angular/common';
 import { GroupApprovals } from '../../data-access/get-group-by-id.service';
 
 export type JoinGroupConfirmationDialogParams = GroupApprovals & { id?: string, name: string };
-export type JoinGroupConfirmEvent = {
+export interface JoinGroupConfirmEvent {
   id?: string,
   name: string,
   approvals: string[],
-};
+}
 
 enum Approvals {
-  personalInfoView = 'personal_info_view',
-  lockMembership = 'lock_membership',
-  watch = 'watch',
+  PersonalInfoView = 'personal_info_view',
+  LockMembership = 'lock_membership',
+  Watch = 'watch',
 }
 
 @Component({
   selector: 'alg-join-group-confirmation-dialog[params]',
   templateUrl: './join-group-confirmation-dialog.component.html',
-  styleUrls: ['./join-group-confirmation-dialog.component.scss'],
+  styleUrls: [ './join-group-confirmation-dialog.component.scss' ],
   standalone: true,
   imports: [
     DialogModule,
@@ -53,13 +53,19 @@ export class JoinGroupConfirmationDialogComponent implements OnInit {
       if (requirePersonalInfoAccessApproval !== 'none') {
         this.form.addControl(
           'agreeWithPersonalInfoView',
-          this.fb.nonNullable.control({ value: false, disabled: false }, Validators.requiredTrue)
+          this.fb.nonNullable.control({
+            value: false,
+            disabled: false,
+          }, Validators.requiredTrue),
         );
       }
       if (requireLockMembershipApprovalUntil) {
         this.form.addControl(
           'agreeWithLockMembership',
-          this.fb.nonNullable.control({ value: false, disabled: false }, Validators.requiredTrue)
+          this.fb.nonNullable.control({
+            value: false,
+            disabled: false,
+          }, Validators.requiredTrue),
         );
       }
     }
@@ -74,8 +80,8 @@ export class JoinGroupConfirmationDialogComponent implements OnInit {
     const agreeWithPersonalInfoView = this.form?.value.agreeWithPersonalInfoView;
     const agreeWithLockMembership = this.form?.value.agreeWithLockMembership;
     const approvals = [
-      ...(agreeWithPersonalInfoView ? [ Approvals.personalInfoView ] : []),
-      ...(agreeWithLockMembership ? [ Approvals.lockMembership ] : []),
+      ...(agreeWithPersonalInfoView ? [ Approvals.PersonalInfoView ] : []),
+      ...(agreeWithLockMembership ? [ Approvals.LockMembership ] : []),
     ];
     this.confirmEvent.emit({
       id: this.params.id,
