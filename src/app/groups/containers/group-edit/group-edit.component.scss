@@ -21,3 +21,12 @@
   display: block;
   margin-top: var(--alg-space-size-4);
 }
+
+.datepicker-value {
+  display: flex;
+  align-items: center;
+}
+
+.datepicker {
+  margin-left: var(--alg-space-size-4);
+}

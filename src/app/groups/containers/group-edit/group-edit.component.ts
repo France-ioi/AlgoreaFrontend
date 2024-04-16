@@ -7,7 +7,7 @@ import { CreateItemService } from 'src/app/data-access/create-item.service';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group, GroupApprovals } from '../../data-access/get-group-by-id.service';
 import { GroupUpdateService } from '../../data-access/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../models/group-management';
@@ -24,6 +24,10 @@ import { SectionComponent } from 'src/app/ui-components/section/section.componen
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { SwitchComponent } from '../../../ui-components/switch/switch.component';
+import { CalendarModule } from 'primeng/calendar';
+import { SelectionComponent } from '../../../ui-components/selection/selection.component';
+import { MessageInfoComponent } from '../../../ui-components/message-info/message-info.component';
 
 @Component({
   selector: 'alg-group-edit',
@@ -42,18 +46,41 @@ import { NgIf, AsyncPipe } from '@angular/common';
     AssociatedItemComponent,
     GroupRemoveButtonComponent,
     FloatingSaveComponent,
-    AsyncPipe
+    AsyncPipe,
+    SwitchComponent,
+    CalendarModule,
+    SelectionComponent,
+    MessageInfoComponent,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
+  approvalOptions: { label: string, value: string }[] = [
+    {
+      label: $localize`No`,
+      value: 'none',
+    },
+    {
+      label: $localize`Read only`,
+      value: 'view',
+    },
+    {
+      label: $localize`Read and edit`,
+      value: 'edit',
+    },
+  ];
+
   groupForm = this.formBuilder.group({
     // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
+    requireLockMembershipApprovalUntilEnabled: [ false, [] ],
+    requireLockMembershipApprovalUntil: [ null, [] ],
+    requirePersonalInfoAccessApproval: [ 'none', [] ],
     rootActivity: [ '', [] ],
     rootSkill: [ '', [] ],
   });
   initialFormData?: Group;
+  minLockMembershipApprovalUntilDate = new Date();
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
 
@@ -101,6 +128,11 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     const id = this.initialFormData.id;
     const name = this.groupForm.get('name')?.value as string;
     const description = this.groupForm.get('description')?.value as string;
+    const requireLockMembershipApprovalUntilEnabled = this.groupForm.get('requireLockMembershipApprovalUntilEnabled')?.value as boolean;
+    const requireLockMembershipApprovalUntil
+      = this.groupForm.get('requireLockMembershipApprovalUntil')?.value as GroupApprovals['requireLockMembershipApprovalUntil'];
+    const requirePersonalInfoAccessApproval
+      = this.groupForm.get('requirePersonalInfoAccessApproval')?.value as GroupApprovals['requirePersonalInfoAccessApproval'];
 
     const rootActivity = this.groupForm.get('rootActivity')?.value as NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem;
     const rootActivityId$ = !isNewAssociatedItem(rootActivity) ? of(isExistingAssociatedItem(rootActivity) ? rootActivity.id : null) :
@@ -127,6 +159,8 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         description: description === '' ? null : description,
         root_activity_id: rootActivityId,
         root_skill_id: rootSkillId,
+        require_lock_membership_approval_until: requireLockMembershipApprovalUntilEnabled ? requireLockMembershipApprovalUntil : null,
+        require_personal_info_access_approval: requirePersonalInfoAccessApproval,
       }))
     ).subscribe({
       next: () => {
@@ -138,7 +172,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
-      }
+      },
     });
   }
 
@@ -151,7 +185,6 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   }
 
   private resetFormWith(group: Group): void {
-
     const rootActivity = group.rootActivityId === null ?
       { tag: 'no-item' } :
       { tag: 'existing-item', id: group.rootActivityId };
@@ -163,7 +196,10 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     this.groupForm.reset({
       name: group.name,
       description: group.description,
-      rootActivity: rootActivity,
+      requireLockMembershipApprovalUntilEnabled: group.requireLockMembershipApprovalUntil !== null,
+      requireLockMembershipApprovalUntil: group.requireLockMembershipApprovalUntil,
+      requirePersonalInfoAccessApproval: group.requirePersonalInfoAccessApproval,
+      rootActivity,
       rootSkill,
     });
     this.groupForm.enable();
@@ -171,5 +207,19 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
 
   refreshGroup(): void {
     this.groupDataSource.refetchGroup();
+  }
+
+  onRequireLockMembershipApprovalUntilEnabledChange(enabled: boolean): void {
+    if (!enabled) return;
+    this.groupForm.patchValue({
+      requireLockMembershipApprovalUntil: new Date(),
+    });
+  }
+
+  onDateChange(): void {
+    const requireLockMembershipApprovalUntilEnabled = this.groupForm?.get('requireLockMembershipApprovalUntil')?.value as boolean;
+    const requireLockMembershipApprovalUntil = this.groupForm?.get('requireLockMembershipApprovalUntil')?.value as Date;
+    this.minLockMembershipApprovalUntilDate = requireLockMembershipApprovalUntilEnabled ?
+      new Date(Math.min(requireLockMembershipApprovalUntil.getTime(), requireLockMembershipApprovalUntil.getTime())) : new Date();
   }
 }
