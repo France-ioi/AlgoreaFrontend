@@ -932,25 +932,25 @@
         <source>No pending requests</source><target state="translated">Aucune requête en attente</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="3648275586699949989" datatype="html">
-        <source>Unable to accept invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="new">Unable to accept invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
+        <source>Unable to accept invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="translated">Erreur lors de l'acceptation de l'invitation du groupe "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
           <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit><trans-unit id="921569788287925673" datatype="html">
-        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been accepted</source><target state="new">The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been accepted</target>
+        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been accepted</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été accepté</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
           <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit><trans-unit id="822411182236345828" datatype="html">
-        <source>Unable to reject invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="new">Unable to reject invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
+        <source>Unable to reject invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="translated">Erreur lors de refus de l'invitation du groupe "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
           <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit><trans-unit id="4103778436647970622" datatype="html">
-        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been declined</source><target state="new">The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been declined</target>
+        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been declined</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été refusé</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context>
           <context context-type="linenumber">105</context>
@@ -960,19 +960,19 @@
       <target state="translated"> Tout sélectionner </target>
 
     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">138</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">124</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="4391050282469768523" datatype="html">
-        <source>Error while loading the activities</source><target state="new">Error while loading the activities</target>
+        <source>Error while loading the activities</source><target state="translated">Erreur de chargement des activités</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="5856751044957815003" datatype="html">
-        <source> There are no activities linked to this <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;observedGroupRoute$ | async as observedGroupRoute&quot;>"/> <x id="INTERPOLATION" equiv-text="{{ (observedGroupRoute | isUser).toString() | i18nSelect: { true: 'user', other: 'group' } }}"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="new"> There are no activities linked to this <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup$ | async as watchedGroup&quot;>"/> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect: { true: 'user', other: 'group' } }}"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
+        <source> There are no activities linked to this <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;observedGroupRoute$ | async as observedGroupRoute&quot;>"/> <x id="INTERPOLATION" equiv-text="{{ (observedGroupRoute | isUser).toString() | i18nSelect: { true: 'user', other: 'group' } }}"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="translated"> Il n'y a pas d'activité liée à <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup$ | async as watchedGroup&quot;>"/> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect: { true: 'cet user', other: 'ce groupe' } }}"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context>
           <context context-type="linenumber">15,21</context>
         </context-group>
       </trans-unit><trans-unit id="7668019104010759211" datatype="html">
-        <source>Pending invitations</source><target state="new">Pending invitations</target>
+        <source>Pending invitations</source><target state="translated">Invitations en attente</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="2199673414504144949" datatype="html">
-        <source>Error while loading the group invitations.</source><target state="new">Error while loading the group invitations.</target>
+        <source>Error while loading the group invitations.</source><target state="translated">Erreur de chargement des invitations de groupe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context>
           <context context-type="linenumber">9</context>
@@ -1027,13 +1027,13 @@
         <source> Action </source><target state="translated"> Action </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="3653275073165616526" datatype="html">
-        <source>This team membership is now frozen and cannot be modified.</source><target state="needs-l10n">This team membership is now frozen and cannot be modified.</target>
+        <source>This team membership is now frozen and cannot be modified.</source><target state="translated">La participation à cette équipe est gelée et ne peut pas être modifiée.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="5672137923854913268" datatype="html">
-        <source>You cannot leave this team as it would break entry condition to some content your team participating to.</source><target state="new">You cannot leave this team as it would break entry condition to some content your team participating to.</target>
+        <source>You cannot leave this team as it would break entry condition to some content your team participating to.</source><target state="translated">Vous ne pouvez pas quitter cette équipe car cela violerait les conditions d'entrée de certains contenus auxquels votre équipe participe.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="319253824694160731" datatype="html">
-        <source>You cannot leave the group for the moment. Contact the group manager for more information.</source><target state="new">You cannot leave the group for the moment. Contact the group manager for more information.</target>
+        <source>You cannot leave the group for the moment. Contact the group manager for more information.</source><target state="translated">Vous ne pouvez pas actuellement quitter le groupe. Contactez le gestionnaire de groupe pour plus d'informations.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="4911966127509711469" datatype="html">
         <source>Leave the group</source><target state="translated">Quitter le groupe</target>
@@ -1145,13 +1145,13 @@
         <source>Can grant view</source><target state="translated">Droit de donner des droits de visibilité</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="5086832329438229437" datatype="html">
-        <source> User(s) can give and revoke members access to some content </source><target state="needs-l10n"> User(s) can give and revoke members access to some content </target>
+        <source> User(s) can give and revoke members access to some content </source><target state="translated"> L(es) utilisateur(s) peu(ven)t donner et révoquer des accès à certains contenus pour les membres </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="7308369809380680356" datatype="html">
-        <source>Can watch members</source><target state="new">Can watch members</target>
+        <source>Can watch members</source><target state="translated">Peut observer des membres</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit><trans-unit id="731959018199918793" datatype="html">
-        <source> User(s) can watch the members' activity on some content </source><target state="new"> User(s) can watch the members' activity on some content </target>
+        <source> User(s) can watch the members' activity on some content </source><target state="translated"> L(es) utilisateur(s) peu(ven)t observer les activités d'autres membres sur certains contenus</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="6674111336491636600" datatype="html">
         <source>Can watch</source><target state="translated">Droit d'observation</target>
@@ -1163,7 +1163,7 @@
         <source>Can attach official sessions</source><target state="translated">Droit d'attacher des sessions officielles</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="6237882281903895670" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item </target>
+        <source> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> may attach official sessions to this item, that will be visible to everyone in the content tab of the item </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> peut associer des sessions officielles à ce contenu, celles-ci seront visibles à tous dans l'onglet "contenu" </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context>
           <context context-type="linenumber">85,88</context>
@@ -1172,7 +1172,7 @@
         <source>Is owner</source><target state="translated">Propriétaire</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="182886395984526168" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> own this item, and get the maximum access in all categories above, and may also delete this item </source><target state="new"> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> own this item, and get the maximum access in all categories above, and may also delete this item </target>
+        <source> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> own this item, and get the maximum access in all categories above, and may also delete this item </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> est propriétaire du contenu, il a donc tous les droits maximum dans les catégories ci-dessus et peut également le supprimer </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context>
           <context context-type="linenumber">107,109</context>
@@ -1184,33 +1184,33 @@
         <source>Proceed</source><target state="translated">Valider</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit><trans-unit id="6825914120786002519" datatype="html">
-        <source>Permission editor</source><target state="new">Permission editor</target>
+        <source>Permission editor</source><target state="translated">Éditeur de permissions</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="849207469011307459" datatype="html">
-        <source>User permissions cannot be changed via this page for the moment</source><target state="new">User permissions cannot be changed via this page for the moment</target>
+        <source>User permissions cannot be changed via this page for the moment</source><target state="translated">Les permissions de l'utilisateur ne peuvent actuellement pas être changée sur cette page</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="9119511347263876873" datatype="html">
-        <source>Can list the members</source><target state="new">Can list the members</target>
+        <source>Can list the members</source><target state="translated">Peut lister les membres</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="3737711445155929474" datatype="html">
-        <source>Membership</source><target state="new">Membership</target>
+        <source>Membership</source><target state="translated">Membres</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="2692535648170033936" datatype="html">
-        <source>Can manage (add, remove, invite, ...) members</source><target state="new">Can manage (add, remove, invite, ...) members</target>
+        <source>Can manage (add, remove, invite, ...) members</source><target state="translated">Peut gérer (ajouter, supprimer, inviter, ...) des membres</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="2357554189942911948" datatype="html">
-        <source>Can manage members, managers, and change group settings</source><target state="new">Can manage members, managers, and change group settings</target>
+        <source>Can manage members, managers, and change group settings</source><target state="translated">Peut gérer les membres et gestionnaires, et changer les paramètres du groupe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="7263179703351163373" datatype="html">
         <source>Are you sure to remove from yourself the permission to edit group settings and edit managers?
-        You may lose manager access and not be able to restore it.</source><target state="new">Are you sure to remove from yourself the permission to edit group settings and edit managers?
-        You may lose manager access and not be able to restore it.</target>
+        You may lose manager access and not be able to restore it.</source><target state="translated">Êtes-vous sur de vouloir vous supprimer les droits d'éditer les paramètres du groupe et d'éditer les gestionnaires ?
+        Vous pourriez perdre les droits de gestion et ne pas pouvoir les remettre.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">119</context></context-group></trans-unit><trans-unit id="6689721430962659135" datatype="html">
-        <source>Yes, save these changes.</source><target state="new">Yes, save these changes.</target>
+        <source>Yes, save these changes.</source><target state="translated">Oui, sauvegarder ces changements.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">123</context></context-group></trans-unit><trans-unit id="5697804787450123368" datatype="html">
-        <source>New permissions successfully saved.</source><target state="new">New permissions successfully saved.</target>
+        <source>New permissions successfully saved.</source><target state="translated">Nouvelles permissions sauvegardées !</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">149</context></context-group></trans-unit><trans-unit id="1850357961340956981" datatype="html">
         <source>Failed to save permissions.</source><target state="translated">Erreur lors de la sauvegarde des permissions</target>
@@ -1225,10 +1225,10 @@
         <source>Open</source><target state="translated">Ouvert</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="5153695377822897261" datatype="html">
-        <source>The permissions cannot be retrieved.</source><target state="new">The permissions cannot be retrieved.</target>
+        <source>The permissions cannot be retrieved.</source><target state="translated">Erreur de récupération des permissions.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="4715679906218027061" datatype="html">
-        <source> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;(group | isUser) &amp;&amp; permGiverName&quot;>"/>on "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="new"> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;group.isUser &amp;&amp; permGiverName&quot;>"/>on "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
+        <source> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;(group | isUser) &amp;&amp; permGiverName&quot;>"/>on "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="translated"> Ci-dessous les permissions données par "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" à "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;group.isUser &amp;&amp; permGiverName&quot;>"/>sur "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="4705822664965381735" datatype="html">
         <source>Children</source><target state="translated">Enfants</target>
@@ -1270,34 +1270,34 @@
           <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit><trans-unit id="9045659846963395136" datatype="html">
-        <source> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </source><target state="new"> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </target>
+        <source> Users will unlock access to this content if they solve <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>at least one<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> of the content below. </source><target state="translated"> Les utilisateurs débloqueront l'accès à ce contenu si ils résolvent <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>au moins l'un<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> des contenus ci-dessous. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="4862743093134382333" datatype="html">
-        <source> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </source><target state="new"> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </target>
+        <source> Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet. They will only see dependencies they are allowed to view already. </source><target state="translated"> Les utilisateurs verront la liste des dépendances dans l'onglet "contenu" et seulement si ils l'ont pas encore accès au contenu. Ils ne verront que les dépendances qu'ils ont le droit de voir. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="1823124172013249286" datatype="html">
-        <source>Content depending on this one</source><target state="new">Content depending on this one</target>
+        <source>Content depending on this one</source><target state="translated">Contenus qui dépendent de celui-ci</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="4510905835500873772" datatype="html">
-        <source> Only the content that is visible to you is listed. Other content may depend on it. </source><target state="new"> Only the content that is visible to you is listed. Other content may depend on it. </target>
+        <source> Only the content that is visible to you is listed. Other content may depend on it. </source><target state="translated"> Seuls les contenus qui vous sont visibles sont listés. D'autres peuvent également dépendre du contenu actuel. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="3235601792663508256" datatype="html">
-        <source> There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to. </source><target state="new"> There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to. </target>
+        <source> There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to. </source><target state="translated"> Il n'y a pas d'autres contenus (visibles pour vous) qui dépendent de celui-ci pour être débloqués. Pour en ajouter, visiter le même onglet sur le contenu au quel vous voulez donner accès. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="2926423520956948326" datatype="html">
-        <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         other: 'activity'       } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapter',         other: 'activity'     } }}"/>. </source><target state="new"> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         other: 'activity'       } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapter',         other: 'activity'     } }}"/>. </target>
+        <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         other: 'activity'       } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapter',         other: 'activity'     } }}"/>. </source><target state="translated"> Il n'y a pas de prérequis pour cette {{ itemData.item.type | i18nSelect : {         Skill: 'compétence',         other: 'activité'       } }}. Les utilisateurs y auront accès si on leur en donne accès manuellement ou si l'"accès par défaut" est configuré à "ouvert" dans son {{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapitre parent',         other: 'activité parente'     } }}. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="7423100881808748596" datatype="html">
-        <source>You are not allowed to view dependencies for this content</source><target state="new">You are not allowed to view dependencies for this content</target>
+        <source>You are not allowed to view dependencies for this content</source><target state="translated">Vous n'êtes pas autorisé à voir les dépendances de ce contenu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">124</context></context-group></trans-unit><trans-unit id="5037437391296624618" datatype="html">
-        <source>Information</source><target state="new">Information</target>
+        <source>Information</source><target state="translated">Information</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-wrapper/item-edit-wrapper.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8309054658706496987" datatype="html">
-        <source> «<x id="INTERPOLATION" equiv-text="{{ observedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {             true: 'can',             other: 'can\'t'           } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </source><target state="new"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'can',           other: 'can\'t'         } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'skill',           other: 'activity'         } }}"/> </target>
+        <source> «<x id="INTERPOLATION" equiv-text="{{ observedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {             true: 'can',             other: 'can\'t'           } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </source><target state="translated"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'peut',           other: 'ne peut pas'         } }}"/> accéder à cette <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'compétence',           other: 'activité'         } }}"/> </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1633175305056804241" datatype="html">
-        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {               Skill: 'skill',               other: 'activity'             } }}"/> </source><target state="new">You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </target>
+        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {               Skill: 'skill',               other: 'activity'             } }}"/> </source><target state="translated">Vous ne pouvez pas observer cette <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'compétence',             other: 'activité'           } }}"/> </target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="7210234374199239920" datatype="html">
         <source> The <x id="INTERPOLATION" equiv-text="{{ (observedGroup.route | isUser).toString() | i18nSelect : {               true: 'user',               other: 'group'             } }}"/> cannot currently view this content. </source><target state="new"> The <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {               true: 'user',               other: 'group'             } }}"/> cannot currently view this content. </target>
