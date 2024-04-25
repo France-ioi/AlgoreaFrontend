@@ -30,3 +30,8 @@
 .datepicker {
   margin-left: var(--alg-space-size-4);
 }
+
+.approval-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
