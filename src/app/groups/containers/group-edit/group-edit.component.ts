@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapStateData, readyData } from 'src/app/utils/operators/state';
-import { of, Subscription, combineLatest } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { of, Subscription, combineLatest, take, takeWhile, BehaviorSubject, switchMap } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/data-access/create-item.service';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
 import { Group } from '../../data-access/get-group-by-id.service';
-import { GroupUpdateService } from '../../data-access/group-update.service';
+import { GroupChanges, GroupUpdateService } from '../../data-access/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../models/group-management';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -30,6 +30,9 @@ import { MessageInfoComponent } from 'src/app/ui-components/message-info/message
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { GroupApprovals } from 'src/app/groups/models/group-approvals';
+import { DialogModule } from 'primeng/dialog';
+import { GetGroupMembersService } from '../../data-access/get-group-members.service';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'alg-group-edit',
@@ -54,6 +57,8 @@ import { GroupApprovals } from 'src/app/groups/models/group-approvals';
     MessageInfoComponent,
     InputMaskModule,
     InputDateComponent,
+    DialogModule,
+    ButtonModule,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
@@ -84,6 +89,10 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   });
   initialFormData?: Group;
   minLockMembershipApprovalUntilDate?: Date;
+  showConfirmApprovalDialog = new BehaviorSubject<{
+    opened: boolean,
+    data?: GroupChanges['approval_change_action'],
+  }>({ opened: false });
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
 
@@ -96,7 +105,8 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     private formBuilder: UntypedFormBuilder,
     private groupUpdateService: GroupUpdateService,
     private createItemService: CreateItemService,
-    private pendingChangesService: PendingChangesService
+    private pendingChangesService: PendingChangesService,
+    private getGroupMembersService: GetGroupMembersService,
   ) {
     this.subscription = this.state$
       .pipe(readyData())
@@ -116,10 +126,20 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.pendingChangesService.clear();
+    this.showConfirmApprovalDialog.complete();
   }
 
   isDirty(): boolean {
     return this.groupForm.dirty;
+  }
+
+  onConfirmApprovalDialogCancel(): void {
+    this.showConfirmApprovalDialog.next({ opened: false });
+    this.groupForm.enable();
+  }
+
+  onConfirmApprovalDialogChange(event: GroupChanges['approval_change_action']): void {
+    this.showConfirmApprovalDialog.next({ opened: false, data: event });
   }
 
   save(): void {
@@ -159,22 +179,63 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         asRootOfGroupId: this.initialFormData.id,
       });
 
-    combineLatest([ rootActivityId$, rootSkillId$ ]).pipe(
-      concatMap(([ rootActivityId, rootSkillId ]) => this.groupUpdateService.updateGroup(id, {
+    const currentDate = new Date();
+    const requireConfirmApproval = (
+      requireLockMembershipApprovalUntilEnabled && (
+        requireLockMembershipApprovalUntil !== null && requireLockMembershipApprovalUntil > currentDate &&
+        (
+          this.initialFormData.requireLockMembershipApprovalUntil !== null
+          && currentDate > this.initialFormData.requireLockMembershipApprovalUntil
+          || this.initialFormData.requireLockMembershipApprovalUntil === null
+        )
+      )
+    ) || (
+      requirePersonalInfoAccessApproval !== 'none' && this.initialFormData.requirePersonalInfoAccessApproval === 'none'
+      || requirePersonalInfoAccessApproval === 'edit' && this.initialFormData.requirePersonalInfoAccessApproval !== 'edit'
+    );
+
+    const defaultParams$ = combineLatest([ rootActivityId$, rootSkillId$ ]).pipe(
+      map(([ rootActivityId, rootSkillId ]) => (<GroupChanges>{
         name,
         description: description === '' ? null : description,
         root_activity_id: rootActivityId,
         root_skill_id: rootSkillId,
         require_lock_membership_approval_until: requireLockMembershipApprovalUntilEnabled ? requireLockMembershipApprovalUntil : null,
         require_personal_info_access_approval: requirePersonalInfoAccessApproval,
-      }))
+      })),
+    );
+
+    const confirmApprovalParams$ = this.getGroupMembersService.getGroupMembers(id).pipe(
+      switchMap(members => {
+        if (members.length === 0) return of(undefined);
+        this.showConfirmApprovalDialog.next({ opened: true });
+        return this.showConfirmApprovalDialog.pipe(
+          takeWhile(dialog =>
+            dialog.opened || !dialog.opened && dialog.data !== undefined
+          ),
+          filter(dialog => !dialog.opened && dialog.data !== undefined),
+          map(dialog => ({ approval_change_action: dialog.data })),
+          take(1),
+        );
+      }),
+    );
+
+    defaultParams$.pipe(
+      switchMap(params => (requireConfirmApproval ? confirmApprovalParams$.pipe(
+        map(confirmApprovalParams =>
+          (confirmApprovalParams !== undefined ? { ...params, ...confirmApprovalParams } : params)
+        )
+      ) : of(params))),
+      switchMap(params => this.groupUpdateService.updateGroup(id, params)),
     ).subscribe({
       next: () => {
+        this.showConfirmApprovalDialog.next({ opened: false });
         this.groupDataSource.refetchGroup(); // will re-enable the form
         this.refreshNav();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
-      error: err => {
+      error: (err: any) => {
+        this.showConfirmApprovalDialog.next({ opened: false });
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
