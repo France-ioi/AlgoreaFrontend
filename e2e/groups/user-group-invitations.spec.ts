@@ -91,6 +91,9 @@ test('Accept group invitation flow', async ({ page }) => {
     if (await isUserInvitedToGroup(page)) {
       await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
       await page.getByRole('row', { name: groupName }).getByTestId('accept-group').click();
+      await expect.soft(page.getByText('Accepting a invitation')).toBeVisible();
+      await expect.soft(page.getByRole('button', { name: 'Join group' })).toBeVisible();
+      await page.getByRole('button', { name: 'Join group' }).click();
       await expect.soft(await page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
     } else {
       throw new Error('Failed to accept group invitation');
