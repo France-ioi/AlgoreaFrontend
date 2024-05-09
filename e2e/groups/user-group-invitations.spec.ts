@@ -39,6 +39,7 @@ const isUserInvitedToGroup = async (page: Page) => {
   await page.goto('/groups/mine');
   await page.waitForResponse(`${apiUrl}/current-user/group-memberships`);
   await expect.soft(page.getByRole('heading', { name: 'Pending invitations' })).toBeVisible();
+  await expect.soft(page.locator('alg-user-group-invitations')).toBeVisible();
   return page.locator('alg-user-group-invitations').getByRole('cell', { name: groupName }).isVisible();
 };
 
@@ -80,7 +81,7 @@ test.afterEach(async ({ page }) => {
   await expect(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
 });
 
-test('Accept group invitation flow', async ({ page }) => {
+test('Accept group invitation', async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
