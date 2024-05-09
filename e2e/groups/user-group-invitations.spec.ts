@@ -22,16 +22,15 @@ const leaveGroup = async (page: Page) => {
   await page.goto('/groups/mine');
   await page.waitForResponse(`${apiUrl}/current-user/group-memberships`);
   await expect.soft(page.getByRole('heading', { name: 'The groups you joined' })).toBeVisible();
-  await expect.soft(
-    page.locator('alg-joined-group-list', { hasText: groupName })
-      .getByRole('row', { name: groupName })
-      .getByRole('button')
-  ).toBeVisible();
-  await page.locator('alg-joined-group-list', { hasText: groupName })
+  const joinedGroupListLocator = page.locator('alg-joined-group-list', { hasText: groupName })
     .getByRole('row', { name: groupName })
-    .getByRole('button')
-    .click();
-  await page.getByRole('button', { name: 'Yes, leave group' }).click();
+    .getByRole('button');
+  await expect.soft(joinedGroupListLocator).toBeVisible();
+  await joinedGroupListLocator.hover();
+  await joinedGroupListLocator.click();
+  const leaveGroupButtonLocator = page.getByRole('button', { name: 'Yes, leave group' });
+  await expect.soft(leaveGroupButtonLocator).toBeVisible();
+  await leaveGroupButtonLocator.click();
   await expect.soft(page.locator('p-toastitem', { hasText: `You have left "${ groupName }"` })).toBeVisible();
 };
 
@@ -39,7 +38,7 @@ const isUserInvitedToGroup = async (page: Page) => {
   await page.goto('/groups/mine');
   await page.waitForResponse(`${apiUrl}/current-user/group-memberships`);
   await expect.soft(page.getByRole('heading', { name: 'Pending invitations' })).toBeVisible();
-  await expect.soft(page.locator('alg-user-group-invitations')).toBeVisible();
+  await expect.soft(page.locator('alg-user-group-invitations').filter({ has: page.locator('p-table') })).toBeVisible();
   return page.locator('alg-user-group-invitations').getByRole('cell', { name: groupName }).isVisible();
 };
 
