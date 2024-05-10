@@ -1,7 +1,7 @@
 import { HttpContextToken, HttpRequest } from '@angular/common/http';
 import { appConfig } from '../utils/config';
 
-const defaultTimeout = 3000;
+const defaultTimeout = 6000;
 
 /**
  * Define the context token which are used by interceptors and which may be overriden by services

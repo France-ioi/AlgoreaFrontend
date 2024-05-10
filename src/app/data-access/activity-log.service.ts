@@ -36,7 +36,7 @@ const activityLogsSchema = z.array(
 
 export type ActivityLogs = z.infer<typeof activityLogsSchema>;
 
-const logServicesTimeout = 10 * SECONDS; // log services may be very slow
+const logServicesTimeout = 15 * SECONDS; // log services may be very slow
 const logDefaultLimit = 20;
 
 @Injectable({

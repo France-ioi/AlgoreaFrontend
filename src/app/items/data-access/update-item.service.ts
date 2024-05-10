@@ -37,7 +37,7 @@ export interface ItemChanges {
   entry_min_admitted_members_ratio?: 'All' | 'Half' | 'One' | 'None',
 }
 
-const serviceTimeout = 5*SECONDS;
+const serviceTimeout = 20*SECONDS;
 
 @Injectable({
   providedIn: 'root',
