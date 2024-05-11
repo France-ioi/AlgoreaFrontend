@@ -85,7 +85,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav/left-nav.component.ts</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="5630181057184644670" datatype="html">
         <source>First <x id="INTERPOLATION" equiv-text="{{ data.length }}"/> results</source><target state="translated"><x id="INTERPOLATION" equiv-text="{{ data.length }}"/> premiers résultats</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-search-result/left-search-result.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="2419193533364061980" datatype="html">
         <source> Type at least 3 letters to search content </source><target state="translated"> Entrez au moins 3 caractères pour rechercher </target>
 
@@ -94,13 +94,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-search-result/left-search-result.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="7248248386950217161" datatype="html">
         <source> Only the content visible by the user you are observing (<x id="INTERPOLATION" equiv-text="{{ observedGroup.name }}"/>) is shown. </source><target state="translated"> Seulement le contenu visible par l'utilisateur que vous observez (<x id="INTERPOLATION" equiv-text="{{ observedGroup.name }}"/>) est montré. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/observation-bar/observation-bar.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="3863946283840310958" datatype="html">
         <source>Oops… We didn’t find that page</source><target state="translated">Oups, nous n'avons pas trouvé cette page</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/page-not-found/page-not-found.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="7097023383751720049" datatype="html">
         <source>Back to home page</source><target state="translated">Retour sur la page d'accueil</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/page-not-found/page-not-found.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="6592131321269769114" datatype="html">
         <source>This page does not exist!</source><target state="translated">Cette page n'existe pas!</target>
 
@@ -112,10 +112,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/redirect-to-id/redirect-to-id.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="9167217071684260011" datatype="html">
         <source>Create a new group</source><target state="translated">Créer un nouveau groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/add-group/add-group.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="4567003064913663922" datatype="html">
         <source>Enter a title to create a new group</source><target state="translated">Entrez un titre pour créer un nouveau groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/add-group/add-group.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="796732026436524919" datatype="html">
         <source>There is currently no way for you to access this content.</source><target state="translated">Vous n'avez actuellement pas accès à ce contenu.</target>
 
@@ -139,12 +139,12 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-removal-response-handling.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1892052022101596974" datatype="html">
         <source>Unable to remove the selected manager(s). </source><target state="translated">Impossible de retirer le(s) gestionnaire(s) sélectionné(s). </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-removal-response-handling.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="1218914975991202082" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> manager(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could
        not be removed. </source><target state="translated"><x id="PH" equiv-text="result.countSuccess"/> gestionnaire(s) a/ont été retiré(s), <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> n'ont/a pas
        pu être retiré(s). </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-removal-response-handling.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="6595442071355967826" datatype="html">
         <source>You have left "<x id="PH" equiv-text="groupName"/>"</source>
         <target state="translated">Vous avez quitté le groupe "<x id="PH" equiv-text="groupName"/>"</target><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="3538887675032003480" datatype="html">
@@ -152,7 +152,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="516816391207493054" datatype="html">
         <source>You can unlock access by validating one of the following content.</source><target state="translated">Vous pouvez débloquer l'accès en validant l'un des contenus suivants.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-unlock-access/item-unlock-access.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="2182721470632146329" datatype="html">
         <source> Parent skills </source><target state="translated"> Compétence parente </target>
 
@@ -165,7 +165,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-remove-button/group-remove-button.component.ts</context><context context-type="linenumber">101</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.ts</context><context context-type="linenumber">111</context></context-group></trans-unit><trans-unit id="319993299602692228" datatype="html">
         <source>Error while loading the group you joined</source><target state="translated">Erreur lors du chargement du groupe que vous avez rejoint</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="6595442071355967826" datatype="html">
         <source>You have left "<x id="PH" equiv-text="groupName"/>"</source><target state="translated">Vous avez quitté "<x id="PH" equiv-text="groupName"/>"</target>
         <context-group purpose="location">
@@ -216,10 +216,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="7657899273911095693" datatype="html">
         <source>You are not currently observing any group.</source><target state="translated">Vous n'observez actuellement pas de groupe.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="7526011216469102541" datatype="html">
         <source>Unable to load the recent threads</source><target state="translated">Erreur lors du chargement des discussions récentes</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="8623978917681527907" datatype="html">
         <source>Group</source><target state="translated">Groupe</target>
 
@@ -234,10 +234,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="8461842260159597706" datatype="html">
         <source>Show</source><target state="translated">Montrer</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="8461609631969932886" datatype="html">
         <source>Hide</source><target state="translated">Cacher</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="1493586474607607923" datatype="html">
         <source> You have not requested any help for activities in this chapter. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>To request help on an activity, click on the <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;chat-icon ph-duotone ph-chats-circle&quot;>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="button at t"/> button at the top of the page when visiting this activity. You cannot request help on a chapter. </source><target state="translated"> Vous n'avez demandé d'aide sur aucune des activités de ce chapitre. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Pour demander de l'aider sur une activité, cliquez sur le <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;chat-icon ph-duotone ph-chats-circle&quot;>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="button at t"/> bouton en haut de la page en visitant l'activité. Vous ne pouvez pas demander de l'aide sur un chapitre. </target>
         <context-group purpose="location">
@@ -378,13 +378,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/add-item/add-item.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="3024902573076444503" datatype="html">
         <source>Error while fetching author info</source><target state="translated">Erreur lors du chargement des informations de l'auteur</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/answer-author-indicator/answer-author-indicator.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="8316992145372469100" datatype="html">
         <source> Edit it </source><target state="translated"> Éditer </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/answer-author-indicator/answer-author-indicator.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="8187582203673100203" datatype="html">
         <source> Back to your current answer </source><target state="translated"> Retour à votre réponse actuelle </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/answer-author-indicator/answer-author-indicator.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="5801047186843718571" datatype="html">
         <source> Submitted by <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;author.groupId === info.currentUserId; else otherUser&quot;>"/> yourself <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #otherUser>"/><x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;groupLink$ | async&quot; class=&quot;alg-link base-color&quot;>"/><x id="INTERPOLATION" equiv-text="rCaption }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;"/><x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> on <x id="INTERPOLATION_1" equiv-text="{{ answer.createdAt | date:'short' }}"/>. </source><target state="translated"> Soumis par <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;author.groupId === userProfile?.groupId; else otherUser&quot;>"/> vous-même <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/><x id="START_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;ng-template #otherUser>"/><x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;groupLink$ | async&quot; class=&quot;alg-link base-color&quot;>"/><x id="INTERPOLATION" equiv-text="rCaption }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/ng-te"/><x id="CLOSE_TAG_NG_TEMPLATE" ctype="x-ng_template" equiv-text="&lt;/ng-template>"/> le <x id="INTERPOLATION_1" equiv-text="{{ answer.createdAt | date:'short' }}"/>. </target>
 
@@ -393,10 +393,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="6378470992307056425" datatype="html">
         <source>Generate a new code and reset expiration</source><target state="translated">Générer un nouveau code et réinitialiser l'expiration</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/code-token/code-token.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="344937797304326982" datatype="html">
         <source>Disable code access</source><target state="translated">Désactiver l'accès par code</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/code-token/code-token.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="840951359074313455" datatype="html">
         <source>Days</source><target state="translated">Jours</target>
 
@@ -421,13 +421,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="6598737181359979919" datatype="html">
         <source>Select the type of group to create</source><target state="translated">Sélectionnez le type de groupe à créer</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="4256736616422966530" datatype="html">
         <source>Task URL</source><target state="translated">URL de la tâche</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="4337023717719639106" datatype="html">
         <source> An error occurred while searching. If the problem persists, please contact us. </source><target state="translated"> Erreur lors de la recherche. Si le problème persiste, veuillez nous contacter. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="4670132225535615890" datatype="html">
         <source>Select a content among those which already exist</source><target state="translated">Sélectionnez un contenu parmi les existants</target>
         <context-group purpose="location">
@@ -445,11 +445,11 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="4088311569349098646" datatype="html">
         <source>Stats</source><target state="translated">Stats</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="186236568870281953" datatype="html">
         <source>History</source><target state="translated">Historique</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="4045087308145757242" datatype="html">
         <source>Dependencies</source><target state="translated">Dépendances</target>
 
@@ -549,24 +549,24 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-overview/group-overview.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="3797570084942068182" datatype="html">
         <source>Select</source><target state="translated">Sélectionner</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="3307474071394609167" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="3307474071394609167" datatype="html">
         <source>You don't have access to this </source><target state="translated">Vous n'avez pas accès à cette </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="8488818580261010572" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="8488818580261010572" datatype="html">
         <source>activity</source><target state="translated">activité</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="1086089060464522984" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">95</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="1086089060464522984" datatype="html">
         <source>skill</source><target state="translated">compétence</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="3566344197907781183" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">95</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="3566344197907781183" datatype="html">
         <source>The configured </source><target state="translated">Vous n'avez pas accès à la </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="7427247114485525389" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="7427247114485525389" datatype="html">
         <source> is currently not visible to you.</source><target state="translated"> configurée.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">102</context></context-group></trans-unit><trans-unit id="4698805386402618801" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.ts</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="4698805386402618801" datatype="html">
         <source>All descendants</source><target state="translated">Tous les descendants</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-composition-filter/group-composition-filter.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="4378796785985219718" datatype="html">
         <source>Class</source><target state="translated">Classe</target>
 
@@ -596,22 +596,22 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/add-group/add-group.component.ts</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="2501969335659826225" datatype="html">
         <source>This field is required</source><target state="translated">Ce champ est requis</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/form-error/form-error.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="6598100256909967586" datatype="html">
         <source>This field is too short, minimum : <x id="INTERPOLATION" equiv-text="{{err.requiredLength}}"/> characters.</source><target state="translated">Ce champ est trop court, minimum : <x id="INTERPOLATION" equiv-text="{{err.requiredLength}}"/> caractères.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/form-error/form-error.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="2385176308849939836" datatype="html">
         <source>This field is too long, maximum : <x id="INTERPOLATION" equiv-text="{{err.requiredLength}}"/> characters.</source><target state="translated">Ce champ est trop long, maximum : <x id="INTERPOLATION" equiv-text="{{err.requiredLength}}"/> caractères.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/form-error/form-error.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="7259291209739716585" datatype="html">
         <source>Invalid value, minimum: <x id="INTERPOLATION" equiv-text="{{ err.min }}"/></source><target state="translated">Valeur invalide, minimum: <x id="INTERPOLATION" equiv-text="{{ err.min }}"/></target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/form-error/form-error.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="1840782594573673792" datatype="html">
         <source>Invalid value, maximum: <x id="INTERPOLATION" equiv-text="{{ err.max }}"/></source><target state="translated">Valeur invalide, maximum: <x id="INTERPOLATION" equiv-text="{{ err.max }}"/></target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/form-error/form-error.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="7550645954278337301" datatype="html">
         <source>Invalid duration</source><target state="translated">Durée invalide</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/form-error/form-error.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="5322922947143379212" datatype="html">
         <source>Chapter</source><target state="translated">Chapitre</target>
 
@@ -620,16 +620,16 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/new-item-types.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="4031797825052811683" datatype="html">
         <source>Empty task</source><target state="translated">Tâche vide</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/new-item-types.ts</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="4862866967293032908" datatype="html">
         <source>A new task which will be configured later.</source><target state="translated">Nouvelle tâche configurée plus tard.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/new-item-types.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="4578192247039196794" datatype="html">
         <source>Task</source><target state="translated">Tâche</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/new-item-types.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="1248147639129492382" datatype="html">
         <source>A new task configured with a given url.</source><target state="translated">Une nouvelle tâche avec une URL donnée.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/new-item-types.ts</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="6387879863897234206" datatype="html">
         <source>Skill</source><target state="translated">Compétence</target>
 
@@ -638,19 +638,19 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/new-item-types.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="3305017324257919959" datatype="html">
         <source>All with grant</source><target state="translated">Tout + transfert</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="7016790272435410171" datatype="html">
         <source>Enter</source><target state="translated">Entrer</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="3700070166854933786" datatype="html">
         <source>Content with descendants</source><target state="translated">Contenu et descendants</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="7118211687824505601" datatype="html">
         <source>Solution with grant</source><target state="translated">Solution et "grant"</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="5525476874751783659" datatype="html">
         <source>Answer with grant</source><target state="translated">Réponse + transfert</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="6928692670367755308" datatype="html">
         <source>No caption</source><target state="translated">No caption</target>
 
@@ -671,10 +671,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/logActionDisplay.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="8472266054053408671" datatype="html">
         <source>Current answer</source><target state="translated">Réponse actuelle</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/logActionDisplay.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1808532519775134628" datatype="html">
         <source>Saved answer</source><target state="translated">Réponse sauvegardée</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/logActionDisplay.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="4272436583644511364" datatype="html">
         <source>Just now</source><target state="translated">Il y a quelques secondes</target>
         <context-group purpose="location">
@@ -689,7 +689,7 @@
         </context-group>
       </trans-unit><trans-unit id="7860418101283165917" datatype="html">
         <source>Closed</source><target state="translated">Fermé</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="5711976490580430557" datatype="html">
         <source>Saving answer before loading submission...</source><target state="translated">Sauvegarde de la réponse pour charger une soumission...</target>
 
@@ -704,16 +704,16 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/services/item-task-init.service.ts</context><context context-type="linenumber">170</context></context-group></trans-unit><trans-unit id="2232338005256831495" datatype="html">
         <source>Unable to load this task. Either you have a connection issue or this task is not correctly configured. Please retry, if the problem persists, contact us.</source><target state="translated">Erreur lors du chargement de cette tâche. Soit vous avez un problème de connexion, soit cette tâche est mal configurée. Veuillez réessayer. Si le problème persiste, contactez-nous.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/lti/lti.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="4795807627293465219" datatype="html">
         <source>This task is not correctly configured (chapter with tasks expected).</source><target state="translated">Cette tâche est mal configurée (le chapitre devrait comporter des tâches).</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/lti/lti.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="6099099963678196110" datatype="html">
         <source>This task is not correctly configured (item not found or explicit entry but no result)</source><target state="translated">Cette tâche est mal configurée (contenu non trouvé ou entrée explicite sans "result")</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/lti/lti.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="4734981103934735932" datatype="html">
         <source>Something wrong occurred during the login process, please retry after closing this tab or window.</source><target state="translated">Une erreur est parvenue lors du login, veuillez réessayer après avoir fermé cet onglet ou cette fenêtre.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/lti/lti.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="5402924068010392760" datatype="html">
         <source>Join the group "<x id="PH" equiv-text="response.group.name"/>"</source><target state="translated">Rejoindre le groupe "<x id="PH" equiv-text="response.group.name"/>"</target>
 
@@ -764,8 +764,12 @@
           <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit><trans-unit id="7708270344948043036" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {           Chapter: 'Only empty chapters can be deleted.',           other: 'Only empty skills can be deleted.'         } }}"/> </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Seuls les chapitres vides peuvent être supprimés.' : 'Seuls les compétences vides peuvent être supprimées.' }}"/> </target>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ data.length | i18nPlural: {
+        '=0': 'No result found',
+        '=1': '# result found',
+        'other': '# results found'
+      } }}"/> </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Seuls les chapitres vides peuvent être supprimés.' : 'Seuls les compétences vides peuvent être supprimées.' }}"/> </target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-search-result/left-search-result.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="translated">Fermer</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
@@ -803,31 +807,31 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/access-code-view/access-code-view.component.ts</context><context context-type="linenumber">85</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.ts</context><context context-type="linenumber">135</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/platform-settings/platform-settings.component.ts</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-form/item-children-edit-form.component.ts</context><context context-type="linenumber">125</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-wrapper/item-edit-wrapper.component.ts</context><context context-type="linenumber">333</context></context-group></trans-unit><trans-unit id="2835171506377219358" datatype="html">
         <source>Activity associated to <x id="INTERPOLATION" equiv-text="{{ group?.name }}"/></source><target state="translated">Activité associée à <x id="INTERPOLATION" equiv-text="{{ group?.name }}"/></target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="6803862177254985390" datatype="html">
         <source>Error while loading the root activity.</source><target state="translated">Erreur lors d'un chargement de l'activité associée.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="1817538289889667498" datatype="html">
         <source>Root activity:</source><target state="translated">Activité associée :</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="1191851295588896752" datatype="html">
         <source>This group has no root activity.</source><target state="translated">Ce groupe n'a pas d'activité associée.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="1737222622761672885" datatype="html">
         <source>Specific permissions given to the group on content</source><target state="translated">Permissions spécifiques données au groupe sur le contenu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="6444571656011193657" datatype="html">
         <source>Error while loading permissions.</source><target state="translated">Erreur lors du chargement des permissions.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="5875164839897370180" datatype="html">
         <source>Given by</source><target state="translated">Donnés par</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="807906988305504107" datatype="html">
         <source>Given by this group</source><target state="translated">Donnés par le groupe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="1728082805654879046" datatype="html">
         <source>This group has no specific permissions.</source><target state="translated">Ce groupe n'a pas de permissions spécifiques.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-access/group-access.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="4611536703147831594" datatype="html">
         <source>You are not allowed to manage permissions of this group.</source><target state="translated">Vous n'êtes pas autorisés à gérer les permissions de ce groupe.</target>
 
@@ -866,13 +870,13 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="6897999120381208807" datatype="html">
         <source> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this chapter. </source><target state="translated"> Vos droits d'accès actuels ne vous permettent pas de lister<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> le contenu de ce chapitre. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="8697596042386823142" datatype="html">
         <source> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this skill. </source><target state="translated"> Vos droits d'accès actuels ne vous permettent pas de lister<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> le contenu de cette compétence. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="5323780775476058848" datatype="html">
         <source> Your current access rights do not allow you to start<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the activity. </source><target state="translated"> Vos droits d'accès actuels ne vous permettent pas commencer<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> cette activité. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="701018348223992755" datatype="html">
         <source>Loading the content</source><target state="translated">Chargement du contenu</target>
 
@@ -931,7 +935,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/add-content/add-content.component.ts</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="3492417901129709355" datatype="html">
         <source>No pending requests</source><target state="translated">Aucune requête en attente</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="3648275586699949989" datatype="html">
         <source>Unable to accept invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="translated">Erreur lors de l'acceptation de l'invitation du groupe "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
         <context-group purpose="location">
@@ -971,7 +975,7 @@
         </context-group>
       </trans-unit><trans-unit id="7668019104010759211" datatype="html">
         <source>Pending invitations</source><target state="translated">Invitations en attente</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="2199673414504144949" datatype="html">
         <source>Error while loading the group invitations.</source><target state="translated">Erreur de chargement des invitations de groupe.</target>
         <context-group purpose="location">
@@ -992,7 +996,7 @@
         </context-group>
       </trans-unit><trans-unit id="7269166825697408326" datatype="html">
         <source> You are manager of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;user.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> of which this user is member. </source><target state="translated"> Vous êtes gestionnaire de <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;user.ancestorsCurrentUserIsManagerOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> dont cet utilisateur est membre. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-indicator/user-indicator.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="544102334421307622" datatype="html">
         <source>The group(s) must be empty</source><target state="translated">Le(s) groupe(s) doi(ven)t être vide(s)</target>
 
@@ -1038,7 +1042,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="4911966127509711469" datatype="html">
         <source>Leave the group</source><target state="translated">Quitter le groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="4310172052559167325" datatype="html">
        <source>This list is empty.</source><target state="translated">Cette liste est vide.</target>
 
@@ -1187,10 +1191,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">96</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">127</context></context-group></trans-unit><trans-unit id="6825914120786002519" datatype="html">
         <source>Permission editor</source><target state="translated">Éditeur de permissions</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="849207469011307459" datatype="html">
         <source>User permissions cannot be changed via this page for the moment</source><target state="translated">Les permissions de l'utilisateur ne peuvent actuellement pas être changée sur cette page</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="9119511347263876873" datatype="html">
         <source>Can list the members</source><target state="translated">Peut lister les membres</target>
 
@@ -1219,10 +1223,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.ts</context><context context-type="linenumber">154</context></context-group></trans-unit><trans-unit id="4691747963442507127" datatype="html">
         <source>Locked and hidden</source><target state="translated">Verrouillé et caché</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="7870689051450450957" datatype="html">
         <source>Locked</source><target state="translated">Verrouillé</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="7593555694782789615" datatype="html">
         <source>Open</source><target state="translated">Ouvert</target>
 
@@ -1279,7 +1283,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="1823124172013249286" datatype="html">
         <source>Content depending on this one</source><target state="translated">Contenus qui dépendent de celui-ci</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="4510905835500873772" datatype="html">
         <source> Only the content that is visible to you is listed. Other content may depend on it. </source><target state="translated"> Seuls les contenus qui vous sont visibles sont listés. D'autres peuvent également dépendre du contenu actuel. </target>
 
@@ -1287,7 +1291,14 @@
         <source> There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to. </source><target state="translated"> Il n'y a pas d'autres contenus (visibles pour vous) qui dépendent de celui-ci pour être débloqués. Pour en ajouter, visiter le même onglet sur le contenu au quel vous voulez donner accès. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="2926423520956948326" datatype="html">
-        <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         other: 'activity'       } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapter',         other: 'activity'     } }}"/>. </source><target state="translated"> Il n'y a pas de prérequis pour cette {{ itemData.item.type | i18nSelect : {         Skill: 'compétence',         other: 'activité'       } }}. Les utilisateurs y auront accès si on leur en donne accès manuellement ou si l'"accès par défaut" est configuré à "ouvert" dans son {{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapitre parent',         other: 'activité parente'     } }}. </target>
+        <source> There are no prerequisites for this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        other: 'activity'
+      } }}"/>. Users will have access to it only if they are given access manually or if the "default access" is configured as "open" in its parent <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+        Skill: 'skill',
+        Chapter: 'chapter',
+        other: 'activity'
+    } }}"/>. </source><target state="translated"> Il n'y a pas de prérequis pour cette {{ itemData.item.type | i18nSelect : {         Skill: 'compétence',         other: 'activité'       } }}. Les utilisateurs y auront accès si on leur en donne accès manuellement ou si l'"accès par défaut" est configuré à "ouvert" dans son {{ itemData.item.type | i18nSelect : {         Skill: 'skill',         Chapter: 'chapitre parent',         other: 'activité parente'     } }}. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="7423100881808748596" datatype="html">
         <source>You are not allowed to view dependencies for this content</source><target state="translated">Vous n'êtes pas autorisé à voir les dépendances de ce contenu</target>
@@ -1296,20 +1307,41 @@
         <source>Information</source><target state="translated">Information</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-wrapper/item-edit-wrapper.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8309054658706496987" datatype="html">
-        <source> «<x id="INTERPOLATION" equiv-text="{{ observedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {             true: 'can',             other: 'can\'t'           } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'skill',             other: 'activity'           } }}"/> </source><target state="translated"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'peut',           other: 'ne peut pas'         } }}"/> accéder à cette <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'compétence',           other: 'activité'         } }}"/> </target>
-        
+        <source> «<x id="INTERPOLATION" equiv-text="{{ observedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ (watchedGroupPermissions | allowsViewingContent).toString() | i18nSelect : {
+            true: 'can',
+            other: 'can\'t'
+          } }}"/> access this <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {
+            Skill: 'skill',
+            other: 'activity'
+          } }}"/> </source><target state="translated"> «<x id="INTERPOLATION" equiv-text="{{ watchedGroup.name }}"/>» <x id="INTERPOLATION_1" equiv-text="{{ ['content', 'content_with_descendants', 'solution'].includes(permissions.canView).toString() | i18nSelect : {           true: 'peut',           other: 'ne peut pas'         } }}"/> accéder à cette <x id="INTERPOLATION_2" equiv-text="{{ itemData.item.type | i18nSelect : {           Skill: 'compétence',           other: 'activité'         } }}"/> </target>
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1633175305056804241" datatype="html">
-        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {               Skill: 'skill',               other: 'activity'             } }}"/> </source><target state="translated">Vous ne pouvez pas observer cette <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'compétence',             other: 'activité'           } }}"/> </target>
-        
+        <source>You cannot watch this <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}"/> </source><target state="translated">Vous ne pouvez pas observer cette <x id="INTERPOLATION" equiv-text="{{ itemData.item.type | i18nSelect : {             Skill: 'compétence',             other: 'activité'           } }}"/> </target>
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="7210234374199239920" datatype="html">
-        <source> The <x id="INTERPOLATION" equiv-text="{{ (observedGroup.route | isUser).toString() | i18nSelect : {               true: 'user',               other: 'group'             } }}"/> cannot currently view this content. </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {               true: 'L\'utilisateur',               other: 'Le groupe'             } }}"/> ne peut pas actuellement voir ce contenu. </target>
+        <source> The <x id="INTERPOLATION" equiv-text="{{ (observedGroup.route | isUser).toString() | i18nSelect : {
+              true: 'user',
+              other: 'group'
+            } }}"/> cannot currently view this content. </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {               true: 'L\'utilisateur',               other: 'Le groupe'             } }}"/> ne peut pas actuellement voir ce contenu. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="3905090940376140689" datatype="html">
-        <source> The <x id="INTERPOLATION" equiv-text="{{ (observedGroup.route | isUser).toString() | i18nSelect : {               true: 'user',               other: 'group'             } }}"/> can list this <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {               Skill: 'skill',               other: 'activity'             } }}"/> but cannot <x id="INTERPOLATION_2" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {               true: 'list its content.',               other: 'view its content.'             } }}"/> </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {               true: 'L\'utilisateur',               other: 'group'             } }}"/> peut voir cette {{ itemData.item.type | i18nSelect : {               Skill: 'compétence',               other: 'activité'             } }} mais ne peut pas {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {               true: 'lister son contenu its content.',               other: 'voir son contenu.'             } }} </target>
+        <source> The <x id="INTERPOLATION" equiv-text="{{ (observedGroup.route | isUser).toString() | i18nSelect : {
+              true: 'user',
+              other: 'group'
+            } }}"/> can list this <x id="INTERPOLATION_1" equiv-text="{{ itemData.item.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}"/> but cannot <x id="INTERPOLATION_2" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
+              true: 'list its content.',
+              other: 'view its content.'
+            } }}"/> </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect : {               true: 'L\'utilisateur',               other: 'group'             } }}"/> peut voir cette {{ itemData.item.type | i18nSelect : {               Skill: 'compétence',               other: 'activité'             } }} mais ne peut pas {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {               true: 'lister son contenu its content.',               other: 'voir son contenu.'             } }} </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="2619134793600643680" datatype="html">
         <source> You cannot watch other users' activity on this content </source><target state="translated"> Vous ne pouvez pas observer l'activité des autres utilisateurs sur ce contenu </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="6629702976113303770" datatype="html">
         <source> Note that some subgroups or users of the groups may have higher permissions. </source><target state="translated"> Notez que certains sous-groupes ou utilisateurs peuvent avoir des permissions plus élevées. </target>
 
@@ -1344,7 +1376,10 @@
         <source>You have no path to this content.</source><target state="translated">Vous n'avez pas accès à ce contenu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="4280251484403789226" datatype="html">
-        <source> This content is one of your root <x id="INTERPOLATION" equiv-text="{{ rootItem.type | i18nSelect : {               Skill: 'skill',               other: 'activity'             } }}"/> </source><target state="translated"> Ce contenu est l'une de vos {{ rootItem.type | i18nSelect : {               Skill: 'compétences',               other: 'activités'             } }} racines </target>
+        <source> This content is one of your root <x id="INTERPOLATION" equiv-text="{{ rootItem.type | i18nSelect : {
+              Skill: 'skill',
+              other: 'activity'
+            } }}"/> </source><target state="translated"> Ce contenu est l'une de vos {{ rootItem.type | i18nSelect : {               Skill: 'compétences',               other: 'activités'             } }} racines </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="9212151393694561338" datatype="html">
         <source>This content can be found in...</source><target state="translated">Vous pouvez accéder à ce contenu via...</target>
@@ -1390,7 +1425,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread-message/thread-message.component.ts</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="5431013772554598311" datatype="html">
         <source>The connection with the forum has been lost, try to refresh the current page.</source><target state="translated">La connexion avec le forum a été perdue, rafraichissez la page.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="6113781660128924635" datatype="html">
         <source> There are currently no events </source><target state="translated"> Il n'y actuellement pas d'évènements </target>
 
@@ -1539,25 +1574,25 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="9115774419520226047" datatype="html">
         <source>This user</source><target state="translated">Cet utilisateur</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="9020509149221306349" datatype="html">
         <source>This group</source><target state="translated">Ce groupe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="2558146662528383162" datatype="html">
         <source>This team</source><target state="translated">Cette équipe</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="720557322859638078" datatype="html">
         <source>You</source><target state="translated">Vous</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="4601425161855798823" datatype="html">
         <source>to be at least</source><target state="translated">être au moins</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="2913790852956203897" datatype="html">
         <source>to be</source><target state="translated">être</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="1346386960355422306" datatype="html">
         <source>You need to be owner of this item</source><target state="translated">Vous devez être propriétaire de cet élément</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="1586778869242032005" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can also give 'Can edit' access to others</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut également donner les droits d'édition à d'autres</target>
 
@@ -1580,16 +1615,43 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/add-sub-group/add-sub-group.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="1921262188546615038" datatype="html">
         <source>Add subgroups</source><target state="translated">Ajouter des sous-groupes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/add-sub-group/add-sub-group.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="6042043656811511894" datatype="html">
-        <source> Associated <x id="INTERPOLATION" equiv-text="{{ contentType | i18nSelect : {       skill: 'Skill',       other: 'Activity'     } }}"/> </source><target state="translated"> {{ contentType | i18nSelect : {       skill: 'Compétence',       other: 'Activité'     } }} liée </target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/add-sub-group/add-sub-group.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="8794446368986778774" datatype="html">
+        <source> Associated <x id="ICU" equiv-text="{contentType, select, skill {Skill} other {Activity}}" xid="8599000147288790783"/> </source><target state="new"> Associated <x id="ICU" equiv-text="{contentType, select, skill {Skill} other {Activity}}" xid="8599000147288790783"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context>
-          <context context-type="linenumber">2,7</context>
+          <context context-type="linenumber">2,4</context>
         </context-group>
-      </trans-unit><trans-unit id="8910728358351209969" datatype="html">
-        <source>Error while loading the root <x id="INTERPOLATION" equiv-text="{{ contentType | i18nSelect : {       skill: 'Skill',       other: 'activity'     } }}"/></source><target state="translated">Erreur du chargement de <x id="INTERPOLATION" equiv-text="{{ contentType | i18nSelect : {         skill: 'la compétence',         other: 'l\'activité'       } }}"/> racine</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="2863460046387544768" datatype="html">
+      </trans-unit><trans-unit id="8599000147288790783" datatype="html">
+        <source>{VAR_SELECT, select, skill {Skill} other {Activity}}</source><target state="new">{VAR_SELECT, select, skill {Skill(Translated)} other {Activity(Translated)}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="4984451405509509653" datatype="html">
+        <source> Error while loading the root <x id="ICU" equiv-text="{contentType, select, skill {skill} other {activity}}" xid="2477531095255582964"/> </source><target state="new"> Error while loading the root <x id="ICU" equiv-text="{contentType, select, skill {skill} other {activity}}" xid="2477531095255582964"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+      </trans-unit><trans-unit id="2477531095255582964" datatype="html">
+        <source>{VAR_SELECT, select, skill {skill} other {activity}}</source><target state="new">{VAR_SELECT, select, skill {skill} other {activity}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit><trans-unit id="1529591460214040631" datatype="html">
+        <source> There are currently no <x id="ICU" equiv-text="{contentType, select, skill {skills} other {activities}}" xid="4702562550095320581"/> associated with this group. </source><target state="new"> There are currently no <x id="ICU" equiv-text="{contentType, select, skill {skills} other {activities}}" xid="4702562550095320581"/> associated with this group. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+      </trans-unit><trans-unit id="4702562550095320581" datatype="html">
+        <source>{VAR_SELECT, select, skill {skills} other {activities}}</source><target state="new">{VAR_SELECT, select, skill {skills(translated)} other {activities(translated)}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/associated-item/associated-item.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="2863460046387544768" datatype="html">
         <source>teams</source><target state="translated">équipes</target>
 
 
@@ -1605,7 +1667,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-indicator/group-indicator.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6350999595816280001" datatype="html">
         <source> As a member of <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/> you are a member of this group. </source><target state="translated"> En tant que membre de <x id="START_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;alg-group-links class=&quot;links&quot; [items]=&quot;group?.descendantsCurrentUserIsMemberOf&quot;>"/><x id="CLOSE_TAG_ALG_GROUP_LINKS" ctype="x-alg_group_links" equiv-text="&lt;/alg-group-links>"/>, vous êtes également membre de ce groupe. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-indicator/group-indicator.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="1652019840559664368" datatype="html">
         <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> You are a manager of this group. </source><target state="translated"><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i class=&quot;icon ph-duotone ph-crown&quot;>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/> Vous êtes gestionnaire du groupe. </target>
 
@@ -1719,15 +1781,15 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="1153571395259772276" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> group(s) have been removed</source><target state="translated"><x id="PH" equiv-text="result.countSuccess"/> groupe(s) a/ont été supprimé(s)</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/group-removal-response-handling.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="2361481675221094358" datatype="html">
         <source>Unable to remove the selected group(s). </source><target state="translated">Erreur lors de la suppression du/des groupe(s). </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/group-removal-response-handling.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="2715190794133910945" datatype="html">
         <source><x id="PH" equiv-text="result.countSuccess"/> group(s) have been removed, <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> could
        not be removed. </source><target state="translated"><x id="PH" equiv-text="result.countSuccess"/> groupe(s) a/ont été supprimé(s), <x id="PH_1" equiv-text="result.countRequests - result.countSuccess"/> n'a/ont
        pas pu être supprimé(s). </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/group-removal-response-handling.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="924686070752449719" datatype="html">
         <source>Error while loading the group you manage</source><target state="translated">Erreur lors du chargement des groupes dont vous êtes gestionnaire</target>
 
@@ -1791,17 +1853,17 @@
         </context-group>
       </trans-unit><trans-unit id="3508946365635764054" datatype="html">
         <source>Invite users</source><target state="translated">Inviter des utilisateurs</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="5217546025338934271" datatype="html">
         <source>Add users name list, separated by commas.</source><target state="translated">Entez une liste d'identifiants d'utilisateur, séparés par des virgules.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="9106233537687521844" datatype="html">
         <source>login_1, login_2...</source><target state="translated">identifiant_1, identifiant_2, ...</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="2515100901319484306" datatype="html">
         <source>You cannot invite more than 100 users at once</source><target state="translated">Vous ne pouvez pas inviter plus de 100 utilisateurs à la fois</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="3463797202358605584" datatype="html">
         <source>Invite</source><target state="translated">Inviter</target>
 
@@ -1816,10 +1878,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.ts</context><context context-type="linenumber">174</context></context-group></trans-unit><trans-unit id="8839544110714813464" datatype="html">
         <source> You are currently not allowed to leave this group. </source><target state="translated"> Vous n'êtes actuellement pas autorisé à quitter ce groupe. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-leave/group-leave.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="8973345892770149395" datatype="html">
         <source> You can freely leave this group. Note that you may lose access to content if this group was granting some permissions to its members. </source><target state="translated"> Vous pouvez librement quitter ce groupe. Notez que vous pourriez perdre accès à certains contenus si l'accès à ceux-ci vous y était donné par ce groupe. </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-leave/group-leave.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="5744148860872137225" datatype="html">
         <source>Leave this group</source><target state="translated">Quitter ce groupe</target>
 
@@ -1846,7 +1908,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="6384438664656581593" datatype="html">
         <source>This code can be used multiple times without expiring.</source><target state="translated">Ce code peut être utilisé plusieurs fois sans expirer.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="3593273375283998688" datatype="html">
         <source> This code has been activated <x id="INTERPOLATION" equiv-text="{{ codeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }}"/> minutes ago, it will be disabled in <x id="INTERPOLATION_1" equiv-text="{{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }}"/> minutes. </source><target state="translated"> Ce code a été activé il y a <x id="INTERPOLATION" equiv-text="tivated {{ groupExt.durationSinceFirstCodeUse! | toMin | number:'1"/> minutes, il sera désactivé dans <x id="INTERPOLATION_1" equiv-text=" be disabled in {{ groupExt.durationBeforeCodeExpiration! | toMin | n"/> minutes. </target>
 
@@ -1861,7 +1923,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="8019333697666942316" datatype="html">
         <source>Generate a code</source><target state="translated">Générer un code</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="8186013988289067040" datatype="html">
         <source>Code</source><target state="translated">Code</target>
 
@@ -1978,10 +2040,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">183</context></context-group></trans-unit><trans-unit id="2739370419840410792" datatype="html">
         <source>Add a manager</source><target state="translated">Ajouter un gestionnaire</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="5489740898797957483" datatype="html">
         <source>Login of a user</source><target state="translated">Se connecter en tant qu'un utilisateur</target>
-        
+
       <note from="description" priority="1">Placeholder of field for searching for user by login</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
         <source>Time spent</source><target state="translated">Temps écoulé</target>
 
@@ -1999,10 +2061,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
         <source>This user has this permission via one of the other group he is member of, or one of their ancestors.</source><target state="translated">Cet utilisateur a reçu cette permission via un autre groupe dont il est membre, ou l'un de ses ancêtres.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="1019652748880096752" datatype="html">
         <source>This group has this permission via one of one of its ancestor group.</source><target state="translated">Ce groupe a reçu cette permission par l'un de ses groupes ancêtres.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="6746605846893800788" datatype="html">
         <source>Error while loading the group progress</source><target state="translated">Erreur lors du chargement de la progression du groupe</target>
 
@@ -2010,7 +2072,10 @@
         <source>Error while loading the user progress</source><target state="translated">Erreur lors du chargement de la progression de l'utilisateur</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5015665626593413569" datatype="html">
-        <source> (using <x id="INTERPOLATION" equiv-text="{{ rowData.hintsRequested | i18nPlural : {                         '=1': 'hint',                         'other': '# hints'                       } }}"/>) </source><target state="translated"> ({{ rowData.hintsRequested | i18nPlural : {'=0': 'sans indice',                         '=1': 'avec un indice',                         'other': 'avec # indices'                       } }}) </target>
+        <source> (using <x id="INTERPOLATION" equiv-text="{{ rowData.hintsRequested | i18nPlural : {
+                        '=1': 'hint',
+                        'other': '# hints'
+                      } }}"/>) </source><target state="translated"> ({{ rowData.hintsRequested | i18nPlural : {'=0': 'sans indice',                         '=1': 'avec un indice',                         'other': 'avec # indices'                       } }}) </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="5338231862998220113" datatype="html">
         <source>Latest activity</source><target state="translated">Dernière activité</target>
@@ -2023,7 +2088,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/my-groups/my-groups.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6774795715471269377" datatype="html">
         <source>The groups you joined</source><target state="translated">Groupes dont vous êtes membre</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/my-groups/my-groups.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="9110846348938454365" datatype="html">
         <source>Join a group by code</source><target state="translated">Rejoindre un groupe par code</target>
 
@@ -2071,7 +2136,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user/user.component.ts</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="955425775818627867" datatype="html">
         <source>Add a new prerequisite</source><target state="translated">Ajouter un nouveau prérequis</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/add-dependency/add-dependency.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="3872177273357595383" datatype="html">
         <source>Error while loading the user info</source><target state="translated">Erreur de chargement des informations de l'utilisateur</target>
 
@@ -2092,7 +2157,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-composition-filter/group-composition-filter.component.ts</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="4139147089479340367" datatype="html">
         <source>Enter a title to create a new dependency</source><target state="translated">Entrez un titre pour créer une nouvelle dépendance</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/add-dependency/add-dependency.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="2618743771935093938" datatype="html">
         <source>Personal info</source><target state="translated">Informations personnelles</target>
 
