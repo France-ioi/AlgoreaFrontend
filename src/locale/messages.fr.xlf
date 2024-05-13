@@ -223,7 +223,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="8623978917681527907" datatype="html">
         <source>Group</source><target state="translated">Groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="5611592591303869712" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="162781895218767419" datatype="html">
+        <source>{VAR_SELECT, select, isObserving: {View the best answer} other {Reload the best answer}}</source><target state="new">{VAR_SELECT, select, isObserving: {View the best answer} other {Reload the best answer}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+      </trans-unit><trans-unit id="4941164855841861817" datatype="html">
+        <source>{VAR_SELECT, select, observingMode {View answer} other {Reload answer}}</source><target state="new">{VAR_SELECT, select, observingMode {View answer} other {Reload answer}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.html</context>
+          <context context-type="linenumber">85,88</context>
+        </context-group>
+      </trans-unit><trans-unit id="5611592591303869712" datatype="html">
         <source>Status</source><target state="translated">Status</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="989713090179506197" datatype="html">

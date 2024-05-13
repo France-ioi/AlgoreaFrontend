@@ -21,10 +21,10 @@
                 } | url"
               *ngrxLet="observedGroupId$; let observedGroupId"
             >
-              {{ (!!observedGroupId ? 'isObserving' : '') | i18nSelect : {
-                isObserving: 'View the best answer',
-                other: 'Reload the best answer'
-              } }}
+              {(!!observedGroupId ? 'isObserving' : ''), select,
+                isObserving: {View the best answer}
+                other {Reload the best answer}
+              }
             </a>
           </ng-container>
         </ng-container>
@@ -82,10 +82,10 @@
                         [routerLink]="rowData.item | itemRoute: { answer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true }} | url"
                         *ngIf="(!meta.isObserving || rowData.canWatchItemAnswer) && rowData.answerId"
                       >
-                        {{ (meta.isObserving ? 'observingMode' : '') | i18nSelect : {
-                          observingMode: 'View answer',
-                          other: 'Reload answer'
-                        } }}
+                        {(meta.isObserving ? 'observingMode' : ''), select,
+                          observingMode {View answer}
+                          other {Reload answer}
+                        }
                       </a>
                     </div>
                   </div>
