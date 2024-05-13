@@ -1754,7 +1754,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">106</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">125</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">104</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">114</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.html</context><context context-type="linenumber">126</context></context-group></trans-unit><trans-unit id="5077586677126527379" datatype="html">
         <source>This list is empty. Check below the different ways to add members or sub-groups.</source><target state="translated">La liste est vide. Voyez ci-dessous comment vous pouvez ajouter des membres et sous-groupes.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">116</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">116</context></context-group></trans-unit><trans-unit id="5897133143808303682" datatype="html">
+        <source>{VAR_SELECT, select, users {Remove} other {Remove from group}}</source><target state="new">{VAR_SELECT, select, users {Remove} other {Remove from group}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit><trans-unit id="1916930465370171483" datatype="html">
         <source> Select all </source><target state="translated"> Tout sélectionner </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/modules/group/components/member-list/member-list.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="6306138344256927663" datatype="html">

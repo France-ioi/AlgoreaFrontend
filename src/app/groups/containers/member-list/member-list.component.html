@@ -133,10 +133,7 @@
             (click)="onRemove($event)"
             [disabled]="(removalInProgress$ | async) || !state.isReady || selection.length === 0"
           >
-            {{ currentFilter.type | i18nSelect : {
-              users: 'Remove',
-              other: 'Remove from group'
-            } }}
+            {currentFilter.type, select, users {Remove} other {Remove from group}}
           </button>
         </div>
       </ng-template>

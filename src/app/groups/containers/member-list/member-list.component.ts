@@ -23,7 +23,7 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe, NgClass } from '@angular/common';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
 
 type Member = GroupMembers[number];
 
@@ -88,7 +88,6 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
     ButtonModule,
     AsyncPipe,
     DatePipe,
-    I18nSelectPipe,
     GroupLinkPipe,
     UserCaptionPipe,
     NgClass,
