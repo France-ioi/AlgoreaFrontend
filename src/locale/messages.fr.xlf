@@ -978,8 +978,8 @@
     <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.html</context><context context-type="linenumber">138</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/member-list/member-list.component.html</context><context context-type="linenumber">124</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="4391050282469768523" datatype="html">
         <source>Error while loading the activities</source><target state="translated">Erreur de chargement des activités</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="5856751044957815003" datatype="html">
-        <source> There are no activities linked to this <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;observedGroupRoute$ | async as observedGroupRoute&quot;>"/> <x id="INTERPOLATION" equiv-text="{{ (observedGroupRoute | isUser).toString() | i18nSelect: { true: 'user', other: 'group' } }}"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="translated"> Il n'y a pas d'activité liée à <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;watchedGroup$ | async as watchedGroup&quot;>"/> <x id="INTERPOLATION" equiv-text="{{ watchedGroup.route.isUser.toString() | i18nSelect: { true: 'cet user', other: 'ce groupe' } }}"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="9158526371318044109" datatype="html">
+        <source> There are no activities linked to this <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;observedGroupRoute$ | async as observedGroupRoute&quot;>"/> <x id="ICU" equiv-text="{(observedGroupRoute | isUser).toString(), select, true {user} other {group}}" xid="2467243377468000214"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="new"> There are no activities linked to this <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;observedGroupRoute$ | async as observedGroupRoute&quot;>"/> <x id="ICU" equiv-text="{(observedGroupRoute | isUser).toString(), select, true {user} other {group}}" xid="2467243377468000214"/>. <x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context>
           <context context-type="linenumber">15,21</context>
@@ -2031,15 +2031,9 @@
         </context-group>
       </trans-unit><trans-unit id="2467243377468000214" datatype="html">
         <source>{VAR_SELECT, select, true {user} other {group}}</source><target state="new">{VAR_SELECT, select, true {user} other {group}}</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit><trans-unit id="896279574598754208" datatype="html">
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/suggestion-of-activities/suggestion-of-activities.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="896279574598754208" datatype="html">
         <source> The <x id="ICU" equiv-text="{(observedGroup.route | isUser).toString(), select, true {user} other {group}}" xid="2467243377468000214"/> can list this <x id="ICU_1" equiv-text="{itemData.item.type, select, Skill {skill} other {activity}}" xid="1954407385077732703"/> but cannot <x id="INTERPOLATION" equiv-text="{{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
               true: 'list its content.',
               other: 'view its content.'
