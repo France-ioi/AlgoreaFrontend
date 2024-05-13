@@ -1368,19 +1368,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/parent-skills/parent-skills.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="7599176768250828782" datatype="html">
         <source>Error while loading path suggestion</source><target state="translated">Erreur de chargement des suggestions de chemins</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="7136816175934806999" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="5886451662291177129" datatype="html">
+        <source> This content is one of your root <x id="ICU" equiv-text="{rootItem.type, select, Skill {skill} other {activity}}" xid="1954407385077732703"/> </source><target state="new"> This content is one of your root <x id="ICU" equiv-text="{rootItem.type, select, Skill {skill} other {activity}}" xid="1954407385077732703"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+      </trans-unit><trans-unit id="7136816175934806999" datatype="html">
         <source>You have no path to this content.</source><target state="translated">Vous n'avez pas accès à ce contenu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="4280251484403789226" datatype="html">
-        <source> This content is one of your root <x id="INTERPOLATION" equiv-text="{{ rootItem.type | i18nSelect : {
-              Skill: 'skill',
-              other: 'activity'
-            } }}"/> </source><target state="translated"> Ce contenu est l'une de vos {{ rootItem.type | i18nSelect : {               Skill: 'compétences',               other: 'activités'             } }} racines </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="9212151393694561338" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="9212151393694561338" datatype="html">
         <source>This content can be found in...</source><target state="translated">Vous pouvez accéder à ce contenu via...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="4475993768283951722" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="4475993768283951722" datatype="html">
         <source>Sub-skills</source><target state="translated">Sous-compétences</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="5233338047905293197" datatype="html">
@@ -2017,7 +2017,7 @@
       </trans-unit><trans-unit id="1954407385077732703" datatype="html">
         <source>{VAR_SELECT, select, Skill {skill} other {activity}}</source><target state="new">{VAR_SELECT, select, Skill {skill} other {activity}}</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="2952099917311947909" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/containers/path-suggestion/path-suggestion.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="2952099917311947909" datatype="html">
         <source> You cannot watch this <x id="ICU" equiv-text="{itemData.item.type, select, Skill {skill} other {activity}}" xid="1954407385077732703"/> </source><target state="new"> You cannot watch this <x id="ICU" equiv-text="{itemData.item.type, select, Skill {skill} other {activity}}" xid="1954407385077732703"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.html</context>
