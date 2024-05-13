@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, I18nSelectPipe } from '@angular/common';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-remove-button',
@@ -24,7 +24,6 @@ import { NgIf, AsyncPipe, I18nSelectPipe } from '@angular/common';
     ErrorComponent,
     ButtonModule,
     AsyncPipe,
-    I18nSelectPipe,
   ],
 })
 export class ItemRemoveButtonComponent implements OnChanges, OnDestroy {

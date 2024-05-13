@@ -775,18 +775,10 @@
           <context context-type="sourcefile">src/app/app.component.html</context>
           <context context-type="linenumber">84</context>
         </context-group>
-      </trans-unit><trans-unit id="7708270344948043036" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {
-          Chapter: 'Only empty chapters can be deleted.',
-          other: 'Only empty skills can be deleted.'
-        } }}"/> </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Seuls les chapitres vides peuvent être supprimés.' : 'Seuls les compétences vides peuvent être supprimées.' }}"/> </target>
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
+      </trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="translated">Fermer</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="7708270344948043036" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ item.type | i18nSelect : {           Chapter: 'Only empty chapters can be deleted.',           other: 'Only empty skills can be deleted.'         } }}"/> </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ item.type === 'Chapter' ? 'Seuls les chapitres vides peuvent être supprimés.' : 'Seuls les compétences vides peuvent être supprimées.' }}"/> </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/modules/item/components/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5302971017875260731" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="5302971017875260731" datatype="html">
         <source>Only owner can delete items</source><target state="translated">Seuls les propriétaires d'un contenu peuvent le supprimer</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="970391649916938978" datatype="html">
@@ -1343,6 +1335,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/item-permissions/item-permissions.component.ts</context>
           <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit><trans-unit id="8856905278208146821" datatype="html">
+        <source> <x id="ICU" equiv-text="{item.type, select,
+          Chapter {Only empty chapters can be deleted.}
+          other {Only empty skills can be deleted.}
+        }" xid="6352676031821913729"/> </source><target state="new"> <x id="ICU" equiv-text="{item.type, select,
+          Chapter {Only empty chapters can be deleted.}
+          other {Only empty skills can be deleted.}
+        }" xid="6352676031821913729"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.html</context>
+          <context context-type="linenumber">5,10</context>
+        </context-group>
+      </trans-unit><trans-unit id="6352676031821913729" datatype="html">
+        <source>{VAR_SELECT, select, Chapter {Only empty chapters can be deleted.} other {Only empty skills can be deleted.}}</source><target state="new">{VAR_SELECT, select, Chapter {Only empty chapters can be deleted.} other {Only empty skills can be deleted.}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-remove-button/item-remove-button.component.html</context>
+          <context context-type="linenumber">6,9</context>
         </context-group>
       </trans-unit><trans-unit id="permissionsUpdated" datatype="html">
         <source>Permissions successfully updated.</source><target state="translated">Permissions mises à jour !</target>

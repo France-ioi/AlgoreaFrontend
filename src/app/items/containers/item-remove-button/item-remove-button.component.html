@@ -3,10 +3,10 @@
     <alg-loading size="small" *ngIf="state.isFetching || deletionInProgress"></alg-loading>
     <ng-container *ngIf="item.permissions.isOwner; else notOwner">
       <span class="message" *ngIf="state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)" i18n>
-        {{ item.type | i18nSelect : {
-          Chapter: 'Only empty chapters can be deleted.',
-          other: 'Only empty skills can be deleted.'
-        } }}
+        {item.type, select,
+          Chapter {Only empty chapters can be deleted.}
+          other {Only empty skills can be deleted.}
+        }
       </span>
     </ng-container>
     <ng-template #notOwner>
