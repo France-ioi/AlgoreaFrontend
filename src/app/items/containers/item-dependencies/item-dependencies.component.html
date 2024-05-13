@@ -106,17 +106,9 @@
   <ng-template #emptyList>
     <alg-error i18n>
       There are no prerequisites for this
-      {{ itemData.item.type | i18nSelect : {
-        Skill: 'skill',
-        other: 'activity'
-      } }}.
+      {itemData.item.type, select, Skill {skill} other {activity}}.
       Users will have access to it only if they are given access manually or if the "default access" is configured as
-      "open" in its parent
-      {{ itemData.item.type | i18nSelect : {
-        Skill: 'skill',
-        Chapter: 'chapter',
-        other: 'activity'
-    } }}.
+      "open" in its parent {itemData.item.type, select, Skill {skill} Chapter {chapter} other {activity}}.
     </alg-error>
   </ng-template>
 
