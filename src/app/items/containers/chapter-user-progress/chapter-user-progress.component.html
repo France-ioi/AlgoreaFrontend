@@ -71,10 +71,7 @@
                   <ng-container *ngIf="!['Chapter', 'Skill'].includes(rowData.type) && rowData.latestActivityAt">
                     {{ rowData.submissions }}
                     <span *ngIf="rowData.hintsRequested > 0" i18n>
-                      (using {{ rowData.hintsRequested | i18nPlural : {
-                        '=1': 'hint',
-                        'other': '# hints'
-                      } }})
+                      (using {rowData.hintsRequested, plural, =1 {hint} other {{{ rowData.hintsRequested }} hints}})
                     </span>
                   </ng-container>
                 </ng-container>

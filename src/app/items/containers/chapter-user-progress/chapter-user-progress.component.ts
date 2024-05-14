@@ -18,7 +18,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nPluralPipe } from '@angular/common';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
 
 interface RowData {
   id: string,
@@ -52,7 +52,6 @@ interface RowData {
     NgSwitchDefault,
     AsyncPipe,
     DatePipe,
-    I18nPluralPipe,
     ItemRoutePipe,
     RouteUrlPipe,
     DurationToReadable

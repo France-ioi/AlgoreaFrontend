@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { SectionComponent } from 'src/app/ui-components/section/section.component';
-import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -41,7 +41,6 @@ import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
     OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
-    I18nSelectPipe,
     ItemRoutePipe,
     RouteUrlPipe,
   ],

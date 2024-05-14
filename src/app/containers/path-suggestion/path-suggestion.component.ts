@@ -12,7 +12,7 @@ import { typeCategoryOfItem } from '../../items/models/item-type';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe, I18nSelectPipe } from '@angular/common';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand => {
   const path = breadcrumbs.map(item => item.id);
@@ -31,7 +31,6 @@ const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: Breadcru
     NgFor,
     RouterLink,
     AsyncPipe,
-    I18nSelectPipe,
   ],
 })
 export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {

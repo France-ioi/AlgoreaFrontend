@@ -10,7 +10,7 @@ import { PathSuggestionComponent } from '../path-suggestion/path-suggestion.comp
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { MessageInfoComponent } from '../../ui-components/message-info/message-info.component';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-left-search-result',
@@ -28,7 +28,6 @@ import { NgIf, NgFor, NgClass, AsyncPipe, I18nPluralPipe } from '@angular/common
     OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
-    I18nPluralPipe,
     ItemRoutePipe,
     RouteUrlPipe
   ],

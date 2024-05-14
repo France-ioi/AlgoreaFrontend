@@ -1,9 +1,6 @@
 <ng-container *ngIf="state$ | async as state">
   <h2 class="alg-h2 alg-text-normal title" i18n>
-    Associated {{ contentType | i18nSelect : {
-      skill: 'Skill',
-      other: 'Activity'
-    } }}
+    Associated {contentType, select, skill {Skill} other {Activity}}
   </h2>
 
   <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
@@ -12,22 +9,21 @@
     *ngIf="state.isError"
     class="dark"
     icon="ph-duotone ph-warning-circle"
-    i18n-message message="Error while loading the root {{ contentType | i18nSelect : {
-      skill: 'Skill',
-      other: 'activity'
-    } }}"
     [showRefreshButton]="true"
     refreshButtonType="refresh"
     (refresh)="refresh()"
-  ></alg-error>
+  >
+    <ng-container i18n>
+      Error while loading the root {contentType, select, skill {skill} other {activity}}
+    </ng-container>
+  </alg-error>
 
   <ng-container *ngIf="state.isReady">
     <ng-container [ngSwitch]="state.data.tag">
       <ng-container *ngSwitchCase="'no-item'">
-        <p class="note">There are currently no {{ contentType | i18nSelect : {
-            skill: 'skills',
-            other: 'activities'
-          } }} associated with this group.</p>
+        <p class="note" i18n>
+          There are currently no {contentType, select, skill {skills} other {activities}} associated with this group.
+        </p>
         <alg-add-content
           [allowedTypesForNewContent]="allowedNewItemTypes"
           [searchFunction]="searchFunction"

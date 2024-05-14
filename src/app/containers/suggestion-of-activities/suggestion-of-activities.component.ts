@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, NgFor, I18nSelectPipe } from '@angular/common';
+import { NgIf, AsyncPipe, NgFor } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
@@ -30,7 +30,6 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
     ItemRoutePipe,
     RouteUrlPipe,
     NgFor,
-    I18nSelectPipe,
     GroupIsUserPipe,
   ],
 })

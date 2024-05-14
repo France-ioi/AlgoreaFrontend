@@ -24,7 +24,7 @@ import { AddContentComponent } from 'src/app/ui-components/add-content/add-conte
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { SectionComponent } from 'src/app/ui-components/section/section.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, I18nSelectPipe, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -50,7 +50,6 @@ import { ButtonModule } from 'primeng/button';
     RouterLink,
     NgClass,
     AsyncPipe,
-    I18nSelectPipe,
     ButtonModule,
     NgTemplateOutlet
   ],

@@ -21,7 +21,7 @@ import { ButtonModule } from 'primeng/button';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe, I18nSelectPipe } from '@angular/common';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -55,7 +55,6 @@ const logsLimit = 20;
     NgSwitchDefault,
     AsyncPipe,
     DatePipe,
-    I18nSelectPipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,

@@ -49,6 +49,11 @@ export class ItemPermissionsComponent implements OnChanges {
   watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';
   collapsed = true;
+  lockEditTooltipCaptions = {
+    content: $localize`You are not allowed to give permissions on this content`,
+    group: $localize`You are not allowed to give permissions to this group`,
+    contentGroup: $localize`You are not allowed to give permissions on this content and to this group`,
+  };
 
   constructor() {
   }
