@@ -29,10 +29,7 @@
           <div class="no-access" *ngIf="(watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)" i18n>
             The {(observedGroup.route | isUser).toString(), select, true {user} other {group}}
             can list this {itemData.item.type, select, Skill {skill} other {activity}} but cannot
-            {{ ['Skill', 'Chapter'].includes(itemData.item.type).toString() | i18nSelect : {
-              true: 'list its content.',
-              other: 'view its content.'
-            } }}
+            {itemData.item.type, select, Task {view its content} other {list its content}}.
           </div>
         </ng-container>
 
