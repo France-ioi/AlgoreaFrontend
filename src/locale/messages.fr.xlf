@@ -2103,7 +2103,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="8115085152478832979" datatype="html">
         <source>There is no progress to report for this group/user.</source><target state="translated">Il n'y a pas de progression pour ce(t) groupe/utilisateur.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">94</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="9216117865911519658" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">94</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">95</context></context-group></trans-unit><trans-unit id="9216117865911519658" datatype="html">
         <source>Action</source><target state="translated">Opération</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">167</context></context-group></trans-unit><trans-unit id="2392488717875840729" datatype="html">
@@ -2124,7 +2124,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">
         <source>Not started</source><target state="translated">Non commencé</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="7894478830808730680" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="2389112862883394749" datatype="html">
+        <source> (using <x id="ICU" equiv-text="{rowData.hintsRequested, plural, =1 {hint} other {{{ rowData.hintsRequested }} hints}}" xid="7805236562230341422"/>) </source><target state="new"> (using <x id="ICU" equiv-text="{rowData.hintsRequested, plural, =1 {hint} other {# hints}}" xid="3733855476795018628"/>) </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context>
+          <context context-type="linenumber">73,75</context>
+        </context-group>
+      </trans-unit><trans-unit id="407271160873416945" datatype="html">
+        <source>{VAR_PLURAL, plural, =1 {hint} other {<x id="INTERPOLATION"/> hints}}</source><target state="new">{VAR_PLURAL, plural, =1 {hint} other {<x id="INTERPOLATION"/> hints}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit><trans-unit id="7894478830808730680" datatype="html">
         <source>You cannot view answers for this content.</source><target state="translated">Vous ne pouvez pas voir les réponses pour ce contenu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="3935757628740535532" datatype="html">
@@ -2145,13 +2157,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-group-progress/chapter-group-progress.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="8897571869263582585" datatype="html">
         <source>Error while loading the user progress</source><target state="translated">Erreur lors du chargement de la progression de l'utilisateur</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5015665626593413569" datatype="html">
-        <source> (using <x id="INTERPOLATION" equiv-text="{{ rowData.hintsRequested | i18nPlural : {
-                        '=1': 'hint',
-                        'other': '# hints'
-                      } }}"/>) </source><target state="translated"> ({{ rowData.hintsRequested | i18nPlural : {'=0': 'sans indice',                         '=1': 'avec un indice',                         'other': 'avec # indices'                       } }}) </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="5338231862998220113" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="5338231862998220113" datatype="html">
         <source>Latest activity</source><target state="translated">Dernière activité</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="7123653594948067002" datatype="html">
