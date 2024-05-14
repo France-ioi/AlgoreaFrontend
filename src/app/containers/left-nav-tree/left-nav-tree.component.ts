@@ -8,7 +8,7 @@ import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.co
 import { TreeModule } from 'primeng/tree';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgIf, NgClass, I18nPluralPipe, I18nSelectPipe } from '@angular/common';
+import { NgIf, NgClass, I18nSelectPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
 export interface CustomTreeNode<T> extends TreeNode {
@@ -31,7 +31,6 @@ export interface CustomTreeNode<T> extends TreeNode {
     ScoreRingComponent,
     TooltipModule,
     SkillProgressComponent,
-    I18nPluralPipe,
     I18nSelectPipe,
     ButtonModule,
   ],
@@ -41,6 +40,10 @@ export class LeftNavTreeComponent implements OnChanges {
   @Input() elementType: ItemTypeCategory | 'group' = 'activity';
 
   nodes: CustomTreeNode<NavTreeElement>[] = [];
+  managershipTooltipCaptions = {
+    descendant: $localize`You are a manager of one of the descendant of the group`,
+    other: $localize`You are a manager of the group`,
+  };
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.nodes = this.data ? this.mapItemToNodes(this.data).map(n => ({ ...n, inL1: true })) : [];

@@ -46,7 +46,7 @@
           <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
             {{ node.label }}
             <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-              (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+              (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
               {{ node.data.associatedGroupNames.join(', ') }})
             </span>
           </div>
@@ -103,7 +103,7 @@
           <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
             {{ node.label }}
             <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-              (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+              (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
               {{ node.data.associatedGroupNames.join(', ') }})
             </span>
           </div>
@@ -146,7 +146,7 @@
         <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
           {{ node.label }}
           <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-            (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+            (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
             {{ node.data.associatedGroupNames.join(', ') }})
           </span>
         </div>
@@ -213,10 +213,7 @@
           [class.fade]="node.data.groupRelation.managership === 'descendant'"
           tooltipStyleClass="alg-tooltip"
           tooltipPosition="top"
-          pTooltip="{{ node.data.groupRelation.managership | i18nSelect : {
-            'descendant': 'You are a manager of one of the descendant of the group',
-            other: 'You are a manager of the group' }
-          }}"
+          [pTooltip]="node.data.groupRelation.managership | i18nSelect : managershipTooltipCaptions"
           *ngIf="node.data.groupRelation.managership !== 'none'"
         >
           <i class="ph-duotone ph-crown"></i>
@@ -247,7 +244,7 @@
         <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
           {{ node.label }}
           <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-            (<span>{{ node.data.associatedGroupNames.length | i18nPlural: { '=1': 'via group', 'other': 'via groups' } }}:</span>
+            (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
             {{ node.data.associatedGroupNames.join(', ') }})
           </span>
         </div>
