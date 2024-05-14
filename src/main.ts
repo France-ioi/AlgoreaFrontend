@@ -35,7 +35,7 @@ import { provideState, provideStore } from '@ngrx/store';
 import { fromForum, forumEffects } from './app/forum/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
-import { provideRouterStore, RouterState } from '@ngrx/router-store';
+import { provideRouterStore } from '@ngrx/router-store';
 import { fromObservation, observationEffects } from './app/store/observation';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromUserContent, groupStoreEffects } from './app/groups/store';
@@ -133,7 +133,7 @@ bootstrapApplication(AppComponent, {
     },
     provideRouter(routes),
     provideStore(),
-    provideRouterStore({ routerState: RouterState.Minimal, serializer: RouterSerializer }),
+    provideRouterStore({ serializer: RouterSerializer }),
     provideState(fromRouter),
     provideState(fromObservation),
     provideState(fromForum),
