@@ -217,7 +217,7 @@
         <source>List</source><target state="translated">Liste</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="5737287568482767307" datatype="html">
-        <source>Grid</source><target state="translated">Grile</target>
+        <source>Grid</source><target state="translated">Grille</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-edit-advanced-parameters/item-edit-advanced-parameters.component.ts</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="3640760237782604721" datatype="html">
         <source>All the members must be admitted</source><target state="translated">Tous les membres doivent être admis</target>
