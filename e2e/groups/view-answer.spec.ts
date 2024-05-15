@@ -121,10 +121,10 @@ const itemLogsJson = [
 
 test('View answer in logs for current user', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/groups/users/670968966872011405');
   await page.route(`${apiUrl}/items/log?limit=20`, async route => {
     await route.fulfill({ json: currentUserLogsJson });
   });
+  await page.goto('/groups/users/670968966872011405');
   await expect.soft(page.locator('h1').getByText('Armelle Bonenfant (arbonenfant)')).toBeVisible();
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();
@@ -134,10 +134,10 @@ test('View answer in logs for current user', async ({ page }) => {
 
 test('View answer in logs for other user', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/groups/users/752024252804317630');
   await page.route(`${apiUrl}/items/log?limit=20&watched_group_id=752024252804317630`, async route => {
     await route.fulfill({ json: otherUserJson });
   });
+  await page.goto('/groups/users/752024252804317630');
   await expect.soft(page.locator('h1').getByText('usr_5p020x2thuyu')).toBeVisible();
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();
@@ -147,10 +147,10 @@ test('View answer in logs for other user', async ({ page }) => {
 
 test('View answer in logs for a group', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/groups/by-id/672913018859223173;p=52767158366271444');
   await page.route(`${apiUrl}/items/log?limit=20&watched_group_id=672913018859223173`, async route => {
     await route.fulfill({ json: groupLogsJson });
   });
+  await page.goto('/groups/by-id/672913018859223173;p=52767158366271444');
   await expect.soft(page.locator('h1').getByText('Pixal')).toBeVisible();
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();
@@ -160,10 +160,10 @@ test('View answer in logs for a group', async ({ page }) => {
 
 test('Reload answer in logs for a item', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/a/home;pa=0/progress/history');
   await page.route(`${apiUrl}/items/4702/log?limit=20`, async route => {
     await route.fulfill({ json: itemLogsJson });
   });
+  await page.goto('/a/home;pa=0/progress/history');
   await expect.soft(page.locator('h1').getByText('Parcours officiels')).toBeVisible();
   await expect.soft(page.getByRole('link', { name: 'Reload answer' })).toBeVisible();
   await page.getByRole('link', { name: 'Reload answer' }).click();
