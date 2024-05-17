@@ -5,4 +5,10 @@
   <div *ngIf="control.errors.min as err"><small i18n>Invalid value, minimum: {{ err.min }}</small></div>
   <div *ngIf="control.errors.max as err"><small i18n>Invalid value, maximum: {{ err.max }}</small></div>
   <div *ngIf="control.errors.invalidDuration as err"><small i18n>Invalid duration</small></div>
+  @if (control.errors.inputDateInvalid; as err) {
+    <small i18n>Invalid date</small>
+  }
+  @if (control.errors.inputDateMinInvalid; as err) {
+    <small i18n>Minimum date: {{ err.minDate | date: 'dd/MM/yyyy h:mm' }}</small>
+  }
 </div>

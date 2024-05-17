@@ -45,14 +45,10 @@
           ></alg-switch>
           @if (!!groupForm.get('requireLockMembershipApprovalUntilEnabled')?.value) {
             <div class="datepicker" data-testid="require-lock-until-datepicker">
-              <p-calendar
-                styleClass="alg-calendar"
+              <alg-input-date
                 formControlName="requireLockMembershipApprovalUntil"
-                [showIcon]="true"
-                [showTime]="true"
                 [minDate]="minLockMembershipApprovalUntilDate"
-                (change)="onDateChange()"
-              ></p-calendar>
+              ></alg-input-date>
             </div>
           }
         </div>

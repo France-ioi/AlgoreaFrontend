@@ -24,10 +24,11 @@ import { SectionComponent } from 'src/app/ui-components/section/section.componen
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { SwitchComponent } from '../../../ui-components/switch/switch.component';
-import { CalendarModule } from 'primeng/calendar';
-import { SelectionComponent } from '../../../ui-components/selection/selection.component';
-import { MessageInfoComponent } from '../../../ui-components/message-info/message-info.component';
+import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
+import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 
 @Component({
   selector: 'alg-group-edit',
@@ -48,9 +49,10 @@ import { MessageInfoComponent } from '../../../ui-components/message-info/messag
     FloatingSaveComponent,
     AsyncPipe,
     SwitchComponent,
-    CalendarModule,
     SelectionComponent,
     MessageInfoComponent,
+    InputMaskModule,
+    InputDateComponent,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
@@ -80,7 +82,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     rootSkill: [ '', [] ],
   });
   initialFormData?: Group;
-  minLockMembershipApprovalUntilDate = new Date();
+  minLockMembershipApprovalUntilDate?: Date;
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
 
@@ -98,6 +100,9 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     this.subscription = this.state$
       .pipe(readyData())
       .subscribe(item => {
+        if (item.requireLockMembershipApprovalUntil !== null) {
+          this.minLockMembershipApprovalUntilDate = item.requireLockMembershipApprovalUntil;
+        }
         this.initialFormData = item;
         this.resetFormWith(item);
       });
@@ -211,15 +216,9 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
 
   onRequireLockMembershipApprovalUntilEnabledChange(enabled: boolean): void {
     if (!enabled) return;
+    this.minLockMembershipApprovalUntilDate = new Date();
     this.groupForm.patchValue({
       requireLockMembershipApprovalUntil: new Date(),
     });
-  }
-
-  onDateChange(): void {
-    const requireLockMembershipApprovalUntilEnabled = this.groupForm?.get('requireLockMembershipApprovalUntil')?.value as boolean;
-    const requireLockMembershipApprovalUntil = this.groupForm?.get('requireLockMembershipApprovalUntil')?.value as Date;
-    this.minLockMembershipApprovalUntilDate = requireLockMembershipApprovalUntilEnabled ?
-      new Date(Math.min(requireLockMembershipApprovalUntil.getTime(), requireLockMembershipApprovalUntil.getTime())) : new Date();
   }
 }

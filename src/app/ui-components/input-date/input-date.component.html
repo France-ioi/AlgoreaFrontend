@@ -1,0 +1,12 @@
+<p-inputMask
+  class="alg-input"
+  mask="99/99/9999 99:99"
+  placeholder="dd/mm/yyyy hh:mm"
+  slotChar="dd/mm/yyyy hh:mm"
+  [(ngModel)]="input"
+  (ngModelChange)="onInputChange($event)"
+  (onComplete)="onComplete()"
+></p-inputMask>
+@if (control) {
+  <alg-input-error [control]="control"></alg-input-error>
+}
