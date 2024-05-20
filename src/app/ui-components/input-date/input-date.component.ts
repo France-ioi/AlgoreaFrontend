@@ -15,15 +15,7 @@ import {
 import { InputMaskModule } from 'primeng/inputmask';
 import { DatePipe } from '@angular/common';
 import { FormErrorComponent } from '../form-error/form-error.component';
-
-const convertDateToString = (input: Date): string => `${ input.toLocaleDateString() } ${ input.toLocaleTimeString() }`;
-
-const convertStringToDate = (input: string): Date | null => {
-  if (input.trim() === '') return null;
-  const [ day, month, year, hh, mm ] = input.split(/[/\s:]/);
-  if (!day || !month || !year || !hh || !mm) return null;
-  return new Date(`${month}/${day}/${year} ${hh}:${mm}`);
-};
+import { convertDateToString, convertStringToDate } from 'src/app/utils/input-date';
 
 @Component({
   selector: 'alg-input-date',

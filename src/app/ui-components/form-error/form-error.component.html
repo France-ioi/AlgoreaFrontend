@@ -9,6 +9,6 @@
     <small i18n>Invalid date</small>
   }
   @if (control.errors.inputDateMinInvalid; as err) {
-    <small i18n>Minimum date: {{ err.minDate | date: 'dd/MM/yyyy h:mm' }}</small>
+    <small i18n>Minimum date: {{ err.minDate | date: 'dd/MM/yyyy HH:mm' }}</small>
   }
 </div>
