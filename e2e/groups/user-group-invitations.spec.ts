@@ -80,7 +80,7 @@ test.afterEach(async ({ page }) => {
   await expect(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
 });
 
-test('Accept group invitation', async ({ page }) => {
+test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
@@ -110,7 +110,7 @@ test('Accept group invitation', async ({ page }) => {
   });
 });
 
-test('Reject group invitation', async ({ page }) => {
+test('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
