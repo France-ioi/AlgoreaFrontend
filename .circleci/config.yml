@@ -165,7 +165,7 @@ jobs:
   e2e-parallelism:
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.0-jammy
-    parallelism: 4
+    parallelism: 10
     steps:
       - attach_workspace:
           at: ./
