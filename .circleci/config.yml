@@ -156,7 +156,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npx playwright test --grep @no-parallelism
+      - run: npx playwright test --grep @no-parallelism --workers=1
       - persist_to_workspace:
           root: ./
           paths:
