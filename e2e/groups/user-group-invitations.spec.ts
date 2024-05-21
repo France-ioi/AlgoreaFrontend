@@ -52,7 +52,7 @@ const isUserJoinedToGroup = async (page: Page) => {
     .isVisible();
 };
 
-const rejectGroupInvitation = async (page: Page)=> {
+const rejectGroupInvitation = async (page: Page) => {
   await page.goto('/groups/mine');
   await page.waitForResponse(`${apiUrl}/current-user/group-invitations`);
   await expect.soft(page.getByRole('heading', { name: 'My groups' })).toBeVisible();
@@ -91,7 +91,7 @@ test('Accept group invitation', async ({ page }) => {
     if (await isUserInvitedToGroup(page)) {
       await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
       await page.getByRole('row', { name: groupName }).getByTestId('accept-group').click();
-      await expect.soft(await page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
+      await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
     } else {
       throw new Error('Failed to accept group invitation');
     }
