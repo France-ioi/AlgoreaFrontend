@@ -52,7 +52,7 @@ const isUserJoinedToGroup = async (page: Page) => {
     .isVisible();
 };
 
-const rejectGroupInvitation = async (page: Page)=> {
+const rejectGroupInvitation = async (page: Page) => {
   await page.goto('/groups/mine');
   await page.waitForResponse(`${apiUrl}/current-user/group-invitations`);
   await expect.soft(page.getByRole('heading', { name: 'My groups' })).toBeVisible();
