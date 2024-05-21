@@ -6,8 +6,6 @@ const groupName = 'E2EGroupInvitationProcess';
 const groupId = '4433009959583369709';
 const demoUserLogin = 'usr_5p020x2thuyu';
 
-test.describe.configure({ mode: 'serial' });
-
 const sendGroupInvitation = async (page: Page) => {
   await page.goto(`/groups/by-id/${ groupId };p=/members`);
   await expect.soft(page.getByRole('heading', { name: groupName })).toBeVisible();
