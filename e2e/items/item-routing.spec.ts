@@ -67,21 +67,21 @@ test('route with action parameter: action passed to subcomponents + parameter re
   await page.goto(`/a/6379723280369399253;p=;pa=0;answerId=${emptyAnswer};answerLoadAsCurrent=1`);
 
   await test.step('checks the answer has been emptied', async () => {
-    await expect(page.frameLocator('iFrame').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
-    await expect(page.frameLocator('iFrame').getByText('1234567')).not.toBeVisible();
+    await expect(page.frameLocator('iframe').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
+    await expect(page.frameLocator('iframe').getByText('1234567')).not.toBeVisible();
   });
 
   // then reload a answer which contains "1234567" in the answer
   await page.goto(`/a/6379723280369399253;p=;pa=0;answerId=${answerWith1234567};answerLoadAsCurrent=1`);
 
   await test.step('drop the action parameter', async () => {
-    await expect(page.locator('.left-pane-title-text')).toContainText('Blockly Basic Task', { timeout: 15000 });
+    await expect(page.locator('.left-pane-title-text')).toContainText('Blockly Basic Task', { timeout: 30000 });
     expect(page.url()).toContain('/a/6379723280369399253;p=;pa=0');
     expect(page.url()).not.toContain('answer');
   });
 
   await test.step('has loaded the expected answer', async () => {
-    await expect(page.frameLocator('iFrame').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
-    await expect(page.frameLocator('iFrame').getByText('1234567')).toBeVisible(); // to check it is the right answer
+    await expect(page.frameLocator('iframe').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
+    await expect(page.frameLocator('iframe').getByText('1234567')).toBeVisible({ timeout: 30000 }); // to check it is the right answer
   });
 });

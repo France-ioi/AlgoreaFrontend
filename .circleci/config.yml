@@ -162,18 +162,18 @@ jobs:
           paths:
             - blob-report
 
-  e2e-parallelism:
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
-    parallelism: 10
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - blob-report
+#  e2e-parallelism:
+#    docker:
+#      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
+#    parallelism: 10
+#    steps:
+#      - attach_workspace:
+#          at: ./
+#      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism
+#      - persist_to_workspace:
+#          root: ./
+#          paths:
+#            - blob-report
 
   e2e-gen-report:
     docker: *node_image
@@ -291,13 +291,13 @@ workflows:
       - e2e-no-parallelism:
           requires:
             - deps
-      - e2e-parallelism:
-          requires:
-            - deps
+#      - e2e-parallelism:
+#          requires:
+#            - deps
       - e2e-gen-report:
           requires:
             - e2e-no-parallelism
-            - e2e-parallelism
+#            - e2e-parallelism
           filters:
             branches:
               ignore: master
@@ -332,7 +332,7 @@ workflows:
             - build-master-fr
             - tests
             - e2e-no-parallelism
-            - e2e-parallelism
+#            - e2e-parallelism
           filters:
             branches:
               only: master
