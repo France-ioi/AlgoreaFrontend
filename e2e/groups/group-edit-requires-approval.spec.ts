@@ -86,9 +86,7 @@ test('Check invalid date validation', async ({ page }) => {
   await test.step('Fill past date', async () => {
     const currentDate = new Date();
     await inputDateLocator.fill(convertDateToString(currentDate));
-    console.log('currentDate', currentDate);
-    console.log('currentDate', convertDateToString(currentDate));
-    await expect.soft(page.getByText(`Minimum date: ${ convertDateToString(currentDate) }`)).toBeVisible();
+    await expect.soft(page.getByText(`The date must be grater than: ${ convertDateToString(currentDate) }`)).toBeVisible();
   });
 
   await test.step('Clear invalid date and check validation message is gone', async () => {
