@@ -1,6 +1,4 @@
-const withMissedZero = (value: number) => {
-  return ("0" + value).slice(-2);
-};
+const withMissedZero = (value: number): string => ('0' + String(value)).slice(-2);
 
 export const convertDateToString = (input: Date): string => {
   const date = withMissedZero(input.getDate());
