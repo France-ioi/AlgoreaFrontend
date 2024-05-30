@@ -216,9 +216,6 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
 
   onRequireLockMembershipApprovalUntilEnabledChange(enabled: boolean): void {
     if (!enabled) return;
-    this.minLockMembershipApprovalUntilDate = new Date();
-    this.groupForm.patchValue({
-      requireLockMembershipApprovalUntil: new Date(),
-    });
+    this.minLockMembershipApprovalUntilDate = this.groupForm.get('requireLockMembershipApprovalUntil')?.value || new Date();
   }
 }

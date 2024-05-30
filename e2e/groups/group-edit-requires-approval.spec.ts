@@ -5,10 +5,6 @@ import { DAYS } from 'src/app/utils/duration';
 
 test.describe.configure({ mode: 'serial' });
 
-test.use({
-  timezoneId: 'Africa/Accra',
-});
-
 test('Turn on approval rules', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/6688692310502473984;p=/settings');

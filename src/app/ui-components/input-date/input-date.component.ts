@@ -62,7 +62,6 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
     setTimeout(() => {
       this.control?.clearValidators();
       this.control?.updateValueAndValidity();
-      this.control?.patchValue(null);
     });
   }
 
