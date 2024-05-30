@@ -41,7 +41,7 @@
             <alg-switch-field class="switch-field" formControlName="agreeWithLockMembership">
               <ng-template #label>
                 <span i18n>
-                  You will not be able to leave this group until: {{ params.requireLockMembershipApprovalUntil | date: 'short' }}
+                  You will not be able to leave this group until {{ params.requireLockMembershipApprovalUntil | date: 'short' }}
                 </span>
               </ng-template>
             </alg-switch-field>
