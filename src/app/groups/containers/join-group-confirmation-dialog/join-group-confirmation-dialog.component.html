@@ -12,7 +12,7 @@
         type="button"
         class="alg-button-icon rounded primary-color stroke regular-size"
         icon="ph-bold ph-x"
-        (click)="onCancel()"
+        (click)="cancelEvent.emit()"
         pButton
       ></button>
     </div>
@@ -20,7 +20,7 @@
 
   <div class="dialog-container">
     <div class="dialog-content">
-      <p class="description">Do you want to join the group "{{ params.name }}"?</p>
+      <p class="description">Do you want to join the group "{{ name }}"?</p>
       @if (form) {
         <form class="form" [formGroup]="form">
           @if (form.get('agreeWithPersonalInfoView')) {
@@ -57,14 +57,14 @@
         class="alg-button basic small button"
         icon="ph-bold ph-x"
         i18n-label label="Cancel"
-        (click)="onCancel()"
+        (click)="cancelEvent.emit()"
         pButton
       ></button>
       <button
         class="alg-button primary small button"
         icon="ph-bold ph-check"
         i18n-label label="Join group"
-        (click)="onAccept()"
+        (click)="confirmEvent.emit()"
         [disabled]="form?.invalid"
         pButton
       ></button>

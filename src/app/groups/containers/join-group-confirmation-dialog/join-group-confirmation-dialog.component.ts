@@ -2,22 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SwitchFieldComponent } from '../../../ui-components/collapsible-section/switch-field/switch-field.component';
+import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { DatePipe, I18nSelectPipe } from '@angular/common';
-import { GroupApprovals } from '../../data-access/get-group-by-id.service';
-
-export type JoinGroupConfirmationDialogParams = GroupApprovals & { id?: string, name: string };
-export interface JoinGroupConfirmEvent {
-  id?: string,
-  name: string,
-  approvals: string[],
-}
-
-enum Approvals {
-  PersonalInfoView = 'personal_info_view',
-  LockMembership = 'lock_membership',
-  Watch = 'watch',
-}
+import { GroupApprovals } from 'src/app/groups/models/group-arrpovals';
 
 @Component({
   selector: 'alg-join-group-confirmation-dialog[params]',
@@ -35,8 +22,9 @@ enum Approvals {
 })
 export class JoinGroupConfirmationDialogComponent implements OnInit {
   @Output() cancelEvent = new EventEmitter<void>();
-  @Output() confirmEvent = new EventEmitter<JoinGroupConfirmEvent>();
-  @Input() params!: JoinGroupConfirmationDialogParams;
+  @Output() confirmEvent = new EventEmitter<void>();
+  @Input() name = '';
+  @Input() params!: GroupApprovals;
 
   form?: FormGroup<{
     agreeWithPersonalInfoView?: FormControl<boolean>,
@@ -69,24 +57,5 @@ export class JoinGroupConfirmationDialogComponent implements OnInit {
         );
       }
     }
-  }
-
-  onCancel(): void {
-    this.cancelEvent.emit();
-  }
-
-  onAccept(): void {
-    if (this.form?.invalid) throw new Error('Unexpected: Must be selected all approval values');
-    const agreeWithPersonalInfoView = this.form?.value.agreeWithPersonalInfoView;
-    const agreeWithLockMembership = this.form?.value.agreeWithLockMembership;
-    const approvals = [
-      ...(agreeWithPersonalInfoView ? [ Approvals.PersonalInfoView ] : []),
-      ...(agreeWithLockMembership ? [ Approvals.LockMembership ] : []),
-    ];
-    this.confirmEvent.emit({
-      id: this.params.id,
-      name: this.params.name,
-      approvals,
-    });
   }
 }

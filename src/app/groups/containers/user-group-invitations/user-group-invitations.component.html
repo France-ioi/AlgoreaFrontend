@@ -77,10 +77,11 @@
   }
 }
 
-@if (joinGroupConfirmationDialog) {
+@if (pendingJoinRequest) {
   <alg-join-group-confirmation-dialog
-    [params]="joinGroupConfirmationDialog"
-    (confirmEvent)="accept($event)"
+    [name]="pendingJoinRequest.name"
+    [params]="pendingJoinRequest.params"
+    (confirmEvent)="accept(pendingJoinRequest.id, pendingJoinRequest.name)"
     (cancelEvent)="closeModal()"
   ></alg-join-group-confirmation-dialog>
 }

@@ -8,16 +8,11 @@ import { dateDecoder } from 'src/app/utils/decoders';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { groupCodeDecoder } from '../models/group-code';
 import { groupManagershipDecoder } from '../models/group-management';
+import { groupApprovalsDecoder } from 'src/app/groups/models/group-arrpovals';
 
 const groupShortInfo = D.struct({
   id: D.string,
   name: D.string,
-});
-
-const groupApprovalsDecoder = D.struct({
-  requireLockMembershipApprovalUntil: D.nullable(dateDecoder),
-  requirePersonalInfoAccessApproval: D.literal('none', 'view', 'edit'),
-  requireWatchApproval: D.boolean,
 });
 
 const decoder = pipe(
@@ -49,7 +44,6 @@ const decoder = pipe(
 
 export type Group = D.TypeOf<typeof decoder>;
 export type GroupShortInfo = D.TypeOf<typeof groupShortInfo>;
-export type GroupApprovals = D.TypeOf<typeof groupApprovalsDecoder>;
 
 @Injectable({
   providedIn: 'root',
