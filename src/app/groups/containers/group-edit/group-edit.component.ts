@@ -100,11 +100,11 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     this.subscription = this.state$
       .pipe(readyData())
       .subscribe(item => {
-        if (item.requireLockMembershipApprovalUntil !== null) {
-          this.minLockMembershipApprovalUntilDate = item.requireLockMembershipApprovalUntil;
-        }
         this.initialFormData = item;
         this.resetFormWith(item);
+        if (item.requireLockMembershipApprovalUntil !== null) {
+          this.onRequireLockMembershipApprovalUntilEnabledChange(true);
+        }
       });
   }
 
@@ -215,7 +215,19 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   }
 
   onRequireLockMembershipApprovalUntilEnabledChange(enabled: boolean): void {
-    if (!enabled) return;
-    this.minLockMembershipApprovalUntilDate = this.groupForm.get('requireLockMembershipApprovalUntil')?.value as Date | null || new Date();
+    const requireLockMembershipApprovalUntilControl = this.groupForm.get('requireLockMembershipApprovalUntil');
+    if (!requireLockMembershipApprovalUntilControl) throw new Error('Unexpected: Missed requireLockMembershipApprovalUntil control');
+    if (enabled) {
+      const initialRequireLockMembershipApprovalUntil = this.initialFormData?.requireLockMembershipApprovalUntil;
+      const currentDate = new Date();
+      this.minLockMembershipApprovalUntilDate = initialRequireLockMembershipApprovalUntil && initialRequireLockMembershipApprovalUntil
+        < currentDate ? initialRequireLockMembershipApprovalUntil : currentDate;
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      requireLockMembershipApprovalUntilControl.addValidators(Validators.required);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      requireLockMembershipApprovalUntilControl.removeValidators(Validators.required);
+    }
+    requireLockMembershipApprovalUntilControl.updateValueAndValidity();
   }
 }
