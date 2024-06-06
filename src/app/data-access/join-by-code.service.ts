@@ -7,7 +7,7 @@ import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { dateDecoder } from '../utils/decoders';
+import { groupApprovalsDecoder } from 'src/app/groups/models/group-approvals';
 
 const managerDecoder = D.struct({
   id: D.string,
@@ -16,15 +16,15 @@ const managerDecoder = D.struct({
   login: D.string,
 });
 
-const groupDecoder = D.struct({
-  name: D.string,
-  requireLockMembershipApprovalUntil: D.nullable(dateDecoder),
-  requirePersonalInfoAccessApproval: D.literal('none', 'view', 'edit'),
-  requireWatchApproval: D.boolean,
-  rootActivityId: D.nullable(D.string),
-  rootSkillId: D.nullable(D.string),
-  managers: D.array(managerDecoder),
-});
+const groupDecoder = pipe(
+  D.struct({
+    name: D.string,
+    rootActivityId: D.nullable(D.string),
+    rootSkillId: D.nullable(D.string),
+    managers: D.array(managerDecoder),
+  }),
+  D.intersect(groupApprovalsDecoder),
+);
 
 const invalidReasonDecoder = D.literal(
   'no_group',

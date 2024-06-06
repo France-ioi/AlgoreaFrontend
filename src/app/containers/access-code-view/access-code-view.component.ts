@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
 import { ItemData } from '../../items/services/item-datasource.service';
@@ -8,13 +7,17 @@ import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { SectionParagraphComponent } from '../../ui-components/section-paragraph/section-paragraph.component';
+import {
+  JoinGroupConfirmationDialogComponent
+} from 'src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component';
+import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 
 @Component({
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
   standalone: true,
-  imports: [ SectionParagraphComponent, NgClass, FormsModule, ButtonModule ]
+  imports: [ SectionParagraphComponent, NgClass, FormsModule, ButtonModule, JoinGroupConfirmationDialogComponent ]
 })
 export class AccessCodeViewComponent {
   @Input() sectionLabel = '';
@@ -24,14 +27,17 @@ export class AccessCodeViewComponent {
 
   code = '';
   state: 'ready'|'loading' = 'ready';
+  pendingJoinRequest?: {
+    name: string,
+    params: GroupApprovals,
+  };
 
   constructor(
     private joinByCodeService: JoinByCodeService,
     private actionFeedbackService: ActionFeedbackService,
-    private confirmationService: ConfirmationService,
   ) { }
 
-  onClickAccess(): void {
+  checkCodeValidity(): void {
     this.state = 'loading';
 
     this.joinByCodeService.checkCodeValidity(this.code).subscribe({
@@ -48,39 +54,27 @@ export class AccessCodeViewComponent {
           return;
         }
 
-        if (!response.group) {
-          throw new Error('Unexpected: Missed group for invalid state');
-        }
+        if (!response.group) throw new Error('Unexpected: Missed group for valid state');
 
-        let message = $localize`Are you sure you want to join the group "${response.group.name}"?`;
-
-        if (this.itemData) {
-          const id = this.itemData.item.type === 'Skill' ? response.group.rootSkillId : response.group.rootActivityId;
-
-          if (this.itemData.item.id !== id) {
-            message = $localize`The code does not correspond to the group attached to this page. Are you sure you want to join the group "
-            ${response.group.name}"?`;
-          }
-        }
-
-        this.confirmationService.confirm({
-          header: $localize`Join the group "${response.group.name}"`,
-          message: message,
-          acceptLabel: $localize`Join`,
-          acceptIcon: 'ph-bold ph-check',
-          rejectLabel: $localize`Cancel`,
-          rejectIcon: 'ph-bold ph-x',
-          accept: () => {
-            this.joinGroup(this.code);
-          }
-        });
+        this.pendingJoinRequest = {
+          name: response.group.name,
+          params: response.group,
+        };
       },
     });
   }
 
-  joinGroup(code: string): void {
-    this.joinByCodeService.joinGroupThroughCode(code).subscribe({
+  closeModal(): void {
+    this.pendingJoinRequest = undefined;
+  }
+
+  joinGroup(code: string, params: GroupApprovals): void {
+    const approvalValues = mapGroupApprovalParamsToValues(params);
+    this.closeModal();
+    this.state = 'loading';
+    this.joinByCodeService.joinGroupThroughCode(code, approvalValues).subscribe({
       next: _result => {
+        this.state = 'ready';
         this.code = '';
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
