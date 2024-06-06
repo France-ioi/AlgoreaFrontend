@@ -7,7 +7,7 @@ import { DatePipe, I18nSelectPipe } from '@angular/common';
 import { GroupApprovals } from 'src/app/groups/models/group-arrpovals';
 
 @Component({
-  selector: 'alg-join-group-confirmation-dialog[params]',
+  selector: 'alg-join-group-confirmation-dialog',
   templateUrl: './join-group-confirmation-dialog.component.html',
   styleUrls: [ './join-group-confirmation-dialog.component.scss' ],
   standalone: true,
@@ -24,7 +24,7 @@ export class JoinGroupConfirmationDialogComponent implements OnInit {
   @Output() cancelEvent = new EventEmitter<void>();
   @Output() confirmEvent = new EventEmitter<void>();
   @Input() name = '';
-  @Input() params!: GroupApprovals;
+  @Input({ required: true }) params!: GroupApprovals;
 
   form?: FormGroup<{
     agreeWithPersonalInfoView?: FormControl<boolean>,
