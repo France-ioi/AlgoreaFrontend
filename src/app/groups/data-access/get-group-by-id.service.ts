@@ -8,7 +8,7 @@ import { dateDecoder } from 'src/app/utils/decoders';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { groupCodeDecoder } from '../models/group-code';
 import { groupManagershipDecoder } from '../models/group-management';
-import { groupApprovalsDecoder } from 'src/app/groups/models/group-arrpovals';
+import { groupApprovalsDecoder } from 'src/app/groups/models/group-approvals';
 
 const groupShortInfo = D.struct({
   id: D.string,

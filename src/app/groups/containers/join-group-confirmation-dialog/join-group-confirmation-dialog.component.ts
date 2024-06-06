@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { DatePipe, I18nSelectPipe } from '@angular/common';
-import { GroupApprovals } from 'src/app/groups/models/group-arrpovals';
+import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 
 @Component({
   selector: 'alg-join-group-confirmation-dialog',

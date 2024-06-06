@@ -18,7 +18,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import {
   JoinGroupConfirmationDialogComponent,
 } from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
-import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-arrpovals';
+import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 
 @Component({
   selector: 'alg-user-group-invitations',
