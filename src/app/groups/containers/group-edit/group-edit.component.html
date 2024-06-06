@@ -29,6 +29,39 @@
           <alg-textarea [parentForm]="groupForm" inputName="description"></alg-textarea>
         </div>
       </div>
+      <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Required approvals</h2>
+      <alg-message-info icon="ph-duotone ph-info" i18n>
+        If you enable some of the rules below, users joining the group will have to approve them first.
+      </alg-message-info>
+      <div class="field">
+        <div class="field-name" i18n>
+          Lock membership until a given date
+        </div>
+        <div class="field-value datepicker-value">
+          <alg-switch
+            data-testid="switch-require-lock-until-enabled"
+            formControlName="requireLockMembershipApprovalUntilEnabled"
+            (change)="onRequireLockMembershipApprovalUntilEnabledChange($event)"
+          ></alg-switch>
+          @if (!!groupForm.get('requireLockMembershipApprovalUntilEnabled')?.value) {
+            <div class="datepicker">
+              <alg-input-date
+                formControlName="requireLockMembershipApprovalUntil"
+                [minDate]="minLockMembershipApprovalUntilDate"
+              ></alg-input-date>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-name" i18n>
+          Managers can access member's personal information
+        </div>
+        <div class="field-value">
+          <alg-selection formControlName="requirePersonalInfoAccessApproval" [items]="approvalOptions"></alg-selection>
+        </div>
+      </div>
+
       <alg-associated-item formControlName="rootActivity" contentType="activity"></alg-associated-item>
       <alg-associated-item formControlName="rootSkill" contentType="skill"></alg-associated-item>
       <alg-group-remove-button
