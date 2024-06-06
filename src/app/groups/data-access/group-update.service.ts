@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/utils/config';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
-import { GroupApprovals } from './get-group-by-id.service';
+import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 
 export interface GroupChanges {
   name?: string,

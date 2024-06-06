@@ -7,7 +7,7 @@ import { CreateItemService } from 'src/app/data-access/create-item.service';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
-import { Group, GroupApprovals } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../data-access/get-group-by-id.service';
 import { GroupUpdateService } from '../../data-access/group-update.service';
 import { GroupDataSource } from '../../services/group-datasource.service';
 import { withManagementAdditions } from '../../models/group-management';
@@ -29,6 +29,7 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
+import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 
 @Component({
   selector: 'alg-group-edit',
