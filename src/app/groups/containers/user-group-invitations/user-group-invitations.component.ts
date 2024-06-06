@@ -6,15 +6,19 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { PendingRequestComponent } from '../pending-request/pending-request.component';
-import { LoadingComponent } from '../../../ui-components/loading/loading.component';
+import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
-import { ErrorComponent } from '../../../ui-components/error/error.component';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ProcessGroupInvitationService } from '../../data-access/process-group-invitation.service';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { UserCaptionPipe } from '../../../pipes/userCaption';
+import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { SortEvent } from 'primeng/api/sortevent';
-import { mapToFetchState } from '../../../utils/operators/state';
+import { mapToFetchState } from 'src/app/utils/operators/state';
+import {
+  JoinGroupConfirmationDialogComponent,
+} from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
+import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -36,10 +40,16 @@ import { mapToFetchState } from '../../../utils/operators/state';
     NgSwitchDefault,
     AsyncPipe,
     NgClass,
+    JoinGroupConfirmationDialogComponent,
   ],
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
   processing = false;
+  pendingJoinRequest?: {
+    id: string,
+    name: string,
+    params: GroupApprovals,
+  };
 
   private sortSubject = new BehaviorSubject<string[]>([]);
   state$ = this.sortSubject.pipe(
@@ -72,16 +82,35 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     if (sortMeta) this.onFetch(sortMeta);
   }
 
-  onAccept(pendingRequest: PendingRequest): void {
+  openJoinGroupConfirmationDialog(pendingRequest: PendingRequest): void {
+    this.pendingJoinRequest = {
+      id: pendingRequest.group.id,
+      name: pendingRequest.group.name,
+      params: {
+        requireLockMembershipApprovalUntil: null,
+        requirePersonalInfoAccessApproval: 'none',
+        requireWatchApproval: false,
+      },
+    };
+  }
+
+  closeModal(): void {
+    this.pendingJoinRequest = undefined;
+  }
+
+  accept(groupId: string, groupName: string): void {
+    if (this.pendingJoinRequest === undefined) throw new Error('Unexpected: Missed pendingJoinRequest data');
+    const approvalValues = mapGroupApprovalParamsToValues(this.pendingJoinRequest.params);
+    this.closeModal();
     this.processing = true;
-    this.processGroupInvitationService.accept(pendingRequest.group.id).subscribe({
+    this.processGroupInvitationService.accept(groupId, approvalValues).subscribe({
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ pendingRequest.group.name }"`);
+          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ groupName }"`);
           return;
         }
-        this.actionFeedbackService.success($localize`The ${ pendingRequest.group.name } group has been accepted`);
+        this.actionFeedbackService.success($localize`The ${ groupName } group has been accepted`);
         this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },

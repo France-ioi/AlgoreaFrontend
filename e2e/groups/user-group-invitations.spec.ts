@@ -91,7 +91,10 @@ test('Accept group invitation', async ({ page }) => {
     if (await isUserInvitedToGroup(page)) {
       await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
       await page.getByRole('row', { name: groupName }).getByTestId('accept-group').click();
-      await expect.soft(await page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
+      await expect.soft(page.getByText('Joining a new group')).toBeVisible();
+      await expect.soft(page.getByRole('button', { name: 'Join group' })).toBeVisible();
+      await page.getByRole('button', { name: 'Join group' }).click();
+      await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
     } else {
       throw new Error('Failed to accept group invitation');
     }
@@ -127,4 +130,25 @@ test('Error on group invitations service', async ({ page }) => {
   await page.route(`${apiUrl}/current-user/group-invitations`, route => route.abort());
   await page.goto('/groups/mine');
   await expect.soft(page.getByText('Error while loading the group invitations.')).toBeVisible();
+});
+
+test('Cancel "Joining a new group" modal', async ({ page }) => {
+  await test.step('Invite user into group', async () => {
+    await initAsUsualUser(page);
+    await sendGroupInvitation(page);
+  });
+
+  await test.step('Open "Joining a new group" modal and do cancel', async () => {
+    await initAsDemoUser(page);
+    if (await isUserInvitedToGroup(page)) {
+      await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
+      await page.getByRole('row', { name: groupName }).getByTestId('accept-group').click();
+      await expect.soft(page.getByText('Joining a new group')).toBeVisible();
+      await expect.soft(page.getByRole('button', { name: 'Join group' })).toBeVisible();
+      await page.getByRole('button', { name: 'Cancel' }).click();
+      await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
+    } else {
+      throw new Error('Failed to accept group invitation');
+    }
+  });
 });
