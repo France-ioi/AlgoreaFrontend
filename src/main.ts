@@ -53,6 +53,7 @@ Sentry.init({
   ignoreErrors: [
     'Cannot redefine property: googletag',
     "Cannot read properties of undefined (reading 'sendMessage')", // a chrome extension error
+    'Talisman extension',
     "can't access dead object", // a firefox error when add-ons keep references to DOM objects after their parent document was destroyed
   ],
   // from https://docs.sentry.io/clients/javascript/tips/
