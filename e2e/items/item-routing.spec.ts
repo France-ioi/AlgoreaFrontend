@@ -58,7 +58,7 @@ test('route with missing path and service error', async ({ page }) => {
 
 });
 
-test('route with action parameter: action passed to subcomponents + parameter removed', async ({ page }) => {
+test('route with action parameter: action passed to subcomponents + parameter removed', { tag: '@no-parallelism' }, async ({ page }) => {
   const emptyAnswer = '1970981512988735785';
   const answerWith1234567 = '4143245131838208903';
 

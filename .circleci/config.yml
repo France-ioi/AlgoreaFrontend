@@ -150,14 +150,26 @@ jobs:
           name: CodeCov (tool sending coverage reports (lcov.info) to Codecov.io)
           command: bash <(curl -s https://codecov.io/bash)
 
-  e2e:
+  e2e-no-parallelism:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.41.1-jammy
-    parallelism: 4
+      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
     steps:
       - attach_workspace:
           at: ./
-      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+      - run: npx playwright test --grep @no-parallelism --workers=1
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - blob-report
+
+  e2e-parallelism:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
+    parallelism: 10
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism
       - persist_to_workspace:
           root: ./
           paths:
@@ -276,12 +288,16 @@ workflows:
       - tests:
           requires:
             - deps
-      - e2e:
+      - e2e-no-parallelism:
+          requires:
+            - deps
+      - e2e-parallelism:
           requires:
             - deps
       - e2e-gen-report:
           requires:
-            - e2e
+            - e2e-no-parallelism
+            - e2e-parallelism
           filters:
             branches:
               ignore: master
@@ -315,7 +331,8 @@ workflows:
             - build-master-en
             - build-master-fr
             - tests
-            - e2e
+            - e2e-no-parallelism
+            - e2e-parallelism
           filters:
             branches:
               only: master

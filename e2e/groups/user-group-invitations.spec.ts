@@ -6,8 +6,6 @@ const groupName = 'E2EGroupInvitationProcess';
 const groupId = '4433009959583369709';
 const demoUserLogin = 'usr_5p020x2thuyu';
 
-test.describe.configure({ mode: 'serial' });
-
 const sendGroupInvitation = async (page: Page) => {
   await page.goto(`/groups/by-id/${ groupId };p=/members`);
   await expect.soft(page.getByRole('heading', { name: groupName })).toBeVisible();
@@ -52,7 +50,7 @@ const isUserJoinedToGroup = async (page: Page) => {
     .isVisible();
 };
 
-const rejectGroupInvitation = async (page: Page)=> {
+const rejectGroupInvitation = async (page: Page) => {
   await page.goto('/groups/mine');
   await page.waitForResponse(`${apiUrl}/current-user/group-invitations`);
   await expect.soft(page.getByRole('heading', { name: 'My groups' })).toBeVisible();
@@ -80,7 +78,7 @@ test.afterEach(async ({ page }) => {
   await expect(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
 });
 
-test('Accept group invitation', async ({ page }) => {
+test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
@@ -113,7 +111,7 @@ test('Accept group invitation', async ({ page }) => {
   });
 });
 
-test('Reject group invitation', async ({ page }) => {
+test('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
