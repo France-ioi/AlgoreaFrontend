@@ -123,14 +123,14 @@ test('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => 
   });
 });
 
-test('Error on group invitations service', async ({ page }) => {
+test('Error on group invitations service', { tag: '@no-parallelism' }, async ({ page }) => {
   await initAsUsualUser(page);
   await page.route(`${apiUrl}/current-user/group-invitations`, route => route.abort());
   await page.goto('/groups/mine');
   await expect.soft(page.getByText('Error while loading the group invitations.')).toBeVisible();
 });
 
-test('Cancel "Joining a new group" modal', async ({ page }) => {
+test('Cancel "Joining a new group" modal', { tag: '@no-parallelism' }, async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
