@@ -15,10 +15,11 @@ import { UserIndicatorComponent } from '../user-indicator/user-indicator.compone
 import { UserHeaderComponent } from '../user-header/user-header.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { NgIf, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromUserContent } from '../../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
+import { UserInfoComponent } from 'src/app/groups/containers/user-info/user-info.component';
 
 const breadcrumbHeader = $localize`Users`;
 
@@ -39,7 +40,9 @@ const breadcrumbHeader = $localize`Users`;
     GroupLogViewComponent,
     CurrentUserComponent,
     PlatformSettingsComponent,
-    AsyncPipe
+    AsyncPipe,
+    UserInfoComponent,
+    NgTemplateOutlet,
   ],
 })
 export class UserComponent implements OnInit, OnDestroy {
