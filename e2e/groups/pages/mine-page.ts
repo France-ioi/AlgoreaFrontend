@@ -1,5 +1,8 @@
 import { expect, Page } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
+import { SECONDS } from 'src/app/utils/duration';
+
+const extraTimeout = 60*SECONDS;
 
 export class MinePage {
   userGroupInvitationsLocator = this.page.locator('alg-user-group-invitations');
@@ -78,7 +81,7 @@ export class MinePage {
   }
 
   async waitGroupInvitationsResponse(): Promise<void> {
-    await this.page.waitForResponse(`${apiUrl}/current-user/group-invitations`);
+    await this.page.waitForResponse(`${apiUrl}/current-user/group-invitations`, { timeout: extraTimeout });
   }
 
   async isUserInvitedToGroup(groupName: string): Promise<boolean> {

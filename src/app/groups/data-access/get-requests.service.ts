@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { map } from 'rxjs/operators';
@@ -7,6 +7,8 @@ import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../utils/operators/decode';
 import { dateDecoder } from 'src/app/utils/decoders';
+import { requestTimeout } from 'src/app/interceptors/interceptor_common';
+import { SECONDS } from 'src/app/utils/duration';
 
 const userDecoder = pipe(
   D.struct({
@@ -83,6 +85,8 @@ export interface GroupInvitation extends PendingRequest {
   },
 }
 
+const groupInvitationsServiceTimeout = 60*SECONDS;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -125,7 +129,10 @@ export class GetRequestsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/current-user/group-invitations`, { params: params })
+      .get<unknown>(`${appConfig.apiUrl}/current-user/group-invitations`, {
+        params: params,
+        context: new HttpContext().set(requestTimeout, groupInvitationsServiceTimeout),
+      })
       .pipe(
         decodeSnakeCase(D.array(groupInvitationDecoder)),
         map(groupInvitations => groupInvitations.filter(invitation => invitation.action === 'invitation_created').map(r => ({

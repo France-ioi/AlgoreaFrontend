@@ -1,10 +1,13 @@
 import { test, expect, Page } from './fixture';
 import { initAsDemoUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { apiUrl } from '../helpers/e2e_http';
+import { SECONDS } from 'src/app/utils/duration';
 
 const groupName = 'E2EGroupInvitationProcess';
 const groupId = '4433009959583369709';
 const demoUserLogin = 'usr_5p020x2thuyu';
+
+const extraTimeout = 60*SECONDS;
 
 const sendGroupInvitation = async (page: Page) => {
   await page.goto(`/groups/by-id/${ groupId };p=/members`);
@@ -28,6 +31,7 @@ const rejectGroupInvitation = async (page: Page) => {
 };
 
 test.beforeEach(async ({ page, minePage }) => {
+  test.setTimeout(extraTimeout);
   await initAsDemoUser(page);
   await minePage.goto();
   await Promise.all([
