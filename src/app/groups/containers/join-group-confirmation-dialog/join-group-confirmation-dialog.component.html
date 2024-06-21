@@ -24,7 +24,10 @@
       @if (form) {
         <form class="form" [formGroup]="form">
           @if (form.get('agreeWithPersonalInfoView')) {
-            <alg-switch-field formControlName="agreeWithPersonalInfoView">
+            <alg-switch-field
+              formControlName="agreeWithPersonalInfoView"
+              data-testid="switch-agree-with-personal-info-view"
+            >
               <ng-template #label>
                 <span i18n>
                   The managers of this group will be able to
@@ -38,7 +41,11 @@
             </alg-switch-field>
           }
           @if (form.get('agreeWithLockMembership')) {
-            <alg-switch-field class="switch-field" formControlName="agreeWithLockMembership">
+            <alg-switch-field
+              class="switch-field"
+              formControlName="agreeWithLockMembership"
+              data-testid="switch-agree-with-lock-membership"
+            >
               <ng-template #label>
                 <span i18n>
                   You will not be able to leave this group until {{ params.requireLockMembershipApprovalUntil | date: 'short' }}
