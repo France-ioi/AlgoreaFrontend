@@ -1,6 +1,7 @@
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
+import { requirePersonalInfoAccessApprovalDecoder } from 'src/app/groups/models/group-approvals';
 
 export const userBaseSchema = z.object({
   login: z.string(),
@@ -55,6 +56,7 @@ export const userDecoder = pipe(
       lastName: D.nullable(D.string),
       currentUserCanWatchUser: D.boolean,
       currentUserCanGrantUserAccess: D.boolean,
+      personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalDecoder,
     }),
   ),
 );

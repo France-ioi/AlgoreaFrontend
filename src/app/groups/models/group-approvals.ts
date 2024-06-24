@@ -1,9 +1,11 @@
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/utils/decoders';
 
+export const requirePersonalInfoAccessApprovalDecoder = D.literal('none', 'view', 'edit');
+
 export const groupApprovalsDecoder = D.struct({
   requireLockMembershipApprovalUntil: D.nullable(dateDecoder),
-  requirePersonalInfoAccessApproval: D.literal('none', 'view', 'edit'),
+  requirePersonalInfoAccessApproval: requirePersonalInfoAccessApprovalDecoder,
   requireWatchApproval: D.boolean,
 });
 
