@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, switchMap, map, forkJoin, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
@@ -18,6 +18,7 @@ const groupChildDecoder = pipe(
     isPublic: D.boolean,
     name: D.string,
     type: typeDecoder,
+    isEmpty: D.boolean,
   }),
   D.intersect(
     D.partial({
@@ -54,30 +55,5 @@ export class GetGroupChildrenService {
       .pipe(
         decodeSnakeCase(D.array(groupChildDecoder))
       );
-  }
-
-  getGroupChildrenWithSubgroupCount(
-    groupId: string,
-    sort: string[] = [],
-    typesInclude: GroupType[] = [],
-    typesExclude: GroupType[] = [],
-  ): Observable<(GroupChild & { isEmpty: boolean })[]> {
-    return this.getGroupChildren(groupId, sort, typesInclude, typesExclude).pipe(
-      switchMap(groupChildren => {
-        if (groupChildren.length === 0) {
-          return of([]);
-        }
-        return forkJoin(
-          groupChildren.map(g =>
-            this.getGroupChildren(g.id).pipe(
-              map(subGroupChildren => ({
-                ...g,
-                isEmpty: subGroupChildren.length === 0,
-              })),
-            )
-          )
-        );
-      }),
-    );
   }
 }
