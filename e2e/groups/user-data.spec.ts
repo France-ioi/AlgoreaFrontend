@@ -1,9 +1,7 @@
-import { test } from '@playwright/test';
+import { test } from './fixture';
 import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
-import { UserPage } from 'e2e/groups/pages/user-page';
 
-test('checks current user profile', async ({ page }) => {
-  const userPage = new UserPage(page);
+test('checks current user profile', async ({ page, userPage }) => {
   await initAsUsualUser(page);
 
   await test.step('checks tabs is visible', async () => {
@@ -25,8 +23,7 @@ test('checks current user profile', async ({ page }) => {
   });
 });
 
-test('checks other\'s user profile', async ({ page }) => {
-  const userPage = new UserPage(page);
+test('checks other\'s user profile', async ({ page, userPage }) => {
   await initAsUsualUser(page);
 
   await test.step('checks tabs is not visible', async () => {
@@ -51,8 +48,7 @@ test('checks other\'s user profile', async ({ page }) => {
   });
 });
 
-test('checks other\'s user profile with can view personal data access', async ({ page }) => {
-  const userPage = new UserPage(page);
+test('checks other\'s user profile with can view personal data access', async ({ page, userPage }) => {
   await initAsUsualUser(page);
 
   await test.step('checks tabs is not visible', async () => {
