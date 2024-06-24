@@ -1,6 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
 export class GroupMembersPage {
+  tabsLocator = this.page.locator('alg-selection');
   memberListLocator = this.page.locator('alg-member-list');
   approveConfirmationBtnLocator = this.page.getByRole('button', { name: 'Yes' });
   rejectConfirmationBtnLocator = this.page.getByRole('button', { name: 'No' });
@@ -13,8 +14,8 @@ export class GroupMembersPage {
   }
 
   async goToTab(tab: 'Sub-groups' | 'Users'): Promise<void> {
-    await expect.soft(this.memberListLocator.getByText(tab)).toBeVisible();
-    await this.memberListLocator.getByText(tab).click();
+    await expect.soft(this.tabsLocator.getByText(tab)).toBeVisible();
+    await this.tabsLocator.getByText(tab).click();
   }
 
   async checksIsGroupWithCheckboxVisible(groupName: string): Promise<void> {

@@ -1,7 +1,6 @@
-import { test } from '@playwright/test';
+import { test } from './fixture';
 import { initAsUsualUser } from '../helpers/e2e_auth';
 import { apiUrl } from '../helpers/e2e_http';
-import { GroupMembersPage } from './pages/group-members-page';
 
 const groupChildrenJson = [
   {
@@ -36,8 +35,7 @@ const groupChildrenJson = [
 
 const groupName = 'Pixal';
 
-test('delete subgroup when children are not empty', async ({ page }) => {
-  const groupMembersPage = new GroupMembersPage(page);
+test('delete subgroup when children are not empty', async ({ page, groupMembersPage }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
@@ -59,8 +57,7 @@ test('delete subgroup when children are not empty', async ({ page }) => {
   });
 });
 
-test('delete subgroup when children are empty', async ({ page }) => {
-  const groupMembersPage = new GroupMembersPage(page);
+test('delete subgroup when children are empty', async ({ page, groupMembersPage }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
@@ -88,8 +85,7 @@ test('delete subgroup when children are empty', async ({ page }) => {
   });
 });
 
-test('delete multiple subgroups when children are empty and non empty', async ({ page }) => {
-  const groupMembersPage = new GroupMembersPage(page);
+test('delete multiple subgroups when children are empty and non empty', async ({ page, groupMembersPage }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
@@ -111,8 +107,7 @@ test('delete multiple subgroups when children are empty and non empty', async ({
   });
 });
 
-test('checks reject confirmations for empty group', async ({ page }) => {
-  const groupMembersPage = new GroupMembersPage(page);
+test('checks reject confirmations for empty group', async ({ page, groupMembersPage }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
