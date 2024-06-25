@@ -40,7 +40,7 @@
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="personalData.isActive"
           i18n
-          [hidden]="!state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none' && (activeRoute$ | async) !== 'personal-data'"
+          [hidden]="!state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser === 'none' && (activeRoute$ | async) !== 'personal-data'"
       >
         Personal data
       </a>

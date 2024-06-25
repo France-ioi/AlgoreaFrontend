@@ -62,5 +62,6 @@ test('checks other\'s user profile with can view personal data access', async ({
     await userPage.goToTab('Progress');
     await userPage.waitForLogsResponse('879359034123878481');
     await userPage.checksIsProgressTableVisible();
+    await userPage.checksIsTabVisible('Personal data');
   });
 });
