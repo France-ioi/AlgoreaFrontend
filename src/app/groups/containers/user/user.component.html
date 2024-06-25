@@ -22,7 +22,7 @@
       *ngIf="!state.data.isCurrentUser && state.data.ancestorsCurrentUserIsManagerOf.length > 0"
     ></alg-user-indicator>
 
-    <nav class="alg-nav-tab" *ngIf="state.data.isCurrentUser || !state.data.isCurrentUser && state.data?.personalInfoAccessApprovalToCurrentUser !== 'none' || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
+    <nav class="alg-nav-tab" *ngIf="state.data.isCurrentUser || !state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none' || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
       <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
@@ -40,7 +40,7 @@
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="personalData.isActive"
           i18n
-          [hidden]="!state.data.isCurrentUser && state.data?.personalInfoAccessApprovalToCurrentUser !== 'none' && (activeRoute$ | async) !== 'personal-data'"
+          [hidden]="!state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none' && (activeRoute$ | async) !== 'personal-data'"
       >
         Personal data
       </a>
@@ -68,7 +68,7 @@
       <ng-container *ngIf="activeRoute === 'personal-data'">
         @if (state.data.isCurrentUser) {
           <alg-current-user></alg-current-user>
-        } @else if (!state.data.isCurrentUser && state.data?.personalInfoAccessApprovalToCurrentUser !== 'none') {
+        } @else if (!state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none') {
           <alg-user-info [user]="state.data"></alg-user-info>
         } @else {
           <ng-container *ngTemplateOutlet="forbidden"></ng-container>
