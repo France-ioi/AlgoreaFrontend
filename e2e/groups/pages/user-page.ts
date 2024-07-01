@@ -2,6 +2,8 @@ import { Page, expect } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class UserPage {
+  modifyPasswordBtnLocator = this.page.getByRole('button', { name: 'Modify password' });
+
   constructor(private readonly page: Page) {
   }
 
@@ -57,5 +59,13 @@ export class UserPage {
 
   async waitForLogsResponse(groupId?: string): Promise<void> {
     await this.page.waitForResponse(`${apiUrl}/items/log?limit=20${ groupId ? `&watched_group_id=${ groupId}` : '' }`);
+  }
+
+  async checksIsModifyPasswordBtnVisible(): Promise<void> {
+    await expect.soft(this.modifyPasswordBtnLocator).toBeVisible();
+  }
+
+  async checksIsModifyPasswordBtnNotVisible(): Promise<void> {
+    await expect.soft(this.modifyPasswordBtnLocator).not.toBeVisible();
   }
 }
