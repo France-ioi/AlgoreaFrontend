@@ -13,7 +13,7 @@ export class GroupMembersPage {
     await expect(this.page.getByRole('heading', { name: groupName })).toBeVisible();
   }
 
-  async goToTab(tab: 'Sub-groups' | 'Users'): Promise<void> {
+  async goToTab(tab: string): Promise<void> {
     await expect.soft(this.tabsLocator.getByText(tab)).toBeVisible();
     await this.tabsLocator.getByText(tab).click();
   }

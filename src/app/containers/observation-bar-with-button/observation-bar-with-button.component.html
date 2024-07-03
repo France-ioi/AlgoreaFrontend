@@ -7,6 +7,7 @@
       pButton
       type="button"
       icon="ph ph-eye"
+      data-testid="toggle-group-observation"
       (click)="toggleObservationMode($event, containerRef, currentGroupContent)"
       *ngIf="currentGroupContent !== undefined && !currentGroupContent.isBeingWatched"
     ></button>
