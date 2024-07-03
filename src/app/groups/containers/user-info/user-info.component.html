@@ -1,3 +1,13 @@
+@if (user.personalInfoAccessApprovalToCurrentUser === 'edit') {
+  <div class="button-container">
+    <p-button
+      styleClass="alg-button primary"
+      i18n-label label="Modify password"
+      icon="ph-duotone ph-pen"
+      (onClick)="onModifyPassword()"
+    ></p-button>
+  </div>
+}
 <h2 class="alg-h2 alg-text-normal title" i18n>Personal Information</h2>
 <ul class="alg-data-list">
   <li class="alg-data-list-item">
