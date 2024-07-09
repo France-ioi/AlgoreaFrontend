@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
+import { GetRequestsService, GroupInvitation, PendingRequest } from '../../data-access/get-requests.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -82,14 +82,14 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     if (sortMeta) this.onFetch(sortMeta);
   }
 
-  openJoinGroupConfirmationDialog(pendingRequest: PendingRequest): void {
+  openJoinGroupConfirmationDialog(groupInvitation: GroupInvitation): void {
     this.pendingJoinRequest = {
-      id: pendingRequest.group.id,
-      name: pendingRequest.group.name,
+      id: groupInvitation.group.id,
+      name: groupInvitation.group.name,
       params: {
-        requireLockMembershipApprovalUntil: null,
-        requirePersonalInfoAccessApproval: 'none',
-        requireWatchApproval: false,
+        requireLockMembershipApprovalUntil: groupInvitation.group.requireLockMembershipApprovalUntil,
+        requirePersonalInfoAccessApproval: groupInvitation.group.requirePersonalInfoAccessApproval,
+        requireWatchApproval: groupInvitation.group.requireWatchApproval,
       },
     };
   }

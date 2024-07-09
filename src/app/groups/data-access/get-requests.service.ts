@@ -9,6 +9,7 @@ import { decodeSnakeCase } from '../../utils/operators/decode';
 import { dateDecoder } from 'src/app/utils/decoders';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { SECONDS } from 'src/app/utils/duration';
+import { groupApprovalsDecoder } from 'src/app/groups/models/group-approvals';
 
 const userDecoder = pipe(
   D.struct({
@@ -35,14 +36,16 @@ const groupPendingRequestDecoder = D.struct({
 });
 
 const groupInvitationDecoder = D.struct({
-  action: D.literal('invitation_created', 'join_request_created', 'join_request_refused'),
   at: dateDecoder,
-  group: D.struct({
-    id: D.string,
-    name: D.string,
-    description: D.nullable(D.string),
-    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base'),
-  }),
+  group: pipe(
+    D.struct({
+      id: D.string,
+      name: D.string,
+      description: D.nullable(D.string),
+      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base'),
+    }),
+    D.intersect(groupApprovalsDecoder),
+  ),
   groupId: D.string,
   invitingUser: D.nullable(D.struct({
     id: D.string,
@@ -76,14 +79,7 @@ export interface GroupPendingRequest extends PendingRequest {
   },
 }
 
-export interface GroupInvitation extends PendingRequest {
-  group: {
-    id: string,
-    name: string,
-    description: string|null,
-    type: 'Class' | 'Team' | 'Club' | 'Friends' | 'Other' | 'Session' | 'Base',
-  },
-}
+export type GroupInvitation = D.TypeOf<typeof groupInvitationDecoder>;
 
 const groupInvitationsServiceTimeout = 60*SECONDS;
 
@@ -133,18 +129,6 @@ export class GetRequestsService {
         params: params,
         context: new HttpContext().set(requestTimeout, groupInvitationsServiceTimeout),
       })
-      .pipe(
-        decodeSnakeCase(D.array(groupInvitationDecoder)),
-        map(groupInvitations => groupInvitations.filter(invitation => invitation.action === 'invitation_created').map(r => ({
-          at: r.at,
-          group: {
-            id: r.group.id,
-            name: r.group.name,
-            description: r.group.description,
-            type: r.group.type,
-          },
-          user: r.invitingUser,
-        }))),
-      );
+      .pipe(decodeSnakeCase(D.array(groupInvitationDecoder)));
   }
 }
