@@ -3,9 +3,9 @@ import { initAsDemoUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
 import { DAYS } from 'src/app/utils/duration';
 
-const groupUrl = '/groups/by-id/7603612676907243141;p=/settings';
-const groupName = 'E2EJoinByCode';
-const code = '8mp35xuh6f';
+const groupUrl = '/groups/by-id/612953395334966729;p=/settings';
+const groupName = 'E2EStrengthenedApprovalConditions';
+const code = '6cx6ycddy4';
 
 test.beforeEach(async ({ page, groupSettingsPage, minePage }) => {
   await initAsUsualUser(page);
@@ -84,9 +84,29 @@ test.afterEach(async ({ page, groupSettingsPage, minePage }) => {
 });
 
 test(
-  'checks join group by code with "Lock membership until a given date" required approval',
+  'checks strengthened confirmation and remove members',
   { tag: '@no-parallelism' },
   async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
+    await test.step('join by code from demo user', async () => {
+      await initAsDemoUser(page);
+      await minePage.goto();
+      await minePage.checkHeaderIsVisible();
+      await minePage.checkJoinByCodeIsVisible();
+      await minePage.joinByCode(code);
+    });
+
+    await test.step('checks open join group confirmation', async () => {
+      await joinGroupConfirmation.checkHeaderIsVisible();
+      await joinGroupConfirmation.checkMessageIsVisible(groupName);
+    });
+
+    await test.step('join to group and check is demo user member of joined group', async () => {
+      await joinGroupConfirmation.joinGroup();
+      await minePage.waitGroupMembershipsResponse();
+      await minePage.checkJoinedGroupsSectionIsVisible();
+      await minePage.checkJoinedGroupIsVisible(groupName);
+    });
+
     await initAsUsualUser(page);
     await groupSettingsPage.goto(groupUrl);
 
@@ -99,56 +119,23 @@ test(
       await groupSettingsPage.fillDate(convertDateToString(new Date(Date.now() + DAYS)));
     });
 
-    await test.step('save changes and wait notification of success', async () => {
-      await groupSettingsPage.saveChangesAndCheckNotification();
-    });
-
-    await test.step('join by code from demo user', async () => {
-      await initAsDemoUser(page);
-      await minePage.goto();
-      await minePage.checkHeaderIsVisible();
-      await minePage.checkJoinByCodeIsVisible();
-      await minePage.joinByCode(code);
-    });
-
-    await test.step('checks open join group confirmation and switch "agree with lock membership"', async () => {
-      await joinGroupConfirmation.checkHeaderIsVisible();
-      await joinGroupConfirmation.checkMessageIsVisible(groupName);
-      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
-      await joinGroupConfirmation.switchAgreeWithLockMembership();
-    });
-
-    await test.step('join to group and check is demo user member of joined group', async () => {
-      await joinGroupConfirmation.joinGroup();
-      await minePage.waitGroupMembershipsResponse();
-      await minePage.checkJoinedGroupsSectionIsVisible();
-      await minePage.checkJoinedGroupIsVisible(groupName);
-    });
-
-    await test.step('checks is group locked to leave', async () => {
-      await minePage.checkGroupIsLockToLeave(groupName);
-    });
-  });
-
-test(
-  'checks join group by code with "Managers can access member\'s personal information" required approval',
-  { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
-    await initAsUsualUser(page);
-    await groupSettingsPage.goto(groupUrl);
-
-    await test.step('checks the required approvals section is visible', async () => {
-      await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
-    });
-
     await test.step('select "Managers can access member\'s personal information" to "Read only"', async () => {
       await groupSettingsPage.selectManagersCanAccessMemberPersonalInformation('Read only');
     });
 
-    await test.step('save changes and wait notification of success', async () => {
-      await groupSettingsPage.saveChangesAndCheckNotification();
+    await test.step('checks strengthened approval confirmation appears', async () => {
+      await groupSettingsPage.saveChanges();
+      await groupSettingsPage.checkIsStrengthenedApprovalConfirmationVisible();
+      await groupSettingsPage.checkIsStrengthenedConfirmationCancelBtnVisible();
+      await groupSettingsPage.selectStrengthenedConfirmationOperation('Remove all members');
+      await groupSettingsPage.checkSuccessfulNotification();
     });
+  });
 
+test(
+  'checks strengthened confirmation and re-invite members',
+  { tag: '@no-parallelism' },
+  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
     await test.step('join by code from demo user', async () => {
       await initAsDemoUser(page);
       await minePage.goto();
@@ -157,11 +144,9 @@ test(
       await minePage.joinByCode(code);
     });
 
-    await test.step('checks open join group confirmation and switch agree with personal info view', async () => {
+    await test.step('checks open join group confirmation', async () => {
       await joinGroupConfirmation.checkHeaderIsVisible();
       await joinGroupConfirmation.checkMessageIsVisible(groupName);
-      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
-      await joinGroupConfirmation.switchAgreeWithPersonalInfoView();
     });
 
     await test.step('join to group and check is demo user member of joined group', async () => {
@@ -170,65 +155,11 @@ test(
       await minePage.checkJoinedGroupsSectionIsVisible();
       await minePage.checkJoinedGroupIsVisible(groupName);
     });
-  });
 
-test(
-  'checks join group by code with all required approvals',
-  { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
     await initAsUsualUser(page);
     await groupSettingsPage.goto(groupUrl);
 
-    await test.step('checks the required approvals section is visible', async () => {
-      await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
-    });
-
-    await test.step('enable "Lock membership until a given date" control and fill the date', async () => {
-      await groupSettingsPage.enableLockMembershipUntilInputDate();
-      await groupSettingsPage.fillDate(convertDateToString(new Date(Date.now() + DAYS)));
-    });
-
-    await test.step('Select "Managers can access member\'s personal information" to "Read only"', async () => {
-      await groupSettingsPage.selectManagersCanAccessMemberPersonalInformation('Read only');
-    });
-
-    await test.step('Save changes and wait notification of success', async () => {
-      await groupSettingsPage.saveChangesAndCheckNotification();
-    });
-
-    await test.step('join by code from demo user', async () => {
-      await initAsDemoUser(page);
-      await minePage.goto();
-      await minePage.checkHeaderIsVisible();
-      await minePage.checkJoinByCodeIsVisible();
-      await minePage.joinByCode(code);
-    });
-
-    await test.step('Open join group confirmation and switch all options', async () => {
-      await joinGroupConfirmation.checkHeaderIsVisible();
-      await joinGroupConfirmation.checkMessageIsVisible(groupName);
-      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
-      await joinGroupConfirmation.switchAgreeWithLockMembership();
-      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
-      await joinGroupConfirmation.switchAgreeWithPersonalInfoView();
-    });
-
-    await test.step('Join group and check group in joined groups table', async () => {
-      await joinGroupConfirmation.joinGroup();
-      await minePage.waitGroupMembershipsResponse();
-      await minePage.checkJoinedGroupsSectionIsVisible();
-      await minePage.checkJoinedGroupIsVisible(groupName);
-    });
-  });
-
-test(
-  'checks cancel join group confirmation modal',
-  { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
-    await initAsUsualUser(page);
-    await groupSettingsPage.goto(groupUrl);
-
-    await test.step('checks the required approvals section is visible', async () => {
+    await test.step('checks is required approvals section visible', async () => {
       await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
     });
 
@@ -241,10 +172,27 @@ test(
       await groupSettingsPage.selectManagersCanAccessMemberPersonalInformation('Read only');
     });
 
-    await test.step('save changes and wait notification of success', async () => {
-      await groupSettingsPage.saveChangesAndCheckNotification();
+    await test.step('checks strengthened approval confirmation appears', async () => {
+      await groupSettingsPage.saveChanges();
+      await groupSettingsPage.checkIsStrengthenedApprovalConfirmationVisible();
+      await groupSettingsPage.checkIsStrengthenedConfirmationCancelBtnVisible();
+      await groupSettingsPage.selectStrengthenedConfirmationOperation('Remove and re-invite all members');
+      await groupSettingsPage.checkSuccessfulNotification();
     });
 
+    await test.step('checks is demo user invited to group', async () => {
+      await initAsDemoUser(page);
+      await minePage.goto();
+      await minePage.waitGroupInvitationsResponse();
+      await minePage.checkHeaderIsVisible();
+      await minePage.checkIsUserInvitedToGroupVisible(groupName);
+    });
+  });
+
+test(
+  'checks cancel strengthened confirmation',
+  { tag: '@no-parallelism' },
+  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
     await test.step('join by code from demo user', async () => {
       await initAsDemoUser(page);
       await minePage.goto();
@@ -253,17 +201,38 @@ test(
       await minePage.joinByCode(code);
     });
 
-    await test.step('checks join group confirmation modal and switch all options', async () => {
+    await test.step('checks open join group confirmation', async () => {
       await joinGroupConfirmation.checkHeaderIsVisible();
       await joinGroupConfirmation.checkMessageIsVisible(groupName);
-      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
-      await joinGroupConfirmation.switchAgreeWithLockMembership();
-      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
-      await joinGroupConfirmation.switchAgreeWithPersonalInfoView();
     });
 
-    await test.step('cancel join group confirmation modal', async () => {
-      await joinGroupConfirmation.cancel();
-      await joinGroupConfirmation.checkHeaderIsNotVisible();
+    await test.step('join to group and check is demo user member of joined group', async () => {
+      await joinGroupConfirmation.joinGroup();
+      await minePage.waitGroupMembershipsResponse();
+      await minePage.checkJoinedGroupsSectionIsVisible();
+      await minePage.checkJoinedGroupIsVisible(groupName);
+    });
+
+    await initAsUsualUser(page);
+    await groupSettingsPage.goto(groupUrl);
+
+    await test.step('checks is required approvals section visible', async () => {
+      await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
+    });
+
+    await test.step('turns on "Lock membership until a given date" control and fill the date', async () => {
+      await groupSettingsPage.enableLockMembershipUntilInputDate();
+      await groupSettingsPage.fillDate(convertDateToString(new Date(Date.now() + DAYS)));
+    });
+
+    await test.step('select "Managers can access member\'s personal information" to "Read only"', async () => {
+      await groupSettingsPage.selectManagersCanAccessMemberPersonalInformation('Read only');
+    });
+
+    await test.step('checks strengthened approval confirmation appears', async () => {
+      await groupSettingsPage.saveChanges();
+      await groupSettingsPage.checkIsStrengthenedApprovalConfirmationVisible();
+      await groupSettingsPage.checkIsStrengthenedConfirmationCancelBtnVisible();
+      await groupSettingsPage.selectStrengthenedConfirmationOperation('Cancel');
     });
   });

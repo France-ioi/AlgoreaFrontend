@@ -13,6 +13,7 @@ export interface GroupChanges {
   root_skill_id?: string|null,
   require_lock_membership_approval_until: GroupApprovals['requireLockMembershipApprovalUntil'],
   require_personal_info_access_approval: GroupApprovals['requirePersonalInfoAccessApproval'],
+  approval_change_action?: 'empty'|'reinvite',
 }
 
 @Injectable({

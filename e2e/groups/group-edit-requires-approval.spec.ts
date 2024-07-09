@@ -25,7 +25,7 @@ test.beforeEach(async ({ page, groupSettingsPage }) => {
     }
 
     if (isLockMembershipInputDateEnabled || isManagersCanAccessMemberPersonalInformationEnabled) {
-      await groupSettingsPage.saveChanges();
+      await groupSettingsPage.saveChangesAndCheckNotification();
     }
   });
 });
@@ -48,7 +48,7 @@ test('turn on and turn off approval rules', { tag: '@no-parallelism' }, async ({
   });
 
   await test.step('save changes and wait notification of success', async () => {
-    await groupSettingsPage.saveChanges();
+    await groupSettingsPage.saveChangesAndCheckNotification();
   });
 
   await test.step('checks the required approvals section is visible', async () => {
@@ -64,7 +64,7 @@ test('turn on and turn off approval rules', { tag: '@no-parallelism' }, async ({
   });
 
   await test.step('save changes and wait notification of success', async () => {
-    await groupSettingsPage.saveChanges();
+    await groupSettingsPage.saveChangesAndCheckNotification();
   });
 });
 
