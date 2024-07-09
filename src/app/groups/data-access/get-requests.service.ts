@@ -5,11 +5,12 @@ import { appConfig } from 'src/app/utils/config';
 import { map } from 'rxjs/operators';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from '../../utils/operators/decode';
-import { dateDecoder } from 'src/app/utils/decoders';
+import { decodeSnakeCase, decodeSnakeCaseZod } from '../../utils/operators/decode';
+import { dateDecoder, dateSchema } from 'src/app/utils/decoders';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { SECONDS } from 'src/app/utils/duration';
-import { groupApprovalsDecoder } from 'src/app/groups/models/group-approvals';
+import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
+import { z } from 'zod';
 
 const userDecoder = pipe(
   D.struct({
@@ -35,25 +36,24 @@ const groupPendingRequestDecoder = D.struct({
   user: userDecoder,
 });
 
-const groupInvitationDecoder = D.struct({
-  at: dateDecoder,
-  group: pipe(
-    D.struct({
-      id: D.string,
-      name: D.string,
-      description: D.nullable(D.string),
-      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base'),
-    }),
-    D.intersect(groupApprovalsDecoder),
-  ),
-  groupId: D.string,
-  invitingUser: D.nullable(D.struct({
-    id: D.string,
-    firstName: D.nullable(D.string),
-    lastName: D.nullable(D.string),
-    login: D.string,
-  })),
-});
+const groupInvitationsSchema = z.array(
+  z.object({
+    at: dateSchema,
+    group: z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.nullable(z.string()),
+      type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]),
+    }).and(groupApprovalsSchema),
+    groupId: z.string(),
+    invitingUser: z.nullable(z.object({
+      id: z.string(),
+      firstName: z.nullable(z.string()),
+      lastName: z.nullable(z.string()),
+      login: z.string(),
+    })),
+  }),
+);
 
 export interface PendingRequest {
   at: Date|null,
@@ -79,7 +79,8 @@ export interface GroupPendingRequest extends PendingRequest {
   },
 }
 
-export type GroupInvitation = D.TypeOf<typeof groupInvitationDecoder>;
+export type GroupInvitations = z.infer<typeof groupInvitationsSchema>;
+export type GroupInvitation = GroupInvitations[0];
 
 const groupInvitationsServiceTimeout = 60*SECONDS;
 
@@ -121,7 +122,7 @@ export class GetRequestsService {
 
   getGroupInvitations(
     sort: string[] = [],
-  ): Observable<GroupInvitation[]> {
+  ): Observable<GroupInvitations> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
@@ -129,6 +130,6 @@ export class GetRequestsService {
         params: params,
         context: new HttpContext().set(requestTimeout, groupInvitationsServiceTimeout),
       })
-      .pipe(decodeSnakeCase(D.array(groupInvitationDecoder)));
+      .pipe(decodeSnakeCaseZod(groupInvitationsSchema));
   }
 }
