@@ -1,13 +1,17 @@
 import { test } from './fixture';
 import { initAsDemoUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
-import { DAYS } from 'src/app/utils/duration';
+import { DAYS, SECONDS } from 'src/app/utils/duration';
+import { expect } from 'e2e/groups/fixture';
 
 const groupUrl = '/groups/by-id/612953395334966729;p=/settings';
 const groupName = 'E2EStrengthenedApprovalConditions';
 const code = '6cx6ycddy4';
 
+const extraTimeout = 60*SECONDS;
+
 test.beforeEach(async ({ page, groupSettingsPage, minePage }) => {
+  test.setTimeout(extraTimeout);
   await initAsUsualUser(page);
   await groupSettingsPage.goto(groupUrl);
 
@@ -186,6 +190,28 @@ test(
       await minePage.waitGroupInvitationsResponse();
       await minePage.checkHeaderIsVisible();
       await minePage.checkIsUserInvitedToGroupVisible(groupName);
+    });
+
+    await test.step('accept group invitation', async () => {
+      await minePage.acceptGroupInvitation(groupName);
+    });
+
+    await test.step('open join group confirmation and switch all options', async () => {
+      await joinGroupConfirmation.checkHeaderIsVisible();
+      await joinGroupConfirmation.checkMessageIsVisible(groupName);
+      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
+      await joinGroupConfirmation.switchAgreeWithLockMembership();
+      await joinGroupConfirmation.checkJoinGroupBtnIsDisabled();
+      await joinGroupConfirmation.switchAgreeWithPersonalInfoView();
+    });
+
+    await test.step('join group and check group in joined groups table', async () => {
+      await joinGroupConfirmation.joinGroup();
+      await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
+      await minePage.goto();
+      await minePage.waitGroupMembershipsResponse();
+      await minePage.checkJoinedGroupsSectionIsVisible();
+      await minePage.checkJoinedGroupIsVisible(groupName);
     });
   });
 

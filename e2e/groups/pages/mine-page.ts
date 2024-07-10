@@ -23,7 +23,11 @@ export class MinePage {
   }
 
   async checkJoinedGroupIsVisible(groupName: string): Promise<void> {
-    await expect.soft(this.page.getByText(groupName)).toBeVisible();
+    await expect.soft(
+      this.page
+        .locator('alg-joined-group-list', { hasText: groupName })
+        .getByRole('row', { name: groupName })
+    ).toBeVisible();
   }
 
   async waitGroupMembershipsResponse(): Promise<void> {
@@ -92,5 +96,11 @@ export class MinePage {
   async isUserInvitedToGroup(groupName: string): Promise<boolean> {
     await expect.soft(this.userGroupInvitationsLocator.filter({ has: this.page.locator('p-table') })).toBeVisible();
     return this.userGroupInvitationsLocator.getByRole('cell', { name: groupName }).isVisible();
+  }
+
+  async acceptGroupInvitation(groupName: string): Promise<void> {
+    const acceptBtnLocator = this.page.getByRole('row', { name: groupName }).getByTestId('accept-group');
+    await expect.soft(acceptBtnLocator).toBeVisible();
+    await acceptBtnLocator.click();
   }
 }
