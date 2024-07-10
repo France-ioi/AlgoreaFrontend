@@ -5,6 +5,9 @@ import { FullItemRoute, itemCategoryFromPrefix, routesEqualIgnoringCommands } fr
 import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../utils/item-route-validation';
 import { State } from './item-content.state';
 import { equalNullableFactory } from 'src/app/utils/null-undefined-predicates';
+import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
+import { ItemData } from '../../services/item-datasource.service';
+import { canFetchResults } from '../../services/result-fetching.service';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -21,6 +24,21 @@ interface UserContentSelectors<T extends RootState> {
    * If the content is an item and there is no route error: the fully defined route
    */
   selectActiveContentRoute: MemoizedSelector<T, FullItemRoute|null>,
+  /**
+   * If the content is an item and there is no route error: the item id
+   */
+  selectActiveContentId: MemoizedSelector<T, string|null>,
+  selectActiveContentItem: MemoizedSelector<T, State['item']|null>,
+  selectActiveContentBreadcrumbs: MemoizedSelector<T, State['breadcrumbs']|null>,
+  selectActiveContentResults: MemoizedSelector<T, State['results']>,
+  /**
+   * Data that can be used for fetching results
+   */
+  selectActiveContentInfoForFetchingResults: MemoizedSelector<T, { route: FullItemRoute, item: ItemData['item'] }|null>,
+  /**
+   * The old structure for sharing the item data. Kept for now for compatibility reasons
+   */
+  selectActiveContentData: MemoizedSelector<T, FetchState<ItemData>|null>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
@@ -70,10 +88,75 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     result => (result && !isItemRouteError(result) ? result : null)
   );
 
+  const selectHasActiveContentValidRoute = createSelector(
+    selectActiveContentRoute,
+    route => !!route
+  );
+
+  const selectActiveContentId = createSelector(
+    selectActiveContentRoute,
+    route => (route ? route.id : null)
+  );
+
+  const selectActiveContentItem = createSelector(
+    selectState,
+    selectHasActiveContentValidRoute,
+    ({ item }, valid) => (valid ? item : null)
+  );
+
+  const selectActiveContentBreadcrumbs = createSelector(
+    selectState,
+    selectHasActiveContentValidRoute,
+    ({ breadcrumbs }, valid) => (valid ? breadcrumbs : null)
+  );
+
+  const selectActiveContentResults = createSelector(
+    selectState,
+    selectActiveContentItem,
+    selectActiveContentBreadcrumbs,
+    ({ results }, itemState, breadcrumbsState) =>
+      // the result can only be used if both item and breadcrumbs are ready (otherwise it could still for the previous item)
+      (itemState?.isReady && breadcrumbsState?.isReady && canFetchResults(itemState.data) ? results : null)
+  );
+
+  const selectActiveContentInfoForFetchingResults = createSelector(
+    selectActiveContentRoute,
+    selectActiveContentItem,
+    selectActiveContentBreadcrumbs,
+    (route, itemState, breadcrumbsState) =>
+      ((route !== null && itemState?.isReady && breadcrumbsState?.isReady) ? { route, item: itemState.data } : null)
+  );
+
+  const selectActiveContentData = createSelector(
+    selectActiveContentRoute,
+    selectActiveContentItem,
+    selectActiveContentBreadcrumbs,
+    selectActiveContentResults,
+    (route, itemState, breadcrumbsState, resultsState) => {
+      if (route === null || itemState === null || breadcrumbsState === null) return null;
+      if (itemState.isError) return errorState(itemState.error);
+      if (breadcrumbsState.isError) return errorState(breadcrumbsState.error);
+      if (itemState.isFetching || breadcrumbsState.isFetching) return fetchingState<ItemData>();
+      return readyState<ItemData>({
+        route,
+        item: itemState.data,
+        breadcrumbs: breadcrumbsState.data,
+        results: resultsState?.data?.results,
+        currentResult: resultsState?.data?.currentResult,
+      });
+    }
+  );
+
   return {
     selectIsItemContentActive,
     selectActiveContentRouteError,
     selectActiveContentRouteErrorHandlingState,
     selectActiveContentRoute,
+    selectActiveContentId,
+    selectActiveContentItem,
+    selectActiveContentBreadcrumbs,
+    selectActiveContentResults,
+    selectActiveContentInfoForFetchingResults,
+    selectActiveContentData,
   };
 }

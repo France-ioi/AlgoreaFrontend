@@ -15,10 +15,8 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { FetchState } from 'src/app/utils/state';
-import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
-import { GetItemPathService } from '../data-access/get-item-path.service';
 import { ItemDataSource, ItemData } from './services/item-datasource.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { ItemRouter } from 'src/app/models/routing/item-router';
@@ -67,6 +65,7 @@ import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
 import { isUser } from '../models/routing/group-route';
 import { fromItemContent } from './store';
+import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -228,8 +227,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
           route,
           breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
         }));
-        // trigger the fetch of the item (which will itself re-update the current content)
-        this.itemDataSource.fetchItem(route);
       } else {
         this.currentContent.clear();
       }
@@ -264,7 +261,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }));
     }),
 
-    this.itemDataSource.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
+    this.breadcrumbService.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
 
     this.itemDataSource.state$.pipe(
       filter(s => s.isError),
@@ -328,8 +325,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private initialAnswerDataSource: InitialAnswerDataSource,
     private itemTabs: ItemTabs,
     private userSessionService: UserSessionService,
-    private resultActionsService: ResultActionsService,
-    private getItemPathService: GetItemPathService,
+    private breadcrumbService: ItemBreadcrumbsWithFailoverService,
     private layoutService: LayoutService,
     private currentContentService: CurrentContentService,
     private tabService: TabService,
