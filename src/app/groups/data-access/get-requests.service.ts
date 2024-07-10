@@ -2,39 +2,33 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import { map } from 'rxjs/operators';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase, decodeSnakeCaseZod } from '../../utils/operators/decode';
-import { dateDecoder, dateSchema } from 'src/app/utils/decoders';
+import { decodeSnakeCaseZod } from '../../utils/operators/decode';
+import { dateSchema } from 'src/app/utils/decoders';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { SECONDS } from 'src/app/utils/duration';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 import { z } from 'zod';
+import { map } from 'rxjs/operators';
 
-const userDecoder = pipe(
-  D.struct({
-    groupId: D.string,
-    login: D.string,
-  }),
-  D.intersect(
-    D.partial({
-      firstName: D.nullable(D.string),
-      lastName: D.nullable(D.string),
-      grade: D.nullable(D.number),
-    }),
-  ),
-);
-
-const groupPendingRequestDecoder = D.struct({
-  at: D.nullable(dateDecoder),
-  group: D.struct({
-    id: D.string,
-    name: D.string,
-  }),
-  type: D.literal('join_request', 'leave_request'),
-  user: userDecoder,
+const userSchema = z.object({
+  groupId: z.string(),
+  login: z.string(),
+  firstName: z.nullable(z.string().optional()),
+  lastName: z.nullable(z.string().optional()),
+  grade: z.nullable(z.number().optional()),
 });
+
+const groupPendingRequestSchema = z.array(
+  z.object({
+    at: dateSchema,
+    group: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
+    type: z.enum([ 'join_request', 'leave_request' ]),
+    user: userSchema,
+  })
+);
 
 const groupInvitationsSchema = z.array(
   z.object({
@@ -57,7 +51,7 @@ const groupInvitationsSchema = z.array(
 
 export interface PendingRequest {
   at: Date|null,
-  user: null | {
+  user: {
     id: string,
     login: string,
     firstName: string|null,
@@ -66,16 +60,6 @@ export interface PendingRequest {
   group: {
     id: string,
     name: string,
-  },
-}
-
-export interface GroupPendingRequest extends PendingRequest {
-  user: {
-    id: string,
-    login: string,
-    firstName: string|null,
-    lastName: string|null,
-    grade: number|null,
   },
 }
 
@@ -93,9 +77,9 @@ export class GetRequestsService {
 
   getGroupPendingRequests(
     groupId?: string,
-    includeSubgroup : boolean = false,
+    includeSubgroup: boolean = false,
     sort: string[] = [],
-  ): Observable<GroupPendingRequest[]> {
+  ): Observable<PendingRequest[]> {
     let params = new HttpParams();
     if (groupId) {
       params = params.set('group_id', groupId);
@@ -105,7 +89,7 @@ export class GetRequestsService {
     return this.http
       .get<unknown>(`${appConfig.apiUrl}/groups/user-requests`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(groupPendingRequestDecoder)),
+        decodeSnakeCaseZod(groupPendingRequestSchema),
         map(pendingRequests => pendingRequests.map(r => ({
           at: r.at,
           group: r.group,
