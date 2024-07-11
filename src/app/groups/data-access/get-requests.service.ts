@@ -5,7 +5,7 @@ import { appConfig } from 'src/app/utils/config';
 import { decodeSnakeCaseZod } from '../../utils/operators/decode';
 import { dateSchema } from 'src/app/utils/decoders';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
-import { SECONDS } from 'src/app/utils/duration';
+import { MINUTES } from 'src/app/utils/duration';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 import { z } from 'zod';
 import { map } from 'rxjs/operators';
@@ -66,7 +66,7 @@ export interface PendingRequest {
 export type GroupInvitations = z.infer<typeof groupInvitationsSchema>;
 export type GroupInvitation = GroupInvitations[0];
 
-const groupInvitationsServiceTimeout = 60*SECONDS;
+const groupInvitationsServiceTimeout = 2*MINUTES;
 
 @Injectable({
   providedIn: 'root'

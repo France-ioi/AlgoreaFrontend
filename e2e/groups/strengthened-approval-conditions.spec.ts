@@ -1,17 +1,16 @@
 import { test } from './fixture';
 import { initAsDemoUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
-import { DAYS, SECONDS } from 'src/app/utils/duration';
+import { DAYS } from 'src/app/utils/duration';
 import { expect } from 'e2e/groups/fixture';
+import { extraGroupInvitationsTimeout } from 'e2e/groups/pages/mine-page';
 
 const groupUrl = '/groups/by-id/612953395334966729;p=/settings';
 const groupName = 'E2EStrengthenedApprovalConditions';
 const code = '6cx6ycddy4';
 
-const extraTimeout = 60*SECONDS;
-
 test.beforeEach(async ({ page, groupSettingsPage, minePage }) => {
-  test.setTimeout(extraTimeout);
+  test.setTimeout(extraGroupInvitationsTimeout);
   await initAsUsualUser(page);
   await groupSettingsPage.goto(groupUrl);
 
