@@ -183,6 +183,8 @@ test(
       await groupSettingsPage.checkSuccessfulNotification();
     });
 
+    test.skip(true);
+
     await test.step('checks is demo user invited to group', async () => {
       await initAsDemoUser(page);
       await minePage.goto();

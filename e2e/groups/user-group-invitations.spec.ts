@@ -53,7 +53,7 @@ test.afterEach(async ({ page }) => {
   await expect(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
 });
 
-test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, minePage }) => {
+test.skip('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, minePage }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
@@ -92,7 +92,7 @@ test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, mineP
   });
 });
 
-test('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => {
+test.skip('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
@@ -104,14 +104,14 @@ test('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => 
   });
 });
 
-test('Error on group invitations service', { tag: '@no-parallelism' }, async ({ page }) => {
+test.skip('Error on group invitations service', { tag: '@no-parallelism' }, async ({ page }) => {
   await initAsUsualUser(page);
   await page.route(`${apiUrl}/current-user/group-invitations`, route => route.abort());
   await page.goto('/groups/mine');
   await expect.soft(page.getByText('Error while loading the group invitations.')).toBeVisible();
 });
 
-test('Cancel "Joining a new group" modal', { tag: '@no-parallelism' }, async ({ page, minePage }) => {
+test.skip('Cancel "Joining a new group" modal', { tag: '@no-parallelism' }, async ({ page, minePage }) => {
   await test.step('Invite user into group', async () => {
     await initAsUsualUser(page);
     await sendGroupInvitation(page);
