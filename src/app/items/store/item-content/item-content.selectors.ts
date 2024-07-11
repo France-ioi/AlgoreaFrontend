@@ -28,8 +28,8 @@ interface UserContentSelectors<T extends RootState> {
    * If the content is an item and there is no route error: the item id
    */
   selectActiveContentId: MemoizedSelector<T, string|null>,
-  selectActiveContentItem: MemoizedSelector<T, State['item']|null>,
-  selectActiveContentBreadcrumbs: MemoizedSelector<T, State['breadcrumbs']|null>,
+  selectActiveContentItem: MemoizedSelector<T, State['item']>,
+  selectActiveContentBreadcrumbs: MemoizedSelector<T, State['breadcrumbs']>,
   selectActiveContentResults: MemoizedSelector<T, State['results']>,
   /**
    * Data that can be used for fetching results
@@ -101,13 +101,13 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   const selectActiveContentItem = createSelector(
     selectState,
     selectHasActiveContentValidRoute,
-    ({ item }, valid) => (valid ? item : null)
+    ({ item }, valid) => (valid ? item : fetchingState())
   );
 
   const selectActiveContentBreadcrumbs = createSelector(
     selectState,
     selectHasActiveContentValidRoute,
-    ({ breadcrumbs }, valid) => (valid ? breadcrumbs : null)
+    ({ breadcrumbs }, valid) => (valid ? breadcrumbs : fetchingState())
   );
 
   const selectActiveContentResults = createSelector(
@@ -116,7 +116,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentBreadcrumbs,
     ({ results }, itemState, breadcrumbsState) =>
       // the result can only be used if both item and breadcrumbs are ready (otherwise it could still for the previous item)
-      (itemState?.isReady && breadcrumbsState?.isReady && canFetchResults(itemState.data) ? results : null)
+      (itemState.isReady && breadcrumbsState.isReady && canFetchResults(itemState.data) ? results : null)
   );
 
   const selectActiveContentInfoForFetchingResults = createSelector(
@@ -124,7 +124,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentItem,
     selectActiveContentBreadcrumbs,
     (route, itemState, breadcrumbsState) =>
-      ((route !== null && itemState?.isReady && breadcrumbsState?.isReady) ? { route, item: itemState.data } : null)
+      ((route !== null && itemState.isReady && breadcrumbsState.isReady) ? { route, item: itemState.data } : null)
   );
 
   const selectActiveContentData = createSelector(
@@ -133,7 +133,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentBreadcrumbs,
     selectActiveContentResults,
     (route, itemState, breadcrumbsState, resultsState) => {
-      if (route === null || itemState === null || breadcrumbsState === null) return null;
+      if (route === null) return null;
       if (itemState.isError) return errorState(itemState.error);
       if (breadcrumbsState.isError) return errorState(breadcrumbsState.error);
       if (itemState.isFetching || breadcrumbsState.isFetching) return fetchingState<ItemData>();
