@@ -156,8 +156,8 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    * When it is populated with an element id, the neighbor navigation will only be restricted to its descendants _not including self_.
    */
   navigationNeighborsRestrictedToDescendantOfElementId: string | null = null;
-  navigationNeighbors$: Observable<FetchState<NavigationNeighbors|undefined>> = this.state$.pipe(
-    mapStateData(navData => {
+  navigationNeighbors$ = this.state$.pipe(
+    mapStateData<NavTreeData, NavigationNeighbors|undefined>(navData => {
       if (!navData.selectedElementId) return undefined;
       const l1Idx = navData.elements.findIndex(
         e => e.route.id === navData.selectedElementId || e.children?.find(c => c.route.id === navData.selectedElementId)
