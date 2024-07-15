@@ -183,7 +183,12 @@ test(
       await groupSettingsPage.checkSuccessfulNotification();
     });
 
-    test.skip(true);
+    /***
+      Because of unstable work of BE response of group invitations, temporary skip the next test steps
+      with group invitation request.
+      To be removed after BE to be fixed.
+    **/
+    test.skip(true, 'skips next test steps with group invitations request');
 
     await test.step('checks is demo user invited to group', async () => {
       await initAsDemoUser(page);
