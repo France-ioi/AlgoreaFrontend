@@ -64,7 +64,3 @@ export const durationSchema = z.string().transform((val, ctx) => {
   }
   return duration;
 });
-
-export const dateSchema = z.custom<Date>(value =>
-  typeof value === 'number' || typeof value === 'string' && !Number.isNaN(new Date(value).valueOf())
-, 'Not a date');

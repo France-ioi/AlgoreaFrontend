@@ -1,5 +1,5 @@
 import * as D from 'io-ts/Decoder';
-import { dateDecoder, dateSchema } from 'src/app/utils/decoders';
+import { dateDecoder } from 'src/app/utils/decoders';
 import { z } from 'zod';
 
 export const requirePersonalInfoAccessApprovalDecoder = D.literal('none', 'view', 'edit');
@@ -12,7 +12,7 @@ export const groupApprovalsDecoder = D.struct({
 });
 
 export const groupApprovalsSchema = z.object({
-  requireLockMembershipApprovalUntil: z.nullable(dateSchema),
+  requireLockMembershipApprovalUntil: z.coerce.date().nullable(),
   requirePersonalInfoAccessApproval: requirePersonalInfoAccessApprovalSchema,
   requireWatchApproval: z.boolean(),
 });
