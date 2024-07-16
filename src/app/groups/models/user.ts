@@ -10,9 +10,9 @@ export const userBaseSchema = z.object({
 });
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */ // Let type inference guess the return type (would be very verbose)
-export const withGroupId = <T extends typeof userBaseSchema>(user: T) => user.extend({ groupId: z.string() });
-export const withId = <T extends typeof userBaseSchema>(user: T) => user.extend({ id: z.string() });
-export const withGrade = <T extends typeof userBaseSchema>(user: T) => user.extend({ grade: z.number().nullable() });
+export const withGroupId = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user.extend({ groupId: z.string() });
+export const withId = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user.extend({ id: z.string() });
+export const withGrade = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user.extend({ grade: z.number().nullable() });
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 export type UserBase = z.infer<typeof userBaseSchema>;

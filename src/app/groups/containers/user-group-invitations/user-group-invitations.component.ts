@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
+import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -82,14 +82,14 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     if (sortMeta) this.onFetch(sortMeta);
   }
 
-  openJoinGroupConfirmationDialog(pendingRequest: PendingRequest): void {
+  openJoinGroupConfirmationDialog(groupInvitation: GroupInvitation): void {
     this.pendingJoinRequest = {
-      id: pendingRequest.group.id,
-      name: pendingRequest.group.name,
+      id: groupInvitation.group.id,
+      name: groupInvitation.group.name,
       params: {
-        requireLockMembershipApprovalUntil: null,
-        requirePersonalInfoAccessApproval: 'none',
-        requireWatchApproval: false,
+        requireLockMembershipApprovalUntil: groupInvitation.group.requireLockMembershipApprovalUntil,
+        requirePersonalInfoAccessApproval: groupInvitation.group.requirePersonalInfoAccessApproval,
+        requireWatchApproval: groupInvitation.group.requireWatchApproval,
       },
     };
   }
@@ -122,16 +122,16 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     });
   }
 
-  onReject(pendingRequest: PendingRequest): void {
+  onReject(groupInvitation: GroupInvitation): void {
     this.processing = true;
-    this.processGroupInvitationService.reject(pendingRequest.group.id).subscribe({
+    this.processGroupInvitationService.reject(groupInvitation.group.id).subscribe({
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error($localize`Unable to reject invitation to group "${ pendingRequest.group.name }"`);
+          this.actionFeedbackService.error($localize`Unable to reject invitation to group "${ groupInvitation.group.name }"`);
           return;
         }
-        this.actionFeedbackService.success($localize`The ${ pendingRequest.group.name } group has been declined`);
+        this.actionFeedbackService.success($localize`The ${ groupInvitation.group.name } group has been declined`);
         this.sortSubject.next(this.sortSubject.value);
         this.currentContentService.forceNavMenuReload();
       },

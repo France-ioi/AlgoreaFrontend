@@ -97,11 +97,6 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
     const requestMap = new Map<string, string[]>();
     params.data.forEach(elm => {
       const groupID = elm.group.id;
-
-      if (!elm.user) {
-        throw new Error('Unexpected: Missed user ID');
-      }
-
       const memberID = elm.user.id;
 
       const value = requestMap.get(groupID);

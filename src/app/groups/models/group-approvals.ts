@@ -1,12 +1,20 @@
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/utils/decoders';
+import { z } from 'zod';
 
 export const requirePersonalInfoAccessApprovalDecoder = D.literal('none', 'view', 'edit');
+export const requirePersonalInfoAccessApprovalSchema = z.enum([ 'none', 'view', 'edit' ]);
 
 export const groupApprovalsDecoder = D.struct({
   requireLockMembershipApprovalUntil: D.nullable(dateDecoder),
   requirePersonalInfoAccessApproval: requirePersonalInfoAccessApprovalDecoder,
   requireWatchApproval: D.boolean,
+});
+
+export const groupApprovalsSchema = z.object({
+  requireLockMembershipApprovalUntil: z.coerce.date().nullable(),
+  requirePersonalInfoAccessApproval: requirePersonalInfoAccessApprovalSchema,
+  requireWatchApproval: z.boolean(),
 });
 
 export type GroupApprovals = D.TypeOf<typeof groupApprovalsDecoder>;
