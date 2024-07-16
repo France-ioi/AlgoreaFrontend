@@ -4,10 +4,11 @@ import { RootState } from 'src/app/utils/store/root_state';
 import { FullItemRoute, itemCategoryFromPrefix, routesEqualIgnoringCommands } from 'src/app/models/routing/item-route';
 import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../utils/item-route-validation';
 import { State } from './item-content.state';
-import { equalNullableFactory } from 'src/app/utils/null-undefined-predicates';
+import { equalNullishFactory } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../services/item-datasource.service';
-import { canFetchResults } from '../../services/result-fetching.service';
+import { fromObservation } from 'src/app/store/observation';
+import equal from 'fast-deep-equal/es6';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -79,18 +80,13 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   // on reload). We do not want the item content to consider that as a change, we keep the initial route.
   // eslint-disable-next-line @ngrx/prefix-selectors-with-select
   const createSelectorIgnoringRouteActionChanges = createSelectorFactory(
-    projectionFn => resultMemoize(projectionFn, equalNullableFactory(routesEqualIgnoringCommands))
+    projectionFn => resultMemoize(projectionFn, equalNullishFactory(routesEqualIgnoringCommands))
   // eslint-disable-next-line deprecation/deprecation
   ) as typeof createSelector; /* fix for ngrx non-type-safety on createSelectorFactory */
 
   const selectActiveContentRoute = createSelectorIgnoringRouteActionChanges(
     selectActiveContentRouteParsingResult,
     result => (result && !isItemRouteError(result) ? result : null)
-  );
-
-  const selectHasActiveContentValidRoute = createSelector(
-    selectActiveContentRoute,
-    route => !!route
   );
 
   const selectActiveContentId = createSelector(
@@ -100,23 +96,22 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   const selectActiveContentItem = createSelector(
     selectState,
-    selectHasActiveContentValidRoute,
-    ({ item }, valid) => (valid ? item : fetchingState())
+    selectActiveContentId,
+    fromObservation.selectObservedGroupId,
+    ({ item }, id, observedGroupId) => (equal(item.identifier, { id, observedGroupId }) ? item : fetchingState())
   );
 
   const selectActiveContentBreadcrumbs = createSelector(
     selectState,
-    selectHasActiveContentValidRoute,
-    ({ breadcrumbs }, valid) => (valid ? breadcrumbs : fetchingState())
+    selectActiveContentRoute,
+    ({ breadcrumbs }, route) =>
+      (equalNullishFactory(routesEqualIgnoringCommands)(route, breadcrumbs.identifier) ? breadcrumbs : fetchingState())
   );
 
   const selectActiveContentResults = createSelector(
     selectState,
-    selectActiveContentItem,
-    selectActiveContentBreadcrumbs,
-    ({ results }, itemState, breadcrumbsState) =>
-      // the result can only be used if both item and breadcrumbs are ready (otherwise it could still for the previous item)
-      (itemState.isReady && breadcrumbsState.isReady && canFetchResults(itemState.data) ? results : null)
+    selectActiveContentRoute,
+    ({ results }, route) => (equalNullishFactory(routesEqualIgnoringCommands)(route, results?.identifier) ? results : null)
   );
 
   const selectActiveContentInfoForFetchingResults = createSelector(

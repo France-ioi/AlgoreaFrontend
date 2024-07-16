@@ -25,7 +25,10 @@ export const itemFetchingEffect = createEffect(
     )),
     distinctUntilChanged((prev, cur) => prev.id === cur.id && prev.observedGroupId === cur.observedGroupId),
     switchMap(({ id, observedGroupId }) => getItemByIdService.get(id, observedGroupId ?? undefined).pipe(
-      mapToFetchState({ resetter: actions$.pipe(ofType(fromItemContent.itemByIdPageActions.refresh)) })
+      mapToFetchState({
+        resetter: actions$.pipe(ofType(fromItemContent.itemByIdPageActions.refresh)),
+        identifier: { id, observedGroupId }
+      })
     )),
     map(fetchState => itemFetchingActions.itemFetchStateChanged({ fetchState })),
   ),
@@ -41,7 +44,10 @@ export const breadcrumbsFetchingEffect = createEffect(
     filter(isNotNull),
     distinctUntilChanged(routesEqualIgnoringCommands), // do not refetch if coming back on the same content
     switchMap(route => breadcrumbsService.get(route).pipe(
-      mapToFetchState({ resetter: actions$.pipe(ofType(fromItemContent.itemByIdPageActions.refresh)) })
+      mapToFetchState({
+        resetter: actions$.pipe(ofType(fromItemContent.itemByIdPageActions.refresh)),
+        identifier: route,
+      })
     )),
     map(fetchState => itemFetchingActions.breadcrumbsFetchStateChanged({ fetchState })),
   ),
@@ -59,7 +65,10 @@ export const resultsFetchingEffect = createEffect(
     switchMap(({ route, item }) => {
       if (!canFetchResults(item)) return of(null);
       return resultFetchingService.fetchResults(route, item).pipe(
-        mapToFetchState({ resetter: actions$.pipe(ofType(fromItemContent.itemByIdPageActions.refresh)) })
+        mapToFetchState({
+          resetter: actions$.pipe(ofType(fromItemContent.itemByIdPageActions.refresh)),
+          identifier: route,
+        })
       );
     }),
     map(fetchState => itemFetchingActions.resultsFetchStateChanged({ fetchState })),
