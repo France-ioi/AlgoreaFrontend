@@ -153,6 +153,7 @@ jobs:
   e2e-no-parallelism:
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.0-jammy
+    resource_class: medium+
     steps:
       - attach_workspace:
           at: ./
@@ -166,6 +167,7 @@ jobs:
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.0-jammy
     parallelism: 10
+    resource_class: medium+
     steps:
       - attach_workspace:
           at: ./
