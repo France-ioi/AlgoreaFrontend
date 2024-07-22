@@ -3,14 +3,18 @@
 .neighbor-widget {
   display: flex;
   align-items: center;
+  height: 100%;
 }
 
 .neighbor-widget-button {
+  display: flex;
+  align-items: center;
+  height: 100%;
+
   &:not(:last-child) {
     &:after {
       content: '|';
       color: var(--alg-border-light-color);
-      margin: 0 toRem(12);
 
       @media screen and (max-width: 599.98px) {
         margin: 0 toRem(2);

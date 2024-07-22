@@ -168,4 +168,13 @@
       }
     }
   }
+
+  &.nav-arrow {
+    padding: 0 toRem(12);
+    height: 100%;
+
+    @media screen and (max-width: 599.98px) {
+      padding: 0 toRem(2);
+    }
+  }
 }
