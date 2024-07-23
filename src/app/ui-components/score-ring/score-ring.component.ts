@@ -19,8 +19,6 @@ export class ScoreRingComponent implements OnChanges {
   @Input() bestScore = 0;
   @Input() isValidated = false;
   /**@deprecated**/
-  @Input() isDark = false;
-  /**@deprecated**/
   @Input() icon?: string; // a font-awesome icon identifier
   /**@deprecated**/
   @Input() scoreFillColor?: string;
