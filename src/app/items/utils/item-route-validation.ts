@@ -1,5 +1,5 @@
 import { ParamMap } from '@angular/router';
-import { EMPTY, Observable, map, of, switchMap } from 'rxjs';
+import { EMPTY, Observable, delay, map, of, switchMap } from 'rxjs';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { decodeItemRouterParameters, FullItemRoute, ItemRoute } from 'src/app/models/routing/item-route';
@@ -48,6 +48,7 @@ export function solveMissingPathAttempt(
         map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answer }))
       );
     }),
+    delay(0), // required in order to trigger new navigation after the current one
     switchMap(itemRoute => {
       itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
       return EMPTY;
