@@ -213,9 +213,8 @@ test(
 
     await test.step('join group and check group in joined groups table', async () => {
       await joinGroupConfirmation.joinGroup();
-      await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
-      await minePage.goto();
       await minePage.waitGroupMembershipsResponse();
+      await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
       await minePage.checkJoinedGroupsSectionIsVisible();
       await minePage.checkJoinedGroupIsVisible(groupName);
     });

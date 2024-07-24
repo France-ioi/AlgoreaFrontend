@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
@@ -44,6 +44,8 @@ import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/m
   ],
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
+  @Output() groupJoined = new EventEmitter<void>();
+
   processing = false;
   pendingJoinRequest?: {
     id: string,
@@ -112,7 +114,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
         }
         this.actionFeedbackService.success($localize`The ${ groupName } group has been accepted`);
         this.sortSubject.next(this.sortSubject.value);
-        this.currentContentService.forceNavMenuReload();
+        this.groupJoined.emit();
       },
       error: err => {
         this.processing = false;
