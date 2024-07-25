@@ -77,16 +77,21 @@
                     </div>
                     <div class="item-title">
                       <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                      <a
-                        class="alg-link item-title-link"
-                        [routerLink]="rowData.item | itemRoute: { answer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true }} | url"
-                        *ngIf="(!meta.isObserving || rowData.canWatchItemAnswer) && rowData.answerId"
-                      >
-                        {(meta.isObserving ? 'observingMode' : ''), select,
-                          observingMode {View answer}
-                          other {Reload answer}
-                        }
-                      </a>
+                      @if (itemData) {
+                        <a
+                          class="alg-link item-title-link"
+                          [routerLink]="rowData.item | itemRoute: {
+                            answer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true },
+                            path: rowData.item.id === itemData.item.id ? itemData.route.path : undefined
+                          } | url"
+                          *ngIf="(!meta.isObserving || rowData.canWatchItemAnswer) && rowData.answerId"
+                        >
+                          {(meta.isObserving ? 'observingMode' : ''), select,
+                            observingMode {View answer}
+                            other {Reload answer}
+                          }
+                        </a>
+                      }
                     </div>
                   </div>
                 </ng-container>
