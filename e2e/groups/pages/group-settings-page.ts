@@ -15,7 +15,7 @@ export class GroupSettingsPage {
   }
 
   async checkRequiredApprovalsSectionIsVisible(): Promise<void> {
-    await expect(this.page.getByRole('heading', { name: 'Required approvals' })).toBeVisible();
+    await expect.soft(this.page.getByRole('heading', { name: 'Required approvals' })).toBeVisible();
   }
 
   async enableLockMembershipUntilInputDate(): Promise<void> {
@@ -37,13 +37,15 @@ export class GroupSettingsPage {
   }
 
   async selectManagersCanAccessMemberPersonalInformation(option: 'No' | 'Read only' | 'Read and edit'): Promise<void> {
-    await expect(this.page.getByText('Managers can access member\'s personal information')).toBeVisible();
-    await expect(this.page.locator('li').filter({ hasText: option })).toBeVisible();
-    await this.page.locator('li').filter({ hasText: option }).click();
+    await expect.soft(this.page.getByText('Managers can access member\'s personal information')).toBeVisible();
+    const requirePersonalInfoAccessApprovalSelectionLocator
+      = this.page.getByTestId('selection-control-value').filter({ hasText: option });
+    await expect.soft(requirePersonalInfoAccessApprovalSelectionLocator).toBeVisible();
+    await requirePersonalInfoAccessApprovalSelectionLocator.click();
   }
 
   async isLockMembershipInputDateVisible(): Promise<boolean> {
-    await expect(this.page.getByText('Lock membership until a given date')).toBeVisible();
+    await expect.soft(this.page.getByText('Lock membership until a given date')).toBeVisible();
     return this.page.getByTestId('input-date').isVisible();
   }
 
