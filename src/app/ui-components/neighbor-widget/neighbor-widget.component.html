@@ -4,7 +4,7 @@
       pButton
       type="button"
       icon="ph-bold ph-caret-up"
-      class="alg-button-icon no-bg primary-color"
+      class="alg-button-icon no-bg primary-color nav-arrow"
       (click)="parent.emit()"
     ></button>
   </div>
@@ -13,7 +13,7 @@
       pButton
       type="button"
       icon="ph-bold ph-caret-left"
-      class="alg-button-icon no-bg primary-color"
+      class="alg-button-icon no-bg primary-color nav-arrow"
       (click)="left.emit()"
       [disabled]="!navigationMode.left"
     ></button>
@@ -23,7 +23,7 @@
       pButton
       type="button"
       icon="ph-bold ph-caret-right"
-      class="alg-button-icon no-bg primary-color"
+      class="alg-button-icon no-bg primary-color nav-arrow"
       data-testid="nav-to-next"
       (click)="right.emit()"
       [disabled]="!navigationMode.right"
