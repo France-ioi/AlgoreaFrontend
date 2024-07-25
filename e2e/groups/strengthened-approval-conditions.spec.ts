@@ -3,14 +3,12 @@ import { initAsDemoUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
 import { DAYS } from 'src/app/utils/duration';
 import { expect } from 'e2e/groups/fixture';
-import { extraGroupInvitationsTimeout } from 'e2e/groups/pages/mine-page';
 
 const groupUrl = '/groups/by-id/612953395334966729;p=/settings';
 const groupName = 'E2EStrengthenedApprovalConditions';
 const code = '6cx6ycddy4';
 
 test.beforeEach(async ({ page, groupSettingsPage, minePage }) => {
-  test.setTimeout(extraGroupInvitationsTimeout);
   await initAsUsualUser(page);
   await groupSettingsPage.goto(groupUrl);
 
@@ -182,13 +180,6 @@ test(
       await groupSettingsPage.selectStrengthenedConfirmationOperation('Remove and re-invite all members');
       await groupSettingsPage.checkSuccessfulNotification();
     });
-
-    /***
-      Because of unstable work of BE response of group invitations, temporary skip the next test steps
-      with group invitation request.
-      To be removed after BE to be fixed.
-    **/
-    test.skip(true, 'skips next test steps with group invitations request');
 
     await test.step('checks is demo user invited to group', async () => {
       await initAsDemoUser(page);

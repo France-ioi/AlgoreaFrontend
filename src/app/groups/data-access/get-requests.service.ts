@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { decodeSnakeCaseZod } from '../../utils/operators/decode';
-import { requestTimeout } from 'src/app/interceptors/interceptor_common';
-import { MINUTES } from 'src/app/utils/duration';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 import { z } from 'zod';
 import { map } from 'rxjs/operators';
@@ -53,8 +51,6 @@ export interface PendingRequest {
 export type GroupInvitations = z.infer<typeof groupInvitationsSchema>;
 export type GroupInvitation = GroupInvitations[0];
 
-const groupInvitationsServiceTimeout = 2*MINUTES;
-
 @Injectable({
   providedIn: 'root'
 })
@@ -97,10 +93,7 @@ export class GetRequestsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/current-user/group-invitations`, {
-        params: params,
-        context: new HttpContext().set(requestTimeout, groupInvitationsServiceTimeout),
-      })
+      .get<unknown>(`${appConfig.apiUrl}/current-user/group-invitations`, { params: params, })
       .pipe(decodeSnakeCaseZod(groupInvitationsSchema));
   }
 }
