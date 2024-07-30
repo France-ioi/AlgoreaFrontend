@@ -1,3 +1,9 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .header-container {
   padding: var(--alg-space-size-3) 0;
 }
