@@ -3,11 +3,16 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes-guard';
 import { MyGroupsComponent } from './containers/my-groups/my-groups.component';
 import { UserComponent } from './containers/user/user.component';
 import { GroupByIdComponent } from './group-by-id.component';
+import { ManageGroupsComponent } from 'src/app/groups/containers/manage-groups/manage-groups.component';
 
 const routes: Routes = [
   {
     path: 'mine',
     component: MyGroupsComponent,
+  },
+  {
+    path: 'manage',
+    component: ManageGroupsComponent,
   },
   {
     path: 'users/:id',

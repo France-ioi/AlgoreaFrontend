@@ -1,0 +1,19 @@
+<div class="header-container">
+  <div class="item-title-container">
+    <h1 class="header-title alg-h1 alg-text-normal" i18n>Group management</h1>
+    <p class="header-subtitle" i18n>All the groups you manage</p>
+  </div>
+</div>
+
+@if ((currentUser$ | async)?.tempUser === false) {
+  <h2 class="alg-h2 alg-text-normal" i18n>The groups you manage</h2>
+  <alg-managed-group-list></alg-managed-group-list>
+
+  <alg-add-group></alg-add-group>
+} @else {
+  <alg-error
+    class="alg-flex-1"
+    i18n-message message="You need to be logged in to manage and create groups"
+    icon="ph-bold ph-power"
+  ></alg-error>
+}

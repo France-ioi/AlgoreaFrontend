@@ -2,16 +2,26 @@
   <alg-left-menu-back-button>{{ data.parent.title }}</alg-left-menu-back-button>
 </div>
 
-<div class="container" *ngIf="!data?.parent && elementType === 'group'">
+<div class="container buttons-section" *ngIf="!data?.parent && elementType === 'group'">
   <a
-    class="alg-button primary left-menu"
+    class="alg-button basic left-menu alg-flex-1"
     [routerLink]="['groups', 'mine']"
     routerLinkActive="left-menu-selected"
     pButton
-    icon="ph-duotone ph-users"
+    icon="ph-duotone ph-users-three"
     i18n
   >
-    My groups
+    Join
+  </a>
+  <a
+    class="alg-button basic left-menu alg-flex-1"
+    [routerLink]="['groups', 'manage']"
+    routerLinkActive="left-menu-selected"
+    pButton
+    icon="ph-duotone ph-crown-simple"
+    i18n
+  >
+    Manage
   </a>
 </div>
 
