@@ -17,7 +17,7 @@ export class MinePage {
 
   async checkHeaderSubtitleIsVisible(): Promise<void> {
     await expect.soft(
-      this.page.getByText('All the groups you have joined and you manage')
+      this.page.getByText('Join new groups')
     ).toBeVisible();
   }
 

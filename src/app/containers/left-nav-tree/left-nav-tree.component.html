@@ -2,7 +2,7 @@
   <alg-left-menu-back-button>{{ data.parent.title }}</alg-left-menu-back-button>
 </div>
 
-<div class="container buttons-section" *ngIf="!data?.parent && elementType === 'group'">
+<div class="container buttons-section" data-testid="group-left-menu" *ngIf="!data?.parent && elementType === 'group'">
   <a
     class="alg-button basic left-menu alg-flex-1"
     [routerLink]="['groups', 'mine']"
