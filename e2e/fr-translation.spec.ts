@@ -107,3 +107,13 @@ test('checks select in item dependencies', async ({ page }) => {
   await expect.soft(page.getByText('Il n\'y a pas de pré-requis pour cette activité.')).toBeVisible();
 });
 
+test('checks select in user progress table', async ({ page }) => {
+  await initAsUsualUser(page);
+  await page.goto('/a/6379723280369399253;p=;pa=0/progress/chapter?watchedGroupId=123456');
+  const selectionLocator = page.getByText('équipes');
+  await expect.soft(selectionLocator).toBeVisible();
+  await selectionLocator.click();
+  // To be translated
+  await expect.soft(page.getByText('This group has no teams')).toBeVisible();
+});
+
