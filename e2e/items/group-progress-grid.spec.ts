@@ -25,7 +25,7 @@ test('check user progress detail', async ({ page }) => {
   await page.locator('alg-group-progress-grid p-table tr:nth-child(1) td:nth-child(3) alg-score-ring').click();
 
   await test.step('check view answer row', async () => {
-    const viewAnswerRow = page.locator('.user-progress-overlay-panel .user-progress-info > div > div a');
+    const viewAnswerRow = page.getByText('View answer');
     await expect(viewAnswerRow).toBeVisible();
     const href = await viewAnswerRow.getAttribute('href');
     expect.soft(href).toContain(
