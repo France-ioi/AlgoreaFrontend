@@ -11,36 +11,34 @@
   ></alg-error>
 
   <ng-container *ngIf="!state.isFetching && (state.data || []).length > 0">
-    <alg-section icon="ph ph-list" i18n-label label="Prerequisites">
-      <p i18n>You can unlock access by validating one of the following content.</p>
-
-      <ul class="list">
-        <li
-          class="list-item"
-          *ngFor="let item of state.data; let i = index"
-          (mouseleave)="onMouseLeave($event)"
-        >
-          <div class="list-item-left">
-            <span class="activity-progress">
-              <alg-score-ring
-                [diameter]="30"
-                [bestScore]="item.bestScore"
-                [currentScore]="item.bestScore"
-              ></alg-score-ring>
-            </span>
-            <a
-              class="alg-link"
-              [routerLink]="item | itemRoute | url"
-              (mouseenter)="onMouseEnter($event, item.id, i)"
-              #contentRef
-            >
-              {{ item.string.title }}
-            </a>
-          </div>
-          <i class="lock-icon ph-duotone ph-lock" *ngIf="item.isLocked"></i>
-        </li>
-      </ul>
-    </alg-section>
+    <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Prerequisites</h2>
+    <p i18n>You can unlock access by validating one of the following content.</p>
+    <ul class="alg-data-list">
+      <li
+        class="alg-data-list-item"
+        *ngFor="let item of state.data; let i = index"
+        (mouseleave)="onMouseLeave($event)"
+      >
+        <div class="list-item-left">
+          <span class="activity-progress">
+            <alg-score-ring
+              [diameter]="30"
+              [bestScore]="item.bestScore"
+              [currentScore]="item.bestScore"
+            ></alg-score-ring>
+          </span>
+          <a
+            class="alg-link"
+            [routerLink]="item | itemRoute | url"
+            (mouseenter)="onMouseEnter($event, item.id, i)"
+            #contentRef
+          >
+            {{ item.string.title }}
+          </a>
+        </div>
+        <i class="lock-icon ph-duotone ph-lock" *ngIf="item.isLocked"></i>
+      </li>
+    </ul>
 
     <p-overlayPanel
       styleClass="alg-path-suggestion-overlay"

@@ -1,21 +1,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: var(--alg-space-size-4) 0;
-}
-
-.list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0 1.6667rem 1.6667rem 1.6667rem;
-}
-
-.list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 4rem;
-  border-bottom: .1rem solid var(--light-border-color);
+  padding: 0;
 }
 
 .list-item-left {
@@ -24,10 +10,10 @@
 }
 
 .activity-progress {
-  margin-right: 2rem;
+  margin-right: var(--alg-space-size-5);
 }
 
 .lock-icon {
-  margin-left: 2rem;
-  color: var(--light-text-color);
+  margin-left: var(--alg-space-size-5);
+  color: var(--alg-primary-color);
 }
