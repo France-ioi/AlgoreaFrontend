@@ -42,6 +42,7 @@ export class MinePage {
     const joinBtnLocator = this.page.getByText(/^Join$/);
     await expect.soft(joinBtnLocator).toBeVisible();
     await joinBtnLocator.click();
+    await this.page.waitForResponse(`${apiUrl}/groups/is-code-valid?code=${code}`);
   }
 
   async leaveGroup(groupName: string): Promise<void> {

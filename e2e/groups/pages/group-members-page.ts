@@ -10,7 +10,7 @@ export class GroupMembersPage {
   }
 
   async checksIsHeaderVisible(groupName: string): Promise<void> {
-    await expect(this.page.getByRole('heading', { name: groupName })).toBeVisible();
+    await expect.soft(this.page.getByRole('heading', { name: groupName })).toBeVisible();
   }
 
   async goToTab(tab: string): Promise<void> {
