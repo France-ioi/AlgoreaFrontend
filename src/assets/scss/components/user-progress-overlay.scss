@@ -1,0 +1,29 @@
+@import 'src/assets/scss/functions';
+
+.alg-user-progress-overlay {
+  border-radius: toRem(10);
+  border: none;
+
+  &:before {
+    border-bottom-color: var(--alg-border-color);
+  }
+
+  &:after {
+    border-bottom-color: var(--alg-border-color);
+  }
+
+  &.p-overlaypanel-flipped {
+    &:before {
+      border-top-color: var(--alg-border-color);
+      border-bottom-color: transparent;
+    }
+
+    &:after {
+      border: none;
+    }
+  }
+
+  .p-overlaypanel-content {
+    padding: 0;
+  }
+}

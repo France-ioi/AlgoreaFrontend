@@ -999,10 +999,10 @@
         <source>The <x id="PH" equiv-text="groupName"/> group has been accepted</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été accepté</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="822411182236345828" datatype="html">
-        <source>Unable to reject invitation to group "<x id="PH" equiv-text="pendingRequest.group.name"/>"</source><target state="translated">Erreur lors de refus de l'invitation du groupe "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
+        <source>Unable to reject invitation to group "<x id="PH" equiv-text="groupInvitation.group.name"/>"</source><target state="translated">Erreur lors de refus de l'invitation du groupe "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="4103778436647970622" datatype="html">
-        <source>The <x id="PH" equiv-text="pendingRequest.group.name"/> group has been declined</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été refusé</target>
+        <source>The <x id="PH" equiv-text="groupInvitation.group.name"/> group has been declined</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été refusé</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">134</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
       <source> Select all </source>
@@ -2181,10 +2181,10 @@
       <note from="description" priority="1">Placeholder of field for searching for user by login</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
         <source>Time spent</source><target state="translated">Temps écoulé</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">113</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">
         <source>Not started</source><target state="translated">Non commencé</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">40</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="2389112862883394749" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="2389112862883394749" datatype="html">
         <source> (using <x id="ICU" equiv-text="{rowData.hintsRequested, plural, =1 {hint} other {{{ rowData.hintsRequested }} hints}}" xid="7805236562230341422"/>) </source><target state="translated"> (avec <x id="ICU" equiv-text="{rowData.hintsRequested, plural, =1 {hint} other {{{ rowData.hintsRequested }} hints}}" xid="7805236562230341422"/>) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context>
@@ -2199,13 +2199,13 @@
       </trans-unit><trans-unit id="7894478830808730680" datatype="html">
         <source>You cannot view answers for this content.</source><target state="translated">Vous ne pouvez pas voir les réponses pour ce contenu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="3935757628740535532" datatype="html">
-        <source>View answer</source><target state="translated">Voir la réponse</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="6629094035123468873" datatype="html">
-        <source>ACCESS</source><target state="translated">ACCÈS</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="2040441545335668377" datatype="html">
+        <source> View answer </source><target state="new"> View answer </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+      </trans-unit><trans-unit id="6284712106854193940" datatype="html">
         <source>This user has this permission via one of the other group he is member of, or one of their ancestors.</source><target state="translated">Cet utilisateur a reçu cette permission via un autre groupe dont il est membre, ou l'un de ses ancêtres.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="1019652748880096752" datatype="html">

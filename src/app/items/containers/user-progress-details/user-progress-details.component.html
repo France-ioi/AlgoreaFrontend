@@ -1,53 +1,57 @@
-<p-overlayPanel #panel appendTo="body" styleClass="user-progress-overlay-panel" hideTransitionOptions="0s">
+<p-overlayPanel #panel appendTo="body" styleClass="alg-user-progress-overlay" hideTransitionOptions="0s">
   <ng-template pTemplate>
-    <div class="user-progress-info">
-      <div class="content validated">
-        <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
-          <span>
-            <i class="ph ph-clock"></i>
-            <span class="menu-label" i18n>Time spent</span>
-            <span class="menu-value">{{ progress.timeSpent | duration }}</span>
-          </span>
-          <span class="score">
-            <alg-score-ring
-              [isDark]="true"
-              [currentScore]="progress.score"
-              [diameter]="32"
-              [isValidated]="progress.validated"
-            ></alg-score-ring>
-          </span>
-          <ng-container
-            *ngIf="progressData && progressData.currentFilter !== 'Groups' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
-          >
-            <ng-container *ngIf="currentUser$ | async as currentUser">
-              <div
-                i18n-pTooltip pTooltip="You cannot view answers for this content."
-                [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
+    <div class="container">
+      <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
+        <div class="header-section">
+          <i class="ph ph-clock time-icon"></i>
+          <span class="label" i18n>Time spent</span>
+          <span class="value">{{ progress.timeSpent | duration }}</span>
+        </div>
+        <span class="score-section">
+          <alg-score-ring
+            [currentScore]="progress.score"
+            [diameter]="32"
+            [isValidated]="progress.validated"
+          ></alg-score-ring>
+        </span>
+        <ng-container
+          *ngIf="progressData && progressData.currentFilter !== 'Groups' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
+        >
+          <ng-container *ngIf="currentUser$ | async as currentUser">
+            <div
+              class="view-answer-section"
+              i18n-pTooltip pTooltip="You cannot view answers for this content."
+              [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
+            >
+              <a
+                class="alg-button small primary"
+                [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
+                [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: true, participantId: progress.groupId } } | url"
+                icon="pi pi-code"
+                pButton
+                i18n
               >
-                <a
-                  class="clickable"
-                  [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
-                  [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: true, participantId: progress.groupId } } | url"
-                >
-                  <i class="pi pi-code"></i>
-                  <span i18n>View answer</span>
-                </a>
-              </div>
-            </ng-container>
+                View answer
+              </a>
+            </div>
           </ng-container>
         </ng-container>
-        <ng-template #noActivity>
-          <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
-        </ng-template>
-        <span
-          *ngIf="canEditPermissions"
-          class="clickable"
-          (click)="editPermissions.emit()"
-        >
-          <i class="ph-duotone ph-lock"></i>
-          <span i18n>ACCESS</span>
-        </span>
-      </div>
+      </ng-container>
+      <ng-template #noActivity>
+        <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
+      </ng-template>
+      @if (canEditPermissions) {
+        <div class="button-section">
+          <button
+            class="alg-button small primary"
+            icon="ph-duotone ph-lock"
+            (click)="editPermissions.emit()"
+            pButton
+          >
+            Access
+          </button>
+        </div>
+      }
     </div>
   </ng-template>
 </p-overlayPanel>

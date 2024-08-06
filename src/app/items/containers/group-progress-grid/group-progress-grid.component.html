@@ -97,7 +97,7 @@
                   *ngIf="row.data[colIndex]"
                   [userProgress]="row.data[colIndex]"
                 ></alg-user-progress>
-                <div class="overlay-target">
+                <div class="overlay-target" data-testid="user-progress-tooltip-target">
                   <span class="overlay-position" #overlayTarget></span>
                 </div>
               </td>

@@ -28,6 +28,7 @@
 @import 'assets/scss/components/tooltip';
 @import 'assets/scss/components/path-suggestion-overlay';
 @import 'assets/scss/components/suggestion-of-activities-overlay';
+@import 'assets/scss/components/user-progress-overlay';
 @import 'assets/scss/components/rounded-icon-wrapper';
 @import 'assets/scss/components/input';
 @import 'assets/scss/components/top-bar-scrollbar';
@@ -83,36 +84,6 @@ body {
 
 .cdk-overlay-connected-position-bounding-box {
   margin-bottom: -2rem;
-}
-
-.user-progress-overlay-panel {
-  background-color: transparent;
-  box-shadow: none;
-  min-height: unset !important;
-  border: none;
-
-  &:before {
-    border-bottom-color: #295485;
-    border-width: 0.4167rem;
-  }
-
-  &:after {
-    border: none;
-  }
-
-  &.p-overlaypanel-flipped {
-    &:before {
-      border-top-color: var(--base-color);
-    }
-
-    &:after {
-      border: none;
-    }
-  }
-
-  .p-overlaypanel-content {
-    padding: 0;
-  }
 }
 
 .p-tooltip.tooltip-custom {

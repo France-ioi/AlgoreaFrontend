@@ -17,6 +17,7 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { ItemType } from 'src/app/items/models/item-type';
+import { ButtonModule } from 'primeng/button';
 
 export interface ProgressData {
   progress: ParticipantProgresses[number],
@@ -47,6 +48,7 @@ export interface ProgressData {
     RouteUrlPipe,
     AllowsWatchingItemAnswersPipe,
     DurationToReadable,
+    ButtonModule,
   ],
 })
 export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {

@@ -1,94 +1,38 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@import 'src/assets/scss/functions';
 
-.user-progress-info {
-  background-color: transparent;
-  box-shadow: none;
-  min-height: unset !important;
+.container {
+  padding: var(--alg-space-size-5);
+}
 
-  .content {
-    background-color: var(--base-color);
-    color: white;
-    width: 100%;
-    border-radius: $border-radius;
-    box-shadow: 0 0.1667rem 0.3333rem -.1rem rgba(0, 0, 0, .2), 0 0.3333rem 0.4167rem 0 rgba(0, 0, 0, .14), 0 .1rem 1rem 0 rgba(0, 0, 0, .12);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+.header-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    &.validated {
-      background-color: var(--dark-base-color);
-    }
+.score-section, .button-section, .view-answer-section {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--alg-space-size-6);
+}
 
-    & > span, a {
-      display: flex;
-      align-items: center;
-      padding: 0.4167rem;
-      font-size: 1.2rem;
-      text-decoration: none;
-      color: #fff;
+.time-icon {
+  margin-right: toRem(4);
+  font-size: toRem(18);
+}
 
-      &:last-child {
-        border-bottom: none;
-      }
+.label {
+  margin-right: toRem(4);
+  font-size: toRem(14);
+}
 
-      &.score {
-        border-top: .1rem solid #295485;
-        justify-content: center;
-        border-bottom: none;
-
-        alg-score-ring {
-          color: white;
-          margin-right: 1rem;
-        }
-      }
-
-      &.clickable {
-        height: 2.9167rem;
-        padding-top: 1rem;
-        padding-left: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: .1rem solid #295485;
-        background-color: var(--base-color);
-        cursor: pointer;
-
-        &.disabled {
-          opacity: .7;
-          cursor: default;
-          pointer-events: none;
-        }
-
-        &:not(.disabled):hover {
-          background-color: #295485;
-        }
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        i {
-          margin-right: 1rem;
-        }
-      }
-
-      span.menu-label {
-        flex: 1;
-      }
-
-      span.menu-value {
-        margin-left: 1rem;
-      }
-
-      i {
-        margin-right: 0.4167rem;
-        width: 1.6667rem;
-      }
-    }
-  }
+.value {
+  font-size: toRem(14);
 }
 
 .not-started {
-  min-width: 10rem;
+  min-width: toRem(140);
+  display: flex;
   justify-content: center;
-  padding-bottom: 1rem !important;
+  font-size: toRem(14);
 }
