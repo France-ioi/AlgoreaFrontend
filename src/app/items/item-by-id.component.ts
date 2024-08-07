@@ -17,7 +17,6 @@ import {
 import { FetchState } from 'src/app/utils/state';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
-import { ItemDataSource } from './services/item-datasource.service';
 import { ItemData } from './models/item-data';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { ItemRouter } from 'src/app/models/routing/item-router';
@@ -77,7 +76,7 @@ const itemBreadcrumbCat = $localize`Items`;
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
-  providers: [ ItemDataSource, InitialAnswerDataSource, ItemTabs ],
+  providers: [ InitialAnswerDataSource, ItemTabs ],
   standalone: true,
   imports: [
     NgIf,
@@ -117,9 +116,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private destroyed$ = new Subject<void>();
   private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
 
+  private itemState$ = this.store.select(fromItemContent.selectActiveContentData).pipe(
+    filter(isNotNull),
+  );
+
   state$: Observable<FetchState<ItemData>> = merge(
     this.store.select(fromItemContent.selectActiveContentRouteErrorHandlingState).pipe(filter(isNotNull)),
-    this.itemDataSource.state$
+    this.itemState$,
   );
 
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
@@ -187,7 +190,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
 
-  private itemChanged$ = this.itemDataSource.state$.pipe(
+  private itemChanged$ = this.itemState$.pipe(
     distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
     map(() => {}),
   );
@@ -234,7 +237,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     }),
 
     // on datasource state change, update the current content page info
-    this.itemDataSource.state$.pipe(readyData()).subscribe(data => {
+    this.itemState$.pipe(readyData()).subscribe(data => {
       this.hasRedirected = false;
       this.currentContent.replace(itemInfo({
         breadcrumbs: {
@@ -264,7 +267,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     this.breadcrumbService.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
 
-    this.itemDataSource.state$.pipe(
+    this.itemState$.pipe(
       filter(s => s.isError),
     ).subscribe(state => {
       // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
@@ -278,7 +281,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.currentContent.clear();
     }),
 
-    combineLatest([ this.itemRoute$, this.itemDataSource.state$.pipe(startWith(undefined)) ]).pipe(
+    combineLatest([ this.itemRoute$, this.itemState$.pipe(startWith(undefined)) ]).pipe(
       map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
         { route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId), isTask: isTask(itemState.data.item) }:
         { route, isTask: undefined }
@@ -287,7 +290,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.initialAnswerDataSource.setInfo(route, isTask);
     }),
 
-    combineLatest([ this.itemDataSource.state$.pipe(readyData()), this.fullFrameContent$ ]).pipe(
+    combineLatest([ this.itemState$.pipe(readyData()), this.fullFrameContent$ ]).pipe(
       map(([ data, fullFrame ]) => {
         if (fullFrame) return { id: data.route.id, display: ContentDisplayType.ShowFullFrame };
         return { id: data.route.id, display: isTask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default };
@@ -297,7 +300,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
     // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
-    combineLatest([ this.itemDataSource.state$, this.userProfile$, this.store.select(fromObservation.selectObservedGroupRoute) ]).pipe(
+    combineLatest([ this.itemState$, this.userProfile$, this.store.select(fromObservation.selectObservedGroupRoute) ]).pipe(
       map(([ state, userProfile, observedGroupRoute ]) => {
         if (userProfile.tempUser) return null;
         if (!state.data || !isATask(state.data.item)) return null;
@@ -322,7 +325,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     private itemRouter: ItemRouter,
     private activatedRoute: ActivatedRoute,
     private currentContent: CurrentContentService,
-    private itemDataSource: ItemDataSource,
     private initialAnswerDataSource: InitialAnswerDataSource,
     private itemTabs: ItemTabs,
     private userSessionService: UserSessionService,
