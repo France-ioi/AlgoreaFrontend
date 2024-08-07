@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, combineLatest } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
-import { UserSessionService } from 'src/app/services/user-session.service';
 import { BreadcrumbItem } from '../data-access/get-breadcrumb.service';
 import { Item } from '../../data-access/get-item-by-id.service';
 import { Result } from '../data-access/get-results.service';
@@ -34,18 +33,11 @@ export class ItemDataSource implements OnDestroy {
     filter(isNotNull),
   );
 
-  private subscription = combineLatest([
-    this.userSessionService.userChanged$, // user change
-    this.userSessionService.userProfile$.pipe(map(user => user.defaultLanguage), distinctUntilChanged()), // lang change
-  ]).pipe(debounceTime(0)).subscribe(_s => this.store.dispatch(fromItemContent.itemByIdPageActions.refresh()));
-
   constructor(
     private store: Store,
-    private userSessionService: UserSessionService,
   ) {}
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
