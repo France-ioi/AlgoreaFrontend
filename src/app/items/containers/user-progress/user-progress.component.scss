@@ -1,6 +1,3 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
-
 .group-situation-data {
   display: flex;
   align-items: center;
@@ -13,19 +10,19 @@
   }
 
   &.success {
-    background-color: #9ACC68;
+    background-color: var(--alg-message-success-color);
   }
 
   &.in-progress {
-    background-color: var(--secondary-color);
+    background-color: var(--alg-observation-button-bg-color);
   }
 
   &.no-score {
-    background-color: #F9C6CD;
+    background-color: rgba(0, 0, 0, 0.05);
   }
 
   &.not-started {
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.02);
   }
 
   .situation-check {
@@ -33,11 +30,5 @@
     align-items: center;
     justify-content: center;
     color: white;
-  }
-
-  alg-score-ring {
-    &.not-started {
-      background-color: red;
-    }
   }
 }

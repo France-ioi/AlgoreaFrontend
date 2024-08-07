@@ -20,12 +20,13 @@
       </div>
 
       <p class="empty-message" *ngIf="rowsState.isReady && rowsState.data.length === 0">
-        <ng-container [ngSwitch]="currentFilter">
-          <span *ngSwitchCase="'Users'" i18n>This group has no users</span>
-          <span *ngSwitchCase="'Teams'" i18n>This group has no teams</span>
-          <span *ngSwitchCase="'Groups'" i18n>This group has no sub-groups</span>
-        </ng-container>
-        <p-button icon="pi pi-refresh" (click)="fetchRows()" styleClass="p-button-sm"></p-button>
+        <alg-error
+          buttonCaption="Refresh"
+          [showRefreshButton]="true"
+          (refresh)="fetchRows()"
+        >
+          This group has no {currentFilter, select, Users {users} Teams {teams} other {sub-groups}}
+        </alg-error>
       </p>
 
       <alg-user-progress-details
@@ -38,11 +39,11 @@
       <ng-container *ngIf="rowsState.data && columnsState.data && rowsState.data.length > 0">
         <div class="operations">
           <button
+            class="alg-button primary small"
             pButton
             type="button"
             i18n-label label="Export as CSV"
             icon="ph ph-file-arrow-down"
-            class="p-button-sm"
             (click)="onCSVExport()"
             [disabled]="isCSVDataFetching"
           ></button>
@@ -58,13 +59,18 @@
           <ng-template pTemplate="header" let-columns>
             <tr>
               <th class="empty first header-refresh">
-                <p-button icon="pi pi-refresh" (click)="fetchRows()"></p-button>
+                <button
+                  class="alg-button-icon no-bg primary-color"
+                  icon="pi pi-refresh"
+                  (click)="fetchRows()"
+                  pButton
+                ></button>
               </th>
               <th *ngFor="let col of columns">
                 <div class="slanted-header">
                   <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
                     <a
-                      class="slanted-header-link alg-link cursor-pointer"
+                      class="alg-link cursor-pointer"
                       [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
                         with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
                         url : [ 'progress', 'chapter' ]"
@@ -73,7 +79,6 @@
                   </div>
                 </div>
               </th>
-              <th class="empty last"></th>
             </tr>
           </ng-template>
           <ng-template
@@ -109,7 +114,7 @@
                 <div class="text-center">
                   <button
                     pButton
-                    class="alg-button basic"
+                    class="alg-button basic load-more"
                     icon="ph-duotone ph-arrow-circle-down"
                     i18n-label label="Load more"
                     (click)="fetchMoreRows()"
