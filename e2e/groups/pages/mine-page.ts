@@ -15,6 +15,12 @@ export class MinePage {
     await expect.soft(this.page.getByRole('heading', { name: 'My groups' })).toBeVisible();
   }
 
+  async checkHeaderSubtitleIsVisible(): Promise<void> {
+    await expect.soft(
+      this.page.getByText('All the groups you have joined and you manage')
+    ).toBeVisible();
+  }
+
   async checkJoinedGroupsSectionIsVisible(): Promise<void> {
     await expect.soft(this.page.getByText('The groups you joined')).toBeVisible();
   }
@@ -100,5 +106,11 @@ export class MinePage {
     const acceptBtnLocator = this.page.getByRole('row', { name: groupName }).getByTestId('accept-group');
     await expect.soft(acceptBtnLocator).toBeVisible();
     await acceptBtnLocator.click();
+  }
+
+  async checksNonAuthMessageIsVisible(): Promise<void> {
+    await expect.soft(
+      this.page.getByText('To join a group, you first have to log in or sign in using the top right button.')
+    ).toBeVisible();
   }
 }

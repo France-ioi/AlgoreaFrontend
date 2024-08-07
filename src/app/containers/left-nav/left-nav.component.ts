@@ -1,13 +1,12 @@
 
 import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { merge, of, ReplaySubject, Subject } from 'rxjs';
-import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from '../../utils/null-undefined-predicates';
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { isGroupInfo, isMyGroupsInfo } from 'src/app/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/models/content/item-info';
 import { CurrentContentService } from '../../services/current-content.service';
-import { UserSessionService } from '../../services/user-session.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -97,7 +96,6 @@ export class LeftNavComponent implements OnChanges {
   @Output() closeSearch = new EventEmitter<void>();
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
-  currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
@@ -109,7 +107,6 @@ export class LeftNavComponent implements OnChanges {
 
   constructor(
     private store: Store,
-    private sessionService: UserSessionService,
     private currentContent: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,

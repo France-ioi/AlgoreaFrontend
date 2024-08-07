@@ -44,4 +44,10 @@
   .p-treenode-label {
     flex: 1;
   }
+
+  .p-tree-empty-message {
+    margin-top: var(--alg-space-size-5);
+    text-align: center;
+    color: var(--alg-secondary-color);
+  }
 }

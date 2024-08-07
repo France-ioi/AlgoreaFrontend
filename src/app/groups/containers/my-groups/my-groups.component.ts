@@ -7,6 +7,10 @@ import { ManagedGroupListComponent } from '../managed-group-list/managed-group-l
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
 import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { UserGroupInvitationsComponent } from '../user-group-invitations/user-group-invitations.component';
+import { delay } from 'rxjs/operators';
+import { UserSessionService } from 'src/app/services/user-session.service';
+import { AsyncPipe } from '@angular/common';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
 @Component({
   selector: 'alg-my-groups',
@@ -19,14 +23,19 @@ import { UserGroupInvitationsComponent } from '../user-group-invitations/user-gr
     JoinedGroupListComponent,
     AccessCodeViewComponent,
     ManagedGroupListComponent,
-    AddGroupComponent
+    AddGroupComponent,
+    AsyncPipe,
+    ErrorComponent
   ],
 })
 export class MyGroupsComponent implements OnDestroy {
   @ViewChild('joinedGroupList') joinedGroupList?: JoinedGroupListComponent;
 
+  currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
+
   constructor(
     private currentContent: CurrentContentService,
+    private sessionService: UserSessionService,
   ) {
     this.currentContent.replace(myGroupsInfo({
       title: $localize`My groups`,
