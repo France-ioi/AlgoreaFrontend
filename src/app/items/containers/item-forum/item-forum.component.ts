@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
 import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
 import { mapToFetchState } from 'src/app/utils/operators/state';

@@ -1,21 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { FullItemRoute } from 'src/app/models/routing/item-route';
-import { BreadcrumbItem } from '../data-access/get-breadcrumb.service';
-import { Item } from '../../data-access/get-item-by-id.service';
-import { Result } from '../data-access/get-results.service';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from '../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-
-export interface ItemData {
-  route: FullItemRoute,
-  item: Item,
-  breadcrumbs: BreadcrumbItem[],
-  results?: Result[],
-  currentResult?: Result,
-}
 
 /**
  * A datasource which allows fetching a item using a proper state and sharing it among several components.

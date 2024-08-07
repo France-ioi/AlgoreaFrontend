@@ -17,7 +17,8 @@ import {
 import { FetchState } from 'src/app/utils/state';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
-import { ItemDataSource, ItemData } from './services/item-datasource.service';
+import { ItemDataSource } from './services/item-datasource.service';
+import { ItemData } from './models/item-data';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { isATask, isTask } from 'src/app/items/models/item-type';
