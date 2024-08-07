@@ -356,7 +356,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   onScoreChange(score: number): void {
     this.currentContentService.forceNavMenuReload();
-    this.itemDataSource.patchItemScore(score);
+    this.store.dispatch(fromItemContent.itemByIdPageActions.patchScore({ score }));
   }
 
   beforeUnload(): Observable<boolean> {
