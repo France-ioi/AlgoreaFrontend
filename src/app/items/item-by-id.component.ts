@@ -351,7 +351,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
 
   reloadItem(): void {
-    this.itemDataSource.refreshItem();
+    this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());
   }
 
   onScoreChange(score: number): void {

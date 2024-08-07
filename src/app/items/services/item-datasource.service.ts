@@ -37,16 +37,12 @@ export class ItemDataSource implements OnDestroy {
   private subscription = combineLatest([
     this.userSessionService.userChanged$, // user change
     this.userSessionService.userProfile$.pipe(map(user => user.defaultLanguage), distinctUntilChanged()), // lang change
-  ]).pipe(debounceTime(0)).subscribe(_s => this.refreshItem());
+  ]).pipe(debounceTime(0)).subscribe(_s => this.store.dispatch(fromItemContent.itemByIdPageActions.refresh()));
 
   constructor(
     private store: Store,
     private userSessionService: UserSessionService,
   ) {}
-
-  refreshItem(): void {
-    this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());
-  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
