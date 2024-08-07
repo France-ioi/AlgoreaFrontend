@@ -12,9 +12,12 @@
     <p class="validation-text" *ngIf="data.missingValidation" i18n>
       To validate this chapter, solve at least all tasks with Validation type
     </p>
-    <p class="validation-text" *ngIf="data.children.length === 0" i18n>
-      This chapter has no content visible to you, so you can't validate it for now.
-    </p>
+    <alg-error
+      class="alg-flex-1"
+      icon="ph ph-folder-simple-lock"
+      i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
+      *ngIf="data.children.length === 0"
+    ></alg-error>
 
     <ng-container *ngIf="itemData && itemData.item.childrenLayout === 'Grid'; else listSection">
       <div
