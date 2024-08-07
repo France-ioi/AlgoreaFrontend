@@ -995,10 +995,10 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">112</context></context-group></trans-unit><trans-unit id="921569788287925673" datatype="html">
         <source>The <x id="PH" equiv-text="groupName"/> group has been accepted</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été accepté</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">113</context></context-group></trans-unit><trans-unit id="822411182236345828" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">115</context></context-group></trans-unit><trans-unit id="822411182236345828" datatype="html">
         <source>Unable to reject invitation to group "<x id="PH" equiv-text="groupInvitation.group.name"/>"</source><target state="translated">Erreur lors de refus de l'invitation du groupe "<x id="PH" equiv-text="pendingRequest.group.name"/>"</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">131</context></context-group></trans-unit><trans-unit id="4103778436647970622" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="4103778436647970622" datatype="html">
         <source>The <x id="PH" equiv-text="groupInvitation.group.name"/> group has been declined</source><target state="translated">Le groupe <x id="PH" equiv-text="pendingRequest.group.name"/> a été refusé</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/user-group-invitations/user-group-invitations.component.ts</context><context context-type="linenumber">136</context></context-group></trans-unit><trans-unit id="1916930465370171483" datatype="html">
@@ -1931,9 +1931,9 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">108</context></context-group></trans-unit><trans-unit id="8385107467455078164" datatype="html">
         <source><x id="PH" equiv-text="invalidInvites.length"/> user login(s) could not be invited: </source><target state="translated"><x id="PH" equiv-text="invalidInvites.length"/> utilisateur(s) n'a/ont pas pu être invité(s) : </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">116</context></context-group></trans-unit><trans-unit id="5275881613335730136" datatype="html">
-        <source> Let user join using a code
-</source><target state="translated"> Rejoindre le groupe par code
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-invite-users/group-invite-users.component.ts</context><context context-type="linenumber">116</context></context-group></trans-unit><trans-unit id="4903616281650634429" datatype="html">
+        <source> Let users join using a code
+</source><target state="new"> Let users join using a code
 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/containers/group-join-by-code/group-join-by-code.component.html</context>
