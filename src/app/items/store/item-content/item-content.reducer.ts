@@ -1,6 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import { State, initialState } from './item-content.state';
-import { itemFetchingActions, itemRouteErrorHandlingActions } from './item-content.actions';
+import { itemByIdPageActions, itemFetchingActions, itemRouteErrorHandlingActions } from './item-content.actions';
+import { mapStateData } from 'src/app/utils/state';
+import { patchItemScore, patchResultScore } from '../../models/score-patching';
 
 export const reducer = createReducer(
   initialState,
@@ -24,5 +26,14 @@ export const reducer = createReducer(
     itemFetchingActions.resultsFetchStateChanged,
     (state, { fetchState }): State => ({ ...state, results: fetchState })
   ),
+
+  on(itemByIdPageActions.patchScore,
+    (state, { score }): State => ({
+      ...state,
+      item: mapStateData(state.item, i => patchItemScore(i, score)),
+      results: state.results ? mapStateData(state.results, r => patchResultScore(r, score)) : null,
+    })
+
+  )
 
 );

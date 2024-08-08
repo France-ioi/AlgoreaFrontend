@@ -1,6 +1,6 @@
 import { EMPTY, noop, Observable, of, OperatorFunction, pipe } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
-import { errorState, FetchError, fetchingState, FetchState, Ready, readyState } from '../state';
+import { errorState, FetchError, fetchingState, FetchState, Ready, readyState, mapStateData as mapStateDataFct } from '../state';
 
 /**
  * Rx operator which first emits a loading state and then emit a ready or error state depending on the source. Never fails.
@@ -40,15 +40,11 @@ export function readyData<T>(): OperatorFunction<FetchState<T>,T> {
 }
 
 /**
- * Rx operator which maps the data (if any) using the `dataMapper` function and keeps the state unchanged
+ * Rx operator which maps the data (if any) using the `dataMapper` function and otherwise keeps the state unchanged
  */
 export function mapStateData<T, V, U = undefined>(dataMapper: (data: T) => V): OperatorFunction<FetchState<T,U>,FetchState<V,U>> {
   return pipe(
-    map(state => {
-      if (state.isReady) return readyState(dataMapper(state.data), state.identifier);
-      if (state.isFetching) return fetchingState(state.data === undefined ? undefined : dataMapper(state.data), state.identifier);
-      return state; // error state is not changed
-    }),
+    map(s => mapStateDataFct(s, dataMapper)),
   );
 }
 

@@ -42,3 +42,12 @@ export function errorState<U = undefined>(error: unknown, identifier?: U): Fetch
 export function isFetchingOrError<T, U = undefined>(state: FetchState<T, U>): state is Fetching<T, U>|FetchError {
   return state.isFetching || state.isError;
 }
+
+/**
+ * Maps the data (if any) using the `dataMapper` function, otherwise keeps the state unchanged
+ */
+export function mapStateData<T, V, U = undefined>(state: FetchState<T,U>, dataMapper: (data: T) => V): FetchState<V,U> {
+  if (state.isReady) return readyState(dataMapper(state.data), state.identifier);
+  if (state.isFetching) return fetchingState(state.data === undefined ? undefined : dataMapper(state.data), state.identifier);
+  return state; // error state is not changed
+}

@@ -12,6 +12,7 @@ export const itemByIdPageActions = createActionGroup({
   source: 'Item-by-id page',
   events: {
     refresh: emptyProps(),
+    patchScore: props<{ score: number }>(),
   }
 });
 
