@@ -27,7 +27,7 @@ const otherItemJson = [
         'title': 'Blockly Basic Task'
       }
     },
-    'can_watch_item_answer': true
+    'can_watch_answer': true
   },
 ];
 

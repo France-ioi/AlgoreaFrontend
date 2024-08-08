@@ -15,7 +15,7 @@ const activityLogsSchema = z.array(
     activityType: z.enum([ 'result_started', 'submission', 'result_validated', 'saved_answer', 'current_answer' ]),
     at: z.coerce.date(),
     attemptId: z.string(),
-    canWatchItemAnswer: z.boolean(),
+    canWatchAnswer: z.boolean(),
     item: z.object({
       id: z.string(),
       string: z.object({
