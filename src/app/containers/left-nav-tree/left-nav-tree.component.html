@@ -25,7 +25,13 @@
   </a>
 </div>
 
-<p-tree styleClass="alg-tree-nav" [value]="nodes" i18n-emptyMessage emptyMessage="There is no content to display">
+<p-tree styleClass="alg-tree-nav" [value]="nodes">
+  <ng-template pTemplate="empty">
+    {elementType, select,
+      group {You are not a member or manager of any group}
+      other {There is no content to display}
+    }
+  </ng-template>
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <div
