@@ -28,7 +28,7 @@ const currentUserLogsJson = [
         "title": "Task with edit tab"
       }
     },
-    "can_watch_item_answer": true
+    "can_watch_answer": true
   },
 ];
 
@@ -55,7 +55,7 @@ const otherUserJson = [
         "title": "Blockly Basic Task"
       }
     },
-    "can_watch_item_answer": true
+    "can_watch_answer": true
   },
 ];
 
@@ -85,7 +85,7 @@ const groupLogsJson = [
         "title": "Task with edit tab"
       }
     },
-    "can_watch_item_answer": true
+    "can_watch_answer": true
   },
 ];
 
@@ -115,7 +115,7 @@ const itemLogsJson = [
         "title": "Task with edit tab"
       }
     },
-    "can_watch_item_answer": true
+    "can_watch_answer": true
   },
 ];
 

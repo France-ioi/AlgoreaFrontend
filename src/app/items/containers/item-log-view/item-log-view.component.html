@@ -84,7 +84,7 @@
                             answer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true },
                             path: rowData.item.id === itemData.item.id ? itemData.route.path : undefined
                           } | url"
-                          *ngIf="(!meta.isObserving || rowData.canWatchItemAnswer) && rowData.answerId"
+                          *ngIf="(!meta.isObserving || rowData.canWatchAnswer) && rowData.answerId"
                         >
                           {(meta.isObserving ? 'observingMode' : ''), select,
                             observingMode {View answer}
