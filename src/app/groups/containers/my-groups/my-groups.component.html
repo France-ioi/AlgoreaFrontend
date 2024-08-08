@@ -1,17 +1,11 @@
 <div class="header-container">
   <div class="item-title-container">
     <h1 class="header-title alg-h1 alg-text-normal" i18n>My groups</h1>
-    <p class="header-subtitle" i18n>All the groups you have joined and you manage</p>
+    <p class="header-subtitle" i18n>Join new groups and manage your memberships</p>
   </div>
 </div>
 
 @if ((currentUser$ | async)?.tempUser === false) {
-  <alg-user-group-invitations (groupJoined)="onGroupJoined()"></alg-user-group-invitations>
-
-  <!--<alg-pending-join-requests [showSwitch]="false"></alg-pending-join-requests>-->
-
-  <h2 class="alg-h2 alg-text-normal" i18n>The groups you joined</h2>
-  <alg-joined-group-list #joinedGroupList></alg-joined-group-list>
   <h2 class="alg-h2 alg-text-normal" i18n>Join a group by code</h2>
   <alg-access-code-view
     i18n-sectionLabel sectionLabel="Join a group by code"
@@ -19,10 +13,13 @@
     (groupJoined)="onGroupJoined()"
   ></alg-access-code-view>
 
-  <h2 class="alg-h2 alg-text-normal" i18n>The groups you manage</h2>
-  <alg-managed-group-list></alg-managed-group-list>
+  <alg-user-group-invitations (groupJoined)="onGroupJoined()"></alg-user-group-invitations>
 
-  <alg-add-group></alg-add-group>
+  <!--<alg-pending-join-requests [showSwitch]="false"></alg-pending-join-requests>-->
+
+  <h2 class="alg-h2 alg-text-normal" i18n>The groups you joined</h2>
+  <alg-joined-group-list #joinedGroupList></alg-joined-group-list>
+
 } @else {
   <alg-error
     class="alg-flex-1"

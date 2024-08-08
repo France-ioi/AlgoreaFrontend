@@ -2,20 +2,36 @@
   <alg-left-menu-back-button>{{ data.parent.title }}</alg-left-menu-back-button>
 </div>
 
-<div class="container" *ngIf="!data?.parent && elementType === 'group'">
+<div class="container buttons-section" data-testid="group-left-menu" *ngIf="!data?.parent && elementType === 'group'">
   <a
-    class="alg-button primary left-menu"
+    class="alg-button basic left-menu alg-flex-1"
     [routerLink]="['groups', 'mine']"
     routerLinkActive="left-menu-selected"
     pButton
-    icon="ph-duotone ph-users"
+    icon="ph-duotone ph-users-three"
     i18n
   >
-    My groups
+    Join
+  </a>
+  <a
+    class="alg-button basic left-menu alg-flex-1"
+    [routerLink]="['groups', 'manage']"
+    routerLinkActive="left-menu-selected"
+    pButton
+    icon="ph-duotone ph-crown-simple"
+    i18n
+  >
+    Manage
   </a>
 </div>
 
-<p-tree styleClass="alg-tree-nav" [value]="nodes" i18n-emptyMessage emptyMessage="There is no content to display">
+<p-tree styleClass="alg-tree-nav" [value]="nodes">
+  <ng-template pTemplate="empty">
+    {elementType, select,
+      group {You are not a member or manager of any group}
+      other {There is no content to display}
+    }
+  </ng-template>
   <!-- "chapter" type -->
   <ng-template let-node pTemplate="chapter">
     <div

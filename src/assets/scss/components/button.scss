@@ -105,27 +105,30 @@
   }
 
   &.left-menu {
-    width: 100%;
-
     &.p-button {
-      padding-left: toRem(7.5);
-      padding-right: toRem(7.5);
+      font-size: toRem(16);
       flex-direction: row;
-      border-radius: toRem(10);
-      background-color: transparent;
-      color: rgb(84, 84, 84);
-      font-weight: 700;
+      border-color: rgba(0, 0, 0, 0.05);
+      background: none !important;
+      height: toRem(40);
+      border-radius: toRem(20) !important;
+      justify-content: center;
     }
 
     .p-button-icon {
+      padding: 0;
       margin-right: toRem(7.5);
       font-size: toRem(24);
       color: var(--alg-primary-color);
     }
 
+    &[icon] {
+      padding: 0 toRem(7) !important;
+    }
+
     &.left-menu-selected {
       &.p-button {
-        background-color: var(--alg-tree-selected-color);
+        border-color: var(--primary-color);
       }
     }
   }

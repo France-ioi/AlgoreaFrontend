@@ -117,3 +117,9 @@ test('checks select in user progress table', async ({ page }) => {
   await expect.soft(page.getByText('This group has no teams')).toBeVisible();
 });
 
+test('checks select for no content in left menu', async ({ page }) => {
+  await page.goto('/groups/manage');
+  // To be translated
+  await expect.soft(page.getByText('You are not a member or manager of any group')).toBeVisible();
+});
+

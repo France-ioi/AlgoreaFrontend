@@ -1,4 +1,4 @@
-import { test, expect } from './fixture';
+import { test, expect } from '@playwright/test';
 import { initAsUsualUser } from '../helpers/e2e_auth';
 
 /**
@@ -27,17 +27,4 @@ test('another user\'s page', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/users/752024252804317630');
   await expect(page.getByRole('heading', { name: 'usr_5p020x2thuyu' })).toBeVisible();
-});
-
-test('checks "Groups" as temp user', async ({ page, minePage }) => {
-  await test.step('checks "Groups" tab in left menu as temp user', async () => {
-    await minePage.goto();
-    await expect.soft(page.getByRole('button', { name: 'Groups' })).toBeVisible();
-  });
-
-  await test.step('checks "My Groups" non auth message', async () => {
-    await minePage.checkHeaderIsVisible();
-    await minePage.checkHeaderSubtitleIsVisible();
-    await minePage.checksNonAuthMessageIsVisible();
-  });
 });

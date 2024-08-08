@@ -4,6 +4,18 @@
   padding: 0 var(--alg-space-size-5);
 }
 
+.buttons-section {
+  display: flex;
+  margin-top: var(--alg-space-size-6);
+  margin-bottom: var(--alg-space-size-5);
+}
+
+.left-menu {
+  &:first-child {
+    margin-right: var(--alg-space-size-6);
+  }
+}
+
 .tree-nav-wrapper {
   display: flex;
   justify-content: flex-start;
