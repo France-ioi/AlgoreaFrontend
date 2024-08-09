@@ -12,7 +12,6 @@ import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemChildrenEditListComponent } from '../item-children-edit-list/item-children-edit-list.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
 
@@ -52,7 +51,7 @@ export const DEFAULT_SCORE_WEIGHT = 1;
   templateUrl: './item-children-edit.component.html',
   styleUrls: [ './item-children-edit.component.scss' ],
   standalone: true,
-  imports: [ NgIf, SectionComponent, ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
+  imports: [ NgIf, ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   @Input() itemData?: ItemData;

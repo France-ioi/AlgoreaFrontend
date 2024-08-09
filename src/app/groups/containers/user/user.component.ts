@@ -10,7 +10,6 @@ import { GroupRouter } from 'src/app/models/routing/group-router';
 import { PlatformSettingsComponent } from '../platform-settings/platform-settings.component';
 import { CurrentUserComponent } from '../current-user/current-user.component';
 import { GroupLogViewComponent } from '../group-log-view/group-log-view.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { UserIndicatorComponent } from '../user-indicator/user-indicator.component';
 import { UserHeaderComponent } from '../user-header/user-header.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -36,7 +35,6 @@ const breadcrumbHeader = $localize`Users`;
     UserIndicatorComponent,
     RouterLinkActive,
     RouterLink,
-    SectionComponent,
     GroupLogViewComponent,
     CurrentUserComponent,
     PlatformSettingsComponent,

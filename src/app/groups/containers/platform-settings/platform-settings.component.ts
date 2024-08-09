@@ -4,7 +4,6 @@ import { LocaleService } from 'src/app/services/localeService';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguagePickerComponent } from 'src/app/containers/language-picker/language-picker.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -14,7 +13,6 @@ import { NgIf, AsyncPipe } from '@angular/common';
   standalone: true,
   imports: [
     NgIf,
-    SectionComponent,
     LanguagePickerComponent,
     AsyncPipe,
   ],

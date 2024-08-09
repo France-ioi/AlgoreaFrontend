@@ -12,7 +12,6 @@ import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
@@ -26,7 +25,6 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    SectionComponent,
     NgFor,
     ScoreRingComponent,
     RouterLink,

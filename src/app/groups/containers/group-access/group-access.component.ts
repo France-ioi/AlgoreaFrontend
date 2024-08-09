@@ -10,7 +10,6 @@ import { GroupPermissionsComponent } from '../group-permissions/group-permission
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
@@ -20,7 +19,6 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
   standalone: true,
   imports: [
     NgIf,
-    SectionComponent,
     LoadingComponent,
     ErrorComponent,
     NgFor,

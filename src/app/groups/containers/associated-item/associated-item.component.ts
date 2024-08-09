@@ -23,7 +23,6 @@ import { RouterLink } from '@angular/router';
 import { AddContentComponent } from 'src/app/ui-components/add-content/add-content.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
@@ -41,7 +40,6 @@ import { ButtonModule } from 'primeng/button';
   standalone: true,
   imports: [
     NgIf,
-    SectionComponent,
     LoadingComponent,
     ErrorComponent,
     NgSwitch,
