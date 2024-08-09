@@ -1,7 +1,7 @@
 import { combineLatest, ReplaySubject, Subject } from 'rxjs';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';

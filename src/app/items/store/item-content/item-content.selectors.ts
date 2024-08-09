@@ -6,7 +6,7 @@ import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../uti
 import { State } from './item-content.state';
 import { equalNullishFactory } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
 

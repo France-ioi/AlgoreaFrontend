@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { shareReplay, toArray } from 'rxjs';
+import { EMPTY, shareReplay, toArray } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
 import { fromItemContent } from './item-content.store';
@@ -9,12 +9,14 @@ import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcru
 import { FullItemRoute, itemRoute } from 'src/app/models/routing/item-route';
 import { Result } from '../../data-access/get-results.service';
 import { ResultFetchingService } from '../../services/result-fetching.service';
+import { UserSessionService } from 'src/app/services/user-session.service';
 
 const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
 });
 const route: FullItemRoute = itemRoute('activity', '1', { attemptId: '0', path: [] });
 const anotherRoute: FullItemRoute = itemRoute('activity', '2', { attemptId: '0', path: [] });
+const userSessionServiceMock = { userChanged$: EMPTY, userProfile$: EMPTY } as unknown as UserSessionService;
 
 describe('itemFetchingEffect', () => {
   const mockItem = 'mockItem' as unknown as Item;
@@ -34,7 +36,8 @@ describe('itemFetchingEffect', () => {
       itemFetchingEffect(
         storeMock$,
         actions$,
-        getItemServiceSpy
+        userSessionServiceMock,
+        getItemServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
           expect(actions.length).toEqual(2);
@@ -63,6 +66,7 @@ describe('itemFetchingEffect', () => {
       itemFetchingEffect(
         storeMock$,
         actions$,
+        userSessionServiceMock,
         getItemServiceSpy
       ).pipe(toArray()).subscribe({
         next: () => {
@@ -88,7 +92,8 @@ describe('itemFetchingEffect', () => {
       itemFetchingEffect(
         storeMock$,
         actions$,
-        getItemServiceSpy
+        userSessionServiceMock,
+        getItemServiceSpy,
       ).pipe(toArray()).subscribe({
         next: () => {
           expect(getItemServiceSpy.get).toHaveBeenCalledTimes(2); // only (a,g) and (a,n) has been called
@@ -113,6 +118,7 @@ describe('itemFetchingEffect', () => {
       itemFetchingEffect(
         storeMock$,
         actions$,
+        userSessionServiceMock,
         getItemServiceSpy
       ).pipe(toArray()).subscribe({
         next: actions => {
@@ -144,7 +150,8 @@ describe('breadcrumbsFetchingEffect', () => {
       breadcrumbsFetchingEffect(
         storeMock$,
         actions$,
-        breadcrumbsServiceSpy
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
           expect(actions.length).toEqual(2);
@@ -171,7 +178,8 @@ describe('breadcrumbsFetchingEffect', () => {
       breadcrumbsFetchingEffect(
         storeMock$,
         actions$,
-        breadcrumbsServiceSpy
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
           expect(actions[0]?.fetchState.isFetching).toBeTrue();
@@ -203,7 +211,8 @@ describe('resultsFetchingEffect', () => {
       resultsFetchingEffect(
         storeMock$,
         actions$,
-        resultsServiceSpy
+        userSessionServiceMock,
+        resultsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
           expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(1);
@@ -229,7 +238,8 @@ describe('resultsFetchingEffect', () => {
       resultsFetchingEffect(
         storeMock$,
         actions$,
-        resultsServiceSpy
+        userSessionServiceMock,
+        resultsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: () => {
           expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(2);
@@ -254,7 +264,8 @@ describe('resultsFetchingEffect', () => {
       resultsFetchingEffect(
         storeMock$,
         actions$,
-        resultsServiceSpy
+        userSessionServiceMock,
+        resultsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
           expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(1);
@@ -279,7 +290,8 @@ describe('resultsFetchingEffect', () => {
       resultsFetchingEffect(
         storeMock$,
         actions$,
-        resultsServiceSpy
+        userSessionServiceMock,
+        resultsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
           expect(actions.length).toEqual(4);

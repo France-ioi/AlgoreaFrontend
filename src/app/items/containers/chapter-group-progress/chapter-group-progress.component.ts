@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { Subject } from 'rxjs';

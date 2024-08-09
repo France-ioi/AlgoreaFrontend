@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
-import { ItemData } from '../../items/services/item-datasource.service';
+import { ItemData } from 'src/app/items/models/item-data';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';

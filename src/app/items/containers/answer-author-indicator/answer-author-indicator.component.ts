@@ -14,7 +14,7 @@ import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
 import { ButtonModule } from 'primeng/button';
 import { ItemRoutePipe } from '../../../pipes/itemRoute';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
 import { UserSessionService } from '../../../services/user-session.service';
 import { LetDirective } from '@ngrx/component';

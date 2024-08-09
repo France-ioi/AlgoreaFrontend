@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import {
   ChildDataWithId,
   hasId,
@@ -18,6 +18,8 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
 import { AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
 import { NgIf, NgClass } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from '../../store';
 
 @Component({
   selector: 'alg-item-children-edit-form',
@@ -46,9 +48,9 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   }
 
   constructor(
+    private store: Store,
     private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
-    private itemDataSource: ItemDataSource,
     private actionFeedbackService: ActionFeedbackService,
     private pendingChangesService: PendingChangesService,
     private currentContentService: CurrentContentService,
@@ -123,7 +125,8 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
     this.updateItem().subscribe({
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
-        this.itemDataSource.refreshItem(); // which will re-enable the form
+        this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());
+        // which will re-enable the form
         this.currentContentService.forceNavMenuReload();
       },
       error: err => {

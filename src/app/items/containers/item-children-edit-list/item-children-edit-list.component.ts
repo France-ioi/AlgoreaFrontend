@@ -9,7 +9,7 @@ import { itemWatchPermMax } from 'src/app/items/models/item-watch-permission';
 import { itemEditPermMax } from 'src/app/items/models/item-edit-permission';
 import { itemGrantViewPermMax } from 'src/app/items/models/item-grant-view-permission';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PropagationEditMenuComponent } from '../propagation-edit-menu/propagation-edit-menu.component';
