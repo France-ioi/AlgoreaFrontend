@@ -5,7 +5,6 @@ import { JoinedGroupListComponent } from '../joined-group-list/joined-group-list
 import { AddGroupComponent } from '../add-group/add-group.component';
 import { ManagedGroupListComponent } from '../managed-group-list/managed-group-list.component';
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { UserGroupInvitationsComponent } from '../user-group-invitations/user-group-invitations.component';
 import { delay } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -19,7 +18,6 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
   standalone: true,
   imports: [
     UserGroupInvitationsComponent,
-    SectionComponent,
     JoinedGroupListComponent,
     AccessCodeViewComponent,
     ManagedGroupListComponent,

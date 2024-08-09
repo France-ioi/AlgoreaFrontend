@@ -4,7 +4,6 @@ import { appConfig } from 'src/app/utils/config';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Location, NgIf, AsyncPipe } from '@angular/common';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -15,7 +14,6 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     NgIf,
     ButtonModule,
-    SectionComponent,
     AsyncPipe,
   ],
 })
