@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, input } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -51,7 +51,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(ItemChildrenEditFormComponent) itemChildrenEditFormComponent?: ItemChildrenEditFormComponent;
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
   @Input() taskView?: TaskTab['view'];
   @Input() taskConfig: TaskConfig|null = null;
   @Input() savingAnswer = false;
