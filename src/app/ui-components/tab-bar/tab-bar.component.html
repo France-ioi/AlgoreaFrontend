@@ -8,12 +8,11 @@
     *ngIf="showPrevButton"
   ></button>
   <ng-scrollbar
-    viewClass="alg-top-bar-scrollbar"
+    class="alg-top-bar-scrollbar"
     trackClass="alg-top-bar-scrollbar-no-track"
-    track="horizontal"
-    [autoWidthDisabled]="false"
-    [sensorDebounce]="1"
-    appearance="standard"
+    orientation="horizontal"
+    [sensorThrottleTime]="1"
+    appearance="native"
   >
     <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs">
       <li class="tabs-item" [ngClass]="tab.styleClass" *ngFor="let tab of tabs">

@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Observable, combineLatest, map, Subscription, Subject, merge } from 'rxjs';
+import { Observable, combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
@@ -65,7 +65,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(
       merge(
         this.resizeEvent.asObservable(),
-        this.scrollbarRef.scrolled,
+        fromEvent(this.scrollbarRef.viewport.nativeElement, 'scroll'),
         this.tabs$,
       ).pipe(
         debounceTime(50),
@@ -88,9 +88,9 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   handleArrows(): void {
     if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = this.scrollbarRef.viewport.scrollLeft;
-    const scrollWidth = this.scrollbarRef.viewport.scrollWidth;
-    const clientWidth = this.scrollbarRef.viewport.clientWidth;
+    const scrollLeft = this.scrollbarRef.nativeElement.scrollLeft;
+    const scrollWidth = this.scrollbarRef.nativeElement.scrollWidth;
+    const clientWidth = this.scrollbarRef.nativeElement.clientWidth;
     const gap = 5;
     this.showPrevButton = clientWidth !== Math.round(scrollWidth) && scrollLeft > gap;
     this.showNextButton = clientWidth !== Math.round(scrollWidth)
@@ -100,8 +100,8 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   onPrev(): void {
     if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = this.scrollbarRef.viewport.scrollLeft;
-    const clientWidth = this.scrollbarRef.viewport.clientWidth;
+    const scrollLeft = this.scrollbarRef.nativeElement.scrollLeft;
+    const clientWidth = this.scrollbarRef.nativeElement.clientWidth;
     void this.scrollbarRef.scrollTo({
       left: scrollLeft - (clientWidth / 2),
     });
@@ -109,8 +109,8 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   onNext(): void {
     if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = this.scrollbarRef.viewport.scrollLeft;
-    const clientWidth = this.scrollbarRef.viewport.clientWidth;
+    const scrollLeft = this.scrollbarRef.nativeElement.scrollLeft;
+    const clientWidth = this.scrollbarRef.nativeElement.clientWidth;
     void this.scrollbarRef.scrollTo({
       left: scrollLeft + (clientWidth / 2),
     });
