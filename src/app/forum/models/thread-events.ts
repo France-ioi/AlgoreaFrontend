@@ -1,7 +1,7 @@
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 
-enum EventLabel {
+export enum EventLabel {
   AttemptStarted = 'result_started',
   Submission = 'submission',
   Message = 'message',

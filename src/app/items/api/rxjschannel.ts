@@ -45,6 +45,7 @@ export class RxMessagingChannel {
   }
 
   /** Bind a local method, allowing the remote task to call it */
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   bind<T extends Observable<any> | any>(method: string, mapper?: (params: unknown) => T, doNotPublish?: boolean): MessagingChannel {
     // Create a callback wrapping the observable bound
     const callback = (transaction: MessageTransaction, params: unknown): void => {

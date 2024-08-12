@@ -51,6 +51,7 @@ export class ItemTaskInitService implements OnDestroy {
   // called yet.
   readonly task$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(tap(task => bindPlatform(task)))),
     takeUntil(this.destroyed$),
     shareReplay(1),
@@ -105,7 +106,7 @@ export class ItemTaskInitService implements OnDestroy {
   readonly urlError$ = this.iframeSrc$.pipe(
     catchError((urlError: Error) => of(urlError)),
     filter(error => error instanceof Error),
-  ) as Observable<Error>;
+  );
 
   initialized = false;
 
