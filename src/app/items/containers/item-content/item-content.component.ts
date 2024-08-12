@@ -18,7 +18,7 @@ import { ParentSkillsComponent } from '../../containers/parent-skills/parent-ski
 import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.component';
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
 import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
@@ -29,7 +29,6 @@ import { ErrorComponent } from '../../../ui-components/error/error.component';
   styleUrls: [ './item-content.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
     HasHTMLDirective,
     SwitchComponent,
     ItemChildrenEditFormComponent,

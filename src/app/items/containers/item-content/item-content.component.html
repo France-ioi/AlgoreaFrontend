@@ -1,9 +1,8 @@
-<ng-container *ngIf="itemData">
-
-  <ng-container *ngIf="itemData.item.type !== 'Task' && itemData.item.string.description">
+@if (itemData) {
+  @if (itemData.item.type !== 'Task' && itemData.item.string.description) {
     <ng-container
       *algHasHTML="itemData.item.string.description; else textContent"
-    >
+      >
       <div
         class="html-container"
         data-testid="item-description"
@@ -13,41 +12,43 @@
     <ng-template #textContent>
       <p class="description alg-text-base" data-testid="item-description">{{ itemData.item.string.description }}</p>
     </ng-template>
-  </ng-container>
-
-  <ng-container *ngIf="(itemData.item.permissions | allowsViewingContent) && !(itemData.item.requiresExplicitEntry && itemData.results !== undefined && !itemData.currentResult)">
-
-    <ng-container *ngIf="['Chapter', 'Skill'].includes(itemData.item.type) && itemData.currentResult">
-      <div class="edit" *ngIf="['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled">
-        <label class="edit-label">
-          <span class="alg-base-text-color" i18n>Edit content</span>
-          <alg-switch
-            class="edit-switch"
-            data-testid="edit-switch"
-            mode="white"
-            [checked]="editModeEnabled"
-            (change)="onEditModeEnableChange($event)"
-          ></alg-switch>
-        </label>
-      </div>
-
-      <alg-item-children-edit-form
-        [itemData]="itemData"
-        *ngIf="editModeEnabled"
-      ></alg-item-children-edit-form>
-
-      <alg-chapter-children
-        class="alg-flex-1"
-        [itemData]="itemData"
-        *ngIf="itemData.item.type === 'Chapter' && !editModeEnabled"
-      ></alg-chapter-children>
-
-      <alg-sub-skills class="alg-flex-1" [itemData]="itemData" *ngIf="itemData.item.type === 'Skill' && !editModeEnabled"></alg-sub-skills>
-      <alg-parent-skills class="alg-flex-1" [itemData]="itemData" *ngIf="itemData.item.type === 'Skill'"></alg-parent-skills>
-    </ng-container>
-
-    <ng-container *ngIf="taskConfig">
-      <ng-container *ngIf="itemData.item.url; else noUrl">
+  }
+  @if ((itemData.item.permissions | allowsViewingContent) && !(itemData.item.requiresExplicitEntry && itemData.results !== undefined && !itemData.currentResult)) {
+    @if (['Chapter', 'Skill'].includes(itemData.item.type) && itemData.currentResult) {
+      @if (['all','all_with_grant', 'children'].includes(itemData.item.permissions.canEdit) || editModeEnabled) {
+        <div class="edit">
+          <label class="edit-label">
+            <span class="alg-base-text-color" i18n>Edit content</span>
+            <alg-switch
+              class="edit-switch"
+              data-testid="edit-switch"
+              mode="white"
+              [checked]="editModeEnabled"
+              (change)="onEditModeEnableChange($event)"
+            ></alg-switch>
+          </label>
+        </div>
+      }
+      @if (editModeEnabled) {
+        <alg-item-children-edit-form
+          [itemData]="itemData"
+        ></alg-item-children-edit-form>
+      }
+      @if (itemData.item.type === 'Chapter' && !editModeEnabled) {
+        <alg-chapter-children
+          class="alg-flex-1"
+          [itemData]="itemData"
+        ></alg-chapter-children>
+      }
+      @if (itemData.item.type === 'Skill' && !editModeEnabled) {
+        <alg-sub-skills class="alg-flex-1" [itemData]="itemData"></alg-sub-skills>
+      }
+      @if (itemData.item.type === 'Skill') {
+        <alg-parent-skills class="alg-flex-1" [itemData]="itemData"></alg-parent-skills>
+      }
+    }
+    @if (taskConfig) {
+      @if (itemData.item.url) {
         <alg-item-display
           class="alg-flex-1"
           [ngClass]="{ 'alg-opacity-0': !(isTaskLoaded$ | async) }"
@@ -68,58 +69,57 @@
           (fullFrame)="fullFrameTask.emit($event)"
           (loadingComplete)="isTaskLoaded$.next($event)"
         ></alg-item-display>
-      </ng-container>
-
-      <ng-template #noUrl>
+      } @else {
         <alg-error class="alg-flex-1" icon="ph-duotone ph-wrench">
           <p i18n>
             This activity has not been correctly configured.
           </p>
-          <p *ngIf="itemData.item.permissions | allowsEditingChildren" i18n>
+          @if (itemData.item.permissions | allowsEditingChildren) {
+            <p i18n>
             You need to set a url in editing mode.
           </p>
+          }
         </alg-error>
-      </ng-template>
-    </ng-container>
-  </ng-container>
-
-  <ng-container *ngIf="!(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry">
+      }
+    }
+  }
+  @if (!(itemData.item.permissions | allowsViewingContent) && !itemData.item.requiresExplicitEntry) {
     <div class="no-access-message alg-flex-1">
       <span class="no-access-message-icon-container">
         <i class="ph-duotone ph-lock-key no-access-message-icon"></i>
         <span class="no-access-message-icon-bg"></span>
       </span>
-
-      <span class="no-access-message-text alg-text-secondary" *ngIf="itemData.item.type === 'Chapter'" i18n>
+      @if (itemData.item.type === 'Chapter') {
+        <span class="no-access-message-text alg-text-secondary" i18n>
         Your current access rights do not allow you to list<br> the content of this chapter.
       </span>
-
-      <span class="no-access-message-text alg-text-secondary" *ngIf="itemData.item.type === 'Skill'" i18n>
+      }
+      @if (itemData.item.type === 'Skill') {
+        <span class="no-access-message-text alg-text-secondary" i18n>
         Your current access rights do not allow you to list<br> the content of this skill.
       </span>
-
-      <span class="no-access-message-text alg-text-secondary" *ngIf="itemData.item.type === 'Task'" i18n>
+      }
+      @if (itemData.item.type === 'Task') {
+        <span class="no-access-message-text alg-text-secondary" i18n>
         Your current access rights do not allow you to start<br> the activity.
       </span>
+      }
     </div>
-
     <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData"></alg-item-unlock-access>
-  </ng-container>
-
-  <alg-task-loader
-    class="alg-flex-1 task-loader"
-    *ngIf="(itemData.item.permissions | allowsViewingContent) && (!itemData.item.requiresExplicitEntry && (itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)) || (itemData.item.requiresExplicitEntry && (itemData.results === undefined || (itemData.results !== undefined && itemData.currentResult && itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)))) )"
-    i18n-label label="Loading the content"
-    i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
-  ></alg-task-loader>
-
-  <ng-container *ngIf="itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && itemData.results !== undefined && !itemData.currentResult))">
+  }
+  @if ((itemData.item.permissions | allowsViewingContent) && (!itemData.item.requiresExplicitEntry && (itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)) || (itemData.item.requiresExplicitEntry && (itemData.results === undefined || (itemData.results !== undefined && itemData.currentResult && itemData.item.type === 'Task' && itemData.item.url && !(isTaskLoaded$ | async)))) )) {
+    <alg-task-loader
+      class="alg-flex-1 task-loader"
+      i18n-label label="Loading the content"
+      i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
+    ></alg-task-loader>
+  }
+  @if (itemData.item.requiresExplicitEntry && (!(itemData.item.permissions | allowsViewingContent) || ((itemData.item.permissions | allowsViewingContent) && itemData.results !== undefined && !itemData.currentResult))) {
     <p class="validation-text">
       <span>
         <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
         <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
       </span>
     </p>
-  </ng-container>
-
-</ng-container>
+  }
+}
