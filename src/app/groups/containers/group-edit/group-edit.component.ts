@@ -20,7 +20,6 @@ import { GroupRemoveButtonComponent } from '../group-remove-button/group-remove-
 import { AssociatedItemComponent } from '../associated-item/associated-item.component';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe } from '@angular/common';
@@ -45,7 +44,6 @@ import { ButtonModule } from 'primeng/button';
     ErrorComponent,
     FormsModule,
     ReactiveFormsModule,
-    SectionComponent,
     InputComponent,
     TextareaComponent,
     AssociatedItemComponent,

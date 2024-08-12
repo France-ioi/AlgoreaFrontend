@@ -7,7 +7,6 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { AddContentComponent } from 'src/app/ui-components/add-content/add-content.component';
-import { SectionComponent } from 'src/app/ui-components/section/section.component';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
 
@@ -16,7 +15,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
   templateUrl: 'add-group.component.html',
   styleUrls: [ 'add-group.component.scss' ],
   standalone: true,
-  imports: [ SectionComponent, AddContentComponent ],
+  imports: [ AddContentComponent ],
 })
 export class AddGroupComponent {
   allowedNewGroupTypes: NewContentType<GroupType>[] = [
