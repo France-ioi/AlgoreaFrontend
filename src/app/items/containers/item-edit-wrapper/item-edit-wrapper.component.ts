@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { ItemData, ItemDataSource } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import {
   AbstractControl,
   UntypedFormBuilder,
@@ -26,6 +26,8 @@ import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-param
 import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { NgIf } from '@angular/common';
+import { fromItemContent } from '../../store';
+import { Store } from '@ngrx/store';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -104,8 +106,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   constructor(
+    private store: Store,
     private currentContentService: CurrentContentService,
-    private itemDataSource: ItemDataSource,
     private formBuilder: UntypedFormBuilder,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
@@ -331,7 +333,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     ]).subscribe({
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
-        this.itemDataSource.refreshItem(); // which will re-enable the form
+        this.store.dispatch(fromItemContent.itemByIdPageActions.refresh()); // which will re-enable the form
         this.currentContentService.forceNavMenuReload();
       },
       error: (err: unknown) => {

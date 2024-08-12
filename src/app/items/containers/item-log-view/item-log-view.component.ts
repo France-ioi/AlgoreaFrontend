@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';

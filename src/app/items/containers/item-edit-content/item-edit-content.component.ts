@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { PossiblyInvisibleChildData } from '../../containers/item-children-edit/item-children-edit.component';
 import { AllowsEditingAllItemPipe } from 'src/app/items/models/item-edit-permission';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';

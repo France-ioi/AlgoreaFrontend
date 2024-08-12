@@ -4,7 +4,7 @@ import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { canCloseOverlay } from 'src/app/utils/overlay';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType } from 'src/app/items/models/item-type';

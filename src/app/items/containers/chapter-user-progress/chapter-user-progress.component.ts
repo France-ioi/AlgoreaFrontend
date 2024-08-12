@@ -6,7 +6,7 @@ import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { FetchState } from 'src/app/utils/state';
 import { ItemType } from 'src/app/items/models/item-type';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { DurationToReadable } from 'src/app/pipes/duration';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';

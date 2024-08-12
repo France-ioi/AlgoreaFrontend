@@ -8,7 +8,6 @@ import { isATask } from 'src/app/items/models/item-type';
 import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/items/models/item-view-permission';
 import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
-import { ItemDataSource } from './services/item-datasource.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { NavigationEnd, Router } from '@angular/router';
 import { ItemRouter } from 'src/app/models/routing/item-router';
@@ -17,6 +16,7 @@ import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
+import { fromItemContent } from './store';
 
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
@@ -48,8 +48,12 @@ export class ItemTabs implements OnDestroy {
     map(t => t?.tag),
   );
 
+  private itemState$ = this.store.select(fromItemContent.selectActiveContentData).pipe(
+    filter(isNotNull),
+  );
+
   private tabs$: Observable<Parameters<TabService['setTabs']>[0]> = combineLatest([
-    this.itemDataSource.state$,
+    this.itemState$,
     this.taskTabs$,
     this.store.select(fromObservation.selectIsObserving),
     this.disablePlatformProgressOnTasks$,
@@ -98,7 +102,6 @@ export class ItemTabs implements OnDestroy {
     private store: Store,
     private router: Router,
     private itemRouter: ItemRouter,
-    private itemDataSource: ItemDataSource,
     private tabService: TabService,
     private userSession: UserSessionService,
   ) {}

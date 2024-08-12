@@ -10,7 +10,7 @@ import { GetGroupProgressService, ParticipantProgresses } from 'src/app/data-acc
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { TypeFilter } from '../../models/composition-filter';
 import { GetItemChildrenService } from '../../../data-access/get-item-children.service';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { ProgressCSVService } from 'src/app/data-access/progress-csv.service';
 import { downloadFile } from 'src/app/utils/download-file';
 import { ItemType, typeCategoryOfItem } from 'src/app/items/models/item-type';

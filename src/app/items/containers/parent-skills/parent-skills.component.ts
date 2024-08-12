@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemParentsService } from '../../data-access/get-item-parents.service';
-import { ItemData } from '../../services/item-datasource.service';
+import { ItemData } from '../../models/item-data';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
