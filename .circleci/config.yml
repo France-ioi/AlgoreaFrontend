@@ -61,7 +61,7 @@ jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
     docker: &node_image
-      - image: cimg/node:18.13
+      - image: cimg/node:18.20.4
     steps:
       - checkout
       # cache is used between builds, we use the cache if the lock file has not changed
@@ -97,7 +97,7 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/en
+            - dist/algorea/browser/en
 
   build-branch-fr:
     docker: *node_image
@@ -110,7 +110,7 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/fr
+            - dist/algorea/browser/fr
 
   build-master-en:
     docker: *node_image
@@ -123,7 +123,7 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/en
+            - dist/algorea/browser/en
 
   build-master-fr:
     docker: *node_image
@@ -136,11 +136,11 @@ jobs:
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/fr
+            - dist/algorea/browser/fr
 
   tests:
     docker: &node_browsers_image
-      - image: cimg/node:18.13-browsers
+      - image: cimg/node:18.20.4-browsers
     steps:
       - browser-tools/install-browser-tools
       - attach_workspace:
@@ -247,9 +247,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/browser/index.html
       - deploy-to-s3:
-          from: ./dist/algorea/
+          from: ./dist/algorea/browser/
           bucket: $DEPLOYMENT_BUCKET
           path: /branch/<< pipeline.git.branch >>
 
@@ -261,9 +261,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/index.html
+      - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/browser/index.html
       - deploy-to-s3:
-          from: ./dist/algorea/
+          from: ./dist/algorea/browser/
           bucket: $DEPLOYMENT_BUCKET
           path: ""
 
