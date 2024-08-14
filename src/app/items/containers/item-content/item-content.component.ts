@@ -57,7 +57,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
 
   itemData = input.required<ItemData>();
-  item = computed(() => this.itemData().item);
+  private item = computed(() => this.itemData().item);
   /**
    * Item description, only if it should be shown
    */

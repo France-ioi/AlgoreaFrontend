@@ -13,10 +13,11 @@
   </ng-template>
 }
 
-@let perms = item().permissions;
+@let item = itemData().item;
+@let perms = item.permissions;
 
-@if ((perms | allowsViewingContent) && !(item().requiresExplicitEntry && itemData().results !== undefined && !itemData().currentResult)) {
-  @if ((item() | mayHaveChildren) && itemData().currentResult) {
+@if ((perms | allowsViewingContent) && !(item.requiresExplicitEntry && itemData().results !== undefined && !itemData().currentResult)) {
+  @if ((item | mayHaveChildren) && itemData().currentResult) {
     @if ((perms | allowsEditingChildren) || editModeEnabled) {
       <div class="edit">
         <label class="edit-label">
@@ -36,21 +37,21 @@
         [itemData]="itemData()"
       ></alg-item-children-edit-form>
     }
-    @if ((item() | isAChapter) && !editModeEnabled) {
+    @if ((item | isAChapter) && !editModeEnabled) {
       <alg-chapter-children
         class="alg-flex-1"
         [itemData]="itemData()"
       ></alg-chapter-children>
     }
-    @if ((item() | isASkill) && !editModeEnabled) {
+    @if ((item | isASkill) && !editModeEnabled) {
       <alg-sub-skills class="alg-flex-1" [itemData]="itemData()"></alg-sub-skills>
     }
-    @if (item() | isASkill) {
+    @if (item | isASkill) {
       <alg-parent-skills class="alg-flex-1" [itemData]="itemData()"></alg-parent-skills>
     }
   }
   @if (taskConfig) {
-    @let url = item().url;
+    @let url = item.url;
     @if (url) {
       <alg-item-display
         class="alg-flex-1"
@@ -86,23 +87,23 @@
     }
   }
 }
-@if (!(perms | allowsViewingContent) && !item().requiresExplicitEntry) {
+@if (!(perms | allowsViewingContent) && !item.requiresExplicitEntry) {
   <div class="no-access-message alg-flex-1">
     <span class="no-access-message-icon-container">
       <i class="ph-duotone ph-lock-key no-access-message-icon"></i>
       <span class="no-access-message-icon-bg"></span>
     </span>
-    @if (item() | isAChapter) {
+    @if (item | isAChapter) {
       <span class="no-access-message-text alg-text-secondary" i18n>
       Your current access rights do not allow you to list<br> the content of this chapter.
     </span>
     }
-    @if (item() | isASkill) {
+    @if (item | isASkill) {
       <span class="no-access-message-text alg-text-secondary" i18n>
       Your current access rights do not allow you to list<br> the content of this skill.
     </span>
     }
-    @if (item() | isATask) {
+    @if (item | isATask) {
       <span class="no-access-message-text alg-text-secondary" i18n>
       Your current access rights do not allow you to start<br> the activity.
     </span>
@@ -110,14 +111,14 @@
   </div>
   <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()"></alg-item-unlock-access>
 }
-@if ((perms | allowsViewingContent) && (!item().requiresExplicitEntry && ((item() | isATask) && itemData().item.url && !(isTaskLoaded$ | async)) || (item().requiresExplicitEntry && (itemData().results === undefined || (itemData().results !== undefined && itemData().currentResult && (item() | isATask) && itemData().item.url && !(isTaskLoaded$ | async)))) )) {
+@if ((perms | allowsViewingContent) && (!item.requiresExplicitEntry && ((item | isATask) && itemData().item.url && !(isTaskLoaded$ | async)) || (item.requiresExplicitEntry && (itemData().results === undefined || (itemData().results !== undefined && itemData().currentResult && (item | isATask) && itemData().item.url && !(isTaskLoaded$ | async)))) )) {
   <alg-task-loader
     class="alg-flex-1 task-loader"
     i18n-label label="Loading the content"
     i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
   ></alg-task-loader>
 }
-@if (item().requiresExplicitEntry && (!(perms | allowsViewingContent) || ((perms | allowsViewingContent) && itemData().results !== undefined && !itemData().currentResult))) {
+@if (item.requiresExplicitEntry && (!(perms | allowsViewingContent) || ((perms | allowsViewingContent) && itemData().results !== undefined && !itemData().currentResult))) {
   <p class="validation-text">
     <span>
       <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
