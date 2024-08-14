@@ -50,13 +50,14 @@
     }
   }
   @if (taskConfig) {
-    @if (itemData().item.url) {
+    @let url = item().url;
+    @if (url) {
       <alg-item-display
         class="alg-flex-1"
         [ngClass]="{ 'alg-opacity-0': !(isTaskLoaded$ | async) }"
         [route]="itemData().route"
         [editingPermission]="itemData().item.permissions"
-        [url]="itemData().item.url!"
+        [url]="url"
         [attemptId]="itemData().currentResult ? itemData().currentResult?.attemptId : undefined"
         [view]="taskView"
         [taskConfig]="taskConfig"
