@@ -15,79 +15,21 @@
 
 @let item = itemData().item;
 @let perms = item.permissions;
+@let canViewContent = perms | allowsViewingContent;
+@let resultsFetched = itemData().results !== undefined;
+@let hasCurentResult = !!itemData().currentResult;
+@let userHasToEnterExplicitely = item.requiresExplicitEntry && ((canViewContent && resultsFetched && !hasCurentResult) || !canViewContent);
 
-@if ((perms | allowsViewingContent) && !(item.requiresExplicitEntry && itemData().results !== undefined && !itemData().currentResult)) {
-  @if ((item | mayHaveChildren) && itemData().currentResult) {
-    @if ((perms | allowsEditingChildren) || editModeEnabled) {
-      <div class="edit">
-        <label class="edit-label">
-          <span class="alg-base-text-color" i18n>Edit content</span>
-          <alg-switch
-            class="edit-switch"
-            data-testid="edit-switch"
-            mode="white"
-            [checked]="editModeEnabled"
-            (change)="onEditModeEnableChange($event)"
-          ></alg-switch>
-        </label>
-      </div>
-    }
-    @if (editModeEnabled) {
-      <alg-item-children-edit-form
-        [itemData]="itemData()"
-      ></alg-item-children-edit-form>
-    }
-    @if ((item | isAChapter) && !editModeEnabled) {
-      <alg-chapter-children
-        class="alg-flex-1"
-        [itemData]="itemData()"
-      ></alg-chapter-children>
-    }
-    @if ((item | isASkill) && !editModeEnabled) {
-      <alg-sub-skills class="alg-flex-1" [itemData]="itemData()"></alg-sub-skills>
-    }
-    @if (item | isASkill) {
-      <alg-parent-skills class="alg-flex-1" [itemData]="itemData()"></alg-parent-skills>
-    }
-  }
-  @if (taskConfig) {
-    @let url = item.url;
-    @if (url) {
-      <alg-item-display
-        class="alg-flex-1"
-        [ngClass]="{ 'alg-opacity-0': !(isTaskLoaded$ | async) }"
-        [route]="itemData().route"
-        [editingPermission]="itemData().item.permissions"
-        [url]="url"
-        [attemptId]="itemData().currentResult ? itemData().currentResult?.attemptId : undefined"
-        [view]="taskView"
-        [taskConfig]="taskConfig"
-        [savingAnswer]="savingAnswer"
-        (viewChange)="taskViewChange.emit($event)"
-        (tabsChange)="taskTabsChange.emit($event)"
-        (scoreChange)="onScoreChange($event)"
-        (skipSave)="skipSave.emit()"
-        (refresh)="refresh.emit()"
-        (editorUrl)="editorUrl.emit($event)"
-        (disablePlatformProgress)="disablePlatformProgress.emit($event)"
-        (fullFrame)="fullFrameTask.emit($event)"
-        (loadingComplete)="isTaskLoaded$.next($event)"
-      ></alg-item-display>
-    } @else {
-      <alg-error class="alg-flex-1" icon="ph-duotone ph-wrench">
-        <p i18n>
-          This activity has not been correctly configured.
-        </p>
-        @if (perms | allowsEditingChildren) {
-          <p i18n>
-          You need to set a url in editing mode.
-        </p>
-        }
-      </alg-error>
-    }
-  }
+@if (userHasToEnterExplicitely) {
+  <p class="validation-text">
+    <span>
+      <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
+      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
+    </span>
+  </p>
 }
-@if (!(perms | allowsViewingContent) && !item.requiresExplicitEntry) {
+
+@else if (!canViewContent) {
   <div class="no-access-message alg-flex-1">
     <span class="no-access-message-icon-container">
       <i class="ph-duotone ph-lock-key no-access-message-icon"></i>
@@ -111,18 +53,94 @@
   </div>
   <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()"></alg-item-unlock-access>
 }
-@if ((perms | allowsViewingContent) && (!item.requiresExplicitEntry && ((item | isATask) && itemData().item.url && !(isTaskLoaded$ | async)) || (item.requiresExplicitEntry && (itemData().results === undefined || (itemData().results !== undefined && itemData().currentResult && (item | isATask) && itemData().item.url && !(isTaskLoaded$ | async)))) )) {
-  <alg-task-loader
-    class="alg-flex-1 task-loader"
-    i18n-label label="Loading the content"
-    i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
-  ></alg-task-loader>
+
+@else if ((item | isAChapter) || (item | isASkill)) { <!-- with canViewContent, results may not be fetched yet-->
+
+  @if (!hasCurentResult) {
+    <!-- waiting for the results to load, do not show anything -->
+  }
+  @else {
+    @if ((perms | allowsEditingChildren) || editModeEnabled) {
+      <div class="edit">
+        <label class="edit-label">
+          <span class="alg-base-text-color" i18n>Edit content</span>
+          <alg-switch
+            class="edit-switch"
+            data-testid="edit-switch"
+            mode="white"
+            [checked]="editModeEnabled"
+            (change)="onEditModeEnableChange($event)"
+          ></alg-switch>
+        </label>
+      </div>
+    }
+    @if (editModeEnabled) {
+      <alg-item-children-edit-form
+        [itemData]="itemData()"
+      ></alg-item-children-edit-form>
+    }
+    @else { <!-- !editModeEnabled -->
+      @if (item | isAChapter) {
+        <alg-chapter-children class="alg-flex-1" [itemData]="itemData()"></alg-chapter-children>
+      }
+      @else { <!-- skill -->
+        <alg-sub-skills class="alg-flex-1" [itemData]="itemData()"></alg-sub-skills>
+      }
+    }
+    @if (item | isASkill) {
+      <alg-parent-skills class="alg-flex-1" [itemData]="itemData()"></alg-parent-skills>
+    }
+  }
 }
-@if (item.requiresExplicitEntry && (!(perms | allowsViewingContent) || ((perms | allowsViewingContent) && itemData().results !== undefined && !itemData().currentResult))) {
-  <p class="validation-text">
-    <span>
-      <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
-      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
-    </span>
-  </p>
+
+@else { <!-- task with canViewContent, results may not be fetched yet -->
+
+  @let url = item.url;
+  @if (!url) {
+    <alg-error class="alg-flex-1" icon="ph-duotone ph-wrench">
+      <p i18n>
+        This activity has not been correctly configured.
+      </p>
+      @if (perms | allowsEditingAll) {
+        <p i18n>
+          You need to set a url in editing mode.
+        </p>
+      }
+    </alg-error>
+  }
+  @else { <!-- url set -->
+
+    @let isTaskLoaded = isTaskLoaded$ | async;
+
+    @if (taskConfig) {
+      <alg-item-display
+        class="alg-flex-1"
+        [ngClass]="{ 'alg-opacity-0': !isTaskLoaded }"
+        [route]="itemData().route"
+        [editingPermission]="itemData().item.permissions"
+        [url]="url"
+        [attemptId]="itemData().currentResult ? itemData().currentResult?.attemptId : undefined"
+        [view]="taskView"
+        [taskConfig]="taskConfig"
+        [savingAnswer]="savingAnswer"
+        (viewChange)="taskViewChange.emit($event)"
+        (tabsChange)="taskTabsChange.emit($event)"
+        (scoreChange)="onScoreChange($event)"
+        (skipSave)="skipSave.emit()"
+        (refresh)="refresh.emit()"
+        (editorUrl)="editorUrl.emit($event)"
+        (disablePlatformProgress)="disablePlatformProgress.emit($event)"
+        (fullFrame)="fullFrameTask.emit($event)"
+        (loadingComplete)="isTaskLoaded$.next($event)"
+      ></alg-item-display>
+    }
+    @if (!isTaskLoaded) {
+      <alg-task-loader
+        class="alg-flex-1 task-loader"
+        i18n-label label="Loading the content"
+        i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
+      ></alg-task-loader>
+    }
+
+  }
 }

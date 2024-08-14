@@ -9,7 +9,7 @@ import {
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { BehaviorSubject } from 'rxjs';
-import { AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
+import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { TaskLoaderComponent } from '../../containers/task-loader/task-loader.component';
 import { ItemUnlockAccessComponent } from '../../containers/item-unlock-access/item-unlock-access.component';
@@ -44,6 +44,7 @@ import { IsAChapterPipe, IsASkillPipe, IsATaskPipe, MayHaveChildrenPipe, isATask
     AsyncPipe,
     AllowsViewingItemContentPipe,
     AllowsEditingChildrenItemPipe,
+    AllowsEditingAllItemPipe,
     ErrorComponent,
     MayHaveChildrenPipe,
     IsAChapterPipe,
