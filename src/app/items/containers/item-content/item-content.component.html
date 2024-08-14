@@ -37,18 +37,18 @@
     </span>
     @if (item | isAChapter) {
       <span class="no-access-message-text alg-text-secondary" i18n>
-      Your current access rights do not allow you to list<br> the content of this chapter.
-    </span>
+        Your current access rights do not allow you to list<br> the content of this chapter.
+      </span>
     }
-    @if (item | isASkill) {
+    @else if (item | isASkill) {
       <span class="no-access-message-text alg-text-secondary" i18n>
-      Your current access rights do not allow you to list<br> the content of this skill.
-    </span>
+        Your current access rights do not allow you to list<br> the content of this skill.
+      </span>
     }
-    @if (item | isATask) {
+    @else { <!-- task -->
       <span class="no-access-message-text alg-text-secondary" i18n>
-      Your current access rights do not allow you to start<br> the activity.
-    </span>
+        Your current access rights do not allow you to start<br> the activity.
+      </span>
     }
   </div>
   <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()"></alg-item-unlock-access>

@@ -13,7 +13,6 @@ import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app
 import { AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { TaskLoaderComponent } from '../../containers/task-loader/task-loader.component';
 import { ItemUnlockAccessComponent } from '../../containers/item-unlock-access/item-unlock-access.component';
-import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { ParentSkillsComponent } from '../../containers/parent-skills/parent-skills.component';
 import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.component';
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
@@ -22,7 +21,7 @@ import { NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
-import { IsAChapterPipe, IsASkillPipe, IsATaskPipe, MayHaveChildrenPipe, isATask } from '../../models/item-type';
+import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 
 @Component({
   selector: 'alg-item-content',
@@ -38,7 +37,6 @@ import { IsAChapterPipe, IsASkillPipe, IsATaskPipe, MayHaveChildrenPipe, isATask
     ParentSkillsComponent,
     ItemDisplayComponent,
     NgClass,
-    MessageInfoComponent,
     ItemUnlockAccessComponent,
     TaskLoaderComponent,
     AsyncPipe,
@@ -46,10 +44,8 @@ import { IsAChapterPipe, IsASkillPipe, IsATaskPipe, MayHaveChildrenPipe, isATask
     AllowsEditingChildrenItemPipe,
     AllowsEditingAllItemPipe,
     ErrorComponent,
-    MayHaveChildrenPipe,
     IsAChapterPipe,
     IsASkillPipe,
-    IsATaskPipe,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
