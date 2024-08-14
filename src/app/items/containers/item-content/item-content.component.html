@@ -1,15 +1,15 @@
-@if (itemData().item.type !== 'Task' && itemData().item.string.description) {
+@if (description(); as description) {
   <ng-container
-    *algHasHTML="itemData().item.string.description!; else textContent"
+    *algHasHTML="description; else textContent"
     >
     <div
       class="html-container"
       data-testid="item-description"
-      [innerHTML]="itemData().item.string.description"
+      [innerHTML]="description"
     ></div>
   </ng-container>
   <ng-template #textContent>
-    <p class="description alg-text-base" data-testid="item-description">{{ itemData().item.string.description }}</p>
+    <p class="description alg-text-base" data-testid="item-description">{{ description }}</p>
   </ng-template>
 }
 @if ((itemData().item.permissions | allowsViewingContent) && !(itemData().item.requiresExplicitEntry && itemData().results !== undefined && !itemData().currentResult)) {

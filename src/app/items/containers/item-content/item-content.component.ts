@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, computed, input } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -22,6 +22,7 @@ import { NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
+import { isATask } from '../../models/item-type';
 
 @Component({
   selector: 'alg-item-content',
@@ -52,6 +53,16 @@ export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
 
   itemData = input.required<ItemData>();
+  private item = computed(() => this.itemData().item);
+  isATask = computed(() => isATask(this.item()));
+  /**
+   * Item description, only if it should be shown
+   */
+  description = computed(() => {
+    const description = this.item().string.description;
+    return (!this.isATask() && description /* not null, undefined or empty */) ? description : null;
+  });
+
   @Input() taskView?: TaskTab['view'];
   @Input() taskConfig: TaskConfig|null = null;
   @Input() savingAnswer = false;
