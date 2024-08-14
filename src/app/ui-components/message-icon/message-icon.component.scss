@@ -1,0 +1,40 @@
+@import 'src/assets/scss/functions';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.icon-container {
+  padding-bottom: toRem(15);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  position: relative;
+  color: var(--alg-primary-color);
+  font-size: toRem(144);
+  z-index: 2;
+}
+
+.message-icon-bg {
+  position: absolute;
+  bottom: 0;
+  width: toRem(174);
+  height: toRem(57);
+  background-color: rgb(238, 238, 238);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.message-text {
+  margin-top: toRem(10);
+  text-align: center;
+}
