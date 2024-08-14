@@ -22,7 +22,7 @@ import { NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
-import { isATask } from '../../models/item-type';
+import { IsAChapterPipe, IsASkillPipe, IsATaskPipe, MayHaveChildrenPipe, isATask } from '../../models/item-type';
 
 @Component({
   selector: 'alg-item-content',
@@ -45,6 +45,10 @@ import { isATask } from '../../models/item-type';
     AllowsViewingItemContentPipe,
     AllowsEditingChildrenItemPipe,
     ErrorComponent,
+    MayHaveChildrenPipe,
+    IsAChapterPipe,
+    IsASkillPipe,
+    IsATaskPipe,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
@@ -53,14 +57,13 @@ export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
 
   itemData = input.required<ItemData>();
-  private item = computed(() => this.itemData().item);
-  isATask = computed(() => isATask(this.item()));
+  item = computed(() => this.itemData().item);
   /**
    * Item description, only if it should be shown
    */
   description = computed(() => {
     const description = this.item().string.description;
-    return (!this.isATask() && description /* not null, undefined or empty */) ? description : null;
+    return (!isATask(this.item()) && description /* not null, undefined or empty */) ? description : null;
   });
 
   @Input() taskView?: TaskTab['view'];
