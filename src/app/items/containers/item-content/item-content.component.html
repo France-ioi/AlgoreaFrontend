@@ -110,12 +110,10 @@
   }
   @else { <!-- url set -->
 
-    @let isTaskLoaded = isTaskLoaded$ | async;
-
     @if (taskConfig) {
       <alg-item-display
         class="alg-flex-1"
-        [ngClass]="{ 'alg-opacity-0': !isTaskLoaded }"
+        [ngClass]="{ 'alg-opacity-0': !isTaskLoaded() }"
         [route]="itemData().route"
         [editingPermission]="itemData().item.permissions"
         [url]="url"
@@ -131,10 +129,10 @@
         (editorUrl)="editorUrl.emit($event)"
         (disablePlatformProgress)="disablePlatformProgress.emit($event)"
         (fullFrame)="fullFrameTask.emit($event)"
-        (loadingComplete)="isTaskLoaded$.next($event)"
+        (loadingComplete)="onTaskLoadChange($event)"
       ></alg-item-display>
     }
-    @if (!isTaskLoaded) {
+    @if (!isTaskLoaded()) {
       <alg-task-loader
         class="alg-flex-1 task-loader"
         i18n-label label="Loading the content"
