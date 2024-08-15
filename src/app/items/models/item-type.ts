@@ -30,6 +30,10 @@ export function typeCategoryOfItem(item: ItemWithType): ItemTypeCategory {
   return item.type === 'Skill' ? 'skill' : 'activity';
 }
 
+export function isAnActivity(item: ItemWithType): boolean {
+  return typeCategoryOfItem(item) === 'activity';
+}
+
 /* Helpers on ItemTypeCategory */
 export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
   return cat === 'skill';

@@ -21,6 +21,7 @@ import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
+import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
 
 @Component({
   selector: 'alg-item-content',
@@ -35,6 +36,7 @@ import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
     SubSkillsComponent,
     ParentSkillsComponent,
     ItemDisplayComponent,
+    ExplicitEntryComponent,
     NgClass,
     ItemUnlockAccessComponent,
     TaskLoaderComponent,

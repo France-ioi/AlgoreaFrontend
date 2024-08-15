@@ -21,12 +21,7 @@
 @let userHasToEnterExplicitely = item.requiresExplicitEntry && ((canViewContent && resultsFetched && !hasCurentResult) || !canViewContent);
 
 @if (userHasToEnterExplicitely) {
-  <p class="validation-text">
-    <span>
-      <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
-      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
-    </span>
-  </p>
+  <alg-explicit-entry [itemData]="itemData()"></alg-explicit-entry>
 }
 
 @else if (!canViewContent) {

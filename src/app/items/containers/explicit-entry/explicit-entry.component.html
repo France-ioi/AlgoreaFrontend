@@ -1,0 +1,13 @@
+@let item = itemData().item;
+
+@if (item | isTeamActivity) {
+  <p>Team activities are currently not supported</p>
+}
+@else {
+  <p class="validation-text">
+    <span>
+      <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
+      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
+    </span>
+  </p>
+}
