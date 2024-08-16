@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserSessionService } from './user-session.service';
-import { setUser, addBreadcrumb, setTag } from '@sentry/angular-ivy';
+import { setUser, addBreadcrumb, setTag } from '@sentry/angular';
 import { LocaleService } from './localeService';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';

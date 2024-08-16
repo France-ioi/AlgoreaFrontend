@@ -24,12 +24,12 @@ export class CreateGroupInvitationsService {
     logins : string[]
   ) : Observable<Map<string, InvitationResult>> {
     return this.http
-      .post<ActionResponse<Object>>(
+      .post<ActionResponse<object>>(
         `${appConfig.apiUrl}/groups/${groupId}/invitations`,
         { logins: logins }, {})
       .pipe(
         map(successData),
-        map(function (data: Object): Map<string, InvitationResult> {
+        map(function (data: object): Map<string, InvitationResult> {
           return new Map<string, InvitationResult>(
             Object.entries(data).map(
               ([ key, value ]) => {

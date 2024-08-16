@@ -136,7 +136,7 @@ export class Task {
   /**
    * Task API functions
    */
-  load(views: Object): Observable<unknown> {
+  load(views: object): Observable<unknown> {
     return this.chan.call({
       method: 'task.load',
       params: views,

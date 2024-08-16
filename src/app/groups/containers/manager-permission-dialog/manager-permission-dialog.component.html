@@ -1,5 +1,6 @@
 <p-dialog
-  [(visible)]="!!visible"
+  [visible]="!!visible"
+  (visibleChange)="visible = $event"
   [modal]="true"
   [draggable]="false"
   [closable]="false"

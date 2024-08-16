@@ -1,5 +1,5 @@
 import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@angular/core';
-import * as Sentry from '@sentry/angular-ivy';
+import * as Sentry from '@sentry/angular';
 
 import { appConfig, WEBSOCKET_URL } from './app/utils/config';
 import { version } from './version';

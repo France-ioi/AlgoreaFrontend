@@ -1,5 +1,5 @@
 import { ErrorHandler, Injectable } from '@angular/core';
-import * as Sentry from '@sentry/angular-ivy';
+import * as Sentry from '@sentry/angular';
 import { convertToError } from './error-conversion';
 import { ChunkErrorService } from '../../services/chunk-error.service';
 

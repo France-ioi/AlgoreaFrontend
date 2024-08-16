@@ -8,9 +8,9 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:@angular-eslint/recommended',
-    'plugin:@ngrx/all-requiring-type-checking'
+    'plugin:@ngrx/all',
   ],
-  plugins: ['rxjs', 'jasmine', 'deprecation'],
+  plugins: ['rxjs', 'jasmine', 'deprecation', '@stylistic/ts'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -38,7 +38,7 @@ module.exports = {
     'rxjs/no-unbound-methods': 'error',
     'rxjs/throw-error': 'error',
     'rxjs/suffix-subjects': 'off',
-    '@typescript-eslint/semi': ['error'],
+    '@stylistic/ts/semi': ['error'],
     'max-len': [
       'error',
       { 'code': 140 },
@@ -76,6 +76,7 @@ module.exports = {
       { "selector": "enumMember", "format": ["PascalCase"] },
       { "selector": "typeLike", "format": ["PascalCase"] },
       { "selector": "property", "format": ["camelCase", "snake_case"] },
+      { "selector": "import", "format": ["camelCase", "PascalCase"] },
     ],
     'indent': ['error', 2, { "SwitchCase": 1 }],
     '@typescript-eslint/strict-boolean-expressions': ['error', {
@@ -106,6 +107,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': ['error', {
       'ignoreStatic': true
     }],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
   overrides: [
     {
@@ -115,7 +117,9 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/naming-convention': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
-        '@typescript-eslint/no-floating-promises': 'off'
+        '@typescript-eslint/no-floating-promises': 'off',
+        'indent': 'off',
+        'array-bracket-spacing': 'off',
       }
     },
   ],

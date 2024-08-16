@@ -3,6 +3,7 @@ import { State } from './current-thread.store';
 import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../models/threads';
 import { FetchState } from 'src/app/utils/state';
 import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
+import { EventLabel } from 'src/app/forum/models/thread-events';
 
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
@@ -62,7 +63,7 @@ export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, St
   );
   const selectThreadNoMessages = createSelector(
     selectThreadEvents,
-    events => (events.data ? events.data.filter(event => event.label === 'message').length === 0 : false),
+    events => (events.data ? events.data.filter(event => event.label === EventLabel.AttemptStarted).length === 0 : false),
   );
   return {
     selectVisible,

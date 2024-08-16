@@ -346,7 +346,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     }
 
     const groupId = this.groupData.group.id;
-    if (this.currentFilter.type === 'users') {
+    if (this.currentFilter.type === TypeFilter.Users) {
       this.removeUsers(groupId);
       return;
     }

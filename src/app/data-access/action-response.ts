@@ -45,6 +45,6 @@ export function assertSuccess<T>(resp: ActionResponse<T>): void {
 }
 
 // Transform a JS object from a response to a typescript map
-export function objectToMap(data: Object): Map<string, any> {
+export function objectToMap(data: object): Map<string, any> {
   return new Map(Object.entries(data));
 }

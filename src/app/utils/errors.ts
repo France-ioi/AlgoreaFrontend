@@ -5,7 +5,7 @@ interface WithErrorTag { errorTag: string }
 /**
  * Add a tag to an error object so it can be recognized later (using the errorHasTag function)
  */
-export function tagError<T extends {}>(error: T, tag: string): T & WithErrorTag {
+export function tagError<T extends object>(error: T, tag: string): T & WithErrorTag {
   return Object.assign(error, { errorTag: tag });
 }
 
