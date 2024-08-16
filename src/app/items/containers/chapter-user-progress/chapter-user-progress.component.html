@@ -64,7 +64,7 @@
                 </ng-container>
                 <ng-container *ngSwitchCase="'timeSpent'">
                   <ng-container *ngIf="rowData.latestActivityAt">
-                    {{ rowData.timeSpent | duration }}
+                    {{ rowData.timeSpent | secToDuration | readable }}
                   </ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'submissions'">

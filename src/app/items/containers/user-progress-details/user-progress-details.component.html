@@ -5,7 +5,7 @@
         <div class="header-section">
           <i class="ph ph-clock time-icon"></i>
           <span class="label" i18n>Time spent</span>
-          <span class="value">{{ progress.timeSpent | duration }}</span>
+          <span class="value">{{ progress.timeSpent | secToDuration | readable }}</span>
         </div>
         <span class="score-section">
           <alg-score-ring

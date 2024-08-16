@@ -7,7 +7,7 @@ import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { TypeFilter } from '../../models/composition-filter';
-import { DurationToReadable } from 'src/app/pipes/duration';
+import { DurationToReadablePipe, SecondsToDurationPipe } from 'src/app/pipes/duration';
 import { AllowsWatchingItemAnswersPipe } from 'src/app/items/models/item-watch-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -47,7 +47,8 @@ export interface ProgressData {
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
     AllowsWatchingItemAnswersPipe,
-    DurationToReadable,
+    SecondsToDurationPipe,
+    DurationToReadablePipe,
     ButtonModule,
   ],
 })
