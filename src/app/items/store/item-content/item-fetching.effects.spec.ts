@@ -15,7 +15,6 @@ const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
 });
 const route: FullItemRoute = itemRoute('activity', '1', { attemptId: '0', path: [] });
-const anotherRoute: FullItemRoute = itemRoute('activity', '2', { attemptId: '0', path: [] });
 const userSessionServiceMock = { userChanged$: EMPTY, userProfile$: EMPTY } as unknown as UserSessionService;
 
 describe('itemFetchingEffect', () => {
@@ -227,6 +226,7 @@ describe('resultsFetchingEffect', () => {
 
   it('does refetch on route change', done => {
     const resultsServiceSpy = jasmine.createSpyObj<ResultFetchingService>('ResultFetchingService', [ 'fetchResults' ]);
+    const anotherRoute: FullItemRoute = itemRoute('activity', '2', { attemptId: '0', path: [] });
     testScheduler.run(({ hot, cold }) => {
       resultsServiceSpy.fetchResults.and.callFake(() => cold('-a|', { a: mockResults }));
       const selectInfo$ = hot('r-s-|', { r: { route, item: mockItem }, s: { route: anotherRoute, item: mockItem } });
@@ -249,13 +249,13 @@ describe('resultsFetchingEffect', () => {
     });
   });
 
-  it('emits `null` if non-authorized to view item.', done => {
-    const mockNonVisibleItemState = { permissions: { canView: 'none' } } as unknown as Item;
+  it('does refetch on view perm change', done => {
+    const mockItemWithInfoPerm = { permissions: { canView: 'info' } } as unknown as Item;
 
     const resultsServiceSpy = jasmine.createSpyObj<ResultFetchingService>('ResultFetchingService', [ 'fetchResults' ]);
     testScheduler.run(({ hot, cold }) => {
       resultsServiceSpy.fetchResults.and.callFake(() => cold('-a|', { a: mockResults }));
-      const selectInfo$ = hot('r-s-|', { r: { route, item: mockItem }, s: { route: anotherRoute, item: mockNonVisibleItemState } });
+      const selectInfo$ = hot('r-s-|', { r: { route, item: mockItemWithInfoPerm }, s: { route: route, item: mockItem } });
       const actions$ = hot('   ----|');
       const storeMock$ = {
         select: () => selectInfo$
@@ -267,10 +267,8 @@ describe('resultsFetchingEffect', () => {
         userSessionServiceMock,
         resultsServiceSpy,
       ).pipe(toArray()).subscribe({
-        next: actions => {
-          expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(1);
-          expect(actions.length).toEqual(3);
-          expect(actions[2]?.fetchState).toBeNull();
+        next: () => {
+          expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(2);
           done();
         }
       });

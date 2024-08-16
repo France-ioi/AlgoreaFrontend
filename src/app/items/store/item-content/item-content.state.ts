@@ -16,12 +16,12 @@ export interface State {
   item: FetchState<Item, { id: ItemId, observedGroupId: string|null }>,
   breadcrumbs: FetchState<BreadcrumbItem[], FullItemRoute>,
   /** `results` of the current participant on the active item */
-  results: FetchState<{ results: Result[], currentResult?: Result }, FullItemRoute>|null,
+  results: FetchState<{ results: Result[], currentResult?: Result }, FullItemRoute>,
 }
 
 export const initialState: State = {
   routeErrorHandling: fetchingState(),
   item: fetchingState(),
   breadcrumbs: fetchingState(),
-  results: null,
+  results: fetchingState(),
 };

@@ -18,7 +18,7 @@
 @let canViewContent = perms | allowsViewingContent;
 @let resultsFetched = itemData().results !== undefined;
 @let hasCurentResult = !!itemData().currentResult;
-@let userHasToEnterExplicitely = item.requiresExplicitEntry && ((canViewContent && resultsFetched && !hasCurentResult) || !canViewContent);
+@let userHasToEnterExplicitely = item.requiresExplicitEntry && resultsFetched && !hasCurentResult;
 
 @if (userHasToEnterExplicitely) {
   <alg-explicit-entry [itemData]="itemData()" (itemRefreshRequired)="refresh.emit()"></alg-explicit-entry>

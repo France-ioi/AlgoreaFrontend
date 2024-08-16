@@ -9,7 +9,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { itemByIdPageActions, itemFetchingActions } from './item-content.actions';
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
-import { ResultFetchingService, canFetchResults } from '../../services/result-fetching.service';
+import { ResultFetchingService } from '../../services/result-fetching.service';
 import { routesEqualIgnoringCommands } from 'src/app/models/routing/item-route';
 import { UserSessionService } from 'src/app/services/user-session.service';
 
@@ -73,16 +73,15 @@ export const resultsFetchingEffect = createEffect(
     resultFetchingService = inject(ResultFetchingService),
   ) => store$.select(fromItemContent.selectActiveContentInfoForFetchingResults).pipe(
     filter(isNotNull),
-    distinctUntilChanged((x, y) => routesEqualIgnoringCommands(x.route, y.route)),
-    switchMap(({ route, item }) => {
-      if (!canFetchResults(item)) return of(null);
-      return resultFetchingService.fetchResults(route, item).pipe(
-        mapToFetchState({
-          resetter: refreshTriggers(actions$, userSessionService$),
-          identifier: route,
-        })
-      );
-    }),
+    distinctUntilChanged((x, y) => // for results, it needs to be re-fetched only if the route or perm change (+ refresh via the resetter)
+      routesEqualIgnoringCommands(x.route, y.route) && x.item.permissions.canView === y.item.permissions.canView
+    ),
+    switchMap(({ route, item }) => resultFetchingService.fetchResults(route, item).pipe(
+      mapToFetchState({
+        resetter: refreshTriggers(actions$, userSessionService$),
+        identifier: route
+      }),
+    )),
     map(fetchState => itemFetchingActions.resultsFetchStateChanged({ fetchState })),
   ),
   { functional: true },

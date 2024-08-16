@@ -22,6 +22,7 @@ export class ResultFetchingService {
   ){}
 
   fetchResults(itemRoute: FullItemRoute, item: Item): Observable<{ results: Result[], currentResult?: Result }> {
+    if (!canFetchResults(item)) return of({ results: [] });
     return this.resultsService.getResults(itemRoute).pipe(
       switchMap(results => {
         // 1) if attempt_id was given as arg, try to select the matching result

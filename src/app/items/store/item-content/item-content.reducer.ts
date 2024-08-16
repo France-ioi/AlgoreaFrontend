@@ -31,7 +31,7 @@ export const reducer = createReducer(
     (state, { score }): State => ({
       ...state,
       item: mapStateData(state.item, i => patchItemScore(i, score)),
-      results: state.results ? mapStateData(state.results, r => patchResultScore(r, score)) : null,
+      results: mapStateData(state.results, r => patchResultScore(r, score)),
     })
 
   )
