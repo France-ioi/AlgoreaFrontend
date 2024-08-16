@@ -1,13 +1,36 @@
 @let item = itemData().item;
 
 @if (item | isTeamActivity) {
-  <p>Team activities are currently not supported</p>
+  <p i18n>Team activities are currently not supported</p>
 }
 @else {
-  <p class="validation-text">
-    <span>
-      <ng-container i18n>This activity requires explicit entry</ng-container>&nbsp;
-      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>.
-    </span>
-  </p>
+  @let entryStateFetchState = entryStateState();
+
+  @if (entryStateFetchState.isError) {
+    <p i18n>There was an error while fetching the entry state</p>
+  }
+  @else if (entryStateFetchState.isFetching) {
+    <p i18n>Loading the entry state...</p>
+  }
+  @else {
+    @let entryState = entryStateFetchState.data;
+    @if (entryState | hasAlreadyStated) {
+      <p i18n>You have already started the activity. Please refresh the page.</p>
+    }
+    @else if (entryState | canEnterNow) {
+      <p i18n>You can currently start the activity.</p>
+    }
+    @else {
+      <p i18n>You are not allowed to start the activity for now.</p>
+    }
+    <button
+      class="alg-button primary"
+      icon="ph-bold ph-door"
+      label="Enter now"
+      [disabled]="enterActivityInProgress() || !(entryState | canEnterNow)"
+      (click)="enterActivity(itemData().route)"
+      pButton
+    ></button>
+ }
+
 }

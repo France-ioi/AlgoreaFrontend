@@ -21,7 +21,7 @@
 @let userHasToEnterExplicitely = item.requiresExplicitEntry && ((canViewContent && resultsFetched && !hasCurentResult) || !canViewContent);
 
 @if (userHasToEnterExplicitely) {
-  <alg-explicit-entry [itemData]="itemData()"></alg-explicit-entry>
+  <alg-explicit-entry [itemData]="itemData()" (itemRefreshRequired)="refresh.emit()"></alg-explicit-entry>
 }
 
 @else if (!canViewContent) {
