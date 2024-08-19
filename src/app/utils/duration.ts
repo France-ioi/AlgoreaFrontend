@@ -34,8 +34,25 @@ export class Duration {
     return new Duration(seconds * SECONDS);
   }
 
+  static fromNowUntil(endDate: Date, now = new Date()): Duration {
+    if (endDate <= now) return new Duration(0);
+    return new Duration(endDate.valueOf() - now.valueOf());
+  }
+
   toString(): string {
     return `${Math.floor(this.ms/HOURS)}:${Math.floor(this.ms%HOURS/MINUTES)}:${this.ms%MINUTES/SECONDS}`;
+  }
+
+  toCountdown(): string {
+    const days = Math.floor(this.ms/DAYS);
+    const hours = Math.floor(this.ms%DAYS/HOURS);
+    const min = Math.floor(this.ms%HOURS/MINUTES);
+    const sec = Math.floor(this.ms%MINUTES/SECONDS);
+    const daysStr = days > 0 ? days + 'd' : '';
+    const hoursStr = hours > 0 ? hours + 'h' : '';
+    const minStr = min > 0 ? ((hours > 0 && min < 10 ? '0' : '') + min + 'm') : '';
+    const secStr = (min > 0 && sec < 10 ? '0' : '') + sec + 's';
+    return daysStr + hoursStr + minStr + secStr;
   }
 
   toReadable(): string {

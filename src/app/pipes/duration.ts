@@ -30,3 +30,13 @@ export class DurationToReadablePipe implements PipeTransform {
     return duration.toReadable();
   }
 }
+
+@Pipe({
+  name: 'asCountdown',
+  standalone: true
+})
+export class DurationAsCountdownPipe implements PipeTransform {
+  transform(duration: Duration): string {
+    return duration.toCountdown();
+  }
+}
