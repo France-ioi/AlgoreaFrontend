@@ -105,4 +105,12 @@ export class Duration {
     return !isNaN(this.ms);
   }
 
+  isStrictlyPositive(): boolean {
+    return this.ms > 0;
+  }
+
+  add(ms: number): Duration {
+    return new Duration(this.ms + ms);
+  }
+
 }

@@ -25,7 +25,7 @@ import { AlgErrorHandler } from './app/utils/error-handling/error-handler';
 import { WithCredentialsInterceptor } from './app/interceptors/with_credentials.interceptor';
 import { AuthenticationInterceptor } from './app/interceptors/authentication.interceptor';
 import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
-import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -40,6 +40,8 @@ import { fromObservation, observationEffects } from './app/store/observation';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromUserContent, groupStoreEffects } from './app/groups/store';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
+import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
+import { fromTimeOffset } from './app/store/time-offset';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -142,9 +144,10 @@ bootstrapApplication(AppComponent, {
     provideState(fromForum),
     provideState(fromUserContent),
     provideState(fromItemContent),
+    provideState(fromTimeOffset),
     provideEffects(observationEffects, forumEffects(), groupStoreEffects(), itemStoreEffects()),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
   ]
 }).catch(err => console.error(err));
