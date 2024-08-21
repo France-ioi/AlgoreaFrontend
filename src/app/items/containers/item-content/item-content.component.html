@@ -6,11 +6,12 @@
     >
       <div
         class="html-container"
+        data-testid="item-description"
         [innerHTML]="itemData.item.string.description"
       ></div>
     </ng-container>
     <ng-template #textContent>
-      <p class="description alg-text-base">{{ itemData.item.string.description }}</p>
+      <p class="description alg-text-base" data-testid="item-description">{{ itemData.item.string.description }}</p>
     </ng-template>
   </ng-container>
 
@@ -22,6 +23,7 @@
           <span class="alg-base-text-color" i18n>Edit content</span>
           <alg-switch
             class="edit-switch"
+            data-testid="edit-switch"
             mode="white"
             [checked]="editModeEnabled"
             (change)="onEditModeEnableChange($event)"
