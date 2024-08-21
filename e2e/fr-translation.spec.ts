@@ -35,7 +35,7 @@ test('checks select in item log view', async ({ page }) => {
 
 test('checks select in item permissions', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('a/6707691810849260111;p=;pa=0?watchedGroupId=672913018859223173');
+  await page.goto('a/5770807837681306905;p=6707691810849260111;a=0?watchedGroupId=672913018859223173');
   const itemPermissionsLocator = page.locator('alg-item-permissions');
   await expect.soft(itemPermissionsLocator).toBeVisible();
   await expect.soft(
@@ -49,7 +49,7 @@ test('checks select in item permissions', async ({ page }) => {
   await page.goto('a/5280599138983174;p=;pa=0?watchedGroupId=672913018859223173');
   await expect.soft(page.getByText('Vous ne pouvez pas observer cette activité')).toBeVisible();
 
-  await page.goto('a/5770807837681306905;p=6707691810849260111;pa=0?watchedGroupId=672913018859223173');
+  await page.goto('a/5388967674530252881;p=6707691810849260111,5770807837681306905;a=0?watchedGroupId=672913018859223173');
   await expect.soft(itemPermissionsLocator).toBeVisible();
   await itemPermissionsLocator.click();
   await expect.soft(
