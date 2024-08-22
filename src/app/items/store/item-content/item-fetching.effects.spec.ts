@@ -7,7 +7,7 @@ import { breadcrumbsFetchingEffect, itemFetchingEffect, resultsFetchingEffect } 
 import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
 import { FullItemRoute, itemRoute } from 'src/app/models/routing/item-route';
-import { Result } from '../../data-access/get-results.service';
+import { Result } from '../../models/attempts';
 import { ResultFetchingService } from '../../services/result-fetching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 

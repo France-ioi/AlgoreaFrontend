@@ -1,7 +1,7 @@
 import { FetchError, FetchState, Fetching, fetchingState } from 'src/app/utils/state';
 import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { Result } from '../../data-access/get-results.service';
+import { Result } from '../../models/attempts';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 
 type ItemId = string;

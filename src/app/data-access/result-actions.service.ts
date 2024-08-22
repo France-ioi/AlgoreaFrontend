@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { SimpleActionResponse, assertSuccess, ActionResponse, successData } from './action-response';
+import { SimpleActionResponse, ActionResponse, successData } from './action-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { appConfig } from '../utils/config';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
+import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { Result, attemptResultSchema, resultFromFetchedResult } from '../items/models/attempts';
 
 const startResultTimeout = 8000;
 const startResultPathTimeout = 10000;
@@ -18,7 +20,7 @@ export class ResultActionsService {
 
   constructor(private http: HttpClient) {}
 
-  start(itemIdPath: string[], attemptId: string): Observable<void> {
+  start(itemIdPath: string[], attemptId: string): Observable<Result> {
     const path = itemIdPath.join('/');
     return this.http
       .post<SimpleActionResponse>(`${appConfig.apiUrl}/items/${path}/start-result`, null, {
@@ -28,7 +30,9 @@ export class ResultActionsService {
         context: new HttpContext().set(requestTimeout, startResultTimeout),
       })
       .pipe(
-        map(assertSuccess)
+        map(successData),
+        decodeSnakeCaseZod(attemptResultSchema),
+        map(resultFromFetchedResult),
       );
   }
 

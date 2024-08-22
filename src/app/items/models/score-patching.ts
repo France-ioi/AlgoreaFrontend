@@ -1,5 +1,5 @@
 import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { Result } from '../data-access/get-results.service';
+import { Result } from '../models/attempts';
 
 export function patchItemScore(item: Item, newScore: number): Item {
   return { ...item, bestScore: Math.max(item.bestScore, newScore) };
