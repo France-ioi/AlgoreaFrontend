@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Thread } from '../data-access/get-threads.service';
+import { ThreadStatus } from '../items/models/threads';
 
-function formatThreadStatus(type: Thread['status']): string {
+function formatThreadStatus(type: ThreadStatus): string {
   switch (type) {
     case 'not_started': return $localize`Not started`;
     case 'waiting_for_participant': return $localize`Open`;

@@ -1,39 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { appConfig } from 'src/app/utils/config';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { pipe } from 'fp-ts/function';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { Observable } from 'rxjs';
+import { z } from 'zod';
+import { itemTypeSchema } from '../items/models/item-type';
+import { userBaseSchema, withId } from '../groups/models/user';
 
-const threadDecoder = pipe(
-  D.struct({
-    item: D.struct({
-      id: D.string,
-      languageTag: D.string,
-      title: D.string,
-      type: D.literal('Chapter','Task','Skill'),
+const threadsSchema = z.array(
+  z.object({
+    item: z.object({
+      id: z.string(),
+      languageTag: z.string(),
+      title: z.string(),
+      type: itemTypeSchema,
     }),
-    latestUpdateAt: dateDecoder,
-    messageCount: D.number,
-    participant: pipe(
-      D.struct({
-        id: D.string,
-        login: D.string,
-      }),
-      D.intersect(
-        D.partial({
-          firstName: D.string,
-          lastName: D.string,
-        }),
-      ),
-    ),
-    status: D.literal('not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed'),
+    latestUpdateAt: z.coerce.date(),
+    messageCount: z.number(),
+    participant: withId(userBaseSchema),
+    status: z.enum([ 'not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed' ]),
   }),
 );
 
-export type Thread = D.TypeOf<typeof threadDecoder>;
+type Threads = z.infer<typeof threadsSchema>;
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +31,7 @@ export class GetThreadsService {
   constructor(private http: HttpClient) {
   }
 
-  get(itemId: string, options: { isMine: boolean } | { watchedGroupId: string }): Observable<Thread[]> {
+  get(itemId: string, options: { isMine: boolean } | { watchedGroupId: string }): Observable<Threads> {
     let params = new HttpParams({ fromObject: { item_id: itemId } });
     if ('isMine' in options) {
       params = params.set('is_mine', options.isMine ? 1 : 0);
@@ -53,7 +42,7 @@ export class GetThreadsService {
     return this.http.get<unknown>(`${appConfig.apiUrl}/threads`, {
       params,
     }).pipe(
-      decodeSnakeCase(D.array(threadDecoder)),
+      decodeSnakeCaseZod(threadsSchema),
     );
   }
 }
