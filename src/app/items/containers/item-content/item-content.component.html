@@ -57,7 +57,7 @@
   @else {
     @if ((perms | allowsEditingChildren) || editModeEnabled) {
       <div class="edit">
-        <label class="edit-label">
+        <span class="edit-label">
           <span class="alg-base-text-color" i18n>Edit content</span>
           <alg-switch
             class="edit-switch"
@@ -66,7 +66,7 @@
             [checked]="editModeEnabled"
             (change)="onEditModeEnableChange($event)"
           ></alg-switch>
-        </label>
+        </span>
       </div>
     }
     @if (editModeEnabled) {
