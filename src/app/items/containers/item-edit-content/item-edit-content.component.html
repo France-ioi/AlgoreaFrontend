@@ -1,5 +1,5 @@
 <ng-container *ngIf="itemData && itemData.currentResult">
-  <div *ngIf="itemData.item.permissions | allowsEditingAll">
+  <div>
     <h2 class="alg-h2 alg-text-normal title" i18n>Description</h2>
     <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
   </div>

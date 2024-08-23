@@ -28,6 +28,7 @@ import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { NgIf } from '@angular/common';
 import { fromItemContent } from '../../store';
 import { Store } from '@ngrx/store';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -59,6 +60,7 @@ function isServerValidationErrors(e: HttpErrorResponse): e is ServerValidationEr
     FloatingSaveComponent,
     AllowsEditingAllItemPipe,
     AllowsEditingChildrenItemPipe,
+    ErrorComponent,
   ],
 })
 export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
