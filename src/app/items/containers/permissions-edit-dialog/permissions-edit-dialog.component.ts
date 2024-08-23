@@ -39,7 +39,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
   @Output() close = new EventEmitter<boolean>();
 
   @Input() currentUserPermissions!: ItemCorePerm;
-  @Input() item!: { id: string, string: { title: string | null } };
+  @Input() item!: { id: string, requiresExplicitEntry: boolean, string: { title: string | null } };
   @Input() group!: RawGroupRoute;
   @Input() sourceGroup?: RawGroupRoute;
   @Input() permReceiverName!: string;

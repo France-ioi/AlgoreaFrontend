@@ -3,6 +3,9 @@
 .header-content {
   display: flex;
   align-items: center;
+  font-size: toRem(12);
+  font-style: italic;
+  color: var(--alg-secondary-color);
 }
 
 .body {
@@ -14,11 +17,6 @@
 .item {
   display: flex;
   position: relative;
-  //height: 5rem;
-
-  &:first-child {
-    //height: 3rem;
-  }
 }
 
 .desc {
@@ -36,7 +34,6 @@
 
 .desc-name {
   color: var(--alg-secondary-color);
-  //font-weight: bold;
   cursor: pointer;
 
   &.active {
@@ -45,7 +42,6 @@
 }
 
 .switch {
-  //height: 3rem;
   margin-right: 1.8rem;
   width: 2.5rem;
   display: flex;

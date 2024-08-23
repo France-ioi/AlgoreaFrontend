@@ -2,6 +2,7 @@ import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { SectionHeaderComponent } from '../section-header/section-header.component';
 import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { Tag } from 'primeng/tag/tag';
 
 @Component({
   selector: 'alg-collapsible-section',
@@ -14,12 +15,14 @@ export class CollapsibleSectionComponent {
 
   @Input() header = '';
   @Input() errorMessage?: string;
+  @Input() severity: Tag['severity'] = 'danger';
   @Input() icon = '';
 
   @Input() disabled = false;
   @Input() collapsed = true;
   @Input() collapsible = true;
   @Input() theme: 'success' | 'warning' | 'danger' = 'success';
+  @Input() messageClass = '';
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
 

@@ -42,6 +42,8 @@ export class SwitchFieldComponent implements ControlValueAccessor {
 
   @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
   @ContentChild('label') labelTemplate?: TemplateRef<any>;
+  @ContentChild('content') contentTemplate?: TemplateRef<any>;
+  @ContentChild('headerContent') headerContent?: TemplateRef<any>;
 
   @Output() valueChange = new EventEmitter<boolean>();
 

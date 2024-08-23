@@ -52,6 +52,10 @@ export class GroupPermissionsService {
     permissions: Partial<GroupPermissions>): Observable<void> {
 
     const body = {
+      ...(permissions.canEnterFrom && permissions.canEnterUntil ? {
+        can_enter_from: permissions.canEnterFrom,
+        can_enter_until: permissions.canEnterUntil,
+      } : {}),
       can_view: permissions.canView,
       can_grant_view: permissions.canGrantView,
       can_watch: permissions.canWatch,

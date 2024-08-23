@@ -1,6 +1,44 @@
 <form [formGroup]="form" *ngIf="form">
   <div class="container">
     <div class="controls-container">
+      @if (requiresExplicitEntry) {
+        <alg-collapsible-section
+          class="header-with-padding-left"
+          i18n-header header="Can enter"
+          icon="ph-duotone ph-door"
+          [collapsible]="!canEnterWarningMessage"
+          [errorMessage]="canEnterWarningMessage"
+          severity="warning"
+          messageClass="message-with-bottom-margin"
+        >
+          <ng-template #content let-collapsed>
+            <alg-switch-field
+              data-testid="can-enter-switch-field"
+              i18n-title title="Can Enter"
+              icon="fa fa-door-open"
+              formControlName="canEnterEnabled"
+              [collapsed]="collapsed"
+              [disabledTooltip]="permissionsDialogData.canEnterDisabledTooltip ?? []"
+            >
+              <ng-template #label i18n>
+                Whether the users with 'info' view permission are allowed to enter this activity.
+                The activity must be also correctly configured to allow entering.
+              </ng-template>
+              <ng-template #headerContent>
+                @let canEnter = this.form.get('canEnter')?.value;
+                @if (canEnter) {
+                  {{ canEnter.canEnterFrom | date: 'dd/MM/yyyy HH:mm' }} - {{ canEnter.canEnterUntil | date: 'dd/MM/yyyy HH:mm' }}
+                }
+              </ng-template>
+              @if (this.form.get('canEnterEnabled')?.value) {
+                <ng-template #content>
+                  <alg-can-enter formControlName="canEnter"></alg-can-enter>
+                </ng-template>
+              }
+            </alg-switch-field>
+          </ng-template>
+        </alg-collapsible-section>
+      }
       <alg-collapsible-section
         class="header-with-padding-left"
         i18n-header header="Can view" icon="ph-duotone ph-eyeglasses"
