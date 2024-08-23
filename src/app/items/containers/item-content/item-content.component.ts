@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, computed, input, signal } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -8,20 +8,19 @@ import {
 } from '../../containers/item-children-edit-form/item-children-edit-form.component';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
-import { BehaviorSubject } from 'rxjs';
-import { AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
+import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { TaskLoaderComponent } from '../../containers/task-loader/task-loader.component';
 import { ItemUnlockAccessComponent } from '../../containers/item-unlock-access/item-unlock-access.component';
-import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { ParentSkillsComponent } from '../../containers/parent-skills/parent-skills.component';
 import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.component';
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
 import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
+import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 
 @Component({
   selector: 'alg-item-content',
@@ -29,7 +28,6 @@ import { ErrorComponent } from '../../../ui-components/error/error.component';
   styleUrls: [ './item-content.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
     HasHTMLDirective,
     SwitchComponent,
     ItemChildrenEditFormComponent,
@@ -38,13 +36,14 @@ import { ErrorComponent } from '../../../ui-components/error/error.component';
     ParentSkillsComponent,
     ItemDisplayComponent,
     NgClass,
-    MessageInfoComponent,
     ItemUnlockAccessComponent,
     TaskLoaderComponent,
-    AsyncPipe,
     AllowsViewingItemContentPipe,
     AllowsEditingChildrenItemPipe,
+    AllowsEditingAllItemPipe,
     ErrorComponent,
+    IsAChapterPipe,
+    IsASkillPipe,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
@@ -52,7 +51,16 @@ export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(ItemChildrenEditFormComponent) itemChildrenEditFormComponent?: ItemChildrenEditFormComponent;
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
+  private item = computed(() => this.itemData().item);
+  /**
+   * Item description, only if it should be shown
+   */
+  description = computed(() => {
+    const description = this.item().string.description;
+    return (!isATask(this.item()) && description /* not null, undefined or empty */) ? description : null;
+  });
+
   @Input() taskView?: TaskTab['view'];
   @Input() taskConfig: TaskConfig|null = null;
   @Input() savingAnswer = false;
@@ -67,7 +75,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   @Output() disablePlatformProgress = new EventEmitter<boolean>();
   @Output() fullFrameTask = new EventEmitter<boolean>();
 
-  isTaskLoaded$ = new BehaviorSubject(false); // whether the task has finished loading, i.e. is ready or in error
+  isTaskLoaded = signal(false); // whether the task has finished loading, i.e. is ready or in error
 
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent?.dirty;
@@ -94,4 +102,7 @@ export class ItemContentComponent implements PendingChangesComponent {
     this.store.dispatch(fromForum.itemPageEventSyncActions.forceSyncCurrentThreadEvents());
   }
 
+  onTaskLoadChange(loadingComplete: boolean): void {
+    this.isTaskLoaded.set(loadingComplete);
+  }
 }
