@@ -406,30 +406,27 @@ test('checks task loading the content view content perm, explicit entry, results
 
 // Task, with view info perm, explicit entry, a result is returned (mock the service for that):
 // "This activity requires explicit entry", item-display NOT in dom
-test('checks task message "This activity requires explicit entry" is visible and item-display not in DOM', async ({ itemContentPage, page }) => {
-  await initAsDemoUser(page);
-  await page.route(`${apiUrl}/items/8762331199149369455/attempts?attempt_id=0`, async route => {
+test('checks explicit entry component is visible and item-display not in DOM', async ({ itemContentPage, page }) => {
+  await page.route(`${apiUrl}/items/851659072357188051/attempts?attempt_id=0`, async route => {
     await route.fulfill({ json: attemptsResponse });
   });
-  await itemContentPage.goto('a/8762331199149369455;p=4702,1625159049301502151;pa=0');
+  await itemContentPage.goto('/a/851659072357188051;p=4702,7528142386663912287,944619266928306927;pa=0');
   await Promise.all([
-    itemContentPage.waitForItemResponse('8762331199149369455'),
-    itemContentPage.waitForBreadcrumbsResponse('4702/1625159049301502151/8762331199149369455', 'parent_attempt_id=0'),
-    itemContentPage.waitForAttemptsResponse('8762331199149369455', 'parent_attempt_id=0'),
+    itemContentPage.waitForItemResponse('851659072357188051'),
+    itemContentPage.waitForBreadcrumbsResponse('4702/7528142386663912287/944619266928306927/851659072357188051', 'parent_attempt_id=0'),
   ]);
-  await itemContentPage.checksRequiresExplicitEntryMessageIsVisible();
+  await itemContentPage.checksExplicitEntryIsVisible();
   await itemContentPage.checksItemDisplayIsNotVisible();
 });
 
 // Task, with view content perm, explicit entry, results fetched but empty so undefined current result:
 // "This activity requires explicit entry", item-display NOT in dom
-test('checks task message "This activity requires explicit entry" is visible and item-display not in DOM with view content perm, explicit entry, no results', async ({ itemContentPage, page }) => {
-  await initAsDemoUser(page);
-  await itemContentPage.goto('a/8762331199149369455;p=4702,1625159049301502151;pa=0');
+test('checks that explicit entry component is visible and item-display not in DOM with view content perm, explicit entry, no results', async ({ itemContentPage, page }) => {
+  await itemContentPage.goto('/a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;pa=0');
   await Promise.all([
-    itemContentPage.waitForItemResponse('8762331199149369455'),
-    itemContentPage.waitForBreadcrumbsResponse('4702/1625159049301502151/8762331199149369455', 'parent_attempt_id=0'),
-    itemContentPage.waitForAttemptsResponse('8762331199149369455', 'parent_attempt_id=0'),
+    itemContentPage.waitForItemResponse('1480462971860767879'),
+    itemContentPage.waitForBreadcrumbsResponse('4702/7528142386663912287/944619266928306927/1480462971860767879', 'parent_attempt_id=0'),
+    itemContentPage.waitForAttemptsResponse('1480462971860767879', 'parent_attempt_id=0'),
   ]);
-  await itemContentPage.checksRequiresExplicitEntryMessageIsVisible();
+  await itemContentPage.checksExplicitEntryIsVisible();
 });

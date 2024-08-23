@@ -113,8 +113,8 @@ export class ItemContentPage {
     await expect.soft(this.page.getByText('Prerequisites')).not.toBeVisible();
   }
 
-  async checksRequiresExplicitEntryMessageIsVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('This activity requires explicit entry')).toBeVisible();
+  async checksExplicitEntryIsVisible(): Promise<void> {
+    await expect.soft(this.page.locator('alg-explicit-entry')).toBeVisible();
   }
 
   async checksTaskNotCorrectlyConfiguredMessageIsVisible(): Promise<void> {
