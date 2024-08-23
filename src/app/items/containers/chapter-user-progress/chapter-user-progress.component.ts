@@ -8,7 +8,7 @@ import { FetchState } from 'src/app/utils/state';
 import { ItemType } from 'src/app/items/models/item-type';
 import { ItemData } from '../../models/item-data';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
-import { DurationToReadable } from 'src/app/pipes/duration';
+import { DurationToReadablePipe, SecondsToDurationPipe } from 'src/app/pipes/duration';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -54,7 +54,8 @@ interface RowData {
     DatePipe,
     ItemRoutePipe,
     RouteUrlPipe,
-    DurationToReadable
+    SecondsToDurationPipe,
+    DurationToReadablePipe,
   ],
 })
 export class ChapterUserProgressComponent implements OnChanges, OnDestroy {

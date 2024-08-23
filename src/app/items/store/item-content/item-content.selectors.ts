@@ -3,7 +3,7 @@ import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
 import { FullItemRoute, itemCategoryFromPrefix, routesEqualIgnoringCommands } from 'src/app/models/routing/item-route';
 import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../utils/item-route-validation';
-import { State } from './item-content.state';
+import { State, initialState } from './item-content.state';
 import { equalNullishFactory } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
@@ -98,20 +98,20 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectState,
     selectActiveContentId,
     fromObservation.selectObservedGroupId,
-    ({ item }, id, observedGroupId) => (equal(item.identifier, { id, observedGroupId }) ? item : fetchingState())
+    ({ item }, id, observedGroupId) => (equal(item.identifier, { id, observedGroupId }) ? item : initialState.item)
   );
 
   const selectActiveContentBreadcrumbs = createSelector(
     selectState,
     selectActiveContentRoute,
     ({ breadcrumbs }, route) =>
-      (equalNullishFactory(routesEqualIgnoringCommands)(route, breadcrumbs.identifier) ? breadcrumbs : fetchingState())
+      (equalNullishFactory(routesEqualIgnoringCommands)(route, breadcrumbs.identifier) ? breadcrumbs : initialState.breadcrumbs)
   );
 
   const selectActiveContentResults = createSelector(
     selectState,
     selectActiveContentRoute,
-    ({ results }, route) => (equalNullishFactory(routesEqualIgnoringCommands)(route, results?.identifier) ? results : null)
+    ({ results }, route) => (equalNullishFactory(routesEqualIgnoringCommands)(route, results?.identifier) ? results : initialState.results)
   );
 
   const selectActiveContentInfoForFetchingResults = createSelector(
@@ -136,8 +136,8 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
         route,
         item: itemState.data,
         breadcrumbs: breadcrumbsState.data,
-        results: resultsState?.data?.results,
-        currentResult: resultsState?.data?.currentResult,
+        results: resultsState.data?.results,
+        currentResult: resultsState.data?.currentResult,
       });
     }
   );

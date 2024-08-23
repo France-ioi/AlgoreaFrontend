@@ -12,11 +12,31 @@ export class DurationToMinPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'duration',
+  name: 'secToDuration',
   standalone: true
 })
-export class DurationToReadable implements PipeTransform {
-  transform(duration: number): string {
-    return Duration.fromSeconds(duration).toReadable();
+export class SecondsToDurationPipe implements PipeTransform {
+  transform(seconds: number): Duration {
+    return Duration.fromSeconds(seconds);
+  }
+}
+
+@Pipe({
+  name: 'readable',
+  standalone: true
+})
+export class DurationToReadablePipe implements PipeTransform {
+  transform(duration: Duration): string {
+    return duration.toReadable();
+  }
+}
+
+@Pipe({
+  name: 'asCountdown',
+  standalone: true
+})
+export class DurationAsCountdownPipe implements PipeTransform {
+  transform(duration: Duration): string {
+    return duration.toCountdown();
   }
 }

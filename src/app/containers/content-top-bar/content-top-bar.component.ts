@@ -19,6 +19,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { TabService } from '../../services/tab.service';
+import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -33,6 +34,7 @@ import { TabService } from '../../services/tab.service';
     BreadcrumbComponent,
     TabBarComponent,
     ObservationBarWithButtonComponent,
+    TimeLimitedContentInfoComponent,
     NeighborWidgetComponent,
     AsyncPipe,
     PushPipe,

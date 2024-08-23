@@ -1,0 +1,22 @@
+@import 'src/assets/scss/functions';
+
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 toRem(16);
+  height: toRem(32);
+  border-radius: toRem(20);
+  background-color: #ffcb30;
+}
+
+.left-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.title {
+  margin: 0 toRem(16);
+  font-size: toRem(12);
+}
