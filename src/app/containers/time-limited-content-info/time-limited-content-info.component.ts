@@ -9,7 +9,7 @@ import { Duration } from 'src/app/utils/duration';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 
 /**
- * The current result. `null` if we know for sure there is no current result. `undefined` if it is not known yet.
+ * Select the current result, will be`null` if we know for sure there is no current result and `undefined` if it is not known yet.
  */
 const selectCurrentResult = createSelector(
   fromItemContent.selectActiveContentResults,
