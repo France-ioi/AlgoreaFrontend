@@ -24,6 +24,7 @@
           buttonCaption="Refresh"
           [showRefreshButton]="true"
           (refresh)="fetchRows()"
+          i18n
         >
           This group has no {currentFilter, select, Users {users} Teams {teams} other {sub-groups}}
         </alg-error>
