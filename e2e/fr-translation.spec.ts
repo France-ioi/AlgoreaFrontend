@@ -113,13 +113,11 @@ test('checks select in user progress table', async ({ page }) => {
   const selectionLocator = page.getByText('équipes');
   await expect.soft(selectionLocator).toBeVisible();
   await selectionLocator.click();
-  // To be translated
-  await expect.soft(page.getByText('This group has no teams')).toBeVisible();
+  await expect.soft(page.getByText('Ce groupe n\'a aucune équipe')).toBeVisible();
 });
 
 test('checks select for no content in left menu', async ({ page }) => {
   await page.goto('/groups/manage');
-  // To be translated
-  await expect.soft(page.getByText('You are not a member or manager of any group')).toBeVisible();
+  await expect.soft(page.getByText('Vous n\'êtes membre ou gestionnaire d\'aucun groupe')).toBeVisible();
 });
 
