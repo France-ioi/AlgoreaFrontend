@@ -4,7 +4,7 @@ import { Store, createSelector } from '@ngrx/store';
 import { filter, interval, map, of, switchMap } from 'rxjs';
 import { fromItemContent } from 'src/app/items/store';
 import { DurationAsCountdownPipe } from 'src/app/pipes/duration';
-import { isInfinite } from 'src/app/utils/date';
+import { isInfinite, isPastDate } from 'src/app/utils/date';
 import { Duration } from 'src/app/utils/duration';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 
@@ -49,7 +49,7 @@ export class TimeLimitedContentInfoComponent {
         const timeRemaining = Duration.fromNowUntil(submissionUntil);
         if (!timeRemaining.getMs()) return of(new Duration(0));
         return interval(1000).pipe(
-          map(() => Duration.fromNowUntil(submissionUntil)),
+          map(() => (isPastDate(submissionUntil) ? new Duration(0) : Duration.fromNowUntil(submissionUntil))),
         );
       }),
     )
