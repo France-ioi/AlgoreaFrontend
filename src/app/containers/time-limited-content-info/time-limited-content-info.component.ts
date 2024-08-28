@@ -52,7 +52,7 @@ export class TimeLimitedContentInfoComponent {
           map(() => (isPastDate(submissionUntil) ? new Duration(0) : Duration.fromNowUntil(submissionUntil))),
         );
       }),
-    )
+    ), { initialValue: null }
   );
 
   constructor(
