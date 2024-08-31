@@ -80,6 +80,17 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
  */
 export const appDefaultItemRoute = itemRoute('activity', appConfig.defaultActivityId, { path: [], parentAttemptId: defaultAttemptId });
 
+/**
+ * Return the route of the parent item of the given item route.
+ * Beware it assumes the parent as the same content type as its child... which is not fully guaranteed
+ */
+export function parentRoute(route: ItemRoute): ItemRoute {
+  if (route.path.length === 0) return appDefaultItemRoute;
+  return itemRoute(route.contentType, route.path[route.path.length - 1]!, {
+    attemptId: route.parentAttemptId ?? undefined,
+    path: route.path.slice(0, -1),
+  });
+}
 
 /* **********************************************************************************************************
  * Utility functions for decoding the item route from url params

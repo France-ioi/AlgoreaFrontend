@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownOption } from 'src/app/ui-components/dropdown/dropdown.component';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { HOURS } from 'src/app/utils/duration';
 import { ItemRemoveButtonComponent } from '../../containers/item-remove-button/item-remove-button.component';
 import { FormErrorComponent } from 'src/app/ui-components/form-error/form-error.component';
@@ -13,6 +12,7 @@ import { DropdownComponent } from 'src/app/ui-components/dropdown/dropdown.compo
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { NgIf } from '@angular/common';
+import { ItemData } from '../../models/item-data';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -40,7 +40,7 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Output() confirmRemoval = new EventEmitter<void>();
 
-  @Input() item?: Item;
+  @Input({ required: true }) itemData!: ItemData;
   @Input() parentForm?: UntypedFormGroup;
   @Input() attemptId?: string;
 

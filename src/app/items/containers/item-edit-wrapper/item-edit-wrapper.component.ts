@@ -97,7 +97,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     validators: [ this.maxTeamSizeValidator() ],
   });
   initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMinEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
-  attemptId?: string;
 
   get enableParticipation(): boolean {
     return this.initialFormData?.type !== 'Skill';
@@ -123,7 +122,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   ngOnChanges(): void {
     if (this.itemData) {
-      this.attemptId = this.itemData.route.attemptId || this.itemData.route.parentAttemptId;
       this.initialFormData = {
         ...this.itemData.item,
         durationEnabled: this.itemData.item.duration !== null,
