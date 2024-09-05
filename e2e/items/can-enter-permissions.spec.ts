@@ -3,6 +3,7 @@ import { initAsUsualUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
 import { farFutureDateString } from 'src/app/utils/date';
 import { HOURS } from 'src/app/utils/duration';
+import { expect } from 'e2e/groups/fixture';
 
 test('check can enter permissions', { tag: '@no-parallelism' }, async ({ page, editPermissionsModal }) => {
   await initAsUsualUser(page);
@@ -114,6 +115,22 @@ test('check can enter fields behaviour', async ({ page, editPermissionsModal }) 
     await editPermissionsModal.isSavePermissionsBtnDisabled();
     await editPermissionsModal.fillUntilValue(untilDateValue);
     await editPermissionsModal.checksIsUntilValidationMessageNotVisible(fromDateValue);
+    await editPermissionsModal.isSavePermissionsBtnEnabled();
+  });
+
+  await test.step('checks can enter sub controls validation', async () => {
+    await editPermissionsModal.fillFromValue('32/09/2024 22:34');
+    await expect.soft(page.getByText('Invalid date')).toBeVisible();
+    await editPermissionsModal.fillUntilValue('32/09/2024 22:34');
+    await editPermissionsModal.isSavePermissionsBtnDisabled();
+    await editPermissionsModal.fillFromValue(fromDateValue);
+    await editPermissionsModal.fillUntilValue(untilDateValue);
+    await expect.soft(page.getByText('Invalid date')).not.toBeVisible();
+    await editPermissionsModal.isSavePermissionsBtnEnabled();
+    await editPermissionsModal.fillFromValue('32/09/2024 22:34');
+    await expect.soft(page.getByText('Invalid date')).toBeVisible();
+    await editPermissionsModal.isSavePermissionsBtnDisabled();
+    await editPermissionsModal.toggleCanEnterSwitch();
     await editPermissionsModal.isSavePermissionsBtnEnabled();
   });
 });

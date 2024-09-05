@@ -9,6 +9,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   NgControl,
+  NgModel,
   ReactiveFormsModule,
   ValidationErrors
 } from '@angular/forms';
@@ -16,6 +17,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { DatePipe } from '@angular/common';
 import { FormErrorComponent } from '../form-error/form-error.component';
 import { convertDateToString, convertStringToDate } from 'src/app/utils/input-date';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-input-date',
@@ -47,6 +49,7 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
 
   input = '';
   control?: FormControl<Date | null>;
+  subscription?: Subscription;
 
   constructor(private injector: Injector) {
   }
@@ -55,10 +58,21 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
     const injectedControl = this.injector.get(NgControl);
     if (injectedControl instanceof FormControlName) {
       this.control = this.injector.get(FormGroupDirective).getControl(injectedControl);
+    } else if (injectedControl instanceof NgModel) {
+      this.control = injectedControl.control;
+
+      this.subscription = injectedControl.control.valueChanges.subscribe(value => {
+        if (injectedControl.model !== value || injectedControl.viewModel !== value) {
+          injectedControl.viewToModelUpdate(value);
+        }
+      });
+    } else {
+      this.control = new FormControl();
     }
   }
 
   ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
     setTimeout(() => {
       this.control?.clearValidators();
       this.control?.updateValueAndValidity();

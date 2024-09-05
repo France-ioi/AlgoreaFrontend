@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import {
@@ -48,6 +48,9 @@ export interface CanEnterValue {
   ],
 })
 export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  @ViewChild('canEnterFromRef') canEnterFromRef?: InputDateComponent;
+  @ViewChild('canEnterUntilRef') canEnterUntilRef?: InputDateComponent;
+
   canEnterFrom: Date | null = null;
   canEnterUntil: Date | null = null;
   currentDate = new Date();
@@ -79,6 +82,9 @@ export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestro
   private onChange: (value: CanEnterValue | null) => void = () => {};
 
   validate(control: AbstractControl<CanEnterValue | null>): ValidationErrors | null {
+    if (this.canEnterFromRef?.control?.invalid || this.canEnterUntilRef?.control?.invalid) return {
+      canEnterUntilDateInvalid: true
+    };
     return control.value !== null && control.value.canEnterUntil <= control.value.canEnterFrom
       ? { canEnterUntilMDateMinInvalid: { minDate: control.value.canEnterFrom } } : null;
   }

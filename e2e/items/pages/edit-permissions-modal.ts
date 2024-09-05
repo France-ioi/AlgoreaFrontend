@@ -6,8 +6,8 @@ export class EditPermissionsModal {
   private canEnterHeaderLocator = this.page.locator('alg-section-header').filter({ hasText: 'Can enter' });
   private canEnterSwitchFieldLocator = this.page.getByTestId('can-enter-switch-field');
   private canEnterSwitchLocator = this.canEnterSwitchFieldLocator.locator('alg-switch');
-  private fromInputLocator = this.page.locator('div').filter({ hasText: /^From:$/ }).getByRole('textbox');
-  private untilInputLocator = this.page.locator('div').filter({ hasText: /^Until:$/ }).getByRole('textbox');
+  private fromInputLocator = this.page.getByTestId('can-enter-from-control').getByRole('textbox');
+  private untilInputLocator = this.page.getByTestId('can-enter-until-control').getByRole('textbox');
   private proceedLocator = this.page.getByRole('button', { name: 'Proceed' });
   private itemPermissionsLocator = this.page.locator('alg-item-permissions');
   private editPermissionsBtnLocator = this.page.getByText('Edit permissions');
@@ -102,7 +102,7 @@ export class EditPermissionsModal {
   }
 
   async fillUntilValue(dateString: string): Promise<void> {
-    await this.fromInputLocator.focus();
+    await this.untilInputLocator.focus();
     await this.untilInputLocator.fill(dateString);
   }
 
