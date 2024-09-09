@@ -4,6 +4,8 @@ import { MyGroupsComponent } from './containers/my-groups/my-groups.component';
 import { UserComponent } from './containers/user/user.component';
 import { GroupByIdComponent } from './group-by-id.component';
 import { ManageGroupsComponent } from 'src/app/groups/containers/manage-groups/manage-groups.component';
+import { PageNotFoundComponent } from '../containers/page-not-found/page-not-found.component';
+import { DefaultLayoutInitService } from '../services/layout.service';
 
 const routes: Routes = [
   {
@@ -55,6 +57,11 @@ const routes: Routes = [
         children: [],
       },
     ],
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
+    canActivate: [ DefaultLayoutInitService ]
   },
 ];
 
