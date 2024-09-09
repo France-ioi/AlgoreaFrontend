@@ -46,7 +46,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   const selectActiveContentItemTypeCategory = createSelector(
     fromRouter.selectPath,
-    path => (!!path && path[0] ? itemCategoryFromPrefix(path[0]) : null),
+    path => (!!path && path.length >= 2 && path[0] ? itemCategoryFromPrefix(path[0]) : null),
   );
 
   const selectIsItemContentActive = createSelector(
