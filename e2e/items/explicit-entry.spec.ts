@@ -7,7 +7,7 @@ test('enter explicitely an activity with "content" initial view permission', asy
   await page.getByRole('button', { name: 'Enter now' }).click();
 
   await expect.soft(page.locator('.right-container').getByText('Some course')).toBeVisible();
-  await expect.soft(page.locator('alg-time-limited-content-info')).not.toBeVisible();
+  await expect.soft(page.locator('alg-time-limited-content-info')).toBeVisible();
   await expect.soft(page.getByText('2h59')).toBeVisible();
 });
 
