@@ -2,11 +2,9 @@ import { AfterViewInit, SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { delay, take } from 'rxjs';
-import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { TypeFilter } from '../../models/composition-filter';
 import { DurationToReadablePipe, SecondsToDurationPipe } from 'src/app/pipes/duration';
 import { AllowsWatchingItemAnswersPipe } from 'src/app/items/models/item-watch-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -18,11 +16,12 @@ import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { ItemType } from 'src/app/items/models/item-type';
 import { ButtonModule } from 'primeng/button';
+import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
+import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
 
 export interface ProgressData {
-  progress: ParticipantProgresses[number],
+  progress: Progress,
   target: Element,
-  currentFilter: TypeFilter,
   colItem: {
     type: ItemType,
     fullRoute: FullItemRoute,
@@ -50,6 +49,7 @@ export interface ProgressData {
     SecondsToDurationPipe,
     DurationToReadablePipe,
     ButtonModule,
+    RelativeTimePipe,
   ],
 })
 export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {

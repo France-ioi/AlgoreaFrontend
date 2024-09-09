@@ -6,7 +6,7 @@ import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
 import { formatUser } from 'src/app/groups/models/user';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
-import { GetGroupProgressService, ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
+import { GetGroupProgressService } from 'src/app/data-access/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { TypeFilter } from '../../models/composition-filter';
 import { GetItemChildrenService } from '../../../data-access/get-item-children.service';
@@ -39,10 +39,27 @@ import { CompositionFilterComponent } from '../../containers/composition-filter/
 
 const progressListLimit = 25;
 
+export type Progress = {
+  groupId: string,
+  itemId: string,
+  score: number,
+  timeSpent: number,
+  hintsRequested: number,
+  submissions: number,
+  latestActivityAt: Date | null,
+} & ({
+  type: 'user',
+  validated: boolean,
+} | {
+  type: 'group',
+  validationRate: number,
+});
+
+
 interface DataRow {
   header: string,
   id: string,
-  data: (ParticipantProgresses[number]|undefined)[],
+  data: (Progress|undefined)[],
 }
 interface DataColumn {
   id: string,
@@ -174,7 +191,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     return row.id;
   }
 
-  showProgressDetail(target: HTMLElement, userProgress: ParticipantProgresses[number], row: DataRow, col: DataColumn): void {
+  showProgressDetail(target: HTMLElement, userProgress: Progress, row: DataRow, col: DataColumn): void {
     if (!this.itemData) {
       throw new Error('Unexpected: Missed item data');
     }
@@ -186,7 +203,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.progressOverlay = {
       target,
       progress: userProgress,
-      currentFilter: this.currentFilter,
       colItem: {
         type: col.type,
         fullRoute: itemRoute(
@@ -228,22 +244,27 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.fetchMoreRows();
   }
 
-  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<ParticipantProgresses> {
+  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<Progress[]> {
     switch (filter) {
       case 'Users':
-        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], { limit: pageSize, fromId });
+        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], { limit: pageSize, fromId }).pipe(
+          map(progress => progress.map(p => ({ ...p, type: 'user' }))),
+        );
       case 'Teams':
-        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]);
+        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]).pipe(
+          map(progress => progress.map(p => ({ ...p, type: 'user' }))),
+        );
       case 'Groups':
         return this.getGroupUsersProgressService.getGroupsProgress(groupId, [ itemId ])
-          .pipe(map(groupsProgress => groupsProgress.map(m => ({
-            groupId: m.groupId,
-            itemId: m.itemId,
-            validated: m.validationRate === 1,
-            score: m.averageScore,
-            timeSpent: m.avgTimeSpent,
-            hintsRequested: m.avgHintsRequested,
-            submissions: m.avgSubmissions,
+          .pipe(map(groupsProgress => groupsProgress.map(p => ({
+            type: 'group',
+            groupId: p.groupId,
+            itemId: p.itemId,
+            validationRate: p.validationRate,
+            score: p.averageScore,
+            timeSpent: p.avgTimeSpent,
+            hintsRequested: p.avgHintsRequested,
+            submissions: p.avgSubmissions,
             latestActivityAt: null,
           }))));
     }
