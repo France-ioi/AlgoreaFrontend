@@ -18,8 +18,12 @@ export class AlgErrorHandler extends ErrorHandler {
   }
 
   handleError(err: any): void {
-    const regExp = /Loading chunk [a-z_\d]+ failed/;
-    if (regExp.test(convertToError(err).message)) {
+    const chunkErrormessages = [
+      'Loading chunk [a-z_\\d]+ failed',
+      'Failed to fetch dynamically imported module',
+      'error loading dynamically imported module',
+    ];
+    if (new RegExp(chunkErrormessages.map(m => `(${m})`).join('|')).test(convertToError(err).message)) {
       this.chunkErrorService.emitError();
       return;
     }
