@@ -23,7 +23,7 @@ const itemParentsSchema = z.array(
       startedAt: z.coerce.date().nullable(),
       scoreComputed: z.number(),
       validated: z.boolean()
-    })
+    }).nullable()
   })
 );
 

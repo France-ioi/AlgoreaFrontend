@@ -11,7 +11,7 @@ export const attemptResultSchema = z.object({
   scoreComputed: z.number(),
   startedAt: z.coerce.date().nullable(),
   validated: z.boolean(),
-  userCreator: withGroupId(userBaseSchema).optional(),
+  userCreator: withGroupId(userBaseSchema).nullable(),
 });
 
 export interface Result {

@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { ItemByIdComponent } from './item-by-id.component';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes-guard';
 import { BeforeUnloadGuard } from 'src/app/guards/before-unload-guard';
+import { PageNotFoundComponent } from '../containers/page-not-found/page-not-found.component';
+import { DefaultLayoutInitService } from '../services/layout.service';
 
 const routes: Routes = [
   {
@@ -75,7 +77,12 @@ const routes: Routes = [
         ],
       },
     ]
-  }
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent,
+    canActivate: [ DefaultLayoutInitService ]
+  },
 ];
 
 export default routes;
