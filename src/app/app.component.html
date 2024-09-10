@@ -49,14 +49,16 @@
   [closable]="false"
 >
   <p class="error-message">
-    <ng-container *ngIf="fatalError.message === 'ChunkError'; else otherErrorMessage" i18n>
-      An error occurred that we cannot recover (you got a network issue?).
-    </ng-container>
-    <ng-template #otherErrorMessage>
+    @if (fatalError.message === 'ChunkError') {
+      <ng-container i18n>
+        An error occurred that we cannot recover (you got a network issue?).
+      </ng-container>
+    }
+    @else {
       <ng-container i18n="@@auth-error-modal-context">
         Oops, we are unable to make the site work properly. Are you connected to the Internet?
       </ng-container>
-    </ng-template>
+    }
   </p>
   <div class="error-refresh-button">
     <p-button
