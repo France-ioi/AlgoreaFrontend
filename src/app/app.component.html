@@ -50,7 +50,7 @@
 >
   <p class="error-message">
     <ng-container *ngIf="fatalError.message === 'ChunkError'; else otherErrorMessage" i18n>
-      The application has been updated since you opened it, it needs to be reloaded.
+      An error occurred that we cannot recover (you got a network issue?).
     </ng-container>
     <ng-template #otherErrorMessage>
       <ng-container i18n="@@auth-error-modal-context">
