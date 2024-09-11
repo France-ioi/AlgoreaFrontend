@@ -1,0 +1,28 @@
+<div class="control-container">
+  <span class="label" i18n>From:</span>
+  <alg-input-date
+    class="control"
+    [(ngModel)]="canEnterFrom"
+    (ngModelChange)="onDateChange()"
+    data-testid="can-enter-from-control"
+    #canEnterFromRef
+  ></alg-input-date>
+</div>
+<div class="control-container">
+  <span class="label" i18n>Until:</span>
+  <alg-input-date
+    class="control"
+    [(ngModel)]="canEnterUntil"
+    (ngModelChange)="onDateChange()"
+    data-testid="can-enter-until-control"
+    #canEnterUntilRef
+  ></alg-input-date>
+</div>
+@if (control && control.invalid) {
+  <alg-input-error [control]="control"></alg-input-error>
+} @else {
+  <p class="alg-text-small note" i18n>
+    The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+  </p>
+}
+

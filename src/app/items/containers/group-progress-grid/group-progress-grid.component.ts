@@ -46,6 +46,7 @@ interface DataRow {
 }
 interface DataColumn {
   id: string,
+  requiresExplicitEntry: boolean,
   title: string|null,
   type: ItemType,
   permissions: ItemCorePerm,
@@ -61,6 +62,7 @@ interface DataFetching {
 interface ProgressDataDialog {
   item: {
     id: string,
+    requiresExplicitEntry: boolean,
     string: {
       title: string | null,
     },
@@ -205,6 +207,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.progressDataDialog = {
       item: {
         id: col.id,
+        requiresExplicitEntry: col.requiresExplicitEntry,
         string: {
           title: col.title,
         },
@@ -342,12 +345,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       map(items => [
         {
           id: itemData.item.id,
+          requiresExplicitEntry: itemData.item.requiresExplicitEntry,
           title: itemData.item.string.title,
           type: itemData.item.type,
           permissions: itemData.item.permissions,
         },
         ...items.map(item => ({
           id: item.id,
+          requiresExplicitEntry: !!item.requiresExplicitEntry,
           title: item.string.title,
           type: item.type,
           permissions: item.permissions,

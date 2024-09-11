@@ -12,6 +12,7 @@ import {
   validateIsOwner,
   validateCanMakeSessionOfficial,
   ConstraintError,
+  validateCanEnter,
 } from './item-permissions-constraints';
 import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permission';
@@ -26,6 +27,7 @@ export interface PermissionsDialogData {
   canEditValues: ProgressSelectValue<string>[],
   isOwnerDisabledTooltip?: string[],
   canMakeSessionOfficialDisabledTooltip?: string[],
+  canEnterDisabledTooltip?: string[],
 }
 
 export function getTargetTypeString(targetType: TypeFilter): string {
@@ -207,5 +209,7 @@ export function generateValues(
     canMakeSessionOfficialDisabledTooltip: formatErrors(validateCanMakeSessionOfficial(
       { ...receiverPermissions, canMakeSessionOfficial: true }, giverPermissions
     )) || undefined,
+
+    canEnterDisabledTooltip: formatErrors(validateCanEnter(giverPermissions)),
   };
 }

@@ -18,6 +18,7 @@ const baseItemChildSchema = z.object({
   category: itemChildCategorySchema,
   permissions: itemCorePermSchema,
   scoreWeight: z.number(),
+  requiresExplicitEntry: z.boolean().optional(),
 }).and(itemPermPropagationsSchema);
 
 /** an invisible item is an item which has a view perm set to 'none' */

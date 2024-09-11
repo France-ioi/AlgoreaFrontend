@@ -1,0 +1,20 @@
+@import 'src/assets/scss/functions';
+
+.control-container {
+  display: flex;
+  align-items: center;
+  margin-top: var(--alg-space-size-6);
+}
+
+.label {
+  width: toRem(50);
+  font-size: toRem(14);
+}
+
+.control {
+  margin-left: var(--alg-space-size-6);
+}
+
+.note {
+  margin: var(--alg-space-size-6) 0;
+}

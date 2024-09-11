@@ -11,4 +11,7 @@
   @if (control.errors.inputDateMinInvalid; as err) {
     <small i18n>The date must be greater than: {{ err.minDate | date: 'dd/MM/yyyy HH:mm' }}</small>
   }
+  @if (control.errors.canEnterUntilMDateMinInvalid; as err) {
+    <small i18n>The until date must be greater than: {{ err.minDate | date: 'dd/MM/yyyy HH:mm' }}</small>
+  }
 </div>

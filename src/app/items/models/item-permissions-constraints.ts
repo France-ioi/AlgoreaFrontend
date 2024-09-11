@@ -181,3 +181,12 @@ export function validateIsOwner(receiverPermissions: ItemOwnerPerm, giverPermiss
   return [];
 }
 
+export function validateCanEnter(
+  giverPermissions: ItemPermWithGrantView
+): ConstraintError[] {
+  if (!hasAtLeastPermission(itemGrantViewPermValues, giverPermissions.canGrantView)(ItemGrantViewPerm.Enter)) {
+    return [ genError('canGrantView')(ItemGrantViewPerm.Enter, 'giver', 'atLeast') ];
+  }
+  return [];
+}
+
