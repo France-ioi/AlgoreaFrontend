@@ -1,14 +1,15 @@
-<p-button
-    class="save"
-    styleClass="p-button-rounded p-button-success"
-    i18n-label label="Save"
-    [disabled]="saving"
-    (onClick)="onSave()"
-></p-button>
+<button
+  class="alg-button success"
+  i18n-label label="Save"
+  [disabled]="saving"
+  (click)="onSave()"
+  pButton
+></button>
 
-<p-button
-    styleClass="p-button-rounded p-button-outlined p-button-danger"
-    i18n-label label="Cancel Changes"
-    [disabled]="saving"
-    (onClick)="onCancel()"
-></p-button>
+<button
+  class="alg-button secondary button"
+  i18n-label label="Cancel Changes"
+  [disabled]="saving"
+  (click)="onCancel()"
+  pButton
+></button>

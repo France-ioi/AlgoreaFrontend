@@ -1,5 +1,13 @@
 <ng-container *ngIf="item">
   <div class="container" *ngIf="state$ | async as state">
+    <button
+      pButton
+      type="button"
+      class="alg-button danger"
+      i18n-label label="Delete this item"
+      (click)="onDeleteItem()"
+      [disabled]="(state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)) || state.isFetching || state.isError || deletionInProgress || !item.permissions.isOwner"
+    ></button>
     <alg-loading size="small" *ngIf="state.isFetching || deletionInProgress"></alg-loading>
     <ng-container *ngIf="item.permissions.isOwner; else notOwner">
       <span class="message" *ngIf="state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)" i18n>
@@ -20,13 +28,5 @@
       refreshButtonType="refresh"
       (refresh)="refresh()"
     ></alg-error>
-    <button
-      pButton
-      type="button"
-      class="alg-button danger"
-      i18n-label label="Delete this item"
-      (click)="onDeleteItem()"
-      [disabled]="(state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)) || state.isFetching || state.isError || deletionInProgress || !item.permissions.isOwner"
-    ></button>
   </div>
 </ng-container>
