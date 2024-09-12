@@ -8,3 +8,7 @@ export const backendInfiniteDateString = '9999-12-31T23:59:59Z';
 export function isInfinite(d: Date): boolean {
   return d > new Date('2099-01-01');
 }
+
+export function isPastDate(d: Date): boolean {
+  return d < new Date();
+}
