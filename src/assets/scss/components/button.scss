@@ -59,6 +59,45 @@
     }
   }
 
+  &.success {
+    &.p-button {
+      padding: 0 toRem(18);
+      flex-direction: row-reverse;
+      color: var(--alg-white-color);
+      font-size: toRem(16);
+      text-decoration: none;
+      border-radius: toRem(20);
+      background: var(--alg-success-btn-color);
+      height: toRem(40);
+    }
+
+    .p-button-icon {
+      margin-left: toRem(7);
+      color: var(--alg-white-color);
+      font-size: toRem(16);
+    }
+  }
+
+  &.secondary {
+    &.p-button {
+      padding: 0 toRem(18);
+      flex-direction: row-reverse;
+      color: var(--alg-secondary-color);
+      font-size: toRem(16);
+      text-decoration: none;
+      border-radius: toRem(20);
+      border: toRem(1) solid var(--alg-border-color);
+      background: var(--alg-white-color);
+      height: toRem(40);
+    }
+
+    .p-button-icon {
+      margin-left: toRem(7);
+      color: var(--alg-secondary-color);
+      font-size: toRem(16);
+    }
+  }
+
   &.danger {
     &.p-button {
       padding: 0 toRem(18);

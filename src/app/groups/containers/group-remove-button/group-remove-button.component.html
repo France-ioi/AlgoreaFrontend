@@ -1,10 +1,6 @@
 <div class="container" *ngIf="state$ | async as state">
   <alg-loading size="small" *ngIf="state.isFetching || (deletionInProgress$ | async)"></alg-loading>
 
-  <span class="has-children" *ngIf="state.isReady && state.data" i18n>
-    Only an empty group can be deleted.
-  </span>
-
   <div class="button-block">
     <button
       pButton
@@ -24,4 +20,8 @@
       (refresh)="refresh()"
     ></alg-error>
   </div>
+
+  <span class="has-children" *ngIf="state.isReady && state.data" i18n>
+    Only an empty group can be deleted.
+  </span>
 </div>

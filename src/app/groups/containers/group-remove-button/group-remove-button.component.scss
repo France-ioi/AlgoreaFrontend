@@ -1,11 +1,11 @@
 .container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .has-children {
-  margin-right: var(--alg-space-size-5);
+  margin-left: var(--alg-space-size-6);
   color: var(--notify-error-color);
 }
 

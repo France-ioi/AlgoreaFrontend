@@ -1,13 +1,18 @@
+@import 'src/assets/scss/functions';
+
 :host {
   position: fixed;
-  bottom: 0.2rem;
-  right: 1rem;
-  height: 4rem;
+  bottom: var(--alg-space-size-5);
+  right: var(--alg-space-size-5);
   z-index: 900;
   display: flex;
   align-items: center;
 }
 
 .save {
-  margin-right: 0.2rem;
+  margin-right: toRem(4);
+}
+
+.button {
+  margin-left: var(--alg-space-size-6);
 }
