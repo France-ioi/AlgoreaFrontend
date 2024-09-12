@@ -40,22 +40,88 @@
         </ng-template>
 
         <ng-container *ngIf="watchedGroupPermissions">
-          <div class="permission-indicator-section">
-            <alg-section-header
-              i18n-title title="Can view"
-              icon="ph-duotone ph-eyeglasses"
-              theme="warning"
-            >
-              <ng-template #content>
-                <alg-progress-select
-                  [collapsed]="true"
-                  [(ngModel)]="watchedGroupPermissions.canView"
-                  [values]="canViewValues"
+          @if (watchedGroupPermissions.isOwner) {
+            <div class="permission-indicator-section">
+              <alg-section-header
+                i18n-title title="Is owner"
+                icon="ph-duotone ph-user"
+                theme="warning"
+              >
+                <ng-template #content>
+                  <span class="alg-text-small alg-text-secondary" i18n>Yes</span>
+                </ng-template>
+              </alg-section-header>
+            </div>
+          } @else {
+            <div class="permission-indicator-section">
+              <alg-section-header
+                i18n-title title="Can view"
+                icon="ph-duotone ph-eyeglasses"
+                theme="warning"
+              >
+                <ng-template #content>
+                  <alg-progress-select
+                    [collapsed]="true"
+                    [(ngModel)]="watchedGroupPermissions.canView"
+                    [values]="canViewValues"
+                    theme="warning"
+                  ></alg-progress-select>
+                </ng-template>
+              </alg-section-header>
+            </div>
+            @if (watchedGroupPermissions | allowsViewingInfo) {
+              <div class="permission-indicator-section">
+                <alg-section-header
+                  i18n-title title="Can grant view"
+                  icon="ph-duotone ph-key"
                   theme="warning"
-                ></alg-progress-select>
-              </ng-template>
-            </alg-section-header>
-          </div>
+                >
+                  <ng-template #content>
+                    <alg-progress-select
+                      [collapsed]="true"
+                      [(ngModel)]="watchedGroupPermissions.canGrantView"
+                      [values]="canGrantViewValues"
+                      theme="warning"
+                    ></alg-progress-select>
+                  </ng-template>
+                </alg-section-header>
+              </div>
+            }
+            @if (watchedGroupPermissions | allowsViewingContent) {
+              <div class="permission-indicator-section">
+                <alg-section-header
+                  i18n-title title="Can watch"
+                  icon="ph-duotone ph-binoculars"
+                  theme="warning"
+                >
+                  <ng-template #content>
+                    <alg-progress-select
+                      [collapsed]="true"
+                      [(ngModel)]="watchedGroupPermissions.canWatch"
+                      [values]="canWatchValues"
+                      theme="warning"
+                    ></alg-progress-select>
+                  </ng-template>
+                </alg-section-header>
+              </div>
+              <div class="permission-indicator-section">
+                <alg-section-header
+                  i18n-title title="Can edit"
+                  icon="ph-duotone ph-pencil"
+                  theme="warning"
+                >
+                  <ng-template #content>
+                    <alg-progress-select
+                      [collapsed]="true"
+                      [(ngModel)]="watchedGroupPermissions.canEdit"
+                      [values]="canEditValues"
+                      theme="warning"
+                    ></alg-progress-select>
+                  </ng-template>
+                </alg-section-header>
+              </div>
+            }
+          }
         </ng-container>
       </div>
       <div class="footer">
