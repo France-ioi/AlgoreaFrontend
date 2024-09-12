@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store, createSelector } from '@ngrx/store';
-import { filter, interval, map, of, switchMap } from 'rxjs';
+import { filter, interval, map, of, switchMap, take } from 'rxjs';
 import { fromItemContent } from 'src/app/items/store';
 import { DurationAsCountdownPipe } from 'src/app/pipes/duration';
-import { isInfinite, isPastDate } from 'src/app/utils/date';
+import { isInfinite } from 'src/app/utils/date';
+import { fromTimeOffset } from 'src/app/store/time-offset';
 import { Duration } from 'src/app/utils/duration';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 
@@ -49,7 +50,9 @@ export class TimeLimitedContentInfoComponent {
         const timeRemaining = Duration.fromNowUntil(submissionUntil);
         if (!timeRemaining.getMs()) return of(new Duration(0));
         return interval(1000).pipe(
-          map(() => (isPastDate(submissionUntil) ? new Duration(0) : Duration.fromNowUntil(submissionUntil))),
+          switchMap(() => this.store.select(fromTimeOffset.selectCurrentTimeOffset).pipe(take(1))),
+          map(offset => Duration.fromNowUntil(submissionUntil).add(-offset)),
+          map(remaining => (remaining.isStrictlyPositive() ? remaining : new Duration(0))),
         );
       }),
     ), { initialValue: null }

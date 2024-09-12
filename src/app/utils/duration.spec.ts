@@ -88,4 +88,26 @@ describe('duration', () => {
       expect(Duration.fromHMS(0, 0, 0).toCountdown()).toEqual('0s');
     });
   });
+
+  describe('add', () => {
+    it('should add ms when positive', () => {
+      expect(Duration.fromHMS(50, 30, 10).add(3500).getHMS()).toEqual([ '50', '30', '13']);
+    });
+    it('should substract ms when negative', () => {
+      expect(Duration.fromHMS(50, 30, 10).add(-3500).getHMS()).toEqual([ '50', '30', '6']);
+    });
+
+  });
+
+  describe('isStrictlyPositive', () => {
+    it('should return true when positive', () => {
+      expect(Duration.fromSeconds(10).isStrictlyPositive()).toBeTrue();
+    });
+    it('should return false when negative', () => {
+      expect(Duration.fromSeconds(-10).isStrictlyPositive()).toBeFalse();
+    });
+    it('should return false when 0', () => {
+      expect(Duration.fromSeconds(0).isStrictlyPositive()).toBeFalse();
+    });
+  });
 });

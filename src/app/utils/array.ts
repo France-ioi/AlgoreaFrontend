@@ -28,3 +28,15 @@ export function groupBy<K, V>(list: Array<V>, keyGetter: (input: V) => K): Map<K
   });
   return map;
 }
+
+/**
+ * Return the median of the array. If there is an even number of values, use the average of the 2 median values.
+ * Do not modify the input list.
+ * @param list a non-empty array
+ */
+export function median(list: number[]): number {
+  if (list.length === 0) throw new Error('cannot compute median of an empty list');
+  const sorted = [ ...list ].sort();
+  if (list.length % 2 === 1) return sorted[(list.length-1)/2]!;
+  return (sorted[list.length / 2]! + sorted[list.length / 2 + 1]!) / 2;
+}
