@@ -27,15 +27,12 @@
         *ngIf="itemData.item.type !== 'Task'"
       >
       </alg-item-edit-content>
-      <ng-container *ngIf="attemptId">
-        <alg-item-edit-advanced-parameters
-          [parentForm]="itemForm"
-          [item]="initialFormData"
-          [attemptId]="attemptId"
-          (confirmRemoval)="onConfirmRemoval()"
-        >
-        </alg-item-edit-advanced-parameters>
-      </ng-container>
+      <alg-item-edit-advanced-parameters
+        [parentForm]="itemForm"
+        [itemData]="itemData"
+        (confirmRemoval)="onConfirmRemoval()"
+      >
+      </alg-item-edit-advanced-parameters>
     </form>
 
     <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>

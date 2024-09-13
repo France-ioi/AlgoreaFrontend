@@ -1,32 +1,31 @@
-<ng-container *ngIf="item">
-  <div class="container" *ngIf="state$ | async as state">
-    <button
-      pButton
-      type="button"
-      class="alg-button danger"
-      i18n-label label="Delete this item"
-      (click)="onDeleteItem()"
-      [disabled]="(state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)) || state.isFetching || state.isError || deletionInProgress || !item.permissions.isOwner"
-    ></button>
-    <alg-loading size="small" *ngIf="state.isFetching || deletionInProgress"></alg-loading>
-    <ng-container *ngIf="item.permissions.isOwner; else notOwner">
-      <span class="message" *ngIf="state.isReady && state.data && ['Chapter', 'Skill'].includes(item.type)" i18n>
-        {item.type, select,
-          Chapter {Only empty chapters can be deleted.}
-          other {Only empty skills can be deleted.}
-        }
-      </span>
-    </ng-container>
-    <ng-template #notOwner>
-      <span class="message" i18n>Only owner can delete items</span>
-    </ng-template>
+<div class="container">
+  <button
+    pButton
+    type="button"
+    class="alg-button danger"
+    i18n-label label="Delete this item"
+    (click)="onDeleteItem()"
+    [disabled]="!canDeleteState().data || deletionInProgress()"
+  ></button>
+  @if (!isOwner()) {
+    <span class="message" i18n>Only owner can delete items</span>
+  }
+  @else if (canDeleteState().isFetching || deletionInProgress()) {
+    <alg-loading size="small"></alg-loading>
+  }
+  @else if (canDeleteState().isError) {
     <alg-error
-      *ngIf="state.isError"
-      class="warning small"
-      i18n-message message="Error while loading the item info"
-      [showRefreshButton]="true"
-      refreshButtonType="refresh"
-      (refresh)="refresh()"
-    ></alg-error>
-  </div>
-</ng-container>
+        class="warning small"
+        i18n-message message="Error while loading the item info"
+        [showRefreshButton]="true"
+        refreshButtonType="refresh"
+        (refresh)="refresh()"
+      ></alg-error>
+  }
+  @else if ((itemData().item | isAChapter) && !canDeleteState().data) {
+    <span class="message" i18n>Only empty chapters can be deleted.</span>
+  }
+  @else if ((itemData().item | isASkill) && !canDeleteState().data) {
+    <span class="message" i18n>Only empty skills can be deleted.</span>
+  }
+</div>

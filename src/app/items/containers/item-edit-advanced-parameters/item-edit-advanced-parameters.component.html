@@ -1,3 +1,5 @@
+@let item = itemData.item;
+
 <form *ngIf="item && parentForm" [formGroup]="parentForm">
   <div *ngIf="item.type === 'Task'">
     <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
@@ -244,7 +246,7 @@
 </form>
 
 <div class="delete-button">
-  <alg-item-remove-button [item]="item" [attemptId]="attemptId" (confirmRemoval)="onConfirmRemoval()"></alg-item-remove-button>
+  <alg-item-remove-button [itemData]="itemData" (confirmRemoval)="onConfirmRemoval()"></alg-item-remove-button>
 </div>
 
 
