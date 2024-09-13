@@ -40,15 +40,23 @@
             <span class="label" i18n>validation rate:</span>
             <span class="value">{{ progress.validationRate * 100 }}%</span>
           </div>
+
+          <div class="value-section">
+            <i class="ph ph-gauge icon"></i>
+            <span class="label" i18n>average score:</span>
+            <span class="value">{{ progress.score | number:'1.0-0' }}</span>
+          </div>
         }
 
-        <span class="score-section">
-          <alg-score-ring
-            [currentScore]="progress.score"
-            [diameter]="32"
-            [isValidated]="progress.type === 'user' ? progress.validated : progress.validationRate === 1"
-          ></alg-score-ring>
-        </span>
+        @if (progress.type === 'user') {
+          <span class="score-section">
+            <alg-score-ring
+              [currentScore]="progress.score"
+              [diameter]="32"
+              [isValidated]="progress.validated"
+            ></alg-score-ring>
+          </span>
+        }
         <ng-container
           *ngIf="progressData && progress.type === 'user' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
         >

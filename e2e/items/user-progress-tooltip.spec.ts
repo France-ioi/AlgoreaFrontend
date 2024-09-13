@@ -24,6 +24,7 @@ test('checks user progress tooltip', async ({ page }) => {
     await expect.soft(page.getByText('hints requested:')).toBeVisible();
     await expect.soft(page.getByText('submissions:')).toBeVisible();
     await expect.soft(page.getByText('last activity:')).toBeVisible();
+    await expect.soft(page.getByText('average score:')).not.toBeVisible();
     await expect.soft(page.getByRole('button', { name: 'Access' })).toBeVisible();
   });
 
@@ -63,6 +64,8 @@ test('checks group progress tooltip', async ({ page }) => {
     await expect.soft(page.getByText('avg hints requested:')).toBeVisible();
     await expect.soft(page.getByText('avg submissions:')).toBeVisible();
     await expect.soft(page.getByText('validation rate:')).toBeVisible();
+    await expect.soft(page.getByText('average score:')).toBeVisible();
+    await expect.soft(page.getByText('last activity:')).not.toBeVisible();
     await expect.soft(page.getByRole('button', { name: 'Access' })).toBeVisible();
   });
 });

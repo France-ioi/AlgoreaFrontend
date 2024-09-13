@@ -12,7 +12,7 @@ import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgIf, NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { ItemType } from 'src/app/items/models/item-type';
 import { ButtonModule } from 'primeng/button';
@@ -50,6 +50,7 @@ export interface ProgressData {
     DurationToReadablePipe,
     ButtonModule,
     RelativeTimePipe,
+    DecimalPipe,
   ],
 })
 export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
