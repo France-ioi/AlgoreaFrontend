@@ -43,6 +43,14 @@ export function allowsGrantingWatch(p: ItemPermWithWatch): boolean {
 }
 
 // ********************************************
+// Shortcut/helper functions on items directly
+// ********************************************
+
+export function canCurrentUserWatchResult(i: ItemWithWatchPerm): boolean {
+  return allowsWatchingResults(i.permissions);
+}
+
+// ********************************************
 // Pipes for templates
 // ********************************************
 

@@ -17,6 +17,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from './store';
+import { canCurrentUserSetExtraTime, isTimeLimitedActivity } from './models/time-limited-activity';
 
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
@@ -24,6 +25,7 @@ const editTab = { title: $localize`Edit`, routerLink: [ 'edit' ], tag: 'alg-task
 const statsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter' ], tag: 'alg-chapter-progress' };
 const historyTab = { title: $localize`History`, routerLink: [ 'progress', 'history' ], tag: 'alg-log' };
 const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'dependencies' ], tag: 'alg-dependencies' };
+const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' ], tag: 'alg-extra-time' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum' };
 
@@ -73,6 +75,7 @@ export class ItemTabs implements OnDestroy {
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
       const canViewStats = isObserving ? canWatchResults : canViewContent;
       const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewStats;
+      const canSetExtraTime = state.isReady ? isTimeLimitedActivity(state.data.item) && canCurrentUserSetExtraTime(state.data.item) : false;
 
       const shouldHideTab = (v: string): boolean => appConfig.featureFlags.hideTaskTabs.includes(v);
       const filteredTaskTabs = taskTabs.filter(({ view }) => !shouldHideTab(view) && (canViewSolution || view !== solutionTabView));
@@ -86,6 +89,7 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(historyTab) || showProgress ? historyTab : null,
         this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
+        this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
         this.isCurrentTab(forumTab) || (!userProfile.tempUser && !!appConfig.forumServerUrl) ? forumTab : null,
       ]
         .filter(isNotNull)

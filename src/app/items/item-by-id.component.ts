@@ -66,6 +66,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { isUser } from '../models/routing/group-route';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
+import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 
 const itemBreadcrumbCat = $localize`Items`;
 
@@ -97,6 +98,7 @@ const itemBreadcrumbCat = $localize`Items`;
     ChapterUserProgressComponent,
     ItemDependenciesComponent,
     ItemEditWrapperComponent,
+    ItemExtraTimeComponent,
     ItemForumComponent,
     RouterLinkActive,
     DialogModule,
