@@ -226,22 +226,26 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
       const enteringTimeMinEnabled = formControls.enteringTimeMinEnabled?.value as boolean;
       const hasEnteringTimeMinEnabledChanges = enteringTimeMinEnabled !== this.initialFormData.enteringTimeMinEnabled;
-      const enteringTimeMin = formControls.enteringTimeMin?.value as Date;
-      const hasEnteringTimeMinChanges = enteringTimeMin.getTime()
+      const enteringTimeMin = formControls.enteringTimeMin?.value as Date | null;
+      const hasEnteringTimeMinChanges = enteringTimeMin && enteringTimeMin.getTime()
         !== this.initialFormData.enteringTimeMin.getTime();
 
       if (hasEnteringTimeMinChanges || hasEnteringTimeMinEnabledChanges) {
-        itemFormValues.entering_time_min = enteringTimeMinEnabled ? enteringTimeMin : new Date(DEFAULT_ENTERING_TIME_MIN);
+        itemFormValues.entering_time_min = enteringTimeMinEnabled && enteringTimeMin
+          ? enteringTimeMin
+          : new Date(DEFAULT_ENTERING_TIME_MIN);
       }
 
       const enteringTimeMaxEnabled = formControls.enteringTimeMaxEnabled?.value as boolean;
       const hasEnteringTimeMaxEnabledChanges = enteringTimeMaxEnabled !== this.initialFormData.enteringTimeMaxEnabled;
-      const enteringTimeMax = formControls.enteringTimeMax?.value as Date;
-      const hasEnteringTimeMaxChanges = enteringTimeMax.getTime()
+      const enteringTimeMax = formControls.enteringTimeMax?.value as Date | null;
+      const hasEnteringTimeMaxChanges = enteringTimeMax && enteringTimeMax.getTime()
         !== this.initialFormData.enteringTimeMax.getTime();
 
       if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxEnabledChanges) {
-        itemFormValues.entering_time_max = enteringTimeMaxEnabled ? enteringTimeMax : new Date(DEFAULT_ENTERING_TIME_MAX);
+        itemFormValues.entering_time_max = enteringTimeMaxEnabled && enteringTimeMax
+          ? enteringTimeMax
+          : new Date(DEFAULT_ENTERING_TIME_MAX);
       }
     }
 

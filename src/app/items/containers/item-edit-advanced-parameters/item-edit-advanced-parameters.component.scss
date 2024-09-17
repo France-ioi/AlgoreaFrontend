@@ -57,9 +57,13 @@
 
 .form-item-datepicker {
   margin: toRem(16) 0;
-  height: toRem(40);
+  height: toRem(62);
 }
 
 .delete-button {
   padding: 1rem 0;
+}
+
+.date-note {
+  margin: var(--alg-space-size-6) 0 0 0;
 }
