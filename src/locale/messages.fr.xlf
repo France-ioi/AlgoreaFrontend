@@ -426,7 +426,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/group-progress-grid/group-progress-grid.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="1601880004921589799" datatype="html">
         <source>Could not load more results, are you connected to the internet?</source><target state="translated">Erreur lors du chargement des résultats, êtes-vous connecté à Internet ?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">142</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">159</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/floating-save/floating-save.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
@@ -467,10 +467,10 @@
         </context-group>
       </trans-unit><trans-unit id="5074866284474597878" datatype="html">
         <source>Until:</source><target state="new">Until:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/collapsible-section/can-enter/can-enter.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="472407369411511160" datatype="html">
         <source> The time is entered in your own timezone (<x id="INTERPOLATION" equiv-text="{{ currentDate | date: 'zzzz' }}"/>) </source><target state="new"> The time is entered in your own timezone (<x id="INTERPOLATION" equiv-text="{{ currentDate | date: 'zzzz' }}"/>) </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/collapsible-section/can-enter/can-enter.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="840951359074313455" datatype="html">
         <source>Days</source><target state="translated">Jours</target>
 
@@ -845,10 +845,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/services/action-feedback.service.ts</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="6200891523979462766" datatype="html">
         <source>You are not allowed to watch the group for which you have requested observation.</source><target state="translated">Vous n'êtes pas autorisé d'observer le groupe que vous demandez d'observer.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="8386895801304527934" datatype="html">
         <source>Something went wrong while enabling group observation. If the problem persists, please contact us.</source><target state="translated">Erreur lors de l'activation du mode observation. Si le problème persiste, contactez-nous.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/app.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source><target state="translated">Fermer</target>
 
@@ -1268,7 +1268,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">146</context></context-group></trans-unit><trans-unit id="1636049446785302734" datatype="html">
         <source>As the group or user has currently "can view &gt;= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</source><target state="new">As the group or user has currently "can view &gt;= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
 
@@ -1481,7 +1481,37 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/sub-skills/sub-skills.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="4292111728885991868" datatype="html">
         <source>This skill does not have related activities.</source><target state="translated">Cette compétence n'a pas d'activité liée.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/sub-skills/sub-skills.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="4178036374836569451" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/sub-skills/sub-skills.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="5033395991463477338" datatype="html">
+        <source><x id="START_BLOCK_IF" equiv-text="@if (progress.type === 'group') {"/> avg <x id="CLOSE_BLOCK_IF" equiv-text="}"/> time spent: </source><target state="new"><x id="START_BLOCK_IF" equiv-text="@if (progressData?.currentFilter === 'Groups') {"/> avg <x id="CLOSE_BLOCK_IF" equiv-text="}"/> time spent: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit><trans-unit id="1997960181587817120" datatype="html">
+        <source><x id="START_BLOCK_IF" equiv-text="@if (progress.type === 'group') {"/> avg <x id="CLOSE_BLOCK_IF" equiv-text="}"/> hints requested: </source><target state="new"><x id="START_BLOCK_IF" equiv-text="@if (progress.type === 'group') {"/> avg <x id="CLOSE_BLOCK_IF" equiv-text="}"/> hints requested: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+      </trans-unit><trans-unit id="3888690591513637832" datatype="html">
+        <source><x id="START_BLOCK_IF" equiv-text="@if (progress.type === 'group') {"/> avg <x id="CLOSE_BLOCK_IF" equiv-text="}"/> submissions: </source><target state="new"><x id="START_BLOCK_IF" equiv-text="@if (progress.type === 'group') {"/> avg <x id="CLOSE_BLOCK_IF" equiv-text="}"/> submissions: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">24,26</context>
+        </context-group>
+      </trans-unit><trans-unit id="2272047393473715732" datatype="html">
+        <source>last activity:</source><target state="new">last activity:</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="6588961912019113741" datatype="html">
+        <source>validation rate:</source><target state="new">validation rate:</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="602123857687945755" datatype="html">
+        <source>average score:</source><target state="new">average score:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context>
+          <context context-type="linenumber">46,47</context>
+        </context-group>
+      </trans-unit><trans-unit id="4178036374836569451" datatype="html">
         <source>Error while loading content</source><target state="translated">Erreur lors du chargement du contenu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/sub-skills/sub-skills.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="7555865016486494326" datatype="html">
@@ -2226,10 +2256,10 @@
       <note from="description" priority="1">Placeholder of field for searching for user by login</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
         <source>Time spent</source><target state="translated">Temps écoulé</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">114</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">114</context></context-group></trans-unit><trans-unit id="2827276519893025325" datatype="html">
         <source>Not started</source><target state="translated">Non commencé</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="2389112862883394749" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="2389112862883394749" datatype="html">
         <source> (using <x id="ICU" equiv-text="{rowData.hintsRequested, plural, =1 {hint} other {{{ rowData.hintsRequested }} hints}}" xid="7805236562230341422"/>) </source><target state="translated"> (avec <x id="ICU" equiv-text="{rowData.hintsRequested, plural, =1 {hint} other {{{ rowData.hintsRequested }} hints}}" xid="7805236562230341422"/>) </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="407271160873416945" datatype="html">
@@ -2241,10 +2271,10 @@
       </trans-unit><trans-unit id="7894478830808730680" datatype="html">
         <source>You cannot view answers for this content.</source><target state="translated">Vous ne pouvez pas voir les réponses pour ce contenu.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="2040441545335668377" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="2040441545335668377" datatype="html">
         <source> View answer </source><target state="translated"> Voir la réponse </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="6284712106854193940" datatype="html">
         <source>This user has this permission via one of the other group he is member of, or one of their ancestors.</source><target state="translated">Cet utilisateur a reçu cette permission via un autre groupe dont il est membre, ou l'un de ses ancêtres.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="1019652748880096752" datatype="html">

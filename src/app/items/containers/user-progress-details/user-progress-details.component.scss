@@ -4,30 +4,32 @@
   padding: var(--alg-space-size-5);
 }
 
-.header-section {
+.value-section {
   display: flex;
-  justify-content: center;
   align-items: center;
+  margin-bottom: var(--alg-space-size-6);
+}
+
+.label {
+  margin-right: toRem(4);
+  font-size: toRem(14);
+  color: var(--alg-secondary-color);
+}
+
+.value {
+  font-size: toRem(14);
+}
+
+.icon {
+  margin-right: toRem(4);
+  font-size: toRem(18);
+  color: var(--alg-secondary-color);
 }
 
 .score-section, .button-section, .view-answer-section {
   display: flex;
   justify-content: center;
   margin-top: var(--alg-space-size-6);
-}
-
-.time-icon {
-  margin-right: toRem(4);
-  font-size: toRem(18);
-}
-
-.label {
-  margin-right: toRem(4);
-  font-size: toRem(14);
-}
-
-.value {
-  font-size: toRem(14);
 }
 
 .not-started {

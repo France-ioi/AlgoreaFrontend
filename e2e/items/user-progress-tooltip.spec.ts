@@ -20,7 +20,11 @@ test('checks user progress tooltip', async ({ page }) => {
     const firstCellLocator = cellLocator.first();
     await expect.soft(firstCellLocator).toBeVisible();
     await firstCellLocator.click({ force: true });
-    await expect.soft(page.getByText('Time spent')).toBeVisible();
+    await expect.soft(page.getByText('time spent:')).toBeVisible();
+    await expect.soft(page.getByText('hints requested:')).toBeVisible();
+    await expect.soft(page.getByText('submissions:')).toBeVisible();
+    await expect.soft(page.getByText('last activity:')).toBeVisible();
+    await expect.soft(page.getByText('average score:')).not.toBeVisible();
     await expect.soft(page.getByRole('button', { name: 'Access' })).toBeVisible();
   });
 
@@ -32,6 +36,36 @@ test('checks user progress tooltip', async ({ page }) => {
     await expect.soft(notStartedCellLocator).toBeVisible();
     await notStartedCellLocator.click({ force: true });
     await expect.soft(page.getByText('Not started')).toBeVisible();
+    await expect.soft(page.getByRole('button', { name: 'Access' })).toBeVisible();
+  });
+});
+
+test('checks group progress tooltip', async ({ page }) => {
+  await initAsUsualUser(page);
+  await page.goto('a/899800937596940136;p=;pa=0/progress/chapter?watchedGroupId=140728183860941974');
+
+  await test.step('checks group progress grid is visible', async () => {
+    await expect.soft(page.getByRole('heading', { name: '4LA 1ère année UE Informatique' })).toBeVisible();
+    await page.waitForResponse(`${apiUrl}/groups/140728183860941974/user-progress?parent_item_ids=899800937596940136&limit=25`);
+    const groupProgressGridLocator = page.locator('alg-group-progress-grid');
+    await expect.soft(groupProgressGridLocator).toBeVisible();
+  });
+
+  const cellLocator = page.getByTestId('user-progress-tooltip-target');
+
+  await test.step('checks group progress tooltip is visible', async () => {
+    await expect.soft(page.getByText('sub-groups')).toBeVisible();
+    await page.getByText('sub-groups').click();
+    await expect.soft(page.getByRole('link', { name: 'OMD - 2018-2019' })).toBeVisible();
+    const firstCellLocator = cellLocator.first();
+    await expect.soft(firstCellLocator).toBeVisible();
+    await firstCellLocator.click({ force: true });
+    await expect.soft(page.getByText('avg time spent:')).toBeVisible();
+    await expect.soft(page.getByText('avg hints requested:')).toBeVisible();
+    await expect.soft(page.getByText('avg submissions:')).toBeVisible();
+    await expect.soft(page.getByText('validation rate:')).toBeVisible();
+    await expect.soft(page.getByText('average score:')).toBeVisible();
+    await expect.soft(page.getByText('last activity:')).not.toBeVisible();
     await expect.soft(page.getByRole('button', { name: 'Access' })).toBeVisible();
   });
 });
