@@ -84,9 +84,14 @@ export class ItemTaskAnswerService implements OnDestroy {
     this.loadedTask$,
   ]).pipe(
     delayWhen(() => this.initializedTaskState$),
-    switchMap(([ initialAnswer, task ]) =>
-      (initialAnswer?.answer ? task.reloadAnswer(initialAnswer.answer).pipe(map(() => undefined)) : of(undefined))
-    ),
+    switchMap(([ initialAnswer, task ]) => (initialAnswer?.answer ?
+      task.reloadAnswer(initialAnswer.answer).pipe(
+        map(() => undefined),
+        // if the task reports an error while loading the answer, consider it ready anyway (task will show the appropriate error message)
+        catchError(() => of(undefined)),
+      ) :
+      of(undefined)
+    )),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
@@ -127,9 +132,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
-    this.initializedTaskAnswer$.subscribe({
-      error: err => this.errorSubject.next(err),
-    }),
     this.initializedTaskState$.subscribe({
       error: err => this.errorSubject.next(err),
     }),
