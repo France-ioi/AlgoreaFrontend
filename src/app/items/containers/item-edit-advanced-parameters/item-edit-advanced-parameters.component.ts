@@ -5,14 +5,14 @@ import { HOURS } from 'src/app/utils/duration';
 import { ItemRemoveButtonComponent } from '../../containers/item-remove-button/item-remove-button.component';
 import { FormErrorComponent } from 'src/app/ui-components/form-error/form-error.component';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { CalendarModule } from 'primeng/calendar';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { DropdownComponent } from 'src/app/ui-components/dropdown/dropdown.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { ItemData } from '../../models/item-data';
+import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -31,10 +31,11 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
     DropdownComponent,
     SelectionComponent,
     DurationComponent,
-    CalendarModule,
     InputNumberModule,
     FormErrorComponent,
-    ItemRemoveButtonComponent
+    ItemRemoveButtonComponent,
+    InputDateComponent,
+    DatePipe
   ],
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
@@ -81,6 +82,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }];
 
   minEnteringTimeMaxDate = new Date();
+  currentDate = new Date();
 
   minAdmittedMembersRatioOptions: DropdownOption[] = [{
     label: $localize`All the members must be admitted`,
@@ -121,13 +123,10 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }
 
   onEnteringTimeMinEnabledChange(enabled: boolean): void {
-    if (!enabled) {
-      return;
-    }
+    if (!enabled) return;
+    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as Date | null;
 
-    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as Date;
-
-    if (enteringTimeMin.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime()) {
+    if (enteringTimeMin && enteringTimeMin.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime()) {
       this.parentForm?.get('entering_time_min')?.patchValue(
         new Date()
       );
@@ -135,29 +134,26 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }
 
   onEnteringTimeMaxEnabledChange(enabled: boolean): void {
-    if (!enabled) {
-      return;
-    }
+    if (!enabled) return;
+    const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date | null;
 
-    const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date;
-
-    if (enteringTimeMax.getTime() === new Date(DEFAULT_ENTERING_TIME_MAX).getTime()) {
+    if (enteringTimeMax && enteringTimeMax.getTime() === new Date(DEFAULT_ENTERING_TIME_MAX).getTime()) {
       const enteringTimeMinEnabled = this.parentForm?.get('entering_time_min_enabled')?.value as boolean;
-      const enteringTimeMin = enteringTimeMinEnabled ? this.parentForm?.get('entering_time_min')?.value as Date : new Date();
-      const newTimeMax = enteringTimeMinEnabled ? enteringTimeMin.getTime() + HOURS : enteringTimeMin.getTime();
-
-      this.parentForm?.get('entering_time_max')?.patchValue(
-        new Date(newTimeMax)
-      );
+      const enteringTimeMin = enteringTimeMinEnabled ? this.parentForm?.get('entering_time_min')?.value as Date | null : new Date();
+      const newTimeMax = enteringTimeMin && (enteringTimeMinEnabled ? enteringTimeMin.getTime() + HOURS : enteringTimeMin.getTime());
+      if (newTimeMax) {
+        this.parentForm?.get('entering_time_max')?.patchValue(
+          new Date(newTimeMax)
+        );
+      }
     }
   }
 
   onDateChange(): void {
     const enteringTimeMinEnabled = this.parentForm?.get('entering_time_min_enabled')?.value as boolean;
-    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as Date;
-    const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date;
-
-    this.minEnteringTimeMaxDate = enteringTimeMinEnabled ?
+    const enteringTimeMin = this.parentForm?.get('entering_time_min')?.value as Date | null;
+    const enteringTimeMax = this.parentForm?.get('entering_time_max')?.value as Date | null;
+    this.minEnteringTimeMaxDate = enteringTimeMinEnabled && enteringTimeMin && enteringTimeMax ?
       new Date(Math.min(enteringTimeMin.getTime(), enteringTimeMax.getTime())) : new Date();
   }
 

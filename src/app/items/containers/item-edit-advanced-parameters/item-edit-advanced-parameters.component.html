@@ -153,51 +153,48 @@
           </div>
         </div>
       </div>
-      <div class="form-item-view form-item-datepicker">
+      <div class="form-item-view form-item-datepicker" data-testid="entering-time-min-container">
         <span class="form-item-label" i18n>First allowed entering time</span>
         <div class="form-item-control another-input">
           <alg-switch
-              class="first-child"
-              formControlName="entering_time_min_enabled"
-              mode="white"
-              (ngModelChange)="onEnteringTimeMinEnabledChange($event)"
+            class="first-child"
+            formControlName="entering_time_min_enabled"
+            (ngModelChange)="onEnteringTimeMinEnabledChange($event)"
           >
           </alg-switch>
           <ng-container *ngIf="!!parentForm.get('entering_time_min_enabled')?.value">
             <div>
-              <p-calendar
-                styleClass="alg-calendar"
-                formControlName="entering_time_min"
-                [showIcon]="true"
-                [showTime]="true"
-                (ngModelChange)="onDateChange()"
-              >
-              </p-calendar>
+              <alg-input-date formControlName="entering_time_min" (change)="onDateChange()"></alg-input-date>
+              @if (parentForm.get('entering_time_min')?.valid) {
+                <p class="alg-text-small date-note" i18n>
+                  The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+                </p>
+              }
             </div>
           </ng-container>
         </div>
       </div>
-      <div class="form-item-view form-item-datepicker">
+      <div class="form-item-view form-item-datepicker" data-testid="entering-time-max-container">
         <span class="form-item-label" i18n>Latest allowed entering time</span>
         <div class="form-item-control another-input">
           <alg-switch
-              class="first-child"
-              formControlName="entering_time_max_enabled"
-              mode="white"
-              (ngModelChange)="onEnteringTimeMaxEnabledChange($event)"
+            class="first-child"
+            formControlName="entering_time_max_enabled"
+            (ngModelChange)="onEnteringTimeMaxEnabledChange($event)"
           >
           </alg-switch>
           <ng-container *ngIf="!!parentForm.get('entering_time_max_enabled')?.value">
             <div>
-              <p-calendar
-                styleClass="alg-calendar"
+              <alg-input-date
                 formControlName="entering_time_max"
-                [showIcon]="true"
-                [showTime]="true"
                 [minDate]="minEnteringTimeMaxDate"
-                (ngModelChange)="onDateChange()"
-              >
-              </p-calendar>
+                (change)="onDateChange()"
+              ></alg-input-date>
+              @if (parentForm.get('entering_time_max')?.valid) {
+                <p class="alg-text-small date-note" i18n>
+                  The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+                </p>
+              }
             </div>
           </ng-container>
         </div>
