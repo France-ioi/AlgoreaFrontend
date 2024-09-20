@@ -4,7 +4,12 @@ import {
   ProgressSelectValue,
   ProgressSelectComponent,
 } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
-import { generateCanViewValues } from '../../models/permissions-texts';
+import {
+  generateCanEditValues,
+  generateCanGrantViewValues,
+  generateCanViewValues,
+  generateCanWatchValues
+} from '../../models/permissions-texts';
 import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
 import { PermissionsEditDialogComponent } from '../permissions-edit-dialog/permissions-edit-dialog.component';
@@ -45,6 +50,9 @@ export class ItemPermissionsComponent implements OnChanges {
   @Input() observedGroup?: { route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean };
 
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
+  canGrantViewValues: ProgressSelectValue<string>[] = generateCanGrantViewValues('Groups');
+  canWatchValues: ProgressSelectValue<string>[] = generateCanWatchValues('Groups');
+  canEditValues: ProgressSelectValue<string>[] = generateCanEditValues('Groups');
   isPermissionsDialogOpened = false;
   watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';

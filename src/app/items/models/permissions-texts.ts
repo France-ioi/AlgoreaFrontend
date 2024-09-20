@@ -74,7 +74,7 @@ export function generateCanViewValues(
   ];
 }
 
-function generateCanGrantViewValues(
+export function generateCanGrantViewValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canGrantView']>[] {
   const targetTypeString = getTargetTypeString(targetType);
@@ -113,7 +113,7 @@ function generateCanGrantViewValues(
   ];
 }
 
-function generateCanWatchValues(
+export function generateCanWatchValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canWatch']>[] {
   const targetTypeString = getTargetTypeString(targetType);
@@ -143,7 +143,7 @@ function generateCanWatchValues(
   ];
 }
 
-function generateCanEditValues(
+export function generateCanEditValues(
   targetType: TypeFilter,
 ): ProgressSelectValue<GroupPermissions['canEdit']>[] {
   const targetTypeString = getTargetTypeString(targetType);
