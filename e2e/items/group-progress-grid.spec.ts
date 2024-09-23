@@ -29,7 +29,7 @@ test('check user progress detail', async ({ page }) => {
     await expect(viewAnswerRow).toBeVisible();
     const href = await viewAnswerRow.getAttribute('href');
     expect.soft(href).toContain(
-      '/a/6379723280369399253;p=7528142386663912287,7523720120450464843;pa=0;answerBest=1;answerParticipantId=670968966872011405'
+      '/a/6379723280369399253;p=7528142386663912287,7523720120450464843;pa=0;answerBest=1;answerParticipantId=752024252804317630'
     );
   });
 });
