@@ -1,7 +1,9 @@
 <ng-container *ngIf="state$ | async as state">
 
   <ng-container *ngIf="state.data?.group as group">
-    <alg-group-header [groupData]="state.data"></alg-group-header>
+    @if (state.data) {
+      <alg-group-header [groupData]="state.data"></alg-group-header>
+    }
 <!--    <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"

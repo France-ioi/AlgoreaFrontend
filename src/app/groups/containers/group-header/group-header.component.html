@@ -1,7 +1,37 @@
-<div class="group-header-container" *ngIf="groupData">
+<div class="group-header-container">
   <div class="group-header">
     <div class="group-title-container">
-      <h1 class="group-title">{{ groupData.group.name }}</h1>
+      <h1 class="group-title alg-h1">{{ groupData().group.name }}</h1>
+      @if (state$ | async; as state) {
+        <p class="group-subtitle">
+          <ng-container i18n>Associated activity: </ng-container>
+            @if (state.isFetching) {
+              <span i18n>loading...</span>
+            } @else if (state.isError) {
+              @if ($any(state.error).status === 403) {
+                <span i18n>not visible</span>
+              } @else {
+                <div class="error-container">
+                  <ng-container i18n>error while fetching the activity</ng-container>
+                  <button
+                    class="alg-button-icon no-bg primary-color refresh-btn"
+                    type="button"
+                    icon="ph ph-arrows-clockwise"
+                    data-testid="retry-subtitle"
+                    (click)="refresh()"
+                    pButton
+                  ></button>
+                </div>
+              }
+            } @else if (state.isReady && state.data) {
+              @if (state.data.string.title; as title) {
+                {{ title }}
+              } @else {
+                <span i18n>Unknown title</span>
+              }
+            }
+        </p>
+      }
     </div>
   </div>
 </div>
