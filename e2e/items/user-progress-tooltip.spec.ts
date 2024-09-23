@@ -16,7 +16,7 @@ test('checks user progress tooltip', async ({ page }) => {
   const cellLocator = page.getByTestId('user-progress-tooltip-target');
 
   await test.step('checks user progress tooltip is visible', async () => {
-    await expect.soft(page.getByRole('link', { name: 'Armelle Bonenfant (arbonenfant)' })).toBeVisible();
+    await expect.soft(page.getByRole('link', { name: 'usr_5p020x2thuyu' })).toBeVisible();
     const firstCellLocator = cellLocator.first();
     await expect.soft(firstCellLocator).toBeVisible();
     await firstCellLocator.click({ force: true });
