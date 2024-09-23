@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, filter, map, startWith, Subject, take, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, startWith, Subject, withLatestFrom } from 'rxjs';
 import { UrlCommand } from '../utils/url';
 import { takeUntil, tap } from 'rxjs/operators';
 
@@ -68,11 +68,12 @@ export class TabService implements OnDestroy {
         }
       }),
       filter(event => event instanceof NavigationEnd),
-      take(1),
       takeUntil(destroyed$),
-    ).subscribe(() =>
-      this.activeTab.next(tag)
-    );
+    ).subscribe(() => {
+      this.activeTab.next(tag);
+      destroyed$.next();
+      destroyed$.complete();
+    });
   }
 
   private isTabLinkActive(tab: Tab): boolean {
