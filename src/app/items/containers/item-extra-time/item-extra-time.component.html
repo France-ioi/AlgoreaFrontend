@@ -1,0 +1,29 @@
+@let item = itemData().item;
+@let observedGroupInfo = observedGroupInfoSignal();
+
+@if (!(item | isTimeLimitedActivity) ) {
+  <alg-error i18n-message message="This content is not time-limited."></alg-error>
+}
+@else if (!(item | canCurrentUserSetExtraTime)) {
+  <alg-error i18n-message message="You do not have the permissions to set extra time on this activity."></alg-error>
+}
+@else if (observedGroupInfo === null) {
+  <p i18n>This activity has a duration of {{ item.duration | readable }}. To list and add extra-time to some groups or users, start observation on them.</p>
+}
+@else if (observedGroupInfo === undefined || false) { <!-- loading-->
+  <alg-loading></alg-loading>
+}
+@else if (false) { <!-- error-->
+  <alg-error i18n-message message="Unable to load the extra time given to this group"></alg-error>
+}
+@else {
+  <p i18n>
+    The extra-time given to "{{ observedGroupInfo.name }}" (i.e., including those given to its ancestors) is TODO,
+    the resulting extra-time (so including its ancestor groups) is TODO.
+  </p>
+  <!-- to be implemented: way to change that number -->
+
+  @if (!(observedGroupInfo.route | isUser)) {
+    <alg-item-extra-time-for-descendants [itemId]="item.id" [groupId]="observedGroupInfo.route.id"></alg-item-extra-time-for-descendants>
+  }
+}

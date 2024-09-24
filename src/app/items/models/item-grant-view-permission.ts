@@ -32,6 +32,15 @@ export function allowsGrantingContentView(p: ItemPermWithGrantView): boolean {
   return [ P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ].includes(p.canGrantView);
 }
 
+
+// ********************************************
+// Shortcut/helper functions on items directly
+// ********************************************
+
+export function canCurrentUserGrantView(i: ItemWithGrantViewPerm): boolean {
+  return allowsGrantingView(i.permissions);
+}
+
 // ********************************************
 // Pipes for templates
 // ********************************************

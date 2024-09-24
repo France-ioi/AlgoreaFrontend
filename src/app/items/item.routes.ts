@@ -55,6 +55,10 @@ const routes: Routes = [
         children: [],
       },
       {
+        path: 'extra-time',
+        children: [],
+      },
+      {
         path: 'forum',
         children: [
           {
