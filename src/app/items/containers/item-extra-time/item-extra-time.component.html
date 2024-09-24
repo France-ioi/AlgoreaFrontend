@@ -10,10 +10,10 @@
 @else if (observedGroupInfo === null) {
   <p i18n>This activity has a duration of {{ item.duration | readable }}. To list and add extra-time to some groups or users, start observation on them.</p>
 }
-@else if (observedGroupInfo === undefined || false ) { <!-- loading-->
+@else if (observedGroupInfo === undefined || false) { <!-- loading-->
   <alg-loading></alg-loading>
 }
-@else if (false ) { <!-- error-->
+@else if (false) { <!-- error-->
   <alg-error i18n-message message="Unable to load the extra time given to this group"></alg-error>
 }
 @else {
