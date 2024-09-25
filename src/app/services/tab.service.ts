@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, filter, map, startWith, Subject, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, startWith, take, withLatestFrom } from 'rxjs';
 import { UrlCommand } from '../utils/url';
-import { takeUntil, tap } from 'rxjs/operators';
 
 interface Tab {
   title: string,
@@ -59,20 +58,11 @@ export class TabService implements OnDestroy {
   }
 
   setActiveTab(tag: string|undefined): void {
-    const destroyed$ = new Subject<void>();
     this.router.events.pipe(
-      tap(event => {
-        if (event instanceof NavigationCancel) {
-          destroyed$.next();
-          destroyed$.complete();
-        }
-      }),
-      filter(event => event instanceof NavigationEnd),
-      takeUntil(destroyed$),
-    ).subscribe(() => {
-      this.activeTab.next(tag);
-      destroyed$.next();
-      destroyed$.complete();
+      filter(event => event instanceof NavigationEnd || event instanceof NavigationCancel),
+      take(1),
+    ).subscribe(event => {
+      if (event instanceof NavigationEnd) this.activeTab.next(tag);
     });
   }
 
