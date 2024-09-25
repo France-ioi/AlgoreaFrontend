@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class GroupSettingsPage {
   inputDateLocator = this.page.getByTestId('input-date').getByRole('textbox');
@@ -6,6 +7,9 @@ export class GroupSettingsPage {
   strengthenedConfirmationMessageLocator
     = this.page.getByText('As you have strengthened approval conditions, all group members have to re-approve the new conditions');
   strengthenedConfirmationCancelBtnLocator = this.page.getByRole('button', { name: 'Cancel', exact: true });
+  deleteGroupBtnLocator = this.page.getByRole('button', { name: 'Delete this group' });
+  associatedActivitySectionLocator = this.page.locator('alg-associated-item').filter({ hasText: 'Associated Activity' });
+  searchExistingContentInputLocator = this.associatedActivitySectionLocator.getByPlaceholder('Search for existing content').nth(1);
 
   constructor(private readonly page: Page) {
   }
@@ -94,5 +98,72 @@ export class GroupSettingsPage {
   async saveChangesAndCheckNotification(): Promise<void> {
     await this.saveChanges();
     await this.checkSuccessfulNotification();
+  }
+
+  async checksIsDeleteButtonVisible(): Promise<void> {
+    await expect.soft(this.deleteGroupBtnLocator).toBeVisible();
+  }
+
+  async deleteGroup(): Promise<void> {
+    await this.deleteGroupBtnLocator.click();
+    await expect.soft(this.page.getByText('Confirm Action')).toBeVisible();
+    const confirmBtnLocator = this.page.getByRole('button', { name: 'Delete it' });
+    await expect.soft(confirmBtnLocator).toBeVisible();
+    await confirmBtnLocator.click();
+  }
+
+  async checksIsAssociatedActivityVisible(): Promise<void> {
+    await expect.soft(this.associatedActivitySectionLocator).toBeVisible();
+  }
+
+  async checksIsAssociatedActivitySearchInputVisible(): Promise<void> {
+    await expect.soft(this.searchExistingContentInputLocator).toBeVisible();
+  }
+
+  async searchAndSelectAssociatedActivity(search: string): Promise<void> {
+    await this.searchExistingContentInputLocator.fill(search);
+    const foundItemLocator = this.page.locator('alg-add-content').getByRole('listitem').filter({
+      has: this.page.getByText('Task #1').first()
+    });
+    await expect.soft(foundItemLocator.getByRole('button', { name: 'Select' })).toBeVisible();
+    await foundItemLocator.getByRole('button', { name: 'Select' }).click();
+  }
+
+  async checksIsSubtitleLoadingVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('Associated activity: loading...')).toBeVisible();
+  }
+
+  async checksIsSubtitleVisible(name: string): Promise<void> {
+    await expect.soft(this.page.getByText(`Associated activity: ${name}`)).toBeVisible();
+  }
+
+  async checksIsSubtitleNotVisible(name: string): Promise<void> {
+    await expect.soft(this.page.getByText(`Associated activity: ${name}`)).not.toBeVisible();
+  }
+
+  async waitForGroupResponse(groupId: string): Promise<void> {
+    await this.page.waitForResponse(`${apiUrl}/groups/${groupId}`);
+  }
+
+  async abortOrContinueAssociatedItemResponse(itemId: string, errorCode?: string): Promise<void> {
+    await this.page.route(`${apiUrl}/items/${itemId}`, route =>
+      (errorCode === undefined ? route.continue() : errorCode === 'accessdenied' ? route.fulfill({
+        status: 403,
+      }) : route.abort())
+    );
+  }
+
+  async removeAssociatedActivity(): Promise<void> {
+    await this.associatedActivitySectionLocator.getByRole('button').click();
+  }
+
+  async isNotAllowToViewMessageVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('You are not allowed to view this group page.')).toBeVisible();
+  }
+
+  async retrySubtitle(): Promise<void> {
+    const retrySubtitleBtnLocator = this.page.getByTestId('retry-subtitle');
+    await expect.soft(retrySubtitleBtnLocator).toBeVisible();
+    await retrySubtitleBtnLocator.click();
   }
 }
