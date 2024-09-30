@@ -227,7 +227,7 @@ export class Task {
     return this.chan.call({
       method: 'task.gradeAnswer',
       params: [ answer, answerToken ],
-      timeout: 40000
+      timeout: 300000 // 5 min, same as the taskgrader timeout
     }).pipe(
       map(result => {
         if (result.length === 0) throw new Error('task.gradeAnswer returned no arguments');
