@@ -1,4 +1,4 @@
-@import 'src/variables';
+@import 'src/assets/scss/functions';
 
 .group-header-container {
   padding: var(--alg-space-size-3) 0;
@@ -18,4 +18,22 @@
 
 .group-title {
   margin: 0;
+  line-height: 1em;
+}
+
+.group-subtitle {
+  margin: toRem(8) 0 0 0;
+  color: var(--alg-secondary-color);
+  font-weight: 300;
+  font-size: toRem(20);
+  line-height: toRem(16);
+}
+
+.error-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.refresh-btn {
+  margin-left: var(--alg-space-size-6);
 }

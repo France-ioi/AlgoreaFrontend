@@ -24,9 +24,9 @@
 }
 
 .item-subtitle {
-  margin: .5rem 0 0 0;
-  color: var(--base-text-color);
+  margin: toRem(8) 0 0 0;
+  color: var(--alg-secondary-color);
   font-weight: 300;
-  font-size: 1.25rem;
+  font-size: toRem(20);
   line-height: 1em;
 }
