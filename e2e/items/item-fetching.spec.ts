@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 /**
@@ -7,7 +7,7 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
  */
 
 test('visit an already-started chapter', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/a/7523720120450464843;p=7528142386663912287;a=0');
 
   await test.step('check breadcrumbs', async () => {
@@ -22,7 +22,7 @@ test('visit an already-started chapter', async ({ page }) => {
 });
 
 test('wrong path auto-healing', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/a/7523720120450464843;p=404;a=0');
 
   await test.step('check content', async () => {
@@ -45,12 +45,8 @@ test('refresh when observation change (check the score)', async ({ page }) => {
   });
 });
 
-
-
-
-
 test('route with missing path and service error', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.route(`${apiUrl}/items/7523720120450464843/path-from-root`, route => route.abort());
 
   await test.step('path solving error', async () => {

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from './helpers/e2e_auth';
+import { initAsTesterUser } from './helpers/e2e_auth';
 import { apiUrl } from './helpers/e2e_http';
 
 test('home page loaded', async ({ page }) => {
@@ -17,10 +17,10 @@ test('home page loaded', async ({ page }) => {
 });
 
 test('home page loaded as usual user', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/');
   await expect.soft(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
-  await expect.soft(page.locator('alg-top-right-menu')).toContainText('arbonenfant');
+  await expect.soft(page.locator('alg-top-right-menu')).toContainText('e2e-tests');
 });
 
 test('backend is down', async ({ page }) => {

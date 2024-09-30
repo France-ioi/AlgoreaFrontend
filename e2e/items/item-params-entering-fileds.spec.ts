@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
+import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 import { apiUrl } from '../helpers/e2e_http';
 import { convertDateToString } from 'src/app/utils/input-date';
 
 test('checks entering date fields in item permissions', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   const firstAllowedEnteringTimeLocator = page.getByText('First allowed entering time');
   const latestAllowedEnteringTimeLocator = page.getByText('Latest allowed entering time');
   const enteringTimeMinContainerLocator = page.getByTestId('entering-time-min-container');
@@ -21,9 +21,9 @@ test('checks entering date fields in item permissions', async ({ page }) => {
     .getByRole('textbox');
 
   await test.step('checks entering date fields are visible', async () => {
-    await page.goto('a/1980584647557587953;p=4702,4102;a=0/parameters');
-    await page.waitForResponse(`${apiUrl}/items/1980584647557587953/navigation?attempt_id=0`);
-    await expect.soft(page.getByTestId('item-title').getByText('L1S1 Computer science')).toBeVisible();
+    await page.goto('a/4892052901432763219;p=3244687538937221949;pa=0/parameters');
+    await page.waitForResponse(`${apiUrl}/items/4892052901432763219/attempts?parent_attempt_id=0`);
+    await expect.soft(page.getByTestId('item-title').getByText('Entering Fields')).toBeVisible();
     await expect.soft(firstAllowedEnteringTimeLocator).toBeVisible();
     await expect.soft(latestAllowedEnteringTimeLocator).toBeVisible();
     await expect.soft(enteringTimeMinSwitchLocator).toBeVisible();

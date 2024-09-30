@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 // TODO: Tests to be improved to cover empty / non-empty cases, but that would require to improve to clean the dataset first
 
 test('skill loads with activities and parents, no subskills,', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/s/3001;p=3000;a=0');
   await expect.soft(page.getByRole('heading', { name: 'Depth First Search (DFS)' })).toBeVisible();
 
@@ -23,7 +23,7 @@ test('skill loads with activities and parents, no subskills,', async ({ page }) 
 });
 
 test('skill loads, with subskills', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/s/3002;p=3000;a=0');
 
   await test.step('check subskills', async () => {
@@ -36,7 +36,7 @@ test('skill sub-tables loading errors', async ({ page }) => {
   await page.route(`${apiUrl}/items/3001/parents*`, route => route.abort());
   await page.route(`${apiUrl}/items/3001/children*`, route => route.abort());
 
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/s/3001;p=3000;a=0');
   await expect.soft(page.getByRole('heading', { name: 'Depth First Search (DFS)' })).toBeVisible();
 

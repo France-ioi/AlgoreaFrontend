@@ -17,3 +17,9 @@ export function initAsDemoUser(page: Page): Promise<void> {
   if (!key) throw new Error('a key for the demo key should be provided in "E2E_DEMOUSER_TOKEN" env var');
   return setForcedToken(page, key);
 }
+
+export function initAsTesterUser(page: Page): Promise<void> {
+  const key = process.env.E2E_TESTERUSER_TOKEN;
+  if (!key) throw new Error('a key for the demo key should be provided in "E2E_TESTERUSER_TOKEN" env var');
+  return setForcedToken(page, key);
+}

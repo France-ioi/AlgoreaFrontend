@@ -1,36 +1,35 @@
 import { test } from './fixture';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
 import { farFutureDateString } from 'src/app/utils/date';
 import { HOURS } from 'src/app/utils/duration';
 import { expect } from 'e2e/groups/fixture';
 
 test('check can enter permissions', { tag: '@no-parallelism' }, async ({ page, editPermissionsModal }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   const fromDateValue = convertDateToString(new Date(Date.now() + HOURS));
   const untilDateValue = convertDateToString(new Date(Date.now() + (HOURS * 2)));
 
   await test.step('checks can enter permission is off', async () => {
-    await initAsUsualUser(page);
-    await page.goto('a/3668315727545144509;p=;pa=0?watchedGroupId=5751429939100258793');
+    await page.goto('a/8470006805577401679;p=3244687538937221949;pa=0?watchedGroupId=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/5751429939100258793/permissions/5751429939100258793/3668315727545144509');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
     await editPermissionsModal.checksIsCanEnterSwitchFieldVisible();
     await editPermissionsModal.toggleCanEnterSwitchField();
     if (await editPermissionsModal.isFromUntilInputsVisible()) {
       await editPermissionsModal.toggleCanEnterSwitch();
       await editPermissionsModal.checksIsFromUntilInputsNotVisible();
       await editPermissionsModal.savePermissions();
-      await editPermissionsModal.waitForPermissionsResponse('groups/5751429939100258793/permissions/5751429939100258793/3668315727545144509');
+      await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
     }
   });
 
   await test.step('checks can enter control is visible', async () => {
-    await page.goto('a/3668315727545144509;p=;pa=0?watchedGroupId=5751429939100258793');
+    await page.goto('a/8470006805577401679;p=3244687538937221949;pa=0?watchedGroupId=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/5751429939100258793/permissions/5751429939100258793/3668315727545144509');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
   });
 
   await test.step('checks can enter control is visible', async () => {
@@ -53,14 +52,14 @@ test('check can enter permissions', { tag: '@no-parallelism' }, async ({ page, e
     await editPermissionsModal.toggleCanEnterSwitchField();
     await editPermissionsModal.checksIsCanEnterValueInHeaderVisible(`${fromDateValue} - ${untilDateValue}`);
     await editPermissionsModal.savePermissions();
-    await editPermissionsModal.waitForPermissionsResponse('groups/5751429939100258793/permissions/5751429939100258793/3668315727545144509');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
     await editPermissionsModal.checksIsPermissionsModalNotVisible();
   });
 
   await test.step('checks can enter switch is enable', async () => {
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/5751429939100258793/permissions/5751429939100258793/3668315727545144509');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
     await editPermissionsModal.toggleCanEnterSwitchField();
     await editPermissionsModal.checksIsFromUntilInputsVisible();
   });
@@ -78,15 +77,15 @@ test('check can enter permissions', { tag: '@no-parallelism' }, async ({ page, e
 });
 
 test('check can enter fields behaviour', async ({ page, editPermissionsModal }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   const fromDateValue = convertDateToString(new Date(Date.now() + (HOURS * 2)));
   const untilDateValue = convertDateToString(new Date(Date.now() + (HOURS * 3)));
 
   await test.step('checks can enter control is visible', async () => {
-    await page.goto('a/6379723280369399253;p=7523720120450464843;pa=0?watchedGroupId=123456');
+    await page.goto('a/2999322914037656296;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/123456/permissions/123456/6379723280369399253');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/2999322914037656296');
   });
 
   await test.step('checks can enter control is visible', async () => {
@@ -136,12 +135,12 @@ test('check can enter fields behaviour', async ({ page, editPermissionsModal }) 
 });
 
 test('check can enter warning', async ({ page, editPermissionsModal }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await test.step('checks can enter control is visible', async () => {
-    await page.goto('a/899800937596940136;p=694914435881177216,5,4700,4707,4702,4102;pa=0?watchedGroupId=917454091139548680');
+    await page.goto('a/2999322914037656296;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/917454091139548680/permissions/917454091139548680/899800937596940136');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/2999322914037656296');
   });
 
   await test.step('checks can enter warning for form value', async () => {
@@ -154,22 +153,22 @@ test('check can enter warning', async ({ page, editPermissionsModal }) => {
   });
 
   await test.step('checks can enter warning for grand view', async () => {
-    await page.goto('a/1980584647557587953;p=;pa=0?watchedGroupId=917454091139548680');
+    await page.goto('a/1749804273409471901;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/917454091139548680/permissions/917454091139548680/1980584647557587953');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/1749804273409471901');
     await editPermissionsModal.checksIsCanEnterSwitchFieldVisible();
     await editPermissionsModal.checksIsCanEnterWarningVisible();
   });
 });
 
 test('checks item with no explicit entry',async ({ page, editPermissionsModal }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await test.step('checks can enter control is not visible', async () => {
-    await page.goto('a/2268458803184278714;p=;pa=0?watchedGroupId=123456');
+    await page.goto('a/422346871652804072;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
-    await editPermissionsModal.waitForPermissionsResponse('groups/123456/permissions/123456/2268458803184278714');
+    await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/422346871652804072');
     await editPermissionsModal.checksIsCanEnterSwitchFieldNotVisible();
   });
 });

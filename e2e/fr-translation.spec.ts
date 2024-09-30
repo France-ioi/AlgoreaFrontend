@@ -1,12 +1,12 @@
 import { test, expect } from './groups/fixture';
-import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
+import { initAsTesterUser, initAsUsualUser } from 'e2e/helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 // It runs "fr" version of app
 test.use({ baseURL: 'http://localhost:4100' });
 
 test('checks plural in left menu', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/a/home;pa=0');
   await expect.soft(page.getByText('(via le groupe: Pixal)')).toBeVisible();
 });
@@ -28,7 +28,7 @@ test('checks plural in chapter user progress', async ({ page }) => {
 });
 
 test('checks select in item log view', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('a/7528142386663912287;p=;a=0/progress/history');
   await expect.soft(page.getByRole('link', { name: 'Recharger la réponse' }).first()).toBeVisible();
 });
@@ -108,7 +108,7 @@ test('checks select in item dependencies', async ({ page }) => {
 });
 
 test('checks select in user progress table', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/a/6379723280369399253;p=;pa=0/progress/chapter?watchedGroupId=123456');
   const selectionLocator = page.getByText('équipes');
   await expect.soft(selectionLocator).toBeVisible();

@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 
 test('check chapter children', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/a/7523720120450464843;p=7528142386663912287;a=0/progress/chapter');
   const firstChildLink = page.locator('alg-chapter-user-progress tbody tr:nth-child(2) a');
   await expect(firstChildLink).toBeVisible();
