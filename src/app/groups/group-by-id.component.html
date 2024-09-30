@@ -1,9 +1,7 @@
 <ng-container *ngIf="state$ | async as state">
 
-  <ng-container *ngIf="state.data?.group as group">
-    @if (state.data) {
-      <alg-group-header [groupData]="state.data"></alg-group-header>
-    }
+  @if (state.data && state.data.group; as group) {
+    <alg-group-header [groupData]="state.data"></alg-group-header>
 <!--    <alg-pending-join-requests
         *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"
@@ -88,7 +86,7 @@
     <alg-group-managers *ngIf="!!adminTab?.isActive" class="alg-flex-1" [groupData]="state.data"></alg-group-managers>
     <alg-group-access *ngIf="!!accessTab?.isActive" class="alg-flex-1" [group]="group"></alg-group-access>
     <alg-group-edit *ngIf="!!settingsTab?.isActive" class="alg-flex-1" #groupEdit></alg-group-edit>
-  </ng-container>
+  }
 
   <alg-loading class="alg-flex-1" *ngIf="state.isFetching && !state.data"></alg-loading>
 
