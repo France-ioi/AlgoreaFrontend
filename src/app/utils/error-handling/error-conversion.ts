@@ -9,7 +9,7 @@ class HTTPError extends Error {
 
 class UnknownError extends Error {
   constructor(err: unknown) {
-    super(JSON.stringify(err));
+    super(typeof err === 'object' ? JSON.stringify(err) : String(err));
     this.name = 'UnknownError';
   }
 }
