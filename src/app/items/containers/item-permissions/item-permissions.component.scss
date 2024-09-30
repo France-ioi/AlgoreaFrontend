@@ -66,3 +66,11 @@
 .no-access {
   margin: toRem(16);
 }
+
+.can-view-container {
+  display: flex;
+}
+
+.grant-access-button {
+  margin-left: var(--alg-space-size-6);
+}

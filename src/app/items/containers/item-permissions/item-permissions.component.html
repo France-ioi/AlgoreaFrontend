@@ -65,7 +65,20 @@
                     [(ngModel)]="watchedGroupPermissions.canView"
                     [values]="canViewValues"
                     theme="warning"
-                  ></alg-progress-select>
+                  >
+                    @if (observedGroup.currentUserCanGrantAccess && (itemData.item.permissions | allowsGrantingContentView) && !(watchedGroupPermissions | allowsViewingInfo)) {
+                      <span header-section>
+                        <button
+                          class="alg-button primary grant-access-button"
+                          type="button"
+                          (click)="grantAccess()"
+                          [disabled]="updateInProcess"
+                          pButton
+                          i18n
+                        >Grant content access</button>
+                      </span>
+                    }
+                  </alg-progress-select>
                 </ng-template>
               </alg-section-header>
             </div>
