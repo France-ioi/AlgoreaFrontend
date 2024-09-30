@@ -132,3 +132,8 @@
   color: var(--alg-secondary-color);
   margin-bottom: var(--alg-space-size-5);
 }
+
+.header-content-wrapper {
+  display: flex;
+  align-items: center;
+}
