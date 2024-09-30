@@ -135,6 +135,16 @@
     }
   }
 
+  &.grant-access-button {
+    &.p-button {
+      padding: 0 toRem(8);
+      height: toRem(24);
+      font-size: toRem(12);
+      font-weight: 500;
+      border-radius: toRem(24) !important;
+    }
+  }
+
   &.light-border {
     border: toRem(1) solid var(--alg-white-color);
 
