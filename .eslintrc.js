@@ -109,6 +109,7 @@ module.exports = {
       'ignoreStatic': true
     }],
     '@typescript-eslint/no-explicit-any': 'off',
+    '@ngrx/no-store-subscription': 'off'
   },
   overrides: [
     {

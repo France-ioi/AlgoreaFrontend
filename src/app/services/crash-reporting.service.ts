@@ -19,7 +19,6 @@ export class CrashReportingService {
   init(): void {
     this.userSessionService.session$.subscribe(session => setUser(session ? { id: session.groupId, username: session.login } : null));
 
-    // eslint-disable-next-line @ngrx/no-store-subscription
     this.store.select(fromObservation.selectObservedGroupId).subscribe(g => addBreadcrumb({
       category: 'group-watching',
       level: 'info',

@@ -224,7 +224,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.itemRouter.navigateTo({ ...route, answer: undefined });
     }),
 
-    // eslint-disable-next-line @ngrx/no-store-subscription
     this.store.select(fromItemContent.selectActiveContentRoute).subscribe(route => {
       if (route) {
         // just publish to current content the new route we are navigating to (without knowing any info)
