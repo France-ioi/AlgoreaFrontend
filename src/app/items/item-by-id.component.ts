@@ -238,7 +238,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     // on datasource state change, update the current content page info
     this.itemState$.pipe(readyData()).subscribe(data => {
-      this.hasRedirected = false;
       this.currentContent.replace(itemInfo({
         breadcrumbs: {
           category: itemBreadcrumbCat,
@@ -267,18 +266,21 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     this.breadcrumbService.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
 
-    this.itemState$.pipe(
-      filter(s => s.isError),
-    ).subscribe(state => {
+    this.store.select(fromItemContent.selectActiveContentBreadcrumbs).subscribe(state => {
+      if (state.isError) this.currentContent.clear();
+
       // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
-      if (errorHasTag(state.error, breadcrumbServiceTag) && (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))) {
+      if (
+        state.isError &&
+        errorHasTag(state.error, breadcrumbServiceTag) &&
+        (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
+      ) {
         if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
         this.hasRedirected = true;
         const { contentType, id, answer } = this.getItemRoute();
         if (!id) throw new Error('Unexpected: item id should exist');
         this.itemRouter.navigateTo({ contentType, id, answer }, { navExtras: { replaceUrl: true } });
-      }
-      this.currentContent.clear();
+      } else this.hasRedirected = false;
     }),
 
     combineLatest([ this.itemRoute$, this.itemState$.pipe(startWith(undefined)) ]).pipe(
