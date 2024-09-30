@@ -16,7 +16,14 @@ import { ButtonDirective } from 'primeng/button';
   templateUrl: './group-header.component.html',
   styleUrls: [ './group-header.component.scss' ],
   standalone: true,
-  imports: [ NgIf, AsyncPipe, JsonPipe, LoadingComponent, ErrorComponent, ButtonDirective ],
+  imports: [
+    NgIf,
+    AsyncPipe,
+    JsonPipe,
+    LoadingComponent,
+    ErrorComponent,
+    ButtonDirective,
+  ],
 })
 export class GroupHeaderComponent {
   groupData = input.required<GroupData>();
