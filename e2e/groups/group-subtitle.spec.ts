@@ -1,6 +1,8 @@
 import { test, expect } from 'e2e/groups/create-group-fixture';
 import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
 
+const associatedItemName = 'Task #1';
+
 test.beforeEach(async ({ page }) => {
   await initAsUsualUser(page);
 });
@@ -14,13 +16,13 @@ test('checks group subtitle add and remove', async ({ page, groupSettingsPage, c
   await groupSettingsPage.goto(`/groups/by-id/${ createGroup.groupId };p=/settings`);
   await expect.soft(page.getByRole('heading', { name: createGroup.groupName })).toBeVisible();
 
-  await test.step('checks is associated activity visible', async () => {
-    await groupSettingsPage.checksIsAssociatedActivityVisible();
+  await test.step('checks is associated activity section visible', async () => {
+    await groupSettingsPage.checksIsAssociatedActivitySectionVisible();
     await groupSettingsPage.checksIsAssociatedActivitySearchInputVisible();
   });
 
   await test.step('search and select exist content', async () => {
-    await groupSettingsPage.searchAndSelectAssociatedActivity('Task #1');
+    await groupSettingsPage.searchAndSelectAssociatedActivity(associatedItemName);
   });
 
   await test.step('save group data', async () => {
@@ -31,18 +33,32 @@ test('checks group subtitle add and remove', async ({ page, groupSettingsPage, c
   });
 
   await test.step('checks subtitle is visible', async () => {
-    await groupSettingsPage.checksIsSubtitleLoadingVisible();
     await groupSettingsPage.checksIsSubtitleVisible('Task #1');
+  });
+
+  await test.step('checks navigation to associated item', async () => {
+    await groupSettingsPage.navigateToAssociatedActivity(associatedItemName);
+    await expect.soft(page.getByRole('heading', { name: associatedItemName })).toBeVisible();
+    await page.goBack();
+    await groupSettingsPage.checksIsSubtitleLoadingVisible();
+    await expect.soft(page.getByRole('heading', { name: createGroup.groupName })).toBeVisible();
+  });
+
+  await test.step('checks is associated activity visible', async () => {
+    await groupSettingsPage.checksIsAssociatedActivitySectionVisible();
+    await groupSettingsPage.checksIsAssociatedActivityVisible(associatedItemName);
   });
 
   await test.step('remove associated activity', async () => {
     await groupSettingsPage.removeAssociatedActivity();
-    await groupSettingsPage.saveChangesAndCheckNotification();
-    await groupSettingsPage.waitForGroupResponse(createGroup.groupId);
+    await Promise.all([
+      groupSettingsPage.saveChangesAndCheckNotification(),
+      groupSettingsPage.waitForGroupResponse(createGroup.groupId),
+    ]);
   });
 
   await test.step('checks subtitle is not visible', async () => {
-    await groupSettingsPage.checksIsSubtitleNotVisible('Task #1');
+    await groupSettingsPage.checksIsSubtitleNotVisible(associatedItemName);
   });
 });
 
@@ -51,13 +67,13 @@ test('checks group subtitle failure response', async ({ page, groupSettingsPage,
   await groupSettingsPage.goto(`/groups/by-id/${ createGroup.groupId };p=/settings`);
   await expect.soft(page.getByRole('heading', { name: createGroup.groupName })).toBeVisible();
 
-  await test.step('checks is associated activity visible', async () => {
-    await groupSettingsPage.checksIsAssociatedActivityVisible();
+  await test.step('checks is associated activity section visible', async () => {
+    await groupSettingsPage.checksIsAssociatedActivitySectionVisible();
     await groupSettingsPage.checksIsAssociatedActivitySearchInputVisible();
   });
 
   await test.step('search and select exist content', async () => {
-    await groupSettingsPage.searchAndSelectAssociatedActivity('Task #1');
+    await groupSettingsPage.searchAndSelectAssociatedActivity(associatedItemName);
   });
 
   await test.step('save group data', async () => {
@@ -76,7 +92,7 @@ test('checks group subtitle failure response', async ({ page, groupSettingsPage,
     await groupSettingsPage.abortOrContinueAssociatedItemResponse('10886782127135168');
     await groupSettingsPage.retrySubtitle();
     await groupSettingsPage.checksIsSubtitleLoadingVisible();
-    await groupSettingsPage.checksIsSubtitleVisible('Task #1');
+    await groupSettingsPage.checksIsSubtitleVisible(associatedItemName);
   });
 
   await test.step('checks subtitle is forbidden', async () => {

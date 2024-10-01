@@ -25,7 +25,7 @@
               }
             } @else {
               @if (state.data.string.title; as title) {
-                {{ title }}
+                <a class="alg-link" [routerLink]="state.data | itemRoute | url">{{ title }}</a>
               } @else {
                 <span i18n>Unknown title</span>
               }

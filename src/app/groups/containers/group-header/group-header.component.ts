@@ -9,6 +9,9 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { ButtonDirective } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 
 @Component({
   selector: 'alg-group-header',
@@ -22,6 +25,9 @@ import { ButtonDirective } from 'primeng/button';
     LoadingComponent,
     ErrorComponent,
     ButtonDirective,
+    RouterLink,
+    ItemRoutePipe,
+    RouteUrlPipe,
   ],
 })
 export class GroupHeaderComponent implements OnDestroy {

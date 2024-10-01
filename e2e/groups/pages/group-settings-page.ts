@@ -86,7 +86,12 @@ export class GroupSettingsPage {
   }
 
   async checkSuccessfulNotification(): Promise<void> {
-    await expect.soft(this.page.getByText('SuccessChanges successfully')).toBeVisible();
+    const toastLocator = this.page.locator('p-toast');
+    const successfulLocator = toastLocator.getByText('SuccessChanges successfully');
+    await expect.soft(successfulLocator).toBeVisible();
+    await expect.soft(toastLocator.getByLabel('Close')).toBeVisible();
+    await toastLocator.getByLabel('Close').click();
+    await expect.soft(successfulLocator).not.toBeVisible();
   }
 
   async saveChanges(): Promise<void> {
@@ -112,8 +117,12 @@ export class GroupSettingsPage {
     await confirmBtnLocator.click();
   }
 
-  async checksIsAssociatedActivityVisible(): Promise<void> {
+  async checksIsAssociatedActivitySectionVisible(): Promise<void> {
     await expect.soft(this.associatedActivitySectionLocator).toBeVisible();
+  }
+
+  async checksIsAssociatedActivityVisible(name: string): Promise<void> {
+    await expect.soft(this.associatedActivitySectionLocator.getByText(name)).toBeVisible();
   }
 
   async checksIsAssociatedActivitySearchInputVisible(): Promise<void> {
@@ -130,7 +139,7 @@ export class GroupSettingsPage {
   }
 
   async checksIsSubtitleLoadingVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('Associated activity: loading...')).toBeVisible();
+    await expect.soft(this.page.getByText('loading...')).toBeVisible();
   }
 
   async checksIsSubtitleVisible(name: string): Promise<void> {
@@ -151,6 +160,10 @@ export class GroupSettingsPage {
         status: 403,
       }) : route.abort())
     );
+  }
+
+  async navigateToAssociatedActivity(name: string): Promise<void> {
+    await this.page.getByText(`Associated activity: ${name}`).getByRole('link', { name }).click();
   }
 
   async removeAssociatedActivity(): Promise<void> {
