@@ -132,6 +132,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   );
 
   private subscriptions = [
+    this.initializedTaskAnswer$.subscribe(),
     this.initializedTaskState$.subscribe({
       error: err => this.errorSubject.next(err),
     }),
