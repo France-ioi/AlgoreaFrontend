@@ -1,5 +1,5 @@
 import { test } from './fixture';
-import { initAsTesterUser, initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 import { apiUrl } from '../helpers/e2e_http';
 
 const groupChildrenJson = [

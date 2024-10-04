@@ -8,8 +8,10 @@ test.skip('checks navigation to another tab for item', async ({ page, lostChange
   const itemEditWrapperLocator = page.locator('alg-item-edit-wrapper');
   await initAsTesterUser(page);
   await test.step('checks cancel modal', async () => {
-    await page.goto(`a/${itemId};p=;a=0/parameters`);
-    await page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`);
+    await Promise.all([
+      page.goto(`a/${itemId};p=;a=0/parameters`),
+      page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
+    ]);
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
@@ -21,8 +23,10 @@ test.skip('checks navigation to another tab for item', async ({ page, lostChange
   });
 
   await test.step('checks confirm modal', async () => {
-    await page.goto(`a/${itemId};p=;a=0/parameters`);
-    await page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`);
+    await Promise.all([
+      page.goto(`a/${itemId};p=;a=0/parameters`),
+      page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
+    ]);
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
@@ -39,8 +43,10 @@ test.skip('checks navigation to another module for item', async ({ page, lostCha
   const itemEditWrapperLocator = page.locator('alg-item-edit-wrapper');
   await initAsTesterUser(page);
   await test.step('checks cancel modal', async () => {
-    await page.goto(`a/${itemId};p=;a=0/parameters`);
-    await page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`);
+    await Promise.all([
+      page.goto(`a/${itemId};p=;a=0/parameters`),
+      page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
+    ]);
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
@@ -55,8 +61,10 @@ test.skip('checks navigation to another module for item', async ({ page, lostCha
   });
 
   await test.step('checks confirm modal', async () => {
-    await page.goto(`a/${itemId};p=;a=0/parameters`);
-    await page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`);
+    await Promise.all([
+      page.goto(`a/${itemId};p=;a=0/parameters`),
+      page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
+    ]);
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');

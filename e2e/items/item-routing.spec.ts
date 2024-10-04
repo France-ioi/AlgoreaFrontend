@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { initAsTesterUser } from '../helpers/e2e_auth';
+import { initAsTesterUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 /**
@@ -62,7 +62,7 @@ test('route with action parameter: action passed to subcomponents + parameter re
   const emptyAnswer = '1970981512988735785';
   const answerWith1234567 = '4143245131838208903';
 
-  await initAsTesterUser(page);
+  await initAsUsualUser(page);
   // first reload an empty answer
   await page.goto(`/a/6379723280369399253;p=;pa=0;answerId=${emptyAnswer};answerLoadAsCurrent=1`);
 

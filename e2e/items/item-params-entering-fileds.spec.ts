@@ -21,8 +21,10 @@ test('checks entering date fields in item permissions', async ({ page }) => {
     .getByRole('textbox');
 
   await test.step('checks entering date fields are visible', async () => {
-    await page.goto('a/4892052901432763219;p=3244687538937221949;pa=0/parameters');
-    await page.waitForResponse(`${apiUrl}/items/4892052901432763219/attempts?parent_attempt_id=0`);
+    await Promise.all([
+      page.goto('a/4892052901432763219;p=3244687538937221949;pa=0/parameters'),
+      page.waitForResponse(`${apiUrl}/items/4892052901432763219/attempts?parent_attempt_id=0`),
+    ]);
     await expect.soft(page.getByTestId('item-title').getByText('Entering Fields')).toBeVisible();
     await expect.soft(firstAllowedEnteringTimeLocator).toBeVisible();
     await expect.soft(latestAllowedEnteringTimeLocator).toBeVisible();

@@ -169,8 +169,8 @@ test('checks item description', async ({ page, itemContentPage }) => {
 
   // Task with description: description should not be shown
   await test.step('checks description is not visible for "Task"', async () => {
-    await itemContentPage.goto('/a/6379723280369399253;p=;a=0');
     await Promise.all([
+      itemContentPage.goto('/a/6379723280369399253;p=;a=0'),
       itemContentPage.waitForItemResponse('6379723280369399253'),
       itemContentPage.waitForBreadcrumbsResponse('6379723280369399253'),
     ]);
@@ -179,8 +179,8 @@ test('checks item description', async ({ page, itemContentPage }) => {
 
   // Chapter with description: description should be shown
   await test.step('checks description is visible for "Chapter"', async () => {
-    await itemContentPage.goto('/a/7523720120450464843;p=;a=0');
     await Promise.all([
+      itemContentPage.goto('/a/7523720120450464843;p=;a=0'),
       itemContentPage.waitForItemResponse('7523720120450464843'),
       itemContentPage.waitForBreadcrumbsResponse('7523720120450464843'),
     ]);
@@ -190,8 +190,8 @@ test('checks item description', async ({ page, itemContentPage }) => {
   // Skill with description: description should be shown
   await test.step('checks description is visible for "Skill"', async () => {
     await initAsUsualUser(page);
-    await itemContentPage.goto('/s/8865540088611165367;p=;a=0');
     await Promise.all([
+      itemContentPage.goto('/s/8865540088611165367;p=;a=0'),
       itemContentPage.waitForItemResponse('8865540088611165367'),
       itemContentPage.waitForBreadcrumbsResponse('8865540088611165367'),
     ]);
@@ -201,8 +201,8 @@ test('checks item description', async ({ page, itemContentPage }) => {
 
 // Chapter, with no view content perm, not explicit entry item, no prerequisite: chapter specific message, no prerequisite part
 test('checks chapter no access message with no prerequisites section', async ({ itemContentPage }) => {
-  await itemContentPage.goto('a/902356740789159624;p=4702,4102;pa=0');
   await Promise.all([
+    itemContentPage.goto('a/902356740789159624;p=4702,4102;pa=0'),
     itemContentPage.waitForItemResponse('902356740789159624'),
     itemContentPage.waitForBreadcrumbsResponse('4702/4102/902356740789159624', 'parent_attempt_id=0'),
   ]);
@@ -212,8 +212,8 @@ test('checks chapter no access message with no prerequisites section', async ({ 
 
 // Chapter, with no view content perm, not explicit entry item, with prerequisite: chapter specific message, with prerequisite part
 test('checks chapter no access message with prerequisites section', async ({ itemContentPage }) => {
-  await itemContentPage.goto('a/128139237432513103;p=4702,4102;pa=0');
   await Promise.all([
+    itemContentPage.goto('a/128139237432513103;p=4702,4102;pa=0'),
     itemContentPage.waitForItemResponse('128139237432513103'),
     itemContentPage.waitForBreadcrumbsResponse('4702/4102/128139237432513103', 'parent_attempt_id=0'),
   ]);
@@ -224,8 +224,8 @@ test('checks chapter no access message with prerequisites section', async ({ ite
 // Chapter, with view content perm, no edit perm, not explicit entry, : load/show children (or empty)
 test('checks chapter children list is visible with view content perm no edit perm not explicit entry', async ({ itemContentPage, page }) => {
   await initAsUsualUser(page);
-  await itemContentPage.goto('a/home;a=0');
   await Promise.all([
+    itemContentPage.goto('a/home;a=0'),
     itemContentPage.waitForItemResponse('4702'),
     itemContentPage.waitForBreadcrumbsResponse('4702'),
     itemContentPage.waitForChildrenResponse('4702'),
@@ -250,8 +250,8 @@ test('checks chapter children list is visible with view content perm, no edit pe
 // children edition switch shown, no skill sub/parent shown
 test('checks chapter children edition switch is visible, sub/parent skills is not visible with view content', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/6707691810849260111;p=;a=0');
   await Promise.all([
+    itemContentPage.goto('a/6707691810849260111;p=;a=0'),
     itemContentPage.waitForItemResponse('6707691810849260111'),
     itemContentPage.waitForBreadcrumbsResponse('6707691810849260111'),
     itemContentPage.waitForChildrenResponse('6707691810849260111'),
@@ -265,8 +265,8 @@ test('checks chapter children edition switch is visible, sub/parent skills is no
 // children edition comp shown, no skill sub/parent shown
 test('checks chapter edit mode: children edition switch is visible, children edition view is visible, sub/parent skills is not visible', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/6707691810849260111;p=;a=0/edit-children');
   await Promise.all([
+    itemContentPage.goto('a/6707691810849260111;p=;a=0/edit-children'),
     itemContentPage.waitForItemResponse('6707691810849260111'),
     itemContentPage.waitForBreadcrumbsResponse('6707691810849260111'),
     itemContentPage.waitForChildrenResponse('6707691810849260111', 'attempt_id=0&show_invisible_items=1'),
@@ -281,8 +281,8 @@ test('checks chapter edit mode: children edition switch is visible, children edi
 // children edition comp shown with message, no skill sub/parent shown
 test('checks chapter edit mode: children edition switch is visible children no edit message is not visible, sub/parent skills is visible', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/home;a=0/edit-children');
   await Promise.all([
+    itemContentPage.goto('a/home;a=0/edit-children'),
     itemContentPage.waitForItemResponse('4702'),
     itemContentPage.waitForBreadcrumbsResponse('4702'),
   ]);
@@ -297,8 +297,8 @@ test('checks chapter edit mode: children edition switch is visible children no e
 // children edition switch shown, sub skills sub shown, skill parent shown
 test('checks skill children edition switch is visible, sub/parent skills is visible with view content perm, edit children perm, not explicit entry', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('s/568547986401741399;p=;a=0');
   await Promise.all([
+    itemContentPage.goto('s/568547986401741399;p=;a=0'),
     itemContentPage.waitForItemResponse('568547986401741399'),
     itemContentPage.waitForBreadcrumbsResponse('568547986401741399'),
   ]);
@@ -310,8 +310,8 @@ test('checks skill children edition switch is visible, sub/parent skills is visi
 // children edition switch shown, children edition comp shown, sub skills comp NOT shown, skill parent shown
 test('checks skill on children-edit url: children edition switch is visible, children edition is visible, sub skills is not visible, parent skills is visible with view content perm, edit children perm, not explicit entry', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('s/568547986401741399;p=;a=0/edit-children');
   await Promise.all([
+    itemContentPage.goto('s/568547986401741399;p=;a=0/edit-children'),
     itemContentPage.waitForItemResponse('568547986401741399'),
     itemContentPage.waitForBreadcrumbsResponse('568547986401741399'),
   ]);
@@ -327,8 +327,10 @@ test('checks skill no access message', async ({ itemContentPage, page }) => {
   await page.route(`${apiUrl}/items/568547986401741399`, async route => {
     await route.fulfill({ json: skillResponse });
   });
-  await itemContentPage.goto('s/568547986401741399;p=;a=0');
-  await itemContentPage.waitForBreadcrumbsResponse('568547986401741399');
+  await Promise.all([
+    itemContentPage.goto('s/568547986401741399;p=;a=0'),
+    itemContentPage.waitForBreadcrumbsResponse('568547986401741399'),
+  ]);
   await itemContentPage.checksSkillNoAccessMessageIsVisible();
 });
 
@@ -336,20 +338,22 @@ test('checks skill no access message', async ({ itemContentPage, page }) => {
 // item-display in dom with opacity 0, "Loading the content" shown
 test('checks task loading the content message with view content perm, explicit entry, non empty url, a current result available', async ({ itemContentPage, page }) => {
   await initAsUsualUser(page);
-  await itemContentPage.goto('a/8762331199149369455;p=694914435881177216,5,4700,4707,4702,7528142386663912287,944619266928306927;a=0');
   await Promise.all([
+    itemContentPage.goto('a/8762331199149369455;p=694914435881177216,5,4700,4707,4702,7528142386663912287,944619266928306927;a=0'),
     itemContentPage.waitForItemResponse('8762331199149369455'),
     itemContentPage.waitForBreadcrumbsResponse('694914435881177216/5/4700/4707/4702/7528142386663912287/944619266928306927/8762331199149369455'),
   ]);
-  await itemContentPage.checksLoadingContentMessageIsVisible();
-  await itemContentPage.checksItemDisplayHasZeroOpacity();
+  await Promise.all([
+    itemContentPage.checksLoadingContentMessageIsVisible(),
+    itemContentPage.checksItemDisplayHasZeroOpacity(),
+  ]);
 });
 
 // Task with view content perm, no edit perm, not explicit entry, empty url: error message
 test('checks task empty url message', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/1501663083087440078;p=7528142386663912287,3327328786400474746;a=0');
   await Promise.all([
+    itemContentPage.goto('a/1501663083087440078;p=7528142386663912287,3327328786400474746;a=0'),
     itemContentPage.waitForItemResponse('1501663083087440078'),
     itemContentPage.waitForBreadcrumbsResponse('7528142386663912287/3327328786400474746/1501663083087440078'),
   ]);
@@ -359,8 +363,8 @@ test('checks task empty url message', async ({ itemContentPage, page }) => {
 // Task with view content perm, edit perm, not explicit entry, empty url: other error message
 test('checks task empty url message with can edit perm', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/878263964159393890;p=7528142386663912287,7523720120450464843;pa=0');
   await Promise.all([
+    itemContentPage.goto('a/878263964159393890;p=7528142386663912287,7523720120450464843;pa=0'),
     itemContentPage.waitForItemResponse('878263964159393890'),
     itemContentPage.waitForBreadcrumbsResponse('7528142386663912287/7523720120450464843/878263964159393890', 'parent_attempt_id=0'),
   ]);
@@ -371,20 +375,22 @@ test('checks task empty url message with can edit perm', async ({ itemContentPag
 // Task with view content perm, not explicit entry, non empty url: item-display in dom with opacity 0, "Loading the content" shown
 test('checks task loading the content message with view content perm, not explicit entry, non empty url', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/8760146602351467826;p=7528142386663912287,7523720120450464843;a=0');
   await Promise.all([
+    itemContentPage.goto('a/8760146602351467826;p=7528142386663912287,7523720120450464843;a=0'),
     itemContentPage.waitForItemResponse('8760146602351467826'),
     itemContentPage.waitForBreadcrumbsResponse('7528142386663912287/7523720120450464843/8760146602351467826'),
   ]);
-  await itemContentPage.checksLoadingContentMessageIsVisible();
-  await itemContentPage.checksItemDisplayHasZeroOpacity();
+  await Promise.all([
+    itemContentPage.checksLoadingContentMessageIsVisible(),
+    itemContentPage.checksItemDisplayHasZeroOpacity(),
+  ]);
 });
 
 // Task, with no view content perm, not explicit entry item: task specific message
 test('checks task no access message with no view content perm, not explicit entry', async ({ itemContentPage, page }) => {
   await initAsDemoUser(page);
-  await itemContentPage.goto('a/6747343693587333585;p=4702,7528142386663912287,944619266928306927;pa=0');
   await Promise.all([
+    itemContentPage.goto('a/6747343693587333585;p=4702,7528142386663912287,944619266928306927;pa=0'),
     itemContentPage.waitForItemResponse('6747343693587333585'),
     itemContentPage.waitForBreadcrumbsResponse('4702/7528142386663912287/944619266928306927/6747343693587333585', 'parent_attempt_id=0'),
   ]);
@@ -410,8 +416,8 @@ test('checks explicit entry component is visible and item-display not in DOM', a
   await page.route(`${apiUrl}/items/851659072357188051/attempts?attempt_id=0`, async route => {
     await route.fulfill({ json: attemptsResponse });
   });
-  await itemContentPage.goto('/a/851659072357188051;p=4702,7528142386663912287,944619266928306927;pa=0');
   await Promise.all([
+    itemContentPage.goto('/a/851659072357188051;p=4702,7528142386663912287,944619266928306927;pa=0'),
     itemContentPage.waitForItemResponse('851659072357188051'),
     itemContentPage.waitForBreadcrumbsResponse('4702/7528142386663912287/944619266928306927/851659072357188051', 'parent_attempt_id=0'),
   ]);
@@ -422,8 +428,8 @@ test('checks explicit entry component is visible and item-display not in DOM', a
 // Task, with view content perm, explicit entry, results fetched but empty so undefined current result:
 // "This activity requires explicit entry", item-display NOT in dom
 test('checks that explicit entry component is visible and item-display not in DOM with view content perm, explicit entry, no results', async ({ itemContentPage, page }) => {
-  await itemContentPage.goto('/a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;pa=0');
   await Promise.all([
+    itemContentPage.goto('/a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;pa=0'),
     itemContentPage.waitForItemResponse('1480462971860767879'),
     itemContentPage.waitForBreadcrumbsResponse('4702/7528142386663912287/944619266928306927/1480462971860767879', 'parent_attempt_id=0'),
     itemContentPage.waitForAttemptsResponse('1480462971860767879', 'parent_attempt_id=0'),

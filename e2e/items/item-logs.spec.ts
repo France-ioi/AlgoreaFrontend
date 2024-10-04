@@ -33,8 +33,10 @@ const otherItemJson = [
 
 test('checks reload link in logs on task page', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/a/6379723280369399253;p=7523720120450464843;a=0/progress/history');
-  await page.waitForResponse(`${apiUrl}/items/6379723280369399253/log?limit=20`);
+  await Promise.all([
+    page.goto('/a/6379723280369399253;p=7523720120450464843;a=0/progress/history'),
+    page.waitForResponse(`${apiUrl}/items/6379723280369399253/log?limit=20`),
+  ]);
   await expect.soft(page.getByRole('heading', { name: 'Blockly Basic Task' })).toBeVisible();
   const reloadAnswerLocator = page.getByRole('link', { name: 'Reload answer' }).first();
   await expect.soft(reloadAnswerLocator).toBeVisible();
@@ -44,8 +46,10 @@ test('checks reload link in logs on task page', async ({ page }) => {
 
 test('checks view link in logs on task page', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/a/6379723280369399253;p=7523720120450464843;a=0/progress/history/?watchedGroupId=123456');
-  await page.waitForResponse(`${apiUrl}/items/6379723280369399253/log?limit=20&watched_group_id=123456`);
+  await Promise.all([
+    page.goto('/a/6379723280369399253;p=7523720120450464843;a=0/progress/history/?watchedGroupId=123456'),
+    page.waitForResponse(`${apiUrl}/items/6379723280369399253/log?limit=20&watched_group_id=123456`),
+  ]);
   await expect.soft(page.getByRole('heading', { name: 'Blockly Basic Task' })).toBeVisible();
   const reloadAnswerLocator = page.getByRole('link', { name: 'View answer' }).first();
   await expect.soft(reloadAnswerLocator).toBeVisible();

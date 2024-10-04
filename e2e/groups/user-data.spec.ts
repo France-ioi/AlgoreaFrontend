@@ -5,8 +5,10 @@ test('checks current user profile', async ({ page, userPage }) => {
   await initAsUsualUser(page);
 
   await test.step('checks tabs is visible', async () => {
-    await userPage.goto('/groups/users/670968966872011405');
-    await userPage.waitForLogsResponse();
+    await Promise.all([
+      userPage.goto('/groups/users/670968966872011405'),
+      userPage.waitForLogsResponse(),
+    ]);
     await userPage.checksIsHeaderVisible('Armelle Bonenfant (arbonenfant)');
     await userPage.checksIsTabVisible('Personal data');
   });
@@ -27,8 +29,10 @@ test('checks other\'s user profile', async ({ page, userPage }) => {
   await initAsUsualUser(page);
 
   await test.step('checks tabs is not visible', async () => {
-    await userPage.goto('/groups/users/6351969043660203734');
-    await userPage.waitForLogsResponse('6351969043660203734');
+    await Promise.all([
+      userPage.goto('/groups/users/6351969043660203734'),
+      userPage.waitForLogsResponse('6351969043660203734'),
+    ]);
     await userPage.checksIsHeaderVisible('user-no-access');
     await userPage.checksIsTabNotVisible('Personal data');
   });

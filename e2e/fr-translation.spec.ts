@@ -88,8 +88,8 @@ test('checks select in associated item', async ({ page }) => {
   });
 
   await test.step('checks error caption', async () => {
-    await page.goto('groups/by-id/672913018859223173;p=52767158366271444/settings');
     await page.route(`${apiUrl}/items/6707691810849260111`, route => route.abort());
+    await page.goto('groups/by-id/672913018859223173;p=52767158366271444/settings');
     await expect.soft(page.getByText('Erreur de chargement de la activité racine')).toBeVisible();
   });
 });
