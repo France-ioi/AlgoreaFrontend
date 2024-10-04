@@ -152,7 +152,7 @@ jobs:
 
   e2e-no-parallelism:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
+      - image: mcr.microsoft.com/playwright:v1.47.2-noble
     resource_class: large
     steps:
       - attach_workspace:
@@ -165,7 +165,7 @@ jobs:
 
   e2e-parallelism-chromium:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
+      - image: mcr.microsoft.com/playwright:v1.47.2-noble
     parallelism: 2
     resource_class: large
     steps:
@@ -179,7 +179,7 @@ jobs:
 
   e2e-parallelism-firefox:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.0-jammy
+      - image: mcr.microsoft.com/playwright:v1.47.2-noble
     parallelism: 2
     resource_class: large
     steps:
