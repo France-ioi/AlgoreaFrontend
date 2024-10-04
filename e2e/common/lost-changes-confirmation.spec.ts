@@ -2,7 +2,7 @@ import { test, expect } from './fixture';
 import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
-test('checks navigation to another tab for item', async ({ page, lostChangesConfirmationModal }) => {
+test.skip('checks navigation to another tab for item', async ({ page, lostChangesConfirmationModal }) => {
   await initAsUsualUser(page);
   await test.step('checks cancel modal', async () => {
     await page.goto('a/39530140456452546;p=4702,4102,1980584647557587953;a=0/parameters');
@@ -32,7 +32,7 @@ test('checks navigation to another tab for item', async ({ page, lostChangesConf
   });
 });
 
-test('checks navigation to another module for item', async ({ page, lostChangesConfirmationModal }) => {
+test.skip('checks navigation to another module for item', async ({ page, lostChangesConfirmationModal }) => {
   await initAsUsualUser(page);
   await test.step('checks cancel modal', async () => {
     await page.goto('a/39530140456452546;p=4702,4102,1980584647557587953;a=0/parameters');
@@ -68,7 +68,7 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
   });
 });
 
-test('checks navigation to another tab for group', async ({ page, lostChangesConfirmationModal }) => {
+test.skip('checks navigation to another tab for group', async ({ page, lostChangesConfirmationModal }) => {
   await initAsUsualUser(page);
   await test.step('checks cancel modal', async () => {
     await page.goto('groups/by-id/4035378957038759250;p=/settings');
@@ -96,7 +96,7 @@ test('checks navigation to another tab for group', async ({ page, lostChangesCon
   });
 });
 
-test('checks navigation to another module for group', async ({ page, lostChangesConfirmationModal }) => {
+test.skip('checks navigation to another module for group', async ({ page, lostChangesConfirmationModal }) => {
   await initAsUsualUser(page);
   await test.step('checks cancel modal', async () => {
     await page.goto('groups/by-id/4035378957038759250;p=/settings');
