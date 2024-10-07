@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, filter, map, startWith, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, startWith, Subject } from 'rxjs';
 import { UrlCommand } from '../utils/url';
 
 interface Tab {
@@ -20,23 +20,29 @@ export class TabService implements OnDestroy {
 
   shouldDisplayTabBar$ = this.tabs.pipe(map(tabs => tabs.length > 1));
 
-  private activeTab = new BehaviorSubject<string|undefined>(undefined);
-  activeTab$ = this.activeTab.asObservable();
+  private selectedTab = new Subject<string>(); // the manually selected tab stream
 
-  subscription = combineLatest([
-    this.tabs$,
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd), map(() => {}), startWith(undefined)),
-  ]).pipe(
-    withLatestFrom(this.activeTab$)
-  ).subscribe(([ [ tabs ], activeTab ]) => {
-    // if the new url does not match the active tab, change tab
-    const currentTab = tabs.find(t => t.tag === activeTab);
-    if (!currentTab || !this.isTabLinkActive(currentTab)) {
-      // find the first tab matching the current route
-      const matchingTab = tabs.find(t => this.isTabLinkActive(t));
-      if (matchingTab) this.activeTab.next(matchingTab.tag);
-    }
-  });
+  activeTab$ = combineLatest({
+    selectedTabTag: this.selectedTab.pipe(startWith(undefined)),
+    routerNavigationEnd: this.router.events.pipe(filter(event => event instanceof NavigationEnd), startWith(undefined)),
+    tabs: this.tabs,
+  }).pipe(
+    map(({ selectedTabTag, tabs }) => {
+      /**
+       * The active tab (the one highlighed and the page shown) is the one matching the current url.
+       * If none matches, fallback to the first tab.
+       * If several match, select the one matching the latest manually selected tab.
+       */
+      const tabsMatchingActiveRoute = tabs.filter(t => this.isTabLinkActive(t));
+      if (tabsMatchingActiveRoute.length === 0) return tabs[0];
+      if (tabsMatchingActiveRoute.length === 1) return tabsMatchingActiveRoute[0];
+      const tabMatchingRouteAndSelected = tabsMatchingActiveRoute.find(t => t.tag === selectedTabTag);
+      return tabMatchingRouteAndSelected ? tabMatchingRouteAndSelected : tabsMatchingActiveRoute[0];
+    }),
+    map(tab => tab?.tag),
+    distinctUntilChanged(),
+    shareReplay(1),
+  );
 
   constructor(
     private router: Router,
@@ -44,21 +50,15 @@ export class TabService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.tabs.complete();
-    this.activeTab.complete();
-    this.subscription.unsubscribe();
+    this.selectedTab.complete();
   }
 
   setTabs(tabs: Tab[]): void {
     this.tabs.next(tabs);
-    const activeTab = this.activeTab.value;
-    // if the active tab is not among the tabs anymore OR if there was no active tab and tabs have changed: select the first tab as active
-    if ((activeTab !== undefined && !tagInTabs(activeTab, tabs)) || !activeTab) {
-      this.activeTab.next(tabs[0]?.tag); // set no active tab if there is no tabs
-    }
   }
 
-  setActiveTab(tag: string|undefined): void {
-    this.activeTab.next(tag);
+  setActiveTab(tag: string): void {
+    this.selectedTab.next(tag);
   }
 
   private isTabLinkActive(tab: Tab): boolean {
@@ -71,8 +71,4 @@ export class TabService implements OnDestroy {
     });
   }
 
-}
-
-function tagInTabs(tag: string, tabs: Tab[]): boolean {
-  return tabs.some(tab => tab.tag === tag);
 }

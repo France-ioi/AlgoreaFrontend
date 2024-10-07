@@ -4,7 +4,7 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 
 const itemId = '7523720120450464843';
 
-test.skip('checks navigation to another tab for item', async ({ page, lostChangesConfirmationModal }) => {
+test('checks navigation to another tab for item', async ({ page, lostChangesConfirmationModal }) => {
   const itemEditWrapperLocator = page.locator('alg-item-edit-wrapper');
   await initAsTesterUser(page);
   await test.step('checks cancel modal', async () => {
@@ -39,7 +39,7 @@ test.skip('checks navigation to another tab for item', async ({ page, lostChange
   });
 });
 
-test.skip('checks navigation to another module for item', async ({ page, lostChangesConfirmationModal }) => {
+test('checks navigation to another module for item', async ({ page, lostChangesConfirmationModal }) => {
   const itemEditWrapperLocator = page.locator('alg-item-edit-wrapper');
   await initAsTesterUser(page);
   await test.step('checks cancel modal', async () => {
@@ -80,7 +80,7 @@ test.skip('checks navigation to another module for item', async ({ page, lostCha
   });
 });
 
-test.skip('checks navigation to another tab for group', async ({ page, lostChangesConfirmationModal }) => {
+test('checks navigation to another tab for group', async ({ page, lostChangesConfirmationModal }) => {
   await initAsTesterUser(page);
   await test.step('checks cancel modal', async () => {
     await page.goto('groups/by-id/4035378957038759250;p=/settings');
@@ -108,7 +108,7 @@ test.skip('checks navigation to another tab for group', async ({ page, lostChang
   });
 });
 
-test.skip('checks navigation to another module for group', async ({ page, lostChangesConfirmationModal }) => {
+test('checks navigation to another module for group', async ({ page, lostChangesConfirmationModal }) => {
   await initAsTesterUser(page);
   await test.step('checks cancel modal', async () => {
     await page.goto('groups/by-id/4035378957038759250;p=/settings');
