@@ -40,8 +40,10 @@ test('checks reload link in logs on task page', async ({ page }) => {
   await expect.soft(page.getByRole('heading', { name: 'Blockly Basic Task' })).toBeVisible();
   const reloadAnswerLocator = page.getByRole('link', { name: 'Reload answer' }).first();
   await expect.soft(reloadAnswerLocator).toBeVisible();
-  await reloadAnswerLocator.click();
-  expect(page.url()).toContain('/a/6379723280369399253;p=7523720120450464843;answerId=');
+  await Promise.all([
+    reloadAnswerLocator.click(),
+    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=7523720120450464843;answerId=')),
+  ]);
 });
 
 test('checks view link in logs on task page', async ({ page }) => {
@@ -53,8 +55,10 @@ test('checks view link in logs on task page', async ({ page }) => {
   await expect.soft(page.getByRole('heading', { name: 'Blockly Basic Task' })).toBeVisible();
   const reloadAnswerLocator = page.getByRole('link', { name: 'View answer' }).first();
   await expect.soft(reloadAnswerLocator).toBeVisible();
-  await reloadAnswerLocator.click();
-  expect(page.url()).toContain('/a/6379723280369399253;p=7523720120450464843;answerId=');
+  await Promise.all([
+    reloadAnswerLocator.click(),
+    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=7523720120450464843;answerId=')),
+  ]);
 });
 
 test('checks reload link in logs on item page', async ({ page }) => {
@@ -66,8 +70,10 @@ test('checks reload link in logs on item page', async ({ page }) => {
   await expect.soft(page.getByRole('heading', { name: 'Tasks Showcase' })).toBeVisible();
   const reloadAnswerLocator = page.getByRole('link', { name: 'Reload answer' }).first();
   await expect.soft(reloadAnswerLocator).toBeVisible();
-  await reloadAnswerLocator.click();
-  expect(page.url()).toContain('/a/6379723280369399253;answerId=');
+  await Promise.all([
+    reloadAnswerLocator.click(),
+    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;answerId=')),
+  ]);
 });
 
 test('checks view link in logs on item page', async ({ page }) => {
@@ -79,6 +85,8 @@ test('checks view link in logs on item page', async ({ page }) => {
   await expect.soft(page.getByRole('heading', { name: 'Tasks Showcase' })).toBeVisible();
   const reloadAnswerLocator = page.getByRole('link', { name: 'View answer' }).first();
   await expect.soft(reloadAnswerLocator).toBeVisible();
-  await reloadAnswerLocator.click();
-  expect(page.url()).toContain('/a/6379723280369399253;answerId=');
+  await Promise.all([
+    reloadAnswerLocator.click(),
+    expect(page).toHaveURL(new RegExp('/a/6379723280369399253;answerId=')),
+  ]);
 });
