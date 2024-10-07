@@ -15,6 +15,7 @@ export function initErrorTracking(): void {
       'Talisman extension',
       "can't access dead object", // a firefox error when add-ons keep references to DOM objects after their parent document was destroyed
       'ResizeObserver loop limit exceeded', // https://sentry.io/answers/react-resizeobserver-loop-completed-with-undelivered-notifications/
+      "Can't find variable: WeakRef", // old Safari/Webkit browsers(<04/2020) do not know about WeakRef in JS. Used by ngx-scrollbar.
     ],
     // from https://docs.sentry.io/clients/javascript/tips/
     denyUrls: [
