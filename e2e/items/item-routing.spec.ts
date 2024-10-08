@@ -77,7 +77,7 @@ test('route with action parameter: action passed to subcomponents + parameter re
   await test.step('drop the action parameter', async () => {
     await expect(page.locator('.left-pane-title-text')).toContainText('Blockly Basic Task', { timeout: 15000 });
     await expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=;pa=0'));
-    await expect.soft(page).not.toHaveURL(new RegExp('answer'));
+    await expect.soft(page).not.toHaveURL(/answer/);
   });
 
   await test.step('has loaded the expected answer', async () => {
