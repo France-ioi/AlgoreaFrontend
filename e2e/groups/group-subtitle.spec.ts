@@ -1,10 +1,10 @@
 import { test, expect } from 'e2e/groups/create-group-fixture';
-import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
+import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 
 const associatedItemName = 'Task #1';
 
 test.beforeEach(async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
 });
 
 test.afterEach(({ deleteGroup }) => {

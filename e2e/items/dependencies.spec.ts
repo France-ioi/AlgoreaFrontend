@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser, initAsUsualUser } from '../helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 test('empty dependencies and prerequisites', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/a/7523720120450464843;p=7528142386663912287;pa=0/dependencies');
   await expect.soft(page.getByText('There are no prerequisites')).toBeVisible();
   await expect.soft(page.getByRole('heading', { name: 'Add a new prerequisite' })).toBeVisible();
@@ -14,7 +14,7 @@ test('error/retry on dependencies/prerequisites services', async ({ page }) => {
   await test.step('test error', async () => {
     await page.route(`${apiUrl}/items/7523720120450464843/prerequisites`, route => route.abort());
     await page.route(`${apiUrl}/items/7523720120450464843/dependencies`, route => route.abort());
-    await initAsUsualUser(page);
+    await initAsTesterUser(page);
     await page.goto('/a/7523720120450464843;p=7528142386663912287;pa=0/dependencies');
     await expect.soft(page.getByText('Unable to load the prerequisites')).toBeVisible();
     await expect.soft(page.getByText('Unable to load the dependencies')).toBeVisible();

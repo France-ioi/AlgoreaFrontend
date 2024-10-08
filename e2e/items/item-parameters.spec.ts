@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser, initAsUsualUser } from '../helpers/e2e_auth';
 
 test('checks no access message', async ({ page }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('a/1625159049301502151;p=4702;a=0/parameters');
   await expect.soft(page.getByText('You do not have the permissions to edit this content.')).toBeVisible();
 });

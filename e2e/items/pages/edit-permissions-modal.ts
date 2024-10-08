@@ -33,7 +33,7 @@ export class EditPermissionsModal {
   }
 
   async waitForPermissionsResponse(url: string): Promise<void> {
-    await this.page.waitForResponse(`${apiUrl}/${url}`);
+    await this.page.waitForResponse(`${apiUrl}/groups/${url}`);
   }
 
   async checksIsCanEnterSwitchFieldVisible(): Promise<void> {

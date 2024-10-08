@@ -17,8 +17,10 @@ const sendGroupInvitation = async (page: Page) => {
 };
 
 const rejectGroupInvitation = async (page: Page) => {
-  await page.goto('/groups/mine');
-  await page.waitForResponse(`${apiUrl}/current-user/group-invitations`);
+  await Promise.all([
+    page.goto('/groups/mine'),
+    page.waitForResponse(`${apiUrl}/current-user/group-invitations`),
+  ]);
   await expect.soft(page.getByRole('heading', { name: 'My groups' })).toBeVisible();
   await expect.soft(page.getByRole('heading', { name: 'Pending invitations' })).toBeVisible();
   await expect.soft(page.getByRole('cell', { name: groupName })).toBeVisible();
@@ -29,8 +31,8 @@ const rejectGroupInvitation = async (page: Page) => {
 
 test.beforeEach(async ({ page, minePage }) => {
   await initAsDemoUser(page);
-  await minePage.goto();
   await Promise.all([
+    minePage.goto(),
     minePage.waitGroupInvitationsResponse(),
     minePage.waitGroupMembershipsResponse(),
   ]);
@@ -45,8 +47,10 @@ test.beforeEach(async ({ page, minePage }) => {
 
 test.afterEach(async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto(`/groups/by-id/${ groupId };p=/members`);
-  await page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=25`);
+  await Promise.all([
+    page.goto(`/groups/by-id/${ groupId };p=/members`),
+    page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=25`),
+  ]);
   await expect.soft(page.locator('li').filter({ hasText: 'Users' })).toBeVisible();
   await expect.soft(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
 });
@@ -59,8 +63,10 @@ test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, mineP
 
   await test.step('Accept a group', async () => {
     await initAsDemoUser(page);
-    await minePage.goto();
-    await minePage.waitGroupInvitationsResponse();
+    await Promise.all([
+      minePage.goto(),
+      minePage.waitGroupInvitationsResponse(),
+    ]);
     await minePage.checkIsPendingInvitationsVisible();
     if (await minePage.isUserInvitedToGroup(groupName)) {
       await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();
@@ -76,15 +82,19 @@ test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, mineP
 
   await test.step('Check the user accepted group invitation in member list', async () => {
     await initAsUsualUser(page);
-    await page.goto(`/groups/by-id/${ groupId };p=/members`);
-    await page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=25`);
+    await Promise.all([
+      page.goto(`/groups/by-id/${ groupId };p=/members`),
+      page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=25`),
+    ]);
     await expect.soft(page.locator('alg-member-list').getByRole('link', { name: demoUserLogin })).toBeVisible();
   });
 
   await test.step('Leave a group', async () => {
     await initAsDemoUser(page);
-    await minePage.goto();
-    await minePage.waitGroupMembershipsResponse();
+    await Promise.all([
+      minePage.goto(),
+      minePage.waitGroupMembershipsResponse(),
+    ]);
     await minePage.checkJoinedGroupsSectionIsVisible();
     await minePage.leaveGroup(groupName);
   });
@@ -117,8 +127,10 @@ test('Cancel "Joining a new group" modal', { tag: '@no-parallelism' }, async ({ 
 
   await test.step('Open "Joining a new group" modal and do cancel', async () => {
     await initAsDemoUser(page);
-    await minePage.goto();
-    await minePage.waitGroupInvitationsResponse();
+    await Promise.all([
+      minePage.goto(),
+      minePage.waitGroupInvitationsResponse(),
+    ]);
     await minePage.checkIsPendingInvitationsVisible();
     if (await minePage.isUserInvitedToGroup(groupName)) {
       await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('accept-group')).toBeVisible();

@@ -1,8 +1,8 @@
 import { test, expect } from './fixture';
-import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
+import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 
 test('checks my group pages', async ({ page, minePage, manageGroupsPage }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await minePage.goto();
   const joinLinkBtnLocator = page.getByTestId('group-left-menu').getByRole('link', { name: 'Join' });
   const manageLinkBtnLocator = page.getByTestId('group-left-menu').getByRole('link', { name: 'Manage' });

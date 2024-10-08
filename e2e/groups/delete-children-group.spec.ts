@@ -1,5 +1,5 @@
 import { test } from './fixture';
-import { initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 import { apiUrl } from '../helpers/e2e_http';
 
 const groupChildrenJson = [
@@ -36,7 +36,7 @@ const groupChildrenJson = [
 const groupName = 'Pixal';
 
 test('delete subgroup when children are not empty', async ({ page, groupMembersPage }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
     await route.fulfill({ json: groupChildrenJson });
@@ -58,7 +58,7 @@ test('delete subgroup when children are not empty', async ({ page, groupMembersP
 });
 
 test('delete subgroup when children are empty', async ({ page, groupMembersPage }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
     await route.fulfill({ json: groupChildrenJson });
@@ -86,7 +86,7 @@ test('delete subgroup when children are empty', async ({ page, groupMembersPage 
 });
 
 test('delete multiple subgroups when children are empty and non empty', async ({ page, groupMembersPage }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
     await route.fulfill({ json: groupChildrenJson });
@@ -108,7 +108,7 @@ test('delete multiple subgroups when children are empty and non empty', async ({
 });
 
 test('checks reject confirmations for empty group', async ({ page, groupMembersPage }) => {
-  await initAsUsualUser(page);
+  await initAsTesterUser(page);
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/members');
   await page.route(`${apiUrl}/groups/672913018859223173/children?types_exclude=Team,Session,User`, async route => {
     await route.fulfill({ json: groupChildrenJson });
