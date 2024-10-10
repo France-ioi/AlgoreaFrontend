@@ -83,7 +83,7 @@ export class ItemTabs implements OnDestroy {
       return [
         filteredTaskTabs.length === 0 && !this.isCurrentTab(childrenEditTab) ? contentTab : null,
         filteredTaskTabs.length === 0 && this.isCurrentTab(childrenEditTab) ? childrenEditTab : null,
-        ...taskTabs.map(t => ({ title: t.name, routerLink: [], tag: t.view })),
+        ...taskTabs.map(t => ({ title: t.name, routerLink: [], tag: t.view, exactpathMatch: true })),
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
         this.isCurrentTab(statsTab) || canViewStats && !isTask ? statsTab : null,
         this.isCurrentTab(historyTab) || showProgress ? historyTab : null,
