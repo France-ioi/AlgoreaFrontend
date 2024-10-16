@@ -2,6 +2,7 @@ import { expect, Page } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class ItemContentPage {
+  titleLocator = this.page.getByTestId('item-title');
   descriptionLocator = this.page.getByTestId('item-description');
   chapterChildrenLocator = this.page.locator('alg-chapter-children');
   switchEditLocator = this.page.getByTestId('edit-switch');
@@ -9,12 +10,19 @@ export class ItemContentPage {
   parentSkillsLocator = this.page.locator('alg-parent-skills');
   itemChildrenEditListLocator = this.page.locator('alg-item-children-edit-list');
   itemChildrenEditFormLocator = this.page.locator('alg-item-children-edit-form');
+  saveBtnLocator = this.page.getByRole('button', { name: 'Save' });
+  addItemLocator = this.page.locator('alg-add-item').filter({ hasText: 'Add a content' });
+  deleteItemBtnLocator = this.page.getByRole('button', { name: 'Delete this item' });
 
   constructor(private readonly page: Page) {
   }
 
   async goto(url: string): Promise<void> {
     await this.page.goto(url);
+  }
+
+  async checksIsTitleVisible(title: string): Promise<void> {
+    await expect.soft(this.titleLocator.filter({ hasText: title })).toBeVisible();
   }
 
   async checksIsDescriptionVisible(description: string): Promise<void> {
@@ -143,5 +151,65 @@ export class ItemContentPage {
 
   async checksSkillNoAccessMessageIsVisible(): Promise<void> {
     await expect.soft(this.page.getByText('Your current access rights do not allow you to list the content of this skill.')).toBeVisible();
+  }
+
+  async checkToastNotification(message: string): Promise<void> {
+    const toastLocator = this.page.locator('p-toast');
+    const successfulLocator = toastLocator.getByText(message);
+    await expect.soft(successfulLocator).toBeVisible();
+    await expect.soft(toastLocator.getByLabel('Close')).toBeVisible();
+    await toastLocator.getByLabel('Close').click();
+    await expect.soft(successfulLocator).not.toBeVisible();
+  }
+
+  async isSaveBtnVisible(): Promise<boolean> {
+    return this.saveBtnLocator.isVisible();
+  }
+
+  async saveChanges(): Promise<void> {
+    await expect.soft(this.saveBtnLocator).toBeVisible();
+    await expect.soft(this.saveBtnLocator).toBeEnabled();
+    await this.saveBtnLocator.click();
+  }
+
+  async saveChangesAndCheckNotification(): Promise<void> {
+    await this.saveChanges();
+    await this.checkToastNotification('Changes successfully saved.');
+  }
+
+  async checksIsAddContentVisible(): Promise<void> {
+    await expect.soft(this.addItemLocator).toBeVisible();
+  }
+
+  async createChildItem(name: string, type = 'Chapter'): Promise<string | undefined> {
+    const inputLocator = this.page.getByPlaceholder('Enter a title to create a new child');
+    await expect.soft(inputLocator).toBeVisible();
+    await inputLocator.fill(name);
+    const classBtnLocator = this.page.locator('alg-add-content').getByText(type);
+    await expect.soft(classBtnLocator).toBeVisible();
+    await classBtnLocator.click();
+    await this.isSaveBtnVisible();
+    await this.saveChanges();
+    const response = await this.page.waitForResponse(`${apiUrl}/items`);
+    await this.checkToastNotification('Changes successfully saved.');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const jsonResponse: { data: { id: string | undefined } | undefined } = await response.json();
+    return jsonResponse.data?.id;
+  }
+
+  async checksIsDeleteButtonVisible(): Promise<void> {
+    await expect.soft(this.deleteItemBtnLocator).toBeVisible();
+  }
+
+  async deleteItem(): Promise<void> {
+    await this.deleteItemBtnLocator.click();
+    await expect.soft(this.page.getByText('Are you sure you want to delete this content?')).toBeVisible();
+    const confirmBtnLocator = this.page.getByRole('button', { name: 'Yes' });
+    await expect.soft(confirmBtnLocator).toBeVisible();
+    await confirmBtnLocator.click();
+  }
+
+  async checksIsAllowToViewMessageNotVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('This content does not exist or you are not allowed to view it.')).toBeVisible();
   }
 }

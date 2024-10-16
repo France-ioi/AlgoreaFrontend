@@ -1,5 +1,8 @@
 <div *ngIf="collapsed" class="header-content">
-  <span class="selected-progress-level">{{ values[selected]?.label }}</span>
+  <div class="header-content-wrapper">
+    <span class="selected-progress-level">{{ values[selected]?.label }}</span>
+    <ng-content select="[header-section]"></ng-content>
+  </div>
   <alg-progress-level [maximum]="values.length" [value]="selected + 1" [colorTheme]="theme"></alg-progress-level>
 </div>
 
