@@ -54,7 +54,7 @@ export class GroupSettingsPage {
   }
 
   async isManagersCanAccessMemberPersonalInformationSelected(option: 'No' | 'Read only' | 'Read and edit'): Promise<boolean> {
-    const locator = this.page.locator('li').filter({ hasText: option });
+    const locator = this.page.locator('alg-selection').locator('li').filter({ hasText: option });
     return locator.evaluate(el => el.classList.contains('active'));
   }
 
