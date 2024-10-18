@@ -26,7 +26,7 @@ import { GradeService } from '../data-access/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
 import { Answer } from './item-task.service';
 
-const answerAndStateSaveInterval = 5*SECONDS;
+const answerAndStateSaveInterval = 60*SECONDS;
 
 /** config of a task which has been started, so which has an attempt id set */
 type RunningItemTaskConfig = ItemTaskConfig & { attemptId: string };
