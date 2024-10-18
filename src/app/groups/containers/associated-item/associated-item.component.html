@@ -5,7 +5,7 @@
 
   <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
-  <alg-message-info icon="ph-duotone ph-info">
+  <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
     @if (contentType === 'skill') {
       <p i18n>
         Attaching a skill to a group makes it available to its members at the top level of the "Skills" tab of the left panel, assuming they have been given the access rights to this skill. It also makes it easier for you to track their progress.
