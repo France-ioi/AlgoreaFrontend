@@ -10,6 +10,10 @@ import { ChunkErrorService } from '../../services/chunk-error.service';
 export class AlgErrorHandler extends ErrorHandler {
 
   private isDialogOpen = false;
+  /**
+   * list of errors which have already been reported in this session so that we do not report the same one several times
+   */
+  private reportedErrors: string[] = [];
 
   constructor(private chunkErrorService: ChunkErrorService) {
     super();
@@ -22,8 +26,10 @@ export class AlgErrorHandler extends ErrorHandler {
     }
     const error = convertToError(err);
     const eventId = Sentry.captureException(error);
-    if (!this.isDialogOpen) {
+
+    if (!this.isDialogOpen && !this.reportedErrors.includes(error.toString())) {
       this.isDialogOpen = true;
+      this.reportedErrors.push(error.toString());
       Sentry.showReportDialog({ eventId, onClose: () => this.isDialogOpen = false });
     }
   }
