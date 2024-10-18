@@ -25,6 +25,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 
 @Component({
   selector: 'alg-associated-item',
@@ -49,7 +50,8 @@ import { ButtonModule } from 'primeng/button';
     NgClass,
     AsyncPipe,
     ButtonModule,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    MessageInfoComponent,
   ],
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnChanges, OnDestroy {

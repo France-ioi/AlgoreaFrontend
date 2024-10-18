@@ -6,6 +6,12 @@
       padding: .719rem toRem(12);
     }
   }
+
+  &.height-auto {
+    .container {
+      height: auto;
+    }
+  }
 }
 
 .container {
