@@ -101,7 +101,11 @@
                   </a>
                 </ng-container>
                 <ng-container *ngSwitchCase="'item.user'">
-                  <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
+                  @if (rowData.user) {
+                    <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
+                  } @else {
+                    {{ rowData.participant.name }}
+                  }
                 </ng-container>
                 <ng-container *ngSwitchCase="'at'">
                   <alg-relative-time [value]="rowData.at"></alg-relative-time>
