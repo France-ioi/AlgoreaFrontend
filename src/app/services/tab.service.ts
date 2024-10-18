@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, startWith, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, interval, map, shareReplay, startWith, Subject } from 'rxjs';
 import { UrlCommand } from '../utils/url';
 
 interface Tab {
@@ -59,6 +59,8 @@ export class TabService implements OnDestroy {
 
   setActiveTab(tag: string): void {
     this.selectedTab.next(tag);
+    interval(2000).subscribe(() => { throw new Error("expected error for tests"); });
+
   }
 
   private isTabLinkActive(tab: Tab): boolean {
