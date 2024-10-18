@@ -83,7 +83,11 @@
             </a>
           </td>
           <td *ngIf="this.showUserColumn">
-            <a class="alg-link" [routerLink]="rowData.user | groupLink">{{ rowData.user | userCaption }}</a>
+            @if (rowData.user) {
+              <a class="alg-link" [routerLink]="rowData.user | groupLink">{{ rowData.user | userCaption }}</a>
+            } @else {
+              {{ rowData.participant.name }}
+            }
           </td>
           <td>{{ rowData.at | date:'short' }}</td>
         </tr>
