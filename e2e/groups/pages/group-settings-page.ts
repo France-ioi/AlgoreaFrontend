@@ -109,6 +109,14 @@ export class GroupSettingsPage {
     await expect.soft(this.deleteGroupBtnLocator).toBeVisible();
   }
 
+  async checksIsDeleteButtonEnabled(): Promise<void> {
+    await expect.soft(this.deleteGroupBtnLocator).toBeEnabled();
+  }
+
+  async checksIsDeleteButtonDisabled(): Promise<void> {
+    await expect.soft(this.deleteGroupBtnLocator).toBeDisabled();
+  }
+
   async deleteGroup(): Promise<void> {
     await this.deleteGroupBtnLocator.click();
     await expect.soft(this.page.getByText('Confirm Action')).toBeVisible();
