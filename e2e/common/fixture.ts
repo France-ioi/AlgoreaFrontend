@@ -1,13 +1,20 @@
-import { test as base } from '@playwright/test';
+import { test as groupFixtures } from '../groups/create-group-fixture';
+import { test as itemFixtures } from '../items/create-item-fixture';
+import { mergeTests } from '@playwright/test';
 import { LostChangesConfirmationModal } from 'e2e/common/pages/lost-changes-confirmation-modal';
+import { Header } from 'e2e/common/pages/header';
 
 interface CommonFixtures {
   lostChangesConfirmationModal: LostChangesConfirmationModal,
+  header: Header,
 }
 
-export const test = base.extend<CommonFixtures>({
+export const test = mergeTests(groupFixtures, itemFixtures).extend<CommonFixtures>({
   lostChangesConfirmationModal: async ({ page }, use) => {
     await use(new LostChangesConfirmationModal(page));
+  },
+  header: async ({ page }, use) => {
+    await use(new Header(page));
   },
 });
 
