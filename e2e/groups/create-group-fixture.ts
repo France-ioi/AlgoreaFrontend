@@ -11,14 +11,15 @@ interface CreateGroupFixtures {
 }
 
 export const test = base.extend<CreateGroupFixtures>({
-  createGroup: async ({ manageGroupsPage }, use) => {
+  createGroup: async ({ page, groupMembersPage }, use) => {
+    const rootGroupId = '7035186126723551198';
+    const rootGroupName = 'E2E-generated-groups';
     const groupName = `E2E_${ Date.now() }`;
-    await manageGroupsPage.goto();
-    await manageGroupsPage.checkHeaderIsVisible();
-    await manageGroupsPage.waitForManagedGroupsResponse();
-    await manageGroupsPage.checksIsManagedGroupsTableVisible();
-    await manageGroupsPage.checksIsCreateGroupSectionVisible();
-    const groupId = await manageGroupsPage.createGroup(groupName);
+    await page.goto(`groups/by-id/${rootGroupId};p=/members`);
+    await groupMembersPage.checksIsHeaderVisible(rootGroupName);
+    await groupMembersPage.goToTab('Sub-groups');
+    await groupMembersPage.checksIsAddSubGroupsSectionVisible();
+    const groupId = await groupMembersPage.createChild(groupName);
     if (groupId) await use({ groupName, groupId });
   },
   deleteGroup: async ({ groupSettingsPage, minePage, createGroup }, use) => {
