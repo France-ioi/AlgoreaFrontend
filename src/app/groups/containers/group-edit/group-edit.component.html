@@ -62,8 +62,19 @@
         </div>
       </div>
 
-      <alg-associated-item formControlName="rootActivity" contentType="activity"></alg-associated-item>
-      <alg-associated-item formControlName="rootSkill" contentType="skill"></alg-associated-item>
+      <ng-container *ngrxLet="observedGroup$; let observedGroup">
+        @let currentObservedGroup = observedGroup && observedGroup.route.id === state.data.id ? observedGroup : undefined;
+        <alg-associated-item
+          formControlName="rootActivity"
+          contentType="activity"
+          [observedGroup]="currentObservedGroup"
+        ></alg-associated-item>
+        <alg-associated-item
+          formControlName="rootSkill"
+          contentType="skill"
+          [observedGroup]="currentObservedGroup"
+        ></alg-associated-item>
+      </ng-container>
       <alg-group-remove-button
         class="remove-button-section"
         [group]="state.data"
