@@ -23,6 +23,53 @@
     }
   </alg-message-info>
 
+  @if (state.isReady && state.data.tag === 'existing-item' && state.data.permissions; as permissions) {
+    @if (!permissions.group && observedGroup()?.currentUserCanGrantAccess === false) {
+      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+        <p i18n>
+          You cannot view the permissions given to this group, so we cannot determine if it has access to this
+          {contentType, select, skill {skill} other {activity}}.
+        </p>
+      </alg-message-info>
+    } @else if (!permissions.group && !(permissions.item | allowsWatchingResults) && !(permissions.item | allowsGrantingView)) {
+      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+        <p i18n>
+          You cannot view the permissions given to this {contentType, select, skill {skill} other {activity}},
+          so we cannot determine if the group has access to it.
+        </p>
+      </alg-message-info>
+    } @else if (permissions.group && (permissions.group | allowsViewingInfo)) {
+      <alg-message-info class="message-info success height-auto" icon="ph-duotone ph-info">
+        <p i18n>
+          The {contentType, select, skill {skill} other {activity}} is visible to the members of this group.
+          They will see it in the left menu, in the "{contentType, select, skill {skill} other {activity}}" tab.
+        </p>
+      </alg-message-info>
+    } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && observedGroup()?.currentUserCanGrantAccess === false)) {
+      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+        <p i18n>
+          This {contentType, select, skill {skill} other {activity}} may not be visible to the members of this group.
+          You are not allowed to give access to this group, ask another manager to do so.
+        </p>
+      </alg-message-info>
+    } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && !(permissions.item | allowsGrantingView))) {
+      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+        <p i18n>
+          This {contentType, select, skill {skill} other {activity}} may not be visible to the members of this group. You are not allowed to grant access to this content,
+          ask someone who has the permission to grant access to this content or make sure all your users can view the
+          {contentType, select, skill {skill} other {activity}} by other means (e.g. if it is public).
+        </p>
+      </alg-message-info>
+    } @else {
+      <alg-message-info class="message-info danger height-auto" icon="ph-duotone ph-info">
+        <p i18n>
+          This {contentType, select, skill {skill} other {activity}} may not be visible to the members of this group. You can grant them access by "observing" the group,
+          then visiting the {contentType, select, skill {skill} other {activity}} and changing the permissions via the orange panel.
+        </p>
+      </alg-message-info>
+    }
+  }
+
   <alg-error
     *ngIf="state.isError"
     class="dark"

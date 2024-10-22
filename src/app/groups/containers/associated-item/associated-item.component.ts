@@ -1,6 +1,6 @@
-import { Component, forwardRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, forwardRef, input, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject, combineLatest } from 'rxjs';
 import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { itemRoute, urlArrayForItemRoute } from 'src/app/models/routing/item-route';
@@ -26,6 +26,12 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
+import { RawGroupRoute } from 'src/app/models/routing/group-route';
+import { GroupInfo } from 'src/app/store/observation/observation.state';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
+import { AllowsGrantingViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
+import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
 
 @Component({
   selector: 'alg-associated-item',
@@ -52,10 +58,14 @@ import { MessageInfoComponent } from 'src/app/ui-components/message-info/message
     ButtonModule,
     NgTemplateOutlet,
     MessageInfoComponent,
+    AllowsViewingItemInfoPipe,
+    AllowsGrantingViewItemPipe,
+    AllowsWatchingItemResultsPipe,
   ],
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnChanges, OnDestroy {
   @Input() contentType: ItemTypeCategory = 'activity';
+  observedGroup = input<{ route: RawGroupRoute } & GroupInfo>();
 
   allowedNewItemTypes: NewContentType<ItemType>[] = [];
 
@@ -65,9 +75,14 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   }>();
 
   private refresh$ = new Subject<void>();
-  readonly state$ = this.itemChanges$.pipe(
-    distinctUntilChanged(),
-    switchMap(data => {
+  readonly state$ = combineLatest([
+    this.itemChanges$,
+    toObservable(this.observedGroup),
+  ]).pipe(
+    distinctUntilChanged(([ prevItem, prevObservedGroup ], [ item, observedGroup ]) =>
+      prevItem === item && prevObservedGroup === observedGroup
+    ),
+    switchMap(([ data, observedGroup ]) => {
       if (data.triggerChange) this.onChange(data.item);
 
       if (!isExistingAssociatedItem(data.item)) {
@@ -78,14 +93,26 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
       }
 
       const id = data.item.id;
-      const name = data.item.name !== undefined ? of(data.item.name) :
-        this.getItemByIdService.get(id).pipe(map(item => item.string.title));
 
-      return name.pipe(
-        map(name => ({
+      if (data.item.name !== undefined && !observedGroup) {
+        return of({
           tag: 'existing-item',
           id,
-          name,
+          permissions: undefined,
+          name: data.item.name,
+          path: urlArrayForItemRoute(itemRoute(this.contentType, id))
+        });
+      }
+
+      return this.getItemByIdService.get(id, observedGroup?.route.id).pipe(
+        map(item => ({
+          tag: 'existing-item',
+          id,
+          name: item.string.title,
+          permissions: item.watchedGroup ? {
+            item: item.permissions,
+            group: item.watchedGroup.permissions,
+          } : undefined,
           path: urlArrayForItemRoute(itemRoute(this.contentType, id))
         })),
         catchError(err => {
@@ -93,12 +120,14 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
             tag: 'existing-item',
             name: $localize`You don't have access to this ` + (this.contentType === 'activity'
               ? $localize`activity` : $localize`skill`) + '.',
+            permissions: undefined,
             path: null,
           });
           else if (errorIsHTTPNotFound(err)) return of({
             tag: 'existing-item',
             name: $localize`The configured ` + (this.contentType === 'activity'
               ? $localize`activity` : $localize`skill`) + $localize` is currently not visible to you.`,
+            permissions: undefined,
             path: null,
           });
           throw err;

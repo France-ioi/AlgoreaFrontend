@@ -19,6 +19,39 @@
       white-space: nowrap;
     }
   }
+
+  &.success {
+    .container {
+      color: var(--alg-message-success-color);
+      background-color: var(--alg-message-success-bg-color);
+    }
+
+    .message-icon {
+      color: var(--alg-message-success-color);
+    }
+  }
+
+  &.info {
+    .container {
+      color: var(--alg-message-info-color);
+      background-color: var(--alg-message-info-bg-color);
+    }
+
+    .message-icon, .p-message-close-icon {
+      color: var(--alg-message-info-color);
+    }
+  }
+
+  &.danger {
+    .container {
+      color: var(--alg-message-error-color);
+      background-color: var(--alg-message-error-bg-color);
+    }
+
+    .message-icon {
+      color: var(--alg-message-error-color);
+    }
+  }
 }
 
 .container {
