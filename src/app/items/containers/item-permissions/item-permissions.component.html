@@ -69,8 +69,9 @@
                     @if (observedGroup.currentUserCanGrantAccess && (itemData.item.permissions | allowsGrantingContentView) && !(watchedGroupPermissions | allowsViewingInfo)) {
                       <span header-section>
                         <button
-                          class="alg-button primary grant-access-button"
+                          class="alg-button warning grant-access-button"
                           type="button"
+                          icon="ph ph-plus"
                           (click)="grantAccess()"
                           [disabled]="updateInProcess"
                           pButton
