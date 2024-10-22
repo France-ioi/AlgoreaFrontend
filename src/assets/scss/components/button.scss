@@ -117,6 +117,26 @@
     }
   }
 
+  &.warning {
+    &.p-button {
+      padding: 0 toRem(18);
+      flex-direction: row-reverse;
+      color: var(--alg-accent-dark-color);
+      font-size: toRem(16);
+      text-decoration: none;
+      border-radius: toRem(20);
+      border: toRem(1) solid var(--alg-accent-dark-color);
+      background: transparent;
+      height: toRem(40);
+    }
+
+    .p-button-icon {
+      margin-left: toRem(7);
+      color: var(--alg-accent-dark-color);
+      font-size: toRem(16);
+    }
+  }
+
   &.small {
     &.p-button {
       height: toRem(32);
