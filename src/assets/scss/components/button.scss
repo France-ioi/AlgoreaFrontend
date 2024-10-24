@@ -135,6 +135,16 @@
       color: var(--alg-accent-dark-color);
       font-size: toRem(16);
     }
+
+    &:hover {
+      &.p-button {
+        color: var(--alg-accent-dark-hover-color);
+        border-color: var(--alg-accent-dark-hover-color);
+      }
+      .p-button-icon {
+        color: var(--alg-accent-dark-hover-color);
+      }
+    }
   }
 
   &.small {
