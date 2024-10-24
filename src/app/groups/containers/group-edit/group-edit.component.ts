@@ -32,6 +32,9 @@ import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 import { DialogModule } from 'primeng/dialog';
 import { GetGroupMembersService } from '../../data-access/get-group-members.service';
 import { ButtonModule } from 'primeng/button';
+import { Store } from '@ngrx/store';
+import { fromObservation } from 'src/app/store/observation';
+import { LetDirective } from '@ngrx/component';
 
 @Component({
   selector: 'alg-group-edit',
@@ -57,6 +60,7 @@ import { ButtonModule } from 'primeng/button';
     InputDateComponent,
     DialogModule,
     ButtonModule,
+    LetDirective,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
@@ -93,6 +97,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   }>({ opened: false });
 
   state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
+  observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
 
   subscription?: Subscription;
 
@@ -105,6 +110,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     private createItemService: CreateItemService,
     private pendingChangesService: PendingChangesService,
     private getGroupMembersService: GetGroupMembersService,
+    private store: Store,
   ) {
     this.subscription = this.state$
       .pipe(readyData())
