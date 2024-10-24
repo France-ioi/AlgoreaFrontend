@@ -197,7 +197,14 @@ export class ItemTaskAnswerService implements OnDestroy {
       takeUntil(this.destroyed$),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$ ])
+    // In parallel: save the submitted answer as the new current answer
+    const state$ = this.loadedTask$.pipe(take(1), switchMap(task => task.getState()), takeUntil(this.destroyed$), shareReplay(1));
+    const config$ = this.config$.pipe(take(1));
+    const saveAsCurrent$ = combineLatest([ answer$, state$, config$ ]).pipe(
+      switchMap(([ answer, state, config ]) => this.currentAnswerService.update(config.route.id, config.attemptId, { answer, state }))
+    );
+
+    combineLatest([ grade$, saveGrade$, saveAsCurrent$ ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
       .subscribe(([ grade ]) => {
         if (grade.score !== undefined) this.scoreChange.next(grade.score);
