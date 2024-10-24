@@ -197,7 +197,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       takeUntil(this.destroyed$),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$ ])
+    combineLatest([ grade$, saveGrade$, this.saveAnswerAndState() ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
       .subscribe(([ grade ]) => {
         if (grade.score !== undefined) this.scoreChange.next(grade.score);
