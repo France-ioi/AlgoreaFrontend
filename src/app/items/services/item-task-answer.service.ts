@@ -17,7 +17,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/utils/duration';
-import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
 import { AnswerTokenService } from '../data-access/answer-token.service';
 import { AnswerService } from '../data-access/answer.service';
@@ -25,6 +24,7 @@ import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GradeService } from '../data-access/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
 import { Answer } from './item-task.service';
+import { areStateAnswerEqual } from '../models/answers';
 
 const answerAndStateSaveInterval = 60*SECONDS;
 
@@ -242,9 +242,14 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private loadAsNewCurrentAnswer(itemId: string, attemptId: string, newAnswer: Answer): Observable<Answer> {
     return this.currentAnswerService.get(itemId, attemptId).pipe(
-      filter(isNotNull),
-      switchMap(current => this.answerService.save(itemId, attemptId, { answer: current.answer ?? '', state: current.state ?? '' })),
-      defaultIfEmpty(undefined),
+      switchMap(currentAnswer => {
+        if (currentAnswer) {
+          return areStateAnswerEqual(currentAnswer, newAnswer) ?
+            EMPTY : // do not do anything
+            this.answerService.save(itemId, attemptId, { answer: currentAnswer.answer ?? '', state: currentAnswer.state ?? '' });
+        }
+        return of(undefined);
+      }),
       switchMap(() => {
         const body = { answer: newAnswer.answer ?? '', state: newAnswer.state ?? '' };
         return this.currentAnswerService.update(itemId, attemptId, body).pipe(map(() => newAnswer));
