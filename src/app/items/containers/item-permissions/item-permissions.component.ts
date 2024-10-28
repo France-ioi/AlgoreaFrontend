@@ -101,7 +101,7 @@ export class ItemPermissionsComponent implements OnChanges {
     }
   }
 
-  grantAccess(): void {
+  grantViewContentAccess(): void {
     const groupId = this.observedGroup?.route.id;
     if (!groupId) throw new Error('Unexpected: The group id is not provided');
     const itemId = this.itemData?.item.id;
