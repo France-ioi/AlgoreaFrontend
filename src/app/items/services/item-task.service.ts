@@ -54,7 +54,7 @@ export class ItemTaskService implements OnDestroy {
   readonly activeView$ = this.viewsService.activeView$;
 
   readonly scoreChange$ = this.answerService.scoreChange$;
-  readonly saveAnswerAndStateInterval$ = this.answerService.saveAnswerAndStateInterval$;
+  readonly autoSaveResult$ = this.answerService.autoSaveResult$;
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
     map(neighborsState => (neighborsState.isReady ? (neighborsState.data?.next ?? neighborsState.data?.parent)?.navigateTo : undefined)),
@@ -95,8 +95,8 @@ export class ItemTaskService implements OnDestroy {
     this.viewsService.showView(view);
   }
 
-  saveAnswerAndState(): Observable<{ saving: boolean }> {
-    return this.answerService.saveAnswerAndState();
+  saveAnswerAndState(): ReturnType<ItemTaskAnswerService['saveTaskStateAnswerAsCurrent']> {
+    return this.answerService.saveTaskStateAnswerAsCurrent();
   }
 
   private bindPlatform(task: Task): void {
