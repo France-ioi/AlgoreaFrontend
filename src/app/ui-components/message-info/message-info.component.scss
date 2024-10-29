@@ -7,16 +7,23 @@
     }
   }
 
-  &.height-auto {
+  &.overflow {
     .container {
-      height: auto;
+      padding: 0 toRem(12);
+      height: toRem(40);
+    }
+
+    .message-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
 
 .container {
-  padding: 0 toRem(12);
-  height: toRem(40);
+  padding: toRem(12);
+  height: auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;

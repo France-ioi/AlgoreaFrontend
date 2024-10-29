@@ -5,19 +5,19 @@
 
   <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
-  <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+  <alg-message-info class="message-info" icon="ph-duotone ph-info">
     @if (contentType === 'skill') {
-      <p i18n>
+      <p class="alg-no-top-margin" i18n>
         Attaching a skill to a group makes it available to its members at the top level of the "Skills" tab of the left panel, assuming they have been given the access rights to this skill. It also makes it easier for you to track their progress.
       </p>
-      <p i18n>
+      <p class="alg-no-bottom-margin" i18n>
         You may create a new skill folder to list all the skills you expect this group's users to work on. You may associate an existing skill if your goal is simply for members to work on this existing skill.
       </p>
     } @else {
-      <p i18n>
+      <p class="alg-no-top-margin" i18n>
         Attaching an activity to a group makes it available to its members at the top level of the "Content" tab of the left panel, assuming they have been given the access rights to this activity. It also makes it easier for you to track their progress.
       </p>
-      <p i18n>
+      <p class="alg-no-bottom-margin" i18n>
         You may create a new chapter folder to list all the content you expect this group's users to work on. You may associate an existing chapter if your goal is simply for members to work on this existing content.
       </p>
     }

@@ -15,7 +15,7 @@
         Only the content visible by the group you are observing ({{ observedGroup.name }}) is shown.
       </ng-template>
     </ng-template>
-    <span class="title" *ngIf="!onlyIcon">
+    <span class="title text-dots" *ngIf="!onlyIcon">
       @if(caption) {
         <span class="alg-secondary-color">{{ caption }}</span>
       } @else if(observedGroup.name) {
