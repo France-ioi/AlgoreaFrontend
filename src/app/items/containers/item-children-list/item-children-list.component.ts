@@ -7,6 +7,7 @@ import { SkillProgressComponent } from 'src/app/ui-components/skill-progress/ski
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
 import { NgIf, NgClass, NgFor } from '@angular/common';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
 @Component({
   selector: 'alg-item-children-list',
@@ -23,6 +24,7 @@ import { NgIf, NgClass, NgFor } from '@angular/common';
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
+    ErrorComponent,
   ],
 })
 export class ItemChildrenListComponent {
