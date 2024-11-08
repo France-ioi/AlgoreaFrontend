@@ -11,7 +11,7 @@ import {
   generateCanWatchValues
 } from '../../models/permissions-texts';
 import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
-import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
+import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe, ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { PermissionsEditDialogComponent } from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
@@ -21,6 +21,11 @@ import { SectionParagraphComponent } from 'src/app/ui-components/section-paragra
 import { NgIf, I18nSelectPipe, NgClass } from '@angular/common';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
+import { AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
+import { HttpErrorResponse } from '@angular/common/http';
+import { GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
+import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
+import { CurrentContentService } from 'src/app/services/current-content.service';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -41,6 +46,7 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
     AllowsViewingItemInfoPipe,
     NgClass,
     GroupIsUserPipe,
+    AllowsGrantingContentViewItemPipe,
   ],
 })
 export class ItemPermissionsComponent implements OnChanges {
@@ -62,9 +68,13 @@ export class ItemPermissionsComponent implements OnChanges {
     group: $localize`You are not allowed to give permissions to this group`,
     contentGroup: $localize`You are not allowed to give permissions on this content and to this group`,
   };
+  updateInProcess = false;
 
-  constructor() {
-  }
+  constructor(
+    private groupPermissionsService: GroupPermissionsService,
+    private actionFeedbackService: ActionFeedbackService,
+    private currentContentService: CurrentContentService,
+  ) {}
 
   ngOnChanges(): void {
     this.watchedGroupPermissions = this.itemData?.item?.watchedGroup?.permissions ? {
@@ -89,5 +99,34 @@ export class ItemPermissionsComponent implements OnChanges {
     if (changed) {
       this.changed.emit();
     }
+  }
+
+  grantViewContentAccess(): void {
+    const groupId = this.observedGroup?.route.id;
+    if (!groupId) throw new Error('Unexpected: The group id is not provided');
+    const itemId = this.itemData?.item.id;
+    if (!itemId) throw new Error('Unexpected: The item id is not provided');
+
+    this.updateInProcess = true;
+    this.groupPermissionsService.updatePermissions(
+      groupId,
+      groupId,
+      itemId,
+      { canView: ItemViewPerm.Content },
+    )
+      .subscribe({
+        next: () => {
+          this.updateInProcess = false;
+          this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
+          this.changed.emit();
+          this.currentContentService.forceNavMenuReload();
+        },
+        error: err => {
+          this.updateInProcess = false;
+          this.actionFeedbackService.unexpectedError();
+          this.currentContentService.forceNavMenuReload();
+          if (!(err instanceof HttpErrorResponse)) throw err;
+        },
+      });
   }
 }

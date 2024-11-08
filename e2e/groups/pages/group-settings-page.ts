@@ -140,7 +140,7 @@ export class GroupSettingsPage {
   async searchAndSelectAssociatedActivity(search: string): Promise<void> {
     await this.searchExistingContentInputLocator.fill(search);
     const foundItemLocator = this.page.locator('alg-add-content').getByRole('listitem').filter({
-      has: this.page.getByText('Task #1').first()
+      has: this.page.getByText(search).first()
     });
     await expect.soft(foundItemLocator.getByRole('button', { name: 'Select' })).toBeVisible();
     await foundItemLocator.getByRole('button', { name: 'Select' }).click();
