@@ -1,5 +1,9 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  overflow: hidden;
+}
+
 .wrapper {
   display: flex;
   justify-content: flex-start;
@@ -24,9 +28,13 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  overflow: hidden;
 }
 
 .title {
   margin: 0 toRem(16);
   font-size: toRem(12);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
