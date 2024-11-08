@@ -64,7 +64,7 @@ test('route with action parameter: action passed to subcomponents + parameter re
 
   await initAsUsualUser(page);
   // first reload an empty answer
-  await page.goto(`/a/6379723280369399253;p=;pa=0;answerId=${emptyAnswer};answerLoadAsCurrent=1`);
+  await page.goto(`/a/6379723280369399253;p=7523720120450464843;pa=0;answerId=${emptyAnswer};answerLoadAsCurrent=1`);
 
   await test.step('checks the answer has been emptied', async () => {
     await expect(page.frameLocator('iFrame').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
@@ -72,11 +72,11 @@ test('route with action parameter: action passed to subcomponents + parameter re
   });
 
   // then reload a answer which contains "1234567" in the answer
-  await page.goto(`/a/6379723280369399253;p=;pa=0;answerId=${answerWith1234567};answerLoadAsCurrent=1`);
+  await page.goto(`/a/6379723280369399253;p=7523720120450464843;pa=0;answerId=${answerWith1234567};answerLoadAsCurrent=1`);
 
   await test.step('drop the action parameter', async () => {
     await expect(page.locator('.left-pane-title-text')).toContainText('Blockly Basic Task', { timeout: 15000 });
-    await expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=;pa=0'));
+    await expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=7523720120450464843;pa=0'));
     await expect.soft(page).not.toHaveURL(/answer/);
   });
 
