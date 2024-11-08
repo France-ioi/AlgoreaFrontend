@@ -62,5 +62,9 @@
 </ul>
 
 <ng-template #noChildrenSection>
-  <p class="empty-message" *ngIf="emptyMessage">{{ emptyMessage }}</p>
+  @if (emptyMessage) {
+    <alg-error>
+      {{ emptyMessage }}
+    </alg-error>
+  }
 </ng-template>
