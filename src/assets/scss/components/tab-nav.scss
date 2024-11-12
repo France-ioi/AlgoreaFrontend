@@ -22,11 +22,16 @@
 }
 
 .alg-nav-tab-item {
-  padding-bottom: toRem(8);
+  padding: 0 0 toRem(10) 0;
+  background: none;
   color: var(--alg-secondary-color);
+  font-family: inherit;
   font-size: toRem(16);
   font-weight: 300;
   text-decoration: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   border-bottom: toRem(3) solid transparent;
   opacity: .5;
   position: relative;
