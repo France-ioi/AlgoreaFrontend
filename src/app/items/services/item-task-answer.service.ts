@@ -1,30 +1,29 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { combineLatest, EMPTY, forkJoin, interval, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   defaultIfEmpty,
   delayWhen,
-  distinctUntilChanged,
   filter,
   map,
   retry,
   shareReplay,
-  startWith,
   switchMap,
   take,
   takeUntil,
+  tap,
   timeout,
-  withLatestFrom,
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/utils/duration';
-import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
 import { AnswerTokenService } from '../data-access/answer-token.service';
 import { AnswerService } from '../data-access/answer.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GradeService } from '../data-access/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
 import { Answer } from './item-task.service';
+import { areStateAnswerEqual } from '../models/answers';
+import { mapToFetchState } from 'src/app/utils/operators/state';
+import { FetchState } from 'src/app/utils/state';
 
 const answerAndStateSaveInterval = 60*SECONDS;
 
@@ -41,9 +40,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   private scoreChange = new Subject<number>();
   readonly scoreChange$ = this.scoreChange.asObservable();
 
-  private saved$ = new ReplaySubject<{ answer: string, state: string }>();
-  private saveError$ = new Subject<Error>();
-
   private loadedTask$ = this.taskInitService.loadedTask$.pipe(
     catchError(() => EMPTY), // error handled in subscriptions
     takeUntil(this.error$)
@@ -54,6 +50,8 @@ export class ItemTaskAnswerService implements OnDestroy {
     filter((config): config is RunningItemTaskConfig => config.attemptId !== undefined)
   );
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
+
+  private latestSavedCurrentAnswer: { state: string, answer: string } | null = null;
 
   private initialAnswer$: Observable<Answer | null> = this.config$.pipe(
     switchMap(({ route, attemptId, initialAnswer }) => {
@@ -96,39 +94,28 @@ export class ItemTaskAnswerService implements OnDestroy {
     shareReplay(1),
   );
 
+  /**
+   * Wait for the task state & answer to have been initialized to allow auto-saves
+   */
   private canStartSaveInterval$: Observable<void> = this.config$.pipe(
     take(1),
     filter(({ readOnly }) => !readOnly),
     map(() => undefined),
-    delayWhen(() => combineLatest([ this.saved$, this.initializedTaskState$, this.initializedTaskAnswer$ ])),
+    delayWhen(() => combineLatest([ this.initializedTaskState$, this.initializedTaskAnswer$ ])),
   );
 
-  private refreshAnswerAndStatePeriod = Math.max(answerAndStateSaveInterval, (window.taskSaveIntervalInSec ?? 0)*SECONDS);
-  private answerOrStateChange$ = interval(this.refreshAnswerAndStatePeriod).pipe(
-    takeUntil(this.destroyed$),
-    switchMap(() => this.loadedTask$),
-    switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
-    distinctUntilChanged((a, b) => a.answer === b.answer && a.state === b.state),
+  private autoSaveCurrentState$ = this.canStartSaveInterval$.pipe( // wait for the task answer+state to have been initialized
+    switchMap(() => interval(answerAndStateSaveInterval)),
+    switchMap(() => this.saveTaskStateAnswerAsCurrent()),
+    takeUntil(this.destroyed$), // make sure the repetition ends when the service gets destroyed
+    shareReplay(1), // do not save several times in parallel if there are more subscribers
   );
-
-  private autoSaveInterval$: Observable<{ answer: string, state: string } | Error> = this.canStartSaveInterval$.pipe(
-    switchMap(() => this.saved$),
-    repeatLatestWhen(this.saveError$),
-    switchMap(saved => this.answerOrStateChange$.pipe(
-      filter(current => current.answer !== saved.answer || current.state !== saved.state),
-      take(1),
-    )),
-    withLatestFrom(this.config$),
-    catchError(() => EMPTY),
-    switchMap(([ current, { route, attemptId }]) => this.currentAnswerService.update(route.id, attemptId, current).pipe(
-      map(() => current),
-      catchError(() => of(new Error('auto save failed'))),
-    )),
-  );
-
-  readonly saveAnswerAndStateInterval$ = merge(
-    this.saved$.pipe(map(() => ({ success: true }))),
-    this.saveError$.pipe(map(() => ({ success: false }))),
+  autoSaveResult$ = this.autoSaveCurrentState$.pipe(
+    switchMap(state => {
+      if (state.isError) return of(false);
+      if (state.isReady) return of(true);
+      return EMPTY; // if the save is "waiting"
+    })
   );
 
   private subscriptions = [
@@ -139,15 +126,11 @@ export class ItemTaskAnswerService implements OnDestroy {
     this.taskInitService.loadedTask$.subscribe({
       error: err => this.errorSubject.next(err),
     }),
-    this.initialAnswer$
-      .subscribe({
-        next: initial => this.saved$.next({ answer: initial?.answer ?? '', state: initial?.state ?? '' }),
-        error: err => this.errorSubject.next(err),
-      }),
-    this.autoSaveInterval$.subscribe(savedOrError => {
-      if (savedOrError instanceof Error) this.saveError$.next(savedOrError);
-      else this.saved$.next(savedOrError);
+    this.initialAnswer$.subscribe({
+      next: answer => this.latestSavedCurrentAnswer = answer ? { answer: answer.answer ?? '', state: answer.state ?? '' } : null,
+      error: err => this.errorSubject.next(err),
     }),
+    this.autoSaveCurrentState$.subscribe(),
   ];
 
   constructor(
@@ -197,7 +180,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       takeUntil(this.destroyed$),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$ ])
+    combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent() ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
       .subscribe(([ grade ]) => {
         if (grade.score !== undefined) this.scoreChange.next(grade.score);
@@ -209,42 +192,66 @@ export class ItemTaskAnswerService implements OnDestroy {
     return this.loadedTask$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
   }
 
-  saveAnswerAndState(): Observable<{ saving: boolean }> {
-    return combineLatest([ this.saved$, this.loadedTask$, this.config$ ]).pipe(
+  /**
+   * Ask the task for its current state and answer, and save it as current.
+   */
+  saveTaskStateAnswerAsCurrent(): Observable<FetchState<void>> {
+    return this.taskStateAnswer().pipe(
+      switchMap(answer => this.saveAsCurrentAnswer(answer)),
+      defaultIfEmpty(undefined), // emit a ready state if taskStateAnswer or saveAsCurrentAnswer are empty
+      mapToFetchState(),
+      shareReplay(1),
+    );
+  }
+
+  /**
+   * Observable that emits the current state and answer received from the task
+   * Completes without emitting if there is no loaded task
+   * Errors if there is no loaded task or if the task fails in responding to answer or state request
+   */
+  private taskStateAnswer(): Observable<{ state: string, answer: string }> {
+    return this.loadedTask$.pipe(
       take(1),
-      // save action must applied straight away ONLY if there is an available config & task & saved-value couple
-      // if such couple is not available straight away, it means the user has navigated so quickly that the task could not be initialized
-      // therefore, no user action on the task could have been made, so there's no treatment to apply (catchError -> Empty)
-      timeout(1),
-      catchError(() => EMPTY),
+      timeout(1), // loaded task must be available immediately
+      catchError(() => EMPTY), // no task is not considered as an error but a normal case doing nothing
+      switchMap(task => forkJoin({ answer: task.getAnswer(), state: task.getState() })),
+    );
+  }
 
-      switchMap(([ saved, task, config ]) => forkJoin({
-        config: of(config),
-        saved: of(saved),
-        current: forkJoin({ answer: task.getAnswer(), state: task.getState() }),
-      })),
-
-      switchMap(({ saved, current, config: { route, attemptId, readOnly } }) => {
-        if (readOnly) return of({ saving: false });
-        const currentIsSaved = saved.answer === current.answer && saved.state === current.state;
-        if (currentIsSaved) return of({ saving: false });
-
-        return this.currentAnswerService.update(route.id, attemptId, current).pipe(
-          map(() => ({ saving: false })),
-          startWith({ saving: true }),
+  /**
+   * Save the given state-answer as current.
+   * Emit when the save is done
+   * Complete without emitting if the save has been skipped (because no config, read-only answer or state unchanged)
+   * Errors if the config was not set or if the save failed
+   */
+  private saveAsCurrentAnswer(answer: { state: string, answer: string }): Observable<void> {
+    return this.config$.pipe(
+      take(1),
+      timeout(1), // skip the saving if there are no config immediately
+      catchError(() => EMPTY), // no config is not considered as an error but a normal case doing nothing
+      switchMap(({ route, attemptId, readOnly }) => {
+        // skip save if readonly
+        if (readOnly) return EMPTY;
+        // skip save if no change since latest successful save
+        if (this.latestSavedCurrentAnswer && areStateAnswerEqual(this.latestSavedCurrentAnswer, answer)) return EMPTY;
+        return this.currentAnswerService.update(route.id, attemptId, answer).pipe(
+          tap(() => this.latestSavedCurrentAnswer = answer),
+          map(() => undefined),
         );
       }),
-      defaultIfEmpty({ saving: false }), // when a timeout is caught, the observable is empty
-      takeUntil(this.destroyed$),
-      shareReplay(1),
     );
   }
 
   private loadAsNewCurrentAnswer(itemId: string, attemptId: string, newAnswer: Answer): Observable<Answer> {
     return this.currentAnswerService.get(itemId, attemptId).pipe(
-      filter(isNotNull),
-      switchMap(current => this.answerService.save(itemId, attemptId, { answer: current.answer ?? '', state: current.state ?? '' })),
-      defaultIfEmpty(undefined),
+      switchMap(currentAnswer => {
+        if (currentAnswer) {
+          return areStateAnswerEqual(currentAnswer, newAnswer) ?
+            EMPTY : // do not do anything
+            this.answerService.save(itemId, attemptId, { answer: currentAnswer.answer ?? '', state: currentAnswer.state ?? '' });
+        }
+        return of(undefined);
+      }),
       switchMap(() => {
         const body = { answer: newAnswer.answer ?? '', state: newAnswer.state ?? '' };
         return this.currentAnswerService.update(itemId, attemptId, body).pipe(map(() => newAnswer));

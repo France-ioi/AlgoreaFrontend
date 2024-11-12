@@ -139,11 +139,11 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   );
 
   private subscriptions = [
-    this.taskService.saveAnswerAndStateInterval$
-      .pipe(startWith({ success: true }), pairwise())
+    this.taskService.autoSaveResult$
+      .pipe(startWith(true), pairwise())
       .subscribe(([ previous, next ]) => {
-        const shouldDisplayError = !next.success && !this.actionFeedbackService.hasFeedback;
-        const shouldDisplaySuccess = !previous.success && next.success;
+        const shouldDisplayError = !next && !this.actionFeedbackService.hasFeedback;
+        const shouldDisplaySuccess = !previous && next;
         if (shouldDisplayError) {
           const message = $localize`Your current progress could not have been saved. Are you connected to the internet?`;
           this.actionFeedbackService.error(message, { life: 24*HOURS });
@@ -255,7 +255,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     this.destroyed$.complete();
   }
 
-  saveAnswerAndState(): Observable<{ saving: boolean }> {
+  saveAnswerAndState(): ReturnType<ItemTaskService['saveAnswerAndState']> {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     return this.taskService.saveAnswerAndState();
   }

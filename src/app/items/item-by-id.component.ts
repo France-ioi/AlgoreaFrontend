@@ -14,7 +14,7 @@ import {
   mergeWith,
   takeUntil,
 } from 'rxjs/operators';
-import { FetchState } from 'src/app/utils/state';
+import { FetchState, readyState } from 'src/app/utils/state';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
 import { ItemData } from './models/item-data';
@@ -175,21 +175,19 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private skipBeforeUnload$ = new Subject<void>();
   private retryBeforeUnload$ = new Subject<void>();
   private beforeUnload$ = new Subject<void>();
-  private saveBeforeUnload$: Observable<{ saving: boolean, error?: Error }> = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
+  private saveBeforeUnload$ = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
     switchMap(() => {
-      if (!this.itemContentComponent?.itemDisplayComponent) return of({ saving: false });
-      return this.itemContentComponent.itemDisplayComponent.saveAnswerAndState().pipe(
-        catchError(() => of({ saving: false, error: new Error('fail') })),
-      );
+      if (!this.itemContentComponent?.itemDisplayComponent) return of(readyState<void>(undefined));
+      return this.itemContentComponent.itemDisplayComponent.saveAnswerAndState();
     }),
     takeUntil(this.skipBeforeUnload$),
-    mergeWith(this.skipBeforeUnload$.pipe(map(() => ({ saving: false })))),
+    mergeWith(this.skipBeforeUnload$.pipe(map(() => readyState<void>(undefined)))),
     shareReplay(1),
   );
   // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
   // savingAnswer$ indicates the loading state while blocking navigation because of the save request.
-  readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(({ saving }) => saving));
-  readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(({ error }) => error));
+  readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(state => state.isFetching));
+  readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(state => state.isError));
 
   private itemChanged$ = this.itemState$.pipe(
     distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
@@ -367,8 +365,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   beforeUnload(): Observable<boolean> {
     this.beforeUnload$.next();
     return this.saveBeforeUnload$.pipe(
-      map(({ saving, error }) => !saving && !error),
-      filter(saved => saved),
+      map(state => state.isReady),
+      filter(done => done),
       take(1),
     );
   }
