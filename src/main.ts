@@ -38,6 +38,7 @@ import { fromObservation, observationEffects } from './app/store/observation';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromUserContent, groupStoreEffects } from './app/groups/store';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
+import { fromSelectedContent, selectedContentEffects } from './app/store/navigation/selected-content';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
 import { fromTimeOffset } from './app/store/time-offset';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
@@ -113,7 +114,8 @@ bootstrapApplication(AppComponent, {
     provideState(fromUserContent),
     provideState(fromItemContent),
     provideState(fromTimeOffset),
-    provideEffects(observationEffects, forumEffects(), groupStoreEffects(), itemStoreEffects()),
+    provideState(fromSelectedContent),
+    provideEffects(observationEffects, forumEffects(), groupStoreEffects(), itemStoreEffects(), selectedContentEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
