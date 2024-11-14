@@ -100,7 +100,7 @@ export class LeftNavComponent implements OnChanges {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
-  skillsDisabled = appConfig.featureFlags.skillsDisabled;
+  skillsDisabled = appConfig.defaultSkillId === undefined;
   observationModeCaption = $localize`Observation mode`;
 
   currentLanguage = this.localeService.currentLang?.tag;

@@ -10,6 +10,7 @@ export const environment: Environment = {
   searchApiUrl: 'https://jyz57q4k3ytekopv6tvg5bdxaq0vlgso.lambda-url.eu-west-3.on.aws',
 
   defaultActivityId: '4702',
+  defaultSkillId: '3000',
   allUsersGroupId: '3',
 
   languages: [
@@ -27,7 +28,6 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
-    skillsDisabled: false,
     showGroupAccessTab: true,
   },
 
