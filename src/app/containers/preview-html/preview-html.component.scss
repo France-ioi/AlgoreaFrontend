@@ -1,0 +1,10 @@
+@import 'src/assets/scss/functions';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: var(--alg-space-size-5);
+  min-height: toRem(97);
+  border: toRem(1) solid var(--alg-light-color);
+  border-radius: var(--border-radius);
+}

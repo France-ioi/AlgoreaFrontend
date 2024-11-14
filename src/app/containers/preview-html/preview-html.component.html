@@ -1,0 +1,9 @@
+<div class="wrapper">
+  @if (textContent.trim() !== '') {
+    <div [innerHTML]="textContent"></div>
+  } @else {
+    <div class="alg-full-centered-container alg-text-secondary-color alg-flex-1" i18n>
+      Nothing to preview
+    </div>
+  }
+</div>

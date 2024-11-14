@@ -1,6 +1,26 @@
 <ng-container *ngIf="itemData && itemData.currentResult">
   <div>
     <h2 class="alg-h2 alg-text-normal title" i18n>Description</h2>
-    <alg-textarea [parentForm]="parentForm" inputName="description"></alg-textarea>
+    <div class="alg-nav-tab" data-testid="edit-item-description-tabs">
+      <button
+        class="alg-nav-tab-item cursor-pointer"
+        [class.active]="activeTab() === 'write'"
+        (click)="onTabChange('write')"
+        i18n
+      >Write</button>
+      <button
+        class="alg-nav-tab-item cursor-pointer"
+        [class.active]="activeTab() === 'preview'"
+        (click)="onTabChange('preview')"
+        i18n
+      >Preview</button>
+    </div>
+    @if (activeTab() === 'write') {
+      <alg-textarea [parentForm]="parentForm" inputName="description" data-testid="edit-item-description"></alg-textarea>
+    } @else {
+      @if (parentForm) {
+        <alg-preview-html [textContent]="parentForm.value.description"></alg-preview-html>
+      }
+    }
   </div>
 </ng-container>
