@@ -110,7 +110,7 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
     const existingTitleControl: Observable<string> | undefined = this.addContentForm.get('searchExisting')?.valueChanges;
     if (existingTitleControl) this.subscriptions.push(
       existingTitleControl.pipe(
-        map(value => value.trim()),
+        map(value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim()),
         filter(value => this.checkLength(value)),
         debounceTime(300),
         switchMap(value => searchFunction(value).pipe(mapToFetchState())),
