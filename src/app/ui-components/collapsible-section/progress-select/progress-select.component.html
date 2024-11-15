@@ -3,7 +3,7 @@
     <span class="selected-progress-level">{{ values[selected]?.label }}</span>
     <ng-content select="[header-section]"></ng-content>
   </div>
-  <alg-progress-level [maximum]="values.length" [value]="selected + 1" [colorTheme]="theme"></alg-progress-level>
+  <alg-progress-level [valuesLength]="values.length" [value]="selected" [colorTheme]="theme"></alg-progress-level>
 </div>
 
 <div *ngIf="!collapsed" class="progress-select-body">
