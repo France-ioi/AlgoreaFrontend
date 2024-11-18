@@ -1,8 +1,8 @@
 import { FunctionalEffect } from '@ngrx/effects';
-import * as userContentEffects from './user-content/user-content.effects';
+import * as groupContentEffects from './group-content/group-content.effects';
 
 export const groupStoreEffects = (): Record<string, FunctionalEffect> => ({
-  ...userContentEffects,
+  ...groupContentEffects,
 });
 
-export { fromUserContent } from './user-content/user-content.store';
+export { fromGroupContent } from './group-content/group-content.store';

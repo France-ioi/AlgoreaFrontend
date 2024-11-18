@@ -36,7 +36,7 @@ import { provideEffects } from '@ngrx/effects';
 import { NavigationActionTiming, provideRouterStore } from '@ngrx/router-store';
 import { fromObservation, observationEffects } from './app/store/observation';
 import { fromRouter, RouterSerializer } from './app/store/router';
-import { fromUserContent, groupStoreEffects } from './app/groups/store';
+import { fromGroupContent, groupStoreEffects } from './app/groups/store';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
 import { fromSelectedContent, selectedContentEffects } from './app/store/navigation/selected-content';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
@@ -111,7 +111,7 @@ bootstrapApplication(AppComponent, {
     provideState(fromRouter),
     provideState(fromObservation),
     provideState(fromForum),
-    provideState(fromUserContent),
+    provideState(fromGroupContent),
     provideState(fromItemContent),
     provideState(fromTimeOffset),
     provideState(fromSelectedContent),
