@@ -22,6 +22,7 @@ import { NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { ButtonModule } from 'primeng/button';
+import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -44,6 +45,7 @@ import { ButtonModule } from 'primeng/button';
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
     ButtonModule,
+    EmptyContentComponent,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
