@@ -63,8 +63,10 @@
 
 <ng-template #noChildrenSection>
   @if (emptyMessage) {
-    <alg-error>
-      {{ emptyMessage }}
-    </alg-error>
+    <alg-empty-content
+      class="empty-content"
+      icon="ph-duotone ph-folder-simple-minus"
+      [message]="emptyMessage"
+    ></alg-empty-content>
   }
 </ng-template>

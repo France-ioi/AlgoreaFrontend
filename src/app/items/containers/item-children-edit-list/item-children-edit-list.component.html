@@ -95,7 +95,13 @@
     </ng-template>
   </p-table>
 
-  <p *ngIf="!data.length" i18n>No children for this chapter.</p>
+  @if (!data.length) {
+    <alg-empty-content
+      class="empty-content"
+      icon="ph-duotone ph-folder-simple-minus"
+      i18n-message message="No children for this chapter."
+    ></alg-empty-content>
+  }
 </div>
 
 <div class="add-item-container">
