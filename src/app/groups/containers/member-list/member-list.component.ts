@@ -9,7 +9,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { GetGroupChildrenService, GroupChild } from '../../data-access/get-group-children.service';
 import { GetGroupMembersService, GroupMembers } from '../../data-access/get-group-members.service';
 import { GroupUsersService, parseResults } from '../../data-access/group-users.service';
-import { GroupData } from '../../services/group-datasource.service';
+import { GroupData } from '../../models/group-data';
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { displayResponseToast } from './user-removal-response-handling';
 import { displayGroupRemovalResponseToast } from './group-removal-response-handling';

@@ -44,7 +44,7 @@ const breadcrumbHeader = $localize`Users`;
   ],
 })
 export class UserComponent implements OnInit, OnDestroy {
-  userRoute$ = this.store.select(fromGroupContent.selectActiveContentGroupRoute).pipe(filter(isNotNull));
+  userRoute$ = this.store.select(fromGroupContent.selectActiveContentRoute).pipe(filter(isNotNull));
   state$ = this.store.select(fromGroupContent.selectActiveContentUser);
 
   private url$ = this.router.events.pipe(

@@ -17,7 +17,10 @@ export const fetchUserInfoEffect = createEffect(
     userService = inject(GetUserService),
   ) => store$.select(fromGroupContent.selectActiveContentUserId).pipe(
     filter(isNotNull),
-    switchMap(id => userService.getForId(id).pipe(mapToFetchState({ resetter: actions$.pipe(ofType(userPageActions.refresh)) }))),
+    switchMap(id => userService.getForId(id).pipe(mapToFetchState({
+      resetter: actions$.pipe(ofType(userPageActions.refresh)),
+      identifier: { id },
+    }))),
     map(fetchState => groupInfoFetchedActions.userFetchStateChanged({ fetchState }))
   ),
   { functional: true }
@@ -28,9 +31,12 @@ export const fetchGroupInfoEffect = createEffect(
     store$ = inject(Store),
     actions$ = inject(Actions),
     groupService = inject(GetGroupByIdService),
-  ) => store$.select(fromGroupContent.selectActiveContentUserId).pipe(
+  ) => store$.select(fromGroupContent.selectActiveContentGroupId).pipe(
     filter(isNotNull),
-    switchMap(id => groupService.get(id).pipe(mapToFetchState({ resetter: actions$.pipe(ofType(groupPageActions.refresh)) }))),
+    switchMap(id => groupService.get(id).pipe(mapToFetchState({
+      resetter: actions$.pipe(ofType(groupPageActions.refresh)),
+      identifier: { id },
+    }))),
     map(fetchState => groupInfoFetchedActions.groupFetchStateChanged({ fetchState }))
   ),
   { functional: true }
@@ -40,9 +46,9 @@ export const fetchBreadcrumbsEffect = createEffect(
   (
     store$ = inject(Store),
     breadcrumbsService = inject(GetGroupBreadcrumbsService),
-  ) => store$.select(fromGroupContent.selectActiveContentGroupFullRoute).pipe(
+  ) => store$.select(fromGroupContent.selectActiveContentFullRoute).pipe(
     filter(isNotNull),
-    switchMap(route => breadcrumbsService.getBreadcrumbs(route).pipe(mapToFetchState())),
+    switchMap(route => breadcrumbsService.getBreadcrumbs(route).pipe(mapToFetchState({ identifier: route }))),
     map(fetchState => groupInfoFetchedActions.breadcrumbsFetchStateChanged({ fetchState }))
   ),
   { functional: true }

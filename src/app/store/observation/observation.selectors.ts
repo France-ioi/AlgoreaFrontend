@@ -74,7 +74,7 @@ export function selectors<T extends RootState>(selectObservationState: Selector<
 
   const selectStartObservingActiveContentGroupInfo = createSelector(
     selectActiveContentIsBeingObserved,
-    fromGroupContent.selectObservationInfoForActiveContentGroup,
+    fromGroupContent.selectObservationInfoForActiveContent,
     (activeContentIsBeingObserved, info) => (!activeContentIsBeingObserved ? info : null)
   );
 

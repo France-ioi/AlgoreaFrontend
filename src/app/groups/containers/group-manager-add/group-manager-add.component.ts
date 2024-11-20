@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GroupData } from '../../services/group-datasource.service';
+import { GroupData } from '../../models/group-data';
 import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { GetUserByLoginService } from 'src/app/data-access/get-user-by-login.service';

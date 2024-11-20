@@ -1,15 +1,12 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, RouterLinkActive, UrlTree, RouterLink } from '@angular/router';
+import { RouterLinkActive, UrlTree, RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { GetGroupPathService } from 'src/app/groups/data-access/get-group-path.service';
 import { appConfig } from 'src/app/utils/config';
-import { groupInfo, GroupInfo } from 'src/app/models/content/group-info';
-import { mapStateData, readyData } from 'src/app/utils/operators/state';
-import { groupRoute, groupRouteFromParams, isGroupRouteError } from 'src/app/models/routing/group-route';
+import { GroupInfo, groupInfo } from 'src/app/models/content/group-info';
+import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { withManagementAdditions } from './models/group-management';
-import { GroupDataSource } from './services/group-datasource.service';
+import { ManagementAdditions, withManagementAdditions } from './models/group-management';
 import { GroupEditComponent } from './containers/group-edit/group-edit.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -20,6 +17,12 @@ import { GroupOverviewComponent } from './containers/group-overview/group-overvi
 import { GroupIndicatorComponent } from './containers/group-indicator/group-indicator.component';
 import { GroupHeaderComponent } from './containers/group-header/group-header.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { fromGroupContent } from './store';
+import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.service';
+import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
+import { GroupData, selectGroupData } from './models/group-data';
+import { mapStateData, readyData } from '../utils/operators/state';
 
 const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 
@@ -27,7 +30,6 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
   selector: 'alg-group-by-id',
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
-  providers: [ GroupDataSource ],
   standalone: true,
   imports: [
     NgIf,
@@ -47,10 +49,13 @@ const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 })
 export class GroupByIdComponent implements OnDestroy {
 
-  state$ = this.groupDataSource.state$.pipe(mapStateData(state => ({
-    ...state,
-    group: withManagementAdditions(state.group),
-  })));
+  state$ = this.store.select(selectGroupData).pipe(
+    mapStateData<GroupData, GroupData & { group: ManagementAdditions }>(state => ({
+      ...state,
+      group: withManagementAdditions(state.group),
+    }))
+  );
+
   hideAccessTab = !appConfig.featureFlags.showGroupAccessTab;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
@@ -62,7 +67,7 @@ export class GroupByIdComponent implements OnDestroy {
   @ViewChild('groupEdit') groupEdit?: GroupEditComponent;
 
   // on state change, update current content page info (for breadcrumb)
-  private groupToCurrentContentSubscription = this.groupDataSource.state$.pipe(
+  private groupToCurrentContentSubscription = this.state$.pipe(
     readyData(),
     map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
       route: route,
@@ -83,23 +88,38 @@ export class GroupByIdComponent implements OnDestroy {
     })),
   ).subscribe(p => this.currentContent.replace(p));
 
+  private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbs).subscribe(state => {
+    if (state === null) return; // state is null when there is no path
+    if (state.isError) this.currentContent.clear();
+
+    // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
+    if (
+      state.isError &&
+      errorHasTag(state.error, breadcrumbServiceTag) &&
+      (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
+    ) {
+      if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
+      this.hasRedirected = true;
+      const id = state.identifier?.id;
+      if (!id) throw new Error('Unexpected: group id should exist');
+      this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: false }), { navExtras: { replaceUrl: true } });
+    } else this.hasRedirected = false;
+  });
+
+
   private hasRedirected = false;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private store: Store,
     private currentContent: CurrentContentService,
-    private groupDataSource: GroupDataSource,
     private groupRouter: GroupRouter,
-    private getGroupPath: GetGroupPathService,
     private currentContentService: CurrentContentService,
-  ) {
-    // on route change: refetch group if needed
-    this.activatedRoute.paramMap.subscribe(params => this.fetchGroupAtRoute(params));
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.currentContent.clear();
     this.groupToCurrentContentSubscription.unsubscribe();
+    this.breadcrumbsErrorSubscription.unsubscribe();
   }
 
   isDirty(): boolean {
@@ -111,37 +131,8 @@ export class GroupByIdComponent implements OnDestroy {
   }
 
   onGroupRefreshRequired(): void {
-    this.groupDataSource.refetchGroup();
+    this.store.dispatch(fromGroupContent.groupPageActions.refresh());
     this.refreshNav();
   }
 
-  private fetchGroupAtRoute(params: ParamMap): void {
-    const route = groupRouteFromParams(params);
-
-    if (isGroupRouteError(route)) {
-      if (!route.id) throw new Error('a group id is required to open group details');
-      if (this.hasRedirected) throw new Error('too many redirections');
-      else this.solveMissingPathAttempt(route.id);
-      return;
-    }
-
-    this.hasRedirected = false;
-    this.currentContent.replace(groupInfo({
-      route,
-      breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 },
-    }));
-    this.groupDataSource.fetchGroup(route);
-  }
-
-  private solveMissingPathAttempt(groupId: string): void {
-    this.getGroupPath.getGroupPath(groupId).subscribe({
-      next: path => {
-        this.hasRedirected = true;
-        this.groupRouter.navigateTo(groupRoute({ id: groupId, isUser: false }, path), { navExtras: { replaceUrl: true } });
-      },
-      error: () => {
-        this.groupRouter.navigateTo(groupRoute({ id: groupId, isUser: false }, []), { navExtras: { replaceUrl: true } });
-      }
-    });
-  }
 }

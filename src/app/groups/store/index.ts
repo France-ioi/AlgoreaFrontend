@@ -1,8 +1,10 @@
 import { FunctionalEffect } from '@ngrx/effects';
-import * as groupContentEffects from './group-content/group-content.effects';
+import * as groupFetchingEffects from './group-content/group-fetching.effects';
+import * as groupRouteEffects from './group-content/group-route.effects';
 
 export const groupStoreEffects = (): Record<string, FunctionalEffect> => ({
-  ...groupContentEffects,
+  ...groupFetchingEffects,
+  ...groupRouteEffects
 });
 
 export { fromGroupContent } from './group-content/group-content.store';

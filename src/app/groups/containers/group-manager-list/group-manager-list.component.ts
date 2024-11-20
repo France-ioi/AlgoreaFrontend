@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
-import { GroupData, GroupDataSource } from '../../services/group-datasource.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { mapStateData } from 'src/app/utils/operators/state';
@@ -21,6 +20,9 @@ import { GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { GroupData } from '../../models/group-data';
+import { Store } from '@ngrx/store';
+import { fromGroupContent } from '../../store';
 
 const managersLimit = 25;
 
@@ -72,10 +74,10 @@ export class GroupManagerListComponent implements OnChanges {
   );
 
   constructor(
+    private store: Store,
     private getGroupManagersService: GetGroupManagersService,
     private removeGroupManagerService: RemoveGroupManagerService,
     private actionFeedbackService: ActionFeedbackService,
-    private groupDataSource: GroupDataSource,
     private userService: UserSessionService,
     private confirmationService: ConfirmationService,
   ) {}
@@ -197,7 +199,7 @@ export class GroupManagerListComponent implements OnChanges {
 
     if (event.updated) {
       this.fetchData();
-      this.groupDataSource.refetchGroup();
+      this.store.dispatch(fromGroupContent.groupPageActions.refresh());
     }
   }
 
