@@ -40,6 +40,7 @@ test('checks group subtitle add and remove', async ({ page, groupSettingsPage, c
     await groupSettingsPage.navigateToAssociatedActivity(associatedItemName);
     await expect.soft(page.getByRole('heading', { name: associatedItemName })).toBeVisible();
     await page.goBack();
+    await groupSettingsPage.waitForGroupResponse(createGroup.groupId);
     await groupSettingsPage.checksIsSubtitleLoadingVisible();
     await expect.soft(page.getByRole('heading', { name: createGroup.groupName })).toBeVisible();
   });
