@@ -32,9 +32,9 @@ export function mapToFetchState<T, U = undefined>(
 /**
  * Rx operator which only keeps data of ready states (i.e., which removes non-ready states and maps ready state to their data)
  */
-export function readyData<T>(): OperatorFunction<FetchState<T>,T> {
+export function readyData<T, U = undefined>(): OperatorFunction<FetchState<T, U>,T> {
   return pipe(
-    filter((s): s is Ready<T> => s.isReady),
+    filter((s): s is Ready<T, U> => s.isReady),
     map(s => s.data)
   );
 }

@@ -235,7 +235,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     }),
 
     // on datasource state change, update the current content page info
-    this.itemState$.pipe(readyData()).subscribe(data => {
+    this.itemState$.pipe(readyData<ItemData>()).subscribe(data => {
       this.currentContent.replace(itemInfo({
         breadcrumbs: {
           category: itemBreadcrumbCat,
@@ -290,7 +290,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.initialAnswerDataSource.setInfo(route, isTask);
     }),
 
-    combineLatest([ this.itemState$.pipe(readyData()), this.fullFrameContent$ ]).pipe(
+    combineLatest([ this.itemState$.pipe(readyData<ItemData>()), this.fullFrameContent$ ]).pipe(
       map(([ data, fullFrame ]) => {
         if (fullFrame) return { id: data.route.id, display: ContentDisplayType.ShowFullFrame };
         return { id: data.route.id, display: isTask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default };
