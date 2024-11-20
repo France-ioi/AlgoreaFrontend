@@ -5,7 +5,7 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 import { HOURS } from 'src/app/utils/duration';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
-const rootItemId = '4710077428991025828';
+const rootItemId = '1751831682141956756';
 const rootItemName = 'E2E-generated-items';
 
 test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ page, itemContentPage }) => {
@@ -17,7 +17,7 @@ test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ 
   ]);
   await itemContentPage.checksIsTitleVisible(rootItemName);
   const leftNavRootItem = page.locator('p-treenode').filter({ has: page.getByText(rootItemName) });
-  const regExpItem = /E2E_\d{13}/;
+  const regExpItem = /E2E_Item_\d{13}/;
 
   const itemNamesForRemove = (await Promise.all((await leftNavRootItem.getByText(regExpItem).all())
     .map(item => item.textContent())))

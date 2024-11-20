@@ -12,9 +12,9 @@ interface CreateGroupFixtures {
 
 export const test = base.extend<CreateGroupFixtures>({
   createGroup: async ({ page, groupMembersPage }, use) => {
-    const rootGroupId = '7035186126723551198';
+    const rootGroupId = '8248811194835349084';
     const rootGroupName = 'E2E-generated-groups';
-    const groupName = `E2E_${ Date.now() }`;
+    const groupName = `E2E_Group_${ Date.now() }`;
     await page.goto(`groups/by-id/${rootGroupId};p=/members`);
     await groupMembersPage.checksIsHeaderVisible(rootGroupName);
     await groupMembersPage.goToTab('Sub-groups');

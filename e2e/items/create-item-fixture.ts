@@ -10,11 +10,11 @@ interface CreateGroupFixtures {
   deleteItem: ItemData | undefined,
 }
 
-const rootItemId = '4710077428991025828';
+const rootItemId = '1751831682141956756';
 
 export const test = base.extend<CreateGroupFixtures>({
   createItem: async ({ itemContentPage }, use) => {
-    const itemName = `E2E_${ Date.now() }`;
+    const itemName = `E2E_Item_${ Date.now() }`;
     await Promise.all([
       itemContentPage.goto(`a/${rootItemId};p=;a=0/edit-children`),
       itemContentPage.waitForItemResponse(rootItemId),
