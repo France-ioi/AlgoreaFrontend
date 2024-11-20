@@ -68,8 +68,8 @@ export function selectors<T extends RootState>(selectObservationState: Selector<
 
   const selectActiveContentIsBeingObserved = createSelector(
     selectObservedGroupId,
-    fromGroupContent.selectActiveContentGroupId,
-    (observedGroupId, activeGroupId) => observedGroupId === activeGroupId
+    fromGroupContent.selectActiveContentRoute,
+    (observedGroupId, activeGroupRoute) => observedGroupId === activeGroupRoute?.id
   );
 
   const selectStartObservingActiveContentGroupInfo = createSelector(
