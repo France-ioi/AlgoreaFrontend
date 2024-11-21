@@ -1,12 +1,12 @@
 <ng-container *ngIf="state$ | async as state">
   <h2 class="alg-h2 alg-text-normal title" i18n>
-    Associated {contentType, select, skill {Skill} other {Activity}}
+    Associated {contentType(), select, skill {Skill} other {Activity}}
   </h2>
 
   <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
 
   <alg-message-info class="message-info" icon="ph-duotone ph-info">
-    @if (contentType === 'skill') {
+    @if (forSkills()) {
       <p class="alg-no-top-margin" i18n>
         Attaching a skill to a group makes it available to its members at the top level of the "Skills" tab of the left panel, assuming they have been given the access rights to this skill. It also makes it easier for you to track their progress.
       </p>
@@ -28,43 +28,43 @@
       <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
         <p i18n>
           You cannot view the permissions given to this group, so we cannot determine if it has access to this
-          {contentType, select, skill {skill} other {activity}}.
+          {contentType(), select, skill {skill} other {activity}}.
         </p>
       </alg-message-info>
     } @else if (!permissions.group && !(permissions.item | allowsWatchingResults) && !(permissions.item | allowsGrantingView)) {
       <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
         <p i18n>
-          You cannot view the permissions given to this {contentType, select, skill {skill} other {activity}},
+          You cannot view the permissions given to this {contentType(), select, skill {skill} other {activity}},
           so we cannot determine if the group has access to it.
         </p>
       </alg-message-info>
     } @else if (permissions.group && (permissions.group | allowsViewingInfo)) {
       <alg-message-info class="message-info success height-auto" icon="ph-duotone ph-info">
         <p i18n>
-          The {contentType, select, skill {skill} other {activity}} is visible to the members of this group.
-          They will see it in the left menu, in the "{contentType, select, skill {skill} other {activity}}" tab.
+          The {contentType(), select, skill {skill} other {activity}} is visible to the members of this group.
+          They will see it in the left menu, in the "{contentType(), select, skill {skill} other {activity}}" tab.
         </p>
       </alg-message-info>
     } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && observedGroup()?.currentUserCanGrantAccess === false)) {
       <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
         <p i18n>
-          This {contentType, select, skill {skill} other {activity}} may not be visible to the members of this group.
+          This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group.
           You are not allowed to give access to this group, ask another manager to do so.
         </p>
       </alg-message-info>
     } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && !(permissions.item | allowsGrantingView))) {
       <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
         <p i18n>
-          This {contentType, select, skill {skill} other {activity}} may not be visible to the members of this group. You are not allowed to grant access to this content,
+          This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group. You are not allowed to grant access to this content,
           ask someone who has the permission to grant access to this content or make sure all your users can view the
-          {contentType, select, skill {skill} other {activity}} by other means (e.g. if it is public).
+          {contentType(), select, skill {skill} other {activity}} by other means (e.g. if it is public).
         </p>
       </alg-message-info>
     } @else {
       <alg-message-info class="message-info danger height-auto" icon="ph-duotone ph-info">
         <p i18n>
-          This {contentType, select, skill {skill} other {activity}} may not be visible to the members of this group. You can grant them access by "observing" the group,
-          then visiting the {contentType, select, skill {skill} other {activity}} and changing the permissions via the orange panel.
+          This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group. You can grant them access by "observing" the group,
+          then visiting the {contentType(), select, skill {skill} other {activity}} and changing the permissions via the orange panel.
         </p>
       </alg-message-info>
     }
@@ -79,7 +79,7 @@
     (refresh)="refresh()"
   >
     <ng-container i18n>
-      Error while loading the root {contentType, select, skill {skill} other {activity}}
+      Error while loading the root {contentType(), select, skill {skill} other {activity}}
     </ng-container>
   </alg-error>
 
@@ -87,10 +87,10 @@
     <ng-container [ngSwitch]="state.data.tag">
       <ng-container *ngSwitchCase="'no-item'">
         <p class="note" i18n>
-          There are currently no {contentType, select, skill {skills} other {activities}} associated with this group.
+          There are currently no {contentType(), select, skill {skills} other {activities}} associated with this group.
         </p>
         <alg-add-content
-          [allowedTypesForNewContent]="allowedNewItemTypes"
+          [allowedTypesForNewContent]="allowedNewItemTypes()"
           [searchFunction]="searchFunction"
           (contentAdded)="setRootItem($event)"
           i18n-selectExistingText selectExistingText="Select"

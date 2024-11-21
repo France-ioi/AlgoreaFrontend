@@ -1,14 +1,12 @@
-import { Component, forwardRef, input, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, computed, forwardRef, input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, ReplaySubject, Subject, combineLatest } from 'rxjs';
 import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { itemRoute, urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
-import {
-  AddedContent, NewContentType,
-} from 'src/app/ui-components/add-content/add-content.component';
-import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
+import { isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
 import {
   NoAssociatedItem,
   NewAssociatedItem,
@@ -63,11 +61,13 @@ import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-p
     AllowsWatchingItemResultsPipe,
   ],
 })
-export class AssociatedItemComponent implements ControlValueAccessor, OnChanges, OnDestroy {
-  @Input() contentType: ItemTypeCategory = 'activity';
+export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
+
+  contentType = input.required<ItemTypeCategory>();
   observedGroup = input<{ route: RawGroupRoute } & GroupInfo>();
 
-  allowedNewItemTypes: NewContentType<ItemType>[] = [];
+  forSkills = computed(() => isSkill(this.contentType()));
+  allowedNewItemTypes = computed(() => getAllowedNewItemTypes({ allowActivities: !this.forSkills(), allowSkills: this.forSkills() }));
 
   private readonly itemChanges$ = new ReplaySubject<{
     item: NoAssociatedItem|NewAssociatedItem|(ExistingAssociatedItem&{ name?: string }),
@@ -100,7 +100,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
           id,
           permissions: undefined,
           name: data.item.name,
-          path: urlArrayForItemRoute(itemRoute(this.contentType, id))
+          path: urlArrayForItemRoute(itemRoute(this.contentType(), id))
         });
       }
 
@@ -113,19 +113,19 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
             item: item.permissions,
             group: item.watchedGroup.permissions,
           } : undefined,
-          path: urlArrayForItemRoute(itemRoute(this.contentType, id))
+          path: urlArrayForItemRoute(itemRoute(this.contentType(), id))
         })),
         catchError(err => {
           if (errorIsHTTPForbidden(err)) return of({
             tag: 'existing-item',
-            name: $localize`You don't have access to this ` + (this.contentType === 'activity'
+            name: $localize`You don't have access to this ` + (this.contentType() === 'activity'
               ? $localize`activity` : $localize`skill`) + '.',
             permissions: undefined,
             path: null,
           });
           else if (errorIsHTTPNotFound(err)) return of({
             tag: 'existing-item',
-            name: $localize`The configured ` + (this.contentType === 'activity'
+            name: $localize`The configured ` + (this.contentType() === 'activity'
               ? $localize`activity` : $localize`skill`) + $localize` is currently not visible to you.`,
             permissions: undefined,
             path: null,
@@ -140,23 +140,12 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   private onChange: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void = () => {};
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, this.contentType === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
+    this.searchItemService.search(value, this.contentType() === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
 
   constructor(
     private getItemByIdService: GetItemByIdService,
     private searchItemService: SearchItemService,
   ) { }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contentType && !changes.contentType.firstChange && changes.contentType.currentValue
-      !== changes.contentType.previousValue) {
-      throw new Error('Unexpected: Not allow to change content type');
-    }
-    this.allowedNewItemTypes = getAllowedNewItemTypes({
-      allowActivities: this.contentType === 'activity',
-      allowSkills: this.contentType === 'skill',
-    });
-  }
 
   ngOnDestroy(): void {
     this.refresh$.complete();
