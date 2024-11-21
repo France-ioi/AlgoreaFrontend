@@ -204,6 +204,12 @@
           <context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
+      </trans-unit><trans-unit id="191940774886006608" datatype="html">
+        <source>Do you want to join the group "<x id="INTERPOLATION" equiv-text="{{ name }}"/>"?</source><target state="translated">Souhaitez-vous rejoindre le groupe "<x id="INTERPOLATION" equiv-text="{{ name }}"/>" ?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
       </trans-unit><trans-unit id="2706940000051504069" datatype="html">
         <source> The managers of this group will be able to <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {
                     view: 'view',
