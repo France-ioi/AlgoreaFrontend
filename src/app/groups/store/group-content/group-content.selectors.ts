@@ -11,6 +11,7 @@ import { selectIdParameter, selectPathParameter } from 'src/app/models/routing/c
 
 interface UserContentSelectors<T extends RootState> {
   selectIsGroupContentActive: MemoizedSelector<T, boolean>,
+  selectIsUserContentActive: MemoizedSelector<T, boolean>,
   /**
    * The route error, if any, of the current active content if it is an item
    * To be used by the effect which handles the error
@@ -145,6 +146,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   return {
     selectIsGroupContentActive,
+    selectIsUserContentActive,
     selectActiveContentRouteError,
     selectActiveContentRouteErrorHandlingState,
     selectActiveContentRoute,
