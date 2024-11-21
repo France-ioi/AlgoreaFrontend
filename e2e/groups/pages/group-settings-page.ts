@@ -147,7 +147,7 @@ export class GroupSettingsPage {
   }
 
   async checksIsSubtitleLoadingVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('loading...')).toBeVisible();
+    await expect.soft(this.page.getByText('Associated activity: loading')).toBeVisible();
   }
 
   async checksIsSubtitleVisible(name: string): Promise<void> {

@@ -4,7 +4,7 @@ import { HOURS } from 'src/app/utils/duration';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
-const rootGroupId = '7035186126723551198';
+const rootGroupId = '8248811194835349084';
 const rootGroupName = 'E2E-generated-groups';
 
 test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
@@ -21,7 +21,7 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
   await groupMembersPage.checksIsHeaderVisible(rootGroupName);
   const leftNavRootGroup = page.locator('p-treenode').filter({ has: page.getByText(rootGroupName) });
   await expect.soft(leftNavRootGroup).toBeVisible();
-  const regExpGroup = /E2E_\d{13}/;
+  const regExpGroup = /E2E_Group_\d{13}/;
   const leftNavFirstChild = leftNavRootGroup.getByText(regExpGroup).first();
   if (!(await leftNavFirstChild.isVisible())) return;
 
