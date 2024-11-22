@@ -20,6 +20,7 @@ export const routeErrorHandlingEffect = createEffect(
     getGroupPathService = inject(GetGroupPathService),
     groupRouter = inject(GroupRouter),
   ) => store$.select(fromGroupContent.selectActiveContentRouteError).pipe(
+    // should only be set for non-users
     filter(isNotNull),
     repeatLatestWhen(userSessionService.userChanged$),
     switchMap(routeError => solveMissingGroupPath(routeError.id, getGroupPathService, groupRouter).pipe(

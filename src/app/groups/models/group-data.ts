@@ -16,10 +16,13 @@ export interface GroupData {
 }
 
 export const selectGroupData = createSelector(
+  fromGroupContent.selectActiveContentRouteErrorHandlingState,
   fromGroupContent.selectActiveContentGroup,
   fromGroupContent.selectActiveContentFullRoute,
   fromGroupContent.selectActiveContentBreadcrumbs,
-  (group, route, breadcrumbs) => {
+  (errorHandling, group, route, breadcrumbs) => {
+    if (errorHandling?.isFetching) return fetchingState();
+    if (errorHandling?.isError) return errorState(errorHandling.error);
     if (group.isError) return errorState(group.error);
     if (!route || !breadcrumbs) return fetchingState();
     if (breadcrumbs.isError) return errorState(breadcrumbs.error);

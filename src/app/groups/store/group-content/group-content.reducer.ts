@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { State, initialState } from './group-content.state';
-import { groupInfoFetchedActions } from './group-content.actions';
+import { groupInfoFetchedActions, routeErrorHandlingActions } from './group-content.actions';
 
 export const reducer = createReducer(
   initialState,
@@ -14,6 +14,11 @@ export const reducer = createReducer(
   on(
     groupInfoFetchedActions.breadcrumbsFetchStateChanged,
     (state, { fetchState }): State => ({ ...state, breadcrumbs: fetchState })
-  )
+  ),
+
+  on(
+    routeErrorHandlingActions.routeErrorHandlingChange,
+    (state, { newState }): State => ({ ...state, routeErrorHandling: newState })
+  ),
 
 );

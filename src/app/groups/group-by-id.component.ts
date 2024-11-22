@@ -88,6 +88,18 @@ export class GroupByIdComponent implements OnDestroy {
     })),
   ).subscribe(p => this.currentContent.replace(p));
 
+  private initialCurrentContentSubscription = this.store.select(fromGroupContent.selectActiveContentFullRoute).subscribe(route => {
+    if (route) {
+      // just publish to current content the new route we are navigating to (without knowing any info)
+      this.currentContent.replace(groupInfo({
+        route,
+        breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
+      }));
+    } else {
+      this.currentContent.clear();
+    }
+  });
+
   private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbs).subscribe(state => {
     if (state === null) return; // state is null when there is no path
     if (state.isError) this.currentContent.clear();
@@ -103,7 +115,8 @@ export class GroupByIdComponent implements OnDestroy {
       const id = state.identifier?.id;
       if (!id) throw new Error('Unexpected: group id should exist');
       this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: false }), { navExtras: { replaceUrl: true } });
-    } else this.hasRedirected = false;
+    }
+    if (state.isReady) this.hasRedirected = false;
   });
 
 
@@ -120,6 +133,7 @@ export class GroupByIdComponent implements OnDestroy {
     this.currentContent.clear();
     this.groupToCurrentContentSubscription.unsubscribe();
     this.breadcrumbsErrorSubscription.unsubscribe();
+    this.initialCurrentContentSubscription.unsubscribe();
   }
 
   isDirty(): boolean {

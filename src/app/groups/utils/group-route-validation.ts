@@ -1,6 +1,6 @@
 import { GroupRoute, groupRoute, RawGroupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GetGroupPathService } from '../data-access/get-group-path.service';
-import { catchError, delay, EMPTY, Observable, switchMap } from 'rxjs';
+import { delay, EMPTY, Observable, switchMap } from 'rxjs';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 
 export interface GroupRouteError {
@@ -18,6 +18,10 @@ export function isGroupRouteError(route: ReturnType<typeof groupRouteFromParams>
   return 'tag' in route && route.tag === 'error';
 }
 
+/**
+ * Only for non-users. Call the service to retrieve a path to the given group and navigate to the route with this path.
+ * Error if no path is found (or non visible).
+ */
 export function solveMissingGroupPath(groupId: string, groupPathService: GetGroupPathService, router: GroupRouter): Observable<never> {
   return groupPathService.getGroupPath(groupId).pipe(
     delay(0),
@@ -25,9 +29,5 @@ export function solveMissingGroupPath(groupId: string, groupPathService: GetGrou
       router.navigateTo(groupRoute({ id: groupId, isUser: false }, path), { navExtras: { replaceUrl: true } });
       return EMPTY;
     }),
-    catchError(() => {
-      router.navigateTo(groupRoute({ id: groupId, isUser: false }, []), { navExtras: { replaceUrl: true } });
-      return EMPTY;
-    })
   );
 }

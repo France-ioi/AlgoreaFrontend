@@ -278,7 +278,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         const { contentType, id, answer } = this.getItemRoute();
         if (!id) throw new Error('Unexpected: item id should exist');
         this.itemRouter.navigateTo({ contentType, id, answer }, { navExtras: { replaceUrl: true } });
-      } else this.hasRedirected = false;
+      }
+      if (state.isReady) this.hasRedirected = false;
     }),
 
     combineLatest([ this.itemRoute$, this.itemState$.pipe(startWith(undefined)) ]).pipe(
