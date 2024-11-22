@@ -6,6 +6,7 @@
       pButton
       type="button"
       icon="ph ph-eye"
+      data-testid="toggle-group-observation"
       (click)="toggleObservation($event, containerRef, startObservingActiveContentGroupInfo)"
       *ngIf="startObservingActiveContentGroupInfo$ | async as startObservingActiveContentGroupInfo"
     ></button>
