@@ -34,7 +34,6 @@ import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { LetDirective } from '@ngrx/component';
-import { fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-group-edit',
@@ -99,7 +98,6 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   state$ = this.store.select(fromGroupContent.selectActiveContentGroup).pipe(
     mapStateData<Group, Group & ManagementAdditions, { id: string}>(withManagementAdditions),
   );
-  observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
 
   subscription?: Subscription;
 

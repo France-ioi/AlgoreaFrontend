@@ -24,7 +24,7 @@
   </alg-message-info>
 
   @if (state.isReady && state.data.tag === 'existing-item' && state.data.permissions; as permissions) {
-    @if (!permissions.group && observedGroup()?.currentUserCanGrantAccess === false) {
+    @if (!permissions.group && group().data?.currentUserCanGrantGroupAccess === false) {
       <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
         <p i18n>
           You cannot view the permissions given to this group, so we cannot determine if it has access to this
@@ -45,7 +45,7 @@
           They will see it in the left menu, in the "{contentType(), select, skill {skill} other {activity}}" tab.
         </p>
       </alg-message-info>
-    } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && observedGroup()?.currentUserCanGrantAccess === false)) {
+    } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && group().data?.currentUserCanGrantGroupAccess === false)) {
       <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
         <p i18n>
           This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group.

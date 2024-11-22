@@ -24,12 +24,12 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
-import { RawGroupRoute } from 'src/app/models/routing/group-route';
-import { GroupInfo } from 'src/app/store/observation/observation.state';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
 import { AllowsGrantingViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
+import { Store } from '@ngrx/store';
+import { fromGroupContent } from '../../store';
 
 @Component({
   selector: 'alg-associated-item',
@@ -63,8 +63,9 @@ import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-p
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
 
+  group = this.store.selectSignal(fromGroupContent.selectActiveContentGroup);
+
   contentType = input.required<ItemTypeCategory>();
-  observedGroup = input<{ route: RawGroupRoute } & GroupInfo>();
 
   forSkills = computed(() => isSkill(this.contentType()));
   allowedNewItemTypes = computed(() => getAllowedNewItemTypes({ allowActivities: !this.forSkills(), allowSkills: this.forSkills() }));
@@ -77,12 +78,12 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
   private refresh$ = new Subject<void>();
   readonly state$ = combineLatest([
     this.itemChanges$,
-    toObservable(this.observedGroup),
+    toObservable(this.group),
   ]).pipe(
-    distinctUntilChanged(([ prevItem, prevObservedGroup ], [ item, observedGroup ]) =>
-      prevItem === item && prevObservedGroup === observedGroup
+    distinctUntilChanged(([ prevItem, prevGroup ], [ item, group ]) =>
+      prevItem === item && prevGroup === group
     ),
-    switchMap(([ data, observedGroup ]) => {
+    switchMap(([ data, group ]) => {
       if (data.triggerChange) this.onChange(data.item);
 
       if (!isExistingAssociatedItem(data.item)) {
@@ -94,7 +95,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
 
       const id = data.item.id;
 
-      if (data.item.name !== undefined && !observedGroup) {
+      if (data.item.name !== undefined && !group.isReady) {
         return of({
           tag: 'existing-item',
           id,
@@ -104,7 +105,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
         });
       }
 
-      return this.getItemByIdService.get(id, observedGroup?.route.id).pipe(
+      return this.getItemByIdService.get(id, group.data?.id).pipe(
         map(item => ({
           tag: 'existing-item',
           id,
@@ -143,6 +144,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
     this.searchItemService.search(value, this.contentType() === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
 
   constructor(
+    private store: Store,
     private getItemByIdService: GetItemByIdService,
     private searchItemService: SearchItemService,
   ) { }
