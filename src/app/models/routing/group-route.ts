@@ -10,12 +10,6 @@ export interface GroupRoute extends ContentRoute {
 }
 export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<ContentRoute, 'path'>>;
 
-export interface GroupRouteError {
-  tag: 'error',
-  path?: string[],
-  id?: string,
-}
-
 export type GroupLike =
   | { id: Group['id'], contentType: GroupTypeCategory }
   | { id: Group['id'], isUser: boolean }
@@ -83,15 +77,4 @@ export function decodeGroupRouterParameters(params: ParamMap): { id: string | nu
     id: params.get('id'),
     path: pathFromRouterParameters(params),
   };
-}
-
-export function groupRouteFromParams(params: ParamMap, isUser = false): GroupRoute | GroupRouteError {
-  const id = params.get('id') ?? undefined;
-  const path = pathFromRouterParameters(params);
-  if (!id || path === null) return { tag: 'error', id };
-  return groupRoute({ id, isUser }, path);
-}
-
-export function isGroupRouteError(route: GroupRoute | GroupRouteError): route is GroupRouteError {
-  return 'tag' in route && route.tag === 'error';
 }

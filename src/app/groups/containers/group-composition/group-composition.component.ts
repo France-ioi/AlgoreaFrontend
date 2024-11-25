@@ -8,7 +8,7 @@ import { MemberListComponent } from '../member-list/member-list.component';
 import { ManagementAdditions, withManagementAdditions } from '../../models/group-management';
 import { Group } from '../../data-access/get-group-by-id.service';
 import { GroupCreationService } from '../../data-access/group-creation.service';
-import { GroupData } from '../../services/group-datasource.service';
+import { GroupData } from '../../models/group-data';
 import { AddSubGroupComponent } from '../add-sub-group/add-sub-group.component';
 import { GroupNoPermissionComponent } from '../group-no-permission/group-no-permission.component';
 import { GroupInviteUsersComponent } from '../group-invite-users/group-invite-users.component';

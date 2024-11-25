@@ -27,6 +27,7 @@ import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { LocaleService } from '../../services/localeService';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
+import { NavTreeData } from 'src/app/models/left-nav-loading/nav-tree-data';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -89,7 +90,7 @@ export class LeftNavComponent implements OnChanges {
     map(tab => this.navTreeServices[tab.index]),
     filter(isNotUndefined),
     switchMap(activeTreeService => activeTreeService.state$),
-    readyData(),
+    readyData<NavTreeData>(),
     map(navTreeData => navTreeData.selectedElementId),
     distinctUntilChanged(),
   );
@@ -100,7 +101,7 @@ export class LeftNavComponent implements OnChanges {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
-  skillsDisabled = appConfig.featureFlags.skillsDisabled;
+  skillsDisabled = appConfig.defaultSkillId === undefined;
   observationModeCaption = $localize`Observation mode`;
 
   currentLanguage = this.localeService.currentLang?.tag;

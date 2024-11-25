@@ -12,6 +12,7 @@ export const environment: Environment = {
   oauthClientId: '43',
 
   defaultActivityId: '4702',
+  defaultSkillId: '3000',
   allUsersGroupId: '3',
 
   languages: [
@@ -28,7 +29,6 @@ export const environment: Environment = {
   theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
-    skillsDisabled: false,
   },
 };
 

@@ -96,7 +96,8 @@ module.exports = {
             '!**/utils/store/**',
             '!**/store/observation',
             '!**/store/time-offset',
-            '!**/store/router'
+            '!**/store/router',
+            '!**/store/navigation'
           ],
           message: 'Only store indexes can be imported'
         },

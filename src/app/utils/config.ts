@@ -20,9 +20,11 @@ export interface Environment {
 
   sentryDsn?: string, // if not set, tracing not enabled; if set, the dsn to the sentry-compatible dsn
 
-  // the id of the item to be loaded by default on home page (if no specific path is given) and in nav menu (if no other item is visited)
+  // the id of the activity/skill to be loaded by default on its tab
+  // for the activity, it is also the "home" content, so what is displayed when arriving on "/"
   // this item MUST be on one of all users' root and be implicitely startable
   defaultActivityId: string,
+  defaultSkillId?: string, // if not given, skills are disabled
 
   // groupId of the all-users group used by the backend (used while the backend cannot provide us with it)
   allUsersGroupId: string,
@@ -45,7 +47,6 @@ export interface Environment {
 
   featureFlags: {
     hideTaskTabs: string[],
-    skillsDisabled: boolean,
     showGroupAccessTab?: boolean,
   },
 

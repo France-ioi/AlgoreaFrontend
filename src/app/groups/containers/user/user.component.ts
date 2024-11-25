@@ -16,7 +16,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromUserContent } from '../../store';
+import { fromGroupContent } from '../../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { UserInfoComponent } from 'src/app/groups/containers/user-info/user-info.component';
 
@@ -44,8 +44,8 @@ const breadcrumbHeader = $localize`Users`;
   ],
 })
 export class UserComponent implements OnInit, OnDestroy {
-  userRoute$ = this.store.select(fromUserContent.selectActiveContentUserRoute).pipe(filter(isNotNull));
-  state$ = this.store.select(fromUserContent.selectActiveContentUser);
+  userRoute$ = this.store.select(fromGroupContent.selectActiveContentRoute).pipe(filter(isNotNull));
+  state$ = this.store.select(fromGroupContent.selectActiveContentUser);
 
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -71,7 +71,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userRoute$,
       this.activeRoute$.pipe(map(p => this.pageTitle(p))),
       this.state$,
-      this.store.select(fromUserContent.selectActiveContentBreadcrumbs),
+      this.store.select(fromGroupContent.selectActiveContentBreadcrumbs),
     ])
       .pipe(
         map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => contentInfo({
@@ -98,7 +98,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   refresh(): void {
-    this.store.dispatch(fromUserContent.userPageActions.refresh());
+    this.store.dispatch(fromGroupContent.userPageActions.refresh());
   }
 
   /**

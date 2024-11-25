@@ -2,7 +2,7 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { LayoutService } from '../../services/layout.service';
 import { combineLatest, map } from 'rxjs';
-import { GroupInfo, isGroupInfo } from '../../models/content/group-info';
+import { isGroupInfo } from '../../models/content/group-info';
 import { CurrentContentService } from '../../services/current-content.service';
 import {
   SuggestionOfActivitiesComponent
@@ -73,26 +73,9 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
     });
   }
 
-  toggleObservationMode(event: Event, target: HTMLDivElement, groupInfo: GroupInfo & {isBeingWatched: boolean}): void {
-    if (groupInfo.isBeingWatched) {
-      this.op?.hide();
-      return;
-    }
-
-    if (!groupInfo.details) {
-      throw new Error('Unexpected: group details in not set');
-    }
-
-    this.store.dispatch(fromObservation.topBarActions.enableObservation({
-      route: groupInfo.route,
-      name: groupInfo.details.name,
-      currentUserCanGrantAccess: groupInfo.details.currentUserCanGrantGroupAccess,
-    }));
-
-    this.openSuggestionOfActivitiesOverlayPanel(event, target);
-  }
-
-  toggleObservation(observationInfo: ObservationInfo): void {
+  toggleObservation(event: Event, target: HTMLDivElement, observationInfo: ObservationInfo): void {
     this.store.dispatch(fromObservation.topBarActions.enableObservation(observationInfo));
+    this.openSuggestionOfActivitiesOverlayPanel(event, target);
+
   }
 }

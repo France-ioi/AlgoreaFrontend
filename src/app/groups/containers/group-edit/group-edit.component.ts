@@ -9,8 +9,7 @@ import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
 import { Group } from '../../data-access/get-group-by-id.service';
 import { GroupChanges, GroupUpdateService } from '../../data-access/group-update.service';
-import { GroupDataSource } from '../../services/group-datasource.service';
-import { withManagementAdditions } from '../../models/group-management';
+import { ManagementAdditions, withManagementAdditions } from '../../models/group-management';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,6 +31,8 @@ import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 import { DialogModule } from 'primeng/dialog';
 import { GetGroupMembersService } from '../../data-access/get-group-members.service';
 import { ButtonModule } from 'primeng/button';
+import { Store } from '@ngrx/store';
+import { fromGroupContent } from '../../store';
 
 @Component({
   selector: 'alg-group-edit',
@@ -92,13 +93,15 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     data?: GroupChanges['approval_change_action'],
   }>({ opened: false });
 
-  state$ = this.groupDataSource.state$.pipe(mapStateData(state => withManagementAdditions(state.group)));
+  state$ = this.store.select(fromGroupContent.selectActiveContentGroup).pipe(
+    mapStateData<Group, Group & ManagementAdditions, { id: string}>(withManagementAdditions),
+  );
 
   subscription?: Subscription;
 
   constructor(
+    private store: Store,
     private currentContentService: CurrentContentService,
-    private groupDataSource: GroupDataSource,
     private actionFeedbackService: ActionFeedbackService,
     private formBuilder: UntypedFormBuilder,
     private groupUpdateService: GroupUpdateService,
@@ -228,7 +231,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     ).subscribe({
       next: () => {
         this.showConfirmApprovalDialog.next({ opened: false });
-        this.groupDataSource.refetchGroup(); // will re-enable the form
+        this.store.dispatch(fromGroupContent.groupPageActions.refresh()); // will re-enable the form
         this.refreshNav();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
@@ -271,7 +274,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   }
 
   refreshGroup(): void {
-    this.groupDataSource.refetchGroup();
+    this.store.dispatch(fromGroupContent.groupPageActions.refresh());
   }
 
   onRequireLockMembershipApprovalUntilEnabledChange(enabled: boolean): void {

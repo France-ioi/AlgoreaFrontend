@@ -1,5 +1,5 @@
 import { Component, input, OnDestroy } from '@angular/core';
-import { GroupData } from '../../services/group-datasource.service';
+import { GroupData } from '../../models/group-data';
 import { AsyncPipe, JsonPipe, NgIf } from '@angular/common';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';

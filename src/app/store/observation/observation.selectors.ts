@@ -2,7 +2,7 @@ import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { GroupInfo, State } from './observation.state';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { isForbiddenObservationError } from './utils/errors';
-import { fromUserContent } from 'src/app/groups/store';
+import { fromGroupContent } from 'src/app/groups/store';
 import { ObservationInfo } from './observation.actions';
 import { RootState } from 'src/app/utils/store/root_state';
 
@@ -66,27 +66,15 @@ export function selectors<T extends RootState>(selectObservationState: Selector<
     g => (g?.info.isError ? { isForbidden: isForbiddenObservationError(g.info.error) } : false)
   );
 
-  const selectActiveContentGroupId = createSelector(
-    fromUserContent.selectActiveContentUserId,
-    // should handle group content as well!
-    userId => userId
-  );
-
   const selectActiveContentIsBeingObserved = createSelector(
     selectObservedGroupId,
-    selectActiveContentGroupId,
-    (observedGroupId, activeGroupId) => observedGroupId === activeGroupId
-  );
-
-  const selectObservationInfoForActiveContentGroup = createSelector(
-    fromUserContent.selectObservationInfoForActiveContentUser,
-    // should handle group content as well!
-    user => user
+    fromGroupContent.selectActiveContentRoute,
+    (observedGroupId, activeGroupRoute) => observedGroupId === activeGroupRoute?.id
   );
 
   const selectStartObservingActiveContentGroupInfo = createSelector(
     selectActiveContentIsBeingObserved,
-    selectObservationInfoForActiveContentGroup,
+    fromGroupContent.selectObservationInfoForActiveContent,
     (activeContentIsBeingObserved, info) => (!activeContentIsBeingObserved ? info : null)
   );
 

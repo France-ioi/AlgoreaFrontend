@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ManagementAdditions } from '../../models/group-management';
-import { GroupData } from '../../services/group-datasource.service';
+import { GroupData } from '../../models/group-data';
 import { GroupManagerListComponent } from '../group-manager-list/group-manager-list.component';
 import { NgIf } from '@angular/common';
 
