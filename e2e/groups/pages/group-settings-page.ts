@@ -27,6 +27,8 @@ export class GroupSettingsPage {
     await expect.soft(this.page.getByTestId('switch-require-lock-until-enabled')).toBeVisible();
     await this.page.getByTestId('switch-require-lock-until-enabled').click();
     await expect.soft(this.inputDateLocator).toBeVisible();
+    await this.inputDateLocator.click();
+    await expect.soft(this.inputDateLocator).toHaveValue('dd/mm/yyyy hh:mm');
   }
 
   async disableLockMembershipUntilInputDate(): Promise<void> {

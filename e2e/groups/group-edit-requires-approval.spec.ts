@@ -80,6 +80,8 @@ test('check invalid date validation', { tag: '@no-parallelism' },async ({ page, 
     await groupSettingsPage.enableLockMembershipUntilInputDate();
   });
 
+  const minInputDate = new Date();
+
   if (browser.browserType().name() === 'chromium') {
     await test.step('checks invalid time in Chrome', async () => {
       await groupSettingsPage.fillDate('21/05/2024 60:60');
@@ -93,9 +95,8 @@ test('check invalid date validation', { tag: '@no-parallelism' },async ({ page, 
   });
 
   await test.step('fill past date', async () => {
-    const currentDate = new Date();
-    await groupSettingsPage.fillDate(convertDateToString(currentDate));
-    await expect.soft(page.getByText(`The date must be greater than: ${ convertDateToString(currentDate) }`)).toBeVisible();
+    await groupSettingsPage.fillDate(convertDateToString(minInputDate));
+    await expect.soft(page.getByText(`The date must be greater than: ${ convertDateToString(minInputDate) }`)).toBeVisible();
   });
 
   await test.step('clear invalid date and check validation message is gone', async () => {
