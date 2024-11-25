@@ -1,7 +1,7 @@
-import { Component, computed, forwardRef, input, OnDestroy } from '@angular/core';
+import { Component, computed, forwardRef, input, OnDestroy, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, ReplaySubject, Subject, combineLatest } from 'rxjs';
-import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { itemRoute, urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
@@ -13,6 +13,7 @@ import {
   ExistingAssociatedItem,
   isExistingAssociatedItem,
   isNewAssociatedItem,
+  noAssociatedItem,
 } from './associated-item-types';
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { mapToFetchState } from 'src/app/utils/operators/state';
@@ -29,7 +30,7 @@ import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permis
 import { AllowsGrantingViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
 import { Store } from '@ngrx/store';
-import { fromGroupContent } from '../../store';
+import { Group } from '../../data-access/get-group-by-id.service';
 
 @Component({
   selector: 'alg-associated-item',
@@ -63,49 +64,47 @@ import { fromGroupContent } from '../../store';
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
 
-  group = this.store.selectSignal(fromGroupContent.selectActiveContentGroup);
-
+  group = input.required<Group>();
   contentType = input.required<ItemTypeCategory>();
+  /**
+   * Whether this component is for the associated skill (or associated activity)
+   */
+  isSkill = computed(() => isSkill(this.contentType()));
 
-  forSkills = computed(() => isSkill(this.contentType()));
-  allowedNewItemTypes = computed(() => getAllowedNewItemTypes({ allowActivities: !this.forSkills(), allowSkills: this.forSkills() }));
+  /**
+   * The list of allowed item types with icons etc for the new content case
+   */
+  allowedNewItemTypes = computed(() => getAllowedNewItemTypes({ allowActivities: !this.isSkill(), allowSkills: this.isSkill() }));
 
-  private readonly itemChanges$ = new ReplaySubject<{
-    item: NoAssociatedItem|NewAssociatedItem|(ExistingAssociatedItem&{ name?: string }),
-    triggerChange: boolean,
-  }>();
+  private associatedItem = signal<NoAssociatedItem|NewAssociatedItem|(ExistingAssociatedItem&{ name?: string })>(noAssociatedItem);
 
   private refresh$ = new Subject<void>();
-  readonly state$ = combineLatest([
-    this.itemChanges$,
-    toObservable(this.group),
-  ]).pipe(
-    distinctUntilChanged(([ prevItem, prevGroup ], [ item, group ]) =>
-      prevItem === item && prevGroup === group
-    ),
-    switchMap(([ data, group ]) => {
-      if (data.triggerChange) this.onChange(data.item);
 
-      if (!isExistingAssociatedItem(data.item)) {
+  readonly state$ = toObservable(this.associatedItem).pipe(
+    switchMap(item => {
+
+      if (!isExistingAssociatedItem(item)) {
         return of({
-          tag: data.item.tag, id: undefined, path: null,
-          name: isNewAssociatedItem(data.item) ? data.item.name : undefined
+          tag: item.tag, id: undefined, path: null,
+          name: isNewAssociatedItem(item) ? item.name : undefined,
+          permissions: undefined,
         });
       }
 
-      const id = data.item.id;
+      const id = item.id;
 
-      if (data.item.name !== undefined && !group.isReady) {
+      /** to be fixed
+      if (item.name !== undefined) {
         return of({
           tag: 'existing-item',
           id,
           permissions: undefined,
-          name: data.item.name,
+          name: item.name,
           path: urlArrayForItemRoute(itemRoute(this.contentType(), id))
         });
-      }
+      }*/
 
-      return this.getItemByIdService.get(id, group.data?.id).pipe(
+      return this.getItemByIdService.get(id, this.group().id).pipe(
         map(item => ({
           tag: 'existing-item',
           id,
@@ -144,18 +143,16 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
     this.searchItemService.search(value, this.contentType() === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
 
   constructor(
-    private store: Store,
     private getItemByIdService: GetItemByIdService,
     private searchItemService: SearchItemService,
   ) { }
 
   ngOnDestroy(): void {
     this.refresh$.complete();
-    this.itemChanges$.complete();
   }
 
-  writeValue(rootItem: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem): void {
-    this.itemChanges$.next({ item: rootItem, triggerChange: false });
+  writeValue(associatedItem: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem): void {
+    this.associatedItem.set(associatedItem);
   }
 
   registerOnChange(fn: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void): void {
@@ -166,17 +163,16 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
   }
 
   onRemove(): void {
-    this.itemChanges$.next({
-      item: { tag: 'no-item' }, triggerChange: true });
+    this.associatedItem.set(noAssociatedItem);
+    this.onChange(noAssociatedItem);
   }
 
-  setRootItem(item: AddedContent<ItemType>): void {
-    this.itemChanges$.next({
-      item: item.id !== undefined ?
-        { tag: 'existing-item', id: item.id, name: item.title } :
-        { tag: 'new-item', name: item.title, url: item.url, itemType: item.type },
-      triggerChange: true
-    });
+  setAssociatedItem(item: AddedContent<ItemType>): void {
+    const newValue = item.id !== undefined ?
+      { tag: 'existing-item', id: item.id, name: item.title } :
+      { tag: 'new-item', name: item.title, url: item.url, itemType: item.type };
+    this.associatedItem.set(newValue);
+    this.onChange(newValue);
   }
 
   refresh(): void {

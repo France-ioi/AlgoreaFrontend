@@ -2,8 +2,9 @@ import { ItemFound } from 'src/app/data-access/search-item.service';
 import { ActivityType, isASkill, ItemType } from 'src/app/items/models/item-type';
 
 type AssociatedItemId = string;
+export const noAssociatedItem = { tag: 'no-item' };
 
-export interface NoAssociatedItem { tag: 'no-item' }
+export type NoAssociatedItem = typeof noAssociatedItem;
 
 export interface NewAssociatedItem { tag: 'new-item', name: string, url?: string, itemType: ItemType }
 
