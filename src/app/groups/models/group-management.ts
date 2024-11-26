@@ -1,3 +1,4 @@
+import { Pipe, PipeTransform } from '@angular/core';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 
@@ -37,6 +38,10 @@ export function canCurrentUserGrantGroupAccess<T extends GroupManagership>(g: T)
   return !!g.currentUserCanGrantGroupAccess;
 }
 
+export function canCurrentUserWatchMembers<T extends GroupManagership>(g: T): boolean {
+  return !!g.currentUserCanWatchMembers;
+}
+
 export function canCurrentUserManageMembers<T extends GroupManagership>(g: T): boolean {
   return !!g.currentUserCanManage &&
     [ managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup ].includes(g.currentUserCanManage);
@@ -44,6 +49,10 @@ export function canCurrentUserManageMembers<T extends GroupManagership>(g: T): b
 
 export function canCurrentUserManageGroup<T extends GroupManagership>(g: T): boolean {
   return g.currentUserCanManage === managementLevelOpts.membershipsAndGroup;
+}
+
+export function canCurrentUserViewGroupPermissions<T extends GroupManagership>(g: T): boolean {
+  return canCurrentUserGrantGroupAccess(g) && canCurrentUserWatchMembers(g);
 }
 
 export interface ManagementAdditions {
@@ -61,4 +70,16 @@ export function withManagementAdditions<T extends GroupManagership>(g: T): T & M
     canCurrentUserManageMembers: canCurrentUserManageMembers(g),
     canCurrentUserManageGroup: canCurrentUserManageGroup(g),
   };
+}
+
+// ********************************************
+// Pipes for templates
+// ********************************************
+
+@Pipe({
+  name: 'canCurrentUserViewGroupPermissions', pure: true,
+  standalone: true
+})
+export class CanCurrentUserViewGroupPermissionsPipe implements PipeTransform {
+  transform = canCurrentUserViewGroupPermissions;
 }

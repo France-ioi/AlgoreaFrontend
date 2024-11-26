@@ -1,116 +1,125 @@
-<ng-container *ngIf="state$ | async as state">
-  <h2 class="alg-h2 alg-text-normal title" i18n>
-    Associated {contentType(), select, skill {Skill} other {Activity}}
-  </h2>
+@if (isSkill()) { <h2 class="alg-h2 alg-text-normal title" i18n>Associated Skill</h2> }
+@else { <h2 class="alg-h2 alg-text-normal title" i18n>Associated Activity</h2> }
 
-  <alg-loading size="medium" *ngIf="state.isFetching"></alg-loading>
+<alg-message-info class="message-info info" icon="ph-duotone ph-info">
+  @if (isSkill()) {
+    <p class="alg-no-top-margin" i18n>
+      Attaching a skill to a group makes it available to its members at the top level of the "Skills" tab of the left panel, assuming they have been given the access rights to this skill. It also makes it easier for you to track their progress.
+    </p>
+    <p class="alg-no-bottom-margin" i18n>
+      You may create a new skill folder to list all the skills you expect this group's users to work on. You may associate an existing skill if your goal is simply for members to work on this existing skill.
+    </p>
+  } @else {
+    <p class="alg-no-top-margin" i18n>
+      Attaching an activity to a group makes it available to its members at the top level of the "Content" tab of the left panel, assuming they have been given the access rights to this activity. It also makes it easier for you to track their progress.
+    </p>
+    <p class="alg-no-bottom-margin" i18n>
+      You may create a new chapter folder to list all the content you expect this group's users to work on. You may associate an existing chapter if your goal is simply for members to work on this existing content.
+    </p>
+  }
+</alg-message-info>
 
-  <alg-message-info class="message-info" icon="ph-duotone ph-info">
-    @if (isSkill()) {
-      <p class="alg-no-top-margin" i18n>
-        Attaching a skill to a group makes it available to its members at the top level of the "Skills" tab of the left panel, assuming they have been given the access rights to this skill. It also makes it easier for you to track their progress.
-      </p>
-      <p class="alg-no-bottom-margin" i18n>
-        You may create a new skill folder to list all the skills you expect this group's users to work on. You may associate an existing skill if your goal is simply for members to work on this existing skill.
-      </p>
-    } @else {
-      <p class="alg-no-top-margin" i18n>
-        Attaching an activity to a group makes it available to its members at the top level of the "Content" tab of the left panel, assuming they have been given the access rights to this activity. It also makes it easier for you to track their progress.
-      </p>
-      <p class="alg-no-bottom-margin" i18n>
-        You may create a new chapter folder to list all the content you expect this group's users to work on. You may associate an existing chapter if your goal is simply for members to work on this existing content.
-      </p>
+@let associatedItemVal = associatedItem();
+
+@switch (associatedItemVal.tag) {
+
+  @case ('existing-item') {
+
+    @let existingItemStateVal = existingItemState();
+
+    @if (existingItemStateVal.isReady) {
+
+      @let existingItem = existingItemStateVal.data;
+
+      @if (existingItem.name === undefined) { <!-- the current user cannot view the item title-->
+        <!-- the current user cannot view the item title: just don't display anything is this case -->
+      }
+      @else if (!(group()|canCurrentUserViewGroupPermissions)) {
+        <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+          @if (isSkill()) { <p i18n>You cannot view the permissions given to this group, so we cannot determine if it has access to this skill.</p> }
+          @else { <p i18n>You cannot view the permissions given to this group, so we cannot determine if it has access to this activity.</p> }
+        </alg-message-info>
+      }
+      @else if (existingItem.groupPerms === undefined) {
+        <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+          @if (isSkill()) { <p i18n>You cannot view the permissions given to this skill, so we cannot determine if the group has access to it.</p> }
+          @else { <p i18n>You cannot view the permissions given to this activity, so we cannot determine if the group has access to it.</p> }
+        </alg-message-info>
+      }
+      @else if (existingItem.groupPerms | allowsViewingInfo) {
+        <alg-message-info class="message-info success height-auto" icon="ph-duotone ph-check-circle">
+          @if (isSkill()) { <p i18n>The skill is visible to all members of this group. They will see it in the left menu, in the "Skills" tab.</p> }
+          @else { <p i18n>The activity is visible to all members of this group. They will see it in the left menu, in the "Content" tab.</p> }
+        </alg-message-info>
+      }
+      @else if (!group().currentUserCanGrantGroupAccess) { <!-- group cannot view the item -->
+        <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+          @if (isSkill()) { <p i18n>This skill may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.</p> }
+          @else { <p i18n>This activity may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.</p> }
+        </alg-message-info>
+      }
+      @else if (!(existingItem.permissions | allowsGrantingView)) { <!-- group cannot view the item -->
+        <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
+          @if (isSkill()) { <p i18n>This skill may not be visible to the members of this group. You are not allowed to grant access to this content, ask someone who has the permission to grant access to this content or make sure all your users can view the skill by other means (e.g. if it is public).</p> }
+          @else { <p i18n>This activity may not be visible to the members of this group. You are not allowed to grant access to this content, ask someone who has the permission to grant access to this content or make sure all your users can view the activity by other means (e.g. if it is public).</p> }
+        </alg-message-info>
+      } @else { <!-- group cannot view the item, current user can change the perms -->
+        <alg-message-info class="message-info danger height-auto" icon="ph-duotone ph-warning">
+          @if (isSkill()) { <p i18n>This skill may not be visible to the members of this group. You can grant them access by "observing" the group, then visiting the skill and changing the permissions via the orange panel.</p> }
+          @else { <p i18n>This activity may not be visible to the members of this group. You can grant them access by "observing" the group, then visiting the activity and changing the permissions via the orange panel.</p> }
+        </alg-message-info>
+      }
+
+      <div class="item">
+        @if (existingItem.name === undefined) {
+          <i class="ph-duotone ph-lock"></i>
+          @if (isSkill()) { <span alg-flex-1 i18n>You are not allowed to view the associated skill which has been configured for this group.</span> }
+          @else { <span alg-flex-1 i18n>You are not allowed to view the associated activity which has been configured for this group.</span> }
+        }
+        @else {
+          <a class="alg-link alg-flex-1" [routerLink]="existingItem | itemRoute | url">{{ existingItem.name }}</a>
+        }
+        <ng-container *ngTemplateOutlet="removeButton"></ng-container>
+      </div>
+
+    } <!-- if (existingItemStateVal.isReady) -->
+    @if (existingItemStateVal.isFetching) {
+      <alg-loading size="medium"></alg-loading>
     }
-  </alg-message-info>
-
-  @if (state.isReady && state.data.tag === 'existing-item' && state.data.permissions; as permissions) {
-    @if (!permissions.group && group().currentUserCanGrantGroupAccess === false) {
-      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
-        <p i18n>
-          You cannot view the permissions given to this group, so we cannot determine if it has access to this
-          {contentType(), select, skill {skill} other {activity}}.
-        </p>
-      </alg-message-info>
-    } @else if (!permissions.group && !(permissions.item | allowsWatchingResults) && !(permissions.item | allowsGrantingView)) {
-      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
-        <p i18n>
-          You cannot view the permissions given to this {contentType(), select, skill {skill} other {activity}},
-          so we cannot determine if the group has access to it.
-        </p>
-      </alg-message-info>
-    } @else if (permissions.group && (permissions.group | allowsViewingInfo)) {
-      <alg-message-info class="message-info success height-auto" icon="ph-duotone ph-info">
-        <p i18n>
-          The {contentType(), select, skill {skill} other {activity}} is visible to the members of this group.
-          They will see it in the left menu, in the "{contentType(), select, skill {skill} other {activity}}" tab.
-        </p>
-      </alg-message-info>
-    } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && group().currentUserCanGrantGroupAccess === false)) {
-      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
-        <p i18n>
-          This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group.
-          You are not allowed to give access to this group, ask another manager to do so.
-        </p>
-      </alg-message-info>
-    } @else if (permissions.group && (!(permissions.group | allowsViewingInfo) && !(permissions.item | allowsGrantingView))) {
-      <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
-        <p i18n>
-          This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group. You are not allowed to grant access to this content,
-          ask someone who has the permission to grant access to this content or make sure all your users can view the
-          {contentType(), select, skill {skill} other {activity}} by other means (e.g. if it is public).
-        </p>
-      </alg-message-info>
-    } @else {
-      <alg-message-info class="message-info danger height-auto" icon="ph-duotone ph-info">
-        <p i18n>
-          This {contentType(), select, skill {skill} other {activity}} may not be visible to the members of this group. You can grant them access by "observing" the group,
-          then visiting the {contentType(), select, skill {skill} other {activity}} and changing the permissions via the orange panel.
-        </p>
-      </alg-message-info>
+    @if (existingItemStateVal.isError) {
+      <alg-error
+        class="dark"
+        icon="ph-duotone ph-warning-circle"
+        [showRefreshButton]="true"
+        refreshButtonType="refresh"
+        (refresh)="refresh()"
+      >
+        @if (isSkill()) { <ng-container i18n>Error while loading the associated skill</ng-container> }
+        @else { <ng-container i18n>Error while loading the associated activity</ng-container> }
+    </alg-error>
     }
+
+  } <!-- @case ('existing-item') -->
+
+  @case ('no-item') {
+    @if (isSkill()) { <p class="note" i18n>There are currently no skills associated with this group.</p> }
+    @else { <p class="note" i18n>There are currently no activities associated with this group.</p> }
+    <alg-add-content
+      [allowedTypesForNewContent]="allowedNewItemTypes()"
+      [searchFunction]="searchFunction"
+      (contentAdded)="setAssociatedItem($event)"
+      i18n-selectExistingText selectExistingText="Select"
+    ></alg-add-content>
   }
 
-  <alg-error
-    *ngIf="state.isError"
-    class="dark"
-    icon="ph-duotone ph-warning-circle"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="refresh()"
-  >
-    <ng-container i18n>
-      Error while loading the root {contentType(), select, skill {skill} other {activity}}
-    </ng-container>
-  </alg-error>
+  @case ('new-item') {
+    <div class="item">
+      <span class="alg-text-normal alg-flex-1">{{ $any(associatedItemVal).name }}</span>
+      <ng-container *ngTemplateOutlet="removeButton"></ng-container>
+    </div>
+  }
 
-  <ng-container *ngIf="state.isReady">
-    <ng-container [ngSwitch]="state.data.tag">
-      <ng-container *ngSwitchCase="'no-item'">
-        <p class="note" i18n>
-          There are currently no {contentType(), select, skill {skills} other {activities}} associated with this group.
-        </p>
-        <alg-add-content
-          [allowedTypesForNewContent]="allowedNewItemTypes()"
-          [searchFunction]="searchFunction"
-          (contentAdded)="setAssociatedItem($event)"
-          i18n-selectExistingText selectExistingText="Select"
-        ></alg-add-content>
-      </ng-container>
-
-      <div class="item" *ngSwitchCase="'new-item'">
-        <span class="alg-text-normal alg-flex-1">{{ state.data.name }}</span>
-        <ng-container *ngTemplateOutlet="removeButton"></ng-container>
-      </div>
-
-      <div class="item" *ngSwitchCase="'existing-item'">
-        <!--When rootActivity|rootSkill is an existing item, rootActivityData|rootSkillData is not null-->
-        <i class="ph-duotone ph-lock" *ngIf="!state.data.path"></i>
-        <a class="alg-link alg-flex-1" [routerLink]="state.data.path">{{ state.data.name }}</a>
-        <ng-container *ngTemplateOutlet="removeButton"></ng-container>
-      </div>
-    </ng-container>
-  </ng-container>
-</ng-container>
+} <!-- @switch (associatedItemVal.tag)  -->
 
 <ng-template #removeButton>
   <button
