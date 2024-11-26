@@ -75,13 +75,15 @@
         <li
           class="add-content-list-item"
           *ngFor="let item of (state.data || []) | slice : 0 : 10"
-          (mouseleave)="onMouseLeave($event)"
+          [algShowOverlay]="op"
+          (overlayOpenEvent)="itemId.set(item.id)"
+          (overlayCloseEvent)="itemId.set(undefined)"
         >
           <div class="add-content-list-left">
             <span class="add-content-type">{{ item.type }}</span>
             <span class="add-content-title">
               @if(item.id) {
-                <span (mouseenter)="onMouseEnter($event, item.id, contentRef)" #contentRef>
+                <span algShowOverlayHoverTarget>
                   {{ item.title }}
                 </span>
               }@else {
@@ -115,6 +117,6 @@
   #op
 >
   <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+    <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
   </ng-container>
 </p-overlayPanel>

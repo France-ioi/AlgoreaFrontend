@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect, Locator } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class GroupSettingsPage {
@@ -139,11 +139,15 @@ export class GroupSettingsPage {
     await expect.soft(this.searchExistingContentInputLocator).toBeVisible();
   }
 
-  async searchAndSelectAssociatedActivity(search: string): Promise<void> {
+  async searchAssociatedActivity(search: string): Promise<Locator> {
     await this.searchExistingContentInputLocator.fill(search);
-    const foundItemLocator = this.page.locator('alg-add-content').getByRole('listitem').filter({
+    return this.page.locator('alg-add-content').getByRole('listitem').filter({
       has: this.page.getByText(search).first()
     });
+  }
+
+  async searchAndSelectAssociatedActivity(search: string): Promise<void> {
+    const foundItemLocator = await this.searchAssociatedActivity(search);
     await expect.soft(foundItemLocator.getByRole('button', { name: 'Select' })).toBeVisible();
     await foundItemLocator.getByRole('button', { name: 'Select' }).click();
   }

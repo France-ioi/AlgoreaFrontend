@@ -24,7 +24,11 @@
 <ng-container *ngFor="let item of data;">
   <div class="container">
     <ul class="result-list alg-search-result">
-      <li class="result-list-item" (mouseleave)="onMouseLeave($event)">
+      <li class="result-list-item"
+          [algShowOverlay]="op"
+          (overlayOpenEvent)="itemId.set(item.id)"
+          (overlayCloseEvent)="itemId.set(undefined)"
+      >
         <a class="result-list-link" [routerLink]="item | itemRoute | url" routerLinkActive="selected">
           <i
             class="result-list-icon ph-duotone"
@@ -33,7 +37,7 @@
             'ph-folders': item.type === 'Chapter'
           }"
           ></i>
-          <span class="result-list-link-caption" (mouseenter)="onMouseEnter($event, item.id, contentRef)" #contentRef>
+          <span class="result-list-link-caption" algShowOverlayHoverTarget>
             <span [innerHTML]="titleHighlight" *ngIf="item.titleHighlight as titleHighlight; else noTitleHighlight"></span>
             <ng-template #noTitleHighlight>{{ item.title }}</ng-template>
           </span>
@@ -51,7 +55,7 @@
   #op
 >
   <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+    <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
   </ng-container>
 </p-overlayPanel>
 

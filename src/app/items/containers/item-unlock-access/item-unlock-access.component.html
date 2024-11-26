@@ -17,7 +17,9 @@
       <li
         class="alg-data-list-item"
         *ngFor="let item of state.data; let i = index"
-        (mouseleave)="onMouseLeave($event)"
+        [algShowOverlay]="op"
+        (overlayOpenEvent)="itemId.set(item.id)"
+        (overlayCloseEvent)="itemId.set(undefined)"
       >
         <div class="list-item-left">
           <span class="activity-progress">
@@ -30,8 +32,7 @@
           <a
             class="alg-link"
             [routerLink]="item | itemRoute | url"
-            (mouseenter)="onMouseEnter($event, item.id, i)"
-            #contentRef
+            algShowOverlayHoverTarget
           >
             {{ item.string.title }}
           </a>
@@ -45,7 +46,7 @@
       #op
     >
       <ng-container *ngIf="op.overlayVisible">
-        <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+        <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
       </ng-container>
     </p-overlayPanel>
   </ng-container>
