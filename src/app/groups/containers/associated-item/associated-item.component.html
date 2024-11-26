@@ -73,8 +73,8 @@
       <div class="item">
         @if (existingItem.name === undefined) {
           <i class="ph-duotone ph-lock"></i>
-          @if (isSkill()) { <span alg-flex-1 i18n>The associated skill which has been configured for this group is not visible to you.</span> }
-          @else { <span alg-flex-1 i18n>The associated activity which has been configured for this group is not visible to you.</span> }
+          @if (isSkill()) { <span i18n>The associated skill which has been configured for this group is not visible to you.</span> }
+          @else { <span i18n>The associated activity which has been configured for this group is not visible to you.</span> }
         }
         @else {
           <a class="alg-link alg-flex-1" [routerLink]="existingItem | itemRoute | url">{{ existingItem.name }}</a>
@@ -91,7 +91,6 @@
         class="dark"
         icon="ph-duotone ph-warning-circle"
         [showRefreshButton]="true"
-        refreshButtonType="refresh"
         (refresh)="refresh()"
       >
         @if (isSkill()) { <ng-container i18n>Error while loading the associated skill</ng-container> }
