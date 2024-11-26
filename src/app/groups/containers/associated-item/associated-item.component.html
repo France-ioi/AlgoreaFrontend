@@ -73,8 +73,8 @@
       <div class="item">
         @if (existingItem.name === undefined) {
           <i class="ph-duotone ph-lock"></i>
-          @if (isSkill()) { <span alg-flex-1 i18n>You are not allowed to view the associated skill which has been configured for this group.</span> }
-          @else { <span alg-flex-1 i18n>You are not allowed to view the associated activity which has been configured for this group.</span> }
+          @if (isSkill()) { <span alg-flex-1 i18n>The associated skill which has been configured for this group is not visible to you.</span> }
+          @else { <span alg-flex-1 i18n>The associated activity which has been configured for this group is not visible to you.</span> }
         }
         @else {
           <a class="alg-link alg-flex-1" [routerLink]="existingItem | itemRoute | url">{{ existingItem.name }}</a>
