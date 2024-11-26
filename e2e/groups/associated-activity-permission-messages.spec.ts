@@ -7,7 +7,7 @@ test('checks can view info message', async ({ page, groupSettingsPage }) => {
   await groupSettingsPage.checksIsAssociatedActivitySectionVisible();
   await groupSettingsPage.checksIsAssociatedActivityVisible('E2E: Associated Item');
   await expect.soft(
-    page.locator('alg-message-info').getByText('The activity is visible to the members of this group')
+    page.locator('alg-message-info').getByText('The activity is visible to all members of this group.')
   ).toBeVisible();
 });
 
