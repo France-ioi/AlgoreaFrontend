@@ -58,7 +58,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectIsUserContentActive,
     selectIdParameter,
     selectPathParameter,
-    (isActive, isUser, id, path) => (isActive ? groupRouteFromParams(id, path, isUser) : null)
+    (isActive, isUser, id, path) => (isActive && id ? groupRouteFromParams(id, path, isUser) : null)
   );
 
   const selectActiveContentRouteError = createSelector(
