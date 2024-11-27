@@ -55,10 +55,10 @@ export class GetItemByIdService {
 
   constructor(private http: HttpClient) {}
 
-  get(id: string, watchedGroupId?: string): Observable<Item> {
+  get(id: string, options?: { watchedGroupId?: string }): Observable<Item> {
     let params = new HttpParams();
-    if (watchedGroupId) {
-      params = params.set('watched_group_id', watchedGroupId);
+    if (options?.watchedGroupId) {
+      params = params.set('watched_group_id', options.watchedGroupId);
     }
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}`, { params }).pipe(
       decodeSnakeCaseZod(itemSchema),

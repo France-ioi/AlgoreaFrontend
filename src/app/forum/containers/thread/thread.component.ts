@@ -137,7 +137,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         if (!threadStatus || !threadStatus?.visible) return of(undefined);
         const { id, open } = threadStatus;
         if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
-        return this.getItemByIdService.get(id.itemId, isCurrentUserParticipant ? undefined : id.participantId).pipe(
+        return this.getItemByIdService.get(id.itemId, isCurrentUserParticipant ? {} : { watchedGroupId: id.participantId }).pipe(
           mapToFetchState(),
           map(state => {
             switch (state.tag) {

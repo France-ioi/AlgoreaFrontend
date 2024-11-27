@@ -37,6 +37,10 @@ export function canCurrentUserGrantGroupAccess<T extends GroupManagership>(g: T)
   return !!g.currentUserCanGrantGroupAccess;
 }
 
+export function canCurrentUserWatchMembers<T extends GroupManagership>(g: T): boolean {
+  return !!g.currentUserCanWatchMembers;
+}
+
 export function canCurrentUserManageMembers<T extends GroupManagership>(g: T): boolean {
   return !!g.currentUserCanManage &&
     [ managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup ].includes(g.currentUserCanManage);

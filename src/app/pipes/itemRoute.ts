@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ItemType, typeCategoryOfItem } from '../items/models/item-type';
+import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
 import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route';
 
 /**
@@ -11,8 +11,8 @@ import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route
   standalone: true
 })
 export class ItemRoutePipe implements PipeTransform {
-  transform(item: { id: string, type: ItemType }, extraAttrs?: Partial<ItemRoute>): RawItemRoute {
-    return itemRoute(typeCategoryOfItem(item), item.id, extraAttrs);
+  transform(item: { id: string } & ({ type: ItemType }|{ contentType: ItemTypeCategory }), extraAttrs?: Partial<ItemRoute>): RawItemRoute {
+    return itemRoute('type' in item ? typeCategoryOfItem(item): item.contentType, item.id, extraAttrs);
   }
 }
 

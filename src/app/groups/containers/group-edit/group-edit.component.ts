@@ -33,6 +33,7 @@ import { GetGroupMembersService } from '../../data-access/get-group-members.serv
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
+import { LetDirective } from '@ngrx/component';
 
 @Component({
   selector: 'alg-group-edit',
@@ -58,6 +59,7 @@ import { fromGroupContent } from '../../store';
     InputDateComponent,
     DialogModule,
     ButtonModule,
+    LetDirective,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {

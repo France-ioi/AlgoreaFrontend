@@ -34,7 +34,7 @@ export const itemFetchingEffect = createEffect(
       combineLatest({ id: of(id), observedGroupId: store$.select(fromObservation.selectObservedGroupId) }) : EMPTY
     )),
     distinctUntilChanged((prev, cur) => prev.id === cur.id && prev.observedGroupId === cur.observedGroupId),
-    switchMap(({ id, observedGroupId }) => getItemByIdService.get(id, observedGroupId ?? undefined).pipe(
+    switchMap(({ id, observedGroupId }) => getItemByIdService.get(id, observedGroupId ? { watchedGroupId: observedGroupId } : {}).pipe(
       mapToFetchState({
         resetter: refreshTriggers(actions$, userSessionService$),
         identifier: { id, observedGroupId }

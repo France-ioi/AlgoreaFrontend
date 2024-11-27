@@ -76,24 +76,6 @@ test('checks select in suggestion of activities', async ({ page }) => {
   await expect.soft(page.getByText('Il n\'y a pas activité liée à ce(t) groupe.')).toBeVisible();
 });
 
-test('checks select in associated item', async ({ page }) => {
-  await initAsUsualUser(page);
-  await page.goto('groups/by-id/3535308828390188167;p=/settings');
-
-  await test.step('checks base captions', async () => {
-    await expect.soft(page.getByText('Activité associée')).toBeVisible();
-    await expect.soft(page.getByText('Il n\'y a actuellement pas de activités associée à ce groupe')).toBeVisible();
-    await expect.soft(page.getByText('Compétence associée')).toBeVisible();
-    await expect.soft(page.getByText('Il n\'y a actuellement pas de compétences associée à ce groupe.')).toBeVisible();
-  });
-
-  await test.step('checks error caption', async () => {
-    await page.route(`${apiUrl}/items/6707691810849260111`, route => route.abort());
-    await page.goto('groups/by-id/672913018859223173;p=52767158366271444/settings');
-    await expect.soft(page.getByText('Erreur de chargement de la activité racine')).toBeVisible();
-  });
-});
-
 test('checks select in member list', async ({ page, groupMembersPage }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/4035378957038759250;p=/members');
@@ -120,4 +102,3 @@ test('checks select for no content in left menu', async ({ page }) => {
   await page.goto('/groups/manage');
   await expect.soft(page.getByText('Vous n\'êtes membre ou gestionnaire d\'aucun groupe')).toBeVisible();
 });
-

@@ -62,8 +62,17 @@
         </div>
       </div>
 
-      <alg-associated-item formControlName="rootActivity" contentType="activity"></alg-associated-item>
-      <alg-associated-item formControlName="rootSkill" contentType="skill"></alg-associated-item>
+      <alg-associated-item
+        [group]="state.data"
+        formControlName="rootActivity"
+        contentType="activity"
+      ></alg-associated-item>
+      <alg-associated-item
+        [group]="state.data"
+        formControlName="rootSkill"
+        contentType="skill"
+      ></alg-associated-item>
+
       <alg-group-remove-button
         class="remove-button-section"
         [group]="state.data"

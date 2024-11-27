@@ -1,20 +1,17 @@
-import { Component, forwardRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, computed, forwardRef, input, OnDestroy, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { itemRoute, urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
-import {
-  AddedContent, NewContentType,
-} from 'src/app/ui-components/add-content/add-content.component';
-import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
+import { isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
 import {
   NoAssociatedItem,
   NewAssociatedItem,
   ExistingAssociatedItem,
   isExistingAssociatedItem,
-  isNewAssociatedItem,
+  noAssociatedItem,
 } from './associated-item-types';
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { mapToFetchState } from 'src/app/utils/operators/state';
@@ -23,9 +20,16 @@ import { RouterLink } from '@angular/router';
 import { AddContentComponent } from 'src/app/ui-components/add-content/add-content.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
+import { AllowsGrantingViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
+import { Group } from '../../data-access/get-group-by-id.service';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
+import { canCurrentUserGrantGroupAccess, canCurrentUserWatchMembers } from '../../models/group-management';
 
 @Component({
   selector: 'alg-associated-item',
@@ -47,95 +51,75 @@ import { MessageInfoComponent } from 'src/app/ui-components/message-info/message
     NgSwitchCase,
     AddContentComponent,
     RouterLink,
-    NgClass,
-    AsyncPipe,
     ButtonModule,
     NgTemplateOutlet,
     MessageInfoComponent,
+    AllowsViewingItemInfoPipe,
+    AllowsGrantingViewItemPipe,
+    ItemRoutePipe,
+    RouteUrlPipe,
   ],
 })
-export class AssociatedItemComponent implements ControlValueAccessor, OnChanges, OnDestroy {
-  @Input() contentType: ItemTypeCategory = 'activity';
+export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
 
-  allowedNewItemTypes: NewContentType<ItemType>[] = [];
+  group = input.required<Group>();
+  contentType = input.required<ItemTypeCategory>();
+  /**
+   * Whether this component is for the associated skill (or associated activity)
+   */
+  isSkill = computed(() => isSkill(this.contentType()));
 
-  private readonly itemChanges$ = new ReplaySubject<{
-    item: NoAssociatedItem|NewAssociatedItem|(ExistingAssociatedItem&{ name?: string }),
-    triggerChange: boolean,
-  }>();
+  /**
+   * The list of allowed item types with icons etc for the new content case
+   */
+  allowedNewItemTypes = computed(() => getAllowedNewItemTypes({ allowActivities: !this.isSkill(), allowSkills: this.isSkill() }));
+
+  associatedItem = signal<NoAssociatedItem|NewAssociatedItem|(ExistingAssociatedItem&{ name?: string })>(noAssociatedItem);
 
   private refresh$ = new Subject<void>();
-  readonly state$ = this.itemChanges$.pipe(
-    distinctUntilChanged(),
-    switchMap(data => {
-      if (data.triggerChange) this.onChange(data.item);
 
-      if (!isExistingAssociatedItem(data.item)) {
-        return of({
-          tag: data.item.tag, id: undefined, path: null,
-          name: isNewAssociatedItem(data.item) ? data.item.name : undefined
-        });
+  private existingItemState$ = toObservable(this.associatedItem).pipe(
+    filter((item): item is ExistingAssociatedItem & { name?: string } => isExistingAssociatedItem(item)),
+    switchMap(item => {
+      const id = item.id;
+      // note: a user without the "watch" perm but with the "grant" one should, in theory, be allowed to see perms... but in practice, the
+      // service does not allow using "watchedGroupId" param without the watch perm. Anyway, the user could not modify the perm in such a
+      // case. That's an issue that should be fixed but that requires several service change.
+      const canGetGroupPerms = canCurrentUserGrantGroupAccess(this.group()) && canCurrentUserWatchMembers(this.group());
+      // the only scenario where it is not needed to fetching the item info
+      if (!canGetGroupPerms && item.name) {
+        return of({ id, name: item.name, groupPerms: undefined, permissions: undefined, contentType: this.contentType() });
       }
-
-      const id = data.item.id;
-      const name = data.item.name !== undefined ? of(data.item.name) :
-        this.getItemByIdService.get(id).pipe(map(item => item.string.title));
-
-      return name.pipe(
-        map(name => ({
-          tag: 'existing-item',
-          id,
-          name,
-          path: urlArrayForItemRoute(itemRoute(this.contentType, id))
-        })),
+      return this.getItemByIdService.get(item.id, canGetGroupPerms ? { watchedGroupId: this.group().id } : {}).pipe(
+        map(fullItem => ({ name: fullItem.string.title, groupPerms: fullItem.watchedGroup?.permissions, ...fullItem })),
         catchError(err => {
-          if (errorIsHTTPForbidden(err)) return of({
-            tag: 'existing-item',
-            name: $localize`You don't have access to this ` + (this.contentType === 'activity'
-              ? $localize`activity` : $localize`skill`) + '.',
-            path: null,
-          });
-          else if (errorIsHTTPNotFound(err)) return of({
-            tag: 'existing-item',
-            name: $localize`The configured ` + (this.contentType === 'activity'
-              ? $localize`activity` : $localize`skill`) + $localize` is currently not visible to you.`,
-            path: null,
-          });
+          if (errorIsHTTPForbidden(err) || errorIsHTTPNotFound(err)) {
+            return of({ id, name: undefined, groupPerms: undefined, permissions: undefined });
+          }
           throw err;
         })
       );
     }),
     mapToFetchState({ resetter: this.refresh$ }),
   );
+  existingItemState = toSignal(this.existingItemState$, { requireSync: true });
 
   private onChange: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void = () => {};
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, this.contentType === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
+    this.searchItemService.search(value, this.contentType() === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
 
   constructor(
     private getItemByIdService: GetItemByIdService,
     private searchItemService: SearchItemService,
   ) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contentType && !changes.contentType.firstChange && changes.contentType.currentValue
-      !== changes.contentType.previousValue) {
-      throw new Error('Unexpected: Not allow to change content type');
-    }
-    this.allowedNewItemTypes = getAllowedNewItemTypes({
-      allowActivities: this.contentType === 'activity',
-      allowSkills: this.contentType === 'skill',
-    });
-  }
-
   ngOnDestroy(): void {
     this.refresh$.complete();
-    this.itemChanges$.complete();
   }
 
-  writeValue(rootItem: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem): void {
-    this.itemChanges$.next({ item: rootItem, triggerChange: false });
+  writeValue(associatedItem: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem): void {
+    this.associatedItem.set(associatedItem);
   }
 
   registerOnChange(fn: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void): void {
@@ -146,17 +130,16 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnChanges,
   }
 
   onRemove(): void {
-    this.itemChanges$.next({
-      item: { tag: 'no-item' }, triggerChange: true });
+    this.associatedItem.set(noAssociatedItem);
+    this.onChange(noAssociatedItem);
   }
 
-  setRootItem(item: AddedContent<ItemType>): void {
-    this.itemChanges$.next({
-      item: item.id !== undefined ?
-        { tag: 'existing-item', id: item.id, name: item.title } :
-        { tag: 'new-item', name: item.title, url: item.url, itemType: item.type },
-      triggerChange: true
-    });
+  setAssociatedItem(item: AddedContent<ItemType>): void {
+    const newValue = item.id !== undefined ?
+      { tag: 'existing-item', id: item.id, name: item.title } :
+      { tag: 'new-item', name: item.title, url: item.url, itemType: item.type };
+    this.associatedItem.set(newValue);
+    this.onChange(newValue);
   }
 
   refresh(): void {
