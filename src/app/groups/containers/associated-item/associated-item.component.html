@@ -34,10 +34,10 @@
       @if (existingItem.name === undefined) { <!-- the current user cannot view the item title-->
         <!-- the current user cannot view the item title: just don't display anything is this case -->
       }
-      @else if (!(group()|canCurrentUserViewGroupPermissions)) {
+      @else if (!group().currentUserCanGrantGroupAccess || !group().currentUserCanWatchMembers) { <!-- see remark in the TS file -->
         <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
-          @if (isSkill()) { <p i18n>You cannot view the permissions given to this group, so we cannot determine if it has access to this skill.</p> }
-          @else { <p i18n>You cannot view the permissions given to this group, so we cannot determine if it has access to this activity.</p> }
+          @if (isSkill()) { <p i18n>This skill may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.</p> }
+          @else { <p i18n>This activity may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.</p> }
         </alg-message-info>
       }
       @else if (existingItem.groupPerms === undefined) {
@@ -50,12 +50,6 @@
         <alg-message-info class="message-info success height-auto" icon="ph-duotone ph-check-circle">
           @if (isSkill()) { <p i18n>The skill is visible to all members of this group. They will see it in the left menu, in the "Skills" tab.</p> }
           @else { <p i18n>The activity is visible to all members of this group. They will see it in the left menu, in the "Content" tab.</p> }
-        </alg-message-info>
-      }
-      @else if (!group().currentUserCanGrantGroupAccess) { <!-- group cannot view the item -->
-        <alg-message-info class="message-info height-auto" icon="ph-duotone ph-info">
-          @if (isSkill()) { <p i18n>This skill may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.</p> }
-          @else { <p i18n>This activity may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.</p> }
         </alg-message-info>
       }
       @else if (!(existingItem.permissions | allowsGrantingView)) { <!-- group cannot view the item -->

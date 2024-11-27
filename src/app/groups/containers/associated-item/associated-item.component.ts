@@ -27,9 +27,9 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
 import { AllowsGrantingViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { Group } from '../../data-access/get-group-by-id.service';
-import { canCurrentUserViewGroupPermissions, CanCurrentUserViewGroupPermissionsPipe } from '../../models/group-management';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
+import { canCurrentUserGrantGroupAccess, canCurrentUserWatchMembers } from '../../models/group-management';
 
 @Component({
   selector: 'alg-associated-item',
@@ -56,7 +56,6 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
     MessageInfoComponent,
     AllowsViewingItemInfoPipe,
     AllowsGrantingViewItemPipe,
-    CanCurrentUserViewGroupPermissionsPipe,
     ItemRoutePipe,
     RouteUrlPipe,
   ],
@@ -83,12 +82,15 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
     filter((item): item is ExistingAssociatedItem & { name?: string } => isExistingAssociatedItem(item)),
     switchMap(item => {
       const id = item.id;
-      const canViewGroupPerms = canCurrentUserViewGroupPermissions(this.group());
+      // note: a user without the "watch" perm but with the "grant" one should, in theory, be allowed to see perms... but in practice, the
+      // service does not allow using "watchedGroupId" param without the watch perm. Anyway, the user could not modify the perm in such a
+      // case. That's an issue that should be fixed but that requires several service change.
+      const canGetGroupPerms = canCurrentUserGrantGroupAccess(this.group()) && canCurrentUserWatchMembers(this.group());
       // the only scenario where it is not needed to fetching the item info
-      if (!canViewGroupPerms && item.name) {
+      if (!canGetGroupPerms && item.name) {
         return of({ id, name: item.name, groupPerms: undefined, permissions: undefined, contentType: this.contentType() });
       }
-      return this.getItemByIdService.get(item.id, canViewGroupPerms ? { watchedGroupId: this.group().id } : {}).pipe(
+      return this.getItemByIdService.get(item.id, canGetGroupPerms ? { watchedGroupId: this.group().id } : {}).pipe(
         map(fullItem => ({ name: fullItem.string.title, groupPerms: fullItem.watchedGroup?.permissions, ...fullItem })),
         catchError(err => {
           if (errorIsHTTPForbidden(err) || errorIsHTTPNotFound(err)) {
