@@ -39,22 +39,22 @@ test('checks with current user can\'t grant and group can\'t view message', asyn
   await expect.soft(page.locator('alg-message-info').getByText('This activity may not be visible to the members of this group. You are not allowed to grant access to this content, ask someone who has the permission to grant access to this content or make sure all your users can view the activity by other means (e.g. if it is public).')).toBeVisible();
 });
 
-test('checks current user cannot grant permission to the group', async ({ page, groupSettingsPage }) => {
+test('checks can\'t determinate access message', async ({ page, groupSettingsPage }) => {
   await initAsTesterUser(page);
   await groupSettingsPage.goto('/groups/by-id/3434783988769832015;p=7002637463896228384/settings?watchedGroupId=3434783988769832015');
   await groupSettingsPage.checksIsAssociatedActivitySectionVisible();
   await groupSettingsPage.checksIsAssociatedActivityVisible('E2E: Associated Item no perm');
   await expect.soft(
-    page.locator('alg-message-info').getByText('You cannot view the permissions given to this group, so we cannot determine if it has access to this activity.')
+    page.locator('alg-message-info').getByText('You cannot view the permissions given to this activity, so we cannot determine if the group has access to it.')
   ).toBeVisible();
 });
 
-test('checks current user either cannot watch or grant perm to the item', async ({ page, groupSettingsPage }) => {
+test('checks current user either cannot watch or grant perm to the item message', async ({ page, groupSettingsPage }) => {
   await initAsTesterUser(page);
   await groupSettingsPage.goto('/groups/by-id/4113242269106225458;p=7002637463896228384/settings?watchedGroupId=4113242269106225458');
   await groupSettingsPage.checksIsAssociatedActivitySectionVisible();
   await groupSettingsPage.checksIsAssociatedActivityVisible('E2E: Associated Item no perm');
   await expect.soft(
-    page.locator('alg-message-info').getByText('You cannot view the permissions given to this activity, so we cannot determine if the group has access to it.')
+    page.locator('alg-message-info').getByText('This activity may not be visible to the members of this group. You are not allowed to give access to this group, ask another manager to do so.')
   ).toBeVisible();
 });
