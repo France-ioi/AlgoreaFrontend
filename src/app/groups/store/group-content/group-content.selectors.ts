@@ -1,5 +1,5 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
-import { GroupRoute, RawGroupRoute, contentTypeOfPath, isGroupRoute, isUser } from 'src/app/models/routing/group-route';
+import { GroupRoute, RawGroupRoute, isGroupRoute, isUser, parseRouterPath } from 'src/app/models/routing/group-route';
 import { GroupRouteError, groupRouteFromParams, isGroupRouteError } from '../../utils/group-route-validation';
 import { ObservationInfo } from 'src/app/store/observation';
 import { fromRouter } from 'src/app/store/router';
@@ -8,6 +8,7 @@ import { fetchingState } from 'src/app/utils/state';
 import { formatUser } from 'src/app/groups/models/user';
 import { RootState } from 'src/app/utils/store/root_state';
 import { selectIdParameter, selectPathParameter } from 'src/app/models/routing/content-route-selectors';
+import { groupGroupTypeCategory, userGroupTypeCategory } from '../../models/group-types';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsGroupContentActive: MemoizedSelector<T, boolean>,
@@ -43,14 +44,25 @@ interface UserContentSelectors<T extends RootState> {
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
 
-  const selectIsGroupContentActive = createSelector(
+  const selectRouterPathParsingResult = createSelector(
     fromRouter.selectPath,
-    path => !!path && !!contentTypeOfPath(path)
+    path => (path ? parseRouterPath(path) : null)
   );
 
   const selectIsUserContentActive = createSelector(
-    fromRouter.selectPath,
-    path => !!path && contentTypeOfPath(path) === 'user'
+    selectRouterPathParsingResult,
+    pathParsingResult => pathParsingResult === userGroupTypeCategory
+  );
+
+  const selectIsNonUserGroupContentActive = createSelector(
+    selectRouterPathParsingResult,
+    pathParsingResult => pathParsingResult === groupGroupTypeCategory
+  );
+
+  const selectIsGroupContentActive = createSelector(
+    selectIsUserContentActive,
+    selectIsNonUserGroupContentActive,
+    (isUser, isNonUserGroup) => isUser || isNonUserGroup
   );
 
   const selectActiveContentRouteParsingResult = createSelector(
@@ -58,7 +70,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectIsUserContentActive,
     selectIdParameter,
     selectPathParameter,
-    (isActive, isUser, id, path) => (isActive ? groupRouteFromParams(id, path, isUser) : null)
+    (isGroupContent, isUser, id, path) => (isGroupContent ? groupRouteFromParams(id, path, isUser) : null)
   );
 
   const selectActiveContentRouteError = createSelector(

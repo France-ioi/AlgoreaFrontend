@@ -3,7 +3,15 @@ import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
 import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
 import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
-import { GroupTypeCategory } from '../../groups/models/group-types';
+import { groupGroupTypeCategory, GroupTypeCategory, userGroupTypeCategory } from '../../groups/models/group-types';
+
+export const myGroupsPage = 'mine';
+export const managedGroupsPage = 'manage';
+export type GroupPage = typeof myGroupsPage | typeof managedGroupsPage;
+
+export const groupPathRouterPrefix = 'groups';
+export const userPathRouterSubPrefix = 'users';
+export const groupPathRouterSubPrefix = 'by-id';
 
 export interface GroupRoute extends ContentRoute {
   contentType: GroupTypeCategory,
@@ -24,12 +32,17 @@ export function isUser(group: GroupLike): boolean {
 }
 
 function contentType(group: GroupLike): GroupTypeCategory {
-  return isUser(group) ? 'user' : 'group';
+  return isUser(group) ? userGroupTypeCategory : groupGroupTypeCategory;
 }
 
-export function contentTypeOfPath(path: string[]): GroupTypeCategory | undefined {
-  if (path[0] !== 'groups') return undefined;
-  return path[1] === 'users' ? 'user' : 'group';
+export function parseRouterPath(path: string[]): GroupTypeCategory | GroupPage | null {
+  if (path[0] !== groupPathRouterPrefix) return null;
+  const subPrefix = path[1];
+  if (subPrefix === userPathRouterSubPrefix) return userGroupTypeCategory;
+  if (subPrefix === groupPathRouterSubPrefix) return groupGroupTypeCategory;
+  if (subPrefix === myGroupsPage) return myGroupsPage;
+  if (subPrefix === managedGroupsPage) return managedGroupsPage;
+  return null; // means the path is "/groups/something-unrecognized"
 }
 
 export function rawGroupRoute(group: GroupLike): RawGroupRoute {
@@ -42,25 +55,27 @@ export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
 }
 
 export function isGroupRoute(route: ContentRoute | RawGroupRoute): route is GroupRoute {
-  return (route.contentType === 'group' || route.contentType === 'user') && route.path !== undefined;
+  return (route.contentType === groupGroupTypeCategory || route.contentType === userGroupTypeCategory) && route.path !== undefined;
 }
 
 export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {
   if (typeof route !== 'object') return false;
   const contentType = (route as Record<string, unknown> | null)?.contentType;
-  return contentType === 'group' || contentType === 'user';
+  return contentType === groupGroupTypeCategory || contentType === userGroupTypeCategory;
 }
 
 /**
  * Return a url array (`commands` array) to the given group, on the given page.
  */
-export function urlArrayForGroupRoute(
-  route: RawGroupRoute,
-  page?: string[],
-): UrlCommand {
-  const path = route.path ? pathAsParameter(route.path) : {};
-  const actualPage = page && ((isUser(route) && isUserPage(page)) || (!isUser(route) && isGroupPage(page))) ? page : [];
-  return [ '/', 'groups', isUser(route) ? 'users' : 'by-id', route.id, path, ...actualPage ];
+export function urlArrayForGroupRoute(route: RawGroupRoute|GroupPage, page?: string[]): UrlCommand {
+  if (route === myGroupsPage || route === managedGroupsPage) {
+    return [ '/', groupPathRouterPrefix, route ];
+  } else {
+    const path = route.path ? pathAsParameter(route.path) : {};
+    const actualPage = page && ((isUser(route) && isUserPage(page)) || (!isUser(route) && isGroupPage(page))) ? page : [];
+    const subPrefix = isUser(route) ? userPathRouterSubPrefix : groupPathRouterSubPrefix;
+    return [ '/', groupPathRouterPrefix, subPrefix, route.id, path, ...actualPage ];
+  }
 }
 
 function isUserPage(page: string[]): boolean {
