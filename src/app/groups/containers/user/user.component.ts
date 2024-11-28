@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
-import { contentInfo } from 'src/app/models/content/content-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { formatUser } from 'src/app/groups/models/user';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
@@ -19,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { UserInfoComponent } from 'src/app/groups/containers/user-info/user-info.component';
+import { userInfo } from 'src/app/models/content/group-info';
 
 const breadcrumbHeader = $localize`Users`;
 
@@ -74,7 +74,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.store.select(fromGroupContent.selectActiveContentBreadcrumbs),
     ])
       .pipe(
-        map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => contentInfo({
+        map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => userInfo({
           title: state.isReady ? formatUser(state.data) : undefined,
           breadcrumbs: {
             category: breadcrumbHeader,

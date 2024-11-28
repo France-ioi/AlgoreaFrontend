@@ -1,7 +1,7 @@
-import { createFeatureAlt } from 'src/app/utils/store/feature_creator';
 import { reducer } from './selected-content.reducer';
+import { createFeature } from '@ngrx/store';
 
-export const fromSelectedContent = createFeatureAlt({
+export const fromSelectedContent = createFeature({
   name: 'selectedContent',
   reducer,
 });

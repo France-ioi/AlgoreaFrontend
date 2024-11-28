@@ -1,20 +1,28 @@
 import { createReducer, on } from '@ngrx/store';
 import { changedContentActions } from './selected-content.actions';
 import { initialState, State } from './selected-content.state';
-import { isItemRoute } from 'src/app/models/routing/item-route';
 import { isSkill } from 'src/app/items/models/item-type';
 
 export const reducer = createReducer(
   initialState,
 
   on(
-    changedContentActions.changeContent,
+    changedContentActions.changeItemRoute,
     (state, { route }): State => ({
       ...state,
-      activity: route && isItemRoute(route) && !isSkill(route.contentType) ? route : state.activity,
-      skill: route && isItemRoute(route) && isSkill(route.contentType) ? route : state.skill
+      activity: !isSkill(route.contentType) ? route : state.activity,
+      skill: isSkill(route.contentType) ? route : state.skill,
+
     })
   ),
+
+  on(
+    changedContentActions.changeGroupRouteOrPage,
+    (state, { routeOrPage }): State => ({
+      ...state,
+      group: routeOrPage
+    })
+  )
 
 
 );

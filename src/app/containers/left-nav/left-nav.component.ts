@@ -1,10 +1,10 @@
 
 import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { merge, of, ReplaySubject, Subject } from 'rxjs';
+import { of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from '../../utils/null-undefined-predicates';
 import { ContentInfo } from 'src/app/models/content/content-info';
-import { isGroupInfo, isMyGroupsInfo } from 'src/app/models/content/group-info';
+import { isGroupInfo, isMyGroupsInfo, isUserInfo } from 'src/app/models/content/group-info';
 import { isActivityInfo, isItemInfo } from 'src/app/models/content/item-info';
 import { CurrentContentService } from '../../services/current-content.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
@@ -28,6 +28,9 @@ import { LocaleService } from '../../services/localeService';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { NavTreeData } from 'src/app/models/left-nav-loading/nav-tree-data';
+import { ItemRouter } from 'src/app/models/routing/item-router';
+import { GroupRouter } from 'src/app/models/routing/group-router';
+import { fromSelectedContent } from 'src/app/store/navigation/selected-content';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -72,15 +75,10 @@ export class LeftNavComponent implements OnChanges {
 
   searchService = appConfig.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
 
-  private manualTabChange = new Subject<number>();
-  activeTab$ = merge(
-    this.manualTabChange,
-    this.currentContent.content$.pipe(
-      distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
-      map(content => contentToTabIndex(content)),
-      filter(isDefined),
-    )
-  ).pipe(
+  activeTab$ = this.currentContent.content$.pipe(
+    distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
+    map(content => contentToTabIndex(content)),
+    filter(isDefined),
     startWith(0),
     distinctUntilChanged(),
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
@@ -106,6 +104,10 @@ export class LeftNavComponent implements OnChanges {
 
   currentLanguage = this.localeService.currentLang?.tag;
 
+  private selectedActivityRoute = this.store.selectSignal(fromSelectedContent.selectActivity);
+  private selectedSkillRoute = this.store.selectSignal(fromSelectedContent.selectSkill);
+  private selectedGroupRoute = this.store.selectSignal(fromSelectedContent.selectGroup);
+
   constructor(
     private store: Store,
     private currentContent: CurrentContentService,
@@ -115,6 +117,8 @@ export class LeftNavComponent implements OnChanges {
     private injector : Injector,
     private layoutService: LayoutService,
     private localeService: LocaleService,
+    private itemRouter: ItemRouter,
+    private groupRouter: GroupRouter,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -122,7 +126,9 @@ export class LeftNavComponent implements OnChanges {
   }
 
   onSelectionChangedByIdx(e: number): void {
-    this.manualTabChange.next(e);
+    if (e === activitiesTabIdx) this.itemRouter.navigateTo(this.selectedActivityRoute());
+    if (e === skillsTabIdx) this.itemRouter.navigateTo(this.selectedSkillRoute()!); // cannot be undefined if tab is shown
+    if (e === groupsTabIdx) this.groupRouter.navigateTo(this.selectedGroupRoute());
   }
 
   retryError(tabIndex: number): void {
@@ -137,7 +143,7 @@ export class LeftNavComponent implements OnChanges {
 
 function contentToTabIndex(content: ContentInfo|null): number|undefined {
   if (content === null) return undefined;
-  if (isGroupInfo(content) || isMyGroupsInfo(content)) return groupsTabIdx;
+  if (isGroupInfo(content) || isMyGroupsInfo(content) || isUserInfo(content)) return groupsTabIdx;
   if (isItemInfo(content)) {
     return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
   }
