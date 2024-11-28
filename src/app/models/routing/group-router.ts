@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { UrlCommand } from '../../utils/url';
-import { RawGroupRoute, urlArrayForGroupRoute } from './group-route';
+import { GroupPage, groupPathRouterPrefix, groupPathRouterSubPrefix, RawGroupRoute, urlArrayForGroupRoute } from './group-route';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class GroupRouter {
    * Navigate to given group, on the path page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to '/'.
    */
-  navigateTo(route: RawGroupRoute, options?: { page?: string[], navExtras?: NavigationExtras }): void {
+  navigateTo(route: RawGroupRoute|GroupPage, options?: { page?: string[], navExtras?: NavigationExtras }): void {
     void this.router.navigateByUrl(this.url(route, options?.page), options?.navExtras);
   }
 
@@ -34,7 +34,7 @@ export class GroupRouter {
    * Return a url to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to '/'.
    */
-  url(route: RawGroupRoute, page?: string[]): UrlTree {
+  url(route: RawGroupRoute|GroupPage, page?: string[]): UrlTree {
     return this.router.createUrlTree(this.urlArray(route, page));
   }
 
@@ -42,7 +42,7 @@ export class GroupRouter {
    * Return a url array (`commands` array) to the given group, on the `path` page.
    * If page is not given and we are currently on a group page, use the same page. Otherwise, default to '/'.
    */
-  urlArray(route: RawGroupRoute, page?: string[]): UrlCommand {
+  urlArray(route: RawGroupRoute|GroupPage, page?: string[]): UrlCommand {
     return urlArrayForGroupRoute(route, page ?? this.currentGroupPage());
   }
 
@@ -61,7 +61,11 @@ export class GroupRouter {
     const { primary } = this.router.parseUrl(this.router.url).root.children;
     if (!primary) return undefined;
     const { segments } = primary;
-    if (segments.length < 3 || segments[0]?.path !== 'groups' || segments[1]?.path !== 'by-id') return undefined;
+    if (
+      segments.length < 3 ||
+      segments[0]?.path !== groupPathRouterPrefix ||
+      segments[1]?.path !== groupPathRouterSubPrefix
+    ) return undefined;
     return segments.map(segment => segment.path);
   }
 
