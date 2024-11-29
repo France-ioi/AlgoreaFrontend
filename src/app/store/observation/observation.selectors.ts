@@ -29,9 +29,14 @@ interface ObservationSelectors<T extends RootState> {
    */
   selectObservationError: MemoizedSelector<T, { isForbidden: boolean } | false>,
   /**
-   * If starting observation on the active content is allowed (and not already enabled), the observation info. Otherwise null.
+   * Whether the active content is being observed
    */
-  selectStartObservingActiveContentGroupInfo: MemoizedSelector<T, ObservationInfo | null>,
+  selectActiveContentIsBeingObserved: MemoizedSelector<T, boolean>,
+  /**
+   * If starting observation on the active content is allowed (and not already enabled), the observation info.
+   * Null if there is no group active content. False if it cannot be watched.
+   */
+  selectStartObservingActiveContentGroupInfo: MemoizedSelector<T, ObservationInfo | null | false>,
 }
 
 export function selectors<T extends RootState>(selectObservationState: Selector<T, State>): ObservationSelectors<T> {
@@ -84,6 +89,7 @@ export function selectors<T extends RootState>(selectObservationState: Selector<
     selectObservedGroupInfo,
     selectIsObserving,
     selectObservationError,
+    selectActiveContentIsBeingObserved,
     selectStartObservingActiveContentGroupInfo,
   };
 }

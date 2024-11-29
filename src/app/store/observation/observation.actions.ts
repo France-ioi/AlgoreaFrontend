@@ -37,6 +37,14 @@ export const routerActions = createActionGroup({
   },
 });
 
+export const groupPageActions = createActionGroup({
+  source: 'Group/user page',
+  events: {
+    hasLoadedAnNonObservableContent: emptyProps(),
+    hasLoadedAnObservableContent: props<ObservationInfo>(),
+  },
+});
+
 export interface FetchedObservedGroupInfo { name: string, currentUserCanGrantAccess: boolean }
 
 export const groupInfoFetchedActions = createActionGroup({

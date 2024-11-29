@@ -6,6 +6,7 @@ import {
   routerActions,
   topBarActions,
   observationBarActions,
+  groupPageActions,
 } from './observation.actions';
 import { State, initialState } from './observation.state';
 
@@ -16,11 +17,13 @@ export const reducer = createReducer(
     routerActions.disableObservation,
     errorModalActions.disableObservation,
     observationBarActions.disableObservation,
+    groupPageActions.hasLoadedAnNonObservableContent,
     (state): State => ({ ...state, group: null })
   ),
 
   on(
     topBarActions.enableObservation,
+    groupPageActions.hasLoadedAnObservableContent,
     (state, { route, name, currentUserCanGrantAccess }): State => ({
       ...state,
       group: { route, info: readyState({ name, currentUserCanGrantAccess }) }
