@@ -157,7 +157,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRoute,
     ({ isReady, data }, route) => (
       route && isReady ? (
-        data.currentUserCanWatchUser ?
+        data.currentUserCanWatchUser && !data.isCurrentUser ?
           { route, name: formatUser(data), currentUserCanGrantAccess: !!data.currentUserCanGrantUserAccess } : false
       ) : null)
   );
