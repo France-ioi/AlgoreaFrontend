@@ -1,11 +1,10 @@
-import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, signal, ViewChild } from '@angular/core';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
-import { BehaviorSubject, debounceTime, merge, ReplaySubject, Subject, switchMap } from 'rxjs';
+import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
-import { distinctUntilChanged, filter, map, share, shareReplay } from 'rxjs/operators';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { map, share } from 'rxjs/operators';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ItemData } from '../../models/item-data';
-import { canCloseOverlay } from 'src/app/utils/overlay';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType } from 'src/app/items/models/item-type';
 import { AddItemPrerequisiteService } from '../../data-access/add-item-prerequisite.service';
@@ -22,6 +21,8 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
+import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -41,13 +42,14 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     AsyncPipe,
     ItemRoutePipe,
     RouteUrlPipe,
+    ShowOverlayDirective,
+    ShowOverlayHoverTargetDirective,
   ],
 })
 export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
 
   @ViewChild('addDependencyComponent') addDependencyComponent?: AddDependencyComponent;
-  @ViewChild('op') op?: OverlayPanel;
 
   private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
@@ -65,17 +67,9 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     share(),
   );
   addedIds$ = this.state$.pipe(readyData(), map(data => data.map(dependency => dependency.id)));
-  private readonly showOverlaySubject$ = new BehaviorSubject<{ event: Event, itemId: string, target: HTMLElement }|undefined>(undefined);
-  showOverlay$ = merge(
-    this.showOverlaySubject$.pipe(debounceTime(750)),
-    this.showOverlaySubject$.pipe(filter(value => !value)), // this allows to close the overlay immediately and not after debounce delay
-  ).pipe(distinctUntilChanged(), shareReplay(1));
-
-  private readonly showOverlaySubscription = this.showOverlay$.subscribe(data => {
-    data ? this.op?.toggle(data.event, data.target) : this.op?.hide();
-  });
 
   changeInProgress = false;
+  itemId = signal<string | undefined>(undefined);
 
   constructor(
     private getItemPrerequisitesService: GetItemPrerequisitesService,
@@ -94,23 +88,7 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.itemId$.complete();
-    this.showOverlaySubject$.complete();
     this.refresh$.complete();
-    this.showOverlaySubscription.unsubscribe();
-  }
-
-  onMouseEnter(event: Event, itemId: string, targetElement: HTMLAnchorElement): void {
-    this.showOverlaySubject$.next({ event, itemId, target: targetElement });
-  }
-
-  onMouseLeave(event: MouseEvent): void {
-    if (canCloseOverlay(event)) {
-      this.closeOverlay();
-    }
-  }
-
-  closeOverlay(): void {
-    this.showOverlaySubject$.next(undefined);
   }
 
   refresh(): void {

@@ -4,11 +4,13 @@ import { test as groupFixtures } from '../groups/create-group-fixture';
 import { test as itemFixtures } from '../items/create-item-fixture';
 import { mergeTests } from '@playwright/test';
 import { Header } from 'e2e/common/pages/header';
+import { ShowOverflow } from 'e2e/common/pages/show-overflow';
 
 interface CommonFixtures {
   lostChangesConfirmationModal: LostChangesConfirmationModal,
   toast: Toast,
   header: Header,
+  showOverflow: ShowOverflow,
 }
 
 export const test = mergeTests(groupFixtures, itemFixtures).extend<CommonFixtures>({
@@ -20,6 +22,9 @@ export const test = mergeTests(groupFixtures, itemFixtures).extend<CommonFixture
   },
   header: async ({ page }, use) => {
     await use(new Header(page));
+  },
+  showOverflow: async ({ page }, use) => {
+    await use(new ShowOverflow(page));
   },
 });
 

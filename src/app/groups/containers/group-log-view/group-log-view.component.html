@@ -71,13 +71,16 @@
               </div>
             </div>
           </td>
-          <td (mouseleave)="onMouseLeave($event)">
+          <td
+            [algShowOverlay]="op"
+            (overlayOpenEvent)="itemId.set(rowData.item.id)"
+            (overlayCloseEvent)="itemId.set(undefined)"
+          >
             <a
               class="alg-link"
               [ngClass]="{'disabled': !rowData.item}"
               [routerLink]="rowData.item | itemRoute | url"
-              (mouseenter)="onMouseEnter($event, rowData.item.id, index)"
-              #contentRef
+              algShowOverlayHoverTarget
             >
               {{ rowData.item.string.title }}
             </a>
@@ -120,10 +123,10 @@
 </ng-container>
 
 <p-overlayPanel
-    styleClass="alg-path-suggestion-overlay"
-    #op
+  styleClass="alg-path-suggestion-overlay"
+  #op
 >
   <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="(showOverlay$ | async)?.itemId" (mouseleave)="closeOverlay()"></alg-path-suggestion>
+    <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
   </ng-container>
 </p-overlayPanel>
