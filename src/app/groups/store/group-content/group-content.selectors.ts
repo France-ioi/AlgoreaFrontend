@@ -1,5 +1,14 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
-import { GroupRoute, RawGroupRoute, isGroupRoute, isUser, parseRouterPath } from 'src/app/models/routing/group-route';
+import {
+  GroupPage,
+  GroupRoute,
+  RawGroupRoute,
+  isGroupRoute,
+  isUser,
+  managedGroupsPage,
+  myGroupsPage,
+  parseRouterPath
+} from 'src/app/models/routing/group-route';
 import { GroupRouteError, groupRouteFromParams, isGroupRouteError } from '../../utils/group-route-validation';
 import { ObservationInfo } from 'src/app/store/observation';
 import { fromRouter } from 'src/app/store/router';
@@ -25,6 +34,7 @@ interface UserContentSelectors<T extends RootState> {
 
   selectActiveContentRoute: MemoizedSelector<T, RawGroupRoute|null>,
   selectActiveContentFullRoute: MemoizedSelector<T, GroupRoute|null>,
+  selectActiveContentRouteOrPage: MemoizedSelector<T, RawGroupRoute|GroupPage|null>,
 
   selectActiveContentUserId: MemoizedSelector<T, string|null>,
   selectActiveContentGroupId: MemoizedSelector<T, string|null>,
@@ -95,6 +105,16 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     route => (route && isGroupRoute(route) ? route : null),
   );
 
+  const selectActiveContentRouteOrPage = createSelector(
+    selectActiveContentRoute,
+    selectRouterPathParsingResult,
+    (route, parsingResult) => {
+      if (route) return route;
+      if (parsingResult === myGroupsPage || parsingResult === managedGroupsPage) return parsingResult;
+      return null;
+    }
+  );
+
   const selectActiveContentId = createSelector(
     selectActiveContentRoute,
     route => route?.id ?? null
@@ -163,6 +183,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRouteErrorHandlingState,
     selectActiveContentRoute,
     selectActiveContentFullRoute,
+    selectActiveContentRouteOrPage,
     selectActiveContentUserId,
     selectActiveContentGroupId,
     selectActiveContentGroup,

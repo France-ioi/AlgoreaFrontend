@@ -35,3 +35,13 @@ export function myGroupsInfo(info: Omit<MyGroupsInfo, 'type'>): MyGroupsInfo {
 export function isMyGroupsInfo(info: ContentInfo|null): info is MyGroupsInfo {
   return info !== null && info.type === 'my-groups';
 }
+
+export interface UserInfo extends ContentInfo {
+  type: 'user',
+}
+export function userInfo(info: Omit<MyGroupsInfo, 'type'>): UserInfo {
+  return { ...info, type: 'user' };
+}
+export function isUserInfo(info: ContentInfo|null): info is UserInfo {
+  return info !== null && info.type === 'user';
+}

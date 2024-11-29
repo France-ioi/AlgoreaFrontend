@@ -1,9 +1,10 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { ContentRoute } from 'src/app/models/routing/content-route';
+import { State } from './selected-content.state';
 
 export const changedContentActions = createActionGroup({
   source: 'Router',
   events: {
-    changeContent: props<{ route: ContentRoute|null }>(),
+    changeItemRoute: props<{ route: State['activity'] }>(),
+    changeGroupRouteOrPage: props<{ routeOrPage: State['group'] }>(),
   },
 });

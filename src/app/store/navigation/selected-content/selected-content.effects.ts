@@ -1,23 +1,28 @@
 import { createEffect } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { createSelector, Store } from '@ngrx/store';
-import { map } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { filter, map } from 'rxjs';
 import { fromItemContent } from 'src/app/items/store';
 import { changedContentActions } from './selected-content.actions';
 import { fromGroupContent } from 'src/app/groups/store';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
-const selectActiveContentRoute = createSelector(
-  fromItemContent.selectActiveContentRoute,
-  fromGroupContent.selectActiveContentFullRoute,
-  fromGroupContent.selectIsUserContentActive,
-  (itemRoute, groupRoute, isUser) => itemRoute ?? (isUser ? groupRoute : null)
-);
-
-export const keepActiveContentEffect = createEffect(
+export const keepActiveItemContentEffect = createEffect(
   (
     store$ = inject(Store),
-  ) => store$.select(selectActiveContentRoute).pipe(
-    map(route => changedContentActions.changeContent({ route })),
+  ) => store$.select(fromItemContent.selectActiveContentRoute).pipe(
+    filter(isNotNull),
+    map(route => changedContentActions.changeItemRoute({ route })),
+  ),
+  { functional: true },
+);
+
+export const keepActiveGroupContentEffect = createEffect(
+  (
+    store$ = inject(Store),
+  ) => store$.select(fromGroupContent.selectActiveContentRouteOrPage).pipe(
+    filter(isNotNull),
+    map(routeOrPage => changedContentActions.changeGroupRouteOrPage({ routeOrPage })),
   ),
   { functional: true },
 );
