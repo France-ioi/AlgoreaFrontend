@@ -22,6 +22,7 @@ export class ObservationBarComponent {
   @Input() showTooltip = false;
 
   observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
+  activeContentIsBeingObserved$ = this.store.select(fromObservation.selectActiveContentIsBeingObserved);
 
   constructor(
     private store: Store
