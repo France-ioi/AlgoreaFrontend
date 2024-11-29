@@ -51,9 +51,6 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
     await page.locator('alg-left-nav').getByRole('button', { name: 'Groups' }).click();
-    await page.waitForResponse(`${ apiUrl }/groups/roots`);
-    await expect.soft(page.locator('#nav-4035378957038759250')).toBeVisible();
-    await page.locator('#nav-4035378957038759250').click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
@@ -69,14 +66,10 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
     await page.locator('alg-left-nav').getByRole('button', { name: 'Groups' }).click();
-    await page.waitForResponse(`${ apiUrl }/groups/roots`);
-    await expect.soft(page.locator('#nav-4035378957038759250')).toBeVisible();
-    await page.locator('#nav-4035378957038759250').click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.confirm();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
-    await expect.soft(page.getByRole('heading', { name: '!634' })).toBeVisible();
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).not.toBeVisible();
+    await expect.soft(page.getByRole('heading', { name: 'My groups' })).toBeVisible();
   });
 });
 
@@ -116,8 +109,6 @@ test('checks navigation to another module for group', async ({ page, lostChanges
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
     await page.locator('alg-left-nav').getByRole('button', { name: 'Content' }).click();
-    await expect.soft(page.locator('#nav-4702')).toBeVisible();
-    await page.locator('#nav-4702').click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
@@ -130,8 +121,6 @@ test('checks navigation to another module for group', async ({ page, lostChanges
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
     await page.locator('alg-left-nav').getByRole('button', { name: 'Content' }).click();
-    await expect.soft(page.locator('#nav-4702')).toBeVisible();
-    await page.locator('#nav-4702').click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.confirm();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
