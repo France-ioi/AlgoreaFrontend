@@ -3,7 +3,6 @@ import { GroupInfo, State } from './observation.state';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { isForbiddenObservationError } from './utils/errors';
 import { fromGroupContent } from 'src/app/groups/store';
-import { ObservationInfo } from './observation.actions';
 import { RootState } from 'src/app/utils/store/root_state';
 
 interface ObservationSelectors<T extends RootState> {
@@ -32,11 +31,6 @@ interface ObservationSelectors<T extends RootState> {
    * Whether the active content is being observed
    */
   selectActiveContentIsBeingObserved: MemoizedSelector<T, boolean>,
-  /**
-   * If starting observation on the active content is allowed (and not already enabled), the observation info.
-   * Null if there is no group active content. False if it cannot be watched.
-   */
-  selectStartObservingActiveContentGroupInfo: MemoizedSelector<T, ObservationInfo | null | false>,
 }
 
 export function selectors<T extends RootState>(selectObservationState: Selector<T, State>): ObservationSelectors<T> {
@@ -77,19 +71,12 @@ export function selectors<T extends RootState>(selectObservationState: Selector<
     (observedGroupId, activeGroupRoute) => observedGroupId === activeGroupRoute?.id
   );
 
-  const selectStartObservingActiveContentGroupInfo = createSelector(
-    selectActiveContentIsBeingObserved,
-    fromGroupContent.selectObservationInfoForActiveContent,
-    (activeContentIsBeingObserved, info) => (!activeContentIsBeingObserved ? info : null)
-  );
-
   return {
     selectObservedGroupId,
     selectObservedGroupRoute,
     selectObservedGroupInfo,
     selectIsObserving,
     selectObservationError,
-    selectActiveContentIsBeingObserved,
-    selectStartObservingActiveContentGroupInfo,
+    selectActiveContentIsBeingObserved
   };
 }

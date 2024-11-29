@@ -45,7 +45,6 @@ export class ObservationBarWithButtonComponent implements OnDestroy {
       isBeingWatched: currentContent.route.id === observedGroupId,
     } : undefined)),
   );
-  startObservingActiveContentGroupInfo$ = this.store.select(fromObservation.selectStartObservingActiveContentGroupInfo);
 
   subscription = this.isObserving$.subscribe(isObserving => {
     if (!isObserving && this.op?.overlayVisible) {
