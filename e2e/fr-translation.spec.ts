@@ -1,6 +1,5 @@
 import { test, expect } from './groups/fixture';
 import { initAsTesterUser, initAsUsualUser } from 'e2e/helpers/e2e_auth';
-import { apiUrl } from 'e2e/helpers/e2e_http';
 
 // It runs "fr" version of app
 test.use({ baseURL: 'http://localhost:4100' });
