@@ -1,6 +1,7 @@
 import { test } from '../common/fixture';
 import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 import { expect } from 'e2e/groups/create-group-fixture';
+import { rootItemId } from 'e2e/items/create-item-fixture';
 
 test.beforeEach(async ({ page }) => {
   await initAsTesterUser(page);
@@ -18,7 +19,6 @@ test('grant view permission', async ({
   itemContentPage,
   editPermissionsModal,
   groupSettingsPage,
-  header,
 }) => {
   if (!createGroup) throw new Error('The group is not created');
   if (!createItem) throw new Error('The item is not created');
@@ -42,8 +42,7 @@ test('grant view permission', async ({
   });
 
   await test.step('checks grant content access for item', async () => {
-    await header.toggleGroupObservation();
-    await header.clickOnSuggestedItem(`${createItem.itemName} (${createGroup.groupName})`);
+    await page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0?watchedGroupId=${createGroup.groupId}`);
     await editPermissionsModal.openPermissionsBlock();
     const grantAccessBtnLocator = page.getByRole('button', { name: 'Grant content access' });
     await expect.soft(grantAccessBtnLocator).toBeVisible();

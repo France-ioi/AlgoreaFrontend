@@ -67,15 +67,6 @@ test('checks select in path suggestion ', async ({ page }) => {
   await expect.soft(page.getByText('Ce contenu est l\'un de vos activité racines')).toBeVisible();
 });
 
-test('checks select in suggestion of activities', async ({ page }) => {
-  await initAsUsualUser(page);
-  await page.goto('groups/by-id/2713577096475953687;p=');
-  const toggleGroupObservationLocator = page.getByTestId('toggle-group-observation');
-  await expect.soft(toggleGroupObservationLocator).toBeVisible();
-  await toggleGroupObservationLocator.click();
-  await expect.soft(page.getByText('Il n\'y a pas activité liée à ce(t) groupe.')).toBeVisible();
-});
-
 test('checks select in member list', async ({ page, groupMembersPage }) => {
   await initAsUsualUser(page);
   await page.goto('/groups/by-id/4035378957038759250;p=/members');
