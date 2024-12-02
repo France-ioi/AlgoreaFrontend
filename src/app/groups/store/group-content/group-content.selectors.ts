@@ -47,9 +47,11 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentBreadcrumbs: MemoizedSelector<T, State['breadcrumbs']|null>,
 
   /**
-   * Null if there is no group as active content, or if the group cannot be observed, or if group info is not fetched
+   * Group info required for observation
+   * Null if there is no group as active content (or not fetched yet)
+   * False if the group cannot be observed
    */
-  selectObservationInfoForActiveContent: MemoizedSelector<T, ObservationInfo | null>,
+  selectObservationInfoForActiveContent: MemoizedSelector<T, ObservationInfo | false | null>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
@@ -153,27 +155,27 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   const selectObservationInfoForActiveContentUser = createSelector(
     selectActiveContentUser,
     selectActiveContentRoute,
-    ({ isReady, data }, route) => (route && isReady && !!data.currentUserCanWatchUser ? {
-      route,
-      name: formatUser(data),
-      currentUserCanGrantAccess: data.currentUserCanGrantUserAccess ?? false
-    } : null)
+    ({ isReady, data }, route) => (
+      route && isReady ? (
+        data.currentUserCanWatchUser && !data.isCurrentUser ?
+          { route, name: formatUser(data), currentUserCanGrantAccess: !!data.currentUserCanGrantUserAccess } : false
+      ) : null)
   );
 
   const selectObservationInfoForActiveContentGroup = createSelector(
     selectActiveContentGroup,
     selectActiveContentRoute,
-    ({ isReady, data }, route) => (route && isReady && !!data.currentUserCanWatchMembers ? {
-      route,
-      name: data.name,
-      currentUserCanGrantAccess: data.currentUserCanGrantGroupAccess ?? false
-    } : null)
+    ({ isReady, data }, route) => (
+      (route && isReady) ? (
+        data.currentUserCanWatchMembers ?
+          { route, name: data.name, currentUserCanGrantAccess: !!data.currentUserCanGrantGroupAccess } : false
+      ) : null)
   );
 
   const selectObservationInfoForActiveContent = createSelector(
     selectObservationInfoForActiveContentUser,
     selectObservationInfoForActiveContentGroup,
-    (obsInfoForUser, obsInfoForNonUserGroup) => obsInfoForUser ?? obsInfoForNonUserGroup
+    (obsInfoForUser, obsInfoForNonUserGroup) => (obsInfoForUser === null ? obsInfoForNonUserGroup : obsInfoForUser)
   );
 
   return {

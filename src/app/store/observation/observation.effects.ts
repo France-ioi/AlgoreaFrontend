@@ -1,16 +1,17 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { createSelector, Store } from '@ngrx/store';
 import { withLatestFrom, filter, map, switchMap, Observable, tap } from 'rxjs';
 import { fromObservation } from './observation.store';
 import { selectObservedGroupRouteFromRouter } from './router-observation.selectors';
-import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { FetchedObservedGroupInfo, groupInfoFetchedActions, routerActions } from './observation.actions';
+import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { FetchedObservedGroupInfo, groupInfoFetchedActions, groupPageActions, routerActions } from './observation.actions';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { cannotWatchError } from './utils/errors';
 import { isUser } from 'src/app/models/routing/group-route';
+import { fromGroupContent } from 'src/app/groups/store';
 
 /**
  * If the router has a observed group set (possibly 'none') AND it is different from the current one in the store, emit an
@@ -43,6 +44,25 @@ export const observationGroupFetching = createEffect(
   { functional: true }
 );
 
+export const observeOnGroupNavigationEffect = createEffect(
+  (
+    store$ = inject(Store),
+  ) => store$.select(selectObservationActionBasedOnActiveGroup).pipe(
+    filter(isNotNull),
+    map(info => (info === false ? groupPageActions.hasLoadedAnNonObservableContent() : groupPageActions.hasLoadedAnObservableContent(info)))
+  ),
+  { functional: true }
+);
+
+//
+// Private selectors
+//
+
+const selectObservationActionBasedOnActiveGroup = createSelector(
+  fromObservation.selectActiveContentIsBeingObserved,
+  fromGroupContent.selectObservationInfoForActiveContent, // null if unknown, false is cannot be watched
+  (activeContentIsBeingObserved, info) => (activeContentIsBeingObserved ? null : info)
+);
 
 //
 // Utility functions (private)

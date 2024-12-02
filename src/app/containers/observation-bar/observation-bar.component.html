@@ -28,5 +28,7 @@
       }
     </span>
   </div>
-  <button pButton type="button" icon="ph ph-x" class="alg-button-icon secondary-color no-bg" (click)="onCancelClick()"></button>
+  @if (!(activeContentIsBeingObserved$ | async)) {
+    <button pButton type="button" icon="ph ph-x" class="alg-button-icon secondary-color no-bg" (click)="onCancelClick()"></button>
+  }
 </div>

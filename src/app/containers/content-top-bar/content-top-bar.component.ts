@@ -9,7 +9,6 @@ import { LayoutService } from '../../services/layout.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { isGroupInfo } from '../../models/content/group-info';
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
-import { ObservationBarWithButtonComponent } from '../observation-bar-with-button/observation-bar-with-button.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { LetDirective, PushPipe } from '@ngrx/component';
@@ -20,6 +19,7 @@ import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { TabService } from '../../services/tab.service';
 import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
+import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -33,7 +33,7 @@ import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/ti
     LetDirective,
     BreadcrumbComponent,
     TabBarComponent,
-    ObservationBarWithButtonComponent,
+    ObservationBarComponent,
     TimeLimitedContentInfoComponent,
     NeighborWidgetComponent,
     AsyncPipe,

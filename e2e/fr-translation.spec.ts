@@ -1,6 +1,5 @@
 import { test, expect } from './groups/fixture';
 import { initAsTesterUser, initAsUsualUser } from 'e2e/helpers/e2e_auth';
-import { apiUrl } from 'e2e/helpers/e2e_http';
 
 // It runs "fr" version of app
 test.use({ baseURL: 'http://localhost:4100' });
@@ -65,15 +64,6 @@ test('checks select in path suggestion ', async ({ page }) => {
   await expect.soft(linkLocator).toBeVisible();
   await linkLocator.hover();
   await expect.soft(page.getByText('Ce contenu est l\'un de vos activité racines')).toBeVisible();
-});
-
-test('checks select in suggestion of activities', async ({ page }) => {
-  await initAsUsualUser(page);
-  await page.goto('groups/by-id/2713577096475953687;p=');
-  const toggleGroupObservationLocator = page.getByTestId('toggle-group-observation');
-  await expect.soft(toggleGroupObservationLocator).toBeVisible();
-  await toggleGroupObservationLocator.click();
-  await expect.soft(page.getByText('Il n\'y a pas activité liée à ce(t) groupe.')).toBeVisible();
 });
 
 test('checks select in member list', async ({ page, groupMembersPage }) => {

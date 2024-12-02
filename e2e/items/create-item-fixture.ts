@@ -10,7 +10,7 @@ interface CreateGroupFixtures {
   deleteItem: ItemData | undefined,
 }
 
-const rootItemId = '1751831682141956756';
+export const rootItemId = '1751831682141956756';
 
 export const test = base.extend<CreateGroupFixtures>({
   createItem: async ({ itemContentPage }, use) => {

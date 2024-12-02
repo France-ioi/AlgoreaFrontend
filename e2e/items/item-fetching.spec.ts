@@ -38,7 +38,7 @@ test('refresh when observation change (check the score)', async ({ page }) => {
     await expect.soft(page.locator('.score-caption')).toContainText('50');
   });
 
-  await page.locator('alg-observation-bar-with-button').getByRole('button').click();
+  await page.locator('alg-observation-bar').filter({ hasText: 'usr_5p020x2thuyu' }).getByRole('button').click();
 
   await test.step('check score of the current user', async () => {
     await expect.soft(page.locator('.score-caption')).toContainText('75');
