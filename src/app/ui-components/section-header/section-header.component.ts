@@ -14,7 +14,7 @@ import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
 })
 export class SectionHeaderComponent {
 
-  @Input() title = '';
+  @Input() caption = '';
   @Input() icon = '';
   @Input() theme: 'success' | 'warning' | 'danger' = 'success';
   @Input() styleClass: string | string[] | Set<string> | { [klass: string]: boolean } = '';

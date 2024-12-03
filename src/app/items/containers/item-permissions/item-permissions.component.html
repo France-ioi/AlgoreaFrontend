@@ -43,7 +43,7 @@
           @if (watchedGroupPermissions.isOwner) {
             <div class="permission-indicator-section">
               <alg-section-header
-                i18n-title title="Is owner"
+                i18n-caption caption="Is owner"
                 icon="ph-duotone ph-user"
                 theme="warning"
               >
@@ -55,7 +55,7 @@
           } @else {
             <div class="permission-indicator-section">
               <alg-section-header
-                i18n-title title="Can view"
+                i18n-caption caption="Can view"
                 icon="ph-duotone ph-eyeglasses"
                 theme="warning"
               >
@@ -86,7 +86,7 @@
             @if (watchedGroupPermissions | allowsViewingInfo) {
               <div class="permission-indicator-section">
                 <alg-section-header
-                  i18n-title title="Can grant view"
+                  i18n-caption caption="Can grant view"
                   icon="ph-duotone ph-key"
                   theme="warning"
                 >
@@ -104,7 +104,7 @@
             @if (watchedGroupPermissions | allowsViewingContent) {
               <div class="permission-indicator-section">
                 <alg-section-header
-                  i18n-title title="Can watch"
+                  i18n-caption caption="Can watch"
                   icon="ph-duotone ph-binoculars"
                   theme="warning"
                 >
@@ -120,7 +120,7 @@
               </div>
               <div class="permission-indicator-section">
                 <alg-section-header
-                  i18n-title title="Can edit"
+                  i18n-caption caption="Can edit"
                   icon="ph-duotone ph-pencil"
                   theme="warning"
                 >
