@@ -3,12 +3,13 @@ import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
 import { FullItemRoute, itemCategoryFromPrefix, routesEqualIgnoringCommands } from 'src/app/models/routing/item-route';
 import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../utils/item-route-validation';
-import { State, initialState } from './item-content.state';
+import { Breadcumbs, Item, Results, State, initialState } from './item-content.state';
 import { equalNullishFactory } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
 import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
+import { Result } from '../../models/attempts';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -32,6 +33,24 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentItemState: MemoizedSelector<T, State['itemState']>,
   selectActiveContentBreadcrumbsState: MemoizedSelector<T, State['breadcrumbsState']>,
   selectActiveContentResultsState: MemoizedSelector<T, State['resultsState']>,
+
+  /**
+   * The active item if we there is one and it has been fetched
+   */
+  selectActiveContentItem: MemoizedSelector<T, Item|null>,
+  /**
+   * The breadcrumbs of the active item if there is one and it has been fetched
+   */
+  selectActiveContentBreadcrumbs: MemoizedSelector<T, Breadcumbs|null>,
+  /**
+   * The results of the active item if there is one and it has been fetched
+   */
+  selectActiveContentResults: MemoizedSelector<T, Results|null>,
+  /**
+   * The current result of the active item if there is one and it has been fetched
+   */
+  selectActiveContentCurrentResult: MemoizedSelector<T, Result|null>,
+
   /**
    * Data that can be used for fetching results
    */
@@ -116,6 +135,26 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
       resultsState : initialState.resultsState)
   );
 
+  const selectActiveContentItem = createSelector(
+    selectActiveContentItemState,
+    state => state.data ?? null
+  );
+
+  const selectActiveContentBreadcrumbs = createSelector(
+    selectActiveContentBreadcrumbsState,
+    state => state.data ?? null
+  );
+
+  const selectActiveContentResults = createSelector(
+    selectActiveContentResultsState,
+    state => state.data ?? null
+  );
+
+  const selectActiveContentCurrentResult = createSelector(
+    selectActiveContentResults,
+    results => results?.currentResult ?? null
+  );
+
   const selectActiveContentInfoForFetchingResults = createSelector(
     selectActiveContentRoute,
     selectActiveContentItemState,
@@ -153,6 +192,10 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentItemState,
     selectActiveContentBreadcrumbsState,
     selectActiveContentResultsState,
+    selectActiveContentItem,
+    selectActiveContentBreadcrumbs,
+    selectActiveContentResults,
+    selectActiveContentCurrentResult,
     selectActiveContentInfoForFetchingResults,
     selectActiveContentData,
   };
