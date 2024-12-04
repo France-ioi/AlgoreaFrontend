@@ -38,13 +38,13 @@ interface UserContentSelectors<T extends RootState> {
 
   selectActiveContentUserId: MemoizedSelector<T, string|null>,
   selectActiveContentGroupId: MemoizedSelector<T, string|null>,
-  selectActiveContentGroup: MemoizedSelector<T, GroupInState>,
-  selectActiveContentUser: MemoizedSelector<T, UserInState>,
+  selectActiveContentGroupState: MemoizedSelector<T, GroupInState>,
+  selectActiveContentUserState: MemoizedSelector<T, UserInState>,
   /**
    * The breadcrumbs state, IF a full route is known for the active content
    * null if the breadcrumb is irrelevant, i.e. when there is no path
    */
-  selectActiveContentBreadcrumbs: MemoizedSelector<T, State['breadcrumbs']|null>,
+  selectActiveContentBreadcrumbsState: MemoizedSelector<T, State['breadcrumbsState']|null>,
 
   /**
    * Group info required for observation
@@ -134,26 +134,28 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     (isUser, id) => (!isUser ? id : null)
   );
 
-  const selectActiveContentGroup = createSelector(
+  const selectActiveContentGroupState = createSelector(
     selectState,
     selectActiveContentRoute,
-    ({ group }, route) => (route && group.identifier?.id === route.id && !isUser(route) ? group as GroupInState : fetchingState())
+    ({ groupState }, route) => (route && groupState.identifier?.id === route.id && !isUser(route) ?
+      groupState as GroupInState : fetchingState())
   );
 
-  const selectActiveContentUser = createSelector(
+  const selectActiveContentUserState = createSelector(
     selectState,
     selectActiveContentRoute,
-    ({ group }, route) => (route && group.identifier?.id === route.id && isUser(route) ? group as UserInState : fetchingState())
+    ({ groupState }, route) => (route && groupState.identifier?.id === route.id && isUser(route) ?
+      groupState as UserInState : fetchingState())
   );
 
-  const selectActiveContentBreadcrumbs = createSelector(
+  const selectActiveContentBreadcrumbsState = createSelector(
     selectState,
     selectActiveContentFullRoute,
-    ({ breadcrumbs }, route) => (breadcrumbs.identifier === route ? breadcrumbs : null)
+    ({ breadcrumbsState }, route) => (breadcrumbsState.identifier === route ? breadcrumbsState : null)
   );
 
   const selectObservationInfoForActiveContentUser = createSelector(
-    selectActiveContentUser,
+    selectActiveContentUserState,
     selectActiveContentRoute,
     ({ isReady, data }, route) => (
       route && isReady ? (
@@ -163,7 +165,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   );
 
   const selectObservationInfoForActiveContentGroup = createSelector(
-    selectActiveContentGroup,
+    selectActiveContentGroupState,
     selectActiveContentRoute,
     ({ isReady, data }, route) => (
       (route && isReady) ? (
@@ -188,9 +190,9 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRouteOrPage,
     selectActiveContentUserId,
     selectActiveContentGroupId,
-    selectActiveContentGroup,
-    selectActiveContentUser,
-    selectActiveContentBreadcrumbs,
+    selectActiveContentGroupState,
+    selectActiveContentUserState,
+    selectActiveContentBreadcrumbsState,
 
     selectObservationInfoForActiveContent,
   };

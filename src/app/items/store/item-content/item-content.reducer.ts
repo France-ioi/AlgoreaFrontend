@@ -14,24 +14,24 @@ export const reducer = createReducer(
 
   on(
     itemFetchingActions.itemFetchStateChanged,
-    (state, { fetchState }): State => ({ ...state, item: fetchState })
+    (state, { fetchState }): State => ({ ...state, itemState: fetchState })
   ),
 
   on(
     itemFetchingActions.breadcrumbsFetchStateChanged,
-    (state, { fetchState }): State => ({ ...state, breadcrumbs: fetchState })
+    (state, { fetchState }): State => ({ ...state, breadcrumbsState: fetchState })
   ),
 
   on(
     itemFetchingActions.resultsFetchStateChanged,
-    (state, { fetchState }): State => ({ ...state, results: fetchState })
+    (state, { fetchState }): State => ({ ...state, resultsState: fetchState })
   ),
 
   on(itemByIdPageActions.patchScore,
     (state, { score }): State => ({
       ...state,
-      item: mapStateData(state.item, i => patchItemScore(i, score)),
-      results: mapStateData(state.results, r => patchResultScore(r, score)),
+      itemState: mapStateData(state.itemState, i => patchItemScore(i, score)),
+      resultsState: mapStateData(state.resultsState, r => patchResultScore(r, score)),
     })
 
   )

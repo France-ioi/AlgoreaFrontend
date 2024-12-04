@@ -13,7 +13,7 @@ import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
  * Select the current result, will be`null` if we know for sure there is no current result and `undefined` if it is not known yet.
  */
 const selectCurrentResult = createSelector(
-  fromItemContent.selectActiveContentResults,
+  fromItemContent.selectActiveContentResultsState,
   resultsState => (resultsState.isReady ? (resultsState.data.currentResult ?? null) : undefined)
 );
 

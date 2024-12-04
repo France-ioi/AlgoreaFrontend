@@ -11,8 +11,8 @@ import { formatBreadcrumbs } from '../../models/group-breadcrumbs';
 const selectNonUserCurrentContent = createSelector(
   fromGroupContent.selectIsUserContentActive,
   fromGroupContent.selectActiveContentFullRoute,
-  fromGroupContent.selectActiveContentBreadcrumbs,
-  fromGroupContent.selectActiveContentGroup,
+  fromGroupContent.selectActiveContentBreadcrumbsState,
+  fromGroupContent.selectActiveContentGroupState,
   (isUser, route, breadcrumbsState, groupState) =>
     (route && !isUser ? { route, breadcrumbs: breadcrumbsState?.data, group: groupState.data } : null)
 );

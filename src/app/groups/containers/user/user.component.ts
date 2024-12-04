@@ -44,7 +44,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
 })
 export class UserComponent implements OnInit, OnDestroy {
   userRoute$ = this.store.select(fromGroupContent.selectActiveContentRoute).pipe(filter(isNotNull));
-  state$ = this.store.select(fromGroupContent.selectActiveContentUser);
+  state$ = this.store.select(fromGroupContent.selectActiveContentUserState);
 
   private url$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
@@ -70,7 +70,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.userRoute$,
       this.activeRoute$.pipe(map(p => this.pageTitle(p))),
       this.state$,
-      this.store.select(fromGroupContent.selectActiveContentBreadcrumbs),
+      this.store.select(fromGroupContent.selectActiveContentBreadcrumbsState),
     ])
       .subscribe(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => {
         this.currentContent.replace(userInfo({

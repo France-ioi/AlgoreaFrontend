@@ -13,15 +13,15 @@ export interface State {
    */
   routeErrorHandling: Fetching<undefined>|FetchError,
 
-  item: FetchState<Item, { id: ItemId, observedGroupId: string|null }>,
-  breadcrumbs: FetchState<BreadcrumbItem[], FullItemRoute>,
+  itemState: FetchState<Item, { id: ItemId, observedGroupId: string|null }>,
+  breadcrumbsState: FetchState<BreadcrumbItem[], FullItemRoute>,
   /** `results` of the current participant on the active item */
-  results: FetchState<{ results: Result[], currentResult?: Result }, FullItemRoute>,
+  resultsState: FetchState<{ results: Result[], currentResult?: Result }, FullItemRoute>,
 }
 
 export const initialState: State = {
   routeErrorHandling: fetchingState(),
-  item: fetchingState(),
-  breadcrumbs: fetchingState(),
-  results: fetchingState(),
+  itemState: fetchingState(),
+  breadcrumbsState: fetchingState(),
+  resultsState: fetchingState(),
 };

@@ -79,7 +79,7 @@ export class GroupByIdComponent implements OnDestroy {
     }
   });
 
-  private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbs).subscribe(state => {
+  private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbsState).subscribe(state => {
     if (state === null) return; // state is null when there is no path
     if (state.isError) this.currentContent.clear();
 

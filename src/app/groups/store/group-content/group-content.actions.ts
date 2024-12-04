@@ -6,7 +6,7 @@ export const groupInfoFetchedActions = createActionGroup({
   events: {
     userFetchStateChanged: props<{ fetchState: UserInState }>(),
     groupFetchStateChanged: props<{ fetchState: GroupInState }>(),
-    breadcrumbsFetchStateChanged: props<{ fetchState: State['breadcrumbs'] }>(),
+    breadcrumbsFetchStateChanged: props<{ fetchState: State['breadcrumbsState'] }>(),
   },
 });
 
