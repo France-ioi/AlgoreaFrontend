@@ -47,7 +47,6 @@ export class MyGroupsComponent implements OnDestroy, OnInit {
       title: $localize`My groups`,
       breadcrumbs: {
         path: [],
-        currentPageIdx: -1
       }
     }));
   }

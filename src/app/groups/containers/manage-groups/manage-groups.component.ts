@@ -40,7 +40,6 @@ export class ManageGroupsComponent implements OnInit, OnDestroy {
       title: $localize`Manage groups`,
       breadcrumbs: {
         path: [],
-        currentPageIdx: -1
       }
     }));
   }

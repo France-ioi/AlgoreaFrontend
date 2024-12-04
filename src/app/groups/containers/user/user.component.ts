@@ -85,7 +85,6 @@ export class UserComponent implements OnInit, OnDestroy {
               { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
               { title: currentPageTitle }
             ] : [],
-            currentPageIdx: breadcrumbs !== null && breadcrumbs.isReady ? breadcrumbs.data.length : 1,
           }
         }));
       });

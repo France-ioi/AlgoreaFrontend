@@ -2,13 +2,13 @@
   @let breadcrumbsVal = breadcrumbs();
   @if (breadcrumbsVal) {
     <ul class="breadcrumb-list"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
-      @for (breadcrumb of breadcrumbsVal.path; track breadcrumb.title; let idx = $index) {
-        <li class="breadcrumb-item separator" [ngClass]="{ 'active': idx === breadcrumbsVal.currentPageIdx }" *ngIf="idx > 0">
+      @for (breadcrumb of breadcrumbsVal.path; track breadcrumb.title; let last = $last, first = $first) {
+        <li class="breadcrumb-item separator" [ngClass]="{ 'active': last }" *ngIf="!first">
           <i class="ph ph-caret-right separator-icon"></i>
         </li>
         <li
           class="breadcrumb-item"
-          [ngClass]="{ 'active': idx === breadcrumbsVal.currentPageIdx, 'routable': breadcrumb.navigateTo }"
+          [ngClass]="{ 'active': last, 'routable': breadcrumb.navigateTo }"
           (click)="onElementClick(breadcrumb)"
           [pTooltip]="breadcrumb.title"
           tooltipPosition="bottom"
