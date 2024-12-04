@@ -83,7 +83,7 @@ export class UserComponent implements OnInit, OnDestroy {
             ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
             { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
             { title: currentPageTitle }
-          ] : []
+          ] : undefined
         }));
       });
   }

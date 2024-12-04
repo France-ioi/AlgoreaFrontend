@@ -21,10 +21,10 @@ export const dispatchCurrentContentEffect = createEffect(
     itemRouter = inject(ItemRouter),
   ) => store$.select(selectCurrentContent).pipe(
     filter(isNotNull),
-    map(content => fromCurrentContent.contentPageActions.changeContent({
-      route: content.route,
-      breadcrumbs: formatBreadcrumbs(content.breadcrumbs, itemRouter),
-      title: content.item?.string.title ?? undefined,
+    map(({ route, breadcrumbs, item }) => fromCurrentContent.contentPageActions.changeContent({
+      route: route,
+      breadcrumbs: breadcrumbs ? formatBreadcrumbs(breadcrumbs, itemRouter) : undefined,
+      title: item?.string.title ?? undefined,
     }))
   ),
   { functional: true },

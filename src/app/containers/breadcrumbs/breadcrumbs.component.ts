@@ -2,8 +2,17 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { Store } from '@ngrx/store';
+import { createSelector, Store } from '@ngrx/store';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
+
+/**
+ * When there is no breadcrumb, use the title as unique breadcrumb
+ */
+const selectBreadcrumbsDefaultOnTitle = createSelector(
+  fromCurrentContent.selectBreadcrumbs,
+  fromCurrentContent.selectTitle,
+  (breadcrumbs, title) => breadcrumbs ?? (title ? [{ title }] : undefined)
+);
 
 @Component({
   selector: 'alg-breadcrumbs',
@@ -20,7 +29,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
 })
 export class BreadcrumbsComponent {
 
-  breadcrumbs = this.store.selectSignal(fromCurrentContent.selectBreadcrumbs);
+  breadcrumbs = this.store.selectSignal(selectBreadcrumbsDefaultOnTitle);
 
   constructor(
     private store: Store,
