@@ -30,7 +30,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { NavTreeData } from 'src/app/models/left-nav-loading/nav-tree-data';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { GroupRouter } from 'src/app/models/routing/group-router';
-import { fromSelectedContent } from 'src/app/store/navigation/selected-content';
+import { fromSelectedContent } from 'src/app/store/navigation';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;

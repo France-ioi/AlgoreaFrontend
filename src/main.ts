@@ -38,7 +38,7 @@ import { fromObservation, observationEffects } from './app/store/observation';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromGroupContent, groupStoreEffects } from './app/groups/store';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
-import { fromSelectedContent, selectedContentEffects } from './app/store/navigation/selected-content';
+import { fromSelectedContent, selectedContentEffects } from './app/store/navigation';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
 import { fromTimeOffset } from './app/store/time-offset';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
