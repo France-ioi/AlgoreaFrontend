@@ -1,8 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { RouterLinkActive, UrlTree, RouterLink } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/utils/config';
-import { GroupInfo, groupInfo } from 'src/app/models/content/group-info';
+import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -23,6 +22,7 @@ import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.servic
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
 import { GroupData, selectGroupData } from './models/group-data';
 import { mapStateData, readyData } from '../utils/operators/state';
+import { fromCurrentContent } from '../store/navigation/current-content/current-content.store';
 
 const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 
@@ -67,10 +67,17 @@ export class GroupByIdComponent implements OnDestroy {
   @ViewChild('groupEdit') groupEdit?: GroupEditComponent;
 
   // on state change, update current content page info (for breadcrumb)
-  private groupToCurrentContentSubscription = this.state$.pipe(
-    readyData(),
-    map(({ group, route, breadcrumbs }): GroupInfo => groupInfo({
-      route: route,
+  private groupToCurrentContentSubscription = this.state$.pipe(readyData()).subscribe(({ group, route, breadcrumbs }) => {
+    this.currentContent.replace(groupInfo({
+      route,
+      details: {
+        name: group.name,
+        currentUserCanWatchMembers: !!group.currentUserCanWatchMembers,
+        currentUserCanGrantGroupAccess: !!group.currentUserCanGrantGroupAccess,
+      },
+    }));
+    this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
+      route,
       breadcrumbs: {
         category: GROUP_BREADCRUMB_CAT,
         path: breadcrumbs.map(breadcrumb => ({
@@ -80,21 +87,20 @@ export class GroupByIdComponent implements OnDestroy {
         currentPageIdx: breadcrumbs.length - 1,
       },
       title: group.name,
-      details: {
-        name: group.name,
-        currentUserCanWatchMembers: !!group.currentUserCanWatchMembers,
-        currentUserCanGrantGroupAccess: !!group.currentUserCanGrantGroupAccess,
-      },
-    })),
-  ).subscribe(p => this.currentContent.replace(p));
+    }));
+  });
 
   private initialCurrentContentSubscription = this.store.select(fromGroupContent.selectActiveContentFullRoute).subscribe(route => {
     if (route) {
       // just publish to current content the new route we are navigating to (without knowing any info)
       this.currentContent.replace(groupInfo({
         route,
+      }));
+      this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
+        route,
         breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
       }));
+
     } else {
       this.currentContent.clear();
     }

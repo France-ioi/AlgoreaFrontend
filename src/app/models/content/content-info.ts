@@ -1,11 +1,8 @@
-import { ContentBreadcrumb } from './content-breadcrumb';
 import { ContentRoute } from '../routing/content-route';
 import { arraysEqual } from '../../utils/array';
 
 export interface ContentInfo {
   type: string,
-  breadcrumbs?: ContentBreadcrumb,
-  title?: string, // page title
   route?: ContentRoute,
   score?: { currentScore: number, bestScore: number, isValidated: boolean },
 }

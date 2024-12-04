@@ -19,6 +19,7 @@ import { fromGroupContent } from '../../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { UserInfoComponent } from 'src/app/groups/containers/user-info/user-info.component';
 import { userInfo } from 'src/app/models/content/group-info';
+import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 
 const breadcrumbHeader = $localize`Users`;
 
@@ -73,8 +74,12 @@ export class UserComponent implements OnInit, OnDestroy {
       this.state$,
       this.store.select(fromGroupContent.selectActiveContentBreadcrumbs),
     ])
-      .pipe(
-        map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => userInfo({
+      .subscribe(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => {
+        this.currentContent.replace(userInfo({
+          route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
+        }));
+        this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
+          route: 'user-by-id',
           title: state.isReady ? formatUser(state.data) : undefined,
           breadcrumbs: {
             category: breadcrumbHeader,
@@ -84,11 +89,8 @@ export class UserComponent implements OnInit, OnDestroy {
               { title: currentPageTitle }
             ] : [],
             currentPageIdx: breadcrumbs !== null && breadcrumbs.isReady ? breadcrumbs.data.length : 1,
-          },
-          route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
-        }))
-      ).subscribe(contentInfo => {
-        this.currentContent.replace(contentInfo);
+          }
+        }));
       });
   }
 

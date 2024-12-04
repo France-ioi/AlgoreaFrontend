@@ -28,16 +28,12 @@
           class="left-pane-title margin-right"
           *ngIf="!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed"
         >
-          <ng-container *ngIf="!showBreadcrumbs && currentContent && currentContent.title; then onlyTitle else breadcrumbs"></ng-container>
-          <ng-template #onlyTitle>
-            <p class="left-pane-title-text">{{ currentContent.title }}</p>
-          </ng-template>
-          <ng-template #breadcrumbs>
-            <alg-breadcrumb
-              class="breadcrumb"
-              [contentBreadcrumb]="currentContent?.breadcrumbs"
-            ></alg-breadcrumb>
-          </ng-template>
+          @let titleVal = title();
+          @if (!showBreadcrumbs && titleVal) {
+            <p class="left-pane-title-text">{{ titleVal }}</p>
+          } @else {
+            <alg-breadcrumb class="breadcrumb"></alg-breadcrumb>
+          }
         </div>
         <alg-tab-bar
           class="tab-bar"

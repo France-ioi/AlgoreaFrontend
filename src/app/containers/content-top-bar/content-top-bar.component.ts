@@ -20,6 +20,7 @@ import { fromForum } from 'src/app/forum/store';
 import { TabService } from '../../services/tab.service';
 import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
+import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -49,6 +50,7 @@ export class ContentTopBarComponent {
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
   );
+  title = this.store.selectSignal(fromCurrentContent.selectTitle);
 
   navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {

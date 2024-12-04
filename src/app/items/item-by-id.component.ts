@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, UrlTree, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, ParamMap, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -67,8 +67,6 @@ import { isUser } from '../models/routing/group-route';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
-
-const itemBreadcrumbCat = $localize`Items`;
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -222,31 +220,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.itemRouter.navigateTo({ ...route, answer: undefined });
     }),
 
-    this.store.select(fromItemContent.selectActiveContentRoute).subscribe(route => {
-      if (route) {
-        // just publish to current content the new route we are navigating to (without knowing any info)
-        this.currentContent.replace(itemInfo({
-          route,
-          breadcrumbs: { category: itemBreadcrumbCat, path: [], currentPageIdx: -1 }
-        }));
-      } else {
-        this.currentContent.clear();
-      }
-    }),
-
     // on datasource state change, update the current content page info
     this.itemState$.pipe(readyData<ItemData>()).subscribe(data => {
       this.currentContent.replace(itemInfo({
-        breadcrumbs: {
-          category: itemBreadcrumbCat,
-          path: data.breadcrumbs.map(el => ({
-            title: el.title,
-            hintNumber: el.attemptCnt,
-            navigateTo: ():UrlTree => this.itemRouter.url(el.route),
-          })),
-          currentPageIdx: data.breadcrumbs.length - 1,
-        },
-        title: data.item.string.title === null ? undefined : data.item.string.title,
         route: routeWithSelfAttempt(data.route, data.currentResult?.attemptId),
         details: {
           title: data.item.string.title,
