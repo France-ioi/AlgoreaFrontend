@@ -38,9 +38,7 @@ export class ManageGroupsComponent implements OnInit, OnDestroy {
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route: managedGroupsPage,
       title: $localize`Manage groups`,
-      breadcrumbs: {
-        path: [],
-      }
+      breadcrumbs: [],
     }));
   }
 

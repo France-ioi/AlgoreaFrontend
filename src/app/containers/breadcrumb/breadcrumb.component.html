@@ -2,7 +2,7 @@
   @let breadcrumbsVal = breadcrumbs();
   @if (breadcrumbsVal) {
     <ul class="breadcrumb-list"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
-      @for (breadcrumb of breadcrumbsVal.path; track breadcrumb.title; let last = $last, first = $first) {
+      @for (breadcrumb of breadcrumbsVal; track breadcrumb.title; let last = $last, first = $first) {
         <li class="breadcrumb-item separator" [ngClass]="{ 'active': last }" *ngIf="!first">
           <i class="ph ph-caret-right separator-icon"></i>
         </li>

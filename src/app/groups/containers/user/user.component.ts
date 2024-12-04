@@ -79,13 +79,11 @@ export class UserComponent implements OnInit, OnDestroy {
         this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
           route: 'user-by-id',
           title: state.isReady ? formatUser(state.data) : undefined,
-          breadcrumbs: {
-            path: state.isReady ? [
-              ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
-              { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
-              { title: currentPageTitle }
-            ] : [],
-          }
+          breadcrumbs: state.isReady ? [
+            ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
+            { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
+            { title: currentPageTitle }
+          ] : []
         }));
       });
   }

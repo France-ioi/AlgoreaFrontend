@@ -45,9 +45,7 @@ export class MyGroupsComponent implements OnDestroy, OnInit {
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route: myGroupsPage,
       title: $localize`My groups`,
-      breadcrumbs: {
-        path: [],
-      }
+      breadcrumbs: [],
     }));
   }
 

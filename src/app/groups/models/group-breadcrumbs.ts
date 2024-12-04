@@ -17,11 +17,9 @@ interface GroupBreadcrumb extends D.TypeOf<typeof breadcrumbDecoder> {
 export type GroupBreadcrumbs = GroupBreadcrumb[];
 
 export function formatBreadcrumbs(breadcrumbs: GroupBreadcrumbs | undefined, groupRouter: GroupRouter): ContentBreadcrumb {
-  if (!breadcrumbs) return { path: [] };
-  return {
-    path: breadcrumbs.map(breadcrumb => ({
-      title: breadcrumb.name,
-      navigateTo: (): UrlTree => groupRouter.url(breadcrumb.route),
-    })),
-  };
+  if (!breadcrumbs) return [];
+  return breadcrumbs.map(breadcrumb => ({
+    title: breadcrumb.name,
+    navigateTo: (): UrlTree => groupRouter.url(breadcrumb.route),
+  }));
 }

@@ -4,11 +4,9 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { UrlTree } from '@angular/router';
 
 export function formatBreadcrumbs(breadcrumbs: BreadcrumbItem[] | undefined, itemRouter: ItemRouter): ContentBreadcrumb {
-  if (!breadcrumbs) return { path: [] };
-  return {
-    path: breadcrumbs.map(el => ({
-      title: el.title,
-      navigateTo: ():UrlTree => itemRouter.url(el.route),
-    })),
-  };
+  if (!breadcrumbs) return [];
+  return breadcrumbs.map(el => ({
+    title: el.title,
+    navigateTo: ():UrlTree => itemRouter.url(el.route),
+  }));
 }
