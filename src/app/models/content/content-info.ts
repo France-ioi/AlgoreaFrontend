@@ -4,7 +4,6 @@ import { arraysEqual } from '../../utils/array';
 export interface ContentInfo {
   type: string,
   route?: ContentRoute,
-  score?: { currentScore: number, bestScore: number, isValidated: boolean },
 }
 
 export interface RoutedContentInfo extends ContentInfo {
