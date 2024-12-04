@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { RouterLinkActive, UrlTree, RouterLink } from '@angular/router';
+import { RouterLinkActive, RouterLink } from '@angular/router';
 import { appConfig } from 'src/app/utils/config';
 import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
@@ -22,9 +22,6 @@ import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.servic
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
 import { GroupData, selectGroupData } from './models/group-data';
 import { mapStateData, readyData } from '../utils/operators/state';
-import { fromCurrentContent } from '../store/navigation/current-content/current-content.store';
-
-const GROUP_BREADCRUMB_CAT = $localize`Groups`;
 
 @Component({
   selector: 'alg-group-by-id',
@@ -67,20 +64,8 @@ export class GroupByIdComponent implements OnDestroy {
   @ViewChild('groupEdit') groupEdit?: GroupEditComponent;
 
   // on state change, update current content page info (for breadcrumb)
-  private groupToCurrentContentSubscription = this.state$.pipe(readyData()).subscribe(({ group, route, breadcrumbs }) => {
+  private groupToCurrentContentSubscription = this.state$.pipe(readyData()).subscribe(({ route }) => {
     this.currentContent.replace(groupInfo({ route }));
-    this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
-      route,
-      breadcrumbs: {
-        category: GROUP_BREADCRUMB_CAT,
-        path: breadcrumbs.map(breadcrumb => ({
-          title: breadcrumb.name,
-          navigateTo: (): UrlTree => this.groupRouter.url(breadcrumb.route),
-        })),
-        currentPageIdx: breadcrumbs.length - 1,
-      },
-      title: group.name,
-    }));
   });
 
   private initialCurrentContentSubscription = this.store.select(fromGroupContent.selectActiveContentFullRoute).subscribe(route => {
@@ -89,11 +74,6 @@ export class GroupByIdComponent implements OnDestroy {
       this.currentContent.replace(groupInfo({
         route,
       }));
-      this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
-        route,
-        breadcrumbs: { category: GROUP_BREADCRUMB_CAT, path: [], currentPageIdx: -1 }
-      }));
-
     } else {
       this.currentContent.clear();
     }
