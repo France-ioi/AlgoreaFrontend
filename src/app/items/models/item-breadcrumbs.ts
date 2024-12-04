@@ -8,7 +8,6 @@ export function formatBreadcrumbs(breadcrumbs: BreadcrumbItem[] | undefined, ite
   return {
     path: breadcrumbs.map(el => ({
       title: el.title,
-      hintNumber: el.attemptCnt,
       navigateTo: ():UrlTree => itemRouter.url(el.route),
     })),
     currentPageIdx: breadcrumbs.length - 1,
