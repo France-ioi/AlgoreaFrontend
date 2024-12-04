@@ -21,8 +21,6 @@ import { UserInfoComponent } from 'src/app/groups/containers/user-info/user-info
 import { userInfo } from 'src/app/models/content/group-info';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 
-const breadcrumbHeader = $localize`Users`;
-
 @Component({
   selector: 'alg-user',
   templateUrl: './user.component.html',
@@ -82,7 +80,6 @@ export class UserComponent implements OnInit, OnDestroy {
           route: 'user-by-id',
           title: state.isReady ? formatUser(state.data) : undefined,
           breadcrumbs: {
-            category: breadcrumbHeader,
             path: state.isReady ? [
               ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
               { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },

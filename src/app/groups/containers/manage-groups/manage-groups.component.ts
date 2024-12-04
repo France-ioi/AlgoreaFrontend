@@ -39,7 +39,6 @@ export class ManageGroupsComponent implements OnInit, OnDestroy {
       route: managedGroupsPage,
       title: $localize`Manage groups`,
       breadcrumbs: {
-        category: $localize`Manage groups`,
         path: [],
         currentPageIdx: -1
       }

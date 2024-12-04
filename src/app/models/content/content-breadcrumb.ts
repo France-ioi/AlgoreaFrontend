@@ -1,7 +1,6 @@
 import { UrlTree } from '@angular/router';
 
 export interface ContentBreadcrumb {
-  category: string,
   path: {
     title: string,
     hintNumber?: number,
