@@ -10,7 +10,7 @@ import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.se
 import { isGroupInfo } from '../../models/content/group-info';
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 import { LetDirective, PushPipe } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { ButtonModule } from 'primeng/button';
@@ -32,7 +32,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
     ButtonModule,
     ScoreRingComponent,
     LetDirective,
-    BreadcrumbComponent,
+    BreadcrumbsComponent,
     TabBarComponent,
     ObservationBarComponent,
     TimeLimitedContentInfoComponent,

@@ -6,9 +6,9 @@ import { Store } from '@ngrx/store';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 
 @Component({
-  selector: 'alg-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
-  styleUrls: [ './breadcrumb.component.scss' ],
+  selector: 'alg-breadcrumbs',
+  templateUrl: './breadcrumbs.component.html',
+  styleUrls: [ './breadcrumbs.component.scss' ],
   standalone: true,
   imports: [
     NgIf,
@@ -18,7 +18,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbComponent {
+export class BreadcrumbsComponent {
 
   breadcrumbs = this.store.selectSignal(fromCurrentContent.selectBreadcrumbs);
 

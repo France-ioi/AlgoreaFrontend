@@ -1,6 +1,6 @@
 import { UrlTree } from '@angular/router';
 import * as D from 'io-ts/Decoder';
-import { ContentBreadcrumb } from 'src/app/models/content/content-breadcrumb';
+import { ContentBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { GroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 
@@ -16,7 +16,7 @@ interface GroupBreadcrumb extends D.TypeOf<typeof breadcrumbDecoder> {
 
 export type GroupBreadcrumbs = GroupBreadcrumb[];
 
-export function formatBreadcrumbs(breadcrumbs: GroupBreadcrumbs | undefined, groupRouter: GroupRouter): ContentBreadcrumb {
+export function formatBreadcrumbs(breadcrumbs: GroupBreadcrumbs | undefined, groupRouter: GroupRouter): ContentBreadcrumbs {
   if (!breadcrumbs) return [];
   return breadcrumbs.map(breadcrumb => ({
     title: breadcrumb.name,
