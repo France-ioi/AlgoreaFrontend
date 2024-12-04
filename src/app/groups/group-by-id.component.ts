@@ -68,14 +68,7 @@ export class GroupByIdComponent implements OnDestroy {
 
   // on state change, update current content page info (for breadcrumb)
   private groupToCurrentContentSubscription = this.state$.pipe(readyData()).subscribe(({ group, route, breadcrumbs }) => {
-    this.currentContent.replace(groupInfo({
-      route,
-      details: {
-        name: group.name,
-        currentUserCanWatchMembers: !!group.currentUserCanWatchMembers,
-        currentUserCanGrantGroupAccess: !!group.currentUserCanGrantGroupAccess,
-      },
-    }));
+    this.currentContent.replace(groupInfo({ route }));
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route,
       breadcrumbs: {
