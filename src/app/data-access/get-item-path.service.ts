@@ -3,9 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { map } from 'rxjs/operators';
+import { ItemId, ItemPath } from '../models/ids';
 
-type ItemId = string;
-type ItemPath = ItemId[];
 interface RawItemPath { path: ItemPath }
 
 @Injectable({

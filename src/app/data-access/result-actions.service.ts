@@ -7,11 +7,10 @@ import { appConfig } from '../utils/config';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { decodeSnakeCaseZod } from '../utils/operators/decode';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../items/models/attempts';
+import { AttemptId, ItemPath } from '../models/ids';
 
 const startResultTimeout = 8000;
 const startResultPathTimeout = 10000;
-
-type AttemptId = string;
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,7 @@ export class ResultActionsService {
 
   constructor(private http: HttpClient) {}
 
-  start(itemIdPath: string[], attemptId: string): Observable<Result> {
+  start(itemIdPath: ItemPath, attemptId: AttemptId): Observable<Result> {
     const path = itemIdPath.join('/');
     return this.http
       .post<SimpleActionResponse>(`${appConfig.apiUrl}/items/${path}/start-result`, null, {
@@ -39,10 +38,10 @@ export class ResultActionsService {
   /*
    * Start an item when no attempt or parent attempt is known. To be used only in this case!
    */
-  startWithoutAttempt(itemIdPath: string[]): Observable<AttemptId> {
+  startWithoutAttempt(itemIdPath: ItemPath): Observable<AttemptId> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<ActionResponse<{ attempt_id: string }>>(`${appConfig.apiUrl}/items/${path}/start-result-path`, null, {
+      .post<ActionResponse<{ attempt_id: AttemptId }>>(`${appConfig.apiUrl}/items/${path}/start-result-path`, null, {
         context: new HttpContext().set(requestTimeout, startResultPathTimeout),
       })
       .pipe(

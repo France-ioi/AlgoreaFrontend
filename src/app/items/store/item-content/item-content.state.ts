@@ -3,8 +3,8 @@ import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { Item as ItemFromService } from 'src/app/data-access/get-item-by-id.service';
 import { Result } from '../../models/attempts';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
+import { ItemId } from 'src/app/models/ids';
 
-type ItemId = string;
 export type Item = ItemFromService;
 export type Breadcumbs = BreadcrumbItem[];
 export interface Results { results: Result[], currentResult?: Result }
