@@ -3,8 +3,6 @@ type Id = string;
 
 export interface ContentRoute {
   contentType: string,
-  id: Id,
-  path: Id[],
 }
 
 /*

@@ -4,6 +4,7 @@ import { UrlCommand } from '../../utils/url';
 import { ContentRoute } from './content-route';
 import { groupGroupTypeCategory, GroupTypeCategory, userGroupTypeCategory } from '../../groups/models/group-types';
 import { pathAsParameter } from './path-parameter';
+import { GroupId, GroupPath } from '../ids';
 
 export const myGroupsPage = 'mine';
 export const managedGroupsPage = 'manage';
@@ -15,8 +16,10 @@ export const groupPathRouterSubPrefix = 'by-id';
 
 export interface GroupRoute extends ContentRoute {
   contentType: GroupTypeCategory,
+  id: GroupId,
+  path: GroupPath,
 }
-export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<ContentRoute, 'path'>>;
+export type RawGroupRoute = Omit<GroupRoute, 'path'> & Partial<Pick<GroupRoute, 'path'>>;
 
 export type GroupLike =
   | { id: Group['id'], contentType: GroupTypeCategory }
@@ -55,7 +58,8 @@ export function groupRoute(group: GroupLike, path: string[]): GroupRoute {
 }
 
 export function isGroupRoute(route: ContentRoute | RawGroupRoute): route is GroupRoute {
-  return (route.contentType === groupGroupTypeCategory || route.contentType === userGroupTypeCategory) && route.path !== undefined;
+  return (route.contentType === groupGroupTypeCategory || route.contentType === userGroupTypeCategory)
+    && 'path' in route && Array.isArray(route.path);
 }
 
 export function isRawGroupRoute(route?: unknown): route is RawGroupRoute {

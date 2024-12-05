@@ -4,7 +4,6 @@ import { map, skip, switchMap, take } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/items/models/attempts';
 import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { ContentInfo } from 'src/app/models/content/content-info';
-import { ContentRoute } from 'src/app/models/routing/content-route';
 import { isActivityInfo, isItemInfo, itemInfo, ItemInfo } from 'src/app/models/content/item-info';
 import { itemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { mayHaveChildren } from 'src/app/items/models/item-type';
@@ -17,6 +16,7 @@ import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/items/m
 import { isGroupTypeVisible } from 'src/app/groups/models/group-types';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
+import { EntityPathRoute } from 'src/app/models/routing/entity-route';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
@@ -52,7 +52,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return !!content.route.attemptId; // an attempt is required to fetch children
   }
 
-  fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+  fetchNavData(route: EntityPathRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
     const attemptId = route.attemptId;
     if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');

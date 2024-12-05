@@ -6,7 +6,7 @@ import { ItemTypeCategory } from '../../items/models/item-type';
 import { isString } from '../../utils/type-checkers';
 import { UrlCommand } from '../../utils/url';
 import { arraysEqual } from '../../utils/array';
-import { AnswerId, AttemptId, ItemId } from '../ids';
+import { AnswerId, AttemptId, ItemId, ItemPath } from '../ids';
 import { pathAsParameter, pathFromRouterParameters } from './path-parameter';
 
 // url parameter names
@@ -36,6 +36,8 @@ const answerLoadAsCurrentParamName = 'answerLoadAsCurrent';
 // STRUCTURES
 export interface ItemRoute extends ContentRoute {
   contentType: ItemTypeCategory,
+  id: ItemId,
+  path: ItemPath,
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?:

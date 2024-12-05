@@ -3,13 +3,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/models/content/group-info';
-import { ContentRoute } from 'src/app/models/routing/content-route';
 import { groupRoute, isGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../data-access/group-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
+import { EntityPathRoute } from 'src/app/models/routing/entity-route';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     return !isUser(content.route);
   }
 
-  fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
+  fetchNavData(route: EntityPathRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     return this.groupNavigationService.getGroupNavigation(route.id).pipe(
       map(data => this.mapNavData(data, route.path))
     );
