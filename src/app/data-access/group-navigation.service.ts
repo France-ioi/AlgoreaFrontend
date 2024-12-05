@@ -1,28 +1,46 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import * as D from 'io-ts/Decoder';
 import { appConfig } from 'src/app/utils/config';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
 
-const groupNavigationChildDecoder = D.struct({
-  id: D.string,
-  name: D.string,
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
-  currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
-  currentUserMembership: D.literal('none', 'direct', 'descendant'),
+const groupNavigationChildSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.union([
+    z.literal('Class'),
+    z.literal('Team'),
+    z.literal('Club'),
+    z.literal('Friends'),
+    z.literal('Other'),
+    z.literal('User'),
+    z.literal('Session'),
+    z.literal('Base')
+  ]),
+  currentUserManagership: z.union([ z.literal('none'), z.literal('direct'), z.literal('ancestor'), z.literal('descendant') ]),
+  currentUserMembership: z.union([ z.literal('none'), z.literal('direct'), z.literal('descendant') ]),
 });
 
-export type GroupNavigationChild = D.TypeOf<typeof groupNavigationChildDecoder>;
+export type GroupNavigationChild = z.infer<typeof groupNavigationChildSchema>;
 
-const groupNavigationDecoder = D.struct({
-  id: D.string,
-  name: D.string,
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
-  children: D.array(groupNavigationChildDecoder),
+const groupNavigationSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.union([
+    z.literal('Class'),
+    z.literal('Team'),
+    z.literal('Club'),
+    z.literal('Friends'),
+    z.literal('Other'),
+    z.literal('User'),
+    z.literal('Session'),
+    z.literal('Base')
+  ]),
+  children: z.array(groupNavigationChildSchema),
 });
 
-export type GroupNavigationData = D.TypeOf<typeof groupNavigationDecoder>;
+export type GroupNavigationData = z.infer<typeof groupNavigationSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -33,13 +51,13 @@ export class GroupNavigationService {
 
   getGroupNavigation(groupId: string): Observable<GroupNavigationData> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/navigation`).pipe(
-      decodeSnakeCase(groupNavigationDecoder),
+      decodeSnakeCaseZod(groupNavigationSchema),
     );
   }
 
   getRoot(): Observable<GroupNavigationChild[]> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/groups/roots`).pipe(
-      decodeSnakeCase(D.array(groupNavigationChildDecoder)),
+      decodeSnakeCaseZod(z.array(groupNavigationChildSchema)),
     );
   }
 
