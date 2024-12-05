@@ -1,4 +1,4 @@
-import { closestBreadcrumbs } from './content-route';
+import { closestBreadcrumbs } from './content-breadcrumbs';
 
 const basePath = [ '1', '2', '3' ];
 
@@ -6,7 +6,7 @@ function wrap(path: string[]): { id: string }[] {
   return path.map(e => ({ id: e }));
 }
 
-describe('closestPath', () => {
+describe('closestBreadcrumbs', () => {
   it('should throw an exception if the list is empty', () => {
     expect(function () {
       closestBreadcrumbs(basePath, []);

@@ -46,7 +46,7 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { GetBreadcrumbsFromRootsService } from 'src/app/data-access/get-breadcrumbs-from-roots.service';
 import { typeCategoryOfItem } from 'src/app/items/models/item-type';
-import { closestBreadcrumbs } from 'src/app/models/routing/content-route';
+import { closestBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
