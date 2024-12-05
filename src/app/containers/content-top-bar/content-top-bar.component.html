@@ -11,13 +11,14 @@
         ></button>
       </div>
       <div class="margin-right score-section" *ngIf="currentContent.type === 'item'">
-        <alg-score-ring
-          *ngIf="$any(currentContent).details && $any(currentContent).details.bestScore !== undefined && $any(currentContent).details.currentScore !== undefined && $any(currentContent).details.validated !== undefined"
-          [bestScore]="$any(currentContent).details.bestScore"
-          [currentScore]="$any(currentContent).details.currentScore"
-          [isValidated]="$any(currentContent).details.validated"
-          [diameter]="32"
-        ></alg-score-ring>
+        @if (score(); as scoreVal) {
+          <alg-score-ring
+            [bestScore]="scoreVal.best"
+            [currentScore]="scoreVal.current"
+            [isValidated]="scoreVal.validated"
+            [diameter]="32"
+          ></alg-score-ring>
+        }
       </div>
       <ng-container *ngrxLet="{
         fullFrameContentDisplayed: fullFrameContentDisplayed$,

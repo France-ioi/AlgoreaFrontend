@@ -21,6 +21,7 @@ import { TabService } from '../../services/tab.service';
 import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
+import { selectActiveItemDisplayedScore } from 'src/app/items/models/scores';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -51,6 +52,7 @@ export class ContentTopBarComponent {
     delay(0),
   );
   title = this.store.selectSignal(fromCurrentContent.selectTitle);
+  score = this.store.selectSignal(selectActiveItemDisplayedScore);
 
   navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {
