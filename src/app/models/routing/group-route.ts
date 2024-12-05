@@ -1,10 +1,9 @@
-import { ParamMap } from '@angular/router';
 import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
 import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
 import { ContentRoute } from './content-route';
 import { groupGroupTypeCategory, GroupTypeCategory, userGroupTypeCategory } from '../../groups/models/group-types';
-import { pathAsParameter, pathFromRouterParameters } from './path-parameter';
+import { pathAsParameter } from './path-parameter';
 
 export const myGroupsPage = 'mine';
 export const managedGroupsPage = 'manage';
@@ -86,11 +85,4 @@ function isUserPage(page: string[]): boolean {
 function isGroupPage(page: string[]): boolean {
   if (!page[0]) return false;
   return [ 'members', 'managers', 'settings', 'access' ].includes(page[0]);
-}
-
-export function decodeGroupRouterParameters(params: ParamMap): { id: string | null, path: string[] | null } {
-  return {
-    id: params.get('id'),
-    path: pathFromRouterParameters(params),
-  };
 }
