@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 import { fromRouter } from 'src/app/store/router';
-import { pathFromParamValue, pathParamName } from './content-route';
+import { pathFromParamValue, pathParamName } from './path-parameter';
 
 /**
  * A selector on the "id" parameter extracted from the route.

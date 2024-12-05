@@ -2,8 +2,9 @@ import { ParamMap } from '@angular/router';
 import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
 import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
-import { ContentRoute, pathAsParameter, pathFromRouterParameters } from './content-route';
+import { ContentRoute } from './content-route';
 import { groupGroupTypeCategory, GroupTypeCategory, userGroupTypeCategory } from '../../groups/models/group-types';
+import { pathAsParameter, pathFromRouterParameters } from './path-parameter';
 
 export const myGroupsPage = 'mine';
 export const managedGroupsPage = 'manage';
