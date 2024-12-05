@@ -16,8 +16,9 @@ import { GroupInState, State, UserInState } from './group-content.state';
 import { fetchingState } from 'src/app/utils/state';
 import { formatUser } from 'src/app/groups/models/user';
 import { RootState } from 'src/app/utils/store/root_state';
-import { selectIdParameter, selectPathParameter } from 'src/app/models/routing/content-route-selectors';
+import { selectIdParameter } from 'src/app/models/routing/content-route-selectors';
 import { groupGroupTypeCategory, userGroupTypeCategory } from '../../models/group-types';
+import { selectPathParameter } from 'src/app/models/routing/path-parameter';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsGroupContentActive: MemoizedSelector<T, boolean>,
