@@ -1,12 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { of } from 'rxjs';
-import { CurrentContentService } from '../../services/current-content.service';
-import { switchMap, filter } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
-import { isItemInfo } from '../../models/content/item-info';
 import { LayoutService } from '../../services/layout.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
-import { isGroupInfo } from '../../models/content/group-info';
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
@@ -22,6 +19,8 @@ import { ObservationBarComponent } from '../observation-bar/observation-bar.comp
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 import { selectActiveItemDisplayedScore } from 'src/app/items/models/scores';
 import { fromItemContent } from 'src/app/items/store';
+import { isGroupRoute } from 'src/app/models/routing/group-route';
+import { isItemRoute } from 'src/app/models/routing/item-route';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -52,20 +51,17 @@ export class ContentTopBarComponent {
   title = this.store.selectSignal(fromCurrentContent.selectTitle);
   score = this.store.selectSignal(selectActiveItemDisplayedScore);
 
-  navigationNeighbors$ = this.currentContentService.content$.pipe(
-    switchMap(content => {
-      if (isGroupInfo(content)) {
-        return this.groupNavTreeService.navigationNeighbors$;
-      }
+  navigationNeighbors$ = this.store.select(fromCurrentContent.selectContentRoute).pipe(
+    switchMap(contentRoute => {
+      if (!contentRoute) return of(undefined);
 
-      if (!isItemInfo(content) || !content.route?.contentType) {
-        return of(undefined);
+      if (isGroupRoute(contentRoute)) return this.groupNavTreeService.navigationNeighbors$;
+      if (isItemRoute(contentRoute)) {
+        return contentRoute.contentType === 'activity' ?
+          this.activityNavTreeService.navigationNeighbors$ : this.skillNavTreeService.navigationNeighbors$;
       }
-
-      return content.route.contentType === 'activity' ?
-        this.activityNavTreeService.navigationNeighbors$ : this.skillNavTreeService.navigationNeighbors$;
+      return of(undefined);
     }),
-    filter(navigationNeighbors => !!navigationNeighbors?.isReady),
   );
   readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
@@ -73,7 +69,6 @@ export class ContentTopBarComponent {
 
   constructor(
     private store: Store,
-    private currentContentService: CurrentContentService,
     private activityNavTreeService: ActivityNavTreeService,
     private skillNavTreeService: SkillNavTreeService,
     private groupNavTreeService: GroupNavTreeService,
