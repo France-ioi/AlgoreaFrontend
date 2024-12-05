@@ -36,6 +36,7 @@
     "useDefineForClassFields": false,
 
     "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true,
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
