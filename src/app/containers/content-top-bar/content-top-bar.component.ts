@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ContentInfo } from '../../models/content/content-info';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { CurrentContentService } from '../../services/current-content.service';
-import { delay, switchMap, filter } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { isItemInfo } from '../../models/content/item-info';
 import { LayoutService } from '../../services/layout.service';
@@ -22,6 +21,7 @@ import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/ti
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 import { selectActiveItemDisplayedScore } from 'src/app/items/models/scores';
+import { fromItemContent } from 'src/app/items/store';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -48,9 +48,7 @@ export class ContentTopBarComponent {
 
   hasForumThreadConfigured$ = this.store.select(fromForum.selectHasCurrentThread);
 
-  currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
-    delay(0),
-  );
+  isItemContentActive = this.store.selectSignal(fromItemContent.selectIsItemContentActive);
   title = this.store.selectSignal(fromCurrentContent.selectTitle);
   score = this.store.selectSignal(selectActiveItemDisplayedScore);
 

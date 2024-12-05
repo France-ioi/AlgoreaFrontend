@@ -1,16 +1,16 @@
-<ng-container *ngIf="currentContent$ | async as currentContent">
-  <div class="content-top-bar">
-    <div class="left-pane">
-      <div class="margin-right" *ngIf="showLeftMenuOpener">
-        <button
-          class="alg-button-icon no-bg primary-color left-menu"
-          pButton
-          type="button"
-          icon="ph ph-list"
-          (click)="showLeftMenu()"
-        ></button>
-      </div>
-      <div class="margin-right score-section" *ngIf="currentContent.type === 'item'">
+<div class="content-top-bar">
+  <div class="left-pane">
+    <div class="margin-right" *ngIf="showLeftMenuOpener">
+      <button
+        class="alg-button-icon no-bg primary-color left-menu"
+        pButton
+        type="button"
+        icon="ph ph-list"
+        (click)="showLeftMenu()"
+      ></button>
+    </div>
+    @if (isItemContentActive()) {
+      <div class="margin-right score-section">
         @if (score(); as scoreVal) {
           <alg-score-ring
             [bestScore]="scoreVal.best"
@@ -20,52 +20,52 @@
           ></alg-score-ring>
         }
       </div>
-      <ng-container *ngrxLet="{
-        fullFrameContentDisplayed: fullFrameContentDisplayed$,
-        shouldDisplayTabBar: shouldDisplayTabBar$,
-        isNarrowScreen: isNarrowScreen$,
-      } as behaviourInfo">
-        <div
-          class="left-pane-title margin-right"
-          *ngIf="!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed"
-        >
-          @let titleVal = title();
-          @if (!showBreadcrumbs && titleVal) {
-            <p class="left-pane-title-text">{{ titleVal }}</p>
-          } @else {
-            <alg-breadcrumbs class="breadcrumbs"></alg-breadcrumbs>
-          }
-        </div>
-        <alg-tab-bar
-          class="tab-bar"
-          styleClass="for-header"
-          *ngIf="behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed"
-        ></alg-tab-bar>
-      </ng-container>
-    </div>
-    <div class="right-pane">
-      <alg-time-limited-content-info></alg-time-limited-content-info>
-      <alg-observation-bar></alg-observation-bar>
-      <button
-        *ngIf="hasForumThreadConfigured$ | ngrxPush"
-        class="alg-button-icon no-bg primary-color margin-left"
-        pButton
-        type="button"
-        icon="ph-duotone ph-chats-circle"
-        (click)="toggleDiscussionPanelVisibility()"
-      ></button>
-      <alg-neighbor-widget
-        *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-        class="neighbor-widget margin-left"
-        [navigationMode]="{
-          parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
-          left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
-          right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
-        }"
-        (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
-        (left)="navigationNeighbors?.data?.previous?.navigateTo()"
-        (right)="navigationNeighbors?.data?.next?.navigateTo()"
-      ></alg-neighbor-widget>
-    </div>
+    }
+    <ng-container *ngrxLet="{
+      fullFrameContentDisplayed: fullFrameContentDisplayed$,
+      shouldDisplayTabBar: shouldDisplayTabBar$,
+      isNarrowScreen: isNarrowScreen$,
+    } as behaviourInfo">
+      <div
+        class="left-pane-title margin-right"
+        *ngIf="!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed"
+      >
+        @let titleVal = title();
+        @if (!showBreadcrumbs && titleVal) {
+          <p class="left-pane-title-text">{{ titleVal }}</p>
+        } @else {
+          <alg-breadcrumbs class="breadcrumbs"></alg-breadcrumbs>
+        }
+      </div>
+      <alg-tab-bar
+        class="tab-bar"
+        styleClass="for-header"
+        *ngIf="behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed"
+      ></alg-tab-bar>
+    </ng-container>
   </div>
-</ng-container>
+  <div class="right-pane">
+    <alg-time-limited-content-info></alg-time-limited-content-info>
+    <alg-observation-bar></alg-observation-bar>
+    <button
+      *ngIf="hasForumThreadConfigured$ | ngrxPush"
+      class="alg-button-icon no-bg primary-color margin-left"
+      pButton
+      type="button"
+      icon="ph-duotone ph-chats-circle"
+      (click)="toggleDiscussionPanelVisibility()"
+    ></button>
+    <alg-neighbor-widget
+      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
+      class="neighbor-widget margin-left"
+      [navigationMode]="{
+        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
+        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
+        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
+      }"
+      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
+      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
+      (right)="navigationNeighbors?.data?.next?.navigateTo()"
+    ></alg-neighbor-widget>
+  </div>
+</div>
