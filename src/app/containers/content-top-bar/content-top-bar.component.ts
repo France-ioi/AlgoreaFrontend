@@ -10,7 +10,7 @@ import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.se
 import { isGroupInfo } from '../../models/content/group-info';
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
-import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 import { LetDirective, PushPipe } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { ButtonModule } from 'primeng/button';
@@ -20,6 +20,7 @@ import { fromForum } from 'src/app/forum/store';
 import { TabService } from '../../services/tab.service';
 import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
+import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -31,7 +32,7 @@ import { ObservationBarComponent } from '../observation-bar/observation-bar.comp
     ButtonModule,
     ScoreRingComponent,
     LetDirective,
-    BreadcrumbComponent,
+    BreadcrumbsComponent,
     TabBarComponent,
     ObservationBarComponent,
     TimeLimitedContentInfoComponent,
@@ -49,6 +50,7 @@ export class ContentTopBarComponent {
   currentContent$: Observable<ContentInfo | null> = this.currentContentService.content$.pipe(
     delay(0),
   );
+  title = this.store.selectSignal(fromCurrentContent.selectTitle);
 
   navigationNeighbors$ = this.currentContentService.content$.pipe(
     switchMap(content => {

@@ -19,8 +19,7 @@ import { fromGroupContent } from '../../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { UserInfoComponent } from 'src/app/groups/containers/user-info/user-info.component';
 import { userInfo } from 'src/app/models/content/group-info';
-
-const breadcrumbHeader = $localize`Users`;
+import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 
 @Component({
   selector: 'alg-user',
@@ -73,22 +72,19 @@ export class UserComponent implements OnInit, OnDestroy {
       this.state$,
       this.store.select(fromGroupContent.selectActiveContentBreadcrumbs),
     ])
-      .pipe(
-        map(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => userInfo({
-          title: state.isReady ? formatUser(state.data) : undefined,
-          breadcrumbs: {
-            category: breadcrumbHeader,
-            path: state.isReady ? [
-              ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
-              { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
-              { title: currentPageTitle }
-            ] : [],
-            currentPageIdx: breadcrumbs !== null && breadcrumbs.isReady ? breadcrumbs.data.length : 1,
-          },
+      .subscribe(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => {
+        this.currentContent.replace(userInfo({
           route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
-        }))
-      ).subscribe(contentInfo => {
-        this.currentContent.replace(contentInfo);
+        }));
+        this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
+          route: 'user-by-id',
+          title: state.isReady ? formatUser(state.data) : undefined,
+          breadcrumbs: state.isReady ? [
+            ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
+            { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
+            { title: currentPageTitle }
+          ] : undefined
+        }));
       });
   }
 

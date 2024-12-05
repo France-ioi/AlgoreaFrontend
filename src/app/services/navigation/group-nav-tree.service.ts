@@ -43,8 +43,8 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     return isGroupInfo(content);
   }
 
-  addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: GroupInfo): NavTreeElement {
-    return contentInfo.title ? { ...treeElement, title: contentInfo.title } : treeElement;
+  addDetailsToTreeElement(treeElement: NavTreeElement, _contentInfo: GroupInfo): NavTreeElement {
+    return treeElement;
   }
 
   fetchRootTreeData(): Observable<NavTreeElement[]> {
