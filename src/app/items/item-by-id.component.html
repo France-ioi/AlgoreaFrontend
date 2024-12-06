@@ -6,12 +6,14 @@
           <alg-item-header [itemData]="itemData"></alg-item-header>
         }
         @if (showAccessCodeField$ | async) {
-          <alg-access-code-view
-            i18n-sectionLabel sectionLabel="Access to activity"
-            i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
-            [itemData]="itemData"
-            (groupJoined)="reloadItem()"
-          ></alg-access-code-view>
+          <div class="access-code-view">
+            <alg-access-code-view
+              i18n-sectionLabel sectionLabel="Access to activity"
+              i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
+              [itemData]="itemData"
+              (groupJoined)="reloadItem()"
+            ></alg-access-code-view>
+          </div>
         }
         @if (observedGroup$ | async; as observedGroup) {
           <alg-item-permissions
