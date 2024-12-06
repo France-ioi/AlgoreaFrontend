@@ -19,7 +19,7 @@ export class AlgErrorHandler extends ErrorHandler {
     super();
   }
 
-  handleError(err: any): void {
+  override handleError(err: any): void {
     if (this.isChunkLoadingError(err)) {
       this.chunkErrorService.emitError();
       return;

@@ -33,7 +33,10 @@
 
     // "strict" enables all strict type checking option
     "strict": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true,
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
