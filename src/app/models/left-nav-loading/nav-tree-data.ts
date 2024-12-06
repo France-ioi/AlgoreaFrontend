@@ -1,13 +1,12 @@
 import { arraysEqual } from 'src/app/utils/array';
 import { ensureDefined } from 'src/app/utils/assert';
-import { ContentRoute } from 'src/app/models/routing/content-route';
+import { EntityPathRoute } from '../routing/entity-route';
 
-type Id = string;
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
 
 export interface NavTreeElement {
   // generic
-  route: ContentRoute,
+  route: EntityPathRoute,
   title: string,
   hasChildren: boolean,
   children?: this[],
@@ -34,15 +33,15 @@ export class NavTreeData {
 
   constructor(
     public readonly elements: NavTreeElement[], // level 1 elements (which may have children)
-    public readonly pathToElements: Id[], // path from root to the elements (so including the parent if any)
+    public readonly pathToElements: EntityPathRoute['path'], // path from root to the elements (so including the parent if any)
     public readonly parent?: NavTreeElement, // level 0 element
-    public readonly selectedElementId?: Id, // the selected element is among elements
+    public readonly selectedElementId?: EntityPathRoute['id'], // the selected element is among elements
   ) {}
 
   /**
    * Return this with selected element changed
    */
-  withSelection(id: Id): NavTreeData {
+  withSelection(id: EntityPathRoute['id']): NavTreeData {
     return new NavTreeData(this.elements, this.pathToElements, this.parent, id);
   }
 
@@ -50,8 +49,8 @@ export class NavTreeData {
    * Return this with the element from `elements` (identified by its id) replaced by the given one
    * If the element is not found, return this unchanged.
    */
-  withUpdatedElement(route: ContentRoute, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
-    let l1Id: ContentRoute['id'];
+  withUpdatedElement(route: EntityPathRoute, update: (el:NavTreeElement)=>NavTreeElement): NavTreeData {
+    let l1Id: EntityPathRoute['id'];
     if (arraysEqual(route.path, this.pathToElements)) l1Id = route.id;
     else if (arraysEqual(route.path.slice(0, -1), this.pathToElements)) l1Id = ensureDefined(route.path[route.path.length-1]);
     else throw new Error('unexpected: updated element not among tree elements');
@@ -69,8 +68,8 @@ export class NavTreeData {
    * Return this with children added to the element from `elements` (identified by its route)
    * If the element is not found, return this unchanged.
    */
-  withChildren(route: ContentRoute, children: NavTreeElement[]): NavTreeData {
-    let id: ContentRoute['id'];
+  withChildren(route: EntityPathRoute, children: NavTreeElement[]): NavTreeData {
+    let id: EntityPathRoute['id'];
     if (arraysEqual(route.path, this.pathToElements)) id = route.id;
     else if (arraysEqual(route.path.slice(0, -1), this.pathToElements)) id = ensureDefined(route.path[route.path.length-1]);
     else throw new Error('unexpected: children parent not among tree elements');

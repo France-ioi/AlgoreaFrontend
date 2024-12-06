@@ -6,9 +6,9 @@ import { isDefined } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, readyState } from 'src/app/utils/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/models/content/content-info';
 import { mapStateData, mapToFetchState } from 'src/app/utils/operators/state';
-import { ContentRoute } from 'src/app/models/routing/content-route';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
+import { EntityPathRoute } from 'src/app/models/routing/entity-route';
 
 export interface NeighborInfo {
   navigateTo: () => void,
@@ -21,7 +21,7 @@ export interface NavigationNeighbors {
 }
 
 interface FetchInfo {
-  path: ContentRoute['path'], /* path to the fetched elements */
+  path: EntityPathRoute['path'], /* path to the fetched elements */
   fetch: Observable<FetchState<NavTreeData>>,
 }
 
@@ -210,7 +210,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    */
   protected abstract canFetchChildren(content: ContentInfo): boolean;
 
-  protected abstract fetchNavData(route: ContentRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
+  protected abstract fetchNavData(route: EntityPathRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
   private fetchChildrenNav(content: RoutedContentInfo): FetchInfo|undefined {
     if (!this.canFetchChildren(content)) return undefined;
@@ -234,7 +234,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     } else return this.fetchRootNav();
   }
 
-  private fetch(path: ContentRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
+  private fetch(path: EntityPathRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
     return {
       path: path,
       fetch: fetch.pipe(
