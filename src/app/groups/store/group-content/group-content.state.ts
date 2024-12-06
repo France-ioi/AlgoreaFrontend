@@ -15,14 +15,14 @@ export interface State {
   routeErrorHandling: Fetching<undefined>|FetchError,
 
   // if the content is currently a group/user page: the corresponding info
-  group: GroupInState | UserInState,
+  groupState: GroupInState | UserInState,
   // if (and only if) the content is currently a group page AND the page has a path in url: the corresponding breadcrumbs
-  breadcrumbs: FetchState<GroupBreadcrumbs, GroupRoute>,
+  breadcrumbsState: FetchState<GroupBreadcrumbs, GroupRoute>,
 }
 
 export const initialState: State = {
   routeErrorHandling: fetchingState(),
 
-  group: fetchingState(),
-  breadcrumbs: fetchingState(),
+  groupState: fetchingState(),
+  breadcrumbsState: fetchingState(),
 };

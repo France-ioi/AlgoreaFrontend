@@ -19,8 +19,8 @@ export const itemByIdPageActions = createActionGroup({
 export const itemFetchingActions = createActionGroup({
   source: 'Item-related API',
   events: {
-    itemFetchStateChanged: props<{ fetchState: State['item'] }>(),
-    breadcrumbsFetchStateChanged: props<{ fetchState: State['breadcrumbs'] }>(),
-    resultsFetchStateChanged: props<{ fetchState: State['results'] }>(),
+    itemFetchStateChanged: props<{ fetchState: State['itemState'] }>(),
+    breadcrumbsFetchStateChanged: props<{ fetchState: State['breadcrumbsState'] }>(),
+    resultsFetchStateChanged: props<{ fetchState: State['resultsState'] }>(),
   },
 });

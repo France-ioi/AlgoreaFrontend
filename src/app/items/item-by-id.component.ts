@@ -240,7 +240,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     this.breadcrumbService.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
 
-    this.store.select(fromItemContent.selectActiveContentBreadcrumbs).subscribe(state => {
+    this.store.select(fromItemContent.selectActiveContentBreadcrumbsState).subscribe(state => {
       if (state.isError) this.currentContent.clear();
 
       // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation

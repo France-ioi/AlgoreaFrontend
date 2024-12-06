@@ -8,12 +8,12 @@ export const reducer = createReducer(
   on(
     groupInfoFetchedActions.userFetchStateChanged,
     groupInfoFetchedActions.groupFetchStateChanged,
-    (state, { fetchState }): State => ({ ...state, group: fetchState })
+    (state, { fetchState }): State => ({ ...state, groupState: fetchState })
   ),
 
   on(
     groupInfoFetchedActions.breadcrumbsFetchStateChanged,
-    (state, { fetchState }): State => ({ ...state, breadcrumbs: fetchState })
+    (state, { fetchState }): State => ({ ...state, breadcrumbsState: fetchState })
   ),
 
   on(

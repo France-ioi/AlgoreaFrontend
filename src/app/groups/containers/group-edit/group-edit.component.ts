@@ -95,7 +95,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     data?: GroupChanges['approval_change_action'],
   }>({ opened: false });
 
-  state$ = this.store.select(fromGroupContent.selectActiveContentGroup).pipe(
+  state$ = this.store.select(fromGroupContent.selectActiveContentGroupState).pipe(
     mapStateData<Group, Group & ManagementAdditions, { id: string}>(withManagementAdditions),
   );
 

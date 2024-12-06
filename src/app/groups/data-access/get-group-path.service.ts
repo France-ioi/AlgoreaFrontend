@@ -5,14 +5,9 @@ import { appConfig } from 'src/app/utils/config';
 import { map } from 'rxjs/operators';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../utils/operators/decode';
+import { GroupId, GroupPath } from 'src/app/models/ids';
 
-const groupIdDecoder = D.string;
-
-type GroupId = D.TypeOf<typeof groupIdDecoder>;
-
-const groupPathDecoder = D.array(groupIdDecoder);
-
-type GroupPath = D.TypeOf<typeof groupPathDecoder>;
+const groupPathDecoder = D.array(D.string);
 
 const groupPathResponseDecoder = D.struct({
   path: groupPathDecoder,

@@ -17,9 +17,9 @@ export interface GroupData {
 
 export const selectGroupData = createSelector(
   fromGroupContent.selectActiveContentRouteErrorHandlingState,
-  fromGroupContent.selectActiveContentGroup,
+  fromGroupContent.selectActiveContentGroupState,
   fromGroupContent.selectActiveContentFullRoute,
-  fromGroupContent.selectActiveContentBreadcrumbs,
+  fromGroupContent.selectActiveContentBreadcrumbsState,
   (errorHandling, group, route, breadcrumbs) => {
     if (errorHandling?.isFetching) return fetchingState();
     if (errorHandling?.isError) return errorState(errorHandling.error);

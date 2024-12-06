@@ -6,6 +6,7 @@ import { ItemTypeCategory } from '../../items/models/item-type';
 import { isString } from '../../utils/type-checkers';
 import { UrlCommand } from '../../utils/url';
 import { arraysEqual } from '../../utils/array';
+import { AnswerId, AttemptId, ItemId } from '../ids';
 
 // url parameter names
 export const activityPrefix = 'a';
@@ -18,9 +19,6 @@ const answerBestParticipantParamName = 'answerParticipantId';
 const answerLoadAsCurrentParamName = 'answerLoadAsCurrent';
 
 // alias for better readibility
-type ItemId = string;
-export type AttemptId = string;
-type AnswerId = string;
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item

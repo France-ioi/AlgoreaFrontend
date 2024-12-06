@@ -10,8 +10,8 @@ import { formatBreadcrumbs } from '../../models/item-breadcrumbs';
 
 const selectCurrentContent = createSelector(
   fromItemContent.selectActiveContentRoute,
-  fromItemContent.selectActiveContentBreadcrumbs,
-  fromItemContent.selectActiveContentItem,
+  fromItemContent.selectActiveContentBreadcrumbsState,
+  fromItemContent.selectActiveContentItemState,
   (route, breadcrumbsState, itemState) => (route ? { route, breadcrumbs: breadcrumbsState.data, item: itemState.data } : null)
 );
 
