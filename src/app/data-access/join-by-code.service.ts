@@ -4,51 +4,42 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appConfig } from 'src/app/utils/config';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { groupApprovalsDecoder } from 'src/app/groups/models/group-approvals';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 
-const managerDecoder = D.struct({
-  id: D.string,
-  firstName: D.nullable(D.string),
-  lastName: D.nullable(D.string),
-  login: D.string,
+const managerSchema = z.object({
+  id: z.string(),
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
+  login: z.string(),
 });
 
-const groupDecoder = pipe(
-  D.struct({
-    name: D.string,
-    rootActivityId: D.nullable(D.string),
-    rootSkillId: D.nullable(D.string),
-    managers: D.array(managerDecoder),
-  }),
-  D.intersect(groupApprovalsDecoder),
-);
+const groupSchema = z.object({
+  name: z.string(),
+  rootActivityId: z.string().nullable(),
+  rootSkillId: z.string().nullable(),
+  managers: z.array(managerSchema),
+}).and(groupApprovalsSchema);
 
-const invalidReasonDecoder = D.literal(
+const invalidReasonSchema = z.enum([
   'no_group',
   'frozen_membership',
   'already_member',
   'conflicting_team_participation',
-  'team_conditions_not_met'
-);
+  'team_conditions_not_met',
+]);
 
-const isCodeValidDecoder = pipe(
-  D.struct({
-    valid: D.boolean,
-  }),
-  D.intersect(
-    D.partial({
-      group: groupDecoder,
-      reason: invalidReasonDecoder,
-    }),
-  ),
-);
+const isCodeValidSchema = z.object({
+  valid: z.boolean(),
+}).and(z.object({
+  group: groupSchema,
+  reason: invalidReasonSchema,
+}).partial());
 
-export type IsCodeValid = D.TypeOf<typeof isCodeValidDecoder>;
+export type IsCodeValid = z.infer<typeof isCodeValidSchema>;
 
-export type InvalidCodeReason = D.TypeOf<typeof invalidReasonDecoder>;
+export type InvalidCodeReason = z.infer<typeof invalidReasonSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +55,7 @@ export class JoinByCodeService {
       .get<unknown>(`${appConfig.apiUrl}/groups/is-code-valid`,
         { params: params })
       .pipe(
-        decodeSnakeCase(isCodeValidDecoder),
+        decodeSnakeCaseZod(isCodeValidSchema),
       );
   }
 
