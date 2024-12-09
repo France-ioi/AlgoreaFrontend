@@ -3,32 +3,25 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/data-access/sort-options';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import z from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
 
-const groupMembershipDecoder = pipe(
-  D.struct({
-    action: D.literal('invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly'),
-    group: D.struct({
-      description: D.nullable(D.string),
-      id: D.string,
-      name: D.string,
-      type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Base', 'Session'),
-    }),
-    memberSince: D.nullable(dateDecoder),
-    isMembershipLocked: D.boolean,
+const groupMembershipSchema = z.object({
+  action: z.enum([ 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly' ]),
+  group: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string().nullable(),
+    type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Base', 'Session' ]),
   }),
-  D.intersect(
-    D.partial({
-      canLeaveTeam: D.literal('free_to_leave', 'frozen_membership', 'would_break_entry_conditions'),
-    })
-  ),
-);
+  memberSince: z.coerce.date().nullable(),
+  isMembershipLocked: z.boolean(),
+}).and(z.object({
+  canLeaveTeam: z.enum([ 'free_to_leave', 'frozen_membership', 'would_break_entry_conditions' ]),
+}).partial());
 
-export type GroupMembership = D.TypeOf<typeof groupMembershipDecoder>;
+export type GroupMembership = z.infer<typeof groupMembershipSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +34,7 @@ export class JoinedGroupsService {
     return this.http
       .get(`${appConfig.apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
-        decodeSnakeCase(D.array(groupMembershipDecoder)),
+        decodeSnakeCaseZod(z.array(groupMembershipSchema)),
         map(memberships => memberships.filter(membership => membership.group.type !== 'Base')),
       );
   }
