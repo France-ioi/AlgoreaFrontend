@@ -1,13 +1,22 @@
-import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { GroupRoute } from 'src/app/models/routing/group-route';
 
-export const breadcrumbDecoder = D.struct({
-  id: D.string,
-  name: D.string,
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base'),
+export const breadcrumbSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.union([
+    z.literal('Class'),
+    z.literal('Team'),
+    z.literal('Club'),
+    z.literal('Friends'),
+    z.literal('Other'),
+    z.literal('User'),
+    z.literal('Session'),
+    z.literal('Base'),
+  ]),
 });
 
-interface GroupBreadcrumb extends D.TypeOf<typeof breadcrumbDecoder> {
+interface GroupBreadcrumb extends z.infer<typeof breadcrumbSchema> {
   route: GroupRoute,
 }
 
