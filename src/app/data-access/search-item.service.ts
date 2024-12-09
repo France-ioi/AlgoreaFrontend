@@ -3,9 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../utils/config';
 import { ItemType } from '../items/models/item-type';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from '../utils/operators/decode';
-import { ItemCorePerm, itemCorePermDecoder } from '../items/models/item-permissions';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { ItemCorePerm, itemCorePermSchema } from '../items/models/item-permissions';
 
 export interface ItemFound<T> {
   id: string,
@@ -14,11 +14,11 @@ export interface ItemFound<T> {
   permissions: ItemCorePerm,
 }
 
-export const itemFoundDecoder = D.struct({
-  id: D.string,
-  title: D.string,
-  type: D.literal('Chapter','Task','Skill'),
-  permissions: itemCorePermDecoder,
+const itemFoundSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  type: z.enum([ 'Chapter', 'Task', 'Skill' ]),
+  permissions: itemCorePermSchema,
 });
 
 @Injectable({
@@ -44,7 +44,7 @@ export class SearchItemService {
       `${appConfig.apiUrl}/items/search`,
       { params: params },
     ).pipe(
-      decodeSnakeCase(D.array(itemFoundDecoder))
+      decodeSnakeCaseZod(z.array(itemFoundSchema))
     );
   }
 }
