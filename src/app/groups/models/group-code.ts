@@ -1,14 +1,14 @@
 import { Duration } from 'src/app/utils/duration';
-import * as D from 'io-ts/Decoder';
-import { codeLifetimeDecoder } from './code-lifetime';
+import { z } from 'zod';
+import { codeLifetimeSchema } from './code-lifetime';
 
-export const groupCodeDecoder = D.partial({
-  code: D.nullable(D.string),
-  codeLifetime: codeLifetimeDecoder,
-  codeExpiresAt: D.nullable(D.string),
-});
+export const groupCodeSchema = z.object({
+  code: z.string().nullable(),
+  codeLifetime: codeLifetimeSchema,
+  codeExpiresAt: z.string().nullable(),
+}).partial();
 
-type GroupCode = D.TypeOf<typeof groupCodeDecoder>;
+type GroupCode = z.infer<typeof groupCodeSchema>;
 
 export interface CodeInfo {
   codeExpiration?: Date,
