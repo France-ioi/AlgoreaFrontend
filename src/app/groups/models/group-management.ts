@@ -1,5 +1,6 @@
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 
 const managershipOpts = {
   none: 'none',
@@ -26,6 +27,22 @@ export const groupManagershipDecoder = pipe(
     })
   )
 );
+export const groupManagershipSchema = z.object({
+  currentUserManagership: z.union([
+    z.literal(managershipOpts.none),
+    z.literal(managershipOpts.descendant),
+    z.literal(managershipOpts.direct),
+    z.literal(managershipOpts.ancestor),
+  ]),
+}).and(z.object({
+  currentUserCanGrantGroupAccess: z.boolean(),
+  currentUserCanManage: z.union([
+    z.literal(managementLevelOpts.none),
+    z.literal(managementLevelOpts.memberships),
+    z.literal(managementLevelOpts.membershipsAndGroup),
+  ]),
+  currentUserCanWatchMembers: z.boolean(),
+}).partial());
 
 type GroupManagership = D.TypeOf<typeof groupManagershipDecoder>;
 

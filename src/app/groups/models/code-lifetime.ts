@@ -1,4 +1,5 @@
 import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { pipe } from 'fp-ts/function';
 import { Duration } from '../../utils/duration';
 
@@ -31,4 +32,8 @@ export const codeLifetimeDecoder: D.Decoder<unknown, CodeLifetime> = pipe(
     const ms = valueInSeconds === null ? Infinity : valueInSeconds * 1000;
     return D.success(new CodeLifetime(ms));
   }),
+);
+
+export const codeLifetimeSchema = z.number().nullable().transform<CodeLifetime>(valueInSeconds =>
+  new CodeLifetime(valueInSeconds === null ? Infinity : valueInSeconds * 1000)
 );
