@@ -71,7 +71,8 @@
                       <ng-template #iconSection>
                         <i class="ph-duotone item-icon" [ngClass]="{
                           'ph-flag-checkered': rowData.activityType === 'result_started',
-                          'ph-floppy-disk-back': rowData.activityType === 'saved_answer'
+                          'ph-floppy-disk-back': rowData.activityType === 'saved_answer',
+                          'ph-check-circle': rowData.activityType === 'result_validated'
                         }"></i>
                       </ng-template>
                     </div>
