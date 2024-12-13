@@ -22,6 +22,7 @@ const saveGradeResultSchema = z.object({
 });
 
 type SaveGradeResult = z.infer<typeof saveGradeResultSchema>;
+export type UnlockedItems = SaveGradeResult['unlockedItems'];
 
 @Injectable({
   providedIn: 'root',

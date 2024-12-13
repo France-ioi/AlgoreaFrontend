@@ -54,6 +54,7 @@ export class ItemTaskService implements OnDestroy {
   readonly activeView$ = this.viewsService.activeView$;
 
   readonly scoreChange$ = this.answerService.scoreChange$;
+  readonly unlockedItems$ = this.answerService.unlockedItems$;
   readonly autoSaveResult$ = this.answerService.autoSaveResult$;
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
@@ -128,7 +129,7 @@ export class ItemTaskService implements OnDestroy {
     task.bindPlatform(platform);
   }
 
-  private validate(mode: string): Observable<unknown> {
+  private validate(mode: string): Observable<void> {
     switch (mode) {
       case 'cancel': return this.answerService.clearAnswer();
       case 'nextImmediate': return this.navigateToNextItem();
