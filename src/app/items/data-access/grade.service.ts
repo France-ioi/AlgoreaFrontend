@@ -15,7 +15,7 @@ const saveGradeResultSchema = z.object({
   validated: z.boolean(),
   unlockedItems: z.array(z.object({
     itemId: z.string(),
-    languageTab: z.string(),
+    languageTag: z.string(),
     title: z.string().nullable(),
     type: itemTypeSchema,
   })),
