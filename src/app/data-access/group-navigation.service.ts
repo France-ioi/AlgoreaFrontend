@@ -18,7 +18,7 @@ export type GroupNavigationChild = z.infer<typeof groupNavigationChildSchema>;
 const groupNavigationSchema = z.object({
   id: z.string(),
   name: z.string(),
-  type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base' ]),
+  type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]),
   children: z.array(groupNavigationChildSchema),
 });
 
