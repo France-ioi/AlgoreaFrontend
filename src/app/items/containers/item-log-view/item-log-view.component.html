@@ -69,10 +69,10 @@
                         *ngIf="rowData.score; else iconSection"
                       ></alg-score-ring>
                       <ng-template #iconSection>
-                        <i class="ph-duotone item-icon" [ngClass]="{
-                          'ph-flag-checkered': rowData.activityType === 'result_started',
-                          'ph-floppy-disk-back': rowData.activityType === 'saved_answer',
-                          'ph-check-circle': rowData.activityType === 'result_validated'
+                        <i class="item-icon" [ngClass]="{
+                          'ph-duotone ph-flag-checkered': rowData.activityType === 'result_started',
+                          'ph-duotone ph-floppy-disk-back': rowData.activityType === 'saved_answer',
+                          'ph ph-check-circle size-38': rowData.activityType === 'result_validated'
                         }"></i>
                       </ng-template>
                     </div>
