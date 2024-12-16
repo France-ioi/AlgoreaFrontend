@@ -2,48 +2,41 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from 'src/app/utils/config';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { groupCodeDecoder } from '../models/group-code';
-import { groupManagershipDecoder } from '../models/group-management';
-import { groupApprovalsDecoder } from 'src/app/groups/models/group-approvals';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { groupCodeSchema } from '../models/group-code';
+import { groupManagershipSchema } from '../models/group-management';
+import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
+import { z } from 'zod';
 
-const groupShortInfo = D.struct({
-  id: D.string,
-  name: D.string,
+const groupShortInfoSchema = z.object({
+  id: z.string(),
+  name: z.string(),
 });
 
-const decoder = pipe(
-  D.struct({
-    id: D.string,
-    type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base'),
-    name: D.string,
-    description: D.nullable(D.string),
-    isMembershipLocked: D.boolean,
-    isOpen: D.boolean,
-    isPublic: D.boolean,
-    createdAt: D.nullable(dateDecoder),
-    grade: D.number,
+const groupSchema = z.object({
+  id: z.string(),
+  type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]),
+  name: z.string(),
+  description: z.string().nullable(),
+  isMembershipLocked: z.boolean(),
+  isOpen: z.boolean(),
+  isPublic: z.boolean(),
+  createdAt: z.coerce.date().nullable(),
+  grade: z.number(),
 
-    currentUserMembership: D.literal('none', 'direct', 'descendant'),
-    currentUserManagership: D.literal('none', 'direct', 'ancestor', 'descendant'),
-    ancestorsCurrentUserIsManagerOf: D.array(groupShortInfo),
-    descendantsCurrentUserIsManagerOf: D.array(groupShortInfo),
-    descendantsCurrentUserIsMemberOf: D.array(groupShortInfo),
+  currentUserMembership: z.enum([ 'none', 'direct', 'descendant' ]),
+  currentUserManagership: z.enum([ 'none', 'direct', 'ancestor', 'descendant' ]),
+  ancestorsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
+  descendantsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
+  descendantsCurrentUserIsMemberOf: z.array(groupShortInfoSchema),
 
-    rootActivityId: D.nullable(D.string),
-    rootSkillId: D.nullable(D.string),
-    openActivityWhenJoining: D.boolean,
-  }),
-  D.intersect(groupCodeDecoder),
-  D.intersect(groupManagershipDecoder),
-  D.intersect(groupApprovalsDecoder),
-);
+  rootActivityId: z.string().nullable(),
+  rootSkillId: z.string().nullable(),
+  openActivityWhenJoining: z.boolean(),
+}).and(groupCodeSchema).and(groupManagershipSchema).and(groupApprovalsSchema);
 
-export type Group = D.TypeOf<typeof decoder>;
-export type GroupShortInfo = D.TypeOf<typeof groupShortInfo>;
+export type Group = z.infer<typeof groupSchema>;
+export type GroupShortInfo = z.infer<typeof groupShortInfoSchema>;
 
 @Injectable({
   providedIn: 'root',
@@ -54,7 +47,7 @@ export class GetGroupByIdService {
 
   get(id: string): Observable<Group> {
     return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${id}`).pipe(
-      decodeSnakeCase(decoder),
+      decodeSnakeCaseZod(groupSchema),
     );
   }
 

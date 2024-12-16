@@ -4,91 +4,81 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { isSkill, ItemTypeCategory } from 'src/app/items/models/item-type';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { itemViewPermDecoder } from 'src/app/items/models/item-view-permission';
-import { itemCorePermDecoder } from 'src/app/items/models/item-permissions';
+import { isSkill, ItemTypeCategory, itemTypeSchema } from 'src/app/items/models/item-type';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
+import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
+import { z } from 'zod';
 
-const itemNavigationChildDecoderBase = pipe(
-  D.struct({
-    bestScore: D.number,
-    entryParticipantType: D.literal('User', 'Team'),
-    hasVisibleChildren: D.boolean,
-    id: D.string,
-    noScore: D.boolean,
-    permissions: itemCorePermDecoder,
-    requiresExplicitEntry: D.boolean,
-    results: D.array(D.struct({
-      attemptAllowsSubmissionsUntil: dateDecoder,
-      attemptId: D.string,
-      endedAt: D.nullable(dateDecoder),
-      latestActivityAt: dateDecoder,
-      scoreComputed: D.number,
-      startedAt: D.nullable(dateDecoder),
-      validated: D.boolean,
-    })),
-    string: D.struct({
-      languageTag: D.string,
-      title: D.nullable(D.string),
-    }),
-    type: D.literal('Chapter','Task','Skill'),
-  })
-);
-
-const itemNavigationChildDecoder = pipe(
-  itemNavigationChildDecoderBase,
-  D.intersect(
-    D.partial({
-      watchedGroup: pipe(
-        itemViewPermDecoder,
-        D.intersect(
-          D.partial({
-            allValidated: D.boolean,
-            avgScore: D.number,
-          })
-        )
-      ),
-    })
-  )
-);
-
-export type ItemNavigationChild = D.TypeOf<typeof itemNavigationChildDecoder>;
-
-const itemNavigationDataDecoder = D.struct({
-  id: D.string,
-  attemptId: D.string,
-  permissions: itemCorePermDecoder,
-  string: D.struct({
-    languageTag: D.string,
-    title: D.nullable(D.string),
+const itemNavigationChildBaseSchema = z.object({
+  id: z.string(),
+  bestScore: z.number(),
+  entryParticipantType: z.enum([ 'User', 'Team' ]),
+  hasVisibleChildren: z.boolean(),
+  noScore: z.boolean(),
+  permissions: itemCorePermSchema,
+  requiresExplicitEntry: z.boolean(),
+  results: z.array(z.object({
+    attemptAllowsSubmissionsUntil: z.coerce.date(),
+    attemptId: z.string(),
+    endedAt: z.coerce.date().nullable(),
+    latestActivityAt: z.coerce.date(),
+    scoreComputed: z.number(),
+    startedAt: z.coerce.date().nullable(),
+    validated: z.boolean(),
+  })),
+  string: z.object({
+    languageTag: z.string(),
+    title: z.string().nullable(),
   }),
-  type: D.literal('Chapter','Task','Skill'),
-  children: D.array(itemNavigationChildDecoder),
+  type: itemTypeSchema,
 });
 
-export type ItemNavigationData = D.TypeOf<typeof itemNavigationDataDecoder>;
+const itemNavigationChildSchema = itemNavigationChildBaseSchema.and(z.object({
+  watchedGroup: itemViewPermSchema.and(z.object({
+    allValidated: z.boolean(),
+    avgScore: z.number(),
+  }).partial()),
+}).partial());
 
-const rootItemGroupInfoDecoder = D.struct({
-  groupId: D.string,
-  name: D.string,
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants'),
+export type ItemNavigationChild = z.infer<typeof itemNavigationChildSchema>;
+
+const itemNavigationDataSchema = z.object({
+  id: z.string(),
+  attemptId: z.string(),
+  permissions: itemCorePermSchema,
+  string: z.object({
+    languageTag: z.string(),
+    title: z.string().nullable(),
+  }),
+  type: z.enum([ 'Chapter', 'Task', 'Skill' ]),
+  children: z.array(itemNavigationChildSchema),
 });
 
-const rootActivityDecoder = D.intersect(rootItemGroupInfoDecoder)(D.struct({ activity: itemNavigationChildDecoderBase }));
-type GroupWithRootActivity = D.TypeOf<typeof rootActivityDecoder>;
+export type ItemNavigationData = z.infer<typeof itemNavigationDataSchema>;
 
-const rootSkillDecoder = D.intersect(rootItemGroupInfoDecoder)(D.struct({ skill: itemNavigationChildDecoderBase }));
-type GroupWithRootSkill = D.TypeOf<typeof rootSkillDecoder>;
+const rootItemGroupInfoSchema = z.object({
+  groupId: z.string(),
+  name: z.string(),
+  type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base', 'ContestParticipants' ]),
+});
+
+const rootActivitySchema = rootItemGroupInfoSchema.and(z.object({
+  activity: itemNavigationChildBaseSchema,
+}));
+type GroupWithRootActivity = z.infer<typeof rootActivitySchema>;
+
+const rootSkillSchema = rootItemGroupInfoSchema.and(z.object({
+  skill: itemNavigationChildBaseSchema
+}));
+type GroupWithRootSkill = z.infer<typeof rootSkillSchema>;
 
 // common type to RootActivity and RootSkill if the activity/skill key is renamed 'item'
 export type GroupWithRootItem = Omit<GroupWithRootActivity, 'activity'> & { item: GroupWithRootActivity['activity']};
 
 // see `mapToItemList` for explanation
-export type RootItem = D.TypeOf<typeof itemNavigationChildDecoderBase> & { groups: D.TypeOf<typeof rootItemGroupInfoDecoder>[] };
+export type RootItem = z.infer<typeof itemNavigationChildBaseSchema> & { groups: z.infer<typeof rootItemGroupInfoSchema>[] };
 
 @Injectable({
   providedIn: 'root'
@@ -108,7 +98,7 @@ export class ItemNavigationService {
     else params = params.set('attempt_id', options.childRoute.parentAttemptId);
 
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
-      decodeSnakeCase(itemNavigationDataDecoder),
+      decodeSnakeCaseZod(itemNavigationDataSchema),
       map(data => (options.skillOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
     );
   }
@@ -121,7 +111,7 @@ export class ItemNavigationService {
     }
 
     return this.http.get<unknown[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, { params: httpParams }).pipe(
-      decodeSnakeCase(D.array(rootActivityDecoder)),
+      decodeSnakeCaseZod(z.array(rootActivitySchema)),
     );
   }
 
@@ -133,7 +123,7 @@ export class ItemNavigationService {
     }
 
     return this.http.get<unknown[]>(`${appConfig.apiUrl}/current-user/group-memberships/skills`, { params: httpParams }).pipe(
-      decodeSnakeCase(D.array(rootSkillDecoder)),
+      decodeSnakeCaseZod(z.array(rootSkillSchema)),
     );
   }
 
