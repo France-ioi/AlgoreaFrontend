@@ -18,7 +18,7 @@ import { SECONDS } from 'src/app/utils/duration';
 import { AnswerTokenService } from '../data-access/answer-token.service';
 import { AnswerService } from '../data-access/answer.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
-import { GradeService } from '../data-access/grade.service';
+import { GradeService, UnlockedItems } from '../data-access/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
 import { Answer } from './item-task.service';
 import { areStateAnswerEqual } from '../models/answers';
@@ -39,6 +39,9 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private scoreChange = new Subject<number>();
   readonly scoreChange$ = this.scoreChange.asObservable();
+
+  private unlockedItems = new Subject<UnlockedItems>();
+  readonly unlockedItems$ = this.unlockedItems.asObservable();
 
   private loadedTask$ = this.taskInitService.loadedTask$.pipe(
     catchError(() => EMPTY), // error handled in subscriptions
@@ -148,7 +151,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     this.destroyed$.complete();
   }
 
-  submitAnswer(): Observable<unknown> {
+  submitAnswer(): Observable<void> {
     // Step 1: get answer from task
     const answer$ = this.loadedTask$.pipe(take(1), switchMap(task => task.getAnswer()), takeUntil(this.destroyed$), shareReplay(1));
 
@@ -182,14 +185,15 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
     combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent() ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
-      .subscribe(([ grade ]) => {
+      .subscribe(([ grade, saveGradeResult ]) => {
         if (grade.score !== undefined) this.scoreChange.next(grade.score);
+        if (saveGradeResult.unlockedItems.length > 0) this.unlockedItems.next(saveGradeResult.unlockedItems);
       });
-    return saveGrade$;
+    return saveGrade$.pipe(map(() => undefined));
   }
 
-  clearAnswer(): Observable<unknown> {
-    return this.loadedTask$.pipe(take(1), switchMap(task => task.reloadAnswer('')));
+  clearAnswer(): Observable<void> {
+    return this.loadedTask$.pipe(take(1), switchMap(task => task.reloadAnswer('')), map(() => undefined));
   }
 
   /**

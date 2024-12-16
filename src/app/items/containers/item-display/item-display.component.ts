@@ -212,6 +212,10 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
         else this.itemRouter.navigateTo(route);
       }
     }),
+
+    this.taskService.unlockedItems$.subscribe(items => {
+      this.actionFeedbackService.success(`Congrat, you have unlocked the follow content: ${items.map(i => i.title).join(', ')}`);
+    }),
   ];
 
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
