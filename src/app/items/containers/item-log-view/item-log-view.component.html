@@ -69,11 +69,7 @@
                         *ngIf="rowData.score; else iconSection"
                       ></alg-score-ring>
                       <ng-template #iconSection>
-                        <i class="item-icon" [ngClass]="{
-                          'ph-duotone ph-flag-checkered': rowData.activityType === 'result_started',
-                          'ph-duotone ph-floppy-disk-back': rowData.activityType === 'saved_answer',
-                          'ph ph-check-circle size-38': rowData.activityType === 'result_validated'
-                        }"></i>
+                        <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
                       </ng-template>
                     </div>
                     <div class="item-title">

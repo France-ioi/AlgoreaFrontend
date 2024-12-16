@@ -1,3 +1,5 @@
+@import 'src/assets/scss/functions';
+
 .alg-h1 {
   font-size: 3rem;
   font-weight: 500;
@@ -44,4 +46,8 @@
 .alg-text-small {
   font-size: .75rem;
   font-weight: 400;
+}
+
+.alg-font-size-38 {
+  font-size: toRem(38) !important;
 }
