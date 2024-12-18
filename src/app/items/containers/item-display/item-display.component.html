@@ -86,9 +86,11 @@
     [visible]="true"
     [modal]="true"
     [draggable]="false"
-    [closable]="false"
+    [closable]="true"
+    [dismissableMask]="true"
     i18n-header header="Unlocked content"
     styleClass="alg-permissions-edit-dialog"
+    (visibleChange)="onCloseUnlockedItemsDialog($event)"
   >
     <p class="unlocked-items-title" i18n>You have just unlocked the following content.</p>
     <div class="unlocked-items">

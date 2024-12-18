@@ -289,4 +289,8 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   closeUnlockedItemsDialog(): void {
     this.unlockedItems = undefined;
   }
+
+  onCloseUnlockedItemsDialog(event: boolean): void {
+    if (!event) this.closeUnlockedItemsDialog();
+  }
 }
