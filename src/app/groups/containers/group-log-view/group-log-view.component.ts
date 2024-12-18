@@ -28,6 +28,7 @@ import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { UserSessionService } from '../../../services/user-session.service';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
+import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 
 const logsLimit = 20;
 
@@ -57,6 +58,7 @@ const logsLimit = 20;
     LogActionDisplayPipe,
     ShowOverlayHoverTargetDirective,
     ShowOverlayDirective,
+    LogActivityTypeIconPipe,
   ],
 })
 export class GroupLogViewComponent implements OnChanges {

@@ -26,6 +26,7 @@ import { RelativeTimeComponent } from '../../../ui-components/relative-time/rela
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
+import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 interface Column {
   field: string,
   header: string,
@@ -62,6 +63,7 @@ const logsLimit = 20;
     UserCaptionPipe,
     LogActionDisplayPipe,
     RelativeTimeComponent,
+    LogActivityTypeIconPipe,
   ],
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
