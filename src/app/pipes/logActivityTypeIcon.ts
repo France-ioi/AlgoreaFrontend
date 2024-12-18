@@ -6,7 +6,7 @@ import { ActivityLogs } from 'src/app/data-access/activity-log.service';
   pure: true,
   standalone: true
 })
-export class LogActivityTypeIcon implements PipeTransform {
+export class LogActivityTypeIconPipe implements PipeTransform {
   transform(activity: ActivityLogs[number]['activityType']): string {
     switch (activity) {
       case 'result_started': return 'ph-duotone ph-flag-checkered';
