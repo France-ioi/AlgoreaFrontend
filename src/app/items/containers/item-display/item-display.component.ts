@@ -41,7 +41,7 @@ import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemPermWithEdit, ItemEditPerm, AllowsEditingAllItemPipe } from 'src/app/items/models/item-edit-permission';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { GetBreadcrumbsFromRootsService } from 'src/app/data-access/get-breadcrumbs-from-roots.service';
@@ -51,6 +51,10 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
+import { DialogModule } from 'primeng/dialog';
+import { UnlockedItems } from 'src/app/items/data-access/grade.service';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 
 export interface TaskTab {
   name: string,
@@ -74,6 +78,10 @@ const heightSyncInterval = 0.2*SECONDS;
     LoadingComponent,
     AsyncPipe,
     AllowsEditingAllItemPipe,
+    DialogModule,
+    ItemRoutePipe,
+    RouterLink,
+    RouteUrlPipe,
   ],
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
@@ -213,13 +221,15 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
       }
     }),
 
-    this.taskService.unlockedItems$.subscribe(items => {
-      this.actionFeedbackService.success(`Congrat, you have unlocked the follow content: ${items.map(i => i.title).join(', ')}`);
-    }),
+    this.taskService.unlockedItems$.subscribe(items =>
+      this.unlockedItems = items
+    ),
   ];
 
   errorMessage = $localize`:@@unknownError:An unknown error occurred. ` +
     $localize`:@@contactUs:If the problem persists, please contact us.`;
+
+  unlockedItems?: UnlockedItems = undefined;
 
   constructor(
     private router: Router,
@@ -274,5 +284,13 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
       case 'task': return $localize`Statement`;
       default: return capitalize(view);
     }
+  }
+
+  closeUnlockedItemsDialog(): void {
+    this.unlockedItems = undefined;
+  }
+
+  onCloseUnlockedItemsDialog(event: boolean): void {
+    if (!event) this.closeUnlockedItemsDialog();
   }
 }
