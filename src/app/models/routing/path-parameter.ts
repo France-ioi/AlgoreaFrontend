@@ -29,7 +29,10 @@ export const selectPathParameter = createSelector(
   rawPath => (rawPath !== null ? parsePath(rawPath) : null)
 );
 
-
-function parsePath(path: string): string[] {
+export function parsePath(path: string): string[] {
   return path === '' ? [] : path.split(',');
+}
+
+export function encodePath(path: string[]): string {
+  return path.join(',');
 }
