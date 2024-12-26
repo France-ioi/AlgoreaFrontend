@@ -15,6 +15,12 @@
     overflow: scroll;
   }
 
+  &.no-scroll {
+    .p-dialog-content {
+      overflow: hidden !important;
+    }
+  }
+
   .p-dialog-footer {
     display: flex;
     justify-content: center;
