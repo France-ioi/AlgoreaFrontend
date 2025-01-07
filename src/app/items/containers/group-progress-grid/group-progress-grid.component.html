@@ -50,82 +50,86 @@
           ></button>
         </div>
 
-        <p-table #table
-          [columns]="columnsState.data"
-          [value]="rowsState.data"
-          class="slanted-grid"
-          [rowTrackBy]="trackByRow"
-          [loading]="rowsState.isFetching"
-        >
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th class="empty first header-refresh">
-                <button
-                  class="alg-button-icon no-bg primary-color"
-                  icon="pi pi-refresh"
-                  (click)="fetchRows()"
-                  pButton
-                ></button>
-              </th>
-              <th *ngFor="let col of columns">
-                <div class="slanted-header">
-                  <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
-                    <a
-                      class="alg-link cursor-pointer"
-                      [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
-                        with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
-                        url : [ 'progress', 'chapter' ]"
-                      *ngIf="itemData && itemData.currentResult && itemData.currentResult.attemptId as attemptId"
-                    >{{ col.title }}</a>
-                  </div>
-                </div>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template
-            pTemplate="body"
-            let-row
-            let-columns="columns"
+        <div class="slanted-grid-container">
+          <div class="slanted-grid-sticky-header-bg"></div>
+          <p-table #table
+            [columns]="columnsState.data"
+            [value]="rowsState.data"
+            class="slanted-grid"
+            styleClass="slanted-grid"
+            [rowTrackBy]="trackByRow"
+            [loading]="rowsState.isFetching"
           >
-            <tr>
-              <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
-                <a
-                  class="alg-link cursor-pointer"
-                  [routerLink]="{ id: row.id, isUser: currentFilter === 'Users' } | groupLink"
-                >{{ row.header }}</a>
-              </td>
-              <td
-                class="cursor-pointer user-progress"
-                *ngFor="let col of columns; let colIndex = index"
-                (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
-              >
-                <alg-user-progress
-                  *ngIf="row.data[colIndex]"
-                  [userProgress]="row.data[colIndex]"
-                ></alg-user-progress>
-                <div class="overlay-target" data-testid="user-progress-tooltip-target">
-                  <span class="overlay-position" #overlayTarget></span>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="footer">
-            <tr *ngIf="currentFilter === 'Users' && (datapager.canLoadMore$ | async)">
-              <td [colSpan]="columnsState.data.length + 1">
-                <div class="text-center">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th class="empty first header-refresh">
                   <button
+                    class="alg-button-icon no-bg primary-color"
+                    icon="pi pi-refresh"
+                    (click)="fetchRows()"
                     pButton
-                    class="alg-button basic load-more"
-                    icon="ph-duotone ph-arrow-circle-down"
-                    i18n-label label="Load more"
-                    (click)="fetchMoreRows()"
-                    [disabled]="rowsState.isFetching"
                   ></button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+                </th>
+                <th *ngFor="let col of columns">
+                  <div class="slanted-header">
+                    <div class="slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
+                      <a
+                        class="alg-link cursor-pointer"
+                        [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
+                          with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
+                          url : [ 'progress', 'chapter' ]"
+                        *ngIf="itemData && itemData.currentResult && itemData.currentResult.attemptId as attemptId"
+                      >{{ col.title }}</a>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template
+              pTemplate="body"
+              let-row
+              let-columns="columns"
+            >
+              <tr>
+                <td class="users" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
+                  <a
+                    class="alg-link cursor-pointer"
+                    [routerLink]="{ id: row.id, isUser: currentFilter === 'Users' } | groupLink"
+                  >{{ row.header }}</a>
+                </td>
+                <td
+                  class="cursor-pointer user-progress"
+                  *ngFor="let col of columns; let colIndex = index"
+                  (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+                >
+                  <alg-user-progress
+                    *ngIf="row.data[colIndex]"
+                    [userProgress]="row.data[colIndex]"
+                  ></alg-user-progress>
+                  <div class="overlay-target" data-testid="user-progress-tooltip-target">
+                    <span class="overlay-position" #overlayTarget></span>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+              <tr *ngIf="currentFilter === 'Users' && (datapager.canLoadMore$ | async)">
+                <td [colSpan]="columnsState.data.length + 1">
+                  <div class="text-center">
+                    <button
+                      pButton
+                      class="alg-button basic load-more"
+                      icon="ph-duotone ph-arrow-circle-down"
+                      i18n-label label="Load more"
+                      (click)="fetchMoreRows()"
+                      [disabled]="rowsState.isFetching"
+                    ></button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
       </ng-container>
 
       <alg-permissions-edit-dialog
