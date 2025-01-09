@@ -4,17 +4,17 @@ import { UrlSegment } from '@angular/router';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { serializeItemRoute } from './item-route-serializer';
 
-type SerializerParameters = Parameters<typeof serializeItemRoute>[1];
+type SerializerParameters = Parameters<typeof serializeItemRoute>[2];
 
 type AnswerType = { id: AnswerId, best: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id: undefined };
 
 export class ItemEntityRoute extends ContentRoute {
   public readonly category: ItemTypeCategory;
   public readonly id: ItemId;
-  public readonly page: string[];
+  public readonly page?: string[];
   public readonly answer?: AnswerType;
 
-  constructor(args: { category: ItemTypeCategory, id: ItemId, page: string[], answer?: AnswerType }) {
+  constructor(args: { category: ItemTypeCategory, id: ItemId, page?: string[], answer?: AnswerType }) {
     super();
     this.category = args.category;
     this.id = args.id;
@@ -22,8 +22,9 @@ export class ItemEntityRoute extends ContentRoute {
     this.answer = args.answer;
   }
 
-  override urlSegments(): UrlSegment[] {
-    return serializeItemRoute(this, this.parameters());
+  override urlSegments(currentRoute?: ContentRoute): UrlSegment[] {
+    const page = this.page ?? (currentRoute instanceof ItemEntityRoute ? currentRoute.page : undefined);
+    return serializeItemRoute(this.category, this.id, this.parameters(), page);
   }
 
   protected parameters(): SerializerParameters {
@@ -37,14 +38,6 @@ export class ItemEntityRoute extends ContentRoute {
     return { category: this.category, id: this.id, answer: this.answer, page: this.page };
   }
 
-  clone(override: Partial<ConstructorParameters<typeof ItemEntityRoute>[0]>): ItemEntityRoute {
-    return new ItemEntityRoute({ ...this.attributes(), ...override });
-  }
-
-  override withPageFrom(route: ContentRoute): ItemEntityRoute {
-    if (!(route instanceof ItemEntityRoute)) return this;
-    return this.clone({ page: route.page });
-  }
 }
 
 export class ItemEntityWithPathRoute extends ItemEntityRoute {
@@ -62,14 +55,6 @@ export class ItemEntityWithPathRoute extends ItemEntityRoute {
     return { ...super.attributes(), path: this.path };
   }
 
-  override clone(override: Partial<ConstructorParameters<typeof ItemEntityWithPathRoute>[0]>): ItemEntityWithPathRoute {
-    return new ItemEntityWithPathRoute({ ...this.attributes(), ...override });
-  }
-
-  override withPageFrom(route: ContentRoute): ItemEntityWithPathRoute {
-    if (!(route instanceof ItemEntityRoute)) return this;
-    return this.clone({ page: route.page });
-  }
 }
 
 export type ItemEntityWithAttemptRoute = ItemEntityWithSelfAttemptRoute | ItemEntityWithParentAttemptRoute;
@@ -91,15 +76,6 @@ export class ItemEntityWithSelfAttemptRoute extends ItemEntityWithPathRoute {
     return { ...super.attributes(), attemptId: this.attemptId };
   }
 
-  override clone(override: Partial<ConstructorParameters<typeof ItemEntityWithSelfAttemptRoute>[0]>): ItemEntityWithSelfAttemptRoute {
-    return new ItemEntityWithSelfAttemptRoute({ ...this.attributes(), ...override });
-  }
-
-  override withPageFrom(route: ContentRoute): ItemEntityWithSelfAttemptRoute {
-    if (!(route instanceof ItemEntityRoute)) return this;
-    return this.clone({ page: route.page });
-  }
-
 }
 
 export class ItemEntityWithParentAttemptRoute extends ItemEntityWithPathRoute {
@@ -115,15 +91,6 @@ export class ItemEntityWithParentAttemptRoute extends ItemEntityWithPathRoute {
 
   protected override attributes(): ConstructorParameters<typeof ItemEntityWithParentAttemptRoute>[0] {
     return { ...super.attributes(), parentAttemptId: this.parentAttemptId };
-  }
-
-  override clone(override: Partial<ConstructorParameters<typeof ItemEntityWithParentAttemptRoute>[0]>): ItemEntityWithParentAttemptRoute {
-    return new ItemEntityWithParentAttemptRoute({ ...this.attributes(), ...override });
-  }
-
-  override withPageFrom(route: ContentRoute): ItemEntityWithParentAttemptRoute {
-    if (!(route instanceof ItemEntityRoute)) return this;
-    return this.clone({ page: route.page });
   }
 
 }

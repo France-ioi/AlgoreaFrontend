@@ -2,6 +2,7 @@ import { UrlSegment } from '@angular/router';
 import { ItemEntityRoute, ItemEntityWithParentAttemptRoute, ItemEntityWithPathRoute, ItemEntityWithSelfAttemptRoute } from './item-route';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { encodeItemRouteParameters, extractItemRouteParameters } from './item-route-url-parameters';
+import { ItemId } from '../ids';
 
 const activityPrefix = 'a';
 const skillPrefix = 's';
@@ -36,11 +37,16 @@ export function deserializeItemRoute(segments: UrlSegment[]): ItemEntityRoute|nu
   return new ItemEntityRoute(base);
 }
 
-export function serializeItemRoute(route: ItemEntityRoute, parameters: Parameters<typeof encodeItemRouteParameters>[0]): UrlSegment[] {
+export function serializeItemRoute(
+  category: ItemTypeCategory,
+  id: ItemId,
+  parameters: Parameters<typeof encodeItemRouteParameters>[0],
+  page?: string[]
+): UrlSegment[] {
   return [
-    new UrlSegment(route.category === 'activity' ? activityPrefix : skillPrefix, {}),
-    new UrlSegment(route.id, encodeItemRouteParameters(parameters)),
-    ...route.page.map(p => new UrlSegment(p, {})),
+    new UrlSegment(category === 'activity' ? activityPrefix : skillPrefix, {}),
+    new UrlSegment(id, encodeItemRouteParameters(parameters)),
+    ...(page ?? []).map(p => new UrlSegment(p, {})),
   ];
 }
 

@@ -2,6 +2,8 @@ import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from './router.state';
 import { ParamMap, Params, convertToParamMap } from '@angular/router';
 import { RouterReducerState } from '@ngrx/router-store';
+import { ContentRoute } from 'src/app/models/routing-next/content-route';
+import { deserializeContentRoute } from 'src/app/models/routing-next/content-route-serializer';
 
 interface Selectors<T> {
   /** override the auto-generated selector as there do not handle correctly the fact that the state is `undefined` at app launch */
@@ -13,6 +15,8 @@ interface Selectors<T> {
   selectParamMap: MemoizedSelector<T, ParamMap>,
   selectParam: (param: string) => MemoizedSelector<T, string | null>,
   selectQueryParam: (param: string) => MemoizedSelector<T, string | null>,
+
+  selectCurrentContentRoute: MemoizedSelector<T, ContentRoute | undefined>,
 }
 
 export function selectors<T>(baseSelectRouterState: Selector<T, RouterReducerState<State>>): Selectors<T> {
@@ -58,5 +62,24 @@ export function selectors<T>(baseSelectRouterState: Selector<T, RouterReducerSta
   const selectQueryParam = (param: string): MemoizedSelector<T, string | null> =>
     createSelector(selectQueryParamMap, paramMap => paramMap.get(param));
 
-  return { selectRouterState, selectState, selectNavigationId, selectPath, selectParamMap, selectParam, selectQueryParam };
+  const selectUrl = createSelector(
+    selectState,
+    state => state?.url
+  );
+
+  const selectCurrentContentRoute = createSelector(
+    selectUrl,
+    url => (url ? deserializeContentRoute(url) : undefined)
+  );
+
+  return {
+    selectRouterState,
+    selectState,
+    selectNavigationId,
+    selectPath,
+    selectParamMap,
+    selectParam,
+    selectQueryParam,
+    selectCurrentContentRoute,
+  };
 }

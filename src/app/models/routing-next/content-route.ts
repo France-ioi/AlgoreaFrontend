@@ -11,19 +11,17 @@ export abstract class ContentRoute {
   }
 
   /**
-   * Return the url command to be given to the router
+   * The url command to navigate to the content.
+   * @param currentRoute if given, adapt the command to the current content
    */
-  urlCommand(): UrlCommand {
-    return this.urlSegments().flatMap(s => [ s.path, s.parameters ]);
+  urlCommand(currentRoute?: ContentRoute): UrlCommand {
+    return this.urlSegments(currentRoute).flatMap(s => [ s.path, s.parameters ]);
   }
-
-  abstract urlSegments(): UrlSegment[];
 
   /**
-   * Override it to support injecting the page of another content route (typically the current one)
+   * Convert the route url segments
+   * @param currentRoute if given, adapt the command to the current content
    */
-  withPageFrom(route: ContentRoute): ContentRoute {
-    return route;
-  }
+  abstract urlSegments(currentRoute?: ContentRoute): UrlSegment[];
 
 }
