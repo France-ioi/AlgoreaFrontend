@@ -17,7 +17,6 @@ const attemptParamName = 'a';
 const answerParamName = 'answerId';
 const answerBestParamName = 'answerBest';
 const answerBestParticipantParamName = 'answerParticipantId';
-const answerLoadAsCurrentParamName = 'answerLoadAsCurrent';
 
 // alias for better readibility
 
@@ -41,8 +40,8 @@ export interface ItemRoute extends ContentRoute {
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?:
-    { best?: undefined, id: AnswerId, participantId?: undefined, loadAsCurrent?: true } |
-    { best: true, id?: undefined, participantId?: string /* not set if mine */, loadAsCurrent?: undefined },
+    { best?: undefined, id: AnswerId, participantId?: undefined } |
+    { best: true, id?: undefined, participantId?: string /* not set if mine */ },
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
@@ -107,7 +106,6 @@ export function decodeItemRouterParameters(params: ParamMap): {
   answerId: string|null,
   answerBest: boolean,
   answerParticipantId: string|null,
-  answerLoadAsCurrent: boolean,
 } {
   let idOrAlias = params.get('idOrAlias');
   let path = pathFromRouterParameters(params);
@@ -124,7 +122,6 @@ export function decodeItemRouterParameters(params: ParamMap): {
     answerId: params.get(answerParamName),
     answerBest: params.get(answerBestParamName) === '1',
     answerParticipantId: params.get(answerBestParticipantParamName),
-    answerLoadAsCurrent: params.get(answerLoadAsCurrentParamName) === '1',
   };
 }
 
@@ -170,7 +167,6 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
       if (route.answer.participantId) params[answerBestParticipantParamName] = route.answer.participantId;
     } else {
       params[answerParamName] = route.answer.id;
-      if (route.answer.loadAsCurrent) params[answerLoadAsCurrentParamName] = '1';
     }
   }
 
@@ -190,27 +186,4 @@ function aliasFor(itemId: ItemId, path: string[]|undefined): { alias: string, va
 
 function pathToAlias(path: string): string {
   return path.replace(/\//g, '--');
-}
-
-/* **********************************************************************************************************
- * Other utility functions
- * ********************************************************************************************************** */
-
-/**
- * Whether the 2 routes are equals
- * If `prev` had a "command" (e.g., loadAsCurrent) and there is no `answer` in `cur`, route are considered equal
- */
-export function routesEqualIgnoringCommands(prev: FullItemRoute, cur: FullItemRoute): boolean {
-  return prev.id === cur.id &&
-    arraysEqual(prev.path, cur.path) &&
-    prev.attemptId === cur.attemptId &&
-    prev.parentAttemptId === cur.parentAttemptId &&
-    (
-      (
-        prev.answer?.best === cur.answer?.best &&
-        prev.answer?.id === cur.answer?.id &&
-        prev.answer?.participantId === cur.answer?.participantId &&
-        prev.answer?.loadAsCurrent === cur.answer?.loadAsCurrent
-      ) || (!!prev.answer?.loadAsCurrent && !cur.answer)
-    );
 }
