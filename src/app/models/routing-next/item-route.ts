@@ -4,9 +4,14 @@ import { UrlSegment } from '@angular/router';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { serializeItemRoute } from './item-route-serializer';
 
-type SerializerParameters = Parameters<typeof serializeItemRoute>[2];
-
 type AnswerType = { id: AnswerId, best: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id: undefined };
+
+export interface ItemRouteParameters {
+  path?: ItemPath,
+  attemptId?: AttemptId,
+  parentAttemptId?: AttemptId,
+  answer?: AnswerType,
+}
 
 export class ItemEntityRoute extends ContentRoute {
   public readonly category: ItemTypeCategory;
@@ -27,7 +32,7 @@ export class ItemEntityRoute extends ContentRoute {
     return serializeItemRoute(this.category, this.id, this.parameters(), page);
   }
 
-  protected parameters(): SerializerParameters {
+  protected parameters(): ItemRouteParameters {
     return {};
   }
 
@@ -47,7 +52,7 @@ export class ItemEntityWithPathRoute extends ItemEntityRoute {
     super(args);
     this.path = args.path;
   }
-  protected override parameters(): SerializerParameters {
+  protected override parameters(): ItemRouteParameters {
     return { path: this.path };
   }
 
@@ -68,7 +73,7 @@ export class ItemEntityWithSelfAttemptRoute extends ItemEntityWithPathRoute {
     this.attemptId = args.attemptId;
   }
 
-  protected override parameters(): SerializerParameters {
+  protected override parameters(): ItemRouteParameters {
     return { ...super.parameters(), attemptId: this.attemptId };
   }
 
@@ -85,12 +90,21 @@ export class ItemEntityWithParentAttemptRoute extends ItemEntityWithPathRoute {
     super(args);
     this.parentAttemptId = args.parentAttemptId;
   }
-  protected override parameters(): SerializerParameters {
+  protected override parameters(): ItemRouteParameters {
     return { ...super.parameters(), parentAttemptId: this.parentAttemptId, };
   }
 
   protected override attributes(): ConstructorParameters<typeof ItemEntityWithParentAttemptRoute>[0] {
     return { ...super.attributes(), parentAttemptId: this.parentAttemptId };
   }
+
+}
+
+export function createItemEntity(
+  category: ItemTypeCategory,
+  id: ItemId,
+  parameters: ItemRouteParameters,
+  page?: string[]
+): ItemEntityRoute {
 
 }

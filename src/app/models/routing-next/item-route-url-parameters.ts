@@ -1,5 +1,5 @@
-import { AnswerId, AttemptId, ItemPath, ParticipantId } from '../ids';
 import { encodePath, parsePath } from '../routing/path-parameter';
+import { ItemRouteParameters } from './item-route';
 
 enum ParamNames {
   Path = 'p',
@@ -12,16 +12,7 @@ enum ParamNames {
 
 type ItemUrlParams = Partial<{ [name in ParamNames]: string }>;
 
-interface ParsedParameters {
-  path?: ItemPath,
-  attemptId?: AttemptId,
-  parentAttemptId?: AttemptId,
-  answerId?: AnswerId,
-  answerBest?: boolean,
-  answerBestParticipantId?: ParticipantId,
-}
-
-export function extractItemRouteParameters(parameters: ItemUrlParams): ParsedParameters {
+export function extractItemRouteParameters(parameters: ItemUrlParams): ItemRouteParameters {
   const pathString = parameters[ParamNames.Path];
   const path = pathString ? parsePath(pathString) : undefined;
   const attemptId = parameters[ParamNames.AttemptId];
@@ -29,17 +20,18 @@ export function extractItemRouteParameters(parameters: ItemUrlParams): ParsedPar
   const answerId = parameters[ParamNames.AnswerId];
   const answerBest = parameters[ParamNames.AnswerBest] !== undefined ? true : undefined;
   const answerBestParticipantId = parameters[ParamNames.AnswerBestParticipantId];
-  return { path, attemptId, parentAttemptId, answerId, answerBest, answerBestParticipantId };
+  const answer = answerId ? { id: answerId } : (answerBest ? { best: { id: answerBestParticipantId } } : undefined);
+  return { path, attemptId, parentAttemptId, answer };
 }
 
-export function encodeItemRouteParameters(p: ParsedParameters): ItemUrlParams {
+export function encodeItemRouteParameters(p: ItemRouteParameters): ItemUrlParams {
   const params: { [name: string]: string } = {};
   if (p.path) params[ParamNames.Path] = encodePath(p.path);
   if (p.attemptId) params[ParamNames.AttemptId] = p.attemptId;
   if (p.parentAttemptId) params[ParamNames.ParentAttemptId] = p.parentAttemptId;
-  if (p.answerId) params[ParamNames.AnswerId] = p.answerId;
-  if (p.answerBest) params[ParamNames.AnswerBest] = '1';
-  if (p.answerBestParticipantId) params[ParamNames.AnswerBestParticipantId] = p.answerBestParticipantId;
+  if (p.answer?.id) params[ParamNames.AnswerId] = p.answer.id;
+  if (p.answer?.best) params[ParamNames.AnswerBest] = '1';
+  if (p.answer?.best?.id) params[ParamNames.AnswerBestParticipantId] = p.answer.best.id;
 
   return params;
 }
