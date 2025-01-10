@@ -27,6 +27,7 @@ import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
+import { LoadAnswerAsCurrentRoutingStatePipe } from '../../utils/load-answer-as-current-state';
 interface Column {
   field: string,
   header: string,
@@ -58,6 +59,7 @@ const logsLimit = 20;
     DatePipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
+    LoadAnswerAsCurrentRoutingStatePipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,

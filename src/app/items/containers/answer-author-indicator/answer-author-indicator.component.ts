@@ -20,6 +20,7 @@ import { UserSessionService } from '../../../services/user-session.service';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
+import { LoadAnswerAsCurrentRoutingStatePipe } from '../../utils/load-answer-as-current-state';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',
@@ -34,6 +35,7 @@ import { fromObservation } from 'src/app/store/observation';
     AsyncPipe,
     DatePipe,
     UserCaptionPipe,
+    LoadAnswerAsCurrentRoutingStatePipe,
     ScoreRingComponent,
     ButtonModule,
     ItemRoutePipe,
