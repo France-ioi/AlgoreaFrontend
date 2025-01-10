@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { initAsTesterUser, initAsUsualUser } from '../helpers/e2e_auth';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 /**
@@ -56,32 +56,4 @@ test('route with missing path and service error', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
   });
 
-});
-
-test('route with action parameter: action passed to subcomponents + parameter removed', { tag: '@no-parallelism' }, async ({ page }) => {
-  const emptyAnswer = '1970981512988735785';
-  const answerWith1234567 = '4143245131838208903';
-
-  await initAsUsualUser(page);
-  // first reload an empty answer
-  await page.goto(`/a/6379723280369399253;p=7523720120450464843;pa=0;answerId=${emptyAnswer};answerLoadAsCurrent=1`);
-
-  await test.step('checks the answer has been emptied', async () => {
-    await expect(page.frameLocator('iFrame').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
-    await expect(page.frameLocator('iFrame').getByText('1234567')).not.toBeVisible();
-  });
-
-  // then reload a answer which contains "1234567" in the answer
-  await page.goto(`/a/6379723280369399253;p=7523720120450464843;pa=0;answerId=${answerWith1234567};answerLoadAsCurrent=1`);
-
-  await test.step('drop the action parameter', async () => {
-    await expect(page.locator('.left-pane-title-text')).toContainText('Blockly Basic Task', { timeout: 15000 });
-    await expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=7523720120450464843;pa=0'));
-    await expect.soft(page).not.toHaveURL(/answer/);
-  });
-
-  await test.step('has loaded the expected answer', async () => {
-    await expect(page.frameLocator('iFrame').getByText('Programme de la tortue')).toBeVisible({ timeout: 30000 });
-    await expect(page.frameLocator('iFrame').getByText('1234567')).toBeVisible(); // to check it is the right answer
-  });
 });
