@@ -6,6 +6,7 @@ import { decodeItemRouterParameters, FullItemRoute, ItemRoute } from 'src/app/mo
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { defaultAttemptId } from '../models/attempts';
 import { ItemTypeCategory } from '../models/item-type';
+import { loadAnswerAsCurrentFromBrowserState } from './load-answer-as-current-state';
 
 export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'id'|'contentType'> & Partial<ItemRoute>;
 
@@ -50,7 +51,7 @@ export function solveMissingPathAttempt(
     }),
     delay(0), // required in order to trigger new navigation after the current one
     switchMap(itemRoute => {
-      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState() });
       return EMPTY;
     })
   );
