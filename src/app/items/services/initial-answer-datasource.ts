@@ -44,7 +44,7 @@ export class InitialAnswerDataSource implements OnDestroy {
       if (isTask === false) return { tag: 'NotApplicable' };
       if (!answer) {
         const loadAnswerAsCurrent = loadAnswerAsCurrentFromBrowserState();
-        if (loadAnswerAsCurrent){
+        if (loadAnswerAsCurrent) {
           return attemptId ? { tag: 'LoadAsCurrent', itemId: id, attemptId, answerId: loadAnswerAsCurrent } : { tag: 'Wait' };
         }
         if (isObserving) return { tag: 'EmptyInitialAnswer' };
