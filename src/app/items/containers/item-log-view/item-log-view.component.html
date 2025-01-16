@@ -78,9 +78,10 @@
                         <a
                           class="alg-link item-title-link"
                           [routerLink]="rowData.item | itemRoute: {
-                            answer: { id: rowData.answerId, loadAsCurrent: meta.isObserving ? undefined : true },
+                            answer: meta.isObserving ? { id: rowData.answerId } : undefined,
                             path: rowData.item.id === itemData.item.id ? itemData.route.path : undefined
                           } | url"
+                          [state]="meta.isObserving ? {} : (rowData.answerId | routingStateForLoadingAnswerAsCurrent)"
                           *ngIf="(!meta.isObserving || !!rowData.canWatchAnswer) && rowData.answerId"
                         >
                           {(meta.isObserving ? 'observingMode' : ''), select,

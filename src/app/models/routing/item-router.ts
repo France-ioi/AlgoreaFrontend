@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../../utils/assert';
 import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
+import { AnswerId } from '../ids';
+import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
 
 interface NavigateOptions {
   page?: string|string[],
   preventFullFrame?: boolean,
+  loadAnswerIdAsCurrent?: AnswerId,
   navExtras?: NavigationExtras,
 }
 
@@ -25,10 +28,16 @@ export class ItemRouter {
   navigateTo(item: RawItemRoute, {
     page,
     navExtras,
+    loadAnswerIdAsCurrent,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     preventFullFrame = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame),
   }: NavigateOptions = {}): void {
-    void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: { ...navExtras?.state, preventFullFrame } });
+    void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: {
+      ...navExtras?.state,
+      preventFullFrame,
+      ...(loadAnswerIdAsCurrent ? loadAnswerAsCurrentAsBrowserState(loadAnswerIdAsCurrent) : {}),
+    } }
+    );
   }
 
   /**

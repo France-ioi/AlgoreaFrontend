@@ -42,7 +42,7 @@ test('checks reload link in logs on task page', async ({ page }) => {
   await expect.soft(reloadAnswerLocator).toBeVisible();
   await Promise.all([
     reloadAnswerLocator.click(),
-    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=7523720120450464843;answerId=')),
+    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;p=7523720120450464843')),
   ]);
 });
 
@@ -72,7 +72,7 @@ test('checks reload link in logs on item page', async ({ page }) => {
   await expect.soft(reloadAnswerLocator).toBeVisible();
   await Promise.all([
     reloadAnswerLocator.click(),
-    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253;answerId=')),
+    expect.soft(page).toHaveURL(new RegExp('/a/6379723280369399253')),
   ]);
 });
 

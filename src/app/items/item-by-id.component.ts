@@ -161,7 +161,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       return this.initialAnswerDataSource.answer$.pipe(
         catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
         map(initialAnswer => ({
-          readOnly: !!route.answer && !route.answer.loadAsCurrent,
+          readOnly: !!route.answer,
           initialAnswer,
           locale: userLocale, // should use task locale if there is a way for the user to select it
         }))

@@ -1,10 +1,9 @@
-import { MemoizedSelector, Selector, createSelector, createSelectorFactory, resultMemoize } from '@ngrx/store';
+import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
-import { FullItemRoute, itemCategoryFromPrefix, routesEqualIgnoringCommands } from 'src/app/models/routing/item-route';
+import { FullItemRoute, itemCategoryFromPrefix } from 'src/app/models/routing/item-route';
 import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../utils/item-route-validation';
 import { Breadcumbs, Item, Results, State, initialState } from './item-content.state';
-import { equalNullishFactory } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
 import { fromObservation } from 'src/app/store/observation';
@@ -95,15 +94,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     (state, error) => (error !== null ? state.routeErrorHandling : null)
   );
 
-  // The commands (e.g. `answer.loadAsCurrent`) in route parameters are transient and removed once parsed (to prevent replaying the action
-  // on reload). We do not want the item content to consider that as a change, we keep the initial route.
-  // eslint-disable-next-line @ngrx/prefix-selectors-with-select
-  const createSelectorIgnoringRouteActionChanges = createSelectorFactory(
-    projectionFn => resultMemoize(projectionFn, equalNullishFactory(routesEqualIgnoringCommands))
-  // eslint-disable-next-line deprecation/deprecation
-  ) as typeof createSelector; /* fix for ngrx non-type-safety on createSelectorFactory */
-
-  const selectActiveContentRoute = createSelectorIgnoringRouteActionChanges(
+  const selectActiveContentRoute = createSelector(
     selectActiveContentRouteParsingResult,
     result => (result && !isItemRouteError(result) ? result : null)
   );
@@ -124,14 +115,14 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectState,
     selectActiveContentRoute,
     ({ breadcrumbsState }, route) =>
-      (equalNullishFactory(routesEqualIgnoringCommands)(route, breadcrumbsState.identifier) ?
+      (equal(route, breadcrumbsState.identifier) ?
         breadcrumbsState : initialState.breadcrumbsState)
   );
 
   const selectActiveContentResultsState = createSelector(
     selectState,
     selectActiveContentRoute,
-    ({ resultsState }, route) => (equalNullishFactory(routesEqualIgnoringCommands)(route, resultsState?.identifier) ?
+    ({ resultsState }, route) => (equal(route, resultsState?.identifier) ?
       resultsState : initialState.resultsState)
   );
 

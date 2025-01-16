@@ -27,7 +27,8 @@
           <a
             class="alg-button primary mini button"
             pButton
-            [routerLink]="itemData.item | itemRoute: { answer: { id: answer.id, loadAsCurrent: true } } | url"
+            [routerLink]="itemData.item | itemRoute | url"
+            [state]="answer.id | routingStateForLoadingAnswerAsCurrent"
             i18n
           >
             Edit it

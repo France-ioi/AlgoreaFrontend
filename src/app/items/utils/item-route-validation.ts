@@ -6,15 +6,16 @@ import { decodeItemRouterParameters, FullItemRoute, ItemRoute } from 'src/app/mo
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { defaultAttemptId } from '../models/attempts';
 import { ItemTypeCategory } from '../models/item-type';
+import { loadAnswerAsCurrentFromBrowserState } from './load-answer-as-current-state';
 
 export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'id'|'contentType'> & Partial<ItemRoute>;
 
 export function itemRouteFromParams(contentType: ItemTypeCategory, params: ParamMap): FullItemRoute|ItemRouteError {
-  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId, answerLoadAsCurrent }
+  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId }
     = decodeItemRouterParameters(params);
   let answer: ItemRoute['answer']|undefined;
   if (answerBest) answer = { best: true, participantId: answerParticipantId ?? undefined };
-  else if (answerId) answer = { id: answerId, loadAsCurrent: answerLoadAsCurrent ? true : undefined };
+  else if (answerId) answer = { id: answerId };
 
   if (!id) throw new Error('Unexpected missing id from item param');
   if (path === null) return { tag: 'error', contentType, id, answer };
@@ -50,7 +51,7 @@ export function solveMissingPathAttempt(
     }),
     delay(0), // required in order to trigger new navigation after the current one
     switchMap(itemRoute => {
-      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true } });
+      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState() });
       return EMPTY;
     })
   );

@@ -1,7 +1,7 @@
 import { createEffect } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { delay, filter, map, startWith, switchMap, tap } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { fromItemContent } from './item-content.store';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
@@ -31,18 +31,4 @@ export const routeErrorHandlingEffect = createEffect(
     map(newState => itemRouteErrorHandlingActions.routeErrorHandlingChange({ newState }))
   ),
   { functional: true },
-);
-
-export const removeActionsFromRouteEffect = createEffect(
-  (
-    store$ = inject(Store),
-    itemRouter = inject(ItemRouter),
-  ) => store$.select(fromItemContent.selectActiveContentRoute).pipe(
-    filter(isNotNull),
-    delay(0), // required in order to trigger new navigation after this one
-    tap(route => {
-      if (route.answer?.loadAsCurrent) itemRouter.navigateTo({ ...route, answer: undefined }, { navExtras: { replaceUrl: true } });
-    })
-  ),
-  { functional: true, dispatch: false },
 );
