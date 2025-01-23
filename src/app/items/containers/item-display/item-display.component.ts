@@ -45,7 +45,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { GetBreadcrumbsFromRootsService } from 'src/app/data-access/get-breadcrumbs-from-roots.service';
-import { typeCategoryOfItem } from 'src/app/items/models/item-type';
+import { ItemTypeCategory, typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { closestBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ButtonModule } from 'primeng/button';
@@ -189,7 +189,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
       filter((d): d is ({ id: string, path: string[] }|{ url: string })&{ newTab: boolean} => 'url' in d || ('id' in d && !!d.path))
     ).subscribe(dst => {
       if ('id' in dst) {
-        const route = itemRoute('activity', dst.id, { path: dst.path });
+        const route = itemRoute(ItemTypeCategory.Activity, dst.id, { path: dst.path });
         if (dst.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
         else this.itemRouter.navigateTo(route);
       }

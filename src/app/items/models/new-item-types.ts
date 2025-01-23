@@ -3,19 +3,19 @@ import { ActivityType, ItemType } from './item-type';
 
 export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   {
-    type: 'Chapter',
+    type: ItemType.Chapter,
     icon: 'ph-duotone ph-book',
     title: $localize`Chapter`,
     description: $localize`A new folder which can contain any activities.`,
   },
   {
-    type: 'Task',
+    type: ItemType.Task,
     icon: 'ph-duotone ph-code',
     title: $localize`Empty task`,
     description: $localize`A new task which will be configured later.`,
   },
   {
-    type: 'Task',
+    type: ItemType.Task,
     icon: 'ph-duotone ph-code',
     title: $localize`Task`,
     description: $localize`A new task configured with a given url.`,
@@ -24,7 +24,7 @@ export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
 ];
 
 export const skillNewType: NewContentType<ItemType> = {
-  type: 'Skill',
+  type: ItemType.Skill,
   icon: 'ph-duotone ph-graduation-cap',
   title: $localize`Skill`,
   description: $localize`A new skill.`,

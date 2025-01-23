@@ -5,7 +5,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { FetchState } from 'src/app/utils/state';
-import { ItemType } from 'src/app/items/models/item-type';
+import { itemType, ItemType } from 'src/app/items/models/item-type';
 import { ItemData } from '../../models/item-data';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { DurationToReadablePipe, SecondsToDurationPipe } from 'src/app/pipes/duration';
@@ -68,7 +68,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
       this.getParticipantProgressService.get(item.id).pipe(map(participantProgress => ([
         {
           id: item.id,
-          type: item.type,
+          type: itemType(item.type),
           title: item.string.title || '',
           latestActivityAt: participantProgress.item.latestActivityAt,
           hintsRequested: participantProgress.item.hintsRequested,
@@ -81,7 +81,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
         },
         ...(participantProgress.children || []).map(itemData => ({
           id: itemData.itemId,
-          type: itemData.type,
+          type: itemType(item.type),
           title: itemData.string.title || '',
           latestActivityAt: itemData.latestActivityAt,
           hintsRequested: itemData.hintsRequested,
@@ -116,7 +116,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
         {
           field: 'submissions',
           header: $localize`:Truncated title (little space available) for 'number of submissions':# Subm.`,
-          disabled: !items.some(item => item.type !== 'Chapter'),
+          disabled: !items.some(item => item.type !== ItemType.Chapter),
         },
         {
           field: 'score',

@@ -5,7 +5,7 @@ import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
-import { isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { isSkill, ItemType, itemTypeCategory, ItemTypeCategory, ItemTypeCategoryString } from 'src/app/items/models/item-type';
 import {
   NoAssociatedItem,
   NewAssociatedItem,
@@ -63,11 +63,12 @@ import { canCurrentUserGrantGroupAccess, canCurrentUserWatchMembers } from '../.
 export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
 
   group = input.required<Group>();
-  contentType = input.required<ItemTypeCategory>();
+  contentType = input.required<ItemTypeCategoryString>();
+  contentItemTypeCategory = computed(() => itemTypeCategory(this.contentType()));
   /**
    * Whether this component is for the associated skill (or associated activity)
    */
-  isSkill = computed(() => isSkill(this.contentType()));
+  isSkill = computed(() => isSkill(this.contentItemTypeCategory()));
 
   /**
    * The list of allowed item types with icons etc for the new content case
@@ -88,7 +89,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
       const canGetGroupPerms = canCurrentUserGrantGroupAccess(this.group()) && canCurrentUserWatchMembers(this.group());
       // the only scenario where it is not needed to fetching the item info
       if (!canGetGroupPerms && item.name) {
-        return of({ id, name: item.name, groupPerms: undefined, permissions: undefined, contentType: this.contentType() });
+        return of({ id, name: item.name, groupPerms: undefined, permissions: undefined, contentType: this.contentItemTypeCategory() });
       }
       return this.getItemByIdService.get(item.id, canGetGroupPerms ? { watchedGroupId: this.group().id } : {}).pipe(
         map(fullItem => ({ name: fullItem.string.title, groupPerms: fullItem.watchedGroup?.permissions, ...fullItem })),
@@ -107,7 +108,10 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
   private onChange: (value: NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem) => void = () => {};
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
-    this.searchItemService.search(value, this.contentType() === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
+    this.searchItemService.search(
+      value,
+      this.contentItemTypeCategory() === ItemTypeCategory.Activity ? [ ItemType.Chapter, ItemType.Task ] : [ ItemType.Skill ]
+    );
 
   constructor(
     private getItemByIdService: GetItemByIdService,

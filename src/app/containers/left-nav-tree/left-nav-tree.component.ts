@@ -37,7 +37,7 @@ export interface CustomTreeNode<T> extends TreeNode {
 })
 export class LeftNavTreeComponent implements OnChanges {
   @Input() data?: NavTreeData;
-  @Input() elementType: ItemTypeCategory | 'group' = 'activity';
+  @Input() elementType: ItemTypeCategory | 'group' = ItemTypeCategory.Activity;
 
   nodes: CustomTreeNode<NavTreeElement>[] = [];
   managershipTooltipCaptions = {
@@ -90,9 +90,9 @@ export class LeftNavTreeComponent implements OnChanges {
 
   private typeForElement(e: NavTreeElement): string {
     switch (this.elementType) {
-      case 'activity':
+      case ItemTypeCategory.Activity:
         return e.hasChildren ? 'chapter' : 'task';
-      case 'skill':
+      case ItemTypeCategory.Skill:
         return e.hasChildren ? 'skill-folder' : 'skill-leaf';
       case 'group':
         return 'group';

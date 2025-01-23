@@ -159,7 +159,7 @@ export class ActivityNavTreeService extends ItemNavTreeService {
     itemRouter: ItemRouter,
     store: Store,
   ) {
-    super('activity', currentContent, itemNavService, itemRouter, store);
+    super(ItemTypeCategory.Activity, currentContent, itemNavService, itemRouter, store);
   }
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {
@@ -177,7 +177,7 @@ export class SkillNavTreeService extends ItemNavTreeService {
     itemRouter: ItemRouter,
     store: Store
   ) {
-    super('skill', currentContent, itemNavService, itemRouter, store);
+    super(ItemTypeCategory.Skill, currentContent, itemNavService, itemRouter, store);
   }
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {

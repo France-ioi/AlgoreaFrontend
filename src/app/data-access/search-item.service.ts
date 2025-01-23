@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { appConfig } from '../utils/config';
-import { ItemType } from '../items/models/item-type';
+import { ItemType, itemTypeSchema } from '../items/models/item-type';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from '../utils/operators/decode';
 import { ItemCorePerm, itemCorePermSchema } from '../items/models/item-permissions';
@@ -17,7 +17,7 @@ export interface ItemFound<T> {
 const itemFoundSchema = z.object({
   id: z.string(),
   title: z.string(),
-  type: z.enum([ 'Chapter', 'Task', 'Skill' ]),
+  type: itemTypeSchema,
   permissions: itemCorePermSchema,
 });
 

@@ -25,6 +25,7 @@ import { LTIDataSource } from './lti-datasource.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { ItemTypeCategory } from '../items/models/item-type';
 
 enum LTIError {
   FetchError = 'fetch_error',
@@ -136,7 +137,7 @@ export class LTIComponent implements OnDestroy {
           void this.router.navigateByUrl(fromPath);
           return;
         }
-        const route = itemRoute('activity', firstChild.id, { path, parentAttemptId: attemptId });
+        const route = itemRoute(ItemTypeCategory.Activity, firstChild.id, { path, parentAttemptId: attemptId });
         this.itemRouter.navigateTo(route, { navExtras: { replaceUrl: true } });
       }),
   ];

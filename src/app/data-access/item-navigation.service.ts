@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { isSkill, ItemTypeCategory, itemTypeSchema } from 'src/app/items/models/item-type';
+import { isSkill, ItemType, ItemTypeCategory, itemTypeSchema } from 'src/app/items/models/item-type';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
@@ -52,7 +52,7 @@ const itemNavigationDataSchema = z.object({
     languageTag: z.string(),
     title: z.string().nullable(),
   }),
-  type: z.enum([ 'Chapter', 'Task', 'Skill' ]),
+  type: itemTypeSchema,
   children: z.array(itemNavigationChildSchema),
 });
 
@@ -99,7 +99,7 @@ export class ItemNavigationService {
 
     return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
       decodeSnakeCaseZod(itemNavigationDataSchema),
-      map(data => (options.skillOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
+      map(data => (options.skillOnly ? { ...data, children: data.children.filter(c => c.type === ItemType.Skill) } : data))
     );
   }
 

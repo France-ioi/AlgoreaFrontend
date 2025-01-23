@@ -1,46 +1,60 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { z } from 'zod';
 
-export const itemTypeSchema = z.enum([ 'Chapter', 'Task', 'Skill' ]);
+export enum ItemType {
+  Chapter = 'Chapter',
+  Task = 'Task',
+  Skill = 'Skill',
+}
+export type ItemTypeString = `${ItemType}`;
+export type ActivityType = ItemType.Chapter | ItemType.Task;
+export enum ItemTypeCategory {
+  Activity = 'activity',
+  Skill = 'skill',
+}
+export type ItemTypeCategoryString = `${ItemTypeCategory}`;
 
-export type ActivityType = 'Chapter'|'Task';
-export type ItemType = z.infer<typeof itemTypeSchema>;
-export type ItemTypeCategory = 'activity'|'skill';
+export const itemTypeSchema = z.nativeEnum(ItemType);
 interface ItemWithType { type: ItemType }
-
 
 /* Helpers in Item-like */
 export function isASkill(item: ItemWithType): boolean {
-  return item.type === 'Skill';
+  return item.type === ItemType.Skill;
 }
 
 export function isATask(item: ItemWithType): boolean {
-  return item.type === 'Task';
+  return item.type === ItemType.Task;
 }
 
 export function isAChapter(item: ItemWithType): boolean {
-  return item.type === 'Chapter';
+  return item.type === ItemType.Chapter;
 }
 
 export function mayHaveChildren(item: ItemWithType): boolean {
-  return item.type === 'Chapter' || item.type === 'Skill';
+  return item.type === ItemType.Chapter || item.type === ItemType.Skill;
 }
 
 export function typeCategoryOfItem(item: ItemWithType): ItemTypeCategory {
-  return item.type === 'Skill' ? 'skill' : 'activity';
+  return item.type === ItemType.Skill ? ItemTypeCategory.Skill : ItemTypeCategory.Activity;
 }
 
 export function isAnActivity(item: ItemWithType): boolean {
-  return typeCategoryOfItem(item) === 'activity';
+  return typeCategoryOfItem(item) === ItemTypeCategory.Activity;
+}
+
+export function itemType(type: ItemTypeString): ItemType {
+  if (type === 'Chapter') return ItemType.Chapter;
+  if (type === 'Task') return ItemType.Task;
+  return ItemType.Skill;
 }
 
 /* Helpers on ItemTypeCategory */
-export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
-  return cat === 'skill';
+export function isSkill(cat: ItemTypeCategory): cat is ItemTypeCategory.Skill {
+  return cat === ItemTypeCategory.Skill;
 }
 
-export function isTask(item: ItemWithType): boolean {
-  return item.type === 'Task';
+export function itemTypeCategory(category: ItemTypeCategoryString): ItemTypeCategory {
+  return category === ItemTypeCategory.Activity.toString() ? ItemTypeCategory.Activity : ItemTypeCategory.Skill;
 }
 
 // ********************************************

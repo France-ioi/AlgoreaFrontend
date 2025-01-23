@@ -7,6 +7,7 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from '../../services/current-content.service';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf } from '@angular/common';
+import { ItemTypeCategory } from 'src/app/items/models/item-type';
 
 @Component({
   selector: 'alg-redirect-to-id',
@@ -33,7 +34,7 @@ export class RedirectToIdComponent implements OnDestroy {
   private subscription = this.path$.pipe(
     map(path => (appConfig.redirects ? appConfig.redirects[path] : undefined))
   ).subscribe(route => {
-    if (route) this.itemRouter.navigateTo(itemRoute('activity', route.id, { path: route.path }));
+    if (route) this.itemRouter.navigateTo(itemRoute(ItemTypeCategory.Activity, route.id, { path: route.path }));
     else this.notExisting = true;
   });
 

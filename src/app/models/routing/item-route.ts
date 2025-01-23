@@ -48,7 +48,7 @@ export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'pa
 
 // TYPE ASSERT FUNCTIONS
 export function isItemRoute(route: ContentRoute): route is ItemRoute {
-  return ([ 'activity', 'skill' ].includes(route.contentType));
+  return ([ ItemTypeCategory.Activity.toString(), ItemTypeCategory.Skill.toString() ].includes(route.contentType));
 }
 
 export function isFullItemRoute(route: ContentRoute): route is FullItemRoute {
@@ -78,9 +78,10 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
 /**
  * The route to the app default (see config) item
  */
-export const appDefaultActivityRoute = itemRoute('activity', appConfig.defaultActivityId, { path: [], parentAttemptId: defaultAttemptId });
+export const appDefaultActivityRoute =
+  itemRoute(ItemTypeCategory.Activity, appConfig.defaultActivityId, { path: [], parentAttemptId: defaultAttemptId });
 export const appDefaultSkillRoute = appConfig.defaultSkillId ?
-  itemRoute('skill', appConfig.defaultSkillId, { path: [], parentAttemptId: defaultAttemptId }) :
+  itemRoute(ItemTypeCategory.Skill, appConfig.defaultSkillId, { path: [], parentAttemptId: defaultAttemptId }) :
   undefined;
 
 /**
@@ -127,8 +128,8 @@ export function decodeItemRouterParameters(params: ParamMap): {
 
 export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
   switch (prefix) {
-    case activityPrefix: return 'activity';
-    case skillPrefix: return 'skill';
+    case activityPrefix: return ItemTypeCategory.Activity;
+    case skillPrefix: return ItemTypeCategory.Skill;
     default: return null;
   }
 }
@@ -170,7 +171,7 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
     }
   }
 
-  const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
+  const prefix = route.contentType === ItemTypeCategory.Activity ? activityPrefix : skillPrefix;
   const pagePath = isString(page) ? [ page ] : page;
   return [ '/', prefix, itemAlias ? itemAlias.alias : route.id, params, ...pagePath ];
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ItemTypeCategory } from 'src/app/items/models/item-type';
+import { ItemTypeCategoryString } from 'src/app/items/models/item-type';
 import { ItemChildWithAdditions } from './item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -30,7 +30,7 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
   ],
 })
 export class ItemChildrenListComponent {
-  @Input() type: ItemTypeCategory = 'activity';
+  @Input() type: ItemTypeCategoryString = 'activity';
   @Input() children: ItemChildWithAdditions[] = [];
   @Input() emptyMessage?: string;
   @Input() routeParams?: {

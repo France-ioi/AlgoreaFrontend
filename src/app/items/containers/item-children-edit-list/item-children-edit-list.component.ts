@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@a
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
-import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { ItemType, ItemTypeCategoryString } from 'src/app/items/models/item-type';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { itemViewPermMax } from 'src/app/items/models/item-view-permission';
 import { itemWatchPermMax } from 'src/app/items/models/item-watch-permission';
@@ -50,7 +50,9 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
 })
 export class ItemChildrenEditListComponent implements OnChanges {
   @Input() itemData?: ItemData;
-  @Input() type: ItemTypeCategory = 'activity';
+
+  @Input() type: ItemTypeCategoryString = 'activity';
+
   @Input() data: PossiblyInvisibleChildData[] = [];
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
 
