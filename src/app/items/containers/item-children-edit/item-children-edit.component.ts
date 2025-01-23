@@ -3,7 +3,7 @@ import { ItemData } from '../../models/item-data';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
-import { isASkill, isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { isASkill, ItemType, ItemTypeCategory, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -143,8 +143,8 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
     this.reloadData();
   }
 
-  onDataChange(children: PossiblyInvisibleChildData[], type: ItemTypeCategory = 'activity'): void {
-    if (isSkill(type)) {
+  onDataChange(children: PossiblyInvisibleChildData[], type: ItemTypeCategory = c.activity): void {
+    if (type === c.skill) {
       this.skills = children;
     } else {
       this.activities = children;

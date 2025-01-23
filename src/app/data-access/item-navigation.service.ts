@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
-import { isSkill, ItemTypeCategory, itemTypeSchema } from 'src/app/items/models/item-type';
+import { ItemTypeCategory, itemTypeCategoryEnum, itemTypeSchema } from 'src/app/items/models/item-type';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
@@ -128,7 +128,7 @@ export class ItemNavigationService {
   }
 
   getRoots(type: ItemTypeCategory, watchedGroupId?: string): Observable<RootItem[]> {
-    const rootAsGroupList$: Observable<GroupWithRootItem[]> = isSkill(type) ?
+    const rootAsGroupList$: Observable<GroupWithRootItem[]> = type === itemTypeCategoryEnum.skill ?
       this.getRootSkills(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
     return rootAsGroupList$.pipe(map(groupList => this.mapToItemList(groupList)));

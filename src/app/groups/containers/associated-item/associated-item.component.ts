@@ -5,7 +5,7 @@ import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { SearchItemService } from 'src/app/data-access/search-item.service';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
-import { isSkill, ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
+import { ItemType, ItemTypeCategory, itemTypeCategoryEnum } from 'src/app/items/models/item-type';
 import {
   NoAssociatedItem,
   NewAssociatedItem,
@@ -67,7 +67,7 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
   /**
    * Whether this component is for the associated skill (or associated activity)
    */
-  isSkill = computed(() => isSkill(this.contentType()));
+  isSkill = computed(() => this.contentType() === itemTypeCategoryEnum.skill);
 
   /**
    * The list of allowed item types with icons etc for the new content case

@@ -23,7 +23,6 @@ interface ItemWithType { type: ItemType }
 const t = itemTypeEnum; // local shorthand
 const c = itemTypeCategoryEnum; // local shorthand
 
-
 export function isASkill(item: ItemWithType): boolean {
   return item.type === t.Skill;
 }
@@ -46,10 +45,6 @@ export function typeCategoryOfItem(item: ItemWithType): ItemTypeCategory {
 
 export function isAnActivity(item: ItemWithType): boolean {
   return typeCategoryOfItem(item) === 'activity';
-}
-
-export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
-  return cat === c.skill;
 }
 
 // ********************************************
