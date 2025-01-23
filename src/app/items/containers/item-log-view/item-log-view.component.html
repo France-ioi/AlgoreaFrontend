@@ -17,7 +17,7 @@
             <a class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise"
               [routerLink]="itemData.route | with: {
                   parentAttemptId,
-                  answer: { best: true, participantId: observedGroupId ? observedGroupId : undefined }
+                  answer: { best: { id: observedGroupId ? observedGroupId : undefined }}
                 } | url"
               *ngrxLet="observedGroupId$; let observedGroupId"
             >
@@ -78,7 +78,7 @@
                         <a
                           class="alg-link item-title-link"
                           [routerLink]="rowData.item | itemRoute: {
-                            answer: meta.isObserving ? { id: rowData.answerId } : undefined,
+                            answer: $any(meta.isObserving ? { id: rowData.answerId } : undefined),
                             path: rowData.item.id === itemData.item.id ? itemData.route.path : undefined
                           } | url"
                           [state]="meta.isObserving ? {} : (rowData.answerId | routingStateForLoadingAnswerAsCurrent)"

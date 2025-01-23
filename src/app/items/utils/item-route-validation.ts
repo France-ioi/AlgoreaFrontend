@@ -14,7 +14,7 @@ export function itemRouteFromParams(contentType: ItemTypeCategory, params: Param
   const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId }
     = decodeItemRouterParameters(params);
   let answer: ItemRoute['answer']|undefined;
-  if (answerBest) answer = { best: true, participantId: answerParticipantId ?? undefined };
+  if (answerBest) answer = { best: { id: answerParticipantId ?? undefined } };
   else if (answerId) answer = { id: answerId };
 
   if (!id) throw new Error('Unexpected missing id from item param');

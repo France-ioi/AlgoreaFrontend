@@ -6,7 +6,7 @@ import { ItemTypeCategory } from '../../items/models/item-type';
 import { isString } from '../../utils/type-checkers';
 import { UrlCommand } from '../../utils/url';
 import { arraysEqual } from '../../utils/array';
-import { AnswerId, AttemptId, ItemId, ItemPath } from '../ids';
+import { AnswerId, AttemptId, ItemId, ItemPath, ParticipantId } from '../ids';
 import { pathAsParameter, pathFromRouterParameters } from './path-parameter';
 
 // url parameter names
@@ -39,9 +39,7 @@ export interface ItemRoute extends ContentRoute {
   path: ItemPath,
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
-  answer?:
-    { best?: undefined, id: AnswerId, participantId?: undefined } |
-    { best: true, id?: undefined, participantId?: string /* not set if mine */ },
+  answer?: { id: AnswerId, best?: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id?: undefined },
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
@@ -164,7 +162,7 @@ export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] 
   if (route.answer) {
     if (route.answer.best) {
       params[answerBestParamName] = '1';
-      if (route.answer.participantId) params[answerBestParticipantParamName] = route.answer.participantId;
+      if (route.answer.best.id) params[answerBestParticipantParamName] = route.answer.best.id;
     } else {
       params[answerParamName] = route.answer.id;
     }
