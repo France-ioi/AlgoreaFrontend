@@ -39,10 +39,6 @@ export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
   return cat === 'skill';
 }
 
-export function isTask(item: ItemWithType): boolean {
-  return item.type === 'Task';
-}
-
 // ********************************************
 // Pipes for templates
 // ********************************************

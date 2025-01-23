@@ -12,7 +12,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemData } from '../../models/item-data';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { IsAChapterPipe, IsASkillPipe, isTask } from '../../models/item-type';
+import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { parentRoute } from 'src/app/models/routing/item-route';
 
@@ -42,7 +42,7 @@ export class ItemRemoveButtonComponent implements OnDestroy {
     distinctUntilChanged((a, b) => a.item.id === b.item.id && a.currentResult?.attemptId === b.currentResult?.attemptId),
     switchMap(({ item, currentResult }) => {
       if (!item.permissions.isOwner) return of(false);
-      if (isTask(item)) return of(true);
+      if (isATask(item)) return of(true);
       if (!currentResult) return EMPTY;
       return this.getItemChildrenService.get(item.id, currentResult.attemptId).pipe(
         map((itemChildren: ItemChildren) => itemChildren.length === 0),

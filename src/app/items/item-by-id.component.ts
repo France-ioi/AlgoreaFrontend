@@ -20,7 +20,7 @@ import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
 import { ItemData } from './models/item-data';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { ItemRouter } from 'src/app/models/routing/item-router';
-import { isATask, isTask } from 'src/app/items/models/item-type';
+import { isATask } from 'src/app/items/models/item-type';
 import { itemInfo } from 'src/app/models/content/item-info';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { itemRouteFromParams } from './utils/item-route-validation';
@@ -152,7 +152,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   );
 
   readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(readyData()).pipe(
-    map(data => ({ isTask: isTask(data.item), route: data.route })),
+    map(data => ({ isTask: isATask(data.item), route: data.route })),
     distinctUntilChanged((x, y) => JSON.stringify(x.route) === JSON.stringify(y.route)),
     switchMap(({ isTask, route }) => {
       if (!isTask) return of(null); // config for non-task's is null
@@ -260,7 +260,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
     combineLatest([ this.itemRoute$, this.itemState$.pipe(startWith(undefined)) ]).pipe(
       map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
-        { route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId), isTask: isTask(itemState.data.item) }:
+        {
+          route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId),
+          isTask: isATask(itemState.data.item),
+        } :
         { route, isTask: undefined }
       ))
     ).subscribe(({ route, isTask }) => {
@@ -270,7 +273,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     combineLatest([ this.itemState$.pipe(readyData<ItemData>()), this.fullFrameContent$ ]).pipe(
       map(([ data, fullFrame ]) => {
         if (fullFrame) return { id: data.route.id, display: ContentDisplayType.ShowFullFrame };
-        return { id: data.route.id, display: isTask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default };
+        return { id: data.route.id, display: isATask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default };
       }),
       distinctUntilChanged((x, y) => x.id === y.id && x.display === y.display), // emit once per item for a same display
       map(({ display }) => display),
