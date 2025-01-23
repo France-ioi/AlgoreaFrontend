@@ -1,42 +1,55 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { z } from 'zod';
 
+// domain level item typing
 export const itemTypeSchema = z.enum([ 'Chapter', 'Task', 'Skill' ]);
-
-export type ActivityType = 'Chapter'|'Task';
 export type ItemType = z.infer<typeof itemTypeSchema>;
-export type ItemTypeCategory = 'activity'|'skill';
+export const itemTypeEnum = itemTypeSchema.enum;
+
+// activity is just a subset of type just including chapter and task
+const activityTypeSchema = itemTypeSchema.extract([ 'Chapter', 'Task' ]);
+export type ActivityType = z.infer<typeof activityTypeSchema>;
+
+// another higher level of item typing: chapters and tasks are activities, skill are skills
+const itemTypeCategorySchema = z.enum([ 'activity', 'skill' ]);
+export type ItemTypeCategory = z.infer<typeof itemTypeCategorySchema>;
+export const itemTypeCategoryEnum = itemTypeCategorySchema.enum;
+
+//
+// Helpers for items-like
+//
+
 interface ItemWithType { type: ItemType }
+const t = itemTypeEnum; // local shorthand
+const c = itemTypeCategoryEnum; // local shorthand
 
 
-/* Helpers in Item-like */
 export function isASkill(item: ItemWithType): boolean {
-  return item.type === 'Skill';
+  return item.type === t.Skill;
 }
 
 export function isATask(item: ItemWithType): boolean {
-  return item.type === 'Task';
+  return item.type === t.Task;
 }
 
 export function isAChapter(item: ItemWithType): boolean {
-  return item.type === 'Chapter';
+  return item.type === t.Chapter;
 }
 
 export function mayHaveChildren(item: ItemWithType): boolean {
-  return item.type === 'Chapter' || item.type === 'Skill';
+  return item.type === t.Chapter || item.type === t.Skill;
 }
 
 export function typeCategoryOfItem(item: ItemWithType): ItemTypeCategory {
-  return item.type === 'Skill' ? 'skill' : 'activity';
+  return item.type === t.Skill ? c.skill : c.activity;
 }
 
 export function isAnActivity(item: ItemWithType): boolean {
   return typeCategoryOfItem(item) === 'activity';
 }
 
-/* Helpers on ItemTypeCategory */
 export function isSkill(cat: ItemTypeCategory): cat is 'skill' {
-  return cat === 'skill';
+  return cat === c.skill;
 }
 
 // ********************************************
