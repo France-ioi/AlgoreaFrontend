@@ -15,9 +15,9 @@ const itemTypeCategorySchema = z.enum([ 'activity', 'skill' ]);
 export type ItemTypeCategory = z.infer<typeof itemTypeCategorySchema>;
 export const itemTypeCategoryEnum = itemTypeCategorySchema.enum;
 
-//
+// ********************************************
 // Helpers for items-like
-//
+// ********************************************
 
 interface ItemWithType { type: ItemType }
 const t = itemTypeEnum; // local shorthand
