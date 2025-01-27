@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, skip, switchMap, take } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/items/models/attempts';
-import { isSkill, ItemTypeCategory, typeCategoryOfItem } from 'src/app/items/models/item-type';
+import { ItemTypeCategory, typeCategoryOfItem, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { isActivityInfo, isItemInfo, itemInfo, ItemInfo } from 'src/app/models/content/item-info';
 import { itemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
@@ -59,7 +59,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
       switchMap(observedGroupId => this.itemNavService.getItemNavigation(route.id,
-        { attemptId, skillOnly: isSkill(route.contentType), watchedGroupId: observedGroupId ?? undefined }
+        { attemptId, skillOnly: route.contentType === c.skill, watchedGroupId: observedGroupId ?? undefined }
       )),
       map(data => this.mapNavData(data, route.path)),
     );
@@ -81,7 +81,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
       switchMap(observedGroupId => this.itemNavService.getItemNavigation(id,
-        { childRoute: child.route, skillOnly: isSkill(this.category), watchedGroupId: observedGroupId ?? undefined }
+        { childRoute: child.route, skillOnly: this.category === c.skill, watchedGroupId: observedGroupId ?? undefined }
       )),
       map(data => this.mapNavData(data, child.route.path.slice(0, -1)))
     );
