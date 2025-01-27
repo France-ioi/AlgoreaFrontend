@@ -4,12 +4,11 @@ import { RawItemRoute } from './item-route';
 import { AnswerId } from '../ids';
 import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
 import { itemRouteAsUrlCommand } from './item-route-serialization';
-import { isString } from 'src/app/utils/type-checkers';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
 
 interface NavigateOptions {
-  page?: string|string[],
+  page?: string[],
   preventFullFrame?: boolean,
   loadAnswerIdAsCurrent?: AnswerId,
   navExtras?: NavigationExtras,
@@ -50,10 +49,9 @@ export class ItemRouter {
    * Return a url to the given item, on the given page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to '/'.
    */
-  url(item: RawItemRoute, page?: string|string[]): UrlTree {
-    const pageArray = isString(page) ? [ page ]: page;
+  url(item: RawItemRoute, page?: string[]): UrlTree {
     const currentPage = this.currentPage() ?? undefined;
-    return this.router.createUrlTree(itemRouteAsUrlCommand(item, pageArray ?? currentPage));
+    return this.router.createUrlTree(itemRouteAsUrlCommand(item, page ?? currentPage));
   }
 
 }
