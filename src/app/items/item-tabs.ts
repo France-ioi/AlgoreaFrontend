@@ -53,6 +53,7 @@ export class ItemTabs implements OnDestroy {
   private itemState$ = this.store.select(fromItemContent.selectActiveContentData).pipe(
     filter(isNotNull),
   );
+  private currentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
 
   private tabs$: Observable<Parameters<TabService['setTabs']>[0]> = combineLatest([
     this.itemState$,
@@ -139,7 +140,9 @@ export class ItemTabs implements OnDestroy {
   }
 
   private isCurrentTab(tab: { routerLink: string[] }): boolean {
-    return arraysEqual(this.itemRouter.currentItemPage() ?? [], tab.routerLink);
+    const currentPage = this.currentPage();
+    if (currentPage === null) return false;
+    return arraysEqual(currentPage, tab.routerLink);
   }
 
 }

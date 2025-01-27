@@ -8,7 +8,7 @@ import { ItemData } from '../../models/item-data';
 import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
 import { Result } from '../../models/attempts';
-import { isItemRouteError, ItemRouteError, itemRouteFromUrlSegments } from 'src/app/models/routing/item-route-serialization';
+import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -25,6 +25,10 @@ interface UserContentSelectors<T extends RootState> {
    * If the content is an item and there is no route error: the fully defined route
    */
   selectActiveContentRoute: MemoizedSelector<T, FullItemRoute|null>,
+  /**
+   * If the content is an item, the current page
+   */
+  selectActiveContentPage: MemoizedSelector<T, string[]|null>,
   /**
    * If the content is an item and there is no route error: the item id
    */
@@ -64,7 +68,17 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   const selectActiveContentRouteParsingResult = createSelector(
     fromRouter.selectSegments,
-    segments => (segments ? itemRouteFromUrlSegments(segments) : null)
+    segments => (segments ? parseItemUrlSegments(segments) : null)
+  );
+
+  const selectActiveContentRouteParsingResultRoute = createSelector(
+    selectActiveContentRouteParsingResult,
+    result => (result ? result.route: null)
+  );
+
+  const selectActiveContentPage = createSelector(
+    selectActiveContentRouteParsingResult,
+    result => (result ? result.page: null)
   );
 
   const selectIsItemContentActive = createSelector(
@@ -73,8 +87,8 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   );
 
   const selectActiveContentRouteError = createSelector(
-    selectActiveContentRouteParsingResult,
-    result => (result && isItemRouteError(result) ? result : null)
+    selectActiveContentRouteParsingResultRoute,
+    route => (route && isItemRouteError(route) ? route : null)
   );
 
   const selectActiveContentRouteErrorHandlingState = createSelector(
@@ -84,8 +98,8 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   );
 
   const selectActiveContentRoute = createSelector(
-    selectActiveContentRouteParsingResult,
-    result => (result && !isItemRouteError(result) ? result : null)
+    selectActiveContentRouteParsingResultRoute,
+    route => (route && !isItemRouteError(route) ? route : null)
   );
 
   const selectActiveContentId = createSelector(
@@ -168,6 +182,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRouteError,
     selectActiveContentRouteErrorHandlingState,
     selectActiveContentRoute,
+    selectActiveContentPage,
     selectActiveContentId,
     selectActiveContentItemState,
     selectActiveContentBreadcrumbsState,

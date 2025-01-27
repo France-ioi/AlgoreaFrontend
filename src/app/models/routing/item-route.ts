@@ -1,8 +1,7 @@
-import { defaultAttemptId } from '../../items/models/attempts';
-import { appConfig } from '../../utils/config';
 import { ContentRoute } from './content-route';
 import { ItemTypeCategory } from '../../items/models/item-type';
 import { AnswerId, AttemptId, ItemId, ItemPath, ParticipantId } from '../ids';
+import { appDefaultActivityRoute } from './item-route-default';
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item
@@ -56,14 +55,6 @@ export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Omi
 export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|undefined): FullItemRoute {
   return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
 }
-
-/**
- * The route to the app default (see config) item
- */
-export const appDefaultActivityRoute = itemRoute('activity', appConfig.defaultActivityId, { path: [], parentAttemptId: defaultAttemptId });
-export const appDefaultSkillRoute = appConfig.defaultSkillId ?
-  itemRoute('skill', appConfig.defaultSkillId, { path: [], parentAttemptId: defaultAttemptId }) :
-  undefined;
 
 /**
  * Return the route of the parent item of the given item route.
