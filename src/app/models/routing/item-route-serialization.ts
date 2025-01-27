@@ -55,6 +55,9 @@ export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
 // Export route for navigation
 // **********************************************************************************************************
 
+/**
+ * Create a navigable url command based on the given route. If the page is not given, use the root page of the item.
+ */
 export function itemRouteAsUrlCommand(route: RawItemRoute, page?: string[]): UrlCommand {
   const aliasSearch = itemAliasFor(route.id, route.path);
   const idOrAlias = aliasSearch ? aliasSearch.alias : route.id;
