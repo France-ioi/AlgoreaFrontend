@@ -1,6 +1,6 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from './router.state';
-import { ParamMap, Params, convertToParamMap } from '@angular/router';
+import { ParamMap, Params, UrlSegment, convertToParamMap } from '@angular/router';
 import { RouterReducerState } from '@ngrx/router-store';
 
 interface Selectors<T> {
@@ -10,6 +10,7 @@ interface Selectors<T> {
   selectState: MemoizedSelector<T, State | undefined>,
   selectNavigationId: MemoizedSelector<T, RouterReducerState['navigationId'] | undefined>,
   selectPath: MemoizedSelector<T, string[] | undefined>,
+  selectSegments: MemoizedSelector<T, UrlSegment[] | undefined>,
   selectParamMap: MemoizedSelector<T, ParamMap>,
   selectParam: (param: string) => MemoizedSelector<T, string | null>,
   selectQueryParam: (param: string) => MemoizedSelector<T, string | null>,
@@ -30,9 +31,14 @@ export function selectors<T>(baseSelectRouterState: Selector<T, RouterReducerSta
     routerState => routerState?.navigationId
   );
 
-  const selectPath = createSelector(
+  const selectSegments = createSelector(
     selectState,
-    state => state?.path
+    state => state?.segments,
+  );
+
+  const selectPath = createSelector(
+    selectSegments,
+    segments => segments?.map(({ path }) => path),
   );
 
   const emptyParams: Params = [];
@@ -58,5 +64,5 @@ export function selectors<T>(baseSelectRouterState: Selector<T, RouterReducerSta
   const selectQueryParam = (param: string): MemoizedSelector<T, string | null> =>
     createSelector(selectQueryParamMap, paramMap => paramMap.get(param));
 
-  return { selectRouterState, selectState, selectNavigationId, selectPath, selectParamMap, selectParam, selectQueryParam };
+  return { selectRouterState, selectState, selectNavigationId, selectPath, selectSegments, selectParamMap, selectParam, selectQueryParam };
 }

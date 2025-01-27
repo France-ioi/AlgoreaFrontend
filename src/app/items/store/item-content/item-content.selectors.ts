@@ -1,14 +1,14 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
-import { FullItemRoute, itemCategoryFromPrefix } from 'src/app/models/routing/item-route';
-import { ItemRouteError, isItemRouteError, itemRouteFromParams } from '../../utils/item-route-validation';
+import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { Breadcumbs, Item, Results, State, initialState } from './item-content.state';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
 import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
 import { Result } from '../../models/attempts';
+import { isItemRouteError, ItemRouteError, itemRouteFromUrlSegments } from 'src/app/models/routing/item-route-serialization';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -62,25 +62,14 @@ interface UserContentSelectors<T extends RootState> {
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
 
-  const selectActiveContentItemTypeCategory = createSelector(
-    fromRouter.selectPath,
-    path => (!!path && path.length >= 2 && path[0] ? itemCategoryFromPrefix(path[0]) : null),
+  const selectActiveContentRouteParsingResult = createSelector(
+    fromRouter.selectSegments,
+    segments => (segments ? itemRouteFromUrlSegments(segments) : null)
   );
 
   const selectIsItemContentActive = createSelector(
-    selectActiveContentItemTypeCategory,
-    category => category !== null
-  );
-
-  const selectActiveContentParams = createSelector(
-    selectActiveContentItemTypeCategory,
-    fromRouter.selectParamMap,
-    (category, paramMap) => (category ? { paramMap, category } : null)
-  );
-
-  const selectActiveContentRouteParsingResult = createSelector(
-    selectActiveContentParams,
-    params => (params ? itemRouteFromParams(params.category, params.paramMap) : null)
+    selectActiveContentRouteParsingResult,
+    result => result !== null
   );
 
   const selectActiveContentRouteError = createSelector(

@@ -1,24 +1,8 @@
-import { ParamMap } from '@angular/router';
 import { defaultAttemptId } from '../../items/models/attempts';
 import { appConfig } from '../../utils/config';
 import { ContentRoute } from './content-route';
 import { ItemTypeCategory } from '../../items/models/item-type';
-import { isString } from '../../utils/type-checkers';
-import { UrlCommand } from '../../utils/url';
-import { arraysEqual } from '../../utils/array';
-import { AnswerId, AttemptId, ItemId, ItemPath } from '../ids';
-import { pathAsParameter, pathFromRouterParameters } from './path-parameter';
-
-// url parameter names
-export const activityPrefix = 'a';
-export const skillPrefix = 's';
-const parentAttemptParamName = 'pa';
-const attemptParamName = 'a';
-const answerParamName = 'answerId';
-const answerBestParamName = 'answerBest';
-const answerBestParticipantParamName = 'answerParticipantId';
-
-// alias for better readibility
+import { AnswerId, AttemptId, ItemId, ItemPath, ParticipantId } from '../ids';
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item
@@ -39,9 +23,7 @@ export interface ItemRoute extends ContentRoute {
   path: ItemPath,
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
-  answer?:
-    { best?: undefined, id: AnswerId, participantId?: undefined } |
-    { best: true, id?: undefined, participantId?: string /* not set if mine */ },
+  answer?: { id: AnswerId, best?: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id?: undefined },
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
@@ -93,97 +75,4 @@ export function parentRoute(route: ItemRoute): ItemRoute {
     attemptId: route.parentAttemptId ?? undefined,
     path: route.path.slice(0, -1),
   });
-}
-
-/* **********************************************************************************************************
- * Utility functions for decoding the item route from url params
- * ********************************************************************************************************** */
-export function decodeItemRouterParameters(params: ParamMap): {
-  id: string|null,
-  path: string[]|null,
-  attemptId: string|null,
-  parentAttemptId: string|null,
-  answerId: string|null,
-  answerBest: boolean,
-  answerParticipantId: string|null,
-} {
-  let idOrAlias = params.get('idOrAlias');
-  let path = pathFromRouterParameters(params);
-  if (idOrAlias !== null && isAnAlias(idOrAlias)) {
-    const res = aliasToId(idOrAlias);
-    if (res?.id) idOrAlias = res?.id;
-    if (res?.path && !path) path = res.path;
-  }
-  return {
-    id: idOrAlias,
-    path,
-    attemptId: params.get(attemptParamName),
-    parentAttemptId: params.get(parentAttemptParamName),
-    answerId: params.get(answerParamName),
-    answerBest: params.get(answerBestParamName) === '1',
-    answerParticipantId: params.get(answerBestParticipantParamName),
-  };
-}
-
-export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
-  switch (prefix) {
-    case activityPrefix: return 'activity';
-    case skillPrefix: return 'skill';
-    default: return null;
-  }
-}
-
-function isAnAlias(idOrAlias: string): boolean {
-  return !(/^\d*$/.test(idOrAlias));
-}
-
-/**
- * Iterate all alias to map to id. Could be optimized with a cache for better performance
- */
-function aliasToId(alias: string): { id: ItemId, path?: string[] } | null {
-  const redirects = appConfig.redirects;
-  if (!redirects) return null;
-  for (const [ k, v ] of Object.entries(redirects)) {
-    if (pathToAlias(k) === alias) return v;
-  }
-  return null;
-}
-
-/* **********************************************************************************************************
- * Utility functions for converting item info to a navigable url command
- * ********************************************************************************************************** */
-
-/**
- * Return a url array (`commands` array) to the given item, on the given page.
- */
-export function urlArrayForItemRoute(route: RawItemRoute, page: string|string[] = []): UrlCommand {
-  const itemAlias = aliasFor(route.id, route.path);
-  const params = route.path && !itemAlias?.validPath ? pathAsParameter(route.path) : {};
-  if (route.attemptId) params[attemptParamName] = route.attemptId;
-  else if (route.parentAttemptId) params[parentAttemptParamName] = route.parentAttemptId;
-  if (route.answer) {
-    if (route.answer.best) {
-      params[answerBestParamName] = '1';
-      if (route.answer.participantId) params[answerBestParticipantParamName] = route.answer.participantId;
-    } else {
-      params[answerParamName] = route.answer.id;
-    }
-  }
-
-  const prefix = route.contentType === 'activity' ? activityPrefix : skillPrefix;
-  const pagePath = isString(page) ? [ page ] : page;
-  return [ '/', prefix, itemAlias ? itemAlias.alias : route.id, params, ...pagePath ];
-}
-
-function aliasFor(itemId: ItemId, path: string[]|undefined): { alias: string, validPath: boolean } | null {
-  const redirects = appConfig.redirects;
-  if (!redirects) return null;
-  for (const [ k, v ] of Object.entries(redirects)) {
-    if (v.id === itemId) return { alias: pathToAlias(k), validPath: !!v.path && !!path && arraysEqual(path, v.path) };
-  }
-  return null;
-}
-
-function pathToAlias(path: string): string {
-  return path.replace(/\//g, '--');
 }

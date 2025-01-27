@@ -20,9 +20,9 @@ export class RouterSerializer implements RouterStateSerializer<State> {
       params = { ...params, ...route.params };
     }
 
-    // extract path segments as string[]
-    const path = route.pathFromRoot.flatMap(({ url }) => url).map(({ path }) => path);
+    // extract path segments
+    const segments = route.pathFromRoot.flatMap(({ url }) => url);
 
-    return { url, path, params, queryParams };
+    return { url, params, queryParams, segments };
   }
 }

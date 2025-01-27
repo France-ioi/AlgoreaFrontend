@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { ensureDefined } from '../../utils/assert';
-import { itemCategoryFromPrefix, RawItemRoute, urlArrayForItemRoute } from './item-route';
+import { RawItemRoute } from './item-route';
 import { AnswerId } from '../ids';
 import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
+import { itemCategoryFromPrefix, itemRouteAsUrlCommand } from './item-route-serialization';
+import { isString } from 'src/app/utils/type-checkers';
 
 interface NavigateOptions {
   page?: string|string[],
@@ -45,7 +47,8 @@ export class ItemRouter {
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to '/'.
    */
   url(item: RawItemRoute, page?: string|string[]): UrlTree {
-    return this.router.createUrlTree(urlArrayForItemRoute(item, page ?? this.currentItemPage()));
+    const pageArray = isString(page) ? [ page ]: page;
+    return this.router.createUrlTree(itemRouteAsUrlCommand(item, pageArray ?? this.currentItemPage()));
   }
 
   /**
