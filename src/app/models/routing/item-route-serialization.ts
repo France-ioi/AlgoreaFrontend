@@ -17,9 +17,10 @@ export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is 
   return 'tag' in route && route.tag === 'error';
 }
 
-export function itemRouteFromUrlSegments(segments: UrlSegment[]): FullItemRoute|ItemRouteError|null {
-  const [ prefixSegment, mainSegment ] = segments;
+export function parseItemUrlSegments(segments: UrlSegment[]): { route: FullItemRoute|ItemRouteError, page: string[] }|null {
+  const [ prefixSegment, mainSegment, ...pageSegments ] = segments;
   if (!prefixSegment || !mainSegment) return null;
+  const page = pageSegments.map(segm => segm.path);
 
   // parsing item category
   const contentType = itemCategoryFromPrefix(prefixSegment.path);
@@ -36,10 +37,10 @@ export function itemRouteFromUrlSegments(segments: UrlSegment[]): FullItemRoute|
   const path = pathFromParam ?? idPath.path;
 
   // creating the response from what we parsed
-  if (!path) return { tag: 'error', contentType, id, answer };
-  if (attemptId) return itemRoute(contentType, id, { path, attemptId, answer });
-  if (parentAttemptId) return itemRoute(contentType, id, { path, parentAttemptId, answer });
-  return { tag: 'error', contentType, id, path, answer };
+  if (!path) return { route: { tag: 'error', contentType, id, answer }, page };
+  if (attemptId) return { route: itemRoute(contentType, id, { path, attemptId, answer }), page };
+  if (parentAttemptId) return { route: itemRoute(contentType, id, { path, parentAttemptId, answer }), page };
+  return { route: { tag: 'error', contentType, id, path, answer }, page };
 }
 
 export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
