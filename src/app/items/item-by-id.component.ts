@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
@@ -23,17 +23,15 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { isATask } from 'src/app/items/models/item-type';
 import { itemInfo } from 'src/app/models/content/item-info';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { itemRouteFromParams } from './utils/item-route-validation';
 import { ContentDisplayType, LayoutService } from 'src/app/services/layout.service';
 import { mapStateData, readyData } from 'src/app/utils/operators/state';
-import { RawItemRoute, itemCategoryFromPrefix, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
+import { RawItemRoute, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/guards/before-unload-guard';
 import { ItemContentComponent } from './containers/item-content/item-content.component';
 import { ItemEditWrapperComponent } from './containers/item-edit-wrapper/item-edit-wrapper.component';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
-import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { appConfig } from 'src/app/utils/config';
 import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
@@ -67,6 +65,7 @@ import { isUser } from '../models/routing/group-route';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
+import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -146,7 +145,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     switchMap(answerErr => this.itemRoute$.pipe(
       map((route, idx) => (idx === 0 && answerErr !== undefined ? {
         isForbidden: errorIsHTTPForbidden(answerErr.error),
-        fallbackLink: route.answer ? urlArrayForItemRoute({ ...route, answer: undefined }) : undefined,
+        fallbackLink: route.answer ? itemRouteAsUrlCommand({ ...route, answer: undefined }) : undefined,
       } : undefined /* reset error if we navigate */)))
     ),
   );
@@ -251,9 +250,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       ) {
         if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
         this.hasRedirected = true;
-        const { contentType, id, answer } = this.getItemRoute();
-        if (!id) throw new Error('Unexpected: item id should exist');
-        this.itemRouter.navigateTo({ contentType, id, answer }, { navExtras: { replaceUrl: true } });
+        const route = state.identifier;
+        if (!route) throw new Error('unexpected: the active breadcrumbs state should always have an identifier');
+        const routeWithoutPath = { ...route, path: undefined };
+        this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true } });
       }
       if (state.isReady) this.hasRedirected = false;
     }),
@@ -381,15 +381,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
    */
   setTaskView(view: string): void {
     this.tabService.setActiveTab(view);
-  }
-
-  private getItemRoute(params?: ParamMap): ReturnType<typeof itemRouteFromParams> {
-    const snapshot = this.activatedRoute.snapshot;
-    if (!snapshot.parent) throw new Error('Unexpected: activated route snapshot has no parent');
-    if (!snapshot.parent.url[0]) throw new Error('Unexpected: activated route snapshot parent has no url');
-    const contentType = itemCategoryFromPrefix(snapshot.parent.url[0].path);
-    if (contentType === null) throw new Error('Unexpected item path prefix');
-    return itemRouteFromParams(contentType, params ?? snapshot.paramMap);
   }
 
 }
