@@ -26,8 +26,8 @@ export function itemRouteFromUrlSegments(segments: UrlSegment[]): FullItemRoute|
   if (!contentType) return null;
 
   // parsing id
-  const aliasOrid = mainSegment.path;
-  const idPath = isAnItemAlias(aliasOrid) ? resolveItemAlias(aliasOrid) : { id: aliasOrid };
+  const aliasOrId = mainSegment.path;
+  const idPath = isAnItemAlias(aliasOrId) ? resolveItemAlias(aliasOrId) : { id: aliasOrId };
   if (!idPath) return null; // the alias does not resolve to an id
   const id = idPath.id;
 
