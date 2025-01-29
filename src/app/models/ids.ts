@@ -6,3 +6,5 @@ export type ItemPath = ItemId[];
 
 export type GroupId = string;
 export type GroupPath = ItemId[];
+
+export type ParticipantId = GroupId;

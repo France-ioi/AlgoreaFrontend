@@ -12,12 +12,12 @@ import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicat
 import { NavigationEnd, Router } from '@angular/router';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { arraysEqual } from 'src/app/utils/array';
-import { urlArrayForItemRoute } from 'src/app/models/routing/item-route';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from './store';
 import { canCurrentUserSetExtraTime, isTimeLimitedActivity } from './models/time-limited-activity';
+import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
@@ -94,7 +94,7 @@ export class ItemTabs implements OnDestroy {
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))
-        .map(t => ({ ...t, command: urlArrayForItemRoute(state.data.route, t.routerLink) }))
+        .map(t => ({ ...t, command: itemRouteAsUrlCommand(state.data.route, t.routerLink) }))
       ;
     }),
     distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y)),

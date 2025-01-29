@@ -1,8 +1,8 @@
-import { Params } from '@angular/router';
+import { Params, UrlSegment } from '@angular/router';
 
 export interface State {
   url: string,
-  path: string[],
   params: Params,
   queryParams: Params,
+  segments: UrlSegment[],
 }

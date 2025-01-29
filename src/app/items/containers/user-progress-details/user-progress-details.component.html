@@ -69,7 +69,7 @@
               <a
                 class="alg-button small primary"
                 [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
-                [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: true, participantId: progress.groupId } } | url"
+                [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url"
                 icon="pi pi-code"
                 pButton
                 i18n

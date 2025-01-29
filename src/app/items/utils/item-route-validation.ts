@@ -1,32 +1,10 @@
-import { ParamMap } from '@angular/router';
 import { EMPTY, Observable, delay, map, of, switchMap } from 'rxjs';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
-import { decodeItemRouterParameters, FullItemRoute, ItemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { defaultAttemptId } from '../models/attempts';
-import { ItemTypeCategory } from '../models/item-type';
 import { loadAnswerAsCurrentFromBrowserState } from './load-answer-as-current-state';
-
-export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'id'|'contentType'> & Partial<ItemRoute>;
-
-export function itemRouteFromParams(contentType: ItemTypeCategory, params: ParamMap): FullItemRoute|ItemRouteError {
-  const { id, path, attemptId, parentAttemptId, answerId, answerBest, answerParticipantId }
-    = decodeItemRouterParameters(params);
-  let answer: ItemRoute['answer']|undefined;
-  if (answerBest) answer = { best: true, participantId: answerParticipantId ?? undefined };
-  else if (answerId) answer = { id: answerId };
-
-  if (!id) throw new Error('Unexpected missing id from item param');
-  if (path === null) return { tag: 'error', contentType, id, answer };
-  if (attemptId) return { contentType, id: id, path, attemptId, answer };
-  if (parentAttemptId) return { contentType, id, path, parentAttemptId, answer };
-  return { tag: 'error', contentType, id, path, answer };
-}
-
-export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is ItemRouteError {
-  return 'tag' in route && route.tag === 'error';
-}
+import { ItemRouteError } from 'src/app/models/routing/item-route-serialization';
 
 /**
  * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.

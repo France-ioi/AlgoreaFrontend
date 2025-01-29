@@ -52,7 +52,7 @@ export class InitialAnswerDataSource implements OnDestroy {
         return attemptId ? { tag: 'LoadCurrent', itemId: id, attemptId } : { tag: 'Wait' };
       }
       if (answer.id) return { tag: 'LoadById', answerId: answer.id };
-      return { tag: 'LoadBest', itemId: id, participantId: answer.participantId };
+      return { tag: 'LoadBest', itemId: id, participantId: answer.best?.id };
     }),
     distinctUntilChanged((s1, s2) => JSON.stringify(s1) === JSON.stringify(s2)),
     switchMap(strategy => {
