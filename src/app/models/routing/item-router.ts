@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
-import { ensureDefined } from '../../utils/assert';
 import { RawItemRoute } from './item-route';
 import { AnswerId } from '../ids';
 import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
-import { itemCategoryFromPrefix, itemRouteAsUrlCommand } from './item-route-serialization';
-import { isString } from 'src/app/utils/type-checkers';
+import { itemRouteAsUrlCommand } from './item-route-serialization';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from 'src/app/items/store';
+import { UrlCommand } from 'src/app/utils/url';
 
 interface NavigateOptions {
-  page?: string|string[],
+  page?: string[],
   preventFullFrame?: boolean,
   loadAnswerIdAsCurrent?: AnswerId,
   navExtras?: NavigationExtras,
@@ -21,7 +22,10 @@ export class ItemRouter {
 
   constructor(
     private router: Router,
+    private store: Store,
   ) {}
+
+  private currentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
 
   /**
    * Navigate to given item, on the path page.
@@ -34,7 +38,7 @@ export class ItemRouter {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     preventFullFrame = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame),
   }: NavigateOptions = {}): void {
-    void this.router.navigateByUrl(this.url(item, page), { ...navExtras, state: {
+    void this.router.navigate(this.routeAsUrlCommand(item, page), { ...navExtras, state: {
       ...navExtras?.state,
       preventFullFrame,
       ...(loadAnswerIdAsCurrent ? loadAnswerAsCurrentAsBrowserState(loadAnswerIdAsCurrent) : {}),
@@ -43,32 +47,20 @@ export class ItemRouter {
   }
 
   /**
-   * Return a url to the given item, on the given page.
-   * If page is not given and we are currently on an item page, use the same page. Otherwise, default to '/'.
+   * Return a url to the given item, on the given page. Default to current page.
+   * If page is not given and we are not currently on an item page, default to '/'.
    */
-  url(item: RawItemRoute, page?: string|string[]): UrlTree {
-    const pageArray = isString(page) ? [ page ]: page;
-    return this.router.createUrlTree(itemRouteAsUrlCommand(item, pageArray ?? this.currentItemPage()));
+  url(item: RawItemRoute, page?: string[]): UrlTree {
+    return this.router.createUrlTree(this.routeAsUrlCommand(item, page));
   }
 
   /**
-   * Extract (bit hacky) the item page from what is currently displayed.
-   * Return undefined if we are not on an "item" page
+   * Url of given route on the given page. Unlike `itemRouteAsUrlCommand`, default on the current page.
+   * To prevent misusing it, this function is private: use `itemRouteAsUrlCommand` with the current page from the store instead.
    */
-  currentItemPage(): string[]|undefined {
-    const page = this.currentItemPagePath()?.slice(2);
-    return page && page.length > 0 ? page : undefined;
-  }
-
-  private currentItemPagePath(): string[]|undefined {
-    const { primary } = this.router.parseUrl(this.router.url).root.children;
-    if (!primary) return undefined;
-    const { segments } = primary;
-    if (
-      segments.length < 2 ||
-      itemCategoryFromPrefix(ensureDefined(segments[0]).path) === null
-    ) return undefined;
-    return segments.map(segment => segment.path);
+  private routeAsUrlCommand(item: RawItemRoute, page?: string[]): UrlCommand {
+    const currentPage = this.currentPage() ?? undefined;
+    return itemRouteAsUrlCommand(item, page ?? currentPage);
   }
 
 }
