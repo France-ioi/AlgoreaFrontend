@@ -19,6 +19,7 @@ module.exports = {
     '@angular-eslint/component-selector': [
       'error',
       { type: 'element', prefix: 'alg', style: 'kebab-case' },
+      { type: 'attribute' },
     ],
     '@angular-eslint/no-output-native': 'off',
     'no-unused-vars': 'off',
