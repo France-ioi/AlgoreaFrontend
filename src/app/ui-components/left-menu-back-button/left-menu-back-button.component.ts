@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-left-menu-back-button',
   templateUrl: './left-menu-back-button.component.html',
   styleUrls: [ './left-menu-back-button.component.scss' ],
   standalone: true,
-  imports: [ ButtonModule ]
+  imports: [ ButtonIconComponent ]
 })
 export class LeftMenuBackButtonComponent {
   @Output() close = new EventEmitter<void>();
