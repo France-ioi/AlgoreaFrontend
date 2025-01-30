@@ -15,6 +15,10 @@
   color: var(--alg-secondary-color);
   box-sizing: border-box;
 
+  &:disabled {
+    opacity: 0.5;
+  }
+
   &.size-s {
     height: toRem(24);
     font-size: toRem(12);
