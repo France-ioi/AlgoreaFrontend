@@ -81,13 +81,13 @@
   }
 
   // Specific
-  .back-button {
+  &.back-button {
     .wrapper {
       background-color: #dbe1f3;
     }
   }
-  .send-button {}
-  .tab-arrow {
+  &.send-button {}
+  &.tab-arrow {
     width: toRem(30);
     height: 100%;
     padding: 0 0.75rem;
@@ -100,7 +100,7 @@
       box-shadow: toRem(-1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
     }
   }
-  .nav-arrow {
+  &.nav-arrow {
     padding: 0 toRem(12);
     height: 100%;
 
@@ -114,8 +114,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: toRem(24);
-  height: toRem(24);
   border-radius: 50%;
   color: var(--alg-primary-color);
 }

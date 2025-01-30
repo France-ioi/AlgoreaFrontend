@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-neighbor-widget',
@@ -30,7 +30,7 @@ import { NgIf } from '@angular/common';
     ]),
   ],
   standalone: true,
-  imports: [ NgIf, ButtonModule ]
+  imports: [ NgIf, ButtonIconComponent ]
 })
 export class NeighborWidgetComponent {
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
