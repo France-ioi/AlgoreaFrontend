@@ -4,17 +4,17 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { LayoutService } from '../../services/layout.service';
 import { delay } from 'rxjs/operators';
 import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
   styleUrls: [ './left-header.component.scss' ],
   standalone: true,
-  imports: [ NgIf, LetDirective, NgClass, RouterLink, ButtonModule, TopRightControlsComponent, AsyncPipe ]
+  imports: [ NgIf, LetDirective, NgClass, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent ]
 })
 export class LeftHeaderComponent {
 
