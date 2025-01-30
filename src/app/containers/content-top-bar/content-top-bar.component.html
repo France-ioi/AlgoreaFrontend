@@ -2,8 +2,7 @@
   <div class="left-pane">
     <div class="margin-right" *ngIf="showLeftMenuOpener">
       <button
-        class="alg-button-icon no-bg primary-color left-menu"
-        pButton
+        algButtonIcon
         type="button"
         icon="ph ph-list"
         (click)="showLeftMenu()"
@@ -49,8 +48,8 @@
     <alg-observation-bar></alg-observation-bar>
     <button
       *ngIf="hasForumThreadConfigured$ | ngrxPush"
-      class="alg-button-icon no-bg primary-color margin-left"
-      pButton
+      class="size-s"
+      algButtonIcon
       type="button"
       icon="ph-duotone ph-chats-circle"
       (click)="toggleDiscussionPanelVisibility()"
