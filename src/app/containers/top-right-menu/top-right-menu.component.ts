@@ -8,9 +8,9 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { UserSessionService } from '../../services/user-session.service';
 import { LayoutService } from '../../services/layout.service';
-import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-top-right-menu',
@@ -20,8 +20,8 @@ import { NgIf, AsyncPipe } from '@angular/common';
   imports: [
     NgIf,
     MenuModule,
-    ButtonModule,
     AsyncPipe,
+    ButtonIconComponent,
   ],
 })
 export class TopRightMenuComponent {
