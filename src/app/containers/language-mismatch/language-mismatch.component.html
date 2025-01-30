@@ -19,24 +19,24 @@
       </div>
 
       <div class="actions">
-        <p-button
+        <button
           type="button"
           (click)="onUpdateUserLanguage(currentLanguage)"
+          algButton
         >
-          <ng-template pTemplate="content">
-            <span i18n>
-              Continue in "{{ currentLanguage }}" and change my default language to "{{ currentLanguage }}" for this platform
-            </span>
-          </ng-template>
-        </p-button>
-        <p-button
+          <span i18n>
+            Continue in "{{ currentLanguage }}" and change my default language to "{{ currentLanguage }}" for this platform
+          </span>
+        </button>
+        <button
           type="button"
           (click)="onVisitPlatformInUserLanguage(languageMismatch.userDefaultLanguage)"
+          algButton
         >
-          <ng-template pTemplate="content" i18n>
+          <span i18n>
             Visit the platform in "{{ languageMismatch.userDefaultLanguage }}"
-          </ng-template>
-        </p-button>
+          </span>
+        </button>
       </div>
     </ng-container>
 
@@ -45,14 +45,15 @@
         The platform does not exist in your default language "{{ languageMismatch.userDefaultLanguage }}".
       </div>
       <div class="actions">
-        <p-button
+        <button
           type="button"
           (click)="onUpdateUserLanguage(currentLanguage)"
+          algButton
         >
-          <ng-template pTemplate="content" i18n>
+          <span i18n>
             Continue in "{{ currentLanguage }}" and change my default language to "{{ currentLanguage }}" for this platform.
-          </ng-template>
-        </p-button>
+          </span>
+        </button>
       </div>
     </ng-container>
 
