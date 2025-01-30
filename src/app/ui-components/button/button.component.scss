@@ -67,6 +67,20 @@
     border: toRem(1) solid var(--alg-message-error-color);
     background: var(--alg-message-error-color);
   }
+
+  &.left-menu {
+    flex-direction: row-reverse;
+    border-color: #0000000d;
+
+    .icon {
+      font-size: toRem(24);
+      margin-right: toRem(7.5);
+    }
+
+    &.selected {
+      border-color: var(--alg-primary-color);
+    }
+  }
 }
 
 .container {

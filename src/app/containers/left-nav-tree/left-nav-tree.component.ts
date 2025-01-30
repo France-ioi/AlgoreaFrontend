@@ -9,7 +9,7 @@ import { TreeModule } from 'primeng/tree';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
 import { NgIf, NgClass, I18nSelectPipe } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 export interface CustomTreeNode<T> extends TreeNode {
   data: T,
@@ -32,7 +32,7 @@ export interface CustomTreeNode<T> extends TreeNode {
     TooltipModule,
     SkillProgressComponent,
     I18nSelectPipe,
-    ButtonModule,
+    ButtonComponent,
   ],
 })
 export class LeftNavTreeComponent implements OnChanges {
