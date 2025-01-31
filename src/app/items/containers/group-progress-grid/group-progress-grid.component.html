@@ -40,14 +40,13 @@
       <ng-container *ngIf="rowsState.data && columnsState.data && rowsState.data.length > 0">
         <div class="operations">
           <button
-            class="alg-button primary small"
-            pButton
+            algButton
             type="button"
-            i18n-label label="Export as CSV"
             icon="ph ph-file-arrow-down"
             (click)="onCSVExport()"
             [disabled]="isCSVDataFetching"
-          ></button>
+            i18n
+          >Export as CSV</button>
         </div>
 
         <div class="slanted-grid-container">
@@ -64,10 +63,10 @@
               <tr>
                 <th class="empty first header-refresh">
                   <button
-                    class="alg-button-icon no-bg primary-color"
+                    class="size-s"
                     icon="pi pi-refresh"
                     (click)="fetchRows()"
-                    pButton
+                    algButtonIcon
                   ></button>
                 </th>
                 <th *ngFor="let col of columns">
@@ -117,13 +116,13 @@
                 <td [colSpan]="columnsState.data.length + 1">
                   <div class="text-center">
                     <button
-                      pButton
-                      class="alg-button basic load-more"
+                      algButton
+                      class="size-s stroke load-more"
                       icon="ph-duotone ph-arrow-circle-down"
                       i18n-label label="Load more"
                       (click)="fetchMoreRows()"
                       [disabled]="rowsState.isFetching"
-                    ></button>
+                    >Load more</button>
                   </div>
                 </td>
               </tr>
