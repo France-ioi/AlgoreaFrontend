@@ -46,17 +46,17 @@
 
     <div class="error-buttons">
       <button
-        pButton
-        class="alg-button primary error-button"
-        i18n-label label="Show task anyway (for debugging)"
+        algButton
+        class="size-l error-button"
         (click)="showTaskAnyway = true"
-      ></button>
+        i18n
+      >Show task anyway (for debugging)</button>
       <button
-        pButton
-        class="alg-button primary error-button"
-        i18n-label label="Retry"
+        algButton
+        class="size-l error-button"
         (click)="refresh.emit()"
-      ></button>
+        i18n
+      >Retry</button>
     </div>
   </div>
   <div
@@ -66,7 +66,7 @@
       <p class="saving-answer-message">
         <span i18n>Saving answer...</span>
         <alg-loading size="medium"></alg-loading>
-        <p-button type="button" (click)="skipSave.emit()" i18n-label label="Skip"></p-button>
+        <button algButton type="button" (click)="skipSave.emit()" i18n>Skip</button>
       </p>
     </div>
     <iframe
@@ -115,7 +115,7 @@
       }
     </div>
     <div class="unlocked-items-controls">
-      <button class="alg-button primary small" type="button" (click)="closeUnlockedItemsDialog()" pButton i18n>
+      <button class="size-s" type="button" (click)="closeUnlockedItemsDialog()" algButton i18n>
         Continue on the current content
       </button>
     </div>
