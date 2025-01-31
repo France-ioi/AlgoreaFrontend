@@ -17,7 +17,6 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -28,6 +27,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { LoadAnswerAsCurrentRoutingStatePipe } from '../../utils/load-answer-as-current-state';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 interface Column {
   field: string,
   header: string,
@@ -45,7 +45,6 @@ const logsLimit = 20;
     LoadingComponent,
     ErrorComponent,
     LetDirective,
-    ButtonModule,
     RouterLink,
     TableModule,
     SharedModule,
@@ -66,6 +65,7 @@ const logsLimit = 20;
     LogActionDisplayPipe,
     RelativeTimeComponent,
     LogActivityTypeIconPipe,
+    ButtonComponent,
   ],
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
