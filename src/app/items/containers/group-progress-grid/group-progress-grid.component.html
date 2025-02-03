@@ -40,7 +40,7 @@
       <ng-container *ngIf="rowsState.data && columnsState.data && rowsState.data.length > 0">
         <div class="operations">
           <button
-            algButton
+            alg-button
             type="button"
             icon="ph ph-file-arrow-down"
             (click)="onCSVExport()"
@@ -66,7 +66,7 @@
                     class="size-s"
                     icon="pi pi-refresh"
                     (click)="fetchRows()"
-                    algButtonIcon
+                    alg-button-icon
                   ></button>
                 </th>
                 <th *ngFor="let col of columns">
@@ -116,7 +116,7 @@
                 <td [colSpan]="columnsState.data.length + 1">
                   <div class="text-center">
                     <button
-                      algButton
+                      alg-button
                       class="size-s stroke load-more"
                       icon="ph-duotone ph-arrow-circle-down"
                       i18n-label label="Load more"

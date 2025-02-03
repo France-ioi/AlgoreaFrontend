@@ -2,7 +2,7 @@
   <div class="left-pane">
     <div class="margin-right" *ngIf="showLeftMenuOpener">
       <button
-        algButtonIcon
+        alg-button-icon
         type="button"
         icon="ph ph-list"
         (click)="showLeftMenu()"
@@ -49,7 +49,7 @@
     <button
       *ngIf="hasForumThreadConfigured$ | ngrxPush"
       class="size-s"
-      algButtonIcon
+      alg-button-icon
       type="button"
       icon="ph-duotone ph-chats-circle"
       (click)="toggleDiscussionPanelVisibility()"

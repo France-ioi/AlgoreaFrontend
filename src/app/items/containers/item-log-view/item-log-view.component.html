@@ -14,7 +14,7 @@
       <div>
         <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
           <ng-container *ngIf="itemData && itemData.item.type === 'Task'">
-            <a class="size-s stroke" algButton icon="ph-duotone ph-arrows-clockwise"
+            <a class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise"
               [routerLink]="itemData.route | with: {
                   parentAttemptId,
                   answer: { best: true, participantId: observedGroupId ? observedGroupId : undefined }
@@ -29,7 +29,7 @@
           </ng-container>
         </ng-container>
       </div>
-      <button class="size-s stroke" algButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
+      <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
         Refresh
       </button>
     </div>
@@ -128,7 +128,7 @@
             <td [attr.colspan]="columns.length">
               <div class="text-center">
                 <button
-                  algButton
+                  alg-button
                   (click)="fetchMoreRows()"
                   [disabled]="state.isFetching || state.isError"
                   i18n
