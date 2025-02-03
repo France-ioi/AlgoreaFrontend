@@ -10,6 +10,11 @@
   padding-left: 0;
   padding-right: 0;
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
   &.secondary {
     .wrapper {
       color: var(--alg-secondary-color);
