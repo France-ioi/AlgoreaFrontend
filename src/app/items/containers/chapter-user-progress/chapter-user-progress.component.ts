@@ -15,10 +15,10 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 interface RowData {
   id: string,
@@ -40,7 +40,6 @@ interface RowData {
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    ButtonModule,
     TableModule,
     SharedModule,
     NgFor,
@@ -56,6 +55,7 @@ interface RowData {
     RouteUrlPipe,
     SecondsToDurationPipe,
     DurationToReadablePipe,
+    ButtonComponent,
   ],
 })
 export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
