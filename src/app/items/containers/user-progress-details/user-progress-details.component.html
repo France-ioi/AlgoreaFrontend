@@ -67,11 +67,10 @@
               [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
             >
               <a
-                class="alg-button small primary"
                 [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
                 [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url"
                 icon="pi pi-code"
-                pButton
+                alg-button
                 i18n
               >
                 View answer
@@ -86,10 +85,10 @@
       @if (canEditPermissions) {
         <div class="button-section">
           <button
-            class="alg-button small primary"
             icon="ph-duotone ph-lock"
             (click)="editPermissions.emit()"
-            pButton
+            alg-button
+            i18n
           >
             Access
           </button>

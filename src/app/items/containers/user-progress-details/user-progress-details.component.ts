@@ -15,9 +15,9 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { NgIf, NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { ItemType } from 'src/app/items/models/item-type';
-import { ButtonModule } from 'primeng/button';
 import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
 import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 export interface ProgressData {
   progress: Progress,
@@ -48,9 +48,9 @@ export interface ProgressData {
     AllowsWatchingItemAnswersPipe,
     SecondsToDurationPipe,
     DurationToReadablePipe,
-    ButtonModule,
     RelativeTimePipe,
     DecimalPipe,
+    ButtonComponent,
   ],
 })
 export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
