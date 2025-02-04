@@ -16,7 +16,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
-import { ButtonModule } from 'primeng/button';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group][permReceiverName]',
@@ -32,7 +32,7 @@ import { ButtonModule } from 'primeng/button';
     PermissionsEditFormComponent,
     AsyncPipe,
     GroupIsUserPipe,
-    ButtonModule,
+    ButtonIconComponent,
   ],
 })
 export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
