@@ -24,13 +24,12 @@
       <p i18n>You are not allowed to start the activity for now.</p>
     }
     <button
-      class="alg-button primary"
+      class="size-l"
       icon="ph-bold ph-door"
-      label="Enter now"
       [disabled]="enterActivityInProgress() || !(entryState | canEnterNow)"
       (click)="enterActivity(itemData().route)"
-      pButton
-    ></button>
+      alg-button
+    i18n>Enter now</button>
  }
 
 }

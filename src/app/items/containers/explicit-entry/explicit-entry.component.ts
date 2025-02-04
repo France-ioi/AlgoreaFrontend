@@ -6,18 +6,18 @@ import { ItemEntryService } from '../../data-access/item-entry.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { Subscription, switchMap } from 'rxjs';
 import { CanEnterNowPipe, HasAlreadyStatedPipe } from '../../models/item-entry';
-import { ButtonModule } from 'primeng/button';
 import { ItemRoute } from 'src/app/models/routing/item-route';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-explicit-entry',
   standalone: true,
   imports: [
-    ButtonModule,
     IsTeamActivityPipe,
     CanEnterNowPipe,
     HasAlreadyStatedPipe,
+    ButtonComponent,
   ],
   templateUrl: './explicit-entry.component.html',
   styleUrl: './explicit-entry.component.scss',
