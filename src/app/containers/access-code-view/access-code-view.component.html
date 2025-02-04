@@ -10,13 +10,12 @@
   >
   <div class="button-section">
     <button
-      class="alg-button primary"
+      class="size-l"
       icon="ph-bold ph-check"
-      [label]="buttonLabel"
       [disabled]="input.value === '' || state === 'loading'"
       (click)="checkCodeValidity()"
-      pButton
-    ></button>
+      alg-button
+    >{{ buttonLabel }}</button>
   </div>
 </div>
 

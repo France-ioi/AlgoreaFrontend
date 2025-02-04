@@ -9,7 +9,6 @@ import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 import { LetDirective, PushPipe } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
-import { ButtonModule } from 'primeng/button';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
@@ -21,6 +20,7 @@ import { selectActiveItemDisplayedScore } from 'src/app/items/models/scores';
 import { fromItemContent } from 'src/app/items/store';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { isItemRoute } from 'src/app/models/routing/item-route';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -29,7 +29,6 @@ import { isItemRoute } from 'src/app/models/routing/item-route';
   standalone: true,
   imports: [
     NgIf,
-    ButtonModule,
     ScoreRingComponent,
     LetDirective,
     BreadcrumbsComponent,
@@ -39,6 +38,7 @@ import { isItemRoute } from 'src/app/models/routing/item-route';
     NeighborWidgetComponent,
     AsyncPipe,
     PushPipe,
+    ButtonIconComponent,
   ],
 })
 export class ContentTopBarComponent {

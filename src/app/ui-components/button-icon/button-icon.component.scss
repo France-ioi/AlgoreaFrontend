@@ -1,0 +1,135 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  background: none;
+  padding-left: 0;
+  padding-right: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &.secondary {
+    .wrapper {
+      color: var(--alg-secondary-color);
+    }
+  }
+
+  &.stroke {
+    .wrapper {
+      width: toRem(32);
+      height: toRem(32);
+      border: toRem(1) solid var(--alg-border-color);
+    }
+    .icon {
+      font-size: toRem(18);
+    }
+  }
+
+  &.with-bg {
+    .wrapper {
+      width: toRem(32);
+      height: toRem(32);
+      color: var(--alg-white-color);
+      background-color: var(--alg-primary-color);
+    }
+    .icon {
+      font-size: toRem(18);
+    }
+  }
+
+  &:not(.stroke):not(.with-bg):not(.secondary) {
+    .wrapper {
+      color: var(--alg-primary-color);
+    }
+  }
+
+  &.size-s {
+    &:not(.stroke) {
+      .icon {
+        font-size: toRem(18);
+      }
+    }
+
+    &.stroke, &.with-bg {
+      .wrapper {
+        width: toRem(24);
+        height: toRem(24);
+      }
+      .icon {
+        font-size: toRem(16);
+      }
+    }
+  }
+
+  &.size-l {
+    &:not(.stroke) {
+      .icon {
+        font-size: toRem(32);
+      }
+    }
+    &.stroke, &.with-bg {
+      .wrapper {
+        width: toRem(40);
+        height: toRem(40);
+      }
+      .icon {
+        font-size: toRem(18);
+      }
+    }
+  }
+
+  &.secondary {
+    .wrapper {
+      color: var(--alg-secondary-color);
+    }
+  }
+
+  // Specific
+  &.back-button {
+    .wrapper {
+      color: var(--alg-primary-color);
+      background-color: #dbe1f3;
+    }
+  }
+  &.send-button {}
+  &.tab-arrow {
+    width: toRem(30);
+    height: 100%;
+    padding: 0 0.75rem;
+
+    &.tab-prev {
+      box-shadow: toRem(1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
+    }
+
+    &.tab-next {
+      box-shadow: toRem(-1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
+    }
+  }
+  &.nav-arrow {
+    padding: 0 toRem(12);
+    height: 100%;
+
+    @media screen and (max-width: 599.98px) {
+      padding: 0 toRem(2);
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: var(--alg-primary-color);
+}
+
+.icon {
+  font-size: toRem(24);
+}

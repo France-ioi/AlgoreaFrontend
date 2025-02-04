@@ -31,11 +31,12 @@ import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgFor, AsyncPipe } from '@angular/common';
 import { CompositionFilterComponent } from '../../containers/composition-filter/composition-filter.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 const progressListLimit = 25;
 
@@ -101,7 +102,6 @@ interface ProgressDataDialog {
     LoadingComponent,
     NgSwitch,
     NgSwitchCase,
-    ButtonModule,
     UserProgressDetailsComponent,
     TableModule,
     SharedModule,
@@ -114,7 +114,10 @@ interface ProgressDataDialog {
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
-    GroupLinkPipe ],
+    GroupLinkPipe,
+    ButtonComponent,
+    ButtonIconComponent
+  ],
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 

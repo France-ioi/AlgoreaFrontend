@@ -3,10 +3,10 @@
   <div class="user-container" *ngIf="userLogin$ | async as userLogin">
     <span class="alg-secondary-color user-login" *ngIf="!(isNarrowScreen$ | async)">{{ userLogin }}</span>
     <button
-      class="alg-button-icon no-bg primary-color user-menu"
+      class="size-l"
       icon="ph-duotone ph-user-circle"
       (click)="menu.toggle($event)"
-      pButton
+      alg-button-icon
     ></button>
   </div>
 </ng-container>

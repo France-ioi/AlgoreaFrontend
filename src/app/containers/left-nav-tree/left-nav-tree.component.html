@@ -4,20 +4,20 @@
 
 <div class="container buttons-section" data-testid="group-left-menu" *ngIf="!data?.parent && elementType === 'group'">
   <a
-    class="alg-button basic left-menu alg-flex-1"
+    class="size-l stroke left-menu alg-flex-1"
     [routerLink]="['groups', 'mine']"
-    routerLinkActive="left-menu-selected"
-    pButton
+    routerLinkActive="selected"
+    alg-button
     icon="ph-duotone ph-users-three"
     i18n
   >
     Join
   </a>
   <a
-    class="alg-button basic left-menu alg-flex-1"
+    class="size-l stroke left-menu alg-flex-1"
     [routerLink]="['groups', 'manage']"
-    routerLinkActive="left-menu-selected"
-    pButton
+    routerLinkActive="selected"
+    alg-button
     icon="ph-duotone ph-crown-simple"
     i18n
   >

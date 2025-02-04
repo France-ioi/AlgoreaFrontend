@@ -5,10 +5,10 @@ import { mapPending } from 'src/app/utils/operators/map-pending';
 import { UserSessionService } from '../../services/user-session.service';
 import { LocaleService } from '../../services/localeService';
 import { SharedModule } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { DialogModule } from 'primeng/dialog';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-language-mismatch',
@@ -19,9 +19,9 @@ import { NgIf, AsyncPipe } from '@angular/common';
     NgIf,
     DialogModule,
     LoadingComponent,
-    ButtonModule,
     SharedModule,
     AsyncPipe,
+    ButtonComponent,
   ],
 })
 export class LanguageMismatchComponent implements OnDestroy {

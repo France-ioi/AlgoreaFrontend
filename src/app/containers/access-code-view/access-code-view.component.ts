@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
 import { ItemData } from 'src/app/items/models/item-data';
-import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { SectionParagraphComponent } from '../../ui-components/section-paragraph/section-paragraph.component';
@@ -11,13 +10,14 @@ import {
   JoinGroupConfirmationDialogComponent
 } from 'src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
   standalone: true,
-  imports: [ SectionParagraphComponent, NgClass, FormsModule, ButtonModule, JoinGroupConfirmationDialogComponent ]
+  imports: [ SectionParagraphComponent, NgClass, FormsModule, JoinGroupConfirmationDialogComponent, ButtonComponent ]
 })
 export class AccessCodeViewComponent {
   @Input() sectionLabel = '';

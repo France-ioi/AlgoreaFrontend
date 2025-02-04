@@ -48,13 +48,13 @@ import { GetBreadcrumbsFromRootsService } from 'src/app/data-access/get-breadcru
 import { typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { closestBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
 import { DialogModule } from 'primeng/dialog';
 import { UnlockedItems } from 'src/app/items/data-access/grade.service';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 export interface TaskTab {
   name: string,
@@ -74,7 +74,6 @@ const heightSyncInterval = 0.2*SECONDS;
     NgClass,
     FullHeightContentDirective,
     ErrorComponent,
-    ButtonModule,
     LoadingComponent,
     AsyncPipe,
     AllowsEditingAllItemPipe,
@@ -82,6 +81,7 @@ const heightSyncInterval = 0.2*SECONDS;
     ItemRoutePipe,
     RouterLink,
     RouteUrlPipe,
+    ButtonComponent,
   ],
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
