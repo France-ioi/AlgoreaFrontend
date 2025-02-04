@@ -49,6 +49,18 @@
     }
   }
 
+  &.only-caption {
+    height: auto;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--alg-primary-color);
+
+    &.accent-dark {
+      color: var(--alg-accent-dark-color);
+    }
+  }
+
   &.secondary {
     color: var(--alg-secondary-color);
     border: toRem(1) solid var(--alg-border-color);
@@ -62,6 +74,25 @@
   &.success {
     border: toRem(1) solid var(--alg-success-color);
     background: var(--alg-success-color);
+  }
+
+  &.accent-dark:not(.only-caption) {
+    color: var(--alg-white-color);
+    border: toRem(1) solid var(--alg-accent-dark-color);
+    background: var(--alg-accent-dark-color);
+
+    .icon {
+      color: var(--alg-white-color);
+    }
+
+    &.stroke {
+      background: none;
+      color: var(--alg-accent-dark-color);
+
+      .icon {
+        color: var(--alg-accent-dark-color);
+      }
+    }
   }
 
   &.danger {

@@ -13,7 +13,6 @@ import {
 import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe, ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { PermissionsEditDialogComponent } from '../permissions-edit-dialog/permissions-edit-dialog.component';
-import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
@@ -26,6 +25,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -39,7 +39,6 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
     ProgressSelectComponent,
     FormsModule,
     TooltipModule,
-    ButtonModule,
     PermissionsEditDialogComponent,
     I18nSelectPipe,
     AllowsViewingItemContentPipe,
@@ -47,6 +46,7 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
     NgClass,
     GroupIsUserPipe,
     AllowsGrantingContentViewItemPipe,
+    ButtonComponent,
   ],
 })
 export class ItemPermissionsComponent implements OnChanges {
