@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -8,8 +8,9 @@ import { NgClass } from '@angular/common';
   standalone: true,
   imports: [
     NgClass,
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonIconComponent {
-  @Input({ required: true }) icon!: string;
+  icon = input.required<string>();
 }
