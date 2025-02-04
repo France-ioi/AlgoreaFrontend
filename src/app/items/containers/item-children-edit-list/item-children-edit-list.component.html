@@ -63,14 +63,14 @@
         </ng-template>
         <td>
           <button
-            class="alg-button-icon primary-color no-bg"
+            class="size-s"
             type="button"
             icon="{{
               rowData.contentViewPropagation === 'as_content' ? 'ph-duotone ph-eye' : rowData.contentViewPropagation === 'as_info'
               ? 'ph-duotone ph-lock-simple' : rowData.contentViewPropagation === 'none' ? 'ph-duotone ph-eye-slash' : ''
             }}"
             (click)="openPropagationEditMenu($event, index)"
-            pButton
+            alg-button-icon
           ></button>
         </td>
       </tr>
@@ -84,12 +84,12 @@
           </span>
         </div>
         <button
-          class="alg-button-icon no-bg primary-color"
-          pButton
+          class="size-s"
           type="button"
           icon="ph-duotone ph-trash"
           (click)="onRemove()"
           [disabled]="selectedRows.length === 0"
+          alg-button-icon
         ></button>
       </div>
     </ng-template>
