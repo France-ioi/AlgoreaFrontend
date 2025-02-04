@@ -16,13 +16,13 @@ import { GetItemDependenciesService } from '../../data-access/get-item-dependenc
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -35,7 +35,6 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
     ErrorComponent,
     NgFor,
     RouterLink,
-    ButtonModule,
     AddDependencyComponent,
     OverlayPanelModule,
     PathSuggestionComponent,
@@ -44,6 +43,7 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
     RouteUrlPipe,
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
+    ButtonIconComponent,
   ],
 })
 export class ItemDependenciesComponent implements OnChanges, OnDestroy {
