@@ -5,7 +5,6 @@ import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
 import { ItemCorePerm } from '../../items/models/item-permissions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from '../../utils/state';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from '../loading/loading.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputComponent } from '../input/input.component';
@@ -14,6 +13,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PathSuggestionComponent } from '../../containers/path-suggestion/path-suggestion.component';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 export interface AddedContent<T> {
   id?: string,
@@ -45,13 +45,13 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     NgClass,
     LoadingComponent,
     NgFor,
-    ButtonModule,
     SlicePipe,
     OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
+    ButtonComponent,
   ],
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {

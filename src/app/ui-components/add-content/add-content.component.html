@@ -57,7 +57,7 @@
       </div>
       <div class="input-group" *ngIf="selected">
         <alg-input class="input-group-control white-bg" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm"></alg-input>
-        <p-button styleClass="alg-button primary" (onClick)="addNew(selected.type)">Add Task</p-button>
+        <button class="size-l" alg-button (click)="addNew(selected.type)">Add Task</button>
       </div>
     </div>
   </ng-container>
@@ -93,12 +93,10 @@
           </div>
           <div class="add-content-list-right">
             <button
-              pButton
-              class="add-content-button alg-button primary small"
-              [label]="addedIds.includes(item.id || '') ? addedText : selectExistingText"
+              alg-button
               [disabled]="addedIds.includes(item.id || '')"
               (click)="addExisting(item)"
-            ></button>
+            >{{ addedIds.includes(item.id || '') ? addedText : selectExistingText }}</button>
           </div>
         </li>
       </ul>
