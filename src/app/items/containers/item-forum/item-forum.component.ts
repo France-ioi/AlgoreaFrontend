@@ -13,7 +13,6 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
@@ -23,6 +22,7 @@ import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { fromObservation } from 'src/app/store/observation';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 
 enum ForumTabUrls {
@@ -53,7 +53,6 @@ const OPTIONS = [
     SelectionComponent,
     ErrorComponent,
     LoadingComponent,
-    ButtonModule,
     TableModule,
     SharedModule,
     NgClass,
@@ -65,6 +64,7 @@ const OPTIONS = [
     GroupLinkPipe,
     UserCaptionPipe,
     ThreadStatusDisplayPipe,
+    ButtonComponent,
   ],
 })
 export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
