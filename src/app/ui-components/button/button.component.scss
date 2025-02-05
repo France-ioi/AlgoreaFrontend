@@ -112,6 +112,10 @@
     background: var(--alg-message-error-color);
   }
 
+  &.light-border {
+    border: toRem(1) solid var(--alg-white-color);
+  }
+
   &.left-menu {
     flex-direction: row-reverse;
     border-color: #0000000d;

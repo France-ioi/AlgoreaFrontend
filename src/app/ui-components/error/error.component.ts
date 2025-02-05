@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { NgIf, NgClass } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-error',
@@ -11,8 +11,8 @@ import { NgIf, NgClass } from '@angular/common';
   imports: [
     NgIf,
     NgClass,
-    ButtonModule,
     RouterLink,
+    ButtonComponent,
   ],
 })
 export class ErrorComponent {

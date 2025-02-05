@@ -9,14 +9,14 @@
     </span>
   </div>
   <button
-    [class]="buttonStyleClass || 'alg-button primary refresh-button'"
-    pButton
+    [class]="buttonStyleClass || 'size-l refresh-button'"
+    alg-button
     (click)="onRefresh($event)"
     *ngIf="showRefreshButton && !link"
   >{{ buttonCaption }}</button>
   <a
-    class="alg-button primary refresh-button"
-    pButton
+    class="size-l refresh-button"
+    alg-button
     [routerLink]="link"
     *ngIf="link"
   >{{ buttonCaption }}</a>
