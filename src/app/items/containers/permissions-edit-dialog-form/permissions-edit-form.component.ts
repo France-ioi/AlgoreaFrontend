@@ -11,7 +11,6 @@ import { ItemEditPerm } from 'src/app/items/models/item-edit-permission';
 import { merge, Subject } from 'rxjs';
 import { permissionsConstraintsValidator } from '../../models/permissions-constraints-validator';
 import { withComputePermissions } from '../../models/computed-permissions';
-import { ButtonModule } from 'primeng/button';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
@@ -21,6 +20,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { backendInfiniteDateString, farFutureDateString, isInfinite } from 'src/app/utils/date';
 import { CanEnterComponent, CanEnterValue } from 'src/app/ui-components/collapsible-section/can-enter/can-enter.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 // eslint-disable-next-line max-len
 const canEnterWarningMessage = $localize`As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.`;
@@ -37,13 +37,13 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
     CollapsibleSectionComponent,
     ProgressSelectComponent,
     SwitchFieldComponent,
-    ButtonModule,
     JsonPipe,
     SwitchComponent,
     CalendarModule,
     InputDateComponent,
     DatePipe,
     CanEnterComponent,
+    ButtonComponent,
   ],
 })
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {

@@ -153,20 +153,19 @@
 
     <div class="buttons">
       <button
-        class="alg-button basic small button"
+        class="stroke button"
         icon="ph-bold ph-x"
-        i18n-label label="Cancel"
         (click)="onCancel()"
-        pButton
-      ></button>
+        alg-button
+        i18n
+      >Cancel</button>
       <button
-        class="alg-button primary small button"
         icon="ph-bold ph-check"
-        i18n-label label="Proceed"
         (click)="onAccept()"
         [disabled]="!form.dirty || form.invalid || form.disabled || acceptButtonDisabled"
-        pButton
-      ></button>
+        alg-button
+        i18n
+      >Proceed</button>
     </div>
   </div>
 </form>
