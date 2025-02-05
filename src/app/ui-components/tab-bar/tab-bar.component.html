@@ -1,9 +1,9 @@
 <div class="container">
   <button
-    class="alg-button-icon tab-arrow tab-prev prev-button"
+    class="size-s primary no-bg tab-arrow tab-prev prev-button"
     type="button"
     icon="ph-bold ph-caret-left"
-    pButton
+    alg-button-icon
     (click)="onPrev()"
     *ngIf="showPrevButton"
   ></button>
@@ -21,10 +21,10 @@
     </ul>
   </ng-scrollbar>
   <button
-    class="alg-button-icon tab-arrow tab-next next-button"
+    class="size-s primary no-bg tab-arrow tab-next next-button"
     type="button"
     icon="ph-bold ph-caret-right"
-    pButton
+    alg-button-icon
     (click)="onNext()"
     *ngIf="showNextButton"
   ></button>

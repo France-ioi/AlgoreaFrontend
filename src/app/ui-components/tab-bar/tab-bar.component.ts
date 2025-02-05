@@ -14,16 +14,17 @@ import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { debounceTime } from 'rxjs/operators';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
   standalone: true,
-  imports: [ LetDirective, AsyncPipe, NgForOf, NgClass, RouterLink, ButtonModule, NgIf, NgScrollbar ],
+  imports: [ LetDirective, AsyncPipe, NgForOf, NgClass, RouterLink, NgIf, NgScrollbar, ButtonComponent, ButtonIconComponent ],
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;

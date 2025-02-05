@@ -102,7 +102,8 @@
   &.tab-arrow {
     width: toRem(30);
     height: 100%;
-    padding: 0 0.75rem;
+    padding: 0;
+    background-color: var(--alg-white-color);
 
     &.tab-prev {
       box-shadow: toRem(1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
