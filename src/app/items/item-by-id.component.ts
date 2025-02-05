@@ -45,7 +45,6 @@ import { ItemDependenciesComponent } from './containers/item-dependencies/item-d
 import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
 import { ChapterGroupProgressComponent } from './containers/chapter-group-progress/chapter-group-progress.component';
 import { ItemLogViewComponent } from './containers/item-log-view/item-log-view.component';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemTaskEditComponent } from './containers/item-task-edit/item-task-edit.component';
 import { AnswerAuthorIndicatorComponent } from './containers/answer-author-indicator/answer-author-indicator.component';
@@ -66,6 +65,7 @@ import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -89,7 +89,6 @@ import { itemRouteAsUrlCommand } from '../models/routing/item-route-serializatio
     ItemContentComponent,
     ItemTaskEditComponent,
     LoadingComponent,
-    ButtonModule,
     ItemLogViewComponent,
     ChapterGroupProgressComponent,
     ChapterUserProgressComponent,
@@ -103,6 +102,7 @@ import { itemRouteAsUrlCommand } from '../models/routing/item-route-serializatio
     AsyncPipe,
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
+    ButtonComponent,
   ],
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
