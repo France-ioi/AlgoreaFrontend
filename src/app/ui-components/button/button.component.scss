@@ -20,6 +20,18 @@
     cursor: default;
   }
 
+  &.size-xs {
+    padding: 0 toRem(8);
+    height: toRem(20);
+    font-size: toRem(12);
+    border-radius: toRem(12);
+    font-weight: 500;
+
+    &:has(.icon) {
+      padding: 0 toRem(7) 0 toRem(15);
+    }
+  }
+
   &.size-s {
     height: toRem(24);
     font-size: toRem(12);
