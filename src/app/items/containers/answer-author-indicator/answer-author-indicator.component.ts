@@ -12,7 +12,6 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
-import { ButtonModule } from 'primeng/button';
 import { ItemRoutePipe } from '../../../pipes/itemRoute';
 import { ItemData } from '../../models/item-data';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
@@ -21,6 +20,7 @@ import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { LoadAnswerAsCurrentRoutingStatePipe } from '../../utils/load-answer-as-current-state';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',
@@ -37,10 +37,10 @@ import { LoadAnswerAsCurrentRoutingStatePipe } from '../../utils/load-answer-as-
     UserCaptionPipe,
     LoadAnswerAsCurrentRoutingStatePipe,
     ScoreRingComponent,
-    ButtonModule,
     ItemRoutePipe,
     RouteUrlPipe,
     LetDirective,
+    ButtonComponent,
   ],
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {

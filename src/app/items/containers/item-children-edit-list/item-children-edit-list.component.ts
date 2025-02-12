@@ -21,8 +21,8 @@ import { TableModule } from 'primeng/table';
 import { NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
-import { ButtonModule } from 'primeng/button';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -44,8 +44,8 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
-    ButtonModule,
     EmptyContentComponent,
+    ButtonIconComponent,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {

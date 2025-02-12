@@ -69,12 +69,12 @@
                     @if (observedGroup.currentUserCanGrantAccess && (itemData.item.permissions | allowsGrantingContentView) && !(watchedGroupPermissions | allowsViewingInfo)) {
                       <span header-section>
                         <button
-                          class="alg-button warning grant-access-button"
+                          class="size-s stroke accent-dark grant-access-button"
                           type="button"
                           icon="ph ph-plus"
                           (click)="grantViewContentAccess()"
                           [disabled]="updateInProcess"
-                          pButton
+                          alg-button
                           i18n
                         >Grant content access</button>
                       </span>
@@ -151,13 +151,13 @@
             [tooltipDisabled]="!lockEdit"
           >
            <button
-             pButton
+             alg-button
              type="button"
-             class="alg-button only-caption edit-permissions"
-             i18n-label label="Edit permissions"
+             class="only-caption accent-dark"
              [disabled]="lockEdit"
              (click)="openPermissionsDialog()"
-           ></button>
+             i18n
+           >Edit permissions</button>
           </span>
 
           <alg-permissions-edit-dialog

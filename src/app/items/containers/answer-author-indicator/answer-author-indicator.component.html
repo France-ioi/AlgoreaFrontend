@@ -25,8 +25,8 @@
         </div>
         <div class="buttons" *ngIf="!info.isObserving && author.groupId === info.currentUserId && itemData">
           <a
-            class="alg-button primary mini button"
-            pButton
+            class="size-xs button"
+            alg-button
             [routerLink]="itemData.item | itemRoute | url"
             [state]="answer.id | routingStateForLoadingAnswerAsCurrent"
             i18n
@@ -34,8 +34,8 @@
             Edit it
           </a>
           <a
-            class="alg-button primary mini button"
-            pButton
+            class="size-xs"
+            alg-button
             [routerLink]="itemData.item | itemRoute | url"
             i18n
           >

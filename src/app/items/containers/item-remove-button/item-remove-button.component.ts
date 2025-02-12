@@ -15,6 +15,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { parentRoute } from 'src/app/models/routing/item-route';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-item-remove-button',
@@ -28,6 +29,7 @@ import { parentRoute } from 'src/app/models/routing/item-route';
     ButtonModule,
     IsAChapterPipe,
     IsASkillPipe,
+    ButtonComponent,
   ],
 })
 export class ItemRemoveButtonComponent implements OnDestroy {

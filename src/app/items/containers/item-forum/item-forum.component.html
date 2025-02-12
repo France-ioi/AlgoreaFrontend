@@ -27,7 +27,7 @@
 
       <ng-container *ngIf="state.data">
         <div class="operation-buttons">
-          <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+          <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
             Refresh
           </button>
         </div>
@@ -60,8 +60,8 @@
               } as rowThread"
             >
               <td>
-                <button pButton type="button" class="p-button-rounded" *ngIf="!rowThread.isVisible" (click)="showThreadPanel(rowThread.id)" i18n>Show</button>
-                <button pButton type="button" class="p-button-rounded p-button-danger" *ngIf="rowThread.isVisible" (click)="hideThreadPanel()" i18n>Hide</button>
+                <button class="size-l" alg-button type="button" *ngIf="!rowThread.isVisible" (click)="showThreadPanel(rowThread.id)" i18n>Show</button>
+                <button class="size-l danger" alg-button type="button" *ngIf="rowThread.isVisible" (click)="hideThreadPanel()" i18n>Hide</button>
               </td>
               <td *ngIf="itemData?.item?.type !== 'Task'">
                 <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">

@@ -8,7 +8,7 @@
     icon="ph-duotone ph-warning-circle"
     i18n-buttonCaption buttonCaption="Retry"
     [showRefreshButton]="$any(state.error).status !== 403"
-    buttonStyleClass="alg-button primary refresh-button light-border"
+    buttonStyleClass="size-l refresh-button light-border"
     (refresh)="refresh()"
   >
     <ng-container *ngIf="$any(state.error).status === 403; else otherError;">

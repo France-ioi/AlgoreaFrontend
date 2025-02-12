@@ -1,12 +1,12 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-floating-save',
   templateUrl: './floating-save.component.html',
   styleUrls: [ './floating-save.component.scss' ],
   standalone: true,
-  imports: [ ButtonModule ]
+  imports: [ ButtonComponent ]
 })
 export class FloatingSaveComponent implements OnInit, OnDestroy {
 

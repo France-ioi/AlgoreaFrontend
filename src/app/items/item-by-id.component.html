@@ -99,7 +99,7 @@
                   <p class="save-answer-loader-message">
                     <span i18n>Saving answer before loading submission...</span>
                     <alg-loading size="medium"></alg-loading>
-                    <p-button type="button" (click)="skipBeforeUnload()" i18n-label label="Skip"></p-button>
+                    <button alg-button type="button" (click)="skipBeforeUnload()" i18n>Skip</button>
                   </p>
                 </div>
               }
@@ -196,16 +196,16 @@
     <p i18n>You do not appear to be connected to the Internet, if you leave this task you may loose your progress. Are you sure you want to continue?</p>
     <ng-template pTemplate="footer">
       <button
-        pButton
-        class="p-button-danger"
-        i18n-label label="Loose progress and leave the task"
+        alg-button
+        class="danger"
         (click)="skipBeforeUnload()"
-      ></button>
+        i18n
+      >Loose progress and leave the task</button>
       <button
-        pButton
-        i18n-label label="Retry"
+        alg-button
         (click)="retryBeforeUnload()"
-      ></button>
+        i18n
+      >Retry</button>
     </ng-template>
   </p-dialog>
 }

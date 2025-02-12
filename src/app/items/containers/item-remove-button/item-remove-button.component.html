@@ -1,12 +1,12 @@
 <div class="container">
   <button
-    pButton
+    alg-button
     type="button"
-    class="alg-button danger"
-    i18n-label label="Delete this item"
+    class="danger size-l"
     (click)="onDeleteItem()"
     [disabled]="!canDeleteState().data || deletionInProgress()"
-  ></button>
+    i18n
+  >Delete this item</button>
   @if (!isOwner()) {
     <span class="message" i18n>Only owner can delete items</span>
   }
