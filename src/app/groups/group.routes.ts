@@ -41,6 +41,10 @@ const routes: Routes = [
         children: [],
       },
       {
+        path: 'history',
+        children: [],
+      },
+      {
         path: 'members',
         children: [],
       },

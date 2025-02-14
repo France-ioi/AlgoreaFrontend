@@ -88,5 +88,5 @@ function isUserPage(page: string[]): boolean {
 }
 function isGroupPage(page: string[]): boolean {
   if (!page[0]) return false;
-  return [ 'members', 'managers', 'settings', 'access' ].includes(page[0]);
+  return [ 'history', 'members', 'managers', 'settings', 'access' ].includes(page[0]);
 }

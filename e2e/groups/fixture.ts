@@ -5,6 +5,7 @@ import { JoinGroupConfirmation } from './pages/join-group-confirmation';
 import { GroupMembersPage } from 'e2e/groups/pages/group-members-page';
 import { UserPage } from 'e2e/groups/pages/user-page';
 import { ManageGroupsPage } from 'e2e/groups/pages/manage-groups-page';
+import { GroupHistoryPage } from 'e2e/groups/pages/group-history-page';
 
 interface GroupFixtures {
   groupSettingsPage: GroupSettingsPage,
@@ -13,6 +14,7 @@ interface GroupFixtures {
   joinGroupConfirmation: JoinGroupConfirmation,
   groupMembersPage: GroupMembersPage,
   userPage: UserPage,
+  groupHistoryPage: GroupHistoryPage,
 }
 
 export const test = base.extend<GroupFixtures>({
@@ -33,6 +35,9 @@ export const test = base.extend<GroupFixtures>({
   },
   userPage: async ({ page }, use) => {
     await use(new UserPage(page));
+  },
+  groupHistoryPage: async ({ page }, use) => {
+    await use(new GroupHistoryPage(page));
   },
 });
 

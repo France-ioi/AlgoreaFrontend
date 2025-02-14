@@ -59,7 +59,7 @@ test('checks path suggestion for search result in left menu', async ({ page, sho
 
 test('checks path suggestion in group logs', async ({ page, showOverflow }) => {
   await initAsTesterUser(page);
-  await page.goto('/groups/by-id/4306830013673248439;p=614090468359597091');
+  await page.goto('/groups/by-id/4306830013673248439;p=614090468359597091/history');
 
   await page.route(`${apiUrl}/items/log?limit=20&watched_group_id=4306830013673248439`, async route => {
     await route.fulfill({ json: logsResponseJSON });

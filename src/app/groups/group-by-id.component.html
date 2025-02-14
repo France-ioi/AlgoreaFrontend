@@ -13,8 +13,8 @@
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
-      <div class="alg-nav-tab">
+    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
+      <div class="alg-nav-tab" data-testid="alg-nav-tab">
         <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
@@ -24,6 +24,16 @@
           i18n
         >
           Overview
+        </a>
+        <a
+          [hidden]="!group.currentUserCanWatchMembers && !historyTab.isActive"
+          class="alg-nav-tab-item"
+          [routerLink]="'./history'"
+          routerLinkActive #historyTab="routerLinkActive"
+          [class.active]="historyTab.isActive"
+          i18n
+        >
+          History
         </a>
         <a
           [hidden]="!group.isCurrentUserManager && !compositionTab?.isActive"
@@ -75,6 +85,9 @@
       (groupRefreshRequired)="onGroupRefreshRequired()"
       (leftGroup)="refreshNav()"
     ></alg-group-overview>
+    @if (!!historyTab?.isActive) {
+      <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
+    }
     <alg-group-composition
       *ngIf="!!compositionTab?.isActive"
       class="alg-flex-1"
