@@ -3,7 +3,7 @@
   <div class="controls">
     <button
       *ngIf="showRefresh"
-      class="alg-button-icon rounded primary-color stroke regular-size button"
+      class="size-l stroke button"
       [ngClass]="{'no-remove': !showRemove}"
       (click)="refreshCode()"
       i18n-pTooltip pTooltip="Generate a new code and reset expiration"
@@ -11,18 +11,18 @@
       tooltipPosition="top"
       tooltipEvent="hover"
       icon="ph ph-arrow-clockwise"
-      pButton
+      alg-button-icon
     ></button>
     <button
       *ngIf="showRemove"
-      class="alg-button-icon rounded primary-color stroke regular-size"
+      class="size-l stroke"
       (click)="removeCode()"
       i18n-pTooltip pTooltip="Disable code access"
       tooltipStyleClass="alg-tooltip"
       tooltipPosition="top"
       tooltipEvent="hover"
       icon="ph ph-x"
-      pButton
+      alg-button-icon
     ></button>
   </div>
 </div>
