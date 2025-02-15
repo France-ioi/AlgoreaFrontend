@@ -18,7 +18,7 @@
 
   <ng-container *ngIf="state.data">
     <div class="refresh-button">
-      <button class="alg-button basic" pButton icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+      <button class="stroke size-s" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
         Refresh
       </button>
     </div>
@@ -104,13 +104,13 @@
           <td [attr.colspan]="this.showUserColumn ? 4 : 3">
             <div class="text-center">
               <button
-                pButton
-                class="alg-button basic"
+                alg-button
+                class="size-s stroke"
                 icon="ph-duotone ph-arrow-circle-down"
-                i18n-label label="Load more"
                 (click)="fetchMoreRows()"
                 [disabled]="state.isFetching || state.isError"
-              ></button>
+                i18n
+              >Load more</button>
             </div>
           </td>
         </tr>
