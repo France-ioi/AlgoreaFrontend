@@ -30,10 +30,10 @@ import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.
 import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 import { DialogModule } from 'primeng/dialog';
 import { GetGroupMembersService } from '../../data-access/get-group-members.service';
-import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { LetDirective } from '@ngrx/component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-group-edit',
@@ -58,8 +58,8 @@ import { LetDirective } from '@ngrx/component';
     InputMaskModule,
     InputDateComponent,
     DialogModule,
-    ButtonModule,
     LetDirective,
+    ButtonComponent,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
