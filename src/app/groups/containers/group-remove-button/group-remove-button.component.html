@@ -3,13 +3,13 @@
 
   <div class="button-block">
     <button
-      pButton
+      alg-button
       type="button"
-      class="alg-button danger"
-      i18n-label label="Delete this group"
+      class="size-l danger"
       (click)="onDeleteGroup()"
       [disabled]="(state.isReady && state.data) || state.isFetching || state.isError || (deletionInProgress$ | async)"
-    ></button>
+      i18n
+    >Delete this group</button>
 
     <alg-error
       *ngIf="state.isError"
