@@ -13,7 +13,6 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { ManagerPermissionDialogComponent } from '../manager-permission-dialog/manager-permission-dialog.component';
 import { GroupManagerAddComponent } from '../group-manager-add/group-manager-add.component';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { GridComponent } from 'src/app/ui-components/grid/grid.component';
@@ -23,6 +22,8 @@ import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { GroupData } from '../../models/group-data';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 const managersLimit = 25;
 
@@ -39,12 +40,14 @@ const managersLimit = 25;
     TableModule,
     RouterLink,
     NgClass,
-    ButtonModule,
     GroupManagerAddComponent,
     ManagerPermissionDialogComponent,
     AsyncPipe,
     GroupLinkPipe,
-    UserCaptionPipe ],
+    UserCaptionPipe,
+    ButtonIconComponent,
+    ButtonComponent
+  ],
 })
 export class GroupManagerListComponent implements OnChanges {
 
