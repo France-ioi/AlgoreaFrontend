@@ -12,10 +12,10 @@
       <span class="dialog-title" i18n>{{ group?.name }}: manager access given to {{ userCaption }}</span>
       <button
         type="button"
-        class="alg-button-icon rounded primary-color stroke regular-size"
+        class="size-l stroke"
         icon="ph-bold ph-x"
         (click)="onClose()"
-        pButton
+        alg-button-icon
       ></button>
     </div>
   </p-header>
@@ -85,20 +85,19 @@
       <alg-loading *ngIf="isUpdating; else buttonsSection"></alg-loading>
       <ng-template #buttonsSection>
         <button
-          class="alg-button basic small button"
+          class="stroke"
           icon="ph-bold ph-x"
-          i18n-label label="Cancel"
           (click)="onClose()"
-          pButton
-        ></button>
+          alg-button
+          i18n
+        >Cancel</button>
         <button
-          class="alg-button primary small button"
           icon="ph-bold ph-check"
-          i18n-label label="Proceed"
           (click)="onAccept()"
           [disabled]="!form.dirty"
-          pButton
-        ></button>
+          alg-button
+          i18n
+        >Proceed</button>
       </ng-template>
     </div>
   </p-footer>
