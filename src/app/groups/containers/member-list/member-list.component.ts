@@ -20,10 +20,10 @@ import { DataPager } from 'src/app/utils/data-pager';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 type Member = GroupMembers[number];
 
@@ -85,12 +85,12 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
     NgSwitchCase,
     RouterLink,
     NgSwitchDefault,
-    ButtonModule,
     AsyncPipe,
     DatePipe,
     GroupLinkPipe,
     UserCaptionPipe,
     NgClass,
+    ButtonComponent,
   ],
 })
 export class MemberListComponent implements OnChanges, OnDestroy {
