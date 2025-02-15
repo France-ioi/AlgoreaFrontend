@@ -62,13 +62,12 @@
     }
   </p>
   <div class="error-refresh-button">
-    <p-button
-      class="refresh-button"
+    <button
       icon="pi pi-refresh"
-      i18n-label label="Reload the application."
       (click)="onRefresh()"
-      styleClass="p-button-sm"
-    ></p-button>
+      alg-button
+      i18n
+    >Reload the application.</button>
   </div>
   <p class="error-note" i18n="@@contactUs">
     If the problem persists, please contact us.
@@ -88,9 +87,10 @@
   }
 
   <ng-template pTemplate="footer">
-    <p-button
-      i18n-label label="Close"
+    <button
       (click)="closeObservationErrorDialog()"
-    ></p-button>
+      alg-button
+      i18n
+    >Close</button>
   </ng-template>
 </p-dialog>

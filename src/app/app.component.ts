@@ -16,7 +16,6 @@ import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { SharedModule } from 'primeng/api';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
-import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -28,6 +27,7 @@ import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-root',
@@ -47,10 +47,10 @@ import { fromObservation } from './store/observation';
     ConfirmDialogModule,
     ConfirmPopupModule,
     DialogModule,
-    ButtonModule,
     LanguageMismatchComponent,
     SharedModule,
     AsyncPipe,
+    ButtonComponent,
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {
