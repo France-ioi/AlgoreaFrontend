@@ -8,12 +8,13 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { RippleModule } from 'primeng/ripple';
-import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -30,10 +31,11 @@ import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe } fr
     NgSwitchCase,
     TooltipModule,
     NgSwitchDefault,
-    ButtonModule,
     RippleModule,
     AsyncPipe,
-    DatePipe
+    DatePipe,
+    ButtonComponent,
+    ButtonIconComponent
   ],
 })
 export class JoinedGroupListComponent implements OnDestroy {

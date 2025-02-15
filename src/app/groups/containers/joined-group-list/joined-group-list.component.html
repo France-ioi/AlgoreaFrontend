@@ -72,12 +72,12 @@
             </ng-template>
             <ng-template #canLeaveActions>
               <button
-                pButton
                 i18n-pTooltip pTooltip="Leave the group"
                 type="button"
                 icon="ph-duotone ph-sign-out"
-                class="alg-button-icon rounded primary-color stroke regular-size"
+                class="stroke size-l"
                 (click)="onGroupLeaveClick($event, membership)"
+                alg-button-icon
               ></button>
             </ng-template>
           </div>
