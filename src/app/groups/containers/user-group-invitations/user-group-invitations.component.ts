@@ -10,7 +10,6 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ProcessGroupInvitationService } from '../../data-access/process-group-invitation.service';
-import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { SortEvent } from 'primeng/api/sortevent';
@@ -19,6 +18,7 @@ import {
   JoinGroupConfirmationDialogComponent,
 } from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -30,7 +30,6 @@ import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/m
     LoadingComponent,
     NgIf,
     ErrorComponent,
-    ButtonModule,
     DatePipe,
     NgForOf,
     NgSwitchCase,
@@ -41,6 +40,7 @@ import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/m
     AsyncPipe,
     NgClass,
     JoinGroupConfirmationDialogComponent,
+    ButtonIconComponent,
   ],
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
