@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { User } from 'src/app/groups/models/user';
-import { ButtonModule } from 'primeng/button';
 import { GenerateProfileEditTokenService } from 'src/app/groups/data-access/generate-profile-edit-token.service';
 import { Location } from '@angular/common';
 import { appConfig } from 'src/app/utils/config';
 import { HttpParams } from '@angular/common/http';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-user-info',
@@ -12,7 +12,7 @@ import { HttpParams } from '@angular/common/http';
   styleUrls: [ './user-info.component.scss' ],
   standalone: true,
   imports: [
-    ButtonModule,
+    ButtonComponent,
   ]
 })
 export class UserInfoComponent {
