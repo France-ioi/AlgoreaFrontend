@@ -4,7 +4,7 @@ import { appConfig } from 'src/app/utils/config';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Location, NgIf, AsyncPipe } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-current-user',
@@ -13,8 +13,8 @@ import { ButtonModule } from 'primeng/button';
   standalone: true,
   imports: [
     NgIf,
-    ButtonModule,
     AsyncPipe,
+    ButtonComponent,
   ],
 })
 export class CurrentUserComponent {
