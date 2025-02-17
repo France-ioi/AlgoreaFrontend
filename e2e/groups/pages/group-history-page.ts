@@ -2,8 +2,8 @@ import { Page, expect } from '@playwright/test';
 
 export class GroupHistoryPage {
   tableLocator = this.page.locator('alg-group-log-view').locator('p-table');
-  forbiddenMessageLocator = this.page.locator('alg-group-log-view')
-    .getByText('You are not allowed to see activities of this user.');
+  forbiddenMessageLocator = this.page
+    .getByText('The current user is not authorized to see the history with his current permissions on the group.');
 
   constructor(private readonly page: Page) {
   }

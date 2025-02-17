@@ -11,9 +11,9 @@ test('checks history tab is visible', async ({ page, groupHistoryPage }) => {
 test('checks history tab is not visible', async ({ page, groupHistoryPage }) => {
   await initAsTesterUser(page);
   await page.goto('/groups/by-id/5738025589734638944;p=/history');
-  await groupHistoryPage.checksIsForbiddenMessageVisible();
   const navTabLocator = page.getByTestId('alg-nav-tab');
   await expect.soft(navTabLocator.getByText('History')).toBeVisible();
+  await groupHistoryPage.checksIsForbiddenMessageVisible();
   await navTabLocator.getByText('Overview').click();
   await expect.soft(navTabLocator.getByText('History')).not.toBeVisible();
 });

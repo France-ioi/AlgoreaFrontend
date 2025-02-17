@@ -86,7 +86,15 @@
       (leftGroup)="refreshNav()"
     ></alg-group-overview>
     @if (!!historyTab?.isActive) {
-      <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
+      @if (group.currentUserCanWatchMembers) {
+        <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
+      } @else {
+        <alg-error class="alg-flex-1">
+          <ng-container i18n>
+            The current user is not authorized to see the history with his current permissions on the group.
+          </ng-container>
+        </alg-error>
+      }
     }
     <alg-group-composition
       *ngIf="!!compositionTab?.isActive"
