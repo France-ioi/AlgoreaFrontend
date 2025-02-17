@@ -8,7 +8,7 @@ import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgTemplateOutlet, NgFor, NgClass, NgSwitch, NgSwitchCase, NgSwitchDefault, DatePipe } from '@angular/common';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
-import { ButtonModule } from 'primeng/button';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-pending-request',
@@ -30,7 +30,7 @@ import { ButtonModule } from 'primeng/button';
     LoadingComponent,
     DatePipe,
     UserCaptionPipe,
-    ButtonModule,
+    ButtonComponent,
   ],
 })
 export class PendingRequestComponent<T> {
