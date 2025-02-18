@@ -5,13 +5,13 @@
       <div class="header-title">
         <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchLabel" label-section i18n>
           «{{ observedGroup.name }}»
-          {(watchedGroupPermissions | allowsViewingContent).toString(), select, true {can} other {can't}}
+          {(watchedGroupPermissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
           access this
           {itemData.item.type, select, Skill {skill} other {activity}}
         </ng-container>
         <ng-template #noPermissionToWatchLabel>
           <ng-container i18n>
-            You cannot watch this {itemData.item.type, select, Skill {skill} other {activity}}
+            You cannot watch other users progress on this {itemData.item.type, select, Skill {skill} other {activity}}
           </ng-container>
         </ng-template>
       </div>
@@ -22,14 +22,13 @@
       <div class="content">
         <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchContent">
           <div class="no-access" *ngIf="!(watchedGroupPermissions | allowsViewingInfo)" i18n>
-            The {(observedGroup.route | isUser).toString(), select, true {user} other {group}} cannot currently
-            view this content.
+            This {(observedGroup.route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
           </div>
 
           <div class="no-access" *ngIf="(watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)" i18n>
-            The {(observedGroup.route | isUser).toString(), select, true {user} other {group}}
-            can list this {itemData.item.type, select, Skill {skill} other {activity}} but cannot
-            {itemData.item.type, select, Task {view its content} other {list its content}}.
+            This {(observedGroup.route | isUser).toString(), select, true {user} other {group}}
+            can view the title, subtitle and description of this {itemData.item.type, select, Skill {skill} other {activity}}
+            but may not be able to {itemData.item.type, select, Task {view its content} other {view what it contains}}.
           </div>
         </ng-container>
 
@@ -140,7 +139,7 @@
       </div>
       <div class="footer">
         <div class="footer-caption" *ngIf="!(observedGroup.route | isUser)" i18n>
-          Note that some subgroups or users of the groups may have higher permissions.
+          Note that some members or sub-groups of this group may have obtained additional access rights on this {itemData.item.type, select, Skill {skill} other {activity}}.
         </div>
         <ng-container *ngIf="itemData?.item?.permissions">
           <span
