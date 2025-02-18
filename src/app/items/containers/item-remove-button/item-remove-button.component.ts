@@ -7,7 +7,6 @@ import { ConfirmationService } from 'primeng/api';
 import { RemoveItemService } from '../../data-access/remove-item.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemData } from '../../models/item-data';
@@ -26,7 +25,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   imports: [
     LoadingComponent,
     ErrorComponent,
-    ButtonModule,
     IsAChapterPipe,
     IsASkillPipe,
     ButtonComponent,

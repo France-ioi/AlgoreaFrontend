@@ -9,16 +9,16 @@ import { GroupDeleteService } from '../../data-access/group-delete.service';
 import { Router } from '@angular/router';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ],
   standalone: true,
-  imports: [ NgIf, LoadingComponent, ButtonModule, ErrorComponent, AsyncPipe ]
+  imports: [ NgIf, LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;

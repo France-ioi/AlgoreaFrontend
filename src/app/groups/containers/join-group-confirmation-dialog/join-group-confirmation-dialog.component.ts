@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { DatePipe, I18nSelectPipe } from '@angular/common';
 import { GroupApprovals } from 'src/app/groups/models/group-approvals';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-join-group-confirmation-dialog',
@@ -13,11 +14,12 @@ import { GroupApprovals } from 'src/app/groups/models/group-approvals';
   standalone: true,
   imports: [
     DialogModule,
-    ButtonModule,
     SwitchFieldComponent,
     ReactiveFormsModule,
     I18nSelectPipe,
     DatePipe,
+    ButtonComponent,
+    ButtonIconComponent,
   ],
 })
 export class JoinGroupConfirmationDialogComponent implements OnInit {

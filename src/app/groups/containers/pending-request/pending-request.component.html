@@ -84,21 +84,20 @@
       </div>
       <div>
         <button
-          class="alg-button primary small margin-right"
-          pButton
+          alg-button
           type="button"
           (click)="onAccept()"
           [disabled]="selection.length === 0 || this.state !== 'ready'"
-          i18n-label label="Accept"
-        ></button>
+          i18n
+        >Accept</button>
         <button
-          class="alg-button basic small"
-          pButton
+          class="stroke"
+          alg-button
           type="button"
           (click)="onReject()"
           [disabled]="selection.length === 0 || this.state !== 'ready'"
-          i18n-label label="Reject"
-        ></button>
+          i18n
+        >Reject</button>
       </div>
     </div>
   </ng-template>

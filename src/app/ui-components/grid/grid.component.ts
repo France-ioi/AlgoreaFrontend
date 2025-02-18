@@ -6,7 +6,6 @@ import { SortMeta } from 'primeng/api/sortmeta';
 import { SwitchComponent } from '../switch/switch.component';
 import { SharedModule } from 'primeng/api';
 import { NgClass, NgIf, NgTemplateOutlet, NgFor } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
 
 export function tableFactory(wrapper: GridComponent): Table|undefined {
   return wrapper.table;
@@ -40,7 +39,6 @@ export interface GridColumn {
     NgTemplateOutlet,
     NgFor,
     SwitchComponent,
-    ButtonModule,
   ],
 })
 export class GridComponent {

@@ -26,12 +26,12 @@
       This code has expired on {{ codeInfo.codeExpiration | date:'medium' }}
     </p>
     <button
-      class="alg-button primary"
+      class="size-l"
       icon="ph-bold ph-plus"
       (click)="generateNewCode()"
       [disabled]="processing"
       i18n
-      pButton
+      alg-button
       *ngIf="codeInfo.hasCodeNotSet"
     >Generate a code</button>
   </ng-container>
@@ -75,11 +75,11 @@
             tooltipEvent="hover"
           >
             <button
-              class="alg-button-icon rounded primary-color stroke regular-size"
+              class="size-l stroke"
               icon="ph-bold ph-check"
               (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
               [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
-              pButton
+              alg-button-icon
             ></button>
           </span>
         </div>

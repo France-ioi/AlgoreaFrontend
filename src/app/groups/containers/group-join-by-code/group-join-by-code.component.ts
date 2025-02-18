@@ -15,10 +15,11 @@ import { FormsModule } from '@angular/forms';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { CodeTokenComponent } from 'src/app/ui-components/code-token/code-token.component';
-import { ButtonModule } from 'primeng/button';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { NgIf, DecimalPipe, DatePipe } from '@angular/common';
 import { LoadingComponent } from '../../../ui-components/loading/loading.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -28,7 +29,6 @@ import { LoadingComponent } from '../../../ui-components/loading/loading.compone
   imports: [
     NgIf,
     SectionParagraphComponent,
-    ButtonModule,
     CodeTokenComponent,
     SelectionComponent,
     DurationComponent,
@@ -38,6 +38,8 @@ import { LoadingComponent } from '../../../ui-components/loading/loading.compone
     DatePipe,
     DurationToMinPipe,
     LoadingComponent,
+    ButtonComponent,
+    ButtonIconComponent,
   ],
 })
 

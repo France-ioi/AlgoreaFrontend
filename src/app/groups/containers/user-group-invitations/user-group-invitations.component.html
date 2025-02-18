@@ -45,18 +45,18 @@
           <td>
             <div class="operations">
               <button
-                class="alg-button-icon rounded primary-color stroke regular-size margin-right"
+                class="stroke size-l margin-right"
                 data-testid="accept-group"
-                pButton
+                alg-button-icon
                 type="button"
                 icon="ph-bold ph-check"
                 (click)="openJoinGroupConfirmationDialog(rowData)"
                 [disabled]="processing"
               ></button>
               <button
-                class="alg-button-icon rounded primary-color stroke regular-size"
+                class="stroke size-l"
                 data-testid="reject-group"
-                pButton
+                alg-button-icon
                 type="button"
                 icon="ph-bold ph-x"
                 (click)="onReject(rowData)"

@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgClass, NgIf } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-code-token',
@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
     NgClass,
     NgIf,
     TooltipModule,
-    ButtonModule,
+    ButtonIconComponent,
   ],
 })
 export class CodeTokenComponent {

@@ -21,7 +21,6 @@ import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
@@ -29,6 +28,7 @@ import { UserSessionService } from '../../../services/user-session.service';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 const logsLimit = 20;
 
@@ -41,7 +41,6 @@ const logsLimit = 20;
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    ButtonModule,
     TableModule,
     SharedModule,
     ScoreRingComponent,
@@ -59,6 +58,7 @@ const logsLimit = 20;
     ShowOverlayHoverTargetDirective,
     ShowOverlayDirective,
     LogActivityTypeIconPipe,
+    ButtonComponent,
   ],
 })
 export class GroupLogViewComponent implements OnChanges {

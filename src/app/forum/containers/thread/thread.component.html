@@ -57,10 +57,10 @@
                 #messageToSendEl
               ></textarea>
               <button
-                class="alg-button-icon primary-color rounded send-button"
+                class="size-l with-bg send-button"
                 type="submit"
                 icon="pi pi-send"
-                pButton
+                alg-button-icon
                 [disabled]="!form.get('messageToSend')?.value?.trim() || !!(disableControls$ | async)"
               ></button>
             </form>
@@ -91,9 +91,8 @@
               >
                 <button
                   type="button"
-                  class="alg-button primary small"
                   [disabled]="!canSwitch"
-                  pButton
+                  alg-button
                   (click)="changeThreadStatus({ open: !thread.threadStatus.data.open, threadId: threadId })"
                   *ngIf="thread.threadStatus && thread.threadStatus.data"
                 >

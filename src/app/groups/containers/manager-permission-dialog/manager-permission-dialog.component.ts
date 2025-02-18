@@ -9,12 +9,13 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { ButtonModule } from 'primeng/button';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
 import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -31,7 +32,8 @@ import { NgIf } from '@angular/common';
     ProgressSelectComponent,
     SwitchFieldComponent,
     LoadingComponent,
-    ButtonModule,
+    ButtonIconComponent,
+    ButtonComponent,
   ],
 })
 export class ManagerPermissionDialogComponent implements OnChanges {

@@ -6,11 +6,11 @@ import { isNotNull } from '../../../utils/null-undefined-predicates';
 import { catchError } from 'rxjs/operators';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { fromForum } from 'src/app/forum/store';
 import { Store } from '@ngrx/store';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-thread-container',
@@ -20,11 +20,11 @@ import { Store } from '@ngrx/store';
   imports: [
     NgIf,
     RouterLink,
-    ButtonModule,
     ThreadComponent,
     AsyncPipe,
     ItemRoutePipe,
     RouteUrlPipe,
+    ButtonIconComponent,
   ],
 })
 export class ThreadContainerComponent implements AfterViewInit, OnDestroy {

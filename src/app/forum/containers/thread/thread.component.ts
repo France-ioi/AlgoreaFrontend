@@ -23,7 +23,6 @@ import { FetchState, fetchingState, readyState } from '../../../utils/state';
 import { errorIsHTTPForbidden } from '../../../utils/errors';
 import { UpdateThreadService } from '../../../data-access/update-thread.service';
 import { TooltipModule } from 'primeng/tooltip';
-import { ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
@@ -39,6 +38,8 @@ import { messageEvent } from '../../models/thread-events';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { fromObservation } from 'src/app/store/observation';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-thread',
@@ -54,10 +55,11 @@ import { fromObservation } from 'src/app/store/observation';
     ReactiveFormsModule,
     InputTextareaModule,
     ItemRoutePipe,
-    ButtonModule,
     TooltipModule,
     AsyncPipe,
     RouterLink,
+    ButtonIconComponent,
+    ButtonComponent,
   ],
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {

@@ -21,7 +21,6 @@ import { AddContentComponent } from 'src/app/ui-components/add-content/add-conte
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
@@ -30,6 +29,7 @@ import { Group } from '../../data-access/get-group-by-id.service';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { canCurrentUserGrantGroupAccess, canCurrentUserWatchMembers } from '../../models/group-management';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-associated-item',
@@ -51,13 +51,13 @@ import { canCurrentUserGrantGroupAccess, canCurrentUserWatchMembers } from '../.
     NgSwitchCase,
     AddContentComponent,
     RouterLink,
-    ButtonModule,
     NgTemplateOutlet,
     MessageInfoComponent,
     AllowsViewingItemInfoPipe,
     AllowsGrantingViewItemPipe,
     ItemRoutePipe,
     RouteUrlPipe,
+    ButtonIconComponent,
   ],
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {

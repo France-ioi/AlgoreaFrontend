@@ -3,12 +3,13 @@
     <div class="flex-1 modify-description" i18n>
       The following information is what we receive from France-IOI login platform.
     </div>
-    <p-button
-      styleClass="alg-button primary"
-      i18n-label label="Modify"
+    <button
+      class="size-l"
+      alg-button
       icon="ph-duotone ph-pen"
       (click)="onModify(currentUser.groupId)"
-    ></p-button>
+      i18n
+    >Modify</button>
   </div>
 
   <h2 class="alg-h2 alg-text-normal title" i18n>Personal Information</h2>

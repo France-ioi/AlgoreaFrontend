@@ -3,15 +3,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Group } from '../../data-access/get-group-by-id.service';
-import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-group-leave',
   templateUrl: './group-leave.component.html',
   styleUrls: [ './group-leave.component.scss' ],
   standalone: true,
-  imports: [ NgIf, ButtonModule ],
+  imports: [ NgIf, ButtonComponent ],
 })
 export class GroupLeaveComponent {
   @Output() leave = new EventEmitter<void>();

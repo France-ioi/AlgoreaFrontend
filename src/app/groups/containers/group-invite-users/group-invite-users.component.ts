@@ -5,11 +5,11 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ButtonModule } from 'primeng/button';
 import { MessageComponent } from 'src/app/ui-components/message/message.component';
 import { NgIf, NgFor } from '@angular/common';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 interface Message
 {
@@ -31,8 +31,8 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
     TextareaComponent,
     NgIf,
     MessageComponent,
-    ButtonModule,
     NgFor,
+    ButtonComponent,
   ],
 })
 export class GroupInviteUsersComponent implements OnInit, OnDestroy {

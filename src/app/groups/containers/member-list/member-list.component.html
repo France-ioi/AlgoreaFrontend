@@ -98,14 +98,14 @@
           <td colspan="3">
             <div class="text-center">
               <button
-                pButton
-                class="alg-button basic"
+                alg-button
+                class="size-s stroke"
                 icon="ph-duotone ph-arrow-circle-down"
-                i18n-label label="Load more"
                 (click)="fetchMoreRows()"
                 [disabled]="state.isFetching"
-              ></button>
-            </div>
+                i18n
+              >Load more</button>
+            </div>z
           </td>
         </tr>
       </ng-template>
@@ -129,8 +129,7 @@
             >Select all</span>
           </div>
           <button
-            class="alg-button primary small"
-            pButton
+            alg-button
             type="button"
             icon="ph ph-trash"
             (click)="onRemove($event)"

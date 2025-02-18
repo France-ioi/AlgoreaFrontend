@@ -50,6 +50,14 @@
     }
   }
 
+  &.size-xs {
+    &:not(.stroke) {
+      .icon {
+        font-size: toRem(13);
+      }
+    }
+  }
+
   &.size-s {
     &:not(.stroke) {
       .icon {

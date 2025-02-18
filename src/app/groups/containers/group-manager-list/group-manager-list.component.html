@@ -103,10 +103,10 @@
           </td>
           <td style="width: 11rem; max-width: 11rem;">
             <button
-              pButton
+              alg-button-icon
               type="button"
               icon="pi pi-pencil"
-              class="alg-button-icon small no-bg primary-color"
+              class="size-xs"
               (click)="openPermissionsEditDialog(rowData)"
               *ngIf="groupData?.group?.currentUserCanManage === 'memberships_and_group'"
             ></button>
@@ -119,13 +119,13 @@
           <td [colSpan]="6">
             <div class="text-center">
               <button
-                pButton
-                class="alg-button basic"
+                alg-button
+                class="size-s stroke"
                 icon="ph-duotone ph-arrow-circle-down"
-                i18n-label label="Load more"
                 (click)="fetchMoreData()"
                 [disabled]="state.isFetching"
-              ></button>
+                i18n
+              >Load more</button>
             </div>
           </td>
         </tr>
@@ -140,8 +140,8 @@
             </span>
           </div>
           <button
-            class="alg-button-icon no-bg primary-color"
-            pButton
+            class="size-s"
+            alg-button-icon
             type="button"
             icon="ph-duotone ph-trash"
             (click)="onRemove($event)"
