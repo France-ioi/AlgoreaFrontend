@@ -2506,8 +2506,8 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="7288998356732151629" datatype="html">
         <source> Access </source><target state="translated"> Accès </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="2525051330217985735" datatype="html">
-        <source> The current user is not authorized to see the history with his current permissions on the group. </source><target state="new"> The current user is not authorized to see the history with his current permissions on the group. </target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/group-by-id.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/user-progress-details/user-progress-details.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="3523182458285851125" datatype="html">
+        <source> You don't have permission to view this group's history. </source><target state="new"> You don't have permission to view this group's history. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/groups/group-by-id.component.html</context>
           <context context-type="linenumber">94</context>
