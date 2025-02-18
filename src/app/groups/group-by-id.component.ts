@@ -22,6 +22,7 @@ import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.servic
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
 import { GroupData, selectGroupData } from './models/group-data';
 import { mapStateData, readyData } from '../utils/operators/state';
+import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/group-log-view.component';
 
 @Component({
   selector: 'alg-group-by-id',
@@ -42,6 +43,7 @@ import { mapStateData, readyData } from '../utils/operators/state';
     LoadingComponent,
     ErrorComponent,
     AsyncPipe,
+    GroupLogViewComponent,
   ],
 })
 export class GroupByIdComponent implements OnDestroy {

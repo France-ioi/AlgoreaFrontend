@@ -1,5 +1,44 @@
 @let item = itemData.item;
 
+<div>
+  Regular:
+  <button class="size-s" alg-button>Approve</button>
+  <button alg-button>Approve</button>
+  <button class="size-l" alg-button>Approve</button>
+  <button class="secondary" alg-button>Cancel</button>
+<!--  <button class="success" alg-button>Save</button>-->
+  <button class="danger" alg-button>Delete</button>
+</div>
+<div>
+  Specific buttons:
+  <button class="stroke size-s" alg-button icon="ph-duotone ph-arrows-clockwise">Refresh</button>
+  <button class="stroke size-s" alg-button icon="ph-duotone ph-arrow-circle-down">Load more</button>
+  <button alg-button icon="ph-bold ph-check">Approve</button>
+  <button class="stroke" alg-button icon="ph-bold ph-check">Cancel</button>
+</div>
+<div>
+  Only icons:
+  <button class="size-s" alg-button-icon icon="ph ph-presentation"></button>
+  <button class="size-s stroke" alg-button-icon icon="ph ph-presentation"></button>
+  <button class="size-s with-bg" alg-button-icon icon="ph-bold ph-check"></button>
+
+  <button alg-button-icon icon="ph ph-presentation"></button>
+  <button class="stroke" alg-button-icon icon="ph ph-presentation"></button>
+  <button class="with-bg" alg-button-icon icon="ph ph-presentation"></button>
+
+  <button class="size-l" alg-button-icon icon="ph ph-presentation"></button>
+  <button class="size-l with-bg" alg-button-icon icon="ph ph-presentation"></button>
+</div>
+<div>
+  Specific buttons:
+  <button class="size-l primary no-bg" alg-button-icon icon="ph-duotone ph-user-circle"></button>
+  <button class="primary no-bg" alg-button-icon icon="ph ph-list"></button>
+  <button class="size-s primary no-bg tab-arrow" alg-button-icon icon="ph-bold ph-caret-up"></button>
+  <button class="size-s primary no-bg tab-arrow tab-next" alg-button-icon icon="ph-bold ph-caret-right"></button>
+  <button class="size-l primary stroke" alg-button-icon icon="ph-bold ph-check"></button>
+  <button class="size-s primary" alg-button-icon icon="ph ph-arrow-left"></button>
+</div>
+
 <form *ngIf="item && parentForm" [formGroup]="parentForm">
   <div *ngIf="item.type === 'Task'">
     <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>

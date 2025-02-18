@@ -150,7 +150,7 @@ test('View answer in logs for a group', async ({ page }) => {
   await page.route(`${apiUrl}/items/log?limit=20&watched_group_id=672913018859223173`, async route => {
     await route.fulfill({ json: groupLogsJson });
   });
-  await page.goto('/groups/by-id/672913018859223173;p=52767158366271444');
+  await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/history');
   await expect.soft(page.locator('h1').getByText('Pixal')).toBeVisible();
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();

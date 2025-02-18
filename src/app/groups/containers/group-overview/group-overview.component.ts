@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Group } from '../../data-access/get-group-by-id.service';
 import { Router } from '@angular/router';
 import { GroupLeaveComponent } from '../group-leave/group-leave.component';
-import { GroupLogViewComponent } from '../group-log-view/group-log-view.component';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -12,7 +11,6 @@ import { NgIf } from '@angular/common';
   standalone: true,
   imports: [
     NgIf,
-    GroupLogViewComponent,
     GroupLeaveComponent,
   ],
 })
