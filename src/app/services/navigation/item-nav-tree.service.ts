@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, skip, switchMap, take } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/items/models/attempts';
 import { ItemTypeCategory, typeCategoryOfItem, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
@@ -17,6 +17,11 @@ import { isGroupTypeVisible } from 'src/app/groups/models/group-types';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { EntityPathRoute } from 'src/app/models/routing/entity-route';
+import { Cacheable } from 'ts-cacheable';
+import { MINUTES } from 'src/app/utils/duration';
+
+const cacheBuster$ = new Subject<void>();
+const cacheConfig = { cacheBusterObserver: cacheBuster$, maxAge: 1*MINUTES };
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
@@ -34,6 +39,10 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     ).subscribe(() => {
       this.retry();
     });
+    combineLatest([
+      this.store.select(fromObservation.selectObservedGroupId),
+      this.reloadTrigger,
+    ]).subscribe(() => cacheBuster$.next());
   }
 
   /**
@@ -52,6 +61,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return !!content.route.attemptId; // an attempt is required to fetch children
   }
 
+  @Cacheable(cacheConfig)
   fetchNavData(route: EntityPathRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
     const attemptId = route.attemptId;
@@ -65,6 +75,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     );
   }
 
+  @Cacheable(cacheConfig)
   fetchRootTreeData(): Observable<NavTreeElement[]> {
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
@@ -76,6 +87,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     );
   }
 
+  @Cacheable(cacheConfig)
   fetchNavDataFromChild(id: string, child: ItemInfo): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (child.route.path.length === 0) throw new Error('unexpected empty path for child (fetchNavDataFromChild)');
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
