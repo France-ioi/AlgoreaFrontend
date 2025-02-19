@@ -13,8 +13,6 @@ import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { DatePipe, NgIf } from '@angular/common';
 import { ItemData } from '../../models/item-data';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -37,9 +35,7 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
     FormErrorComponent,
     ItemRemoveButtonComponent,
     InputDateComponent,
-    DatePipe,
-    ButtonComponent,
-    ButtonIconComponent
+    DatePipe
   ],
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
