@@ -38,6 +38,10 @@ const routes: Routes = [
     loadChildren: () => import('./lti/lti.routes'),
   },
   {
+    path: 'ui',
+    loadComponent: () => import('./ui-page/ui-page.component').then(m => m.UiPageComponent),
+  },
+  {
     // "r/**" -> the parameter may contain slashes
     matcher: url => (url[0]?.path === 'r' ? {
       consumed: url,
