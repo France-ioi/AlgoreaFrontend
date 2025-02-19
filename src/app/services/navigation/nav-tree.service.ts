@@ -27,7 +27,7 @@ interface FetchInfo {
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
-  private reloadTrigger = new Subject<void>();
+  protected reloadTrigger = new Subject<void>();
   private reload$ = merge(
     this.reloadTrigger,
     this.currentContent.navMenuReload$,
@@ -239,12 +239,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       path: path,
       fetch: fetch.pipe(
         mapToFetchState({ resetter: this.reload$ }),
-        // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
-        // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more
-        // subscribers, and so that new subscribers get the latest results on subscription.
-        // (Note: discussion related to shareReplay refCount: https://github.com/ReactiveX/rxjs/issues/5029 -> a completed (http) source
-        // will not be resubscribed (i.e., be re-executed) after its completion, even with refCount)
-        shareReplay({ refCount: true, bufferSize: 1 }), /* see above for explanation */
+        // The fetches need to have a kind of cache as it may be call several time in a row
       ),
     };
   }
