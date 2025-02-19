@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/cdk/overlay-prebuilt.css';
 @import 'src/variables';
 @import 'src/geometry';
 @import 'assets/scss/helpers';
@@ -16,8 +17,6 @@
 @import 'assets/scss/components/login-button';
 @import 'assets/scss/components/dropdown';
 @import 'assets/scss/components/switch';
-@import 'assets/scss/components/top-right-menu';
-@import 'assets/scss/components/top-right-menu-button';
 @import 'assets/scss/components/button';
 @import 'assets/scss/components/button-icon';
 @import 'assets/scss/components/messages';

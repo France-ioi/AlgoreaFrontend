@@ -1,12 +1,46 @@
-<ng-container *ngIf="menuItems$ | async as menuItems">
-  <p-menu [styleClass]="styleClass || 'alg-top-right-menu'" #menu [popup]="true" [model]="menuItems" appendTo="body"></p-menu>
-  <div class="user-container" *ngIf="userLogin$ | async as userLogin">
-    <span class="alg-secondary-color user-login" *ngIf="!(isNarrowScreen$ | async)">{{ userLogin }}</span>
+<ng-container *ngrxLet="{ userLogin: userLogin$, isNarrowScreen: isNarrowScreen$ } as data">
+  <div class="user-container">
+    @if (!data.isNarrowScreen) {
+      <span class="alg-secondary-color user-login">{{ data.userLogin }}</span>
+    }
     <button
       class="size-l"
       icon="ph-duotone ph-user-circle"
-      (click)="menu.toggle($event)"
+      [cdkMenuTriggerFor]="menu"
       alg-button-icon
     ></button>
   </div>
+
+  <ng-template #menu>
+    <div class="menu" [ngClass]="styleClass" cdkMenu>
+      @if (data.isNarrowScreen) {
+        <div class="menu-header">
+          {{ data.userLogin }}
+        </div>
+      }
+      <ul class="menu-list">
+        @for (menuItem of menuItems$ | async; track $index) {
+          <li class="menu-item">
+            @if (menuItem.routerLink) {
+              <a
+                class="menu-item-link"
+                [routerLink]="menuItem.routerLink"
+                cdkMenuItem
+              >
+                <ng-template [ngTemplateOutlet]="content"></ng-template>
+              </a>
+            } @else if (menuItem.command) {
+              <button class="menu-item-button" type="button" (click)="menuItem.command()">
+                <ng-template [ngTemplateOutlet]="content"></ng-template>
+              </button>
+            }
+            <ng-template #content>
+              <span class="menu-item-label">{{ menuItem.label }}</span>
+              <span class="menu-item-icon" [class]="menuItem.icon"></span>
+            </ng-template>
+          </li>
+        }
+      </ul>
+    </div>
+  </ng-template>
 </ng-container>
