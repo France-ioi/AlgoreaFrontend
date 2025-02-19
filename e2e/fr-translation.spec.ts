@@ -38,21 +38,23 @@ test('checks select in item permissions', async ({ page }) => {
   const itemPermissionsLocator = page.locator('alg-item-permissions');
   await expect.soft(itemPermissionsLocator).toBeVisible();
   await expect.soft(
-    page.getByText('«Pixal» ne peut pas accéder à cette activité')
+    page.getByText('«Pixal» ne peut peut-être pas accéder à cette activité')
   ).toBeVisible();
   await itemPermissionsLocator.click();
   await expect.soft(
-    page.getByText('L(e) groupe peut voir cette activité mais ne pas peut pas lister son contenu.')
+    page.getByText(
+      "Ce groupe peut voir le titre, sous-titre et la description de cette activité mais ne peut peut-être pas voir ce qu'elle contient."
+    )
   ).toBeVisible();
 
   await page.goto('a/5280599138983174;p=;pa=0?watchedGroupId=672913018859223173');
-  await expect.soft(page.getByText('Vous ne pouvez pas observer cette activité')).toBeVisible();
+  await expect.soft(page.getByText("Vous ne pouvez pas observer les progrès d'autres utilisateurs sur cette activité")).toBeVisible();
 
   await page.goto('a/5388967674530252881;p=6707691810849260111,5770807837681306905;a=0?watchedGroupId=672913018859223173');
   await expect.soft(itemPermissionsLocator).toBeVisible();
   await itemPermissionsLocator.click();
   await expect.soft(
-    page.getByText('groupe ne peut actuellement pas voir ce contenu.')
+    page.getByText("Ce groupe n'a reçu aucun droit direct pour voir ce contenu. ")
   ).toBeVisible();
 });
 
