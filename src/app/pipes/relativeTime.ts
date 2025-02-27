@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DAYS, HOURS, MINUTES, MONTHS } from '../utils/duration';
+import { DAYS, HOURS, MINUTES, MONTHS, WEEKS } from '../utils/duration';
 import { LocaleService } from '../services/localeService';
 
 const formatTime = (locale?: string) => (value: string | Date): string => {
@@ -19,20 +19,20 @@ const formatTime = (locale?: string) => (value: string | Date): string => {
     return $localize`Just now`;
   }
 
-  if (absDiffInMS > MINUTES && absDiffInMS < HOURS) {
+  if (absDiffInMS < HOURS) {
     return formatter.format(Math.trunc(diffInMS / MINUTES), 'minutes');
   }
 
-  if (absDiffInMS > HOURS && absDiffInMS < DAYS) {
+  if (absDiffInMS < DAYS) {
     return formatter.format(Math.trunc(diffInMS / HOURS), 'hours');
   }
 
-  if (absDiffInMS > DAYS && absDiffInMS < MONTHS) {
+  if (absDiffInMS < WEEKS) {
     return formatter.format(Math.trunc(diffInMS / DAYS), 'days');
   }
 
-  if (absDiffInMS > MONTHS && absDiffInMS < (MONTHS * 2)) {
-    return $localize`1 month ago`;
+  if (absDiffInMS < (MONTHS * 3)) {
+    return formatter.format(Math.trunc(diffInMS / WEEKS), 'weeks');
   }
 
   return formatter.format(Math.trunc(diffInMS / MONTHS), 'months');
