@@ -1,7 +1,7 @@
 <span
-  pTooltip="{{ value | date: 'fullTime' }}"
+  pTooltip="{{ value | date: 'dd/MM/yyyy h:mm:ss a zzzz' }}"
   [tooltipPosition]="tooltipPosition"
-  tooltipStyleClass="alg-tooltip"
+  tooltipStyleClass="alg-tooltip no-text-wrap"
   *ngIf="value"
 >
   {{ value | relativeTime }}

@@ -1,6 +1,14 @@
 @import 'src/assets/scss/functions';
 
 .alg-tooltip {
+  &.no-text-wrap {
+    max-width: none;
+
+    .p-tooltip-text {
+      text-wrap: nowrap;
+    }
+  }
+
   &.observation-mode {
     min-width: toRem(280);
   }

@@ -1,5 +1,5 @@
 import { RelativeTimePipe } from './relativeTime';
-import { DAYS, MINUTES, MONTHS } from '../utils/duration';
+import { DAYS, MINUTES, MONTHS, WEEKS } from '../utils/duration';
 import { TestBed } from '@angular/core/testing';
 import { LocaleService } from '../services/localeService';
 
@@ -36,14 +36,19 @@ describe('RelativeTimePipe', () => {
     expect(pipe.transform(new Date((currentDate.getTime() - (DAYS * 3))))).toBe('3 days ago');
   });
 
-  it('transforms to "1 month ago"', () => {
+  it('transforms to "last week"', () => {
     const currentDate = new Date();
-    expect(pipe.transform(new Date(currentDate.getTime() - (MONTHS + 1)))).toBe('1 month ago');
+    expect(pipe.transform(new Date((currentDate.getTime() - WEEKS) - 1))).toBe('last week');
   });
 
-  it('transforms to "2 months ago"', () => {
+  it('transforms to "4 weeks ago"', () => {
     const currentDate = new Date();
-    expect(pipe.transform(new Date(currentDate.getTime() - (MONTHS * 2)))).toBe('2 months ago');
+    expect(pipe.transform(new Date(currentDate.getTime() - (WEEKS * 4)))).toBe('4 weeks ago');
+  });
+
+  it('transforms to "3 months ago"', () => {
+    const currentDate = new Date();
+    expect(pipe.transform(new Date(currentDate.getTime() - (MONTHS * 3)))).toBe('3 months ago');
   });
 
   it('should throw error', () => {
