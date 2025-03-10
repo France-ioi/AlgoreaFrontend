@@ -41,8 +41,10 @@ export class ItemTaskViewsService implements OnDestroy {
       this.initService.iframe$,
       this.display$.pipe(map(display => display.scrollTop), filter(isNotUndefined)),
     ]).subscribe(([ iframe, scrollTopInPx ]) => {
-      const iframeTopInPx = iframe.getBoundingClientRect().top + globalThis.scrollY;
-      globalThis.scrollTo({ behavior: 'smooth', top: iframeTopInPx + scrollTopInPx });
+      const mainContentWrapperEl = window.document.querySelector('#main-content-wrapper');
+      if (!mainContentWrapperEl) throw new Error('Unexpected: Missed main content wrapper element');
+      const iframeTopInPx = iframe.getBoundingClientRect().top + mainContentWrapperEl.scrollTop;
+      mainContentWrapperEl.scrollTo({ behavior: 'smooth', top: iframeTopInPx + scrollTopInPx });
     }),
   ];
 
