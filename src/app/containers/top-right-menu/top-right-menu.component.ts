@@ -1,6 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { appConfig } from 'src/app/utils/config';
@@ -8,9 +6,19 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { UserSessionService } from '../../services/user-session.service';
 import { LayoutService } from '../../services/layout.service';
-import { MenuModule } from 'primeng/menu';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
+import { UrlCommand } from 'src/app/utils/url';
+import { LetDirective } from '@ngrx/component';
+import { RouterLink } from '@angular/router';
+
+interface MenuItem {
+  label: string,
+  icon: string,
+  routerLink?: UrlCommand,
+  command?: () => void,
+}
 
 @Component({
   selector: 'alg-top-right-menu',
@@ -18,10 +26,15 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   styleUrls: [ './top-right-menu.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
-    MenuModule,
     AsyncPipe,
     ButtonIconComponent,
+    CdkMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+    NgClass,
+    NgTemplateOutlet,
+    LetDirective,
+    RouterLink,
   ],
 })
 export class TopRightMenuComponent {
@@ -29,12 +42,9 @@ export class TopRightMenuComponent {
 
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
-  readonly menuItems$ = combineLatest([
-    this.sessionService.userProfile$,
-    this.layoutService.isNarrowScreen$,
-  ]).pipe(
-    map(([ profile, isNarrowScreen ]) => {
-      const items = [
+  readonly menuItems$ = this.sessionService.userProfile$.pipe(
+    map(profile =>
+      [
         {
           label: 'Profile',
           icon: 'ph ph-user-list',
@@ -42,12 +52,8 @@ export class TopRightMenuComponent {
         },
         ...this.getDevelopmentMenuItems(),
         { label: 'Log out', icon: 'ph ph-sign-out', command: ():void => this.sessionService.logout() },
-      ];
-      return isNarrowScreen ? [{
-        label: profile.login,
-        items,
-      }] : items;
-    }),
+      ]
+    ),
   );
 
   userLogin$ = this.sessionService.session$.pipe(map(session => session?.login), distinctUntilChanged());
