@@ -38,7 +38,7 @@ const routes: Routes = [
     loadChildren: () => import('./lti/lti.routes'),
   },
   {
-    path: 'ui',
+    path: 'ui-demo',
     loadComponent: () => import('./ui-page/ui-page.component').then(m => m.UiPageComponent),
   },
   {
