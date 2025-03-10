@@ -1,46 +1,47 @@
-<ng-container *ngrxLet="{ userLogin: userLogin$, isNarrowScreen: isNarrowScreen$ } as data">
-  <div class="user-container">
-    @if (!data.isNarrowScreen) {
-      <span class="alg-secondary-color user-login">{{ data.userLogin }}</span>
-    }
-    <button
-      class="size-l"
-      icon="ph-duotone ph-user-circle"
-      [cdkMenuTriggerFor]="menu"
-      alg-button-icon
-    ></button>
-  </div>
+@let userLogin = userLogin$ | async;
+@let isNarrowScreen = isNarrowScreen$ | async;
 
-  <ng-template #menu>
-    <div class="menu" [ngClass]="styleClass" cdkMenu>
-      @if (data.isNarrowScreen) {
-        <div class="menu-header">
-          {{ data.userLogin }}
-        </div>
+<div class="user-container">
+  @if (!isNarrowScreen) {
+    <span class="alg-secondary-color user-login">{{ userLogin }}</span>
+  }
+  <button
+    class="size-l"
+    icon="ph-duotone ph-user-circle"
+    [cdkMenuTriggerFor]="menu"
+    alg-button-icon
+  ></button>
+</div>
+
+<ng-template #menu>
+  <div class="menu" [ngClass]="styleClass" cdkMenu>
+    @if (isNarrowScreen) {
+      <div class="menu-header">
+        {{ userLogin }}
+      </div>
+    }
+    <ul class="menu-list">
+      @for (menuItem of menuItems$ | async; track $index) {
+        <li class="menu-item">
+          @if (menuItem.routerLink) {
+            <a
+              class="menu-item-link"
+              [routerLink]="menuItem.routerLink"
+              cdkMenuItem
+            >
+              <ng-template [ngTemplateOutlet]="content"></ng-template>
+            </a>
+          } @else if (menuItem.command) {
+            <button class="menu-item-button" type="button" (click)="menuItem.command()">
+              <ng-template [ngTemplateOutlet]="content"></ng-template>
+            </button>
+          }
+          <ng-template #content>
+            <span class="menu-item-label">{{ menuItem.label }}</span>
+            <span class="menu-item-icon" [class]="menuItem.icon"></span>
+          </ng-template>
+        </li>
       }
-      <ul class="menu-list">
-        @for (menuItem of menuItems$ | async; track $index) {
-          <li class="menu-item">
-            @if (menuItem.routerLink) {
-              <a
-                class="menu-item-link"
-                [routerLink]="menuItem.routerLink"
-                cdkMenuItem
-              >
-                <ng-template [ngTemplateOutlet]="content"></ng-template>
-              </a>
-            } @else if (menuItem.command) {
-              <button class="menu-item-button" type="button" (click)="menuItem.command()">
-                <ng-template [ngTemplateOutlet]="content"></ng-template>
-              </button>
-            }
-            <ng-template #content>
-              <span class="menu-item-label">{{ menuItem.label }}</span>
-              <span class="menu-item-icon" [class]="menuItem.icon"></span>
-            </ng-template>
-          </li>
-        }
-      </ul>
-    </div>
-  </ng-template>
-</ng-container>
+    </ul>
+  </div>
+</ng-template>
