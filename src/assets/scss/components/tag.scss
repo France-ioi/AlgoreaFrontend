@@ -1,0 +1,23 @@
+@import 'src/assets/scss/functions';
+
+.alg-tag {
+  display: flex;
+  align-items: center;
+  padding: toRem(4) toRem(6);
+
+  border-radius: toRem(4);
+  background-color: var(--alg-message-info-color);
+  color: var(--alg-white-color);
+  font-size: toRem(12);
+  font-weight: 700;
+
+  &.success {
+    background-color: var(--alg-message-success-color);
+  }
+  &.warning {
+    background-color: var(--alg-accent-dark-color);
+  }
+  &.danger {
+    background-color: var(--alg-message-error-color);
+  }
+}

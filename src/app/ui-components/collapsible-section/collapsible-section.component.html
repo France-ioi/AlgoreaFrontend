@@ -9,13 +9,11 @@
   >
     <ng-template #content>
       <div class="content">
-        <p-tag
-          [class]="messageClass"
-          *ngIf="!(collapsed && collapsible) && errorMessage"
-          styleClass="mr-2"
-          [severity]="severity"
-          [value]="errorMessage"
-        ></p-tag>
+        @if (!(collapsed && collapsible) && errorMessage) {
+          <div class="alg-tag mr-2 {{ messageStyleClass }}">
+            {{ errorMessage }}
+          </div>
+        }
         <div class="template alg-flex-1" *ngIf="contentTemplate && collapsed && collapsible">
           <ng-container
             [ngTemplateOutlet]="contentTemplate"
