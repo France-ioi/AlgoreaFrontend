@@ -22,6 +22,7 @@ import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'alg-item-content',
@@ -46,6 +47,7 @@ import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.compone
     ErrorComponent,
     IsAChapterPipe,
     IsASkillPipe,
+    FormsModule,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {
