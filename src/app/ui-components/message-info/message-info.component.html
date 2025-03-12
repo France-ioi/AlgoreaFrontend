@@ -1,6 +1,15 @@
 <div class="container">
-  <i class="message-icon" [ngClass]="icon"></i>
-  <div class="message-text">
-    <ng-content></ng-content>
+  <div class="content">
+    <i class="message-icon" [ngClass]="icon"></i>
+    <div class="message-text">
+      <ng-content></ng-content>
+    </div>
   </div>
+  @if (closable) {
+    <button
+      class="no-bg secondary"
+      alg-button-icon icon="ph ph-x"
+      (click)="closeEvent.emit()"
+    ></button>
+  }
 </div>

@@ -5,18 +5,16 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MessageComponent } from 'src/app/ui-components/message/message.component';
-import { NgIf, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
-import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 
-interface Message
-{
+interface Message {
   type: 'success' | 'info' | 'error',
-  summary?: string,
+  summary: string,
   detail: string,
-  icon?: string,
+  icon: string,
 }
 
 type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
@@ -27,12 +25,10 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
   styleUrls: [ './group-invite-users.component.scss' ],
   standalone: true,
   imports: [
-    SectionParagraphComponent,
     TextareaComponent,
-    NgIf,
-    MessageComponent,
-    NgFor,
     ButtonComponent,
+    MessageInfoComponent,
+    NgClass,
   ],
 })
 export class GroupInviteUsersComponent implements OnInit, OnDestroy {
@@ -93,6 +89,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         type: 'success',
         summary: $localize`${successInvites.length} user(s) invited successfully: `,
         detail: `${successInvites.join(', ')}`,
+        icon: 'ph-bold ph-check',
       });
 
     if (alreadyInvited.length > 0)
@@ -100,6 +97,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         type: 'info',
         summary: $localize`${alreadyInvited.length} user(s) have already been invited: `,
         detail: `${alreadyInvited.join(', ')}`,
+        icon: 'ph-duotone ph-info',
       });
 
     if (notFoundUsers.length > 0)
@@ -115,6 +113,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         type: 'error',
         summary: $localize`${invalidInvites.length} user login(s) could not be invited: `,
         detail: `${invalidInvites.join(', ')}`,
+        icon: 'ph-duotone ph-x-circle',
       });
   }
 
@@ -153,5 +152,9 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
         if (!(err instanceof HttpErrorResponse)) throw err;
       }
     });
+  }
+
+  onCloseMessage(message: Message): void {
+    this.messages = this.messages.filter(m => m !== message);
   }
 }
