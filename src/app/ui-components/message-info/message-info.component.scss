@@ -58,10 +58,16 @@
   padding: toRem(12);
   height: auto;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: space-between;
   background-color: var(--alg-accent-color);
   border-radius: toRem(8);
+}
+
+.content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .message-icon {

@@ -7,9 +7,13 @@
     i18n-placeholder placeholder="login_1, login_2..."
   ></alg-textarea>
 
-  <alg-message *ngIf="state === 'too_many'" type="error" i18n-detail detail="You cannot invite more than 100 users at once"
-    [closable]="false">
-  </alg-message>
+  @if (state === 'too_many') {
+    <div class="too-many-message">
+      <alg-message-info class="danger">
+        <ng-container i18n>You cannot invite more than 100 users at once</ng-container>
+      </alg-message-info>
+    </div>
+  }
 
   <div class="button">
     <button
@@ -21,10 +25,22 @@
     >Invite</button>
   </div>
 
-  <alg-message
-    *ngFor="let message of messages"
-    [type]="message.type"
-    [detail]="message.detail"
-    summary={{message.summary}}
-  ></alg-message>
+  @for (message of messages; track $index) {
+    <div class="message-container">
+      <alg-message-info
+        class="message"
+        [ngClass]="{
+          'info': message.type === 'info',
+          'success': message.type === 'success',
+          'danger': message.type === 'error'
+        }"
+        [icon]="message.icon"
+        [closable]="true"
+        (closeEvent)="onCloseMessage(message)"
+      >
+        <strong>{{ message.summary }}</strong> {{ message.detail }}
+      </alg-message-info>
+    </div>
+  }
+
 </div>
