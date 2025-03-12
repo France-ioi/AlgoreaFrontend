@@ -117,7 +117,7 @@ export class ItemTaskInitService implements OnDestroy {
       prev.locale !== cur.locale ||
       prev.route !== cur.route ||
       prev.url !== cur.url
-    ) throw new Error('cannot change task config, except for initialAnswer');
+    ) throw new Error(`cannot change task config, except for initialAnswer (prev: ${JSON.stringify(prev)} cur: ${JSON.stringify(cur)})`);
   });
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
