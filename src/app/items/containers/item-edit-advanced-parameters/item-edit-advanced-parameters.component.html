@@ -14,7 +14,7 @@
     <div class="form-item-view">
       <span class="form-item-label" i18n>Uses API</span>
       <div class="form-item-control">
-        <alg-switch formControlName="uses_api" mode="white"></alg-switch>
+        <alg-switch formControlName="uses_api"></alg-switch>
       </div>
     </div>
 
@@ -46,7 +46,7 @@
     <div class="form-item-view">
       <span class="form-item-label" i18n>Disable score</span>
       <div class="form-item-control">
-        <alg-switch formControlName="no_score" mode="white"></alg-switch>
+        <alg-switch formControlName="no_score"></alg-switch>
       </div>
     </div>
   </div>
@@ -59,13 +59,13 @@
         <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
       </span>
       <div class="form-item-control">
-        <alg-switch formControlName="title_bar_visible" mode="white"></alg-switch>
+        <alg-switch formControlName="title_bar_visible"></alg-switch>
       </div>
     </div>
     <div class="form-item-view">
       <span class="form-item-label" i18n>Display group code header</span>
       <div class="form-item-control">
-        <alg-switch formControlName="prompt_to_join_group_by_code" mode="white"></alg-switch>
+        <alg-switch formControlName="prompt_to_join_group_by_code"></alg-switch>
       </div>
     </div>
     <div class="form-item-view">
@@ -112,7 +112,7 @@
         <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
       </span>
       <div class="form-item-control">
-        <alg-switch formControlName="allows_multiple_attempts" mode="white"></alg-switch>
+        <alg-switch formControlName="allows_multiple_attempts"></alg-switch>
       </div>
     </div>
     <div class="form-item-view">
@@ -120,7 +120,6 @@
       <div class="form-item-control">
         <alg-switch
             formControlName="requires_explicit_entry"
-            mode="white"
             (ngModelChange)="onRequiresExplicitEntryChange()"
         >
         </alg-switch>
@@ -135,7 +134,6 @@
           <alg-switch
               class="first-child"
               formControlName="duration_enabled"
-              mode="white"
               (ngModelChange)="onDurationEnabledChange()"
           >
           </alg-switch>
@@ -210,14 +208,14 @@
         <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
       </span>
       <div class="form-item-control">
-        <alg-switch formControlName="entry_participant_type" mode="white"></alg-switch>
+        <alg-switch formControlName="entry_participant_type"></alg-switch>
       </div>
     </div>
     <ng-container *ngIf="!!parentForm.get('entry_participant_type')?.value">
       <div class="form-item-view">
         <span class="form-item-label" i18n>Freeze team on entry</span>
         <div class="form-item-control">
-          <alg-switch formControlName="entry_frozen_teams" mode="white"></alg-switch>
+          <alg-switch formControlName="entry_frozen_teams"></alg-switch>
         </div>
       </div>
       <div class="form-item-view">

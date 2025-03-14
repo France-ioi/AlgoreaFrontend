@@ -1,6 +1,5 @@
-import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import { Component, forwardRef, output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { InputSwitchModule } from 'primeng/inputswitch';
 
 /**
  * To use inside form, just set the formControlName
@@ -24,17 +23,17 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     }
   ],
   standalone: true,
-  imports: [ InputSwitchModule, FormsModule ]
+  imports: [ FormsModule ],
 })
 export class SwitchComponent implements ControlValueAccessor {
-  @Input() checked = false;
+  checked = signal(false);
 
-  @Output() change = new EventEmitter<boolean>();
+  change = output<boolean>();
 
   private onChange: (value: boolean) => void = () => {};
 
   writeValue(value: boolean): void {
-    this.checked = value;
+    this.checked.set(value);
   }
 
   registerOnChange(fn: (value: boolean) => void): void {
@@ -45,6 +44,7 @@ export class SwitchComponent implements ControlValueAccessor {
   }
 
   handleChange(checked: boolean): void {
+    this.checked.set(checked);
     this.change.emit(checked);
     this.onChange(checked);
   }

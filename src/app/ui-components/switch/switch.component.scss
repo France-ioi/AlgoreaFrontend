@@ -1,5 +1,64 @@
 @import 'src/assets/scss/functions';
 
 :host {
+  position: relative;
+  display: inline-block;
+  width: toRem(48);
   height: toRem(24);
+}
+
+.input-element {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--alg-switch-input-bg);
+  -webkit-transition: .2s;
+  transition: .2s;
+  border-radius: toRem(24);
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: toRem(18);
+    width: toRem(18);
+    left: toRem(4);
+    bottom: toRem(3);
+    background-color: var(--alg-white-color);
+    -webkit-transition: .2s;
+    transition: .2s;
+  }
+}
+
+input:checked + .slider {
+  background-color: var(--alg-primary-color);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 toRem(2) var(--alg-primary-color);
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(toRem(22));
+  -ms-transform: translateX(toRem(22));
+  transform: translateX(toRem(22));
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: toRem(24);
+}
+
+.slider {
+  &:before {
+    border-radius: 50%;
+  }
 }

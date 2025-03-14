@@ -1,5 +1,4 @@
-<p-inputSwitch
-  class="alg-switch"
-  [(ngModel)]="checked"
-  (onChange)="handleChange(checked)"
-></p-inputSwitch>
+<span class="switch" (click)="handleChange(!checked())">
+  <input class="input-element" type="checkbox" [checked]="checked()">
+  <span class="slider"></span>
+</span>

@@ -1,5 +1,5 @@
 import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { SwitchComponent } from '../../switch/switch.component';
 import { NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
@@ -30,7 +30,7 @@ import { NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
     }
   ],
   standalone: true,
-  imports: [ NgIf, NgTemplateOutlet, SwitchComponent, NgClass, TooltipModule ]
+  imports: [ NgIf, NgTemplateOutlet, SwitchComponent, NgClass, TooltipModule, FormsModule ]
 })
 export class SwitchFieldComponent implements ControlValueAccessor {
 

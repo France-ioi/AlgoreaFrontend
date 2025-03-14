@@ -21,7 +21,7 @@
   </div>
   <div class="item">
     <div class="switch">
-      <alg-switch [checked]="value" (change)="onSet($event)" mode="circular"></alg-switch>
+      <alg-switch [(ngModel)]="value" (change)="onSet($event)"></alg-switch>
     </div>
     <div class="desc">
       <div class="desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">

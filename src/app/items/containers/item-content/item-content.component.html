@@ -62,8 +62,7 @@
           <alg-switch
             class="edit-switch"
             data-testid="edit-switch"
-            mode="white"
-            [checked]="editModeEnabled"
+            [(ngModel)]="editModeEnabled"
             (change)="onEditModeEnableChange($event)"
           ></alg-switch>
         </span>
