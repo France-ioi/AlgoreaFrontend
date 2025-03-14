@@ -112,12 +112,12 @@ export class ItemTaskInitService implements OnDestroy {
 
   /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
   guardSubscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
-    if (
-      prev.readOnly !== cur.readOnly ||
-      prev.locale !== cur.locale ||
-      prev.route !== cur.route ||
-      prev.url !== cur.url
-    ) throw new Error(`cannot change task config, except for initialAnswer (prev: ${JSON.stringify(prev)} cur: ${JSON.stringify(cur)})`);
+    if (prev.readOnly !== cur.readOnly) throw new Error(`cannot change task config (readonly prev:${prev.readOnly} cur:${cur.readOnly})`);
+    if (prev.locale !== cur.locale) throw new Error(`cannot change task config (locale prev:${prev.locale} cur:${cur.locale})`);
+    if (prev.route !== cur.route) {
+      throw new Error(`cannot change task config (route prev:${JSON.stringify(prev.route)} cur:${JSON.stringify(cur.route)})`);
+    }
+    if (prev.url !== cur.url) throw new Error(`cannot change task config (url prev:${prev.url} cur:${cur.url})`);
   });
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
