@@ -10,6 +10,10 @@ import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
 import { z } from 'zod';
+import { SECONDS } from '../utils/duration';
+import { Cacheable } from 'ts-cacheable';
+
+const cacheConfig = { maxAge: 10*SECONDS, maxCacheCount: 5 };
 
 const itemNavigationChildBaseSchema = z.object({
   id: z.string(),
@@ -87,6 +91,7 @@ export class ItemNavigationService {
 
   constructor(private http: HttpClient) {}
 
+  @Cacheable(cacheConfig)
   getItemNavigation(
     itemId: string,
     options: ({ attemptId: string} | { childRoute: FullItemRoute }) & { skillOnly?: boolean, watchedGroupId?: string }
@@ -103,6 +108,7 @@ export class ItemNavigationService {
     );
   }
 
+  @Cacheable(cacheConfig)
   getRootActivities(watchedGroupId?: string): Observable<GroupWithRootActivity[]> {
     let httpParams = new HttpParams();
 
@@ -115,6 +121,7 @@ export class ItemNavigationService {
     );
   }
 
+  @Cacheable(cacheConfig)
   getRootSkills(watchedGroupId?: string): Observable<GroupWithRootSkill[]> {
     let httpParams = new HttpParams();
 
