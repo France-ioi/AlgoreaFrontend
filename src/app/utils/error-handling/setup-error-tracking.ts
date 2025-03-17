@@ -17,6 +17,7 @@ export function initErrorTracking(): void {
       'ResizeObserver loop limit exceeded', // https://sentry.io/answers/react-resizeobserver-loop-completed-with-undelivered-notifications/
       "Can't find variable: WeakRef", // old Safari/Webkit browsers(<04/2020) do not know about WeakRef in JS. Used by ngx-scrollbar.
       "Can't find variable: gmo", // an error on Chrome (354 & 355) on iOS
+      /change_ua/,
     ],
     // from https://docs.sentry.io/clients/javascript/tips/
     denyUrls: [
