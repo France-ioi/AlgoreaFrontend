@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { NgIf, NgClass } from '@angular/common';
 
 @Component({
@@ -13,7 +12,6 @@ import { NgIf, NgClass } from '@angular/common';
     NgIf,
     FormsModule,
     ReactiveFormsModule,
-    InputTextareaModule,
     NgClass,
     FormErrorComponent,
   ],
