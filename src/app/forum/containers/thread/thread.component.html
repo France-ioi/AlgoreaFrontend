@@ -49,10 +49,9 @@
               <textarea
                 class="textarea"
                 placeholder="Send a message..."
-                pInputTextarea
                 formControlName="messageToSend"
                 [rows]="1"
-                [autoResize]="true"
+                algAutoResize
                 (keydown.enter)="$event.preventDefault(); sendMessage(threadId, isThreadOpened)"
                 #messageToSendEl
               ></textarea>

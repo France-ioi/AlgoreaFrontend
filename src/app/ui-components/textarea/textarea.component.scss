@@ -13,6 +13,8 @@
   border: none;
   font-size: toRem(16);
   color: var(--alg-secondary-color);
+  resize: none;
+  box-sizing: border-box;
 
   &.no-icon {
     padding-left: 1rem;
