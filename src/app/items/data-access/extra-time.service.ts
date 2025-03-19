@@ -26,7 +26,7 @@ export class ExtraTimeService {
 
   getForGroupDescendant(itemId: string, groupId: string): Observable<GroupAdditionalTimes> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/contests/${itemId}/groups/${groupId}/members/additional-times`)
+      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/groups/${groupId}/members/additional-times`)
       .pipe(
         decodeSnakeCaseZod(groupAdditionalTimesSchema),
       );
