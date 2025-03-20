@@ -9,20 +9,24 @@
 
   &:not(.p-overlaypanel-flipped) {
     &:before {
+      margin-bottom: toRem(-1);
       border-bottom-color: var(--alg-primary-color);
     }
 
     &:after {
+      margin-bottom: toRem(-1);
       border-bottom-color: var(--alg-primary-color);
     }
   }
 
   &.p-overlaypanel-flipped {
     &:before {
+      margin-top: toRem(-1);
       border-top-color: var(--alg-primary-color);
     }
 
     &:after {
+      margin-top: toRem(-1);
       border-top-color: var(--alg-primary-color);
     }
   }

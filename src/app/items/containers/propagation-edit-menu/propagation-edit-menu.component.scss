@@ -18,15 +18,8 @@
 
 .menu-item {
   position: relative;
-  display: flex;
-  align-items: center;
-  padding: .7rem;
-  margin: toRem(6) toRem(6) toRem(12) toRem(6);
-  border-radius: toRem(10);
-  color: var(--alg-white-color);
-  font-size: toRem(12);
-  font-weight: 500;
-  text-transform: capitalize;
+  padding: 0 toRem(6);
+  margin-bottom: toRem(12);
 
   &:not(:last-child) {
     &:after {
@@ -43,10 +36,32 @@
   &:last-child {
     margin-bottom: toRem(6);
   }
+}
 
-  &:not(.active):not(.no-hover):hover {
+.menu-item-button {
+  width: 100%;
+  height: toRem(42);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 .7rem;
+  border-radius: toRem(10);
+  color: var(--alg-white-color);
+  font-size: toRem(12);
+  font-weight: 500;
+  text-transform: capitalize;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:not(.active):not(.no-hover):hover:not(:disabled) {
     color: white;
     background-color: var(--alg-primary-dark-hover-color);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: .5;
   }
 
   &.active {
@@ -56,10 +71,13 @@
 }
 
 .menu-item-title {
-  flex: 1;
   margin-right: toRem(16);
 }
 
 .menu-item-icon {
   font-size: toRem(16);
+}
+
+.note-icon {
+  margin-left: toRem(4);
 }
