@@ -59,8 +59,7 @@ export class ItemRouter {
    * To prevent misusing it, this function is private: use `itemRouteAsUrlCommand` with the current page from the store instead.
    */
   private routeAsUrlCommand(item: RawItemRoute, page?: string[]): UrlCommand {
-    const currentPage = this.currentPage() ?? undefined;
-    return itemRouteAsUrlCommand(item, page ?? currentPage);
+    return itemRouteAsUrlCommand(item, page ?? (this.currentPage() ?? undefined));
   }
 
 }
