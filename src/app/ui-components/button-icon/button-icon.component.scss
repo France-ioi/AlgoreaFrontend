@@ -21,6 +21,12 @@
     }
   }
 
+  &.light {
+    .wrapper {
+      color: var(--alg-white-color);
+    }
+  }
+
   &.stroke {
     .wrapper {
       width: toRem(32);

@@ -1,6 +1,28 @@
 @import 'src/assets/scss/functions';
 
 .alg-tooltip {
+  &.secondary {
+   .p-tooltip-text {
+     background-color: var(--alg-secondary-color);
+   }
+
+    &.p-tooltip-right .p-tooltip-arrow {
+      border-right-color: var(--alg-secondary-color);
+    }
+
+    &.p-tooltip-left .p-tooltip-arrow {
+      border-left-color: var(--alg-secondary-color);
+    }
+
+    &.p-tooltip-top .p-tooltip-arrow {
+      border-top-color: var(--alg-secondary-color);
+    }
+
+    &.p-tooltip-bottom .p-tooltip-arrow {
+      border-bottom-color: var(--alg-secondary-color);
+    }
+  }
+
   &.no-text-wrap {
     max-width: none;
 
