@@ -243,23 +243,6 @@ export class ItemTaskAnswerService implements OnDestroy {
     );
   }
 
-  private loadAsNewCurrentAnswer(itemId: string, attemptId: string, newAnswer: Answer): Observable<Answer> {
-    return this.currentAnswerService.get(itemId, attemptId).pipe(
-      switchMap(currentAnswer => {
-        if (currentAnswer) {
-          return areStateAnswerEqual(currentAnswer, newAnswer) ?
-            EMPTY : // do not do anything
-            this.answerService.save(itemId, attemptId, { answer: currentAnswer.answer ?? '', state: currentAnswer.state ?? '' });
-        }
-        return of(undefined);
-      }),
-      switchMap(() => {
-        const body = { answer: newAnswer.answer ?? '', state: newAnswer.state ?? '' };
-        return this.currentAnswerService.update(itemId, attemptId, body).pipe(map(() => newAnswer));
-      }),
-    );
-  }
-
 }
 
 declare global {
