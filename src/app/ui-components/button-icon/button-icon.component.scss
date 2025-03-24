@@ -21,6 +21,12 @@
     }
   }
 
+  &.light {
+    .wrapper {
+      color: var(--alg-white-color);
+    }
+  }
+
   &.stroke {
     .wrapper {
       width: toRem(32);
@@ -44,7 +50,7 @@
     }
   }
 
-  &:not(.stroke):not(.with-bg):not(.secondary) {
+  &:not(.stroke):not(.with-bg):not(.secondary):not(.light) {
     .wrapper {
       color: var(--alg-primary-color);
     }
