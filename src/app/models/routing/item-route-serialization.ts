@@ -43,7 +43,7 @@ export function parseItemUrlSegments(segments: UrlSegment[]): { route: FullItemR
   return { route: { tag: 'error', contentType, id, path, answer }, page };
 }
 
-export function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
+function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
   switch (prefix) {
     case activityPrefix: return itemTypeCategoryEnum.activity;
     case skillPrefix: return itemTypeCategoryEnum.skill;
