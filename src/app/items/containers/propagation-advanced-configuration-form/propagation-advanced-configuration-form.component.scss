@@ -1,0 +1,11 @@
+@import 'src/assets/scss/functions';
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: toRem(16);
+}
+
+.button {
+  margin-right: toRem(8);
+}

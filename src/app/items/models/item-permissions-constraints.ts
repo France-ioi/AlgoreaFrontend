@@ -17,7 +17,7 @@ export interface ConstraintError<Permission extends keyof ConstrainedPermissions
   on: 'giver' | 'receiver',
 }
 
-function genError<Permission extends keyof ConstrainedPermissions>(permission: Permission) {
+export function genError<Permission extends keyof ConstrainedPermissions>(permission: Permission) {
   return (
     expectedValue: ConstrainedPermissions[Permission],
     on: 'giver' | 'receiver',
