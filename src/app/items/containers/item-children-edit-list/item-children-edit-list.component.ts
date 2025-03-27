@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, signal, ViewChild } from '@angular/core';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
@@ -23,6 +23,10 @@ import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import {
+  PropagationAdvancedConfigurationDialogComponent, PropagationAdvancedConfigurationDialogData
+} from 'src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component';
+import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -46,6 +50,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     RouteUrlPipe,
     EmptyContentComponent,
     ButtonIconComponent,
+    PropagationAdvancedConfigurationDialogComponent,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
@@ -60,6 +65,11 @@ export class ItemChildrenEditListComponent implements OnChanges {
   scoreWeightEnabled = false;
   propagationEditItemIdx?: number;
   addedItemIds: string[] = [];
+
+  advancedConfigurationDialogData = signal<{
+    childIdx: number,
+    data: PropagationAdvancedConfigurationDialogData,
+  } | undefined>(undefined);
 
   constructor() {
   }
@@ -117,17 +127,46 @@ export class ItemChildrenEditListComponent implements OnChanges {
     this.op?.toggle(event);
   }
 
+  updateChildPropagations(propagations: Partial<ItemPermPropagations>, childIdx: number): void {
+    this.childrenChanges.emit(
+      this.data.map((c, index) => {
+        if (index === childIdx) {
+          return {
+            ...c,
+            ...propagations,
+          };
+        }
+        return c;
+      })
+    );
+  }
+
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
     this.op?.hide();
-    this.childrenChanges.emit(this.data.map((c, index) => {
-      if (index === this.propagationEditItemIdx) {
-        return {
-          ...c,
-          contentViewPropagation,
-        };
-      }
-      return c;
-    }));
+    if (!this.propagationEditItemIdx) throw new Error('Unexpected: Missed propagationEditItemIdx');
+    this.updateChildPropagations({ contentViewPropagation }, this.propagationEditItemIdx);
     this.propagationEditItemIdx = undefined;
+  }
+
+  openAdvancedConfigurationDialog(child: PossiblyInvisibleChildData, childIdx: number): void {
+    if (!child.permissions) throw new Error('Unexpected: missed permissions');
+    this.advancedConfigurationDialogData.set({
+      childIdx,
+      data: {
+        permissions: child.permissions,
+        itemPropagations: {
+          contentViewPropagation: child.contentViewPropagation,
+          upperViewLevelsPropagation: child.upperViewLevelsPropagation,
+          editPropagation: child.editPropagation,
+          grantViewPropagation: child.grantViewPropagation,
+          watchPropagation: child.watchPropagation,
+        },
+      },
+    });
+  }
+
+  closeAdvancedConfigurationDialog(childIdx: number, event?: ItemPermPropagations): void {
+    if (event) this.updateChildPropagations(event, childIdx);
+    this.advancedConfigurationDialogData.set(undefined);
   }
 }

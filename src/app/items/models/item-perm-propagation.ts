@@ -15,3 +15,8 @@ export const itemPermPropagationsSchema = z.object({
 });
 
 export type ItemPermPropagations = Zod.infer<typeof itemPermPropagationsSchema>;
+export const itemContentViewPermPropagationEnum = itemContentViewPermPropagationSchema.enum;
+export const itemUpperViewLevelsPermPropagationEnum = itemUpperViewLevelsPermPropagationSchema.enum;
+
+export const itemContentViewPermPropagationValues = itemContentViewPermPropagationSchema.options;
+export const itemUpperViewLevelsPermPropagationValues = itemUpperViewLevelsPermPropagationSchema.options;
