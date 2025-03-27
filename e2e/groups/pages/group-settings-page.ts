@@ -142,8 +142,8 @@ export class GroupSettingsPage {
   async searchAssociatedActivity(search: string): Promise<Locator> {
     await this.searchExistingContentInputLocator.fill(search);
     return this.page.locator('alg-add-content').getByRole('listitem').filter({
-      has: this.page.getByText(search).first()
-    });
+      has: this.page.getByText(search)
+    }).first();
   }
 
   async searchAndSelectAssociatedActivity(search: string): Promise<void> {
