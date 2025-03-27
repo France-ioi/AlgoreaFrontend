@@ -13,6 +13,7 @@ export class EditPermissionsModal {
   private editPermissionsBtnLocator = this.page.getByText('Edit permissions');
   private canEnterWarningLocator = this.page.getByText('As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.');
   private editPermissionsModalLocator = this.page.getByText('Permission editor');
+  private collapsibleSectionLocator = this.page.locator('alg-collapsible-section');
 
   constructor(private readonly page: Page) {
   }
@@ -46,13 +47,17 @@ export class EditPermissionsModal {
 
 
   async openField(field: string): Promise<void> {
-    const collapsibleSectionLocator = this.page.locator('alg-collapsible-section', { hasText: field });
+    const collapsibleSectionLocator = this.collapsibleSectionLocator.locator('alg-section-header').filter({
+      has: this.page.getByText(field, { exact: true }),
+    });
     await expect.soft(collapsibleSectionLocator).toBeVisible();
     await collapsibleSectionLocator.click();
   }
 
   async selectOption(field: string, option: string): Promise<void> {
-    const collapsibleSectionLocator = this.page.locator('alg-collapsible-section', { hasText: field });
+    const collapsibleSectionLocator = this.collapsibleSectionLocator.filter({
+      has: this.page.locator('alg-section-header').getByText(field)
+    });
     const optionLocator = collapsibleSectionLocator.getByText(option, { exact: true });
     await expect.soft(optionLocator).toBeVisible();
     await optionLocator.click();
