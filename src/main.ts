@@ -3,7 +3,6 @@ import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@a
 import { appConfig, WEBSOCKET_URL } from './app/utils/config';
 import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
@@ -73,7 +72,6 @@ bootstrapApplication(AppComponent, {
       ConfirmPopupModule,
       OverlayPanelModule,
       LayoutModule,
-      InputTextareaModule,
       ReactiveFormsModule,
       ToastModule
     ),
