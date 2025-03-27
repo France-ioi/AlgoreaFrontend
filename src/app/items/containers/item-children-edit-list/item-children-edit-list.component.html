@@ -113,10 +113,23 @@
 
 <p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-menu-overlay" #op appendTo="body">
   <ng-template pTemplate>
-    <alg-propagation-edit-menu
-      *ngIf="propagationEditItemIdx !== undefined"
-      [childData]="data[propagationEditItemIdx]"
-      (clickEvent)="onContentViewPropagationChanged($event)"
-    ></alg-propagation-edit-menu>
+    @if (propagationEditItemIdx !== undefined) {
+      @let childData = data[propagationEditItemIdx];
+      @if (childData) {
+        <alg-propagation-edit-menu
+          [childData]="childData"
+          (clickEvent)="onContentViewPropagationChanged($event)"
+          (openAdvancedConfigurationDialogEvent)="openAdvancedConfigurationDialog(childData, propagationEditItemIdx)"
+        ></alg-propagation-edit-menu>
+      }
+    }
   </ng-template>
 </p-overlayPanel>
+
+@let modalData = this.advancedConfigurationDialogData();
+@if (modalData) {
+  <alg-propagation-advanced-configuration-dialog
+    [data]="modalData.data"
+    (closeEvent)="closeAdvancedConfigurationDialog(modalData.childIdx, $event)"
+  ></alg-propagation-advanced-configuration-dialog>
+}
