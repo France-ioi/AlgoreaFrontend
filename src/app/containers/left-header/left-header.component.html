@@ -1,7 +1,13 @@
 <div class="container" *ngIf="!compactMode">
   <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
     <div class="left-section alg-flex-1" [ngClass]="{ 'for-mobile': isNarrowScreen }">
-      <a class="platform-name" routerLink="/">{{ title }}</a>
+      <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
+        @if (leftHeaderLogoUrl) {
+          <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">
+        } @else {
+          {{ title }}
+        }
+      </a>
       <button
         class="left-menu"
         alg-button-icon

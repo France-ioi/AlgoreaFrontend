@@ -52,6 +52,8 @@ export interface Environment {
 
   /* paths to be matched must not have a trailing slash */
   redirects?: Record<string, { id: string, path?: string[] }>,
+
+  leftHeaderLogoUrl?: string,
 }
 
 type Config = Environment; // config may be someday an extension of the environment

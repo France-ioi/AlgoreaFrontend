@@ -38,7 +38,7 @@ export const environment: Environment = {
     'home': { id: '4702', path: [] },
     'algorea/adventure': { id: '100575556387408660' },
     'officiels/algorea-serious-game/chapter': { id: '1471479157476024035', path: [ '4702' ] },
-  }
+  },
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 

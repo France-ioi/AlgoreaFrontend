@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { appConfig } from 'src/app/utils/config';
 
 @Component({
   selector: 'alg-left-header',
@@ -24,6 +25,7 @@ export class LeftHeaderComponent {
 
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
+  leftHeaderLogoUrl = appConfig.leftHeaderLogoUrl;
 
   constructor(
     private authService: AuthService,
