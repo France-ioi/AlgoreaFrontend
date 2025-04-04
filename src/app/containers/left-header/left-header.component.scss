@@ -18,16 +18,30 @@
     justify-content: flex-end;
     flex-direction: row-reverse;
 
-    .platform-name {
+    .link {
       margin-left: toRem(14);
+    }
+
+    .logo {
+      max-height: toRem(32);
     }
   }
 }
 
-.platform-name {
+.link {
+  display: inline-flex;
+  align-items: center;
   margin-right: toRem(14);
+}
+
+.platform-name {
   color: var(--alg-primary-color);
   text-transform: uppercase;
   text-decoration: none;
   font-size: toRem(16);
+}
+
+.logo {
+  max-width: 80%;
+  max-height: toRem(38);
 }
