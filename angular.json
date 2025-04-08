@@ -47,6 +47,11 @@
                 "glob": "site.webmanifest",
                 "input": "src/assets/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "config.js",
+                "input": "src/assets/",
+                "output": "/assets/"
               }
             ],
             "styles": [
