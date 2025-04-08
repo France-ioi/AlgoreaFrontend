@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { durationSchema } from 'src/app/utils/decoders';
@@ -15,6 +14,7 @@ import {
   itemValidationTypeSchema
 } from '../items/models/item-properties';
 import { participantTypeSchema } from '../groups/models/group-types';
+import { APPCONFIG } from '../app.config';
 
 const itemSchema = z.object({
   id: z.string(),
@@ -53,6 +53,8 @@ export type Item = z.infer<typeof itemSchema>;
 })
 export class GetItemByIdService {
 
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {}
 
   get(id: string, options?: { watchedGroupId?: string }): Observable<Item> {
@@ -60,7 +62,7 @@ export class GetItemByIdService {
     if (options?.watchedGroupId) {
       params = params.set('watched_group_id', options.watchedGroupId);
     }
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}`, { params }).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/items/${id}`, { params }).pipe(
       decodeSnakeCaseZod(itemSchema),
     );
   }
