@@ -48,6 +48,12 @@
     border-radius: toRem(20);
   }
 
+  &.width-full {
+    width: 100%;
+    padding-left: toRem(4);
+    padding-right: toRem(4);
+  }
+
   &:not(.stroke) {
     color: var(--alg-white-color);
     background: var(--alg-primary-color);

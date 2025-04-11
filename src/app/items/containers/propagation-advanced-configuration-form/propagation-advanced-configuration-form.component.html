@@ -1,0 +1,129 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  @let contentViewPropagationError = form.controls.contentViewPropagation.errors?.[0];
+  <alg-collapsible-section
+    class="header-with-padding-left"
+    i18n-header header='Propagation of "content" view permission'
+    icon="ph-duotone ph-eyeglasses"
+    [collapsible]="!contentViewPropagationError"
+    [errorMessage]="contentViewPropagationError"
+  >
+    <ng-template #content let-collapsed>
+      <alg-progress-select
+        [collapsed]="collapsed"
+        formControlName="contentViewPropagation"
+        [values]="data().contentViewPropagationValues"
+      >
+        <ng-template #description>
+          <span i18n>What view permission users get when they have "content" access to the chapter.</span>
+        </ng-template>
+      </alg-progress-select>
+    </ng-template>
+  </alg-collapsible-section>
+  @let upperViewLevelsPropagationError = form.controls.upperViewLevelsPropagation.errors?.[0];
+  <alg-collapsible-section
+    class="header-with-padding-left"
+    i18n-header header="Propagation of higher view permission"
+    icon="ph-duotone ph-hand-arrow-up"
+    [collapsible]="!upperViewLevelsPropagationError"
+    [errorMessage]="upperViewLevelsPropagationError"
+  >
+    <ng-template #content let-collapsed>
+      <alg-progress-select
+        [collapsed]="collapsed"
+        formControlName="upperViewLevelsPropagation"
+        [values]="data().upperViewLevelsPropagationValues"
+      >
+        <ng-template #description>
+          <span i18n>
+            What view permission users get when they have "content with descendants" or "solution" permission on the content.
+          </span>
+        </ng-template>
+      </alg-progress-select>
+    </ng-template>
+  </alg-collapsible-section>
+  @let grantViewPropagationError = form.controls.grantViewPropagation.errors?.[0];
+  <alg-collapsible-section
+    class="header-with-padding-left"
+    i18n-header header='Propagation of "grant view" permission'
+    icon="ph-duotone ph-key"
+    [collapsible]="!grantViewPropagationError"
+    [errorMessage]="grantViewPropagationError"
+  >
+    <ng-template #content let-collapsed>
+      <alg-switch-field
+        [collapsed]="collapsed"
+        formControlName="grantViewPropagation"
+        [disabledTooltip]="data().grantViewPropagationDisabledTooltip ?? []"
+      >
+        <ng-template #label>
+          <span i18n>
+            Whether the user's "grant view" permission on the chapter also applies to this content.
+            (It will propagate as the same value but "solution with grant" which propagates as "solution").
+          </span>
+        </ng-template>
+      </alg-switch-field>
+    </ng-template>
+  </alg-collapsible-section>
+  @let watchPropagationError = form.controls.watchPropagation.errors?.[0];
+  <alg-collapsible-section
+    class="header-with-padding-left"
+    i18n-header header='Propagation of "watch" permission'
+    icon="ph-binoculars ph-duotone"
+    [collapsible]="!watchPropagationError"
+    [errorMessage]="watchPropagationError"
+  >
+    <ng-template #content let-collapsed>
+      <alg-switch-field
+        [collapsed]="collapsed"
+        formControlName="watchPropagation"
+        [disabledTooltip]="data().watchPropagationDisabledTooltip ?? []"
+      >
+        <ng-template #label>
+          <span i18n>
+            Whether the user's "watch" permission on the chapter also applies to this content.
+            (It will propagate as the same value but "answer with grant" which propagates as "answer").
+          </span>
+        </ng-template>
+      </alg-switch-field>
+    </ng-template>
+  </alg-collapsible-section>
+  @let editPropagationError = form.controls.editPropagation.errors?.[0];
+  <alg-collapsible-section
+    class="header-with-padding-left"
+    i18n-header header='Propagation of "edit" permission'
+    icon="ph-duotone ph-pencil"
+    [collapsible]="!editPropagationError"
+    [errorMessage]="editPropagationError"
+  >
+    <ng-template #content let-collapsed>
+      <alg-switch-field
+        [collapsed]="collapsed"
+        formControlName="editPropagation"
+        [disabledTooltip]="data().editPropagationDisabledTooltip ?? []"
+      >
+        <ng-template #label>
+          <span i18n>
+            Whether the user's "edit" permission on the chapter also applies to this content.
+            (It will propagate as the same value but "all with grant" which propagates as "all").
+          </span>
+        </ng-template>
+      </alg-switch-field>
+    </ng-template>
+  </alg-collapsible-section>
+
+  <div class="buttons">
+    <button
+      class="stroke button"
+      icon="ph-bold ph-x"
+      (click)="closeEvent.emit(undefined)"
+      alg-button
+      i18n
+    >Cancel</button>
+    <button
+      icon="ph-bold ph-check"
+      [disabled]="!form.dirty || form.invalid || form.disabled"
+      alg-button
+      i18n
+    >Proceed</button>
+  </div>
+</form>
