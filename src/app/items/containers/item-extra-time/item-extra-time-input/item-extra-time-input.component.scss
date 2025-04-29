@@ -1,0 +1,11 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.button {
+  margin-left: toRem(4);
+}

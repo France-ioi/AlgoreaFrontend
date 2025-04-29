@@ -1,0 +1,25 @@
+<p-inputNumber
+  class="alg-input-number"
+  [(ngModel)]="value"
+  suffix="s"
+></p-inputNumber>
+@if (value() !== defaultValue()) {
+  <button
+    type="button"
+    class="size-s stroke button"
+    alg-button-icon icon="ph-bold ph-check"
+    data-testid="alg-item-extra-time-save-btn"
+    (click)="onSave()"
+    [disabled]="disabled()"
+  ></button>
+  <button
+    type="button"
+    class="size-s stroke button"
+    alg-button-icon
+    data-testid="alg-item-extra-time-cancel-btn"
+    icon="icon ph ph-x"
+    (click)="value.set(defaultValue())"
+    [disabled]="disabled()"
+  ></button>
+}
+
