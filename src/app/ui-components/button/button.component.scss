@@ -48,6 +48,12 @@
     border-radius: toRem(20);
   }
 
+  &.width-full {
+    width: 100%;
+    padding-left: toRem(4);
+    padding-right: toRem(4);
+  }
+
   &:not(.stroke) {
     color: var(--alg-white-color);
     background: var(--alg-primary-color);
@@ -114,6 +120,12 @@
 
   &.light-border {
     border: toRem(1) solid var(--alg-white-color);
+
+    &.with-hover-eff {
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+      }
+    }
   }
 
   &.left-menu {

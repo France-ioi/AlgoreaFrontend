@@ -26,6 +26,7 @@
     <div
       class="progress-select-clickable-area"
       [ngClass]="{ disabled: item.disabled, selected: item.selected }"
+      data-testid="progress-selection"
       (click)="onSet(item.value)"
     >
       <div class="progress-control">

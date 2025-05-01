@@ -438,7 +438,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-list/group-manager-list.component.ts</context><context context-type="linenumber">68</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/group-progress-grid/group-progress-grid.component.ts</context><context context-type="linenumber">162</context></context-group></trans-unit><trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source><target state="translated">Sauvegarder</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/floating-save/floating-save.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">127</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/floating-save/floating-save.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="4675865183684903475" datatype="html">
         <source>Cancel Changes</source><target state="translated">Annuler les changements</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/ui-components/floating-save/floating-save.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="9048329397389521608" datatype="html">
@@ -746,7 +746,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="3700070166854933786" datatype="html">
         <source>Content with descendants</source><target state="translated">Contenu et descendants</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="7118211687824505601" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="8141356788808140655" datatype="html">
+        <source>The user gets the "content with descendants" permission</source><target state="new">The user gets the "content with descendants" permission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="3392116353645723580" datatype="html">
+        <source>The user gets the same view permission on the content as he has on the chapter.</source><target state="new">The user gets the same view permission on the content as he has on the chapter.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="7118211687824505601" datatype="html">
         <source>Solution with grant</source><target state="translated">Solution et "grant"</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="5525476874751783659" datatype="html">
@@ -815,7 +827,7 @@
       <note from="description" priority="1">Button label for joining a group</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/my-groups/my-groups.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.html</context><context context-type="linenumber">100</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">160</context></context-group></trans-unit><trans-unit id="5094474694335501262" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.html</context><context context-type="linenumber">100</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">160</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="5094474694335501262" datatype="html">
         <source>Remove all members</source><target state="translated">Retirer tous les membres</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="1607327889588751059" datatype="html">
@@ -1304,13 +1316,88 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="7593555694782789615" datatype="html">
         <source>Open</source><target state="translated">Ouvert</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="5153695377822897261" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="2036339250729939211" datatype="html">
+        <source> Advanced configuration </source><target state="new"> Advanced configuration </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context>
+          <context context-type="linenumber">63,64</context>
+        </context-group>
+      </trans-unit><trans-unit id="5153695377822897261" datatype="html">
         <source>The permissions cannot be retrieved.</source><target state="translated">Erreur de récupération des permissions.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="4715679906218027061" datatype="html">
         <source> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;(group | isUser) &amp;&amp; permGiverName&quot;>"/>on "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="translated"> Ci-dessous les permissions données par "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" à "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;group.isUser &amp;&amp; permGiverName&quot;>"/>sur "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="7130172892805987456" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="9022618660592751068" datatype="html">
+        <source>Permission propagation configuration</source><target state="new">Permission propagation configuration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit><trans-unit id="4400855353237164153" datatype="html">
+        <source> Configure how user permissions propagate between this chapter <x id="INTERPOLATION" equiv-text="{{ item.title }}"/> and its content </source><target state="new"> Configure how user permissions propagate between this chapter <x id="INTERPOLATION" equiv-text="{{ item.title }}"/> and its content </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit><trans-unit id="5991878472400123259" datatype="html">
+        <source>Non-visible content (<x id="INTERPOLATION" equiv-text="{{ item.id }}"/>)</source><target state="new">Non-visible content (<x id="INTERPOLATION" equiv-text="{{ item.id }}"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit><trans-unit id="5975613247652651267" datatype="html">
+        <source> Actual permissions may be higher if the user has access through other means (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary permissions on the content. </source><target state="new"> Actual permissions may be higher if the user has access through other means (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary permissions on the content. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
+          <context context-type="linenumber">35,37</context>
+        </context-group>
+      </trans-unit><trans-unit id="5055247778956239757" datatype="html">
+        <source>Propagation of "content" view permission</source><target state="new">Propagation of "content" view permission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+      </trans-unit><trans-unit id="5667894270336836530" datatype="html">
+        <source>What view permission users get when they have "content" access to the chapter.</source><target state="new">What view permission users get when they have "content" access to the chapter.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+      </trans-unit><trans-unit id="280472328568879069" datatype="html">
+        <source>Propagation of higher view permission</source><target state="new">Propagation of higher view permission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context>
+          <context context-type="linenumber">25,26</context>
+        </context-group>
+      </trans-unit><trans-unit id="245816497557764690" datatype="html">
+        <source> What view permission users get when they have "content with descendants" or "solution" permission on the content. </source><target state="new"> What view permission users get when they have "content with descendants" or "solution" permission on the content. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="7444038372452186720" datatype="html">
+        <source>Propagation of "grant view" permission</source><target state="new">Propagation of "grant view" permission</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+      </trans-unit><trans-unit id="5655419429087052010" datatype="html">
+        <source> Whether the user's "grant view" permission on the chapter also applies to this content. (It will propagate as the same value but "solution with grant" which propagates as "solution"). </source><target state="new"> Whether the user's "grant view" permission on the chapter also applies to this content. (It will propagate as the same value but "solution with grant" which propagates as "solution"). </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">60</context></context-group></trans-unit><trans-unit id="3713452845776270036" datatype="html">
+        <source>Propagation of "watch" permission</source><target state="new">Propagation of "watch" permission</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="486927649510465044" datatype="html">
+        <source> Whether the user's "watch" permission on the chapter also applies to this content. (It will propagate as the same value but "answer with grant" which propagates as "answer"). </source><target state="new"> Whether the user's "watch" permission on the chapter also applies to this content. (It will propagate as the same value but "answer with grant" which propagates as "answer"). </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="124450146907149715" datatype="html">
+        <source>Propagation of "edit" permission</source><target state="new">Propagation of "edit" permission</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="6467231405574593958" datatype="html">
+        <source> Whether the user's "edit" permission on the chapter also applies to this content. (It will propagate as the same value but "all with grant" which propagates as "all"). </source><target state="new"> Whether the user's "edit" permission on the chapter also applies to this content. (It will propagate as the same value but "all with grant" which propagates as "all"). </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="7130172892805987456" datatype="html">
         <source> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;
     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;
@@ -1543,31 +1630,31 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="6814866706683747731" datatype="html">
         <source>This thread is open</source><target state="translated">Cette conversation est ouverte</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
         <source>This thread is closed</source><target state="translated">Cette conversation est fermée</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
         <source>Loading thread status...</source><target state="translated">Chargement du statut de la conversation ...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
         <source>Error while loading thread info</source><target state="translated">Erreur lors du chargement des infos de la conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
         <source>Could not load thread</source><target state="translated">Erreur lors du chargement de la conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
         <source>Close this thread</source><target state="translated">Fermer cette conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
         <source>Open this thread</source><target state="translated">Ouvrir cette conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
         <source> Only the user of the thread can close it. </source><target state="translated"> Seul l'utilisateur concerné par la conversation peut la fermer. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
         <source>You are not allowed to open this thread.</source><target state="translated">Vous n'êtes pas autorisé à ouvrir cette conversation.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
         <source>Error while loading this chapter's children</source><target state="translated">Erreur lors du chargement des enfants de ce chapitre</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-children/chapter-children.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7143643956716496978" datatype="html">
@@ -1591,14 +1678,36 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-texts.ts</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="314315645942131479" datatype="html">
         <source>Info</source><target state="translated">Info</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="276512967364950264" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="9080866451964204862" datatype="html">
+        <source>The user can see the item title and description, but not its content. A "lock" is displayed next to its icon.</source><target state="new">The user can see the item title and description, but not its content. A "lock" is displayed next to its icon.</target>
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="8892423657568448990" datatype="html">
+        <source>The group can see the content of this item</source><target state="new">The group can see the content of this item</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="4325507101182764653" datatype="html">
+        <source>Use 'content' propagation</source><target state="new">Use 'content' propagation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="6185417082674699097" datatype="html">
+        <source>The user gets the same permissions as if he had "content" permission on the chapter (applies the rule from "Propagation of "content" view permission").</source><target state="new">The user gets the same permissions as if he had "content" permission on the chapter (applies the rule from "Propagation of "content" view permission").</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="276512967364950264" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the item title and description, but not its content</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-texts.ts</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="6205355627445317276" datatype="html">
         <source>Content</source><target state="translated">Contenu</target>
 
 
-      <note from="description" priority="1">Tab name</note><context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav/left-nav.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">106</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">176</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
+      <note from="description" priority="1">Tab name</note><context-group purpose="location"><context context-type="sourcefile">src/app/containers/left-nav/left-nav.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-log-view/group-log-view.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-user-progress/chapter-user-progress.component.ts</context><context context-type="linenumber">106</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-forum/item-forum.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-log-view/item-log-view.component.ts</context><context context-type="linenumber">176</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-tabs.ts</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="1459057934865952132" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can see the content of this item</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut voir le contenu de cet élément</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-texts.ts</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="240638056322492270" datatype="html">
@@ -1611,7 +1720,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-texts.ts</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="2577694282301310795" datatype="html">
         <source>Solution</source><target state="translated">Solution</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-display/item-display.component.ts</context><context context-type="linenumber">282</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="4838785989562241195" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-display/item-display.component.ts</context><context context-type="linenumber">282</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-string.ts</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="4838785989562241195" datatype="html">
         <source><x id="PH" equiv-text="targetTypeString"/> can also see the solution of this items and its descendants (when possible for this group)</source><target state="translated"><x id="PH" equiv-text="targetTypeString"/> peut également voir les solutions de cet élément et ses descendants (quand c'est possible pour ce groupe)</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/permissions-texts.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="4704354403690851163" datatype="html">
@@ -1983,7 +2092,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="6252070156626006029" datatype="html">
         <source>None</source><target state="translated">Rien</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">74</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6950122685678828838" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/managed-group-list/managed-group-list.component.ts</context><context context-type="linenumber">74</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/groupPermissionCaption.ts</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="6950122685678828838" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ group?.name }}"/>: manager access given to <x id="INTERPOLATION_1" equiv-text="{{ userCaption }}"/></source><target state="translated"><x id="INTERPOLATION" equiv-text="{{ group?.name }}"/>: accès gestionnaire donné à <x id="INTERPOLATION_1" equiv-text="{{ userCaption }}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="9171311681863414398" datatype="html">
@@ -2438,7 +2547,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="1019652748880096752" datatype="html">
         <source>This group has this permission via one of one of its ancestor group.</source><target state="translated">Ce groupe a reçu cette permission par l'un de ses groupes ancêtres.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="6746605846893800788" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/models/computed-permissions.ts</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="1153509880936361941" datatype="html">
+        <source>The user can't see the item.</source><target state="new">The user can't see the item.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/models/item-perm-propagation-values.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="6746605846893800788" datatype="html">
         <source>Error while loading the group progress</source><target state="translated">Erreur lors du chargement de la progression du groupe</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-group-progress/chapter-group-progress.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="8897571869263582585" datatype="html">
