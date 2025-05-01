@@ -3,7 +3,7 @@ import { expect, Page } from '@playwright/test';
 export class PropagationAdvancedConfigurationDialogComponent {
   private titleLocator = this.page.getByText('Permission propagation configuration');
   private collapsibleSectionLocator = this.page.locator('alg-collapsible-section');
-  private proceedLocator = this.page.getByRole('button', { name: 'Proceed' });
+  private proceedLocator = this.page.getByRole('button', { name: 'Save' });
 
   constructor(private page: Page) {
   }
