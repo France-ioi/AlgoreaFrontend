@@ -8,6 +8,11 @@ import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
 
 export interface PropagationAdvancedConfigurationDialogData {
+  item: {
+    id: string,
+    title: string,
+  },
+  childTitle?: string,
   permissions: ItemCorePerm,
   itemPropagations: Partial<ItemPermPropagations>,
 }

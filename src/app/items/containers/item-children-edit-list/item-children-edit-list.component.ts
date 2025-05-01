@@ -150,9 +150,20 @@ export class ItemChildrenEditListComponent implements OnChanges {
 
   openAdvancedConfigurationDialog(child: PossiblyInvisibleChildData, childIdx: number): void {
     if (!child.permissions) throw new Error('Unexpected: missed permissions');
+    const item = this.itemData?.item;
+    if (!item) throw new Error('Unexpected: missed item');
+    const title = item.string.title;
+    if (!title) throw new Error('Unexpected: missed title');
+    const childTitle = child.isVisible ? child.title : undefined;
+    if (childTitle === null) throw new Error('Unexpected: missed child title');
     this.advancedConfigurationDialogData.set({
       childIdx,
       data: {
+        item: {
+          id: item.id,
+          title,
+        },
+        childTitle,
         permissions: child.permissions,
         itemPropagations: {
           contentViewPropagation: child.contentViewPropagation,

@@ -1328,11 +1328,23 @@
           <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
           <context context-type="linenumber">11,12</context>
         </context-group>
-      </trans-unit><trans-unit id="3016108569995357859" datatype="html">
-        <source> Configure how user permissions propagate between this chapter (title of the chapter) and its content (name of the child). Actual permissions may be higher if the user has access through other means (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary permissions on the content. </source><target state="new"> Configure how user permissions propagate between this chapter (title of the chapter) and its content (name of the child). Actual permissions may be higher if the user has access through other means (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary permissions on the content. </target>
+      </trans-unit><trans-unit id="4400855353237164153" datatype="html">
+        <source> Configure how user permissions propagate between this chapter <x id="INTERPOLATION" equiv-text="{{ item.title }}"/> and its content </source><target state="new"> Configure how user permissions propagate between this chapter <x id="INTERPOLATION" equiv-text="{{ item.title }}"/> and its content </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
-          <context context-type="linenumber">24,27</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit><trans-unit id="5991878472400123259" datatype="html">
+        <source>Non-visible content (<x id="INTERPOLATION" equiv-text="{{ item.id }}"/>)</source><target state="new">Non-visible content (<x id="INTERPOLATION" equiv-text="{{ item.id }}"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit><trans-unit id="5975613247652651267" datatype="html">
+        <source> Actual permissions may be higher if the user has access through other means (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary permissions on the content. </source><target state="new"> Actual permissions may be higher if the user has access through other means (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary permissions on the content. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component.html</context>
+          <context context-type="linenumber">35,37</context>
         </context-group>
       </trans-unit><trans-unit id="5055247778956239757" datatype="html">
         <source>Propagation of "content" view permission</source><target state="new">Propagation of "content" view permission</target>
@@ -1612,31 +1624,31 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="6814866706683747731" datatype="html">
         <source>This thread is open</source><target state="translated">Cette conversation est ouverte</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
         <source>This thread is closed</source><target state="translated">Cette conversation est fermée</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
         <source>Loading thread status...</source><target state="translated">Chargement du statut de la conversation ...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
         <source>Error while loading thread info</source><target state="translated">Erreur lors du chargement des infos de la conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
         <source>Could not load thread</source><target state="translated">Erreur lors du chargement de la conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
         <source>Close this thread</source><target state="translated">Fermer cette conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
         <source>Open this thread</source><target state="translated">Ouvrir cette conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
         <source> Only the user of the thread can close it. </source><target state="translated"> Seul l'utilisateur concerné par la conversation peut la fermer. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
         <source>You are not allowed to open this thread.</source><target state="translated">Vous n'êtes pas autorisé à ouvrir cette conversation.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
         <source>Error while loading this chapter's children</source><target state="translated">Erreur lors du chargement des enfants de ce chapitre</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-children/chapter-children.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7143643956716496978" datatype="html">
