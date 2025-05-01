@@ -20,11 +20,22 @@
   </p-header>
 
   <div class="dialog-container">
-    <p class="alg-text-small" i18n>
-      Configure how user permissions propagate between this chapter (title of the chapter) and its content
-      (name of the child). Actual permissions may be higher if the user has access through other means
-      (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary
-      permissions on the content.
+    <p class="alg-text-small">
+      @let item = data().item;
+      @let childTitle = data().childTitle;
+      <ng-container i18n>
+        Configure how user permissions propagate between this chapter {{ item.title }} and its content
+      </ng-container>
+      @if (childTitle) {
+        {{ childTitle }}
+      } @else {
+        <ng-container i18n>Non-visible content ({{ item.id }})</ng-container>
+      }.
+      <ng-container i18n>
+        Actual permissions may be higher if the user has access through other means
+        (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary
+        permissions on the content.
+      </ng-container>
     </p>
     <alg-propagation-advanced-configuration-form
       [giverPermissions]="data().permissions"
