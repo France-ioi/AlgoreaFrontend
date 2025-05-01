@@ -41,7 +41,7 @@ export const upperViewLevelsPropagationValues: ProgressSelectValue<ItemPermPropa
   {
     value: itemUpperViewLevelsPermPropagationEnum.as_content_with_descendants,
     label: $localize`Content with descendants`,
-    comment: $localize`The user can see the item title and description, but not its content. A "lock" is displayed next to its icon.`,
+    comment: $localize`The user gets the "content with descendants" permission`,
   },
   {
     value: itemUpperViewLevelsPermPropagationEnum.as_is,
