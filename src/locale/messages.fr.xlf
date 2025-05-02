@@ -208,10 +208,7 @@
           <context context-type="linenumber">23,24</context>
         </context-group>
       </trans-unit><trans-unit id="2706940000051504069" datatype="html">
-        <source> The managers of this group will be able to <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {
-                    view: 'view',
-                    edit: 'edit'
-                  } }}"/> the personal info (firstname, lastname, email, grade, ...) you entered in your profile </source><target state="translated"> Les gestionnaires de ce groupe pourront <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {                     view: 'view',                     edit: 'edit'                   } }}"/> les informations personnelles (nom, email, ...) que vous avez entré dans votre profil. </target>
+        <source> The managers of this group will be able to <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {                     view: 'view',                     edit: 'edit'                   } }}"/> the personal info (firstname, lastname, email, grade, ...) you entered in your profile </source><target state="translated"> Les gestionnaires de ce groupe pourront <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {                     view: 'view',                     edit: 'edit'                   } }}"/> les informations personnelles (nom, email, ...) que vous avez entré dans votre profil. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="2472739556284962082" datatype="html">
         <source> You will not be able to leave this group until <x id="INTERPOLATION" equiv-text="{{ params.requireLockMembershipApprovalUntil | date: 'short' }}"/> </source><target state="translated"> Vous ne pourrez pas quitter ce groupe jusqu'au <x id="INTERPOLATION" equiv-text="{{ params.requireLockMembershipApprovalUntil | date: 'short' }}"/> </target>
@@ -1255,7 +1252,7 @@
         <source> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> own this item, and get the maximum access in all categories above, and may also delete this item </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> est propriétaire du contenu, il a donc tous les droits maximum dans les catégories ci-dessus et peut également le supprimer </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">145</context></context-group></trans-unit><trans-unit id="1636049446785302734" datatype="html">
-        <source>As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</source><target state="new">As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</target>
+        <source>As the group or user has currently "can view &gt;= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</source><target state="new">As the group or user has currently "can view &gt;= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
@@ -1311,17 +1308,7 @@
         <source> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;(group | isUser) &amp;&amp; permGiverName&quot;>"/>on "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="translated"> Ci-dessous les permissions données par "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" à "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;group.isUser &amp;&amp; permGiverName&quot;>"/>sur "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="7130172892805987456" datatype="html">
-        <source> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-    class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;
-    i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;
-    tooltipPosition=&quot;top&quot;
-    tooltipStyleClass=&quot;alg-tooltip secondary&quot;
-  >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source><target state="new"> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
-    class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;
-    i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;
-    tooltipPosition=&quot;top&quot;
-    tooltipStyleClass=&quot;alg-tooltip secondary&quot;
-  >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
+        <source> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source><target state="new"> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context>
           <context context-type="linenumber">2,11</context>
@@ -2409,7 +2396,7 @@
         <source>Add a manager</source><target state="translated">Ajouter un gestionnaire</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="5489740898797957483" datatype="html">
-        <source>Login of a user</source><target state="translated">Se connecter en tant qu'un utilisateur</target>
+        <source>Login of a user</source><target state="translated">Identifiant d'un utilisateur</target>
 
       <note from="description" priority="1">Placeholder of field for searching for user by login</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-manager-add/group-manager-add.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="1848556306631120071" datatype="html">
         <source>Time spent</source><target state="translated">Temps écoulé</target>
