@@ -62,9 +62,9 @@ export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
     this.refreshSubject.next(undefined);
   }
 
-  onExtraTimeSave(additionalTime: number): void {
+  onExtraTimeSave(additionalTime: number, groupId: string): void {
     this.updating.set(true);
-    this.setExtraTimeService.set(this.itemId(), this.groupId(), additionalTime).subscribe({
+    this.setExtraTimeService.set(this.itemId(), groupId, additionalTime).subscribe({
       next: () => {
         this.refreshSubject.next(undefined);
         this.updating.set(false);

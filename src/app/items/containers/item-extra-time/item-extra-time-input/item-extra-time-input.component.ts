@@ -21,7 +21,7 @@ export class ItemExtraTimeInputComponent implements OnChanges {
   saveEvent = output<number>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['disabled']) {
+    if (!changes['disabled'] || changes['value']) {
       this.defaultValue.set(this.value());
     }
   }
