@@ -68,7 +68,7 @@ export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
       next: () => {
         this.refreshSubject.next(undefined);
         this.updating.set(false);
-        this.actionFeedbackService.success($localize`The extra time successfully added`);
+        this.actionFeedbackService.success($localize`This participant's extra time has been successfully updated`);
       },
       error: () => {
         this.updating.set(false);

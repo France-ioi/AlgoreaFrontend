@@ -27,7 +27,8 @@ test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page,
     await expect.soft(saveBtnLocator).toBeVisible();
     await saveBtnLocator.click();
     await expect.soft(saveBtnLocator).toBeDisabled();
-    await toast.checksIsMessageVisible('The extra time successfully added');
+    await page.waitForResponse(`${apiUrl}/items/1480462971860767879/groups/752024252804317630/additional-times?seconds=*`);
+    await toast.checksIsMessageVisible('This participant\'s extra time has been successfully updated');
     await expect.soft(saveBtnLocator).not.toBeVisible();
   });
 
