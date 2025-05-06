@@ -226,7 +226,7 @@
           <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="689769633489535411" datatype="html">
-        <source>Failed to leave "<x id="PH" equiv-text="groupName"/>"</source><target state="translated">Impossible de quitte "<x id="PH" equiv-text="groupName"/>"</target>
+        <source>Failed to leave "<x id="PH" equiv-text="groupName"/>"</source><target state="translated">Impossible de quitter "<x id="PH" equiv-text="groupName"/>"</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="8813563942532149229" datatype="html">
         <source>Group management</source><target state="translated">Gestion de groupe</target>
