@@ -41,7 +41,7 @@
         <td>{{ descendantExtraTime.name }}</td>
         <td>
           <alg-item-extra-time-input
-            [value]="descendantExtraTime.additionalTime"
+            [initialValue]="descendantExtraTime.additionalTime"
             [disabled]="updating()"
             (saveEvent)="onExtraTimeSave($event, descendantExtraTime.groupId)"
           ></alg-item-extra-time-input>

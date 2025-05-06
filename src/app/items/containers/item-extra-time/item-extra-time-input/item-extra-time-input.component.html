@@ -6,7 +6,7 @@
     suffix="s"
   ></p-inputNumber>
 
-  @if (value() !== defaultValue()) {
+  @if (value() !== initialValue()) {
     <button
       type="submit"
       class="size-s stroke button"
@@ -21,7 +21,7 @@
       alg-button-icon
       data-testid="alg-item-extra-time-cancel-btn"
       icon="icon ph ph-x"
-      (click)="value.set(defaultValue())"
+      (click)="value.set(initialValue())"
       [disabled]="disabled()"
     ></button>
   }

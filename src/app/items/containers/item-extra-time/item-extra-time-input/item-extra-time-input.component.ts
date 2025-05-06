@@ -1,4 +1,4 @@
-import { Component, input, model, OnChanges, output, signal, SimpleChanges } from '@angular/core';
+import { Component, effect, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -14,19 +14,22 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ButtonIconComponent,
   ],
 })
-export class ItemExtraTimeInputComponent implements OnChanges {
-  value = model.required<number>();
+export class ItemExtraTimeInputComponent {
+  initialValue = input.required<number>();
+  value = model<number | null>(null); // The p-inputNumber value is nullable
   disabled = input(false);
-  defaultValue = signal(0);
   saveEvent = output<number>();
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['disabled'] || changes['value']) {
-      this.defaultValue.set(this.value());
-    }
+  constructor() {
+    effect(() => {
+      this.value.set(this.initialValue());
+    }, { allowSignalWrites: true });
   }
 
   onSave(): void {
-    this.saveEvent.emit(this.value());
+    const value = this.value();
+    if (value !== null) {
+      this.saveEvent.emit(value);
+    }
   }
 }
