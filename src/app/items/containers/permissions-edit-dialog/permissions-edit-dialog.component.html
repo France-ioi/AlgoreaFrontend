@@ -35,10 +35,15 @@
       <div class="dialog-container" *ngIf="state.isReady">
         <div class="dialog-content">
           <ng-container *ngIf="item.string.title">
-            <p class="dialog-description" i18n>
-              These are the permissions given by "{{ permReceiverName }}" to "{{ item.string.title }}"
-              <ng-container *ngIf="(group | isUser) && permGiverName">on "{{ permGiverName }}"</ng-container>
-            </p>
+            @if(permGiverName) {
+              <p class="dialog-description" i18n>
+                These are the permissions given by "{{ permGiverName }}" to "{{ permReceiverName }}" on "{{ item.string.title }}".
+              </p>
+            } @else {
+              <p class="dialog-description" i18n>
+                These are the permissions given to "{{ permReceiverName }}" on "{{ item.string.title }}".
+              </p>
+            }
           </ng-container>
 
           <alg-permissions-edit-form
