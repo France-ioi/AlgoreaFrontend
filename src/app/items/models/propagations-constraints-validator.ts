@@ -6,9 +6,9 @@ import {
   validateContentViewPropagation, validateEditPropagation,
   validateGrantViewPropagation,
   validateUpperViewLevelsPropagation, validateWatchPropagation
-} from 'src/app/items/models/item-propagations-constrains';
+} from 'src/app/items/models/item-propagations-constraints';
 
-export const propagationsConstrainsValidator = (
+export const propagationsConstraintsValidator = (
   giverPermissions: ItemCorePerm,
   itemPropagations: Partial<ItemPermPropagations>,
 ): ValidatorFn =>

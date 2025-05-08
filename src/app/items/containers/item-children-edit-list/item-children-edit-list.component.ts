@@ -66,7 +66,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
   propagationEditItemIdx?: number;
   addedItemIds: string[] = [];
 
-  advancedConfigurationDialogData = signal<{
+  advancedPermPropagationConfigurationDialogData = signal<{
     childIdx: number,
     data: PropagationAdvancedConfigurationDialogData,
   } | undefined>(undefined);
@@ -127,7 +127,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
     this.op?.toggle(event);
   }
 
-  updateChildPropagations(propagations: Partial<ItemPermPropagations>, childIdx: number): void {
+  emitChildPermPropagations(propagations: Partial<ItemPermPropagations>, childIdx: number): void {
     this.childrenChanges.emit(
       this.data.map((c, index) => {
         if (index === childIdx) {
@@ -144,11 +144,11 @@ export class ItemChildrenEditListComponent implements OnChanges {
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
     this.op?.hide();
     if (!this.propagationEditItemIdx) throw new Error('Unexpected: Missed propagationEditItemIdx');
-    this.updateChildPropagations({ contentViewPropagation }, this.propagationEditItemIdx);
+    this.emitChildPermPropagations({ contentViewPropagation }, this.propagationEditItemIdx);
     this.propagationEditItemIdx = undefined;
   }
 
-  openAdvancedConfigurationDialog(child: PossiblyInvisibleChildData, childIdx: number): void {
+  openAdvancedPermPropagationConfigurationDialog(child: PossiblyInvisibleChildData, childIdx: number): void {
     if (!child.permissions) throw new Error('Unexpected: missed permissions');
     const item = this.itemData?.item;
     if (!item) throw new Error('Unexpected: missed item');
@@ -156,7 +156,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
     if (!title) throw new Error('Unexpected: missed title');
     const childTitle = child.isVisible ? child.title : undefined;
     if (childTitle === null) throw new Error('Unexpected: missed child title');
-    this.advancedConfigurationDialogData.set({
+    this.advancedPermPropagationConfigurationDialogData.set({
       childIdx,
       data: {
         item: {
@@ -176,8 +176,8 @@ export class ItemChildrenEditListComponent implements OnChanges {
     });
   }
 
-  closeAdvancedConfigurationDialog(childIdx: number, event?: ItemPermPropagations): void {
-    if (event) this.updateChildPropagations(event, childIdx);
-    this.advancedConfigurationDialogData.set(undefined);
+  closeAdvancedPermPropagationConfigurationDialog(childIdx: number, event?: ItemPermPropagations): void {
+    if (event) this.emitChildPermPropagations(event, childIdx);
+    this.advancedPermPropagationConfigurationDialogData.set(undefined);
   }
 }

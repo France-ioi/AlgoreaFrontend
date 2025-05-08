@@ -12,7 +12,7 @@ import {
   ItemPermPropagations,
   itemUpperViewLevelsPermPropagationEnum,
 } from 'src/app/items/models/item-perm-propagation';
-import { propagationsConstrainsValidator } from 'src/app/items/models/propagations-constrains-validator';
+import { propagationsConstraintsValidator } from 'src/app/items/models/propagations-constraints-validator';
 
 @Component({
   selector: 'alg-propagation-advanced-configuration-form',
@@ -60,7 +60,7 @@ export class PropagationAdvancedConfigurationFormComponent implements OnChanges 
       watchPropagation,
       editPropagation,
     } = this.itemPropagations();
-    this.form.setValidators(propagationsConstrainsValidator(this.giverPermissions(), this.itemPropagations()));
+    this.form.setValidators(propagationsConstraintsValidator(this.giverPermissions(), this.itemPropagations()));
     this.form.updateValueAndValidity();
     this.form.reset({
       ...(contentViewPropagation ? { contentViewPropagation } : {}),
