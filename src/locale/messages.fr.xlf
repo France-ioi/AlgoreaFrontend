@@ -1304,10 +1304,19 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/pipes/threadStatusDisplay.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="5153695377822897261" datatype="html">
         <source>The permissions cannot be retrieved.</source><target state="translated">Erreur de récupération des permissions.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="4715679906218027061" datatype="html">
-        <source> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;(group | isUser) &amp;&amp; permGiverName&quot;>"/>on "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></source><target state="translated"> Ci-dessous les permissions données par "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" à "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>" <x id="START_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;ng-container *ngIf=&quot;group.isUser &amp;&amp; permGiverName&quot;>"/>sur "<x id="INTERPOLATION_2" equiv-text="{{ permGiverName }}"/>"<x id="CLOSE_TAG_NG_CONTAINER" ctype="x-ng_container" equiv-text="&lt;/ng-container>"/></target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="7130172892805987456" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="1923179660743165372" datatype="html">
+        <source> These are the permissions given by "<x id="INTERPOLATION" equiv-text="{{ permGiverName }}"/>" to "<x id="INTERPOLATION_1" equiv-text="{{ permReceiverName }}"/>" on "<x id="INTERPOLATION_2" equiv-text="{{ item.string.title }}"/>". </source><target state="translated"> Voici les permissions données "<x id="INTERPOLATION" equiv-text="{{ permGiverName }}"/>" à "<x id="INTERPOLATION_1" equiv-text="{{ permReceiverName }}"/>" sur "<x id="INTERPOLATION_2" equiv-text="{{ item.string.title }}"/>". </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit><trans-unit id="4179408070940329921" datatype="html">
+        <source> These are the permissions given to "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" on "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>". </source><target state="translated"> Voici les permissions données à "<x id="INTERPOLATION" equiv-text="{{ permReceiverName }}"/>" sur "<x id="INTERPOLATION_1" equiv-text="{{ item.string.title }}"/>". </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog/permissions-edit-dialog.component.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+      </trans-unit><trans-unit id="7130172892805987456" datatype="html">
         <source> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source><target state="new"> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context>
@@ -1530,31 +1539,31 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="6814866706683747731" datatype="html">
         <source>This thread is open</source><target state="translated">Cette conversation est ouverte</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="7026225147837703446" datatype="html">
         <source>This thread is closed</source><target state="translated">Cette conversation est fermée</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="7081022654245598030" datatype="html">
         <source>Loading thread status...</source><target state="translated">Chargement du statut de la conversation ...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="6336236085368327816" datatype="html">
         <source>Error while loading thread info</source><target state="translated">Erreur lors du chargement des infos de la conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">79</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="622893788827542307" datatype="html">
         <source>Could not load thread</source><target state="translated">Erreur lors du chargement de la conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="3179590434682638610" datatype="html">
         <source>Close this thread</source><target state="translated">Fermer cette conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">99</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="2366438191404804817" datatype="html">
         <source>Open this thread</source><target state="translated">Ouvrir cette conversation</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="1931675333210003976" datatype="html">
         <source> Only the user of the thread can close it. </source><target state="translated"> Seul l'utilisateur concerné par la conversation peut la fermer. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="6788707780009559106" datatype="html">
         <source>You are not allowed to open this thread.</source><target state="translated">Vous n'êtes pas autorisé à ouvrir cette conversation.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/forum/containers/thread/thread.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="4902361762285353004" datatype="html">
         <source>Error while loading this chapter's children</source><target state="translated">Erreur lors du chargement des enfants de ce chapitre</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/chapter-children/chapter-children.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="7143643956716496978" datatype="html">
