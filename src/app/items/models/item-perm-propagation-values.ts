@@ -10,7 +10,7 @@ import {
   validateContentViewPropagation, validateEditPropagation,
   validateGrantViewPropagation,
   validateUpperViewLevelsPropagation, validateWatchPropagation
-} from 'src/app/items/models/item-propagations-constrains';
+} from 'src/app/items/models/item-propagations-constraints';
 import { generateErrorMessage } from 'src/app/items/models/permissions-string';
 
 export const contentViewPropagationValues: ProgressSelectValue<ItemPermPropagations['contentViewPropagation']>[] = [

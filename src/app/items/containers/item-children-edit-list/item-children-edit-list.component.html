@@ -119,17 +119,17 @@
         <alg-propagation-edit-menu
           [childData]="childData"
           (clickEvent)="onContentViewPropagationChanged($event)"
-          (openAdvancedConfigurationDialogEvent)="openAdvancedConfigurationDialog(childData, propagationEditItemIdx)"
+          (openAdvancedConfigurationDialogEvent)="openAdvancedPermPropagationConfigurationDialog(childData, propagationEditItemIdx)"
         ></alg-propagation-edit-menu>
       }
     }
   </ng-template>
 </p-overlayPanel>
 
-@let modalData = this.advancedConfigurationDialogData();
+@let modalData = this.advancedPermPropagationConfigurationDialogData();
 @if (modalData) {
   <alg-propagation-advanced-configuration-dialog
     [data]="modalData.data"
-    (closeEvent)="closeAdvancedConfigurationDialog(modalData.childIdx, $event)"
+    (closeEvent)="closeAdvancedPermPropagationConfigurationDialog(modalData.childIdx, $event)"
   ></alg-propagation-advanced-configuration-dialog>
 }
