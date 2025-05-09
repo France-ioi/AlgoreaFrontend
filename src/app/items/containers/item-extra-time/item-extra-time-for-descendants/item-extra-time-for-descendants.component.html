@@ -39,8 +39,14 @@
     >
       <tr>
         <td>{{ descendantExtraTime.name }}</td>
-        <td>{{ descendantExtraTime.additionalTime }}s</td>
-        <td>{{ descendantExtraTime.totalAdditionalTime }}s</td>
+        <td>
+          <alg-item-extra-time-input
+            [initialValue]="descendantExtraTime.additionalTime"
+            [disabled]="updating()"
+            (saveEvent)="onExtraTimeSave($event, descendantExtraTime.groupId)"
+          ></alg-item-extra-time-input>
+        </td>
+        <td data-testid="alg-total-additional-time">{{ descendantExtraTime.totalAdditionalTime }}s</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
