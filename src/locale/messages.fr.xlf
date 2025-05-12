@@ -207,19 +207,25 @@
           <context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context>
           <context context-type="linenumber">23,24</context>
         </context-group>
-      </trans-unit><trans-unit id="2706940000051504069" datatype="html">
-        <source> The managers of this group will be able to <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {
-                    view: 'view',
-                    edit: 'edit'
-                  } }}"/> the personal info (firstname, lastname, email, grade, ...) you entered in your profile </source><target state="translated"> Les gestionnaires de ce groupe pourront <x id="INTERPOLATION" equiv-text="{{ params.requirePersonalInfoAccessApproval | i18nSelect : {                     view: 'view',                     edit: 'edit'                   } }}"/> les informations personnelles (nom, email, ...) que vous avez entré dans votre profil. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="2472739556284962082" datatype="html">
+      </trans-unit><trans-unit id="7225085637491096600" datatype="html">
+        <source> The managers of this group will be able to <x id="ICU" equiv-text="{ params.requirePersonalInfoAccessApproval, select, view {view} other {edit} }" xid="5658117199326552762"/> the personal info (firstname, lastname, email, grade, ...) you entered in your profile </source><target state="new"> The managers of this group will be able to <x id="ICU" equiv-text="{ params.requirePersonalInfoAccessApproval, select, view {view} other {edit} }" xid="5658117199326552762"/> the personal info (firstname, lastname, email, grade, ...) you entered in your profile </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context>
+          <context context-type="linenumber">33,36</context>
+        </context-group>
+      </trans-unit><trans-unit id="5658117199326552762" datatype="html">
+        <source>{VAR_SELECT, select, view {view} other {edit}}</source><target state="new">{VAR_SELECT, select, view {view} other {edit}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="2472739556284962082" datatype="html">
         <source> You will not be able to leave this group until <x id="INTERPOLATION" equiv-text="{{ params.requireLockMembershipApprovalUntil | date: 'short' }}"/> </source><target state="translated"> Vous ne pourrez pas quitter ce groupe jusqu'au <x id="INTERPOLATION" equiv-text="{{ params.requireLockMembershipApprovalUntil | date: 'short' }}"/> </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="7503117040460977826" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="7503117040460977826" datatype="html">
         <source>Join group</source><target state="translated">Rejoindre le groupe</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="319993299602692228" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="319993299602692228" datatype="html">
         <source>Error while loading the group you joined</source><target state="translated">Erreur lors du chargement du groupe que vous avez rejoint</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/joined-group-list/joined-group-list.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="6595442071355967826" datatype="html">
@@ -827,7 +833,7 @@
       <note from="description" priority="1">Button label for joining a group</note><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/my-groups/my-groups.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.html</context><context context-type="linenumber">100</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">69</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">160</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="5094474694335501262" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.html</context><context context-type="linenumber">100</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/manager-permission-dialog/manager-permission-dialog.component.html</context><context context-type="linenumber">93</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">160</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component.html</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="5094474694335501262" datatype="html">
         <source>Remove all members</source><target state="translated">Retirer tous les membres</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/groups/containers/group-edit/group-edit.component.html</context><context context-type="linenumber">106</context></context-group></trans-unit><trans-unit id="1607327889588751059" datatype="html">

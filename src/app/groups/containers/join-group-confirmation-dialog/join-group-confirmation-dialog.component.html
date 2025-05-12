@@ -31,10 +31,7 @@
               <ng-template #label>
                 <span i18n>
                   The managers of this group will be able to
-                  {{ params.requirePersonalInfoAccessApproval | i18nSelect : {
-                    view: 'view',
-                    edit: 'edit'
-                  } }}
+                  { params.requirePersonalInfoAccessApproval, select, view {view} other {edit} }
                   the personal info (firstname, lastname, email, grade, ...) you entered in your profile
                 </span>
               </ng-template>
