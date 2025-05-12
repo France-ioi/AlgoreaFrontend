@@ -1,0 +1,28 @@
+<form (ngSubmit)="onSave()">
+  <p-inputNumber
+    class="alg-input-number"
+    [(ngModel)]="value"
+    [ngModelOptions]="{ standalone: true }"
+    suffix="s"
+  ></p-inputNumber>
+
+  @if (value() !== initialValue()) {
+    <button
+      type="submit"
+      class="size-s stroke button"
+      alg-button-icon icon="ph-bold ph-check"
+      data-testid="alg-item-extra-time-save-btn"
+      (click)="onSave()"
+      [disabled]="disabled()"
+    ></button>
+    <button
+      type="button"
+      class="size-s stroke button"
+      alg-button-icon
+      data-testid="alg-item-extra-time-cancel-btn"
+      icon="icon ph ph-x"
+      (click)="value.set(initialValue())"
+      [disabled]="disabled()"
+    ></button>
+  }
+</form>
