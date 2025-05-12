@@ -1,0 +1,46 @@
+<p-dialog
+  [visible]="true"
+  [modal]="true"
+  [draggable]="false"
+  [closable]="false"
+  styleClass="alg-permissions-edit-dialog"
+  appendTo="body"
+>
+  <p-header>
+    <div class="dialog-header">
+      <span class="dialog-title" i18n>Permission propagation configuration</span>
+      <button
+        type="button"
+        class="stroke size-l"
+        icon="ph-bold ph-x"
+        (click)="closeEvent.emit(undefined)"
+        alg-button-icon
+      ></button>
+    </div>
+  </p-header>
+
+  <div class="dialog-container">
+    <p class="description">
+      @let item = data().item;
+      @let childTitle = data().childTitle;
+      <ng-container i18n>
+        Configure how user permissions propagate between this chapter ("{{ item.title }}") and its content
+      </ng-container>
+      @if (childTitle) {
+        ("{{ childTitle }}")
+      } @else {
+        <ng-container i18n>Non-visible content ("{{ item.id }}")</ng-container>
+      }.
+      <ng-container i18n>
+        Actual permissions may be higher if the user has access through other means
+        (e.g., another chapter or group membership). Some settings may be locked if you lack the necessary
+        permissions on the content.
+      </ng-container>
+    </p>
+    <alg-propagation-advanced-configuration-form
+      [giverPermissions]="data().permissions"
+      [itemPropagations]="data().itemPropagations"
+      (closeEvent)="closeEvent.emit($event)"
+    ></alg-propagation-advanced-configuration-form>
+  </div>
+</p-dialog>

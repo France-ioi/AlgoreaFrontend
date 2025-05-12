@@ -1,0 +1,21 @@
+@import 'src/assets/scss/functions';
+
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.dialog-title {
+  font-size: toRem(20);
+  flex: 1;
+}
+
+.description {
+  margin-top: 0;
+}

@@ -14,20 +14,19 @@ import {
 } from './item-permissions-constraints';
 import { generateErrorMessage } from './permissions-string';
 
+// The function uses in permissions and propagations
+export const formatValidationError = <T extends object>(targetType: TypeFilter) => (permission: keyof T) =>
+  (constraintErrors: ConstraintError[]): { [key: string]: string[] } => {
+    const e = constraintErrors.map(generateErrorMessage(targetType));
+    return e.length ? { [permission]: e } : {};
+  };
 
 export function permissionsConstraintsValidator(
   giverPermissions: ItemCorePerm,
   targetType: TypeFilter
 ): ValidatorFn {
-
-  const formatValidationError = (permission: keyof ConstrainedPermissions) =>
-    (constraintErrors: ConstraintError[]): { [key: string]: string[] } => {
-      const e = constraintErrors.map(generateErrorMessage(targetType));
-      return e.length ? { [permission]: e } : {};
-    };
-
-
   return (group: AbstractControl): ValidationErrors | null => {
+    const formatValidationErrorFn = formatValidationError<ConstrainedPermissions>(targetType);
 
     const value: GroupPermissions = {
       canView: group.get('canView')?.value as GroupPermissions['canView'],
@@ -41,17 +40,17 @@ export function permissionsConstraintsValidator(
     };
 
     let errors: ValidationErrors = {
-      ...formatValidationError('canView')(validateCanView(value, giverPermissions)),
-      ...formatValidationError('canGrantView')(validateCanGrantView(value, giverPermissions)),
-      ...formatValidationError('canWatch')(validateCanWatch(value, giverPermissions)),
-      ...formatValidationError('canEdit')(validateCanEdit(value, giverPermissions)),
+      ...formatValidationErrorFn('canView')(validateCanView(value, giverPermissions)),
+      ...formatValidationErrorFn('canGrantView')(validateCanGrantView(value, giverPermissions)),
+      ...formatValidationErrorFn('canWatch')(validateCanWatch(value, giverPermissions)),
+      ...formatValidationErrorFn('canEdit')(validateCanEdit(value, giverPermissions)),
     };
 
     if (group.get('isOwner')?.dirty) {
-      errors = { ...errors, ...formatValidationError('isOwner')(validateIsOwner(value, giverPermissions)) };
+      errors = { ...errors, ...formatValidationErrorFn('isOwner')(validateIsOwner(value, giverPermissions)) };
     }
     if (group.get('canMakeSessionOfficial')?.dirty) {
-      errors = { ...errors, ...formatValidationError('canMakeSessionOfficial')(validateCanMakeSessionOfficial(value, giverPermissions)) };
+      errors = { ...errors, ...formatValidationErrorFn('canMakeSessionOfficial')(validateCanMakeSessionOfficial(value, giverPermissions)) };
     }
 
     return Object.keys(errors).length > 0 ? errors : null;

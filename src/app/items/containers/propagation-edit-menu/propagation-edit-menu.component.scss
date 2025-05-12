@@ -9,6 +9,17 @@
   font-size: toRem(16);
 }
 
+.footer {
+  padding: toRem(2) toRem(8) toRem(6) toRem(8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-button {
+  width: 100%;
+}
+
 .menu {
   margin: 0;
   padding: 0;
