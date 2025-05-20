@@ -15,6 +15,8 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ],
 })
 export class ItemExtraTimeInputComponent {
+  inputStyleClass = input('');
+  inputWidth = input<string>();
   initialValue = input.required<number>();
   value = signal<number | null>(null); // The p-inputNumber value is nullable
   disabled = input(false);

@@ -17,13 +17,32 @@
   <alg-error i18n-message message="Unable to load the extra time given to this group"></alg-error>
 }
 @else {
-  <p i18n>
-    The extra-time given to "{{ observedGroupInfo.name }}" (i.e., including those given to its ancestors) is TODO,
-    the resulting extra-time (so including its ancestor groups) is TODO.
-  </p>
+  @let state = stateSignal();
+  @if (state.data === undefined) {
+    <alg-loading></alg-loading>
+  } @else {
+    @let data = state.data;
+    <div class="description" data-testid="extra-time-for-group" i18n>
+      The extra-time given to "{{ observedGroupInfo.name }}" (i.e., including those given to its ancestors) is
+      <span class="extra-time-input">
+        <alg-item-extra-time-input
+          inputStyleClass="size-s"
+          inputWidth="5rem"
+          [initialValue]="data.additionalTime"
+          [disabled]="updating()"
+          (saveEvent)="onExtraTimeSave($event, observedGroupInfo.route.id)"
+        ></alg-item-extra-time-input>
+      </span>,
+      the resulting extra-time (so including its ancestor groups) is
+      <span data-testid="total-additional-time">{{ data.totalAdditionalTime }}s</span>.
+    </div>
+  }
   <!-- to be implemented: way to change that number -->
 
   @if (!(observedGroupInfo.route | isUser)) {
-    <alg-item-extra-time-for-descendants [itemId]="item.id" [groupId]="observedGroupInfo.route.id"></alg-item-extra-time-for-descendants>
+    <alg-item-extra-time-for-descendants
+      [itemId]="item.id"
+      [groupId]="observedGroupInfo.route.id"
+    ></alg-item-extra-time-for-descendants>
   }
 }

@@ -1273,7 +1273,7 @@
         <source> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> own this item, and get the maximum access in all categories above, and may also delete this item </source><target state="translated"> <x id="INTERPOLATION" equiv-text="{{ targetTypeString }}"/> est propriétaire du contenu, il a donc tous les droits maximum dans les catégories ci-dessus et peut également le supprimer </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.html</context><context context-type="linenumber">145</context></context-group></trans-unit><trans-unit id="1636049446785302734" datatype="html">
-        <source>As the group or user has currently "can view &gt;= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</source><target state="new">As the group or user has currently "can view &gt;= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</target>
+        <source>As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</source><target state="new">As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/permissions-edit-dialog-form/permissions-edit-form.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source><target state="translated">Annuler</target>
@@ -1428,7 +1428,12 @@
           <context context-type="linenumber">106,107</context>
         </context-group>
       </trans-unit><trans-unit id="7130172892805987456" datatype="html">
-        <source> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source><target state="new"> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
+        <source> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span
+    class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;
+    i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;
+    tooltipPosition=&quot;top&quot;
+    tooltipStyleClass=&quot;alg-tooltip secondary&quot;
+  >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source><target state="new"> Default access <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span     class=&quot;ph-duotone ph-info note-icon alg-white-color&quot;     i18n-pTooltip pTooltip=&quot;If you have the right, choose below how users will see this content within the chapter. Note that they will see it regardless if they have access to it in another chapter or have obtained rights that unlock it.&quot;     tooltipPosition=&quot;top&quot;     tooltipStyleClass=&quot;alg-tooltip secondary&quot;   >"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/propagation-edit-menu/propagation-edit-menu.component.html</context>
           <context context-type="linenumber">2,11</context>
@@ -2444,11 +2449,29 @@
           <context context-type="sourcefile">src/app/items/containers/item-extra-time/item-extra-time.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-      </trans-unit><trans-unit id="3156329741142433938" datatype="html">
-        <source> The extra-time given to "<x id="INTERPOLATION" equiv-text="{{ observedGroupInfo.name }}"/>" (i.e., including those given to its ancestors) is TODO, the resulting extra-time (so including its ancestor groups) is TODO. </source><target state="new"> The extra-time given to "<x id="INTERPOLATION" equiv-text="{{ observedGroupInfo.name }}"/>" (i.e., including those given to its ancestors) is TODO, the resulting extra-time (so including its ancestor groups) is TODO. </target>
+      </trans-unit><trans-unit id="2969255847607171887" datatype="html">
+        <source> The extra-time given to "<x id="INTERPOLATION" equiv-text="{{ observedGroupInfo.name }}"/>" (i.e., including those given to its ancestors) is <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;extra-time-input&quot;>"/><x id="START_TAG_ALG_ITEM_EXTRA_TIME_INPUT" ctype="x-alg_item_extra_time_input" equiv-text="&lt;alg-item-extra-time-input
+          inputStyleClass=&quot;size-s&quot;
+          inputWidth=&quot;5rem&quot;
+          [initialValue]=&quot;data.additionalTime&quot;
+          [disabled]=&quot;updating()&quot;
+          (saveEvent)=&quot;onExtraTimeSave($event, observedGroupInfo.route.id)&quot;
+        >"/><x id="CLOSE_TAG_ALG_ITEM_EXTRA_TIME_INPUT" ctype="x-alg_item_extra_time_input" equiv-text="&lt;/alg-item-extra-time-input>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>, the resulting extra-time (so including its ancestor groups) is <x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span data-testid=&quot;total-additional-time&quot;>"/><x id="INTERPOLATION_1" equiv-text="{{ data.totalAdditionalTime }}"/>s<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>. </source><target state="new"> The extra-time given to "<x id="INTERPOLATION" equiv-text="{{ observedGroupInfo.name }}"/>" (i.e., including those given to its ancestors) is <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;extra-time-input&quot;>"/><x id="START_TAG_ALG_ITEM_EXTRA_TIME_INPUT" ctype="x-alg_item_extra_time_input" equiv-text="&lt;alg-item-extra-time-input
+          inputStyleClass=&quot;size-s&quot;
+          inputWidth=&quot;5rem&quot;
+          [initialValue]=&quot;data.additionalTime&quot;
+          [disabled]=&quot;updating()&quot;
+          (saveEvent)=&quot;onExtraTimeSave($event, observedGroupInfo.route.id)&quot;
+        >"/><x id="CLOSE_TAG_ALG_ITEM_EXTRA_TIME_INPUT" ctype="x-alg_item_extra_time_input" equiv-text="&lt;/alg-item-extra-time-input>"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>, the resulting extra-time (so including its ancestor groups) is <x id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span data-testid=&quot;total-additional-time&quot;>"/><x id="INTERPOLATION_1" equiv-text="{{ data.totalAdditionalTime }}"/>s<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/items/containers/item-extra-time/item-extra-time.component.html</context>
-          <context context-type="linenumber">21,24</context>
+          <context context-type="linenumber">26,40</context>
+        </context-group>
+      </trans-unit><trans-unit id="6095007103183885895" datatype="html">
+        <source>This group's extra time has been successfully updated</source><target state="new">This group's extra time has been successfully updated</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-extra-time/item-extra-time.component.ts</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit><trans-unit id="1734171097636944073" datatype="html">
         <source>There is no progress to report for this item.</source><target state="translated">Il n'y a pas de progression sur ce contenu.</target>

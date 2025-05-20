@@ -1,6 +1,6 @@
 @import 'src/assets/scss/functions';
 
-:host {
+.form {
   display: flex;
   justify-content: start;
   align-items: center;
@@ -8,4 +8,8 @@
 
 .button {
   margin-left: toRem(4);
+}
+
+.extra-time-input {
+  display: inline;
 }

@@ -1,0 +1,11 @@
+@import 'src/assets/scss/functions';
+
+.description {
+  display: inline;
+  align-items: center;
+  line-height: toRem(32);
+}
+
+.extra-time-input {
+  display: inline-flex;
+}
