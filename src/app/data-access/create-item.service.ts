@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { ItemType } from '../items/models/item-type';
 import { map } from 'rxjs/operators';
 import { ActionResponse, successData } from '../data-access/action-response';
@@ -21,6 +22,7 @@ export type NewItem = {
   providedIn: 'root'
 })
 export class CreateItemService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {
   }
@@ -36,7 +38,7 @@ export class CreateItemService {
     if ('asRootOfGroupId' in newItem) body.as_root_of_group_id = newItem.asRootOfGroupId;
 
     return this.http
-      .post<ActionResponse<NewItemData>>(`${appConfig.apiUrl}/items`, body)
+      .post<ActionResponse<NewItemData>>(`${this.config.apiUrl}/items`, body)
       .pipe(
         map(successData),
         map(response => response.id)

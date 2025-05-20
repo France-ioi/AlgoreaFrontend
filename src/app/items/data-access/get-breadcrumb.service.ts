@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { tagError } from 'src/app/utils/errors';
 import { ensureDefined } from 'src/app/utils/assert';
 import { itemTypeSchema, typeCategoryOfItem } from 'src/app/items/models/item-type';
@@ -34,12 +35,13 @@ export interface BreadcrumbItem {
   providedIn: 'root'
 })
 export class GetBreadcrumbService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getBreadcrumb(itemRoute: FullItemRoute): Observable<BreadcrumbItem[]> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
+      .get<unknown>(`${this.config.apiUrl}/items/${itemRoute.path.concat([ itemRoute.id ]).join('/')}/breadcrumbs`, {
         params: isRouteWithSelfAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(
