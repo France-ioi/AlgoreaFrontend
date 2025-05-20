@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, switchMap } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import jwtDecode from 'jwt-decode';
@@ -31,11 +32,12 @@ export type ThreadInfo = Thread & ThreadToken;
   providedIn: 'root',
 })
 export class ThreadService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   get(itemId: string, participantId: string): Observable<ThreadInfo> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/participant/${participantId}/thread`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/participant/${participantId}/thread`).pipe(
       decodeSnakeCase(threadDecoder),
       switchMap(thread => of(jwtDecode(thread.token, { header: false })).pipe(
         decodeSnakeCase(threadTokenDecoder),

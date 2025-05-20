@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../models/attempts';
@@ -12,12 +13,13 @@ import { Result, attemptResultSchema, resultFromFetchedResult } from '../models/
   providedIn: 'root'
 })
 export class GetResultsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getResults(item: FullItemRoute): Observable<Result[]> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${item.id}/attempts`, {
+      .get<unknown>(`${this.config.apiUrl}/items/${item.id}/attempts`, {
         params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId },
       })
       .pipe(
