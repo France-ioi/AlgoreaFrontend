@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { canCurrentUserViewInfo, ItemViewPerm, itemViewPermSchema, ItemWithViewPerm } from 'src/app/items/models/item-view-permission';
@@ -51,6 +52,7 @@ export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChildren
   providedIn: 'root'
 })
 export class GetItemChildrenService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -59,7 +61,7 @@ export class GetItemChildrenService {
     params = params.set('attempt_id', attemptId);
     if (options?.watchedGroupId !== undefined) params = params.set('watched_group_id', options?.watchedGroupId);
     if (options?.showInvisible) params = params.set('show_invisible_items', '1');
-    return this.http.get<unknown[]>(`${appConfig.apiUrl}/items/${id}/children`, { params });
+    return this.http.get<unknown[]>(`${this.config.apiUrl}/items/${id}/children`, { params });
   }
 
   get(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<ItemChildren> {

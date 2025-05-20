@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
@@ -23,11 +24,13 @@ export interface IncrementMessageCount {
   providedIn: 'root',
 })
 export class UpdateThreadService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {}
 
   update(itemId: string, participantId: string, payload: OpenThread | CloseThread | IncrementMessageCount): Observable<void> {
     return this.http.put<SimpleActionResponse>(
-      `${appConfig.apiUrl}/items/${itemId}/participant/${participantId}/thread`,
+      `${this.config.apiUrl}/items/${itemId}/participant/${participantId}/thread`,
       'status' in payload && payload.status === 'closed' ? {
         status: payload.status,
       } : 'status' in payload && payload.status === 'waiting_for_trainer' ? {

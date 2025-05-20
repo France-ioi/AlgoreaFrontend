@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { HttpClient } from '@angular/common/http';
 import { User, userDecoder } from '../groups/models/user';
@@ -9,12 +10,14 @@ import { User, userDecoder } from '../groups/models/user';
   providedIn: 'root'
 })
 export class GetUserByLoginService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {
   }
 
   get(login: string): Observable<User> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/users/by-login/${login}`)
+      .get<unknown>(`${this.config.apiUrl}/users/by-login/${login}`)
       .pipe(decodeSnakeCase(userDecoder));
   }
 }

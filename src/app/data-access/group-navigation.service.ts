@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { Cacheable } from 'ts-cacheable';
 import { z } from 'zod';
@@ -32,21 +33,21 @@ export type GroupNavigationData = z.infer<typeof groupNavigationSchema>;
   providedIn: 'root'
 })
 export class GroupNavigationService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   @Cacheable(cacheConfig)
   getGroupNavigation(groupId: string): Observable<GroupNavigationData> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/navigation`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/groups/${groupId}/navigation`).pipe(
       decodeSnakeCaseZod(groupNavigationSchema),
     );
   }
 
   @Cacheable(cacheConfig)
   getRoot(): Observable<GroupNavigationChild[]> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/roots`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/groups/roots`).pipe(
       decodeSnakeCaseZod(z.array(groupNavigationChildSchema)),
     );
   }
-
 }

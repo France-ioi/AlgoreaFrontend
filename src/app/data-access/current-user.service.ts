@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { assertSuccess, SimpleActionResponse } from './action-response';
@@ -39,26 +40,27 @@ export interface UpdateUserBody {
   providedIn: 'root'
 })
 export class CurrentUserHttpService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getProfileInfo(): Observable<CurrentUserProfile> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/current-user`)
+      .get<unknown>(`${this.config.apiUrl}/current-user`)
       .pipe(
         decodeSnakeCaseZod(currentUserSchema)
       );
   }
 
   update(changes: UpdateUserBody): Observable<void> {
-    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/current-user`, changes)
+    return this.http.put<SimpleActionResponse>(`${this.config.apiUrl}/current-user`, changes)
       .pipe(
         map(assertSuccess)
       );
   }
 
   refresh(): Observable<void> {
-    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/current-user/refresh`, null)
+    return this.http.put<SimpleActionResponse>(`${this.config.apiUrl}/current-user/refresh`, null)
       .pipe(
         map(assertSuccess)
       );

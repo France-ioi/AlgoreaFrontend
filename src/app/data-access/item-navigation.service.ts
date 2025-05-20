@@ -3,7 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { ItemTypeCategory, itemTypeCategoryEnum, itemTypeSchema } from 'src/app/items/models/item-type';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
@@ -89,6 +90,8 @@ export type RootItem = z.infer<typeof itemNavigationChildBaseSchema> & { groups:
 })
 export class ItemNavigationService {
 
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {}
 
   @Cacheable(cacheConfig)
@@ -102,7 +105,7 @@ export class ItemNavigationService {
     else if (isRouteWithSelfAttempt(options.childRoute)) params = params.set('child_attempt_id', options.childRoute.attemptId);
     else params = params.set('attempt_id', options.childRoute.parentAttemptId);
 
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
       decodeSnakeCaseZod(itemNavigationDataSchema),
       map(data => (options.skillOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
     );
@@ -116,7 +119,7 @@ export class ItemNavigationService {
       httpParams = httpParams.set('watched_group_id', watchedGroupId);
     }
 
-    return this.http.get<unknown[]>(`${appConfig.apiUrl}/current-user/group-memberships/activities`, { params: httpParams }).pipe(
+    return this.http.get<unknown[]>(`${this.config.apiUrl}/current-user/group-memberships/activities`, { params: httpParams }).pipe(
       decodeSnakeCaseZod(z.array(rootActivitySchema)),
     );
   }
@@ -129,7 +132,7 @@ export class ItemNavigationService {
       httpParams = httpParams.set('watched_group_id', watchedGroupId);
     }
 
-    return this.http.get<unknown[]>(`${appConfig.apiUrl}/current-user/group-memberships/skills`, { params: httpParams }).pipe(
+    return this.http.get<unknown[]>(`${this.config.apiUrl}/current-user/group-memberships/skills`, { params: httpParams }).pipe(
       decodeSnakeCaseZod(z.array(rootSkillSchema)),
     );
   }

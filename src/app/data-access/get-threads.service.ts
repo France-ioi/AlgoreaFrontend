@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
@@ -28,6 +29,8 @@ type Threads = z.infer<typeof threadsSchema>;
   providedIn: 'root',
 })
 export class GetThreadsService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {
   }
 
@@ -39,7 +42,7 @@ export class GetThreadsService {
     if ('watchedGroupId' in options) {
       params = params.set('watched_group_id', options.watchedGroupId);
     }
-    return this.http.get<unknown>(`${appConfig.apiUrl}/threads`, {
+    return this.http.get<unknown>(`${this.config.apiUrl}/threads`, {
       params,
     }).pipe(
       decodeSnakeCaseZod(threadsSchema),
