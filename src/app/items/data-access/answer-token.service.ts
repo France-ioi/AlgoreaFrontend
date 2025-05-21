@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
@@ -18,11 +18,12 @@ export type AnswerToken = AnswerTokenData['answerToken'];
   providedIn: 'root',
 })
 export class AnswerTokenService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   generate(answer: string, taskToken: string): Observable<AnswerToken> {
-    return this.http.post<ActionResponse<unknown>>(`${appConfig.apiUrl}/answers`, {
+    return this.http.post<ActionResponse<unknown>>(`${this.config.apiUrl}/answers`, {
       answer,
       task_token: taskToken,
     }).pipe(

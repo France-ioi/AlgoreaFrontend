@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
@@ -13,7 +13,7 @@ import {
   tap,
   timeout,
 } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
@@ -34,6 +34,7 @@ export interface ItemTaskConfig {
 
 @Injectable()
 export class ItemTaskInitService implements OnDestroy {
+  private config = inject(APPCONFIG);
   private destroyed$ = new Subject<void>();
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
@@ -43,7 +44,7 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly iframeSrc$ = this.config$.pipe(
     distinctUntilChanged((c1, c2) => c1.url === c2.url && c1.locale === c2.locale),
-    map(({ url, locale }) => taskUrlWithParameters(this.checkUrl(url), appConfig.itemPlatformId, taskChannelIdPrefix, locale)),
+    map(({ url, locale }) => taskUrlWithParameters(this.checkUrl(url), this.config.itemPlatformId, taskChannelIdPrefix, locale)),
     shareReplay(1), // avoid duplicate xhr calls
   );
 

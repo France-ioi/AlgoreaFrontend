@@ -1,10 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { catchError, switchMap, retry, map } from 'rxjs/operators';
 import { BehaviorSubject, of, timer, Subject, EMPTY, TimeoutError } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { MINUTES } from '../../utils/duration';
-import { appConfig } from '../../utils/config';
+import { APPCONFIG } from '../../app.config';
 import {
   tokenAuthFromStorage,
   AuthStatus,
@@ -34,6 +34,7 @@ export const maxInvalidToken = 6;
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
+  private config = inject(APPCONFIG);
 
   status$ = new BehaviorSubject<AuthStatus>(notAuthenticated());
   failure$ = new Subject<Error>();
@@ -45,8 +46,8 @@ export class AuthService implements OnDestroy {
     .tryCompletingCodeFlowLogin().pipe(
       catchError(_e => {
         // (2) use the ongoing authentication if any
-        if (appConfig.allowForcedToken && hasForcedToken()) return of(forcedTokenAuthFromStorage());
-        else if (appConfig.authType === 'tokens') return of(tokenAuthFromStorage());
+        if (this.config.allowForcedToken && hasForcedToken()) return of(forcedTokenAuthFromStorage());
+        else if (this.config.authType === 'tokens') return of(tokenAuthFromStorage());
         else {
           // try to refresh the cookie-stored token
           // there may not be any (valid) token (we cannot know)... in such a case the service create a temp user (using the given language)
@@ -135,7 +136,7 @@ export class AuthService implements OnDestroy {
     });
 
     this.status$.next(notAuthenticated());
-    if (appConfig.authType === 'tokens') clearTokenFromStorage();
+    if (this.config.authType === 'tokens') clearTokenFromStorage();
   }
 
   /**

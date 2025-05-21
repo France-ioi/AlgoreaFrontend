@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { ActionResponse, assertSuccess } from 'src/app/data-access/action-response';
@@ -32,6 +32,7 @@ interface UpdateCurrentAnswerBody {
   providedIn: 'root',
 })
 export class CurrentAnswerService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
@@ -39,7 +40,7 @@ export class CurrentAnswerService {
     const params = new HttpParams({
       fromObject: asTeamId ? { attempt_id: attemptId, as_team_id: asTeamId } : { attempt_id: attemptId },
     });
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${itemId}/current-answer`, { params }).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/current-answer`, { params }).pipe(
       decodeSnakeCase(currentAnswerDecoder),
       map(a => (a.type === null ? null : a)), // convert "no current answer" response to "null"
     );
@@ -50,7 +51,7 @@ export class CurrentAnswerService {
       fromObject: asTeamId ? { attempt_id: attemptId, as_team_id: asTeamId } : { attempt_id: attemptId },
     });
     return this.http
-      .put<ActionResponse<unknown>>(`${appConfig.apiUrl}/items/${itemId}/attempts/${attemptId}/answers/current`, body, { params })
+      .put<ActionResponse<unknown>>(`${this.config.apiUrl}/items/${itemId}/attempts/${attemptId}/answers/current`, body, { params })
       .pipe(map(assertSuccess), map(() => undefined));
   }
 
