@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { withGrade, withGroupId, userBaseSchema } from '../groups/models/user';
@@ -40,6 +41,7 @@ type UserDescendants = z.infer<typeof userDescendantsSchema>;
   providedIn: 'root'
 })
 export class GetGroupDescendantsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -49,7 +51,7 @@ export class GetGroupDescendantsService {
     if (options?.limit !== undefined) params = params.set('limit', options.limit);
     if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
       .pipe(
         decodeSnakeCaseZod(userDescendantsSchema),
       );
@@ -59,7 +61,7 @@ export class GetGroupDescendantsService {
     let params = new HttpParams();
     if (options?.sort && options.sort.length > 0) params = params.set('sort', options.sort.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
       .pipe(
         decodeSnakeCaseZod(teamDescendantsSchema),
       );

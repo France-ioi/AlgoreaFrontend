@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { SECONDS } from '../utils/duration';
@@ -43,6 +44,7 @@ const logDefaultLimit = 20;
   providedIn: 'root'
 })
 export class ActivityLogService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -74,7 +76,7 @@ export class ActivityLogService {
     }
 
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${itemId}/log`, {
+      .get<unknown[]>(`${this.config.apiUrl}/items/${itemId}/log`, {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })
@@ -111,7 +113,7 @@ export class ActivityLogService {
     }
 
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/log`, {
+      .get<unknown[]>(`${this.config.apiUrl}/items/log`, {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })

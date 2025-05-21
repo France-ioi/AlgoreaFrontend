@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
@@ -45,6 +46,7 @@ export type InvalidCodeReason = z.infer<typeof invalidReasonSchema>;
   providedIn: 'root'
 })
 export class JoinByCodeService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -52,7 +54,7 @@ export class JoinByCodeService {
     let params = new HttpParams();
     params = params.set('code', code);
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/is-code-valid`,
+      .get<unknown>(`${this.config.apiUrl}/groups/is-code-valid`,
         { params: params })
       .pipe(
         decodeSnakeCaseZod(isCodeValidSchema),
@@ -63,7 +65,7 @@ export class JoinByCodeService {
     let params = new HttpParams();
     params = params.set('code', code).set('approvals', approvals.join(','));
     return this.http
-      .post<SimpleActionResponse>(`${appConfig.apiUrl}/current-user/group-memberships/by-code`, null, { params: params })
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/current-user/group-memberships/by-code`, null, { params: params })
       .pipe(
         map(assertSuccess)
       );

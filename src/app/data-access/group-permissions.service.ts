@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
@@ -38,12 +39,13 @@ export type GroupComputedPermissions = GroupPermissionsInfo['computed'];
   providedIn: 'root'
 })
 export class GroupPermissionsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
+      .get<unknown>(`${this.config.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
         decodeSnakeCase(groupPermissionsInfoDecoder),
       );
   }
@@ -64,7 +66,7 @@ export class GroupPermissionsService {
       is_owner: permissions.isOwner,
     };
     return this.http
-      .put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, body)
+      .put<SimpleActionResponse>(`${this.config.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`, body)
       .pipe(map(assertSuccess));
   }
 }
