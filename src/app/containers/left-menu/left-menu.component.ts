@@ -1,6 +1,6 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { LeftMenuSearchComponent } from '../../ui-components/left-menu-search/left-menu-search.component';
 import { NgIf } from '@angular/common';
@@ -14,9 +14,10 @@ import { LeftHeaderComponent } from '../left-header/left-header.component';
   imports: [ LeftHeaderComponent, LeftNavComponent, NgIf, LeftMenuSearchComponent ]
 })
 export class LeftMenuComponent implements OnDestroy {
+  private config = inject(APPCONFIG);
   @ViewChild(LeftNavComponent, { static: false }) componentRef?: LeftNavComponent;
 
-  menuSearchEnabled = !!appConfig.searchApiUrl;
+  menuSearchEnabled = !!this.config.searchApiUrl;
 
   private selectedElement$ = new Subject<string>();
 

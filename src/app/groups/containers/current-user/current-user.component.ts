@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Location, NgIf, AsyncPipe } from '@angular/common';
@@ -18,6 +18,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   ],
 })
 export class CurrentUserComponent {
+  private config = inject(APPCONFIG);
   currentUser$ = this.userSessionService.userProfile$;
 
   constructor(
@@ -29,7 +30,7 @@ export class CurrentUserComponent {
   onModify(userId: string): void {
     const backUrl = window.location.origin + this.location.prepareExternalUrl('update-profile.html');
     window.open(
-      `${ appConfig.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
+      `${ this.config.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
       undefined,
       'popup,width=800,height=640'
     );
