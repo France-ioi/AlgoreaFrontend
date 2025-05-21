@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
 import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 
@@ -20,12 +21,13 @@ export interface GroupChanges {
   providedIn: 'root'
 })
 export class GroupUpdateService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {
   }
 
   updateGroup(groupId: string, changes: GroupChanges) : Observable<void> {
-    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${groupId}`, changes).pipe(
+    return this.http.put<SimpleActionResponse>(`${this.config.apiUrl}/groups/${groupId}`, changes).pipe(
       map(assertSuccess),
     );
   }

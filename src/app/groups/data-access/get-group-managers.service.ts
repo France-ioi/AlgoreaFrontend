@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/function';
 import { decodeSnakeCase } from '../../utils/operators/decode';
@@ -29,6 +30,7 @@ export type Manager = D.TypeOf<typeof managerDecoder>;
   providedIn: 'root'
 })
 export class GetGroupManagersService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -46,7 +48,7 @@ export class GetGroupManagersService {
     if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
 
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
         decodeSnakeCase(D.array(managerDecoder)),
       );
   }

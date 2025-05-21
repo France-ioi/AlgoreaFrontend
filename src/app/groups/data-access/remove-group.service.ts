@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { appConfig } from '../../utils/config';
+import { APPCONFIG } from '../../app.config';
+import { inject } from '@angular/core';
 import { SimpleActionResponse } from '../../data-access/action-response';
 import { catchError, map } from 'rxjs/operators';
 import { Result } from '../containers/member-list/group-removal-response-handling';
@@ -18,11 +19,13 @@ export function parseResults(data: SimpleActionResponse[]): Result {
   providedIn: 'root',
 })
 export class RemoveGroupService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {
   }
 
   remove(id: string): Observable<SimpleActionResponse> {
-    return this.http.delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${id}`);
+    return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/groups/${id}`);
   }
 
   removeBatch(ids: string[]): Observable<Result> {

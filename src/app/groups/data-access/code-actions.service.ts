@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SimpleActionResponse, assertSuccess } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 
 export interface NewCodeSuccessResponse {
   code: string,
@@ -13,12 +14,13 @@ export interface NewCodeSuccessResponse {
   providedIn: 'root'
 })
 export class CodeActionsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   createNewCode(id: string): Observable<string> {
     return this.http
-      .post<NewCodeSuccessResponse|SimpleActionResponse>(`${appConfig.apiUrl}/groups/${id}/code`, null, {})
+      .post<NewCodeSuccessResponse|SimpleActionResponse>(`${this.config.apiUrl}/groups/${id}/code`, null, {})
       .pipe(
         map(resp => {
           const code = (resp as NewCodeSuccessResponse).code;
@@ -30,7 +32,7 @@ export class CodeActionsService {
 
   removeCode(id: string): Observable<void> {
     return this.http
-      .delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${id}/code`)
+      .delete<SimpleActionResponse>(`${this.config.apiUrl}/groups/${id}/code`)
       .pipe(
         map(assertSuccess),
       );

@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 
 type Status = 'invalid'|'success'|'unchanged'|'not_found';
@@ -11,12 +12,13 @@ type Status = 'invalid'|'success'|'unchanged'|'not_found';
   providedIn: 'root'
 })
 export class GroupUsersService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   removeUsers(groupId: string, usersId: string[]): Observable<Map<string, Status>> {
     const httpParams = new HttpParams().set('user_ids', usersId.join(','));
-    return this.http.delete<ActionResponse<{[user: string]: Status}>>(`${appConfig.apiUrl}/groups/${groupId}/members`, {
+    return this.http.delete<ActionResponse<{[user: string]: Status}>>(`${this.config.apiUrl}/groups/${groupId}/members`, {
       params: httpParams
     }).pipe(
       map(successData),

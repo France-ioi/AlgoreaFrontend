@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { ActionResponse, assertSuccess, SimpleActionResponse, successData } from 'src/app/data-access/action-response';
 
 interface NewGroupData {
@@ -13,6 +14,7 @@ interface NewGroupData {
   providedIn: 'root'
 })
 export class GroupCreationService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -22,7 +24,7 @@ export class GroupCreationService {
       type: type
     };
     return this.http
-      .post<ActionResponse<NewGroupData>>(`${appConfig.apiUrl}/groups`, body, {})
+      .post<ActionResponse<NewGroupData>>(`${this.config.apiUrl}/groups`, body, {})
       .pipe(
         map(successData),
         map(response => response.id),
@@ -31,7 +33,7 @@ export class GroupCreationService {
 
   addSubgroup(parentId: string, childId: string): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${parentId}/relations/${childId}`, null, {})
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/groups/${parentId}/relations/${childId}`, null, {})
       .pipe(map(assertSuccess));
   }
 }

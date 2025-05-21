@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
 import { manageTypeDecoder } from 'src/app/data-access/managed-groups.service';
@@ -37,6 +38,7 @@ export type GroupType = D.TypeOf<typeof typeDecoder>;
   providedIn: 'root'
 })
 export class GetGroupChildrenService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -51,7 +53,7 @@ export class GetGroupChildrenService {
     if (typesInclude.length > 0) params = params.set('types_include', typesInclude.join(','));
     if (typesExclude.length > 0) params = params.set('types_exclude', typesExclude.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/children`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(
         decodeSnakeCase(D.array(groupChildDecoder))
       );

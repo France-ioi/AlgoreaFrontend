@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 
 type Status = 'invalid'|'success'|'unchanged'|'not_found';
 
@@ -16,6 +17,7 @@ export enum Action {
   providedIn: 'root'
 })
 export class RequestActionsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
@@ -25,7 +27,7 @@ export class RequestActionsService {
       Array.from(ids.entries()).map(groupMembersIds =>
         this.http
           .post<ActionResponse<{[user: string]: Status}>>(
-            `${appConfig.apiUrl}/groups/${groupMembersIds[0]}/join-requests/${type}`, null, {
+            `${this.config.apiUrl}/groups/${groupMembersIds[0]}/join-requests/${type}`, null, {
               params: {
                 group_ids: groupMembersIds[1].join(','),
               },
@@ -44,7 +46,7 @@ export class RequestActionsService {
       Array.from(ids.entries()).map(groupMembersIds =>
         this.http
           .post<ActionResponse<{[user: string]: Status}>>(
-            `${appConfig.apiUrl}/groups/${groupMembersIds[0]}/leave-requests/${type}`, null, {
+            `${this.config.apiUrl}/groups/${groupMembersIds[0]}/leave-requests/${type}`, null, {
               params: {
                 group_ids: groupMembersIds[1].join(','),
               },
