@@ -11,6 +11,11 @@
   font-size: toRem(16);
   color: var(--alg-secondary-color);
 
+  &.size-s {
+    height: toRem(24);
+    padding: 0 toRem(8);
+  }
+
   &:focus {
     outline: toRem(2) solid var(--alg-primary-color);
     box-shadow: none;

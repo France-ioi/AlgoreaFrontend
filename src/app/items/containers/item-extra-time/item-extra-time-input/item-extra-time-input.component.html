@@ -1,6 +1,8 @@
-<form (ngSubmit)="onSave()">
+<form class="form" (ngSubmit)="onSave()">
   <p-inputNumber
+    [style.width]="inputWidth() || 'auto'"
     class="alg-input-number"
+    [inputStyleClass]="inputStyleClass()"
     [(ngModel)]="value"
     [ngModelOptions]="{ standalone: true }"
     suffix="s"
@@ -11,7 +13,7 @@
       type="submit"
       class="size-s stroke button"
       alg-button-icon icon="ph-bold ph-check"
-      data-testid="alg-item-extra-time-save-btn"
+      data-testid="item-extra-time-save-btn"
       (click)="onSave()"
       [disabled]="disabled()"
     ></button>
