@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { map } from 'rxjs/operators';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { SECONDS } from 'src/app/utils/duration';
@@ -43,6 +43,7 @@ const serviceTimeout = 20*SECONDS;
   providedIn: 'root',
 })
 export class UpdateItemService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {
   }
@@ -51,7 +52,7 @@ export class UpdateItemService {
     itemId: string,
     changes: ItemChanges,
   ): Observable<void> {
-    return this.http.put<SimpleActionResponse>(`${appConfig.apiUrl}/items/${itemId}`, changes, {
+    return this.http.put<SimpleActionResponse>(`${this.config.apiUrl}/items/${itemId}`, changes, {
       context: new HttpContext().set(requestTimeout, serviceTimeout),
     }).pipe(
       map(assertSuccess),

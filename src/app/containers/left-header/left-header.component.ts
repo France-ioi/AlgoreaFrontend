@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 
 @Component({
   selector: 'alg-left-header',
@@ -25,7 +25,7 @@ export class LeftHeaderComponent {
 
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
-  leftHeaderLogoUrl = appConfig.leftHeaderLogoUrl;
+  leftHeaderLogoUrl = inject(APPCONFIG).leftHeaderLogoUrl;
 
   constructor(
     private authService: AuthService,

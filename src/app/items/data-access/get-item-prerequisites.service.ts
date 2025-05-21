@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
@@ -14,12 +14,13 @@ type ItemPrerequisites = z.infer<typeof itemPrerequisitesSchema>;
   providedIn: 'root',
 })
 export class GetItemPrerequisitesService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   get(itemId: string): Observable<ItemPrerequisites> {
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${ itemId }/prerequisites`)
+      .get<unknown[]>(`${this.config.apiUrl}/items/${ itemId }/prerequisites`)
       .pipe(
         decodeSnakeCaseZod(itemPrerequisitesSchema),
       );

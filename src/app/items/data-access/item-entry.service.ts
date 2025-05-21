@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { entryStateValueSchema } from '../models/item-entry';
@@ -27,12 +27,13 @@ type EnterResponseData = z.infer<typeof enterResponseDataSchema>;
   providedIn: 'root'
 })
 export class ItemEntryService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getEntryState(itemId: string): Observable<EntryState> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/entry-state`)
+      .get<unknown>(`${this.config.apiUrl}/items/${itemId}/entry-state`)
       .pipe(
         decodeSnakeCaseZod(entryStateSchema),
       );
@@ -43,7 +44,7 @@ export class ItemEntryService {
     if (!parentAttemptId) throw new Error('enter service expect the parent attempt id to be set');
     const params = new HttpParams({ fromObject: { parent_attempt_id: parentAttemptId } });
     return this.http
-      .post<SimpleActionResponse>(`${appConfig.apiUrl}/items/${route.path.join('/')}/${route.id}/enter`, null, { params }).pipe(
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${route.path.join('/')}/${route.id}/enter`, null, { params }).pipe(
         map(successData),
         decodeSnakeCaseZod(enterResponseDataSchema),
       );

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { dateDecoder } from 'src/app/utils/decoders';
@@ -25,12 +25,13 @@ export type Answer = D.TypeOf<typeof answerDecoder>;
   providedIn: 'root',
 })
 export class GetAnswerService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   get(answerId: string): Observable<Answer> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/answers/${answerId}`)
+      .get<unknown>(`${this.config.apiUrl}/answers/${answerId}`)
       .pipe(decodeSnakeCase(answerDecoder));
   }
 
@@ -40,7 +41,7 @@ export class GetAnswerService {
       params = params.set('watched_group_id', options.watchedGroupId);
     }
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/best-answer`, { params })
+      .get<unknown>(`${this.config.apiUrl}/items/${itemId}/best-answer`, { params })
       .pipe(decodeSnakeCase(answerDecoder));
   }
 

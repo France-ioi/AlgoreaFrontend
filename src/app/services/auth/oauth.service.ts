@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { getArgsFromUrl, clearHash } from '../../utils/url';
 import { Observable, throwError } from 'rxjs';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { base64UrlEncode } from '../../utils/base64';
-import { appConfig } from '../../utils/config';
+import { APPCONFIG } from '../../app.config';
 import { AuthResult } from './auth-info';
 import { Location } from '@angular/common';
 
@@ -15,6 +15,7 @@ const nonceStorageKey = 'oauth_nonce';
   providedIn: 'root'
 })
 export class OAuthService {
+  private config = inject(APPCONFIG);
 
   constructor(
     private authHttp: AuthHttpService,
@@ -26,11 +27,11 @@ export class OAuthService {
    */
   initCodeFlow(): void {
     const state = this.createNonce();
-    const loginServerUri = appConfig.oauthServerUrl+'/oauth/authorize';
+    const loginServerUri = this.config.oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
-      '&client_id=' + encodeURIComponent(appConfig.oauthClientId) +
+      '&client_id=' + encodeURIComponent(this.config.oauthClientId) +
       '&state=' + encodeURIComponent(state) +
       '&redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // should add PKCE here
@@ -69,7 +70,7 @@ export class OAuthService {
   }
 
   logoutOnAuthServer(): void {
-    const logoutUri = appConfig.oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
+    const logoutUri = this.config.oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
     // navigate
     location.href = logoutUri;
   }

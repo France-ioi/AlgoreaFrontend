@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
@@ -9,12 +9,13 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AddItemPrerequisiteService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   create(dependentItemId: string, prerequisiteItemId: string): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(`${appConfig.apiUrl}/items/${ dependentItemId }/prerequisites/${ prerequisiteItemId }`, {
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${ dependentItemId }/prerequisites/${ prerequisiteItemId }`, {
         grant_content_view: true,
       })
       .pipe(map(assertSuccess));

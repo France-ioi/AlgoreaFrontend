@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import * as D from 'io-ts/Decoder';
 import { dateDecoder } from 'src/app/utils/decoders';
@@ -48,12 +48,13 @@ export type ParticipantProgress = D.TypeOf<typeof participantProgressDecoder>;
   providedIn: 'root'
 })
 export class GetParticipantProgressService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
   get(id: string): Observable<ParticipantProgress> {
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/participant-progress`)
+      .get<unknown[]>(`${this.config.apiUrl}/items/${id}/participant-progress`)
       .pipe(
         decodeSnakeCase(participantProgressDecoder)
       );
