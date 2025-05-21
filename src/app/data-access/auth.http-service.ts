@@ -3,7 +3,8 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { ActionResponse, SimpleActionResponse, successData, assertSuccess } from './action-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { AuthResult, cookieAuthFromServiceResp, tokenAuthFromServiceResp } from '../services/auth/auth-info';
 import { requestTimeout, retryOnceOn401, useAuthInterceptor } from '../interceptors/interceptor_common';
 
@@ -19,9 +20,10 @@ const longAuthServicesTimeout = 6000;
   providedIn: 'root'
 })
 export class AuthHttpService {
+  private config = inject(APPCONFIG);
 
-  private apiUrl = new URL(appConfig.apiUrl, location.origin /* act as base when the url is relative, ignored otherwise */);
-  private cookieParams = appConfig.authType === 'cookies' ? {
+  private apiUrl = new URL(this.config.apiUrl, location.origin /* act as base when the url is relative, ignored otherwise */);
+  private cookieParams = this.config.authType === 'cookies' ? {
     use_cookie: '1',
     cookie_secure: this.apiUrl.protocol === 'https:' || this.apiUrl.hostname === 'localhost' ? '1' : '0',
     cookie_same_site: '1',
@@ -59,7 +61,7 @@ export class AuthHttpService {
 
   createTempUser(defaultLanguage: string): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<AuthPayload>>(`${appConfig.apiUrl}/auth/temp-user`, null, {
+      .post<ActionResponse<AuthPayload>>(`${this.config.apiUrl}/auth/temp-user`, null, {
         params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
         context: new HttpContext().set(useAuthInterceptor, false),
       }).pipe(
@@ -71,7 +73,7 @@ export class AuthHttpService {
   createTokenFromCode(code: string, redirectUri: string): Observable<AuthResult> {
     return this.http
       .post<ActionResponse<AuthPayload>>(
-        `${appConfig.apiUrl}/auth/token`,
+        `${this.config.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
         {
           params: new HttpParams({ fromObject: this.cookieParams }),
@@ -87,7 +89,7 @@ export class AuthHttpService {
 
   refreshAuth(options: RefreshAuthOpts = { createTempUserOnRefreshFailure: false }): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<TokenAuthPayload>>(`${appConfig.apiUrl}/auth/token`, null, {
+      .post<ActionResponse<TokenAuthPayload>>(`${this.config.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: options.createTempUserOnRefreshFailure ?
           { ...this.cookieParams, create_temp_user_if_not_authorized: 1, default_language: options.tempUserDefaultLanguage } :
           this.cookieParams
@@ -104,7 +106,7 @@ export class AuthHttpService {
 
   revokeAuth(): Observable<void> {
     return this.http
-      .post<SimpleActionResponse>(`${appConfig.apiUrl}/auth/logout`, null, {
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/auth/logout`, null, {
         context: new HttpContext()
           .set(retryOnceOn401, false)
           .set(useAuthInterceptor, false),
@@ -115,10 +117,10 @@ export class AuthHttpService {
 
   private authPayloadToResult(payload: AuthPayload): AuthResult {
     if ('access_token' in payload) {
-      if (appConfig.authType !== 'tokens') throw new Error('token received while not using tokens');
+      if (this.config.authType !== 'tokens') throw new Error('token received while not using tokens');
       return tokenAuthFromServiceResp(payload.access_token, payload.expires_in);
     } else {
-      if (appConfig.authType === 'tokens') throw new Error('no token received while using tokens');
+      if (this.config.authType === 'tokens') throw new Error('no token received while using tokens');
       return cookieAuthFromServiceResp(payload.expires_in);
     }
   }

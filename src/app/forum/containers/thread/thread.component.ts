@@ -26,7 +26,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
@@ -63,6 +64,7 @@ import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
   ],
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
+  private config = inject(APPCONFIG);
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
   @ViewChild('messageToSendEl') messageToSendEl?: ElementRef<HTMLTextAreaElement>;
 
@@ -277,7 +279,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   ): Observable<void> {
     const update$ = this.updateThreadService.update(params.threadId.itemId, params.threadId.participantId, params.open ? {
       status: 'waiting_for_trainer',
-      helperGroupId: appConfig.allUsersGroupId,
+      helperGroupId: this.config.allUsersGroupId,
       ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {})
     } : { status: 'closed' }).pipe(share());
     update$.subscribe({

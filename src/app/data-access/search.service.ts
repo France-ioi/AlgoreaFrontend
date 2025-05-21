@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 
@@ -24,12 +25,12 @@ export type SearchResponse = z.infer<typeof searchResponseSchema>;
   providedIn: 'root'
 })
 export class SearchService {
-
+  private config = inject(APPCONFIG);
   searchApiUrl: string;
 
   constructor(private http: HttpClient) {
-    if (!appConfig.searchApiUrl) throw new Error('To use the search service you must first check that searchApiUrl is set in config!');
-    this.searchApiUrl = appConfig.searchApiUrl;
+    if (!this.config.searchApiUrl) throw new Error('To use the search service you must first check that searchApiUrl is set in config!');
+    this.searchApiUrl = this.config.searchApiUrl;
   }
 
   search(query: string): Observable<SearchResponse> {
