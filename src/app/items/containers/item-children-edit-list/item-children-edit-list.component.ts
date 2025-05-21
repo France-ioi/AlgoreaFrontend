@@ -141,10 +141,9 @@ export class ItemChildrenEditListComponent implements OnChanges {
     );
   }
 
-  onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
+  onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content', childIdx: number): void {
     this.op?.hide();
-    if (!this.propagationEditItemIdx) throw new Error('Unexpected: Missed propagationEditItemIdx');
-    this.emitChildPermPropagations({ contentViewPropagation }, this.propagationEditItemIdx);
+    this.emitChildPermPropagations({ contentViewPropagation }, childIdx);
     this.propagationEditItemIdx = undefined;
   }
 

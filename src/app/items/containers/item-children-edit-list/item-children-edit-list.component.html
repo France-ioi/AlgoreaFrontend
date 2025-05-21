@@ -118,7 +118,7 @@
       @if (childData) {
         <alg-propagation-edit-menu
           [childData]="childData"
-          (clickEvent)="onContentViewPropagationChanged($event)"
+          (clickEvent)="onContentViewPropagationChanged($event, propagationEditItemIdx)"
           (openAdvancedConfigurationDialogEvent)="openAdvancedPermPropagationConfigurationDialog(childData, propagationEditItemIdx)"
         ></alg-propagation-edit-menu>
       }
