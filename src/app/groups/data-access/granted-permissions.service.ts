@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../utils/operators/decode';
-import { appConfig } from '../../utils/config';
+import { APPCONFIG } from '../../app.config';
+import { inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { pipe } from 'fp-ts/function';
 import { itemCorePermDecoder, itemEntryTimePermDecoder, itemSessionPermDecoder } from 'src/app/items/models/item-permissions';
@@ -38,12 +39,14 @@ export type GrantedPermissions = D.TypeOf<typeof grantedPermissionsDecoder>;
   providedIn: 'root'
 })
 export class GrantedPermissionsService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {
   }
 
   get(id: string, descendants = 0): Observable<GrantedPermissions[]> {
     const httpParams = new HttpParams().set('descendants', descendants);
-    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${ id }/granted_permissions`, {
+    return this.http.get<unknown>(`${this.config.apiUrl}/groups/${ id }/granted_permissions`, {
       params: httpParams,
     }).pipe(
       decodeSnakeCase(D.array(grantedPermissionsDecoder)),

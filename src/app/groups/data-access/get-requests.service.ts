@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from '../../utils/operators/decode';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 import { z } from 'zod';
@@ -55,6 +56,7 @@ export type GroupInvitation = GroupInvitations[0];
   providedIn: 'root'
 })
 export class GetRequestsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
@@ -70,7 +72,7 @@ export class GetRequestsService {
     }
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/user-requests`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/user-requests`, { params: params })
       .pipe(
         decodeSnakeCaseZod(groupPendingRequestSchema),
         map(pendingRequests => pendingRequests.map(r => ({
@@ -93,7 +95,7 @@ export class GetRequestsService {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/current-user/group-invitations`, { params: params, })
+      .get<unknown>(`${this.config.apiUrl}/current-user/group-invitations`, { params: params, })
       .pipe(decodeSnakeCaseZod(groupInvitationsSchema));
   }
 }

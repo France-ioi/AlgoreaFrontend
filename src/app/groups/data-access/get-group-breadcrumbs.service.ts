@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
 import { catchError, map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { groupRoute, GroupRoute } from 'src/app/models/routing/group-route';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { breadcrumbSchema, GroupBreadcrumbs } from '../models/group-breadcrumbs';
@@ -14,13 +15,14 @@ import { breadcrumbServiceTag } from 'src/app/items/data-access/get-breadcrumb.s
   providedIn: 'root'
 })
 export class GetGroupBreadcrumbsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getBreadcrumbs(route: GroupRoute): Observable<GroupBreadcrumbs> {
     const groupIds = [ ...route.path, route.id ];
 
-    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${groupIds.join('/')}/breadcrumbs`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/groups/${groupIds.join('/')}/breadcrumbs`).pipe(
       decodeSnakeCaseZod(z.array(breadcrumbSchema)),
       map(breadcrumbs => breadcrumbs.map((breadcrumb, index) => ({
         ...breadcrumb,
