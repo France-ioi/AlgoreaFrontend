@@ -1,9 +1,9 @@
 
-import { Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs';
 import { TabService } from 'src/app/services/tab.service';
 import { TaskTab } from './containers/item-display/item-display.component';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { isATask } from 'src/app/items/models/item-type';
 import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/items/models/item-view-permission';
@@ -78,7 +78,7 @@ export class ItemTabs implements OnDestroy {
       const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewStats;
       const canSetExtraTime = state.isReady ? isTimeLimitedActivity(state.data.item) && canCurrentUserSetExtraTime(state.data.item) : false;
 
-      const shouldHideTab = (v: string): boolean => appConfig.featureFlags.hideTaskTabs.includes(v);
+      const shouldHideTab = (v: string): boolean => this.config.featureFlags.hideTaskTabs.includes(v);
       const filteredTaskTabs = taskTabs.filter(({ view }) => !shouldHideTab(view) && (canViewSolution || view !== solutionTabView));
 
       return [
@@ -91,7 +91,7 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
         this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
-        this.isCurrentTab(forumTab) || (!userProfile.tempUser && !!appConfig.forumServerUrl) ? forumTab : null,
+        this.isCurrentTab(forumTab) || (!userProfile.tempUser && !!this.config.forumServerUrl) ? forumTab : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))
@@ -102,6 +102,8 @@ export class ItemTabs implements OnDestroy {
   );
 
   private tabUpdateSubscription = this.tabs$.subscribe(tabs => this.tabService.setTabs(tabs));
+
+  private config = inject(APPCONFIG);
 
   constructor(
     private store: Store,

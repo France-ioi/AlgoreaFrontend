@@ -1,6 +1,6 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { RouterLinkActive, RouterLink } from '@angular/router';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
@@ -47,6 +47,7 @@ import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/
   ],
 })
 export class GroupByIdComponent implements OnDestroy {
+  private config = inject(APPCONFIG);
 
   state$ = this.store.select(selectGroupData).pipe(
     mapStateData<GroupData, GroupData & { group: ManagementAdditions }>(state => ({
@@ -55,7 +56,7 @@ export class GroupByIdComponent implements OnDestroy {
     }))
   );
 
-  hideAccessTab = !appConfig.featureFlags.showGroupAccessTab;
+  hideAccessTab = !this.config.featureFlags.showGroupAccessTab;
 
   // use of ViewChild required as these elements are shown under some conditions, so may be undefined
   @ViewChild('overviewTab') overviewTab?: RouterLinkActive;

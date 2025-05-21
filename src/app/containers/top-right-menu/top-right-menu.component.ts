@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { UserSessionService } from '../../services/user-session.service';
@@ -38,6 +38,7 @@ interface MenuItem {
   ],
 })
 export class TopRightMenuComponent {
+  private config = inject(APPCONFIG);
   @Input() styleClass?: string;
 
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
@@ -71,7 +72,7 @@ export class TopRightMenuComponent {
   }
 
   private getDevelopmentMenuItems(): MenuItem[] {
-    if (appConfig.production) return [];
+    if (this.config.production) return [];
     return [
       { label: 'Invalidate token', icon: 'ph ph-arrow-clockwise', command: (): void => this.invalidateToken() },
     ];

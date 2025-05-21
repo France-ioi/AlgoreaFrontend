@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from '../../utils/null-undefined-predicates';
@@ -12,7 +12,7 @@ import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navi
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { SearchService } from '../../data-access/search.service';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { readyState } from '../../utils/state';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { LayoutService } from '../../services/layout.service';
@@ -73,7 +73,8 @@ export class LeftNavComponent implements OnChanges {
       ) : of(readyState(undefined)) /* return a ready state containing `undefined` when the query is too short for searching */)),
   );
 
-  searchService = appConfig.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
+  private config = inject(APPCONFIG);
+  searchService = this.config.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
 
   activeTab$ = this.currentContent.content$.pipe(
     distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
@@ -99,7 +100,7 @@ export class LeftNavComponent implements OnChanges {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
-  skillsDisabled = appConfig.defaultSkillId === undefined;
+  skillsDisabled = this.config.defaultSkillId === undefined;
   observationModeCaption = $localize`Observation mode`;
 
   currentLanguage = this.localeService.currentLang?.tag;
