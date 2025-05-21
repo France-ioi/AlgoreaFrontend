@@ -3,7 +3,8 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { SimpleActionResponse, ActionResponse, successData } from './action-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { decodeSnakeCaseZod } from '../utils/operators/decode';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../items/models/attempts';
@@ -16,13 +17,14 @@ const startResultPathTimeout = 10000;
   providedIn: 'root'
 })
 export class ResultActionsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   start(itemIdPath: ItemPath, attemptId: AttemptId): Observable<Result> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<SimpleActionResponse>(`${appConfig.apiUrl}/items/${path}/start-result`, null, {
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${path}/start-result`, null, {
         params: {
           attempt_id: attemptId
         },
@@ -41,7 +43,7 @@ export class ResultActionsService {
   startWithoutAttempt(itemIdPath: ItemPath): Observable<AttemptId> {
     const path = itemIdPath.join('/');
     return this.http
-      .post<ActionResponse<{ attempt_id: AttemptId }>>(`${appConfig.apiUrl}/items/${path}/start-result-path`, null, {
+      .post<ActionResponse<{ attempt_id: AttemptId }>>(`${this.config.apiUrl}/items/${path}/start-result-path`, null, {
         context: new HttpContext().set(requestTimeout, startResultPathTimeout),
       })
       .pipe(

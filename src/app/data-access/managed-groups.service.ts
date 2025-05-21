@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from '../utils/operators/decode';
@@ -28,12 +29,13 @@ export type Group = z.infer<typeof groupSchema>;
   providedIn: 'root'
 })
 export class ManagedGroupsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getManagedGroups(): Observable<Group[]> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/current-user/managed-groups`)
+      .get<unknown>(`${this.config.apiUrl}/current-user/managed-groups`)
       .pipe(
         decodeSnakeCaseZod(z.array(groupSchema)),
       );
