@@ -1,0 +1,45 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  min-width: toRem(300);
+  background: var(--alg-white-color);
+  border-radius: toRem(8);
+  padding: var(--alg-space-size-6);
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.body {
+  padding: var(--alg-space-size-6);
+}
+
+.message {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: var(--alg-secondary-color);
+}
+
+.message-icon {
+  margin-right: var(--alg-space-size-5);
+  font-size: toRem(24);
+  color: var(--alg-secondary-color);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: var(--alg-space-size-6);
+}
+
+.button {
+  &:not(first-child) {
+    margin-left: var(--alg-space-size-6);
+  }
+}

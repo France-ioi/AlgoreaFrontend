@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="header">
+    <button class="secondary" alg-button-icon icon="ph ph-x" (click)="dialogRef.close()"></button>
+  </div>
+  <div class="body">
+    <div class="message">
+      @if (data().messageIcon; as icon) {
+        <span class="message-icon {{ icon }}"></span>
+      }
+      <span class="message-text">{{ data().message }}</span>
+    </div>
+  </div>
+  <div class="footer">
+    <button
+      type="button"
+      class="button stroke"
+      alg-button
+      (click)="dialogRef.close(false)"
+    >
+      @if (data().rejectButtonCaption) {
+        {{ data().rejectButtonCaption }}
+      } @else {
+        <ng-container i18n>No</ng-container>
+      }
+    </button>
+    <button
+      type="button"
+      class="button"
+      alg-button
+      (click)="dialogRef.close(true)"
+    >
+      @if (data().acceptButtonCaption) {
+        {{ data().acceptButtonCaption }}
+      } @else {
+        <ng-container i18n>Yes</ng-container>
+      }
+    </button>
+  </div>
+</div>
