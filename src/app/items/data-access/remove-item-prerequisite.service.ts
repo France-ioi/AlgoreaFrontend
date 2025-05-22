@@ -16,7 +16,8 @@ export class RemoveItemPrerequisiteService {
   }
 
   delete(dependentItemId: string, prerequisiteItemId: string): Observable<void> {
-    return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/items/${dependentItemId}/prerequisites/${prerequisiteItemId}`).pipe(
+    const url = `${this.config.apiUrl}/items/${dependentItemId}/prerequisites/${prerequisiteItemId}`;
+    return this.http.delete<SimpleActionResponse>(url).pipe(
       map(assertSuccess),
     );
   }

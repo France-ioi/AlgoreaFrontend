@@ -15,16 +15,19 @@ export class ProcessGroupInvitationService {
   constructor(private http: HttpClient) {}
 
   accept(groupId: string, approvals: string[] = []): Observable<{ changed: boolean }> {
-    const params = new HttpParams().set('approvals', approvals.join(','));
-    return this.http
-      .post<ActionResponse<{ changed: boolean }>>(`${this.config.apiUrl}/current-user/group-invitations/${groupId}/accept`, null, { params })
-      .pipe(map(successData));
+    const url = `${this.config.apiUrl}/current-user/group-invitations/${groupId}/accept`;
+    return this.sendAction(url, approvals);
   }
 
   reject(groupId: string, approvals: string[] = []): Observable<{ changed: boolean }> {
+    const url = `${this.config.apiUrl}/current-user/group-invitations/${groupId}/reject`;
+    return this.sendAction(url, approvals);
+  }
+
+  private sendAction(url: string, approvals: string[] = []): Observable<{ changed: boolean }> {
     const params = new HttpParams().set('approvals', approvals.join(','));
     return this.http
-      .post<ActionResponse<{ changed: boolean }>>(`${this.config.apiUrl}/current-user/group-invitations/${groupId}/reject`, null, { params })
+      .post<ActionResponse<{ changed: boolean }>>(url, null, { params })
       .pipe(map(successData));
   }
 }

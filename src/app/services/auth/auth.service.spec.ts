@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { APPCONFIG } from 'src/app/app.config';
 
 import { AuthService } from './auth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';
@@ -12,6 +13,7 @@ describe('AuthService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        { provide: APPCONFIG, useValue: { apiUrl: 'http://localhost:3000/api' } },
         {
           provide: AuthHttpService,
           useValue: {
