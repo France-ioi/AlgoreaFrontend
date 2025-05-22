@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import {
   BreadcrumbsFromRootElement,
   GetBreadcrumbsFromRootsService
@@ -14,11 +14,7 @@ import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { itemRouteAsUrlCommand } from 'src/app/models/routing/item-route-serialization';
-
-const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand => {
-  const path = breadcrumbs.map(item => item.id);
-  return itemRouteAsUrlCommand(itemRoute(typeCategoryOfItem(item), item.id, { path }));
-};
+import { APPCONFIG, AppConfig } from 'src/app/app.config';
 
 @Component({
   selector: 'alg-path-suggestion',
@@ -35,6 +31,13 @@ const getItemRouteUrl = (item: BreadcrumbsFromRootElement, breadcrumbs: Breadcru
   ],
 })
 export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {
+  private config: AppConfig = inject(APPCONFIG);
+
+  private getItemRouteUrl(item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand {
+    const path = breadcrumbs.map(brItem => brItem.id);
+    return itemRouteAsUrlCommand(itemRoute(typeCategoryOfItem(item), item.id, { path }), this.config.redirects);
+  }
+
   @Output() resize = new EventEmitter<void>();
   @Input() itemId?: string;
 
@@ -50,7 +53,7 @@ export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChan
       map(group => (group.length > 0 ? group.map(breadcrumbs =>
         breadcrumbs.map((item, index) => ({
           ...item,
-          url: getItemRouteUrl(item, breadcrumbs.slice(0, index)),
+          url: this.getItemRouteUrl(item, breadcrumbs.slice(0, index)),
         }))
       ).filter(group => group.length > 0) : undefined)),
     )),

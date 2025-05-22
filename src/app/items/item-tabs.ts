@@ -95,7 +95,7 @@ export class ItemTabs implements OnDestroy {
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))
-        .map(t => ({ ...t, command: itemRouteAsUrlCommand(state.data.route, t.routerLink) }))
+        .map(t => ({ ...t, command: itemRouteAsUrlCommand(state.data.route, this.config.redirects, t.routerLink) }))
       ;
     }),
     distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y)),

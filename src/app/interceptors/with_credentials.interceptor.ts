@@ -11,7 +11,7 @@ export class WithCredentialsInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (!isRequestToApi(req) || this.config.authType !== 'cookies') return next.handle(req);
+    if (!isRequestToApi(req, this.config.apiUrl) || this.config.authType !== 'cookies') return next.handle(req);
 
     // `withCredentials: true` adds appropriate cookies to the request and allow response cookies to be accepted
     // see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials
