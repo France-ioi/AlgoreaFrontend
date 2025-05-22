@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
@@ -6,6 +6,7 @@ import { switchMap, filter, take, catchError } from 'rxjs/operators';
 import { AuthResult, AuthStatus } from '../services/auth/auth-info';
 import { isRequestToApi, retryOnceOn401, useAuthInterceptor } from './interceptor_common';
 import { errorIsHTTPUnauthenticated } from '../utils/errors';
+import { APPCONFIG } from '../app.config';
 
 /**
  * This interceptor:
@@ -19,11 +20,13 @@ import { errorIsHTTPUnauthenticated } from '../utils/errors';
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
 
+  private config = inject(APPCONFIG);
+
   constructor(private injector: Injector) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // skip interception if not req to API or the context skips it
-    if (!isRequestToApi(req) || !req.context.get(useAuthInterceptor)) return next.handle(req);
+    if (!isRequestToApi(req, this.config.apiUrl) || !req.context.get(useAuthInterceptor)) return next.handle(req);
 
     // Inject the auth service at runtime injecting in the constructor blocks the whole process because of the dependancy loop
     // (as auth service call http services)

@@ -1,4 +1,6 @@
+import { inject } from '@angular/core';
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
+import { APPCONFIG } from 'src/app/app.config';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
@@ -68,7 +70,10 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   const selectActiveContentRouteParsingResult = createSelector(
     fromRouter.selectSegments,
-    segments => (segments ? parseItemUrlSegments(segments) : null)
+    segments => {
+      const config = inject(APPCONFIG);
+      return segments ? parseItemUrlSegments(segments, config.redirects) : null;
+    }
   );
 
   const selectActiveContentRouteParsingResultRoute = createSelector(

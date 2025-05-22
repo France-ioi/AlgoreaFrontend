@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { RawItemRoute } from './item-route';
 import { AnswerId } from '../ids';
 import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
+import { APPCONFIG, AppConfig } from 'src/app/app.config';
 import { itemRouteAsUrlCommand } from './item-route-serialization';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
@@ -23,6 +24,7 @@ export class ItemRouter {
   constructor(
     private router: Router,
     private store: Store,
+    @Inject(APPCONFIG) private config: AppConfig,
   ) {}
 
   private currentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
@@ -59,7 +61,7 @@ export class ItemRouter {
    * To prevent misusing it, this function is private: use `itemRouteAsUrlCommand` with the current page from the store instead.
    */
   private routeAsUrlCommand(item: RawItemRoute, page?: string[]): UrlCommand {
-    return itemRouteAsUrlCommand(item, page ?? (this.currentPage() ?? undefined));
+    return itemRouteAsUrlCommand(item, this.config.redirects, page ?? (this.currentPage() ?? undefined));
   }
 
 }

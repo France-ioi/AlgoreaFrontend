@@ -146,7 +146,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     switchMap(answerErr => this.itemRoute$.pipe(
       map((route, idx) => (idx === 0 && answerErr !== undefined ? {
         isForbidden: errorIsHTTPForbidden(answerErr.error),
-        fallbackLink: route.answer ? itemRouteAsUrlCommand({ ...route, answer: undefined }) : undefined,
+        fallbackLink: route.answer ? itemRouteAsUrlCommand({ ...route, answer: undefined }, this.config.redirects) : undefined,
       } : undefined /* reset error if we navigate */)))
     ),
   );

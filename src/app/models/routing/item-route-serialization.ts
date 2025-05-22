@@ -3,7 +3,7 @@ import { FullItemRoute, itemRoute, ItemRoute, RawItemRoute } from './item-route'
 import { UrlCommand } from 'src/app/utils/url';
 import { ItemTypeCategory, itemTypeCategoryEnum } from 'src/app/items/models/item-type';
 import { encodeItemRouteParameters, extractItemRouteParameters } from './item-route-parameters';
-import { isAnItemAlias, itemAliasFor, resolveItemAlias } from './item-route-aliasing';
+import { isAnItemAlias, itemAliasFor, resolveItemAlias, Aliases } from './item-route-aliasing';
 
 export const activityPrefix = 'a';
 export const skillPrefix = 's';
@@ -13,11 +13,14 @@ export const skillPrefix = 's';
 // **********************************************************************************************************
 
 export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'id'|'contentType'> & Partial<ItemRoute>;
+
+export type ParsedItemUrl = { route: FullItemRoute|ItemRouteError, page: string[] }|null;
+
 export function isItemRouteError(route: FullItemRoute|ItemRouteError): route is ItemRouteError {
   return 'tag' in route && route.tag === 'error';
 }
 
-export function parseItemUrlSegments(segments: UrlSegment[]): { route: FullItemRoute|ItemRouteError, page: string[] }|null {
+export function parseItemUrlSegments(segments: UrlSegment[], aliases: Aliases): ParsedItemUrl {
   const [ prefixSegment, mainSegment, ...pageSegments ] = segments;
   if (!prefixSegment || !mainSegment) return null;
   const page = pageSegments.map(segm => segm.path);
@@ -28,7 +31,7 @@ export function parseItemUrlSegments(segments: UrlSegment[]): { route: FullItemR
 
   // parsing id
   const aliasOrId = mainSegment.path;
-  const idPath = isAnItemAlias(aliasOrId) ? resolveItemAlias(aliasOrId) : { id: aliasOrId };
+  const idPath = isAnItemAlias(aliasOrId) ? resolveItemAlias(aliasOrId, aliases) : { id: aliasOrId };
   if (!idPath) return null; // the alias does not resolve to an id
   const id = idPath.id;
 
@@ -58,8 +61,8 @@ function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {
 /**
  * Create a navigable url command based on the given route. If the page is not given, use the root page of the item.
  */
-export function itemRouteAsUrlCommand(route: RawItemRoute, page?: string[]): UrlCommand {
-  const aliasSearch = itemAliasFor(route.id, route.path);
+export function itemRouteAsUrlCommand(route: RawItemRoute, aliases: Aliases, page?: string[]): UrlCommand {
+  const aliasSearch = itemAliasFor(route.id, route.path, aliases);
   const idOrAlias = aliasSearch ? aliasSearch.alias : route.id;
   const parameters = aliasSearch?.hasPath ? { ...route, path: undefined }: route; // if the alias include a path, do not include it in url
 
