@@ -1,7 +1,6 @@
 import { ContentRoute } from './content-route';
 import { ItemTypeCategory } from '../../items/models/item-type';
 import { AnswerId, AttemptId, ItemId, ItemPath, ParticipantId } from '../ids';
-import { appDefaultActivityRoute } from './item-route-default';
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item
@@ -58,10 +57,10 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
 
 /**
  * Return the route of the parent item of the given item route.
- * Beware it assumes the parent as the same content type as its child... which is not fully guaranteed
+ * Beware it assumes the parent has the same content type as its child... which is not fully guaranteed
  */
-export function parentRoute(route: ItemRoute): ItemRoute {
-  if (route.path.length === 0) return appDefaultActivityRoute;
+export function parentRoute(route: ItemRoute, defaultActivityRoute: FullItemRoute): ItemRoute {
+  if (route.path.length === 0) return defaultActivityRoute;
   return itemRoute(route.contentType, route.path[route.path.length - 1]!, {
     attemptId: route.parentAttemptId ?? undefined,
     path: route.path.slice(0, -1),

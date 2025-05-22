@@ -3,17 +3,19 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes-guard';
 import { BeforeUnloadGuard } from 'src/app/guards/before-unload-guard';
 import { GroupDeleteService } from './groups/data-access/group-delete.service';
 import { DefaultLayoutInitService } from './services/layout.service';
-import { urlStringFromArray } from './utils/url';
-import { appDefaultActivityRoute } from './models/routing/item-route-default';
+
 import { RedirectToIdComponent } from './containers/redirect-to-id/redirect-to-id.component';
+import { homeRedirectGuard } from 'src/app/guards/home-redirect.guard';
 import { PageNotFoundComponent } from './containers/page-not-found/page-not-found.component';
-import { activityPrefix, itemRouteAsUrlCommand, skillPrefix } from './models/routing/item-route-serialization';
+import { activityPrefix, skillPrefix } from './models/routing/item-route-serialization';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: urlStringFromArray(itemRouteAsUrlCommand(appDefaultActivityRoute)),
-    pathMatch: 'full',
+    canActivate: [ homeRedirectGuard ],
+    // This component should ideally never be reached as the guard always redirects.
+    // Assigning PageNotFoundComponent or an empty component for route validity.
+    component: PageNotFoundComponent,
   },
   {
     path: 'groups',

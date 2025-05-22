@@ -1,15 +1,14 @@
 import { ContentBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { ContentRoute } from 'src/app/models/routing/content-route';
-import { appDefaultActivityRoute } from 'src/app/models/routing/item-route-default';
 
 export interface State {
-  route: ContentRoute|string, // FIXME: the string is current for pages (not by id) which does not match a content route
+  route: ContentRoute|string /* currently for pages (not by id) which does not match a content route */|null /* only initially */,
   title: string|undefined,
   breadcrumbs: ContentBreadcrumbs|undefined,
 }
 
 export const initialState: State = {
-  route: appDefaultActivityRoute,
+  route: null, // initially, will be set by the first visited content
   title: undefined,
   breadcrumbs: undefined,
 };

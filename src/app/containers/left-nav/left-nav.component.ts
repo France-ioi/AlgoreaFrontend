@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from '../../utils/null-undefined-predicates';
@@ -127,9 +127,17 @@ export class LeftNavComponent implements OnChanges {
   }
 
   onSelectionChangedByIdx(e: number): void {
-    if (e === activitiesTabIdx) this.itemRouter.navigateTo(this.selectedActivityRoute());
-    if (e === skillsTabIdx) this.itemRouter.navigateTo(this.selectedSkillRoute()!); // cannot be undefined if tab is shown
-    if (e === groupsTabIdx) this.groupRouter.navigateTo(this.selectedGroupRoute());
+    if (e === activitiesTabIdx) {
+      const route = this.selectedActivityRoute();
+      if (route) this.itemRouter.navigateTo(route);
+    }
+    if (e === skillsTabIdx) {
+      const route = this.selectedSkillRoute();
+      if (route) this.itemRouter.navigateTo(route);
+    }
+    if (e === groupsTabIdx) {
+      this.groupRouter.navigateTo(this.selectedGroupRoute());
+    }
   }
 
   retryError(tabIndex: number): void {

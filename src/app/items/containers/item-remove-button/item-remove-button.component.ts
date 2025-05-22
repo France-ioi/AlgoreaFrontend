@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, computed, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, computed, input, output, signal } from '@angular/core';
 import { EMPTY, Subject, of } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
@@ -6,7 +6,6 @@ import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-i
 import { ConfirmationService } from 'primeng/api';
 import { RemoveItemService } from '../../data-access/remove-item.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { Router } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemData } from '../../models/item-data';
@@ -14,6 +13,8 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { parentRoute } from 'src/app/models/routing/item-route';
+import { DEFAULT_ACTIVITY_ROUTE } from 'src/app/models/routing/default-route-tokens';
+
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
@@ -59,7 +60,6 @@ export class ItemRemoveButtonComponent implements OnDestroy {
     private confirmationService: ConfirmationService,
     private removeItemService: RemoveItemService,
     private actionFeedbackService: ActionFeedbackService,
-    private router: Router,
     private itemRouter: ItemRouter,
   ) {
   }
@@ -102,7 +102,8 @@ export class ItemRemoveButtonComponent implements OnDestroy {
   }
 
   postDeletionNavigation(): void {
-    this.itemRouter.navigateTo(parentRoute(this.itemData().route));
+    const defaultActivityRoute = inject(DEFAULT_ACTIVITY_ROUTE);
+    this.itemRouter.navigateTo(parentRoute(this.itemData().route, defaultActivityRoute));
   }
 
   refresh(): void {
