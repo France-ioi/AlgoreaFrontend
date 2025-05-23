@@ -5,7 +5,7 @@ import { DEFAULT_ACTIVITY_ROUTE, DEFAULT_SKILL_ROUTE } from 'src/app/models/rout
 import { appInitActions } from './app-init.actions';
 
 // Effect to trigger initialization once on app startup
-export const triggerAppInit$ = createEffect(
+export const triggerAppInitEffect$ = createEffect(
   (
     actions$ = inject(Actions)
   ) => actions$.pipe(
@@ -17,7 +17,7 @@ export const triggerAppInit$ = createEffect(
 );
 
 // Effect to load default routes (from config) at app init
-export const loadDefaultRoutes$ = createEffect(
+export const loadDefaultRoutesEffect$ = createEffect(
   (
     actions$ = inject(Actions)
   ) => actions$.pipe(
