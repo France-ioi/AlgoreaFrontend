@@ -1,6 +1,4 @@
-import { inject } from '@angular/core';
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
-import { APPCONFIG } from 'src/app/app.config';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
@@ -11,6 +9,7 @@ import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
 import { Result } from '../../models/attempts';
 import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
+import { fromAppInit } from 'src/app/store/app-init/app-init.store';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -70,10 +69,8 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   const selectActiveContentRouteParsingResult = createSelector(
     fromRouter.selectSegments,
-    segments => {
-      const config = inject(APPCONFIG);
-      return segments ? parseItemUrlSegments(segments, config.redirects) : null;
-    }
+    fromAppInit.selectRedirects,
+    (segments, redirects) => (segments ? parseItemUrlSegments(segments, redirects) : null)
   );
 
   const selectActiveContentRouteParsingResultRoute = createSelector(

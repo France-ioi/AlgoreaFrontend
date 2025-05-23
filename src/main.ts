@@ -43,6 +43,7 @@ import { fromTimeOffset } from './app/store/time-offset';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { appInitEffects } from './app/store/app-init';
+import { fromAppInit } from './app/store/app-init/app-init.store';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -116,6 +117,7 @@ bootstrapApplication(AppComponent, {
     provideState(fromTimeOffset),
     provideState(fromSelectedContent),
     provideState(fromCurrentContent),
+    provideState(fromAppInit),
     provideEffects(
       forumEffects(),
       observationEffects,
