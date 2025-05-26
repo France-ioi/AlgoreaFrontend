@@ -1,6 +1,4 @@
 import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@angular/core';
-
-import { appConfig, WEBSOCKET_URL } from './app/utils/config';
 import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -43,6 +41,7 @@ import { fromTimeOffset } from './app/store/time-offset';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { fromConfig, configEffects } from './app/store/config';
+import { environment } from './environments/environment';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -50,7 +49,7 @@ const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
 
 initErrorTracking();
 
-if (appConfig.production) {
+if (environment.production) {
   enableProdMode();
 }
 
@@ -96,10 +95,6 @@ bootstrapApplication(AppComponent, {
       provide: HTTP_INTERCEPTORS,
       useClass: WithCredentialsInterceptor,
       multi: true,
-    },
-    {
-      provide: WEBSOCKET_URL,
-      useValue: appConfig.forumServerUrl
     },
     {
       provide: ErrorHandler,

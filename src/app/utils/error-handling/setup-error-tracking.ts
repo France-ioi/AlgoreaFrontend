@@ -1,12 +1,16 @@
 import * as Sentry from '@sentry/angular';
-import { appConfig } from '../config';
+import { environment } from 'src/environments/environment';
 import { version } from 'src/version';
+import { getSentryDsnConfig } from 'src/app/app.config';
 
 export function initErrorTracking(): void {
 
+  const sentryDsn = getSentryDsnConfig();
+  if (!sentryDsn) return;
+
   Sentry.init({
-    dsn: appConfig.sentryDsn,
-    environment: appConfig.production ? `prod-${window.location.hostname}` : 'dev',
+    dsn: sentryDsn,
+    environment: environment.production ? `prod-${window.location.hostname}` : 'dev',
     release: version,
     integrations: [],
     ignoreErrors: [

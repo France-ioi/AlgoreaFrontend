@@ -12,6 +12,7 @@ import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { UrlCommand } from 'src/app/utils/url';
 import { LetDirective } from '@ngrx/component';
 import { RouterLink } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface MenuItem {
   label: string,
@@ -72,7 +73,7 @@ export class TopRightMenuComponent {
   }
 
   private getDevelopmentMenuItems(): MenuItem[] {
-    if (this.config.production) return [];
+    if (environment.production) return [];
     return [
       { label: 'Invalidate token', icon: 'ph ph-arrow-clockwise', command: (): void => this.invalidateToken() },
     ];

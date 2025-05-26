@@ -1,8 +1,7 @@
 import { Location } from '@angular/common';
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { LanguageConfig } from 'src/app/utils/config';
-import { APPCONFIG } from 'src/app/app.config';
+import { AppConfig, APPCONFIG } from 'src/app/app.config';
 
 
 @Injectable({
@@ -11,8 +10,8 @@ import { APPCONFIG } from 'src/app/app.config';
 export class LocaleService implements OnDestroy {
   private config = inject(APPCONFIG);
 
-  readonly languages: LanguageConfig[];
-  readonly currentLang?: LanguageConfig;
+  readonly languages: AppConfig['languages'];
+  readonly currentLang?: AppConfig['languages'][number];
   readonly currentLangError$: Observable<Error>;
 
   private navigating$ = new Subject<void>();
