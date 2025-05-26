@@ -98,8 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private el: ElementRef,
     private chunkErrorService: ChunkErrorService,
   ) {
-    const title = this.config.languageSpecificTitles && this.localeService.currentLang ?
-      this.config.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
+    const title = this.localeService.currentLang ? this.config.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? this.config.defaultTitle);
 
     // Handle a redirect to sub path which can be used to redirect to a specific page when coming back on the app
