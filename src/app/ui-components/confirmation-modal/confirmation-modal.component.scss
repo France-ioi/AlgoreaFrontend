@@ -2,7 +2,6 @@
 
 :host {
   display: block;
-  min-width: toRem(300);
   background: var(--alg-white-color);
   border-radius: toRem(8);
   padding: var(--alg-space-size-6);
@@ -15,7 +14,7 @@
 }
 
 .body {
-  padding: var(--alg-space-size-6);
+  margin: 0 var(--alg-space-size-6);
 }
 
 .message {
@@ -26,16 +25,16 @@
 }
 
 .message-icon {
-  margin-right: var(--alg-space-size-5);
-  font-size: toRem(24);
+  margin-right: var(--alg-space-size-6);
+  font-size: toRem(30);
   color: var(--alg-secondary-color);
 }
 
 .footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  padding-top: var(--alg-space-size-6);
+  margin-top: var(--alg-space-size-5);
 }
 
 .button {

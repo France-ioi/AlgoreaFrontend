@@ -4,8 +4,8 @@
   </div>
   <div class="body">
     <div class="message">
-      @if (data().messageIcon; as icon) {
-        <span class="message-icon {{ icon }}"></span>
+      @if (data().messageIconStyleClass; as iconStyleClass) {
+        <span class="message-icon {{ iconStyleClass }}"></span>
       }
       <span class="message-text">{{ data().message }}</span>
     </div>
@@ -13,7 +13,7 @@
   <div class="footer">
     <button
       type="button"
-      class="button stroke"
+      class="button {{ data().rejectButtonStyleClass }}"
       alg-button
       (click)="dialogRef.close(false)"
     >
@@ -25,7 +25,7 @@
     </button>
     <button
       type="button"
-      class="button"
+      class="button {{ data().acceptButtonStyleClass }}"
       alg-button
       (click)="dialogRef.close(true)"
     >

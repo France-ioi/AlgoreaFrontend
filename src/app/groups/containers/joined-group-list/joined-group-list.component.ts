@@ -69,10 +69,12 @@ export class JoinedGroupListComponent implements OnDestroy {
     this.dialogService.open<boolean, ConfirmationModalData>(ConfirmationModalComponent, {
       data: {
         message: $localize`Are you sure you want to leave this group?`,
-        messageIcon: 'ph-duotone ph-warning-circle',
+        messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
         acceptButtonCaption: $localize`Yes, leave group`,
+        acceptButtonStyleClass: 'danger',
         rejectButtonCaption: $localize`No`,
       },
+      maxWidth: '18rem',
     }).closed.pipe(
       filter(accepted => !!accepted),
       switchMap(() => this.groupLeaveService.leave(membership.group.id)),

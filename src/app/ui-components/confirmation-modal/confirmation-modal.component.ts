@@ -5,7 +5,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 
 export interface ConfirmationModalData {
   message: string,
-  messageIcon?: string,
+  messageIconStyleClass?: string,
   acceptButtonCaption?: string,
   acceptButtonStyleClass?: string,
   rejectButtonCaption?: string,
@@ -23,7 +23,7 @@ export interface ConfirmationModalData {
   ],
 })
 export class ConfirmationModalComponent {
-  data = input(inject<ConfirmationModalData>(DIALOG_DATA));
+  data = input({ rejectButtonStyleClass: 'stroke', ...inject<ConfirmationModalData>(DIALOG_DATA) });
   dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);
 
   constructor() {
