@@ -42,8 +42,7 @@ import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset
 import { fromTimeOffset } from './app/store/time-offset';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
-import { appInitEffects } from './app/store/app-init';
-import { fromAppInit } from './app/store/app-init/app-init.store';
+import { fromConfig, configEffects } from './app/store/config';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -117,14 +116,14 @@ bootstrapApplication(AppComponent, {
     provideState(fromTimeOffset),
     provideState(fromSelectedContent),
     provideState(fromCurrentContent),
-    provideState(fromAppInit),
+    provideState(fromConfig),
     provideEffects(
       forumEffects(),
       observationEffects,
       groupStoreEffects(),
       itemStoreEffects(),
       selectedContentEffects,
-      appInitEffects,
+      configEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),

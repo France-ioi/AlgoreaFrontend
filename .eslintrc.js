@@ -94,7 +94,7 @@ module.exports = {
           group: [
             '**/store/*',
             '!**/utils/store/**',
-            '!**/store/app-init',
+            '!**/store/config',
             '!**/store/observation',
             '!**/store/time-offset',
             '!**/store/router',

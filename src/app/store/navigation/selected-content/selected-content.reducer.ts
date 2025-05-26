@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { changedContentActions } from './selected-content.actions';
-import { appInitActions } from '../../app-init/app-init.actions'; // Adjusted path
+import { configActions } from '../../config';
 import { initialState, State } from './selected-content.state';
 import { itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
 
@@ -25,7 +25,7 @@ export const reducer = createReducer(
   ),
 
   on(
-    appInitActions.setDefaultRoutes,
+    configActions.setDefaultRoutes,
     (state, { defaultActivityRoute, defaultSkillRoute }): State => ({
       ...state,
       activity: state.activity === null ? defaultActivityRoute : state.activity,

@@ -9,7 +9,7 @@ import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
 import { Result } from '../../models/attempts';
 import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
-import { fromAppInit } from 'src/app/store/app-init/app-init.store';
+import { fromConfig } from 'src/app/store/config';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -69,7 +69,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
 
   const selectActiveContentRouteParsingResult = createSelector(
     fromRouter.selectSegments,
-    fromAppInit.selectRedirects,
+    fromConfig.selectRedirects,
     (segments, redirects) => (segments ? parseItemUrlSegments(segments, redirects) : null)
   );
 
