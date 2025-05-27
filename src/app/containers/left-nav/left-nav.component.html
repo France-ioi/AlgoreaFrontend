@@ -1,42 +1,45 @@
 <ng-container *ngIf="activeTab$ | async as activeTab;">
-  <div class="tab-view-container">
-    <div class="main-menu">
-      <button
-        class="main-menu-button active"
-        [ngClass]="{ 'active': activeTab.index === 0, 'compact': currentLanguage === 'fr' }"
-        (click)="onSelectionChangedByIdx(0)"
-      >
-        <div class="main-menu-icon-wrapper">
-          <i class="ph ph-presentation main-menu-icon"></i>
-        </div>
-        <span class="main-menu-title" i18n="|Tab name">Content</span>
-      </button>
 
-      <button
-        class="main-menu-button"
-        [ngClass]="{ 'active': activeTab.index === 1, 'compact': currentLanguage === 'fr' }"
-        *ngIf="!skillsDisabled"
-        (click)="onSelectionChangedByIdx(1)"
-      >
-        <div class="main-menu-icon-wrapper">
-          <i class="ph ph-graduation-cap main-menu-icon"></i>
-        </div>
-        <span class="main-menu-title" i18n="|Tab name">Skills</span>
-      </button>
+  @if (showTabs) {
+    <div class="tab-view-container">
+      <div class="main-menu">
+        <button
+          class="main-menu-button active"
+          [ngClass]="{ 'active': activeTab.index === 0, 'compact': currentLanguage === 'fr' }"
+          (click)="onSelectionChangedByIdx(0)"
+        >
+          <div class="main-menu-icon-wrapper">
+            <i class="ph ph-presentation main-menu-icon"></i>
+          </div>
+          <span class="main-menu-title" i18n="|Tab name">Content</span>
+        </button>
 
-      <button
-        class="main-menu-button"
-        [ngClass]="{ 'active': activeTab.index === 2, 'compact': currentLanguage === 'fr' }"
-        data-cy="main-menu-group-btn"
-        (click)="onSelectionChangedByIdx(2)"
-      >
-        <div class="main-menu-icon-wrapper">
-          <i class="ph ph-users main-menu-icon"></i>
-        </div>
-        <span class="main-menu-title" i18n="|Tab name">Groups</span>
-      </button>
+        <button
+          class="main-menu-button"
+          [ngClass]="{ 'active': activeTab.index === 1, 'compact': currentLanguage === 'fr' }"
+          *ngIf="!skillsDisabled"
+          (click)="onSelectionChangedByIdx(1)"
+        >
+          <div class="main-menu-icon-wrapper">
+            <i class="ph ph-graduation-cap main-menu-icon"></i>
+          </div>
+          <span class="main-menu-title" i18n="|Tab name">Skills</span>
+        </button>
+
+        <button
+          class="main-menu-button"
+          [ngClass]="{ 'active': activeTab.index === 2, 'compact': currentLanguage === 'fr' }"
+          data-cy="main-menu-group-btn"
+          (click)="onSelectionChangedByIdx(2)"
+        >
+          <div class="main-menu-icon-wrapper">
+            <i class="ph ph-users main-menu-icon"></i>
+          </div>
+          <span class="main-menu-title" i18n="|Tab name">Groups</span>
+        </button>
+      </div>
     </div>
-  </div>
+  }
 
   <hr class="divider">
   <ng-container *ngrxLet="searchResultState$ as searchResultState">

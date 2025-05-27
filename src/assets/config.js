@@ -25,6 +25,7 @@ window.appConfig = {
   featureFlags: {
     hideTaskTabs: [],
     showGroupAccessTab: true,
+    showLeftMenuTabs: true,
   },
 
   redirects: { /* paths to be matched must not have a trailing slash */
