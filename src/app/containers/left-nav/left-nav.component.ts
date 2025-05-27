@@ -85,6 +85,8 @@ export class LeftNavComponent implements OnChanges {
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
   );
 
+  showTabs = this.config.featureFlags.showLeftMenuTabs;
+
   @Output() selectElement = this.activeTab$.pipe(
     map(tab => this.navTreeServices[tab.index]),
     filter(isNotUndefined),

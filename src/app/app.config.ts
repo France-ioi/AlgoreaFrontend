@@ -42,6 +42,7 @@ const configSchema = z.object({
   featureFlags: z.object({
     hideTaskTabs: z.array(z.string()).default([]),
     showGroupAccessTab: z.boolean().default(false),
+    showLeftMenuTabs: z.boolean().default(true),
   }),
 
   /* paths to be matched must not have a trailing slash */
