@@ -74,7 +74,7 @@ export class JoinedGroupListComponent implements OnDestroy {
         acceptButtonStyleClass: 'danger',
         rejectButtonCaption: $localize`No`,
       },
-      maxWidth: '18rem',
+      maxWidth: '18.5rem',
     }).closed.pipe(
       filter(accepted => !!accepted),
       switchMap(() => this.groupLeaveService.leave(membership.group.id)),

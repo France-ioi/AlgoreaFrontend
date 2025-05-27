@@ -4,7 +4,7 @@
   display: block;
   background: var(--alg-white-color);
   border-radius: toRem(8);
-  padding: var(--alg-space-size-6);
+  padding: calc(var(--alg-space-size-6) + toRem(4)) calc(var(--alg-space-size-6) + toRem(4)) var(--alg-space-size-4);
 }
 
 .header {
@@ -14,7 +14,7 @@
 }
 
 .body {
-  margin: 0 var(--alg-space-size-6);
+  margin: var(--alg-space-size-5) var(--alg-space-size-6) 0 var(--alg-space-size-6);
 }
 
 .message {
@@ -31,10 +31,10 @@
 }
 
 .footer {
+  margin-top: var(--alg-space-size-4);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: var(--alg-space-size-5);
 }
 
 .button {
