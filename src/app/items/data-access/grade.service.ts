@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { TaskToken } from './task-token.service';
 import { TaskScore, TaskScoreToken } from '../api/types';
 import { AnswerToken } from './answer-token.service';
@@ -28,6 +28,7 @@ export type UnlockedItems = SaveGradeResult['unlockedItems'];
   providedIn: 'root',
 })
 export class GradeService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
@@ -37,7 +38,7 @@ export class GradeService {
     score?: TaskScore,
     scoreToken?: TaskScoreToken,
   ): Observable<SaveGradeResult> {
-    return this.http.post<ActionResponse<unknown>>(`${appConfig.apiUrl}/items/save-grade`, {
+    return this.http.post<ActionResponse<unknown>>(`${this.config.apiUrl}/items/save-grade`, {
       task_token: taskToken,
       answer_token: answerToken,
       score,

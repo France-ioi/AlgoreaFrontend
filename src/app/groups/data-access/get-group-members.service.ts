@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { userBaseSchema, withGrade, withGroupId } from '../models/user';
@@ -21,6 +22,7 @@ export type GroupMembers = z.infer<typeof groupMembersSchema>;
   providedIn: 'root'
 })
 export class GetGroupMembersService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -35,7 +37,7 @@ export class GetGroupMembersService {
     if (limit !== undefined) params = params.set('limit', limit.toString());
     if (fromId !== undefined) params = params.set('from.id', fromId);
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/members`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
         decodeSnakeCaseZod(groupMembersSchema),
       );

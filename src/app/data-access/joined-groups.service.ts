@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/data-access/sort-options';
 import z from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
@@ -27,12 +28,13 @@ export type GroupMembership = z.infer<typeof groupMembershipSchema>;
   providedIn: 'root'
 })
 export class JoinedGroupsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getJoinedGroups(sort: SortOptions): Observable<GroupMembership[]> {
     return this.http
-      .get(`${appConfig.apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
+      .get(`${this.config.apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
         decodeSnakeCaseZod(z.array(groupMembershipSchema)),
         map(memberships => memberships.filter(membership => membership.group.type !== 'Base')),

@@ -5,16 +5,19 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { fromTimeOffset } from '../store/time-offset';
 import { isRequestToApi } from './interceptor_common';
+import { APPCONFIG } from '../app.config';
 
 /**
  * Interceptor which measures the time difference betweeen the client and the time indicated on server response, and sends it to the store
  */
 export function timeOffsetComputationInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const store = inject(Store);
+  const config = inject(APPCONFIG);
+
   return next(req).pipe(
     tap(event => {
       const localTs = Date.now();
-      if (!isRequestToApi(req)) return;
+      if (!isRequestToApi(req, config.apiUrl)) return;
       if (event.type !== HttpEventType.Response) return;
       const serverDateString = event.headers.get('Date');
       if (!serverDateString) return;
@@ -23,7 +26,4 @@ export function timeOffsetComputationInterceptor(req: HttpRequest<unknown>, next
       store.dispatch(fromTimeOffset.interceptorActions.reportOffset({ offset }));
     })
   );
-
 }
-
-

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 
@@ -21,12 +21,13 @@ type GroupAdditionalTimes = z.infer<typeof groupAdditionalTimesSchema>;
   providedIn: 'root'
 })
 export class ExtraTimeService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   getForGroupDescendant(itemId: string, groupId: string): Observable<GroupAdditionalTimes> {
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/items/${itemId}/groups/${groupId}/members/additional-times`)
+      .get<unknown>(`${this.config.apiUrl}/items/${itemId}/groups/${groupId}/members/additional-times`)
       .pipe(
         decodeSnakeCaseZod(groupAdditionalTimesSchema),
       );

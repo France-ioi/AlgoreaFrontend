@@ -1,7 +1,7 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from '../../services/current-content.service';
@@ -19,6 +19,7 @@ import { NgIf } from '@angular/common';
   ],
 })
 export class RedirectToIdComponent implements OnDestroy {
+  private config = inject(APPCONFIG);
 
   notExisting = false;
 
@@ -31,7 +32,7 @@ export class RedirectToIdComponent implements OnDestroy {
   );
 
   private subscription = this.path$.pipe(
-    map(path => (appConfig.redirects ? appConfig.redirects[path] : undefined))
+    map(path => this.config.redirects[path]),
   ).subscribe(route => {
     if (route) this.itemRouter.navigateTo(itemRoute('activity', route.id, { path: route.path }));
     else this.notExisting = true;

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
@@ -33,6 +33,7 @@ type ItemParents = z.infer<typeof itemParentsSchema>;
   providedIn: 'root'
 })
 export class GetItemParentsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -40,7 +41,7 @@ export class GetItemParentsService {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
     return this.http
-      .get<unknown[]>(`${appConfig.apiUrl}/items/${id}/parents`, { params: params })
+      .get<unknown[]>(`${this.config.apiUrl}/items/${id}/parents`, { params: params })
       .pipe(
         decodeSnakeCaseZod(itemParentsSchema)
       );

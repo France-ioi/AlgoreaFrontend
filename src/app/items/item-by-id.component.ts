@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
 import {
@@ -32,7 +32,7 @@ import { ItemEditWrapperComponent } from './containers/item-edit-wrapper/item-ed
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
 import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
@@ -106,6 +106,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   ],
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
+  private config = inject(APPCONFIG);
 
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
@@ -145,7 +146,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     switchMap(answerErr => this.itemRoute$.pipe(
       map((route, idx) => (idx === 0 && answerErr !== undefined ? {
         isForbidden: errorIsHTTPForbidden(answerErr.error),
-        fallbackLink: route.answer ? itemRouteAsUrlCommand({ ...route, answer: undefined }) : undefined,
+        fallbackLink: route.answer ? itemRouteAsUrlCommand({ ...route, answer: undefined }, this.config.redirects) : undefined,
       } : undefined /* reset error if we navigate */)))
     ),
   );
@@ -298,7 +299,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
 
-  showItemThreadWidget = !!appConfig.forumServerUrl;
+  showItemThreadWidget = !!this.config.forumServerUrl;
 
   constructor(
     private store: Store,

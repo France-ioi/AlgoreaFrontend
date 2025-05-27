@@ -2,52 +2,10 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { Environment, PartialDeep } from 'src/app/utils/config';
-
-export const environment: Environment = {
+export const environment = {
   production: false,
-  apiUrl: 'https://dev.algorea.org/api',
-  oauthServerUrl: 'https://login.france-ioi.org',
-  forumServerUrl: 'ws://localhost:3001',
-  oauthClientId: '43',
-
-  defaultActivityId: '4702',
-  defaultSkillId: '3000',
-  allUsersGroupId: '3',
-
-  languages: [
-    { tag: 'fr', path: '/fr/' },
-    { tag: 'en', path: '/' },
-  ],
-  defaultTitle: 'Algorea Platform',
-  languageSpecificTitles: { fr: 'Plateforme Algoréa' },
-  allowForcedToken: true,
-  authType: 'tokens',
-
-  itemPlatformId: 'algorea_backend',
-
-  theme: 'default',
-  featureFlags: {
-    hideTaskTabs: [],
-  },
 };
 
-type Preset = 'demo';
-export const presets: Record<Preset, PartialDeep<Environment>> = {
-  demo: {
-    defaultActivityId: '1352246428241737349', // SNT
-    defaultTitle: 'Demo app',
-    authType: 'cookies',
-    theme: 'coursera-pt',
-  },
-};
-
-export function getPresetNameByOrigin(origin: string): Preset | null {
-  switch (origin) {
-    case 'http://demo.localhost': return 'demo';
-    default: return null;
-  }
-}
 
 /*
  * For easier debugging in development mode, you can import the following file

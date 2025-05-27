@@ -1,5 +1,6 @@
 import { catchError, map, Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -27,18 +28,20 @@ const breadcrumbsListSchema = z.array(breadcrumbsFromRootSchema);
   providedIn: 'root',
 })
 export class GetBreadcrumbsFromRootsService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {
   }
 
   get(id: string): Observable<BreadcrumbsFromRootElement[][]> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/${id}/breadcrumbs-from-roots`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/items/${id}/breadcrumbs-from-roots`).pipe(
       decodeSnakeCaseZod(breadcrumbsListSchema),
       map(l => l.map(e => e.path))
     );
   }
 
   getByTextId(textId: string): Observable<BreadcrumbsFromRootElement[][]> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/items/by-text-id/${encodeURIComponent(textId)}/breadcrumbs-from-roots`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/items/by-text-id/${encodeURIComponent(textId)}/breadcrumbs-from-roots`).pipe(
       catchError(err => {
         // convert a specific 400 error to 403
         if (!(err instanceof HttpErrorResponse) || !errorIsBadRequest(err)) throw err;

@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 
@@ -38,6 +39,7 @@ export type ParticipantProgresses = z.infer<typeof participantProgressesSchema>;
   providedIn: 'root'
 })
 export class GetGroupProgressService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -54,7 +56,7 @@ export class GetGroupProgressService {
     if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
 
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/user-progress`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/user-progress`, { params: params })
       .pipe(
         decodeSnakeCaseZod(participantProgressesSchema),
       );
@@ -66,7 +68,7 @@ export class GetGroupProgressService {
   ): Observable<ParticipantProgresses> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/team-progress`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/team-progress`, { params: params })
       .pipe(
         decodeSnakeCaseZod(participantProgressesSchema),
       );
@@ -78,7 +80,7 @@ export class GetGroupProgressService {
   ): Observable<GroupProgresses> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
     return this.http
-      .get<unknown>(`${appConfig.apiUrl}/groups/${groupId}/group-progress`, { params: params })
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/group-progress`, { params: params })
       .pipe(
         decodeSnakeCaseZod(groupProgressesSchema),
       );

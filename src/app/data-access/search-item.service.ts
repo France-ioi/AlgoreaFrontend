@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from '../utils/config';
+import { APPCONFIG } from '../app.config';
+import { inject } from '@angular/core';
 import { ItemType } from '../items/models/item-type';
 import { z } from 'zod';
 import { decodeSnakeCaseZod } from '../utils/operators/decode';
@@ -25,6 +26,7 @@ const itemFoundSchema = z.object({
   providedIn: 'root',
 })
 export class SearchItemService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {
   }
@@ -41,7 +43,7 @@ export class SearchItemService {
     if (excludedTypes) params = params.set('types_exclude', excludedTypes.join(','));
 
     return this.http.get<unknown[]>(
-      `${appConfig.apiUrl}/items/search`,
+      `${this.config.apiUrl}/items/search`,
       { params: params },
     ).pipe(
       decodeSnakeCaseZod(z.array(itemFoundSchema))

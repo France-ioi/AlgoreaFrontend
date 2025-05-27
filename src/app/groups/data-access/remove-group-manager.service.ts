@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { merge, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { appConfig } from '../../utils/config';
+import { APPCONFIG } from '../../app.config';
+import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from '../../data-access/action-response';
 import { reduce, map, switchMap, catchError } from 'rxjs/operators';
 
@@ -22,12 +23,14 @@ export function parseResults(data: boolean[]): Result {
   providedIn: 'root',
 })
 export class RemoveGroupManagerService {
+  private config = inject(APPCONFIG);
+
   constructor(private http: HttpClient) {
   }
 
   remove(groupId: string, managerId: string): Observable<void> {
     return this.http
-      .delete<SimpleActionResponse>(`${appConfig.apiUrl}/groups/${groupId}/managers/${managerId}`)
+      .delete<SimpleActionResponse>(`${this.config.apiUrl}/groups/${groupId}/managers/${managerId}`)
       .pipe(
         map(assertSuccess),
       );

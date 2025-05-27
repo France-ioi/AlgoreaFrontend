@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 
 export enum InvitationResult {
   Success,
@@ -16,6 +17,7 @@ export enum InvitationResult {
   providedIn: 'root'
 })
 export class CreateGroupInvitationsService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
@@ -25,7 +27,7 @@ export class CreateGroupInvitationsService {
   ) : Observable<Map<string, InvitationResult>> {
     return this.http
       .post<ActionResponse<object>>(
-        `${appConfig.apiUrl}/groups/${groupId}/invitations`,
+        `${this.config.apiUrl}/groups/${groupId}/invitations`,
         { logins: logins }, {})
       .pipe(
         map(successData),

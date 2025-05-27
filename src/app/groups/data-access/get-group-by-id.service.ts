@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { groupCodeSchema } from '../models/group-code';
 import { groupManagershipSchema } from '../models/group-management';
@@ -42,11 +43,12 @@ export type GroupShortInfo = z.infer<typeof groupShortInfoSchema>;
   providedIn: 'root',
 })
 export class GetGroupByIdService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {}
 
   get(id: string): Observable<Group> {
-    return this.http.get<unknown>(`${appConfig.apiUrl}/groups/${id}`).pipe(
+    return this.http.get<unknown>(`${this.config.apiUrl}/groups/${id}`).pipe(
       decodeSnakeCaseZod(groupSchema),
     );
   }

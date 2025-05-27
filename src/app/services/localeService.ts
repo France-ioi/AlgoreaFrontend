@@ -1,16 +1,17 @@
 import { Location } from '@angular/common';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { appConfig, LanguageConfig } from 'src/app/utils/config';
+import { AppConfig, APPCONFIG } from 'src/app/app.config';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocaleService implements OnDestroy {
+  private config = inject(APPCONFIG);
 
-  readonly languages: LanguageConfig[];
-  readonly currentLang?: LanguageConfig;
+  readonly languages: AppConfig['languages'];
+  readonly currentLang?: AppConfig['languages'][number];
   readonly currentLangError$: Observable<Error>;
 
   private navigating$ = new Subject<void>();
@@ -19,7 +20,7 @@ export class LocaleService implements OnDestroy {
   constructor(
     private location: Location,
   ) {
-    this.languages = appConfig.languages;
+    this.languages = this.config.languages;
     this.currentLang = this.languages.find(l => this.location.prepareExternalUrl('').endsWith(l.path));
     this.currentLangError$ = this.currentLang ? EMPTY : of(new Error('unable to set current lang'));
   }

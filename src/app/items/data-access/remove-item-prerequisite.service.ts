@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
@@ -9,12 +10,14 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class RemoveItemPrerequisiteService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) {
   }
 
   delete(dependentItemId: string, prerequisiteItemId: string): Observable<void> {
-    return this.http.delete<SimpleActionResponse>(`${appConfig.apiUrl}/items/${dependentItemId}/prerequisites/${prerequisiteItemId}`).pipe(
+    const url = `${this.config.apiUrl}/items/${dependentItemId}/prerequisites/${prerequisiteItemId}`;
+    return this.http.delete<SimpleActionResponse>(url).pipe(
       map(assertSuccess),
     );
   }

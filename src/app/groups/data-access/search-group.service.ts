@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { appConfig } from 'src/app/utils/config';
+import { APPCONFIG } from 'src/app/app.config';
+import { inject } from '@angular/core';
 import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from '../../utils/operators/decode';
 
@@ -27,6 +28,7 @@ function notBase(group: Group): group is GroupFound {
   providedIn: 'root'
 })
 export class SearchGroupService {
+  private config = inject(APPCONFIG);
 
   constructor(private http: HttpClient) { }
 
@@ -36,7 +38,7 @@ export class SearchGroupService {
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<Group[]>(
-      `${appConfig.apiUrl}/current-user/available-groups`,
+      `${this.config.apiUrl}/current-user/available-groups`,
       { params: params },
     ).pipe(
       decodeSnakeCase(D.array(groupInfoDecoder)),
@@ -50,7 +52,7 @@ export class SearchGroupService {
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
     return this.http.get<Group[]>(
-      `${appConfig.apiUrl}/groups/possible-subgroups`,
+      `${this.config.apiUrl}/groups/possible-subgroups`,
       { params: params },
     ).pipe(
       decodeSnakeCase(D.array(groupInfoDecoder)),
