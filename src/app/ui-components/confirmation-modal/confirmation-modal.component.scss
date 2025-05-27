@@ -1,0 +1,44 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  background: var(--alg-white-color);
+  border-radius: toRem(8);
+  padding: calc(var(--alg-space-size-6) + toRem(4)) calc(var(--alg-space-size-6) + toRem(4)) var(--alg-space-size-4);
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.body {
+  margin: var(--alg-space-size-5) var(--alg-space-size-6) 0 var(--alg-space-size-6);
+}
+
+.message {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: var(--alg-secondary-color);
+}
+
+.message-icon {
+  margin-right: var(--alg-space-size-6);
+  font-size: toRem(30);
+  color: var(--alg-secondary-color);
+}
+
+.footer {
+  margin-top: var(--alg-space-size-4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  &:not(first-child) {
+    margin-left: var(--alg-space-size-6);
+  }
+}
