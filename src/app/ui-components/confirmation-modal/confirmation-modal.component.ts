@@ -2,15 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-
-export interface ConfirmationModalData {
-  message: string,
-  messageIconStyleClass?: string,
-  acceptButtonCaption?: string,
-  acceptButtonStyleClass?: string,
-  rejectButtonCaption?: string,
-  rejectButtonStyleClass?: string,
-}
+import { ConfirmationModalData } from 'src/app/services/confirmation-modal.service';
 
 @Component({
   selector: 'alg-confirmation-modal',
