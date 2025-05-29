@@ -8,8 +8,10 @@ export interface ConfirmationModalData {
   messageIconStyleClass?: string,
   acceptButtonCaption?: string,
   acceptButtonStyleClass?: string,
+  acceptButtonIcon?: string,
   rejectButtonCaption?: string,
   rejectButtonStyleClass?: string,
+  rejectButtonIcon?: string,
 }
 
 @Injectable({
