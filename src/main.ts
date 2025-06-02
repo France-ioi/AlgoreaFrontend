@@ -56,6 +56,10 @@ if (environment.production) {
 /* eslint-disable no-console */ /* console call authorized here (?) */
 bootstrapApplication(AppComponent, {
   providers: [
+    {
+      provide: ErrorHandler,
+      useClass: AlgErrorHandler,
+    },
     importProvidersFrom(
       BrowserModule,
       LetDirective,
@@ -95,10 +99,6 @@ bootstrapApplication(AppComponent, {
       provide: HTTP_INTERCEPTORS,
       useClass: WithCredentialsInterceptor,
       multi: true,
-    },
-    {
-      provide: ErrorHandler,
-      useClass: AlgErrorHandler,
     },
     provideRouter(routes),
     provideStore(),
