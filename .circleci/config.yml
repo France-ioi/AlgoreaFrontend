@@ -23,6 +23,7 @@ commands:
           arguments: >-
             --acl public-read
             --exclude "*/index.html"
+            --exclude "*/assets/config.js"
             --cache-control 'max-age=31536000'
       - aws-s3/copy:
           from:  << parameters.from >>index.html
@@ -39,6 +40,18 @@ commands:
       - aws-s3/copy:
           from:  << parameters.from >>fr/index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/fr/index.html
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=10'
+      - aws-s3/copy:
+          from:  << parameters.from >>en/assets/config.js
+          to: s3://<< parameters.bucket >><< parameters.path >>/en/assets/config.js
+          arguments: >-
+            --acl public-read
+            --cache-control 'max-age=10'
+      - aws-s3/copy:
+          from:  << parameters.from >>fr/assets/config.js
+          to: s3://<< parameters.bucket >><< parameters.path >>/fr/assets/config.js
           arguments: >-
             --acl public-read
             --cache-control 'max-age=10'
