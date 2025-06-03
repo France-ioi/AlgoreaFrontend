@@ -30,6 +30,7 @@ export const itemEntryFromPermSchema = z.object({
 export const itemEntryUntilPermSchema = z.object({
   canEnterUntil: z.coerce.date(),
 });
+export const itemEntryTimePermSchema = itemEntryFromPermSchema.and(itemEntryUntilPermSchema);
 
 export const itemEntryFromPermDecoder = D.struct({
   canEnterFrom: dateDecoder,
