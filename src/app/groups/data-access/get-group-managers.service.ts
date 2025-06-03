@@ -3,28 +3,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { decodeSnakeCase } from '../../utils/operators/decode';
+import { z } from 'zod';
+import { manageTypeSchema } from 'src/app/data-access/managed-groups.service';
+import { userBaseSchema } from 'src/app/groups/models/user';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 
-export const managerDecoder = pipe(
-  D.struct({
-    id: D.string,
-    name: D.string,
-    canManage: D.literal('none', 'memberships', 'memberships_and_group'),
-    canGrantGroupAccess: D.boolean,
-    canWatchMembers: D.boolean,
-  }),
-  D.intersect(
-    D.partial({
-      login: D.string,
-      firstName: D.nullable(D.string),
-      lastName: D.nullable(D.string),
-    }),
-  )
-);
+export const managerSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  canManage: manageTypeSchema,
+  canGrantGroupAccess: z.boolean(),
+  canWatchMembers: z.boolean(),
+}).merge(userBaseSchema.partial());
 
-export type Manager = D.TypeOf<typeof managerDecoder>;
+export type Manager = z.infer<typeof managerSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +41,7 @@ export class GetGroupManagersService {
 
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
-        decodeSnakeCase(D.array(managerDecoder)),
+        decodeSnakeCaseZod(z.array(managerSchema)),
       );
   }
 }
