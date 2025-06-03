@@ -2,26 +2,26 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { ActionResponse, assertSuccess } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
 
-const existingCurrentAnswerDecoder = D.struct({
-  answer: D.nullable(D.string),
-  attemptId: D.nullable(D.string),
-  authorId: D.string,
-  id: D.string,
-  itemId: D.string,
-  score: D.nullable(D.number),
-  state: D.nullable(D.string),
-  type: D.literal('Submission', 'Saved', 'Current'),
+const existingCurrentAnswerSchema = z.object({
+  answer: z.string().nullable(),
+  attemptId: z.string().nullable(),
+  authorId: z.string(),
+  id: z.string(),
+  itemId: z.string(),
+  score: z.number().nullable(),
+  state: z.string().nullable(),
+  type: z.enum([ 'Submission', 'Saved', 'Current' ]),
 });
 
-const noCurrentAnswerDecoder = D.struct({ type: D.literal(null) });
-const currentAnswerDecoder = D.union(existingCurrentAnswerDecoder, noCurrentAnswerDecoder);
+const noCurrentAnswerSchema = z.object({ type: z.null() });
+const currentAnswerSchema = z.union([ existingCurrentAnswerSchema, noCurrentAnswerSchema ]);
 
-type ExistingCurrentAnswer = D.TypeOf<typeof existingCurrentAnswerDecoder>;
+type ExistingCurrentAnswer = z.infer<typeof existingCurrentAnswerSchema>;
 
 interface UpdateCurrentAnswerBody {
   answer: string,
@@ -41,7 +41,7 @@ export class CurrentAnswerService {
       fromObject: asTeamId ? { attempt_id: attemptId, as_team_id: asTeamId } : { attempt_id: attemptId },
     });
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/current-answer`, { params }).pipe(
-      decodeSnakeCase(currentAnswerDecoder),
+      decodeSnakeCaseZod(currentAnswerSchema),
       map(a => (a.type === null ? null : a)), // convert "no current answer" response to "null"
     );
   }
