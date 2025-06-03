@@ -4,14 +4,12 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { map } from 'rxjs/operators';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from '../../utils/operators/decode';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { GroupId, GroupPath } from 'src/app/models/ids';
 
-const groupPathDecoder = D.array(D.string);
-
-const groupPathResponseDecoder = D.struct({
-  path: groupPathDecoder,
+const groupPathResponseSchema = z.object({
+  path: z.array(z.string()),
 });
 
 @Injectable({
@@ -24,7 +22,7 @@ export class GetGroupPathService {
 
   getGroupPath(groupId: GroupId): Observable<GroupPath> {
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${groupId}/path-from-root`).pipe(
-      decodeSnakeCase(groupPathResponseDecoder),
+      decodeSnakeCaseZod(groupPathResponseSchema),
       // remove the last element from the path as it is the group id itself, that we do not need in our group paths
       map(raw => raw.path.slice(0,-1)),
     );
