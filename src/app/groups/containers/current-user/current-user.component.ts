@@ -27,10 +27,10 @@ export class CurrentUserComponent {
     private location: Location,
   ) {}
 
-  onModify(userId: string): void {
-    const backUrl = window.location.origin + this.location.prepareExternalUrl('update-profile.html');
+  onModify(): void {
+    const redirectUri = window.location.origin + this.location.prepareExternalUrl('update-profile.html');
     window.open(
-      `${ this.config.oauthServerUrl }?all=1&client_id=${ userId }&redirect_uri=${encodeURI(backUrl)}`,
+      `${ this.config.oauthServerUrl }?all=1&client_id=${ this.config.oauthClientId }&redirect_uri=${encodeURI(redirectUri)}`,
       undefined,
       'popup,width=800,height=640'
     );
