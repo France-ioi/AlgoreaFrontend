@@ -1,8 +1,6 @@
 /** Types and decoders for types used in platform-task communication */
-
-import { pipe } from 'fp-ts/function';
 import * as D from 'io-ts/Decoder';
-
+import * as z from 'zod';
 
 // Parameters passed to the task
 // Those need a decoder as a default value to them can be passed by the task
@@ -30,15 +28,14 @@ export type TaskParamsKeyDefault = D.TypeOf<typeof taskParamsKeyDefaultDecoder>;
 
 // Views offered by the task
 // For instance, taskViews = { task: { includes: ["editor"] }, solution : {}}
-export const taskViewDecoder = D.partial({
-  requires: D.string,
-  includes: D.array(D.string)
-});
-export type TaskView = D.TypeOf<typeof taskViewDecoder>;
+export const taskViewSchema = z.object({
+  requires: z.string(),
+  includes: z.array(z.string()),
+}).partial();
+export type TaskView = z.infer<typeof taskViewSchema>;
 
-export const taskViewsDecoder = D.record(taskViewDecoder);
-export type TaskViews = D.TypeOf<typeof taskViewsDecoder>;
-
+export const taskViewsSchema = z.record(taskViewSchema);
+export type TaskViews = z.infer<typeof taskViewsSchema>;
 
 // Task grading results
 export interface RawTaskGrade {
@@ -46,49 +43,45 @@ export interface RawTaskGrade {
   message?: unknown,
   scoreToken?: unknown,
 }
-export const taskGradeDecoder = D.partial({
-  score: D.number,
-  message: D.string,
-  scoreToken: D.nullable(D.string),
-});
-export type TaskGrade = D.TypeOf<typeof taskGradeDecoder>;
+export const taskGradeSchema = z.object({
+  score: z.number(),
+  message: z.string(),
+  scoreToken: z.string().nullable(),
+}).partial();
+export type TaskGrade = z.infer<typeof taskGradeSchema>;
 export type TaskScore = NonNullable<TaskGrade['score']>;
 export type TaskScoreToken = NonNullable<TaskGrade['scoreToken']>;
 
 // Parameters sent by the task to platform.updateDisplay
-export const updateDisplayParamsDecoder = D.partial({
-  height: D.number,
-  views: taskViewsDecoder,
-  scrollTop: D.number
-});
-export type UpdateDisplayParams = D.TypeOf<typeof updateDisplayParamsDecoder>;
+export const updateDisplayParamsSchema = z.object({
+  height: z.number(),
+  views: taskViewsSchema,
+  scrollTop: z.number(),
+}).partial();
+export type UpdateDisplayParams = z.infer<typeof updateDisplayParamsSchema>;
 
 // Log data sent by the task
-export const taskLogDecoder = D.UnknownArray;
-export type TaskLog = D.TypeOf<typeof taskLogDecoder>;
+export const taskLogSchema = z.array(z.unknown());
+export type TaskLog = z.infer<typeof taskLogSchema>;
 
-export const metadataDecoder = D.partial({
-  autoHeight: D.boolean,
-  disablePlatformProgress: D.boolean,
-  editorUrl: D.string,
-  usesRandomSeed: D.boolean,
-  usesTokens: D.boolean,
-});
-export type TaskMetaData = D.TypeOf<typeof metadataDecoder>;
+export const taskMetadataSchema = z.object({
+  autoHeight: z.boolean(),
+  disablePlatformProgress: z.boolean(),
+  editorUrl: z.string(),
+  usesRandomSeed: z.boolean(),
+  usesTokens: z.boolean(),
+}).partial();
+export type TaskMetaData = z.infer<typeof taskMetadataSchema>;
 export type TaskResources = unknown;
 
-export const openUrlParamsDecoder = D.union(
-  D.string,
-  pipe(
-    D.union(
-      D.struct({ path: D.string }),
-      D.struct({ url: D.string }),
-      D.struct({ itemId: D.string }),
-      D.struct({ textId: D.string }),
-    ),
-    D.intersect(D.partial({ newTab: D.boolean }))
-  ),
+export const openUrlParamsSchema = z.union([
+  z.string(),
+  z.union([
+    z.object({ path: z.string() }),
+    z.object({ url: z.string() }),
+    z.object({ itemId: z.string() }),
+    z.object({ textId: z.string() }),
+  ]).and(z.object({ newTab: z.boolean().optional() }))
+]);
 
-);
-
-export type OpenUrlParams = D.TypeOf<typeof openUrlParamsDecoder>;
+export type OpenUrlParams = z.infer<typeof openUrlParamsSchema>;
