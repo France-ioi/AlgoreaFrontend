@@ -2,16 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 
-const answerTokenDataDecoder = D.struct({
-  answerToken: D.string,
+const answerTokenDataSchema = z.object({
+  answerToken: z.string(),
 });
 
-type AnswerTokenData = D.TypeOf<typeof answerTokenDataDecoder>;
+type AnswerTokenData = z.infer<typeof answerTokenDataSchema>;
 export type AnswerToken = AnswerTokenData['answerToken'];
 
 @Injectable({
@@ -28,7 +28,7 @@ export class AnswerTokenService {
       task_token: taskToken,
     }).pipe(
       map(successData),
-      decodeSnakeCase(answerTokenDataDecoder),
+      decodeSnakeCaseZod(answerTokenDataSchema),
       map(data => data.answerToken),
     );
   }
