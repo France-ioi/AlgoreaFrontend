@@ -6,7 +6,7 @@ import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/it
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { ItemTypeCategory, itemTypeCategoryEnum, itemTypeSchema } from 'src/app/items/models/item-type';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
@@ -106,7 +106,7 @@ export class ItemNavigationService {
     else params = params.set('attempt_id', options.childRoute.parentAttemptId);
 
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/navigation`, { params: params }).pipe(
-      decodeSnakeCaseZod(itemNavigationDataSchema),
+      decodeSnakeCase(itemNavigationDataSchema),
       map(data => (options.skillOnly ? { ...data, children: data.children.filter(c => c.type === 'Skill') } : data))
     );
   }
@@ -120,7 +120,7 @@ export class ItemNavigationService {
     }
 
     return this.http.get<unknown[]>(`${this.config.apiUrl}/current-user/group-memberships/activities`, { params: httpParams }).pipe(
-      decodeSnakeCaseZod(z.array(rootActivitySchema)),
+      decodeSnakeCase(z.array(rootActivitySchema)),
     );
   }
 
@@ -133,7 +133,7 @@ export class ItemNavigationService {
     }
 
     return this.http.get<unknown[]>(`${this.config.apiUrl}/current-user/group-memberships/skills`, { params: httpParams }).pipe(
-      decodeSnakeCaseZod(z.array(rootSkillSchema)),
+      decodeSnakeCase(z.array(rootSkillSchema)),
     );
   }
 

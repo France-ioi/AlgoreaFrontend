@@ -6,7 +6,7 @@ import { inject } from '@angular/core';
 import { z } from 'zod';
 import { manageTypeSchema } from 'src/app/data-access/managed-groups.service';
 import { userBaseSchema } from 'src/app/groups/models/user';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 export const managerSchema = z.object({
   id: z.string(),
@@ -41,7 +41,7 @@ export class GetGroupManagersService {
 
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
-        decodeSnakeCaseZod(z.array(managerSchema)),
+        decodeSnakeCase(z.array(managerSchema)),
       );
   }
 }

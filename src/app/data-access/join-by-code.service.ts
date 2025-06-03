@@ -6,7 +6,7 @@ import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 
 const managerSchema = z.object({
@@ -57,7 +57,7 @@ export class JoinByCodeService {
       .get<unknown>(`${this.config.apiUrl}/groups/is-code-valid`,
         { params: params })
       .pipe(
-        decodeSnakeCaseZod(isCodeValidSchema),
+        decodeSnakeCase(isCodeValidSchema),
       );
   }
 

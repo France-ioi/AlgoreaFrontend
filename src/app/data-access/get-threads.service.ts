@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
 import { itemTypeSchema } from '../items/models/item-type';
@@ -45,7 +45,7 @@ export class GetThreadsService {
     return this.http.get<unknown>(`${this.config.apiUrl}/threads`, {
       params,
     }).pipe(
-      decodeSnakeCaseZod(threadsSchema),
+      decodeSnakeCase(threadsSchema),
     );
   }
 }

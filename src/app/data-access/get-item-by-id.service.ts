@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { durationSchema } from 'src/app/utils/decoders';
 import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { itemStringSchema, withDescription } from '../items/models/item-string';
@@ -63,7 +63,7 @@ export class GetItemByIdService {
       params = params.set('watched_group_id', options.watchedGroupId);
     }
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${id}`, { params }).pipe(
-      decodeSnakeCaseZod(itemSchema),
+      decodeSnakeCase(itemSchema),
     );
   }
 

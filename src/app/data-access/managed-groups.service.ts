@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { decodeSnakeCase } from '../utils/operators/decode';
 
 const typeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]);
 export const manageTypeSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
@@ -35,7 +35,7 @@ export class ManagedGroupsService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/current-user/managed-groups`)
       .pipe(
-        decodeSnakeCaseZod(z.array(groupSchema)),
+        decodeSnakeCase(z.array(groupSchema)),
       );
   }
 

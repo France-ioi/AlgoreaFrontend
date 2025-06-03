@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { z } from 'zod';
 import { APPCONFIG } from 'src/app/app.config';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 
 const taskTokenDataSchema = z.object({
@@ -30,7 +30,7 @@ export class TaskTokenService {
       { params },
     ).pipe(
       map(successData),
-      decodeSnakeCaseZod(taskTokenDataSchema),
+      decodeSnakeCase(taskTokenDataSchema),
       map(data => data.taskToken),
     );
   }
@@ -38,7 +38,7 @@ export class TaskTokenService {
   generateForAnswer(answerId: string): Observable<TaskToken> {
     return this.http.post<ActionResponse<unknown>>(`${this.config.apiUrl}/answers/${answerId}/generate-task-token`, undefined).pipe(
       map(successData),
-      decodeSnakeCaseZod(taskTokenDataSchema),
+      decodeSnakeCase(taskTokenDataSchema),
       map(data => data.taskToken),
     );
   }

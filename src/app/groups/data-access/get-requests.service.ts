@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from '../../utils/operators/decode';
+import { decodeSnakeCase } from '../../utils/operators/decode';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 import { z } from 'zod';
 import { map } from 'rxjs/operators';
@@ -74,7 +74,7 @@ export class GetRequestsService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/user-requests`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(groupPendingRequestSchema),
+        decodeSnakeCase(groupPendingRequestSchema),
         map(pendingRequests => pendingRequests.map(r => ({
           at: r.at,
           group: r.group,
@@ -96,6 +96,6 @@ export class GetRequestsService {
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     return this.http
       .get<unknown>(`${this.config.apiUrl}/current-user/group-invitations`, { params: params, })
-      .pipe(decodeSnakeCaseZod(groupInvitationsSchema));
+      .pipe(decodeSnakeCase(groupInvitationsSchema));
   }
 }

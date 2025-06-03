@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { userBaseSchema, withGrade, withGroupId } from '../models/user';
 
 const groupMembersSchema = z.array(
@@ -39,7 +39,7 @@ export class GetGroupMembersService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/members`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(groupMembersSchema),
+        decodeSnakeCase(groupMembersSchema),
       );
   }
 }

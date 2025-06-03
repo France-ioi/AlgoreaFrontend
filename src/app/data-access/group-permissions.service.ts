@@ -6,7 +6,7 @@ import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { decodeSnakeCase } from '../utils/operators/decode';
 import {
   itemCorePermSchema,
   itemEntryFromPermSchema,
@@ -43,7 +43,7 @@ export class GroupPermissionsService {
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
-        decodeSnakeCaseZod(groupPermissionsInfoSchema),
+        decodeSnakeCase(groupPermissionsInfoSchema),
       );
   }
 

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 import { map } from 'rxjs/operators';
 
@@ -48,7 +48,7 @@ export class CurrentUserHttpService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/current-user`)
       .pipe(
-        decodeSnakeCaseZod(currentUserSchema)
+        decodeSnakeCase(currentUserSchema)
       );
   }
 

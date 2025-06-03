@@ -5,7 +5,7 @@ import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { ItemType } from '../items/models/item-type';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { decodeSnakeCase } from '../utils/operators/decode';
 import { ItemCorePerm, itemCorePermSchema } from '../items/models/item-permissions';
 
 export interface ItemFound<T> {
@@ -46,7 +46,7 @@ export class SearchItemService {
       `${this.config.apiUrl}/items/search`,
       { params: params },
     ).pipe(
-      decodeSnakeCaseZod(z.array(itemFoundSchema))
+      decodeSnakeCase(z.array(itemFoundSchema))
     );
   }
 }

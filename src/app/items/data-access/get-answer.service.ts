@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 export const answerSchema = z.object({
   answer: z.string().nullable(),
@@ -31,7 +31,7 @@ export class GetAnswerService {
   get(answerId: string): Observable<Answer> {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/answers/${answerId}`)
-      .pipe(decodeSnakeCaseZod(answerSchema));
+      .pipe(decodeSnakeCase(answerSchema));
   }
 
   getBest(itemId: string, options?: { watchedGroupId?: string }): Observable<Answer> {
@@ -41,7 +41,7 @@ export class GetAnswerService {
     }
     return this.http
       .get<unknown>(`${this.config.apiUrl}/items/${itemId}/best-answer`, { params })
-      .pipe(decodeSnakeCaseZod(answerSchema));
+      .pipe(decodeSnakeCase(answerSchema));
   }
 
 }

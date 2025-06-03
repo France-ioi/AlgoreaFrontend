@@ -7,7 +7,7 @@ import { reportAnError } from '../error-handling/error-reporting';
 /**
  * Decode an object with keys in snake_case (typically from a json) to one with its types checked and keys in camelCase
  */
-export function decodeSnakeCaseZod<
+export function decodeSnakeCase<
   Output,
   Def extends ZodTypeDef,
   Input

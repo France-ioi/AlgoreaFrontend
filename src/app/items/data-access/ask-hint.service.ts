@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { z } from 'zod';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { APPCONFIG } from 'src/app/app.config';
 
 const askHintDataSchema = z.object({
@@ -31,7 +31,7 @@ export class AskHintService {
         hint_requested: hintRequested,
       }).pipe(
         map(successData),
-        decodeSnakeCaseZod(askHintDataSchema)
+        decodeSnakeCase(askHintDataSchema)
       );
   }
 

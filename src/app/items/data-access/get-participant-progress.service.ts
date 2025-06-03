@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { APPCONFIG } from 'src/app/app.config';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 
@@ -50,7 +50,7 @@ export class GetParticipantProgressService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/items/${id}/participant-progress`)
       .pipe(
-        decodeSnakeCaseZod(participantProgressSchema)
+        decodeSnakeCase(participantProgressSchema)
       );
   }
 }

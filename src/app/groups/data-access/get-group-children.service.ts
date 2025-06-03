@@ -5,7 +5,7 @@ import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
 import { manageTypeSchema } from 'src/app/data-access/managed-groups.service';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 const typeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base' ]);
 
@@ -48,7 +48,7 @@ export class GetGroupChildrenService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(z.array(groupChildSchema))
+        decodeSnakeCase(z.array(groupChildSchema))
       );
   }
 }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
-import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { decodeSnakeCase } from '../utils/operators/decode';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../items/models/attempts';
 import { AttemptId, ItemPath } from '../models/ids';
 
@@ -32,7 +32,7 @@ export class ResultActionsService {
       })
       .pipe(
         map(successData),
-        decodeSnakeCaseZod(attemptResultSchema),
+        decodeSnakeCase(attemptResultSchema),
         map(resultFromFetchedResult),
       );
   }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
 
 const responseSchema = z.object({
@@ -25,7 +25,7 @@ export class CheckLoginService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/current-user/check-login-id`, { params })
       .pipe(
-        decodeSnakeCaseZod(responseSchema),
+        decodeSnakeCase(responseSchema),
         map(data => data.loginIdMatched),
       );
   }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 const searchResponseSchema = z.object({
   searchResults: z.array(
@@ -38,7 +38,7 @@ export class SearchService {
     return this.http
       .get<unknown>(this.searchApiUrl, { params })
       .pipe(
-        decodeSnakeCaseZod(searchResponseSchema),
+        decodeSnakeCase(searchResponseSchema),
       );
   }
 

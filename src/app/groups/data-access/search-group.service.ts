@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from '../../utils/operators/decode';
+import { decodeSnakeCase } from '../../utils/operators/decode';
 
 const groupInfoSchema = z.object({
   id: z.string(),
@@ -41,7 +41,7 @@ export class SearchGroupService {
       `${this.config.apiUrl}/current-user/available-groups`,
       { params: params },
     ).pipe(
-      decodeSnakeCaseZod(z.array(groupInfoSchema)),
+      decodeSnakeCase(z.array(groupInfoSchema)),
       map(groups => groups.filter(notBase)),
     );
   }
@@ -55,7 +55,7 @@ export class SearchGroupService {
       `${this.config.apiUrl}/groups/possible-subgroups`,
       { params: params },
     ).pipe(
-      decodeSnakeCaseZod(z.array(groupInfoSchema)),
+      decodeSnakeCase(z.array(groupInfoSchema)),
       map(groups => groups.filter(notBase))
     );
   }

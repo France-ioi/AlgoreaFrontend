@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { itemStringSchema } from 'src/app/items/models/item-string';
 import { itemChildCategorySchema } from 'src/app/items/models/item-properties';
@@ -43,7 +43,7 @@ export class GetItemParentsService {
     return this.http
       .get<unknown[]>(`${this.config.apiUrl}/items/${id}/parents`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(itemParentsSchema)
+        decodeSnakeCase(itemParentsSchema)
       );
   }
 }

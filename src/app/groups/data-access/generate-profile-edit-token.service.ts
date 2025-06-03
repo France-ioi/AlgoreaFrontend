@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
@@ -23,7 +23,7 @@ export class GenerateProfileEditTokenService {
 
   generate(id: string): Observable<ProfileEditToken> {
     return this.http.post<unknown>(`${this.config.apiUrl}/users/${id}/generate-profile-edit-token`, undefined).pipe(
-      decodeSnakeCaseZod(profileEditTokenSchema),
+      decodeSnakeCase(profileEditTokenSchema),
     );
   }
 }

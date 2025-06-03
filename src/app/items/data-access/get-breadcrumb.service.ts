@@ -9,7 +9,7 @@ import { tagError } from 'src/app/utils/errors';
 import { ensureDefined } from 'src/app/utils/assert';
 import { itemTypeSchema, typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 export const breadcrumbServiceTag = 'breadcrumbservice';
 
@@ -45,7 +45,7 @@ export class GetBreadcrumbService {
         params: isRouteWithSelfAttempt(itemRoute) ? { attempt_id: itemRoute.attemptId } : { parent_attempt_id: itemRoute.parentAttemptId }
       })
       .pipe(
-        decodeSnakeCaseZod(breadcrumbsApiSchema),
+        decodeSnakeCase(breadcrumbsApiSchema),
         map(items => {
           const last = ensureDefined(items[items.length - 1]);
 

@@ -5,7 +5,7 @@ import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/data-access/sort-options';
 import z from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
 
 const groupMembershipSchema = z.object({
@@ -36,7 +36,7 @@ export class JoinedGroupsService {
     return this.http
       .get(`${this.config.apiUrl}/current-user/group-memberships`, { params: sortOptionsToHTTP(sort) })
       .pipe(
-        decodeSnakeCaseZod(z.array(groupMembershipSchema)),
+        decodeSnakeCase(z.array(groupMembershipSchema)),
         map(memberships => memberships.filter(membership => membership.group.type !== 'Base')),
       );
   }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from '../../utils/operators/decode';
+import { decodeSnakeCase } from '../../utils/operators/decode';
 import { APPCONFIG } from '../../app.config';
 import { inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -41,7 +41,7 @@ export class GrantedPermissionsService {
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${ id }/granted_permissions`, {
       params: httpParams,
     }).pipe(
-      decodeSnakeCaseZod(z.array(grantedPermissionsSchema)),
+      decodeSnakeCase(z.array(grantedPermissionsSchema)),
     );
   }
 }

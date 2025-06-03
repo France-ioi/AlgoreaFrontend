@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from '../../app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from '../../utils/operators/decode';
+import { decodeSnakeCase } from '../../utils/operators/decode';
 import { User, userSchema } from '../models/user';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class GetUserService {
   getForId(id: string): Observable<User> {
     return this.http.get<unknown>(`${this.config.apiUrl}/users/${ id }`)
       .pipe(
-        decodeSnakeCaseZod(userSchema)
+        decodeSnakeCase(userSchema)
       );
   }
 }

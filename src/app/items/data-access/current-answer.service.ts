@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { ActionResponse, assertSuccess } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
 
@@ -41,7 +41,7 @@ export class CurrentAnswerService {
       fromObject: asTeamId ? { attempt_id: attemptId, as_team_id: asTeamId } : { attempt_id: attemptId },
     });
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/current-answer`, { params }).pipe(
-      decodeSnakeCaseZod(currentAnswerSchema),
+      decodeSnakeCase(currentAnswerSchema),
       map(a => (a.type === null ? null : a)), // convert "no current answer" response to "null"
     );
   }

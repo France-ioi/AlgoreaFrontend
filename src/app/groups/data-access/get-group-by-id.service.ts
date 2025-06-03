@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { groupCodeSchema } from '../models/group-code';
 import { groupManagershipSchema } from '../models/group-management';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
@@ -49,7 +49,7 @@ export class GetGroupByIdService {
 
   get(id: string): Observable<Group> {
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${id}`).pipe(
-      decodeSnakeCaseZod(groupSchema),
+      decodeSnakeCase(groupSchema),
     );
   }
 

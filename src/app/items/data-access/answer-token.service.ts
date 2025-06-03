@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 
@@ -28,7 +28,7 @@ export class AnswerTokenService {
       task_token: taskToken,
     }).pipe(
       map(successData),
-      decodeSnakeCaseZod(answerTokenDataSchema),
+      decodeSnakeCase(answerTokenDataSchema),
       map(data => data.answerToken),
     );
   }
