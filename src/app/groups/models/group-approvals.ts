@@ -1,7 +1,5 @@
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 
-export const requirePersonalInfoAccessApprovalDecoder = D.literal('none', 'view', 'edit');
 export const requirePersonalInfoAccessApprovalSchema = z.enum([ 'none', 'view', 'edit' ]);
 
 export const groupApprovalsSchema = z.object({
