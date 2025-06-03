@@ -18,7 +18,7 @@ import { TableModule } from 'primeng/table';
 import { GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { GroupData } from '../../models/group-data';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
@@ -33,7 +33,6 @@ const managersLimit = 25;
   styleUrls: [ './group-manager-list.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     GridComponent,
