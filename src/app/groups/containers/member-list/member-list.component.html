@@ -132,7 +132,7 @@
             alg-button
             type="button"
             icon="ph ph-trash"
-            (click)="onRemove($event)"
+            (click)="onRemove()"
             [disabled]="(removalInProgress$ | async) || !state.isReady || selection.length === 0"
           >
             {currentFilter.type, select, users {Remove} other {Remove from group}}
