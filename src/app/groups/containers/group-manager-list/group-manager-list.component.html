@@ -1,3 +1,5 @@
+@let group = groupData.group;
+
 @if (state$ | async; as state) {
   @if (state.isFetching && !state.data) {
     <alg-loading class="alg-flex-1"></alg-loading>
@@ -24,7 +26,7 @@
         >
         <ng-template #headerTemplate let-columns>
           <tr style="border: none; height: 100%">
-            @if (groupData?.group?.currentUserCanManage === 'memberships_and_group') {
+            @if (group.currentUserCanManage === 'memberships_and_group') {
               <th class="alg-table-selection-col"></th>
             }
             <th style="min-width: 160px">
@@ -65,7 +67,7 @@
           let-rowIndex="rowIndex"
           >
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            @if (groupData?.group?.currentUserCanManage === 'memberships_and_group') {
+            @if (group.currentUserCanManage === 'memberships_and_group') {
               <td class="alg-table-selection-col">
                 <div class="alg-table-selection-width">
                   <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
@@ -113,7 +115,7 @@
               </span>
             </td>
             <td style="width: 11rem; max-width: 11rem;">
-              @if (groupData?.group?.currentUserCanManage === 'memberships_and_group') {
+              @if (group.currentUserCanManage === 'memberships_and_group') {
                 <button
                   alg-button-icon
                   type="button"
@@ -143,7 +145,7 @@
             </tr>
           }
         </ng-template>
-        @if (groupData?.group?.currentUserCanManage === 'memberships_and_group') {
+        @if (group.currentUserCanManage === 'memberships_and_group') {
           <ng-template #summaryTemplate>
             <div class="alg-table-summary slanted">
               <div class="alg-table-summary-left">
@@ -169,7 +171,7 @@
         This group has no dedicated managers.
       </div>
     }
-    @if (groupData?.group?.currentUserCanManage === 'memberships_and_group') {
+    @if (group.currentUserCanManage === 'memberships_and_group') {
       <alg-group-manager-add
         [groupData]="groupData"
         [managers]="managers"
@@ -179,7 +181,7 @@
   }
   <alg-manager-permission-dialog
     [visible]="isPermissionsEditDialogOpened"
-    [group]="groupData?.group"
+    [group]="group"
     [manager]="dialogManager"
     (close)="closePermissionsEditDialog($event)"
   ></alg-manager-permission-dialog>
