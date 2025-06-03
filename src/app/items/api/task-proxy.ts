@@ -18,7 +18,7 @@ import {
   TaskMetaData,
   taskMetadataSchema,
   TaskParamsKeyDefault,
-  taskParamsKeyDefaultDecoder,
+  taskParamsKeyDefaultSchema,
   TaskParamsValue,
   TaskResources,
   TaskViews,
@@ -26,7 +26,6 @@ import {
   UpdateDisplayParams,
   updateDisplayParamsSchema,
 } from './types';
-import { decode } from 'src/app/utils/decoders';
 import { z } from 'zod';
 
 function getRandomID(): string {
@@ -98,7 +97,7 @@ export class Task {
       'platform.getTaskParams',
       params => {
         const [ key, defaultValue ] = (Array.isArray(params) ? params : []) as unknown[];
-        return platform.getTaskParams(decode(taskParamsKeyDefaultDecoder)({
+        return platform.getTaskParams(taskParamsKeyDefaultSchema.parse({
           key: key ?? undefined,
           defaultValue: defaultValue ?? undefined,
         }));

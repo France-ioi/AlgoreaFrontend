@@ -4,26 +4,32 @@ import * as z from 'zod';
 
 // Parameters passed to the task
 // Those need a decoder as a default value to them can be passed by the task
-export const taskParamsDecoder = D.struct({
-  minScore: D.number,
-  maxScore: D.number,
-  noScore: D.number,
-  randomSeed: D.number,
-  readOnly: D.boolean,
-  options: D.UnknownRecord,
+export const taskParamsSchema = z.object({
+  minScore: z.number(),
+  maxScore: z.number(),
+  noScore: z.number(),
+  randomSeed: z.number(),
+  readOnly: z.boolean(),
+  options: z.record(z.unknown()),
 });
-export type TaskParams = D.TypeOf<typeof taskParamsDecoder>;
+export type TaskParams = z.infer<typeof taskParamsSchema>;
 
 // Type returned by getTaskParams
-export const taskParamsValueDecoder = D.union(taskParamsDecoder, D.UnknownRecord, D.string, D.number, D.boolean);
-export type TaskParamsValue = D.TypeOf<typeof taskParamsValueDecoder> | undefined;
+export const taskParamsValueSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.record(z.unknown()),
+  taskParamsSchema,
+]);
+export type TaskParamsValue = z.infer<typeof taskParamsValueSchema> | undefined;
 
 // Key default arguments sent to platform.getTaskParams
-export const taskParamsKeyDefaultDecoder = D.partial({
-  key: D.string,
-  defaultValue: taskParamsValueDecoder
-});
-export type TaskParamsKeyDefault = D.TypeOf<typeof taskParamsKeyDefaultDecoder>;
+export const taskParamsKeyDefaultSchema = z.object({
+  key: z.string(),
+  defaultValue: taskParamsValueSchema,
+}).partial();
+export type TaskParamsKeyDefault = z.infer<typeof taskParamsKeyDefaultSchema>;
 
 
 // Views offered by the task
