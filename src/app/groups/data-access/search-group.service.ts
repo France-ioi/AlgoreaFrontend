@@ -4,17 +4,17 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from '../../utils/operators/decode';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from '../../utils/operators/decode';
 
-const groupInfoDecoder = D.struct({
-  id: D.string,
-  name: D.string,
-  description: D.nullable(D.string),
-  type: D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Base', 'Session'),
+const groupInfoSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Base', 'Session' ]),
 });
 
-export type Group = D.TypeOf<typeof groupInfoDecoder>;
+export type Group = z.infer<typeof groupInfoSchema>;
 
 export interface GroupFound extends Group {
   type: 'Class'|'Team'|'Club'|'Friends'|'Other',
@@ -37,11 +37,11 @@ export class SearchGroupService {
     limit = 5,
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
-    return this.http.get<Group[]>(
+    return this.http.get<unknown>(
       `${this.config.apiUrl}/current-user/available-groups`,
       { params: params },
     ).pipe(
-      decodeSnakeCase(D.array(groupInfoDecoder)),
+      decodeSnakeCaseZod(z.array(groupInfoSchema)),
       map(groups => groups.filter(notBase)),
     );
   }
@@ -51,11 +51,11 @@ export class SearchGroupService {
     limit = 11,
   ): Observable<GroupFound[]> {
     const params = new HttpParams({ fromObject: { search: searchString, limit: limit.toString() } });
-    return this.http.get<Group[]>(
+    return this.http.get<unknown>(
       `${this.config.apiUrl}/groups/possible-subgroups`,
       { params: params },
     ).pipe(
-      decodeSnakeCase(D.array(groupInfoDecoder)),
+      decodeSnakeCaseZod(z.array(groupInfoSchema)),
       map(groups => groups.filter(notBase))
     );
   }
