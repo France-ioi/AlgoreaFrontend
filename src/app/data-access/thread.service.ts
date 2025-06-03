@@ -3,28 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, switchMap } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
-import * as D from 'io-ts/Decoder';
-import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { z } from 'zod';
+import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
 import jwtDecode from 'jwt-decode';
 
-const threadDecoder = D.struct({
-  // itemId: D.string, -> bug in backend
-  // participantId: D.string, -> bug in backend
-  status: D.literal('not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed'),
-  token: D.string,
+const threadSchema = z.object({
+  itemId: z.string(),
+  participantId: z.string(),
+  status: z.enum([ 'not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed' ]),
+  token: z.string(),
 });
 
-type Thread = D.TypeOf<typeof threadDecoder>;
+type Thread = z.infer<typeof threadSchema>;
 
-const threadTokenDecoder = D.struct({
-  itemId: D.string,
-  participantId: D.string,
-  userId: D.string,
-  isMine: D.boolean,
-  canWatch: D.boolean,
-  canWrite: D.boolean,
+const threadTokenSchema = z.object({
+  itemId: z.string(),
+  participantId: z.string(),
+  userId: z.string(),
+  isMine: z.boolean(),
+  canWatch: z.boolean(),
+  canWrite: z.boolean(),
 });
-type ThreadToken = D.TypeOf<typeof threadTokenDecoder>;
+type ThreadToken = z.infer<typeof threadTokenSchema>;
 
 export type ThreadInfo = Thread & ThreadToken;
 
@@ -38,9 +38,9 @@ export class ThreadService {
 
   get(itemId: string, participantId: string): Observable<ThreadInfo> {
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/participant/${participantId}/thread`).pipe(
-      decodeSnakeCase(threadDecoder),
+      decodeSnakeCaseZod(threadSchema),
       switchMap(thread => of(jwtDecode(thread.token, { header: false })).pipe(
-        decodeSnakeCase(threadTokenDecoder),
+        decodeSnakeCaseZod(threadTokenSchema),
         map(token => ({ ...thread, ...token }))
       ))
     );
