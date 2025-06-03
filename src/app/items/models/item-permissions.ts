@@ -1,28 +1,18 @@
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
-import { dateDecoder } from '../../utils/decoders';
-import { allowsGrantingEdition, ItemPermWithEdit, itemEditPermDecoder, itemEditPermSchema } from './item-edit-permission';
-import { allowsGrantingView, ItemPermWithGrantView, itemGrantViewPermDecoder, itemGrantViewPermSchema } from './item-grant-view-permission';
-import { itemViewPermDecoder, itemViewPermSchema } from './item-view-permission';
-import { allowsGrantingWatch, ItemPermWithWatch, itemWatchPermDecoder, itemWatchPermSchema } from './item-watch-permission';
+import { allowsGrantingEdition, ItemPermWithEdit, itemEditPermSchema } from './item-edit-permission';
+import { allowsGrantingView, ItemPermWithGrantView, itemGrantViewPermSchema } from './item-grant-view-permission';
+import { itemViewPermSchema } from './item-view-permission';
+import { allowsGrantingWatch, ItemPermWithWatch, itemWatchPermSchema } from './item-watch-permission';
 
 export const itemOwnerPermSchema = z.object({
   isOwner: z.boolean()
 });
-
-export const itemOwnerPermDecoder = D.struct({
-  isOwner: D.boolean
-});
-export type ItemOwnerPerm = D.TypeOf<typeof itemOwnerPermDecoder>;
+export type ItemOwnerPerm = z.infer<typeof itemOwnerPermSchema>;
 
 export const itemSessionPermSchema = z.object({
   canMakeSessionOfficial: z.boolean()
 });
-export const itemSessionPermDecoder = D.struct({
-  canMakeSessionOfficial: D.boolean
-});
-export type ItemSessionPerm = D.TypeOf<typeof itemSessionPermDecoder>;
+export type ItemSessionPerm = z.infer<typeof itemSessionPermSchema>;
 
 export const itemEntryFromPermSchema = z.object({
   canEnterFrom: z.coerce.date(),
@@ -32,21 +22,11 @@ export const itemEntryUntilPermSchema = z.object({
 });
 export const itemEntryTimePermSchema = itemEntryFromPermSchema.and(itemEntryUntilPermSchema);
 
-export const itemEntryFromPermDecoder = D.struct({
-  canEnterFrom: dateDecoder,
-});
-export const itemEntryUntilPermDecoder = D.struct({
-  canEnterUntil: dateDecoder,
-});
-export const itemEntryTimePermDecoder = D.intersect(itemEntryFromPermDecoder)(itemEntryUntilPermDecoder);
-export type ItemEntryTimePerm = D.TypeOf<typeof itemEntryTimePermDecoder>;
+export type ItemEntryTimePerm = z.infer<typeof itemEntryTimePermSchema>;
 
 
 export const itemCanRequestHelpSchema = z.object({
   canRequestHelp: z.boolean()
-});
-export const itemCanRequestHelpDecoder = D.struct({
-  canRequestHelp: D.boolean,
 });
 
 export const itemCorePermSchema = itemViewPermSchema
@@ -55,14 +35,7 @@ export const itemCorePermSchema = itemViewPermSchema
   .and(itemWatchPermSchema)
   .and(itemOwnerPermSchema);
 
-export const itemCorePermDecoder = pipe(
-  itemViewPermDecoder,
-  D.intersect(itemGrantViewPermDecoder),
-  D.intersect(itemEditPermDecoder),
-  D.intersect(itemWatchPermDecoder),
-  D.intersect(itemOwnerPermDecoder),
-);
-export type ItemCorePerm = D.TypeOf<typeof itemCorePermDecoder>;
+export type ItemCorePerm = z.infer<typeof itemCorePermSchema>;
 
 /**
  * Whether the item permissions allows giving some permissions on the item to groups/users.

@@ -1,5 +1,3 @@
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 
 const managershipOpts = {
@@ -15,18 +13,6 @@ const managementLevelOpts = {
   membershipsAndGroup: 'memberships_and_group'
 };
 
-export const groupManagershipDecoder = pipe(
-  D.struct({
-    currentUserManagership: D.literal(managershipOpts.none, managershipOpts.descendant, managershipOpts.direct, managershipOpts.ancestor),
-  }),
-  D.intersect(
-    D.partial({
-      currentUserCanGrantGroupAccess: D.boolean,
-      currentUserCanManage: D.literal(managementLevelOpts.none, managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup),
-      currentUserCanWatchMembers: D.boolean,
-    })
-  )
-);
 export const groupManagershipSchema = z.object({
   currentUserManagership: z.enum([ managershipOpts.none, managershipOpts.descendant, managershipOpts.direct, managershipOpts.ancestor ]),
 }).and(z.object({
@@ -35,7 +21,7 @@ export const groupManagershipSchema = z.object({
   currentUserCanWatchMembers: z.boolean(),
 }).partial());
 
-type GroupManagership = D.TypeOf<typeof groupManagershipDecoder>;
+type GroupManagership = z.infer<typeof groupManagershipSchema>;
 
 function isCurrentUserManager<T extends GroupManagership>(g: T): boolean {
   return [ managershipOpts.direct, managershipOpts.ancestor ].includes(g.currentUserManagership);

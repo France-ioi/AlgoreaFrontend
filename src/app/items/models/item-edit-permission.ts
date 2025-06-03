@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 
 export enum ItemEditPerm {
@@ -15,10 +14,7 @@ export const itemEditPermValues = [ P.None, P.Children, P.All, P.AllWithGrant ] 
 export const itemEditPermSchema = z.object({
   canEdit: z.enum(itemEditPermValues)
 });
-export const itemEditPermDecoder = D.struct({
-  canEdit: D.literal(...itemEditPermValues)
-});
-export type ItemPermWithEdit = D.TypeOf<typeof itemEditPermDecoder>;
+export type ItemPermWithEdit = z.infer<typeof itemEditPermSchema>;
 export interface ItemWithEditPerm { permissions: ItemPermWithEdit }
 
 /**

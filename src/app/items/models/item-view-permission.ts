@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 
 export enum ItemViewPerm {
@@ -16,10 +15,7 @@ export const itemViewPermValues = [ P.None, P.Info, P.Content, P.ContentWithDesc
 export const itemViewPermSchema = z.object({
   canView: z.enum(itemViewPermValues)
 });
-export const itemViewPermDecoder = D.struct({
-  canView: D.literal(...itemViewPermValues)
-});
-export type ItemPermWithView = D.TypeOf<typeof itemViewPermDecoder>;
+export type ItemPermWithView = z.infer<typeof itemViewPermSchema>;
 export interface ItemWithViewPerm { permissions: ItemPermWithView }
 
 /**

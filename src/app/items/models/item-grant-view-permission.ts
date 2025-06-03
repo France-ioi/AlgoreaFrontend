@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
 
 export enum ItemGrantViewPerm {
@@ -18,10 +17,7 @@ export const itemGrantViewPermValues = [ P.None, P.Enter, P.Content, P.ContentWi
 export const itemGrantViewPermSchema = z.object({
   canGrantView: z.enum(itemGrantViewPermValues)
 });
-export const itemGrantViewPermDecoder = D.struct({
-  canGrantView: D.literal(...itemGrantViewPermValues)
-});
-export type ItemPermWithGrantView = D.TypeOf<typeof itemGrantViewPermDecoder>;
+export type ItemPermWithGrantView = z.infer<typeof itemGrantViewPermSchema>;
 export interface ItemWithGrantViewPerm { permissions: ItemPermWithGrantView }
 
 export function allowsGrantingView(p: ItemPermWithGrantView): boolean {
