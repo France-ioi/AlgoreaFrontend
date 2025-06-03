@@ -3,10 +3,9 @@ import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { inject } from '@angular/core';
 import { EMPTY, catchError, map } from 'rxjs';
 import { websocketClientActions } from './websocket.actions';
-import { decode, decodeOrNull } from 'src/app/utils/decoders';
-import * as D from 'io-ts/Decoder';
-import { incomingThreadEventDecoder } from '../../data-access/websocket-messages/threads-inbound-events';
-import { isNotNull } from 'src/app/utils/null-undefined-predicates';
+import { incomingThreadEventSchema } from '../../data-access/websocket-messages/threads-inbound-events';
+import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { z } from 'zod';
 
 export const changeOpenStatusWebsocketClientEffect = createEffect(
   (wsClient$ = inject(WebsocketClient)) => wsClient$.isWsOpen$.pipe(
@@ -20,7 +19,7 @@ export const receiveWebsocketMessagEffect = createEffect(
     wsClient$ = inject(WebsocketClient)
   ) => wsClient$.inputMessages$.pipe(
     // if the incoming message is not array, just ignore it. Otherwise return a list of messages which we were able to decode as events
-    map(message => decode(D.UnknownArray)(message).map(e => decodeOrNull(incomingThreadEventDecoder)(e)).filter(isNotNull)),
+    map(message => z.array(z.unknown()).parse(message).map(e => incomingThreadEventSchema.safeParse(e).data).filter(isNotUndefined)),
     catchError(err => {
       // eslint-disable-next-line no-console
       console.warn(err);

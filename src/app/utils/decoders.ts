@@ -32,15 +32,9 @@ export function decodeOrNull<T>(decoder: D.Decoder<unknown, T>) {
 }
 
 /**
- * Decoder for Date type
+ * Schema for Date type
  */
-export const dateDecoder: D.Decoder<unknown, Date> = pipe(
-  D.union(D.string, D.number),
-  D.parse(stringOrNumber => {
-    const date = new Date(stringOrNumber);
-    return Number.isNaN(date.valueOf()) ? D.failure(stringOrNumber, 'DateFromString') : D.success(date);
-  })
-);
+export const dateSchema = z.union([ z.string(), z.number() ]).pipe(z.coerce.date());
 
 /**
  * Decoder for Duration type

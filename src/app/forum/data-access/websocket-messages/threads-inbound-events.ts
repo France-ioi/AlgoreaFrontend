@@ -1,18 +1,14 @@
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { threadEventDecoder } from '../../models/thread-events';
+import { z } from 'zod';
+import { dateSchema } from 'src/app/utils/decoders';
+import { threadEventSchema } from '../../models/thread-events';
 
-export const incomingThreadEventDecoder = pipe(
-  D.struct({
-    createdBy: D.string,
-    thread: D.struct({
-      participantId: D.string,
-      itemId: D.string,
-    }),
-    time: dateDecoder,
+export const incomingThreadEventSchema = z.object({
+  createdBy: z.string(),
+  thread: z.object({
+    participantId: z.string(),
+    itemId: z.string(),
   }),
-  D.intersect(threadEventDecoder),
-);
+  time: dateSchema,
+}).and(threadEventSchema);
 
-export type IncomingThreadEvent = D.TypeOf<typeof incomingThreadEventDecoder>;
+export type IncomingThreadEvent = z.infer<typeof incomingThreadEventSchema>;

@@ -1,5 +1,4 @@
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
+import { z } from 'zod';
 
 export enum EventLabel {
   AttemptStarted = 'result_started',
@@ -8,51 +7,47 @@ export enum EventLabel {
 }
 
 /**
- * Decoders
+ * Schemas
  */
 
-const attemptStartedEventDecoder = D.struct({
-  label: D.literal(EventLabel.AttemptStarted),
-  data: D.struct({
-    attemptId: D.string,
+const attemptStartedEventSchema = z.object({
+  label: z.literal(EventLabel.AttemptStarted),
+  data: z.object({
+    attemptId: z.string(),
   }),
 });
 
-const submissionEventDecoder = D.struct({
-  label: D.literal(EventLabel.Submission),
-  data: pipe(
-    D.struct({
-      attemptId: D.string,
-      answerId: D.string,
-    }),
-    D.intersect(D.partial({
-      score: D.number,
-    })),
-  )
-});
-
-const messageEventDecoder = D.struct({
-  label: D.literal(EventLabel.Message),
-  data: D.struct({
-    content: D.string,
+const submissionEventSchema = z.object({
+  label: z.literal(EventLabel.Submission),
+  data: z.object({
+    attemptId: z.string(),
+    answerId: z.string(),
+    score: z.number().optional()
   }),
 });
 
-export const threadEventDecoder = D.union(
-  attemptStartedEventDecoder,
-  submissionEventDecoder,
-  messageEventDecoder,
-);
+const messageEventSchema = z.object({
+  label: z.literal(EventLabel.Message),
+  data: z.object({
+    content: z.string(),
+  }),
+});
+
+export const threadEventSchema = z.discriminatedUnion('label', [
+  attemptStartedEventSchema,
+  submissionEventSchema,
+  messageEventSchema,
+]);
 
 /**
  * Event types
  */
 
-export type AttemptStartedEvent = D.TypeOf<typeof attemptStartedEventDecoder>;
-export type SubmissionEvent = D.TypeOf<typeof submissionEventDecoder>;
-export type MessageEvent = D.TypeOf<typeof messageEventDecoder>;
+export type AttemptStartedEvent = z.infer<typeof attemptStartedEventSchema>;
+export type SubmissionEvent = z.infer<typeof submissionEventSchema>;
+export type MessageEvent = z.infer<typeof messageEventSchema>;
 
-export type ThreadEvent = D.TypeOf<typeof threadEventDecoder>;
+export type ThreadEvent = z.infer<typeof threadEventSchema>;
 
 /**
  * Event factories
