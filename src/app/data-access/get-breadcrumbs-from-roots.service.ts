@@ -18,7 +18,6 @@ const breadcrumbsFromRootElementSchema = z.object({
 export type BreadcrumbsFromRootElement = z.infer<typeof breadcrumbsFromRootElementSchema>;
 
 const breadcrumbsFromRootSchema = z.object({
-  startedByParticipant: z.boolean(),
   path: z.array(breadcrumbsFromRootElementSchema)
 });
 
