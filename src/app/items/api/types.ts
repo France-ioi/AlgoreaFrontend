@@ -1,5 +1,4 @@
 /** Types and decoders for types used in platform-task communication */
-import * as D from 'io-ts/Decoder';
 import * as z from 'zod';
 
 // Parameters passed to the task
