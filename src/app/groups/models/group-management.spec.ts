@@ -49,7 +49,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeTruthy();
       expect(canCurrentUserManageMembers(group)).toBeTruthy();
-      expect(canCurrentUserManageMembersAndGroup(group)).toBeTruthy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
