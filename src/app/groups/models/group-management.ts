@@ -35,7 +35,7 @@ export function canCurrentUserManageMembers<T extends CurrentUserManagershipInfo
   return g.currentUserCanManage === l.memberships || g.currentUserCanManage === l.memberships_and_group;
 }
 
-export function canCurrentUserManageGroup<T extends CurrentUserManagershipInfo>(g: T): boolean {
+export function canCurrentUserManageMembersAndGroup<T extends CurrentUserManagershipInfo>(g: T): boolean {
   return g.currentUserCanManage === l.memberships_and_group;
 }
 
@@ -63,7 +63,7 @@ export class CanCurrentUserManageMembersPipe implements PipeTransform {
   transform = canCurrentUserManageMembers;
 }
 
-@Pipe({ name: 'canCurrentUserManageGroup', pure: true, standalone: true })
-export class CanCurrentUserManageGroupPipe implements PipeTransform {
-  transform = canCurrentUserManageGroup;
+@Pipe({ name: 'canCurrentUserManageMembersAndGroup', pure: true, standalone: true })
+export class CanCurrentUserManageMembersAndGroupPipe implements PipeTransform {
+  transform = canCurrentUserManageMembersAndGroup;
 }

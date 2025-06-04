@@ -1,4 +1,4 @@
-import { canCurrentUserManageGroup, canCurrentUserManageMembers, isCurrentUserManager } from './group-management';
+import { canCurrentUserManageMembers, canCurrentUserManageMembersAndGroup, isCurrentUserManager } from './group-management';
 
 describe('GroupManagement', () => {
 
@@ -8,7 +8,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeFalsy();
       expect(canCurrentUserManageMembers(group)).toBeFalsy();
-      expect(canCurrentUserManageGroup(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
@@ -18,7 +18,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeFalsy();
       expect(canCurrentUserManageMembers(group)).toBeFalsy();
-      expect(canCurrentUserManageGroup(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
@@ -29,7 +29,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeTruthy();
       expect(canCurrentUserManageMembers(group)).toBeFalsy();
-      expect(canCurrentUserManageGroup(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
@@ -39,7 +39,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeTruthy();
       expect(canCurrentUserManageMembers(group)).toBeFalsy();
-      expect(canCurrentUserManageGroup(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
@@ -49,7 +49,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeTruthy();
       expect(canCurrentUserManageMembers(group)).toBeTruthy();
-      expect(canCurrentUserManageGroup(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeTruthy();
     });
   });
 
@@ -59,7 +59,7 @@ describe('GroupManagement', () => {
     it('should set expected values', () => {
       expect(isCurrentUserManager(group)).toBeTruthy();
       expect(canCurrentUserManageMembers(group)).toBeTruthy();
-      expect(canCurrentUserManageGroup(group)).toBeTruthy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeTruthy();
     });
   });
 

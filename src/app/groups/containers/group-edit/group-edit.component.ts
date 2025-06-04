@@ -9,7 +9,7 @@ import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
 import { Group } from '../../models/group';
 import { GroupChanges, GroupUpdateService } from '../../data-access/group-update.service';
-import { CanCurrentUserManageGroupPipe, IsCurrentUserManagerPipe } from '../../models/group-management';
+import { CanCurrentUserManageMembersAndGroupPipe, IsCurrentUserManagerPipe } from '../../models/group-management';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -60,7 +60,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     DialogModule,
     LetDirective,
     ButtonComponent,
-    CanCurrentUserManageGroupPipe,
+    CanCurrentUserManageMembersAndGroupPipe,
     IsCurrentUserManagerPipe,
   ],
 })

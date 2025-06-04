@@ -5,7 +5,11 @@ import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { CanCurrentUserGrantGroupAccessPipe, IsCurrentUserManagerPipe, CanCurrentUserManageGroupPipe } from './models/group-management';
+import {
+  CanCurrentUserGrantGroupAccessPipe,
+  IsCurrentUserManagerPipe,
+  CanCurrentUserManageMembersAndGroupPipe
+} from './models/group-management';
 import { GroupEditComponent } from './containers/group-edit/group-edit.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -46,7 +50,7 @@ import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/
     GroupLogViewComponent,
     IsCurrentUserManagerPipe,
     CanCurrentUserGrantGroupAccessPipe,
-    CanCurrentUserManageGroupPipe,
+    CanCurrentUserManageMembersAndGroupPipe,
   ],
 })
 export class GroupByIdComponent implements OnDestroy {
