@@ -3,6 +3,7 @@ import { groupCodeSchema } from './group-code';
 import { groupManagershipSchema } from './group-management';
 import { groupApprovalsSchema } from './group-approvals';
 import { nonUserGroupTypeSchema } from './group-types';
+import { groupMembershipSchema } from './group-membership';
 
 export const groupShortInfoSchema = z.object({
   id: z.string(),
@@ -21,7 +22,7 @@ export const groupSchema = z.object({
   createdAt: z.coerce.date().nullable(),
   grade: z.number(),
 
-  currentUserMembership: z.enum([ 'none', 'direct', 'descendant' ]),
+  currentUserMembership: groupMembershipSchema,
   currentUserManagership: z.enum([ 'none', 'direct', 'ancestor', 'descendant' ]),
   ancestorsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
   descendantsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
