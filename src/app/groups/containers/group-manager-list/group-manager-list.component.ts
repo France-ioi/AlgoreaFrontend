@@ -24,8 +24,8 @@ import { fromGroupContent } from '../../store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { CanCurrentUserManageMembersAndGroupPipe } from '../../models/group-management';
-import { groupManagershipLevelEnum as l } from '../../models/group-management';
 import { Group } from '../../models/group';
+import { ManagementLevelAsTextPipe } from './management-level-as-text.pipe';
 
 const managersLimit = 25;
 
@@ -49,6 +49,7 @@ const managersLimit = 25;
     ButtonIconComponent,
     ButtonComponent,
     CanCurrentUserManageMembersAndGroupPipe,
+    ManagementLevelAsTextPipe,
   ],
 })
 export class GroupManagerListComponent implements OnChanges {
@@ -58,7 +59,7 @@ export class GroupManagerListComponent implements OnChanges {
   selection: Manager[] = [];
   removalInProgress = false;
   isPermissionsEditDialogOpened = false;
-  dialogManager?: Manager & { canManageAsText: string };
+  dialogManager?: Manager;
 
   readonly datapager = new DataPager({
     fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
@@ -70,12 +71,7 @@ export class GroupManagerListComponent implements OnChanges {
   });
 
   readonly state$ = this.datapager.list$.pipe(
-    mapStateData(managers => managers
-      .filter(manager => manager.canManage !== null)
-      .map(manager => ({
-        ...manager,
-        canManageAsText: this.getManagerLevel(manager),
-      }))),
+    mapStateData(managers => managers.filter(manager => manager.canManage !== null)),
   );
 
   constructor(
@@ -91,19 +87,6 @@ export class GroupManagerListComponent implements OnChanges {
     (changes.group?.previousValue as Group | undefined)?.id !== this.group.id
       ? this.fetchData()
       : this.fetchMoreData();
-  }
-
-  private getManagerLevel(manager: Manager): string {
-    switch (manager.canManage) {
-      case l.none:
-        return $localize`Read-only`;
-      case l.memberships:
-        return $localize`Memberships`;
-      case l.memberships_and_group:
-        return $localize`Memberships and group`;
-      default:
-        return ''; // should never happen as null is filtered out
-    }
   }
 
   fetchData(): void {
@@ -188,7 +171,7 @@ export class GroupManagerListComponent implements OnChanges {
       });
   }
 
-  openPermissionsEditDialog(manager: Manager & { canManageAsText: string }): void {
+  openPermissionsEditDialog(manager: Manager): void {
     this.isPermissionsEditDialogOpened = true;
     this.dialogManager = manager;
   }
