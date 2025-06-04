@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { groupCodeSchema } from './group-code';
-import { groupManagershipSchema } from './group-management';
+import { currentUserManagershipInfoSchema } from './group-management';
 import { groupApprovalsSchema } from './group-approvals';
 import { nonUserGroupTypeSchema } from './group-types';
 import { groupMembershipSchema } from './group-membership';
@@ -23,7 +23,7 @@ export const groupSchema = z.object({
   grade: z.number(),
 
   currentUserMembership: groupMembershipSchema,
-  currentUserManagership: z.enum([ 'none', 'direct', 'ancestor', 'descendant' ]),
+
   ancestorsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
   descendantsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
   descendantsCurrentUserIsMemberOf: z.array(groupShortInfoSchema),
@@ -31,6 +31,6 @@ export const groupSchema = z.object({
   rootActivityId: z.string().nullable(),
   rootSkillId: z.string().nullable(),
   openActivityWhenJoining: z.boolean(),
-}).and(groupCodeSchema).and(groupManagershipSchema).and(groupApprovalsSchema);
+}).and(groupCodeSchema).and(currentUserManagershipInfoSchema).and(groupApprovalsSchema);
 
 export type Group = z.infer<typeof groupSchema>;
