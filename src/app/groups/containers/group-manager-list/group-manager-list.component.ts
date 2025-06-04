@@ -18,7 +18,7 @@ import { TableModule } from 'primeng/table';
 import { GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { GroupData } from '../../models/group-data';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
@@ -33,7 +33,6 @@ const managersLimit = 25;
   styleUrls: [ './group-manager-list.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     GridComponent,
@@ -51,7 +50,7 @@ const managersLimit = 25;
 })
 export class GroupManagerListComponent implements OnChanges {
 
-  @Input() groupData?: GroupData;
+  @Input({ required: true }) groupData!: GroupData;
 
   selection: Manager[] = [];
   removalInProgress = false;
@@ -59,10 +58,8 @@ export class GroupManagerListComponent implements OnChanges {
   dialogManager?: Manager & { canManageAsText: string };
 
   readonly datapager = new DataPager({
-    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => {
-      if (!this.groupData) throw new Error('unexpected');
-      return this.getGroupManagersService.getGroupManagers(this.groupData.group.id, { limit: pageSize, fromId: latestManager?.id });
-    },
+    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
+      this.getGroupManagersService.getGroupManagers(this.groupData.group.id, { limit: pageSize, fromId: latestManager?.id }),
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
@@ -86,11 +83,9 @@ export class GroupManagerListComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.groupData) {
-      (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData?.group.id
-        ? this.fetchData()
-        : this.fetchMoreData();
-    }
+    (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData.group.id
+      ? this.fetchData()
+      : this.fetchMoreData();
   }
 
   private getManagerLevel(manager: Manager): string {
@@ -109,7 +104,6 @@ export class GroupManagerListComponent implements OnChanges {
     this.fetchMoreData();
   }
   fetchMoreData(): void {
-    if (!this.groupData) throw new Error('unexpected');
     this.datapager.load();
   }
 
@@ -153,10 +147,6 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   remove(): void {
-    if (!this.groupData) {
-      throw new Error('Unexpected: Missed groupData');
-    }
-
     const currentUserId = this.userService.session$.getValue()?.groupId;
 
     if (!currentUserId) {
