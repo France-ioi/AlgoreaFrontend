@@ -74,7 +74,7 @@ jobs:
   # deps has to be run before the other jobs and basically run "npm install" and cache it
   deps:
     docker: &node_image
-      - image: cimg/node:18.20.4
+      - image: cimg/node:22.16.0
     steps:
       - checkout
       # cache is used between builds, we use the cache if the lock file has not changed
@@ -153,7 +153,7 @@ jobs:
 
   tests:
     docker: &node_browsers_image
-      - image: cimg/node:18.20.4-browsers
+      - image: cimg/node:22.16.0-browsers
     steps:
       - browser-tools/install-browser-tools
       - attach_workspace:
