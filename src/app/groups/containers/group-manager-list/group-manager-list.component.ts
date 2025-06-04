@@ -58,8 +58,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   selection: Manager[] = [];
   removalInProgress = false;
-  isPermissionsEditDialogOpened = false;
-  dialogManager?: Manager;
+  editingManager?: Manager; // the manager being edited in the dialog, undefined when the dialog is closed
 
   readonly datapager = new DataPager({
     fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
@@ -172,13 +171,11 @@ export class GroupManagerListComponent implements OnChanges {
   }
 
   openPermissionsEditDialog(manager: Manager): void {
-    this.isPermissionsEditDialogOpened = true;
-    this.dialogManager = manager;
+    this.editingManager = manager;
   }
 
   closePermissionsEditDialog(event: { updated: boolean }): void {
-    this.isPermissionsEditDialogOpened = false;
-    this.dialogManager = undefined;
+    this.editingManager = undefined;
 
     if (event.updated) {
       this.fetchData();

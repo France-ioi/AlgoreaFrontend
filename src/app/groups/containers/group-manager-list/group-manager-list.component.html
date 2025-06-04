@@ -178,9 +178,9 @@
     }
   }
   <alg-manager-permission-dialog
-    [visible]="isPermissionsEditDialogOpened"
+    [visible]="!!editingManager"
     [group]="group"
-    [manager]="dialogManager"
+    [manager]="editingManager"
     (close)="closePermissionsEditDialog($event)"
   ></alg-manager-permission-dialog>
 }
