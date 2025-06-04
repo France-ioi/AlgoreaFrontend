@@ -70,10 +70,12 @@ export class GroupManagerListComponent implements OnChanges {
   });
 
   readonly state$ = this.datapager.list$.pipe(
-    mapStateData(managers => managers.map(manager => ({
-      ...manager,
-      canManageAsText: this.getManagerLevel(manager),
-    }))),
+    mapStateData(managers => managers
+      .filter(manager => manager.canManage !== null)
+      .map(manager => ({
+        ...manager,
+        canManageAsText: this.getManagerLevel(manager),
+      }))),
   );
 
   constructor(
@@ -99,6 +101,8 @@ export class GroupManagerListComponent implements OnChanges {
         return $localize`Memberships`;
       case l.memberships_and_group:
         return $localize`Memberships and group`;
+      default:
+        return ''; // should never happen as null is filtered out
     }
   }
 

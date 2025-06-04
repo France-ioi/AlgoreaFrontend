@@ -11,9 +11,12 @@ import { groupManagershipLevelSchema } from '../models/group-management';
 export const managerSchema = z.object({
   id: z.string(),
   name: z.string(),
-  canManage: groupManagershipLevelSchema,
+  canManage: groupManagershipLevelSchema.nullable(), // may be null when include_managers_of_ancestor_groups = 1
+  canManageThroughAncestorGroups: groupManagershipLevelSchema.optional(), // not set when include_managers_of_ancestor_groups != 1
   canGrantGroupAccess: z.boolean(),
+  canGrantGroupAccessThroughAncestorGroups: z.boolean().optional(), // not set when include_managers_of_ancestor_groups != 1
   canWatchMembers: z.boolean(),
+  canWatchMembersThroughAncestorGroups: z.boolean().optional(), // not set when include_managers_of_ancestor_groups != 1
 }).merge(userBaseSchema.partial());
 
 export type Manager = z.infer<typeof managerSchema>;
@@ -32,12 +35,14 @@ export class GetGroupManagersService {
       sort?: string[],
       limit?: number,
       fromId?: string,
+      includeAncestors?: boolean,
     },
   ): Observable<Manager[]> {
     let params = new HttpParams();
     if (options?.sort) params = params.set('sort', options.sort.join(','));
     if (options?.limit !== undefined) params = params.set('limit', options.limit);
     if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
+    if (options?.includeAncestors) params = params.set('include_managers_of_ancestor_groups', 1);
 
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/managers`, { params: params }).pipe(
