@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { z } from 'zod';
 
-const groupManagershipLevelSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
+export const groupManagershipLevelSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
+export type GroupManagershipLevel = z.infer<typeof groupManagershipLevelSchema>;
 export const groupManagershipLevelEnum = groupManagershipLevelSchema.enum;
 const l = groupManagershipLevelEnum; // local shorthand
 

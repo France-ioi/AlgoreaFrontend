@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { manageTypeSchema } from 'src/app/data-access/managed-groups.service';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { groupManagershipLevelSchema } from '../models/group-management';
 
 const typeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base' ]);
 
@@ -19,7 +19,7 @@ const groupChildSchema = z.object({
   type: typeSchema,
   isEmpty: z.boolean(),
   currentUserCanGrantGroupAccess: z.boolean().optional(),
-  currentUserCanManage: manageTypeSchema.optional(),
+  currentUserCanManage: groupManagershipLevelSchema.optional(),
   currentUserCanWatchMembers: z.boolean().optional(),
   userCount: z.number().optional(),
 });

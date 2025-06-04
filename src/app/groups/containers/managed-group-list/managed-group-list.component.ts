@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Group, GroupType, ManagedGroupsService, ManageType } from 'src/app/data-access/managed-groups.service';
+import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgClass } from '@angular/common';
+import { GroupManagershipLevel } from '../../models/group-management';
 
 @Component({
   selector: 'alg-managed-group-list',
@@ -64,7 +65,7 @@ export class ManagedGroupListComponent implements OnInit {
     }
   }
 
-  getCanManage(value: ManageType): string {
+  getCanManage(value: GroupManagershipLevel): string {
     switch (value) {
       case 'memberships':
         return $localize`Memberships`;

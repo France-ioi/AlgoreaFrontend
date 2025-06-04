@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { manageTypeSchema } from 'src/app/data-access/managed-groups.service';
 import { userBaseSchema } from 'src/app/groups/models/user';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
+import { groupManagershipLevelSchema } from '../models/group-management';
 
 export const managerSchema = z.object({
   id: z.string(),
   name: z.string(),
-  canManage: manageTypeSchema,
+  canManage: groupManagershipLevelSchema,
   canGrantGroupAccess: z.boolean(),
   canWatchMembers: z.boolean(),
 }).merge(userBaseSchema.partial());

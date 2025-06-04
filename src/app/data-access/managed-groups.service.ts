@@ -5,22 +5,21 @@ import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCase } from '../utils/operators/decode';
+import { groupManagershipLevelSchema } from '../groups/models/group-management';
 
 const typeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]);
-export const manageTypeSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
 
 const groupSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().nullable(),
   type: typeSchema,
-  canManage: manageTypeSchema,
+  canManage: groupManagershipLevelSchema,
   canWatchMembers: z.boolean(),
   canGrantGroupAccess: z.boolean(),
 });
 
 export type GroupType = z.infer<typeof typeSchema>;
-export type ManageType = z.infer<typeof manageTypeSchema>;
 export type Group = z.infer<typeof groupSchema>;
 
 @Injectable({
