@@ -1,3 +1,4 @@
+import { Pipe, PipeTransform } from '@angular/core';
 import { z } from 'zod';
 
 const groupManagershipLevelSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
@@ -18,7 +19,7 @@ export const currentUserManagershipInfoSchema = z.object({
 
 type CurrentUserManagershipInfo = z.infer<typeof currentUserManagershipInfoSchema>;
 
-function isCurrentUserManager<T extends CurrentUserManagershipInfo>(g: T): boolean {
+export function isCurrentUserManager<T extends CurrentUserManagershipInfo>(g: T): boolean {
   return g.currentUserManagership === t.direct || g.currentUserManagership == t.ancestor;
 }
 
@@ -38,19 +39,31 @@ export function canCurrentUserManageGroup<T extends CurrentUserManagershipInfo>(
   return g.currentUserCanManage === l.memberships_and_group;
 }
 
-export interface ManagementAdditions {
-  isCurrentUserManager: boolean,
-  canCurrentUserManageMembers: boolean,
-  canCurrentUserManageGroup: boolean,
+// ********************************************
+// Pipes for templates
+// ********************************************
+
+@Pipe({ name: 'isCurrentUserManager', pure: true, standalone: true })
+export class IsCurrentUserManagerPipe implements PipeTransform {
+  transform = isCurrentUserManager;
 }
 
-// Adds to the given group some new computed attributes (as value)
-// The resulting object can be used in templates as value will not be recomputed
-export function withManagementAdditions<T extends CurrentUserManagershipInfo>(g: T): T & ManagementAdditions {
-  return {
-    ...g,
-    isCurrentUserManager: isCurrentUserManager(g),
-    canCurrentUserManageMembers: canCurrentUserManageMembers(g),
-    canCurrentUserManageGroup: canCurrentUserManageGroup(g),
-  };
+@Pipe({ name: 'canCurrentUserGrantGroupAccess', pure: true, standalone: true })
+export class CanCurrentUserGrantGroupAccessPipe implements PipeTransform {
+  transform = canCurrentUserGrantGroupAccess;
+}
+
+@Pipe({ name: 'canCurrentUserWatchMembers', pure: true, standalone: true })
+export class CanCurrentUserWatchMembersPipe implements PipeTransform {
+  transform = canCurrentUserWatchMembers;
+}
+
+@Pipe({ name: 'canCurrentUserManageMembers', pure: true, standalone: true })
+export class CanCurrentUserManageMembersPipe implements PipeTransform {
+  transform = canCurrentUserManageMembers;
+}
+
+@Pipe({ name: 'canCurrentUserManageGroup', pure: true, standalone: true })
+export class CanCurrentUserManageGroupPipe implements PipeTransform {
+  transform = canCurrentUserManageGroup;
 }

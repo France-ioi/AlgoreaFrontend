@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { mapStateData, readyData } from 'src/app/utils/operators/state';
+import { readyData } from 'src/app/utils/operators/state';
 import { of, Subscription, combineLatest, take, takeWhile, BehaviorSubject, switchMap } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/data-access/create-item.service';
@@ -9,7 +9,7 @@ import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
 import { Group } from '../../models/group';
 import { GroupChanges, GroupUpdateService } from '../../data-access/group-update.service';
-import { ManagementAdditions, withManagementAdditions } from '../../models/group-management';
+import { CanCurrentUserManageGroupPipe, IsCurrentUserManagerPipe } from '../../models/group-management';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -60,6 +60,8 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     DialogModule,
     LetDirective,
     ButtonComponent,
+    CanCurrentUserManageGroupPipe,
+    IsCurrentUserManagerPipe,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
@@ -95,9 +97,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     data?: GroupChanges['approval_change_action'],
   }>({ opened: false });
 
-  state$ = this.store.select(fromGroupContent.selectActiveContentGroupState).pipe(
-    mapStateData<Group, Group & ManagementAdditions, { id: string}>(withManagementAdditions),
-  );
+  state$ = this.store.select(fromGroupContent.selectActiveContentGroupState);
 
   subscription?: Subscription;
 
@@ -112,7 +112,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     private getGroupMembersService: GetGroupMembersService,
   ) {
     this.subscription = this.state$
-      .pipe(readyData())
+      .pipe(readyData<Group, { id: string }>())
       .subscribe(item => {
         this.initialFormData = item;
         this.resetFormWith(item);

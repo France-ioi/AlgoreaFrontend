@@ -1,12 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { MemberListComponent } from '../member-list/member-list.component';
-import { ManagementAdditions, withManagementAdditions } from '../../models/group-management';
-import { Group } from '../../models/group';
 import { GroupCreationService } from '../../data-access/group-creation.service';
 import { GroupData } from '../../models/group-data';
 import { AddSubGroupComponent } from '../add-sub-group/add-sub-group.component';
@@ -14,6 +12,7 @@ import { GroupNoPermissionComponent } from '../group-no-permission/group-no-perm
 import { GroupInviteUsersComponent } from '../group-invite-users/group-invite-users.component';
 import { GroupJoinByCodeComponent } from '../group-join-by-code/group-join-by-code.component';
 import { NgIf } from '@angular/common';
+import { IsCurrentUserManagerPipe, CanCurrentUserManageMembersPipe } from '../../models/group-management';
 
 export interface GroupChildData {
   id?: string,
@@ -32,10 +31,12 @@ export interface GroupChildData {
     AddSubGroupComponent,
     GroupJoinByCodeComponent,
     GroupInviteUsersComponent,
-    GroupNoPermissionComponent
+    GroupNoPermissionComponent,
+    IsCurrentUserManagerPipe,
+    CanCurrentUserManageMembersPipe,
   ],
 })
-export class GroupCompositionComponent implements OnChanges {
+export class GroupCompositionComponent {
   @ViewChild('addSubGroupComponent') addSubGroupComponent?: AddSubGroupComponent;
 
   @Input() groupData?: GroupData;
@@ -43,8 +44,6 @@ export class GroupCompositionComponent implements OnChanges {
   @Output() groupRefreshRequired = new EventEmitter<void>();
   @Output() addedGroup = new EventEmitter<void>();
   @Output() removedGroup = new EventEmitter<void>();
-
-  groupWithPermissions?: Group & ManagementAdditions;
 
   @ViewChild('memberList') private memberList?: MemberListComponent;
 
@@ -54,10 +53,6 @@ export class GroupCompositionComponent implements OnChanges {
     private groupCreationService: GroupCreationService,
     private actionFeedbackService: ActionFeedbackService,
   ) {}
-
-  ngOnChanges(): void {
-    this.groupWithPermissions = this.groupData ? withManagementAdditions(this.groupData.group) : undefined;
-  }
 
   refreshGroupInfo(): void {
     this.groupRefreshRequired.emit();
