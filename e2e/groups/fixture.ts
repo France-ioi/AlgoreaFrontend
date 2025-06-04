@@ -6,6 +6,7 @@ import { GroupMembersPage } from 'e2e/groups/pages/group-members-page';
 import { UserPage } from 'e2e/groups/pages/user-page';
 import { ManageGroupsPage } from 'e2e/groups/pages/manage-groups-page';
 import { GroupHistoryPage } from 'e2e/groups/pages/group-history-page';
+import { GroupManagersPage } from 'e2e/groups/pages/group-managers-page';
 
 interface GroupFixtures {
   groupSettingsPage: GroupSettingsPage,
@@ -15,6 +16,7 @@ interface GroupFixtures {
   groupMembersPage: GroupMembersPage,
   userPage: UserPage,
   groupHistoryPage: GroupHistoryPage,
+  groupManagersPage: GroupManagersPage,
 }
 
 export const test = base.extend<GroupFixtures>({
@@ -38,6 +40,9 @@ export const test = base.extend<GroupFixtures>({
   },
   groupHistoryPage: async ({ page }, use) => {
     await use(new GroupHistoryPage(page));
+  },
+  groupManagersPage: async ({ page }, use) => {
+    await use(new GroupManagersPage(page));
   },
 });
 
