@@ -27,6 +27,7 @@ import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils
 import { GroupData, selectGroupData } from './models/group-data';
 import { readyData } from '../utils/operators/state';
 import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/group-log-view.component';
+import { IsCurrentUserMemberPipe } from './models/group-membership';
 
 @Component({
   selector: 'alg-group-by-id',
@@ -49,6 +50,7 @@ import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/
     AsyncPipe,
     GroupLogViewComponent,
     IsCurrentUserManagerPipe,
+    IsCurrentUserMemberPipe,
     CanCurrentUserGrantGroupAccessPipe,
     CanCurrentUserManageMembersAndGroupPipe,
   ],

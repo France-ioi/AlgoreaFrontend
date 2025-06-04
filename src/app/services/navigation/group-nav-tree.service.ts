@@ -10,6 +10,7 @@ import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } fro
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 import { EntityPathRoute } from 'src/app/models/routing/entity-route';
+import { isCurrentUserMember } from 'src/app/groups/models/group-membership';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +72,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
       title: child.name,
       hasChildren: child.type !== 'User',
       navigateTo: (): void => this.groupRouter.navigateTo(route),
-      groupRelation: { isMember: child.currentUserMembership !== 'none', managership: child.currentUserManagership }
+      groupRelation: { isMember: isCurrentUserMember(child), managership: child.currentUserManagership }
     };
   }
 
