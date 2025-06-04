@@ -23,7 +23,7 @@ import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { CanCurrentUserManageMembersAndGroupPipe } from '../../models/group-management';
+import { CanCurrentUserManageMembersAndGroupPipe, CompareManagershipLevelPipe } from '../../models/group-management';
 import { Group } from '../../models/group';
 import { ManagementLevelAsTextPipe } from './management-level-as-text.pipe';
 
@@ -50,6 +50,7 @@ const managersLimit = 25;
     ButtonComponent,
     CanCurrentUserManageMembersAndGroupPipe,
     ManagementLevelAsTextPipe,
+    CompareManagershipLevelPipe,
   ],
 })
 export class GroupManagerListComponent {
@@ -61,8 +62,10 @@ export class GroupManagerListComponent {
   editingManager?: Manager; // the manager being edited in the dialog, undefined when the dialog is closed
 
   readonly datapager = new DataPager({
-    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
-      this.getGroupManagersService.getGroupManagers(this.group().id, { limit: pageSize, fromId: latestManager?.id }),
+    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => this.getGroupManagersService.getGroupManagers(
+      this.group().id,
+      { limit: pageSize, fromId: latestManager?.id, includeAncestors: true }
+    ),
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
@@ -70,7 +73,10 @@ export class GroupManagerListComponent {
   });
 
   readonly state$ = this.datapager.list$.pipe(
-    mapStateData(managers => managers.filter(manager => manager.canManage !== null)),
+    mapStateData(managers => ({
+      allManagers: managers,
+      currentGroupManagers: managers.filter(m => m.canManage !== null)
+    })),
   );
 
   constructor(
