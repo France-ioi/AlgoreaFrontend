@@ -1,4 +1,4 @@
-import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
+import { Group } from 'src/app/groups/models/group';
 import { User } from 'src/app/groups/models/user';
 import { UrlCommand } from '../../utils/url';
 import { ContentRoute } from './content-route';

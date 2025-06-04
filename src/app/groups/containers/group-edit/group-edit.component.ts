@@ -7,7 +7,7 @@ import { CreateItemService } from 'src/app/data-access/create-item.service';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
   isNewAssociatedItem, isExistingAssociatedItem } from '../associated-item/associated-item-types';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { GroupChanges, GroupUpdateService } from '../../data-access/group-update.service';
 import { ManagementAdditions, withManagementAdditions } from '../../models/group-management';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';

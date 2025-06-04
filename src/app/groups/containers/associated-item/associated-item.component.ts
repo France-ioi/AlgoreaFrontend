@@ -25,7 +25,7 @@ import { MessageInfoComponent } from 'src/app/ui-components/message-info/message
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
 import { AllowsGrantingViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { canCurrentUserGrantGroupAccess, canCurrentUserWatchMembers } from '../../models/group-management';

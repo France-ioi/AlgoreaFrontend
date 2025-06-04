@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { GetGroupChildrenService, GroupChild } from '../../data-access/get-group-children.service';

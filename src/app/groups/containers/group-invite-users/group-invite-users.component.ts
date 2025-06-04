@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';

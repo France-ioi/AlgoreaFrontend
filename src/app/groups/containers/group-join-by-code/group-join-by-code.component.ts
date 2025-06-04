@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Duration } from 'src/app/utils/duration';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { codeInfo, CodeInfo } from '../../models/group-code';
 import { GroupActionsService } from '../../data-access/group-actions.service';
 import { CodeActionsService } from '../../data-access/code-actions.service';

@@ -6,7 +6,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { MemberListComponent } from '../member-list/member-list.component';
 import { ManagementAdditions, withManagementAdditions } from '../../models/group-management';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { GroupCreationService } from '../../data-access/group-creation.service';
 import { GroupData } from '../../models/group-data';
 import { AddSubGroupComponent } from '../add-sub-group/add-sub-group.component';

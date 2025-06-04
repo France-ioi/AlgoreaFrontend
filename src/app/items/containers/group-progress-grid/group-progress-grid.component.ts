@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
-import { Group } from 'src/app/groups/data-access/get-group-by-id.service';
+import { Group } from 'src/app/groups/models/group';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
 import { formatUser } from 'src/app/groups/models/user';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { Router } from '@angular/router';
 import { GroupLeaveComponent } from '../group-leave/group-leave.component';
 import { NgIf } from '@angular/common';
