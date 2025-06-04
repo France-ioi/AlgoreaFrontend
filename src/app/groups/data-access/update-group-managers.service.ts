@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { SimpleActionResponse } from '../../data-access/action-response';
+import { GroupManagershipLevel } from '../models/group-management';
 
 export interface GroupManagerPermissionChanges {
-  canManage?: 'none'|'memberships'|'memberships_and_group',
+  canManage?: GroupManagershipLevel,
   canGrantGroupAccess?: boolean,
   canWatchMembers?: boolean,
 }

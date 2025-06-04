@@ -1,6 +1,7 @@
 import { arraysEqual } from 'src/app/utils/array';
 import { ensureDefined } from 'src/app/utils/assert';
 import { EntityPathRoute } from '../routing/entity-route';
+import { GroupManagershipType } from 'src/app/groups/models/group-management';
 
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
 
@@ -16,7 +17,7 @@ export interface NavTreeElement {
   locked?: boolean, // considering 'not set' as false
   associatedGroupNames?: string[],
   score?: { bestScore: number, currentScore: number, validated: boolean },
-  groupRelation?: { isMember: boolean, managership: 'none'|'direct'|'ancestor'|'descendant' },
+  groupRelation?: { isMember: boolean, managership: GroupManagershipType },
 }
 
 /**

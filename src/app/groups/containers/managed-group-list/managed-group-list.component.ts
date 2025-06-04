@@ -5,7 +5,7 @@ import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgClass } from '@angular/common';
-import { GroupManagershipLevel } from '../../models/group-management';
+import { GroupManagershipLevel, groupManagershipLevelEnum as l } from '../../models/group-management';
 
 @Component({
   selector: 'alg-managed-group-list',
@@ -67,9 +67,9 @@ export class ManagedGroupListComponent implements OnInit {
 
   getCanManage(value: GroupManagershipLevel): string {
     switch (value) {
-      case 'memberships':
+      case l.memberships:
         return $localize`Memberships`;
-      case 'memberships_and_group':
+      case l.memberships_and_group:
         return $localize`Memberships & Group`;
       default:
         return $localize`None`;

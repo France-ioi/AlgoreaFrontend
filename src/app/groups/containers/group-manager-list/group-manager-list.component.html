@@ -26,7 +26,7 @@
         >
         <ng-template #headerTemplate let-columns>
           <tr style="border: none; height: 100%">
-            @if (group.currentUserCanManage === 'memberships_and_group') {
+            @if (group | canCurrentUserManageMembersAndGroup) {
               <th class="alg-table-selection-col"></th>
             }
             <th style="min-width: 160px">
@@ -67,7 +67,7 @@
           let-rowIndex="rowIndex"
           >
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            @if (group.currentUserCanManage === 'memberships_and_group') {
+            @if (group | canCurrentUserManageMembersAndGroup) {
               <td class="alg-table-selection-col">
                 <div class="alg-table-selection-width">
                   <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
@@ -115,7 +115,7 @@
               </span>
             </td>
             <td style="width: 11rem; max-width: 11rem;">
-              @if (group.currentUserCanManage === 'memberships_and_group') {
+              @if (group | canCurrentUserManageMembersAndGroup) {
                 <button
                   alg-button-icon
                   type="button"
@@ -145,7 +145,7 @@
             </tr>
           }
         </ng-template>
-        @if (group.currentUserCanManage === 'memberships_and_group') {
+        @if (group | canCurrentUserManageMembersAndGroup) {
           <ng-template #summaryTemplate>
             <div class="alg-table-summary slanted">
               <div class="alg-table-summary-left">
@@ -171,7 +171,7 @@
         This group has no dedicated managers.
       </div>
     }
-    @if (group.currentUserCanManage === 'memberships_and_group') {
+    @if (group | canCurrentUserManageMembersAndGroup) {
       <alg-group-manager-add
         [groupData]="groupData"
         [managers]="managers"

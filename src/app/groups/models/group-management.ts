@@ -7,6 +7,7 @@ export const groupManagershipLevelEnum = groupManagershipLevelSchema.enum;
 const l = groupManagershipLevelEnum; // local shorthand
 
 const groupManagershipTypeSchema = z.enum([ 'none', 'direct', 'ancestor', 'descendant' ]);
+export type GroupManagershipType = z.infer<typeof groupManagershipTypeSchema>;
 export const groupManagershipTypeEnum = groupManagershipTypeSchema.enum;
 const t = groupManagershipTypeEnum; // local shorthand
 
