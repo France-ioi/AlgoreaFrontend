@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { IsCurrentUserManagerPipe } from '../../models/group-management';
-import { GroupData } from '../../models/group-data';
 import { GroupManagerListComponent } from '../group-manager-list/group-manager-list.component';
 import { IsCurrentUserMemberPipe } from '../../models/group-membership';
+import { Group } from '../../models/group';
 
 @Component({
   selector: 'alg-group-managers',
@@ -12,6 +12,6 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
   imports: [ GroupManagerListComponent, IsCurrentUserManagerPipe, IsCurrentUserMemberPipe ],
 })
 export class GroupManagersComponent {
-  @Input() groupData?: GroupData;
+  group = input.required<Group>();
 }
 

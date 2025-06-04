@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GroupData } from '../../models/group-data';
 import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { GetUserByLoginService } from 'src/app/data-access/get-user-by-login.service';
@@ -10,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { Group } from '../../models/group';
 
 @Component({
   selector: 'alg-group-manager-add',
@@ -22,7 +22,7 @@ export class GroupManagerAddComponent {
 
   @Output() added = new EventEmitter<void>();
 
-  @Input() groupData?: GroupData;
+  @Input({ required: true }) group!: Group;
   @Input() managers?: Manager[];
 
   state: 'ready' | 'error' | 'loading' = 'ready';
@@ -44,11 +44,7 @@ export class GroupManagerAddComponent {
       return;
     }
 
-    if (!this.groupData) {
-      throw new Error('Unexpected: missed group data');
-    }
-
-    const groupId = this.groupData.group.id;
+    const groupId = this.group.id;
 
     this.state = 'loading';
     this.getUserByLoginService.get(this.login).pipe(

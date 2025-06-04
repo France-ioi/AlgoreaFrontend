@@ -1,7 +1,5 @@
-@if (groupData && ((groupData.group | isCurrentUserManager) || (groupData.group | isCurrentUserMember))) {
-  <alg-group-manager-list
-    [groupData]="groupData"
-  ></alg-group-manager-list>
+@if ((group() | isCurrentUserManager) || (group() | isCurrentUserMember)) {
+  <alg-group-manager-list [group]="group()"></alg-group-manager-list>
 } @else {
   <div class="error validation-text" i18n>You are not allowed to see this page.</div>
 }

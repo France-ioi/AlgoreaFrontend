@@ -19,13 +19,13 @@ import { GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgClass, AsyncPipe } from '@angular/common';
-import { GroupData } from '../../models/group-data';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { CanCurrentUserManageMembersAndGroupPipe } from '../../models/group-management';
 import { groupManagershipLevelEnum as l } from '../../models/group-management';
+import { Group } from '../../models/group';
 
 const managersLimit = 25;
 
@@ -53,7 +53,7 @@ const managersLimit = 25;
 })
 export class GroupManagerListComponent implements OnChanges {
 
-  @Input({ required: true }) groupData!: GroupData;
+  @Input({ required: true }) group!: Group;
 
   selection: Manager[] = [];
   removalInProgress = false;
@@ -62,7 +62,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   readonly datapager = new DataPager({
     fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
-      this.getGroupManagersService.getGroupManagers(this.groupData.group.id, { limit: pageSize, fromId: latestManager?.id }),
+      this.getGroupManagersService.getGroupManagers(this.group.id, { limit: pageSize, fromId: latestManager?.id }),
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
@@ -86,7 +86,7 @@ export class GroupManagerListComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData.group.id
+    (changes.group?.previousValue as Group | undefined)?.id !== this.group.id
       ? this.fetchData()
       : this.fetchMoreData();
   }
@@ -156,7 +156,7 @@ export class GroupManagerListComponent implements OnChanges {
       throw new Error('Unexpected: Missed current user ID');
     }
 
-    const groupId = this.groupData.group.id;
+    const groupId = this.group.id;
     const ownManagerId = this.selection.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress = true;
