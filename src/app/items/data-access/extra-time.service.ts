@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 const groupAdditionalTimesSchema = z.array(
   z.object({
@@ -29,7 +29,7 @@ export class ExtraTimeService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/items/${itemId}/groups/${groupId}/members/additional-times`)
       .pipe(
-        decodeSnakeCaseZod(groupAdditionalTimesSchema),
+        decodeSnakeCase(groupAdditionalTimesSchema),
       );
   }
 

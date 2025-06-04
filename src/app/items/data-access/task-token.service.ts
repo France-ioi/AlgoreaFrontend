@@ -2,16 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { APPCONFIG } from 'src/app/app.config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 
-const taskTokenDataDecoder = D.struct({
-  taskToken: D.string,
+const taskTokenDataSchema = z.object({
+  taskToken: z.string(),
 });
 
-type TaskTokenData = D.TypeOf<typeof taskTokenDataDecoder>;
+type TaskTokenData = z.infer<typeof taskTokenDataSchema>;
 export type TaskToken = TaskTokenData['taskToken'];
 
 @Injectable({
@@ -30,7 +30,7 @@ export class TaskTokenService {
       { params },
     ).pipe(
       map(successData),
-      decodeSnakeCase(taskTokenDataDecoder),
+      decodeSnakeCase(taskTokenDataSchema),
       map(data => data.taskToken),
     );
   }
@@ -38,7 +38,7 @@ export class TaskTokenService {
   generateForAnswer(answerId: string): Observable<TaskToken> {
     return this.http.post<ActionResponse<unknown>>(`${this.config.apiUrl}/answers/${answerId}/generate-task-token`, undefined).pipe(
       map(successData),
-      decodeSnakeCase(taskTokenDataDecoder),
+      decodeSnakeCase(taskTokenDataSchema),
       map(data => data.taskToken),
     );
   }

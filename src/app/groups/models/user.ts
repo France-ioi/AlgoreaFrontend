@@ -1,7 +1,5 @@
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
-import { requirePersonalInfoAccessApprovalDecoder } from 'src/app/groups/models/group-approvals';
+import { requirePersonalInfoAccessApprovalSchema } from 'src/app/groups/models/group-approvals';
 
 export const userBaseSchema = z.object({
   login: z.string(),
@@ -35,30 +33,19 @@ export function formatUser<T extends UserBase>(user: T) : string {
   return user.login;
 }
 
-/** former version (to be removed/transformed soon) */
-
-export const userDecoder = pipe(
-  D.struct({
-    groupId: D.string,
-    login: D.string,
-    tempUser: D.boolean,
-    webSite: D.nullable(D.string),
-    freeText: D.nullable(D.string),
-    isCurrentUser: D.boolean,
-    ancestorsCurrentUserIsManagerOf: D.array(D.struct({
-      id: D.string,
-      name: D.string,
+export const userSchema = userBaseSchema.and(
+  withGroupId(z.object({
+    tempUser: z.boolean(),
+    webSite: z.string().nullable(),
+    freeText: z.string().nullable(),
+    isCurrentUser: z.boolean(),
+    ancestorsCurrentUserIsManagerOf: z.array(z.object({
+      id: z.string(),
+      name: z.string(),
     })),
-  }),
-  D.intersect(
-    D.partial({
-      firstName: D.nullable(D.string),
-      lastName: D.nullable(D.string),
-      currentUserCanWatchUser: D.boolean,
-      currentUserCanGrantUserAccess: D.boolean,
-      personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalDecoder,
-    }),
-  ),
-);
+    currentUserCanWatchUser: z.boolean().optional(),
+    currentUserCanGrantUserAccess: z.boolean().optional(),
+    personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalSchema.optional(),
+  })));
 
-export type User = D.TypeOf<typeof userDecoder>;
+export type User = z.infer<typeof userSchema>;

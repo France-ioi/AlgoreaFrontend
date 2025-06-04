@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { itemDependencySchema } from 'src/app/items/models/item-dependency';
 
@@ -23,7 +23,7 @@ export class GetItemDependenciesService {
     return this.http
       .get<unknown[]>(`${this.config.apiUrl}/items/${ itemId }/dependencies`)
       .pipe(
-        decodeSnakeCaseZod(itemDependenciesSchema),
+        decodeSnakeCase(itemDependenciesSchema),
       );
   }
 }

@@ -3,36 +3,29 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import { pipe } from 'fp-ts/function';
-import * as D from 'io-ts/Decoder';
-import { manageTypeDecoder } from 'src/app/data-access/managed-groups.service';
-import { decodeSnakeCase } from '../../utils/operators/decode';
+import { z } from 'zod';
+import { manageTypeSchema } from 'src/app/data-access/managed-groups.service';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
-const typeDecoder = D.literal('Class', 'Team', 'Club', 'Friends', 'Other', 'User','Session', 'Base');
+const typeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base' ]);
 
-const groupChildDecoder = pipe(
-  D.struct({
-    currentUserIsManager: D.boolean,
-    grade: D.number,
-    id: D.string,
-    isOpen: D.boolean,
-    isPublic: D.boolean,
-    name: D.string,
-    type: typeDecoder,
-    isEmpty: D.boolean,
-  }),
-  D.intersect(
-    D.partial({
-      currentUserCanGrantGroupAccess: D.boolean,
-      currentUserCanManage: manageTypeDecoder,
-      currentUserCanWatchMembers: D.boolean,
-      userCount: D.number,
-    })
-  )
-);
+const groupChildSchema = z.object({
+  currentUserIsManager: z.boolean(),
+  grade: z.number(),
+  id: z.string(),
+  isOpen: z.boolean(),
+  isPublic: z.boolean(),
+  name: z.string(),
+  type: typeSchema,
+  isEmpty: z.boolean(),
+  currentUserCanGrantGroupAccess: z.boolean().optional(),
+  currentUserCanManage: manageTypeSchema.optional(),
+  currentUserCanWatchMembers: z.boolean().optional(),
+  userCount: z.number().optional(),
+});
 
-export type GroupChild = D.TypeOf<typeof groupChildDecoder>;
-export type GroupType = D.TypeOf<typeof typeDecoder>;
+export type GroupChild = z.infer<typeof groupChildSchema>;
+export type GroupType = z.infer<typeof typeSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +48,7 @@ export class GetGroupChildrenService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(
-        decodeSnakeCase(D.array(groupChildDecoder))
+        decodeSnakeCase(z.array(groupChildSchema))
       );
   }
 }

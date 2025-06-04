@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { withGrade, withGroupId, userBaseSchema } from '../groups/models/user';
 
 const parentsSchema = z.array(
@@ -53,7 +53,7 @@ export class GetGroupDescendantsService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/user-descendants`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(userDescendantsSchema),
+        decodeSnakeCase(userDescendantsSchema),
       );
   }
 
@@ -63,7 +63,7 @@ export class GetGroupDescendantsService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/team-descendants`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(teamDescendantsSchema),
+        decodeSnakeCase(teamDescendantsSchema),
       );
   }
 }

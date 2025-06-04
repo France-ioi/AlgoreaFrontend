@@ -8,26 +8,25 @@
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, retry } from 'rxjs/operators';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
-import * as D from 'io-ts/Decoder';
 import {
-  metadataDecoder,
   OpenUrlParams,
-  openUrlParamsDecoder,
+  openUrlParamsSchema,
   TaskGrade,
-  taskGradeDecoder,
+  taskGradeSchema,
   TaskLog,
-  taskLogDecoder,
+  taskLogSchema,
   TaskMetaData,
+  taskMetadataSchema,
   TaskParamsKeyDefault,
-  taskParamsKeyDefaultDecoder,
+  taskParamsKeyDefaultSchema,
   TaskParamsValue,
   TaskResources,
   TaskViews,
-  taskViewsDecoder,
+  taskViewsSchema,
   UpdateDisplayParams,
-  updateDisplayParamsDecoder,
+  updateDisplayParamsSchema,
 } from './types';
-import { decode } from 'src/app/utils/decoders';
+import { z } from 'zod';
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();
@@ -91,14 +90,14 @@ export class Task {
 
     this.chan.bind(
       'platform.validate',
-      mode => platform.validate(decode(D.string)(mode)),
+      mode => platform.validate(z.string().parse(mode)),
     );
 
     this.chan.bind(
       'platform.getTaskParams',
       params => {
         const [ key, defaultValue ] = (Array.isArray(params) ? params : []) as unknown[];
-        return platform.getTaskParams(decode(taskParamsKeyDefaultDecoder)({
+        return platform.getTaskParams(taskParamsKeyDefaultSchema.parse({
           key: key ?? undefined,
           defaultValue: defaultValue ?? undefined,
         }));
@@ -106,29 +105,29 @@ export class Task {
     );
     this.chan.bind(
       'platform.showView',
-      view => platform.showView(decode(D.string)(view)),
+      view => platform.showView(z.string().parse(view)),
     );
     this.chan.bind(
       'platform.askHint',
-      hintToken => platform.askHint(decode(D.string)(hintToken)),
+      hintToken => platform.askHint(z.string().parse(hintToken)),
     );
     this.chan.bind(
       'platform.updateDisplay',
-      data => platform.updateDisplay(decode(updateDisplayParamsDecoder)(data)),
+      data => platform.updateDisplay(updateDisplayParamsSchema.parse(data)),
     );
     this.chan.bind(
       'platform.openUrl',
-      url => platform.openUrl(decode(openUrlParamsDecoder)(url)),
+      url => platform.openUrl(openUrlParamsSchema.parse(url)),
     );
     this.chan.bind(
       'platform.log',
-      data => platform.log(decode(taskLogDecoder)(data)),
+      data => platform.log(taskLogSchema.parse(data)),
     );
 
     // Legacy calls
     this.chan.bind(
       'platform.updateHeight',
-      height => platform.updateDisplay({ height: decode(D.number)(height) }),
+      height => platform.updateDisplay({ height: z.number().parse(height) }),
     );
     this.platformSet = true;
   }
@@ -154,7 +153,7 @@ export class Task {
     return this.chan.call({
       method: 'task.getHeight',
       timeout: 500,
-    }).pipe(map(([ height ]) => decode(D.number)(height)));
+    }).pipe(map(([ height ]) => z.number().parse(height)));
   }
 
   updateToken(token: string): Observable<unknown> {
@@ -169,7 +168,7 @@ export class Task {
     return this.chan.call({
       method: 'task.getMetaData',
       timeout: 2000,
-    }).pipe(map(([ metadata ]) => decode(metadataDecoder)(metadata)));
+    }).pipe(map(([ metadata ]) => taskMetadataSchema.parse(metadata)));
   }
 
   getAnswer(): Observable<string> {
@@ -177,7 +176,7 @@ export class Task {
       method: 'task.getAnswer',
       timeout: 2000
     }).pipe(
-      map(([ answer ]) => decode(D.string)(answer)),
+      map(([ answer ]) => z.string().parse(answer)),
       catchError(() => of('')),
     );
   }
@@ -195,7 +194,7 @@ export class Task {
       method: 'task.getState',
       timeout: 2000
     }).pipe(
-      map(([ state ]) => decode(D.string)(state)),
+      map(([ state ]) => z.string().parse(state)),
       catchError(() => of('')),
     );
   }
@@ -212,7 +211,7 @@ export class Task {
     return this.chan.call({
       method: 'task.getViews',
       timeout: 2000
-    }).pipe(map(([ taskViews ]) => decode(taskViewsDecoder)(taskViews)));
+    }).pipe(map(([ taskViews ]) => taskViewsSchema.parse(taskViews)));
   }
 
   showViews(views: Record<string, boolean>): Observable<unknown> {
@@ -234,7 +233,7 @@ export class Task {
         const [ score, message, scoreToken ] = (Array.isArray(result[0]) ? result[0] : result) as unknown[];
         return { score, message, scoreToken };
       }),
-      map(decode(taskGradeDecoder)),
+      map(taskGrade => taskGradeSchema.parse(taskGrade)),
     );
   }
 

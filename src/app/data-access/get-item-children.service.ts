@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { canCurrentUserViewInfo, ItemViewPerm, itemViewPermSchema, ItemWithViewPerm } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { itemChildCategorySchema } from '../items/models/item-properties';
@@ -66,13 +66,13 @@ export class GetItemChildrenService {
 
   get(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<ItemChildren> {
     return this.getRaw(id, attemptId, options).pipe(
-      decodeSnakeCaseZod(itemChildrenSchema),
+      decodeSnakeCase(itemChildrenSchema),
     );
   }
 
   getWithInvisibleItems(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<PossiblyInvisibleItemChildren> {
     return this.getRaw(id, attemptId, { ...options, showInvisible: true }).pipe(
-      decodeSnakeCaseZod(possiblyInvisibleItemChildrenSchema),
+      decodeSnakeCase(possiblyInvisibleItemChildrenSchema),
     );
   }
 }

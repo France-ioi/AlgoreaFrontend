@@ -1,39 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { decodeSnakeCase } from '../../utils/operators/decode';
 import { APPCONFIG } from '../../app.config';
 import { inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { pipe } from 'fp-ts/function';
-import { itemCorePermDecoder, itemEntryTimePermDecoder, itemSessionPermDecoder } from 'src/app/items/models/item-permissions';
+import { itemCorePermSchema, itemEntryTimePermSchema, itemSessionPermSchema } from 'src/app/items/models/item-permissions';
 
-const groupPermissionsDecoder = pipe(
-  itemCorePermDecoder,
-  D.intersect(itemSessionPermDecoder),
-  D.intersect(itemEntryTimePermDecoder),
-);
-
-const grantedPermissionsDecoder = D.struct({
-  group: D.struct({
-    id: D.string,
-    name: D.string,
+const grantedPermissionsSchema = z.object({
+  group: z.object({
+    id: z.string(),
+    name: z.string(),
   }),
-  item: D.struct({
-    id: D.string,
-    languageTag: D.string,
-    requiresExplicitEntry: D.boolean,
-    title: D.nullable(D.string),
+  item: z.object({
+    id: z.string(),
+    languageTag: z.string(),
+    requiresExplicitEntry: z.boolean(),
+    title: z.string().nullable(),
   }),
-  permissions: groupPermissionsDecoder,
-  sourceGroup: D.struct({
-    id: D.string,
-    name: D.string,
+  permissions: itemCorePermSchema.and(itemSessionPermSchema).and(itemEntryTimePermSchema),
+  sourceGroup: z.object({
+    id: z.string(),
+    name: z.string(),
   }),
 });
 
-export type GroupPermissions = D.TypeOf<typeof groupPermissionsDecoder>;
-export type GrantedPermissions = D.TypeOf<typeof grantedPermissionsDecoder>;
+export type GrantedPermissions = z.infer<typeof grantedPermissionsSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +41,7 @@ export class GrantedPermissionsService {
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${ id }/granted_permissions`, {
       params: httpParams,
     }).pipe(
-      decodeSnakeCase(D.array(grantedPermissionsDecoder)),
+      decodeSnakeCase(z.array(grantedPermissionsSchema)),
     );
   }
 }

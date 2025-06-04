@@ -1,10 +1,10 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { ThreadInfo } from 'src/app/data-access/thread.service';
 import { FetchState } from 'src/app/utils/state';
+import { Thread } from '../../models/threads';
 
 export const fetchThreadInfoActions = createActionGroup({
   source: 'Forum API',
   events: {
-    fetchStateChanged: props<{ fetchState: FetchState<ThreadInfo> }>(),
+    fetchStateChanged: props<{ fetchState: FetchState<Thread> }>(),
   },
 });

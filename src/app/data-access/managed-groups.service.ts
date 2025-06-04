@@ -3,13 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import * as D from 'io-ts/Decoder';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { decodeSnakeCase } from '../utils/operators/decode';
 
 const typeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]);
-export const manageTypeDecoder = D.literal('none', 'memberships', 'memberships_and_group');
-const manageTypeSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
+export const manageTypeSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
 
 const groupSchema = z.object({
   id: z.string(),
@@ -37,7 +35,7 @@ export class ManagedGroupsService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/current-user/managed-groups`)
       .pipe(
-        decodeSnakeCaseZod(z.array(groupSchema)),
+        decodeSnakeCase(z.array(groupSchema)),
       );
   }
 

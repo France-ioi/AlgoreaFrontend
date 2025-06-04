@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { entryStateValueSchema } from '../models/item-entry';
 import { ItemRoute } from 'src/app/models/routing/item-route';
@@ -35,7 +35,7 @@ export class ItemEntryService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/items/${itemId}/entry-state`)
       .pipe(
-        decodeSnakeCaseZod(entryStateSchema),
+        decodeSnakeCase(entryStateSchema),
       );
   }
 
@@ -46,7 +46,7 @@ export class ItemEntryService {
     return this.http
       .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${route.path.join('/')}/${route.id}/enter`, null, { params }).pipe(
         map(successData),
-        decodeSnakeCaseZod(enterResponseDataSchema),
+        decodeSnakeCase(enterResponseDataSchema),
       );
   }
 

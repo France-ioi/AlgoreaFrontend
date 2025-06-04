@@ -5,32 +5,29 @@ import { map } from 'rxjs/operators';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from './action-response';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/function';
+import { z } from 'zod';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import {
-  itemCorePermDecoder,
-  itemEntryFromPermDecoder,
-  itemEntryUntilPermDecoder,
-  itemSessionPermDecoder
+  itemCorePermSchema,
+  itemEntryFromPermSchema,
+  itemEntryUntilPermSchema,
+  itemSessionPermSchema
 } from '../items/models/item-permissions';
 
-const groupPermissionsDecoder = pipe(
-  itemCorePermDecoder,
-  D.intersect(itemSessionPermDecoder),
-  D.intersect(itemEntryFromPermDecoder),
-);
+const groupPermissionsSchema = itemCorePermSchema
+  .and(itemSessionPermSchema)
+  .and(itemEntryFromPermSchema);
 
-const groupPermissionsInfoDecoder = D.struct({
-  granted: D.intersect(groupPermissionsDecoder)(itemEntryUntilPermDecoder),
-  computed: groupPermissionsDecoder,
-  grantedViaGroupMembership: groupPermissionsDecoder,
-  grantedViaItemUnlocking: groupPermissionsDecoder,
-  grantedViaSelf: groupPermissionsDecoder,
-  grantedViaOther: groupPermissionsDecoder,
+const groupPermissionsInfoSchema = z.object({
+  granted: groupPermissionsSchema.and(itemEntryUntilPermSchema),
+  computed: groupPermissionsSchema,
+  grantedViaGroupMembership: groupPermissionsSchema,
+  grantedViaItemUnlocking: groupPermissionsSchema,
+  grantedViaSelf: groupPermissionsSchema,
+  grantedViaOther: groupPermissionsSchema,
 });
 
-export type GroupPermissionsInfo = D.TypeOf<typeof groupPermissionsInfoDecoder>;
+export type GroupPermissionsInfo = z.infer<typeof groupPermissionsInfoSchema>;
 
 export type GroupPermissions = GroupPermissionsInfo['granted'];
 export type GroupComputedPermissions = GroupPermissionsInfo['computed'];
@@ -46,7 +43,7 @@ export class GroupPermissionsService {
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${sourceGroupId}/permissions/${groupId}/${itemId}`).pipe(
-        decodeSnakeCase(groupPermissionsInfoDecoder),
+        decodeSnakeCase(groupPermissionsInfoSchema),
       );
   }
 

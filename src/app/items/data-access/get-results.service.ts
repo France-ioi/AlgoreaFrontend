@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../models/attempts';
 
@@ -23,7 +23,7 @@ export class GetResultsService {
         params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId },
       })
       .pipe(
-        decodeSnakeCaseZod(z.array(attemptResultSchema)),
+        decodeSnakeCase(z.array(attemptResultSchema)),
         map(results => results.map(resultFromFetchedResult)),
       );
   }

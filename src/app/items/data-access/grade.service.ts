@@ -9,7 +9,7 @@ import { ActionResponse, successData } from 'src/app/data-access/action-response
 import { map } from 'rxjs/operators';
 import { z } from 'zod';
 import { itemTypeSchema } from '../models/item-type';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 const saveGradeResultSchema = z.object({
   validated: z.boolean(),
@@ -45,7 +45,7 @@ export class GradeService {
       score_token: scoreToken,
     }).pipe(
       map(successData),
-      decodeSnakeCaseZod(saveGradeResultSchema),
+      decodeSnakeCase(saveGradeResultSchema),
     );
   }
 

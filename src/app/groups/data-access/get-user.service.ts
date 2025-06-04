@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../../app.config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from '../../utils/operators/decode';
-import { User, userDecoder } from '../models/user';
+import { User, userSchema } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class GetUserService {
   getForId(id: string): Observable<User> {
     return this.http.get<unknown>(`${this.config.apiUrl}/users/${ id }`)
       .pipe(
-        decodeSnakeCase(userDecoder)
+        decodeSnakeCase(userSchema)
       );
   }
 }

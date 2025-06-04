@@ -1,7 +1,7 @@
 import { catchError, map, Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { z } from 'zod';
@@ -34,7 +34,7 @@ export class GetBreadcrumbsFromRootsService {
 
   get(id: string): Observable<BreadcrumbsFromRootElement[][]> {
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${id}/breadcrumbs-from-roots`).pipe(
-      decodeSnakeCaseZod(breadcrumbsListSchema),
+      decodeSnakeCase(breadcrumbsListSchema),
       map(l => l.map(e => e.path))
     );
   }
@@ -50,7 +50,7 @@ export class GetBreadcrumbsFromRootsService {
         if (typeof errorText === 'string' && /No item found with text_id/.test(errorText)) throw new HttpErrorResponse({ status: 403 });
         throw err;
       }),
-      decodeSnakeCaseZod(breadcrumbsListSchema),
+      decodeSnakeCase(breadcrumbsListSchema),
       map(l => l.map(e => e.path))
     );
   }

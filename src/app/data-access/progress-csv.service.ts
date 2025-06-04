@@ -3,7 +3,7 @@ import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { decodeSnakeCaseZod } from '../utils/operators/decode';
+import { decodeSnakeCase } from '../utils/operators/decode';
 import { z } from 'zod';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class ProgressCSVService {
         params: params,
         responseType: 'text',
       }).pipe(
-        decodeSnakeCaseZod(z.string()),
+        decodeSnakeCase(z.string()),
       );
   }
 }

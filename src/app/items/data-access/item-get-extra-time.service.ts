@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 const itemAdditionalTimeSchema = z.object({
   additionalTime: z.number(),
@@ -24,7 +24,7 @@ export class ItemGetExtraTimeService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/items/${itemId}/groups/${groupId}/additional-times`)
       .pipe(
-        decodeSnakeCaseZod(itemAdditionalTimeSchema),
+        decodeSnakeCase(itemAdditionalTimeSchema),
       );
   }
 

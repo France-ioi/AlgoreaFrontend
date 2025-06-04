@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GroupPermissions } from '../../data-access/granted-permissions.service';
+import { GrantedPermissions } from '../../data-access/granted-permissions.service';
 import { GroupPermissionCaptionPipe } from 'src/app/pipes/groupPermissionCaption';
 import { NgIf, DatePipe } from '@angular/common';
 
@@ -15,5 +15,5 @@ import { NgIf, DatePipe } from '@angular/common';
   ],
 })
 export class GroupPermissionsComponent {
-  @Input() permissions?: GroupPermissions;
+  @Input() permissions?: GrantedPermissions['permissions'];
 }

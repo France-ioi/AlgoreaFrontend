@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as D from 'io-ts/Decoder';
+import { z } from 'zod';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { APPCONFIG } from 'src/app/app.config';
 
-const askHintDataDecoder = D.struct({
-  taskToken: D.string,
+const askHintDataSchema = z.object({
+  taskToken: z.string(),
 });
-export type AskHintData = D.TypeOf<typeof askHintDataDecoder>;
+export type AskHintData = z.infer<typeof askHintDataSchema>;
 
 
 @Injectable({
@@ -31,7 +31,7 @@ export class AskHintService {
         hint_requested: hintRequested,
       }).pipe(
         map(successData),
-        decodeSnakeCase(askHintDataDecoder)
+        decodeSnakeCase(askHintDataSchema)
       );
   }
 

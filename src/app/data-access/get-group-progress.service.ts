@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 const groupProgressesSchema = z.array(
   z.object({
@@ -58,7 +58,7 @@ export class GetGroupProgressService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/user-progress`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(participantProgressesSchema),
+        decodeSnakeCase(participantProgressesSchema),
       );
   }
 
@@ -70,7 +70,7 @@ export class GetGroupProgressService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/team-progress`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(participantProgressesSchema),
+        decodeSnakeCase(participantProgressesSchema),
       );
   }
 
@@ -82,7 +82,7 @@ export class GetGroupProgressService {
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/group-progress`, { params: params })
       .pipe(
-        decodeSnakeCaseZod(groupProgressesSchema),
+        decodeSnakeCase(groupProgressesSchema),
       );
   }
 }

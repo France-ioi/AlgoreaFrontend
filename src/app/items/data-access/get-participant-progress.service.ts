@@ -3,46 +3,40 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { APPCONFIG } from 'src/app/app.config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import * as D from 'io-ts/Decoder';
-import { dateDecoder } from 'src/app/utils/decoders';
-import { itemCorePermDecoder } from 'src/app/items/models/item-permissions';
-import { pipe } from 'fp-ts/function';
+import { z } from 'zod';
+import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 
-const participantProgressDecoder = pipe(
-  D.struct({
-    item: D.struct({
-      hintsRequested: D.number,
-      itemId: D.string,
-      latestActivityAt: D.nullable(dateDecoder),
-      score: D.number,
-      submissions: D.number,
-      timeSpent: D.number,
-      validated: D.boolean,
-    })
+const participantProgressSchema = z.object({
+  item: z.object({
+    hintsRequested: z.number(),
+    itemId: z.string(),
+    latestActivityAt: z.coerce.date().nullable(),
+    score: z.number(),
+    submissions: z.number(),
+    timeSpent: z.number(),
+    validated: z.boolean(),
   }),
-  D.intersect(
-    D.partial({
-      children: D.array(D.struct({
-        currentUserPermissions: itemCorePermDecoder,
-        hintsRequested: D.number,
-        itemId: D.string,
-        latestActivityAt: D.nullable(dateDecoder),
-        noScore: D.boolean,
-        score: D.number,
-        string: D.struct({
-          languageTag: D.string,
-          title: D.nullable(D.string),
-        }),
-        submissions: D.number,
-        timeSpent: D.number,
-        type: D.literal('Chapter', 'Task', 'Skill'),
-        validated: D.boolean,
-      })),
+  children: z.array(
+    z.object({
+      currentUserPermissions: itemCorePermSchema,
+      hintsRequested: z.number(),
+      itemId: z.string(),
+      latestActivityAt: z.coerce.date().nullable(),
+      noScore: z.boolean(),
+      score: z.number(),
+      string: z.object({
+        languageTag: z.string(),
+        title: z.string().nullable(),
+      }),
+      submissions: z.number(),
+      timeSpent: z.number(),
+      type: z.enum([ 'Chapter', 'Task', 'Skill' ]),
+      validated: z.boolean(),
     })
-  ),
-);
+  ).optional(),
+});
 
-export type ParticipantProgress = D.TypeOf<typeof participantProgressDecoder>;
+export type ParticipantProgress = z.infer<typeof participantProgressSchema>;
 
 @Injectable({
   providedIn: 'root'
@@ -54,9 +48,9 @@ export class GetParticipantProgressService {
 
   get(id: string): Observable<ParticipantProgress> {
     return this.http
-      .get<unknown[]>(`${this.config.apiUrl}/items/${id}/participant-progress`)
+      .get<unknown>(`${this.config.apiUrl}/items/${id}/participant-progress`)
       .pipe(
-        decodeSnakeCase(participantProgressDecoder)
+        decodeSnakeCase(participantProgressSchema)
       );
   }
 }

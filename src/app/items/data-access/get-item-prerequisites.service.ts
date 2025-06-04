@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { z } from 'zod';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemDependencySchema } from 'src/app/items/models/item-dependency';
 
 const itemPrerequisitesSchema = z.array(itemDependencySchema);
@@ -22,7 +22,7 @@ export class GetItemPrerequisitesService {
     return this.http
       .get<unknown[]>(`${this.config.apiUrl}/items/${ itemId }/prerequisites`)
       .pipe(
-        decodeSnakeCaseZod(itemPrerequisitesSchema),
+        decodeSnakeCase(itemPrerequisitesSchema),
       );
   }
 }

@@ -3,30 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, switchMap } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
-import * as D from 'io-ts/Decoder';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import jwtDecode from 'jwt-decode';
-
-const threadDecoder = D.struct({
-  // itemId: D.string, -> bug in backend
-  // participantId: D.string, -> bug in backend
-  status: D.literal('not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed'),
-  token: D.string,
-});
-
-type Thread = D.TypeOf<typeof threadDecoder>;
-
-const threadTokenDecoder = D.struct({
-  itemId: D.string,
-  participantId: D.string,
-  userId: D.string,
-  isMine: D.boolean,
-  canWatch: D.boolean,
-  canWrite: D.boolean,
-});
-type ThreadToken = D.TypeOf<typeof threadTokenDecoder>;
-
-export type ThreadInfo = Thread & ThreadToken;
+import { Thread, threadSchema, threadTokenSchema } from '../forum/models/threads';
 
 @Injectable({
   providedIn: 'root',
@@ -36,11 +15,11 @@ export class ThreadService {
 
   constructor(private http: HttpClient) {}
 
-  get(itemId: string, participantId: string): Observable<ThreadInfo> {
+  get(itemId: string, participantId: string): Observable<Thread> {
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/participant/${participantId}/thread`).pipe(
-      decodeSnakeCase(threadDecoder),
+      decodeSnakeCase(threadSchema),
       switchMap(thread => of(jwtDecode(thread.token, { header: false })).pipe(
-        decodeSnakeCase(threadTokenDecoder),
+        decodeSnakeCase(threadTokenSchema),
         map(token => ({ ...thread, ...token }))
       ))
     );

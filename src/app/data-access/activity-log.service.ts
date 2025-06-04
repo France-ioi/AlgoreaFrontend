@@ -3,7 +3,7 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from '../app.config';
 import { inject } from '@angular/core';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { SECONDS } from '../utils/duration';
 import { requestTimeout } from '../interceptors/interceptor_common';
@@ -80,7 +80,7 @@ export class ActivityLogService {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })
-      .pipe(decodeSnakeCaseZod(activityLogsSchema));
+      .pipe(decodeSnakeCase(activityLogsSchema));
   }
 
   getAllActivityLog(
@@ -117,6 +117,6 @@ export class ActivityLogService {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })
-      .pipe(decodeSnakeCaseZod(activityLogsSchema));
+      .pipe(decodeSnakeCase(activityLogsSchema));
   }
 }

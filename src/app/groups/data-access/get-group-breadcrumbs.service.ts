@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/app.config';
 import { inject } from '@angular/core';
 import { groupRoute, GroupRoute } from 'src/app/models/routing/group-route';
-import { decodeSnakeCaseZod } from 'src/app/utils/operators/decode';
+import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { breadcrumbSchema, GroupBreadcrumbs } from '../models/group-breadcrumbs';
 import { tagError } from 'src/app/utils/errors';
 import { breadcrumbServiceTag } from 'src/app/items/data-access/get-breadcrumb.service';
@@ -23,7 +23,7 @@ export class GetGroupBreadcrumbsService {
     const groupIds = [ ...route.path, route.id ];
 
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${groupIds.join('/')}/breadcrumbs`).pipe(
-      decodeSnakeCaseZod(z.array(breadcrumbSchema)),
+      decodeSnakeCase(z.array(breadcrumbSchema)),
       map(breadcrumbs => breadcrumbs.map((breadcrumb, index) => ({
         ...breadcrumb,
         route: groupRoute(breadcrumb, breadcrumbs.slice(0, index).map(({ id }) => id)),
