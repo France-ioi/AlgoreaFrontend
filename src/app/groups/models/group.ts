@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { groupCodeSchema } from './group-code';
 import { groupManagershipSchema } from './group-management';
 import { groupApprovalsSchema } from './group-approvals';
+import { nonUserGroupTypeSchema } from './group-types';
 
 export const groupShortInfoSchema = z.object({
   id: z.string(),
@@ -11,7 +12,7 @@ export type GroupShortInfo = z.infer<typeof groupShortInfoSchema>;
 
 export const groupSchema = z.object({
   id: z.string(),
-  type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]),
+  type: nonUserGroupTypeSchema,
   name: z.string(),
   description: z.string().nullable(),
   isMembershipLocked: z.boolean(),
