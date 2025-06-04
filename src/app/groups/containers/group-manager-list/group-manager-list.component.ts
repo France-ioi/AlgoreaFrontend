@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
@@ -52,9 +52,9 @@ const managersLimit = 25;
     ManagementLevelAsTextPipe,
   ],
 })
-export class GroupManagerListComponent implements OnChanges {
+export class GroupManagerListComponent {
 
-  @Input({ required: true }) group!: Group;
+  group = input.required<Group>();
 
   selection: Manager[] = [];
   removalInProgress = false;
@@ -62,7 +62,7 @@ export class GroupManagerListComponent implements OnChanges {
 
   readonly datapager = new DataPager({
     fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
-      this.getGroupManagersService.getGroupManagers(this.group.id, { limit: pageSize, fromId: latestManager?.id }),
+      this.getGroupManagersService.getGroupManagers(this.group().id, { limit: pageSize, fromId: latestManager?.id }),
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
@@ -80,12 +80,10 @@ export class GroupManagerListComponent implements OnChanges {
     private actionFeedbackService: ActionFeedbackService,
     private userService: UserSessionService,
     private confirmationService: ConfirmationService,
-  ) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    (changes.group?.previousValue as Group | undefined)?.id !== this.group.id
-      ? this.fetchData()
-      : this.fetchMoreData();
+  ) {
+    effect(() => {
+      this.fetchData();
+    });
   }
 
   fetchData(): void {
@@ -142,7 +140,7 @@ export class GroupManagerListComponent implements OnChanges {
       throw new Error('Unexpected: Missed current user ID');
     }
 
-    const groupId = this.group.id;
+    const groupId = this.group().id;
     const ownManagerId = this.selection.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress = true;
