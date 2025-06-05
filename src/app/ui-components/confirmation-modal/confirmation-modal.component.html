@@ -15,6 +15,7 @@
       type="button"
       class="button {{ data().rejectButtonStyleClass }}"
       alg-button
+      [icon]="data().rejectButtonIcon"
       (click)="dialogRef.close(false)"
     >
       @if (data().rejectButtonCaption) {
@@ -27,6 +28,7 @@
       type="button"
       class="button {{ data().acceptButtonStyleClass }}"
       alg-button
+      [icon]="data().acceptButtonIcon"
       (click)="dialogRef.close(true)"
     >
       @if (data().acceptButtonCaption) {

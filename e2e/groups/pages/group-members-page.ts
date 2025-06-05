@@ -2,10 +2,11 @@ import { Page, expect } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class GroupMembersPage {
-  tabsLocator = this.page.locator('alg-selection');
-  memberListLocator = this.page.locator('alg-member-list');
-  approveConfirmationBtnLocator = this.page.getByRole('button', { name: 'Yes' });
-  rejectConfirmationBtnLocator = this.page.getByRole('button', { name: 'No' });
+  private tabsLocator = this.page.locator('alg-selection');
+  private memberListLocator = this.page.locator('alg-member-list');
+  private confirmationModalLocator = this.page.locator('alg-confirmation-modal');
+  private approveConfirmationBtnLocator = this.confirmationModalLocator.getByRole('button', { name: 'Yes' });
+  private rejectConfirmationBtnLocator = this.confirmationModalLocator.getByRole('button', { name: 'No' });
 
   constructor(private readonly page: Page) {
   }
@@ -45,15 +46,11 @@ export class GroupMembersPage {
   }
 
   async checksIsDeleteConfirmationVisible(text: string | RegExp): Promise<void> {
-    await expect.soft(
-      this.page.getByRole('alertdialog').locator('div').filter({ hasText: text })
-    ).toBeVisible();
+    await expect.soft(this.confirmationModalLocator.getByText(text)).toBeVisible();
   }
 
   async checksIsDeleteConfirmationNotVisible(text: string | RegExp): Promise<void> {
-    await expect.soft(
-      this.page.getByRole('alertdialog').locator('div').filter({ hasText: text })
-    ).not.toBeVisible();
+    await expect.soft(this.confirmationModalLocator.getByText(text)).not.toBeVisible();
   }
 
   async approveConfirmation(): Promise<void> {
