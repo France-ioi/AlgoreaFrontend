@@ -163,7 +163,7 @@
     <alg-loading class="alg-flex-1"></alg-loading>
   }
   @if (state.isError) {
-    @if (state.error && ($any(state.error).status === 403 || $any(state.error).status === 404)) {
+    @if (state.error && ($any(state.error).status === 403 || $any(state.error).status === 404 || $any(state.error).name === 'NoSuchAliasError')) {
       <p class="alg-error-message" i18n>
       This content does not exist or you are not allowed to view it.
     </p>

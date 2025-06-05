@@ -12,7 +12,7 @@ export const skillPrefix = 's';
 // Create route from url
 // **********************************************************************************************************
 
-export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'id'|'contentType'> & Partial<ItemRoute>;
+export type ItemRouteError = { tag: 'error' } & Pick<ItemRoute, 'contentType'> & Partial<ItemRoute>;
 
 export type ParsedItemUrl = { route: FullItemRoute|ItemRouteError, page: string[] }|null;
 
@@ -32,7 +32,7 @@ export function parseItemUrlSegments(segments: UrlSegment[], aliases: Aliases): 
   // parsing id
   const aliasOrId = mainSegment.path;
   const idPath = isAnItemAlias(aliasOrId) ? resolveItemAlias(aliasOrId, aliases) : { id: aliasOrId };
-  if (!idPath) return null; // the alias does not resolve to an id
+  if (!idPath) return { route: { tag: 'error', contentType }, page };
   const id = idPath.id;
 
   // parsing parameters

@@ -7,7 +7,7 @@ import { fromItemContent } from './item-content.store';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
-import { solveMissingPathAttempt } from '../../utils/item-route-validation';
+import { solveRouteError } from '../../utils/item-route-validation';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { mapErrorToState } from 'src/app/utils/operators/state';
@@ -24,7 +24,7 @@ export const routeErrorHandlingEffect = createEffect(
   ) => store$.select(fromItemContent.selectActiveContentRouteError).pipe(
     filter(isNotNull),
     repeatLatestWhen(userSessionService.userChanged$),
-    switchMap(routeError => solveMissingPathAttempt(routeError, getItemPathService, resultActionsService, itemRouter).pipe(
+    switchMap(routeError => solveRouteError(routeError, getItemPathService, resultActionsService, itemRouter).pipe(
       startWith(fetchingState()),
       mapErrorToState(),
     )),
