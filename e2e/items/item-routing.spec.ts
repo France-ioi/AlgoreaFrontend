@@ -57,3 +57,9 @@ test('route with missing path and service error', async ({ page }) => {
   });
 
 });
+
+test('route with invalid alias displays a proper error message', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('/a/invalid-alias');
+  await expect(page.getByText('This content does not exist')).toBeVisible();
+});
