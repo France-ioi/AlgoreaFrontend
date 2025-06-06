@@ -7,7 +7,7 @@ import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../..
 import { formatUser } from 'src/app/groups/models/user';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConfirmationService, SharedModule } from 'primeng/api';
+import { SharedModule } from 'primeng/api';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
@@ -16,6 +16,9 @@ import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
+import { Observable, of } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -75,7 +78,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     private updateGroupManagersService: UpdateGroupManagersService,
     private actionFeedbackService: ActionFeedbackService,
     private fb: UntypedFormBuilder,
-    private confirmationService: ConfirmationService,
+    private confirmationModalService: ConfirmationModalService,
   ) {}
 
   ngOnChanges(): void {
@@ -99,44 +102,27 @@ export class ManagerPermissionDialogComponent implements OnChanges {
   }
 
   onAccept(): void {
-    if (!this.manager) {
-      throw new Error('Unexpected: Missed manager data');
-    }
+    const manager = this.manager;
+    const group = this.group;
+    if (!manager || !group) throw new Error('Unexpected: Missed input component params');
 
     const currentUserId = this.sessionService.session$.value?.groupId;
-
-    if (!currentUserId) {
-      throw new Error('Unexpected: Missed current used ID');
-    }
+    if (!currentUserId) throw new Error('Unexpected: Missed current used ID');
 
     const canManageValue = this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'];
 
-    if (this.manager.id !== currentUserId || this.manager.id === currentUserId &&
-      (this.manager.canManage !== 'memberships_and_group') || canManageValue === 'memberships_and_group') {
-      this.update();
-      return;
-    }
+    const canManage = manager.id !== currentUserId || manager.id === currentUserId &&
+      (manager.canManage !== 'memberships_and_group') || canManageValue === 'memberships_and_group';
 
-    this.confirmationService.confirm({
+    const proceedSaving$: Observable<undefined | true> = canManage ? of(undefined) : this.confirmationModalService.open({
       message: $localize`Are you sure to remove from yourself the permission to edit group settings and edit managers?
         You may lose manager access and not be able to restore it.`,
-      header: $localize`Confirm Action`,
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: $localize`Yes, save these changes.`,
+      messageIconStyleClass: 'ph ph-warning-circle alg-validation-error',
+      acceptButtonCaption: 'Yes, save these changes.',
+      acceptButtonIcon: 'ph-bold ph-check',
       acceptButtonStyleClass: 'danger',
-      acceptIcon: 'ph-bold ph-check',
-      accept: () => {
-        this.update();
-      },
-      rejectLabel: $localize`No`,
-      rejectIcon: 'ph-bold ph-x',
-    });
-  }
-
-  update(): void {
-    if (!this.manager || !this.group) {
-      throw new Error('Unexpected: Missed input component params');
-    }
+      rejectButtonIcon: 'ph-bold ph-x',
+    }, { width: '30rem', panelClass: 'alg-z-index-1002' }).pipe(filter(accepted => !!accepted));
 
     const managerPermissions: GroupManagerPermissionChanges = {
       canManage: this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'],
@@ -145,16 +131,17 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     };
 
     this.isUpdating = true;
-    this.updateGroupManagersService.update(this.group.id, this.manager.id, managerPermissions).subscribe({
+    proceedSaving$.pipe(
+      switchMap(() => this.updateGroupManagersService.update(group.id, manager.id, managerPermissions)),
+    ).subscribe({
       next: () => {
-        this.isUpdating = false;
         this.actionFeedbackService.success($localize`New permissions successfully saved.`);
         this.close.emit({ updated: true });
       },
       error: () => {
-        this.isUpdating = false;
         this.actionFeedbackService.error($localize`Failed to save permissions.`);
-      }
+      },
+      complete: () => this.isUpdating = false,
     });
   }
 }
