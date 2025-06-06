@@ -1,4 +1,4 @@
-@if (groupData && (groupData.group.isCurrentUserManager || groupData.group.currentUserMembership !== 'none')) {
+@if (groupData && ((groupData.group | isCurrentUserManager) || (groupData.group | isCurrentUserMember))) {
   <alg-group-manager-list
     [groupData]="groupData"
   ></alg-group-manager-list>

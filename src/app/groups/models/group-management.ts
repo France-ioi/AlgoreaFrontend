@@ -1,62 +1,71 @@
+import { Pipe, PipeTransform } from '@angular/core';
 import { z } from 'zod';
 
-const managershipOpts = {
-  none: 'none',
-  direct: 'direct',
-  ancestor: 'ancestor',
-  descendant: 'descendant',
-};
+export const groupManagershipLevelSchema = z.enum([ 'none', 'memberships', 'memberships_and_group' ]);
+export type GroupManagershipLevel = z.infer<typeof groupManagershipLevelSchema>;
+export const groupManagershipLevelEnum = groupManagershipLevelSchema.enum;
+const l = groupManagershipLevelEnum; // local shorthand
 
-const managementLevelOpts = {
-  none: 'none',
-  memberships: 'memberships',
-  membershipsAndGroup: 'memberships_and_group'
-};
+const groupManagershipTypeSchema = z.enum([ 'none', 'direct', 'ancestor', 'descendant' ]);
+export type GroupManagershipType = z.infer<typeof groupManagershipTypeSchema>;
+export const groupManagershipTypeEnum = groupManagershipTypeSchema.enum;
+const t = groupManagershipTypeEnum; // local shorthand
 
-export const groupManagershipSchema = z.object({
-  currentUserManagership: z.enum([ managershipOpts.none, managershipOpts.descendant, managershipOpts.direct, managershipOpts.ancestor ]),
+export const currentUserManagershipInfoSchema = z.object({
+  currentUserManagership: groupManagershipTypeSchema,
 }).and(z.object({
   currentUserCanGrantGroupAccess: z.boolean(),
-  currentUserCanManage: z.enum([ managementLevelOpts.none, managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup ]),
+  currentUserCanManage: groupManagershipLevelSchema,
   currentUserCanWatchMembers: z.boolean(),
 }).partial());
 
-type GroupManagership = z.infer<typeof groupManagershipSchema>;
+type CurrentUserManagershipInfo = z.infer<typeof currentUserManagershipInfoSchema>;
 
-function isCurrentUserManager<T extends GroupManagership>(g: T): boolean {
-  return [ managershipOpts.direct, managershipOpts.ancestor ].includes(g.currentUserManagership);
+export function isCurrentUserManager<T extends CurrentUserManagershipInfo>(g: T): boolean {
+  return g.currentUserManagership === t.direct || g.currentUserManagership == t.ancestor;
 }
 
-export function canCurrentUserGrantGroupAccess<T extends GroupManagership>(g: T): boolean {
+export function canCurrentUserGrantGroupAccess<T extends CurrentUserManagershipInfo>(g: T): boolean {
   return !!g.currentUserCanGrantGroupAccess;
 }
 
-export function canCurrentUserWatchMembers<T extends GroupManagership>(g: T): boolean {
+export function canCurrentUserWatchMembers<T extends CurrentUserManagershipInfo>(g: T): boolean {
   return !!g.currentUserCanWatchMembers;
 }
 
-export function canCurrentUserManageMembers<T extends GroupManagership>(g: T): boolean {
-  return !!g.currentUserCanManage &&
-    [ managementLevelOpts.memberships, managementLevelOpts.membershipsAndGroup ].includes(g.currentUserCanManage);
+export function canCurrentUserManageMembers<T extends CurrentUserManagershipInfo>(g: T): boolean {
+  return g.currentUserCanManage === l.memberships || g.currentUserCanManage === l.memberships_and_group;
 }
 
-export function canCurrentUserManageGroup<T extends GroupManagership>(g: T): boolean {
-  return g.currentUserCanManage === managementLevelOpts.membershipsAndGroup;
+export function canCurrentUserManageMembersAndGroup<T extends CurrentUserManagershipInfo>(g: T): boolean {
+  return g.currentUserCanManage === l.memberships_and_group;
 }
 
-export interface ManagementAdditions {
-  isCurrentUserManager: boolean,
-  canCurrentUserManageMembers: boolean,
-  canCurrentUserManageGroup: boolean,
+// ********************************************
+// Pipes for templates
+// ********************************************
+
+@Pipe({ name: 'isCurrentUserManager', pure: true, standalone: true })
+export class IsCurrentUserManagerPipe implements PipeTransform {
+  transform = isCurrentUserManager;
 }
 
-// Adds to the given group some new computed attributes (as value)
-// The resulting object can be used in templates as value will not be recomputed
-export function withManagementAdditions<T extends GroupManagership>(g: T): T & ManagementAdditions {
-  return {
-    ...g,
-    isCurrentUserManager: isCurrentUserManager(g),
-    canCurrentUserManageMembers: canCurrentUserManageMembers(g),
-    canCurrentUserManageGroup: canCurrentUserManageGroup(g),
-  };
+@Pipe({ name: 'canCurrentUserGrantGroupAccess', pure: true, standalone: true })
+export class CanCurrentUserGrantGroupAccessPipe implements PipeTransform {
+  transform = canCurrentUserGrantGroupAccess;
+}
+
+@Pipe({ name: 'canCurrentUserWatchMembers', pure: true, standalone: true })
+export class CanCurrentUserWatchMembersPipe implements PipeTransform {
+  transform = canCurrentUserWatchMembers;
+}
+
+@Pipe({ name: 'canCurrentUserManageMembers', pure: true, standalone: true })
+export class CanCurrentUserManageMembersPipe implements PipeTransform {
+  transform = canCurrentUserManageMembers;
+}
+
+@Pipe({ name: 'canCurrentUserManageMembersAndGroup', pure: true, standalone: true })
+export class CanCurrentUserManageMembersAndGroupPipe implements PipeTransform {
+  transform = canCurrentUserManageMembersAndGroup;
 }

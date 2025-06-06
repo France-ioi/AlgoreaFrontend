@@ -1,16 +1,17 @@
-<ng-container *ngIf="groupWithPermissions">
-  <ng-container *ngIf="groupWithPermissions.isCurrentUserManager; else noPermission">
+<ng-container *ngIf="groupData">
+  @let group = groupData.group;
+  <ng-container *ngIf="group | isCurrentUserManager; else noPermission">
     <alg-member-list class="member-list" #memberList [groupData]="groupData" (removedGroup)="removedGroup.emit()"></alg-member-list>
     <alg-add-sub-group
-        *ngIf="groupData?.group?.currentUserCanManage !== 'none'"
+        *ngIf="group.currentUserCanManage !== 'none'"
         [loading]="state === 'addingGroup'"
         (addGroup)="addGroup($event)"
         #addSubGroupComponent
     ></alg-add-sub-group>
-    <alg-group-join-by-code [group]="groupData?.group" (refreshRequired)="refreshGroupInfo()" *ngIf="groupWithPermissions.canCurrentUserManageMembers">
+    <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.currentUserCanManage !== 'none'">
     </alg-group-join-by-code>
 
-    <alg-group-invite-users [group]="groupData?.group" (refreshRequired)="refreshGroupInfo()" *ngIf="groupWithPermissions.canCurrentUserManageMembers">
+    <alg-group-invite-users [group]="group" (refreshRequired)="refreshGroupInfo()" *ngIf="group.currentUserCanManage !== 'none'">
     </alg-group-invite-users>
   </ng-container>
   <ng-template #noPermission>

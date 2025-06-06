@@ -1,5 +1,5 @@
 import { GroupRoute } from 'src/app/models/routing/group-route';
-import { Group } from '../data-access/get-group-by-id.service';
+import { Group } from './group';
 import { GroupBreadcrumbs } from './group-breadcrumbs';
 import { fromGroupContent } from '../store';
 import { errorState, fetchingState, readyState } from 'src/app/utils/state';

@@ -1,71 +1,65 @@
-import { withManagementAdditions } from './group-management';
+import { canCurrentUserManageMembers, canCurrentUserManageMembersAndGroup, isCurrentUserManager } from './group-management';
 
 describe('GroupManagement', () => {
 
   describe('when the user is not manager (1)', () => {
-    const group = { currentUserManagership: 'none' };
+    const group = { currentUserManagership: 'none' as const };
 
     it('should set expected values', () => {
-      const g = withManagementAdditions(group);
-      expect(g.isCurrentUserManager).toBeFalsy();
-      expect(g.canCurrentUserManageMembers).toBeFalsy();
-      expect(g.canCurrentUserManageGroup).toBeFalsy();
+      expect(isCurrentUserManager(group)).toBeFalsy();
+      expect(canCurrentUserManageMembers(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
   describe('when the user is not manager (2)', () => {
-    const group = { currentUserManagership: 'descendant' };
+    const group = { currentUserManagership: 'descendant' as const };
 
     it('should set expected values', () => {
-      const g = withManagementAdditions(group);
-      expect(g.isCurrentUserManager).toBeFalsy();
-      expect(g.canCurrentUserManageMembers).toBeFalsy();
-      expect(g.canCurrentUserManageGroup).toBeFalsy();
+      expect(isCurrentUserManager(group)).toBeFalsy();
+      expect(canCurrentUserManageMembers(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
 
   describe('when the user manager with no perm (1)', () => {
-    const group = { currentUserManagership: 'direct', currentUserCanManage: 'none' };
+    const group = { currentUserManagership: 'direct', currentUserCanManage: 'none' } as const;
 
     it('should set expected values', () => {
-      const g = withManagementAdditions(group);
-      expect(g.isCurrentUserManager).toBeTruthy();
-      expect(g.canCurrentUserManageMembers).toBeFalsy();
-      expect(g.canCurrentUserManageGroup).toBeFalsy();
+      expect(isCurrentUserManager(group)).toBeTruthy();
+      expect(canCurrentUserManageMembers(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
   describe('when the user manager with no perm (2)', () => {
-    const group = { currentUserManagership: 'ancestor', currentUserCanManage: 'none' };
+    const group = { currentUserManagership: 'ancestor', currentUserCanManage: 'none' } as const;
 
     it('should set expected values', () => {
-      const g = withManagementAdditions(group);
-      expect(g.isCurrentUserManager).toBeTruthy();
-      expect(g.canCurrentUserManageMembers).toBeFalsy();
-      expect(g.canCurrentUserManageGroup).toBeFalsy();
+      expect(isCurrentUserManager(group)).toBeTruthy();
+      expect(canCurrentUserManageMembers(group)).toBeFalsy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
   describe('when the user manager with "memberships" perm', () => {
-    const group = { currentUserManagership: 'direct', currentUserCanManage: 'memberships' };
+    const group = { currentUserManagership: 'direct', currentUserCanManage: 'memberships' } as const;
 
     it('should set expected values', () => {
-      const g = withManagementAdditions(group);
-      expect(g.isCurrentUserManager).toBeTruthy();
-      expect(g.canCurrentUserManageMembers).toBeTruthy();
-      expect(g.canCurrentUserManageGroup).toBeFalsy();
+      expect(isCurrentUserManager(group)).toBeTruthy();
+      expect(canCurrentUserManageMembers(group)).toBeTruthy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeFalsy();
     });
   });
 
   describe('when the user manager with max perm', () => {
-    const group = { currentUserManagership: 'direct', currentUserCanManage: 'memberships_and_group' };
+    const group = { currentUserManagership: 'direct', currentUserCanManage: 'memberships_and_group' } as const;
 
     it('should set expected values', () => {
-      const g = withManagementAdditions(group);
-      expect(g.isCurrentUserManager).toBeTruthy();
-      expect(g.canCurrentUserManageMembers).toBeTruthy();
-      expect(g.canCurrentUserManageGroup).toBeTruthy();
+      expect(isCurrentUserManager(group)).toBeTruthy();
+      expect(canCurrentUserManageMembers(group)).toBeTruthy();
+      expect(canCurrentUserManageMembersAndGroup(group)).toBeTruthy();
     });
   });
 

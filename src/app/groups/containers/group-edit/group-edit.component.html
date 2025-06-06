@@ -11,7 +11,7 @@
   ></alg-error>
 
   <ng-container *ngIf="state.isReady">
-    <form [formGroup]="groupForm" *ngIf="state.data.isCurrentUserManager && state.data.canCurrentUserManageGroup; else notAuthorized">
+    <form [formGroup]="groupForm" *ngIf="(state.data | isCurrentUserManager) && (state.data | canCurrentUserManageMembersAndGroup); else notAuthorized">
       <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Group information</h2>
       <div class="field">
         <div class="field-name" i18n>

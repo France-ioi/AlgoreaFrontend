@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { GroupLinksComponent } from '../group-links/group-links.component';
 import { NgSwitch, NgSwitchCase } from '@angular/common';
 import { NgScrollbar } from 'ngx-scrollbar';

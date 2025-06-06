@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GroupShortInfo } from '../../data-access/get-group-by-id.service';
+import { GroupShortInfo } from '../../models/group';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
 import { NgFor, NgIf, SlicePipe } from '@angular/common';

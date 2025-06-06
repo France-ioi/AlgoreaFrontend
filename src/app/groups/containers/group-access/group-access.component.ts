@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { ReplaySubject, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

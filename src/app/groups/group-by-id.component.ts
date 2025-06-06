@@ -5,7 +5,11 @@ import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { ManagementAdditions, withManagementAdditions } from './models/group-management';
+import {
+  CanCurrentUserGrantGroupAccessPipe,
+  IsCurrentUserManagerPipe,
+  CanCurrentUserManageMembersAndGroupPipe
+} from './models/group-management';
 import { GroupEditComponent } from './containers/group-edit/group-edit.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -21,8 +25,9 @@ import { fromGroupContent } from './store';
 import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
 import { GroupData, selectGroupData } from './models/group-data';
-import { mapStateData, readyData } from '../utils/operators/state';
+import { readyData } from '../utils/operators/state';
 import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/group-log-view.component';
+import { IsCurrentUserMemberPipe } from './models/group-membership';
 
 @Component({
   selector: 'alg-group-by-id',
@@ -44,17 +49,16 @@ import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/
     ErrorComponent,
     AsyncPipe,
     GroupLogViewComponent,
+    IsCurrentUserManagerPipe,
+    IsCurrentUserMemberPipe,
+    CanCurrentUserGrantGroupAccessPipe,
+    CanCurrentUserManageMembersAndGroupPipe,
   ],
 })
 export class GroupByIdComponent implements OnDestroy {
   private config = inject(APPCONFIG);
 
-  state$ = this.store.select(selectGroupData).pipe(
-    mapStateData<GroupData, GroupData & { group: ManagementAdditions }>(state => ({
-      ...state,
-      group: withManagementAdditions(state.group),
-    }))
-  );
+  state$ = this.store.select(selectGroupData);
 
   hideAccessTab = !this.config.featureFlags.showGroupAccessTab;
 
@@ -67,7 +71,7 @@ export class GroupByIdComponent implements OnDestroy {
   @ViewChild('groupEdit') groupEdit?: GroupEditComponent;
 
   // on state change, update current content page info (for breadcrumb)
-  private groupToCurrentContentSubscription = this.state$.pipe(readyData()).subscribe(({ route }) => {
+  private groupToCurrentContentSubscription = this.state$.pipe(readyData<GroupData>()).subscribe(({ route }) => {
     this.currentContent.replace(groupInfo({ route }));
   });
 

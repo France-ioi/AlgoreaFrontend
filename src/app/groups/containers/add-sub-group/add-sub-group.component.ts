@@ -6,7 +6,7 @@ import {
   AddedContent,
   NewContentType
 } from 'src/app/ui-components/add-content/add-content.component';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { SearchGroupService } from '../../data-access/search-group.service';
 import { AddContentComponent as AddContentComponent_1 } from 'src/app/ui-components/add-content/add-content.component';
 import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-section.component';

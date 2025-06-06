@@ -3,17 +3,17 @@
   @if (state.data && state.data.group; as group) {
     <alg-group-header [groupData]="state.data"></alg-group-header>
 <!--    <alg-pending-join-requests
-        *ngIf="group.isCurrentUserManager && group.currentUserCanManage !== 'none'"
+        *ngIf="(group | isCurrentUserManager) && group.currentUserCanManage !== 'none'"
         [groupId]="group.id"
     ></alg-pending-join-requests>-->
     <alg-group-indicator
         class="group-indicator"
-        *ngIf="group.currentUserManagership !== 'none' || group.currentUserMembership !== 'none'"
+        *ngIf="(group | isCurrentUserManager) || (group | isCurrentUserMember)"
         [group]="group"
     >
     </alg-group-indicator>
     <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
+    <div [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
       <div class="alg-nav-tab" data-testid="alg-nav-tab">
         <a
           class="alg-nav-tab-item"
@@ -36,7 +36,7 @@
           History
         </a>
         <a
-          [hidden]="!group.isCurrentUserManager && !compositionTab?.isActive"
+          [hidden]="!(group | isCurrentUserManager) && !compositionTab?.isActive"
           class="alg-nav-tab-item"
           [routerLink]="'./members'"
           routerLinkActive #compositionTab="routerLinkActive"
@@ -46,7 +46,7 @@
           Composition
         </a>
         <a
-          [hidden]="!group.isCurrentUserManager && group.currentUserMembership === 'none' && !adminTab?.isActive"
+          [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !adminTab?.isActive"
           class="alg-nav-tab-item"
           [routerLink]="'./managers'"
           routerLinkActive #adminTab="routerLinkActive"
@@ -56,7 +56,7 @@
           Managers
         </a>
         <a
-          [hidden]="(hideAccessTab || !group.currentUserCanGrantGroupAccess) && !accessTab?.isActive"
+          [hidden]="(hideAccessTab || !(group | canCurrentUserGrantGroupAccess)) && !accessTab?.isActive"
           class="alg-nav-tab-item"
           [routerLink]="'./access'"
           routerLinkActive #accessTab="routerLinkActive"
@@ -66,7 +66,7 @@
           Access
         </a>
         <a
-          [hidden]="!group.canCurrentUserManageGroup && !settingsTab?.isActive"
+          [hidden]="!(group | canCurrentUserManageMembersAndGroup) && !settingsTab?.isActive"
           class="alg-nav-tab-item"
           [routerLink]="'./settings'"
           routerLinkActive #settingsTab="routerLinkActive"
@@ -79,7 +79,7 @@
     </div>
 
     <alg-group-overview
-      *ngIf="overviewTab?.isActive || !overviewTab && group.currentUserManagership === 'none' && group.currentUserMembership === 'none'"
+      *ngIf="overviewTab?.isActive || !overviewTab && !(group | isCurrentUserManager) && !(group | isCurrentUserMember)"
       class="alg-flex-1"
       [group]="group"
       (groupRefreshRequired)="onGroupRefreshRequired()"

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { ProgressSelectValue, ProgressSelectComponent } from
   'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { groupManagershipLevelEnum as l } from '../../models/group-management';
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -45,17 +46,17 @@ export class ManagerPermissionDialogComponent implements OnChanges {
 
   managementLevelValues: ProgressSelectValue<GroupManagerPermissionChanges['canManage']>[] = [
     {
-      value: 'none',
+      value: l.none,
       label: $localize`Read-only`,
       comment: $localize`Can list the members`
     },
     {
-      value: 'memberships',
+      value: l.memberships,
       label: $localize`Membership`,
       comment: $localize`Can manage (add, remove, invite, ...) members`
     },
     {
-      value: 'memberships_and_group',
+      value: l.memberships_and_group,
       label: $localize`Memberships and group`,
       comment: $localize`Can manage members, managers, and change group settings`
     },
@@ -112,7 +113,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     const canManageValue = this.form.get('canManage')?.value as GroupManagerPermissionChanges['canManage'];
 
     if (this.manager.id !== currentUserId || this.manager.id === currentUserId &&
-      (this.manager.canManage !== 'memberships_and_group') || canManageValue === 'memberships_and_group') {
+      (this.manager.canManage !== l.memberships_and_group || canManageValue === l.memberships_and_group)) {
       this.update();
       return;
     }

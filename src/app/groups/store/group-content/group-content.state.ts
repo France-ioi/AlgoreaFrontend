@@ -1,7 +1,7 @@
 import { FetchError, FetchState, Fetching, fetchingState } from 'src/app/utils/state';
 import { User } from '../../models/user';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
-import { Group } from '../../data-access/get-group-by-id.service';
+import { Group } from '../../models/group';
 import { GroupRoute } from 'src/app/models/routing/group-route';
 
 export type GroupInState = FetchState<Group, { id: string }>;
