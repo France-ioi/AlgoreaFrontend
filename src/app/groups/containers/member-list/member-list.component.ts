@@ -295,12 +295,16 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       message: `Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(selectedGroupChildren)}?
         This operation cannot be undone.`,
       acceptIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
     }, { maxWidth: '37.5rem' }).pipe(filter(accepted => !!accepted)));
 
     const confirmRemoveSubgroups$ = defer(() => this.confirmationModalService.open({
       message: `By removing ${getSelectedGroupChildCaptions(selectedGroupChildren)} from the group, you may loose
         manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
       acceptIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
     }, { maxWidth: '37.5rem' }).pipe(filter(accepted => !!accepted)));
 
     const proceedRemoving$: Observable<boolean | undefined> = isSubgroupsEmpty ? this.confirmationModalService.open({
@@ -308,6 +312,8 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         $localize`Do you also want to delete the group?` :
         $localize`These groups are all empty. Do you also want to delete them?`,
       acceptIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
     }).pipe(filter(accepted => accepted !== undefined)) : of(undefined);
 
     proceedRemoving$.pipe(
