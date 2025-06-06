@@ -41,6 +41,14 @@ export function canCurrentUserManageMembersAndGroup<T extends CurrentUserManager
   return g.currentUserCanManage === l.memberships_and_group;
 }
 
+/**
+ * Compares two managership levels.
+ * @returns A negative number if l1 is less than l2, a positive number if l1 is greater than l2, or zero if they are equal.
+ */
+export function compareManagershipLevel(l1: GroupManagershipLevel, l2: GroupManagershipLevel): number {
+  return groupManagershipLevelSchema.options.indexOf(l1) - groupManagershipLevelSchema.options.indexOf(l2);
+}
+
 // ********************************************
 // Pipes for templates
 // ********************************************
@@ -68,4 +76,13 @@ export class CanCurrentUserManageMembersPipe implements PipeTransform {
 @Pipe({ name: 'canCurrentUserManageMembersAndGroup', pure: true, standalone: true })
 export class CanCurrentUserManageMembersAndGroupPipe implements PipeTransform {
   transform = canCurrentUserManageMembersAndGroup;
+}
+
+/**
+ * Compares two managership levels.
+ * @returns A negative number if l1 is less than l2, a positive number if l1 is greater than l2, or zero if they are equal.
+ */
+@Pipe({ name: 'compareManagershipLevel', pure: true, standalone: true })
+export class CompareManagershipLevelPipe implements PipeTransform {
+  transform = compareManagershipLevel;
 }

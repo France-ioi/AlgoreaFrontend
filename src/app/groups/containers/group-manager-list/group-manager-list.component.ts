@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
@@ -19,13 +19,13 @@ import { GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgClass, AsyncPipe } from '@angular/common';
-import { GroupData } from '../../models/group-data';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { CanCurrentUserManageMembersAndGroupPipe } from '../../models/group-management';
-import { groupManagershipLevelEnum as l } from '../../models/group-management';
+import { CanCurrentUserManageMembersAndGroupPipe, CompareManagershipLevelPipe } from '../../models/group-management';
+import { Group } from '../../models/group';
+import { ManagementLevelAsTextPipe } from './management-level-as-text.pipe';
 
 const managersLimit = 25;
 
@@ -49,20 +49,23 @@ const managersLimit = 25;
     ButtonIconComponent,
     ButtonComponent,
     CanCurrentUserManageMembersAndGroupPipe,
+    ManagementLevelAsTextPipe,
+    CompareManagershipLevelPipe,
   ],
 })
-export class GroupManagerListComponent implements OnChanges {
+export class GroupManagerListComponent {
 
-  @Input({ required: true }) groupData!: GroupData;
+  group = input.required<Group>();
 
   selection: Manager[] = [];
   removalInProgress = false;
-  isPermissionsEditDialogOpened = false;
-  dialogManager?: Manager & { canManageAsText: string };
+  editingManager?: Manager; // the manager being edited in the dialog, undefined when the dialog is closed
 
   readonly datapager = new DataPager({
-    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> =>
-      this.getGroupManagersService.getGroupManagers(this.groupData.group.id, { limit: pageSize, fromId: latestManager?.id }),
+    fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => this.getGroupManagersService.getGroupManagers(
+      this.group().id,
+      { limit: pageSize, fromId: latestManager?.id, includeAncestors: true }
+    ),
     pageSize: managersLimit,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
@@ -70,10 +73,10 @@ export class GroupManagerListComponent implements OnChanges {
   });
 
   readonly state$ = this.datapager.list$.pipe(
-    mapStateData(managers => managers.map(manager => ({
-      ...manager,
-      canManageAsText: this.getManagerLevel(manager),
-    }))),
+    mapStateData(managers => ({
+      allManagers: managers,
+      currentGroupManagers: managers.filter(m => m.canManage !== null)
+    })),
   );
 
   constructor(
@@ -83,23 +86,10 @@ export class GroupManagerListComponent implements OnChanges {
     private actionFeedbackService: ActionFeedbackService,
     private userService: UserSessionService,
     private confirmationService: ConfirmationService,
-  ) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    (changes.groupData?.previousValue as GroupData | undefined)?.group.id !== this.groupData.group.id
-      ? this.fetchData()
-      : this.fetchMoreData();
-  }
-
-  private getManagerLevel(manager: Manager): string {
-    switch (manager.canManage) {
-      case l.none:
-        return $localize`Read-only`;
-      case l.memberships:
-        return $localize`Memberships`;
-      case l.memberships_and_group:
-        return $localize`Memberships and group`;
-    }
+  ) {
+    effect(() => {
+      this.fetchData();
+    });
   }
 
   fetchData(): void {
@@ -156,7 +146,7 @@ export class GroupManagerListComponent implements OnChanges {
       throw new Error('Unexpected: Missed current user ID');
     }
 
-    const groupId = this.groupData.group.id;
+    const groupId = this.group().id;
     const ownManagerId = this.selection.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress = true;
@@ -184,14 +174,12 @@ export class GroupManagerListComponent implements OnChanges {
       });
   }
 
-  openPermissionsEditDialog(manager: Manager & { canManageAsText: string }): void {
-    this.isPermissionsEditDialogOpened = true;
-    this.dialogManager = manager;
+  openPermissionsEditDialog(manager: Manager): void {
+    this.editingManager = manager;
   }
 
   closePermissionsEditDialog(event: { updated: boolean }): void {
-    this.isPermissionsEditDialogOpened = false;
-    this.dialogManager = undefined;
+    this.editingManager = undefined;
 
     if (event.updated) {
       this.fetchData();

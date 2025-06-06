@@ -104,7 +104,7 @@
       (addedGroup)="refreshNav()"
       (removedGroup)="refreshNav()"
     ></alg-group-composition>
-    <alg-group-managers *ngIf="!!adminTab?.isActive" class="alg-flex-1" [groupData]="state.data"></alg-group-managers>
+    <alg-group-managers *ngIf="!!adminTab?.isActive" class="alg-flex-1" [group]="group"></alg-group-managers>
     <alg-group-access *ngIf="!!accessTab?.isActive" class="alg-flex-1" [group]="group"></alg-group-access>
     <alg-group-edit *ngIf="!!settingsTab?.isActive" class="alg-flex-1" #groupEdit></alg-group-edit>
   }
