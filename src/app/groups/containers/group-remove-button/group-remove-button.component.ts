@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { Group } from '../../models/group';
-import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, map, filter } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { GetGroupChildrenService, GroupChild } from '../../data-access/get-group-children.service';
-import { ConfirmationService } from 'primeng/api';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GroupDeleteService } from '../../data-access/group-delete.service';
 import { Router } from '@angular/router';
@@ -12,6 +11,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, AsyncPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 @Component({
   selector: 'alg-group-remove-button',
@@ -37,7 +37,7 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
 
   constructor(
     private actionFeedbackService: ActionFeedbackService,
-    private confirmationService: ConfirmationService,
+    private confirmationModalService: ConfirmationModalService,
     private getGroupChildrenService: GetGroupChildrenService,
     private groupDeleteService: GroupDeleteService,
     private router: Router,
@@ -61,50 +61,33 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   }
 
   onDeleteGroup(): void {
-    if (!this.group) {
-      return;
-    }
-
-    this.confirmationService.confirm({
-      message: $localize`Are you sure you want to delete the group "${ this.group.name }"`,
-      header: $localize`Confirm Action`,
-      icon: 'ph-duotone ph-warning-circle',
-      acceptLabel: $localize`Delete it`,
-      acceptIcon: 'ph-bold ph-check',
-      accept: () => {
-        this.deleteGroup();
-      },
-      rejectLabel: $localize`No`,
-      rejectIcon: 'ph-bold ph-x',
-    });
-  }
-
-  deleteGroup(): void {
-    if (!this.group) {
-      return;
-    }
-
+    if (!this.group) throw new Error('Unexpected: Missed group');
     const id = this.group.id;
     const groupName = this.group.name;
 
     this.deletionInProgress$.next(true);
-    this.groupDeleteService.delete(id)
-      .subscribe({
-        next: () => {
-          this.deletionInProgress$.next(false);
-          this.actionFeedbackService.success($localize`You have deleted "${groupName}"`);
-          this.groupDeleted.emit();
-          this.navigateToMyGroups();
-        },
-        error: _err => {
-          this.deletionInProgress$.next(false);
-          this.actionFeedbackService.error($localize`Failed to delete "${groupName}"`);
-        }
-      });
-  }
-
-  navigateToMyGroups(): void {
-    void this.router.navigate([ '/groups/mine' ]);
+    this.confirmationModalService.open({
+      title: $localize`Confirm Action`,
+      message: $localize`Are you sure you want to delete the group "${ groupName }"`,
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+      acceptButtonCaption: $localize`Delete it`,
+      acceptButtonIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      rejectButtonIcon: 'ph-bold ph-x',
+    }).pipe(
+      filter(accepted => !!accepted),
+      switchMap(() => this.groupDeleteService.delete(id))
+    ).subscribe({
+      next: () => {
+        this.actionFeedbackService.success($localize`You have deleted "${groupName}"`);
+        this.groupDeleted.emit();
+        void this.router.navigate([ '/groups/mine' ]);
+      },
+      error: _err => {
+        this.actionFeedbackService.error($localize`Failed to delete "${groupName}"`);
+      },
+      complete: () => this.deletionInProgress$.next(false),
+    });
   }
 
   refresh(): void {
