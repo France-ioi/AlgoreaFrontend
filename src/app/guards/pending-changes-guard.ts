@@ -1,8 +1,9 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { PendingChangesService } from '../services/pending-changes-service';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
+import { map } from 'rxjs/operators';
 
 export interface PendingChangesComponent {
   /**
@@ -14,18 +15,12 @@ export interface PendingChangesComponent {
 @Injectable({
   providedIn: 'root'
 })
-export class PendingChangesGuard implements OnDestroy {
-
-  private dialogResponse = new Subject<boolean>();
+export class PendingChangesGuard {
 
   constructor(
-    private confirmationService: ConfirmationService,
+    private confirmationModalService: ConfirmationModalService,
     private pendingChangesService: PendingChangesService,
   ) {}
-
-  ngOnDestroy(): void {
-    this.dialogResponse.complete();
-  }
 
   canDeactivate(
     component: PendingChangesComponent | null,
@@ -43,24 +38,14 @@ export class PendingChangesGuard implements OnDestroy {
       return of(true);
     }
 
-    if (!pendingChangesComponent.isDirty()) return of(true);
-    this.confirmationService.confirm({
+    return pendingChangesComponent.isDirty() ? this.confirmationModalService.open({
       message: $localize`This page has unsaved changes. Do you want to leave this page and lose its changes?`,
-      header: $localize`Confirm Navigation`,
-      icon: 'ph-duotone ph-warning-circle',
-      acceptLabel: $localize`Yes, leave page`,
-      acceptIcon: 'ph-bold ph-check',
-      accept: () => {
-        this.dialogResponse.next(true);
-      },
-      rejectLabel: $localize`No`,
-      rejectIcon: 'ph-bold ph-x',
-      reject: () => {
-        this.dialogResponse.next(false);
-      },
-    });
-
-    return this.dialogResponse;
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+      acceptButtonCaption: 'Yes, leave page',
+      acceptButtonStyleClass: 'danger',
+      acceptButtonIcon: 'ph-bold ph-check',
+      rejectButtonIcon: 'ph-bold ph-x',
+    }).pipe(map(accepted => !!accepted)) : of(true);
   }
 
 }
