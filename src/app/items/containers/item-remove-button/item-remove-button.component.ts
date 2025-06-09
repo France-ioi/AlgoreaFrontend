@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, computed, input, output, signal } from '@angular/core';
 import { EMPTY, Subject, of } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
-import { ConfirmationService } from 'primeng/api';
 import { RemoveItemService } from '../../data-access/remove-item.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -16,6 +15,7 @@ import { parentRoute } from 'src/app/models/routing/item-route';
 import { DEFAULT_ACTIVITY_ROUTE } from 'src/app/models/routing/default-route-tokens';
 
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 @Component({
   selector: 'alg-item-remove-button',
@@ -57,7 +57,7 @@ export class ItemRemoveButtonComponent implements OnDestroy {
 
   constructor(
     private getItemChildrenService: GetItemChildrenService,
-    private confirmationService: ConfirmationService,
+    private confirmationModalService: ConfirmationModalService,
     private removeItemService: RemoveItemService,
     private actionFeedbackService: ActionFeedbackService,
     private itemRouter: ItemRouter,
@@ -69,35 +69,31 @@ export class ItemRemoveButtonComponent implements OnDestroy {
   }
 
   onDeleteItem(): void {
-    this.confirmationService.confirm({
-      message: $localize`Deleting it will also remove permanently all answers and results related with this content.`,
-      header: $localize`Are you sure you want to delete this content?`,
-      icon: 'ph-duotone ph-warning-circle',
-      acceptLabel: $localize`Yes`,
-      acceptButtonStyleClass: 'danger',
-      acceptIcon: 'ph-bold ph-check',
-      accept: () => this.onDeleteItemConfirmed(),
-      rejectLabel: $localize`No`,
-      rejectIcon: 'ph-bold ph-x',
-    });
-  }
-
-  onDeleteItemConfirmed(): void {
-    this.confirmRemoval.emit();
-
     const id = this.itemData().item.id;
     const itemName = this.itemData().item.string.title;
+
+    const confirmation$ = this.confirmationModalService.open({
+      title: $localize`Are you sure you want to delete this content?`,
+      message: $localize`Deleting it will also remove permanently all answers and results related with this content.`,
+      messageIconStyleClass: 'ph-duotone ph-warning-circle danger',
+      acceptButtonIcon: 'ph-bold ph-check',
+      rejectButtonIcon: 'ph-bold ph-x',
+    }).pipe(filter(accept => !!accept));
+
+    confirmation$.subscribe(() => this.confirmRemoval.emit());
+
     this.deletionInProgress.set(true);
-    this.removeItemService.delete(id).subscribe({
+    confirmation$.pipe(
+      switchMap(() => this.removeItemService.delete(id)),
+    ).subscribe({
       next: () => {
-        this.deletionInProgress.set(false);
         this.actionFeedbackService.success($localize`You have delete "${itemName}"`);
         this.postDeletionNavigation();
       },
       error: () => {
-        this.deletionInProgress.set(false);
         this.actionFeedbackService.error($localize`Failed to delete "${itemName}"`);
-      }
+      },
+      complete: () => this.deletionInProgress.set(false),
     });
   }
 
