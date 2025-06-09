@@ -4,6 +4,7 @@ import { ConfirmationModalComponent } from 'src/app/ui-components/confirmation-m
 import { Observable } from 'rxjs';
 
 export interface ConfirmationModalData {
+  title?: string,
   message: string,
   messageIconStyleClass?: string,
   acceptButtonCaption?: string,
