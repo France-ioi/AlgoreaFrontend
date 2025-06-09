@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { TreeModule } from 'primeng/tree';
 import { AccordionModule } from 'primeng/accordion';
@@ -22,7 +21,7 @@ import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
 import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';
@@ -67,7 +66,6 @@ bootstrapApplication(AppComponent, {
       NgScrollbarModule,
       TreeModule,
       TooltipModule,
-      ConfirmDialogModule,
       DialogModule,
       DropdownModule,
       MenuModule,
@@ -77,7 +75,6 @@ bootstrapApplication(AppComponent, {
       ReactiveFormsModule,
       ToastModule
     ),
-    ConfirmationService,
     MessageService,
     {
       provide: NG_SCROLLBAR_OPTIONS,
