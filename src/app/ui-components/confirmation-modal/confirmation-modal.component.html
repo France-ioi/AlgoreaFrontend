@@ -3,6 +3,9 @@
     <button class="secondary" alg-button-icon icon="ph ph-x" (click)="dialogRef.close()"></button>
   </div>
   <div class="body">
+    @if (data().title; as title) {
+      <div class="title alg-h4">{{ title }}</div>
+    }
     <div class="message">
       @if (data().messageIconStyleClass; as iconStyleClass) {
         <span class="message-icon {{ iconStyleClass }}"></span>
