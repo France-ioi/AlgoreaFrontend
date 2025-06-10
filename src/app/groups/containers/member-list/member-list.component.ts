@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ConfirmationService, SortEvent, SharedModule } from 'primeng/api';
+import { SortEvent, SharedModule } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { defer, Observable, of, ReplaySubject } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
 import { groupRoute, rawGroupRoute, RawGroupRoute } from 'src/app/models/routing/group-route';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -24,6 +24,7 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 type Member = GroupMembers[number];
 
@@ -127,7 +128,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     private groupUsersService: GroupUsersService,
     private actionFeedbackService: ActionFeedbackService,
     private removeSubgroupService: RemoveSubgroupService,
-    private confirmationService: ConfirmationService,
+    private confirmationModalService: ConfirmationModalService,
     private removeGroupService: RemoveGroupService,
   ) { }
 
@@ -284,46 +285,44 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       });
   }
 
-  onRemoveGroup(event: Event): void {
-    this.confirmationService.confirm({
-      target: event.target || undefined,
-      key: 'commonPopup',
-      icon: 'ph-duotone ph-warning-circle',
-      message: $localize`Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(this.selection as GroupChild[])}?
-       This operation cannot be undone.`,
-      acceptLabel: $localize`Yes`,
-      acceptIcon: 'ph-bold ph-check',
-      rejectLabel: $localize`No`,
-      accept: () => this.removeGroupsOrSubgroups(),
-    });
-  }
-
-  onRemoveSubgroups(event: Event, groupId: string): void {
-    this.confirmationService.confirm({
-      target: event.target || undefined,
-      key: 'commonPopup',
-      icon: 'ph-duotone ph-warning-circle',
-      message: $localize`By removing ${getSelectedGroupChildCaptions(this.selection as GroupChild[])} from the group, you may loose
-       manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
-      acceptLabel: $localize`Yes`,
-      acceptIcon: 'ph-bold ph-check',
-      rejectLabel: $localize`No`,
-      accept: () => this.removeGroupsOrSubgroups(groupId),
-    });
-  }
-
-  removeGroupsOrSubgroups(groupId?: string): void {
-    if (this.selection.length === 0) {
-      throw new Error('Unexpected: Missed selected groups');
-    }
-
-    const selectedGroupIds = this.selection.map(group => group.id);
+  removeGroupsOrSubgroups(selectedGroupChildren: GroupChild[], groupId: string): void {
+    const selectedGroupChildIds = selectedGroupChildren.map(g => g.id);
+    const isSubgroupsEmpty = selectedGroupChildren.every(g => g.isEmpty);
 
     this.removalInProgress$.next(true);
-    const request$ = groupId ?
-      this.removeSubgroupService.removeBatch(groupId, selectedGroupIds) : this.removeGroupService.removeBatch(selectedGroupIds);
 
-    request$.subscribe({
+    const confirmRemoveGroup$ = defer(() => this.confirmationModalService.open({
+      message: `Are you sure you want to permanently delete ${getSelectedGroupChildCaptions(selectedGroupChildren)}?
+        This operation cannot be undone.`,
+      acceptIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+    }, { maxWidth: '37.5rem' }).pipe(filter(accepted => !!accepted)));
+
+    const confirmRemoveSubgroups$ = defer(() => this.confirmationModalService.open({
+      message: `By removing ${getSelectedGroupChildCaptions(selectedGroupChildren)} from the group, you may loose
+        manager access to them (if no explicit permission or through other parent group). Are you sure you want to proceed?`,
+      acceptIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+    }, { maxWidth: '37.5rem' }).pipe(filter(accepted => !!accepted)));
+
+    const proceedRemoving$: Observable<boolean | undefined> = isSubgroupsEmpty ? this.confirmationModalService.open({
+      message: selectedGroupChildren.length === 1 ?
+        $localize`Do you also want to delete the group?` :
+        $localize`These groups are all empty. Do you also want to delete them?`,
+      acceptIcon: 'ph-bold ph-check',
+      acceptButtonStyleClass: 'danger',
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+    }).pipe(filter(accepted => accepted !== undefined)) : of(undefined);
+
+    proceedRemoving$.pipe(
+      switchMap(allowToRemoveGroup => (
+        allowToRemoveGroup === true
+          ? confirmRemoveGroup$.pipe(switchMap(() => this.removeGroupService.removeBatch(selectedGroupChildIds)))
+          : confirmRemoveSubgroups$.pipe(switchMap(() => this.removeSubgroupService.removeBatch(groupId, selectedGroupChildIds)))
+      ))
+    ).subscribe({
       next: response => {
         displayGroupRemovalResponseToast(this.actionFeedbackService, response);
         this.table?.clear();
@@ -336,49 +335,19 @@ export class MemberListComponent implements OnChanges, OnDestroy {
         this.removalInProgress$.next(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
-      }
+      },
+      complete: () => this.removalInProgress$.next(false)
     });
   }
 
-  onRemove(event: Event): void {
-    if (this.selection.length === 0 || !this.groupData) {
-      throw new Error('Unexpected: Missed group data or selected models');
-    }
-
+  onRemove(): void {
+    if (this.selection.length === 0 || !this.groupData) throw new Error('Unexpected: Missed group data or selected models');
     const groupId = this.groupData.group.id;
     if (this.currentFilter.type === TypeFilter.Users) {
       this.removeUsers(groupId);
-      return;
+    } else {
+      this.removeGroupsOrSubgroups(this.selection as GroupChild[], groupId);
     }
-
-    const isSubgroupsEmpty = !(this.selection as GroupChild[]).some(g => !g.isEmpty);
-    if (!isSubgroupsEmpty) {
-      this.onRemoveSubgroups(event, groupId);
-      return;
-    }
-
-    this.confirmationService.confirm({
-      target: event.target || undefined,
-      key: 'commonPopup',
-      icon: 'pi pi-question-circle',
-      message: this.selection.length === 1 ?
-        $localize`Do you also want to delete the group?` :
-        $localize`These groups are all empty. Do you also want to delete them?`,
-      acceptLabel: $localize`Yes`,
-      acceptIcon: 'ph-bold ph-check',
-      rejectLabel: $localize`No`,
-      accept: () => {
-        // ISSUE: https://github.com/primefaces/primeng/issues/10589
-        setTimeout(() => {
-          this.onRemoveGroup(event);
-        }, 250);
-      },
-      reject: () => {
-        setTimeout(() => {
-          this.onRemoveSubgroups(event, groupId);
-        }, 250);
-      }
-    });
   }
 
   private getColumns(filter: Filter): Column[] {

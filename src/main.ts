@@ -3,7 +3,6 @@ import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
 import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
 import { DropdownModule } from 'primeng/dropdown';
@@ -73,7 +72,6 @@ bootstrapApplication(AppComponent, {
       DropdownModule,
       MenuModule,
       FormsModule,
-      ConfirmPopupModule,
       OverlayPanelModule,
       LayoutModule,
       ReactiveFormsModule,

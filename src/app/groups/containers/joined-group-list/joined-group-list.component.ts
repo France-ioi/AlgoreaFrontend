@@ -14,8 +14,7 @@ import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-import { Dialog } from '@angular/cdk/dialog';
-import { ConfirmationModalComponent, ConfirmationModalData } from 'src/app/ui-components/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -52,7 +51,7 @@ export class JoinedGroupListComponent implements OnDestroy {
     private joinedGroupsService: JoinedGroupsService,
     private groupLeaveService: GroupLeaveService,
     private actionFeedbackService: ActionFeedbackService,
-    private dialogService: Dialog,
+    private confirmationModalService: ConfirmationModalService,
   ) {}
 
   ngOnDestroy(): void {
@@ -66,16 +65,13 @@ export class JoinedGroupListComponent implements OnDestroy {
 
   onGroupLeaveClick(membership: GroupMembership): void {
     const groupName = membership.group.name;
-    this.dialogService.open<boolean, ConfirmationModalData>(ConfirmationModalComponent, {
-      data: {
-        message: $localize`Are you sure you want to leave this group?`,
-        messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
-        acceptButtonCaption: $localize`Yes, leave group`,
-        acceptButtonStyleClass: 'danger',
-        rejectButtonCaption: $localize`No`,
-      },
-      maxWidth: '18.5rem',
-    }).closed.pipe(
+    this.confirmationModalService.open({
+      message: $localize`Are you sure you want to leave this group?`,
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+      acceptButtonCaption: $localize`Yes, leave group`,
+      acceptButtonStyleClass: 'danger',
+      rejectButtonCaption: $localize`No`,
+    }, { maxWidth: '18.5rem' }).pipe(
       filter(accepted => !!accepted),
       switchMap(() => this.groupLeaveService.leave(membership.group.id)),
     ).subscribe({

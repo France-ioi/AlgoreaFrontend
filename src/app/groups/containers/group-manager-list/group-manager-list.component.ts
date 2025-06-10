@@ -1,11 +1,10 @@
 import { Component, effect, input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { mapStateData } from 'src/app/utils/operators/state';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { ConfirmationService } from 'primeng/api';
 import { displayGroupManagerRemovalResponseToast } from './group-manager-removal-response-handling';
 import { DataPager } from 'src/app/utils/data-pager';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -26,6 +25,8 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { CanCurrentUserManageMembersAndGroupPipe, CompareManagershipLevelPipe } from '../../models/group-management';
 import { Group } from '../../models/group';
 import { ManagementLevelAsTextPipe } from './management-level-as-text.pipe';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
+import { filter } from 'rxjs/operators';
 
 const managersLimit = 25;
 
@@ -85,7 +86,7 @@ export class GroupManagerListComponent {
     private removeGroupManagerService: RemoveGroupManagerService,
     private actionFeedbackService: ActionFeedbackService,
     private userService: UserSessionService,
-    private confirmationService: ConfirmationService,
+    private confirmationModalService: ConfirmationModalService,
   ) {
     effect(() => {
       this.fetchData();
@@ -108,7 +109,7 @@ export class GroupManagerListComponent {
     this.selection = managers;
   }
 
-  onRemove(event: Event): void {
+  onRemove(): void {
     if (this.selection.length === 0) {
       return;
     }
@@ -117,23 +118,6 @@ export class GroupManagerListComponent {
 
     if (!currentUserId) {
       throw new Error('Unexpected: Missed current user ID');
-    }
-
-    if (this.selection.some(manager => manager.id === currentUserId)) {
-      this.confirmationService.confirm({
-        target: event.target || undefined,
-        key: 'commonPopup',
-        icon: 'ph-duotone ph-warning-circle',
-        message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and
-          not be able to restore it.`,
-        acceptLabel: $localize`Yes, remove me from the group managers`,
-        acceptButtonStyleClass: 'danger',
-        acceptIcon: 'ph-bold ph-check',
-        rejectLabel: $localize`No`,
-        accept: () => this.remove(),
-      });
-
-      return;
     }
 
     this.remove();
@@ -151,27 +135,40 @@ export class GroupManagerListComponent {
 
     this.removalInProgress = true;
 
-    this.removeGroupManagerService.removeBatch(
-      groupId,
-      this.selection.filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
-      ownManagerId,
-    )
-      .subscribe({
-        next: result => {
-          displayGroupManagerRemovalResponseToast(this.actionFeedbackService, result);
-          this.removalInProgress = false;
+    const proceedRemoving$: Observable<true | undefined> = ownManagerId ? this.confirmationModalService.open({
+      messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
+      message: $localize`Are you sure to remove yourself from the managers of this group? You may lose manager access and
+          not be able to restore it.`,
+      acceptButtonCaption: $localize`Yes, remove me from the group managers`,
+      acceptButtonStyleClass: 'danger',
+      acceptButtonIcon: 'ph-bold ph-check',
+    }, { maxWidth: '34rem' }).pipe(filter(accepted => !!accepted)) : of(undefined);
 
-          if (result.countSuccess > 0) {
-            this.selection = [];
-            this.fetchData();
-          }
-        },
-        error: err => {
-          this.removalInProgress = false;
-          this.actionFeedbackService.unexpectedError();
-          if (!(err instanceof HttpErrorResponse)) throw err;
+    proceedRemoving$.pipe(
+      switchMap(() =>
+        this.removeGroupManagerService.removeBatch(
+          groupId,
+          this.selection.filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
+          ownManagerId,
+        )
+      )
+    ).subscribe({
+      next: result => {
+        displayGroupManagerRemovalResponseToast(this.actionFeedbackService, result);
+        this.removalInProgress = false;
+
+        if (result.countSuccess > 0) {
+          this.selection = [];
+          this.fetchData();
         }
-      });
+      },
+      error: err => {
+        this.removalInProgress = false;
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
+      complete: () => this.removalInProgress = false,
+    });
   }
 
   openPermissionsEditDialog(manager: Manager): void {
