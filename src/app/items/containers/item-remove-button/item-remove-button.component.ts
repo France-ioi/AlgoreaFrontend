@@ -55,6 +55,8 @@ export class ItemRemoveButtonComponent implements OnDestroy {
 
   deletionInProgress = signal(false);
 
+  defaultActivityRoute = inject(DEFAULT_ACTIVITY_ROUTE);
+
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private confirmationService: ConfirmationService,
@@ -102,8 +104,7 @@ export class ItemRemoveButtonComponent implements OnDestroy {
   }
 
   postDeletionNavigation(): void {
-    const defaultActivityRoute = inject(DEFAULT_ACTIVITY_ROUTE);
-    this.itemRouter.navigateTo(parentRoute(this.itemData().route, defaultActivityRoute));
+    this.itemRouter.navigateTo(parentRoute(this.itemData().route, this.defaultActivityRoute));
   }
 
   refresh(): void {
