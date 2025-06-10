@@ -32,6 +32,6 @@ test('checks remove group managers', async ({ page, createGroup, groupManagersPa
     await groupManagersPage.checksIsDeleteConfirmationVisible(removeManagersConfirmationMessage);
     await groupManagersPage.approveConfirmation();
     await groupManagersPage.checksIsDeleteConfirmationNotVisible(removeManagersConfirmationMessage);
-    await expect.soft(page.getByText('This group has no dedicated managers.')).toBeVisible();
+    await expect.soft(page.getByText('None("Memberships and group"')).toBeVisible();
   });
 });
