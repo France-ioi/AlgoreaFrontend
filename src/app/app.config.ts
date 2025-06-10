@@ -4,7 +4,7 @@ import { z } from 'zod';
 const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend
 
-  forumServerUrl: z.string(), // handle not providing it
+  forumServerUrl: z.string().optional(),
   searchApiUrl: z.string().optional(),
 
   oauthServerUrl: z.string(), // full url (not including the trailing slash) of the oauth server
