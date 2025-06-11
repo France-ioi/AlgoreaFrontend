@@ -7,7 +7,6 @@ import { formatUser } from 'src/app/groups/models/user';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { PlatformSettingsComponent } from '../platform-settings/platform-settings.component';
-import { CurrentUserComponent } from '../current-user/current-user.component';
 import { GroupLogViewComponent } from '../group-log-view/group-log-view.component';
 import { UserIndicatorComponent } from '../user-indicator/user-indicator.component';
 import { UserHeaderComponent } from '../user-header/user-header.component';
@@ -35,7 +34,6 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
     RouterLinkActive,
     RouterLink,
     GroupLogViewComponent,
-    CurrentUserComponent,
     PlatformSettingsComponent,
     AsyncPipe,
     UserInfoComponent,

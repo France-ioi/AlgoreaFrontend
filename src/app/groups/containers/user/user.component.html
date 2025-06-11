@@ -66,13 +66,7 @@
       </ng-container>
 
       <ng-container *ngIf="activeRoute === 'personal-data'">
-        @if (state.data.isCurrentUser) {
-          <alg-current-user></alg-current-user>
-        } @else if (!state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none') {
-          <alg-user-info [user]="state.data"></alg-user-info>
-        } @else {
-          <ng-container *ngTemplateOutlet="forbidden"></ng-container>
-        }
+        <alg-user-info [user]="state.data" (hasChanged)="refresh()"></alg-user-info>
       </ng-container>
 
       <ng-container *ngIf="activeRoute === 'settings'">

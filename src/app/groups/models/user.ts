@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { requirePersonalInfoAccessApprovalSchema } from 'src/app/groups/models/group-approvals';
+import { Pipe, PipeTransform } from '@angular/core';
 
 export const userBaseSchema = z.object({
   login: z.string(),
@@ -49,3 +50,24 @@ export const userSchema = userBaseSchema.and(
   })));
 
 export type User = z.infer<typeof userSchema>;
+
+export function canViewPersonalInfo(user: User): boolean {
+  return user.isCurrentUser
+    || user.personalInfoAccessApprovalToCurrentUser === 'view'
+    || user.personalInfoAccessApprovalToCurrentUser === 'edit';
+}
+
+export function canEditPersonalInfo(user: User): boolean {
+  return user.isCurrentUser
+    || user.personalInfoAccessApprovalToCurrentUser === 'edit';
+}
+
+@Pipe({ name: 'canViewPersonalInfo', pure: true, standalone: true })
+export class CanViewPersonalInfoPipe implements PipeTransform {
+  transform = canViewPersonalInfo;
+}
+
+@Pipe({ name: 'canEditPersonalInfo', pure: true, standalone: true })
+export class CanEditPersonalInfoPipe implements PipeTransform {
+  transform = canEditPersonalInfo;
+}
