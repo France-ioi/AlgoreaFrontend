@@ -1,4 +1,4 @@
-import { combineLatest, merge, Observable, of, Subject } from 'rxjs';
+import { combineLatest, defer, merge, Observable, of, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan, debounceTime } from 'rxjs/operators';
 import { arraysEqual } from 'src/app/utils/array';
 import { ensureDefined } from 'src/app/utils/assert';
@@ -215,29 +215,29 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
   private fetchChildrenNav(content: RoutedContentInfo): FetchInfo|undefined {
     if (!this.canFetchChildren(content)) return undefined;
     const path = [ ...content.route.path, content.route.id ];
-    return this.fetch(path, this.fetchNavData(content.route).pipe(
+    return this.fetch(path, () => this.fetchNavData(content.route).pipe(
       map(data => new NavTreeData(data.elements, path, data.parent)),
     ));
   }
 
   private fetchRootNav(): FetchInfo {
-    return this.fetch([], this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
+    return this.fetch([], () => this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
   }
 
   private fetchNav(content: ContentT): FetchInfo {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
-      return this.fetch(route.path,
+      return this.fetch(route.path, () =>
         this.fetchNavDataFromChild(parentId, content).pipe(map(data => new NavTreeData(data.elements, route.path, data.parent)))
       );
     } else return this.fetchRootNav();
   }
 
-  private fetch(path: EntityPathRoute['path'], fetch: Observable<NavTreeData>): FetchInfo {
+  private fetch(path: EntityPathRoute['path'], fetch: () => Observable<NavTreeData>): FetchInfo {
     return {
       path: path,
-      fetch: fetch.pipe(
+      fetch: defer(fetch).pipe(
         mapToFetchState({ resetter: this.reload$ }),
         // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
         // The shareReplay's use `{ refCount: true, bufferSize: 1 }` options so that the service call is cancelled when there are no more

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,10 +11,14 @@ import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
 import { z } from 'zod';
-import { SECONDS } from '../utils/duration';
+import { MINUTES } from '../utils/duration';
 import { Cacheable } from 'ts-cacheable';
+import { Subject } from 'rxjs';
+import { CurrentContentService } from '../services/current-content.service';
+import { IObservableCacheConfig } from 'ts-cacheable/dist/cjs/common/IObservableCacheConfig';
 
-const cacheConfig = { maxAge: 10*SECONDS, maxCacheCount: 5 };
+const cacheBuster$ = new Subject<void>();
+const cacheConfig: IObservableCacheConfig = { maxAge: 2*MINUTES, maxCacheCount: 5, cacheBusterObserver: cacheBuster$ };
 
 const itemNavigationChildBaseSchema = z.object({
   id: z.string(),
@@ -88,11 +92,13 @@ export type RootItem = z.infer<typeof itemNavigationChildBaseSchema> & { groups:
 @Injectable({
   providedIn: 'root'
 })
-export class ItemNavigationService {
+export class ItemNavigationService implements OnDestroy {
 
   private config = inject(APPCONFIG);
 
-  constructor(private http: HttpClient) {}
+  private subscription = this.currentContent.navMenuReload$.subscribe(() => cacheBuster$.next());
+
+  constructor(private http: HttpClient, private currentContent: CurrentContentService) {}
 
   @Cacheable(cacheConfig)
   getItemNavigation(
@@ -142,6 +148,10 @@ export class ItemNavigationService {
       this.getRootSkills(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
     return rootAsGroupList$.pipe(map(groupList => this.mapToItemList(groupList)));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   /**
