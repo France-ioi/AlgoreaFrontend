@@ -17,15 +17,15 @@ test('checks current user profile', async ({ page, userPage }) => {
     await userPage.checksIsProgressTableVisible();
     await userPage.goToTab('Personal data');
     await userPage.checksIsModifyButtonVisible();
-    await userPage.checksIsPersonalInformationSectionVisible();
-    await userPage.checksIsSchoolInformationSectionVisible();
-    await userPage.checksIsContactInformationSectionVisible();
+    await userPage.checksIsCurrentUserIntroHeaderVisible();
+    await userPage.checksIsLoginVisible('arbonenfant');
+    await userPage.checksIsFirstnameVisible('Armelle');
     await userPage.goToTab('Settings');
     await userPage.checksIsPlatformLanguageVisible();
   });
 });
 
-test('checks other\'s user profile', async ({ page, userPage }) => {
+test('checks other\'s user profile (cannot view personal info)', async ({ page, userPage }) => {
   await initAsUsualUser(page);
 
   await test.step('checks tabs is not visible', async () => {
@@ -41,10 +41,13 @@ test('checks other\'s user profile', async ({ page, userPage }) => {
     await userPage.checksIsProgressTableVisible();
   });
 
-  await test.step('checks landing to forbidden tab is visible', async () => {
+  await test.step('checks landing to personal info tab ', async () => {
     await userPage.goto('/groups/users/6351969043660203734/personal-data');
     await userPage.checksIsTabVisible('Personal data');
-    await userPage.checksIsForbiddenMessageVisible();
+    await userPage.checksIsNotViewableUserIntroHeaderVisible();
+    await userPage.checksIsLoginVisible('user-no-access');
+    await userPage.checksIsFirstnameNotVisible();
+
     await userPage.goToTab('Progress');
     await userPage.waitForLogsResponse('6351969043660203734');
     await userPage.checksIsTabNotVisible('Personal data');
@@ -59,7 +62,9 @@ test('checks other\'s user profile with can view personal data access', async ({
     await userPage.goto('/groups/users/1729018577320222812/personal-data');
     await userPage.checksIsHeaderVisible('user-view-access');
     await userPage.checksIsTabVisible('Personal data');
-    await userPage.checksIsPersonalInformationSectionVisible();
+    await userPage.checksIsViewableUserIntroHeaderVisible();
+    await userPage.checksIsLoginVisible('user-view-access');
+    await userPage.checksIsFirstnameVisible(null);
   });
 
   await test.step('checks "Modify password" is not visible', async () => {
@@ -82,6 +87,9 @@ test('checks other\'s user profile "Modify password"', async ({ page, userPage }
     await userPage.checksIsHeaderVisible('user-edit-access');
     await userPage.checksIsTabVisible('Personal data');
     await userPage.checksIsModifyPasswordBtnVisible();
+    await userPage.checksIsEditableUserIntroHeaderVisible();
+    await userPage.checksIsLoginVisible('user-edit-access');
+    await userPage.checksIsFirstnameVisible(null);
   });
 
   await test.step('checks progress table is visible', async () => {

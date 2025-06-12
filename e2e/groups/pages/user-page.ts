@@ -37,16 +37,32 @@ export class UserPage {
     await expect.soft(this.page.getByRole('button', { name: 'Modify' })).toBeVisible();
   }
 
-  async checksIsPersonalInformationSectionVisible(): Promise<void> {
-    await expect.soft(this.page.getByRole('heading', { name: 'Personal Information' })).toBeVisible();
+  async checksIsCurrentUserIntroHeaderVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('to view your personal information')).toBeVisible();
   }
 
-  async checksIsSchoolInformationSectionVisible(): Promise<void> {
-    await expect.soft(this.page.getByRole('heading', { name: 'School Information' })).toBeVisible();
+  async checksIsEditableUserIntroHeaderVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('their personal information and modify their password')).toBeVisible();
+  }
+  async checksIsViewableUserIntroHeaderVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('their personal information.')).toBeVisible();
+  }
+  async checksIsNotViewableUserIntroHeaderVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('You are not authorized to view this user\'s personal information.')).toBeVisible();
   }
 
-  async checksIsContactInformationSectionVisible(): Promise<void> {
-    await expect.soft(this.page.getByRole('heading', { name: 'Contact Information' })).toBeVisible();
+  async checksIsLoginVisible(value: string): Promise<void> {
+    await expect.soft(this.page.locator('.alg-data-list').getByText('Login')).toBeVisible();
+    await expect.soft(this.page.locator('.alg-data-list').getByText(value)).toBeVisible();
+  }
+
+  async checksIsFirstnameNotVisible(): Promise<void> {
+    await expect.soft(this.page.locator('.alg-data-list').getByText('First Name')).not.toBeVisible();
+  }
+
+  async checksIsFirstnameVisible(value: string|null): Promise<void> {
+    await expect.soft(this.page.locator('.alg-data-list').getByText('First Name')).toBeVisible();
+    if (value) await expect.soft(this.page.locator('.alg-data-list').getByText(value)).toBeVisible();
   }
 
   async checksIsPlatformLanguageVisible(): Promise<void> {

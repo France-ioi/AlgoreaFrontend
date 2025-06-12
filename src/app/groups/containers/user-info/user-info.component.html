@@ -1,30 +1,57 @@
-@if (user.personalInfoAccessApprovalToCurrentUser === 'edit') {
-  <div class="button-container">
+@if (user().isCurrentUser) {
+  <div class="modify-section">
+    <div class="flex-1 modify-description" i18n>
+      The following information is what we receive from the login platform.
+      It is only accessible to managers of groups you have explicitly authorized to view your personal information.
+    </div>
     <button
       class="size-l"
+      alg-button
+      icon="ph-duotone ph-pen"
+      (click)="onModifyProfile()"
+      i18n
+    >Modify</button>
+  </div>
+} @else if (user() | canEditPersonalInfo) {
+  <div class="modify-section">
+    <div class="flex-1 modify-description" i18n>
+      Your manager rights in one of this user's groups allow you to view their personal information and modify their password.
+    </div>
+    <button
+      class="size-l"
+      alg-button
       icon="ph-duotone ph-pen"
       (click)="onModifyPassword()"
-      alg-button
       i18n
     >Modify password</button>
+  </div>
+} @else if (user() | canViewPersonalInfo) {
+  <div class="modify-section">
+    <div class="flex-1 modify-description" i18n>
+      Your manager rights in one of this user's groups allow you to view their personal information.
+    </div>
+  </div>
+} @else {
+  <div class="modify-section">
+    <div class="flex-1 modify-description" i18n>
+      You are not authorized to view this user's personal information.
+    </div>
   </div>
 }
 <h2 class="alg-h2 alg-text-normal title" i18n>Personal Information</h2>
 <ul class="alg-data-list">
   <li class="alg-data-list-item">
     <span class="alg-data-list-item-caption" i18n>Login</span>
-    <span class="alg-data-list-item-value">{{ user.login }}</span>
+    <span class="alg-data-list-item-value">{{ user().login }}</span>
   </li>
-  <li class="alg-data-list-item">
-    <span class="alg-data-list-item-caption" i18n>First Name</span>
-    <span class="alg-data-list-item-value">{{ user.firstName }}</span>
-  </li>
-  <li class="alg-data-list-item">
-    <span class="alg-data-list-item-caption" i18n>Last Name</span>
-    <span class="alg-data-list-item-value">{{ user.lastName }}</span>
-  </li>
-  <li class="alg-data-list-item">
-    <span class="alg-data-list-item-caption" i18n>Personal Web page</span>
-    <span class="alg-data-list-item-value">{{ user.webSite }}</span>
-  </li>
+  @if (user() | canViewPersonalInfo) {
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>First Name</span>
+      <span class="alg-data-list-item-value">{{ user().firstName ?? '-'}}</span>
+    </li>
+    <li class="alg-data-list-item">
+      <span class="alg-data-list-item-caption" i18n>Last Name</span>
+      <span class="alg-data-list-item-value">{{ user().lastName ?? '-'}}</span>
+    </li>
+  }
 </ul>
