@@ -11,13 +11,14 @@ import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
 import { z } from 'zod';
-import { SECONDS } from '../utils/duration';
+import { MINUTES } from '../utils/duration';
 import { Cacheable } from 'ts-cacheable';
 import { Subject } from 'rxjs';
 import { CurrentContentService } from '../services/current-content.service';
+import { IObservableCacheConfig } from 'ts-cacheable/dist/cjs/common/IObservableCacheConfig';
 
 const cacheBuster$ = new Subject<void>();
-const cacheConfig = { maxAge: 10*SECONDS, maxCacheCount: 5, cacheBusterObserver: cacheBuster$ };
+const cacheConfig: IObservableCacheConfig = { maxAge: 2*MINUTES, maxCacheCount: 5, cacheBusterObserver: cacheBuster$ };
 
 const itemNavigationChildBaseSchema = z.object({
   id: z.string(),

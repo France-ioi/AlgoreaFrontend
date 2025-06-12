@@ -6,12 +6,13 @@ import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { Cacheable } from 'ts-cacheable';
 import { z } from 'zod';
-import { SECONDS } from '../utils/duration';
+import { MINUTES } from '../utils/duration';
 import { Subject } from 'rxjs';
 import { CurrentContentService } from '../services/current-content.service';
+import { IObservableCacheConfig } from 'ts-cacheable/dist/cjs/common/IObservableCacheConfig';
 
 const cacheBuster$ = new Subject<void>();
-const cacheConfig = { maxAge: 10*SECONDS, maxCacheCount: 5, cacheBusterObserver: cacheBuster$ };
+const cacheConfig: IObservableCacheConfig = { maxAge: 2*MINUTES, maxCacheCount: 5, cacheBusterObserver: cacheBuster$ };
 
 const groupNavigationChildSchema = z.object({
   id: z.string(),
