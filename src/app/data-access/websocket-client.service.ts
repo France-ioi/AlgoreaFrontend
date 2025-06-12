@@ -18,7 +18,9 @@ export class WebsocketClient implements OnDestroy {
   private openEvents$ = new Subject<Event>();
   private closeEvents$ = new Subject<CloseEvent>();
   private forumServerUrl = this.config.forumServerUrl;
-  private ws$ = webSocket<unknown>({ url: this.forumServerUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ });
+  private ws$ = this.forumServerUrl ?
+    webSocket<unknown>({ url: this.forumServerUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ }) :
+    undefined;
 
   isWsOpen$ = merge(
     this.openEvents$.pipe(map(() => true)),
@@ -28,7 +30,7 @@ export class WebsocketClient implements OnDestroy {
     shareReplay(1)
   );
 
-  inputMessages$ = this.ws$.pipe(retry({ delay: wsRetryDelay }));
+  inputMessages$ = this.ws$ ? this.ws$.pipe(retry({ delay: wsRetryDelay })) : EMPTY;
 
   private heartbeatSubscription = this.isWsOpen$.pipe(
     switchMap(open => {
@@ -39,12 +41,13 @@ export class WebsocketClient implements OnDestroy {
 
   ngOnDestroy(): void {
     this.heartbeatSubscription.unsubscribe();
-    this.ws$.complete();
+    this.ws$?.complete();
     this.openEvents$.complete();
     this.closeEvents$.complete();
   }
 
   send(msg: unknown): void {
+    if (!this.ws$) throw new Error('Unexpected: sending message while websocket is not initialized');
     // the websocket will queue the messages while the connection is not established
     this.ws$.next(msg);
   }
