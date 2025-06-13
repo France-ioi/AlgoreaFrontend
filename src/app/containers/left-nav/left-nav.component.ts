@@ -12,7 +12,7 @@ import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navi
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { SearchService } from '../../data-access/search.service';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { readyState } from '../../utils/state';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { LayoutService } from '../../services/layout.service';

@@ -1,5 +1,5 @@
 import { inject, InjectionToken } from '@angular/core';
-import { APPCONFIG } from '../app.config'; // Adjusted path
+import { APPCONFIG } from '.'; // Adjusted path
 import { FullItemRoute, itemRoute } from '../models/routing/item-route';
 import { defaultAttemptId } from '../items/models/attempts'; // Adjusted path
 

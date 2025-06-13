@@ -14,7 +14,7 @@ import {
   itemValidationTypeSchema
 } from '../items/models/item-properties';
 import { participantTypeSchema } from '../groups/models/group-types';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 
 const itemSchema = z.object({
   id: z.string(),

@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { LeftMenuSearchComponent } from '../../ui-components/left-menu-search/left-menu-search.component';
 import { NgIf } from '@angular/common';

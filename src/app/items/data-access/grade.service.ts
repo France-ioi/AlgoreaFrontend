@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { TaskToken } from './task-token.service';
 import { TaskScore, TaskScoreToken } from '../api/types';
 import { AnswerToken } from './answer-token.service';

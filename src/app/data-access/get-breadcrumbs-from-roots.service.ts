@@ -1,5 +1,5 @@
 import { catchError, map, Observable } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';

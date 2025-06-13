@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
 import { forkJoin, Observable } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 
 type Status = 'invalid'|'success'|'unchanged'|'not_found';

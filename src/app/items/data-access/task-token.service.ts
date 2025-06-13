@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { z } from 'zod';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 

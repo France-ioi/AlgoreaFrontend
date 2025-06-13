@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/angular';
 import { environment } from 'src/environments/environment';
 import { version } from 'src/version';
-import { getSentryDsnConfig } from 'src/app/app.config';
+import { getSentryDsnConfig } from 'src/app/config';
 
 export function initErrorTracking(): void {
 

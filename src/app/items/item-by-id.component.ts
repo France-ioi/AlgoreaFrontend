@@ -32,7 +32,7 @@ import { ItemEditWrapperComponent } from './containers/item-edit-wrapper/item-ed
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
