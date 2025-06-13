@@ -1,7 +1,7 @@
 import { inject, InjectionToken } from '@angular/core';
-import { APPCONFIG } from '../../app.config'; // Adjusted path
-import { FullItemRoute, itemRoute } from './item-route';
-import { defaultAttemptId } from '../../items/models/attempts'; // Adjusted path
+import { APPCONFIG } from '../app.config'; // Adjusted path
+import { FullItemRoute, itemRoute } from '../models/routing/item-route';
+import { defaultAttemptId } from '../items/models/attempts'; // Adjusted path
 
 export const DEFAULT_ACTIVITY_ROUTE = new InjectionToken('app.defaultActivityRoute', {
   providedIn: 'root',

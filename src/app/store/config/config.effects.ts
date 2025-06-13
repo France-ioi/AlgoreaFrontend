@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects';
 import { map, take } from 'rxjs/operators';
-import { DEFAULT_ACTIVITY_ROUTE, DEFAULT_SKILL_ROUTE } from 'src/app/models/routing/default-route-tokens';
+import { DEFAULT_ACTIVITY_ROUTE, DEFAULT_SKILL_ROUTE } from 'src/app/config/default-route-tokens';
 import { configActions } from './config.actions';
 import { APPCONFIG } from 'src/app/app.config';
 
