@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { SECONDS } from '../utils/duration';
 import { requestTimeout } from '../interceptors/interceptor_common';
 import { itemTypeSchema } from '../items/models/item-type';
 import { participantTypeSchema } from '../groups/models/group-types';
-import { userBaseSchema, withId } from '../groups/models/user';
+import { userBaseShape, userIdShape } from '../groups/models/user';
 
 const activityLogsSchema = z.array(
   z.object({
@@ -31,7 +31,7 @@ const activityLogsSchema = z.array(
     }),
     answerId: z.string().optional(),
     score: z.number().optional(),
-    user: withId(userBaseSchema).optional(),
+    user: z.object({ ...userBaseShape, ...userIdShape }).optional(),
   })
 );
 

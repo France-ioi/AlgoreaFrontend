@@ -6,7 +6,7 @@ import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/it
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../models/attempts';
 
 @Injectable({

@@ -7,7 +7,7 @@ import { TaskScore, TaskScoreToken } from '../api/types';
 import { AnswerToken } from './answer-token.service';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { itemTypeSchema } from '../models/item-type';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 

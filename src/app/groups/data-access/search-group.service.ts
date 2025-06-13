@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from '../../utils/operators/decode';
 
 const groupInfoSchema = z.object({

@@ -5,7 +5,7 @@ import { EMPTY, catchError, map } from 'rxjs';
 import { websocketClientActions } from './websocket.actions';
 import { incomingThreadEventSchema } from '../../data-access/websocket-messages/threads-inbound-events';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const changeOpenStatusWebsocketClientEffect = createEffect(
   (wsClient$ = inject(WebsocketClient)) => wsClient$.isWsOpen$.pipe(

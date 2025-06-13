@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { userBaseSchema, withGrade, withGroupId } from '../models/user';
+import { userBaseShape, userGradeShape, userGroupIdShape } from '../models/user';
 
 const groupMembersSchema = z.array(
   z.object({
     id: z.string(),
-    user: withGrade(withGroupId(userBaseSchema)),
+    user: z.object({ ...userBaseShape, ...userGroupIdShape, ...userGradeShape }),
     action: z.enum([ 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly' ]).optional(),
     memberSince: z.coerce.date().optional(),
   })

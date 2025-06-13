@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { durationSchema } from 'src/app/utils/decoders';
 import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/items/models/item-permissions';

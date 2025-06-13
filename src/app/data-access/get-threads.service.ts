@@ -4,9 +4,9 @@ import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { Observable } from 'rxjs';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { itemTypeSchema } from '../items/models/item-type';
-import { userBaseSchema, withId } from '../groups/models/user';
+import { userBaseShape, userIdShape } from '../groups/models/user';
 
 const threadsSchema = z.array(
   z.object({
@@ -18,7 +18,7 @@ const threadsSchema = z.array(
     }),
     latestUpdateAt: z.coerce.date(),
     messageCount: z.number(),
-    participant: withId(userBaseSchema),
+    participant: z.object({ ...userBaseShape, ...userIdShape }),
     status: z.enum([ 'not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed' ]),
   }),
 );

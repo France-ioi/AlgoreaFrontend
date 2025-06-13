@@ -1,5 +1,5 @@
 import { UrlTree } from '@angular/router';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ContentBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { GroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';

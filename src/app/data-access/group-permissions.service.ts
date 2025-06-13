@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from './action-response';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import {
   itemCorePermSchema,

@@ -26,7 +26,7 @@ import {
   UpdateDisplayParams,
   updateDisplayParamsSchema,
 } from './types';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();

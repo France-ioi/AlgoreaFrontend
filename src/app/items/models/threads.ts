@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const threadStatusSchema = z.enum([ 'not_started', 'waiting_for_participant', 'waiting_for_trainer', 'closed' ]);
 

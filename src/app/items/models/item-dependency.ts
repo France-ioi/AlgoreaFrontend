@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { durationSchema } from '../../utils/decoders';
 import { participantTypeSchema } from '../../groups/models/group-types';
 import { itemCorePermSchema } from './item-permissions';

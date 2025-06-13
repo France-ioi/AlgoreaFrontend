@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { groupCodeSchema } from './group-code';
 import { currentUserManagershipInfoSchema } from './group-management';
 import { groupApprovalsSchema } from './group-approvals';

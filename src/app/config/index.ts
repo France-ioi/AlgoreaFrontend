@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend

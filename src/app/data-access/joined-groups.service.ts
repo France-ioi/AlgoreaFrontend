@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { SortOptions, sortOptionsToHTTP } from 'src/app/data-access/sort-options';
-import z from 'zod';
+import z from 'zod/v4';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
 

@@ -5,9 +5,9 @@ import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from '../../utils/operators/decode';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { map } from 'rxjs/operators';
-import { userBaseSchema, withGrade, withGroupId, withId } from 'src/app/groups/models/user';
+import { userBaseShape, userGradeShape, userGroupIdShape, userIdShape } from 'src/app/groups/models/user';
 
 const groupPendingRequestSchema = z.array(
   z.object({
@@ -17,7 +17,7 @@ const groupPendingRequestSchema = z.array(
       name: z.string(),
     }),
     type: z.enum([ 'join_request', 'leave_request' ]),
-    user: withGrade(withGroupId(userBaseSchema)),
+    user: z.object({ ...userBaseShape, ...userGroupIdShape, ...userGradeShape }),
   })
 );
 
@@ -31,7 +31,7 @@ const groupInvitationsSchema = z.array(
       type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base' ]),
     }).and(groupApprovalsSchema),
     groupId: z.string(),
-    invitingUser: z.nullable(withId(userBaseSchema)),
+    invitingUser: z.object({ ...userBaseShape, ...userIdShape }).nullable(),
   }),
 );
 

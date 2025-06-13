@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ItemType, isAnActivity } from './item-type';
 import { participantTypeSchema } from 'src/app/groups/models/group-types';
 import { Pipe, PipeTransform } from '@angular/core';

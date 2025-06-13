@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { dateSchema } from 'src/app/utils/decoders';
 import { threadEventSchema } from '../../models/thread-events';
 

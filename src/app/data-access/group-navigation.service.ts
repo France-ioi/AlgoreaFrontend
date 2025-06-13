@@ -5,7 +5,7 @@ import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { Cacheable } from 'ts-cacheable';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { MINUTES } from '../utils/duration';
 import { Subject } from 'rxjs';
 import { CurrentContentService } from '../services/current-content.service';

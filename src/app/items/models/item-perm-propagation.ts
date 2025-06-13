@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const itemContentViewPermPropagationSchema = z.enum([ 'none', 'as_info', 'as_content' ]);
 const itemUpperViewLevelsPermPropagationSchema = z.enum([ 'use_content_view_propagation', 'as_content_with_descendants', 'as_is' ]);
@@ -14,7 +14,7 @@ export const itemPermPropagationsSchema = z.object({
   watchPropagation: itemWatchPermPropagationSchema,
 });
 
-export type ItemPermPropagations = Zod.infer<typeof itemPermPropagationsSchema>;
+export type ItemPermPropagations = z.infer<typeof itemPermPropagationsSchema>;
 export const itemContentViewPermPropagationEnum = itemContentViewPermPropagationSchema.enum;
 export const itemUpperViewLevelsPermPropagationEnum = itemUpperViewLevelsPermPropagationSchema.enum;
 

@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { errorIsBadRequest } from 'src/app/utils/errors';
 import { itemTypeSchema } from '../items/models/item-type';
 

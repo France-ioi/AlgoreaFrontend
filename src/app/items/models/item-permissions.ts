@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { allowsGrantingEdition, ItemPermWithEdit, itemEditPermSchema } from './item-edit-permission';
 import { allowsGrantingView, ItemPermWithGrantView, itemGrantViewPermSchema } from './item-grant-view-permission';
 import { itemViewPermSchema } from './item-view-permission';

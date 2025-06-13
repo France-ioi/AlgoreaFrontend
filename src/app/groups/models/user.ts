@@ -1,18 +1,16 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { requirePersonalInfoAccessApprovalSchema } from 'src/app/groups/models/group-approvals';
 import { Pipe, PipeTransform } from '@angular/core';
 
-export const userBaseSchema = z.object({
+export const userBaseShape = {
   login: z.string(),
   firstName: z.string().nullable().optional(),
   lastName: z.string().nullable().optional(),
-});
-
-/* eslint-disable @typescript-eslint/explicit-function-return-type */ // Let type inference guess the return type (would be very verbose)
-export const withGroupId = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user.extend({ groupId: z.string() });
-export const withId = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user.extend({ id: z.string() });
-export const withGrade = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user.extend({ grade: z.number().nullable() });
-/* eslint-enable @typescript-eslint/explicit-function-return-type */
+};
+export const userBaseSchema = z.object(userBaseShape);
+export const userGroupIdShape = { groupId: z.string() };
+export const userIdShape = { id: z.string() };
+export const userGradeShape = { grade: z.number().nullable() };
 
 export type UserBase = z.infer<typeof userBaseSchema>;
 
@@ -34,20 +32,21 @@ export function formatUser<T extends UserBase>(user: T) : string {
   return user.login;
 }
 
-export const userSchema = userBaseSchema.and(
-  withGroupId(z.object({
-    tempUser: z.boolean(),
-    webSite: z.string().nullable(),
-    freeText: z.string().nullable(),
-    isCurrentUser: z.boolean(),
-    ancestorsCurrentUserIsManagerOf: z.array(z.object({
-      id: z.string(),
-      name: z.string(),
-    })),
-    currentUserCanWatchUser: z.boolean().optional(),
-    currentUserCanGrantUserAccess: z.boolean().optional(),
-    personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalSchema.optional(),
-  })));
+export const userSchema = z.object({
+  ...userBaseShape,
+  ...userGroupIdShape,
+  tempUser: z.boolean(),
+  webSite: z.string().nullable(),
+  freeText: z.string().nullable(),
+  isCurrentUser: z.boolean(),
+  ancestorsCurrentUserIsManagerOf: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+  })),
+  currentUserCanWatchUser: z.boolean().optional(),
+  currentUserCanGrantUserAccess: z.boolean().optional(),
+  personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalSchema.optional(),
+});
 
 export type User = z.infer<typeof userSchema>;
 

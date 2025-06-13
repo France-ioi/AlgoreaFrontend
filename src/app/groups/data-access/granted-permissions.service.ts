@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from '../../utils/operators/decode';
 import { APPCONFIG } from '../../config';
 import { inject } from '@angular/core';

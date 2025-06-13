@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export function areSameThreads<T extends ThreadId, U extends ThreadId>(t1: T, t2: U): boolean {
   return t1.itemId === t2.itemId && t1.participantId === t2.participantId;

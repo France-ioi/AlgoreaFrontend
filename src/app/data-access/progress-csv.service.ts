@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { decodeSnakeCase } from '../utils/operators/decode';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 @Injectable({
   providedIn: 'root'

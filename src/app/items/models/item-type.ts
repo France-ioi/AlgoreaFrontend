@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 // domain level item typing
 export const itemTypeSchema = z.enum([ 'Chapter', 'Task', 'Skill' ]);

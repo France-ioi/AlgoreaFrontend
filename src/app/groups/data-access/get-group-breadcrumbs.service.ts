@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { catchError, map } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';

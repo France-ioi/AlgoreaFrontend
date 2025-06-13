@@ -54,7 +54,7 @@
     "rxjs": "~7.8.1",
     "ts-cacheable": "^1.0.10",
     "tslib": "^2.3.1",
-    "zod": "^3.22.4",
+    "zod": "^3.25.0",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { Duration } from '../../utils/duration';
 
 export class CodeLifetime extends Duration {

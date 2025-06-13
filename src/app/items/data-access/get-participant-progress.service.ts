@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { APPCONFIG } from 'src/app/config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 
 const participantProgressSchema = z.object({

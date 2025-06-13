@@ -10,7 +10,7 @@ import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { groupBy } from 'src/app/utils/array';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { MINUTES } from '../utils/duration';
 import { Cacheable } from 'ts-cacheable';
 import { Subject } from 'rxjs';

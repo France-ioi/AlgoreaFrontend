@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { groupManagershipLevelSchema } from '../groups/models/group-management';
 

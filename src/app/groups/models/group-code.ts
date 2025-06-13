@@ -1,5 +1,5 @@
 import { Duration } from 'src/app/utils/duration';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { codeLifetimeSchema } from './code-lifetime';
 
 export const groupCodeSchema = z.object({

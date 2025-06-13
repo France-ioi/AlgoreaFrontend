@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { Pipe, PipeTransform } from '@angular/core';
 
 export const entryStateValueSchema = z.enum([ 'ready', 'already_started', 'not_ready' ]);

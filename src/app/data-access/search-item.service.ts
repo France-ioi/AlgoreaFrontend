@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { ItemType } from '../items/models/item-type';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { ItemCorePerm, itemCorePermSchema } from '../items/models/item-permissions';
 

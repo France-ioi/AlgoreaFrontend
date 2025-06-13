@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { APPCONFIG } from 'src/app/config';

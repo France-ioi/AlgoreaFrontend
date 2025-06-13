@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { entryStateValueSchema } from '../models/item-entry';
 import { ItemRoute } from 'src/app/models/routing/item-route';
 import { SimpleActionResponse, successData } from 'src/app/data-access/action-response';

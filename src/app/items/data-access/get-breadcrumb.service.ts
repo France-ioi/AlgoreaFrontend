@@ -8,7 +8,7 @@ import { inject } from '@angular/core';
 import { tagError } from 'src/app/utils/errors';
 import { ensureDefined } from 'src/app/utils/assert';
 import { itemTypeSchema, typeCategoryOfItem } from 'src/app/items/models/item-type';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 
 export const breadcrumbServiceTag = 'breadcrumbservice';

@@ -1,6 +1,6 @@
-import { userBaseSchema, withGroupId } from 'src/app/groups/models/user';
+import { userBaseShape, userGroupIdShape } from 'src/app/groups/models/user';
 import { canCurrentUserViewContent, ItemPermWithView } from './item-view-permission';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const attemptResultSchema = z.object({
   id: z.string(),
@@ -11,7 +11,7 @@ export const attemptResultSchema = z.object({
   scoreComputed: z.number(),
   startedAt: z.coerce.date().nullable(),
   validated: z.boolean(),
-  userCreator: withGroupId(userBaseSchema).nullable(),
+  userCreator: z.object({ ...userBaseShape, ...userGroupIdShape }).nullable(),
 });
 
 export interface Result {

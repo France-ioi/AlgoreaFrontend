@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const groupMembershipSchema = z.enum([ 'none', 'direct', 'descendant' ]);
 type GroupMembership = z.infer<typeof groupMembershipSchema>;
