@@ -17,7 +17,7 @@
         <button
           class="main-menu-button"
           [ngClass]="{ 'active': activeTab.index === 1, 'compact': currentLanguage === 'fr' }"
-          *ngIf="!skillsDisabled"
+          *ngIf="!skillsTabDisabled"
           (click)="onSelectionChangedByIdx(1)"
         >
           <div class="main-menu-icon-wrapper">
@@ -30,6 +30,7 @@
           class="main-menu-button"
           [ngClass]="{ 'active': activeTab.index === 2, 'compact': currentLanguage === 'fr' }"
           data-cy="main-menu-group-btn"
+          *ngIf="!groupsTabDisabled"
           (click)="onSelectionChangedByIdx(2)"
         >
           <div class="main-menu-icon-wrapper">

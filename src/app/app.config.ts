@@ -42,7 +42,13 @@ const configSchema = z.object({
   featureFlags: z.object({
     hideTaskTabs: z.array(z.string()).default([]),
     showGroupAccessTab: z.boolean().default(false),
-    showLeftMenuTabs: z.boolean().default(true),
+
+    leftMenu: z.object({
+      groups: z.union([
+        z.object({ hide: z.literal(true), excludeUserIds: z.array(z.string()).default([]) }),
+        z.object({ hide: z.literal(false) })
+      ]).default({ hide: false }),
+    }).default({ groups: { hide: false } }),
   }),
 
   /* paths to be matched must not have a trailing slash */
