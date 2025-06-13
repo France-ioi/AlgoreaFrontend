@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, switchMap } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import jwtDecode from 'jwt-decode';

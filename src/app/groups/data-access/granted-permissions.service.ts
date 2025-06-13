@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
 import { decodeSnakeCase } from '../../utils/operators/decode';
-import { APPCONFIG } from '../../app.config';
+import { APPCONFIG } from '../../config';
 import { inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { itemCorePermSchema, itemEntryTimePermSchema, itemSessionPermSchema } from 'src/app/items/models/item-permissions';

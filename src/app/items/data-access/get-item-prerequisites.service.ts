@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { HttpClient } from '@angular/common/http';
 import { z } from 'zod';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';

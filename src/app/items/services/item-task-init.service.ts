@@ -13,7 +13,7 @@ import {
   tap,
   timeout,
 } from 'rxjs/operators';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';

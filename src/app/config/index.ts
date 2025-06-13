@@ -59,8 +59,6 @@ const configSchema = z.object({
 
 });
 
-export const sentryDsnConfigSchema = z.object({ sentryDsn: z.string().optional() });
-
 export type AppConfig = z.infer<typeof configSchema>;
 
 export const APPCONFIG = new InjectionToken<AppConfig>('app.config', {
@@ -76,11 +74,3 @@ export const APPCONFIG = new InjectionToken<AppConfig>('app.config', {
     return config.data;
   },
 });
-
-export function getSentryDsnConfig(): string | undefined {
-  if (!('appConfig' in window)) {
-    throw new Error('No environment config found!');
-  }
-  const config = sentryDsnConfigSchema.parse(window.appConfig);
-  return config.sentryDsn;
-}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ItemId, ItemPath } from '../models/ids';

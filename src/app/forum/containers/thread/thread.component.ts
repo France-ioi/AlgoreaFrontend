@@ -26,7 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';

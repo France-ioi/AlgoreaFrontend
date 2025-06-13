@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { HttpClient } from '@angular/common/http';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 
 describe('OauthService', () => {
   let authHttp: AuthHttpService;

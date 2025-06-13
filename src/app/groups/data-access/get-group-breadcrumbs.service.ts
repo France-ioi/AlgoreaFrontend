@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { z } from 'zod';
 import { catchError, map } from 'rxjs/operators';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { groupRoute, GroupRoute } from 'src/app/models/routing/group-route';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';

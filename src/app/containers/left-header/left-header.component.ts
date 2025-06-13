@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 
 @Component({
   selector: 'alg-left-header',

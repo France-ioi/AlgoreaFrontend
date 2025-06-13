@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { z } from 'zod';
 import { ActionResponse, successData } from 'src/app/data-access/action-response';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 
 const askHintDataSchema = z.object({
   taskToken: z.string(),

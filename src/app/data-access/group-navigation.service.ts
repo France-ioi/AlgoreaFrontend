@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { Cacheable } from 'ts-cacheable';

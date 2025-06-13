@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';

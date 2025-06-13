@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 
 import { AuthService } from './auth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';

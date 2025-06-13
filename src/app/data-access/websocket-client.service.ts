@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, inject } from '@angular/core';
 import { EMPTY, map, merge, retry, shareReplay, startWith, Subject, switchMap, timer } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 import { MINUTES, SECONDS } from 'src/app/utils/duration';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 
 const wsRetryDelay = 5*SECONDS;
 const heartbeatStartDelay = 1*MINUTES;

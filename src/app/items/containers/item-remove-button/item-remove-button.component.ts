@@ -13,7 +13,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { parentRoute } from 'src/app/models/routing/item-route';
-import { DEFAULT_ACTIVITY_ROUTE } from 'src/app/models/routing/default-route-tokens';
+import { DEFAULT_ACTIVITY_ROUTE } from 'src/app/config/default-route-tokens';
 
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { isRequestToApi } from './interceptor_common';
 
 @Injectable()

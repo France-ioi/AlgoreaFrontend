@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { UserSessionService } from '../../services/user-session.service';

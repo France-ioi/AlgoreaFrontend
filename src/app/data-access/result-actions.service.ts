@@ -3,7 +3,7 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { SimpleActionResponse, ActionResponse, successData } from './action-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { decodeSnakeCase } from '../utils/operators/decode';

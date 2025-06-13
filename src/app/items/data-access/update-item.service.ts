@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { map } from 'rxjs/operators';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { SECONDS } from 'src/app/utils/duration';

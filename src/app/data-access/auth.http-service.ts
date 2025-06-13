@@ -3,7 +3,7 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { ActionResponse, SimpleActionResponse, successData, assertSuccess } from './action-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { AuthResult, cookieAuthFromServiceResp, tokenAuthFromServiceResp } from '../services/auth/auth-info';
 import { requestTimeout, retryOnceOn401, useAuthInterceptor } from '../interceptors/interceptor_common';

@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from '../../services/current-content.service';

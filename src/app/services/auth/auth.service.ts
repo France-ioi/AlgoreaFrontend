@@ -4,7 +4,7 @@ import { BehaviorSubject, of, timer, Subject, EMPTY, TimeoutError } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { MINUTES } from '../../utils/duration';
-import { APPCONFIG } from '../../app.config';
+import { APPCONFIG } from '../../config';
 import {
   tokenAuthFromStorage,
   AuthStatus,

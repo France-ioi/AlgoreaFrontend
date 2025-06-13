@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActionResponse, successData } from '../../data-access/action-response';
-import { APPCONFIG } from '../../app.config';
+import { APPCONFIG } from '../../config';
 import { inject } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';

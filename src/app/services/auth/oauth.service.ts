@@ -3,7 +3,7 @@ import { getArgsFromUrl, clearHash } from '../../utils/url';
 import { Observable, throwError } from 'rxjs';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { base64UrlEncode } from '../../utils/base64';
-import { APPCONFIG } from '../../app.config';
+import { APPCONFIG } from '../../config';
 import { AuthResult } from './auth-info';
 import { Location } from '@angular/common';
 

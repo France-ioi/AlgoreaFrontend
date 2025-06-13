@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { AppConfig, APPCONFIG } from 'src/app/app.config';
+import { AppConfig, APPCONFIG } from 'src/app/config';
 
 
 @Injectable({

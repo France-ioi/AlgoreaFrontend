@@ -14,7 +14,7 @@ import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { itemRouteAsUrlCommand } from 'src/app/models/routing/item-route-serialization';
-import { APPCONFIG, AppConfig } from 'src/app/app.config';
+import { APPCONFIG, AppConfig } from 'src/app/config';
 
 @Component({
   selector: 'alg-path-suggestion',

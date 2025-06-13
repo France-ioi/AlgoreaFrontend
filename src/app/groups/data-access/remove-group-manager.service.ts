@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { merge, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { APPCONFIG } from '../../app.config';
+import { APPCONFIG } from '../../config';
 import { inject } from '@angular/core';
 import { assertSuccess, SimpleActionResponse } from '../../data-access/action-response';
 import { reduce, map, switchMap, catchError } from 'rxjs/operators';

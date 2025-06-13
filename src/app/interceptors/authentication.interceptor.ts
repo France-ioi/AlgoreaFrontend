@@ -6,7 +6,7 @@ import { switchMap, filter, take, catchError } from 'rxjs/operators';
 import { AuthResult, AuthStatus } from '../services/auth/auth-info';
 import { isRequestToApi, retryOnceOn401, useAuthInterceptor } from './interceptor_common';
 import { errorIsHTTPUnauthenticated } from '../utils/errors';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 
 /**
  * This interceptor:

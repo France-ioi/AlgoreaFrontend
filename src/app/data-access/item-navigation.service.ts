@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { ItemTypeCategory, itemTypeCategoryEnum, itemTypeSchema } from 'src/app/items/models/item-type';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';

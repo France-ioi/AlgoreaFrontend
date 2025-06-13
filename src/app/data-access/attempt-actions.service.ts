@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CreateResponse, createdId } from './action-response';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 
 @Injectable({

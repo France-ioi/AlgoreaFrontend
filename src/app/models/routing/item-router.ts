@@ -3,7 +3,7 @@ import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { RawItemRoute } from './item-route';
 import { AnswerId } from '../ids';
 import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
-import { APPCONFIG, AppConfig } from 'src/app/app.config';
+import { APPCONFIG, AppConfig } from 'src/app/config';
 import { itemRouteAsUrlCommand } from './item-route-serialization';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';

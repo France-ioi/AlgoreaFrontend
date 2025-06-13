@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SimpleActionResponse, assertSuccess } from 'src/app/data-access/action-response';
 import { map } from 'rxjs/operators';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 
 export interface NewCodeSuccessResponse {
