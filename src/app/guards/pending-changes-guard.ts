@@ -38,7 +38,9 @@ export class PendingChangesGuard {
       return of(true);
     }
 
-    return pendingChangesComponent.isDirty() ? this.confirmationModalService.open({
+    // ISSUE: In current implementation, when user does navigation between modules (ex. from item to group) - the "canDeactivate" method
+    // calls twice, as result it opens two modals. For avoid it need to check is confirmation modal opened
+    return pendingChangesComponent.isDirty() && !this.confirmationModalService.opened() ? this.confirmationModalService.open({
       title: $localize`Confirm Navigation`,
       message: $localize`This page has unsaved changes. Do you want to leave this page and lose its changes?`,
       messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
