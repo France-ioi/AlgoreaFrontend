@@ -48,4 +48,8 @@ export class GroupManagersPage {
     await expect.soft(this.rejectRemoveManagersConfirmationBtnLocator).toBeVisible();
     await this.rejectRemoveManagersConfirmationBtnLocator.click();
   }
+
+  async openEditPermissionsModal(userName: string): Promise<void> {
+    await this.groupManagersLocator.getByRole('row', { name: userName }).getByRole('button').click();
+  }
 }
