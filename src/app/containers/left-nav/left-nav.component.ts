@@ -1,7 +1,6 @@
-
 import { Component, EventEmitter, inject, Injector, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { of, ReplaySubject, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { isDefined, isNotUndefined } from '../../utils/null-undefined-predicates';
 import { ContentInfo } from 'src/app/models/content/content-info';
 import { isGroupInfo, isMyGroupsInfo, isUserInfo } from 'src/app/models/content/group-info';
@@ -31,6 +30,7 @@ import { NavTreeData } from 'src/app/models/left-nav-loading/nav-tree-data';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { fromSelectedContent } from 'src/app/store/navigation';
+import { LeftMenuConfigService } from 'src/app/config/left-menu-config.service';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -76,12 +76,18 @@ export class LeftNavComponent implements OnChanges {
   private config = inject(APPCONFIG);
   searchService = this.config.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
 
+  skillsTabEnabled$ = this.leftMenuConfig.skillsTabEnabled$;
+  groupsTabEnabled$ = this.leftMenuConfig.groupsTabEnabled$;
+  showTabs$ = this.leftMenuConfig.showTabBar$;
+
   activeTab$ = this.currentContent.content$.pipe(
     distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
     map(content => contentToTabIndex(content)),
     filter(isDefined),
-    filter(idx => !this.skillsTabDisabled || idx !== skillsTabIdx),
-    filter(idx => !this.groupsTabDisabled || idx !== groupsTabIdx),
+    withLatestFrom(this.skillsTabEnabled$, this.groupsTabEnabled$),
+    filter(([ idx, skillsTabEnabled, groupsTabEnabled ]) => // do not switch to a disabled tab
+      idx === activitiesTabIdx || (idx === skillsTabIdx && skillsTabEnabled) || (idx === groupsTabIdx && groupsTabEnabled)),
+    map(([ idx ]) => idx),
     startWith(0),
     distinctUntilChanged(),
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
@@ -103,10 +109,6 @@ export class LeftNavComponent implements OnChanges {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
-  skillsTabDisabled = !this.config.defaultSkillId;
-  groupsTabDisabled = this.config.featureFlags.leftMenu.groups.hide;
-  showTabs = !this.groupsTabDisabled || !this.skillsTabDisabled;
-
   observationModeCaption = $localize`Observation mode`;
 
   currentLanguage = this.localeService.currentLang?.tag;
@@ -126,6 +128,7 @@ export class LeftNavComponent implements OnChanges {
     private localeService: LocaleService,
     private itemRouter: ItemRouter,
     private groupRouter: GroupRouter,
+    private leftMenuConfig: LeftMenuConfigService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {

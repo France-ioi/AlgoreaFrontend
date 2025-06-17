@@ -45,10 +45,14 @@ const configSchema = z.object({
 
     leftMenu: z.object({
       groups: z.union([
-        z.object({ hide: z.literal(true), excludeUserIds: z.array(z.string()).default([]) }),
+        z.object({ hide: z.literal(true), showToUserIds: z.array(z.string()).default([]) }),
         z.object({ hide: z.literal(false) })
       ]).default({ hide: false }),
-    }).default({ groups: { hide: false } }),
+      skills: z.union([
+        z.object({ hide: z.literal(true), showToUserIds: z.array(z.string()).default([]) }),
+        z.object({ hide: z.literal(false) })
+      ]).default({ hide: false }),
+    }).default({ groups: { hide: false }, skills: { hide: false } }),
   }),
 
   /* paths to be matched must not have a trailing slash */
