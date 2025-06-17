@@ -7,6 +7,7 @@ import { UserPage } from 'e2e/groups/pages/user-page';
 import { ManageGroupsPage } from 'e2e/groups/pages/manage-groups-page';
 import { GroupHistoryPage } from 'e2e/groups/pages/group-history-page';
 import { GroupManagersPage } from 'e2e/groups/pages/group-managers-page';
+import { GroupEditPermissionsModal } from 'e2e/groups/pages/group-edit-permissions-modal';
 
 interface GroupFixtures {
   groupSettingsPage: GroupSettingsPage,
@@ -17,6 +18,7 @@ interface GroupFixtures {
   userPage: UserPage,
   groupHistoryPage: GroupHistoryPage,
   groupManagersPage: GroupManagersPage,
+  groupEditPermissionsModal: GroupEditPermissionsModal,
 }
 
 export const test = base.extend<GroupFixtures>({
@@ -43,6 +45,9 @@ export const test = base.extend<GroupFixtures>({
   },
   groupManagersPage: async ({ page }, use) => {
     await use(new GroupManagersPage(page));
+  },
+  groupEditPermissionsModal: async ({ page }, use) => {
+    await use(new GroupEditPermissionsModal(page));
   },
 });
 

@@ -34,6 +34,7 @@ export const test = base.extend<CreateGroupFixtures>({
     await itemContentPage.checksIsDeleteButtonVisible();
     await itemContentPage.deleteItem();
     await itemContentPage.checkToastNotification(`SuccessYou have delete "${createItem.itemName}"`);
+    await itemContentPage.checksIsTitleVisible('E2E-generated-items');
     await itemContentPage.goto(`a/${createItem.itemId};p=${rootItemId};pa=0`);
     await itemContentPage.checksIsAllowToViewMessageNotVisible();
     await use({ itemName: createItem.itemName, itemId: createItem.itemId });

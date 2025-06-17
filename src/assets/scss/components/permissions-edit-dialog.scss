@@ -7,6 +7,10 @@
     overflow: hidden;
   }
 
+  .p-component-overlay {
+    z-index: 999 !important;
+  }
+
   .p-dialog-header {
     padding: var(--alg-space-size-6) var(--alg-space-size-5);
   }

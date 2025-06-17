@@ -18,7 +18,6 @@ import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { SharedModule } from 'primeng/api';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
 import { DialogModule } from 'primeng/dialog';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
@@ -44,7 +43,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     RouterOutlet,
     ThreadContainerComponent,
     ToastModule,
-    ConfirmDialogModule,
     DialogModule,
     LanguageMismatchComponent,
     SharedModule,
