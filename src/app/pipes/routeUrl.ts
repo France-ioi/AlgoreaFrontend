@@ -1,5 +1,5 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 import { UrlCommand } from '../utils/url';
 import { isRawGroupRoute, RawGroupRoute, urlArrayForGroupRoute } from '../models/routing/group-route';
 import { RawItemRoute } from '../models/routing/item-route';

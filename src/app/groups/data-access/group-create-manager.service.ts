@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActionResponse } from '../../data-access/action-response';
-import { APPCONFIG } from '../../app.config';
+import { APPCONFIG } from '../../config';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GroupManagerPermissionChanges } from './update-group-managers.service';

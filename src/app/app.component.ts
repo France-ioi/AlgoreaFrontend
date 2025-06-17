@@ -7,7 +7,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
-import { APPCONFIG } from './app.config';
+import { APPCONFIG } from './config';
 import { inject } from '@angular/core';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
 import { version } from 'src/version';

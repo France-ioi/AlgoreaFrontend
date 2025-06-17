@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { z } from 'zod';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { ActionResponse, assertSuccess } from 'src/app/data-access/action-response';

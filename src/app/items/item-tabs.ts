@@ -3,7 +3,7 @@ import { inject, Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs';
 import { TabService } from 'src/app/services/tab.service';
 import { TaskTab } from './containers/item-display/item-display.component';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { isATask } from 'src/app/items/models/item-type';
 import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/items/models/item-view-permission';

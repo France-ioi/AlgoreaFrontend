@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { RouterLinkActive, RouterLink } from '@angular/router';
-import { APPCONFIG } from 'src/app/app.config';
+import { APPCONFIG } from 'src/app/config';
 import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';

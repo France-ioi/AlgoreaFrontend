@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { fromTimeOffset } from '../store/time-offset';
 import { isRequestToApi } from './interceptor_common';
-import { APPCONFIG } from '../app.config';
+import { APPCONFIG } from '../config';
 
 /**
  * Interceptor which measures the time difference betweeen the client and the time indicated on server response, and sends it to the store
