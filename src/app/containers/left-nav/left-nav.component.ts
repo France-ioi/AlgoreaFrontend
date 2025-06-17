@@ -80,12 +80,13 @@ export class LeftNavComponent implements OnChanges {
     distinctUntilChanged((x,y) => x?.type === y?.type && x?.route?.id === y?.route?.id), // do not re-emit several time for a same content
     map(content => contentToTabIndex(content)),
     filter(isDefined),
+    filter(idx => !this.skillsTabDisabled || idx !== skillsTabIdx),
+    filter(idx => !this.groupsTabDisabled || idx !== groupsTabIdx),
     startWith(0),
     distinctUntilChanged(),
     map(idx => ({ index: idx })), // using object so that Angular ngIf does not ignore the "0" index
   );
 
-  showTabs = this.config.featureFlags.showLeftMenuTabs;
 
   @Output() selectElement = this.activeTab$.pipe(
     map(tab => this.navTreeServices[tab.index]),
@@ -102,7 +103,10 @@ export class LeftNavComponent implements OnChanges {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 
-  skillsDisabled = this.config.defaultSkillId === undefined;
+  skillsTabDisabled = !this.config.defaultSkillId;
+  groupsTabDisabled = this.config.featureFlags.leftMenu.groups.hide;
+  showTabs = !this.groupsTabDisabled || !this.skillsTabDisabled;
+
   observationModeCaption = $localize`Observation mode`;
 
   currentLanguage = this.localeService.currentLang?.tag;
