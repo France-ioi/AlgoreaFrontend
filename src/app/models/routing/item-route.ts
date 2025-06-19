@@ -1,6 +1,6 @@
 import { ContentRoute } from './content-route';
 import { ItemTypeCategory } from '../../items/models/item-type';
-import { AnswerId, AttemptId, ItemId, ItemPath, ParticipantId } from '../ids';
+import { AnswerId, AttemptId, GroupId, ItemId, ItemPath, ParticipantId } from '../ids';
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item
@@ -22,6 +22,7 @@ export interface ItemRoute extends ContentRoute {
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?: { id: AnswerId, best?: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id?: undefined },
+  observedGroupId?: GroupId,
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
