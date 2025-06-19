@@ -2,7 +2,6 @@ import { createReducer, on } from '@ngrx/store';
 import { fetchingState, readyState } from 'src/app/utils/state';
 import {
   groupInfoFetchedActions,
-  errorModalActions,
   routerActions,
   groupPageActions,
 } from './observation.actions';
@@ -13,7 +12,6 @@ export const reducer = createReducer(
 
   on(
     routerActions.disableObservation,
-    errorModalActions.disableObservation,
     groupPageActions.hasLoadedAnNonObservableContent,
     (state): State => ({ ...state, group: null })
   ),
