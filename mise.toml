@@ -1,0 +1,11 @@
+# configuration for the 'Mise' development environment setup tool
+# under version control as it may be used by several developers
+
+[tools]
+node = "22"
+
+[env]
+_.path = ['{{config_root}}/node_modules/.bin']
+
+# Set up the path for node module binaries
+BIN_PATH = "{{ config_root }}/node_modules/.bin"
