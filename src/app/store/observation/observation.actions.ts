@@ -8,13 +8,6 @@ export interface ObservationInfo {
   currentUserCanGrantAccess: boolean,
 }
 
-export const topBarActions = createActionGroup({
-  source: 'Top bar',
-  events: {
-    enableObservation: props<ObservationInfo>(),
-  },
-});
-
 export const observationBarActions = createActionGroup({
   source: 'Observation bar',
   events: {
