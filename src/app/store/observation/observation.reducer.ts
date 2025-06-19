@@ -1,9 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { fetchingState, readyState } from 'src/app/utils/state';
 import {
   groupInfoFetchedActions,
   routerActions,
-  groupPageActions,
 } from './observation.actions';
 import { State, initialState } from './observation.state';
 
@@ -12,20 +10,7 @@ export const reducer = createReducer(
 
   on(
     routerActions.disableObservation,
-    groupPageActions.hasLoadedAnNonObservableContent,
     (state): State => ({ ...state, group: null })
-  ),
-
-  on(
-    groupPageActions.hasLoadedAnObservableContent,
-    (state, { route, name, currentUserCanGrantAccess }): State => ({
-      ...state,
-      group: { route, info: readyState({ name, currentUserCanGrantAccess }) }
-    })
-  ),
-
-  on(routerActions.enableObservation,
-    (state, { route }): State => ({ ...state, group: { route, info: fetchingState() } }),
   ),
 
   on(groupInfoFetchedActions.fetchStateChanged,
