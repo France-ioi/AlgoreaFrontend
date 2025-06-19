@@ -8,13 +8,6 @@ export interface ObservationInfo {
   currentUserCanGrantAccess: boolean,
 }
 
-export const observationBarActions = createActionGroup({
-  source: 'Observation bar',
-  events: {
-    disableObservation: emptyProps(),
-  },
-});
-
 export const errorModalActions = createActionGroup({
   source: 'Observation Error Modal',
   events: {
