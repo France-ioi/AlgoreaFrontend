@@ -56,6 +56,10 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
   return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
 }
 
+export function routeWithNoObservation(route: FullItemRoute): FullItemRoute {
+  return { ...route, observedGroupId: undefined };
+}
+
 /**
  * Return the route of the parent item of the given item route.
  * Beware it assumes the parent has the same content type as its child... which is not fully guaranteed
