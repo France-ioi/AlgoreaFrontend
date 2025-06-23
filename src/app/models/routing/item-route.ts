@@ -22,7 +22,7 @@ export interface ItemRoute extends ContentRoute {
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?: { id: AnswerId, best?: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id?: undefined },
-  observedGroupId?: GroupId,
+  observedGroup?: { id: GroupId, isUser: boolean },
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
@@ -57,7 +57,7 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
 }
 
 export function routeWithNoObservation(route: FullItemRoute): FullItemRoute {
-  return { ...route, observedGroupId: undefined };
+  return { ...route, observedGroup: undefined };
 }
 
 /**

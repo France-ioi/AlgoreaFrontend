@@ -1,7 +1,7 @@
 import { ItemRoute } from './item-route';
 import { encodePath, parsePath } from './path-parameter';
 
-type RouteParameters = Partial<Pick<ItemRoute, 'path'|'attemptId'|'parentAttemptId'|'answer'|'observedGroupId'>>;
+type RouteParameters = Partial<Pick<ItemRoute, 'path'|'attemptId'|'parentAttemptId'|'answer'|'observedGroup'>>;
 
 enum ParamNames {
   Path = 'p',
@@ -10,7 +10,8 @@ enum ParamNames {
   AnswerId = 'answerId',
   AnswerBest = 'answerBest',
   AnswerBestParticipantId = 'answerParticipantId',
-  ObservedGroupId = 'g',
+  ObservedGroupId = 'og',
+  ObservedGroupIsUser = 'ou',
 }
 
 type ItemUrlParams = Partial<{ [name in ParamNames]: string }>;
@@ -25,7 +26,9 @@ export function extractItemRouteParameters(parameters: ItemUrlParams): RoutePara
   const answerBestParticipantId = parameters[ParamNames.AnswerBestParticipantId];
   const answer = answerId ? { id: answerId } : (answerBest ? { best: { id: answerBestParticipantId } } : undefined);
   const observedGroupId = parameters[ParamNames.ObservedGroupId];
-  return { path, attemptId, parentAttemptId, answer, observedGroupId };
+  const observedGroupIsUser = parameters[ParamNames.ObservedGroupIsUser];
+  const observedGroup = observedGroupId ? { id: observedGroupId, isUser: observedGroupIsUser === '1' } : undefined;
+  return { path, attemptId, parentAttemptId, answer, observedGroup };
 }
 
 export function encodeItemRouteParameters(p: RouteParameters): ItemUrlParams {
@@ -36,6 +39,7 @@ export function encodeItemRouteParameters(p: RouteParameters): ItemUrlParams {
   if (p.answer?.id) params[ParamNames.AnswerId] = p.answer.id;
   if (p.answer?.best) params[ParamNames.AnswerBest] = '1';
   if (p.answer?.best?.id) params[ParamNames.AnswerBestParticipantId] = p.answer.best.id;
-  if (p.observedGroupId) params[ParamNames.ObservedGroupId] = p.observedGroupId;
+  if (p.observedGroup?.id) params[ParamNames.ObservedGroupId] = p.observedGroup.id;
+  if (p.observedGroup?.isUser) params[ParamNames.ObservedGroupIsUser] = '1';
   return params;
 }
