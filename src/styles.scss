@@ -72,9 +72,13 @@ html {
   font-size: 16px;
 }
 
-body, button, input, textarea {
+body {
   background-color: var(--alg-light-bg-color);
   font-family: var(--font-family);
+}
+
+button, input, textarea {
+  font-family: inherit;
 }
 
 .cdk-global-overlay-wrapper {
