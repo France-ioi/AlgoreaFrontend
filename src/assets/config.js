@@ -21,7 +21,7 @@ window.appConfig = {
 
   itemPlatformId: 'algorea_backend',
 
-  theme: 'default',
+  theme: 'probabl',
   featureFlags: {
     hideTaskTabs: [],
     showGroupAccessTab: true,
