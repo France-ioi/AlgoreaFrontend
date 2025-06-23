@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DropdownOption } from 'src/app/ui-components/dropdown/dropdown.component';
 import { HOURS } from 'src/app/utils/duration';
 import { ItemRemoveButtonComponent } from '../../containers/item-remove-button/item-remove-button.component';
 import { FormErrorComponent } from 'src/app/ui-components/form-error/form-error.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { DropdownComponent } from 'src/app/ui-components/dropdown/dropdown.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { DatePipe, NgIf } from '@angular/common';
 import { ItemData } from '../../models/item-data';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
+import { SelectComponent } from 'src/app/ui-components/select/select.component';
+import { SelectOption, SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -28,14 +28,15 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
     ReactiveFormsModule,
     InputComponent,
     SwitchComponent,
-    DropdownComponent,
     SelectionComponent,
     DurationComponent,
     InputNumberModule,
     FormErrorComponent,
     ItemRemoveButtonComponent,
     InputDateComponent,
-    DatePipe
+    DatePipe,
+    SelectComponent,
+    SelectOptionComponent
   ],
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
@@ -45,7 +46,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   @Input() parentForm?: UntypedFormGroup;
   @Input() attemptId?: string;
 
-  validationCriteriaOptions: DropdownOption[] = [{
+  validationCriteriaOptions: SelectOption[] = [{
     label: $localize`Never`,
     value: 'None'
   }, {
@@ -84,7 +85,7 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   minEnteringTimeMaxDate = new Date();
   currentDate = new Date();
 
-  minAdmittedMembersRatioOptions: DropdownOption[] = [{
+  minAdmittedMembersRatioOptions: SelectOption[] = [{
     label: $localize`All the members must be admitted`,
     value: 'All'
   }, {

@@ -5,7 +5,6 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
-import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { TreeModule } from 'primeng/tree';
@@ -67,7 +66,6 @@ bootstrapApplication(AppComponent, {
       TreeModule,
       TooltipModule,
       DialogModule,
-      DropdownModule,
       MenuModule,
       FormsModule,
       OverlayPanelModule,

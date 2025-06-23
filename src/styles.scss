@@ -9,13 +9,11 @@
 @import 'assets/scss/components/error-message';
 @import 'assets/scss/components/data-list-container';
 @import 'assets/scss/components/mode-bar';
-@import 'assets/scss/components/select-dropdown';
 @import 'assets/scss/components/calendar';
 @import 'assets/scss/components/tab-rounded';
 @import 'assets/scss/components/tab-nav';
 @import 'assets/scss/components/tree-nav';
 @import 'assets/scss/components/login-button';
-@import 'assets/scss/components/dropdown';
 @import 'assets/scss/components/button';
 @import 'assets/scss/components/button-icon';
 @import 'assets/scss/components/messages';
@@ -149,25 +147,6 @@ body {
     @media screen and (max-width: 599.98px) {
       width: 100% !important;
     }
-}
-
-.alg-dropdown-triangle {
-  position: relative;
-  margin-top: toRem(12);
-  overflow: visible !important;
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: toRem(-8);
-    left: 50%;
-    margin-left: toRem(-8);
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 toRem(8) toRem(8) toRem(8);
-    border-color: transparent transparent var(--alg-primary-color) transparent;
-  }
 }
 
 .alg-divider {

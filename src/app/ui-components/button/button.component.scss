@@ -141,6 +141,26 @@
       border-color: var(--alg-primary-color);
     }
   }
+
+  &.select-button {
+    padding-left: toRem(9) !important;
+    padding-right: toRem(5) !important;
+    border: toRem(1) solid var(--alg-light-color);
+  }
+
+  &.select-form-button {
+    display: flex;
+    justify-content: space-between;
+    padding-left: var(--alg-space-size-5) !important;
+    padding-right: var(--alg-space-size-5) !important;
+    background: var(--alg-light-color);
+    color: var(--alg-secondary-color);
+
+    .icon {
+      color: var(--alg-primary-color);
+    }
+
+  }
 }
 
 .container {
