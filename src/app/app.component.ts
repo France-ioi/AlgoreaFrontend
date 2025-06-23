@@ -1,4 +1,4 @@
-import { Component, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
@@ -91,7 +91,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private ngZone: NgZone,
     private renderer: Renderer2,
-    private el: ElementRef,
     private chunkErrorService: ChunkErrorService,
   ) {
     const title = this.localeService.currentLang ? this.config.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
@@ -102,7 +101,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (redirectTo) void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
 
     if (this.config.theme !== 'default') {
-      this.renderer.setAttribute(this.el.nativeElement, 'data-theme', `${this.config.theme}`);
+      this.renderer.setAttribute(document.body, 'data-theme', `${this.config.theme}`);
     }
     // eslint-disable-next-line no-console
     console.log(`App version: ${version}`);
