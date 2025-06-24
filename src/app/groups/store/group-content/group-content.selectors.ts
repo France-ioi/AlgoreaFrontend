@@ -37,8 +37,6 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentFullRoute: MemoizedSelector<T, GroupRoute|null>,
   selectActiveContentRouteOrPage: MemoizedSelector<T, RawGroupRoute|GroupPage|null>,
 
-  selectActiveContentUserId: MemoizedSelector<T, string|null>,
-  selectActiveContentGroupId: MemoizedSelector<T, string|null>,
   selectActiveContentGroupState: MemoizedSelector<T, GroupInState>,
   selectActiveContentUserState: MemoizedSelector<T, UserInState>,
   /**
@@ -118,23 +116,6 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     }
   );
 
-  const selectActiveContentId = createSelector(
-    selectActiveContentRoute,
-    route => route?.id ?? null
-  );
-
-  const selectActiveContentUserId = createSelector(
-    selectIsUserContentActive,
-    selectActiveContentId,
-    (isUser, id) => (isUser ? id : null)
-  );
-
-  const selectActiveContentGroupId = createSelector(
-    selectIsUserContentActive,
-    selectActiveContentId,
-    (isUser, id) => (!isUser ? id : null)
-  );
-
   const selectActiveContentGroupState = createSelector(
     selectState,
     selectActiveContentRoute,
@@ -189,8 +170,6 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRoute,
     selectActiveContentFullRoute,
     selectActiveContentRouteOrPage,
-    selectActiveContentUserId,
-    selectActiveContentGroupId,
     selectActiveContentGroupState,
     selectActiveContentUserState,
     selectActiveContentBreadcrumbsState,

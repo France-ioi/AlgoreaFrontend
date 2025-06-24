@@ -14,7 +14,7 @@ export interface State {
    */
   routeErrorHandling: Fetching<undefined>|FetchError,
 
-  // if the content is currently a group/user page: the corresponding info
+  // if the content is currently a group/user page OR if a group is currently observed: the corresponding info
   groupState: GroupInState | UserInState,
   // if (and only if) the content is currently a group page AND the page has a path in url: the corresponding breadcrumbs
   breadcrumbsState: FetchState<GroupBreadcrumbs, GroupRoute>,

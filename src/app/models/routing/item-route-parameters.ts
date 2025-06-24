@@ -1,7 +1,7 @@
 import { ItemRoute } from './item-route';
 import { encodePath, parsePath } from './path-parameter';
 
-type RouteParameters = Partial<Pick<ItemRoute, 'path'|'attemptId'|'parentAttemptId'|'answer'>>;
+type RouteParameters = Partial<Pick<ItemRoute, 'path'|'attemptId'|'parentAttemptId'|'answer'|'observedGroup'>>;
 
 enum ParamNames {
   Path = 'p',
@@ -9,7 +9,9 @@ enum ParamNames {
   ParentAttemptId = 'pa',
   AnswerId = 'answerId',
   AnswerBest = 'answerBest',
-  AnswerBestParticipantId = 'answerParticipantId'
+  AnswerBestParticipantId = 'answerParticipantId',
+  ObservedGroupId = 'og',
+  ObservedGroupIsUser = 'ou',
 }
 
 type ItemUrlParams = Partial<{ [name in ParamNames]: string }>;
@@ -23,7 +25,10 @@ export function extractItemRouteParameters(parameters: ItemUrlParams): RoutePara
   const answerBest = parameters[ParamNames.AnswerBest] !== undefined ? true : undefined;
   const answerBestParticipantId = parameters[ParamNames.AnswerBestParticipantId];
   const answer = answerId ? { id: answerId } : (answerBest ? { best: { id: answerBestParticipantId } } : undefined);
-  return { path, attemptId, parentAttemptId, answer };
+  const observedGroupId = parameters[ParamNames.ObservedGroupId];
+  const observedGroupIsUser = parameters[ParamNames.ObservedGroupIsUser];
+  const observedGroup = observedGroupId ? { id: observedGroupId, isUser: observedGroupIsUser === '1' } : undefined;
+  return { path, attemptId, parentAttemptId, answer, observedGroup };
 }
 
 export function encodeItemRouteParameters(p: RouteParameters): ItemUrlParams {
@@ -34,5 +39,7 @@ export function encodeItemRouteParameters(p: RouteParameters): ItemUrlParams {
   if (p.answer?.id) params[ParamNames.AnswerId] = p.answer.id;
   if (p.answer?.best) params[ParamNames.AnswerBest] = '1';
   if (p.answer?.best?.id) params[ParamNames.AnswerBestParticipantId] = p.answer.best.id;
+  if (p.observedGroup?.id) params[ParamNames.ObservedGroupId] = p.observedGroup.id;
+  if (p.observedGroup?.isUser) params[ParamNames.ObservedGroupIsUser] = '1';
   return params;
 }
