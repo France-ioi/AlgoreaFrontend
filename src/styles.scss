@@ -40,6 +40,7 @@
 
 /* Custom themes */
 @import 'assets/scss/themes/coursera-pt';
+@import 'assets/scss/themes/probabl';
 
 @media screen and (max-width: 599.98px) {
   :root {
@@ -74,6 +75,10 @@ html {
 body {
   background-color: var(--alg-light-bg-color);
   font-family: var(--font-family);
+}
+
+button, input, textarea {
+  font-family: inherit;
 }
 
 .cdk-global-overlay-wrapper {
