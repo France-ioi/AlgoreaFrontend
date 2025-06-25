@@ -1,6 +1,6 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge, filter, switchMap } from 'rxjs';
+import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge, filter, switchMap, EMPTY } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { areSameThreads } from '../../models/threads';
 import { fromForum } from '..';
@@ -9,6 +9,7 @@ import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { readyData } from 'src/app/utils/operators/state';
 import { forumThreadListActions, itemPageActions } from './current-thread.actions';
+import { APPCONFIG } from 'src/app/config';
 
 /**
  * Unsubscribe from the thread in two cases:
@@ -21,7 +22,8 @@ export const threadUnsubscriptionEffect = createEffect(
     actions$ = inject(Actions),
     store = inject(Store),
     websocketClient = inject(WebsocketClient),
-  ) =>
+    config = inject(APPCONFIG),
+  ) => (config.forumServerUrl ?
     merge(
       fromEvent(window, 'beforeunload'),
       actions$.pipe(
@@ -37,7 +39,7 @@ export const threadUnsubscriptionEffect = createEffect(
           websocketClient.send(unsubscribeAction(thread.token));
         }
       })
-    ),
+    ) : EMPTY),
   { functional: true, dispatch: false }
 );
 
@@ -50,7 +52,8 @@ export const threadSubscriptionEffect = createEffect(
     actions$ = inject(Actions),
     store$ = inject(Store),
     websocketClient = inject(WebsocketClient),
-  ) => actions$.pipe(
+    config = inject(APPCONFIG),
+  ) => (config.forumServerUrl ? actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChanged),
     map(({ fetchState }) => fetchState),
     readyData(),
@@ -63,6 +66,6 @@ export const threadSubscriptionEffect = createEffect(
     tap(thread => {
       websocketClient.send(subscribeAction(thread.token));
     })
-  ),
+  ) : EMPTY),
   { functional: true, dispatch: false }
 );
