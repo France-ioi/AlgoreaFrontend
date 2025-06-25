@@ -1,11 +1,10 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
-import { FullItemRoute } from 'src/app/models/routing/item-route';
+import { FullItemRoute, ItemRoute } from 'src/app/models/routing/item-route';
 import { Breadcumbs, Item, Results, State, initialState } from './item-content.state';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
-import { fromObservation } from 'src/app/store/observation';
 import equal from 'fast-deep-equal/es6';
 import { Result } from '../../models/attempts';
 import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
@@ -34,6 +33,12 @@ interface UserContentSelectors<T extends RootState> {
    * If the content is an item and there is no route error: the item id
    */
   selectActiveContentId: MemoizedSelector<T, string|null>,
+  /**
+   * If the active content is an item: the observed group.
+   * `undefined` if not observing
+   * `null` if there is no active item
+   */
+  selectActiveContentObservedGroup: MemoizedSelector<T, ItemRoute['observedGroup']|null>,
   selectActiveContentItemState: MemoizedSelector<T, State['itemState']>,
   selectActiveContentBreadcrumbsState: MemoizedSelector<T, State['breadcrumbsState']>,
   selectActiveContentResultsState: MemoizedSelector<T, State['resultsState']>,
@@ -109,11 +114,16 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     route => (route ? route.id : null)
   );
 
+  const selectActiveContentObservedGroup = createSelector(
+    selectActiveContentRoute,
+    route => (route ? route.observedGroup : null)
+  );
+
   const selectActiveContentItemState = createSelector(
     selectState,
-    selectActiveContentId,
-    fromObservation.selectObservedGroupId,
-    ({ itemState }, id, observedGroupId) => (equal(itemState.identifier, { id, observedGroupId }) ? itemState : initialState.itemState)
+    selectActiveContentRoute,
+    ({ itemState }, route) =>
+      (route && equal(itemState.identifier, { id: route.id, observedGroup: route.observedGroup }) ? itemState : initialState.itemState)
   );
 
   const selectActiveContentBreadcrumbsState = createSelector(
@@ -186,6 +196,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRoute,
     selectActiveContentPage,
     selectActiveContentId,
+    selectActiveContentObservedGroup,
     selectActiveContentItemState,
     selectActiveContentBreadcrumbsState,
     selectActiveContentResultsState,

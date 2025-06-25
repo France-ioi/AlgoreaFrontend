@@ -1,11 +1,10 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable, combineLatest, debounceTime, distinctUntilChanged, filter, map, merge, of, skip, switchMap } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, filter, map, merge, skip, switchMap } from 'rxjs';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { fromItemContent } from './item-content.store';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { fromObservation } from 'src/app/store/observation';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { itemByIdPageActions, itemFetchingActions } from './item-content.actions';
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
@@ -27,17 +26,15 @@ export const itemFetchingEffect = createEffect(
     actions$ = inject(Actions),
     userSessionService$ = inject(UserSessionService),
     getItemByIdService = inject(GetItemByIdService),
-  ) => store$.select(fromItemContent.selectActiveContentId).pipe(
+  ) => store$.select(fromItemContent.selectActiveContentRoute).pipe(
     // Only do something for non-null item id (so on item page) so that we keep the item data when navigating to another type of page
     // (e.g., group). If we come back on the same item later, there is no more refetch needed.
-    switchMap(id => (isNotNull(id) ?
-      combineLatest({ id: of(id), observedGroupId: store$.select(fromObservation.selectObservedGroupId) }) : EMPTY
-    )),
-    distinctUntilChanged((prev, cur) => prev.id === cur.id && prev.observedGroupId === cur.observedGroupId),
-    switchMap(({ id, observedGroupId }) => getItemByIdService.get(id, observedGroupId ? { watchedGroupId: observedGroupId } : {}).pipe(
+    filter(isNotNull),
+    distinctUntilChanged((prev, cur) => prev.id === cur.id && prev.observedGroup?.id === cur.observedGroup?.id),
+    switchMap(route => getItemByIdService.get(route.id, route.observedGroup ? { watchedGroupId: route.observedGroup.id } : {}).pipe(
       mapToFetchState({
         resetter: refreshTriggers(actions$, userSessionService$),
-        identifier: { id, observedGroupId }
+        identifier: { id: route.id, observedGroup: route.observedGroup },
       })
     )),
     map(fetchState => itemFetchingActions.itemFetchStateChanged({ fetchState })),

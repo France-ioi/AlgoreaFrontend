@@ -3,7 +3,6 @@ import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { Item as ItemFromService } from 'src/app/data-access/get-item-by-id.service';
 import { Result } from '../../models/attempts';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
-import { ItemId } from 'src/app/models/ids';
 
 export type Item = ItemFromService;
 export type Breadcumbs = BreadcrumbItem[];
@@ -17,7 +16,7 @@ export interface State {
    */
   routeErrorHandling: Fetching<undefined>|FetchError,
 
-  itemState: FetchState<Item, { id: ItemId, observedGroupId: string|null }>,
+  itemState: FetchState<Item, Pick<FullItemRoute, 'id' | 'observedGroup'>>,
   breadcrumbsState: FetchState<Breadcumbs, FullItemRoute>,
   /** `results` of the current participant on the active item */
   resultsState: FetchState<Results, FullItemRoute>,
