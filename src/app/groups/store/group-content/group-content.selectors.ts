@@ -7,13 +7,14 @@ import {
   isUser,
   managedGroupsPage,
   myGroupsPage,
-  parseRouterPath
+  parseRouterPath,
+  rawGroupRoute
 } from 'src/app/models/routing/group-route';
 import { GroupRouteError, groupRouteFromParams, isGroupRouteError } from '../../utils/group-route-validation';
 import { ObservationInfo } from 'src/app/store/observation';
 import { fromRouter } from 'src/app/store/router';
 import { GroupInState, State, UserInState } from './group-content.state';
-import { fetchingState } from 'src/app/utils/state';
+import { fetchingState, FetchState, mapStateData } from 'src/app/utils/state';
 import { formatUser } from 'src/app/groups/models/user';
 import { RootState } from 'src/app/utils/store/root_state';
 import { selectIdParameter } from 'src/app/models/routing/content-route-selectors';
@@ -37,8 +38,6 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentFullRoute: MemoizedSelector<T, GroupRoute|null>,
   selectActiveContentRouteOrPage: MemoizedSelector<T, RawGroupRoute|GroupPage|null>,
 
-  selectActiveContentUserId: MemoizedSelector<T, string|null>,
-  selectActiveContentGroupId: MemoizedSelector<T, string|null>,
   selectActiveContentGroupState: MemoizedSelector<T, GroupInState>,
   selectActiveContentUserState: MemoizedSelector<T, UserInState>,
   /**
@@ -48,11 +47,10 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentBreadcrumbsState: MemoizedSelector<T, State['breadcrumbsState']|null>,
 
   /**
-   * Group info required for observation
-   * Null if there is no group as active content (or not fetched yet)
-   * False if the group cannot be observed
+   * Group info required for observation for the fetched group
+   * Null if there is no group has been fetched yet
    */
-  selectObservationInfoForActiveContent: MemoizedSelector<T, ObservationInfo | false | null>,
+  selectObservationInfoForFetchedContent: MemoizedSelector<T, FetchState<ObservationInfo|undefined, RawGroupRoute> | null>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): UserContentSelectors<T> {
@@ -118,23 +116,6 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     }
   );
 
-  const selectActiveContentId = createSelector(
-    selectActiveContentRoute,
-    route => route?.id ?? null
-  );
-
-  const selectActiveContentUserId = createSelector(
-    selectIsUserContentActive,
-    selectActiveContentId,
-    (isUser, id) => (isUser ? id : null)
-  );
-
-  const selectActiveContentGroupId = createSelector(
-    selectIsUserContentActive,
-    selectActiveContentId,
-    (isUser, id) => (!isUser ? id : null)
-  );
-
   const selectActiveContentGroupState = createSelector(
     selectState,
     selectActiveContentRoute,
@@ -155,29 +136,35 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     ({ breadcrumbsState }, route) => (breadcrumbsState.identifier === route ? breadcrumbsState : null)
   );
 
-  const selectObservationInfoForActiveContentUser = createSelector(
-    selectActiveContentUserState,
-    selectActiveContentRoute,
-    ({ isReady, data }, route) => (
-      route && isReady ? (
-        data.currentUserCanWatchUser && !data.isCurrentUser ?
-          { route, name: formatUser(data), currentUserCanGrantAccess: !!data.currentUserCanGrantUserAccess } : false
-      ) : null)
+  const selectObservationInfoForFetchedUser = createSelector(
+    selectState,
+    ({ groupState }) => (groupState.identifier && isUser(groupState.identifier) ?
+      mapStateData(groupState as UserInState, data => (data ? {
+        route: rawGroupRoute({ id: data.groupId, isUser: true }),
+        name: formatUser(data),
+        currentUserCanGrantAccess: !!data.currentUserCanGrantUserAccess,
+        currentUserWatchGroup: !!data.currentUserCanWatchUser && !data.isCurrentUser
+      } : undefined)) :
+      null /* not a user */
+    )
   );
 
-  const selectObservationInfoForActiveContentGroup = createSelector(
-    selectActiveContentGroupState,
-    selectActiveContentRoute,
-    ({ isReady, data }, route) => (
-      (route && isReady) ? (
-        data.currentUserCanWatchMembers ?
-          { route, name: data.name, currentUserCanGrantAccess: !!data.currentUserCanGrantGroupAccess } : false
-      ) : null)
+  const selectObservationInfoForFetchedNonUserGroup = createSelector(
+    selectState,
+    ({ groupState }) => (groupState.identifier && !isUser(groupState.identifier) ?
+      mapStateData(groupState as GroupInState, data => (data ? {
+        route: rawGroupRoute({ id: data.id, isUser: false }),
+        name: data.name,
+        currentUserCanGrantAccess: !!data.currentUserCanGrantGroupAccess,
+        currentUserWatchGroup: !!data.currentUserCanWatchMembers
+      } : undefined)) :
+      null /* not a group */
+    )
   );
 
-  const selectObservationInfoForActiveContent = createSelector(
-    selectObservationInfoForActiveContentUser,
-    selectObservationInfoForActiveContentGroup,
+  const selectObservationInfoForFetchedContent = createSelector(
+    selectObservationInfoForFetchedUser,
+    selectObservationInfoForFetchedNonUserGroup,
     (obsInfoForUser, obsInfoForNonUserGroup) => (obsInfoForUser === null ? obsInfoForNonUserGroup : obsInfoForUser)
   );
 
@@ -189,12 +176,10 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentRoute,
     selectActiveContentFullRoute,
     selectActiveContentRouteOrPage,
-    selectActiveContentUserId,
-    selectActiveContentGroupId,
     selectActiveContentGroupState,
     selectActiveContentUserState,
     selectActiveContentBreadcrumbsState,
 
-    selectObservationInfoForActiveContent,
+    selectObservationInfoForFetchedContent,
   };
 }
