@@ -1,9 +1,10 @@
-import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
-import { GroupInfo, State } from './observation.state';
+import { MemoizedSelector, createSelector } from '@ngrx/store';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { isForbiddenObservationError } from './utils/errors';
 import { fromGroupContent } from 'src/app/groups/store';
 import { RootState } from 'src/app/utils/store/root_state';
+import { fromItemContent } from 'src/app/items/store';
+import { ObservationInfo } from './models';
 
 interface ObservationSelectors<T extends RootState> {
   /**
@@ -17,7 +18,7 @@ interface ObservationSelectors<T extends RootState> {
   /**
    * The observed-group information (route and fetched info). `null` if is observation not enabled. `undefined` if info not known (yet).
    */
-  selectObservedGroupInfo: MemoizedSelector<T, ({ route: RawGroupRoute } & GroupInfo) | null | undefined>,
+  selectObservedGroupInfo: MemoizedSelector<T, ObservationInfo|null>,
   /**
    * Whether observation is enabled
    */
@@ -33,36 +34,54 @@ interface ObservationSelectors<T extends RootState> {
   selectActiveContentIsBeingObserved: MemoizedSelector<T, boolean>,
 }
 
-export function selectors<T extends RootState>(selectObservationState: Selector<T, State>): ObservationSelectors<T> {
+export function selectors<T extends RootState>(): ObservationSelectors<T> {
 
-  const selectGroup = createSelector(
-    selectObservationState,
-    state => state.group
+  const selectObservationInfoForActiveGroupContent = createSelector(
+    fromGroupContent.selectActiveContentRoute,
+    fromGroupContent.selectObservationInfoForFetchedContent,
+    (route, obsInfo) => (route && route.id === obsInfo?.identifier?.id ? obsInfo : null)
   );
 
-  const selectObservedGroupId = createSelector(
-    selectGroup,
-    g => g?.route.id ?? null
+  const selectObservationInfoForActiveItemContent = createSelector(
+    fromItemContent.selectActiveContentObservedGroup,
+    fromGroupContent.selectObservationInfoForFetchedContent,
+    (obsGroupFromRoute, obsInfo) => (obsGroupFromRoute && obsGroupFromRoute.id === obsInfo?.identifier?.id ? obsInfo : null)
   );
 
-  const selectObservedGroupRoute = createSelector(
-    selectGroup,
-    g => g?.route ?? null
+  const selectObservationInfoForActiveContent = createSelector(
+    selectObservationInfoForActiveGroupContent,
+    selectObservationInfoForActiveItemContent,
+    (obsInfoFromGroup, obsInfoFromItem) => obsInfoFromGroup ?? obsInfoFromItem
+  );
+
+  const selectObservationGroupInfoForActiveContent = createSelector(
+    selectObservationInfoForActiveContent,
+    info => (info ? info.data : null),
   );
 
   const selectObservedGroupInfo = createSelector(
-    selectGroup,
-    g => (g ? (g.info.isReady ? { route: g.route, ...g.info.data } : undefined) : null)
+    selectObservationGroupInfoForActiveContent,
+    info => (info && info.currentUserWatchGroup ? info : null)
+  );
+
+  const selectObservedGroupRoute = createSelector(
+    selectObservedGroupInfo,
+    info => (info ? info.route : null),
+  );
+
+  const selectObservedGroupId = createSelector(
+    selectObservedGroupRoute,
+    route => (route ? route.id : null),
   );
 
   const selectIsObserving = createSelector(
-    selectGroup,
-    g => g !== null
+    selectObservedGroupInfo,
+    info => info !== null
   );
 
   const selectObservationError = createSelector(
-    selectGroup,
-    g => (g?.info.isError ? { isForbidden: isForbiddenObservationError(g.info.error) } : false)
+    selectObservationInfoForActiveContent,
+    info => (info && info.isError ? { isForbidden: isForbiddenObservationError(info.error) } : false)
   );
 
   const selectActiveContentIsBeingObserved = createSelector(
