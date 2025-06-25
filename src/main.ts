@@ -23,7 +23,6 @@ import { fromForum, forumEffects } from './app/forum/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { NavigationActionTiming, provideRouterStore } from '@ngrx/router-store';
-import { fromObservation, observationEffects } from './app/store/observation';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromGroupContent, groupStoreEffects } from './app/groups/store';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
@@ -88,7 +87,6 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideRouterStore({ serializer: RouterSerializer, navigationActionTiming: NavigationActionTiming.PostActivation }),
     provideState(fromRouter),
-    provideState(fromObservation),
     provideState(fromForum),
     provideState(fromGroupContent),
     provideState(fromItemContent),
@@ -98,7 +96,6 @@ bootstrapApplication(AppComponent, {
     provideState(fromConfig),
     provideEffects(
       forumEffects(),
-      observationEffects,
       groupStoreEffects(),
       itemStoreEffects(),
       selectedContentEffects,
