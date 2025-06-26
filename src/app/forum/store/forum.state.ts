@@ -1,12 +1,14 @@
 import * as websocketStore from './websocket/websocket.store';
 import * as currentThreadStore from './current-thread/current-thread.store';
 
-interface State {
+export interface State {
+  enabled: boolean,
   websocket: websocketStore.State,
   currentThread: currentThreadStore.State,
 }
 
 export const initialState: State = {
+  enabled: false,
   websocket: websocketStore.initialState,
   currentThread: currentThreadStore.initialState,
 };
