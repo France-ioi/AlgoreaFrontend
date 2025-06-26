@@ -5,6 +5,7 @@ import * as fetchThreadInfoEffects from './current-thread/fetchThreadInfo.effect
 import * as syncEffects from './current-thread/event-sync.effects';
 import * as threadSubscriptionEffects from './current-thread/threadSubscription.effects';
 import * as currentThreadEffects from './current-thread/current-thread.effects';
+import * as forumBaseEffects from './forum.effects';
 import { getCurrentThreadSelectors } from './current-thread/current-thread.selectors';
 import { topBarActions, forumThreadListActions, threadPanelActions, itemPageActions } from './current-thread/current-thread.actions';
 import { itemPageEventSyncActions } from './current-thread/event-sync.actions';
@@ -17,15 +18,16 @@ export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...syncEffects,
   ...threadSubscriptionEffects,
   ...currentThreadEffects,
+  ...forumBaseEffects,
 });
 
 export const fromForum = {
   ...createFeature({
     name: 'forum',
     reducer,
-    extraSelectors: ({ selectWebsocket, selectCurrentThread }) => ({
+    extraSelectors: ({ selectForumState, selectWebsocket }) => ({
       ...getWebsocketSelectors(selectWebsocket),
-      ...getCurrentThreadSelectors(selectCurrentThread)
+      ...getCurrentThreadSelectors(selectForumState)
     })
   }),
   topBarActions,

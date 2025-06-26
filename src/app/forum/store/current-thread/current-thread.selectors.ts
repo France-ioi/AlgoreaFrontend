@@ -1,5 +1,5 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
-import { State } from './current-thread.store';
+import { State } from '../forum.state';
 import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../models/threads';
 import { FetchState } from 'src/app/utils/state';
 import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
@@ -19,15 +19,26 @@ interface CurrentThreadSelectors<T> {
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
-export const getCurrentThreadSelectors = <T>(selectCurrentThread: Selector<T, State>): CurrentThreadSelectors<T> => {
-  // raw selectors
+export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State>): CurrentThreadSelectors<T> => {
+
+  const selectCurrentThread = createSelector(
+    selectForumState,
+    state => state.currentThread
+  );
+
+  const selectIsForumEnabled = createSelector(
+    selectForumState,
+    state => state.enabled,
+  );
+
   const selectVisible = createSelector(
     selectCurrentThread,
     state => state.visible
   );
   const selectThreadId = createSelector(
+    selectIsForumEnabled,
     selectCurrentThread,
-    state => state.id
+    (enabled, thread) => (enabled ? thread.id : null)
   );
   const selectInfo = createSelector(
     selectCurrentThread,
