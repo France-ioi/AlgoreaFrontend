@@ -6,6 +6,7 @@ import { Thread } from '../../models/threads';
 import { threadSubscriptionEffect } from './threadSubscription.effects';
 import { Store } from '@ngrx/store';
 import { TestScheduler } from 'rxjs/testing';
+import { AppConfig } from 'src/app/config';
 
 describe('threadSubscriptionEffect', () => {
 
@@ -14,6 +15,7 @@ describe('threadSubscriptionEffect', () => {
   const wsClientMock = {
     send: (): void => {}
   } as unknown as WebsocketClient;
+  const config = { forumServerUrl: 'mockurl' } as AppConfig;
 
   // actions for marble testing
   const a = fetchThreadInfoActions.fetchStateChanged({ fetchState: readyState(mockThread1) });
@@ -38,7 +40,7 @@ describe('threadSubscriptionEffect', () => {
         select: () => selectWebsocketOpen
       } as unknown as Store;
 
-      threadSubscriptionEffect(actionsMock$, storeMock$, wsClientMock).subscribe({
+      threadSubscriptionEffect(actionsMock$, storeMock$, wsClientMock, config).subscribe({
         complete: () => {
           expect(wsClientMock.send).toHaveBeenCalledTimes(4);
           done();
@@ -58,7 +60,7 @@ describe('threadSubscriptionEffect', () => {
         select: () => selectWebsocketOpen
       } as unknown as Store;
 
-      threadSubscriptionEffect(actionsMock$, storeMock$, wsClientMock).subscribe({
+      threadSubscriptionEffect(actionsMock$, storeMock$, wsClientMock, config).subscribe({
         complete: () => {
           expect(wsClientMock.send).toHaveBeenCalledTimes(3);
           done();
@@ -77,7 +79,7 @@ describe('threadSubscriptionEffect', () => {
         select: () => selectWebsocketOpen
       } as unknown as Store;
 
-      threadSubscriptionEffect(actionsMock$, storeMock$, wsClientMock).subscribe({
+      threadSubscriptionEffect(actionsMock$, storeMock$, wsClientMock, config).subscribe({
         complete: () => {
           expect(wsClientMock.send).toHaveBeenCalledTimes(2);
           done();
