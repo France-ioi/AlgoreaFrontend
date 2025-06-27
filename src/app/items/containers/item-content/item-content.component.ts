@@ -23,6 +23,9 @@ import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
 import { FormsModule } from '@angular/forms';
+import { UserSessionService } from 'src/app/services/user-session.service';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-item-content',
@@ -80,6 +83,8 @@ export class ItemContentComponent implements PendingChangesComponent {
   @Output() fullFrameTask = new EventEmitter<boolean>();
 
   isTaskLoaded = signal(false); // whether the task has finished loading, i.e. is ready or in error
+  isCurrentUserTemp = toSignal(this.userSessionService.userProfile$.pipe(map(user => user.tempUser)));
+  hasPrerequisites: boolean|undefined = undefined; // undefined while not known
 
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent?.dirty;
@@ -89,6 +94,7 @@ export class ItemContentComponent implements PendingChangesComponent {
     private store: Store,
     private router: Router,
     private route: ActivatedRoute,
+    private userSessionService: UserSessionService,
   ) {}
 
   onEditModeEnableChange(editModeEnabled: boolean): void {
@@ -108,5 +114,9 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onTaskLoadChange(loadingComplete: boolean): void {
     this.isTaskLoaded.set(loadingComplete);
+  }
+
+  onPrerequisiteNotify(hasPrerequisites: boolean): void {
+    this.hasPrerequisites = hasPrerequisites;
   }
 }

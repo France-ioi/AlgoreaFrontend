@@ -960,31 +960,22 @@
       <note from="description" priority="1">Button label for joining an item by (group) code</note><context-group purpose="location"><context context-type="sourcefile">src/app/items/item-by-id.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="2771205002840550916" datatype="html">
         <source>Edit content</source><target state="translated">Editer le contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="7250343758473458577" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="7250343758473458577" datatype="html">
         <source> You do not have the permissions to edit this content. </source><target state="translated"> Vous n'avez pas les permissions d'éditer ce contenu. </target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-form/item-children-edit-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="5441429049165852521" datatype="html">
         <source> This activity has not been correctly configured. </source><target state="translated"> Cette activité n'a pas été correctement configurée. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="7327354999532189308" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">121</context></context-group></trans-unit><trans-unit id="7327354999532189308" datatype="html">
         <source> You need to set a url in editing mode. </source><target state="translated"> Vous devez configurer une URL en mode édition. </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="6897999120381208807" datatype="html">
-        <source> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this chapter. </source><target state="translated"> Vos droits d'accès actuels ne vous permettent pas de lister<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> le contenu de ce chapitre. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="8697596042386823142" datatype="html">
-        <source> Your current access rights do not allow you to list<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the content of this skill. </source><target state="translated"> Vos droits d'accès actuels ne vous permettent pas de lister<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> le contenu de cette compétence. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="5323780775476058848" datatype="html">
-        <source> Your current access rights do not allow you to start<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> the activity. </source><target state="translated"> Vos droits d'accès actuels ne vous permettent pas commencer<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/> cette activité. </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="701018348223992755" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">125</context></context-group></trans-unit><trans-unit id="701018348223992755" datatype="html">
         <source>Loading the content</source><target state="translated">Chargement du contenu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">132</context></context-group></trans-unit><trans-unit id="1105872825687577539" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">157</context></context-group></trans-unit><trans-unit id="1105872825687577539" datatype="html">
         <source>The content is taking an unexpected long time to load... please wait...</source><target state="translated">Ce contenu met plus de temps que prévu à se charger... veuillez patienter...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">133</context></context-group></trans-unit><trans-unit id="notImplemented" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context><context context-type="linenumber">158</context></context-group></trans-unit><trans-unit id="notImplemented" datatype="html">
         <source>(not implemented)</source><target state="translated">(non implémenté)</target>
 
 
@@ -1442,7 +1433,67 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit-list/item-children-edit-list.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="8390631426570727629" datatype="html">
         <source>Error while loading the children items</source><target state="translated">Erreur lors du chargement des enfants</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="4605864425009617908" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-children-edit/item-children-edit.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="1974165985511194380" datatype="html">
+        <source>This chapter is locked.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Fulfill one of the prerequisites below to access its content.</source><target state="translated">Ce chapitre est verrouillé.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Remplissez l’un des prérequis ci-dessous pour accéder à son contenu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="8051920374743623313" datatype="html">
+        <source>You are not connected and cannot access the content of this chapter.</source><target state="translated">Vous n’êtes pas connecté et ne pouvez pas accéder au contenu de ce chapitre.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="8159564484830801720" datatype="html">
+        <source>Your current access rights do not allow you<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>to list the content of this chapter.</source><target state="translated">Vos droits d'accès actuels ne vous permettent pas<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>de consulter le contenu de ce chapitre.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="3065590177299924722" datatype="html">
+        <source>This skill is locked.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Fulfill one of the prerequisites below to access its content.</source><target state="translated">Cette compétence est verrouillée.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Remplissez l’un des prérequis ci-dessous pour accéder à son contenu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit><trans-unit id="3004691292463847196" datatype="html">
+        <source>You are not connected and cannot access the content of this skill.</source><target state="translated">Vous n’êtes pas connecté et ne pouvez pas accéder au contenu de cette compétence.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="3841167108110897631" datatype="html">
+        <source>Your current access rights do not allow you<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>to list the content of this skill.</source><target state="translated">Vos droits d'accès actuels ne vous permettent pas<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>de consulter le contenu de cette compétence.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="9058564029144196029" datatype="html">
+        <source>This activity is locked.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Fulfill one of the prerequisites below to access its content.</source><target state="translated">Cette activité est verrouillée.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>Remplissez l’un des prérequis ci-dessous pour accéder à son contenu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit><trans-unit id="7086141787559582698" datatype="html">
+        <source>You are not connected and cannot start this activity.</source><target state="translated">Vous n’êtes pas connecté et ne pouvez pas démarrer cette activité.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit><trans-unit id="9028158064856724007" datatype="html">
+        <source>Your current access rights do not allow you<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>to start the activity.</source><target state="translated">Vos droits d'accès actuels ne vous permettent pas<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br>"/>de consulter le contenu de ce chapitre.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit><trans-unit id="96403311093859283" datatype="html">
+        <source> Please sign up or log in using the power button at the top right corner of this screen. </source><target state="translated">Ce chapitre est verrouillé.&lt;br&gt;Remplissez l’un des prérequis ci-dessous pour accéder à son contenu.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/items/containers/item-content/item-content.component.html</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+      </trans-unit><trans-unit id="4605864425009617908" datatype="html">
         <source>Prerequisites</source><target state="translated">Prérequis</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-dependencies/item-dependencies.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/items/containers/item-unlock-access/item-unlock-access.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="6971784787959352901" datatype="html">

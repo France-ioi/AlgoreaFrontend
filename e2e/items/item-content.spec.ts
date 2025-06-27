@@ -217,7 +217,7 @@ test('checks chapter no access message with prerequisites section', async ({ ite
     itemContentPage.waitForItemResponse('128139237432513103'),
     itemContentPage.waitForBreadcrumbsResponse('4702/4102/128139237432513103', 'parent_attempt_id=0'),
   ]);
-  await itemContentPage.checksIsChapterNoAccessMessageVisible();
+  await itemContentPage.checksIsChapterLockedMessageVisible();
   await itemContentPage.checksIsPrerequisiteSectionVisible();
 });
 
