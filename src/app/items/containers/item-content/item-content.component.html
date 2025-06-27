@@ -25,28 +25,53 @@
 }
 
 @else if (!canViewContent) {
-  <div class="no-access-message alg-flex-1">
-    <span class="no-access-message-icon-container">
-      <i class="ph-duotone ph-lock-key no-access-message-icon"></i>
-      <span class="no-access-message-icon-bg"></span>
-    </span>
-    @if (item | isAChapter) {
-      <span class="no-access-message-text alg-text-secondary" i18n>
-        Your current access rights do not allow you to list<br> the content of this chapter.
+  @if (hasPrerequisites !== undefined) {
+    <div class="no-access-message alg-flex-1">
+      <span class="no-access-message-icon-container">
+        <i class="ph-duotone no-access-message-icon" [ngClass]="isCurrentUserTemp() && !hasPrerequisites ? 'ph-power' : 'ph-lock-key'"></i>
+        <span class="no-access-message-icon-bg"></span>
       </span>
-    }
-    @else if (item | isASkill) {
-      <span class="no-access-message-text alg-text-secondary" i18n>
-        Your current access rights do not allow you to list<br> the content of this skill.
-      </span>
-    }
-    @else { <!-- task -->
-      <span class="no-access-message-text alg-text-secondary" i18n>
-        Your current access rights do not allow you to start<br> the activity.
-      </span>
-    }
-  </div>
-  <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()"></alg-item-unlock-access>
+      @if (item | isAChapter) {
+        <span class="no-access-message-text alg-text-secondary">
+          @if (hasPrerequisites) {
+            <ng-container i18n>This chapter is locked.<br>Fulfill one of the prerequisites below to access its content.</ng-container>
+          } @else if (isCurrentUserTemp()) {
+            <ng-container i18n>You are not connected and cannot access the content of this chapter.</ng-container>
+          } @else {
+            <ng-container i18n>Your current access rights do not allow you<br>to list the content of this chapter.</ng-container>
+          }
+        </span>
+      }
+      @else if (item | isASkill) {
+        <span class="no-access-message-text alg-text-secondary">
+          @if (hasPrerequisites) {
+            <ng-container i18n>This skill is locked.<br>Fulfill one of the prerequisites below to access its content.</ng-container>
+          } @else if (isCurrentUserTemp()) {
+            <ng-container i18n>You are not connected and cannot access the content of this skill.</ng-container>
+          } @else {
+            <ng-container i18n>Your current access rights do not allow you<br>to list the content of this skill.</ng-container>
+          }
+        </span>
+      }
+      @else { <!-- task -->
+        <span class="no-access-message-text alg-text-secondary">
+          @if (hasPrerequisites) {
+            <ng-container i18n>This activity is locked.<br>Fulfill one of the prerequisites below to access its content.</ng-container>
+          } @else if (isCurrentUserTemp()) {
+            <ng-container i18n>You are not connected and cannot start this activity.</ng-container>
+          } @else {
+            <ng-container i18n>Your current access rights do not allow you<br>to start the activity.</ng-container>
+          }
+        </span>
+      }
+      @if (isCurrentUserTemp() && !hasPrerequisites) {
+        <span class="no-access-message-text alg-text-secondary" i18n>
+          Please sign up or log in using the power button at the top right corner of this screen.
+        </span>
+      }
+    </div>
+  }
+  <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()" (hasContent)="onPrerequisiteNotify($event)"></alg-item-unlock-access>
 }
 
 @else if ((item | isAChapter) || (item | isASkill)) { <!-- with canViewContent, results may not be fetched yet-->

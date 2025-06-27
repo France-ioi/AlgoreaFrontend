@@ -3,7 +3,7 @@ import { ItemData } from '../../models/item-data';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, share } from 'rxjs/operators';
-import { mapToFetchState } from 'src/app/utils/operators/state';
+import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -16,6 +16,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-item-unlock-access',
@@ -55,6 +56,11 @@ export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );
+
+  hasContent = outputFromObservable(this.state$.pipe(
+    readyData(),
+    map(data => data.length > 0),
+  ));
 
   itemId = signal<string | undefined>(undefined);
 
