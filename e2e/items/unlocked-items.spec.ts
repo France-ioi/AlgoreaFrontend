@@ -1,8 +1,9 @@
 import { test, expect } from 'e2e/items/fixture';
+import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 
 test('check unlocked items and navigate to first one', async ({ page }) => {
   await page.goto('a/2004936693550411739;p=4702,7528142386663912287,7523720120450464843;pa=0');
-  expect.soft(page.getByTestId('item-title').getByText('Long text task (opentezos-like)')).toBeVisible();
+  await expect.soft(page.getByTestId('item-title').getByText('Long text task (opentezos-like)')).toBeVisible();
   await expect.soft(page.frameLocator('iFrame').getByText('A brief history of blockchain')).toBeVisible();
   const mainContentWrapperLocator = page.getByTestId('main-content-wrapper');
   await expect.soft(mainContentWrapperLocator).toBeVisible();
@@ -20,7 +21,7 @@ test('check unlocked items and navigate to first one', async ({ page }) => {
 test('check unlocked items and stay on current task', async ({ page }) => {
   await page.goto('a/2004936693550411739;p=4702,7528142386663912287,7523720120450464843;pa=0');
   const itemTitleLocator = page.getByTestId('item-title').getByText('Long text task (opentezos-like)');
-  expect.soft(itemTitleLocator).toBeVisible();
+  await expect.soft(itemTitleLocator).toBeVisible();
   await expect.soft(page.frameLocator('iFrame').getByText('A brief history of blockchain')).toBeVisible();
   const mainContentWrapperLocator = page.getByTestId('main-content-wrapper');
   await expect.soft(mainContentWrapperLocator).toBeVisible();
@@ -33,4 +34,40 @@ test('check unlocked items and stay on current task', async ({ page }) => {
   await expect.soft(continueBtnLocator).toBeVisible();
   await continueBtnLocator.click();
   await expect.soft(itemTitleLocator).toBeVisible();
+});
+
+test('check chapter is locked message for temp user', async ({ page }) => {
+  await page.goto('a/457754150968902848;p=4702,7528142386663912287,944619266928306927;pa=0');
+  const itemTitleLocator = page.getByTestId('item-title').getByText('Chapter unlocked by other tasks');
+  await expect.soft(itemTitleLocator).toBeVisible();
+  await expect.soft(page.getByText('This chapter is locked.')).toBeVisible();
+  await expect.soft(page.getByText('Fulfill one of the prerequisites below to access its content.')).toBeVisible();
+});
+
+test('check chapter is locked message for auth user', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('a/457754150968902848;p=4702,7528142386663912287,944619266928306927;pa=0');
+  const itemTitleLocator = page.getByTestId('item-title').getByText('Chapter unlocked by other tasks');
+  await expect.soft(itemTitleLocator).toBeVisible();
+  await expect.soft(page.getByText('This chapter is locked.')).toBeVisible();
+  await expect.soft(page.getByText('Fulfill one of the prerequisites below to access its content.')).toBeVisible();
+});
+
+test('check the temp user is not connected to activity', async ({ page }) => {
+  await page.goto('a/6747343693587333585;p=4702,7528142386663912287,944619266928306927;pa=0');
+  const itemTitleLocator = page.getByTestId('item-title').getByText('Non-visible task');
+  await expect.soft(itemTitleLocator).toBeVisible();
+  await expect.soft(page.getByText('You are not connected and cannot start this activity.')).toBeVisible();
+  await expect.soft(
+    page.getByText('Please sign up or log in using the power button at the top right corner of this screen.')
+  ).toBeVisible();
+});
+
+test('check the auth user has no access rights to activity', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('a/6747343693587333585;p=4702,7528142386663912287,944619266928306927;pa=0');
+  const itemTitleLocator = page.getByTestId('item-title').getByText('Non-visible task');
+  await expect.soft(itemTitleLocator).toBeVisible();
+  await expect.soft(page.getByText('Your current access rights do not allow you')).toBeVisible();
+  await expect.soft(page.getByText('to start the activity.')).toBeVisible();
 });
