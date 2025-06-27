@@ -109,16 +109,24 @@ export class ItemContentPage {
 
   async checksIsChapterNoAccessMessageVisible(): Promise<void> {
     await expect.soft(
-      this.page.getByText('Your current access rights do not allow you to list the content of this chapter.')
+      this.page.getByText('You are not connected and cannot access the content of this chapter.')
+    ).toBeVisible();
+    await expect.soft(
+      this.page.getByText('Please sign up or log in using the power button at the top right corner of this screen.')
     ).toBeVisible();
   }
 
+  async checksIsChapterLockedMessageVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('This chapter is locked.')).toBeVisible();
+    await expect.soft(this.page.getByText('Fulfill one of the prerequisites below to access its content.')).toBeVisible();
+  }
+
   async checksIsPrerequisiteSectionVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('Prerequisites')).toBeVisible();
+    await expect.soft(this.page.getByRole('heading', { name: 'Prerequisites' })).toBeVisible();
   }
 
   async checksIsPrerequisiteSectionNotVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('Prerequisites')).not.toBeVisible();
+    await expect.soft(this.page.getByRole('heading', { name: 'Prerequisites' })).not.toBeVisible();
   }
 
   async checksExplicitEntryIsVisible(): Promise<void> {
@@ -146,11 +154,13 @@ export class ItemContentPage {
   }
 
   async checksTaskNoAccessMessageIsVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('Your current access rights do not allow you to start the activity.')).toBeVisible();
+    await expect.soft(this.page.getByText('Your current access rights do not allow you')).toBeVisible();
+    await expect.soft(this.page.getByText('to start the activity.')).toBeVisible();
   }
 
   async checksSkillNoAccessMessageIsVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('Your current access rights do not allow you to list the content of this skill.')).toBeVisible();
+    await expect.soft(this.page.getByText('Your current access rights do not allow you')).toBeVisible();
+    await expect.soft(this.page.getByText('to list the content of this skill.')).toBeVisible();
   }
 
   async checkToastNotification(message: string): Promise<void> {

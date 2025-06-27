@@ -36,21 +36,19 @@ test('check unlocked items and stay on current task', async ({ page }) => {
   await expect.soft(itemTitleLocator).toBeVisible();
 });
 
-test('check chapter is locked message for temp user', async ({ page }) => {
+test('check chapter is locked message for temp user', async ({ page, itemContentPage }) => {
   await page.goto('a/457754150968902848;p=4702,7528142386663912287,944619266928306927;pa=0');
   const itemTitleLocator = page.getByTestId('item-title').getByText('Chapter unlocked by other tasks');
   await expect.soft(itemTitleLocator).toBeVisible();
-  await expect.soft(page.getByText('This chapter is locked.')).toBeVisible();
-  await expect.soft(page.getByText('Fulfill one of the prerequisites below to access its content.')).toBeVisible();
+  await itemContentPage.checksIsChapterLockedMessageVisible();
 });
 
-test('check chapter is locked message for auth user', async ({ page }) => {
+test('check chapter is locked message for auth user', async ({ page, itemContentPage }) => {
   await initAsTesterUser(page);
   await page.goto('a/457754150968902848;p=4702,7528142386663912287,944619266928306927;pa=0');
   const itemTitleLocator = page.getByTestId('item-title').getByText('Chapter unlocked by other tasks');
   await expect.soft(itemTitleLocator).toBeVisible();
-  await expect.soft(page.getByText('This chapter is locked.')).toBeVisible();
-  await expect.soft(page.getByText('Fulfill one of the prerequisites below to access its content.')).toBeVisible();
+  await itemContentPage.checksIsChapterLockedMessageVisible();
 });
 
 test('check the temp user is not connected to activity', async ({ page }) => {
@@ -63,11 +61,10 @@ test('check the temp user is not connected to activity', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('check the auth user has no access rights to activity', async ({ page }) => {
+test('check the auth user has no access rights to activity', async ({ page, itemContentPage }) => {
   await initAsTesterUser(page);
   await page.goto('a/6747343693587333585;p=4702,7528142386663912287,944619266928306927;pa=0');
   const itemTitleLocator = page.getByTestId('item-title').getByText('Non-visible task');
   await expect.soft(itemTitleLocator).toBeVisible();
-  await expect.soft(page.getByText('Your current access rights do not allow you')).toBeVisible();
-  await expect.soft(page.getByText('to start the activity.')).toBeVisible();
+  await itemContentPage.checksTaskNoAccessMessageIsVisible();
 });
