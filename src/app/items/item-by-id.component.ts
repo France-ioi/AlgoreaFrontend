@@ -121,7 +121,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   state$: Observable<FetchState<ItemData>> = merge(
     this.store.select(fromItemContent.selectActiveContentRouteErrorHandlingState).pipe(filter(isNotNull)),
-    this.itemState$,
+    this.itemState$.pipe(distinctUntilChanged((x, y) => JSON.stringify(x.data) === JSON.stringify(y.data))),
   );
 
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
