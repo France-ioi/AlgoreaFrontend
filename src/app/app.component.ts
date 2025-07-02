@@ -27,6 +27,7 @@ import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { CdkScrollable } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'alg-root',
@@ -48,6 +49,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     SharedModule,
     AsyncPipe,
     ButtonComponent,
+    CdkScrollable,
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {

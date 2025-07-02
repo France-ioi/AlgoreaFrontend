@@ -1,0 +1,8 @@
+<button
+  class="button alg-select-option"
+  [ngClass]="{ 'selected': selected }"
+  type="button"
+  (click)="select(value())"
+>
+  <ng-content></ng-content>
+</button>

@@ -34,12 +34,13 @@
     <div class="form-item-view">
       <span class="form-item-label" i18n>Validation criteria</span>
       <div class="form-item-control">
-        <alg-dropdown
-          [options]="validationCriteriaOptions"
-          [parentForm]="parentForm"
-          inputName="validation_type"
-          name="validation_type"
-        ></alg-dropdown>
+        <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="validation_type">
+          @for (option of validationCriteriaOptions; track $index) {
+            <alg-select-option [value]="option">
+              {{ option.label }}
+            </alg-select-option>
+          }
+        </alg-select>
       </div>
     </div>
 
@@ -228,12 +229,13 @@
       <div class="form-item-view">
         <span class="form-item-label" i18n>Minimum admitted members</span>
         <div class="form-item-control">
-          <alg-dropdown
-            [options]="minAdmittedMembersRatioOptions"
-            [parentForm]="parentForm"
-            inputName="entry_min_admitted_members_ratio"
-            name="entry_min_admitted_members_ratio"
-          ></alg-dropdown>
+          <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="entry_min_admitted_members_ratio">
+            @for (option of minAdmittedMembersRatioOptions; track $index) {
+              <alg-select-option [value]="option">
+                {{ option.label }}
+              </alg-select-option>
+            }
+          </alg-select>
         </div>
       </div>
     </ng-container>
