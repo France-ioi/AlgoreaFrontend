@@ -15,6 +15,9 @@ commands:
       # starting with a slash, no trailing slash
       path:
         type: string
+      publish_root_index:
+        type: boolean
+        default: true
     steps:
       - aws-s3/sync:
           from: << parameters.from >>
@@ -25,6 +28,7 @@ commands:
             --exclude "*/assets/config.js"
             --cache-control 'max-age=31536000'
       - aws-s3/copy:
+          when: << parameters.publish_root_index >>
           from:  << parameters.from >>index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/index.html
           arguments: >-
@@ -346,6 +350,7 @@ jobs:
           from: ./dist/algorea/browser/
           bucket: $FRONTEND_PUBLIC_BUCKET
           path: /frontend/releases/<< pipeline.git.tag >>/
+          publish_root_index: false
 
 workflows:
   version: 2
