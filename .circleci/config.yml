@@ -15,9 +15,6 @@ commands:
       # starting with a slash, no trailing slash
       path:
         type: string
-      publish_root_index:
-        type: boolean
-        default: true
     steps:
       - aws-s3/sync:
           from: << parameters.from >>
@@ -28,7 +25,6 @@ commands:
             --exclude "*/assets/config.js"
             --cache-control 'max-age=31536000'
       - aws-s3/copy:
-          when: << parameters.publish_root_index >>
           from:  << parameters.from >>index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/index.html
           arguments: >-
@@ -53,6 +49,24 @@ commands:
           to: s3://<< parameters.bucket >><< parameters.path >>/fr/assets/config.js
           arguments: >-
             --cache-control 'max-age=10'
+
+  deploy-to-s3-v2:
+    parameters:
+      # from current dir, with trailing slash
+      from:
+        type: string
+      bucket:
+        type: string
+      # starting with a slash, no trailing slash
+      path:
+        type: string
+    steps:
+      - aws-s3/sync:
+          from: << parameters.from >>
+          to: s3://<< parameters.bucket >><< parameters.path >>
+          overwrite: false
+          arguments: >-
+            --cache-control 'max-age=31536000'
 
   build:
     parameters:
@@ -346,11 +360,10 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - deploy-to-s3:
+      - deploy-to-s3-v2:
           from: ./dist/algorea/browser/
           bucket: $FRONTEND_PUBLIC_BUCKET
           path: /frontend/releases/<< pipeline.git.tag >>/
-          publish_root_index: false
 
 workflows:
   version: 2
