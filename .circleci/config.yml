@@ -357,7 +357,12 @@ workflows:
   version: 2
   default:
     jobs:
-      - deps
+      - deps:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              only: /.*/
       - lint:
           requires:
           - deps
