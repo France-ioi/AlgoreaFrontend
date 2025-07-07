@@ -343,6 +343,8 @@ jobs:
   deploy-version:
     docker:
       - image: 'circleci/python:2.7'
+    environment:
+      AWS_REGION: eu-central-1
     steps:
       - attach_workspace:
           at: ./
@@ -432,14 +434,14 @@ workflows:
             tags:
               only: /^v\d+\.\d+\..*/
           requires:
-          - deps
+            - deps
           context: sentry-sourcemaps
       - build-version-fr:
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
           requires:
-          - deps
+            - deps
           context: sentry-sourcemaps
       - deploy-version:
           filters:
