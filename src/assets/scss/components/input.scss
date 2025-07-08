@@ -8,7 +8,6 @@
 }
 
 .alg-input {
-  .p-inputtext {
-    @include input-base;
-  }
+  @include input-base;
+  box-sizing: border-box;
 }

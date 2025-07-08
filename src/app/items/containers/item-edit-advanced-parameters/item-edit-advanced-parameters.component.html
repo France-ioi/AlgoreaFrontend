@@ -116,7 +116,7 @@
         <alg-switch formControlName="allows_multiple_attempts"></alg-switch>
       </div>
     </div>
-    <div class="form-item-view">
+    <div class="form-item-view" data-testid="form-item-view">
       <span class="form-item-label" i18n>Start participation manually</span>
       <div class="form-item-control">
         <alg-switch
@@ -127,7 +127,7 @@
       </div>
     </div>
     <ng-container *ngIf="!!parentForm.get('requires_explicit_entry')?.value">
-      <div class="form-item-view form-item-duration">
+      <div class="form-item-view form-item-duration" data-testid="form-item-view">
         <span class="form-item-label">
           <ng-container i18n>Duration</ng-container>&nbsp;
         </span>
@@ -138,7 +138,7 @@
               (ngModelChange)="onDurationEnabledChange()"
           >
           </alg-switch>
-          <div class="input-wrapper-duration">
+          <div class="input-wrapper-duration alg-flex-1">
             <alg-duration
                 class="alg-duration"
                 formControlName="duration"

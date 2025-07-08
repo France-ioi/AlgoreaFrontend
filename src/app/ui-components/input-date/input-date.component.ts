@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -10,14 +10,12 @@ import {
   NG_VALUE_ACCESSOR,
   NgControl,
   NgModel,
-  ReactiveFormsModule,
   ValidationErrors
 } from '@angular/forms';
-import { InputMaskModule } from 'primeng/inputmask';
-import { DatePipe } from '@angular/common';
 import { FormErrorComponent } from '../form-error/form-error.component';
 import { convertDateToString, convertStringToDate } from 'src/app/utils/input-date';
 import { Subscription } from 'rxjs';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'alg-input-date',
@@ -37,11 +35,9 @@ import { Subscription } from 'rxjs';
   ],
   standalone: true,
   imports: [
-    InputMaskModule,
-    ReactiveFormsModule,
     FormsModule,
-    DatePipe,
     FormErrorComponent,
+    NgxMaskDirective,
   ],
 })
 export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccessor {
@@ -50,6 +46,7 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   input = '';
   control?: FormControl<Date | null>;
   subscription?: Subscription;
+  mask = signal('99/99/9999 99:99');
 
   constructor(private injector: Injector) {
   }
@@ -69,6 +66,13 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
     } else {
       this.control = new FormControl();
     }
+
+    // Issue: by default ngx mask marks form as dirty
+    // https://github.com/JsDaddy/ngx-mask/issues/1375#issuecomment-2243252405
+    setTimeout(() => {
+      this.control?.markAsPristine();
+      this.control?.markAsUntouched();
+    });
   }
 
   ngOnDestroy(): void {
@@ -80,7 +84,10 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   writeValue(value: Date | null): void {
-    this.input = value ? convertDateToString(value) : '';
+    // Issue due the race condition (probably because of async method in writeValue in ngx-mask)
+    setTimeout(() => {
+      this.input = value ? convertDateToString(value) : '';
+    });
   }
 
   private onChange: (value: Date | null) => void = () => {};
@@ -102,12 +109,14 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   onInputChange(input: string): void {
-    if (input.trim() === '') {
-      this.onChange(null);
+    if (input.length === this.mask().length) {
+      this.onChange(convertStringToDate(input));
     }
   }
 
-  onComplete(): void {
-    this.onChange(convertStringToDate(this.input));
+  onBlur(): void {
+    if (this.input.trim() === '') {
+      this.onChange(null);
+    }
   }
 }

@@ -12,13 +12,11 @@ test('checks entering date fields in item permissions', async ({ page }) => {
   const enteringTimeMaxSwitchLocator = page.getByTestId('entering-time-max-container').locator('alg-switch');
   const enteringTimeMinInputDateLocator = enteringTimeMinContainerLocator
     .locator('alg-input-date')
-    .getByTestId('input-date')
-    .getByRole('textbox');
+    .getByTestId('input-date');
   const enteringTimeMaxContainerLocator = page.getByTestId('entering-time-max-container');
   const enteringTimeMaxInputDateLocator = enteringTimeMaxContainerLocator
     .locator('alg-input-date')
-    .getByTestId('input-date')
-    .getByRole('textbox');
+    .getByTestId('input-date');
 
   await test.step('checks entering date fields are visible', async () => {
     await Promise.all([

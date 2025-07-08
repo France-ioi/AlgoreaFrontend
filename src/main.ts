@@ -39,6 +39,7 @@ import { initErrorTracking } from './app/utils/error-handling/setup-error-tracki
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { fromConfig, configEffects } from './app/store/config';
 import { environment } from './environments/environment';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -116,5 +117,6 @@ bootstrapApplication(AppComponent, {
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
+    provideEnvironmentNgxMask(),
   ]
 }).catch(err => console.error(err));

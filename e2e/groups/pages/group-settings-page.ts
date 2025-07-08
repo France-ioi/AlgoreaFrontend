@@ -2,7 +2,7 @@ import { Page, expect, Locator } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class GroupSettingsPage {
-  inputDateLocator = this.page.getByTestId('input-date').getByRole('textbox');
+  inputDateLocator = this.page.getByTestId('input-date');
   saveBtnLocator = this.page.getByRole('button', { name: 'Save' });
   strengthenedConfirmationMessageLocator
     = this.page.getByText('As you have strengthened approval conditions, all group members have to re-approve the new conditions');
@@ -28,7 +28,7 @@ export class GroupSettingsPage {
     await this.page.getByTestId('switch-require-lock-until-enabled').click();
     await expect.soft(this.inputDateLocator).toBeVisible();
     await this.inputDateLocator.click();
-    await expect.soft(this.inputDateLocator).toHaveValue('dd/mm/yyyy hh:mm');
+    await expect.soft(this.page.getByPlaceholder('dd/mm/yyyy hh:mm')).toBeVisible();
   }
 
   async disableLockMembershipUntilInputDate(): Promise<void> {

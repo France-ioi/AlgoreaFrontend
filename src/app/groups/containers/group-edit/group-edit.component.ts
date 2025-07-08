@@ -25,7 +25,6 @@ import { NgIf, AsyncPipe } from '@angular/common';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
-import { InputMaskModule } from 'primeng/inputmask';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { GroupApprovals } from 'src/app/groups/models/group-approvals';
 import { DialogModule } from 'primeng/dialog';
@@ -55,7 +54,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     SwitchComponent,
     SelectionComponent,
     MessageInfoComponent,
-    InputMaskModule,
     InputDateComponent,
     DialogModule,
     LetDirective,
