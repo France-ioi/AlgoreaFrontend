@@ -1,0 +1,30 @@
+<button
+  type="button"
+  class="{{ buttonStyleClass() }}"
+  alg-button
+  icon="ph ph-caret-down"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  (click)="isOpen.set(!isOpen())"
+>
+  @if (selected()?.label; as label) {
+    <span class="select-button-label">{{ label }}</span>
+  }
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayPositions]="positions()"
+  [cdkConnectedOverlayLockPosition]="true"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  (overlayOutsideClick)="isOpen.set(false)"
+>
+  <div
+    class="dropdown"
+    [style.width.px]="el.nativeElement.getBoundingClientRect().width"
+  >
+    <ng-content></ng-content>
+  </div>
+</ng-template>

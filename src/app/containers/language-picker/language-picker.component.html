@@ -1,10 +1,13 @@
-<p-dropdown
-  *ngIf="current"
-  [options]="languages"
-  [ngModel]="current"
-  [styleClass]="styleClass || 'alg-select-dropdown lang'"
-  panelStyleClass="alg-select-dropdown-panel alg-dropdown-triangle"
-  dropdownIcon="ph-duotone ph-caret-down"
-  appendTo="body"
-  (onChange)="languageChanged($event)"
-></p-dropdown>
+@if (current) {
+  <alg-select
+    [(ngModel)]="current"
+    (change)="languageChanged($event)"
+  >
+    @for (lang of languages; track $index) {
+      <alg-select-option [value]="lang">
+        {{ lang.label }}
+      </alg-select-option>
+    }
+  </alg-select>
+}
+
