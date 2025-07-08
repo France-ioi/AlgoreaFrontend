@@ -66,6 +66,7 @@ import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import equal from 'fast-deep-equal/es6';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -121,7 +122,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   state$: Observable<FetchState<ItemData>> = merge(
     this.store.select(fromItemContent.selectActiveContentRouteErrorHandlingState).pipe(filter(isNotNull)),
-    this.itemState$.pipe(distinctUntilChanged((x, y) => JSON.stringify(x.data) === JSON.stringify(y.data))),
+    this.itemState$.pipe(distinctUntilChanged((x, y) => equal(x.data, y.data))),
   );
 
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
