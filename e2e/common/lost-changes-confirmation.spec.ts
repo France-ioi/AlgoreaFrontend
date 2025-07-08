@@ -13,13 +13,15 @@ test('checks navigation to another tab for item', async ({ page, lostChangesConf
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
-    await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
-    await page.getByRole('textbox').nth(1).fill('Some test');
+    const textboxLocator = page.getByRole('textbox').nth(1);
+    await expect.soft(textboxLocator).toBeVisible();
+    await textboxLocator.fill('Some test');
     await page.getByRole('link', { name: 'Dependencies' }).click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(textboxLocator).toHaveValue('Some test');
   });
 
   await test.step('checks confirm modal', async () => {
@@ -48,13 +50,15 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
-    await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
-    await page.getByRole('textbox').nth(1).fill('Some test');
+    const textboxLocator = page.getByRole('textbox').nth(1);
+    await expect.soft(textboxLocator).toBeVisible();
+    await textboxLocator.fill('Some test');
     await page.locator('alg-left-nav').getByRole('button', { name: 'Groups' }).click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(textboxLocator).toHaveValue('Some test');
   });
 
   await test.step('checks confirm modal', async () => {
@@ -78,13 +82,15 @@ test('checks navigation to another tab for group', async ({ page, lostChangesCon
   await test.step('checks cancel modal', async () => {
     await page.goto('groups/by-id/4035378957038759250;p=/settings');
     await expect.soft(page.getByRole('heading', { name: '!634' })).toBeVisible();
-    await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
-    await page.getByRole('textbox').nth(1).fill('Some test');
+    const textboxLocator = page.getByRole('textbox').nth(1);
+    await expect.soft(textboxLocator).toBeVisible();
+    await textboxLocator.fill('Some test');
     await page.getByRole('link', { name: 'Overview' }).click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
     await expect.soft(page.getByRole('heading', { name: '!634' })).toBeVisible();
+    await expect.soft(textboxLocator).toHaveValue('Some test');
   });
 
   await test.step('checks confirm modal', async () => {
@@ -106,13 +112,15 @@ test('checks navigation to another module for group', async ({ page, lostChanges
   await test.step('checks cancel modal', async () => {
     await page.goto('groups/by-id/4035378957038759250;p=/settings');
     await expect.soft(page.getByRole('heading', { name: '!634' })).toBeVisible();
-    await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
-    await page.getByRole('textbox').nth(1).fill('Some test');
+    const textboxLocator = page.getByRole('textbox').nth(1);
+    await expect.soft(textboxLocator).toBeVisible();
+    await textboxLocator.fill('Some test');
     await page.locator('alg-left-nav').getByRole('button', { name: 'Content' }).click();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
     await expect.soft(page.getByRole('heading', { name: '!634' })).toBeVisible();
+    await expect.soft(textboxLocator).toHaveValue('Some test');
   });
 
   await test.step('checks confirm modal', async () => {
