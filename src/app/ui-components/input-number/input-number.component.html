@@ -1,0 +1,9 @@
+<input
+  class="alg-input"
+  [class]="inputStyleClass()"
+  type="text"
+  [(ngModel)]="value"
+  (ngModelChange)="onInputChange($event)"
+  mask="0*"
+  [suffix]="suffix() || ''"
+/>

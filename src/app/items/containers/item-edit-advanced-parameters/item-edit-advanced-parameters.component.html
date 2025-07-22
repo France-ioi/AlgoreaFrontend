@@ -201,7 +201,7 @@
     </ng-container>
   </div>
 
-  <div *ngIf="item.type !== 'Skill'">
+  <div *ngIf="item.type !== 'Skill'" data-testid="edit-team-section">
     <h2 class="alg-h2 alg-text-normal title" i18n>Team</h2>
     <div class="form-item-view">
       <span class="form-item-label">
@@ -222,7 +222,7 @@
       <div class="form-item-view">
         <span class="form-item-label" i18n>Maximum team size</span>
         <div class="form-item-control">
-          <p-inputNumber class="alg-input-number" formControlName="entry_max_team_size"></p-inputNumber>
+          <alg-input-number formControlName="entry_max_team_size"></alg-input-number>
           <alg-input-error [form]="parentForm" inputName="entry_max_team_size"></alg-input-error>
         </div>
       </div>

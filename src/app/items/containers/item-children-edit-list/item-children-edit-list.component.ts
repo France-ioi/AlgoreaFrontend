@@ -15,7 +15,6 @@ import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PropagationEditMenuComponent } from '../propagation-edit-menu/propagation-edit-menu.component';
 import { AddItemComponent } from '../add-item/add-item.component';
 import { RouterLink } from '@angular/router';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { NgIf, NgClass } from '@angular/common';
@@ -27,6 +26,7 @@ import {
   PropagationAdvancedConfigurationDialogComponent, PropagationAdvancedConfigurationDialogData
 } from 'src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component';
 import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
+import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -39,7 +39,6 @@ import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation
     NgIf,
     TableModule,
     SharedModule,
-    InputNumberModule,
     NgClass,
     RouterLink,
     AddItemComponent,
@@ -51,6 +50,7 @@ import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation
     EmptyContentComponent,
     ButtonIconComponent,
     PropagationAdvancedConfigurationDialogComponent,
+    InputNumberComponent,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {

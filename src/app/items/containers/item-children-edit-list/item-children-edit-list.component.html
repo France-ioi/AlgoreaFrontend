@@ -3,6 +3,7 @@
     <div class="score-weight">
       <span class="score-weight-label alg-base-text-color" i18n>Enable score weight</span>
       <alg-switch
+        data-testid="enable-score-weight"
         [(ngModel)]="scoreWeightEnabled"
         (ngModelChange)="onEnableScoreWeightChange($event)"
       ></alg-switch>
@@ -25,16 +26,16 @@
         <td><p-tableCheckbox [value]="rowData"></p-tableCheckbox></td>
         <ng-container *ngIf="scoreWeightEnabled">
           <td pEditableColumn>
-            <p-cellEditor>
+            <p-cellEditor data-testid="edit-score-weight">
               <ng-template pTemplate="input">
-                <p-inputNumber
-                  [size]="3"
+                <alg-input-number
+                  [style.width.rem]="3"
+                  inputStyleClass="size-s"
                   [(ngModel)]="rowData.scoreWeight"
                   (ngModelChange)="onScoreWeightChange()"
                   [min]="0"
                   [max]="100"
-                  [ariaRequired]="true"
-                ></p-inputNumber>
+                ></alg-input-number>
               </ng-template>
               <ng-template pTemplate="output">
                 x{{ rowData.scoreWeight }}
