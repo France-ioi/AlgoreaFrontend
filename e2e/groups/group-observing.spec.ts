@@ -18,8 +18,8 @@ test('checks when switch group, observation is changed to that new group', async
   await initAsTesterUser(page);
   await page.goto('/groups/by-id/1617087077976582412;p=');
   await expect.soft(page.locator('alg-observation-bar').getByText('E2E_Can_Observe')).toBeVisible();
-  await expect.soft(page.locator('p-treenode').getByText('E2E_Can_Observe_2')).toBeVisible();
-  await page.locator('p-treenode').getByText('E2E_Can_Observe_2').click();
+  await expect.soft(page.locator('cdk-nested-tree-node').getByText('E2E_Can_Observe_2')).toBeVisible();
+  await page.locator('cdk-nested-tree-node').getByText('E2E_Can_Observe_2').click();
   await expect.soft(page.locator('alg-observation-bar').getByText('E2E_Can_Observe_2')).toBeVisible();
 });
 

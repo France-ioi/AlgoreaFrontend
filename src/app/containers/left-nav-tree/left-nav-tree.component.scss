@@ -16,6 +16,34 @@
   }
 }
 
+.tree-nav-container {
+  padding: 0 var(--alg-space-size-5);
+}
+
+.tree-invisible {
+  display: none;
+}
+
+.tree-nested {
+  .tree-node {
+    &:first-child {
+      .tree-nav-dot {
+        &:before {
+          display: none;
+        }
+      }
+    }
+
+    &:last-child {
+      .tree-nav-dot {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
 .tree-nav-wrapper {
   display: flex;
   justify-content: flex-start;
@@ -32,7 +60,7 @@
 
   &.locked {
     .tree-nav-caption {
-      opacity: .5;
+      opacity: .4;
     }
   }
 
@@ -123,4 +151,11 @@
 
 .tree-nav-skill-progress {
   width: toRem(32);
+}
+
+.empty-message {
+  margin-top: var(--alg-space-size-5);
+  padding: 0 var(--alg-space-size-5);
+  text-align: center;
+  color: var(--alg-secondary-color);
 }
