@@ -3,7 +3,6 @@ import { UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '
 import { HOURS } from 'src/app/utils/duration';
 import { ItemRemoveButtonComponent } from '../../containers/item-remove-button/item-remove-button.component';
 import { FormErrorComponent } from 'src/app/ui-components/form-error/form-error.component';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
@@ -13,6 +12,7 @@ import { ItemData } from '../../models/item-data';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { SelectComponent } from 'src/app/ui-components/select/select.component';
 import { SelectOption, SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
+import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -30,13 +30,13 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
     SwitchComponent,
     SelectionComponent,
     DurationComponent,
-    InputNumberModule,
     FormErrorComponent,
     ItemRemoveButtonComponent,
     InputDateComponent,
     DatePipe,
     SelectComponent,
-    SelectOptionComponent
+    SelectOptionComponent,
+    InputNumberComponent
   ],
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {

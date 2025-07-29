@@ -1,7 +1,7 @@
 import { Component, effect, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
 
 @Component({
   selector: 'alg-item-extra-time-input',
@@ -10,8 +10,8 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   standalone: true,
   imports: [
     FormsModule,
-    InputNumberModule,
     ButtonIconComponent,
+    InputNumberComponent,
   ],
 })
 export class ItemExtraTimeInputComponent {

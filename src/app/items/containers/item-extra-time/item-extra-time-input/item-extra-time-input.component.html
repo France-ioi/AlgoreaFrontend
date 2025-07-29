@@ -1,12 +1,11 @@
 <form class="form" (ngSubmit)="onSave()">
-  <p-inputNumber
+  <alg-input-number
     [style.width]="inputWidth() || 'auto'"
-    class="alg-input-number"
     [inputStyleClass]="inputStyleClass()"
     [(ngModel)]="value"
     [ngModelOptions]="{ standalone: true }"
     suffix="s"
-  ></p-inputNumber>
+  ></alg-input-number>
 
   @if (value() !== initialValue()) {
     <button

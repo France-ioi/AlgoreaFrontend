@@ -191,13 +191,17 @@ export class ItemContentPage {
     await expect.soft(this.addItemLocator).toBeVisible();
   }
 
-  async createChildItem(name: string, type = 'Chapter'): Promise<string | undefined> {
+  async addChildItem(name: string, type = 'Chapter'): Promise<void> {
     const inputLocator = this.page.getByPlaceholder('Enter a title to create a new child');
     await expect.soft(inputLocator).toBeVisible();
     await inputLocator.fill(name);
     const classBtnLocator = this.page.locator('alg-add-content').getByText(type);
     await expect.soft(classBtnLocator).toBeVisible();
     await classBtnLocator.click();
+  }
+
+  async createChildItem(name: string, type = 'Chapter'): Promise<string | undefined> {
+    await this.addChildItem(name, type);
     await this.isSaveBtnVisible();
     await this.saveChanges();
     const response = await this.page.waitForResponse(`${apiUrl}/items`);

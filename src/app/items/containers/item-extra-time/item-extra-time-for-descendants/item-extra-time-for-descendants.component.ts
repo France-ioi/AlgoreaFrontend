@@ -6,7 +6,6 @@ import { ExtraTimeService } from 'src/app/items/data-access/extra-time.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { PaginatorModule } from 'primeng/paginator';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
@@ -26,7 +25,6 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
     TableModule,
     ErrorComponent,
     LoadingComponent,
-    InputNumberModule,
     PaginatorModule,
     ReactiveFormsModule,
     ItemExtraTimeInputComponent,
