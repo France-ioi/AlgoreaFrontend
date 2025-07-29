@@ -2,6 +2,7 @@ import { test, expect } from './fixture';
 import { initAsUsualUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
 import { DAYS } from 'src/app/utils/duration';
+import { apiUrl } from 'e2e/helpers/e2e_http';
 
 test.beforeEach(async ({ page, groupSettingsPage }) => {
   await initAsUsualUser(page);
@@ -101,7 +102,8 @@ test('check invalid date validation', { tag: '@no-parallelism' },async ({ page, 
 
   await test.step('clear invalid date and check validation message is gone', async () => {
     await groupSettingsPage.fillDate('');
-    await expect.soft(page.getByTestId('input-date').getByPlaceholder('dd/mm/yyyy hh:mm')).toBeVisible();
+    await expect.soft(page.getByTestId('input-date')).toHaveValue('');
+    await expect.soft(page.getByPlaceholder('dd/mm/yyyy hh:mm')).toBeVisible();
     await page.getByText('Lock membership until a given date').click();
     await expect.soft(page.getByText('Invalid date')).not.toBeVisible();
   });

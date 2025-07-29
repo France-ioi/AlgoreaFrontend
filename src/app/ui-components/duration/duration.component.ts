@@ -1,4 +1,14 @@
-import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Injector,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -12,8 +22,8 @@ import {
 } from '@angular/forms';
 import { Duration, MAX_SECONDS_FORMAT_DURATION, MAX_TIME_FORMAT_DURATION } from 'src/app/utils/duration';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { InputMaskModule } from 'primeng/inputmask';
 import { NgIf } from '@angular/common';
+import { NgxMaskDirective } from 'ngx-mask';
 
 const MAX_HOURS_VALUE = 23;
 const MAX_MINUTES_VALUE = 59;
@@ -36,7 +46,7 @@ const MAX_SECONDS_VALUE = 59;
     },
   ],
   standalone: true,
-  imports: [ NgIf, InputMaskModule, FormsModule, FormErrorComponent ]
+  imports: [ NgIf, FormsModule, FormErrorComponent, NgxMaskDirective ]
 })
 export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
   @Output() change = new EventEmitter<Duration | null>();
@@ -81,12 +91,19 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
     this.control = this.parentForm && this.name
       ? this.parentForm.get(this.name) ?? undefined
       : this.injector.get(NgControl, null)?.control ?? undefined;
-    this.showField = {
-      days: this.layout === 'DHM',
-      hours: this.layout === 'DHM' || this.layout === 'HMS',
-      minutes: this.layout === 'DHM' || this.layout === 'HMS',
-      seconds: this.layout === 'HMS',
-    };
+
+    // Issue due the race condition (probably because of async method in writeValue in ngx-mask) from ngx mask and dirty state on init -
+    // https://github.com/JsDaddy/ngx-mask/issues/1375#issuecomment-2243252405
+    setTimeout(() => {
+      this.showField = {
+        days: this.layout === 'DHM',
+        hours: this.layout === 'DHM' || this.layout === 'HMS',
+        minutes: this.layout === 'DHM' || this.layout === 'HMS',
+        seconds: this.layout === 'HMS',
+      };
+      this.control?.markAsPristine();
+      this.control?.markAsUntouched();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

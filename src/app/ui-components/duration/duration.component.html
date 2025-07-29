@@ -4,65 +4,61 @@
       <p class="label">
         <small i18n>Days</small>
       </p>
-      <p-inputMask
+      <input
         class="alg-input"
+        data-testid="input-date"
+        mask="9||99||999"
         placeholder="DDD"
-        slotChar="DDD"
-        mask="9?99"
-        [unmask]="true"
-        [size]="8"
         [(ngModel)]="days"
+        [dropSpecialCharacters]="false"
+        [clearIfNotMatch]="true"
         (ngModelChange)="handleChange()"
-      >
-      </p-inputMask>
+      />
     </div>
     <div class="element alg-flex-1" *ngIf="showField.hours">
       <p class="label">
         <small i18n>Hours</small>
       </p>
-      <p-inputMask
+      <input
         class="alg-input"
+        data-testid="input-date"
+        [mask]="showField.days ?  '0||00' : '0||00||000'"
         [placeholder]="showField.days ? 'HH' : 'HHH'"
-        [slotChar]="showField.days ? 'HH' : 'HHH'"
-        [mask]="showField.days ? '9?9' : '9?99'"
-        [unmask]="true"
-        [size]="8"
         [(ngModel)]="hours"
+        [dropSpecialCharacters]="false"
+        [clearIfNotMatch]="true"
         (ngModelChange)="handleChange()"
-      >
-      </p-inputMask>
+      />
     </div>
     <div class="element alg-flex-1" *ngIf="showField.minutes">
       <p class="label">
         <small i18n>Minutes</small>
       </p>
-      <p-inputMask
+      <input
         class="alg-input"
+        data-testid="input-date"
+        mask="0||00"
         placeholder="MM"
-        slotChar="MM"
-        mask="9?9"
-        [unmask]="true"
-        [size]="8"
         [(ngModel)]="minutes"
+        [dropSpecialCharacters]="false"
+        [clearIfNotMatch]="true"
         (ngModelChange)="handleChange()"
-      >
-      </p-inputMask>
+      />
     </div>
     <div class="element alg-flex-1" *ngIf="showField.seconds">
       <p class="label">
         <small i18n>Seconds</small>
       </p>
-      <p-inputMask
+      <input
         class="alg-input"
+        data-testid="input-date"
+        mask="0||00"
         placeholder="SS"
-        slotChar="SS"
-        mask="9?9"
-        [unmask]="true"
-        [size]="8"
         [(ngModel)]="seconds"
+        [dropSpecialCharacters]="false"
+        [clearIfNotMatch]="true"
         (ngModelChange)="handleChange()"
-      >
-      </p-inputMask>
+      />
     </div>
   </div>
   <alg-input-error [control]="control"></alg-input-error>

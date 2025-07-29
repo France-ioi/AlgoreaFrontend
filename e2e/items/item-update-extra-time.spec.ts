@@ -10,7 +10,7 @@ test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page,
     .locator('tr')
     .filter({ has: page.getByText('usr_5p020x2thuyu') })
     .first();
-  const inputLocator = targetRow.getByRole('spinbutton');
+  const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   const totalAdditionalTimeLocator = targetRow.getByTestId('total-additional-time');
   const currentTotalAdditionalTimeValue = await totalAdditionalTimeLocator.innerText();
   const saveBtnLocator = targetRow.getByTestId('item-extra-time-save-btn');
@@ -50,7 +50,7 @@ test('checks failure to update item extra time', async ({ page, toast }) => {
     .filter({ has: page.getByText('usr_5p020x2thuyu') })
     .first();
   await expect.soft(targetRow).toBeVisible();
-  const inputLocator = targetRow.getByRole('spinbutton');
+  const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   await expect.soft(inputLocator).toBeVisible();
   await inputLocator.dblclick();
   await page.keyboard.press('Backspace');
@@ -69,7 +69,7 @@ test('checks update item extra time for group', { tag: '@no-parallelism' }, asyn
   await initAsUsualUser(page);
   await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0/extra-time?watchedGroupId=672913018859223173');
   const targetRow = page.getByTestId('extra-time-for-group');
-  const inputLocator = targetRow.getByRole('spinbutton');
+  const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   const totalAdditionalTimeLocator = targetRow.getByTestId('total-additional-time');
   const saveBtnLocator = targetRow.getByTestId('item-extra-time-save-btn');
   const value = String(Math.floor(Math.random() * 10) + 1);
@@ -100,7 +100,7 @@ test('checks failure to update item extra time for group', async ({ page, toast 
   await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0/extra-time?watchedGroupId=672913018859223173');
   const targetRow = page.getByTestId('extra-time-for-group');
   await expect.soft(targetRow).toBeVisible();
-  const inputLocator = targetRow.getByRole('spinbutton');
+  const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   await expect.soft(inputLocator).toBeVisible();
   await inputLocator.dblclick();
   await page.keyboard.press('Backspace');

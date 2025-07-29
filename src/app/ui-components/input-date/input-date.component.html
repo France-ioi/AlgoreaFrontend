@@ -1,13 +1,15 @@
-<p-inputMask
+<input
   class="alg-input"
   data-testid="input-date"
-  mask="99/99/9999 99:99"
+  [mask]="mask()"
   placeholder="dd/mm/yyyy hh:mm"
-  slotChar="dd/mm/yyyy hh:mm"
   [(ngModel)]="input"
+  [dropSpecialCharacters]="false"
+  [clearIfNotMatch]="true"
   (ngModelChange)="onInputChange($event)"
-  (onComplete)="onComplete()"
-></p-inputMask>
+  (blur)="onBlur()"
+/>
+
 @if (control) {
   <alg-input-error [control]="control"></alg-input-error>
 }
