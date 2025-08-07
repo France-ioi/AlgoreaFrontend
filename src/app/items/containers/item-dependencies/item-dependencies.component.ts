@@ -3,7 +3,6 @@ import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequi
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { map, share } from 'rxjs/operators';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ItemData } from '../../models/item-data';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType } from 'src/app/items/models/item-type';
@@ -36,7 +35,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     NgFor,
     RouterLink,
     AddDependencyComponent,
-    OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
     ItemRoutePipe,

@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren } from '@angular/core';
 import { ItemData } from '../../models/item-data';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -30,7 +29,6 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
     NgFor,
     ScoreRingComponent,
     RouterLink,
-    OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
     ItemRoutePipe,

@@ -8,7 +8,6 @@ import {
 import { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DataPager } from 'src/app/utils/data-pager';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { LogActionDisplayPipe } from 'src/app/pipes/logActionDisplay';
@@ -46,7 +45,6 @@ const logsLimit = 20;
     ScoreRingComponent,
     NgClass,
     RouterLink,
-    OverlayPanelModule,
     PathSuggestionComponent,
     AsyncPipe,
     DatePipe,

@@ -72,6 +72,7 @@
             [algShowOverlay]="op"
             (overlayOpenEvent)="itemId.set(rowData.item.id)"
             (overlayCloseEvent)="itemId.set(undefined)"
+            #overlay="algShowOverlay"
           >
             <a
               class="alg-link"
@@ -81,6 +82,9 @@
             >
               {{ rowData.item.string.title }}
             </a>
+            <ng-template #op>
+              <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+            </ng-template>
           </td>
           <td *ngIf="this.showUserColumn">
             @if (rowData.user) {
@@ -118,12 +122,3 @@
     </p-table>
   </ng-container>
 </ng-container>
-
-<p-overlayPanel
-  styleClass="alg-path-suggestion-overlay"
-  #op
->
-  <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
-  </ng-container>
-</p-overlayPanel>

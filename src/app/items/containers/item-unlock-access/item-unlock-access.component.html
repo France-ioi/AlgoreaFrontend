@@ -20,6 +20,7 @@
         [algShowOverlay]="op"
         (overlayOpenEvent)="itemId.set(item.id)"
         (overlayCloseEvent)="itemId.set(undefined)"
+        #overlay="algShowOverlay"
       >
         <div class="list-item-left">
           <span class="activity-progress">
@@ -38,16 +39,11 @@
           </a>
         </div>
         <i class="lock-icon ph-duotone ph-lock" *ngIf="item.isLocked"></i>
+        <ng-template #op>
+          <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+        </ng-template>
       </li>
     </ul>
 
-    <p-overlayPanel
-      styleClass="alg-path-suggestion-overlay"
-      #op
-    >
-      <ng-container *ngIf="op.overlayVisible">
-        <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
-      </ng-container>
-    </p-overlayPanel>
   </ng-container>
 </ng-container>

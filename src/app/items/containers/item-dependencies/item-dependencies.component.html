@@ -25,6 +25,7 @@
               [algShowOverlay]="op"
               (overlayOpenEvent)="itemId.set(item.id)"
               (overlayCloseEvent)="itemId.set(undefined)"
+              #overlay="algShowOverlay"
             >
               <a
                 class="alg-link"
@@ -40,6 +41,9 @@
                 (click)="onRemove(item.id)"
                 alg-button-icon
               ></button>
+              <ng-template #op>
+                <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+              </ng-template>
             </li>
           </ul>
           <p class="note-caption" i18n>
@@ -78,11 +82,12 @@
       <ng-container *ngIf="state.data.length > 0; else noOtherContent">
         <ul class="list">
           <li
-              class="list-item"
-              *ngFor="let item of state.data; let i = index"
-              [algShowOverlay]="op"
-              (overlayOpenEvent)="itemId.set(item.id)"
-              (overlayCloseEvent)="itemId.set(undefined)"
+            class="list-item"
+            *ngFor="let item of state.data; let i = index"
+            [algShowOverlay]="op"
+            (overlayOpenEvent)="itemId.set(item.id)"
+            (overlayCloseEvent)="itemId.set(undefined)"
+            #overlay="algShowOverlay"
           >
             <a
                 class="alg-link list-item-link"
@@ -91,6 +96,9 @@
             >
               {{ item.string.title }}
             </a>
+            <ng-template #op>
+              <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+            </ng-template>
           </li>
         </ul>
         <p class="note-caption" i18n>
@@ -117,16 +125,4 @@
   <ng-template #notAllowToView>
     <alg-error icon="ph ph-prohibit" i18n>You are not allowed to view dependencies for this content</alg-error>
   </ng-template>
-
-  <p-overlayPanel
-    styleClass="alg-path-suggestion-overlay"
-    #op
-  >
-    <ng-container *ngIf="op.overlayVisible">
-      <alg-path-suggestion
-        [itemId]="itemId()"
-        (resize)="op.align()"
-      ></alg-path-suggestion>
-    </ng-container>
-  </p-overlayPanel>
 </ng-container>

@@ -78,6 +78,7 @@
           [algShowOverlay]="op"
           (overlayOpenEvent)="itemId.set(item.id)"
           (overlayCloseEvent)="itemId.set(undefined)"
+          #overlay="algShowOverlay"
         >
           <div class="add-content-list-left">
             <span class="add-content-type">{{ item.type }}</span>
@@ -98,6 +99,9 @@
               (click)="addExisting(item)"
             >{{ addedIds.includes(item.id || '') ? addedText : selectExistingText }}</button>
           </div>
+          <ng-template #op>
+            <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+          </ng-template>
         </li>
       </ul>
       <ng-template #emptyMessage>
@@ -109,12 +113,3 @@
     </div>
   </ng-container>
 </ng-template>
-
-<p-overlayPanel
-  styleClass="alg-path-suggestion-overlay"
-  #op
->
-  <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
-  </ng-container>
-</p-overlayPanel>
