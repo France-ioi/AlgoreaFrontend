@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, signal } from '@angular/core';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
@@ -27,6 +26,8 @@ import {
 } from 'src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component';
 import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
 import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
+import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -42,7 +43,6 @@ import { InputNumberComponent } from 'src/app/ui-components/input-number/input-n
     NgClass,
     RouterLink,
     AddItemComponent,
-    OverlayPanelModule,
     PropagationEditMenuComponent,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
@@ -51,6 +51,8 @@ import { InputNumberComponent } from 'src/app/ui-components/input-number/input-n
     ButtonIconComponent,
     PropagationAdvancedConfigurationDialogComponent,
     InputNumberComponent,
+    CdkMenuTrigger,
+    CdkMenu,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
@@ -58,8 +60,6 @@ export class ItemChildrenEditListComponent implements OnChanges {
   @Input() type: ItemTypeCategory = 'activity';
   @Input() data: PossiblyInvisibleChildData[] = [];
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
-
-  @ViewChild('op') op?: OverlayPanel;
 
   selectedRows: PossiblyInvisibleChildData[] = [];
   scoreWeightEnabled = false;
@@ -70,6 +70,15 @@ export class ItemChildrenEditListComponent implements OnChanges {
     childIdx: number,
     data: PropagationAdvancedConfigurationDialogData,
   } | undefined>(undefined);
+  propagationEditMenuPositions = signal<ConnectedPosition[]>([{
+    originX: 'end',
+    originY: 'bottom',
+    overlayX: 'end',
+    overlayY: 'top',
+    offsetX: 10,
+    offsetY: 10,
+    panelClass: 'alg-top-right-triangle',
+  }]);
 
   constructor() {
   }
@@ -124,7 +133,6 @@ export class ItemChildrenEditListComponent implements OnChanges {
 
   openPropagationEditMenu(event: MouseEvent, itemIdx: number): void {
     this.propagationEditItemIdx = itemIdx;
-    this.op?.toggle(event);
   }
 
   emitChildPermPropagations(propagations: Partial<ItemPermPropagations>, childIdx: number): void {
@@ -142,7 +150,6 @@ export class ItemChildrenEditListComponent implements OnChanges {
   }
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content', childIdx: number): void {
-    this.op?.hide();
     this.emitChildPermPropagations({ contentViewPropagation }, childIdx);
     this.propagationEditItemIdx = undefined;
   }
