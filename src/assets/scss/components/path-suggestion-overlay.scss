@@ -1,42 +1,16 @@
 @import 'src/assets/scss/functions';
 
-.alg-menu-overlay {
-  min-width: 30rem;
-  max-width: 50rem;
-  background-color: var(--alg-primary-color);
-  border-radius: toRem(10);
-  border: none;
-
-  &:not(.p-overlaypanel-flipped) {
-    &:before {
-      margin-bottom: toRem(-1);
-      border-bottom-color: var(--alg-primary-color);
-    }
-
-    &:after {
-      margin-bottom: toRem(-1);
-      border-bottom-color: var(--alg-primary-color);
-    }
-  }
-
-  &.p-overlaypanel-flipped {
-    &:before {
-      margin-top: toRem(-1);
-      border-top-color: var(--alg-primary-color);
-    }
-
-    &:after {
-      margin-top: toRem(-1);
-      border-top-color: var(--alg-primary-color);
-    }
-  }
-
-  .p-overlaypanel-content {
-    padding: 0 0 toRem(3) 0;
-  }
-
-  @media screen and (max-width: 1100px) {
-    max-width: 40rem;
+.alg-top-right-triangle {
+  &:after {
+    position: absolute;
+    top: toRem(-20);
+    right: toRem(10);
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: transparent transparent var(--alg-primary-color) transparent;
   }
 }
 

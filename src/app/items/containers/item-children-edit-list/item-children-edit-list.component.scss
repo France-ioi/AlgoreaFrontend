@@ -36,3 +36,15 @@
 .score-weight-label {
   margin-right: 1rem;
 }
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--alg-primary-color);
+  border-radius: toRem(10);
+  border: none;
+  overflow: hidden;
+  box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
+}
