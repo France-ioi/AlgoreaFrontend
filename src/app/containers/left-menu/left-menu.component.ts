@@ -34,11 +34,13 @@ export class LeftMenuComponent implements OnDestroy {
     if (!scrollbarDirectiveRef) return;
     const scrollbarElement = scrollbarDirectiveRef.nativeElement;
     const menuItemEl = scrollbarElement.querySelector<HTMLElement>(`#nav-${ id }`);
-
     if (!menuItemEl) return;
 
-    if ((menuItemEl.offsetTop + menuItemEl.offsetHeight) >= (scrollbarElement.offsetHeight + scrollbarElement.offsetTop)
-      || menuItemEl.offsetTop - scrollbarElement.offsetTop <= 0) {
+    const menuItemRect = menuItemEl.getBoundingClientRect();
+    const scrollbarElementRect = scrollbarElement.getBoundingClientRect();
+
+    if ((menuItemRect.y + menuItemRect.height) >= (scrollbarElementRect.y + scrollbarElementRect.height)
+      || (menuItemRect.y - menuItemRect.y) <= 0) {
       void scrollbarDirectiveRef.scrollToElement(`#nav-${ id }`);
     }
   }

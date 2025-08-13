@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { TreeModule } from 'primeng/tree';
 import { AccordionModule } from 'primeng/accordion';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -64,7 +63,6 @@ bootstrapApplication(AppComponent, {
       BreadcrumbModule,
       AccordionModule,
       NgScrollbarModule,
-      TreeModule,
       TooltipModule,
       DialogModule,
       MenuModule,

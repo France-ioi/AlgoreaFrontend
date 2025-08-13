@@ -21,6 +21,6 @@ test('checks history tab is not visible', async ({ page, groupHistoryPage }) => 
 test('checks switch between history tabs', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('a/home;pa=0/progress/history');
-  await page.locator('p-treenode').getByText(' Item Title! ').click();
+  await page.locator('cdk-nested-tree-node').getByText(' Item Title! ').click();
   await expect.soft(page).toHaveURL('a/6707691810849260111;p=;a=0;pa=0/progress/history');
 });

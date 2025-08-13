@@ -10,7 +10,7 @@ test('check unlocked items and navigate to first one', async ({ page }) => {
   await mainContentWrapperLocator.evaluate(node =>
     node.scrollBy({ top: node.scrollHeight })
   );
-  await expect.soft(page.locator('p-treenode').getByText('Long text task (opentezos-like)')).toBeVisible();
+  await expect.soft(page.locator('cdk-nested-tree-node').getByText('Long text task (opentezos-like)')).toBeVisible();
   await expect.soft(page.getByText('Unlocked content')).toBeVisible();
   const firstUnlockedItem = page.getByText('Chapter unlocked by other tasks');
   await expect.soft(firstUnlockedItem).toBeVisible();
@@ -28,7 +28,7 @@ test('check unlocked items and stay on current task', async ({ page }) => {
   await mainContentWrapperLocator.evaluate(node =>
     node.scrollBy({ top: node.scrollHeight })
   );
-  await expect.soft(page.locator('p-treenode').getByText('Long text task (opentezos-like)')).toBeVisible();
+  await expect.soft(page.locator('cdk-nested-tree-node').getByText('Long text task (opentezos-like)')).toBeVisible();
   await expect.soft(page.getByText('Unlocked content')).toBeVisible();
   const continueBtnLocator = page.getByText('Continue on the current content');
   await expect.soft(continueBtnLocator).toBeVisible();

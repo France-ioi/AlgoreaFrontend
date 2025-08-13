@@ -19,7 +19,7 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
     page.waitForResponse(`${apiUrl}/groups/${rootGroupId}/navigation`),
   ]);
   await groupMembersPage.checksIsHeaderVisible(rootGroupName);
-  const leftNavRootGroup = page.locator('p-treenode').filter({ has: page.getByText(rootGroupName) });
+  const leftNavRootGroup = page.locator('cdk-nested-tree-node').filter({ has: page.getByText(rootGroupName) });
   await expect.soft(leftNavRootGroup).toBeVisible();
   const regExpGroup = /E2E_Group_\d{13}/;
   const leftNavFirstChild = leftNavRootGroup.getByText(regExpGroup).first();
@@ -38,7 +38,7 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
   await leftNavFirstChild.click();
 
   for (const groupName of groupNamesForRemove) {
-    const leftNavGroupLocator = page.locator('p-tree').getByText(groupName).first();
+    const leftNavGroupLocator = page.locator('cdk-nested-tree-node').getByText(groupName).first();
     await expect.soft(leftNavGroupLocator).toBeVisible();
     await leftNavGroupLocator.click();
     const settingsTabLocator = page.getByRole('link', { name: 'Settings' });

@@ -16,7 +16,7 @@ test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ 
     page.waitForResponse(`${apiUrl}/items/${rootItemId}/navigation?attempt_id=0`)
   ]);
   await itemContentPage.checksIsTitleVisible(rootItemName);
-  const leftNavRootItem = page.locator('p-treenode').filter({ has: page.getByText(rootItemName) });
+  const leftNavRootItem = page.locator('cdk-nested-tree-node').filter({ has: page.getByText(rootItemName) });
   const regExpItem = /E2E_Item_\d{13}/;
 
   const itemNamesForRemove = (await Promise.all((await leftNavRootItem.getByText(regExpItem).all())
@@ -30,7 +30,7 @@ test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ 
     });
 
   for (const itemName of itemNamesForRemove) {
-    const targetItemLocator = page.locator('p-tree').getByText(itemName.trim()).first();
+    const targetItemLocator = page.locator('cdk-nested-tree-node').getByText(itemName.trim()).first();
     await expect.soft(targetItemLocator).toBeVisible();
     await targetItemLocator.click();
     await expect.soft(page.locator('alg-left-menu-back-button').getByText(rootItemName)).toBeVisible();
