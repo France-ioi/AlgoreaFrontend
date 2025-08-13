@@ -1,6 +1,5 @@
 import { SimpleChanges } from '@angular/core';
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -33,7 +32,6 @@ export interface ProgressData {
   styleUrls: [ './user-progress-details.component.scss' ],
   standalone: true,
   imports: [
-    OverlayPanelModule,
     SharedModule,
     NgIf,
     ScoreRingComponent,
