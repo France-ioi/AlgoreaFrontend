@@ -12,6 +12,75 @@
     border-style: solid;
     border-color: transparent transparent var(--alg-primary-color) transparent;
   }
+
+  &.grey {
+    &:after {
+      border-color: transparent transparent var(--alg-border-color) transparent;
+    }
+  }
+}
+
+.alg-top-center-triangle {
+  &:after {
+    position: absolute;
+    top: toRem(-20);
+    margin-left: toRem(-10);
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: transparent transparent var(--alg-primary-color) transparent;
+  }
+
+  &.grey {
+    &:after {
+      border-color: transparent transparent var(--alg-border-color) transparent;
+    }
+  }
+}
+
+.alg-bottom-center-triangle {
+  &:after {
+    position: absolute;
+    bottom: toRem(-20);
+    margin-left: toRem(-10);
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: var(--alg-primary-color) transparent transparent transparent;
+  }
+
+  &.grey {
+    &:after {
+      border-color: var(--alg-border-color) transparent transparent transparent;
+    }
+  }
+}
+
+.alg-left-center-triangle {
+  &:after {
+    position: absolute;
+    right: toRem(-20);
+    margin-top: toRem(-10);
+    top: 50%;
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: transparent transparent transparent var(--alg-primary-color);
+  }
+
+  &.grey {
+    &:after {
+      border-color: transparent transparent transparent var(--alg-border-color);
+    }
+  }
 }
 
 .alg-path-suggestion-overlay {
