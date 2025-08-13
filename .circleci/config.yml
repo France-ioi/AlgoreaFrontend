@@ -21,7 +21,6 @@ commands:
           to: s3://<< parameters.bucket >><< parameters.path >>
           overwrite: false
           arguments: >-
-            --acl public-read
             --exclude "*/index.html"
             --exclude "*/assets/config.js"
             --cache-control 'max-age=31536000'
@@ -29,32 +28,45 @@ commands:
           from:  << parameters.from >>index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/index.html
           arguments: >-
-            --acl public-read
             --cache-control 'max-age=300'
       - aws-s3/copy:
           from:  << parameters.from >>en/index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/en/index.html
           arguments: >-
-            --acl public-read
             --cache-control 'max-age=10'
       - aws-s3/copy:
           from:  << parameters.from >>fr/index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/fr/index.html
           arguments: >-
-            --acl public-read
             --cache-control 'max-age=10'
       - aws-s3/copy:
           from:  << parameters.from >>en/assets/config.js
           to: s3://<< parameters.bucket >><< parameters.path >>/en/assets/config.js
           arguments: >-
-            --acl public-read
             --cache-control 'max-age=10'
       - aws-s3/copy:
           from:  << parameters.from >>fr/assets/config.js
           to: s3://<< parameters.bucket >><< parameters.path >>/fr/assets/config.js
           arguments: >-
-            --acl public-read
             --cache-control 'max-age=10'
+
+  deploy-to-s3-v2:
+    parameters:
+      # from current dir, with trailing slash
+      from:
+        type: string
+      bucket:
+        type: string
+      # starting with a slash, no trailing slash
+      path:
+        type: string
+    steps:
+      - aws-s3/sync:
+          from: << parameters.from >>
+          to: s3://<< parameters.bucket >><< parameters.path >>
+          overwrite: false
+          arguments: >-
+            --cache-control 'max-age=31536000'
 
   build:
     parameters:
@@ -64,10 +76,16 @@ commands:
       # path (from the root of the domain) where it will be deployed (with heading and trailing slash)
       path:
         type: string
+      # domain on which the assets are served
+      assetDomain:
+        type: string
+      # domain on which the assets are served
+      baseHref:
+        type: string
     steps:
       - run: echo "export const version = '`git describe --always`';" > ./src/version.ts
-      - run: npm run injectDeployUrlForAssets --url='//assets.algorea.org<< parameters.path >><< parameters.lang >>/'
-      - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.path >> --deploy-url //assets.algorea.org<< parameters.path >><< parameters.lang >>/ --progress=false
+      - run: npm run injectDeployUrlForAssets --url='//<< parameters.assetDomain >><< parameters.path >>'
+      - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.baseHref >> --deploy-url //<< parameters.assetDomain >><< parameters.path >> --progress=false
       - run: npm run postBuild
 
 jobs:
@@ -106,7 +124,9 @@ jobs:
           at: ./
       - build:
           lang: en
-          path: /branch/<< pipeline.git.branch >>/
+          path: /branch/<< pipeline.git.branch >>/en/
+          assetDomain: assets.algorea.org
+          baseHref: /branch/<< pipeline.git.branch >>/
       - persist_to_workspace:
           root: ./
           paths:
@@ -119,7 +139,9 @@ jobs:
           at: ./
       - build:
           lang: fr
-          path: /branch/<< pipeline.git.branch >>/
+          path: /branch/<< pipeline.git.branch >>/fr/
+          assetDomain: assets.algorea.org
+          baseHref: /branch/<< pipeline.git.branch >>/
       - persist_to_workspace:
           root: ./
           paths:
@@ -132,7 +154,9 @@ jobs:
           at: ./
       - build:
           lang: en
-          path: /
+          path: /en/
+          assetDomain: assets.algorea.org
+          baseHref: /
       - persist_to_workspace:
           root: ./
           paths:
@@ -145,7 +169,41 @@ jobs:
           at: ./
       - build:
           lang: fr
-          path: /
+          path: /fr/
+          assetDomain: assets.algorea.org
+          baseHref: /
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea/browser/fr
+
+  build-version-en:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - build:
+          lang: en
+          path: /frontend/assets/common/
+          assetDomain: static5.algorea.org
+          baseHref: /
+      - run:
+          command: npx sentry-cli sourcemaps inject --org france-ioi --project algorea ./dist/algorea/browser/en && npx sentry-cli sourcemaps upload --org france-ioi --project algorea ./dist/algorea/browser/en
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - dist/algorea/browser/en
+
+  build-version-fr:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - build:
+          lang: fr
+          path: /frontend/assets/common/
+          assetDomain: static5.algorea.org
+          baseHref: /
       - persist_to_workspace:
           root: ./
           paths:
@@ -294,11 +352,29 @@ jobs:
           bucket: $DEPLOYMENT_BUCKET
           path: ""
 
+  deploy-version:
+    docker:
+      - image: 'circleci/python:2.7'
+    environment:
+      AWS_REGION: eu-central-1
+    steps:
+      - attach_workspace:
+          at: ./
+      - deploy-to-s3-v2:
+          from: ./dist/algorea/browser/
+          bucket: $FRONTEND_PUBLIC_BUCKET
+          path: /frontend/releases/<< pipeline.git.tag >>/
+
 workflows:
   version: 2
   default:
     jobs:
-      - deps
+      - deps:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              only: /.*/
       - lint:
           requires:
           - deps
@@ -370,3 +446,31 @@ workflows:
           filters:
             branches:
               only: master
+      - build-version-en:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              ignore: /.*/
+          requires:
+            - deps
+          context: sentry-sourcemaps
+      - build-version-fr:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              ignore: /.*/
+          requires:
+            - deps
+          context: sentry-sourcemaps
+      - deploy-version:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              ignore: /.*/
+          requires:
+            - build-version-en
+            - build-version-fr
+          context: aws-prod
