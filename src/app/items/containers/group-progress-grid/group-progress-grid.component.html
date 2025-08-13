@@ -30,12 +30,15 @@
         </alg-error>
       </p>
 
-      <alg-user-progress-details
-        [canEditPermissions]="canAccess"
-        [progressData]="progressOverlay"
-        (hide)="hideProgressDetail()"
-        (editPermissions)="onAccessPermissions()"
-      ></alg-user-progress-details>
+      <ng-template #menu>
+        <div class="menu" cdkMenu (closed)="hideProgressDetail()">
+          <alg-user-progress-details
+            [canEditPermissions]="canAccess"
+            [progressData]="progressOverlay"
+            (editPermissions)="onAccessPermissions()"
+          ></alg-user-progress-details>
+        </div>
+      </ng-template>
 
       <ng-container *ngIf="rowsState.data && columnsState.data && rowsState.data.length > 0">
         <div class="operations">
@@ -99,15 +102,15 @@
                 <td
                   class="cursor-pointer user-progress"
                   *ngFor="let col of columns; let colIndex = index"
-                  (click)="showProgressDetail(overlayTarget, row.data[colIndex], row, col)"
+                  (click)="showProgressDetail(row.data[colIndex], row, col)"
+                  [cdkMenuTriggerFor]="menu"
+                  [cdkMenuPosition]="progressDetailMenuPositions()"
+                  data-testid="user-progress-tooltip-target"
                 >
                   <alg-user-progress
                     *ngIf="row.data[colIndex]"
                     [userProgress]="row.data[colIndex]"
                   ></alg-user-progress>
-                  <div class="overlay-target" data-testid="user-progress-tooltip-target">
-                    <span class="overlay-position" #overlayTarget></span>
-                  </div>
                 </td>
               </tr>
             </ng-template>
