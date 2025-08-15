@@ -183,7 +183,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       originY: 'top',
       overlayX: 'center',
       overlayY: 'bottom',
-      offsetY: -10,
+      offsetY: -40,
       panelClass: [ 'alg-bottom-center-triangle', 'grey' ],
     },
     {
