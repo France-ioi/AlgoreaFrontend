@@ -20,6 +20,26 @@
   }
 }
 
+.alg-bottom-right-triangle {
+  &:after {
+    position: absolute;
+    bottom: toRem(-20);
+    right: toRem(10);
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: var(--alg-primary-color) transparent transparent transparent;
+  }
+
+  &.grey {
+    &:after {
+      border-color: var(--alg-border-color) transparent transparent transparent;
+    }
+  }
+}
+
 .alg-top-center-triangle {
   &:after {
     position: absolute;

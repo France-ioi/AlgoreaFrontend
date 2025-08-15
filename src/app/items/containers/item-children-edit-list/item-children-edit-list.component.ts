@@ -70,15 +70,26 @@ export class ItemChildrenEditListComponent implements OnChanges {
     childIdx: number,
     data: PropagationAdvancedConfigurationDialogData,
   } | undefined>(undefined);
-  propagationEditMenuPositions = signal<ConnectedPosition[]>([{
-    originX: 'end',
-    originY: 'bottom',
-    overlayX: 'end',
-    overlayY: 'top',
-    offsetX: 10,
-    offsetY: 10,
-    panelClass: 'alg-top-right-triangle',
-  }]);
+  propagationEditMenuPositions = signal<ConnectedPosition[]>([
+    {
+      originX: 'end',
+      originY: 'bottom',
+      overlayX: 'end',
+      overlayY: 'top',
+      offsetX: 10,
+      offsetY: 10,
+      panelClass: 'alg-top-right-triangle',
+    },
+    {
+      originX: 'end',
+      originY: 'top',
+      overlayX: 'end',
+      overlayY: 'bottom',
+      offsetX: 10,
+      offsetY: -42,
+      panelClass: 'alg-bottom-right-triangle',
+    },
+  ]);
 
   constructor() {
   }
