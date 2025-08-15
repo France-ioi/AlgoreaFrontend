@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { SearchResponse } from '../../data-access/search.service';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from '../path-suggestion/path-suggestion.component';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { MessageInfoComponent } from '../../ui-components/message-info/message-info.component';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 
@@ -24,9 +23,7 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
     RouterLinkActive,
     RouterLink,
     NgClass,
-    OverlayPanelModule,
     PathSuggestionComponent,
-    AsyncPipe,
     ItemRoutePipe,
     RouteUrlPipe,
     ShowOverlayDirective,

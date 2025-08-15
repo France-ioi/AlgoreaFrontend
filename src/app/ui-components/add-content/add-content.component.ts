@@ -8,8 +8,7 @@ import { FetchState } from '../../utils/state';
 import { LoadingComponent } from '../loading/loading.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputComponent } from '../input/input.component';
-import { NgIf, NgClass, NgFor, SlicePipe, AsyncPipe } from '@angular/common';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { NgIf, NgClass, NgFor, SlicePipe } from '@angular/common';
 import { PathSuggestionComponent } from '../../containers/path-suggestion/path-suggestion.component';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
@@ -46,9 +45,7 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     LoadingComponent,
     NgFor,
     SlicePipe,
-    OverlayPanelModule,
     PathSuggestionComponent,
-    AsyncPipe,
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
     ButtonComponent,

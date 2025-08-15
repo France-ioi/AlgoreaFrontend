@@ -24,10 +24,12 @@
 <ng-container *ngFor="let item of data;">
   <div class="container">
     <ul class="result-list alg-search-result">
-      <li class="result-list-item"
-          [algShowOverlay]="op"
-          (overlayOpenEvent)="itemId.set(item.id)"
-          (overlayCloseEvent)="itemId.set(undefined)"
+      <li
+        class="result-list-item"
+        [algShowOverlay]="op"
+        (overlayOpenEvent)="itemId.set(item.id)"
+        (overlayCloseEvent)="itemId.set(undefined)"
+        #overlay="algShowOverlay"
       >
         <a class="result-list-link" [routerLink]="item | itemRoute | url" routerLinkActive="selected">
           <i
@@ -45,17 +47,12 @@
         <div class="result-list-description-wrapper" *ngIf="item.highlights.length > 0">
           <p class="result-list-description" *ngFor="let highlight of item.highlights" [innerHTML]="highlight"></p>
         </div>
+        <ng-template #op>
+          <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+        </ng-template>
       </li>
     </ul>
   </div>
 </ng-container>
 
-<p-overlayPanel
-  styleClass="alg-path-suggestion-overlay"
-  #op
->
-  <ng-container *ngIf="op.overlayVisible">
-    <alg-path-suggestion [itemId]="itemId()"></alg-path-suggestion>
-  </ng-container>
-</p-overlayPanel>
 
