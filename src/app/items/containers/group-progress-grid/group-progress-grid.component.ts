@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, signal, SimpleChanges } from '@angular/core';
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
@@ -37,6 +37,8 @@ import { NgIf, NgSwitch, NgSwitchCase, NgFor, AsyncPipe } from '@angular/common'
 import { CompositionFilterComponent } from '../../containers/composition-filter/composition-filter.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 
 const progressListLimit = 25;
 
@@ -116,7 +118,9 @@ interface ProgressDataDialog {
     RouteUrlPipe,
     GroupLinkPipe,
     ButtonComponent,
-    ButtonIconComponent
+    ButtonIconComponent,
+    CdkMenuTrigger,
+    CdkMenu,
   ],
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
@@ -165,6 +169,33 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   rows$ = this.datapager.list$;
 
+  progressDetailMenuPositions = signal<ConnectedPosition[]>([
+    {
+      originX: 'center',
+      originY: 'bottom',
+      overlayX: 'center',
+      overlayY: 'top',
+      offsetY: 10,
+      panelClass: [ 'alg-top-center-triangle', 'grey' ],
+    },
+    {
+      originX: 'center',
+      originY: 'top',
+      overlayX: 'center',
+      overlayY: 'bottom',
+      offsetY: -40,
+      panelClass: [ 'alg-bottom-center-triangle', 'grey' ],
+    },
+    {
+      originX: 'start',
+      originY: 'center',
+      overlayX: 'end',
+      overlayY: 'center',
+      offsetX: -10,
+      panelClass: [ 'alg-left-center-triangle', 'grey' ],
+    },
+  ]);
+
   constructor(
     private getItemChildrenService: GetItemChildrenService,
     private getGroupDescendantsService: GetGroupDescendantsService,
@@ -194,7 +225,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     return row.id;
   }
 
-  showProgressDetail(target: HTMLElement, userProgress: Progress, row: DataRow, col: DataColumn): void {
+  showProgressDetail(userProgress: Progress, row: DataRow, col: DataColumn): void {
     if (!this.itemData) {
       throw new Error('Unexpected: Missed item data');
     }
@@ -204,7 +235,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     const attemptId = this.itemData.currentResult?.attemptId;
     if (!attemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
     this.progressOverlay = {
-      target,
       progress: userProgress,
       colItem: {
         type: col.type,

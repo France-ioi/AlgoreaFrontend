@@ -2,7 +2,6 @@ import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@a
 import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
 import { LayoutModule } from '@angular/cdk/layout';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
@@ -67,7 +66,6 @@ bootstrapApplication(AppComponent, {
       DialogModule,
       MenuModule,
       FormsModule,
-      OverlayPanelModule,
       LayoutModule,
       ReactiveFormsModule,
       ToastModule

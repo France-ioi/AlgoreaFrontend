@@ -1,99 +1,95 @@
-<p-overlayPanel #panel appendTo="body" styleClass="alg-user-progress-overlay" hideTransitionOptions="0s">
-  <ng-template pTemplate>
-    <div class="container">
-      <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
-        <div class="value-section">
-          <i class="ph ph-clock icon"></i>
-          <span class="label" i18n>
-            @if (progress.type === 'group') { avg } time spent:
-          </span>
-          <span class="value">{{ progress.timeSpent | secToDuration | readable }}</span>
-        </div>
+<div class="container">
+  <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
+    <div class="value-section">
+      <i class="ph ph-clock icon"></i>
+      <span class="label" i18n>
+        @if (progress.type === 'group') { avg } time spent:
+      </span>
+      <span class="value">{{ progress.timeSpent | secToDuration | readable }}</span>
+    </div>
 
-        <div class="value-section">
-          <i class="ph ph-lightbulb icon"></i>
-          <span class="label" i18n>
-            @if (progress.type === 'group') { avg } hints requested:
-          </span>
-          <span class="value">{{ progress.hintsRequested }}</span>
-        </div>
+    <div class="value-section">
+      <i class="ph ph-lightbulb icon"></i>
+      <span class="label" i18n>
+        @if (progress.type === 'group') { avg } hints requested:
+      </span>
+      <span class="value">{{ progress.hintsRequested }}</span>
+    </div>
 
-        <div class="value-section">
-          <i class="ph ph-hash icon"></i>
-          <span class="label" i18n>
-            @if (progress.type === 'group') { avg } submissions:
-          </span>
-          <span class="value">{{ progress.submissions }}</span>
-        </div>
+    <div class="value-section">
+      <i class="ph ph-hash icon"></i>
+      <span class="label" i18n>
+        @if (progress.type === 'group') { avg } submissions:
+      </span>
+      <span class="value">{{ progress.submissions }}</span>
+    </div>
 
-        @if (progress.latestActivityAt !== null) {
-          <div class="value-section">
-            <i class="ph ph-person-arms-spread icon"></i>
-            <span class="label" i18n>last activity:</span>
-            <span class="value">{{ progress.latestActivityAt | relativeTime }}</span>
-          </div>
-        }
+    @if (progress.latestActivityAt !== null) {
+      <div class="value-section">
+        <i class="ph ph-person-arms-spread icon"></i>
+        <span class="label" i18n>last activity:</span>
+        <span class="value">{{ progress.latestActivityAt | relativeTime }}</span>
+      </div>
+    }
 
-        @if (progress.type === 'group') {
-          <div class="value-section">
-            <i class="ph ph-star icon"></i>
-            <span class="label" i18n>validation rate:</span>
-            <span class="value">{{ progress.validationRate * 100 }}%</span>
-          </div>
+    @if (progress.type === 'group') {
+      <div class="value-section">
+        <i class="ph ph-star icon"></i>
+        <span class="label" i18n>validation rate:</span>
+        <span class="value">{{ progress.validationRate * 100 }}%</span>
+      </div>
 
-          <div class="value-section">
-            <i class="ph ph-gauge icon"></i>
-            <span class="label" i18n>average score:</span>
-            <span class="value">{{ progress.score | number:'1.0-0' }}</span>
-          </div>
-        }
+      <div class="value-section">
+        <i class="ph ph-gauge icon"></i>
+        <span class="label" i18n>average score:</span>
+        <span class="value">{{ progress.score | number:'1.0-0' }}</span>
+      </div>
+    }
 
-        @if (progress.type === 'user') {
-          <span class="score-section">
-            <alg-score-ring
-              [currentScore]="progress.score"
-              [diameter]="32"
-              [isValidated]="progress.validated"
-            ></alg-score-ring>
-          </span>
-        }
-        <ng-container
-          *ngIf="progressData && progress.type === 'user' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
+    @if (progress.type === 'user') {
+      <span class="score-section">
+        <alg-score-ring
+          [currentScore]="progress.score"
+          [diameter]="32"
+          [isValidated]="progress.validated"
+        ></alg-score-ring>
+      </span>
+    }
+    <ng-container
+      *ngIf="progressData && progress.type === 'user' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
+    >
+      <ng-container *ngIf="currentUser$ | async as currentUser">
+        <div
+          class="view-answer-section"
+          i18n-pTooltip pTooltip="You cannot view answers for this content."
+          [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
         >
-          <ng-container *ngIf="currentUser$ | async as currentUser">
-            <div
-              class="view-answer-section"
-              i18n-pTooltip pTooltip="You cannot view answers for this content."
-              [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
-            >
-              <a
-                [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
-                [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url"
-                icon="pi pi-code"
-                alg-button
-                i18n
-              >
-                View answer
-              </a>
-            </div>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-template #noActivity>
-        <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
-      </ng-template>
-      @if (canEditPermissions) {
-        <div class="button-section">
-          <button
-            icon="ph-duotone ph-lock"
-            (click)="editPermissions.emit()"
+          <a
+            [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
+            [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url"
+            icon="pi pi-code"
             alg-button
             i18n
           >
-            Access
-          </button>
+            View answer
+          </a>
         </div>
-      }
-    </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-template #noActivity>
+    <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
   </ng-template>
-</p-overlayPanel>
+  @if (canEditPermissions) {
+    <div class="button-section">
+      <button
+        icon="ph-duotone ph-lock"
+        (click)="editPermissions.emit()"
+        alg-button
+        i18n
+      >
+        Access
+      </button>
+    </div>
+  }
+</div>

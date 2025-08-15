@@ -71,6 +71,8 @@
             }}"
             (click)="openPropagationEditMenu($event, index)"
             alg-button-icon
+            [cdkMenuTriggerFor]="menu"
+            [cdkMenuPosition]="propagationEditMenuPositions()"
           ></button>
         </td>
       </tr>
@@ -112,20 +114,20 @@
   ></alg-add-item>
 </div>
 
-<p-overlayPanel [style]="{minWidth: '112px', maxWidth: '280px'}" styleClass="alg-menu-overlay" #op appendTo="body">
-  <ng-template pTemplate>
-    @if (propagationEditItemIdx !== undefined) {
-      @let childData = data[propagationEditItemIdx];
-      @if (childData) {
+<ng-template #menu>
+  @if (propagationEditItemIdx !== undefined) {
+    @let childData = data[propagationEditItemIdx];
+    @if (childData) {
+      <div class="menu" cdkMenu>
         <alg-propagation-edit-menu
           [childData]="childData"
           (clickEvent)="onContentViewPropagationChanged($event, propagationEditItemIdx)"
           (openAdvancedConfigurationDialogEvent)="openAdvancedPermPropagationConfigurationDialog(childData, propagationEditItemIdx)"
         ></alg-propagation-edit-menu>
-      }
+      </div>
     }
-  </ng-template>
-</p-overlayPanel>
+  }
+</ng-template>
 
 @let modalData = this.advancedPermPropagationConfigurationDialogData();
 @if (modalData) {
