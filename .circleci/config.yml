@@ -184,7 +184,7 @@ jobs:
           at: ./
       - build:
           lang: en
-          path: /frontend/assets/common/
+          path: /frontend/releases/<< pipeline.git.tag >>/en/
           assetDomain: static5.algorea.org
           baseHref: /
       - run:
@@ -201,7 +201,7 @@ jobs:
           at: ./
       - build:
           lang: fr
-          path: /frontend/assets/common/
+          path: /frontend/releases/<< pipeline.git.tag >>/fr/
           assetDomain: static5.algorea.org
           baseHref: /
       - persist_to_workspace:
