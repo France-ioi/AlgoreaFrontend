@@ -1,32 +1,12 @@
 @if (itemData) {
   @if (itemData.item.permissions | allowsEditingAll) {
     <form [formGroup]="itemForm">
-      <div>
-        <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Information</h2>
-        <div class="field">
-          <div class="field-name">
-            <label i18n>Item title</label>
-          </div>
-          <div class="field-value">
-            <alg-input [parentForm]="itemForm" name="title"></alg-input>
-          </div>
-        </div>
-        <div class="field">
-          <div class="field-name">
-            <label i18n>Item subtitle</label>
-          </div>
-          <div class="field-value">
-            <alg-input [parentForm]="itemForm" name="subtitle"></alg-input>
-          </div>
-        </div>
-      </div>
-      <alg-item-edit-content
-        class="item-edit-content"
-        [parentForm]="itemForm"
-        [itemData]="itemData"
-        *ngIf="itemData.item.type !== 'Task'"
-      >
-      </alg-item-edit-content>
+      <alg-item-all-strings-form
+        [supportedLanguages]="supportedLanguages()"
+        [fetchingOtherLanguages]="fetchingOtherLanguages()"
+        [showDescription]="itemData.item.type !== 'Task' && itemData.currentResult !== undefined"
+        formControlName="allStrings"
+      ></alg-item-all-strings-form>
       <alg-item-edit-advanced-parameters
         [parentForm]="itemForm"
         [itemData]="itemData"

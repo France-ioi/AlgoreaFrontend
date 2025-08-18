@@ -1,34 +1,34 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, signal } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   AbstractControl,
-  UntypedFormBuilder,
   ValidationErrors,
   ValidatorFn,
   Validators,
   FormsModule,
-  ReactiveFormsModule
+  ReactiveFormsModule, FormBuilder
 } from '@angular/forms';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ItemChanges, UpdateItemService } from '../../data-access/update-item.service';
 import { ItemStringChanges, UpdateItemStringService } from '../../data-access/update-item-string.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
+import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { Duration } from 'src/app/utils/duration';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
-import { AllowsEditingAllItemPipe, AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
+import { AllowsEditingAllItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
-import { ItemEditContentComponent } from '../item-edit-content/item-edit-content.component';
-import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { NgIf } from '@angular/common';
 import { fromItemContent } from '../../store';
 import { Store } from '@ngrx/store';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
+import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
+import { ItemAllStringsFormComponent } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.component';
+import { APPCONFIG } from 'src/app/config';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -54,23 +54,22 @@ function isServerValidationErrors(e: HttpErrorResponse): e is ServerValidationEr
     NgIf,
     FormsModule,
     ReactiveFormsModule,
-    InputComponent,
-    ItemEditContentComponent,
     ItemEditAdvancedParametersComponent,
     FloatingSaveComponent,
     AllowsEditingAllItemPipe,
-    AllowsEditingChildrenItemPipe,
     ErrorComponent,
+    ItemAllStringsFormComponent,
   ],
 })
 export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
   @Input() itemData?: ItemData;
 
-  itemForm = this.formBuilder.group({
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    title: [ '', [ Validators.required, Validators.minLength(3), Validators.maxLength(200) ] ],
-    subtitle: [ '', Validators.maxLength(200) ],
-    description: [ '' ],
+  private config = inject(APPCONFIG);
+  private getItemByIdService = inject(GetItemByIdService);
+  private formBuilder = inject(FormBuilder);
+
+  itemForm = this.formBuilder.nonNullable.group({
+    allStrings: this.formBuilder.nonNullable.control<StringsValue[]>([], [ Validators.required, Validators.minLength(1) ]),
     image_url: [ '', Validators.maxLength(2000) ],
     url: [ '', Validators.maxLength(2000) ],
     text_id: [ '', Validators.maxLength(200) ],
@@ -84,19 +83,23 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     allows_multiple_attempts: [ false ],
     requires_explicit_entry: [ false ],
     duration_enabled: [ false ],
-    duration: [ null ],
+    duration: this.formBuilder.control<Duration | null>(null),
     entering_time_min_enabled: [ false ],
-    entering_time_min: [ null ],
+    entering_time_min: this.formBuilder.control<Date | null>(null),
     entering_time_max_enabled: [ false ],
-    entering_time_max: [ null ],
+    entering_time_max: this.formBuilder.control<Date | null>(null),
     entry_participant_type: [ false ],
     entry_frozen_teams: [ false ],
-    entry_max_team_size: [ '' ],
+    entry_max_team_size: [ 0 ],
     entry_min_admitted_members_ratio: [ '' ],
   }, {
     validators: [ this.maxTeamSizeValidator() ],
   });
   initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMinEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
+
+  supportedLanguages = signal(this.config.languages.map(lv => lv.tag));
+  fetchingOtherLanguages = signal(false);
+  initialLanguageValues = signal<StringsValue[]>([]);
 
   get enableParticipation(): boolean {
     return this.initialFormData?.type !== 'Skill';
@@ -109,7 +112,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   constructor(
     private store: Store,
     private currentContentService: CurrentContentService,
-    private formBuilder: UntypedFormBuilder,
     private updateItemService: UpdateItemService,
     private updateItemStringService: UpdateItemStringService,
     private actionFeedbackService: ActionFeedbackService,
@@ -129,6 +131,17 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         enteringTimeMaxEnabled: this.itemData.item.enteringTimeMax.getTime() !== new Date(DEFAULT_ENTERING_TIME_MAX).getTime(),
       };
       this.resetForm();
+
+      this.initialLanguageValues.set([
+        {
+          languageTag: this.itemData.item.string.languageTag || '',
+          title: this.itemData.item.string.title || '',
+          description: this.itemData.item.string.description || '',
+          subtitle: this.itemData.item.string.subtitle || '',
+        }
+      ]);
+      this.resetStringsForm();
+      this.fetchOtherLanguages(this.itemData.item);
     }
   }
 
@@ -138,6 +151,28 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   isDirty(): boolean {
     return this.itemForm.dirty;
+  }
+
+  private fetchOtherLanguages(mainItem: Item): void {
+    if (this.fetchingOtherLanguages()) return;
+    const languagesForFetch = this.supportedLanguages().filter(langTag => langTag !== mainItem.string.languageTag);
+    if (languagesForFetch.length > 0) {
+      this.itemForm.disable();
+      this.fetchingOtherLanguages.set(true);
+      forkJoin(languagesForFetch.map(langTag =>
+        this.getItemByIdService.get(mainItem.id, { languageTag: langTag })
+      )).subscribe({
+        next: result => this.updateAllStringsFormValue(result),
+        error: () => {
+          this.fetchingOtherLanguages.set(false);
+          this.itemForm.disable();
+        },
+        complete: () => {
+          this.fetchingOtherLanguages.set(false);
+          this.itemForm.disable();
+        },
+      });
+    }
   }
 
   private getItemChanges(): ItemChanges | undefined {
@@ -286,40 +321,41 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     return this.updateItemService.updateItem(this.initialFormData.id, changes);
   }
 
-  // Item string changes
-  private getItemStringChanges(): ItemStringChanges | undefined {
-    const titleControl = this.itemForm.get('title');
-    const subtitleControl = this.itemForm.get('subtitle');
-    const descriptionControl = this.itemForm.get('description');
-    const imageUrlControl = this.itemForm.get('image_url');
-    const initialValues = this.initialFormData?.string;
-
-    if (titleControl === null || subtitleControl === null || descriptionControl === null || imageUrlControl === null
-      || !initialValues) return undefined;
-
-    const res: ItemStringChanges = {};
-
-    const title = titleControl.value as string;
-    if (title !== initialValues.title) res.title = title.trim();
-
-    const subtitle = (subtitleControl.value as string).trim() || null;
-    if (subtitle !== initialValues.subtitle) res.subtitle = subtitle;
-
-    const description = (descriptionControl.value as string).trim() || null;
-    if (description !== initialValues.description) res.description = description;
-
-    const imageUrl = (imageUrlControl.value as string).trim() || null;
-    if (imageUrl !== initialValues.imageUrl) res.image_url = imageUrl;
-
-    return res;
+  private getItemAllStringsChanges(): ({ changes: ItemStringChanges, languageTag: string })[] {
+    const allStringsValue = this.itemForm.controls.allStrings.getRawValue();
+    const imageUrlValue = this.itemForm.controls.image_url.getRawValue();
+    return allStringsValue.map((v, idx) =>
+      this.getItemStringChanges(
+        v,
+        {
+          initialValue: this.initialLanguageValues().find(iv => iv.languageTag === v.languageTag),
+          ...(idx === 0 && imageUrlValue !== null && imageUrlValue !== this.initialFormData?.string.imageUrl ? { imageUrlValue } : {}),
+        },
+      )
+    ).filter(({ changes }) => Object.keys(changes).length > 0);
   }
 
-  private updateString(): Observable<void> {
-    if (!this.initialFormData) return throwError(() => new Error('Missing ID form'));
-    const itemStringChanges = this.getItemStringChanges();
-    if (!itemStringChanges) return throwError(() => new Error('Invalid form or initial data'));
-    if (!Object.keys(itemStringChanges).length) return of(undefined);
-    return this.updateItemStringService.updateItem(this.initialFormData.id, itemStringChanges);
+  private getItemStringChanges(
+    value: StringsValue,
+    { initialValue, imageUrlValue }: { initialValue?: StringsValue, imageUrlValue?: string }
+  ): ({ changes: ItemStringChanges, languageTag: string }) {
+    const changes: ItemStringChanges = {
+      ...(imageUrlValue ? { image_url: imageUrlValue } : {}),
+    };
+
+    if (value.title !== initialValue?.title) changes.title = value.title.trim();
+    if (value.subtitle !== initialValue?.subtitle) changes.subtitle = value.subtitle;
+    if (value.description !== initialValue?.description) changes.description = value.description;
+
+    return { changes, languageTag: value.languageTag };
+  }
+
+  private updateString(itemStringChanges: { changes: ItemStringChanges, languageTag: string }[]): Observable<void[] | undefined> {
+    const id = this.itemData?.item.id;
+    if (!id) return throwError(() => new Error('Missing ID form'));
+    return itemStringChanges.length > 0 ? forkJoin(itemStringChanges.map(({ changes, languageTag }) =>
+      this.updateItemStringService.updateItem(id, changes, languageTag))
+    ) : of(undefined);
   }
 
   save(): void {
@@ -333,7 +369,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     this.itemForm.disable();
     forkJoin([
       this.updateItem(),
-      this.updateString(),
+      this.updateString(this.getItemAllStringsChanges()),
     ]).subscribe({
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
@@ -354,10 +390,31 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   onCancel(): void {
     this.resetForm();
+    this.resetStringsForm();
   }
 
   onConfirmRemoval(): void {
     this.resetForm();
+    this.resetStringsForm();
+  }
+
+  private updateAllStringsFormValue(items: Item[]): void {
+    const [ mainLanguageStringsValue ] = this.itemForm.controls.allStrings.getRawValue();
+    if (!mainLanguageStringsValue) throw new Error('Unexpected: Missed mainLanguageStringsValue');
+
+    const values: StringsValue[] = items.map(o => ({
+      title: o.string.title || '',
+      subtitle: o.string.subtitle || '',
+      description: o.string.description || '',
+      languageTag: o.string.languageTag,
+    }));
+
+    this.itemForm.controls.allStrings.reset([ mainLanguageStringsValue, ...values ]);
+    this.initialLanguageValues.set([ mainLanguageStringsValue, ...values ]);
+  }
+
+  private resetStringsForm(): void {
+    this.itemForm.controls.allStrings.reset(this.initialLanguageValues());
   }
 
   private resetForm(): void {
@@ -368,12 +425,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const item = this.initialFormData;
 
     this.itemForm.reset({
-      title: item.string.title || '',
-      description: item.string.description || '',
       image_url: item.string.imageUrl || '',
-      subtitle: item.string.subtitle || '',
       url: item.url || '',
-      text_id: item.textId,
+      text_id: item.textId || '',
       uses_api: item.usesApi || false,
       validation_type: item.validationType,
       no_score: item.noScore,
