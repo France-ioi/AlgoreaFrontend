@@ -450,8 +450,6 @@ workflows:
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
-            branches:
-              ignore: /.*/
           requires:
             - deps
           context: sentry-sourcemaps
@@ -459,8 +457,6 @@ workflows:
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
-            branches:
-              ignore: /.*/
           requires:
             - deps
           context: sentry-sourcemaps
@@ -468,8 +464,6 @@ workflows:
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
-            branches:
-              ignore: /.*/
           requires:
             - build-version-en
             - build-version-fr
