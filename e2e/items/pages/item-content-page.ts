@@ -11,6 +11,7 @@ export class ItemContentPage {
   itemChildrenEditListLocator = this.page.locator('alg-item-children-edit-list');
   itemChildrenEditFormLocator = this.page.locator('alg-item-children-edit-form');
   saveBtnLocator = this.page.getByRole('button', { name: 'Save' });
+  cancelBtnLocator = this.page.getByRole('button', { name: 'Cancel' });
   addItemLocator = this.page.locator('alg-add-item').filter({ hasText: 'Add a content' });
   deleteItemBtnLocator = this.page.getByRole('button', { name: 'Delete this item' });
 
@@ -185,6 +186,11 @@ export class ItemContentPage {
   async saveChangesAndCheckNotification(): Promise<void> {
     await this.saveChanges();
     await this.checkToastNotification('Changes successfully saved.');
+  }
+
+  async cancelChanges(): Promise<void> {
+    await expect.soft(this.cancelBtnLocator).toBeVisible();
+    await this.cancelBtnLocator.click();
   }
 
   async checksIsAddContentVisible(): Promise<void> {
