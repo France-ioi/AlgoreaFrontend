@@ -6,7 +6,8 @@ import {
   ValidatorFn,
   Validators,
   FormsModule,
-  ReactiveFormsModule, FormBuilder
+  ReactiveFormsModule,
+  FormBuilder,
 } from '@angular/forms';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ItemChanges, UpdateItemService } from '../../data-access/update-item.service';
@@ -165,11 +166,11 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         next: result => this.updateAllStringsFormValue(result),
         error: () => {
           this.fetchingOtherLanguages.set(false);
-          this.itemForm.disable();
+          this.itemForm.enable();
         },
         complete: () => {
           this.fetchingOtherLanguages.set(false);
-          this.itemForm.disable();
+          this.itemForm.enable();
         },
       });
     }
