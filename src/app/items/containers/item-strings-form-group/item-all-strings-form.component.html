@@ -18,7 +18,7 @@
           i18n
         >Translate in {{ languageTag }}</button>
         @if (fetchingOtherLanguages()) {
-          <alg-loading class="loading no-padding"></alg-loading>
+          <alg-loading data-testid="fetching-other-languages" class="loading no-padding"></alg-loading>
         }
       </div>
     }
