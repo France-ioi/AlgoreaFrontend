@@ -286,7 +286,6 @@ jobs:
           to: s3://$DEPLOYMENT_BUCKET/branch/<< pipeline.git.branch >>/playwright-report
           overwrite: false
           arguments: >-
-            --acl public-read
             --cache-control 'max-age=20'
 
   e2e-comment-PR:
@@ -320,7 +319,7 @@ jobs:
               if [ $(ghi comment --list $PR_ID -- ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} | grep -c "E2E test report on:") -ge 1 ]; then
               echo "Already commented, skip"
               else
-              ghi comment -m "[auto-generated message] E2E test report on: https://algorea-static.s3.eu-central-1.amazonaws.com/branch/<< pipeline.git.branch >>/playwright-report/index.html" $PR_ID -- ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+              ghi comment -m "[auto-generated message] E2E test report on: https://assets.algorea.org/branch/<< pipeline.git.branch >>/playwright-report/index.html" $PR_ID -- ${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
               fi
             fi
 
