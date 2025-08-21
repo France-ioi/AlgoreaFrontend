@@ -1,42 +1,105 @@
 @import 'src/assets/scss/functions';
 
-.alg-menu-overlay {
-  min-width: 30rem;
-  max-width: 50rem;
-  background-color: var(--alg-primary-color);
-  border-radius: toRem(10);
-  border: none;
+.alg-top-right-triangle {
+  &:after {
+    position: absolute;
+    top: toRem(-20);
+    right: toRem(10);
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: transparent transparent var(--alg-primary-color) transparent;
+  }
 
-  &:not(.p-overlaypanel-flipped) {
-    &:before {
-      margin-bottom: toRem(-1);
-      border-bottom-color: var(--alg-primary-color);
-    }
-
+  &.grey {
     &:after {
-      margin-bottom: toRem(-1);
-      border-bottom-color: var(--alg-primary-color);
+      border-color: transparent transparent var(--alg-border-color) transparent;
     }
   }
+}
 
-  &.p-overlaypanel-flipped {
-    &:before {
-      margin-top: toRem(-1);
-      border-top-color: var(--alg-primary-color);
-    }
+.alg-bottom-right-triangle {
+  &:after {
+    position: absolute;
+    bottom: toRem(-20);
+    right: toRem(10);
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: var(--alg-primary-color) transparent transparent transparent;
+  }
 
+  &.grey {
     &:after {
-      margin-top: toRem(-1);
-      border-top-color: var(--alg-primary-color);
+      border-color: var(--alg-border-color) transparent transparent transparent;
     }
   }
+}
 
-  .p-overlaypanel-content {
-    padding: 0 0 toRem(3) 0;
+.alg-top-center-triangle {
+  &:after {
+    position: absolute;
+    top: toRem(-20);
+    margin-left: toRem(-10);
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: transparent transparent var(--alg-primary-color) transparent;
   }
 
-  @media screen and (max-width: 1100px) {
-    max-width: 40rem;
+  &.grey {
+    &:after {
+      border-color: transparent transparent var(--alg-border-color) transparent;
+    }
+  }
+}
+
+.alg-bottom-center-triangle {
+  &:after {
+    position: absolute;
+    bottom: toRem(-20);
+    margin-left: toRem(-10);
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: var(--alg-primary-color) transparent transparent transparent;
+  }
+
+  &.grey {
+    &:after {
+      border-color: var(--alg-border-color) transparent transparent transparent;
+    }
+  }
+}
+
+.alg-left-center-triangle {
+  &:after {
+    position: absolute;
+    right: toRem(-20);
+    margin-top: toRem(-10);
+    top: 50%;
+    width: 0;
+    height: 0;
+    content: '';
+    border-width: toRem(10);
+    border-style: solid;
+    border-color: transparent transparent transparent var(--alg-primary-color);
+  }
+
+  &.grey {
+    &:after {
+      border-color: transparent transparent transparent var(--alg-border-color);
+    }
   }
 }
 

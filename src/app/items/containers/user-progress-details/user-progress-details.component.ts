@@ -1,7 +1,5 @@
-import { AfterViewInit, SimpleChanges } from '@angular/core';
-import { Component, EventEmitter, Input, Output, ViewChild, OnChanges } from '@angular/core';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { delay, take } from 'rxjs';
+import { SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -21,7 +19,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 export interface ProgressData {
   progress: Progress,
-  target: Element,
   colItem: {
     type: ItemType,
     fullRoute: FullItemRoute,
@@ -35,7 +32,6 @@ export interface ProgressData {
   styleUrls: [ './user-progress-details.component.scss' ],
   standalone: true,
   imports: [
-    OverlayPanelModule,
     SharedModule,
     NgIf,
     ScoreRingComponent,
@@ -53,15 +49,12 @@ export interface ProgressData {
     ButtonComponent,
   ],
 })
-export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
+export class UserProgressDetailsComponent implements OnChanges {
 
   @Input() progressData?: ProgressData;
   @Input() canEditPermissions?: boolean;
 
   @Output() editPermissions = new EventEmitter<void>();
-  @Output() hide = new EventEmitter<void>();
-
-  @ViewChild('panel') panel?: OverlayPanel;
 
   progress?: ProgressData['progress'];
 
@@ -70,40 +63,10 @@ export class UserProgressDetailsComponent implements OnChanges, AfterViewInit {
   constructor(private userSessionService: UserSessionService) {
   }
 
-  ngAfterViewInit(): void {
-    if (this.progressData) this.showOverlay();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.progressData && !changes.progressData.firstChange) {
       this.progress = this.progressData?.progress;
-      this.toggleOverlay();
     }
-  }
-
-  private toggleOverlay(): void {
-    const shouldReopen = this.panel?.overlayVisible && !!this.progressData;
-    if (shouldReopen) return this.reopenOverlay();
-    this.progressData ? this.showOverlay() : this.hideOverlay();
-  }
-
-  private showOverlay(): void {
-    setTimeout(() => {
-      if (!this.panel) throw new Error('panel not available');
-      if (!this.progressData) throw new Error('no progress to render');
-      this.panel.show(null, this.progressData.target);
-    });
-  }
-
-  private hideOverlay(): void {
-    if (!this.panel) throw new Error('panel not available');
-    this.panel.hide();
-  }
-
-  private reopenOverlay(): void {
-    if (!this.panel) throw new Error('no panel available');
-    this.panel.onHide.pipe(delay(0), take(1)).subscribe(() => this.showOverlay());
-    this.hideOverlay();
   }
 
 }
