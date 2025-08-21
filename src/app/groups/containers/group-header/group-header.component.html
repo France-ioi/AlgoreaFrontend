@@ -8,11 +8,11 @@
             @if (state.isFetching) {
               <span i18n>loading...</span>
             } @else if (state.isError) {
-              @if ($any(state.error).status === 403) {
-                <span i18n>not visible</span>
+              @if ($any(state.error).status === 403 || $any(state.error).status === 404) {
+                <span i18n>not visible to you</span>
               } @else {
                 <div class="error-container">
-                  <ng-container i18n>error while fetching the activity</ng-container>
+                  <ng-container i18n>unable to load</ng-container>
                   <button
                     class="size-s refresh-btn"
                     type="button"
