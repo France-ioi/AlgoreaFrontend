@@ -232,8 +232,4 @@ export class ItemContentPage {
   async checksIsAllowToViewMessageNotVisible(): Promise<void> {
     await expect.soft(this.page.getByText('This content does not exist or you are not allowed to view it.')).toBeVisible();
   }
-
-  async checkIsTranslatesLoaded(): Promise<void> {
-    await expect.soft(this.page.getByTestId('fetching-other-languages')).not.toBeVisible();
-  }
 }

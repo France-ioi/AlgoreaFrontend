@@ -19,10 +19,7 @@ test('checks item edit strings', async ({ page, createItem, itemContentPage }) =
   const itemStringsDescriptionLocator = itemStringsSectionLocator.getByTestId('item-strings-description');
   const translateBtnLocator = page.locator('alg-item-all-strings-form').getByRole('button', { name: 'Translate in fr' });
 
-  await Promise.all([
-    await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
-    await itemContentPage.waitForItemResponse(createItem.itemId),
-  ]);
+  await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
 
   await expect.soft(page.getByRole('heading', { name: 'Information (en)' })).toBeVisible();
 

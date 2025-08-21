@@ -35,7 +35,6 @@ test('checks lock membership date saving', async ({ page, createItem, itemConten
     await duration.fillH('01');
     await duration.fillM('10');
     await duration.fillS('15');
-    await itemContentPage.checkIsTranslatesLoaded();
     await itemContentPage.saveChangesAndCheckNotification();
   });
 
