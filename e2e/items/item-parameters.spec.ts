@@ -12,7 +12,6 @@ test('checks edit parameters components are visible', async ({ page }) => {
   await page.goto('a/6707691810849260111;p=;a=0/parameters');
   await expect.soft(page.getByText('Information')).toBeVisible();
   await expect.soft(page.getByRole('heading', { name: 'Information' })).toBeVisible();
-  await expect.soft(page.getByRole('heading', { name: 'Description' })).toBeVisible();
   await expect.soft(page.getByRole('heading', { name: 'Score & Validation' })).toBeVisible();
 });
 
@@ -24,7 +23,7 @@ test('checks edit parameters teams size input', async ({ page }) => {
   const inputBlockLocator = targetBlockLocator.locator('div').filter({ hasText: 'Maximum team size' });
 
   await test.step('checks the number input of team size are visible', async () => {
-    await expect.soft(page.getByRole('heading', { name: 'Description' })).toBeVisible();
+    await expect.soft(page.getByRole('heading', { name: 'Team' })).toBeVisible();
     await expect.soft(teamBlockLocator).toBeVisible();
     await expect.soft(targetBlockLocator).toBeVisible();
     const switchLocator = targetBlockLocator.locator('alg-switch');

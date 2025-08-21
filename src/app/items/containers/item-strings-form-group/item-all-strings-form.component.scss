@@ -1,0 +1,17 @@
+@import 'src/assets/scss/functions';
+
+.item-strings-control {
+  &:not(:first-child) {
+    margin-top: toRem(38);
+  }
+}
+
+.button-section {
+  display: flex;
+  align-items: center;
+  margin-top: var(--alg-space-size-5);
+}
+
+.loading {
+  margin-left: var(--alg-space-size-6);
+}

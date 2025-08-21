@@ -10,14 +10,15 @@ test.afterEach(({ deleteItem }) => {});
 
 test('checks edit parameters - validation criteria', async ({ page, createItem, itemContentPage }, use) => {
   if (!createItem) throw new Error('The item is not created');
-  await page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
-  await expect.soft(page.getByRole('heading', { name: 'Description' })).toBeVisible();
+  await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
+  await expect.soft(page.getByRole('heading', { name: 'Score & Validation' })).toBeVisible();
   const selectLocator = page.locator('alg-select').filter({ has: page.getByText('All children validated') });
   await expect.soft(selectLocator).toBeVisible();
   await selectLocator.click();
   const targetOptionLocator = page.locator('alg-select-option').getByText('Never');
   await expect.soft(targetOptionLocator).toBeVisible();
   await targetOptionLocator.click();
+  await expect.soft(targetOptionLocator).not.toBeVisible();
   await itemContentPage.saveChangesAndCheckNotification();
   await expect.soft(page.locator('alg-select').getByText('Never')).toBeVisible();
 });

@@ -15,7 +15,7 @@ test('checks lock membership date saving', async ({ page, createItem, itemConten
     await itemContentPage.waitForItemResponse(createItem.itemId),
   ]);
 
-  await expect.soft(page.getByRole('heading', { name: 'Description' })).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Participation' })).toBeVisible();
 
   const switchTargetLocator = page.getByTestId('form-item-view')
     .filter({ hasText: /^Start participation manually$/ })

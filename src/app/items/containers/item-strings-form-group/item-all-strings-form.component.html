@@ -1,0 +1,26 @@
+<ng-container [formGroup]="form">
+  <ng-container formArrayName="allStrings">
+    @for (control of allStrings.controls; track $index) {
+      <div class="item-strings-control">
+        <alg-item-strings-control
+          [formControl]="control"
+          [showDescription]="showDescription()"
+        ></alg-item-strings-control>
+      </div>
+    }
+    @for (languageTag of availableLanguagesToCreate(); track $index) {
+      <div class="button-section">
+        <button
+          type="button"
+          alg-button
+          [disabled]="fetchingOtherLanguages()"
+          (click)="addStringsControl({ languageTag })"
+          i18n
+        >Translate in {{ languageTag }}</button>
+        @if (fetchingOtherLanguages()) {
+          <alg-loading data-testid="fetching-other-languages" class="loading no-padding"></alg-loading>
+        }
+      </div>
+    }
+  </ng-container>
+</ng-container>

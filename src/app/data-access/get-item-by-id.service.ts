@@ -57,10 +57,13 @@ export class GetItemByIdService {
 
   constructor(private http: HttpClient) {}
 
-  get(id: string, options?: { watchedGroupId?: string }): Observable<Item> {
+  get(id: string, options?: { watchedGroupId?: string, languageTag?: string }): Observable<Item> {
     let params = new HttpParams();
     if (options?.watchedGroupId) {
       params = params.set('watched_group_id', options.watchedGroupId);
+    }
+    if (options?.languageTag) {
+      params = params.set('language_tag', options.languageTag);
     }
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${id}`, { params }).pipe(
       decodeSnakeCase(itemSchema),
