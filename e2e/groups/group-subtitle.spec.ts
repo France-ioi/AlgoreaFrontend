@@ -86,7 +86,7 @@ test('checks group subtitle failure response', async ({ page, groupSettingsPage,
   });
 
   await test.step('checks is subtitle with error visible', async () => {
-    await groupSettingsPage.checksIsSubtitleVisible('error while fetching the activity');
+    await groupSettingsPage.checksIsSubtitleVisible('unable to load');
   });
 
   await test.step('checks retry subtitle', async () => {
