@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, computed, input, output, signal } from '@angular/core';
-import { EMPTY, Subject, of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
@@ -44,7 +44,8 @@ export class ItemRemoveButtonComponent implements OnDestroy {
     switchMap(({ item, currentResult }) => {
       if (!item.permissions.isOwner) return of(false);
       if (isATask(item)) return of(true);
-      if (!currentResult) return EMPTY;
+      // in that case, there is no guarantee that the item can be deleted as we cannot know if it has children
+      if (!currentResult) return of(false);
       return this.getItemChildrenService.get(item.id, currentResult.attemptId).pipe(
         map((itemChildren: ItemChildren) => itemChildren.length === 0),
       );
