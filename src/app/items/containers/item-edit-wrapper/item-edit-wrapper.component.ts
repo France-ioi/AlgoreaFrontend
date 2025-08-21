@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnChanges, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, signal, SimpleChanges } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   AbstractControl,
@@ -123,8 +123,10 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     this.pendingChangesService.set(this);
   }
 
-  ngOnChanges(): void {
-    if (this.itemData) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.itemData
+      && (changes.itemData?.previousValue as ItemData | undefined)?.item.id !== (changes.itemData?.currentValue as ItemData).item.id) {
+      this.itemForm.disable();
       this.initialFormData = {
         ...this.itemData.item,
         durationEnabled: this.itemData.item.duration !== null,
@@ -158,7 +160,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     if (this.fetchingOtherLanguages()) return;
     const languagesForFetch = this.supportedLanguages().filter(langTag => langTag !== mainItem.string.languageTag);
     if (languagesForFetch.length > 0) {
-      this.itemForm.disable();
       this.fetchingOtherLanguages.set(true);
       forkJoin(languagesForFetch.map(langTag =>
         this.getItemByIdService.get(mainItem.id, { languageTag: langTag })
@@ -173,6 +174,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
           this.itemForm.enable();
         },
       });
+    } else {
+      this.itemForm.enable();
     }
   }
 
@@ -373,6 +376,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       this.updateString(this.getItemAllStringsChanges()),
     ]).subscribe({
       next: _status => {
+        this.itemForm.enable();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.store.dispatch(fromItemContent.itemByIdPageActions.refresh()); // which will re-enable the form
         this.currentContentService.forceNavMenuReload();
@@ -453,7 +457,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         entry_min_admitted_members_ratio: item.entryMinAdmittedMembersRatio,
       } : {}),
     });
-    this.itemForm.enable();
   }
 
   private maxTeamSizeValidator(): ValidatorFn {
