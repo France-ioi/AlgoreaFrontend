@@ -17,7 +17,7 @@ test('checks item edit strings', async ({ page, createItem, itemContentPage }) =
   const itemStringsTitleLocator = itemStringsSectionLocator.getByTestId('item-strings-title');
   const itemStringsSubtitleLocator = itemStringsSectionLocator.getByTestId('item-strings-subtitle');
   const itemStringsDescriptionLocator = itemStringsSectionLocator.getByTestId('item-strings-description');
-  const translateBtnLocator = page.locator('alg-item-all-strings-form').getByRole('button', { name: 'Translate in fr' });
+  const translateBtnLocator = page.locator('alg-item-all-strings-form').getByRole('button', { name: 'Translate to fr' });
 
   await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
 

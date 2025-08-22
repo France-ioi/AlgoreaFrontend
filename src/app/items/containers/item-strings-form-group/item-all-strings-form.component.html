@@ -16,7 +16,7 @@
           [disabled]="fetchingOtherLanguages()"
           (click)="addStringsControl({ languageTag })"
           i18n
-        >Translate in {{ languageTag }}</button>
+        >Translate to {{ languageTag }}</button>
         @if (fetchingOtherLanguages()) {
           <alg-loading data-testid="fetching-other-languages" class="loading no-padding"></alg-loading>
         }
