@@ -22,7 +22,9 @@
     "genDir": "src/locale",
     "defaultLanguage": "en",
     "languages": [
-      "fr"
+      "fr",
+      "de",
+      "it"
     ],
     "removeUnusedIds": true
   },
