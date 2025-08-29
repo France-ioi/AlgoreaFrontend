@@ -220,7 +220,10 @@ jobs:
           paths:
             - blob-report
 
-  e2e-parallelism-chromium:
+  e2e-parallelism:
+    parameters:
+      project:
+        type: string
     docker:
       - image: mcr.microsoft.com/playwright:v1.47.2-noble
     parallelism: 2
@@ -228,21 +231,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism --project=chromium
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - blob-report
-
-  e2e-parallelism-firefox:
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.47.2-noble
-    parallelism: 2
-    resource_class: large
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism --project=firefox
+      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism --project=<< parameters.project >>
       - persist_to_workspace:
           root: ./
           paths:
@@ -389,10 +378,10 @@ workflows:
       - e2e-no-parallelism:
           requires:
             - deps
-      - e2e-parallelism-chromium:
-          requires:
-            - deps
-      - e2e-parallelism-firefox:
+      - e2e-parallelism:
+          matrix:
+            parameters:
+              project: [ chromium, firefox ]
           requires:
             - deps
       - e2e-gen-report:
