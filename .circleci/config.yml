@@ -442,6 +442,9 @@ workflows:
               only: master
       - build-version:
           name: build-version-<< matrix.lang >>
+          requires:
+            - deps
+            - fetch-translations
           matrix:
             parameters:
               lang: [ en, fr, de, it ]
@@ -450,19 +453,17 @@ workflows:
               only: /^v\d+\.\d+\..*/
             branches:
               ignore: /.*/
-          requires:
-            - deps
-            - fetch-translations
           context: sentry-sourcemaps
       - deploy-version:
+          requires:
+            - fetch-translations
+            - build-version-en
+            - build-version-fr
+            - build-version-de
+            - build-version-it
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
             branches:
               ignore: /.*/
-          requires:
-            - build-version-en
-            - build-version-fr
-            - build-version-de
-            - build-version-it
           context: aws-prod
