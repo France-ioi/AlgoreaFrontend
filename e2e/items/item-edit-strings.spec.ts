@@ -10,7 +10,7 @@ test.afterEach(({ deleteItem }) => {
   if (!deleteItem) throw new Error('Unexpected: missed deleted item data');
 });
 
-test.skip('checks item edit strings', async ({ page, createItem, itemContentPage }) => {
+test('checks item edit strings', async ({ page, createItem, itemContentPage }) => {
   if (!createItem) throw new Error('The item is not created');
 
   const itemStringsSectionLocator = page.locator('alg-item-strings-control');
