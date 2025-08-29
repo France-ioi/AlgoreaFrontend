@@ -30,6 +30,8 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
 import { ItemAllStringsFormComponent } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.component';
 import { APPCONFIG } from 'src/app/config';
+import { catchError } from 'rxjs/operators';
+import { errorIsHTTPNotFound } from 'src/app/utils/errors';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -162,9 +164,13 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     if (languagesForFetch.length > 0) {
       this.fetchingOtherLanguages.set(true);
       forkJoin(languagesForFetch.map(langTag =>
-        this.getItemByIdService.get(mainItem.id, { languageTag: langTag })
+        this.getItemByIdService.get(mainItem.id, { languageTag: langTag }).pipe(
+          catchError((error: unknown) =>
+            (errorIsHTTPNotFound(error) ? of(undefined) : throwError(() => error))
+          ),
+        )
       )).subscribe({
-        next: result => this.updateAllStringsFormValue(result),
+        next: result => this.updateAllStringsFormValue(result.filter(isNotUndefined)),
         error: () => {
           this.fetchingOtherLanguages.set(false);
           this.itemForm.enable();
