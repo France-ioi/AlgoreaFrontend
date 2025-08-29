@@ -5,7 +5,8 @@ orbs:
   browser-tools: circleci/browser-tools@1.5.1
 
 commands:
-  deploy-to-s3:
+
+  deploy-to-s3-shortcache:
     parameters:
       # from current dir, with trailing slash
       from:
@@ -15,38 +16,22 @@ commands:
       # starting with a slash, no trailing slash
       path:
         type: string
+      lang:
+        type: string
     steps:
-      - aws-s3/sync:
-          from: << parameters.from >>
-          to: s3://<< parameters.bucket >><< parameters.path >>
-          overwrite: false
-          arguments: >-
-            --exclude "*/index.html"
-            --exclude "*/assets/config.js"
-            --cache-control 'max-age=31536000'
       - aws-s3/copy:
           from:  << parameters.from >>index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/index.html
           arguments: >-
             --cache-control 'max-age=300'
       - aws-s3/copy:
-          from:  << parameters.from >>en/index.html
-          to: s3://<< parameters.bucket >><< parameters.path >>/en/index.html
+          from:  << parameters.from >><< parameters.lang >>/index.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/<< parameters.lang >>/index.html
           arguments: >-
             --cache-control 'max-age=10'
       - aws-s3/copy:
-          from:  << parameters.from >>fr/index.html
-          to: s3://<< parameters.bucket >><< parameters.path >>/fr/index.html
-          arguments: >-
-            --cache-control 'max-age=10'
-      - aws-s3/copy:
-          from:  << parameters.from >>en/assets/config.js
-          to: s3://<< parameters.bucket >><< parameters.path >>/en/assets/config.js
-          arguments: >-
-            --cache-control 'max-age=10'
-      - aws-s3/copy:
-          from:  << parameters.from >>fr/assets/config.js
-          to: s3://<< parameters.bucket >><< parameters.path >>/fr/assets/config.js
+          from:  << parameters.from >><< parameters.lang >>/assets/config.js
+          to: s3://<< parameters.bucket >><< parameters.path >>/<< parameters.lang >>/assets/config.js
           arguments: >-
             --cache-control 'max-age=10'
 
@@ -307,10 +292,15 @@ jobs:
       - attach_workspace:
           at: ./
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/browser/index.html
-      - deploy-to-s3:
+      - deploy-to-s3-v2:
           from: ./dist/algorea/browser/
           bucket: $DEPLOYMENT_BUCKET
           path: /branch/<< pipeline.git.branch >>
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: /branch/<< pipeline.git.branch >>
+          lang: en
 
   deploy-master:
     docker:
@@ -321,10 +311,30 @@ jobs:
       - attach_workspace:
           at: ./
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/browser/index.html
-      - deploy-to-s3:
+      - deploy-to-s3-v2:
           from: ./dist/algorea/browser/
           bucket: $DEPLOYMENT_BUCKET
           path: ""
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: en
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: fr
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: de
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: it
 
   deploy-version:
     docker:
