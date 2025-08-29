@@ -415,6 +415,7 @@ workflows:
             branches:
               ignore: master
       - build-master:
+          name: build-master-<< matrix.lang >>
           matrix:
             parameters:
               lang: [ en, fr, de, it ]
@@ -438,6 +439,7 @@ workflows:
             branches:
               only: master
       - build-version:
+          name: build-version-<< matrix.lang >>
           matrix:
             parameters:
               lang: [ en, fr, de, it ]
