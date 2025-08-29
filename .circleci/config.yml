@@ -5,7 +5,8 @@ orbs:
   browser-tools: circleci/browser-tools@1.5.1
 
 commands:
-  deploy-to-s3:
+
+  deploy-to-s3-shortcache:
     parameters:
       # from current dir, with trailing slash
       from:
@@ -15,38 +16,22 @@ commands:
       # starting with a slash, no trailing slash
       path:
         type: string
+      lang:
+        type: string
     steps:
-      - aws-s3/sync:
-          from: << parameters.from >>
-          to: s3://<< parameters.bucket >><< parameters.path >>
-          overwrite: false
-          arguments: >-
-            --exclude "*/index.html"
-            --exclude "*/assets/config.js"
-            --cache-control 'max-age=31536000'
       - aws-s3/copy:
           from:  << parameters.from >>index.html
           to: s3://<< parameters.bucket >><< parameters.path >>/index.html
           arguments: >-
             --cache-control 'max-age=300'
       - aws-s3/copy:
-          from:  << parameters.from >>en/index.html
-          to: s3://<< parameters.bucket >><< parameters.path >>/en/index.html
+          from:  << parameters.from >><< parameters.lang >>/index.html
+          to: s3://<< parameters.bucket >><< parameters.path >>/<< parameters.lang >>/index.html
           arguments: >-
             --cache-control 'max-age=10'
       - aws-s3/copy:
-          from:  << parameters.from >>fr/index.html
-          to: s3://<< parameters.bucket >><< parameters.path >>/fr/index.html
-          arguments: >-
-            --cache-control 'max-age=10'
-      - aws-s3/copy:
-          from:  << parameters.from >>en/assets/config.js
-          to: s3://<< parameters.bucket >><< parameters.path >>/en/assets/config.js
-          arguments: >-
-            --cache-control 'max-age=10'
-      - aws-s3/copy:
-          from:  << parameters.from >>fr/assets/config.js
-          to: s3://<< parameters.bucket >><< parameters.path >>/fr/assets/config.js
+          from:  << parameters.from >><< parameters.lang >>/assets/config.js
+          to: s3://<< parameters.bucket >><< parameters.path >>/<< parameters.lang >>/assets/config.js
           arguments: >-
             --cache-control 'max-age=10'
 
@@ -117,6 +102,27 @@ jobs:
           at: ./
       - run: npm run lint
 
+  push-translation-source:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm install -g @crowdin/cli
+      - run: npx ng extract-i18n
+      - run: crowdin push sources -s messages.xlf -t src/locale/messages.%two_letters_code%.xlf
+
+  fetch-translations:
+    docker: *node_image
+    steps:
+      - checkout
+      - run: npm install -g @crowdin/cli
+      - run: touch messages.xlf
+      - run: crowdin pull --no-progress --keep-archive -s messages.xlf -t src/locale/messages.%two_letters_code%.xlf
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - src/locale
+
   build-branch-en:
     docker: *node_image
     steps:
@@ -132,82 +138,47 @@ jobs:
           paths:
             - dist/algorea/browser/en
 
-  build-branch-fr:
+  build-master:
     docker: *node_image
+    parameters:
+      lang:
+        type: string
+        default: en
     steps:
       - attach_workspace:
           at: ./
       - build:
-          lang: fr
-          path: /branch/<< pipeline.git.branch >>/fr/
-          assetDomain: assets.algorea.org
-          baseHref: /branch/<< pipeline.git.branch >>/
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - dist/algorea/browser/fr
-
-  build-master-en:
-    docker: *node_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - build:
-          lang: en
-          path: /en/
+          lang: << parameters.lang >>
+          path: /<< parameters.lang >>/
           assetDomain: assets.algorea.org
           baseHref: /
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/browser/en
+            - dist/algorea/browser/<< parameters.lang >>
 
-  build-master-fr:
+  build-version:
     docker: *node_image
+    parameters:
+      lang:
+        type: string
+        default: en
     steps:
       - attach_workspace:
           at: ./
       - build:
-          lang: fr
-          path: /fr/
-          assetDomain: assets.algorea.org
-          baseHref: /
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - dist/algorea/browser/fr
-
-  build-version-en:
-    docker: *node_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - build:
-          lang: en
-          path: /frontend/releases/<< pipeline.git.tag >>/en/
+          lang: << parameters.lang >>
+          path: /frontend/releases/<< pipeline.git.tag >>/<< parameters.lang >>/
           assetDomain: static5.algorea.org
           baseHref: /
       - run:
+          when:
+            equal: [ << parameters.lang >>, en ]
           command: npx sentry-cli sourcemaps inject --org france-ioi --project algorea ./dist/algorea/browser/en && npx sentry-cli sourcemaps upload --org france-ioi --project algorea ./dist/algorea/browser/en
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/browser/en
-
-  build-version-fr:
-    docker: *node_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - build:
-          lang: fr
-          path: /frontend/releases/<< pipeline.git.tag >>/fr/
-          assetDomain: static5.algorea.org
-          baseHref: /
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - dist/algorea/browser/fr
+            - dist/algorea/browser/<< parameters.lang >>
 
   tests:
     docker: &node_browsers_image
@@ -234,7 +205,10 @@ jobs:
           paths:
             - blob-report
 
-  e2e-parallelism-chromium:
+  e2e-parallelism:
+    parameters:
+      project:
+        type: string
     docker:
       - image: mcr.microsoft.com/playwright:v1.47.2-noble
     parallelism: 2
@@ -242,21 +216,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism --project=chromium
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - blob-report
-
-  e2e-parallelism-firefox:
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.47.2-noble
-    parallelism: 2
-    resource_class: large
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism --project=firefox
+      - run: SHARD="$((${CIRCLE_NODE_INDEX}+1))"; npx playwright test --shard=${SHARD}/${CIRCLE_NODE_TOTAL} --grep-invert @no-parallelism --project=<< parameters.project >>
       - persist_to_workspace:
           root: ./
           paths:
@@ -332,10 +292,15 @@ jobs:
       - attach_workspace:
           at: ./
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/browser/index.html
-      - deploy-to-s3:
+      - deploy-to-s3-v2:
           from: ./dist/algorea/browser/
           bucket: $DEPLOYMENT_BUCKET
           path: /branch/<< pipeline.git.branch >>
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: /branch/<< pipeline.git.branch >>
+          lang: en
 
   deploy-master:
     docker:
@@ -346,10 +311,30 @@ jobs:
       - attach_workspace:
           at: ./
       - run: echo '<html><head><script>window.location.replace("en/");</script></head></html>' > dist/algorea/browser/index.html
-      - deploy-to-s3:
+      - deploy-to-s3-v2:
           from: ./dist/algorea/browser/
           bucket: $DEPLOYMENT_BUCKET
           path: ""
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: en
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: fr
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: de
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: it
 
   deploy-version:
     docker:
@@ -377,13 +362,21 @@ workflows:
       - lint:
           requires:
           - deps
-      - build-branch-en:
+      - fetch-translations:
+          context: crowdin
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              only: master
+      - push-translation-source:
           requires:
             - deps
+          context: crowdin
           filters:
             branches:
-              ignore: master
-      - build-branch-fr:
+              only: master
+      - build-branch-en:
           requires:
             - deps
           filters:
@@ -395,10 +388,10 @@ workflows:
       - e2e-no-parallelism:
           requires:
             - deps
-      - e2e-parallelism-chromium:
-          requires:
-            - deps
-      - e2e-parallelism-firefox:
+      - e2e-parallelism:
+          matrix:
+            parameters:
+              project: [ chromium, firefox ]
           requires:
             - deps
       - e2e-gen-report:
@@ -418,19 +411,16 @@ workflows:
       - deploy-branch:
           requires:
             - build-branch-en
-            - build-branch-fr
           filters:
             branches:
               ignore: master
-      - build-master-en:
+      - build-master:
+          matrix:
+            parameters:
+              lang: [ en, fr, de, it ]
           requires:
             - deps
-          filters:
-            branches:
-              only: master
-      - build-master-fr:
-          requires:
-            - deps
+            - fetch-translations
           filters:
             branches:
               only: master
@@ -438,6 +428,8 @@ workflows:
           requires:
             - build-master-en
             - build-master-fr
+            - build-master-it
+            - build-master-de
             - tests
             - e2e-no-parallelism
             - e2e-parallelism-chromium
@@ -445,7 +437,10 @@ workflows:
           filters:
             branches:
               only: master
-      - build-version-en:
+      - build-version:
+          matrix:
+            parameters:
+              lang: [ en, fr, de, it ]
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
@@ -453,15 +448,7 @@ workflows:
               ignore: /.*/
           requires:
             - deps
-          context: sentry-sourcemaps
-      - build-version-fr:
-          filters:
-            tags:
-              only: /^v\d+\.\d+\..*/
-            branches:
-              ignore: /.*/
-          requires:
-            - deps
+            - fetch-translations
           context: sentry-sourcemaps
       - deploy-version:
           filters:
@@ -472,4 +459,6 @@ workflows:
           requires:
             - build-version-en
             - build-version-fr
+            - build-version-de
+            - build-version-it
           context: aws-prod

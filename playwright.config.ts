@@ -80,12 +80,6 @@ export default defineConfig({
       url: 'http://localhost:4200',
       reuseExistingServer: !process.env.CI,
       timeout: 180000,
-    },
-    {
-      command: 'ng serve --configuration=fr --port=4100',
-      url: 'http://localhost:4100',
-      reuseExistingServer: !process.env.CI,
-      timeout: 180000,
     }
   ],
 });
