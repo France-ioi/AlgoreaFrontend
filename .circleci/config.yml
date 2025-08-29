@@ -153,35 +153,24 @@ jobs:
           paths:
             - dist/algorea/browser/en
 
-  build-master-en:
+  build-master:
     docker: *node_image
+    parameters:
+      lang:
+        type: string
+        default: en
     steps:
       - attach_workspace:
           at: ./
       - build:
-          lang: en
-          path: /en/
+          lang: << parameters.lang >>
+          path: /<< parameters.lang >>/
           assetDomain: assets.algorea.org
           baseHref: /
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/browser/en
-
-  build-master-fr:
-    docker: *node_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - build:
-          lang: fr
-          path: /fr/
-          assetDomain: assets.algorea.org
-          baseHref: /
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - dist/algorea/browser/fr
+            - dist/algorea/browser/<< parameters.lang >>
 
   build-version-en:
     docker: *node_image
@@ -435,13 +424,10 @@ workflows:
           filters:
             branches:
               ignore: master
-      - build-master-en:
-          requires:
-            - deps
-          filters:
-            branches:
-              only: master
-      - build-master-fr:
+      - build-master:
+          matrix:
+            parameters:
+              lang: [ en, fr, de, it ]
           requires:
             - deps
             - fetch-translations
@@ -452,6 +438,8 @@ workflows:
           requires:
             - build-master-en
             - build-master-fr
+            - build-master-it
+            - build-master-de
             - tests
             - e2e-no-parallelism
             - e2e-parallelism-chromium
