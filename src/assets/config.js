@@ -12,7 +12,7 @@ window.appConfig = {
 
   languages: [
     { tag: 'fr', path: '/fr/' },
-    { tag: 'en', path: '/' },
+    { tag: 'en', path: '/en/' },
     { tag: 'de', path: '/de/' },
     { tag: 'it', path: '/it/' },
   ],
