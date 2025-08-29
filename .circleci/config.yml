@@ -153,21 +153,6 @@ jobs:
           paths:
             - dist/algorea/browser/en
 
-  build-branch-fr:
-    docker: *node_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - build:
-          lang: fr
-          path: /branch/<< pipeline.git.branch >>/fr/
-          assetDomain: assets.algorea.org
-          baseHref: /branch/<< pipeline.git.branch >>/
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - dist/algorea/browser/fr
-
   build-master-en:
     docker: *node_image
     steps:
@@ -418,13 +403,6 @@ workflows:
           filters:
             branches:
               ignore: master
-      - build-branch-fr:
-          requires:
-            - deps
-            - fetch-translations
-          filters:
-            branches:
-              ignore: master
       - tests:
           requires:
             - deps
@@ -454,7 +432,6 @@ workflows:
       - deploy-branch:
           requires:
             - build-branch-en
-            - build-branch-fr
           filters:
             branches:
               ignore: master
