@@ -172,37 +172,28 @@ jobs:
           paths:
             - dist/algorea/browser/<< parameters.lang >>
 
-  build-version-en:
+  build-version:
     docker: *node_image
+    parameters:
+      lang:
+        type: string
+        default: en
     steps:
       - attach_workspace:
           at: ./
       - build:
-          lang: en
-          path: /frontend/releases/<< pipeline.git.tag >>/en/
+          lang: << parameters.lang >>
+          path: /frontend/releases/<< pipeline.git.tag >>/<< parameters.lang >>/
           assetDomain: static5.algorea.org
           baseHref: /
       - run:
+          when:
+            equal: [ << parameters.lang >>, en ]
           command: npx sentry-cli sourcemaps inject --org france-ioi --project algorea ./dist/algorea/browser/en && npx sentry-cli sourcemaps upload --org france-ioi --project algorea ./dist/algorea/browser/en
       - persist_to_workspace:
           root: ./
           paths:
-            - dist/algorea/browser/en
-
-  build-version-fr:
-    docker: *node_image
-    steps:
-      - attach_workspace:
-          at: ./
-      - build:
-          lang: fr
-          path: /frontend/releases/<< pipeline.git.tag >>/fr/
-          assetDomain: static5.algorea.org
-          baseHref: /
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - dist/algorea/browser/fr
+            - dist/algorea/browser/<< parameters.lang >>
 
   tests:
     docker: &node_browsers_image
@@ -447,16 +438,10 @@ workflows:
           filters:
             branches:
               only: master
-      - build-version-en:
-          filters:
-            tags:
-              only: /^v\d+\.\d+\..*/
-            branches:
-              ignore: /.*/
-          requires:
-            - deps
-          context: sentry-sourcemaps
-      - build-version-fr:
+      - build-version:
+          matrix:
+            parameters:
+              lang: [ en, fr, de, it ]
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
@@ -475,4 +460,6 @@ workflows:
           requires:
             - build-version-en
             - build-version-fr
+            - build-version-de
+            - build-version-it
           context: aws-prod
