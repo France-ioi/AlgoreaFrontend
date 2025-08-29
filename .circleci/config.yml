@@ -362,18 +362,20 @@ workflows:
       - lint:
           requires:
           - deps
-      - fetch-translations:
-          context: crowdin
-          filters:
-            tags:
-              only: /^v\d+\.\d+\..*/
-            branches:
-              only: master
       - push-translation-source:
           requires:
             - deps
           context: crowdin
           filters:
+            branches:
+              only: master
+      - fetch-translations:
+          requires:
+            - push-translation-source # so that new strings appears in the translations (even if not translated)
+          context: crowdin
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
             branches:
               only: master
       - build-branch-en:
