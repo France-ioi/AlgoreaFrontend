@@ -1,5 +1,7 @@
 # Algorea Frontend
 
+Current translation status: [![Crowdin](https://badges.crowdin.net/algorea/localized.svg)](https://crowdin.com/project/algorea)
+
 ## Quick start
 
 It is recommended to run this project on a recent node version (continuous integration use 14).
@@ -98,9 +100,6 @@ test('home page loaded as usual user', async ({ page }) => {
 
 Every developer who adds text into the code should localize it. See the [Angular doc](https://angular.io/guide/i18n#prepare-templates-for-translations) to know how to mark it as localizable.
 
-When a new translatable string has been added to the code, the developer runs `npm run extract-i18n` to generate the new translation file.
+When a new translatable string has been added to the code, it will be pushed to our service online for translation when it is merged into the `master` branch. There is no way to test the translated versions of the website on a deployed developpement branch.
 
-The generated files src/locale/messages.<lang>.xlf can be translated with a XLIFF editor, e.g. Poedit.
-
-For development, the `ng serve` serve can only serve one language (by default, English). To use another language, use another configuration, for instance `ng serve --configuration=fr`.
-The build process generates one website per language in `/en`, `/fr` directories.
+The translated strings will be retrieved online when the `master` branch is built and when a version is created.
