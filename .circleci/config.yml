@@ -117,6 +117,27 @@ jobs:
           at: ./
       - run: npm run lint
 
+  push-translation-source:
+    docker: *node_image
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm install -g @crowdin/cli
+      - run: npx ng extract-i18n
+      - run: crowdin push sources -s messages.xlf -t src/locale/messages.%two_letters_code%.xlf
+
+  fetch-translations:
+    docker: *node_image
+    steps:
+      - checkout
+      - run: npm install -g @crowdin/cli
+      - run: touch messages.xlf
+      - run: crowdin pull --no-progress --keep-archive -s messages.xlf -t src/locale/messages.%two_letters_code%.xlf
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - src/locale
+
   build-branch-en:
     docker: *node_image
     steps:
@@ -377,6 +398,20 @@ workflows:
       - lint:
           requires:
           - deps
+      - fetch-translations:
+          context: crowdin
+          # filters:
+          #   tags:
+          #     only: /^v\d+\.\d+\..*/
+          #   branches:
+          #     ignore: /.*/
+      - push-translation-source:
+          requires:
+            - deps
+          context: crowdin
+          # filters:
+          #   branches:
+          #     only: master
       - build-branch-en:
           requires:
             - deps
@@ -386,6 +421,7 @@ workflows:
       - build-branch-fr:
           requires:
             - deps
+            - fetch-translations
           filters:
             branches:
               ignore: master
@@ -431,6 +467,7 @@ workflows:
       - build-master-fr:
           requires:
             - deps
+            - fetch-translations
           filters:
             branches:
               only: master
@@ -462,6 +499,7 @@ workflows:
               ignore: /.*/
           requires:
             - deps
+            - fetch-translations
           context: sentry-sourcemaps
       - deploy-version:
           filters:

@@ -8,7 +8,6 @@
     "start": "concurrently --kill-others -n \"mock,serve\" -c \"yellow.bold,green.bold\" \"npm run mock\" \"npm run serve\"",
     "build": "ng build core && npm run copyColor && npm run copyGeo",
     "postBuild": "node purgecss.js dist",
-    "extract-i18n": "ng extract-i18n --output-path src/locale && ./node_modules/.bin/xliffmerge",
     "copyColor": "xcopy \"projects\\core\\src\\lib\\colors.scss\" \"dist\\core\\\"",
     "copyGeo": "xcopy \"projects\\core\\src\\lib\\geometry.scss\" \"dist\\core\\\"",
     "injectDeployUrlForAssets": "find src -regex \".*\\.html\" -exec sed -i -E 's@(href|src)=\"images/(.*)\"@\\1=\"'$npm_config_url'images/\\2\"@g' {} + && find src -regex \".*\\.scss\" -exec sed -i -E 's@url\\(\"/images/(.*)\"\\)@url\\(\"'$npm_config_url'images/\\1\")@g' {} + && find src/index.html -exec sed -i -E 's@(href|src)=\"((.*).(woff2|ttf|webmanifest|js))\"@\\1=\"'$npm_config_url'\\2\"@g' {} + && find src/assets/site.webmanifest -exec sed -i -E 's@\"src\":\"images/([^\"]*)\"@\"src\":\"'$npm_config_url'images/\\1\"@g' {} +",
@@ -16,17 +15,6 @@
     "lint": "./node_modules/.bin/eslint src/ --ext .ts",
     "e2e": "npx playwright test",
     "release": "release-it"
-  },
-  "xliffmergeOptions": {
-    "srcDir": "src/locale",
-    "genDir": "src/locale",
-    "defaultLanguage": "en",
-    "languages": [
-      "fr",
-      "de",
-      "it"
-    ],
-    "removeUnusedIds": true
   },
   "private": true,
   "dependencies": {
@@ -102,7 +90,6 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-packagr": "^18.1.0",
-    "ngx-i18nsupport": "^0.17.1",
     "nodemon": "^2.0.7",
     "purgecss": "^5.0.0",
     "release-it": "^17.0.1",
