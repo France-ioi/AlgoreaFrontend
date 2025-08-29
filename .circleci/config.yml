@@ -171,10 +171,11 @@ jobs:
           path: /frontend/releases/<< pipeline.git.tag >>/<< parameters.lang >>/
           assetDomain: static5.algorea.org
           baseHref: /
-      - run:
-          when:
+      - when:
+          condition:
             equal: [ << parameters.lang >>, en ]
-          command: npx sentry-cli sourcemaps inject --org france-ioi --project algorea ./dist/algorea/browser/en && npx sentry-cli sourcemaps upload --org france-ioi --project algorea ./dist/algorea/browser/en
+          steps:
+            - run: npx sentry-cli sourcemaps inject --org france-ioi --project algorea ./dist/algorea/browser/en && npx sentry-cli sourcemaps upload --org france-ioi --project algorea ./dist/algorea/browser/en
       - persist_to_workspace:
           root: ./
           paths:
