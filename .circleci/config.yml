@@ -368,6 +368,8 @@ workflows:
             - deps
           context: crowdin
           filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
             branches:
               only: master
       - fetch-translations:
@@ -457,7 +459,6 @@ workflows:
           context: sentry-sourcemaps
       - deploy-version:
           requires:
-            - fetch-translations
             - build-version-en
             - build-version-fr
             - build-version-de
