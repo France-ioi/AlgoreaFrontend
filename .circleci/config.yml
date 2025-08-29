@@ -385,18 +385,18 @@ workflows:
           - deps
       - fetch-translations:
           context: crowdin
-          # filters:
-          #   tags:
-          #     only: /^v\d+\.\d+\..*/
-          #   branches:
-          #     ignore: /.*/
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              only: master
       - push-translation-source:
           requires:
             - deps
           context: crowdin
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
       - build-branch-en:
           requires:
             - deps
