@@ -12,9 +12,9 @@ window.appConfig = {
 
   languages: [
     { tag: 'fr', path: '/fr/' },
-    { tag: 'en', path: '/' },
     { tag: 'de', path: '/de/' },
     { tag: 'it', path: '/it/' },
+    { tag: 'en', path: '/' },
   ],
   defaultTitle: 'Algorea Platform',
   languageSpecificTitles: { fr: 'Plateforme Algoréa' },
