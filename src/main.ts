@@ -5,7 +5,6 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { LetDirective } from '@ngrx/component';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
@@ -57,7 +56,6 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       BrowserModule,
       LetDirective,
-      BreadcrumbModule,
       NgScrollbarModule,
       TooltipModule,
       DialogModule,
