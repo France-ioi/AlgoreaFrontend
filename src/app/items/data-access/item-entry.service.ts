@@ -43,8 +43,9 @@ export class ItemEntryService {
     const parentAttemptId = route.parentAttemptId;
     if (!parentAttemptId) throw new Error('enter service expect the parent attempt id to be set');
     const params = new HttpParams({ fromObject: { parent_attempt_id: parentAttemptId } });
+    const path = route.path.length > 0 ? route.path.join('/') + '/' + route.id : route.id;
     return this.http
-      .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${route.path.join('/')}/${route.id}/enter`, null, { params }).pipe(
+      .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${path}/enter`, null, { params }).pipe(
         map(successData),
         decodeSnakeCase(enterResponseDataSchema),
       );
