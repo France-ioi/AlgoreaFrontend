@@ -1,6 +1,9 @@
 import { ContentRoute } from './content-route';
 import { ItemTypeCategory } from '../../items/models/item-type';
 import { AnswerId, AttemptId, GroupId, ItemId, ItemPath, ParticipantId } from '../ids';
+import { createSelector } from '@ngrx/store';
+import { fromObservation } from 'src/app/store/observation';
+import { isUser } from './group-route';
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item
@@ -71,3 +74,11 @@ export function parentRoute(route: ItemRoute, defaultActivityRoute: FullItemRout
     path: route.path.slice(0, -1),
   });
 }
+
+/**
+ * Selector to get the currently observed group as an item route parameter
+ */
+export const selectObservedGroupRouteAsItemRouteParameter = createSelector(
+  fromObservation.selectObservedGroupRoute,
+  route => (route !== null ? { observedGroup: { id: route.id, isUser: isUser(route) } } : {})
+);

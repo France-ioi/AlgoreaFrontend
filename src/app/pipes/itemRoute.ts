@@ -1,15 +1,7 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
-import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route';
+import { ItemRoute, RawItemRoute, itemRoute, selectObservedGroupRouteAsItemRouteParameter } from '../models/routing/item-route';
 import { Store } from '@ngrx/store';
-import { fromObservation } from '../store/observation';
-import { createSelector } from '@ngrx/store';
-import { isUser } from '../models/routing/group-route';
-
-const selectObservedGroupRouteAsItemRouteParameter = createSelector(
-  fromObservation.selectObservedGroupRoute,
-  route => (route !== null ? { observedGroup: { id: route.id, isUser: isUser(route) } } : {})
-);
 
 /**
  * Pipe for building a item route from an object
