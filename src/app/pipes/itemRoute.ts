@@ -1,6 +1,15 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
 import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route';
+import { Store } from '@ngrx/store';
+import { fromObservation } from '../store/observation';
+import { createSelector } from '@ngrx/store';
+import { isUser } from '../models/routing/group-route';
+
+const selectObservedGroupRouteAsItemRouteParameter = createSelector(
+  fromObservation.selectObservedGroupRoute,
+  route => (route !== null ? { observedGroup: { id: route.id, isUser: isUser(route) } } : {})
+);
 
 /**
  * Pipe for building a item route from an object
@@ -11,8 +20,13 @@ import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route
   standalone: true
 })
 export class ItemRoutePipe implements PipeTransform {
+
+  private store = inject(Store);
+  private observedGroupRouteAsItemRouteParameterSignal = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
+
   transform(item: { id: string } & ({ type: ItemType }|{ contentType: ItemTypeCategory }), extraAttrs?: Partial<ItemRoute>): RawItemRoute {
-    return itemRoute('type' in item ? typeCategoryOfItem(item): item.contentType, item.id, extraAttrs);
+    const attrs = { ...this.observedGroupRouteAsItemRouteParameterSignal(), ...extraAttrs };
+    return itemRoute('type' in item ? typeCategoryOfItem(item): item.contentType, item.id, attrs);
   }
 }
 
