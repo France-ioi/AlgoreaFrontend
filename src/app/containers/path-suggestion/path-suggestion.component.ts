@@ -1,20 +1,15 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import {
-  BreadcrumbsFromRootElement,
-  GetBreadcrumbsFromRootsService
-} from '../../data-access/get-breadcrumbs-from-roots.service';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { GetBreadcrumbsFromRootsService } from '../../data-access/get-breadcrumbs-from-roots.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState } from '../../utils/operators/state';
 import { map } from 'rxjs/operators';
-import { itemRoute } from '../../models/routing/item-route';
-import { UrlCommand } from '../../utils/url';
-import { typeCategoryOfItem } from '../../items/models/item-type';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
-import { itemRouteAsUrlCommand } from 'src/app/models/routing/item-route-serialization';
-import { APPCONFIG, AppConfig } from 'src/app/config';
+import { mapBreadcrumbsWithPath } from 'src/app/models/content/content-breadcrumbs';
+import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
+import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 
 @Component({
   selector: 'alg-path-suggestion',
@@ -28,15 +23,11 @@ import { APPCONFIG, AppConfig } from 'src/app/config';
     NgFor,
     RouterLink,
     AsyncPipe,
+    ItemRoutePipe,
+    RouteUrlPipe,
   ],
 })
 export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {
-  private config: AppConfig = inject(APPCONFIG);
-
-  private getItemRouteUrl(item: BreadcrumbsFromRootElement, breadcrumbs: BreadcrumbsFromRootElement[]): UrlCommand {
-    const path = breadcrumbs.map(brItem => brItem.id);
-    return itemRouteAsUrlCommand(itemRoute(typeCategoryOfItem(item), item.id, { path }), this.config.redirects);
-  }
 
   @Output() resize = new EventEmitter<void>();
   @Input() itemId?: string;
@@ -50,12 +41,7 @@ export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChan
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getBreadcrumbsFromRootsService.get(itemId).pipe(
-      map(group => (group.length > 0 ? group.map(breadcrumbs =>
-        breadcrumbs.map((item, index) => ({
-          ...item,
-          url: this.getItemRouteUrl(item, breadcrumbs.slice(0, index)),
-        }))
-      ).filter(group => group.length > 0) : undefined)),
+      map(breadcrumbsList => breadcrumbsList.map(mapBreadcrumbsWithPath)),
     )),
     mapToFetchState({ resetter: this.refresh$ }),
   );
