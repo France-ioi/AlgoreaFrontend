@@ -3,9 +3,10 @@ import { User } from '../../models/user';
 import { GroupBreadcrumbs } from '../../models/group-breadcrumbs';
 import { Group } from '../../models/group';
 import { GroupRoute } from 'src/app/models/routing/group-route';
+import { RawGroupRoute } from 'src/app/models/routing/group-route';
 
-export type GroupInState = FetchState<Group, { id: string }>;
-export type UserInState = FetchState<User, { id: string }>;
+export type GroupInState = FetchState<Group, RawGroupRoute>;
+export type UserInState = FetchState<User, RawGroupRoute>;
 
 export interface State {
     /**
@@ -14,7 +15,7 @@ export interface State {
    */
   routeErrorHandling: Fetching<undefined>|FetchError,
 
-  // if the content is currently a group/user page: the corresponding info
+  // if the content is currently a group/user page OR if a group is currently observed: the corresponding info
   groupState: GroupInState | UserInState,
   // if (and only if) the content is currently a group page AND the page has a path in url: the corresponding breadcrumbs
   breadcrumbsState: FetchState<GroupBreadcrumbs, GroupRoute>,

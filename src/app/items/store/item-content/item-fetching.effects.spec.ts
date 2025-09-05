@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { EMPTY, shareReplay, toArray } from 'rxjs';
+import { EMPTY, toArray } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
 import { fromItemContent } from './item-content.store';
@@ -24,12 +24,10 @@ describe('itemFetchingEffect', () => {
     const getItemServiceSpy = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
     testScheduler.run(({ hot, cold }) => {
       getItemServiceSpy.get.and.callFake(() => cold('-a|', { a: mockItem }));
-      const selectActiveContentId$ = hot('a-x-a----|', { x: null, a: 1 });
-      const selectObservedGroupId$ = hot('g--------|', { g: null }).pipe(shareReplay(1));
-      const actions$ = hot('              ---------|');
+      const selectActiveContentRoute$ = hot('a-x-a--|', { a: route, x: null });
+      const actions$ = hot('                 -------|');
       const storeMock$ = {
-        select: (mapFn: (state: unknown) => unknown) =>
-          (mapFn === fromItemContent.selectActiveContentId ? selectActiveContentId$: selectObservedGroupId$)
+        select: () => selectActiveContentRoute$
       } as unknown as Store;
 
       itemFetchingEffect(
@@ -53,13 +51,14 @@ describe('itemFetchingEffect', () => {
   it('does refetch item with observation change', done => {
     const getItemServiceSpy = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
     testScheduler.run(({ hot, cold }) => {
+      const itemObservingG = { ...route, observedGroup: { id: '1' } };
+      const itemNotObservingG = route;
+      const itemObservingG2 = { ...route, observedGroup: { id: '2' } };
       getItemServiceSpy.get.and.callFake(() => cold('-a|', { a: mockItem }));
-      const selectActiveContentId$ = hot('a-x-a-----|', { x: null, a: 1 });
-      const selectObservedGroupId$ = hot('g-----k-n-|', { g: 1, k: 2, n: null }).pipe(shareReplay(1));
-      const actions$ = hot('              ----------|');
+      const selectActiveContentRoute$ = hot('a-x-k-b-|', { a: itemObservingG, x: null, k: itemNotObservingG, b: itemObservingG2 });
+      const actions$ = hot('                 --------|');
       const storeMock$ = {
-        select: (mapFn: (state: unknown) => unknown) =>
-          (mapFn === fromItemContent.selectActiveContentId ? selectActiveContentId$: selectObservedGroupId$)
+        select: () => selectActiveContentRoute$
       } as unknown as Store;
 
       itemFetchingEffect(
@@ -76,42 +75,14 @@ describe('itemFetchingEffect', () => {
     });
   });
 
-  it('does not refetch item with observation change while the item not visible', done => {
-    const getItemServiceSpy = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
-    testScheduler.run(({ hot, cold }) => {
-      getItemServiceSpy.get.and.callFake(() => cold('-a|', { a: mockItem }));
-      const selectActiveContentId$ = hot('a-x-------a-|', { x: null, a: 1 });
-      const selectObservedGroupId$ = hot('g---k-g-n---|', { g: 1, k: 2, n: null }).pipe(shareReplay(1));
-      const actions$ = hot('              ------------|');
-      const storeMock$ = {
-        select: (mapFn: (state: unknown) => unknown) =>
-          (mapFn === fromItemContent.selectActiveContentId ? selectActiveContentId$: selectObservedGroupId$)
-      } as unknown as Store;
-
-      itemFetchingEffect(
-        storeMock$,
-        actions$,
-        userSessionServiceMock,
-        getItemServiceSpy,
-      ).pipe(toArray()).subscribe({
-        next: () => {
-          expect(getItemServiceSpy.get).toHaveBeenCalledTimes(2); // only (a,g) and (a,n) has been called
-          done();
-        }
-      });
-    });
-  });
-
   it('refetches on refresh', done => {
     const getItemServiceSpy = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
     testScheduler.run(({ hot, cold }) => {
       getItemServiceSpy.get.and.callFake(() => cold('-a|', { a: mockItem }));
-      const selectActiveContentId$ = hot('a-----|', { x: null, a: 1 });
-      const selectObservedGroupId$ = hot('g-----|', { g: null }).pipe(shareReplay(1));
-      const actions$ = hot('              --r---|', { r: fromItemContent.itemByIdPageActions.refresh() });
+      const selectActiveContentRoute$ = hot('a-----|', { a: route });
+      const actions$ = hot('                 --r---|', { r: fromItemContent.itemByIdPageActions.refresh() });
       const storeMock$ = {
-        select: (mapFn: (state: unknown) => unknown) =>
-          (mapFn === fromItemContent.selectActiveContentId ? selectActiveContentId$: selectObservedGroupId$)
+        select: () => selectActiveContentRoute$
       } as unknown as Store;
 
       itemFetchingEffect(

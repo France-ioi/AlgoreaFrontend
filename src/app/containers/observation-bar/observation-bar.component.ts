@@ -7,6 +7,11 @@ import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { fromItemContent } from 'src/app/items/store';
+import { filter, take } from 'rxjs';
+import { ItemRouter } from 'src/app/models/routing/item-router';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
+import { routeWithNoObservation } from 'src/app/models/routing/item-route';
 
 @Component({
   selector: 'alg-observation-bar',
@@ -23,13 +28,20 @@ export class ObservationBarComponent {
 
   observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
   activeContentIsBeingObserved$ = this.store.select(fromObservation.selectActiveContentIsBeingObserved);
+  activeItemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute);
 
   constructor(
-    private store: Store
+    private store: Store,
+    private itemRouter: ItemRouter,
   ) {}
 
   onCancelClick(): void {
-    this.store.dispatch(fromObservation.observationBarActions.disableObservation());
+    this.activeItemRoute$.pipe(
+      take(1),
+      filter(isNotNull),
+    ).subscribe(route => {
+      this.itemRouter.navigateTo(routeWithNoObservation(route));
+    });
   }
 
 }

@@ -11,7 +11,7 @@ test('check can enter permissions', { tag: '@no-parallelism' }, async ({ page, e
   const untilDateValue = convertDateToString(new Date(Date.now() + (HOURS * 2)));
 
   await test.step('checks can enter permission is off', async () => {
-    await page.goto('a/8470006805577401679;p=3244687538937221949;pa=0?watchedGroupId=3686890982243872917');
+    await page.goto('a/8470006805577401679;p=3244687538937221949;pa=0;og=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
@@ -26,7 +26,7 @@ test('check can enter permissions', { tag: '@no-parallelism' }, async ({ page, e
   });
 
   await test.step('checks can enter control is visible', async () => {
-    await page.goto('a/8470006805577401679;p=3244687538937221949;pa=0?watchedGroupId=3686890982243872917');
+    await page.goto('a/8470006805577401679;p=3244687538937221949;pa=0;og=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/8470006805577401679');
@@ -82,7 +82,7 @@ test('check can enter fields behaviour', async ({ page, editPermissionsModal }) 
   const untilDateValue = convertDateToString(new Date(Date.now() + (HOURS * 3)));
 
   await test.step('checks can enter control is visible', async () => {
-    await page.goto('a/2999322914037656296;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
+    await page.goto('a/2999322914037656296;p=3244687538937221949;a=0;og=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/2999322914037656296');
@@ -137,7 +137,7 @@ test('check can enter fields behaviour', async ({ page, editPermissionsModal }) 
 test('check can enter warning', async ({ page, editPermissionsModal }) => {
   await initAsTesterUser(page);
   await test.step('checks can enter control is visible', async () => {
-    await page.goto('a/2999322914037656296;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
+    await page.goto('a/2999322914037656296;p=3244687538937221949;a=0;og=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/2999322914037656296');
@@ -153,7 +153,7 @@ test('check can enter warning', async ({ page, editPermissionsModal }) => {
   });
 
   await test.step('checks can enter warning for grand view', async () => {
-    await page.goto('a/1749804273409471901;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
+    await page.goto('a/1749804273409471901;p=3244687538937221949;a=0;og=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/1749804273409471901');
@@ -165,7 +165,7 @@ test('check can enter warning', async ({ page, editPermissionsModal }) => {
 test('checks item with no explicit entry',async ({ page, editPermissionsModal }) => {
   await initAsTesterUser(page);
   await test.step('checks can enter control is not visible', async () => {
-    await page.goto('a/422346871652804072;p=3244687538937221949;a=0?watchedGroupId=3686890982243872917');
+    await page.goto('a/422346871652804072;p=3244687538937221949;a=0;og=3686890982243872917');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.waitForPermissionsResponse('3686890982243872917/permissions/3686890982243872917/422346871652804072');
