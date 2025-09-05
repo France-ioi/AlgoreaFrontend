@@ -23,3 +23,10 @@ export function closestBreadcrumbs<T extends { id: string }>(base: string[], lis
   });
   return sol.breadcrumbs;
 }
+
+/**
+ * Add the path of each breadcrumb to the breadcrumbs.
+ */
+export function mapBreadcrumbsWithPath<T extends { id: string }>(breadcrumbs: T[]): (T & { path: string[] })[] {
+  return breadcrumbs.map((e, idx) => ({ ...e, path: breadcrumbs.slice(0, idx).map(e => e.id) }));
+}
