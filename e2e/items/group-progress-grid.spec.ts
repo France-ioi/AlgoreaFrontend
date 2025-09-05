@@ -3,7 +3,7 @@ import { initAsTesterUser } from '../helpers/e2e_auth';
 
 test('check table header', async ({ page }) => {
   await initAsTesterUser(page);
-  await page.goto('/a/7523720120450464843;p=7528142386663912287;a=0/progress/chapter?watchedGroupId=4462192261130512818');
+  await page.goto('/a/7523720120450464843;p=7528142386663912287;a=0;og=4462192261130512818/progress/chapter');
 
   await test.step('check the path is the same as this page', async () => {
     const firstChildLink = page.locator('alg-group-progress-grid p-table thead th:nth-child(2) a');
@@ -21,7 +21,7 @@ test('check table header', async ({ page }) => {
 
 test('check user progress detail', async ({ page }) => {
   await initAsTesterUser(page);
-  await page.goto('/a/7523720120450464843;p=7528142386663912287;a=0/progress/chapter?watchedGroupId=4462192261130512818');
+  await page.goto('/a/7523720120450464843;p=7528142386663912287;a=0;og=4462192261130512818/progress/chapter');
   await page.locator('alg-group-progress-grid p-table tr:nth-child(2) td:nth-child(3) alg-score-ring').click();
 
   await test.step('check view answer row', async () => {
