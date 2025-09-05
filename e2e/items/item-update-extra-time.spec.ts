@@ -4,7 +4,7 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 
 test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0/extra-time?watchedGroupId=672913018859223173');
+  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
   const targetRow = page.locator('alg-item-extra-time-for-descendants')
     .locator('table')
     .locator('tr')
@@ -42,7 +42,7 @@ test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page,
 
 test('checks failure to update item extra time', async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0/extra-time?watchedGroupId=672913018859223173');
+  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
   const itemExtraTimeForDescendantsLocator = page.locator('alg-item-extra-time-for-descendants');
   const targetRow = itemExtraTimeForDescendantsLocator
     .locator('table')
@@ -67,7 +67,7 @@ test('checks failure to update item extra time', async ({ page, toast }) => {
 
 test('checks update item extra time for group', { tag: '@no-parallelism' }, async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0/extra-time?watchedGroupId=672913018859223173');
+  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
   const targetRow = page.getByTestId('extra-time-for-group');
   const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   const totalAdditionalTimeLocator = targetRow.getByTestId('total-additional-time');
@@ -97,7 +97,7 @@ test('checks update item extra time for group', { tag: '@no-parallelism' }, asyn
 
 test('checks failure to update item extra time for group', async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0/extra-time?watchedGroupId=672913018859223173');
+  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
   const targetRow = page.getByTestId('extra-time-for-group');
   await expect.soft(targetRow).toBeVisible();
   const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
