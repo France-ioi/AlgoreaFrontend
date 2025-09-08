@@ -1,5 +1,5 @@
 import { combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../models/item-data';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
@@ -14,9 +14,11 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { NgIf, NgFor, AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
+import { LayoutService } from 'src/app/services/layout.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-chapter-children',
@@ -35,10 +37,13 @@ import { fromObservation } from 'src/app/store/observation';
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
+    NgClass,
   ],
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;
+
+  layoutService = inject(LayoutService);
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
   private refresh$ = new Subject<void>();
@@ -67,6 +72,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     })),
     mapToFetchState({ resetter: this.refresh$ }),
   );
+  leftMenu = toSignal(this.layoutService.leftMenu$);
 
   constructor(
     private store: Store,
