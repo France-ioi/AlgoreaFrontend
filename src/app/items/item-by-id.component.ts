@@ -1,11 +1,10 @@
 import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
-import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, delay, BehaviorSubject } from 'rxjs';
+import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
   map,
-  pairwise,
   shareReplay,
   startWith,
   switchMap,
@@ -210,16 +209,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       .subscribe({
         error: () => { /* Errors cannot be handled before unloading page. */ },
       }),
-
-    // drop "answer" route arg when switching "watching" off
-    this.isObserving$.pipe(
-      pairwise(),
-      filter(([ old, cur ]) => old && !cur), // was "on", become "off"
-      switchMap(() => this.itemRoute$.pipe(take(1))),
-      delay(0),
-    ).subscribe(route => {
-      this.itemRouter.navigateTo({ ...route, answer: undefined });
-    }),
 
     // on datasource state change, update the current content page info
     this.itemState$.pipe(readyData<ItemData>()).subscribe(data => {

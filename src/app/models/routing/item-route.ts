@@ -60,7 +60,8 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
 }
 
 export function routeWithNoObservation(route: FullItemRoute): FullItemRoute {
-  return { ...route, observedGroup: undefined };
+  // when leaving observation, we also leave the loaded answer if any
+  return { ...route, observedGroup: undefined, answer: undefined };
 }
 
 /**
