@@ -72,7 +72,7 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     })),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-  leftMenu = toSignal(this.layoutService.leftMenu$);
+  leftMenuShown = toSignal(this.layoutService.leftMenu$.pipe(map(({ shown }) => shown)), { initialValue: true });
 
   constructor(
     private store: Store,

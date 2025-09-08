@@ -20,10 +20,9 @@
     ></alg-error>
 
     <ng-container *ngIf="itemData && itemData.item.childrenLayout === 'Grid'; else listSection">
-      @let leftMenuShown = leftMenu()?.shown;
       <div
         class="grid-container"
-        [ngClass]="{ 'left-menu-shown': leftMenuShown === undefined || leftMenuShown }"
+        [ngClass]="{ 'left-menu-shown': leftMenuShown() }"
         *ngIf="data.children.length > 0"
       >
         <div class="grid-item" *ngFor="let item of data.children; let i = index">
