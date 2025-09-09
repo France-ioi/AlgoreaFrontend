@@ -28,7 +28,7 @@
             class="size-xs button"
             alg-button
             [routerLink]="itemData.item | itemRoute | url"
-            [state]="answer.id | routingStateForLoadingAnswerAsCurrent"
+            [algLoadAnswerAsCurrent]="answer.id"
             i18n
           >
             Edit it

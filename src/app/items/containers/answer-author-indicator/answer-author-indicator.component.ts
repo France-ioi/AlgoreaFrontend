@@ -19,8 +19,8 @@ import { UserSessionService } from '../../../services/user-session.service';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
-import { LoadAnswerAsCurrentRoutingStatePipe } from '../../utils/load-answer-as-current-state';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
 
 @Component({
   selector: 'alg-answer-author-indicator[answer]',
@@ -35,7 +35,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     AsyncPipe,
     DatePipe,
     UserCaptionPipe,
-    LoadAnswerAsCurrentRoutingStatePipe,
+    LoadAnswerAsCurrentDirective,
     ScoreRingComponent,
     ItemRoutePipe,
     RouteUrlPipe,

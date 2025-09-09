@@ -1,18 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { itemRouteWith, RawItemRoute, selectObservedGroupRouteAsItemRouteParameter } from './item-route';
-import { AnswerId } from '../ids';
-import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
 import { APPCONFIG, AppConfig } from 'src/app/config';
 import { itemRouteAsUrlCommand } from './item-route-serialization';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
 import { UrlCommand } from 'src/app/utils/url';
+import { ItemNavigationState } from './item-navigation-state';
 
-interface NavigateOptions {
+interface NavigateOptions extends ItemNavigationState {
   page?: string[],
-  preventFullFrame?: boolean,
-  loadAnswerIdAsCurrent?: AnswerId,
   navExtras?: NavigationExtras,
   useCurrentObservation?: boolean,
 }
@@ -47,12 +44,8 @@ export class ItemRouter {
     if (useCurrentObservation) {
       route = itemRouteWith(route, this.observedGroupRouteAsItemRouteParameter());
     }
-    void this.router.navigate(this.routeAsUrlCommand(route, page), { ...navExtras, state: {
-      ...navExtras?.state,
-      preventFullFrame,
-      ...(loadAnswerIdAsCurrent ? loadAnswerAsCurrentAsBrowserState(loadAnswerIdAsCurrent) : {}),
-    } }
-    );
+    const state: ItemNavigationState = { preventFullFrame, loadAnswerIdAsCurrent };
+    void this.router.navigate(this.routeAsUrlCommand(route, page), { ...navExtras, state });
   }
 
   /**
