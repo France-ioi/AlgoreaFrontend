@@ -30,8 +30,8 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { fromItemContent } from './items/store';
 import { isNotNull } from './utils/null-undefined-predicates';
 import { ItemRouter } from './models/routing/item-router';
-import { routeWithNoObservation } from './models/routing/item-route';
 import { CdkScrollable } from '@angular/cdk/overlay';
+import { routeWithNoObservation } from './models/routing/item-route';
 
 @Component({
   selector: 'alg-root',

@@ -1,6 +1,12 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
-import { ItemRoute, RawItemRoute, itemRoute, selectObservedGroupRouteAsItemRouteParameter } from '../models/routing/item-route';
+import {
+  ItemRoute,
+  RawItemRoute,
+  itemRoute,
+  itemRouteWith,
+  selectObservedGroupRouteAsItemRouteParameter
+} from '../models/routing/item-route';
 import { Store } from '@ngrx/store';
 
 /**
@@ -32,6 +38,6 @@ export class ItemRoutePipe implements PipeTransform {
 })
 export class ItemRouteWithExtraPipe implements PipeTransform {
   transform<T extends RawItemRoute>(route: T, attrs: Partial<ItemRoute>): T {
-    return { ...route, ...attrs };
+    return itemRouteWith(route, attrs);
   }
 }

@@ -93,7 +93,8 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return {
       ...treeElement,
       title: details.title ?? '',
-      navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(contentInfo.route, { preventFullFrame }),
+      navigateTo: (preventFullFrame = false): void =>
+        this.itemRouter.navigateTo(contentInfo.route, { preventFullFrame, useCurrentObservation: true }),
       score: details.bestScore !== undefined && details.currentScore !== undefined && details.validated !== undefined ? {
         bestScore: details.bestScore,
         currentScore: details.bestScore,
@@ -127,7 +128,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       route,
       title: child.string.title ?? '',
       hasChildren: child.hasVisibleChildren && canCurrentUserViewContent(child),
-      navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame }),
+      navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame, useCurrentObservation: true }),
       locked: !allowsViewingContent(child.watchedGroup ?? child.permissions),
       score,
     };
@@ -140,7 +141,8 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         route: parentRoute,
         title: data.string.title ?? '',
         hasChildren: data.children.length > 0,
-        navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(parentRoute, { preventFullFrame }),
+        navigateTo: (preventFullFrame = false): void =>
+          this.itemRouter.navigateTo(parentRoute, { preventFullFrame, useCurrentObservation: true }),
         locked: !canCurrentUserViewContent(data),
       },
       elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),

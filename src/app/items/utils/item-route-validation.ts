@@ -37,7 +37,11 @@ export function solveRouteError(
     }),
     delay(0), // required in order to trigger new navigation after the current one
     switchMap(itemRoute => {
-      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState() });
+      itemRouter.navigateTo(itemRoute, {
+        navExtras: { replaceUrl: true },
+        loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState(),
+        useCurrentObservation: true
+      });
       return EMPTY;
     })
   );

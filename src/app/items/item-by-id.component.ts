@@ -244,7 +244,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         const route = state.identifier;
         if (!route) throw new Error('unexpected: the active breadcrumbs state should always have an identifier');
         const routeWithoutPath = { ...route, path: undefined };
-        this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true } });
+        this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
       }
       if (state.isReady) this.hasRedirected = false;
     }),
@@ -351,7 +351,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   }
 
   navigateToDefaultTab(route: RawItemRoute): void {
-    this.itemRouter.navigateTo(route, { page: [] });
+    this.itemRouter.navigateTo(route, { page: [], useCurrentObservation: true });
   }
 
   setTaskTabs(tabs: TaskTab[]): void {

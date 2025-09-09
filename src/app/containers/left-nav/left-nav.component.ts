@@ -138,11 +138,11 @@ export class LeftNavComponent implements OnChanges {
   onSelectionChangedByIdx(e: number): void {
     if (e === activitiesTabIdx) {
       const route = this.selectedActivityRoute();
-      if (route) this.itemRouter.navigateTo(route);
+      if (route) this.itemRouter.navigateTo(route, { useCurrentObservation: true });
     }
     if (e === skillsTabIdx) {
       const route = this.selectedSkillRoute();
-      if (route) this.itemRouter.navigateTo(route);
+      if (route) this.itemRouter.navigateTo(route, { useCurrentObservation: true });
     }
     if (e === groupsTabIdx) {
       this.groupRouter.navigateTo(this.selectedGroupRoute());

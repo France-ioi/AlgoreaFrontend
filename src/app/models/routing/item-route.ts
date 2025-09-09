@@ -52,6 +52,11 @@ export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Omi
   return { ...attrs, contentType, id };
 }
 
+export function itemRouteWith<T extends RawItemRoute, U extends T>(route: T, attrs: Partial<ItemRoute>): U {
+  return { ...route, ...attrs } as U;
+}
+
+
 /**
  * Add to the given route, the given self attempt id (if any) (used when only the parent id was know until now)
  */
