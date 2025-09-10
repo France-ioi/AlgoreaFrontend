@@ -66,7 +66,13 @@ import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import equal from 'fast-deep-equal/es6';
+import { createSelector } from '@ngrx/store';
+
+const selectState = createSelector(
+  fromItemContent.selectActiveContentRouteErrorHandlingState,
+  fromItemContent.selectActiveContentData,
+  (routeErrorHandlingState, itemData) => (routeErrorHandlingState === null ? itemData : routeErrorHandlingState)
+);
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -120,10 +126,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     filter(isNotNull),
   );
 
-  state$: Observable<FetchState<ItemData>> = merge(
-    this.store.select(fromItemContent.selectActiveContentRouteErrorHandlingState).pipe(filter(isNotNull)),
-    this.itemState$.pipe(distinctUntilChanged((x, y) => equal(x.data, y.data))),
-  );
+  /**
+   * The general state, either the route error handling state, or if not routing error, the item data
+   */
+  state$: Observable<FetchState<ItemData>> = this.store.select(selectState).pipe(filter(isNotNull));
 
   // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
   hasRedirected = false;
