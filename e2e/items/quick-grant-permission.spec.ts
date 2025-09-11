@@ -42,7 +42,7 @@ test('grant view permission', async ({
   });
 
   await test.step('checks grant content access for item', async () => {
-    await page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0?watchedGroupId=${createGroup.groupId}`);
+    await page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0;og=${createGroup.groupId}`);
     await editPermissionsModal.openPermissionsBlock();
     const grantAccessBtnLocator = page.getByRole('button', { name: 'Grant content access' });
     await expect.soft(grantAccessBtnLocator).toBeVisible();

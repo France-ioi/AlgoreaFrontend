@@ -102,7 +102,7 @@ export class ItemRemoveButtonComponent implements OnDestroy {
   }
 
   postDeletionNavigation(): void {
-    this.itemRouter.navigateTo(parentRoute(this.itemData().route, this.defaultActivityRoute));
+    this.itemRouter.navigateTo(parentRoute(this.itemData().route, this.defaultActivityRoute), { useCurrentObservation: true });
   }
 
   refresh(): void {

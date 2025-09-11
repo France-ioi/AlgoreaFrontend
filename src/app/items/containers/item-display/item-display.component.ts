@@ -191,7 +191,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
       if ('id' in dst) {
         const route = itemRoute('activity', dst.id, { path: dst.path });
         if (dst.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
-        else this.itemRouter.navigateTo(route);
+        else this.itemRouter.navigateTo(route, { useCurrentObservation: true });
       }
       if ('url' in dst) {
         if (dst.newTab) openNewTab(dst.url, this.location);
@@ -217,7 +217,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
         if (!lastElement) throw new Error('unexpected: get all breadcrumbs services are expected to return non-empty breadcrumbs');
         const route = itemRoute(typeCategoryOfItem(lastElement), lastElement.id, { path: breadcrumbs.map(b => b.id) });
         if (state.data.newTab) openNewTab(this.router.serializeUrl(this.itemRouter.url(route)), this.location);
-        else this.itemRouter.navigateTo(route);
+        else this.itemRouter.navigateTo(route, { useCurrentObservation: true });
       }
     }),
 

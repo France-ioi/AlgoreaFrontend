@@ -1,6 +1,13 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { ItemType, ItemTypeCategory, typeCategoryOfItem } from '../items/models/item-type';
-import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route';
+import {
+  ItemRoute,
+  RawItemRoute,
+  itemRoute,
+  itemRouteWith,
+  selectObservedGroupRouteAsItemRouteParameter
+} from '../models/routing/item-route';
+import { Store } from '@ngrx/store';
 
 /**
  * Pipe for building a item route from an object
@@ -11,8 +18,13 @@ import { ItemRoute, RawItemRoute, itemRoute } from '../models/routing/item-route
   standalone: true
 })
 export class ItemRoutePipe implements PipeTransform {
+
+  private store = inject(Store);
+  private observedGroupRouteAsItemRouteParameterSignal = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
+
   transform(item: { id: string } & ({ type: ItemType }|{ contentType: ItemTypeCategory }), extraAttrs?: Partial<ItemRoute>): RawItemRoute {
-    return itemRoute('type' in item ? typeCategoryOfItem(item): item.contentType, item.id, extraAttrs);
+    const attrs = { ...this.observedGroupRouteAsItemRouteParameterSignal(), ...extraAttrs };
+    return itemRoute('type' in item ? typeCategoryOfItem(item): item.contentType, item.id, attrs);
   }
 }
 
@@ -26,6 +38,6 @@ export class ItemRoutePipe implements PipeTransform {
 })
 export class ItemRouteWithExtraPipe implements PipeTransform {
   transform<T extends RawItemRoute>(route: T, attrs: Partial<ItemRoute>): T {
-    return { ...route, ...attrs };
+    return itemRouteWith(route, attrs);
   }
 }

@@ -1,3 +1,6 @@
-export * as observationEffects from './observation.effects';
-export { fromObservation } from './observation.store';
-export { ObservationInfo } from './observation.actions';
+import { selectors } from './observation.selectors';
+
+const fromObservation = selectors();
+
+export { ObservationInfo } from './models';
+export { fromObservation };

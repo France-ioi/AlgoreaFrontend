@@ -36,14 +36,14 @@ export function parseItemUrlSegments(segments: UrlSegment[], aliases: Aliases): 
   const id = idPath.id;
 
   // parsing parameters
-  const { path: pathFromParam, attemptId, parentAttemptId, answer } = extractItemRouteParameters(mainSegment.parameters);
+  const { path: pathFromParam, attemptId, parentAttemptId, answer, observedGroup } = extractItemRouteParameters(mainSegment.parameters);
   const path = pathFromParam ?? idPath.path;
 
   // creating the response from what we parsed
-  if (!path) return { route: { tag: 'error', contentType, id, answer }, page };
-  if (attemptId) return { route: itemRoute(contentType, id, { path, attemptId, answer }), page };
-  if (parentAttemptId) return { route: itemRoute(contentType, id, { path, parentAttemptId, answer }), page };
-  return { route: { tag: 'error', contentType, id, path, answer }, page };
+  if (!path) return { route: { tag: 'error', contentType, id, answer, observedGroup }, page };
+  if (attemptId) return { route: itemRoute(contentType, id, { path, attemptId, answer, observedGroup }), page };
+  if (parentAttemptId) return { route: itemRoute(contentType, id, { path, parentAttemptId, answer, observedGroup }), page };
+  return { route: { tag: 'error', contentType, id, path, answer, observedGroup }, page };
 }
 
 function itemCategoryFromPrefix(prefix: string): ItemTypeCategory|null {

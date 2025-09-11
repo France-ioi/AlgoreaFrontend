@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
-import { RawItemRoute } from './item-route';
+import { itemRouteWith, RawItemRoute, selectObservedGroupRouteAsItemRouteParameter } from './item-route';
 import { AnswerId } from '../ids';
 import { loadAnswerAsCurrentAsBrowserState } from 'src/app/items/utils/load-answer-as-current-state';
 import { APPCONFIG, AppConfig } from 'src/app/config';
@@ -14,6 +14,7 @@ interface NavigateOptions {
   preventFullFrame?: boolean,
   loadAnswerIdAsCurrent?: AnswerId,
   navExtras?: NavigationExtras,
+  useCurrentObservation?: boolean,
 }
 
 @Injectable({
@@ -28,19 +29,25 @@ export class ItemRouter {
   ) {}
 
   private currentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
+  private observedGroupRouteAsItemRouteParameter = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
 
   /**
    * Navigate to given item, on the path page.
    * If page is not given and we are currently on an item page, use the same page. Otherwise, default to '/'.
+   * If `keepCurrentObservation` is given, we use the observation value from the current page.
    */
-  navigateTo(item: RawItemRoute, {
+  navigateTo(route: RawItemRoute, {
     page,
     navExtras,
     loadAnswerIdAsCurrent,
+    useCurrentObservation = false,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     preventFullFrame = Boolean(typeof history.state === 'object' && history.state?.preventFullFrame),
   }: NavigateOptions = {}): void {
-    void this.router.navigate(this.routeAsUrlCommand(item, page), { ...navExtras, state: {
+    if (useCurrentObservation) {
+      route = itemRouteWith(route, this.observedGroupRouteAsItemRouteParameter());
+    }
+    void this.router.navigate(this.routeAsUrlCommand(route, page), { ...navExtras, state: {
       ...navExtras?.state,
       preventFullFrame,
       ...(loadAnswerIdAsCurrent ? loadAnswerAsCurrentAsBrowserState(loadAnswerIdAsCurrent) : {}),

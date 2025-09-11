@@ -137,7 +137,7 @@ export class LTIComponent implements OnDestroy {
           return;
         }
         const route = itemRoute('activity', firstChild.id, { path, parentAttemptId: attemptId });
-        this.itemRouter.navigateTo(route, { navExtras: { replaceUrl: true } });
+        this.itemRouter.navigateTo(route, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
       }),
   ];
 

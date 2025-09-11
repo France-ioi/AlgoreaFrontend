@@ -1,6 +1,6 @@
 import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
-import { delay, switchMap, tap } from 'rxjs/operators';
+import { delay, filter, switchMap, take, tap } from 'rxjs/operators';
 import { merge, Subscription } from 'rxjs';
 import { AuthService } from './services/auth/auth.service';
 import { Router, RouterOutlet } from '@angular/router';
@@ -27,7 +27,11 @@ import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { fromItemContent } from './items/store';
+import { isNotNull } from './utils/null-undefined-predicates';
+import { ItemRouter } from './models/routing/item-router';
 import { CdkScrollable } from '@angular/cdk/overlay';
+import { routeWithNoObservation } from './models/routing/item-route';
 
 @Component({
   selector: 'alg-root',
@@ -94,6 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private renderer: Renderer2,
     private chunkErrorService: ChunkErrorService,
+    private itemRouter: ItemRouter,
   ) {
     const title = this.localeService.currentLang ? this.config.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? this.config.defaultTitle);
@@ -150,7 +155,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   closeObservationErrorDialog(): void {
     this.showObservationErrorDialog = false;
-    this.store.dispatch(fromObservation.errorModalActions.disableObservation());
+    this.store.select(fromItemContent.selectActiveContentRoute).pipe(
+      take(1),
+      filter(isNotNull),
+    ).subscribe(route => {
+      this.itemRouter.navigateTo(routeWithNoObservation(route));
+    });
   }
 
   onRefresh(): void {

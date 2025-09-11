@@ -1,6 +1,9 @@
 import { ContentRoute } from './content-route';
 import { ItemTypeCategory } from '../../items/models/item-type';
-import { AnswerId, AttemptId, ItemId, ItemPath, ParticipantId } from '../ids';
+import { AnswerId, AttemptId, GroupId, ItemId, ItemPath, ParticipantId } from '../ids';
+import { createSelector } from '@ngrx/store';
+import { fromObservation } from 'src/app/store/observation';
+import { isUser } from './group-route';
 
 /* **********************************************************************************************************
  * Item Route: Object storing information required to navigate to an item
@@ -22,6 +25,7 @@ export interface ItemRoute extends ContentRoute {
   attemptId?: AttemptId,
   parentAttemptId?: AttemptId,
   answer?: { id: AnswerId, best?: undefined } | { best: { id?: ParticipantId /* not set -> mine */ }, id?: undefined },
+  observedGroup?: { id: GroupId, isUser: boolean },
 }
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
@@ -48,11 +52,21 @@ export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs?: Omi
   return { ...attrs, contentType, id };
 }
 
+export function itemRouteWith<T extends RawItemRoute, U extends T>(route: T, attrs: Partial<ItemRoute>): U {
+  return { ...route, ...attrs } as U;
+}
+
+
 /**
  * Add to the given route, the given self attempt id (if any) (used when only the parent id was know until now)
  */
 export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|undefined): FullItemRoute {
   return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
+}
+
+export function routeWithNoObservation(route: FullItemRoute): FullItemRoute {
+  // when leaving observation, we also leave the loaded answer if any
+  return { ...route, observedGroup: undefined, answer: undefined };
 }
 
 /**
@@ -66,3 +80,11 @@ export function parentRoute(route: ItemRoute, defaultActivityRoute: FullItemRout
     path: route.path.slice(0, -1),
   });
 }
+
+/**
+ * Selector to get the currently observed group as an item route parameter
+ */
+export const selectObservedGroupRouteAsItemRouteParameter = createSelector(
+  fromObservation.selectObservedGroupRoute,
+  route => (route !== null ? { observedGroup: { id: route.id, isUser: isUser(route) } } : {})
+);

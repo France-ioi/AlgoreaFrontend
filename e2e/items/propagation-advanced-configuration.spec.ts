@@ -11,7 +11,7 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
 }) => {
   await test.step('enables full item permissions', async () => {
     await initAsUsualUser(page);
-    await page.goto('/a/7953920074421401798;p=8494219788300407657;a=0?watchedGroupId=8381064573926674105');
+    await page.goto('/a/7953920074421401798;p=8494219788300407657;a=0;og=8381064573926674105');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
     await editPermissionsModal.openField('Can view');
@@ -72,7 +72,7 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
 
   await test.step('decrease item permissions', async () => {
     await initAsUsualUser(page);
-    await page.goto('/a/7953920074421401798;p=8494219788300407657;a=0?watchedGroupId=8381064573926674105');
+    await page.goto('/a/7953920074421401798;p=8494219788300407657;a=0;og=8381064573926674105');
     await editPermissionsModal.openPermissionsBlock();
     await editPermissionsModal.openPermissionsModal();
 

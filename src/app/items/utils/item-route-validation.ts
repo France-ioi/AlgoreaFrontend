@@ -19,7 +19,7 @@ class NoSuchAliasError extends Error {
  * May emit errors.
  */
 export function solveRouteError(
-  { contentType, id, path, answer }: ItemRouteError,
+  { contentType, id, path, answer, observedGroup }: ItemRouteError,
   getItemPathService: GetItemPathService,
   resultActionsService: ResultActionsService,
   itemRouter: ItemRouter
@@ -29,15 +29,19 @@ export function solveRouteError(
     switchMap(path => (path ? of(path) : getItemPathService.getItemPath(id))),
     switchMap(path => {
       // for empty path (root items), consider the item has a (fake) parent attempt id 0
-      if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answer });
+      if (path.length === 0) return of({ contentType, id, path, parentAttemptId: defaultAttemptId, answer, observedGroup });
       // else, will start all path but the current item
       return resultActionsService.startWithoutAttempt(path).pipe(
-        map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answer }))
+        map(attemptId => ({ contentType, id, path, parentAttemptId: attemptId, answer, observedGroup }))
       );
     }),
     delay(0), // required in order to trigger new navigation after the current one
     switchMap(itemRoute => {
-      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState() });
+      itemRouter.navigateTo(itemRoute, {
+        navExtras: { replaceUrl: true },
+        loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState(),
+        useCurrentObservation: true
+      });
       return EMPTY;
     })
   );

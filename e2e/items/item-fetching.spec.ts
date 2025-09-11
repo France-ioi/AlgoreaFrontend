@@ -32,7 +32,7 @@ test('wrong path auto-healing', async ({ page }) => {
 
 test('refresh when observation change (check the score)', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('/a/1293400563985240032;p=7528142386663912287,7523720120450464843;a=0?watchedGroupId=752024252804317630&watchUser=1');
+  await page.goto('/a/1293400563985240032;p=7528142386663912287,7523720120450464843;a=0;og=752024252804317630;ou=1');
 
   await test.step('check score of the observed user', async () => {
     await expect.soft(page.locator('.score-caption')).toContainText('50');
