@@ -1,0 +1,55 @@
+@import 'src/assets/scss/functions';
+
+.alg-table-v2 {
+  width: 100%;
+  min-width: 599.98px;
+  border-spacing: 0;
+
+  .alg-table-th {
+    padding: toRem(13) toRem(19);
+    color: var(--alg-secondary-color);
+    font-size: toRem(16);
+    font-weight: 400;
+    text-align: left;
+    opacity: .5;
+  }
+
+  .alg-table-td {
+    padding: 0 toRem(19);
+    color: var(--alg-secondary-color);
+    font-size: toRem(16);
+    border: none;
+    height: toRem(56);
+
+    &:first-child {
+      border-radius: toRem(10) 0 0 toRem(10);
+    }
+
+    &:last-child {
+      border-radius: 0 toRem(10) toRem(10) 0;
+    }
+
+    &.empty-td {
+      border-radius: toRem(10) !important;
+    }
+  }
+
+  .alg-table-body-tr {
+    &:nth-child(odd) {
+      background-color: rgba(0, 0, 0, .04);
+    }
+  }
+}
+
+.alg-table-page-wrapper {
+  margin: 0 toRem(-18);
+}
+
+.alg-table-horizontal-scroll {
+  overflow-x: scroll;
+}
+
+.alg-table-load-more {
+  padding: toRem(10);
+  text-align: center;
+}
