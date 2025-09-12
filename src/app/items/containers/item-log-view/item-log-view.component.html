@@ -85,7 +85,7 @@
                             attemptId: rowData.item.id === itemData.item.id ? itemData.route.attemptId : undefined,
                             parentAttemptId: rowData.item.id === itemData.item.id ? itemData.route.parentAttemptId : undefined,
                           } | url: []"
-                          [state]="meta.isObserving ? {} : (rowData.answerId | routingStateForLoadingAnswerAsCurrent)"
+                          [algLoadAnswerAsCurrent]="meta.isObserving ? undefined : rowData.answerId"
                           *ngIf="(!meta.isObserving || !!rowData.canWatchAnswer) && rowData.answerId"
                         >
                           {(meta.isObserving ? 'observingMode' : ''), select,

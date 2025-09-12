@@ -3,7 +3,7 @@ import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
 import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { defaultAttemptId } from '../models/attempts';
-import { loadAnswerAsCurrentFromBrowserState } from './load-answer-as-current-state';
+import { loadAnswerAsCurrentFromNavigationState } from 'src/app/models/routing/item-navigation-state';
 import { ItemRouteError } from 'src/app/models/routing/item-route-serialization';
 
 class NoSuchAliasError extends Error {
@@ -37,11 +37,8 @@ export function solveRouteError(
     }),
     delay(0), // required in order to trigger new navigation after the current one
     switchMap(itemRoute => {
-      itemRouter.navigateTo(itemRoute, {
-        navExtras: { replaceUrl: true },
-        loadAnswerIdAsCurrent: loadAnswerAsCurrentFromBrowserState(),
-        useCurrentObservation: true
-      });
+      const loadAnswerIdAsCurrent = loadAnswerAsCurrentFromNavigationState();
+      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent, useCurrentObservation: true });
       return EMPTY;
     })
   );

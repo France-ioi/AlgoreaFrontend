@@ -20,7 +20,7 @@ import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GetAnswerService } from '../data-access/get-answer.service';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
-import { loadAnswerAsCurrentFromBrowserState } from '../utils/load-answer-as-current-state';
+import { loadAnswerAsCurrentFromNavigationState } from 'src/app/models/routing/item-navigation-state';
 import { areStateAnswerEqual } from '../models/answers';
 import { Answer } from './item-task.service';
 import { AnswerService } from '../data-access/answer.service';
@@ -43,7 +43,7 @@ export class InitialAnswerDataSource implements OnDestroy {
     map(([{ route: { id, attemptId, answer }, isTask }, isObserving ]): Strategy => {
       if (isTask === false) return { tag: 'NotApplicable' };
       if (!answer) {
-        const loadAnswerAsCurrent = loadAnswerAsCurrentFromBrowserState();
+        const loadAnswerAsCurrent = loadAnswerAsCurrentFromNavigationState();
         if (loadAnswerAsCurrent) {
           return attemptId ? { tag: 'LoadAsCurrent', itemId: id, attemptId, answerId: loadAnswerAsCurrent } : { tag: 'Wait' };
         }
