@@ -10,6 +10,7 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
 import { Store } from '@ngrx/store';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 import { managedGroupsPage } from 'src/app/models/routing/group-route';
+import { ContentDisplayType, LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'alg-manage-groups',
@@ -28,6 +29,7 @@ export class ManageGroupsComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store,
+    private layoutService: LayoutService,
     private currentContent: CurrentContentService,
     private sessionService: UserSessionService,
   ) {
@@ -35,6 +37,7 @@ export class ManageGroupsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentContent.replace(myGroupsInfo({}));
+    this.layoutService.configure({ contentDisplayType: ContentDisplayType.Show });
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route: managedGroupsPage,
       title: $localize`Manage groups`,
