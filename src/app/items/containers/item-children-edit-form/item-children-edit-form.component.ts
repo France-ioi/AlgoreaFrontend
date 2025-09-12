@@ -20,6 +20,7 @@ import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/float
 import { NgIf, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from '../../store';
+import { LocaleService } from 'src/app/services/localeService';
 
 @Component({
   selector: 'alg-item-children-edit-form',
@@ -49,6 +50,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
 
   constructor(
     private store: Store,
+    private localeService: LocaleService,
     private createItemService: CreateItemService,
     private updateItemService: UpdateItemService,
     private actionFeedbackService: ActionFeedbackService,
@@ -76,6 +78,9 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
       return of([]);
     }
 
+    const languageTag = this.localeService.currentLang?.tag;
+    if (!languageTag) throw new Error('unexpected: current language not defined');
+
     return forkJoin(
       this.itemChanges.children.map(child => {
         if (!this.itemData) throw new Error('Missed item data');
@@ -86,7 +91,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
           title: child.title,
           type: child.type,
           url: child.url,
-          languageTag: 'en',
+          languageTag,
           parent: this.itemData.item.id,
         };
         return this.createItemService
