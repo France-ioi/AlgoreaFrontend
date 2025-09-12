@@ -33,6 +33,7 @@ import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { LetDirective } from '@ngrx/component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { LocaleService } from 'src/app/services/localeService';
 
 @Component({
   selector: 'alg-group-edit',
@@ -101,6 +102,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
 
   constructor(
     private store: Store,
+    private localeService: LocaleService,
     private currentContentService: CurrentContentService,
     private actionFeedbackService: ActionFeedbackService,
     private formBuilder: UntypedFormBuilder,
@@ -160,6 +162,8 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
       = this.groupForm.get('requireLockMembershipApprovalUntil')?.value as GroupApprovals['requireLockMembershipApprovalUntil'];
     const requirePersonalInfoAccessApproval
       = this.groupForm.get('requirePersonalInfoAccessApproval')?.value as GroupApprovals['requirePersonalInfoAccessApproval'];
+    const languageTag = this.localeService.currentLang?.tag;
+    if (!languageTag) throw new Error('unexpected: current language not defined');
 
     const rootActivity = this.groupForm.get('rootActivity')?.value as NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem;
     const rootActivityId$ = !isNewAssociatedItem(rootActivity) ? of(isExistingAssociatedItem(rootActivity) ? rootActivity.id : null) :
@@ -167,7 +171,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         title: rootActivity.name,
         url: rootActivity.url,
         type: rootActivity.itemType,
-        languageTag: 'en',// FIXME
+        languageTag,
         asRootOfGroupId: this.initialFormData.id,
       });
 
@@ -176,7 +180,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
       this.createItemService.create({
         title: rootSkill.name,
         type: rootSkill.itemType,
-        languageTag: 'en',// FIXME
+        languageTag,
         asRootOfGroupId: this.initialFormData.id,
       });
 
