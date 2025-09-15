@@ -35,113 +35,92 @@
         Refresh
       </button>
     </div>
-    <ng-container *ngIf="columns$ | async as columns">
-      <p-table
-        class="alg-table"
-        [columns]="columns"
-        [value]="state.data"
-        [loading]="state.isFetching"
-        [tableStyle]="{'min-width': '599.98px'}"
-        responsiveLayout="scroll"
-        *ngIf="{ isObserving: isObserving$ | async } as meta"
-      >
-        <ng-template pTemplate="header" let-rowData let-columns>
-          <tr *ngIf="rowData.length > 0">
-            <ng-container *ngFor="let col of columns">
-              <th>
-                {{ col.header }}
-              </th>
-            </ng-container>
-          </tr>
-        </ng-template>
 
-        <ng-template
-          pTemplate="body"
-          let-rowData
-          let-columns="columns"
-        >
-          <tr>
-            <td *ngFor="let col of columns">
-              <ng-container [ngSwitch]="col.field">
-                <ng-container *ngSwitchCase="'activityType'">
-                  <div class="item-title-section">
-                    <div class="item-title-section-left">
-                      <alg-score-ring
-                        [currentScore]="rowData.score"
-                        *ngIf="rowData.score; else iconSection"
-                      ></alg-score-ring>
-                      <ng-template #iconSection>
-                        <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
-                      </ng-template>
-                    </div>
-                    <div class="item-title">
-                      <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                      @if (itemData) {
-                        <a
-                          class="alg-link item-title-link"
-                          [routerLink]="rowData.item | itemRoute: {
-                            answer: $any(meta.isObserving ? { id: rowData.answerId } : undefined),
+    @let isObserving = isObserving$ | async;
+    <div class="alg-table-page-wrapper">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2" cdk-table [dataSource]="state.data">
+          @for (column of columns(); track column.field) {
+            <ng-container [cdkColumnDef]="column.field">
+              <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>{{ column.header }}</th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                <ng-container [ngSwitch]="column.field">
+                  <ng-container *ngSwitchCase="'activityType'">
+                    <div class="item-title-section">
+                      <div class="item-title-section-left">
+                        <alg-score-ring
+                          [currentScore]="rowData.score"
+                          *ngIf="rowData.score; else iconSection"
+                        ></alg-score-ring>
+                        <ng-template #iconSection>
+                          <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
+                        </ng-template>
+                      </div>
+                      <div class="item-title">
+                        <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
+                        @if (itemData) {
+                          <a
+                            class="alg-link item-title-link"
+                            [routerLink]="rowData.item | itemRoute: {
+                            answer: $any(isObserving ? { id: rowData.answerId } : undefined),
                             path: rowData.item.id === itemData.item.id ? itemData.route.path : undefined,
                             attemptId: rowData.item.id === itemData.item.id ? itemData.route.attemptId : undefined,
                             parentAttemptId: rowData.item.id === itemData.item.id ? itemData.route.parentAttemptId : undefined,
                           } | url: []"
-                          [algLoadAnswerAsCurrent]="meta.isObserving ? undefined : rowData.answerId"
-                          *ngIf="(!meta.isObserving || !!rowData.canWatchAnswer) && rowData.answerId"
-                        >
-                          {(meta.isObserving ? 'observingMode' : ''), select,
-                            observingMode {View answer}
-                            other {Reload answer}
-                          }
-                        </a>
-                      }
+                            [algLoadAnswerAsCurrent]="isObserving ? undefined : rowData.answerId"
+                            *ngIf="(!isObserving || !!rowData.canWatchAnswer) && rowData.answerId"
+                          >
+                            {(isObserving ? 'observingMode' : ''), select,
+                              observingMode {View answer}
+                              other {Reload answer}
+                              }
+                          </a>
+                        }
+                      </div>
                     </div>
-                  </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'item.string.title'">
+                    <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
+                      {{ rowData.item.string.title }}
+                    </a>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'item.user'">
+                    @if (rowData.user) {
+                      <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
+                    } @else {
+                      {{ rowData.participant.name }}
+                    }
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'at'">
+                    <alg-relative-time [value]="rowData.at"></alg-relative-time>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ rowData[column.field] }}
+                  </ng-container>
                 </ng-container>
-                <ng-container *ngSwitchCase="'item.string.title'">
-                  <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
-                    {{ rowData.item.string.title }}
-                  </a>
-                </ng-container>
-                <ng-container *ngSwitchCase="'item.user'">
-                  @if (rowData.user) {
-                    <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
-                  } @else {
-                    {{ rowData.participant.name }}
-                  }
-                </ng-container>
-                <ng-container *ngSwitchCase="'at'">
-                  <alg-relative-time [value]="rowData.at"></alg-relative-time>
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                  {{ rowData[col.field] }}
-                </ng-container>
-              </ng-container>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage" let-columns>
-          <tr>
-            <td [attr.colspan]="columns.length">
+              </td>
+            </ng-container>
+          }
+          <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" *cdkNoDataRow>
+            <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
               <span i18n>There is no progress to report for this item.</span>
             </td>
           </tr>
-        </ng-template>
+        </table>
+      </div>
+    </div>
 
-        <ng-template pTemplate="footer">
-          <tr *ngIf="datapager.canLoadMore$ | async">
-            <td [attr.colspan]="columns.length">
-              <div class="text-center">
-                <button
-                  alg-button
-                  (click)="fetchMoreRows()"
-                  [disabled]="state.isFetching || state.isError"
-                  i18n
-                >Load more</button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </ng-container>
+    @if (datapager.canLoadMore$ | async) {
+      <div class="alg-table-load-more">
+        <button
+          alg-button
+          (click)="fetchMoreRows()"
+          [disabled]="state.isFetching || state.isError"
+          i18n
+        >Load more</button>
+      </div>
+    }
   </ng-container>
 </ng-container>

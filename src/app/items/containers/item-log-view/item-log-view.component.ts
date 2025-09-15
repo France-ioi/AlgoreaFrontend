@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
@@ -15,12 +15,11 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -28,6 +27,20 @@ import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable,
+} from '@angular/cdk/table';
+import { toSignal } from '@angular/core/rxjs-interop';
 interface Column {
   field: string,
   header: string,
@@ -46,9 +59,7 @@ const logsLimit = 20;
     ErrorComponent,
     LetDirective,
     RouterLink,
-    TableModule,
     SharedModule,
-    NgFor,
     NgSwitch,
     NgSwitchCase,
     ScoreRingComponent,
@@ -66,6 +77,17 @@ const logsLimit = 20;
     RelativeTimeComponent,
     LogActivityTypeIconPipe,
     ButtonComponent,
+    CdkTable,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    CdkCellDef,
+    CdkCell,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
   ],
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
@@ -100,6 +122,9 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   ]).pipe(
     map(([ item, observedGroupRoute ]) => this.getLogColumns(item.type, observedGroupRoute)),
   );
+
+  columns = toSignal(this.columns$, { initialValue: [] });
+  displayedColumns = computed(() => this.columns().map(column => column.field));
 
   constructor(
     private store: Store,
