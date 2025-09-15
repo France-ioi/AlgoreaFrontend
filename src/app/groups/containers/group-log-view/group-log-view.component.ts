@@ -1,5 +1,7 @@
 import {
   Component,
+  computed,
+  input,
   Input,
   OnChanges,
   signal,
@@ -19,7 +21,6 @@ import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
@@ -28,6 +29,19 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
 
 const logsLimit = 20;
 
@@ -40,7 +54,6 @@ const logsLimit = 20;
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    TableModule,
     SharedModule,
     ScoreRingComponent,
     NgClass,
@@ -57,14 +70,31 @@ const logsLimit = 20;
     ShowOverlayDirective,
     LogActivityTypeIconPipe,
     ButtonComponent,
+    CdkTable,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    CdkCell,
+    CdkCellDef,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
   ],
 })
 export class GroupLogViewComponent implements OnChanges {
 
   @Input() groupId?: string;
-  @Input() showUserColumn = true;
+  showUserColumn = input(true);
 
   itemId = signal<string | undefined>(undefined);
+  displayedColumns = computed(() => [
+    'action',
+    'content',
+    ...(this.showUserColumn() ? [ 'user' ] : []),
+    'time',
+  ]);
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> => this.getRows(pageSize, latestRow),

@@ -22,103 +22,105 @@
         Refresh
       </button>
     </div>
-    <p-table
-      class="alg-table"
-      [value]="state.data"
-      [loading]="state.isFetching"
-      [tableStyle]="{'min-width': '599.98px'}"
-      responsiveLayout="scroll"
-    >
-      <ng-template pTemplate="header" let-rowData>
-        <tr *ngIf="state.data.length > 0">
-          <th i18n>Action</th>
-          <th i18n>Content</th>
-          <th i18n *ngIf="this.showUserColumn">User</th>
-          <th i18n>Time</th>
-        </tr>
-      </ng-template>
 
-      <ng-template
-          pTemplate="body"
-          let-rowData
-          let-index="rowIndex"
-      >
-        <tr>
-          <td>
-            <div class="item-title-section">
-              <div class="item-title-section-left">
-                <alg-score-ring
-                  [currentScore]="rowData.score"
-                  [diameter]="32"
-                  *ngIf="rowData.score; else iconSection"
-                ></alg-score-ring>
-                <ng-template #iconSection>
-                  <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
-                </ng-template>
+    <div class="alg-table-page-wrapper">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2" cdk-table [dataSource]="state.data">
+          <ng-container cdkColumnDef="action">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Action</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              <div class="item-title-section">
+                <div class="item-title-section-left">
+                  <alg-score-ring
+                    [currentScore]="rowData.score"
+                    [diameter]="32"
+                    *ngIf="rowData.score; else iconSection"
+                  ></alg-score-ring>
+                  <ng-template #iconSection>
+                    <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
+                  </ng-template>
+                </div>
+                <div class="item-title">
+                  <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
+                  <a
+                    class="alg-link"
+                    [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url"
+                    *ngIf="rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId"
+                  >
+                    View answer
+                  </a>
+                </div>
               </div>
-              <div class="item-title">
-                <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                <a
-                  class="alg-link"
-                  [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url"
-                  *ngIf="rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId"
-                >
-                  View answer
-                </a>
-              </div>
-            </div>
-          </td>
-          <td
-            [algShowOverlay]="op"
-            (overlayOpenEvent)="itemId.set(rowData.item.id)"
-            (overlayCloseEvent)="itemId.set(undefined)"
-            #overlay="algShowOverlay"
-          >
-            <a
-              class="alg-link"
-              [ngClass]="{'disabled': !rowData.item}"
-              [routerLink]="rowData.item | itemRoute | url"
-              algShowOverlayHoverTarget
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="content">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Content</th>
+            <td
+              class="alg-table-td"
+              cdk-cell
+              *cdkCellDef="let rowData"
+              [algShowOverlay]="op"
+              (overlayOpenEvent)="itemId.set(rowData.item.id)"
+              (overlayCloseEvent)="itemId.set(undefined)"
+              #overlay="algShowOverlay"
             >
-              {{ rowData.item.string.title }}
-            </a>
-            <ng-template #op>
-              <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
-            </ng-template>
-          </td>
-          <td *ngIf="this.showUserColumn">
-            @if (rowData.user) {
-              <a class="alg-link" [routerLink]="rowData.user | groupLink">{{ rowData.user | userCaption }}</a>
-            } @else {
-              {{ rowData.participant.name }}
-            }
-          </td>
-          <td>{{ rowData.at | date:'short' }}</td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td>
-            <span i18n>There is no progress to report for this group/user.</span>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="footer">
-        <tr *ngIf="datapager.canLoadMore$ | async">
-          <td [attr.colspan]="this.showUserColumn ? 4 : 3">
-            <div class="text-center">
-              <button
-                alg-button
-                class="size-s stroke"
-                icon="ph-duotone ph-arrow-circle-down"
-                (click)="fetchMoreRows()"
-                [disabled]="state.isFetching || state.isError"
-                i18n
-              >Load more</button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+              <a
+                class="alg-link"
+                [ngClass]="{'disabled': !rowData.item}"
+                [routerLink]="rowData.item | itemRoute | url"
+                algShowOverlayHoverTarget
+              >
+                {{ rowData.item.string.title }}
+              </a>
+              <ng-template #op>
+                <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="user">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>User</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              @if (rowData.user) {
+                <a class="alg-link" [routerLink]="rowData.user | groupLink">{{ rowData.user | userCaption }}</a>
+              } @else {
+                {{ rowData.participant.name }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="time">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Time</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              {{ rowData.at | date:'short' }}
+            </td>
+          </ng-container>
+
+          @if (state.data.length > 0) {
+            <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+          }
+          <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" *cdkNoDataRow>
+            <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
+              <span i18n>There is no progress to report for this group/user.</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    @if (datapager.canLoadMore$ | async) {
+      <div class="alg-table-load-more">
+        <button
+          alg-button
+          class="size-s stroke"
+          icon="ph-duotone ph-arrow-circle-down"
+          (click)="fetchMoreRows()"
+          [disabled]="state.isFetching || state.isError"
+          i18n
+        >Load more</button>
+      </div>
+    }
   </ng-container>
 </ng-container>
