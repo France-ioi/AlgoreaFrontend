@@ -9,6 +9,7 @@ export const answerSchema = z.object({
   answer: z.string().nullable(),
   attemptId: z.string().nullable(),
   authorId: z.string(),
+  participantId: z.string(),
   createdAt: z.coerce.date(),
   gradedAt: z.coerce.date().nullable(),
   id: z.string(),
