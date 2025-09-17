@@ -66,11 +66,11 @@ test('checks path suggestion in group logs', async ({ page, showOverflow }) => {
 
   await page.goto('/groups/by-id/4306830013673248439;p=614090468359597091/history');
 
-  const firstRowLocator = page.locator('alg-group-log-view').locator('p-table').locator('tbody').locator('tr').first();
+  const firstRowLocator = page.locator('alg-group-log-view').locator('table').locator('tbody').locator('tr').first();
   const targetLinkLocator = firstRowLocator.locator('td').nth(1).locator('a');
 
   await test.step('checks logs are visible', async () => {
-    await expect.soft(page.locator('alg-group-log-view').locator('p-table')).toBeVisible();
+    await expect.soft(page.locator('alg-group-log-view').locator('table')).toBeVisible();
     await expect.soft(firstRowLocator).toBeVisible();
     await expect.soft(targetLinkLocator).toBeVisible();
   });
