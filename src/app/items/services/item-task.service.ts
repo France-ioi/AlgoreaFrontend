@@ -12,7 +12,7 @@ import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 
-export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
+export type Answer = Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
 
 export interface TaskConfig {
   readOnly: boolean,
