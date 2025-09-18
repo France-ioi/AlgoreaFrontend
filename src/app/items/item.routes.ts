@@ -80,6 +80,10 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: '**',
+        children: [],
+      },
     ]
   },
   {
