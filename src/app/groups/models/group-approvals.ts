@@ -8,6 +8,8 @@ export const groupApprovalsSchema = z.object({
   requireWatchApproval: z.boolean(),
 });
 
+export const infoAndWatchGroupApprovalsSchema = groupApprovalsSchema.omit({ requireLockMembershipApprovalUntil: true });
+
 export type GroupApprovals = z.infer<typeof groupApprovalsSchema>;
 
 export enum ApprovalValues {
