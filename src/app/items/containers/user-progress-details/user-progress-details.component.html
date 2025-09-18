@@ -66,7 +66,7 @@
         >
           <a
             [ngClass]="{ 'disabled': !(progressData.colItem.permissions | allowsWatchingAnswers) && progressData.progress.groupId !== currentUser.groupId }"
-            [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url"
+            [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url: ['task', 'editor']"
             icon="pi pi-code"
             alg-button
             i18n

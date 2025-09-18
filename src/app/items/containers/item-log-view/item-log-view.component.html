@@ -58,23 +58,29 @@
                       </div>
                       <div class="item-title">
                         <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                        @if (itemData) {
-                          <a
-                            class="alg-link item-title-link"
-                            [routerLink]="rowData.item | itemRoute: {
-                            answer: $any(isObserving ? { id: rowData.answerId } : undefined),
-                            path: rowData.item.id === itemData.item.id ? itemData.route.path : undefined,
-                            attemptId: rowData.item.id === itemData.item.id ? itemData.route.attemptId : undefined,
-                            parentAttemptId: rowData.item.id === itemData.item.id ? itemData.route.parentAttemptId : undefined,
-                          } | url: []"
-                            [algLoadAnswerAsCurrent]="isObserving ? undefined : rowData.answerId"
-                            *ngIf="(!isObserving || !!rowData.canWatchAnswer) && rowData.answerId"
-                          >
-                            {(isObserving ? 'observingMode' : ''), select,
-                              observingMode {View answer}
-                              other {Reload answer}
-                              }
-                          </a>
+                        @if (itemData && rowData.answerId) {
+                          @let path = rowData.item.id === itemData.item.id ? itemData.route.path : undefined;
+                          @let attemptId = rowData.item.id === itemData.item.id ? itemData.route.attemptId : undefined;
+                          @let parentAttemptId = rowData.item.id === itemData.item.id ? itemData.route.parentAttemptId : undefined;
+                          @let route = rowData.item | itemRoute: { path, attemptId, parentAttemptId };
+                          @if (!isObserving) {
+                            <a
+                              class="alg-link item-title-link"
+                              [routerLink]="route | url"
+                              [algLoadAnswerAsCurrent]="rowData.answerId"
+                              i18n
+                            >
+                              Reload answer
+                            </a>
+                          } @else if (isObserving && !!rowData.canWatchAnswer) {
+                            <a
+                              class="alg-link item-title-link"
+                              [routerLink]="route | with: { answer: { id: rowData.answerId } } | url: ['task', 'editor']"
+                              i18n
+                            >
+                              View answer
+                            </a>
+                          }
                         }
                       </div>
                     </div>
