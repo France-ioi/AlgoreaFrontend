@@ -13,6 +13,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { myGroupsPage } from 'src/app/models/routing/group-route';
 import { Store } from '@ngrx/store';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
+import { ContentDisplayType, LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'alg-my-groups',
@@ -36,12 +37,14 @@ export class MyGroupsComponent implements OnDestroy, OnInit {
 
   constructor(
     private store: Store,
+    private layoutService: LayoutService,
     private currentContent: CurrentContentService,
     private sessionService: UserSessionService,
   ) {}
 
   ngOnInit(): void {
     this.currentContent.replace(myGroupsInfo({}));
+    this.layoutService.configure({ contentDisplayType: ContentDisplayType.Show });
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route: myGroupsPage,
       title: $localize`My groups`,
