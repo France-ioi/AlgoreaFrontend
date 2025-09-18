@@ -18,9 +18,8 @@ const groupMembershipSchema = z.object({
   }),
   memberSince: z.coerce.date().nullable(),
   isMembershipLocked: z.boolean(),
-}).and(z.object({
-  canLeaveTeam: z.enum([ 'free_to_leave', 'frozen_membership', 'would_break_entry_conditions' ]),
-}).partial());
+  canLeaveTeam: z.enum([ 'free_to_leave', 'frozen_membership', 'would_break_entry_conditions' ]).optional(),
+});
 
 export type GroupMembership = z.infer<typeof groupMembershipSchema>;
 
