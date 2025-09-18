@@ -53,17 +53,15 @@
               </alg-error>
             } @else {
               <ng-container *ngrxLet="taskConfig$ as taskConfig">
-                @if (taskConfig && taskConfig.readOnly && currentTab && ['alg-content', 'task'].includes(currentTab.tag)) {
+                @if (taskConfig && taskConfig.readOnly && taskConfig.initialAnswer && currentTab && currentTab?.isTaskTab) {
                   <div
                     class="indicator"
                     [ngClass]="{ 'no-left-padding': !fullFrameContentDisplayed }"
                     >
-                    @if (!!currentTab?.isTaskTab && taskConfig.initialAnswer) {
                       <alg-answer-author-indicator
                         [answer]="taskConfig.initialAnswer"
                         [itemData]="itemData"
                       ></alg-answer-author-indicator>
-                    }
                   </div>
                 }
                 <alg-item-content
