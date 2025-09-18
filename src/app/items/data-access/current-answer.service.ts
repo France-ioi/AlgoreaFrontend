@@ -11,6 +11,7 @@ const existingCurrentAnswerSchema = z.object({
   answer: z.string().nullable(),
   attemptId: z.string().nullable(),
   authorId: z.string(),
+  participantId: z.string(),
   id: z.string(),
   itemId: z.string(),
   score: z.number().nullable(),

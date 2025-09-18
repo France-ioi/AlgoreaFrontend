@@ -277,10 +277,16 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
     // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
-    combineLatest([ this.itemState$, this.userProfile$, this.store.select(fromObservation.selectObservedGroupRoute) ]).pipe(
-      map(([ state, userProfile, observedGroupRoute ]) => {
+    combineLatest([
+      this.itemState$,
+      this.userProfile$,
+      this.store.select(fromObservation.selectObservedGroupRoute),
+      this.initialAnswerDataSource.answer$
+    ]).pipe(
+      map(([ state, userProfile, observedGroupRoute, answer ]) => {
         if (userProfile.tempUser) return null;
         if (!state.data || !isATask(state.data.item)) return null;
+        if (answer) return { participantId: answer.participantId, itemId: answer.itemId };
         if (observedGroupRoute && (!allowsWatchingAnswers(state.data.item.permissions) || !isUser(observedGroupRoute))) return null;
         if (!observedGroupRoute && !state.data.item.permissions.canRequestHelp) return null;
         return { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
