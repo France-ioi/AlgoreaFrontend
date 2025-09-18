@@ -44,7 +44,7 @@
                   <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
                   <a
                     class="alg-link"
-                    [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url"
+                    [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url: ['task', 'editor']"
                     *ngIf="rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId"
                   >
                     View answer

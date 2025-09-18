@@ -75,7 +75,7 @@
                           } @else if (isObserving && !!rowData.canWatchAnswer) {
                             <a
                               class="alg-link item-title-link"
-                              [routerLink]="route | with: { answer: { id: rowData.answerId } } | url"
+                              [routerLink]="route | with: { answer: { id: rowData.answerId } } | url: ['task', 'editor']"
                               i18n
                             >
                               View answer
