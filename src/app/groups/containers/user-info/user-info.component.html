@@ -1,8 +1,7 @@
 @if (user().isCurrentUser) {
   <div class="modify-section">
     <div class="flex-1 modify-description" i18n>
-      The following information is what we receive from the login platform.
-      It is only accessible to managers of groups you have explicitly authorized to view your personal information.
+      <alg-user-groups-with-grants />
     </div>
     <button
       class="size-l"
