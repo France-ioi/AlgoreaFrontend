@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
 import { HttpParams } from '@angular/common/http';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { UserGroupsWithGrantsComponent } from '../user-groups-with-grants/user-groups-with-grants.component';
 
 @Component({
   selector: 'alg-user-info',
@@ -13,6 +14,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   standalone: true,
   imports: [
     ButtonComponent,
+    UserGroupsWithGrantsComponent,
     CanEditPersonalInfoPipe,
     CanViewPersonalInfoPipe,
   ]

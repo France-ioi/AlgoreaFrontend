@@ -1,0 +1,35 @@
+@let state = groupsWithPersonalInfoAccess();
+
+<div class="container">
+  @switch(state.tag) {
+    @case('fetching') {
+      <alg-loading class="no-padding" size="small" />
+    }
+    @case('error') {
+      <alg-error i18n-message message="Error while fetching info about groups with personal info access"></alg-error>
+    }
+    @case('ready') {
+      @let data = state.data;
+      <div class="content" i18n>
+        The following information is what we receive from the login platform.
+      </div>
+        @if (data.noGroupsMatching) {
+          <div i18n class="content">
+            The groups you have joined do not have access to this information.
+          </div>
+        } @else {
+          @if (data.groupsWithViewAccess.length > 0) {
+            <div class="content">
+              <span i18n>The managers of the following group(s) have access to this information:</span> <alg-group-links class="links" [items]="data.groupsWithViewAccess" [maxItemsDisplay]="10"></alg-group-links>
+            </div>
+          }
+          @if (data.groupsWithEditAccess.length > 0) {
+            <div class="content">
+              <span i18n>The managers of the following group(s) can modify some of your personal information:</span> <alg-group-links class="links" [items]="data.groupsWithEditAccess" [maxItemsDisplay]="10"></alg-group-links>
+            </div>
+          }
+        }
+    }
+  }
+</div>
+
