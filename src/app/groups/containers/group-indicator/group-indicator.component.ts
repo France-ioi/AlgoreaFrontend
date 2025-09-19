@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { Group } from '../../models/group';
 import { GroupLinksComponent } from '../group-links/group-links.component';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'alg-group-indicator',
@@ -11,6 +12,7 @@ import { NgScrollbar } from 'ngx-scrollbar';
   imports: [
     GroupLinksComponent,
     NgScrollbar,
+    RouterLink,
   ]
 })
 export class GroupIndicatorComponent {

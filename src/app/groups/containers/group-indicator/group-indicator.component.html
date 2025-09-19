@@ -14,6 +14,12 @@
       }
     }
 
+    @if (group().currentUserHasPendingInvitation) {
+      <div class="content" i18n>
+        You have been invited to this group, go to "<a class="alg-link" [routerLink]="['/groups', 'mine']">My groups</a>" page to accept or reject the invitation.
+      </div>
+    }
+
     @switch (group().currentUserManagership) {
       @case ('direct') {
         <div class="content">
