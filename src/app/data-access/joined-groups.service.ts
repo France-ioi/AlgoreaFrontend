@@ -7,6 +7,7 @@ import { SortOptions, sortOptionsToHTTP } from 'src/app/data-access/sort-options
 import z from 'zod';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { map } from 'rxjs/operators';
+import { infoAndWatchGroupApprovalsSchema } from '../groups/models/group-approvals';
 
 const groupMembershipSchema = z.object({
   action: z.enum([ 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly' ]),
@@ -15,12 +16,11 @@ const groupMembershipSchema = z.object({
     name: z.string(),
     description: z.string().nullable(),
     type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Base', 'Session' ]),
-  }),
+  }).and(infoAndWatchGroupApprovalsSchema),
   memberSince: z.coerce.date().nullable(),
   isMembershipLocked: z.boolean(),
-}).and(z.object({
-  canLeaveTeam: z.enum([ 'free_to_leave', 'frozen_membership', 'would_break_entry_conditions' ]),
-}).partial());
+  canLeaveTeam: z.enum([ 'free_to_leave', 'frozen_membership', 'would_break_entry_conditions' ]).optional(),
+});
 
 export type GroupMembership = z.infer<typeof groupMembershipSchema>;
 
