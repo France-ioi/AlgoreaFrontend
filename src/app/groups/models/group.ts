@@ -28,6 +28,10 @@ export const groupSchema = z.object({
   descendantsCurrentUserIsManagerOf: z.array(groupShortInfoSchema),
   descendantsCurrentUserIsMemberOf: z.array(groupShortInfoSchema),
 
+  currentUserHasPendingInvitation: z.boolean().optional(),
+  currentUserHasPendingJoinRequest: z.boolean().optional(),
+  currentUserHasPendingLeaveRequest: z.boolean().optional(),
+
   rootActivityId: z.string().nullable(),
   rootSkillId: z.string().nullable(),
   openActivityWhenJoining: z.boolean(),
