@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { GroupShortInfo } from '../../models/group';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
 import { NgFor, NgIf, SlicePipe } from '@angular/common';
 
-const MAX_ITEMS_DISPLAY = 4;
+const defaultMaxItemsDisplay = 4;
 
 @Component({
   selector: 'alg-group-links',
@@ -15,8 +15,7 @@ const MAX_ITEMS_DISPLAY = 4;
 })
 export class GroupLinksComponent {
   @Input() items?: GroupShortInfo[];
-
-  maxItemsDisplay = MAX_ITEMS_DISPLAY;
+  maxItemsDisplay = input(defaultMaxItemsDisplay);
 
   constructor() { }
 
