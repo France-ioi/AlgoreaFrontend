@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-export const requirePersonalInfoAccessApprovalSchema = z.enum([ 'none', 'view', 'edit' ]);
+export enum RequirePersonalInfoAccessApproval {
+  None = 'none',
+  View = 'view',
+  Edit = 'edit',
+}
+const V = RequirePersonalInfoAccessApproval; // non-exported shorthand
+
+export const requirePersonalInfoAccessApprovalSchema = z.enum([ V.None, V.View, V.Edit ]);
 
 export const groupApprovalsSchema = z.object({
   requireLockMembershipApprovalUntil: z.coerce.date().nullable(),
@@ -22,6 +29,6 @@ export const mapGroupApprovalParamsToValues = ({
   requirePersonalInfoAccessApproval,
   requireLockMembershipApprovalUntil,
 }: GroupApprovals): string[] => [
-  ...(requirePersonalInfoAccessApproval !== 'none' ? [ ApprovalValues.PersonalInfoView ] : []),
+  ...(requirePersonalInfoAccessApproval !== V.None ? [ ApprovalValues.PersonalInfoView ] : []),
   ...(requireLockMembershipApprovalUntil !== null ? [ ApprovalValues.LockMembership ] : []),
 ];
