@@ -26,7 +26,7 @@
           <span i18n>Joined On</span>
           <p-sortIcon field="member_since"></p-sortIcon>
         </th>
-        <th i18n>Can watch your activities</th>
+        <!-- <th i18n>Can watch your activities</th> -->
         <th i18n>Personal info access</th>
         <th class="th-action"></th>
       </tr>
@@ -39,7 +39,7 @@
         </td>
         <td>{{ membership.group.type }}</td>
         <td>{{ membership.memberSince | date:'short' }}</td>
-        <td>
+        <!-- <td>
           <span class="table-icon">
             @if(membership.group.requireWatchApproval) {
               <i class="ph ph-check"></i>
@@ -47,7 +47,7 @@
               <i class="ph ph-x"></i>
             }
           </span>
-        </td>
+        </td> -->
         <td>
           <span class="table-icon">
             @switch(membership.group.requirePersonalInfoAccessApproval) {
