@@ -25,6 +25,7 @@ export function initErrorTracking(): void {
       "Can't find variable: WeakRef", // old Safari/Webkit browsers(<04/2020) do not know about WeakRef in JS. Used by ngx-scrollbar.
       "Can't find variable: gmo", // an error on Chrome (354 & 355) on iOS
       /change_ua/,
+      'The object is in an invalid state.', // a safari error triggered by tasks when resizing
     ],
     // from https://docs.sentry.io/clients/javascript/tips/
     denyUrls: [
