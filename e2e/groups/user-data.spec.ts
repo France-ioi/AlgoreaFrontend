@@ -17,7 +17,7 @@ test('checks current user profile', async ({ page, userPage }) => {
     await userPage.checksIsProgressTableVisible();
     await userPage.goToTab('Personal data');
     await userPage.checksIsModifyButtonVisible();
-    await userPage.checksIsCurrentUserIntroHeaderVisible();
+    await userPage.checksIsCurrentUserGroupsWithGrantsVisible();
     await userPage.checksIsLoginVisible('arbonenfant');
     await userPage.checksIsFirstnameVisible('Armelle');
     await userPage.goToTab('Settings');
@@ -39,6 +39,7 @@ test('checks other\'s user profile (cannot view personal info)', async ({ page, 
 
   await test.step('checks progress table is visible', async () => {
     await userPage.checksIsProgressTableVisible();
+    await userPage.checksIsOtherUserGroupsWithGrantsNotVisible();
   });
 
   await test.step('checks landing to personal info tab ', async () => {
