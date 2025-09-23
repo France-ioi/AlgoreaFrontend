@@ -8,7 +8,7 @@
     ></alg-pending-join-requests>-->
     <alg-group-indicator
         class="group-indicator"
-        *ngIf="(group | isCurrentUserManager) || (group | isCurrentUserMember)"
+        *ngIf="(group | isCurrentUserManager) || (group | isCurrentUserMember) || group.currentUserHasPendingInvitation"
         [group]="group"
     >
     </alg-group-indicator>
