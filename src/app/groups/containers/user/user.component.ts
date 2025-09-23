@@ -78,8 +78,11 @@ export class UserComponent implements OnInit, OnDestroy {
           route: 'user-by-id',
           title: state.isReady ? formatUser(state.data) : undefined,
           breadcrumbs: state.isReady ? [
-            ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({ title: b.name, navigateTo: this.groupRouter.url(b.route) })),
-            { title: formatUser(state.data), navigateTo: this.groupRouter.url(currentUserRoute) },
+            ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({
+              title: b.name,
+              navigateTo: (): void => this.groupRouter.navigateTo(b.route)
+            })),
+            { title: formatUser(state.data), navigateTo: (): void => this.groupRouter.navigateTo(currentUserRoute) },
             { title: currentPageTitle }
           ] : undefined
         }));
