@@ -3,6 +3,7 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class UserPage {
   modifyPasswordBtnLocator = this.page.getByRole('button', { name: 'Modify password' });
+  userGroupsWithGrantsLocator = this.page.locator('alg-user-groups-with-grants');
 
   constructor(private readonly page: Page) {
   }
@@ -37,8 +38,23 @@ export class UserPage {
     await expect.soft(this.page.getByRole('button', { name: 'Modify' })).toBeVisible();
   }
 
-  async checksIsCurrentUserIntroHeaderVisible(): Promise<void> {
-    await expect.soft(this.page.getByText('to view your personal information')).toBeVisible();
+  async checksIsCurrentUserGroupsWithGrantsVisible(): Promise<void> {
+    await expect.soft(this.userGroupsWithGrantsLocator).toBeVisible();
+    await expect.soft(
+      this.userGroupsWithGrantsLocator.getByText('The following information is what we receive from the login platform.')
+    ).toBeVisible();
+    await expect.soft(
+      this.userGroupsWithGrantsLocator.getByText('The managers of the following group(s) have access to this information:')
+    ).toBeVisible();
+    await expect.soft(this.userGroupsWithGrantsLocator.getByRole('link', { name: 'JoinGroupTest' })).toBeVisible();
+    await expect.soft(
+      this.userGroupsWithGrantsLocator.getByText('The managers of the following group(s) can modify some of your personal information:')
+    ).toBeVisible();
+    await expect.soft(this.userGroupsWithGrantsLocator.getByRole('link', { name: 'OMD - 2019-2020' })).toBeVisible();
+  }
+
+  async checksIsOtherUserGroupsWithGrantsNotVisible(): Promise<void> {
+    await expect.soft(this.userGroupsWithGrantsLocator).not.toBeVisible();
   }
 
   async checksIsEditableUserIntroHeaderVisible(): Promise<void> {

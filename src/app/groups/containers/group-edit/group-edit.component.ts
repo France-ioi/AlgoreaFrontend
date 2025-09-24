@@ -26,7 +26,7 @@ import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
-import { GroupApprovals } from 'src/app/groups/models/group-approvals';
+import { GroupApprovals, RequirePersonalInfoAccessApproval as PIApproval } from 'src/app/groups/models/group-approvals';
 import { DialogModule } from 'primeng/dialog';
 import { GetGroupMembersService } from '../../data-access/get-group-members.service';
 import { Store } from '@ngrx/store';
@@ -195,8 +195,8 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         )
       )
     ) || (
-      requirePersonalInfoAccessApproval !== 'none' && this.initialFormData.requirePersonalInfoAccessApproval === 'none'
-      || requirePersonalInfoAccessApproval === 'edit' && this.initialFormData.requirePersonalInfoAccessApproval !== 'edit'
+      requirePersonalInfoAccessApproval !== PIApproval.None && this.initialFormData.requirePersonalInfoAccessApproval === PIApproval.None
+      || requirePersonalInfoAccessApproval === PIApproval.Edit && this.initialFormData.requirePersonalInfoAccessApproval !== PIApproval.Edit
     );
 
     const defaultParams$ = combineLatest([ rootActivityId$, rootSkillId$ ]).pipe(

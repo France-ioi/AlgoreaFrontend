@@ -1,5 +1,12 @@
+@import 'src/assets/scss/functions';
+
 .modify-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.modify-description {
+  padding-right: toRem(16);
+  overflow: hidden;
 }

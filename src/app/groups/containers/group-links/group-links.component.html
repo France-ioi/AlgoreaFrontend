@@ -1,19 +1,28 @@
-<ng-container
-    *ngFor="let item of items | slice : 0 : (items || []).length > maxItemsDisplay ? maxItemsDisplay - 1 : maxItemsDisplay; let i = index; last as isLast;">
+@let hasToTruncateList = items().length > maxItemsDisplay();
+
+@for (item of items() | slice : 0 : hasToTruncateList ? maxItemsDisplay() - 1 : maxItemsDisplay(); track item; let i = $index; let isLast = $last) {
   <a
     class="alg-link"
     [routerLink]="{ id: item.id, isUser: false } | groupLink"
-  >
+    >
     <strong>{{ item.name }}</strong>
   </a>
   <span class="separator">
-    <span *ngIf="(items || []).length > maxItemsDisplay && !isLast || (items || []).length === 1 || (items || []).length <= maxItemsDisplay && i < (items || []).length - 2">,</span>
-    <span
-      *ngIf="(items || []).length <= maxItemsDisplay && i >= (items || []).length - 2 && !isLast || (items || []).length > maxItemsDisplay && isLast"
-      i18n
-    >, and</span>
+    @if (
+      (hasToTruncateList && !isLast) ||
+      (!hasToTruncateList && i < items().length - 2)
+    ) {
+      <span>,</span>
+    }
+    @if (
+      (!hasToTruncateList && i >= items().length - 2 && !isLast) ||
+      (hasToTruncateList && isLast)
+    ) {
+      <span i18n>, and</span>
+    }
   </span>
-  <span class="more" *ngIf="(items || []).length > maxItemsDisplay && isLast" i18n>
-    {{ (items || []).length - maxItemsDisplay + 1 }} more
-  </span>
-</ng-container>
+  @if (hasToTruncateList && isLast) {
+    @let remaining = items().length - maxItemsDisplay() + 1;
+    <span class="more" i18n>{{ remaining }} more</span>
+  }
+}

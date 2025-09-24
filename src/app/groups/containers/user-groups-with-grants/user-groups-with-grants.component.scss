@@ -1,0 +1,24 @@
+@import 'src/assets/scss/functions';
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--alg-secondary-color);
+  border-radius: toRem(8);
+  background-color: var(--alg-primary-light-color);
+  min-height: toRem(40);
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  padding: .5rem 1rem;
+}
+
+.links {
+  margin-left: .4rem;
+}

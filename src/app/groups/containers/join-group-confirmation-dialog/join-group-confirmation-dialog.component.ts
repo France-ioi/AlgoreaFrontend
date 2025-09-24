@@ -3,7 +3,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { DatePipe } from '@angular/common';
-import { GroupApprovals } from 'src/app/groups/models/group-approvals';
+import { GroupApprovals, RequirePersonalInfoAccessApproval as PIApproval } from 'src/app/groups/models/group-approvals';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
@@ -37,9 +37,9 @@ export class JoinGroupConfirmationDialogComponent implements OnInit {
 
   ngOnInit(): void {
     const { requirePersonalInfoAccessApproval, requireLockMembershipApprovalUntil } = this.params;
-    if (requirePersonalInfoAccessApproval !== 'none' || requireLockMembershipApprovalUntil) {
+    if (requirePersonalInfoAccessApproval !== PIApproval.None || requireLockMembershipApprovalUntil) {
       this.form = this.fb.nonNullable.group({});
-      if (requirePersonalInfoAccessApproval !== 'none') {
+      if (requirePersonalInfoAccessApproval !== PIApproval.None) {
         this.form.addControl(
           'agreeWithPersonalInfoView',
           this.fb.nonNullable.control({

@@ -41,4 +41,14 @@ export class JoinedGroupsService {
       );
   }
 
+  getJoinedGroupsWithPersonalInfoAccess(): Observable<GroupMembership['group'][]> {
+    return this.http
+      .get(`${this.config.apiUrl}/current-user/group-memberships`, { params: { only_requiring_personal_info_access_approval: 1 } })
+      .pipe(
+        decodeSnakeCase(z.array(groupMembershipSchema)),
+        map(memberships => memberships.map(m => m.group)),
+        map(memberships => memberships.filter(group => group.type !== 'Base')),
+      );
+  }
+
 }
