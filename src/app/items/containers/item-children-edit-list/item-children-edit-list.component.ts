@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, Input, OnChanges, Output, signal } from '@angular/core';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
@@ -14,9 +14,7 @@ import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PropagationEditMenuComponent } from '../propagation-edit-menu/propagation-edit-menu.component';
 import { AddItemComponent } from '../add-item/add-item.component';
 import { RouterLink } from '@angular/router';
-import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
@@ -28,6 +26,18 @@ import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation
 import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkRow,
+  CdkRowDef,
+  CdkTable,
+} from '@angular/cdk/table';
+import { FindInArray } from 'src/app/pipes/findInArray';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -37,9 +47,6 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
   imports: [
     SwitchComponent,
     FormsModule,
-    NgIf,
-    TableModule,
-    SharedModule,
     NgClass,
     RouterLink,
     AddItemComponent,
@@ -53,6 +60,17 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
     InputNumberComponent,
     CdkMenuTrigger,
     CdkMenu,
+    CdkTable,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    CdkCellDef,
+    CdkCell,
+    CdkRow,
+    CdkRowDef,
+    FindInArray,
+    CdkDropList,
+    CdkDrag,
   ],
 })
 export class ItemChildrenEditListComponent implements OnChanges {
@@ -62,7 +80,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
 
   selectedRows: PossiblyInvisibleChildData[] = [];
-  scoreWeightEnabled = false;
+  scoreWeightEnabled = signal(false);
   propagationEditItemIdx?: number;
   addedItemIds: string[] = [];
 
@@ -91,12 +109,28 @@ export class ItemChildrenEditListComponent implements OnChanges {
     },
   ]);
 
+  baseColumns = computed(() =>
+    [
+      'reorder',
+      'checkbox',
+      ...(this.scoreWeightEnabled() ? [ 'editScore' ] : []),
+      'type',
+      'title',
+      'invisible',
+      'edit',
+    ]
+  );
+  displayedFullColumns = computed(() => this.baseColumns().filter(c => c !== 'invisible'));
+  displayedWithInvisibleColumns = computed(() =>
+    this.baseColumns().filter(c => ![ 'type', 'title' ].includes(c))
+  );
+
   constructor() {
   }
 
   ngOnChanges(): void {
     this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
-    this.scoreWeightEnabled = this.data.some(c => c.scoreWeight !== 1);
+    this.scoreWeightEnabled.set(this.data.some(c => c.scoreWeight !== 1));
   }
 
   addChild(child: AddedContent<ItemType>): void {
@@ -119,6 +153,18 @@ export class ItemChildrenEditListComponent implements OnChanges {
     ]);
   }
 
+  onSelect(item: PossiblyInvisibleChildData): void {
+    if (this.selectedRows.includes(item)) {
+      const idx = this.selectedRows.indexOf(item);
+      this.selectedRows = [
+        ...this.selectedRows.slice(0, idx),
+        ...this.selectedRows.slice(idx + 1),
+      ];
+    } else {
+      this.selectedRows = [ ...this.selectedRows, item ];
+    }
+  }
+
   onSelectAll(): void {
     this.selectedRows = this.selectedRows.length === this.data.length ? [] : this.data;
   }
@@ -134,7 +180,10 @@ export class ItemChildrenEditListComponent implements OnChanges {
     }
   }
 
-  orderChanged(): void {
+  orderChanged(event: CdkDragDrop<PossiblyInvisibleChildData[]>): void {
+    const previousIndex = this.data.findIndex(d => d === event.item.data);
+    moveItemInArray(this.data, previousIndex, event.currentIndex);
+    this.data = [ ...this.data ];
     this.childrenChanges.emit(this.data);
   }
 
@@ -142,8 +191,8 @@ export class ItemChildrenEditListComponent implements OnChanges {
     this.childrenChanges.emit(this.data);
   }
 
-  openPropagationEditMenu(event: MouseEvent, itemIdx: number): void {
-    this.propagationEditItemIdx = itemIdx;
+  openPropagationEditMenu(rowData: PossiblyInvisibleChildData): void {
+    this.propagationEditItemIdx = this.data.indexOf(rowData);
   }
 
   emitChildPermPropagations(propagations: Partial<ItemPermPropagations>, childIdx: number): void {
@@ -197,4 +246,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
     if (event) this.emitChildPermPropagations(event, childIdx);
     this.advancedPermPropagationConfigurationDialogData.set(undefined);
   }
+
+  whenItemVisible = (_: number, item: PossiblyInvisibleChildData): boolean => item.isVisible;
+  whenItemInvisible = (_: number, item: PossiblyInvisibleChildData): boolean => !item.isVisible;
 }

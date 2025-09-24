@@ -14,8 +14,7 @@ test('check item children edit score weight', async ({ page, createItem, itemChi
   if (!createItem) throw new Error('The item is not created');
   await page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0/edit-children`);
   const firstRowLocator = page.locator('alg-item-children-edit-list').getByRole('table').getByRole('row').filter({ hasText: 'Item #1' });
-  const editColumnLocator = firstRowLocator.getByTestId('edit-score-weight');
-  const editInputLocator = editColumnLocator.getByRole('textbox');
+  const editInputLocator = firstRowLocator.getByTestId('edit-score-weight').getByRole('textbox');
 
   await test.step('checks the children list are visible', async () => {
     await itemContentPage.waitForItemResponse(createItem.itemId);
@@ -26,8 +25,6 @@ test('check item children edit score weight', async ({ page, createItem, itemChi
 
   await test.step('checks the number input', async () => {
     await itemChildrenEditListComponent.toggleEnableScoreWeight();
-    await expect.soft(editColumnLocator).toBeVisible();
-    await editColumnLocator.click();
     await expect.soft(editInputLocator).toBeVisible();
     await editInputLocator.fill('50');
   });
