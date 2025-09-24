@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { Router } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, NgFor, NgClass } from '@angular/common';
 import { createSelector, Store } from '@ngrx/store';
@@ -36,11 +36,8 @@ export class BreadcrumbsComponent {
     private router: Router,
   ) {}
 
-  onElementClick(el: { navigateTo?: UrlTree|(() => UrlTree) }): void {
-    if (el.navigateTo) {
-      const dest = 'root' in el.navigateTo ? el.navigateTo : el.navigateTo();
-      void this.router.navigateByUrl(dest);
-    }
+  onElementClick(el: { navigateTo?: () => void }): void {
+    if (el.navigateTo) el.navigateTo();
   }
 
 }
