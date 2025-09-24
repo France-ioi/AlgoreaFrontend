@@ -25,9 +25,12 @@ interface ObservationSelectors<T extends RootState> {
   selectIsObserving: MemoizedSelector<T, boolean>,
   /**
    * Whether the observed group caused an error a fetching error (because of network error, group not visible, group cannot be observed)
-   * `false` is not an error, otherwise `{ isForbidden: boolean }` indicating whether that looks like a permission issue.
+   * Possible values:
+   *  - `{ isForbidden: boolean }` if there is an error. `isForbidden` is true if the group cannot be observed (or do not exist)
+   *  - `undefined` if it is still unknown,
+   *  - `null` if there is no error.
    */
-  selectObservationError: MemoizedSelector<T, { isForbidden: boolean } | false>,
+  selectObservationError: MemoizedSelector<T, { isForbidden: boolean } | undefined | null>,
   /**
    * Whether the active content is being observed
    */
@@ -36,37 +39,56 @@ interface ObservationSelectors<T extends RootState> {
 
 export function selectors<T extends RootState>(): ObservationSelectors<T> {
 
-  const selectObservationInfoForActiveGroupContent = createSelector(
+  /**
+   * The observation info fetching state for the active group content IF
+   *   - the current content is a group/user and
+   *   - the fetched group info is for the active group/user,
+   *   - the fetched group can be observed,
+   * `null` otherwise
+   * Note that we do check for observation permission before returning the state as there are absolutely no guarantee when navigating
+   * that the group can be observed.
+   */
+  const selectObservationInfoFetchingStateForActiveGroupContent = createSelector(
     fromGroupContent.selectActiveContentRoute,
     fromGroupContent.selectObservationInfoForFetchedContent,
-    (route, obsInfo) => (route && route.id === obsInfo?.identifier?.id ? obsInfo : null)
+    (route, obsInfo) => (route && route.id === obsInfo?.identifier?.id && obsInfo?.data?.currentUserWatchGroup ? obsInfo : null)
   );
 
-  const selectObservationInfoForActiveItemContent = createSelector(
+  /**
+   * The observation info fetching state for the active item content IF
+   *   - the current content is an item, and
+   *   - observation is enabled on the route, and
+   *   - the fetched group info is for the active item
+   * `null` otherwise
+   * Note that we do not check whether the fetched group can be observed, because we expect that to be checked before navigation.
+   * Observation error on items will be reported by `selectObservationError`.
+   */
+  const selectObservationInfoFetchingStateForActiveItemContent = createSelector(
     fromItemContent.selectActiveContentObservedGroup,
     fromGroupContent.selectObservationInfoForFetchedContent,
     (obsGroupFromRoute, obsInfo) => (obsGroupFromRoute && obsGroupFromRoute.id === obsInfo?.identifier?.id ? obsInfo : null)
   );
 
-  const selectObservationInfoForActiveContent = createSelector(
-    selectObservationInfoForActiveGroupContent,
-    selectObservationInfoForActiveItemContent,
+  const selectObservationInfoFetchingStateForActiveContent = createSelector(
+    selectObservationInfoFetchingStateForActiveGroupContent,
+    selectObservationInfoFetchingStateForActiveItemContent,
     (obsInfoFromGroup, obsInfoFromItem) => obsInfoFromGroup ?? obsInfoFromItem
   );
 
-  const selectObservationGroupInfoForActiveContent = createSelector(
-    selectObservationInfoForActiveContent,
-    info => (info ? info.data : null),
-  );
-
-  const selectObservedGroupInfo = createSelector(
-    selectObservationGroupInfoForActiveContent,
-    info => (info && info.currentUserWatchGroup ? info : null)
+  const selectObservationError = createSelector(
+    selectObservationInfoFetchingStateForActiveContent,
+    info => {
+      if (!info) return null; // no observation requested
+      if (info.isFetching) return undefined; // we don't know yet
+      if (info.isError) return { isForbidden: isForbiddenObservationError(info.error) };
+      if (info.isReady && !info.data?.currentUserWatchGroup) return { isForbidden: true };
+      return null; // the group can be observed
+    }
   );
 
   const selectObservedGroupRoute = createSelector(
-    selectObservedGroupInfo,
-    info => (info ? info.route : null),
+    selectObservationInfoFetchingStateForActiveContent,
+    fetchingState => (fetchingState && fetchingState.identifier ? fetchingState.identifier : null),
   );
 
   const selectObservedGroupId = createSelector(
@@ -75,13 +97,18 @@ export function selectors<T extends RootState>(): ObservationSelectors<T> {
   );
 
   const selectIsObserving = createSelector(
-    selectObservedGroupInfo,
-    info => info !== null
+    selectObservedGroupRoute,
+    route => route !== null
   );
 
-  const selectObservationError = createSelector(
-    selectObservationInfoForActiveContent,
-    info => (info && info.isError ? { isForbidden: isForbiddenObservationError(info.error) } : false)
+  const selectObservationInfoDataForActiveContent = createSelector(
+    selectObservationInfoFetchingStateForActiveContent,
+    state => (state ? state.data : null),
+  );
+
+  const selectObservedGroupInfo = createSelector(
+    selectObservationInfoDataForActiveContent,
+    data => (data && data.currentUserWatchGroup ? data : null)
   );
 
   const selectActiveContentIsBeingObserved = createSelector(
