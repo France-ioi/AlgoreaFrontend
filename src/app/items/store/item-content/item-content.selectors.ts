@@ -115,7 +115,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   );
 
   const selectActiveContentObservedGroup = createSelector(
-    selectActiveContentRoute,
+    selectActiveContentRouteParsingResultRoute,
     route => (route ? route.observedGroup : null)
   );
 
