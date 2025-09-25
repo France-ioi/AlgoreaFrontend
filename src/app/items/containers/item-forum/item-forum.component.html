@@ -116,9 +116,14 @@
                       }
                     }
                   }
-                  @else if (selected === 1) {
+                  @else if (selected === 1 || selected === 2) {
+                    @if (selected === 1) {
+                      <span i18n>You don’t have access to any help request for this activity.</span>
+                    } @else {
+                      <span i18n>You don’t have access to any help request for that group/user on this activity.</span>
+                    }
                     <span i18n>
-                      You don’t have access to any help request for this activity. You may only view requests attached to content you have already
+                      You may only view requests attached to content you have already
                       validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted
                       to members of specific groups.
                     </span>
