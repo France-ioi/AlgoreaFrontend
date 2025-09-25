@@ -291,8 +291,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         if (!observedGroupRoute && !state.data.item.permissions.canRequestHelp) return null;
         return { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
       }),
-      distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
       filter(isNotNull), // leave the forum as it is if no new value
+      distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
     ).subscribe(threadId => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId({ id: threadId }))),
 
   ];

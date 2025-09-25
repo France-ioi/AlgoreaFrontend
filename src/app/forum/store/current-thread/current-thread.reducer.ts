@@ -12,7 +12,7 @@ const reducer = createReducer(
   on(websocketClientActions.eventsReceived, (state, { events }): State => ({
     ...state,
     events: readyState(
-      [ ...state.events.data ?? [], ...events ]
+      [ ...state.events.data ?? [], ...events.filter(e => state.id && areSameThreads(e.thread, state.id)) ]
         .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
         .filter((el, i, list) => el.time.valueOf() !== list[i-1]?.time.valueOf()) // remove duplicate (using time as differentiator)
     )

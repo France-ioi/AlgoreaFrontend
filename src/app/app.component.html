@@ -74,8 +74,9 @@
   </p>
 </p-dialog>
 <alg-language-mismatch></alg-language-mismatch>
+@let groupObservationError = groupObservationError$ | async;
 <p-dialog
-  *ngIf="groupObservationError$ | async as groupObservationError"
+  *ngIf="!!groupObservationError"
   i18n-header header="Error"
   [visible]="showObservationErrorDialog"
   [modal]="true"
