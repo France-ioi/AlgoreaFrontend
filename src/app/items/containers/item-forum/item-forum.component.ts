@@ -16,7 +16,7 @@ import { TableModule } from 'primeng/table';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
@@ -49,7 +49,6 @@ const OPTIONS = [
   standalone: true,
   imports: [
     LetDirective,
-    NgIf,
     SelectionComponent,
     ErrorComponent,
     LoadingComponent,
