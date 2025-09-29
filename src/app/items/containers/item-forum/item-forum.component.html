@@ -1,31 +1,33 @@
 <ng-container *ngrxLet="selected$; let selected">
-  <alg-selection
-    [items]="options"
-    [selected]="selected"
-    (change)="onChange($event, options)"
-    *ngIf="options$ | async as options"
-  ></alg-selection>
+  @if (options$ | async; as options) {
+    <alg-selection
+      [items]="options"
+      [selected]="selected"
+      (change)="onChange($event, options)"
+    ></alg-selection>
+  }
 
-  <alg-error
-    class="alg-flex-1"
-    i18n-message message="You are not currently observing any group."
-    *ngIf="selected === 2 && !(isObserving$ | async); else contentSection"
-  ></alg-error>
-
-  <ng-template #contentSection>
-    <ng-container *ngIf="state$ | async as state">
-      <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
-      <alg-error
-        *ngIf="state.isError"
-        class="alg-flex-1"
-        icon="ph-duotone ph-warning-circle"
-        i18n-message message="Unable to load the recent threads"
-        i18n-buttonCaption buttonCaption="Retry"
-        [showRefreshButton]="true"
-        (refresh)="refresh()"
-      ></alg-error>
-
-      <ng-container *ngIf="state.data">
+  @if (selected === 2 && !(isObserving$ | async)) {
+    <alg-error
+      class="alg-flex-1"
+      i18n-message message="You are not currently observing any group."
+    ></alg-error>
+  } @else {
+    @if (state$ | async; as state) {
+      @if (state.isFetching && !state.data) {
+        <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+      }
+      @if (state.isError) {
+        <alg-error
+          class="alg-flex-1"
+          icon="ph-duotone ph-warning-circle"
+          i18n-message message="Unable to load the recent threads"
+          i18n-buttonCaption buttonCaption="Retry"
+          [showRefreshButton]="true"
+          (refresh)="refresh()"
+        ></alg-error>
+      }
+      @if (state.data) {
         <div class="operation-buttons">
           <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
             Refresh
@@ -38,41 +40,54 @@
           [tableStyle]="{'min-width': '599.98px'}"
           responsiveLayout="scroll"
           *ngrxLet="{ threadId: currentThreadInfo$, isVisible : isDiscussionVisible$ } as discussion"
-        >
+          >
           <ng-template pTemplate="header">
-            <tr *ngIf="state.data.length > 0">
-              <th></th>
-              <th *ngIf="itemData?.item?.type !== 'Task'" i18n>Content</th>
-              <th i18n *ngIf="selected !== 0">User</th>
-              <th i18n>Status</th>
-              <th i18n># msgs</th>
-              <th i18n>Latest update</th>
-            </tr>
+            @if (state.data.length > 0) {
+              <tr>
+                <th></th>
+                @if (itemData?.item?.type !== 'Task') {
+                  <th i18n>Content</th>
+                }
+                @if (selected !== 0) {
+                  <th i18n>User</th>
+                }
+                <th i18n>Status</th>
+                <th i18n># msgs</th>
+                <th i18n>Latest update</th>
+              </tr>
+            }
           </ng-template>
-
           <ng-template
             pTemplate="body"
             let-rowData
-          >
+            >
             <tr *ngrxLet="{
                 id: { participantId: rowData.participant.id, itemId: rowData.item.id },
                 isVisible: discussion.isVisible && rowData.participant.id === discussion.threadId?.participantId && rowData.item.id === discussion.threadId?.itemId,
               } as rowThread"
-            >
+              >
               <td>
-                <button class="size-l" alg-button type="button" *ngIf="!rowThread.isVisible" (click)="showThreadPanel(rowThread.id)" i18n>Show</button>
-                <button class="size-l danger" alg-button type="button" *ngIf="rowThread.isVisible" (click)="hideThreadPanel()" i18n>Hide</button>
+                @if (!rowThread.isVisible) {
+                  <button class="size-l" alg-button type="button" (click)="showThreadPanel(rowThread.id)" i18n>Show</button>
+                }
+                @if (rowThread.isVisible) {
+                  <button class="size-l danger" alg-button type="button" (click)="hideThreadPanel()" i18n>Hide</button>
+                }
               </td>
-              <td *ngIf="itemData?.item?.type !== 'Task'">
-                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
-                  {{ rowData.item.title }}
-                </a>
-              </td>
-              <td *ngIf="selected !== 0">
-                <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
-                  {{ rowData.participant | userCaption }}
-                </a>
-              </td>
+              @if (itemData?.item?.type !== 'Task') {
+                <td>
+                  <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
+                    {{ rowData.item.title }}
+                  </a>
+                </td>
+              }
+              @if (selected !== 0) {
+                <td>
+                  <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
+                    {{ rowData.participant | userCaption }}
+                  </a>
+                </td>
+              }
               <td>{{ rowData.status | threadStatusDisplay }}</td>
               <td>{{ rowData.messageCount }}</td>
               <td>{{ rowData.latestUpdateAt | date:'short' }}</td>
@@ -82,33 +97,44 @@
             <tr>
               <td>
                 <div class="empty-message">
-                  <ng-container *ngIf="selected === 0 && itemData">
-                    <span *ngIf="itemData.item.type === 'Chapter'" i18n>
-                      You have not requested any help for activities in this chapter. <br>To request help on an activity, click on the
-                      <span class="chat-icon ph-duotone ph-chats-circle"></span> button at the top of the page when visiting this activity.
-                      You cannot request help on a chapter.
-                    </span>
-                    <ng-container *ngIf="itemData.item.type === 'Task'">
-                      <span *ngIf="itemData.item.permissions.canRequestHelp; else cannotRequestHelpMessage" i18n>
-                        You have not requested any help for this activity. <br>To request help on this activity, click on the
-                        <span class="chat-icon ph-duotone ph-chats-circle"></span> button at the top of the page.
+                  @if (selected === 0 && itemData) {
+                    @if (itemData.item.type === 'Chapter') {
+                      <span i18n>
+                        You have not requested any help for activities in this chapter. <br>To request help on an activity, click on the
+                        <span class="chat-icon ph-duotone ph-chats-circle"></span> button at the top of the page when visiting this activity.
+                        You cannot request help on a chapter.
                       </span>
-                      <ng-template #cannotRequestHelpMessage>
+                    }
+                    @else if (itemData.item.type === 'Task') {
+                      @if (itemData.item.permissions.canRequestHelp) {
+                        <span i18n>
+                          You have not requested any help for this activity. <br>To request help on this activity, click on the
+                          <span class="chat-icon ph-duotone ph-chats-circle"></span> button at the top of the page.
+                        </span>
+                      } @else {
                         <span i18n>You do not have permission to ask for help on this activity.</span>
-                      </ng-template>
-                    </ng-container>
-                  </ng-container>
-                  <span *ngIf="selected === 1" i18n>
-                    You don’t have access to any help request for this activity. You may only view requests attached to content you have already
-                    validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted
-                    to members of specific groups.
-                  </span>
+                      }
+                    }
+                  }
+                  @else if (selected === 1 || selected === 2) {
+                    @if (selected === 1) {
+                      <span i18n>You don’t have access to any help request for this activity.</span>
+                    } @else {
+                      <span i18n>You don’t have access to any help request for that group/user on this activity.</span>
+                    }
+                    <span i18n>
+                      You may only view requests attached to content you have already
+                      validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted
+                      to members of specific groups.
+                    </span>
+                  }
                 </div>
               </td>
             </tr>
           </ng-template>
         </p-table>
-      </ng-container>
-    </ng-container>
-  </ng-template>
+      }
+    }
+  }
+
 </ng-container>
