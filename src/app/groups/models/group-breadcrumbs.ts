@@ -1,4 +1,3 @@
-import { UrlTree } from '@angular/router';
 import { z } from 'zod';
 import { ContentBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { GroupRoute } from 'src/app/models/routing/group-route';
@@ -19,6 +18,6 @@ export type GroupBreadcrumbs = GroupBreadcrumb[];
 export function formatBreadcrumbs(breadcrumbs: GroupBreadcrumbs, groupRouter: GroupRouter): ContentBreadcrumbs {
   return breadcrumbs.map(breadcrumb => ({
     title: breadcrumb.name,
-    navigateTo: (): UrlTree => groupRouter.url(breadcrumb.route),
+    navigateTo: (): void => groupRouter.navigateTo(breadcrumb.route),
   }));
 }
