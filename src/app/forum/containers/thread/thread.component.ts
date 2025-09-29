@@ -28,7 +28,7 @@ import { ThreadMessageComponent } from '../thread-message/thread-message.compone
 import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { createSelector, Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
@@ -41,6 +41,20 @@ import { fromObservation } from 'src/app/store/observation';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
+import { fromItemContent } from 'src/app/items/store';
+import { fromGroupContent } from 'src/app/groups/store';
+import equal from 'fast-deep-equal/es6';
+
+const selectThreadInfo = createSelector(
+  fromItemContent.selectActiveContentItem,
+  fromGroupContent.selectObservationInfoForFetchedContent,
+  fromForum.selectThreadStatus,
+  (item, observationInfo, threadStatus) => ({
+    threadStatus,
+    itemInfo: threadStatus?.id.itemId === item?.id ? item : null,
+    groupInfo: observationInfo && threadStatus?.id.participantId === observationInfo.data?.route.id ? observationInfo.data : null,
+  })
+);
 
 @Component({
   selector: 'alg-thread',
@@ -133,14 +147,23 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     { open: true, canClose: boolean } |
     { open: false, canOpen: boolean }
   >> = combineLatest([
-      this.store.select(fromForum.selectThreadStatus),
+      this.store.select(selectThreadInfo),
       this.isCurrentUserThreadParticipant$,
     ]).pipe(
       debounceTime(0), // to prevent race condition (service call immediately aborted)
-      switchMap(([ threadStatus, isCurrentUserParticipant ]) => {
+      distinctUntilChanged(([ prev ], [ cur ]) => equal(prev.threadStatus, cur.threadStatus)),
+      switchMap(([{ threadStatus, itemInfo, groupInfo }, isCurrentUserParticipant ]) => {
         if (!threadStatus || !threadStatus?.visible) return of(undefined);
         const { id, open } = threadStatus;
         if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
+        // if we have the info, decided without more fetching
+        if (isCurrentUserParticipant && itemInfo) {
+          return of(readyState({ open: false as const, canOpen: itemInfo.permissions.canRequestHelp }));
+        }
+        if (groupInfo) {
+          return of(readyState({ open: false as const, canOpen: groupInfo.currentUserWatchGroup }));
+        }
+        // if we do not have the info ready, we have to fetch
         return this.getItemByIdService.get(id.itemId, isCurrentUserParticipant ? {} : { watchedGroupId: id.participantId }).pipe(
           mapToFetchState(),
           map(state => {
