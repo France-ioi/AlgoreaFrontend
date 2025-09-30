@@ -23,6 +23,7 @@ import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { fromObservation } from 'src/app/store/observation';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { RawItemRoute } from 'src/app/models/routing/item-route';
 
 
 enum ForumTabUrls {
@@ -159,8 +160,10 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
     this.store.dispatch(fromForum.forumThreadListActions.hideCurrentThread());
   }
 
-  showThreadPanel(id: ThreadId): void {
-    this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({ id }));
+  showThreadPanel(id: ThreadId, item: { title: string, route: RawItemRoute }): void {
+    this.store.dispatch(
+      fromForum.forumThreadListActions.showAsCurrentThread({ id, item })
+    );
   }
 
 }

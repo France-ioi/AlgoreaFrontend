@@ -1,9 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
-import { combineLatest, distinctUntilChanged, filter, of, Subscription, switchMap } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
-import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
-import { isNotNull } from '../../../utils/null-undefined-predicates';
-import { catchError } from 'rxjs/operators';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
@@ -33,23 +30,12 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   @Input() topCompensation = 0;
 
   visible$ = this.store.select(fromForum.selectVisible);
-  readonly threadItem$ = combineLatest([
-    this.store.select(fromForum.selectThreadId).pipe(
-      filter(isNotNull),
-      distinctUntilChanged((x,y) => x?.participantId === y?.participantId && x?.itemId === y?.itemId),
-    ),
-    this.visible$.pipe(filter(visible => visible), distinctUntilChanged()),
-  ]).pipe(
-    switchMap(([ threadId ]) =>
-      this.getItemByIdService.get(threadId.itemId).pipe(catchError(() => of(null)))
-    ),
-  );
+  threadHydratedId = this.store.selectSignal(fromForum.selectThreadHydratedId);
 
   private subscription?: Subscription;
 
   constructor(
     private store: Store,
-    private getItemByIdService: GetItemByIdService,
   ) {
   }
 

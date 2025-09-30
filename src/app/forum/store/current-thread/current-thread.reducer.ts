@@ -33,9 +33,10 @@ const reducer = createReducer(
   on(
     itemPageActions.changeCurrentThreadId,
     forumThreadListActions.showAsCurrentThread,
-    (state, { id }): State => ({
+    (state, { id, item }): State => ({
       ...state,
       id,
+      item,
       info: state.id && areSameThreads(state.id, id) ? state.info : fetchingState(),
       events: state.id && areSameThreads(state.id, id) ? state.events : fetchingState(),
     })
