@@ -55,6 +55,7 @@ export class ItemAllStringsFormComponent {
         title: '',
         subtitle: '',
         description: '',
+        imageUrl: '',
       }),
     ]),
   });
@@ -116,6 +117,7 @@ export class ItemAllStringsFormComponent {
         title: '',
         subtitle: '',
         description: '',
+        imageUrl: '',
         ...value,
       }), { emitEvent: value !== undefined });
 
