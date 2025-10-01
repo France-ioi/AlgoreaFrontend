@@ -91,7 +91,7 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
         this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
-        this.isCurrentTab(forumTab) || (!userProfile.tempUser && !!this.config.forumServerUrl) ? forumTab : null,
+        this.isCurrentTab(forumTab) || (!userProfile.tempUser && this.config.featureFlags.enableForum) ? forumTab : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))
