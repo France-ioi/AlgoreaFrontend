@@ -23,7 +23,7 @@ export const threadUnsubscriptionEffect = createEffect(
     store = inject(Store),
     websocketClient = inject(WebsocketClient),
     config = inject(APPCONFIG),
-  ) => (config.forumServerUrl ?
+  ) => (config.featureFlags.enableForum ?
     merge(
       fromEvent(window, 'beforeunload'),
       actions$.pipe(
@@ -53,7 +53,7 @@ export const threadSubscriptionEffect = createEffect(
     store$ = inject(Store),
     websocketClient = inject(WebsocketClient),
     config = inject(APPCONFIG),
-  ) => (config.forumServerUrl ? actions$.pipe(
+  ) => (config.featureFlags.enableForum ? actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChanged),
     map(({ fetchState }) => fetchState),
     readyData(),

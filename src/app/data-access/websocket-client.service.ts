@@ -17,9 +17,9 @@ export class WebsocketClient implements OnDestroy {
 
   private openEvents$ = new Subject<Event>();
   private closeEvents$ = new Subject<CloseEvent>();
-  private forumServerUrl = this.config.forumServerUrl;
-  private ws$ = this.forumServerUrl ?
-    webSocket<unknown>({ url: this.forumServerUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ }) :
+  private wsUrl = this.config.slsWsUrl;
+  private ws$ = this.wsUrl ?
+    webSocket<unknown>({ url: this.wsUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ }) :
     undefined;
 
   isWsOpen$ = merge(

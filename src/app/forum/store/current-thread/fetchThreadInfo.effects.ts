@@ -16,7 +16,7 @@ export const fetchThreadInfoEffect = createEffect(
     actions$ = inject(Actions),
     threadHttpService = inject(ThreadService),
     config = inject(APPCONFIG),
-  ) => (config.forumServerUrl ? actions$.pipe(
+  ) => (config.featureFlags.enableForum ? actions$.pipe(
     ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.changeCurrentThreadId),
     map(({ id }) => id),
     distinctUntilChanged(areSameThreads),
@@ -34,7 +34,7 @@ export const refreshThreadInfoEffect = createEffect(
     store$ = inject(Store),
     threadHttpService = inject(ThreadService),
     config = inject(APPCONFIG),
-  ) => (config.forumServerUrl ? actions$.pipe(
+  ) => (config.featureFlags.enableForum ? actions$.pipe(
     ofType(threadPanelActions.threadStatusChanged),
     withLatestFrom(store$.select(fromForum.selectThreadId)),
     map(([ , threadId ]) => threadId),
