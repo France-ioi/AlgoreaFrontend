@@ -43,7 +43,8 @@ const itemSchema = z.object({
   watchedGroup: z.object({
     averageScore: z.number().optional(),
     permissions: itemCorePermSchema.optional(),
-  }).optional()
+  }).optional(),
+  defaultLanguageTag: z.string(),
 });
 
 export type Item = z.infer<typeof itemSchema>;

@@ -143,6 +143,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
           title: this.itemData.item.string.title || '',
           description: this.itemData.item.string.description || '',
           subtitle: this.itemData.item.string.subtitle || '',
+          imageUrl: this.itemData.item.string.imageUrl || '',
         }
       ]);
       this.resetStringsForm();
@@ -332,14 +333,18 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   private getItemAllStringsChanges(): ({ changes: ItemStringChanges, languageTag: string })[] {
+    if (!this.initialFormData) throw new Error('Unexpected: Missed initial data');
+    const { string, defaultLanguageTag } = this.initialFormData;
     const allStringsValue = this.itemForm.controls.allStrings.getRawValue();
     const imageUrlValue = this.itemForm.controls.image_url.getRawValue();
+    const defaultLangIdx = this.initialLanguageValues().findIndex(l => l.languageTag === defaultLanguageTag);
     return allStringsValue.map((v, idx) =>
       this.getItemStringChanges(
         v,
         {
           initialValue: this.initialLanguageValues().find(iv => iv.languageTag === v.languageTag),
-          ...(idx === 0 && imageUrlValue !== null && imageUrlValue !== this.initialFormData?.string.imageUrl ? { imageUrlValue } : {}),
+          ...(idx === defaultLangIdx && imageUrlValue !== null && imageUrlValue !== string.imageUrl
+            ? { imageUrlValue } : {}),
         },
       )
     ).filter(({ changes }) => Object.keys(changes).length > 0);
@@ -418,14 +423,23 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       subtitle: o.string.subtitle || '',
       description: o.string.description || '',
       languageTag: o.string.languageTag,
+      imageUrl: o.string.imageUrl || '',
     }));
 
-    this.itemForm.controls.allStrings.reset([ mainLanguageStringsValue, ...values ]);
     this.initialLanguageValues.set([ mainLanguageStringsValue, ...values ]);
+    this.resetStringsForm();
   }
 
   private resetStringsForm(): void {
     this.itemForm.controls.allStrings.reset(this.initialLanguageValues());
+    this.resetImageUrl();
+  }
+
+  private resetImageUrl(): void {
+    if (!this.initialFormData) throw new Error('Unexpected: Missed initial form data');
+    const { defaultLanguageTag } = this.initialFormData;
+    const imageUrl = this.initialLanguageValues().find(l => l.languageTag === defaultLanguageTag)?.imageUrl;
+    this.itemForm.controls.image_url.reset(imageUrl || '');
   }
 
   private resetForm(): void {
@@ -436,7 +450,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const item = this.initialFormData;
 
     this.itemForm.reset({
-      image_url: item.string.imageUrl || '',
       url: item.url || '',
       text_id: item.textId || '',
       uses_api: item.usesApi || false,
