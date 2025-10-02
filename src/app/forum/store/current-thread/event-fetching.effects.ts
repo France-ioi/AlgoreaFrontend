@@ -6,9 +6,10 @@ import { Store } from '@ngrx/store';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { combineLatest } from 'rxjs';
 import { fromForum } from '..';
-import { mapToFetchState } from 'src/app/utils/operators/state';
+import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { eventFetchingActions } from './event-fetching.actions';
 import { convertActivityLogsToThreadEvents } from '../../models/thread-events-convertions';
+import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
 
 export const logEventFetchingEffect = createEffect(
   (
@@ -26,6 +27,20 @@ export const logEventFetchingEffect = createEffect(
       );
     }),
     map(fetchState => eventFetchingActions.logEventsFetchStateChanged({ fetchState })),
+  ),
+  { functional: true }
+);
+
+export const slsEventFetchingEffect = createEffect(
+  (
+    store$ = inject(Store),
+    threadMessageService = inject(ThreadMessageService),
+  ) => store$.select(fromForum.selectInfo).pipe(
+    readyData(),
+    switchMap(thread => threadMessageService.getAll({ authToken: thread.token, limit: 11 }).pipe(
+      mapToFetchState(),
+    )),
+    map(fetchState => eventFetchingActions.slsEventsFetchStateChanged({ fetchState })),
   ),
   { functional: true }
 );

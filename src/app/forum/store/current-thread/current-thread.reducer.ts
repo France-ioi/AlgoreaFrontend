@@ -24,6 +24,11 @@ const reducer = createReducer(
     logEvents: fetchState,
   })),
 
+  on(eventFetchingActions.slsEventsFetchStateChanged, (state, { fetchState }): State => ({
+    ...state,
+    slsEvents: fetchState,
+  })),
+
   on(topBarActions.toggleCurrentThreadVisibility, (state): State => ({ ...state, visible: !state.visible })),
 
   on(forumThreadListActions.showAsCurrentThread, (state): State => ({ ...state, visible: true })),
@@ -45,6 +50,7 @@ const reducer = createReducer(
       info: state.id && areSameThreads(state.id, id) ? state.info : fetchingState(),
       slsEvents: state.id && areSameThreads(state.id, id) ? state.slsEvents : fetchingState(),
       logEvents: state.id && areSameThreads(state.id, id) ? state.logEvents : fetchingState(),
+      wsEvents: state.id && areSameThreads(state.id, id) ? state.wsEvents : [],
     })
   ),
 
