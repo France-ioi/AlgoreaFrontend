@@ -46,7 +46,7 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   );
   const selectThreadEvents = createSelector(
     selectCurrentThread,
-    state => state.events
+    state => state.slsEvents // TODO: append logEvents
   );
 
   // composed selectors

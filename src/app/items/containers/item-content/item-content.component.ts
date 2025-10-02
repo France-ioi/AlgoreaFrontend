@@ -18,7 +18,6 @@ import { ChapterChildrenComponent } from '../../containers/chapter-children/chap
 import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
 import { NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromForum } from 'src/app/forum/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
@@ -109,7 +108,6 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onScoreChange(score: number): void {
     this.scoreChange.emit(score);
-    this.store.dispatch(fromForum.itemPageEventSyncActions.forceSyncCurrentThreadEvents());
   }
 
   onTaskLoadChange(loadingComplete: boolean): void {
