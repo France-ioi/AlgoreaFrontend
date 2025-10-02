@@ -27,6 +27,12 @@
     }
   }
 
+  &.danger {
+    .icon {
+      color: var(--alg-message-error-color);
+    }
+  }
+
   &.stroke {
     .wrapper {
       width: toRem(32);

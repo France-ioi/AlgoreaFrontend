@@ -2,6 +2,7 @@
   @if (itemData.item.permissions | allowsEditingAll) {
     <form [formGroup]="itemForm">
       <alg-item-all-strings-form
+        [defaultLanguageTag]="itemData.item.defaultLanguageTag"
         [supportedLanguages]="supportedLanguages()"
         [fetchingOtherLanguages]="fetchingOtherLanguages()"
         [showDescription]="itemData.item.type !== 'Task' && itemData.currentResult !== undefined"

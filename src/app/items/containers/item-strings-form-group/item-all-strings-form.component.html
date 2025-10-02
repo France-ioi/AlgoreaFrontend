@@ -7,6 +7,20 @@
           [showDescription]="showDescription()"
         ></alg-item-strings-control>
       </div>
+      <div class="button-section right-position">
+        @let isDefaultLanguage = control.getRawValue().languageTag === defaultLanguageTag();
+        @if (isDefaultLanguage) {
+          <span class="delete-note alg-text-small">Cannot remove the default translation</span>
+        }
+        <button
+          class="size-s danger"
+          type="button"
+          icon="ph-duotone ph-trash"
+          alg-button-icon
+          [disabled]="fetchingOtherLanguages() || isDefaultLanguage"
+          (click)="removeStringsControl($index)"
+        ></button>
+      </div>
     }
     @for (languageTag of availableLanguagesToCreate(); track $index) {
       <div class="button-section">
