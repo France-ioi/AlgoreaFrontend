@@ -15,6 +15,7 @@ import { map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 
 @Component({
@@ -27,6 +28,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
     ReactiveFormsModule,
     ButtonComponent,
     LoadingComponent,
+    ButtonIconComponent,
   ],
   providers: [
     {
@@ -42,6 +44,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   ],
 })
 export class ItemAllStringsFormComponent {
+  defaultLanguageTag = input<string>();
   supportedLanguages = input.required<string[]>();
   showDescription = input(false);
   fetchingOtherLanguages = input(false);
@@ -124,5 +127,9 @@ export class ItemAllStringsFormComponent {
     this.availableLanguagesToCreate.set(
       this.supportedLanguages().filter(sl => !this.formValue().find(v => v.languageTag === sl))
     );
+  }
+
+  removeStringsControl(idx: number): void {
+    this.form.controls.allStrings.removeAt(idx);
   }
 }
