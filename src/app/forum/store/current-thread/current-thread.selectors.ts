@@ -1,7 +1,7 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from '../forum.state';
 import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../models/threads';
-import { FetchState } from 'src/app/utils/state';
+import { FetchState, readyState } from 'src/app/utils/state';
 import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 import { EventLabel } from 'src/app/forum/models/thread-events';
 import { ThreadItemInfo } from './current-thread.store';
@@ -48,7 +48,7 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   );
   const selectThreadEvents = createSelector(
     selectCurrentThread,
-    state => state.slsEvents // TODO: append logEvents
+    state => readyState(state.wsEvents) as FetchState<IncomingThreadEvent[]> // TODO: append logEvents & slsEvents
   );
 
   // composed selectors
