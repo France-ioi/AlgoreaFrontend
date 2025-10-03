@@ -32,6 +32,7 @@ import { ItemAllStringsFormComponent } from 'src/app/items/containers/item-strin
 import { APPCONFIG } from 'src/app/config';
 import { catchError } from 'rxjs/operators';
 import { errorIsHTTPNotFound } from 'src/app/utils/errors';
+import { DeleteItemStringService } from 'src/app/items/data-access/delete-item-string.service';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
@@ -70,6 +71,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   private config = inject(APPCONFIG);
   private getItemByIdService = inject(GetItemByIdService);
   private formBuilder = inject(FormBuilder);
+  private deleteItemStringService = inject(DeleteItemStringService);
 
   itemForm = this.formBuilder.nonNullable.group({
     allStrings: this.formBuilder.nonNullable.control<StringsValue[]>([], [ Validators.required, Validators.minLength(1) ]),
@@ -143,6 +145,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
           title: this.itemData.item.string.title || '',
           description: this.itemData.item.string.description || '',
           subtitle: this.itemData.item.string.subtitle || '',
+          imageUrl: this.itemData.item.string.imageUrl || '',
         }
       ]);
       this.resetStringsForm();
@@ -332,14 +335,18 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   private getItemAllStringsChanges(): ({ changes: ItemStringChanges, languageTag: string })[] {
+    if (!this.initialFormData) throw new Error('Unexpected: Missed initial data');
+    const { string, defaultLanguageTag } = this.initialFormData;
     const allStringsValue = this.itemForm.controls.allStrings.getRawValue();
     const imageUrlValue = this.itemForm.controls.image_url.getRawValue();
+    const defaultLangIdx = this.initialLanguageValues().findIndex(l => l.languageTag === defaultLanguageTag);
     return allStringsValue.map((v, idx) =>
       this.getItemStringChanges(
         v,
         {
           initialValue: this.initialLanguageValues().find(iv => iv.languageTag === v.languageTag),
-          ...(idx === 0 && imageUrlValue !== null && imageUrlValue !== this.initialFormData?.string.imageUrl ? { imageUrlValue } : {}),
+          ...(idx === defaultLangIdx && imageUrlValue !== null && imageUrlValue !== string.imageUrl
+            ? { imageUrlValue } : {}),
         },
       )
     ).filter(({ changes }) => Object.keys(changes).length > 0);
@@ -360,12 +367,20 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     return { changes, languageTag: value.languageTag };
   }
 
-  private updateString(itemStringChanges: { changes: ItemStringChanges, languageTag: string }[]): Observable<void[] | undefined> {
+  updateOrDeleteStrings() : Observable<void[] | undefined> {
     const id = this.itemData?.item.id;
     if (!id) return throwError(() => new Error('Missing ID form'));
-    return itemStringChanges.length > 0 ? forkJoin(itemStringChanges.map(({ changes, languageTag }) =>
-      this.updateItemStringService.updateItem(id, changes, languageTag))
-    ) : of(undefined);
+
+    const stringsChanges = this.getItemAllStringsChanges();
+    const stringLanguageTagsValue = this.itemForm.getRawValue().allStrings.map(v => v.languageTag);
+    const stringsToRemove = this.initialLanguageValues().filter(v => !stringLanguageTagsValue.includes(v.languageTag));
+
+    return stringsChanges.length === 0 && stringsToRemove.length === 0 ? of(undefined) : forkJoin([
+      ...(stringsChanges.length > 0 ? stringsChanges.map(({ changes, languageTag }) =>
+        this.updateItemStringService.updateItem(id, changes, languageTag)
+      ) : []),
+      ...(stringsToRemove.length > 0 ? stringsToRemove.map(v => this.deleteItemStringService.delete(id, v.languageTag)) : []),
+    ]);
   }
 
   save(): void {
@@ -379,7 +394,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     this.itemForm.disable();
     forkJoin([
       this.updateItem(),
-      this.updateString(this.getItemAllStringsChanges()),
+      this.updateOrDeleteStrings(),
     ]).subscribe({
       next: _status => {
         this.itemForm.enable();
@@ -418,14 +433,23 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       subtitle: o.string.subtitle || '',
       description: o.string.description || '',
       languageTag: o.string.languageTag,
+      imageUrl: o.string.imageUrl || '',
     }));
 
-    this.itemForm.controls.allStrings.reset([ mainLanguageStringsValue, ...values ]);
     this.initialLanguageValues.set([ mainLanguageStringsValue, ...values ]);
+    this.resetStringsForm();
   }
 
   private resetStringsForm(): void {
     this.itemForm.controls.allStrings.reset(this.initialLanguageValues());
+    this.resetImageUrl();
+  }
+
+  private resetImageUrl(): void {
+    if (!this.initialFormData) throw new Error('Unexpected: Missed initial form data');
+    const { defaultLanguageTag } = this.initialFormData;
+    const imageUrl = this.initialLanguageValues().find(l => l.languageTag === defaultLanguageTag)?.imageUrl;
+    this.itemForm.controls.image_url.reset(imageUrl || '');
   }
 
   private resetForm(): void {
@@ -436,7 +460,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const item = this.initialFormData;
 
     this.itemForm.reset({
-      image_url: item.string.imageUrl || '',
       url: item.url || '',
       text_id: item.textId || '',
       uses_api: item.usesApi || false,
