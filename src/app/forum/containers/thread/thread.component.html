@@ -10,10 +10,6 @@
   <div class="widget-loading" *ngIf="thread.isWsOpen && thread.state.isFetching">Loading...</div>
   <div class="widget-error" *ngIf="thread.isWsOpen && thread.state.isError">Error!</div>
   <div class="ws-error" *ngIf="!thread.isWsOpen" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
-  <div class="no-events" *ngIf="thread.state.isReady && thread.state.data.length === 0; else eventsBlock" i18n>
-    There are currently no events
-  </div>
-  <ng-template #eventsBlock>
     <div class="widget-body" *ngIf="thread.isWsOpen">
       <ng-container *ngIf="!thread?.isMine">
         <ng-container *ngIf="participantUser$ | async as participantUser">
@@ -114,6 +110,5 @@
         </ng-container>
       </div>
     </div>
-  </ng-template>
 </div>
 
