@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
-import { filter, delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import {
   catchError,
   debounceTime,
   distinctUntilChanged,
+  filter,
   map,
   mergeScan,
   scan,
@@ -33,8 +34,6 @@ import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
-import { messageEvent } from '../../models/thread-events';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { fromObservation } from 'src/app/store/observation';
@@ -44,6 +43,8 @@ import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
 import { fromItemContent } from 'src/app/items/store';
 import { fromGroupContent } from 'src/app/groups/store';
 import equal from 'fast-deep-equal/es6';
+import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -186,6 +187,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
   threadId$ = this.store.select(fromForum.selectThreadId);
   hasNoMessages$ = this.store.select(fromForum.selectThreadNoMessages);
+  threadToken = this.store.selectSignal(fromForum.selectThreadToken);
 
   constructor(
     private store: Store,
@@ -195,6 +197,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private actionFeedbackService: ActionFeedbackService,
     private updateThreadService: UpdateThreadService,
     private forumWebsocketClient: WebsocketClient,
+    private threadMessageService: ThreadMessageService,
     private fb: FormBuilder,
   ) {}
 
@@ -242,50 +245,31 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     if (!messageToSend) return;
     this.disableControls$.next(true);
 
-    const threadToken$ = this.store.select(fromForum.selectThreadToken).pipe(
-      take(1), // send on the current thread (if any) only
-      filter(isNotUndefined),
-    );
+    const token = this.threadToken();
+    if (!token) throw new Error('unexpected: the thread token is empty');
 
-    if (isThreadOpened) {
-      threadToken$.subscribe({
-        next: token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])),
-        error: () => this.disableControls$.next(false),
-      });
-      threadToken$.pipe(
-        switchMap(() =>
-          this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })
-        ),
-      ).subscribe({
-        next: () => {
-          this.disableControls$.next(false);
-          this.clearMessageToSendControl();
-        },
-        error: () => this.disableControls$.next(false)
-      });
-    } else {
-      this.changeThreadStatus({
-        open: true,
-        threadId,
-        messageCountIncrement: 1,
-      }).subscribe({
-        error: () => this.disableControls$.next(false),
-      });
-      this.subscriptions.add(
-        this.store.select(fromForum.selectThreadStatusOpen).pipe(
-          filter(isOpened => isOpened),
-          take(1),
-          switchMap(() => threadToken$)
-        ).subscribe({
-          next: token => {
-            this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ]));
-            this.clearMessageToSendControl();
-            this.disableControls$.next(false);
-          },
-          error: () => this.disableControls$.next(false),
-        })
-      );
-    }
+    const prerequisite = isThreadOpened ? of(undefined) : this.changeThreadStatus({ open: true, threadId, messageCountIncrement: 1 }).pipe(
+      switchMap(() => this.store.select(fromForum.selectThreadStatusOpen)),
+      filter(open => open),
+      take(1),
+      map(() => undefined)
+    );
+    prerequisite.pipe(
+      switchMap(() => this.store.select(fromForum.selectThreadToken)),
+      filter(isNotUndefined),
+      take(1),
+      switchMap(token => this.threadMessageService.create(messageToSend, { authToken: token })),
+      switchMap(() => this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })),
+    ).subscribe({
+      next: () => {
+        this.clearMessageToSendControl();
+        this.disableControls$.next(false);
+      },
+      error: err => {
+        this.disableControls$.next(false);
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
   }
 
   scrollDown(): void {
