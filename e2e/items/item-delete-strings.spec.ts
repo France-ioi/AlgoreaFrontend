@@ -63,6 +63,7 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
     await expect.soft(deleteBtnLocator).toBeEnabled();
     await deleteBtnLocator.click();
     await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
+    await expect.soft(translateBtnLocator).toBeVisible();
   });
 
   await test.step('Checks cancel changes', async () => {
@@ -71,6 +72,7 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
     await expect.soft(itemStringsTitleFrLocator.locator('alg-input').getByRole('textbox')).toHaveValue('Title (fr)');
     await expect.soft(itemStringsSubtitleFrLocator.locator('alg-input').getByRole('textbox')).toHaveValue('Subtitle (fr)');
     await expect.soft(itemStringsDescriptionFrLocator.locator('textarea')).toHaveValue('Description (fr)');
+    await expect.soft(translateBtnLocator).not.toBeVisible();
   });
 
   await test.step('Checks delete fr translate and save changes', async () => {
@@ -79,6 +81,7 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
     await expect.soft(deleteBtnLocator).toBeEnabled();
     await deleteBtnLocator.click();
     await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
+    await expect.soft(translateBtnLocator).toBeVisible();
     await itemContentPage.saveChangesAndCheckNotification();
   });
 
