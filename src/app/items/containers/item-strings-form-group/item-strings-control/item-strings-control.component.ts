@@ -15,6 +15,7 @@ export interface StringsValue {
   title: string,
   subtitle: string,
   description: string,
+  imageUrl: string,
 }
 
 @Component({
@@ -49,6 +50,7 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
     title: [ '', [ Validators.required, Validators.minLength(3) ] ],
     subtitle: [ '', Validators.maxLength(200) ],
     description: [ '' ],
+    imageUrl: [ '' ],
   });
 
   formValue = toSignal(
