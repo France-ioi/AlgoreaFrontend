@@ -1,6 +1,7 @@
 import { ActivityLogs } from 'src/app/data-access/activity-log.service';
-import { ThreadEvent, attemptStartedEvent, submissionEvent } from './thread-events';
+import { ThreadEvent, attemptStartedEvent, messageEvent, submissionEvent } from './thread-events';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
+import { ThreadMessage } from 'src/app/data-access/thread-message.service';
 
 export function convertActivityLogsToThreadEvents(events: ActivityLogs): ThreadEvent[] {
   return events.map(event => {
@@ -17,4 +18,8 @@ export function convertActivityLogsToThreadEvents(events: ActivityLogs): ThreadE
       default: return null;
     }
   }).filter(isNotNull);
+}
+
+export function convertThreadMessageToThreadEvents(msgs: ThreadMessage[]): ThreadEvent[] {
+  return msgs.map(msg => messageEvent(msg.message));
 }
