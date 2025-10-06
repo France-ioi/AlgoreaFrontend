@@ -84,7 +84,7 @@ export class ItemAllStringsFormComponent {
     if (values) {
       if (values.length < this.form.controls.allStrings.length) {
         for (let i = this.form.controls.allStrings.length; i > values.length; i--) {
-          this.form.controls.allStrings.removeAt(i, { emitEvent: false });
+          this.removeStringsControl(i, { emitEvent: false });
         }
       }
 
@@ -94,9 +94,7 @@ export class ItemAllStringsFormComponent {
 
       this.form.reset({ allStrings: values }, { emitEvent: false });
 
-      this.availableLanguagesToCreate.set(
-        this.supportedLanguages().filter(sl => !values.find(v => v.languageTag === sl))
-      );
+      this.determinateAvailableLanguagesToCreate();
     }
   }
 
@@ -122,14 +120,29 @@ export class ItemAllStringsFormComponent {
         description: '',
         imageUrl: '',
         ...value,
-      }), { emitEvent: value !== undefined });
-
-    this.availableLanguagesToCreate.set(
-      this.supportedLanguages().filter(sl => !this.formValue().find(v => v.languageTag === sl))
+      }),
+      { emitEvent: value !== undefined },
     );
   }
 
-  removeStringsControl(idx: number): void {
-    this.form.controls.allStrings.removeAt(idx);
+  onAddStringsControl(value?: Partial<StringsValue>): void {
+    this.addStringsControl(value);
+    this.determinateAvailableLanguagesToCreate();
+  }
+
+  removeStringsControl(idx: number, options: { emitEvent: boolean } = { emitEvent: true }): void {
+    this.form.controls.allStrings.removeAt(idx, options);
+  }
+
+  onRemoveStringsControl(idx: number): void {
+    this.removeStringsControl(idx);
+    this.determinateAvailableLanguagesToCreate();
+  }
+
+  determinateAvailableLanguagesToCreate(): void {
+    const stringValues = this.form.controls.allStrings.getRawValue();
+    this.availableLanguagesToCreate.set(
+      this.supportedLanguages().filter(sl => !stringValues.find(v => v.languageTag === sl))
+    );
   }
 }
