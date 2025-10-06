@@ -3,7 +3,6 @@ import { FetchState, fetchingState } from 'src/app/utils/state';
 import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadEvent } from '../../models/thread-events';
-import { ThreadMessage } from 'src/app/data-access/thread-message.service';
 
 export interface ThreadItemInfo {
   route: RawItemRoute,
@@ -16,7 +15,7 @@ export interface State {
   info: FetchState<Thread>,
   item: ThreadItemInfo | null, // item information if there is a thread
   logEvents: FetchState<ThreadEvent[]>,
-  slsEvents: FetchState<ThreadMessage[]>,
+  slsEvents: FetchState<ThreadEvent[]>,
   wsEvents: IncomingThreadEvent[],
 }
 

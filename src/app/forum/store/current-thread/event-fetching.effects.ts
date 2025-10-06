@@ -8,7 +8,7 @@ import { combineLatest } from 'rxjs';
 import { fromForum } from '..';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { eventFetchingActions } from './event-fetching.actions';
-import { convertActivityLogsToThreadEvents } from '../../models/thread-events-convertions';
+import { convertActivityLogsToThreadEvents, convertThreadMessageToThreadEvents } from '../../models/thread-events-convertions';
 import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
 
 export const logEventFetchingEffect = createEffect(
@@ -38,6 +38,7 @@ export const slsEventFetchingEffect = createEffect(
   ) => store$.select(fromForum.selectInfo).pipe(
     readyData(),
     switchMap(thread => threadMessageService.getAll({ authToken: thread.token, limit: 11 }).pipe(
+      map(convertThreadMessageToThreadEvents),
       mapToFetchState(),
     )),
     map(fetchState => eventFetchingActions.slsEventsFetchStateChanged({ fetchState })),
