@@ -8,9 +8,9 @@ import { decodeSnakeCase } from '../utils/operators/decode';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 
 const messageSchema = z.object({
-  time: z.date(),
-  createdBy: z.string(),
-  message: z.string(),
+  time: z.number().transform(val => new Date(val)),
+  authorId: z.string(),
+  text: z.string(),
 });
 export type ThreadMessage = z.infer<typeof messageSchema>;
 
@@ -22,13 +22,13 @@ export class ThreadMessageService {
 
   constructor(private http: HttpClient) {}
 
-  create(message: string, options: { authToken: string }): Observable<void> {
+  create(text: string, options: { authToken: string }): Observable<void> {
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const headers = { Authorization: `Bearer ${options.authToken}` };
 
     return this.http
-      .post<SimpleActionResponse>(`${this.config.slsApiUrl}/forum/message`, { message }, { headers })
+      .post<SimpleActionResponse>(`${this.config.slsApiUrl}/forum/message`, { text }, { headers })
       .pipe(
         map(assertSuccess),
       );

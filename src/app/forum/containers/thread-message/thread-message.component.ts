@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
-import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -10,7 +9,7 @@ import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring
 import { NgClass, NgIf, NgTemplateOutlet, DatePipe } from '@angular/common';
 import { BreakLinesPipe } from '../../../pipes/breakLines';
 import { ThreadId } from '../../models/threads';
-import { isAttemptStartedEvent, isSubmissionEvent } from '../../models/thread-events';
+import { isMessageEvent, ThreadEvent } from '../../models/thread-events';
 import { RelativeTimePipe } from '../../../pipes/relativeTime';
 
 @Component({
@@ -34,15 +33,14 @@ import { RelativeTimePipe } from '../../../pipes/relativeTime';
 })
 export class ThreadMessageComponent implements OnChanges {
   @Input({ required: true }) threadId!: ThreadId;
-  @Input({ required: true }) event!: IncomingThreadEvent;
+  @Input({ required: true }) event!: ThreadEvent;
   @Input() userCache: UserInfo[] = [];
   @Input() canCurrentUserLoadAnswers = false;
   @Input() itemRoute?: RawItemRoute;
   userInfo?: UserInfo & { name: string };
 
   ngOnChanges(): void {
-    const isAttemptOrSubmissionEvent = isAttemptStartedEvent(this.event) || isSubmissionEvent(this.event);
-    const userId = isAttemptOrSubmissionEvent ? this.threadId.participantId : this.event.createdBy;
+    const userId = isMessageEvent(this.event) ? this.event.authorId : this.threadId.participantId;
     const userInfo = this.userCache.find(user => user.id === userId);
     this.userInfo = userInfo ? { ...userInfo, name: userInfo.name ?? $localize`An unknown user` } : undefined;
   }
