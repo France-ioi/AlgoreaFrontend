@@ -12,6 +12,17 @@
   margin-top: var(--alg-space-size-5);
 }
 
+.right-position {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .loading {
   margin-left: var(--alg-space-size-6);
+}
+
+.delete-note {
+  margin-right: var(--alg-space-size-6);
+  color: var(--alg-message-error-color);
 }

@@ -1,11 +1,26 @@
 <ng-container [formGroup]="form">
   <ng-container formArrayName="allStrings">
     @for (control of allStrings.controls; track $index) {
-      <div class="item-strings-control">
+      <div class="item-strings-control" data-testid="item-strings-control">
         <alg-item-strings-control
           [formControl]="control"
           [showDescription]="showDescription()"
         ></alg-item-strings-control>
+
+        <div class="button-section right-position" data-testid="delete-strings-button-section">
+          @let isDefaultLanguage = control.getRawValue().languageTag === defaultLanguageTag();
+          @if (isDefaultLanguage) {
+            <span class="delete-note alg-text-small" i18n>Cannot remove the default translation</span>
+          }
+          <button
+            class="size-s danger"
+            type="button"
+            icon="ph-duotone ph-trash"
+            alg-button-icon
+            [disabled]="fetchingOtherLanguages() || isDefaultLanguage"
+            (click)="onRemoveStringsControl($index)"
+          ></button>
+        </div>
       </div>
     }
     @for (languageTag of availableLanguagesToCreate(); track $index) {
@@ -14,7 +29,7 @@
           type="button"
           alg-button
           [disabled]="fetchingOtherLanguages()"
-          (click)="addStringsControl({ languageTag })"
+          (click)="onAddStringsControl({ languageTag })"
           i18n
         >Translate to {{ languageTag }}</button>
         @if (fetchingOtherLanguages()) {
