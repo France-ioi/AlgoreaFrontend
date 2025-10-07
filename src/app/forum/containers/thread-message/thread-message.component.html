@@ -1,32 +1,32 @@
 <div
   class="message-container"
   [ngClass]="{
-    'left': !userInfo?.isCurrentUser && event.label === 'message',
-    'right': userInfo?.isCurrentUser && event.label === 'message',
-    'full-width transparent': ['result_started', 'submission'].includes(event.label),
-    'started': event.label === 'result_started',
-    'participant': !userInfo?.isCurrentUser && userInfo?.isThreadParticipant && event.label === 'message'
+    'left': !userInfo?.isCurrentUser && event.kind === 'message',
+    'right': userInfo?.isCurrentUser && event.kind === 'message',
+    'full-width transparent': ['result_started', 'submission'].includes(event.kind),
+    'started': event.kind === 'result_started',
+    'participant': !userInfo?.isCurrentUser && userInfo?.isThreadParticipant && event.kind === 'message'
   }"
 >
   <div class="message">
-    <div class="name-section" *ngIf="event.label === 'message'">
+    <div class="name-section" *ngIf="event.kind === 'message'">
       <span class="name" *ngIf="!userInfo?.isCurrentUser">{{ userInfo?.name }}</span>
       <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
     </div>
     <div class="bubble">
       <div
         class="message-event"
-        [innerHTML]="(event.data.content | allowDisplayCodeSnippet : userInfo?.isCurrentUser && event.label === 'message' ? 'light' : 'dark') | breakLines"
-        *ngIf="event.label === 'message'"
+        [innerHTML]="(event.text | allowDisplayCodeSnippet : userInfo?.isCurrentUser && event.kind === 'message' ? 'light' : 'dark') | breakLines"
+        *ngIf="event.kind === 'message'"
       ></div>
-      <ng-container *ngIf="['result_started', 'submission'].includes(event.label)">
-        <hr class="divider alg-divider" *ngIf="event.label === 'submission'">
+      <ng-container *ngIf="['result_started', 'submission'].includes(event.kind)">
+        <hr class="divider alg-divider" *ngIf="event.kind === 'submission'">
         <div class="classical-event">
           <alg-score-ring
             class="score-ring"
-            [currentScore]="event.data.score"
+            [currentScore]="event.score"
             [diameter]="32"
-            *ngIf="event.label === 'submission' && event.data.score !== undefined"
+            *ngIf="event.kind === 'submission' && event.score !== undefined"
           ></alg-score-ring>
           <div>
             <div>
@@ -43,13 +43,13 @@
                   {{ userInfo?.name }}
                 </span>
               </ng-template>
-              <span *ngIf="event.label === 'result_started'" i18n>started the activity</span>
-              <ng-container *ngIf="event.label === 'submission'">
+              <span *ngIf="event.kind === 'result_started'" i18n>started the activity</span>
+              <ng-container *ngIf="event.kind === 'submission'">
                 <span i18n>submitted a</span>
                 <a
                   class="alg-link"
                   [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers }"
-                  [routerLink]="itemRoute | with: { answer: { id: event.data.answerId } } | url"
+                  [routerLink]="itemRoute | with: { answer: { id: event.answerId } } | url"
                   *ngIf="itemRoute"
                   i18n
                 >
@@ -60,7 +60,7 @@
             <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
           </div>
         </div>
-        <hr class="divider alg-divider" *ngIf="event.label === 'submission'">
+        <hr class="divider alg-divider" *ngIf="event.kind === 'submission'">
       </ng-container>
     </div>
   </div>

@@ -6,6 +6,7 @@ import * as eventFetchingEffects from './current-thread/event-fetching.effects';
 import * as threadSubscriptionEffects from './current-thread/threadSubscription.effects';
 import * as currentThreadEffects from './current-thread/current-thread.effects';
 import * as forumBaseEffects from './forum.effects';
+import * as websocketIncomingMessage from './current-thread/websocket-incoming-message.effects';
 import { getCurrentThreadSelectors } from './current-thread/current-thread.selectors';
 import { topBarActions, forumThreadListActions, threadPanelActions, itemPageActions } from './current-thread/current-thread.actions';
 import { getWebsocketSelectors } from './websocket/websocket.selectors';
@@ -19,6 +20,7 @@ export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...threadSubscriptionEffects,
   ...currentThreadEffects,
   ...forumBaseEffects,
+  ...websocketIncomingMessage,
 });
 
 export const fromForum = {

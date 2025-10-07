@@ -1,66 +1,49 @@
-import { z } from 'zod';
 
-export enum EventLabel {
+export enum EventKind {
   AttemptStarted = 'result_started',
   Submission = 'submission',
   Message = 'message',
 }
 
 /**
- * Schemas
- */
-
-const attemptStartedEventSchema = z.object({
-  label: z.literal(EventLabel.AttemptStarted),
-  data: z.object({
-    attemptId: z.string(),
-  }),
-});
-
-const submissionEventSchema = z.object({
-  label: z.literal(EventLabel.Submission),
-  data: z.object({
-    attemptId: z.string(),
-    answerId: z.string(),
-    score: z.number().optional()
-  }),
-});
-
-const messageEventSchema = z.object({
-  label: z.literal(EventLabel.Message),
-  data: z.object({
-    content: z.string(),
-  }),
-});
-
-export const threadEventSchema = z.discriminatedUnion('label', [
-  attemptStartedEventSchema,
-  submissionEventSchema,
-  messageEventSchema,
-]);
-
-/**
  * Event types
  */
 
-export type AttemptStartedEvent = z.infer<typeof attemptStartedEventSchema>;
-export type SubmissionEvent = z.infer<typeof submissionEventSchema>;
-export type MessageEvent = z.infer<typeof messageEventSchema>;
+export interface AttemptStartedEvent {
+  kind: EventKind.AttemptStarted,
+  time: Date,
+  attemptId: string,
+}
 
-export type ThreadEvent = z.infer<typeof threadEventSchema>;
+export interface SubmissionEvent {
+  kind: EventKind.Submission,
+  time: Date,
+  attemptId: string,
+  answerId: string,
+  score?: number,
+}
+
+export interface MessageEvent {
+  kind: EventKind.Message,
+  time: Date,
+  authorId: string,
+  text: string,
+}
+
+export type ThreadEvent = AttemptStartedEvent | SubmissionEvent | MessageEvent;
 
 /**
  * Event factories
  */
 
-export function messageEvent(message: string): ThreadEvent {
-  return { label: EventLabel.Message, data: { content: message } };
+export function messageEvent(data: Omit<MessageEvent, 'kind'>): MessageEvent {
+  return { kind: EventKind.Message, ...data };
 }
-export function attemptStartedEvent(data: AttemptStartedEvent['data']): AttemptStartedEvent {
-  return { label: EventLabel.AttemptStarted, data };
+export function attemptStartedEvent(data: Omit<AttemptStartedEvent, 'kind'>): AttemptStartedEvent {
+  return { kind: EventKind.AttemptStarted, ...data };
 }
-export function submissionEvent(data: SubmissionEvent['data']): SubmissionEvent {
-  return { label: EventLabel.Submission, data };
+export function submissionEvent(data: Omit<SubmissionEvent, 'kind'>): SubmissionEvent {
+  return { kind: EventKind.Submission, ...data };
 }
 
 
@@ -68,10 +51,24 @@ export function submissionEvent(data: SubmissionEvent['data']): SubmissionEvent 
  * Event type assertions
  */
 
+export function isMessageEvent(event: ThreadEvent): event is MessageEvent {
+  return event.kind === EventKind.Message;
+}
+
 export function isAttemptStartedEvent(event: ThreadEvent): event is AttemptStartedEvent {
-  return event.label === EventLabel.AttemptStarted;
+  return event.kind === EventKind.AttemptStarted;
 }
 
 export function isSubmissionEvent(event: ThreadEvent): event is SubmissionEvent {
-  return event.label === EventLabel.Submission;
+  return event.kind === EventKind.Submission;
+}
+
+/**
+ * Merge multiple event lists into a single list, sorted by time.
+ */
+export function mergeEvents(eventLists: ThreadEvent[][]): ThreadEvent[] {
+  const events = eventLists.reduce((acc, events) => [ ...acc, ...events ], []);
+  return events
+    .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
+    .filter((el, i, list) => el.kind !== list[i-1]?.kind || el.time.valueOf() !== list[i-1]?.time.valueOf()); // remove duplicate
 }

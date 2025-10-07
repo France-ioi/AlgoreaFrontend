@@ -5,19 +5,15 @@ import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { State, initialState } from './current-thread.store';
 import { forumThreadListActions, itemPageActions, threadPanelActions, topBarActions } from './current-thread.actions';
 import { eventFetchingActions } from './event-fetching.actions';
+import { websocketIncomingMessageActions } from './websocket-incoming-message.actions';
 
 const reducer = createReducer(
   initialState,
 
-  // temp disabled
-  // on(websocketClientActions.eventsReceived, (state, { events }): State => ({
-  //   ...state,
-  //   slsEvents: readyState(
-  //     [ ...state.slsEvents.data ?? [], ...events.filter(e => state.id && areSameThreads(e.thread, state.id)) ]
-  //       .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
-  //       .filter((el, i, list) => el.time.valueOf() !== list[i-1]?.time.valueOf()) // remove duplicate (using time as differentiator)
-  //   )
-  // })),
+  on(websocketIncomingMessageActions.forumMessageReceived, (state, { threadId, message }): State => ({
+    ...state,
+    wsEvents: state.id && areSameThreads(state.id, threadId) ? [ ...state.wsEvents, message ] : state.wsEvents,
+  })),
 
   on(eventFetchingActions.logEventsFetchStateChanged, (state, { fetchState }): State => ({
     ...state,

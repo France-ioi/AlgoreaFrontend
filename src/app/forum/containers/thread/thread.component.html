@@ -2,7 +2,6 @@
     state: state$,
     isWsOpen: isWsOpen$,
     threadStatus: threadStatus$,
-    hasNoMessages: hasNoMessages$,
     isCurrentUserThreadParticipant: isCurrentUserThreadParticipant$,
     isMine: isMine$,
   } as thread"
@@ -22,7 +21,7 @@
         </ng-container>
       </ng-container>
       <div class="widget-scroll" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
-        <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && thread.hasNoMessages; else messagesBlock" i18n>
+        <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && thread.state.data?.length === 0; else messagesBlock" i18n>
           In this panel, you can request help from other users about the content you are on.
           People who have already validated this activity will see your request and be able to answer.
         </div>

@@ -1,6 +1,5 @@
 import { Thread, ThreadId } from '../../models/threads';
 import { FetchState, fetchingState } from 'src/app/utils/state';
-import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 import { ThreadEvent } from '../../models/thread-events';
 
 export interface State {
@@ -9,7 +8,7 @@ export interface State {
   info: FetchState<Thread>,
   logEvents: FetchState<ThreadEvent[]>,
   slsEvents: FetchState<ThreadEvent[]>,
-  wsEvents: IncomingThreadEvent[],
+  wsEvents: ThreadEvent[],
 }
 
 export const initialState: State = {

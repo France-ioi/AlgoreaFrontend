@@ -42,6 +42,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
 import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { isMessageEvent } from '../../models/thread-events';
 
 @Component({
   selector: 'alg-thread',
@@ -81,7 +82,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
-    map(events => events.map(e => e.createdBy)),
+    map(events => events.filter(isMessageEvent).map(e => e.authorId)),
     scan((acc: string[], val) => [ ...new Set([ ...acc, ...val ]) ].sort() , []),
     startWith([]),
     distinctUntilChanged((prev, cur) => JSON.stringify(prev) === JSON.stringify(cur))
@@ -163,7 +164,6 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       }),
     );
   threadId$ = this.store.select(fromForum.selectThreadId);
-  hasNoMessages$ = this.store.select(fromForum.selectThreadNoMessages);
   threadToken = this.store.selectSignal(fromForum.selectThreadToken);
 
   constructor(
