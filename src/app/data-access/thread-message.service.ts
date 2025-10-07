@@ -11,6 +11,7 @@ const messageSchema = z.object({
   time: z.number().transform(val => new Date(val)),
   authorId: z.string(),
   text: z.string(),
+  uuid: z.string(),
 });
 export type ThreadMessage = z.infer<typeof messageSchema>;
 
@@ -22,13 +23,13 @@ export class ThreadMessageService {
 
   constructor(private http: HttpClient) {}
 
-  create(text: string, options: { authToken: string }): Observable<void> {
+  create(message: { text: string, uuid: string }, options: { authToken: string }): Observable<void> {
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const headers = { Authorization: `Bearer ${options.authToken}` };
 
     return this.http
-      .post<SimpleActionResponse>(`${this.config.slsApiUrl}/forum/message`, { text }, { headers })
+      .post<SimpleActionResponse>(`${this.config.slsApiUrl}/forum/message`, message, { headers })
       .pipe(
         map(assertSuccess),
       );

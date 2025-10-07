@@ -28,6 +28,7 @@ export interface MessageEvent {
   time: Date,
   authorId: string,
   text: string,
+  uuid: string,
 }
 
 export type ThreadEvent = AttemptStartedEvent | SubmissionEvent | MessageEvent;

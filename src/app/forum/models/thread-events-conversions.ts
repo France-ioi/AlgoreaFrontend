@@ -26,6 +26,6 @@ export function convertThreadMessageToThreadEvents(msgs: ThreadMessage[]): Messa
 }
 
 export function convertWsMessageToMessageEvent(msgs: UserMessageForumWsMessage): MessageEvent {
-  const { authorId, time, text } = msgs;
-  return messageEvent({ authorId, time, text });
+  const { authorId, time, text, uuid } = msgs;
+  return messageEvent({ authorId, time, text, uuid });
 }
