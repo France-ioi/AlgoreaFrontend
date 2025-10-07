@@ -1,31 +1,23 @@
 import { z } from 'zod';
 
-enum MessageLabel {
-  Message = 'forum.message',
+export enum ForumMessageAction {
+  NewMessage = 'forum.message.new',
 }
-
-/**
- * Payload schemas
- */
-
-const userMessageSchema = z.object({
-  participantId: z.string(),
-  itemId: z.string(),
-  authorId: z.string(),
-  time: z.date(),
-  text: z.string(),
-});
 
 /**
  * WS Forum Message schemas
  */
 
 export const userMessageForumWsMessageSchema = z.object({
-  label: z.literal(MessageLabel.Message),
-  data: userMessageSchema,
+  action: z.literal(ForumMessageAction.NewMessage),
+  participantId: z.string(),
+  itemId: z.string(),
+  authorId: z.string(),
+  time: z.number().transform(val => new Date(val)),
+  text: z.string(),
 });
 
-export const forumWsMessageSchema = z.discriminatedUnion('label', [
+export const forumWsMessageSchema = z.discriminatedUnion('action', [
   userMessageForumWsMessageSchema,
 ]);
 
@@ -40,5 +32,5 @@ export type ForumWsMessage = z.infer<typeof forumWsMessageSchema>;
  * Event type assertions
  */
 export function isUserMessageForumWsMessage(message: ForumWsMessage): message is UserMessageForumWsMessage {
-  return message.label === MessageLabel.Message;
+  return message.action === ForumMessageAction.NewMessage;
 }
