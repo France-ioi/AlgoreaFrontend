@@ -10,7 +10,7 @@
         <div class="button-section right-position" data-testid="delete-strings-button-section">
           @let isDefaultLanguage = control.getRawValue().languageTag === defaultLanguageTag();
           @if (isDefaultLanguage) {
-            <span class="delete-note alg-text-small">Cannot remove the default translation</span>
+            <span class="delete-note alg-text-small" i18n>Cannot remove the default translation</span>
           }
           <button
             class="size-s danger"
