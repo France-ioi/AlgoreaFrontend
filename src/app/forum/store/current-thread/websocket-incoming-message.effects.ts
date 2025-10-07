@@ -4,7 +4,7 @@ import { filter, map } from 'rxjs';
 import { websocketClientActions } from '../websocket/websocket.actions';
 import { userMessageForumWsMessageSchema } from '../../models/websocket-forum-messages';
 import { websocketIncomingMessageActions } from './websocket-incoming-message.actions';
-import { convertWsMessageToMessageEvent } from '../../models/thread-events-convertions';
+import { convertWsMessageToMessageEvent } from '../../models/thread-events-conversions';
 
 export const websocketIncomingMessageEffect = createEffect(
   (

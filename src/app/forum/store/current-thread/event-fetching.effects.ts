@@ -8,7 +8,7 @@ import { combineLatest } from 'rxjs';
 import { fromForum } from '..';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { eventFetchingActions } from './event-fetching.actions';
-import { convertActivityLogsToThreadEvents, convertThreadMessageToThreadEvents } from '../../models/thread-events-convertions';
+import { convertActivityLogsToThreadEvents, convertThreadMessageToThreadEvents } from '../../models/thread-events-conversions';
 import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
 
 export const logEventFetchingEffect = createEffect(
