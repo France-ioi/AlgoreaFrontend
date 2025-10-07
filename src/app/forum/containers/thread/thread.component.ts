@@ -26,7 +26,7 @@ import { UpdateThreadService } from '../../../data-access/update-thread.service'
 import { TooltipModule } from 'primeng/tooltip';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
@@ -64,8 +64,6 @@ const selectThreadInfo = createSelector(
   styleUrls: [ './thread.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     ThreadMessageComponent,
     LetDirective,
     FormsModule,
@@ -90,7 +88,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   disableControls$ = new BehaviorSubject<boolean>(false);
 
   readonly subscriptions = new Subscription();
-  readonly state$ = this.store.select(fromForum.selectThreadEvents);
+  private readonly state$ = this.store.select(fromForum.selectThreadEvents);
+  readonly state = this.store.selectSignal(fromForum.selectThreadEvents);
 
   readonly isWsOpen$ = this.store.select(fromForum.selectWebsocketOpen);
 
