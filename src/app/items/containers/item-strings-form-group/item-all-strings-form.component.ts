@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject, input, signal } from '@angular/core';
+import { Component, effect, forwardRef, inject, input, output, signal } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -44,6 +44,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ],
 })
 export class ItemAllStringsFormComponent {
+  defaultLanguageEvent = output<string>();
   defaultLanguageTag = input<string>();
   supportedLanguages = input.required<string[]>();
   showDescription = input(false);
@@ -109,6 +110,10 @@ export class ItemAllStringsFormComponent {
   }
 
   registerOnTouched(_fn: (value: StringsValue[] | null) => void): void {
+  }
+
+  onSetDefaultLanguage(languageTag: string): void {
+    this.defaultLanguageEvent.emit(languageTag);
   }
 
   addStringsControl(value?: Partial<StringsValue>): void {

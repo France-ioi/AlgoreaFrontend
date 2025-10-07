@@ -1,12 +1,14 @@
 @if (itemData) {
   @if (itemData.item.permissions | allowsEditingAll) {
     <form [formGroup]="itemForm">
+      @let defaultLanguageTagValue = itemForm.controls.default_language_tag.getRawValue();
       <alg-item-all-strings-form
-        [defaultLanguageTag]="itemData.item.defaultLanguageTag"
+        [defaultLanguageTag]="defaultLanguageTagValue"
         [supportedLanguages]="supportedLanguages()"
         [fetchingOtherLanguages]="fetchingOtherLanguages()"
         [showDescription]="itemData.item.type !== 'Task' && itemData.currentResult !== undefined"
         formControlName="allStrings"
+        (defaultLanguageEvent)="onDefaultLanguageChange($event)"
       ></alg-item-all-strings-form>
       <alg-item-edit-advanced-parameters
         [parentForm]="itemForm"

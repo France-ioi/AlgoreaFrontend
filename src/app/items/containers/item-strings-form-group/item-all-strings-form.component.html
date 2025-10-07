@@ -8,9 +8,21 @@
         ></alg-item-strings-control>
 
         <div class="button-section right-position" data-testid="delete-strings-button-section">
-          @let isDefaultLanguage = control.getRawValue().languageTag === defaultLanguageTag();
+          @let languageTag = control.getRawValue().languageTag;
+          @let isDefaultLanguage = languageTag === defaultLanguageTag();
           @if (isDefaultLanguage) {
             <span class="delete-note alg-text-small" i18n>Cannot remove the default translation</span>
+          } @else {
+            <button
+              class="size-s button"
+              type="button"
+              alg-button
+              [disabled]="fetchingOtherLanguages()"
+              (click)="onSetDefaultLanguage(languageTag)"
+              i18n
+            >
+              Set as default language for that content
+            </button>
           }
           <button
             class="size-s danger"
