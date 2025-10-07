@@ -16,6 +16,7 @@
       icon="ph-bold ph-power"
       (click)="login()"
       alg-button-icon
+      [disabled]="!!session?.tempUser && isLoginButtonClicked()"
     ></button>
   </ng-template>
 </div>
