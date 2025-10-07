@@ -46,6 +46,7 @@ import equal from 'fast-deep-equal/es6';
 import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { isMessageEvent } from '../../models/thread-events';
+import { v4 as uuidv4 } from 'uuid';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -247,6 +248,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     const token = this.threadToken();
     if (!token) throw new Error('unexpected: the thread token is empty');
 
+    const uuid = uuidv4(); // used to track a message if we need to (future use)
     const prerequisite = isThreadOpened ? of(undefined) : this.changeThreadStatus({ open: true, threadId, messageCountIncrement: 1 }).pipe(
       switchMap(() => this.store.select(fromForum.selectThreadStatusOpen)),
       filter(open => open),
@@ -257,7 +259,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       switchMap(() => this.store.select(fromForum.selectThreadToken)),
       filter(isNotUndefined),
       take(1),
-      switchMap(token => this.threadMessageService.create(messageToSend, { authToken: token })),
+      switchMap(token => this.threadMessageService.create({ text: messageToSend, uuid }, { authToken: token })),
       switchMap(() => this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })),
     ).subscribe({
       next: () => {

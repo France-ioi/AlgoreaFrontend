@@ -15,6 +15,7 @@ export const userMessageForumWsMessageSchema = z.object({
   authorId: z.string(),
   time: z.number().transform(val => new Date(val)),
   text: z.string(),
+  uuid: z.string(),
 });
 
 export const forumWsMessageSchema = z.discriminatedUnion('action', [
