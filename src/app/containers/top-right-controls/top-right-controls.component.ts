@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { delay } from 'rxjs/operators';
 import { UserSessionService } from '../../services/user-session.service';
 import { LocaleService } from '../../services/localeService';
@@ -22,12 +22,15 @@ export class TopRightControlsComponent{
   session$ = this.sessionService.session$.pipe(delay(0));
   readonly languages = this.localeService.languages;
 
+  isLoginButtonClicked = signal(false);
+
   constructor(
     private sessionService: UserSessionService,
     private localeService: LocaleService,
   ) { }
 
   login(): void {
+    this.isLoginButtonClicked.set(true);
     this.sessionService.login();
   }
 
