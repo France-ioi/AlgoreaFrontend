@@ -9,7 +9,12 @@
 .button-section {
   display: flex;
   align-items: center;
+  height: toRem(24);
   margin-top: var(--alg-space-size-5);
+}
+
+.button {
+  margin-right: var(--alg-space-size-6);
 }
 
 .right-position {
