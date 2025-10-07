@@ -15,7 +15,7 @@ export const websocketIncomingMessageEffect = createEffect(
     filter(result => result.success),
     map(result => result.data),
     map(message => websocketIncomingMessageActions.forumMessageReceived({
-      threadId: { participantId: message.data.participantId, itemId: message.data.itemId },
+      threadId: { participantId: message.participantId, itemId: message.itemId },
       message: convertWsMessageToMessageEvent(message),
     })),
   ),
