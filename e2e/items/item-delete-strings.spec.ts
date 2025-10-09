@@ -15,6 +15,8 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
 
   const itemStringsSectionLocator = page.getByTestId('item-strings-control');
   const itemStringsSectionEnLocator = itemStringsSectionLocator.nth(0);
+  const deleteEnBtnLocator = itemStringsSectionEnLocator.getByTestId('remove-language-btn');
+
   const itemStringsSectionFrLocator = itemStringsSectionLocator.nth(1);
 
   const translateBtnLocator = page.locator('alg-item-all-strings-form').getByRole('button', { name: 'Translate to fr' });
@@ -22,6 +24,7 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
   const itemStringsTitleFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-title');
   const itemStringsSubtitleFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-subtitle');
   const itemStringsDescriptionFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-description');
+  const deleteFrBtnLocator = itemStringsSectionFrLocator.getByTestId('remove-language-btn');
 
   await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
 
@@ -53,15 +56,14 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
   });
 
   await test.step('Checks the default translate delete button is disabled', async () => {
-    await expect.soft(itemStringsSectionEnLocator.getByTestId('delete-strings-button-section')).toBeVisible();
-    await expect.soft(itemStringsSectionEnLocator.getByTestId('delete-strings-button-section').getByRole('button')).toBeDisabled();
+    await expect.soft(deleteEnBtnLocator).toBeVisible();
+    await expect.soft(deleteEnBtnLocator).toBeDisabled();
   });
 
   await test.step('Checks delete fr translate flow', async () => {
-    const deleteBtnLocator = itemStringsSectionFrLocator.getByTestId('delete-strings-button-section').getByRole('button');
-    await expect.soft(itemStringsSectionFrLocator.getByTestId('delete-strings-button-section')).toBeVisible();
-    await expect.soft(deleteBtnLocator).toBeEnabled();
-    await deleteBtnLocator.click();
+    await expect.soft(deleteFrBtnLocator).toBeVisible();
+    await expect.soft(deleteFrBtnLocator).toBeEnabled();
+    await deleteFrBtnLocator.click();
     await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
     await expect.soft(translateBtnLocator).toBeVisible();
   });
@@ -76,10 +78,9 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
   });
 
   await test.step('Checks delete fr translate and save changes', async () => {
-    const deleteBtnLocator = itemStringsSectionFrLocator.getByTestId('delete-strings-button-section').getByRole('button');
-    await expect.soft(itemStringsSectionFrLocator.getByTestId('delete-strings-button-section')).toBeVisible();
-    await expect.soft(deleteBtnLocator).toBeEnabled();
-    await deleteBtnLocator.click();
+    await expect.soft(deleteFrBtnLocator).toBeVisible();
+    await expect.soft(deleteFrBtnLocator).toBeEnabled();
+    await deleteFrBtnLocator.click();
     await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
     await expect.soft(translateBtnLocator).toBeVisible();
     await itemContentPage.saveChangesAndCheckNotification();
