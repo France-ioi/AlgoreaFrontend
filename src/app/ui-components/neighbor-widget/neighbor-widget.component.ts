@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NgIf } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-neighbor-widget',
@@ -15,6 +16,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
         }),
         animate('.2s .2s ease-in-out', style({
           marginRight: '-2.6rem',
+          opacity: 0,
         })),
       ]),
       transition(':enter', [
@@ -30,7 +32,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ]),
   ],
   standalone: true,
-  imports: [ NgIf, ButtonIconComponent ]
+  imports: [ NgIf, ButtonIconComponent, ButtonComponent ]
 })
 export class NeighborWidgetComponent {
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};

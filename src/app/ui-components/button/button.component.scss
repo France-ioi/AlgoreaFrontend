@@ -161,6 +161,11 @@
     }
 
   }
+
+  &.neighbor-nav {
+    padding-left: var(--alg-space-size-6) !important;
+    padding-right: calc(var(--alg-space-size-6) / 2) !important;
+  }
 }
 
 .container {
