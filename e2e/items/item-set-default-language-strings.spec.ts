@@ -10,12 +10,13 @@ test.afterEach(({ deleteItem }) => {
   if (!deleteItem) throw new Error('Unexpected: missed deleted item data');
 });
 
-test('checks item delete strings', async ({ page, createItem, itemContentPage }) => {
+test('checks item set default language strings', async ({ page, createItem, itemContentPage }) => {
   if (!createItem) throw new Error('The item is not created');
 
   const itemStringsSectionLocator = page.getByTestId('item-strings-control');
   const itemStringsSectionEnLocator = itemStringsSectionLocator.nth(0);
   const deleteEnBtnLocator = itemStringsSectionEnLocator.getByTestId('remove-language-btn');
+  const setDefaultEnBtnLocator = itemStringsSectionEnLocator.getByTestId('set-default-language-btn');
 
   const itemStringsSectionFrLocator = itemStringsSectionLocator.nth(1);
 
@@ -25,6 +26,7 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
   const itemStringsSubtitleFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-subtitle');
   const itemStringsDescriptionFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-description');
   const deleteFrBtnLocator = itemStringsSectionFrLocator.getByTestId('remove-language-btn');
+  const setDefaultFrBtnLocator = itemStringsSectionFrLocator.getByTestId('set-default-language-btn');
 
   await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
 
@@ -55,38 +57,28 @@ test('checks item delete strings', async ({ page, createItem, itemContentPage })
     await expect.soft(itemStringsDescriptionFrLocator.locator('textarea')).toHaveValue('Description (fr)');
   });
 
-  await test.step('Checks the default translate delete button is disabled', async () => {
+  await test.step('Checks en is default flow', async () => {
     await expect.soft(deleteEnBtnLocator).toBeVisible();
     await expect.soft(deleteEnBtnLocator).toBeDisabled();
-  });
-
-  await test.step('Checks delete fr translate flow', async () => {
+    await expect.soft(setDefaultEnBtnLocator).not.toBeVisible();
     await expect.soft(deleteFrBtnLocator).toBeVisible();
-    await expect.soft(deleteFrBtnLocator).toBeEnabled();
-    await deleteFrBtnLocator.click();
-    await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
-    await expect.soft(translateBtnLocator).toBeVisible();
   });
 
-  await test.step('Checks cancel changes', async () => {
-    await itemContentPage.cancelChanges();
-    await expect.soft(itemStringsSectionFrLocator).toBeVisible();
-    await expect.soft(itemStringsTitleFrLocator.locator('alg-input').getByRole('textbox')).toHaveValue('Title (fr)');
-    await expect.soft(itemStringsSubtitleFrLocator.locator('alg-input').getByRole('textbox')).toHaveValue('Subtitle (fr)');
-    await expect.soft(itemStringsDescriptionFrLocator.locator('textarea')).toHaveValue('Description (fr)');
-    await expect.soft(translateBtnLocator).not.toBeVisible();
+  await test.step('Checks the fr translate set default is visible and change to fr', async () => {
+    await expect.soft(setDefaultFrBtnLocator).toBeVisible();
+    await setDefaultFrBtnLocator.click();
+    await expect.soft(setDefaultFrBtnLocator).not.toBeVisible();
   });
 
-  await test.step('Checks delete fr translate and save changes', async () => {
-    await expect.soft(deleteFrBtnLocator).toBeVisible();
-    await expect.soft(deleteFrBtnLocator).toBeEnabled();
-    await deleteFrBtnLocator.click();
-    await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
-    await expect.soft(translateBtnLocator).toBeVisible();
+  await test.step('Checks the fr is default flow and save changes', async () => {
+    await expect.soft(deleteEnBtnLocator).toBeEnabled();
+    await expect.soft(deleteFrBtnLocator).toBeDisabled();
+    await expect.soft(setDefaultEnBtnLocator).toBeVisible();
     await itemContentPage.saveChangesAndCheckNotification();
   });
 
-  await test.step('Checks the fr section is not displayed', async () => {
-    await expect.soft(itemStringsSectionFrLocator).not.toBeVisible();
+  await test.step('Checks the fr language is default', async () => {
+    await expect.soft(setDefaultEnBtnLocator).toBeVisible();
+    await expect.soft(setDefaultFrBtnLocator).not.toBeVisible();
   });
 });
