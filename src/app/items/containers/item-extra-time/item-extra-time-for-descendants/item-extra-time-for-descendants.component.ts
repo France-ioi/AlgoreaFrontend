@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { TableModule } from 'primeng/table';
 import { combineLatest, Subject, switchMap } from 'rxjs';
 import { ExtraTimeService } from 'src/app/items/data-access/extra-time.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -13,6 +12,19 @@ import {
 } from 'src/app/items/containers/item-extra-time/item-extra-time-input/item-extra-time-input.component';
 import { SetExtraTimeService } from 'src/app/items/data-access/set-extra-time.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
 
 /**
  * Display extra time given to group descendants on the given item.
@@ -22,12 +34,22 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
   selector: 'alg-item-extra-time-for-descendants',
   standalone: true,
   imports: [
-    TableModule,
     ErrorComponent,
     LoadingComponent,
     PaginatorModule,
     ReactiveFormsModule,
     ItemExtraTimeInputComponent,
+    CdkTable,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    CdkCell,
+    CdkCellDef,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
   ],
   templateUrl: './item-extra-time-for-descendants.component.html',
   styleUrl: './item-extra-time-for-descendants.component.scss',
@@ -45,6 +67,7 @@ export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
   );
   stateSignal = toSignal(this.state$, { requireSync: true });
   updating = signal(false);
+  displayedColumns = signal([ 'name', 'additionalTime', 'totalAdditionalTime' ]);
 
   constructor(
     private extraTimeService: ExtraTimeService,

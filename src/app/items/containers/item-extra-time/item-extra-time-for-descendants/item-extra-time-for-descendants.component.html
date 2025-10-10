@@ -17,46 +17,39 @@
 }
 @else { <!-- state ready or fetching-->
   @let data = state.data;
-  <p-table
-    class="alg-table"
-    [value]="data"
-    [loading]="state.isFetching"
-    responsiveLayout="scroll"
-  >
-    <ng-template pTemplate="header">
-      @if (data && data.length > 0) {
-        <tr>
-          <th i18n>Name</th>
-          <th i18n>Participant-specific</th>
-          <th i18n>Total</th>
+  <div class="alg-table-page-wrapper">
+    <div class="alg-table-horizontal-scroll">
+      <table class="alg-table-v2" cdk-table [dataSource]="data">
+        <ng-container cdkColumnDef="name">
+          <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Name</th>
+          <td class="alg-table-td" cdk-cell *cdkCellDef="let descendantExtraTime">{{ descendantExtraTime.name }}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="additionalTime">
+          <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Participant-specific</th>
+          <td class="alg-table-td" cdk-cell *cdkCellDef="let descendantExtraTime">
+            <alg-item-extra-time-input
+              [initialValue]="descendantExtraTime.additionalTime"
+              [disabled]="updating()"
+              (saveEvent)="onExtraTimeSave($event, descendantExtraTime.groupId)"
+            ></alg-item-extra-time-input>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="totalAdditionalTime">
+          <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Total</th>
+          <td class="alg-table-td" data-testid="total-additional-time" cdk-cell *cdkCellDef="let descendantExtraTime">
+            {{ descendantExtraTime.totalAdditionalTime }}s
+          </td>
+        </ng-container>
+        @if (data.length > 0) {
+          <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+        }
+        <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+        <tr class="alg-table-body-tr" *cdkNoDataRow>
+          <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
+            <span i18n>This group has no descendants.</span>
+          </td>
         </tr>
-      }
-    </ng-template>
-
-    <ng-template
-      pTemplate="body"
-      let-descendantExtraTime
-    >
-      <tr>
-        <td>{{ descendantExtraTime.name }}</td>
-        <td>
-          <alg-item-extra-time-input
-            [initialValue]="descendantExtraTime.additionalTime"
-            [disabled]="updating()"
-            (saveEvent)="onExtraTimeSave($event, descendantExtraTime.groupId)"
-          ></alg-item-extra-time-input>
-        </td>
-        <td data-testid="total-additional-time">{{ descendantExtraTime.totalAdditionalTime }}s</td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td>
-          <div class="empty-message" i18n>
-            This group has no descendants.
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      </table>
+    </div>
+  </div>
 }
