@@ -7,6 +7,6 @@ import { APPCONFIG } from 'src/app/config';
 export const forumConfigEffect = createEffect(
   (
     config = inject(APPCONFIG),
-  ) => of(configActions.forumEnabled({ enabled: !!config.forumServerUrl })),
+  ) => of(configActions.forumEnabled({ enabled: config.featureFlags.enableForum })),
   { functional: true, dispatch: true }
 );

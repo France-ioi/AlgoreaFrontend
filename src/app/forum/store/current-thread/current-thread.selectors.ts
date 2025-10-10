@@ -1,9 +1,8 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from '../forum.state';
 import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../models/threads';
-import { FetchState } from 'src/app/utils/state';
-import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
-import { EventLabel } from 'src/app/forum/models/thread-events';
+import { fetchingState, FetchState, readyState } from 'src/app/utils/state';
+import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
@@ -14,8 +13,7 @@ interface CurrentThreadSelectors<T> {
   selectThreadToken: MemoizedSelector<T, string | undefined>,
   selectCanCurrentUserLoadThreadAnswers: MemoizedSelector<T, boolean>,
   selectThreadStatusOpen: MemoizedSelector<T, boolean>,
-  selectThreadEvents: MemoizedSelector<T, FetchState<IncomingThreadEvent[]>>,
-  selectThreadNoMessages: MemoizedSelector<T, boolean>,
+  selectThreadEvents: MemoizedSelector<T, FetchState<ThreadEvent[]>>,
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
@@ -46,7 +44,12 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   );
   const selectThreadEvents = createSelector(
     selectCurrentThread,
-    state => state.events
+    ({ logEvents, slsEvents, wsEvents }) => {
+      if (logEvents.isError) return logEvents;
+      if (slsEvents.isError) return slsEvents;
+      if (logEvents.isFetching || slsEvents.isFetching) return fetchingState<ThreadEvent[]>();
+      return readyState(mergeEvents([ logEvents.data, slsEvents.data, wsEvents ]));
+    }
   );
 
   // composed selectors
@@ -72,10 +75,6 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectInfo,
     info => !!info.data && canCurrentUserLoadAnswers(info.data)
   );
-  const selectThreadNoMessages = createSelector(
-    selectThreadEvents,
-    events => (events.data ? events.data.filter(event => event.label === EventLabel.AttemptStarted).length === 0 : false),
-  );
   return {
     selectVisible,
     selectThreadId,
@@ -86,6 +85,5 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectThreadStatus,
     selectThreadToken,
     selectCanCurrentUserLoadThreadAnswers,
-    selectThreadNoMessages,
   };
 };

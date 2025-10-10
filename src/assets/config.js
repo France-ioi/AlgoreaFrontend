@@ -2,7 +2,10 @@
 window.appConfig = {
   apiUrl: 'https://dev.algorea.org/api', // 'http://localhost:3000/api',
   oauthServerUrl: 'https://login.france-ioi.org',
-  forumServerUrl: 'wss://iv4uwoi5v6.execute-api.eu-west-3.amazonaws.com/dev',
+
+  slsWsUrl: 'wss://pkq9ft7322.execute-api.eu-west-3.amazonaws.com/dev',
+  slsApiUrl: 'https://dev.algorea.org/sls',
+
   searchApiUrl: 'https://jyz57q4k3ytekopv6tvg5bdxaq0vlgso.lambda-url.eu-west-3.on.aws',
   oauthClientId: '43',
 
@@ -25,6 +28,7 @@ window.appConfig = {
 
   theme: 'default',
   featureFlags: {
+    enableForum: true,
     hideTaskTabs: [],
     showGroupAccessTab: true,
     showLeftMenuTabs: true,

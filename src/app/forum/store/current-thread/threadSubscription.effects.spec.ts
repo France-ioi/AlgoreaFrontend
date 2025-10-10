@@ -15,7 +15,7 @@ describe('threadSubscriptionEffect', () => {
   const wsClientMock = {
     send: (): void => {}
   } as unknown as WebsocketClient;
-  const config = { forumServerUrl: 'mockurl' } as AppConfig;
+  const config = { slsWsUrl: 'mockurl', slsApiUrl: 'anotherurl', featureFlags: { enableForum: true } } as AppConfig;
 
   // actions for marble testing
   const a = fetchThreadInfoActions.fetchStateChanged({ fetchState: readyState(mockThread1) });

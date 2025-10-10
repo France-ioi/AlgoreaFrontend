@@ -4,7 +4,9 @@ import { z } from 'zod';
 const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend
 
-  forumServerUrl: z.string().optional(),
+  slsApiUrl: z.string().optional(),
+  slsWsUrl: z.string().optional(),
+
   searchApiUrl: z.string().optional(),
 
   oauthServerUrl: z.string(), // full url (not including the trailing slash) of the oauth server
@@ -40,6 +42,8 @@ const configSchema = z.object({
   theme: z.enum([ 'default', 'coursera-pt', 'probabl', 'thymio' ]).default('default'), // TODO: replace by asset replacement for the domain
 
   featureFlags: z.object({
+    enableForum: z.boolean().default(false),
+
     hideTaskTabs: z.array(z.string()).default([]),
     showGroupAccessTab: z.boolean().default(false),
 
