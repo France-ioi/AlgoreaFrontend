@@ -12,12 +12,14 @@
   height: 100%;
 
   &:not(:last-child) {
-    &:after {
-      content: '|';
-      color: var(--alg-border-light-color);
+    &:not(.no-separator) {
+      &:after {
+        content: '|';
+        color: var(--alg-border-light-color);
 
-      @media screen and (max-width: 599.98px) {
-        margin: 0 toRem(2);
+        @media screen and (max-width: 599.98px) {
+          margin: 0 toRem(2);
+        }
       }
     }
   }

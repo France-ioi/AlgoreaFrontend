@@ -163,8 +163,8 @@
   }
 
   &.neighbor-nav {
-    padding-left: var(--alg-space-size-6);
-    padding-right: calc(var(--alg-space-size-6) / 2);
+    padding-left: toRem(12);
+    padding-right: toRem(7);
 
     .icon {
       font-size: toRem(18);
