@@ -6,7 +6,7 @@
       icon="ph-bold ph-caret-up"
       [showCaption]="!navigationMode.right"
       [withAnimation]="true"
-      class="stroke neighbor-nav"
+      class="neighbor-nav"
       [ngClass]="{ 'right-margin': !navigationMode.right }"
       (click)="parent.emit()"
       i18n
@@ -29,7 +29,7 @@
       icon="ph-bold ph-caret-right"
       [showCaption]="navigationMode.right"
       [withAnimation]="true"
-      class="stroke neighbor-nav"
+      class="neighbor-nav"
       data-testid="nav-to-next"
       (click)="right.emit()"
       [disabled]="!navigationMode.right"

@@ -173,7 +173,17 @@
 
   &.no-caption {
     padding: 0 toRem(12);
-    border-color: transparent;
+
+    &:not(&.stroke) {
+      background-color: transparent;
+      .icon {
+        color: var(--alg-primary-color);
+      }
+    }
+
+    &.stroke {
+      border-color: transparent;
+    }
 
     .icon {
       margin-left: 0;
@@ -181,10 +191,20 @@
   }
 
   &.no-caption-animatable {
-    transition: border-color 200ms ease-in-out;
+    &:not(&.stroke) {
+      transition: background-color 200ms ease-in-out;
 
-    .content {
-      overflow: hidden;
+      .content {
+        overflow: hidden;
+      }
+    }
+
+    &.stroke {
+      transition: border-color 200ms ease-in-out;
+
+      .content {
+        overflow: hidden;
+      }
     }
   }
 }
