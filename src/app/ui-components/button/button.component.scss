@@ -163,8 +163,29 @@
   }
 
   &.neighbor-nav {
-    padding-left: var(--alg-space-size-6) !important;
-    padding-right: calc(var(--alg-space-size-6) / 2) !important;
+    padding-left: var(--alg-space-size-6);
+    padding-right: calc(var(--alg-space-size-6) / 2);
+
+    .icon {
+      font-size: toRem(18);
+    }
+  }
+
+  &.no-caption {
+    padding: 0 toRem(12);
+    border-color: transparent;
+
+    .icon {
+      margin-left: 0;
+    }
+  }
+
+  &.no-caption-animatable {
+    transition: border-color 200ms ease-in-out;
+
+    .content {
+      overflow: hidden;
+    }
   }
 }
 

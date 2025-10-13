@@ -24,8 +24,8 @@
 }
 
 .right-margin {
-  margin-right: var(--alg-space-size-6);
+  margin-right: toRem(12);
 }
 .left-margin {
-  margin-left: var(--alg-space-size-6);
+  margin-left: toRem(12);
 }

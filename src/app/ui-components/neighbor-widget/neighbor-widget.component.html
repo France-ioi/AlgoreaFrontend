@@ -1,23 +1,16 @@
 <div class="neighbor-widget" *ngIf="navigationMode">
   <div class="neighbor-widget-button" @buttonAnimation *ngIf="navigationMode.parent">
-    @if (navigationMode.right) {
-      <button
-        alg-button-icon
-        type="button"
-        icon="ph-bold ph-caret-up"
-        class="size-s no-bg nav-arrow"
-        (click)="parent.emit()"
-      ></button>
-    } @else {
-      <button
-        alg-button
-        type="button"
-        icon="ph-bold ph-caret-up"
-        class="stroke neighbor-nav right-margin"
-        (click)="parent.emit()"
-        i18n
-      >Back</button>
-    }
+    <button
+      alg-button
+      type="button"
+      icon="ph-bold ph-caret-up"
+      [showCaption]="!navigationMode.right"
+      [withAnimation]="true"
+      class="stroke neighbor-nav"
+      [ngClass]="{ 'right-margin': !navigationMode.right }"
+      (click)="parent.emit()"
+      i18n
+    >Back</button>
   </div>
   <div class="neighbor-widget-button">
     <button
@@ -29,26 +22,18 @@
       [disabled]="!navigationMode.left"
     ></button>
   </div>
-  <div class="neighbor-widget-button left-margin">
-    @if (navigationMode.right) {
-      <button
-        alg-button
-        type="button"
-        icon="ph-bold ph-caret-right"
-        class="stroke neighbor-nav"
-        data-testid="nav-to-next"
-        (click)="right.emit()"
-        i18n
-      >Next</button>
-    } @else {
-      <button
-        alg-button-icon
-        type="button"
-        icon="ph-bold ph-caret-right"
-        class="size-s no-bg nav-arrow"
-        data-testid="nav-to-next"
-        [disabled]="true"
-      ></button>
-    }
+  <div class="neighbor-widget-button" [ngClass]="{ 'left-margin': navigationMode.right }">
+    <button
+      alg-button
+      type="button"
+      icon="ph-bold ph-caret-right"
+      [showCaption]="navigationMode.right"
+      [withAnimation]="true"
+      class="stroke neighbor-nav"
+      data-testid="nav-to-next"
+      (click)="right.emit()"
+      [disabled]="!navigationMode.right"
+      i18n
+    >Next</button>
   </div>
 </div>
