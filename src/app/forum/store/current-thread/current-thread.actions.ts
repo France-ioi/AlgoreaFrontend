@@ -1,5 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { ThreadId } from '../../models/threads';
+import { ThreadItemInfo } from './current-thread.store';
 
 export const topBarActions = createActionGroup({
   source: 'Top bar',
@@ -11,7 +12,7 @@ export const topBarActions = createActionGroup({
 export const forumThreadListActions = createActionGroup({
   source: 'Forum Thread List Page',
   events: {
-    showAsCurrentThread: props<{ id: ThreadId }>(),
+    showAsCurrentThread: props<{ id: ThreadId, item: ThreadItemInfo }>(),
     hideCurrentThread: emptyProps(),
   },
 });
@@ -27,6 +28,6 @@ export const threadPanelActions = createActionGroup({
 export const itemPageActions = createActionGroup({
   source: 'Item Page',
   events: {
-    changeCurrentThreadId: props<{ id: ThreadId }>(),
+    changeCurrentThreadId: props<{ id: ThreadId, item: ThreadItemInfo }>(),
   },
 });

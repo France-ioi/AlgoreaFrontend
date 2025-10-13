@@ -66,6 +66,7 @@ import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
+import { areSameThreads } from '../forum/models/threads';
 
 const selectState = createSelector(
   fromItemContent.selectActiveContentRouteErrorHandlingState,
@@ -286,15 +287,16 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       map(([ state, userProfile, observedGroupRoute, answer ]) => {
         if (userProfile.tempUser) return null;
         if (!state.data || !isATask(state.data.item)) return null;
-        if (answer) return { participantId: answer.participantId, itemId: answer.itemId };
+        const item = { title: state.data.item.string.title, route: state.data.route };
+        if (answer) return { id: { participantId: answer.participantId, itemId: answer.itemId }, item };
         if (observedGroupRoute && (!allowsWatchingAnswers(state.data.item.permissions) || !isUser(observedGroupRoute))) return null;
         if (!observedGroupRoute && !state.data.item.permissions.canRequestHelp) return null;
-        return { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
+        const id = { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
+        return { id, item } ;
       }),
       filter(isNotNull), // leave the forum as it is if no new value
-      distinctUntilChanged((x, y) => x?.itemId === y?.itemId && x?.participantId === y?.participantId),
-    ).subscribe(threadId => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId({ id: threadId }))),
-
+      distinctUntilChanged((x, y) => areSameThreads(x.id, y.id)),
+    ).subscribe(thread => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId(thread))),
   ];
 
   editorUrl?: string;

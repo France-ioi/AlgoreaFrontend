@@ -4,10 +4,12 @@ import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../m
 import { FetchState } from 'src/app/utils/state';
 import { IncomingThreadEvent } from '../../data-access/websocket-messages/threads-inbound-events';
 import { EventLabel } from 'src/app/forum/models/thread-events';
+import { ThreadItemInfo } from './current-thread.store';
 
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
   selectThreadId: MemoizedSelector<T, ThreadId | null>,
+  selectThreadHydratedId: MemoizedSelector<T, { id: ThreadId, item: ThreadItemInfo } | null>,
   selectHasCurrentThread: MemoizedSelector<T, boolean>,
   selectInfo: MemoizedSelector<T, FetchState<Thread>>,
   selectThreadStatus: MemoizedSelector<T, { id: ThreadId, visible: boolean, open: boolean } | undefined>,
@@ -50,6 +52,10 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   );
 
   // composed selectors
+  const selectThreadHydratedId = createSelector(
+    selectCurrentThread,
+    ({ id, item }) => (id && item ? { id, item } : null)
+  );
   const selectHasCurrentThread = createSelector(
     selectThreadId,
     id => id !== null
@@ -79,6 +85,7 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   return {
     selectVisible,
     selectThreadId,
+    selectThreadHydratedId,
     selectInfo,
     selectThreadEvents,
     selectHasCurrentThread,
