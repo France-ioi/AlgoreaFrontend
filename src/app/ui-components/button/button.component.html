@@ -1,6 +1,9 @@
-<span class="content">
-  <ng-content></ng-content>
-</span>
+@if (showCaption()) {
+  <span class="content" @captionAnimation [@.disabled]="!withAnimation()">
+    <ng-content></ng-content>
+  </span>
+}
+
 @if (icon(); as icon) {
   <span class="icon" [ngClass]="icon"></span>
 }

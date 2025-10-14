@@ -161,6 +161,52 @@
     }
 
   }
+
+  &.neighbor-nav {
+    padding-left: toRem(12);
+    padding-right: toRem(7);
+
+    .icon {
+      font-size: toRem(18);
+    }
+  }
+
+  &.no-caption {
+    padding: 0 toRem(12);
+
+    &:not(&.stroke) {
+      background-color: transparent;
+      .icon {
+        color: var(--alg-primary-color);
+      }
+    }
+
+    &.stroke {
+      border-color: transparent;
+    }
+
+    .icon {
+      margin-left: 0;
+    }
+  }
+
+  &.no-caption-animatable {
+    &:not(&.stroke) {
+      transition: background-color 200ms ease-in-out;
+
+      .content {
+        overflow: hidden;
+      }
+    }
+
+    &.stroke {
+      transition: border-color 200ms ease-in-out;
+
+      .content {
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 .container {
