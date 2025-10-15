@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject, input, signal } from '@angular/core';
+import { Component, effect, forwardRef, inject, input, signal, viewChildren } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -15,6 +15,7 @@ import { map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 
 @Component({
@@ -27,6 +28,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
     ReactiveFormsModule,
     ButtonComponent,
     LoadingComponent,
+    ButtonIconComponent,
   ],
   providers: [
     {
@@ -42,6 +44,8 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   ],
 })
 export class ItemAllStringsFormComponent {
+  allStringControls = viewChildren(ItemStringsControlComponent);
+  defaultLanguageTag = input<string>();
   supportedLanguages = input.required<string[]>();
   showDescription = input(false);
   fetchingOtherLanguages = input(false);
@@ -81,7 +85,7 @@ export class ItemAllStringsFormComponent {
     if (values) {
       if (values.length < this.form.controls.allStrings.length) {
         for (let i = this.form.controls.allStrings.length; i > values.length; i--) {
-          this.form.controls.allStrings.removeAt(i, { emitEvent: false });
+          this.removeStringsControl(i, { emitEvent: false });
         }
       }
 
@@ -91,14 +95,14 @@ export class ItemAllStringsFormComponent {
 
       this.form.reset({ allStrings: values }, { emitEvent: false });
 
-      this.availableLanguagesToCreate.set(
-        this.supportedLanguages().filter(sl => !values.find(v => v.languageTag === sl))
-      );
+      this.determinateAvailableLanguagesToCreate();
     }
   }
 
   validate(): ValidationErrors | null {
-    return this.form.valid ? null : { allStringsForm: true };
+    return (this.form.invalid || this.allStringControls().some(c => c.form.invalid))
+      ? { allStringsForm: true }
+      : null;
   }
 
   private onChange: (value: StringsValue[] | null) => void = () => {};
@@ -119,10 +123,29 @@ export class ItemAllStringsFormComponent {
         description: '',
         imageUrl: '',
         ...value,
-      }), { emitEvent: value !== undefined });
+      }),
+      { emitEvent: value !== undefined },
+    );
+  }
 
+  onAddStringsControl(value?: Partial<StringsValue>): void {
+    this.addStringsControl(value);
+    this.determinateAvailableLanguagesToCreate();
+  }
+
+  removeStringsControl(idx: number, options: { emitEvent: boolean } = { emitEvent: true }): void {
+    this.form.controls.allStrings.removeAt(idx, options);
+  }
+
+  onRemoveStringsControl(idx: number): void {
+    this.removeStringsControl(idx);
+    this.determinateAvailableLanguagesToCreate();
+  }
+
+  determinateAvailableLanguagesToCreate(): void {
+    const stringValues = this.form.controls.allStrings.getRawValue();
     this.availableLanguagesToCreate.set(
-      this.supportedLanguages().filter(sl => !this.formValue().find(v => v.languageTag === sl))
+      this.supportedLanguages().filter(sl => !stringValues.find(v => v.languageTag === sl))
     );
   }
 }

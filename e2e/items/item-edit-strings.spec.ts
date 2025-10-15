@@ -66,6 +66,12 @@ test('checks item edit strings', async ({ page, createItem, itemContentPage }) =
     await expect.soft(itemStringsDescriptionLocator.nth(1)).toBeVisible();
   });
 
+  await test.step('Check base validation for new translate section', async () => {
+    await expect.soft(itemStringsTitleLocator.nth(1).locator('alg-input').getByText('This field is required')).toBeVisible();
+    await itemContentPage.saveChanges();
+    await itemContentPage.checkToastNotification('You need to solve all the');
+  });
+
   await test.step('Fill new translates data and save changes', async () => {
     await itemStringsTitleLocator.nth(0).locator('alg-input').getByRole('textbox').fill('Title (en)');
     await itemStringsSubtitleLocator.nth(0).locator('alg-input').getByRole('textbox').fill('Subtitle (en)');
