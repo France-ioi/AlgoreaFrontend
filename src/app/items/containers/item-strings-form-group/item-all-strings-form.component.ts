@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject, input, signal } from '@angular/core';
+import { Component, effect, forwardRef, inject, input, signal, viewChildren } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -44,6 +44,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ],
 })
 export class ItemAllStringsFormComponent {
+  allStringControls = viewChildren(ItemStringsControlComponent);
   defaultLanguageTag = input<string>();
   supportedLanguages = input.required<string[]>();
   showDescription = input(false);
@@ -99,7 +100,9 @@ export class ItemAllStringsFormComponent {
   }
 
   validate(): ValidationErrors | null {
-    return this.form.valid ? null : { allStringsForm: true };
+    return (this.form.invalid || this.allStringControls().some(c => c.form.invalid))
+      ? { allStringsForm: true }
+      : null;
   }
 
   private onChange: (value: StringsValue[] | null) => void = () => {};
