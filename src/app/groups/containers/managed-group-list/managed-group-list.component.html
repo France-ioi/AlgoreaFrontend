@@ -8,61 +8,72 @@
 ></alg-error>
 
 <ng-template #noError>
-  <p-table
-    #table
-    class="alg-table"
-    [value]="data"
-    [customSort]="true"
-    sortMode="multiple"
-    [loading]="state === 'fetching'"
-  >
-    <ng-template pTemplate="header" let-columns>
-      <tr *ngIf="data.length > 0">
-        <th i18n>Name</th>
-        <th class="small" i18n>Type</th>
-        <th i18n>Can Manage</th>
-        <th class="small" i18n>Can Watch Members</th>
-        <th class="small" i18n>Can Grant Group Access</th>
-      </tr>
-    </ng-template>
+  @if (state === 'fetching') {
+    <alg-loading></alg-loading>
+  } @else {
+    <div class="alg-table-page-wrapper">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2" cdk-table [dataSource]="data">
+          <ng-container cdkColumnDef="name">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Name</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let group">
+              <a class="alg-link" routerLink="../by-id/{{ group.id }}">{{ group.name }}</a>
+            </td>
+          </ng-container>
 
-    <ng-template pTemplate="body" let-group>
-      <tr>
-        <td>
-          <a class="alg-link" routerLink="../by-id/{{ group.id }}">{{ group.name }}</a>
-        </td>
-        <td>{{ getType(group.type) }}</td>
-        <td>{{ getCanManage(group.canManage) }}</td>
-        <td>
-          <span class="table-icon"
-            [ngClass]="{
-            locked: group.canWatchMembers,
-            unlocked: !group.canWatchMembers
-          }">
-            <i *ngIf="!group.canWatchMembers" class="ph-bold ph-x"></i>
-            <i *ngIf="group.canWatchMembers" class="ph-bold ph-check"></i>
-          </span>
-        </td>
-        <td>
-          <span
-            class="table-icon"
-            [ngClass]="{
-            locked: group.canGrantGroupAccess,
-            unlocked: !group.canGrantGroupAccess
-          }">
-            <i *ngIf="!group.canGrantGroupAccess" class="ph-bold ph-x"></i>
-            <i *ngIf="group.canGrantGroupAccess" class="ph-bold ph-check"></i>
-          </span>
-        </td>
-      </tr>
-    </ng-template>
+          <ng-container cdkColumnDef="type">
+            <th class="alg-table-th small" cdk-header-cell *cdkHeaderCellDef i18n>Type</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let group">{{ getType(group.type) }}</td>
+          </ng-container>
 
-    <ng-template pTemplate="emptymessage" let-columns>
-      <tr>
-        <td [attr.colspan]="columns?.length">
-          <p class="empty-message" i18n>You do not manage any group</p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+          <ng-container cdkColumnDef="canManage">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Can Manage</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let group">{{ getCanManage(group.canManage) }}</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="canWatchMembers">
+            <th class="alg-table-th small" cdk-header-cell *cdkHeaderCellDef i18n>Can Watch Members</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let group">
+              <span
+                class="table-icon"
+                [ngClass]="{
+                  locked: group.canWatchMembers,
+                  unlocked: !group.canWatchMembers
+                }"
+              >
+                <i *ngIf="!group.canWatchMembers" class="ph-bold ph-x"></i>
+                <i *ngIf="group.canWatchMembers" class="ph-bold ph-check"></i>
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="canGrantGroupAccess">
+            <th class="alg-table-th small" cdk-header-cell *cdkHeaderCellDef i18n>Can Grant Group Access</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let group">
+              <span
+                class="table-icon"
+                [ngClass]="{
+                  locked: group.canGrantGroupAccess,
+                  unlocked: !group.canGrantGroupAccess
+                }"
+              >
+                <i *ngIf="!group.canGrantGroupAccess" class="ph-bold ph-x"></i>
+                <i *ngIf="group.canGrantGroupAccess" class="ph-bold ph-check"></i>
+              </span>
+            </td>
+          </ng-container>
+
+          @if (data.length > 0) {
+            <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+          }
+          <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" *cdkNoDataRow>
+            <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
+              <p class="empty-message" i18n>You do not manage any group</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  }
 </ng-template>
