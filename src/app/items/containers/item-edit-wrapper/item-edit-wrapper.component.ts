@@ -16,7 +16,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { Duration } from 'src/app/utils/duration';
-import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { concat, forkJoin, Observable, of, throwError, toArray } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
@@ -47,6 +47,11 @@ function isServerValidationErrors(e: HttpErrorResponse): e is ServerValidationEr
   const errorBody: unknown = e.error;
   return errorBody !== null && typeof errorBody === 'object'
     && 'errors' in errorBody && errorBody.errors !== null && typeof errorBody.errors === 'object';
+}
+
+enum UpdateOrDeleteStringsRequestType {
+  Update = 'update',
+  Delete = 'delete',
 }
 
 @Component({
@@ -85,6 +90,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     prompt_to_join_group_by_code: [ false ],
     full_screen: [ '' ],
     children_layout: [ '' ],
+    default_language_tag: [ '' ],
     allows_multiple_attempts: [ false ],
     requires_explicit_entry: [ false ],
     duration_enabled: [ false ],
@@ -250,6 +256,9 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid';
     if (childrenLayout !== this.initialFormData.childrenLayout) itemFormValues.children_layout = childrenLayout;
 
+    const defaultLanguageTag = this.itemForm.controls.default_language_tag.getRawValue();
+    if (defaultLanguageTag !== this.initialFormData.defaultLanguageTag) itemFormValues.default_language_tag = defaultLanguageTag;
+
     if (this.enableParticipation) {
       const allowsMultipleAttempts = formControls.allowsMultipleAttempts?.value as boolean;
       if (allowsMultipleAttempts !== this.initialFormData.allowsMultipleAttempts) {
@@ -336,7 +345,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   private getItemAllStringsChanges(): ({ changes: ItemStringChanges, languageTag: string })[] {
     if (!this.initialFormData) throw new Error('Unexpected: Missed initial data');
-    const { string, defaultLanguageTag } = this.initialFormData;
+    const { string } = this.initialFormData;
+    const defaultLanguageTag = this.itemForm.controls.default_language_tag.getRawValue();
     const allStringsValue = this.itemForm.controls.allStrings.getRawValue();
     const imageUrlValue = this.itemForm.controls.image_url.getRawValue();
     const defaultLangIdx = this.initialLanguageValues().findIndex(l => l.languageTag === defaultLanguageTag);
@@ -367,20 +377,21 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     return { changes, languageTag: value.languageTag };
   }
 
-  updateOrDeleteStrings() : Observable<void[] | undefined> {
+  prepareUpdateOrDeleteStringsRequests() : { type: UpdateOrDeleteStringsRequestType, request$: Observable<void> }[] | undefined {
     const id = this.itemData?.item.id;
-    if (!id) return throwError(() => new Error('Missing ID form'));
+    if (!id) throw new Error('Missing ID form');
 
     const stringsChanges = this.getItemAllStringsChanges();
     const stringLanguageTagsValue = this.itemForm.getRawValue().allStrings.map(v => v.languageTag);
     const stringsToRemove = this.initialLanguageValues().filter(v => !stringLanguageTagsValue.includes(v.languageTag));
 
-    return stringsChanges.length === 0 && stringsToRemove.length === 0 ? of(undefined) : forkJoin([
+    return stringsChanges.length === 0 && stringsToRemove.length === 0 ? undefined : [
       ...(stringsChanges.length > 0 ? stringsChanges.map(({ changes, languageTag }) =>
-        this.updateItemStringService.updateItem(id, changes, languageTag)
+        ({ type: UpdateOrDeleteStringsRequestType.Update, request$: this.updateItemStringService.updateItem(id, changes, languageTag) })
       ) : []),
-      ...(stringsToRemove.length > 0 ? stringsToRemove.map(v => this.deleteItemStringService.delete(id, v.languageTag)) : []),
-    ]);
+      ...(stringsToRemove.length > 0 ? stringsToRemove.map(v =>
+        ({ type: UpdateOrDeleteStringsRequestType.Delete, request$: this.deleteItemStringService.delete(id, v.languageTag) })) : []),
+    ];
   }
 
   save(): void {
@@ -391,11 +402,22 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       return;
     }
 
-    this.itemForm.disable();
-    forkJoin([
+    const createUpdateOrDeleteStringsRequestsData = this.prepareUpdateOrDeleteStringsRequests();
+    const deleteStringsRequests$ = createUpdateOrDeleteStringsRequestsData?.filter(d =>
+      d.type === UpdateOrDeleteStringsRequestType.Update
+    ).map(d => d.request$);
+    const updateStringsRequests$ = createUpdateOrDeleteStringsRequestsData?.filter(d =>
+      d.type === UpdateOrDeleteStringsRequestType.Delete
+    ).map(d => d.request$);
+
+    const requests$ = [
+      ...(deleteStringsRequests$ && deleteStringsRequests$.length > 0 ? [ forkJoin(deleteStringsRequests$) ] : []),
       this.updateItem(),
-      this.updateOrDeleteStrings(),
-    ]).subscribe({
+      ...(updateStringsRequests$ && updateStringsRequests$.length > 0 ? [ forkJoin(updateStringsRequests$) ] : []),
+    ];
+
+    this.itemForm.disable();
+    concat(...requests$).pipe(toArray()).subscribe({
       next: _status => {
         this.itemForm.enable();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
@@ -469,6 +491,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       prompt_to_join_group_by_code: item.promptToJoinGroupByCode || false,
       full_screen: item.fullScreen,
       children_layout: item.childrenLayout,
+      default_language_tag: item.defaultLanguageTag,
       ...(this.enableParticipation ? {
         allows_multiple_attempts: item.allowsMultipleAttempts,
         requires_explicit_entry: item.requiresExplicitEntry,
@@ -499,5 +522,10 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         : maxTeamSizeControl.setErrors(null);
       return null;
     };
+  }
+
+  onDefaultLanguageChange(languageTag: string): void {
+    this.itemForm.controls.default_language_tag.setValue(languageTag);
+    this.itemForm.controls.default_language_tag.markAsDirty();
   }
 }
