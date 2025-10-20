@@ -35,7 +35,7 @@
             </div>
             } @else {
               @if (threadMetadata.id) {
-                @for (event of state().data; track event) {
+                @for (event of state().data; track event.time) {
                   <alg-thread-message
                     class="thread-message"
                     [threadId]="threadMetadata.id"
