@@ -1,11 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
-import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgClass } from '@angular/common';
 import { GroupManagershipLevel, groupManagershipLevelEnum as l } from '../../models/group-management';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
+import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 
 @Component({
   selector: 'alg-managed-group-list',
@@ -15,18 +27,29 @@ import { GroupManagershipLevel, groupManagershipLevelEnum as l } from '../../mod
   imports: [
     NgIf,
     ErrorComponent,
-    TableModule,
-    SharedModule,
     RouterLink,
     NgClass,
+    CdkTable,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
+    CdkColumnDef,
+    CdkCell,
+    CdkCellDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    LoadingComponent,
   ],
 })
 export class ManagedGroupListComponent implements OnInit {
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
-  currentSort: string[] = [];
 
   data: Group[] = [];
+
+  displayedColumns = signal([ 'name', 'type', 'canManage', 'canWatchMembers', 'canGrantGroupAccess' ]);
 
   constructor(private managedGroupService: ManagedGroupsService) {
   }
