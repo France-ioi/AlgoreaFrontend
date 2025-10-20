@@ -68,8 +68,8 @@ export function isSubmissionEvent(event: ThreadEvent): event is SubmissionEvent 
  * Merge multiple event lists into a single list, sorted by time.
  */
 export function mergeEvents(eventLists: ThreadEvent[][]): ThreadEvent[] {
-  const events = eventLists.reduce((acc, events) => [ ...acc, ...events ], []);
-  return events
+  return eventLists
+    .flat()
     .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
     .filter((el, i, list) => el.kind !== list[i-1]?.kind || el.time.valueOf() !== list[i-1]?.time.valueOf()); // remove duplicate
 }
