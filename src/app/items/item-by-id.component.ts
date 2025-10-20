@@ -303,7 +303,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
 
-  showItemThreadWidget = !!this.config.forumServerUrl;
+  showItemThreadWidget = this.config.featureFlags.enableForum;
 
   constructor(
     private store: Store,

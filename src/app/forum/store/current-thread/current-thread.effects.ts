@@ -12,7 +12,7 @@ export const fetchStateChangeGuardEffect = createEffect(
     actions$ = inject(Actions),
     store$ = inject(Store),
     config = inject(APPCONFIG),
-  ) => (config.forumServerUrl ? actions$.pipe(
+  ) => (config.featureFlags.enableForum ? actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChanged),
     withLatestFrom(store$.select(fromForum.selectThreadId)),
     tap(([{ fetchState } , id ]) => {

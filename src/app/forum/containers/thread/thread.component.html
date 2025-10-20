@@ -1,119 +1,128 @@
-<div class="widget" *ngrxLet="{
-    state: state$,
-    isWsOpen: isWsOpen$,
-    threadStatus: threadStatus$,
-    hasNoMessages: hasNoMessages$,
-    isCurrentUserThreadParticipant: isCurrentUserThreadParticipant$,
-    isMine: isMine$,
-  } as thread"
->
-  <div class="widget-loading" *ngIf="thread.isWsOpen && thread.state.isFetching">Loading...</div>
-  <div class="widget-error" *ngIf="thread.isWsOpen && thread.state.isError">Error!</div>
-  <div class="ws-error" *ngIf="!thread.isWsOpen" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
-  <div class="no-events" *ngIf="thread.state.isReady && thread.state.data.length === 0; else eventsBlock" i18n>
-    There are currently no events
-  </div>
-  <ng-template #eventsBlock>
-    <div class="widget-body" *ngIf="thread.isWsOpen">
-      <ng-container *ngIf="!thread?.isMine">
-        <ng-container *ngIf="participantUser$ | async as participantUser">
-          <div class="user-indicator-container" *ngIf="participantUser.name">
-            <div class="user-indicator">
-              <span i18n>You are helping</span>
-              <a class="alg-link user-indicator-link" [routerLink]="[ '/groups/users', participantUser.id ]">{{ participantUser.name }}</a>
+<div class="widget">
+  @let isWsOpen = isWsOpen$ | async;
+  @let threadStatus = threadStatus$ | async;
+  @let isCurrentUserThreadParticipant = isCurrentUserThreadParticipant$ | async;
+  @let isMine = isMine$ | async;
+  @if (!isWsOpen) {
+    <div class="ws-error" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
+  } @else {
+    @switch(state().tag) {
+      @case('fetching') {
+        <div class="widget-loading">Loading...</div>
+      }
+      @case('error') {
+        <div class="widget-error">Error!</div>
+      }
+      @case('ready') {
+        <div class="widget-body">
+          @if (!isMine) {
+            @if (participantUser$ | async; as participantUser) {
+              @if (participantUser.name) {
+                <div class="user-indicator-container">
+                  <div class="user-indicator">
+                    <span i18n>You are helping</span>
+                    <a class="alg-link user-indicator-link" [routerLink]="[ '/groups/users', participantUser.id ]">{{ participantUser.name }}</a>
+                  </div>
+                </div>
+              }
+            }
+          }
+          <div class="widget-scroll" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
+            @if (isCurrentUserThreadParticipant && threadStatus?.isReady && state().data?.length === 0) {
+              <div class="no-messages" i18n>
+              In this panel, you can request help from other users about the content you are on.
+              People who have already validated this activity will see your request and be able to answer.
             </div>
-          </div>
-        </ng-container>
-      </ng-container>
-      <div class="widget-scroll" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
-        <div class="no-messages" *ngIf="thread.isCurrentUserThreadParticipant && thread.threadStatus?.isReady && !thread.threadStatus?.data?.open && thread.hasNoMessages; else messagesBlock" i18n>
-          In this panel, you can request help from other users about the content you are on.
-          People who have already validated this activity will see your request and be able to answer.
-        </div>
-        <ng-template #messagesBlock>
-          <ng-container *ngIf="threadMetadata.id">
-            <alg-thread-message
-              class="thread-message"
-              [threadId]="threadMetadata.id"
-              [event]="event"
-              [userCache]="threadMetadata.userCache ?? []"
-              [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
-              [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
-              *ngFor="let event of thread.state.data"
-            ></alg-thread-message>
-          </ng-container>
-        </ng-template>
-        <ng-container *ngIf="threadMetadata.id as threadId">
-          <div class="footer-panel" *ngrxLet="!!(thread.threadStatus && !!thread.threadStatus.data && !!thread.threadStatus.data.open) as isThreadOpened">
-            <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId, isThreadOpened)">
-              <textarea
-                class="textarea"
-                placeholder="Send a message..."
-                formControlName="messageToSend"
-                [rows]="1"
-                algAutoResize
-                (keydown.enter)="$event.preventDefault(); sendMessage(threadId, isThreadOpened)"
-                #messageToSendEl
-              ></textarea>
-              <button
-                class="size-l with-bg send-button"
-                type="submit"
-                icon="pi pi-send"
-                alg-button-icon
-                [disabled]="!form.get('messageToSend')?.value?.trim() || !!(disableControls$ | async)"
-              ></button>
-            </form>
-            <div class="thread-status">
-              <div class="thread-status-caption" >
-                <ng-container *ngIf="thread.threadStatus?.data?.open">
-                  <span i18n>This thread is open</span>
-                </ng-container>
-                <ng-container *ngIf="thread.threadStatus?.data?.open === false">
-                  <span i18n>This thread is closed</span>
-                </ng-container>
-                <ng-container *ngIf="thread.threadStatus?.isFetching">
-                  <span i18n>Loading thread status...</span>
-                </ng-container>
-                <ng-container *ngIf="thread.threadStatus?.isError">
-                  <span i18n>Error while loading thread info</span>
-                </ng-container>
-                <ng-container *ngIf="thread.threadStatus === undefined">
-                  <span i18n>Could not load thread</span>
-                </ng-container>
-              </div>
-              <div
-                *ngrxLet="!!thread.threadStatus && !!thread.threadStatus.data && ((thread.threadStatus.data.open && thread.threadStatus.data.canClose) || (!thread.threadStatus.data.open && thread.threadStatus.data.canOpen)) as canSwitch"
-                [pTooltip]="threadStatusTooltip"
-                [tooltipDisabled]="canSwitch"
-                tooltipPosition="top"
-                tooltipStyleClass="alg-tooltip"
-              >
-                <button
-                  type="button"
-                  [disabled]="!canSwitch"
-                  alg-button
-                  (click)="changeThreadStatus({ open: !thread.threadStatus.data.open, threadId: threadId })"
-                  *ngIf="thread.threadStatus && thread.threadStatus.data"
-                >
-                  <span *ngIf="thread.threadStatus.data.open; else openThreadCaption" i18n>Close this thread</span>
-                  <ng-template #openThreadCaption>
-                    <span i18n>Open this thread</span>
+            } @else {
+              @if (threadMetadata.id) {
+                @for (event of state().data; track event.time) {
+                  <alg-thread-message
+                    class="thread-message"
+                    [threadId]="threadMetadata.id"
+                    [event]="event"
+                    [userCache]="threadMetadata.userCache ?? []"
+                    [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
+                    [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
+                  ></alg-thread-message>
+                }
+              }
+            }
+            @if (threadMetadata.id; as threadId) {
+              <div class="footer-panel" *ngrxLet="!!(threadStatus && !!threadStatus.data && !!threadStatus.data.open) as isThreadOpened">
+                <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId, isThreadOpened)">
+                  <textarea
+                    class="textarea"
+                    placeholder="Send a message..."
+                    formControlName="messageToSend"
+                    [rows]="1"
+                    algAutoResize
+                    (keydown.enter)="$event.preventDefault(); sendMessage(threadId, isThreadOpened)"
+                    #messageToSendEl
+                  ></textarea>
+                  <button
+                    class="size-l with-bg send-button"
+                    type="submit"
+                    icon="pi pi-send"
+                    alg-button-icon
+                    [disabled]="!form.get('messageToSend')?.value?.trim() || !!(disableControls$ | async)"
+                  ></button>
+                </form>
+                <div class="thread-status">
+                  <div class="thread-status-caption" >
+                    @if (threadStatus?.data?.open) {
+                      <span i18n>This thread is open</span>
+                    }
+                    @if (threadStatus?.data?.open === false) {
+                      <span i18n>This thread is closed</span>
+                    }
+                    @if (threadStatus?.isFetching) {
+                      <span i18n>Loading thread status...</span>
+                    }
+                    @if (threadStatus?.isError) {
+                      <span i18n>Error while loading thread info</span>
+                    }
+                    @if (threadStatus === undefined) {
+                      <span i18n>Could not load thread</span>
+                    }
+                  </div>
+                  <div
+                    *ngrxLet="!!threadStatus && !!threadStatus.data && ((threadStatus.data.open && threadStatus.data.canClose) || (!threadStatus.data.open && threadStatus.data.canOpen)) as canSwitch"
+                    [pTooltip]="threadStatusTooltip"
+                    [tooltipDisabled]="canSwitch"
+                    tooltipPosition="top"
+                    tooltipStyleClass="alg-tooltip"
+                    >
+                    @if (threadStatus && threadStatus.data) {
+                      <button
+                        type="button"
+                        [disabled]="!canSwitch"
+                        alg-button
+                        (click)="changeThreadStatus({ open: !threadStatus.data.open, threadId: threadId })"
+                        >
+                        @if (threadStatus.data.open) {
+                          <span i18n>Close this thread</span>
+                        } @else {
+                          <span i18n>Open this thread</span>
+                        }
+                      </button>
+                    }
+                  </div>
+                  <ng-template #threadStatusTooltip>
+                    @if (threadStatus?.data?.open) {
+                      <span i18n>
+                      Only the user of the thread can close it.
+                    </span>
+                    } @else {
+                      <span i18n>You are not allowed to open this thread.</span>
+                    }
                   </ng-template>
-                </button>
+                </div>
               </div>
-              <ng-template #threadStatusTooltip>
-                <span *ngIf="thread.threadStatus?.data?.open; else notOpenedTooltipCaption" i18n>
-                  Only the user of the thread can close it.
-                </span>
-                <ng-template #notOpenedTooltipCaption>
-                  <span i18n>You are not allowed to open this thread.</span>
-                </ng-template>
-              </ng-template>
-            </div>
+            }
           </div>
-        </ng-container>
-      </div>
-    </div>
-  </ng-template>
+        </div>
+      }
+    }
+  }
 </div>
 

@@ -80,19 +80,9 @@
                   <button class="size-l" alg-button type="button" (click)="showThreadPanel(rowThread.id, threadItemInfo)" i18n>Show</button>
                 }
               </td>
-              <td *ngIf="itemData?.item?.type !== 'Task'">
-                <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="threadItemRoute | url">
-                  {{ rowData.item.title }}
-                </a>
-              </td>
-              <td *ngIf="selected !== 0">
-                <a class="alg-link" [routerLink]="{ id: rowData.participant.id, isUser: true } | groupLink">
-                  {{ rowData.participant | userCaption }}
-                </a>
-              </td>
               @if (itemData?.item?.type !== 'Task') {
                 <td>
-                  <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
+                  <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="threadItemRoute | url">
                     {{ rowData.item.title }}
                   </a>
                 </td>

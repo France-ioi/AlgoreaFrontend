@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
-import { filter, delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import {
   catchError,
   debounceTime,
   distinctUntilChanged,
+  filter,
   map,
   mergeScan,
   scan,
@@ -25,7 +26,7 @@ import { UpdateThreadService } from '../../../data-access/update-thread.service'
 import { TooltipModule } from 'primeng/tooltip';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
@@ -33,8 +34,6 @@ import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { publishEventsAction } from '../../data-access/websocket-messages/threads-outbound-actions';
-import { messageEvent } from '../../models/thread-events';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { fromObservation } from 'src/app/store/observation';
@@ -44,6 +43,10 @@ import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
 import { fromItemContent } from 'src/app/items/store';
 import { fromGroupContent } from 'src/app/groups/store';
 import equal from 'fast-deep-equal/es6';
+import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { isMessageEvent } from '../../models/thread-events';
+import { v4 as uuidv4 } from 'uuid';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -62,8 +65,6 @@ const selectThreadInfo = createSelector(
   styleUrls: [ './thread.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     ThreadMessageComponent,
     LetDirective,
     FormsModule,
@@ -88,13 +89,14 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   disableControls$ = new BehaviorSubject<boolean>(false);
 
   readonly subscriptions = new Subscription();
-  readonly state$ = this.store.select(fromForum.selectThreadEvents);
+  private readonly state$ = this.store.select(fromForum.selectThreadEvents);
+  readonly state = this.store.selectSignal(fromForum.selectThreadEvents);
 
   readonly isWsOpen$ = this.store.select(fromForum.selectWebsocketOpen);
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
-    map(events => events.map(e => e.createdBy)),
+    map(events => events.filter(isMessageEvent).map(e => e.authorId)),
     scan((acc: string[], val) => [ ...new Set([ ...acc, ...val ]) ].sort() , []),
     startWith([]),
     distinctUntilChanged((prev, cur) => JSON.stringify(prev) === JSON.stringify(cur))
@@ -185,7 +187,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       }),
     );
   threadId$ = this.store.select(fromForum.selectThreadId);
-  hasNoMessages$ = this.store.select(fromForum.selectThreadNoMessages);
+  threadToken = this.store.selectSignal(fromForum.selectThreadToken);
 
   constructor(
     private store: Store,
@@ -195,6 +197,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private actionFeedbackService: ActionFeedbackService,
     private updateThreadService: UpdateThreadService,
     private forumWebsocketClient: WebsocketClient,
+    private threadMessageService: ThreadMessageService,
     private fb: FormBuilder,
   ) {}
 
@@ -242,50 +245,32 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     if (!messageToSend) return;
     this.disableControls$.next(true);
 
-    const threadToken$ = this.store.select(fromForum.selectThreadToken).pipe(
-      take(1), // send on the current thread (if any) only
-      filter(isNotUndefined),
-    );
+    const token = this.threadToken();
+    if (!token) throw new Error('unexpected: the thread token is empty');
 
-    if (isThreadOpened) {
-      threadToken$.subscribe({
-        next: token => this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ])),
-        error: () => this.disableControls$.next(false),
-      });
-      threadToken$.pipe(
-        switchMap(() =>
-          this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })
-        ),
-      ).subscribe({
-        next: () => {
-          this.disableControls$.next(false);
-          this.clearMessageToSendControl();
-        },
-        error: () => this.disableControls$.next(false)
-      });
-    } else {
-      this.changeThreadStatus({
-        open: true,
-        threadId,
-        messageCountIncrement: 1,
-      }).subscribe({
-        error: () => this.disableControls$.next(false),
-      });
-      this.subscriptions.add(
-        this.store.select(fromForum.selectThreadStatusOpen).pipe(
-          filter(isOpened => isOpened),
-          take(1),
-          switchMap(() => threadToken$)
-        ).subscribe({
-          next: token => {
-            this.forumWebsocketClient.send(publishEventsAction(token, [ messageEvent(messageToSend) ]));
-            this.clearMessageToSendControl();
-            this.disableControls$.next(false);
-          },
-          error: () => this.disableControls$.next(false),
-        })
-      );
-    }
+    const uuid = uuidv4(); // used to track a message if we need to (future use)
+    const prerequisite = isThreadOpened ? of(undefined) : this.changeThreadStatus({ open: true, threadId, messageCountIncrement: 1 }).pipe(
+      switchMap(() => this.store.select(fromForum.selectThreadStatusOpen)),
+      filter(open => open),
+      take(1),
+      map(() => undefined)
+    );
+    prerequisite.pipe(
+      switchMap(() => this.store.select(fromForum.selectThreadToken)),
+      filter(isNotUndefined),
+      take(1),
+      switchMap(token => this.threadMessageService.create({ text: messageToSend, uuid }, { authToken: token })),
+      switchMap(() => this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })),
+    ).subscribe({
+      next: () => {
+        this.clearMessageToSendControl();
+        this.disableControls$.next(false);
+      },
+      error: err => {
+        this.disableControls$.next(false);
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
   }
 
   scrollDown(): void {

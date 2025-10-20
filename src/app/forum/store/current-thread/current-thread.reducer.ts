@@ -1,21 +1,28 @@
 import { createReducer, on } from '@ngrx/store';
-import { websocketClientActions } from '../websocket/websocket.actions';
 import { areSameThreads } from '../../models/threads';
-import { fetchingState, readyState } from 'src/app/utils/state';
+import { fetchingState } from 'src/app/utils/state';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { State, initialState } from './current-thread.store';
 import { forumThreadListActions, itemPageActions, threadPanelActions, topBarActions } from './current-thread.actions';
+import { eventFetchingActions } from './event-fetching.actions';
+import { websocketIncomingMessageActions } from './websocket-incoming-message.actions';
 
 const reducer = createReducer(
   initialState,
 
-  on(websocketClientActions.eventsReceived, (state, { events }): State => ({
+  on(websocketIncomingMessageActions.forumMessageReceived, (state, { threadId, message }): State => ({
     ...state,
-    events: readyState(
-      [ ...state.events.data ?? [], ...events.filter(e => state.id && areSameThreads(e.thread, state.id)) ]
-        .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
-        .filter((el, i, list) => el.time.valueOf() !== list[i-1]?.time.valueOf()) // remove duplicate (using time as differentiator)
-    )
+    wsEvents: state.id && areSameThreads(state.id, threadId) ? [ ...state.wsEvents, message ] : state.wsEvents,
+  })),
+
+  on(eventFetchingActions.logEventsFetchStateChanged, (state, { fetchState }): State => ({
+    ...state,
+    logEvents: fetchState,
+  })),
+
+  on(eventFetchingActions.slsEventsFetchStateChanged, (state, { fetchState }): State => ({
+    ...state,
+    slsEvents: fetchState,
   })),
 
   on(topBarActions.toggleCurrentThreadVisibility, (state): State => ({ ...state, visible: !state.visible })),
@@ -38,7 +45,9 @@ const reducer = createReducer(
       id,
       item,
       info: state.id && areSameThreads(state.id, id) ? state.info : fetchingState(),
-      events: state.id && areSameThreads(state.id, id) ? state.events : fetchingState(),
+      slsEvents: state.id && areSameThreads(state.id, id) ? state.slsEvents : fetchingState(),
+      logEvents: state.id && areSameThreads(state.id, id) ? state.logEvents : fetchingState(),
+      wsEvents: state.id && areSameThreads(state.id, id) ? state.wsEvents : [],
     })
   ),
 
