@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, computed, Input, OnChanges, OnDestroy } from '@angular/core';
 import { GetParticipantProgressService } from '../../data-access/get-participant-progress.service';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -19,6 +19,20 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface RowData {
   id: string,
@@ -56,6 +70,17 @@ interface RowData {
     SecondsToDurationPipe,
     DurationToReadablePipe,
     ButtonComponent,
+    CdkTable,
+    CdkCell,
+    CdkCellDef,
+    CdkHeaderCell,
+    CdkColumnDef,
+    CdkHeaderCellDef,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
   ],
 })
 export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
@@ -125,6 +150,9 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
       ].filter(column => !column.disabled),
     ),
   );
+
+  columns = toSignal(this.columns$, { initialValue: [] });
+  displayedColumns = computed(() => this.columns().map(column => column.field));
 
   constructor(
     private getParticipantProgressService: GetParticipantProgressService,
