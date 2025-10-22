@@ -12,7 +12,6 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
@@ -53,7 +52,6 @@ const OPTIONS = [
     SelectionComponent,
     ErrorComponent,
     LoadingComponent,
-    TableModule,
     SharedModule,
     NgClass,
     RouterLink,
