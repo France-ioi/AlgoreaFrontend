@@ -457,9 +457,17 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       languageTag: o.string.languageTag,
       imageUrl: o.string.imageUrl || '',
     }));
+    const isDirty = this.itemForm.controls.allStrings.dirty;
 
-    this.initialLanguageValues.set([ mainLanguageStringsValue, ...values ]);
-    this.resetStringsForm();
+    this.initialLanguageValues.update(initialValues => ([ ...initialValues, ...values ]));
+
+    if (isDirty) {
+      this.itemForm.controls.allStrings.setValue([ mainLanguageStringsValue, ...values ]);
+      this.resetImageUrl();
+      this.itemForm.controls.allStrings.markAsDirty();
+    } else {
+      this.resetStringsForm();
+    }
   }
 
   private resetStringsForm(): void {
