@@ -93,12 +93,12 @@ export class MinePage {
   }
 
   async checkIsUserInvitedToGroupVisible(groupName: string): Promise<void> {
-    await expect.soft(this.userGroupInvitationsLocator.filter({ has: this.page.locator('p-table') })).toBeVisible();
+    await expect.soft(this.userGroupInvitationsLocator.filter({ has: this.page.locator('table') })).toBeVisible();
     await expect.soft(this.userGroupInvitationsLocator.getByRole('cell', { name: groupName })).toBeVisible();
   }
 
   async isUserInvitedToGroup(groupName: string): Promise<boolean> {
-    await expect.soft(this.userGroupInvitationsLocator.filter({ has: this.page.locator('p-table') })).toBeVisible();
+    await expect.soft(this.userGroupInvitationsLocator.filter({ has: this.page.locator('table') })).toBeVisible();
     return this.userGroupInvitationsLocator.getByRole('cell', { name: groupName }).isVisible();
   }
 
