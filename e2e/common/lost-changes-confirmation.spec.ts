@@ -49,6 +49,7 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
       page.goto(`a/${itemId};p=;a=0/parameters`),
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
+    await expect.soft(page.getByRole('button', { name: 'Translate to fr' })).toBeEnabled();
     await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
     const textboxLocator = page.getByRole('textbox').nth(1);
     await expect.soft(textboxLocator).toBeVisible();
