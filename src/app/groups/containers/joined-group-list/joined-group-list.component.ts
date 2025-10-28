@@ -1,5 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
-import { SortEvent, SharedModule } from 'primeng/api';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, startWith, switchMap } from 'rxjs/operators';
 import { GroupMembership, JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
@@ -10,11 +9,25 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
 import { RouterLink } from '@angular/router';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
+import { TableSortDirective } from 'src/app/ui-components/table-sort/table-sort.directive';
+import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table-sort/table-sort-header/table-sort-header.component';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -24,8 +37,6 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   imports: [
     NgIf,
     ErrorComponent,
-    TableModule,
-    SharedModule,
     RouterLink,
     NgSwitch,
     NgSwitchCase,
@@ -34,7 +45,21 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
     RippleModule,
     AsyncPipe,
     DatePipe,
-    ButtonIconComponent
+    ButtonIconComponent,
+    CdkTable,
+    TableSortDirective,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
+    CdkCell,
+    CdkCellDef,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    TableSortHeaderComponent,
+    NgClass
   ],
 })
 export class JoinedGroupListComponent implements OnDestroy {
@@ -47,6 +72,8 @@ export class JoinedGroupListComponent implements OnDestroy {
     mapToFetchState({ resetter: this.refresh$.asObservable() }),
   );
 
+  displayedColumns = signal([ 'name', 'type', 'memberSince', 'requirePersonalInfoAccessApproval', 'actions' ]);
+
   constructor(
     private joinedGroupsService: JoinedGroupsService,
     private groupLeaveService: GroupLeaveService,
@@ -58,9 +85,9 @@ export class JoinedGroupListComponent implements OnDestroy {
     this.sort$.complete();
   }
 
-  onCustomSort(event: SortEvent): void {
-    const sort = multisortEventToOptions(event);
-    if (sort) this.sort$.next(sort);
+  onSortChange(events: SortEvent[]): void {
+    const sortMeta = multisortEventToOptions(events);
+    if (sortMeta.length > 0) this.sort$.next(sortMeta);
   }
 
   onGroupLeaveClick(membership: GroupMembership): void {
