@@ -9,71 +9,64 @@
       i18n-message message="Error while loading the group invitations."
     ></alg-error>
   } @else if (state.isReady) {
-    <p-table
-      class="alg-table"
-      [value]="state.data"
-      sortMode="multiple"
-      [customSort]="true"
-      (sortFunction)="onCustomSort($event)"
-    >
-      <ng-template pTemplate="sorticon" let-number>
-        <i class="ph-duotone" [ngClass]="{
-          'ph-arrows-down-up': number === 0,
-          'ph-sort-ascending': number === -1,
-          'ph-sort-descending': number === 1
-        }"></i>
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th><span i18n>Title</span></th>
-          <th><span i18n>Type</span></th>
-          <th pSortableColumn="at">
-            <span i18n>Requested On</span>
-            <p-sortIcon field="at"></p-sortIcon>
-          </th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template
-        pTemplate="body"
-        let-rowData
-      >
-        <tr>
-          <td>{{ rowData.group.name }}</td>
-          <td>{{ rowData.group.type }}</td>
-          <td>{{ rowData.at | date: "d/MM/y" }}</td>
-          <td>
-            <div class="operations">
-              <button
-                class="stroke size-l margin-right"
-                data-testid="accept-group"
-                alg-button-icon
-                type="button"
-                icon="ph-bold ph-check"
-                (click)="openJoinGroupConfirmationDialog(rowData)"
-                [disabled]="processing"
-              ></button>
-              <button
-                class="stroke size-l"
-                data-testid="reject-group"
-                alg-button-icon
-                type="button"
-                icon="ph-bold ph-x"
-                (click)="onReject(rowData)"
-                [disabled]="processing"
-              ></button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">
-            <p class="empty-message" i18n>No pending requests</p>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+    <div class="alg-table-page-wrapper">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2" cdk-table [dataSource]="state.data" algTableSort (sortChange)="onSortChange($event)">
+          <ng-container cdkColumnDef="name">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Title</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              {{ rowData.group.name }}
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="type">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Type</th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              {{ rowData.group.type }}
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="at">
+            <th class="alg-table-th" alg-table-sort-header="at" cdk-header-cell *cdkHeaderCellDef i18n>
+              Requested On
+            </th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              {{ rowData.at | date: "d/MM/y" }}
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="operations">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef></th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              <div class="operations">
+                <button
+                  class="stroke size-l margin-right"
+                  data-testid="accept-group"
+                  alg-button-icon
+                  type="button"
+                  icon="ph-bold ph-check"
+                  (click)="openJoinGroupConfirmationDialog(rowData)"
+                  [disabled]="processing"
+                ></button>
+                <button
+                  class="stroke size-l"
+                  data-testid="reject-group"
+                  alg-button-icon
+                  type="button"
+                  icon="ph-bold ph-x"
+                  (click)="onReject(rowData)"
+                  [disabled]="processing"
+                ></button>
+              </div>
+            </td>
+          </ng-container>
+          <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" *cdkNoDataRow>
+            <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
+              <p class="empty-message" i18n>No pending requests</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
   }
 }
 

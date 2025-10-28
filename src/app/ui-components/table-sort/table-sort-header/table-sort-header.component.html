@@ -1,0 +1,15 @@
+@let icon = sortOrder() === 1
+  ? 'ph-duotone ph-sort-ascending'
+  : sortOrder() === -1
+    ? 'ph-duotone ph-sort-descending'
+    : 'ph-duotone ph-arrows-down-up';
+<label class="label">
+  <ng-content></ng-content>
+  <button
+    class="button secondary size-s"
+    type="button"
+    alg-button-icon
+    [icon]="icon"
+    (click)="toggle()"
+  ></button>
+</label>

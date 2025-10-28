@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
@@ -10,15 +10,28 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ProcessGroupInvitationService } from '../../data-access/process-group-invitation.service';
-import { TableModule } from 'primeng/table';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
-import { SortEvent } from 'primeng/api/sortevent';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import {
   JoinGroupConfirmationDialogComponent,
 } from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
+import { TableSortDirective } from 'src/app/ui-components/table-sort/table-sort.directive';
+import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table-sort/table-sort-header/table-sort-header.component';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -33,7 +46,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     DatePipe,
     NgForOf,
     NgSwitchCase,
-    TableModule,
     UserCaptionPipe,
     NgSwitch,
     NgSwitchDefault,
@@ -41,6 +53,19 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     NgClass,
     JoinGroupConfirmationDialogComponent,
     ButtonIconComponent,
+    CdkTable,
+    CdkCell,
+    CdkCellDef,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
+    TableSortDirective,
+    TableSortHeaderComponent,
   ],
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
@@ -62,6 +87,8 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     )
   );
 
+  displayedColumns = signal([ 'name', 'type', 'at', 'operations' ]);
+
   constructor(
     private getRequestsService: GetRequestsService,
     private actionFeedbackService: ActionFeedbackService,
@@ -79,9 +106,9 @@ export class UserGroupInvitationsComponent implements OnDestroy {
     }
   }
 
-  onCustomSort(event: SortEvent): void {
-    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
-    if (sortMeta) this.onFetch(sortMeta);
+  onSortChange(event: SortEvent[]): void {
+    const sortMeta = event.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
+    if (sortMeta.length > 0) this.onFetch(sortMeta);
   }
 
   openJoinGroupConfirmationDialog(groupInvitation: GroupInvitation): void {
