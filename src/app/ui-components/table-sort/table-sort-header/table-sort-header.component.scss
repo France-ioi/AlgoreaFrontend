@@ -1,7 +1,10 @@
 .label {
   display: flex;
   align-items: center;
-  cursor: pointer;
+
+  &.cursor-pointer {
+    cursor: pointer;
+  }
 }
 
 .button {

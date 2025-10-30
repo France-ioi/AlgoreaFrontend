@@ -11,122 +11,94 @@
   ></alg-error>
 
   <ng-template #noError>
-    <p-table #table
-      class="alg-table member-list-table"
-      [columns]="columns"
-      [value]="state?.data ?? []"
-      [customSort]="true"
-      sortMode="multiple"
-      (sortFunction)="onCustomSort($event)"
-      [loading]="(removalInProgress$ | async) || state.isFetching"
-      [(selection)]="selection"
-      selectionMode="multiple"
-      dataKey="id"
-      [tableStyle]="{'min-width': '599.98px'}"
-      responsiveLayout="scroll"
-    >
-      <ng-template pTemplate="sorticon" let-number>
-        <i class="ph-duotone" [ngClass]="{
-          'ph-arrows-down-up': number === 0,
-          'ph-sort-ascending': number === -1,
-          'ph-sort-descending': number === 1
-        }"></i>
-      </ng-template>
-      <ng-template pTemplate="header" let-columns>
-        <tr *ngIf="state.data && state.data.length > 0">
-          <th class="thin" *ngIf="groupData?.group?.currentUserCanManage !== 'none'"></th>
-          <ng-container *ngFor="let col of columns">
-            <th [pSortableColumn]="col.field" *ngIf="col.sortable">
-              <div class="header-container">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </div>
-            </th>
-            <th *ngIf="!col.sortable">
-              <div class="header-container">
-                {{ col.header }}
-              </div>
-            </th>
+    <div class="alg-table-page-wrapper member-list-table">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2" cdk-table [dataSource]="state.data || []" algTableSort (sortChange)="onSortChange($event)">
+          <ng-container cdkColumnDef="checkbox">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef></th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              @let isSelected = !!(selection | findInArray: rowData);
+              <input type="checkbox" [checked]="isSelected" (change)="onSelect(rowData)" />
+            </td>
           </ng-container>
-        </tr>
-      </ng-template>
 
-      <ng-template
-        pTemplate="body"
-        let-rowData
-        let-columns="columns"
-      >
-        <tr>
-          <td class="thin" *ngIf="groupData?.group?.currentUserCanManage !== 'none'">
-            <p-tableCheckbox class="p-chkbox" [value]="rowData"></p-tableCheckbox>
-          </td>
-          <td *ngFor="let col of columns">
-            <ng-container [ngSwitch]="col.field">
-              <ng-container *ngSwitchCase="'user.login'">
-                <ng-container *ngIf="rowData.user">
-                  <a
-                    class="alg-link"
-                    [routerLink]="rowData.route | groupLink"
-                  >
-                    {{ rowData.user | userCaption }}
-                  </a>
+          @for (column of columns(); track column.field) {
+            <ng-container [cdkColumnDef]="column.field">
+              <th
+                class="alg-table-th"
+                [alg-table-sort-header]="column.field"
+                [sortEnabled]="!!column.sortable"
+                cdk-header-cell
+                *cdkHeaderCellDef
+              >{{ column.header }}</th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                <ng-container [ngSwitch]="column.field">
+                  <ng-container *ngSwitchCase="'user.login'">
+                    <ng-container *ngIf="rowData.user">
+                      <a
+                        class="alg-link"
+                        [routerLink]="rowData.route | groupLink"
+                      >
+                        {{ rowData.user | userCaption }}
+                      </a>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'name'">
+                    <a
+                      class="alg-link"
+                      [routerLink]="rowData.route | groupLink"
+                    >
+                      {{ rowData.name }}
+                    </a>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'member_since'">
+                    <ng-container *ngIf="rowData.memberSince">
+                      {{ rowData.memberSince | date:'short' }}
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ rowData[column.field] }}
+                  </ng-container>
                 </ng-container>
-              </ng-container>
-              <ng-container *ngSwitchCase="'name'">
-                <a
-                  class="alg-link"
-                  [routerLink]="rowData.route | groupLink"
-                >
-                  {{ rowData.name }}
-                </a>
-              </ng-container>
-              <ng-container *ngSwitchCase="'member_since'">
-                <ng-container *ngIf="rowData.memberSince">
-                  {{ rowData.memberSince | date:'short' }}
-                </ng-container>
-              </ng-container>
-              <ng-container *ngSwitchDefault>
-                {{ rowData[col.field] }}
-              </ng-container>
+              </td>
             </ng-container>
-          </td>
-        </tr>
-      </ng-template>
+          }
 
-      <ng-template pTemplate="footer">
-        <tr *ngIf="datapager.canLoadMore$ | async">
-          <td colspan="3">
-            <div class="text-center">
-              <button
-                alg-button
-                class="size-s stroke"
-                icon="ph-duotone ph-arrow-circle-down"
-                (click)="fetchMoreRows()"
-                [disabled]="state.isFetching"
-                i18n
-              >Load more</button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="emptymessage" let-columns>
-        <tr>
-          <td [attr.colspan]="columns.length">
-            <p class="empty-message" i18n>This list is empty. Check below the different ways to add members or sub-groups.</p>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="summary" *ngIf="groupData?.group?.currentUserCanManage !== 'none'">
-        <div class="alg-table-summary">
-          <div class="alg-table-summary-left">
-            <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
-            <span
-              class="alg-table-summary-select-all"
-              (click)="onSelectAll(state.data ?? [])"
-              data-testid="member-list-select-all"
-              i18n
-            >Select all</span>
+          <tr
+            class="alg-table-header-tr"
+            [ngClass]="{ 'alg-display-none': !state.isReady || state.data.length === 0 }"
+            cdk-header-row
+            *cdkHeaderRowDef="displayedColumns()"
+          ></tr>
+          <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+          <tr class="alg-table-body-tr" *cdkNoDataRow>
+            <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
+              @if (state.isFetching) {
+                <alg-loading></alg-loading>
+              } @else {
+                <p class="empty-message" i18n>This list is empty. Check below the different ways to add members or sub-groups.</p>
+              }
+            </td>
+          </tr>
+        </table>
+      </div>
+      @let data = state.data;
+      @if (currentUserCanManage() && data && data.length > 0) {
+        <div class="alg-table-footer">
+          <div class="alg-table-footer-left">
+            <label for="select-all-checkbox">
+              <input
+                type="checkbox"
+                class="alg-table-footer-checkbox"
+                id="select-all-checkbox"
+                data-testid="member-list-select-all"
+                (change)="onSelectAll(data)"
+                [checked]="data.length === selection.length"
+              />
+              <span class="alg-table-footer-select-all" i18n>
+              Select all
+            </span>
+            </label>
           </div>
           <button
             alg-button
@@ -138,7 +110,20 @@
             {currentFilter.type, select, users {Remove} other {Remove from group}}
           </button>
         </div>
-      </ng-template>
-    </p-table>
+      }
+    </div>
+
+    @if (datapager.canLoadMore$ | async) {
+      <div class="alg-table-load-more">
+        <button
+          alg-button
+          class="size-s stroke"
+          icon="ph-duotone ph-arrow-circle-down"
+          (click)="fetchMoreRows()"
+          [disabled]="state.isFetching || state.isError"
+          i18n
+        >Load more</button>
+      </div>
+    }
   </ng-template>
 </ng-container>

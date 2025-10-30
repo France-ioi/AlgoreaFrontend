@@ -1,6 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { SortEvent, SharedModule } from 'primeng/api';
-import { Table, TableModule } from 'primeng/table';
+import { Component, computed, EventEmitter, Input, OnChanges, OnDestroy, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { defer, Observable, of, ReplaySubject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
@@ -22,9 +20,26 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow,
+  CdkHeaderRowDef,
+  CdkNoDataRow,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
+import { TableSortDirective } from 'src/app/ui-components/table-sort/table-sort.directive';
+import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table-sort/table-sort-header/table-sort-header.component';
+import { FindInArray } from 'src/app/pipes/findInArray';
+import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 
 type Member = GroupMembers[number];
 
@@ -79,9 +94,6 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
     GroupCompositionFilterComponent,
     NgIf,
     ErrorComponent,
-    TableModule,
-    SharedModule,
-    NgFor,
     NgSwitch,
     NgSwitchCase,
     RouterLink,
@@ -92,6 +104,21 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
     UserCaptionPipe,
     NgClass,
     ButtonComponent,
+    CdkTable,
+    TableSortDirective,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
+    CdkRow,
+    CdkRowDef,
+    CdkNoDataRow,
+    CdkCell,
+    CdkCellDef,
+    CdkColumnDef,
+    CdkHeaderCell,
+    CdkHeaderCellDef,
+    TableSortHeaderComponent,
+    FindInArray,
+    LoadingComponent,
   ],
 })
 export class MemberListComponent implements OnChanges, OnDestroy {
@@ -106,7 +133,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
   selection: (Member | GroupChild)[] = [];
 
-  columns: Column[] = [];
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: Row): Observable<Row[]> => this.getRows(pageSize, latestRow),
     pageSize: membersLimit,
@@ -116,10 +142,16 @@ export class MemberListComponent implements OnChanges, OnDestroy {
   });
   rows$: Observable<FetchState<Row[]>> = this.datapager.list$;
 
-  @ViewChild('table') private table?: Table;
   @ViewChild('compositionFilter') private compositionFilter?: GroupCompositionFilterComponent;
 
   removalInProgress$ = new ReplaySubject<boolean>();
+
+  currentUserCanManage = signal(false);
+  columns = signal<Column[]>([]);
+  displayedColumns = computed(() => [
+    ...(this.currentUserCanManage() ? [ 'checkbox' ] : []),
+    ...this.columns().map(column => column.field),
+  ]);
 
   constructor(
     private getGroupMembersService: GetGroupMembersService,
@@ -140,9 +172,9 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     if (!this.groupData) return;
 
     this.currentFilter = { ...this.defaultFilter };
-    this.columns = this.getColumns(this.currentFilter);
+    this.currentUserCanManage.set(this.groupData.group.currentUserCanManage !== 'none');
+    this.columns.set(this.getColumns(this.currentFilter));
     this.currentSort = [];
-    this.table?.clear();
     this.fetchRows();
   }
 
@@ -220,12 +252,12 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     }
   }
 
-  onCustomSort(event: SortEvent): void {
+  onSortChange(events: SortEvent[]): void {
     if (!this.groupData) return;
 
-    const sortMeta = event.multiSortMeta?.map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
+    const sortMeta = events.filter(meta => meta.order !== 0).map(meta => (meta.order === -1 ? `-${meta.field}` : meta.field));
 
-    if (sortMeta && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
+    if (sortMeta.length > 0 && JSON.stringify(sortMeta) !== JSON.stringify(this.currentSort)) {
       this.currentSort = sortMeta;
       this.fetchRows();
     }
@@ -236,8 +268,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
 
     if (filter !== this.currentFilter) {
       this.currentFilter = { ...filter };
-      this.columns = this.getColumns(filter);
-      this.table?.clear();
+      this.columns.set(this.getColumns(filter));
       this.currentSort = [];
       this.fetchRows();
     }
@@ -260,6 +291,18 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     this.selection = [];
   }
 
+  onSelect(item: (Member | GroupChild)): void {
+    if (this.selection.includes(item)) {
+      const idx = this.selection.indexOf(item);
+      this.selection = [
+        ...this.selection.slice(0, idx),
+        ...this.selection.slice(idx + 1),
+      ];
+    } else {
+      this.selection = [ ...this.selection, item ];
+    }
+  }
+
   removeUsers(groupId: string): void {
     if (this.selection.length === 0) {
       throw new Error('Unexpected: Missed selected members');
@@ -272,7 +315,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
       .subscribe({
         next: result => {
           displayResponseToast(this.actionFeedbackService, parseResults(result));
-          this.table?.clear();
           this.unselectAll();
           this.fetchRows();
           this.removalInProgress$.next(false);
@@ -325,7 +367,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     ).subscribe({
       next: response => {
         displayGroupRemovalResponseToast(this.actionFeedbackService, response);
-        this.table?.clear();
         this.unselectAll();
         this.fetchRows();
         this.removalInProgress$.next(false);
