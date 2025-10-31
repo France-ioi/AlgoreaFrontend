@@ -1,0 +1,27 @@
+
+{{ message()}}
+
+@if (!verified()) {
+  @if (honorlock) {
+    <alg-hnk-verification
+      [honorlock]="honorlock"
+      (verified)="extensionVerified()"
+      (error)="extensionVerificationError()"
+    ></alg-hnk-verification>
+  }
+}  @else {
+
+  @let iframeUrl = launchScreenUrl$ | async;
+
+  @if (iframeUrl && !authenticationCompleted()) {
+    <iframe [src]="iframeUrl" width="100%" height="100%"></iframe>
+  }
+
+  <button (click)="examLoaded()">exam loaded</button>
+
+  <button (click)="questionLoaded()">question loaded</button>
+  <button (click)="endExam()">end exam</button>
+
+
+}
+

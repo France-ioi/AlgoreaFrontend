@@ -9,6 +9,7 @@ import { CanEnterNowPipe, HasAlreadyStatedPipe } from '../../models/item-entry';
 import { ItemRoute } from 'src/app/models/routing/item-route';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { HnkComponent } from 'src/app/hnk/hnk.component';
 
 @Component({
   selector: 'alg-explicit-entry',
@@ -18,6 +19,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     CanEnterNowPipe,
     HasAlreadyStatedPipe,
     ButtonComponent,
+    HnkComponent,
   ],
   templateUrl: './explicit-entry.component.html',
   styleUrl: './explicit-entry.component.scss',
