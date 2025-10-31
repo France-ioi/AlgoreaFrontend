@@ -30,21 +30,21 @@
       @case ('ancestor') {
         <div class="content">
           <i class="icon ph-duotone ph-crown"></i>
-          <span i18n>
+          <ng-container i18n>
             As a manager of
             <alg-group-links class="links" [items]="group().ancestorsCurrentUserIsManagerOf"></alg-group-links>,
             you can manage this group.
-          </span>
+          </ng-container>
         </div>
       }
       @case ('descendant') {
         <div class="content">
           <i class="icon ph-duotone ph-crown"></i>
-          <span i18n>
+          <ng-container i18n>
             As a manager of
             <alg-group-links class="links" [items]="group().descendantsCurrentUserIsManagerOf"></alg-group-links>,
             you can view this group.
-          </span>
+          </ng-container>
         </div>
       }
     }
