@@ -23,12 +23,12 @@ export class GroupMembersPage {
   async checksIsGroupWithCheckboxVisible(groupName: string): Promise<void> {
     await expect.soft(this.memberListLocator.getByText(groupName)).toBeVisible();
     await expect.soft(
-      this.page.getByRole('row', { name: groupName }).locator('p-tablecheckbox')
+      this.page.getByRole('row', { name: groupName }).getByRole('checkbox')
     ).toBeVisible();
   }
 
   async switchCheckbox(groupName: string): Promise<void> {
-    await this.page.getByRole('row', { name: groupName }).locator('p-tablecheckbox').click();
+    await this.page.getByRole('row', { name: groupName }).getByRole('checkbox').click();
   }
 
   async selectAllCheckboxes(): Promise<void> {
