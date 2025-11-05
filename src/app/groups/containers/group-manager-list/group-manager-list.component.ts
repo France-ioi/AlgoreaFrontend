@@ -1,4 +1,4 @@
-import { Component, effect, input } from '@angular/core';
+import { Component, computed, effect, input } from '@angular/core';
 import { Observable, of, switchMap } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
@@ -14,19 +14,34 @@ import { ManagerPermissionDialogComponent } from '../manager-permission-dialog/m
 import { GroupManagerAddComponent } from '../group-manager-add/group-manager-add.component';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
-import { GridComponent } from 'src/app/ui-components/grid/grid.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { CanCurrentUserManageMembersAndGroupPipe, CompareManagershipLevelPipe } from '../../models/group-management';
+import {
+  canCurrentUserManageMembersAndGroup,
+  CanCurrentUserManageMembersAndGroupPipe,
+  CompareManagershipLevelPipe
+} from '../../models/group-management';
 import { Group } from '../../models/group';
 import { ManagementLevelAsTextPipe } from './management-level-as-text.pipe';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import { filter } from 'rxjs/operators';
+import {
+  CdkCell,
+  CdkCellDef,
+  CdkColumnDef,
+  CdkHeaderCell,
+  CdkHeaderCellDef,
+  CdkHeaderRow, CdkHeaderRowDef,
+  CdkRow,
+  CdkRowDef,
+  CdkTable
+} from '@angular/cdk/table';
+import { FindInArray } from 'src/app/pipes/findInArray';
 
 const managersLimit = 25;
 
@@ -38,10 +53,8 @@ const managersLimit = 25;
   imports: [
     LoadingComponent,
     ErrorComponent,
-    GridComponent,
     TableModule,
     RouterLink,
-    NgClass,
     GroupManagerAddComponent,
     ManagerPermissionDialogComponent,
     AsyncPipe,
@@ -52,6 +65,17 @@ const managersLimit = 25;
     CanCurrentUserManageMembersAndGroupPipe,
     ManagementLevelAsTextPipe,
     CompareManagershipLevelPipe,
+    CdkTable,
+    CdkRow,
+    CdkRowDef,
+    CdkCell,
+    CdkCellDef,
+    CdkColumnDef,
+    CdkHeaderCell,
+    FindInArray,
+    CdkHeaderCellDef,
+    CdkHeaderRow,
+    CdkHeaderRowDef,
   ],
 })
 export class GroupManagerListComponent {
@@ -80,6 +104,15 @@ export class GroupManagerListComponent {
     })),
   );
 
+  displayedColumns = computed(() => [
+    ...(canCurrentUserManageMembersAndGroup(this.group()) ? [ 'checkbox' ] : []),
+    'name',
+    'canManage',
+    'canGrantGroupAccess',
+    'canWatchMembers',
+    'operations',
+  ]);
+
   constructor(
     private store: Store,
     private getGroupManagersService: GetGroupManagersService,
@@ -107,6 +140,18 @@ export class GroupManagerListComponent {
       return;
     }
     this.selection = managers;
+  }
+
+  onSelect(item: Manager): void {
+    if (this.selection.includes(item)) {
+      const idx = this.selection.indexOf(item);
+      this.selection = [
+        ...this.selection.slice(0, idx),
+        ...this.selection.slice(idx + 1),
+      ];
+    } else {
+      this.selection = [ ...this.selection, item ];
+    }
   }
 
   onRemove(): void {

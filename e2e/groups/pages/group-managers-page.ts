@@ -20,7 +20,7 @@ export class GroupManagersPage {
   }
 
   async switchCheckbox(userName: string): Promise<void> {
-    await this.groupManagersLocator.getByRole('row', { name: userName }).locator('p-tablecheckbox').click();
+    await this.groupManagersLocator.getByRole('row', { name: userName }).getByRole('checkbox').click();
   }
 
   async checksIsRemoveGroupManagersBtnVisible(): Promise<void> {

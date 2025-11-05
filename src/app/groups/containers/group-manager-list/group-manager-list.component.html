@@ -16,162 +16,153 @@
 
     <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Managers of this group</h2>
     @if (managers.length > 0) {
-      <alg-grid
-        tableStyle="slanted"
-        [loading]="removalInProgress || state.isFetching"
-        [data]="managers"
-        [(selection)]="selection"
-        sortMode="single"
-        [scrollable]="false"
-        dataKey="id"
-        >
-        <ng-template #headerTemplate let-columns>
-          <tr style="border: none; height: 100%">
-            @if (group() | canCurrentUserManageMembersAndGroup) {
-              <th class="alg-table-selection-col"></th>
-            }
-            <th style="min-width: 160px">
-              <div class="alg-table-slanted-header">
-                <div class="alg-table-slanted-header-content" i18n>
-                Name
-              </div>
-              </div>
-            </th>
-            <th style="min-width: 110px;">
-              <div class="alg-table-slanted-header">
-                <div class="alg-table-slanted-header-content" i18n>
-                Can Manage
-              </div>
-              </div>
-            </th>
-            <th style="width: 5rem; max-width: 5rem;">
-              <div class="alg-table-slanted-header">
-                <div class="alg-table-slanted-header-content" i18n>
-                Can grant group access
-              </div>
-              </div>
-            </th>
-            <th style="width: 5rem; max-width: 5rem;">
-              <div class="alg-table-slanted-header">
-                <div class="alg-table-slanted-header-content" i18n>
-                Can watch members
-              </div>
-              </div>
-            </th>
-            <th style="width: 11rem; max-width: 11rem;"></th>
-          </tr>
-        </ng-template>
-        <ng-template
-          #bodyTemplate
-          let-rowData
-          let-columns="columns"
-          let-rowIndex="rowIndex"
+      <div class="alg-table-page-wrapper">
+        <div class="alg-table-slanted-wrapper">
+          <table
+            class="alg-table-slanted"
+            cdk-table
+            [dataSource]="managers"
           >
-          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            @if (group() | canCurrentUserManageMembersAndGroup) {
-              <td class="alg-table-selection-col">
-                <div class="alg-table-selection-width">
-                  <p-tableCheckbox [value]="rowData" [disabled]="rowData.canManage === null"></p-tableCheckbox>
-                </div>
+            <ng-container cdkColumnDef="checkbox">
+              <th class="alg-table-th alg-table-selection-col" cdk-header-cell *cdkHeaderCellDef></th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                @let isSelected = !!(selection | findInArray: rowData);
+                <input type="checkbox" [checked]="isSelected" (change)="onSelect(rowData)" [disabled]="rowData.canManage === null" />
               </td>
-            }
-            <td
-              style="text-align: left; min-width: 160px; padding-left: 0.5rem; justify-content: left"
-              tooltipPosition="top"
-              tooltipStyleClass="tooltip-custom"
-              >
-              <a class="alg-link"
-                [routerLink]="rowData | groupLink"
-                >
-                {{ rowData.login ? (rowData | userCaption) : rowData.name }}
-              </a>
-            </td>
-            <td style="min-width: 110px;">
-              @let curLevel = rowData.canManage;
-              @let ancLevel = rowData.canManageThroughAncestorGroups;
-              @if (curLevel === null) {
-                <span i18n>None<br/>("{{ ancLevel | managementLevelAsText }}" via ancestors)</span>
-              } @else if ((curLevel | compareManagershipLevel: ancLevel) < 0) {
-                <span i18n>{{ curLevel | managementLevelAsText }}<br/>("{{ ancLevel | managementLevelAsText }}" via ancestors)</span>
-              } @else {
-                <span i18n>{{ curLevel | managementLevelAsText }}</span>
-              }
-            </td>
-            <td style="width: 5rem">
-              @if (!rowData.canGrantGroupAccess) {
-                <div class="table-icon icon-locked"><i class="ph-bold ph-x"></i></div>
-                @if (rowData.canGrantGroupAccessThroughAncestorGroups) {
-                  <div class="table-icon icon-unlocked">(<span i18n><i class="ph-bold ph-check"></i>&nbsp;via&nbsp;ancestors</span>)</div>
+            </ng-container>
+
+            <ng-container cdkColumnDef="name">
+              <th class="alg-table-th" style="min-width: 160px" cdk-header-cell *cdkHeaderCellDef>
+                <div class="alg-table-slanted-header">
+                  <div class="alg-table-slanted-header-content" i18n>Name</div>
+                </div>
+              </th>
+              <td class="alg-table-td" style="text-align: left; padding-left: 0.5rem" cdk-cell *cdkCellDef="let rowData">
+                <a
+                  class="alg-link"
+                  [routerLink]="rowData | groupLink"
+                >{{ rowData.login ? (rowData | userCaption) : rowData.name }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="canManage">
+              <th class="alg-table-th" style="min-width: 110px" cdk-header-cell *cdkHeaderCellDef>
+                <div class="alg-table-slanted-header">
+                  <div class="alg-table-slanted-header-content" i18n>Can Manage</div>
+                </div>
+              </th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                @let curLevel = rowData.canManage;
+                @let ancLevel = rowData.canManageThroughAncestorGroups;
+                @if (curLevel === null) {
+                  <span i18n>None<br/>("{{ ancLevel | managementLevelAsText }}" via ancestors)</span>
+                } @else if ((curLevel | compareManagershipLevel: ancLevel) < 0) {
+                  <span i18n>{{ curLevel | managementLevelAsText }}<br/>("{{ ancLevel | managementLevelAsText }}" via ancestors)</span>
+                } @else {
+                  <span i18n>{{ curLevel | managementLevelAsText }}</span>
                 }
-              }
-              @if (rowData.canGrantGroupAccess) {
-                <div class="table-icon icon-unlocked"><i class="ph-bold ph-check"></i></div>
-              }
-            </td>
-            <td style="width: 5rem;">
-              @if (!rowData.canWatchMembers) {
-                <div class="table-icon icon-locked"><i class="ph-bold ph-x"></i></div>
-                @if (rowData.canWatchMembersThroughAncestorGroups) {
-                  <div class="table-icon icon-unlocked">(<span i18n><i class="ph-bold ph-check"></i>&nbsp;via&nbsp;ancestors</span>)</div>
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="canGrantGroupAccess">
+              <th class="alg-table-th" style="width: 5rem; max-width: 5rem" cdk-header-cell *cdkHeaderCellDef>
+                <div class="alg-table-slanted-header">
+                  <div class="alg-table-slanted-header-content" i18n>Can grant group access</div>
+                </div>
+              </th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                @if (!rowData.canGrantGroupAccess) {
+                  <div class="table-icon icon-locked"><i class="ph-bold ph-x"></i></div>
+                  @if (rowData.canGrantGroupAccessThroughAncestorGroups) {
+                    <div class="table-icon icon-unlocked">(<span i18n><i class="ph-bold ph-check"></i>&nbsp;via&nbsp;ancestors</span>)</div>
+                  }
                 }
-              }
-              @if (rowData.canWatchMembers) {
-                <div class="table-icon icon-unlocked"><i class="ph-bold ph-check"></i></div>
-              }
-            </td>
-            <td style="width: 11rem; max-width: 11rem;">
-              @if ((group() | canCurrentUserManageMembersAndGroup) && rowData.canManage !== null) {
-                <button
-                  alg-button-icon
-                  type="button"
-                  icon="pi pi-pencil"
-                  class="size-xs"
-                  (click)="openPermissionsEditDialog(rowData)"
-                ></button>
-              }
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template #footerTemplate>
-          @if (datapager.canLoadMore$ | async) {
-            <tr>
-              <td [colSpan]="6">
-                <div class="text-center">
+                @if (rowData.canGrantGroupAccess) {
+                  <div class="table-icon icon-unlocked"><i class="ph-bold ph-check"></i></div>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="canWatchMembers">
+              <th class="alg-table-th" style="width: 5rem; max-width: 5rem" cdk-header-cell *cdkHeaderCellDef>
+                <div class="alg-table-slanted-header">
+                  <div class="alg-table-slanted-header-content" i18n>Can watch members</div>
+                </div>
+              </th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                @if (!rowData.canWatchMembers) {
+                  <div class="table-icon icon-locked"><i class="ph-bold ph-x"></i></div>
+                  @if (rowData.canWatchMembersThroughAncestorGroups) {
+                    <div class="table-icon icon-unlocked">(<span i18n><i class="ph-bold ph-check"></i>&nbsp;via&nbsp;ancestors</span>)</div>
+                  }
+                }
+                @if (rowData.canWatchMembers) {
+                  <div class="table-icon icon-unlocked"><i class="ph-bold ph-check"></i></div>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="operations">
+              <th class="alg-table-th" style="width: 11rem; max-width: 11rem" cdk-header-cell *cdkHeaderCellDef></th>
+              <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+                @if ((group() | canCurrentUserManageMembersAndGroup) && rowData.canManage !== null) {
                   <button
-                    alg-button
-                    class="size-s stroke"
-                    icon="ph-duotone ph-arrow-circle-down"
-                    (click)="fetchMoreData()"
-                    [disabled]="state.isFetching"
-                    i18n
-                  >Load more</button>
-                </div>
+                    alg-button-icon
+                    type="button"
+                    icon="pi pi-pencil"
+                    class="size-xs"
+                    (click)="openPermissionsEditDialog(rowData)"
+                  ></button>
+                }
               </td>
-            </tr>
-          }
-        </ng-template>
-        @if (group() | canCurrentUserManageMembersAndGroup) {
-          <ng-template #summaryTemplate>
-            <div class="alg-table-summary slanted">
-              <div class="alg-table-summary-left">
-                <p-tableHeaderCheckbox class="alg-table-summary-checkbox"></p-tableHeaderCheckbox>
-                <span class="alg-table-summary-select-all" (click)="onSelectAll(currentGroupManagers)" i18n>
-              Select all
-            </span>
-              </div>
-              <button
-                class="size-s"
-                data-testid="remove-group-managers"
-                alg-button-icon
-                type="button"
-                icon="ph-duotone ph-trash"
-                (click)="onRemove()"
-                [disabled]="removalInProgress || !state.isReady || selection.length === 0"
-              ></button>
-            </div>
-          </ng-template>
-        }
-      </alg-grid>
+            </ng-container>
+
+            <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+            <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+          </table>
+        </div>
+      </div>
+
+      @if (group() | canCurrentUserManageMembersAndGroup) {
+        <div class="alg-table-footer">
+          <div class="alg-table-footer-left">
+            <label for="select-all-checkbox">
+              <input
+                type="checkbox"
+                class="alg-table-footer-checkbox"
+                id="select-all-checkbox"
+                (change)="onSelectAll(managers)"
+                [checked]="managers.length === selection.length"
+              />
+              <span class="alg-table-footer-select-all" i18n>
+                Select all
+              </span>
+            </label>
+          </div>
+          <button
+            class="size-s"
+            type="button"
+            icon="ph-duotone ph-trash"
+            (click)="onRemove()"
+            [disabled]="removalInProgress || !state.isReady || selection.length === 0"
+            alg-button-icon
+            data-testid="remove-group-managers"
+          ></button>
+        </div>
+      }
+
+      @if (datapager.canLoadMore$ | async) {
+        <div class="alg-table-load-more">
+          <button
+            alg-button
+            class="size-s stroke"
+            icon="ph-duotone ph-arrow-circle-down"
+            (click)="fetchMoreData()"
+            [disabled]="state.isFetching"
+            i18n
+          >Load more</button>
+        </div>
+      }
     } @else {
       <div class="validation-text" i18n>
         This group has no dedicated managers.

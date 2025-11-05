@@ -1,0 +1,76 @@
+@import 'src/assets/scss/functions';
+
+.alg-table-slanted {
+  width: 100%;
+  border-spacing: 0;
+
+  .alg-table-header-tr {
+    .alg-table-th {
+      border-left: none;
+      border-right: none;
+      height: 13rem;
+      transform: skewX(-45deg);
+      transform-origin: 0 100%;
+      position: relative;
+      background-color: rgba(0, 0, 0, .04);
+      min-width: 3.3333rem;
+      flex: auto;
+
+      &:nth-child(odd) {
+        background-color: white;
+      }
+
+      &:first-child {
+        background-color: white;
+      }
+    }
+  }
+
+  .alg-table-slanted-header {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translate(50%, 50%) skewX(45deg) rotate(-45deg);
+    transform-origin: 0 50%;
+    text-align: left;
+    padding-left: 3rem;
+    overflow: visible;
+  }
+
+  .alg-table-slanted-header-content {
+    width: 15rem;
+    overflow: hidden;
+    color: var(--alg-secondary-color);
+    font-weight: 400;
+    text-overflow: ellipsis;
+    text-transform: initial;
+    white-space: nowrap;
+  }
+
+  .alg-table-body-tr {
+    .alg-table-td {
+      background-color: rgba(0, 0, 0, .04);
+      padding: 0;
+      text-align: center;
+      justify-content: center;
+      color: var(--alg-secondary-color);
+      height: toRem(56);
+
+      &:nth-child(odd) {
+        background-color: white;
+        text-align: center;
+      }
+
+      &:first-child {
+        background-color: white;
+      }
+    }
+  }
+}
+
+
+
+.alg-table-slanted-wrapper {
+  overflow: hidden;
+}
