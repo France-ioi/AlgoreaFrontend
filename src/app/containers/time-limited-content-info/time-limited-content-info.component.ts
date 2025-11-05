@@ -49,7 +49,8 @@ export class TimeLimitedContentInfoComponent {
         if (!submissionUntil) return of(null);
         const timeRemaining = Duration.fromNowUntil(submissionUntil);
         if (!timeRemaining.getMs()) return of(new Duration(0));
-        return interval(1000).pipe(
+        const refreshingRate = timeRemaining.getMs() < 5*60*1000 ? 200 : 1000;
+        return interval(refreshingRate).pipe(
           switchMap(() => this.store.select(fromTimeOffset.selectCurrentTimeOffset).pipe(take(1))),
           map(offset => Duration.fromNowUntil(submissionUntil).add(-offset)),
           map(remaining => (remaining.isStrictlyPositive() ? remaining : new Duration(0))),
