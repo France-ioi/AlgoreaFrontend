@@ -10,4 +10,8 @@
     </div>
   </div>
 
+  @if (timeRemaining.getMs() === 0) {
+    <alg-time-limited-content-end />
+  }
+
 }
