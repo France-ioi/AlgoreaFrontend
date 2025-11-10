@@ -32,6 +32,12 @@ const selectTimeLimitedContentRootItem = createSelector(
   }
 );
 
+const selectActiveContentIsTimeLimitedContentRoot = createSelector(
+  fromItemContent.selectActiveContentRoute,
+  selectTimeLimitedContentRootItem,
+  (route, rootItem) => route?.id === rootItem?.route.id
+);
+
 @Component({
   selector: 'alg-time-limited-content-end',
   standalone: true,
@@ -54,11 +60,19 @@ export class TimeLimitedContentEndComponent {
   rootItem = toSignal(this.rootItem$, { requireSync: true });
   visible = signal(true);
 
+  private activeContentIsRoot$ = this.store.select(selectActiveContentIsTimeLimitedContentRoot);
+  activeContentIsRoot = toSignal(this.activeContentIsRoot$, { requireSync: true });
+
   closeDialog(): void {
     this.visible.set(false);
     const rootItem = this.rootItem();
     if (!rootItem) throw new Error('unexpected: null rootItem with close dialog?');
-    this.itemRouter.navigateTo(rootItem.route);
+
+    if (this.activeContentIsRoot()) {
+      this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());
+    } else {
+      this.itemRouter.navigateTo(rootItem.route);
+    }
   }
 }
 
