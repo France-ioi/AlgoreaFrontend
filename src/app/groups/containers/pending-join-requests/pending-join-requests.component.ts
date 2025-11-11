@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../data-access/request-actions.service';
-import { GridColumn } from 'src/app/ui-components/grid/grid.component';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, readyState } from 'src/app/utils/state';
@@ -15,6 +14,12 @@ import { displayResponseToast } from 'src/app/groups/containers/pending-request/
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ensureDefined } from 'src/app/utils/assert';
 import { HttpErrorResponse } from '@angular/common/http';
+
+interface GridColumn {
+  field: string,
+  header: string,
+  sortKey?: string,
+}
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
