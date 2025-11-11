@@ -82,9 +82,11 @@
       }
     }
   }
+
+  .alg-table-selection-col {
+    width: toRem(80);
+  }
 }
-
-
 
 .alg-table-slanted-wrapper {
   overflow: hidden;
