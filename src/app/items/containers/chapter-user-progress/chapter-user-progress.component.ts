@@ -13,8 +13,6 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
-import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
@@ -54,8 +52,6 @@ interface RowData {
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    TableModule,
-    SharedModule,
     NgFor,
     NgSwitch,
     NgSwitchCase,

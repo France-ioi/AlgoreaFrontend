@@ -5,7 +5,6 @@ import { GetRequestsService, GroupInvitation } from '../../data-access/get-reque
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { PendingRequestComponent } from '../pending-request/pending-request.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe, DatePipe, NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -39,7 +38,6 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
   styleUrls: [ './user-group-invitations.component.scss' ],
   standalone: true,
   imports: [
-    PendingRequestComponent,
     LoadingComponent,
     NgIf,
     ErrorComponent,

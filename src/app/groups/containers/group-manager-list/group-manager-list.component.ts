@@ -13,7 +13,6 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { ManagerPermissionDialogComponent } from '../manager-permission-dialog/manager-permission-dialog.component';
 import { GroupManagerAddComponent } from '../group-manager-add/group-manager-add.component';
 import { RouterLink } from '@angular/router';
-import { TableModule } from 'primeng/table';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe } from '@angular/common';
@@ -53,7 +52,6 @@ const managersLimit = 25;
   imports: [
     LoadingComponent,
     ErrorComponent,
-    TableModule,
     RouterLink,
     GroupManagerAddComponent,
     ManagerPermissionDialogComponent,

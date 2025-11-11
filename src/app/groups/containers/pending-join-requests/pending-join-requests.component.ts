@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../data-access/request-actions.service';
-import { GridColumn } from 'src/app/ui-components/grid/grid.component';
 import { merge, of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fetchingState, readyState } from 'src/app/utils/state';
@@ -15,9 +14,12 @@ import { displayResponseToast } from 'src/app/groups/containers/pending-request/
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ensureDefined } from 'src/app/utils/assert';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { NgIf } from '@angular/common';
-import { PendingRequestComponent } from '../pending-request/pending-request.component';
+
+interface GridColumn {
+  field: string,
+  header: string,
+  sortKey?: string,
+}
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
@@ -26,11 +28,6 @@ const groupColumn = { field: 'group.name', header: $localize`GROUP` };
   templateUrl: './pending-join-requests.component.html',
   styleUrls: [ './pending-join-requests.component.scss' ],
   standalone: true,
-  imports: [
-    PendingRequestComponent,
-    NgIf,
-    SelectionComponent,
-  ],
 })
 export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
 
