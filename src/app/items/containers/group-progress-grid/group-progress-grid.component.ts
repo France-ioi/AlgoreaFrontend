@@ -29,11 +29,9 @@ import { PermissionsEditDialogComponent } from '../../containers/permissions-edi
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
-import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgFor, AsyncPipe } from '@angular/common';
+import { NgIf, AsyncPipe } from '@angular/common';
 import { CompositionFilterComponent } from '../../containers/composition-filter/composition-filter.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -102,12 +100,7 @@ interface ProgressDataDialog {
     NgIf,
     ErrorComponent,
     LoadingComponent,
-    NgSwitch,
-    NgSwitchCase,
     UserProgressDetailsComponent,
-    TableModule,
-    SharedModule,
-    NgFor,
     TooltipModule,
     RouterLink,
     UserProgressComponent,
@@ -219,10 +212,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.itemData$.complete();
     this.refresh$.complete();
-  }
-
-  trackByRow(_index: number, row: DataRow): string {
-    return row.id;
   }
 
   showProgressDetail(userProgress: Progress, row: DataRow, col: DataColumn): void {

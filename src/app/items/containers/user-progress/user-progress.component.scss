@@ -1,9 +1,11 @@
+@import 'src/assets/scss/functions';
+
 .group-situation-data {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4167rem;
-  height: 3.5833rem;
+  width: 100%;
+  height: toRem(50);
 
   &.pointer {
     cursor: pointer;

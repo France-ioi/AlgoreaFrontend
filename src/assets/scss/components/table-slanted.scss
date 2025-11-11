@@ -4,17 +4,32 @@
   width: 100%;
   border-spacing: 0;
 
+  &.border-style {
+    .alg-table-th {
+      border-bottom: toRem(1) solid var(--alg-border-color) !important;
+      background: #fff !important;
+    }
+
+    .alg-table-td {
+      border-right: toRem(1) solid var(--alg-border-color) !important;
+      background: #fff !important;
+    }
+  }
+
   .alg-table-header-tr {
     .alg-table-th {
       border-left: none;
       border-right: none;
       height: 13rem;
-      transform: skewX(-45deg);
-      transform-origin: 0 100%;
       position: relative;
       background-color: rgba(0, 0, 0, .04);
       min-width: 3.3333rem;
       flex: auto;
+
+      &:not(&.no-transform) {
+        transform: skewX(-45deg);
+        transform-origin: 0 100%;
+      }
 
       &:nth-child(odd) {
         background-color: white;
