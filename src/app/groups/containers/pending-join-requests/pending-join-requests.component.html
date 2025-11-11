@@ -1,17 +1,1 @@
-<alg-pending-request
-  i18n-label label="Pending requests"
-  [state]="state"
-  [columns]="columns"
-  [requests]="requests"
-  (sort)="onFetch($event)"
-  (processRequests)="onProcessRequests($event)"
->
-  <ng-template #sectionHeaderTemplate>
-    <div
-      *ngIf="showSwitch"
-      class="group-switch">
-      <alg-selection (change)="onSubgroupSwitch($event)" [items]="subgroupSwitchItems"></alg-selection>
-    </div>
-  </ng-template>
-
-</alg-pending-request>
+<p>Pending requests table</p>

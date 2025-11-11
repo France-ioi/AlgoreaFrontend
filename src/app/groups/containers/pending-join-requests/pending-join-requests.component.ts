@@ -15,9 +15,6 @@ import { displayResponseToast } from 'src/app/groups/containers/pending-request/
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ensureDefined } from 'src/app/utils/assert';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { NgIf } from '@angular/common';
-import { PendingRequestComponent } from '../pending-request/pending-request.component';
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
@@ -26,11 +23,6 @@ const groupColumn = { field: 'group.name', header: $localize`GROUP` };
   templateUrl: './pending-join-requests.component.html',
   styleUrls: [ './pending-join-requests.component.scss' ],
   standalone: true,
-  imports: [
-    PendingRequestComponent,
-    NgIf,
-    SelectionComponent,
-  ],
 })
 export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
 
