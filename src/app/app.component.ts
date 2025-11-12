@@ -32,6 +32,8 @@ import { isNotNull } from './utils/null-undefined-predicates';
 import { ItemRouter } from './models/routing/item-router';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { routeWithNoObservation } from './models/routing/item-route';
+import { Dialog } from '@angular/cdk/dialog';
+import { FatalErrorModalComponent } from 'src/app/containers/fatal-error-modal/fatal-error-modal.component';
 
 @Component({
   selector: 'alg-root',
@@ -60,6 +62,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private config = inject(APPCONFIG);
   @ViewChild(TopBarComponent) topBarComponent?: TopBarComponent;
 
+  private dialogService = inject(Dialog);
+
   fatalError$ = merge(
     this.authService.failure$,
     this.sessionService.userProfileError$,
@@ -83,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
   groupObservationError$ = this.store.select(fromObservation.selectObservationError);
   showObservationErrorDialog = true;
 
-  private subscription?: Subscription;
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private store: Store,
@@ -118,13 +122,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // if user changes, navigate back to the root
-    this.subscription = this.sessionService.userChanged$.pipe(
-      switchMap(() => this.router.navigateByUrl('/')),
-    ).subscribe();
+    this.subscriptions.add(
+      this.sessionService.userChanged$.pipe(
+        switchMap(() => this.router.navigateByUrl('/')),
+      ).subscribe(),
+    );
+    this.subscriptions.add(
+      this.fatalError$.pipe(take(1)).subscribe(error =>
+        this.dialogService.open(FatalErrorModalComponent, { data: error, panelClass: 'alg-dialog', disableClose: true })
+      ),
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   onScrollContent(scrollEl: HTMLElement): void {
@@ -162,9 +173,4 @@ export class AppComponent implements OnInit, OnDestroy {
       this.itemRouter.navigateTo(routeWithNoObservation(route));
     });
   }
-
-  onRefresh(): void {
-    window.location.reload();
-  }
-
 }

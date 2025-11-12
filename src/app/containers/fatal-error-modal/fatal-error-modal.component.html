@@ -1,0 +1,27 @@
+<alg-notification-modal i18n-title title="Oops..." [allowToClose]="false">
+  <p class="error-message">
+    @if (error().message === 'ChunkError') {
+      <ng-container i18n>
+        An error occurred that we cannot recover (you got a network issue?).
+      </ng-container>
+    } @else {
+      <ng-container i18n="@@auth-error-modal-context">
+        We are unable to make the site work properly. Are you connected to the Internet?
+      </ng-container>
+    }
+  </p>
+
+  <div class="error-refresh-button">
+    <button
+      alg-button
+      icon="pi pi-refresh"
+      (click)="onRefresh()"
+      i18n
+    >Reload the application.
+    </button>
+  </div>
+
+  <p class="error-note" i18n="@@contactUs">
+    If the problem persists, please contact us.
+  </p>
+</alg-notification-modal>

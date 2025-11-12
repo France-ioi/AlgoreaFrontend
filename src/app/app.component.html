@@ -40,39 +40,6 @@
   </div>
 </div>
 <p-toast position="bottom-left"></p-toast>
-<p-dialog
-  *ngrxLet="fatalError$; let fatalError"
-  i18n-header="@@auth-error-modal-title" header="Error"
-  [visible]="true"
-  [style]="{width: '50vw'}"
-  [modal]="true"
-  [closeOnEscape]="false"
-  [closable]="false"
->
-  <p class="error-message">
-    @if (fatalError.message === 'ChunkError') {
-      <ng-container i18n>
-        An error occurred that we cannot recover (you got a network issue?).
-      </ng-container>
-    }
-    @else {
-      <ng-container i18n="@@auth-error-modal-context">
-        Oops, we are unable to make the site work properly. Are you connected to the Internet?
-      </ng-container>
-    }
-  </p>
-  <div class="error-refresh-button">
-    <button
-      icon="pi pi-refresh"
-      (click)="onRefresh()"
-      alg-button
-      i18n
-    >Reload the application.</button>
-  </div>
-  <p class="error-note" i18n="@@contactUs">
-    If the problem persists, please contact us.
-  </p>
-</p-dialog>
 <alg-language-mismatch></alg-language-mismatch>
 @let groupObservationError = groupObservationError$ | async;
 <p-dialog
