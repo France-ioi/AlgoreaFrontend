@@ -6,8 +6,9 @@ import { fromItemContent } from 'src/app/items/store';
 import { DurationAsCountdownPipe } from 'src/app/pipes/duration';
 import { isInfinite } from 'src/app/utils/date';
 import { fromTimeOffset } from 'src/app/store/time-offset';
-import { Duration } from 'src/app/utils/duration';
+import { Duration, MINUTES, SECONDS } from 'src/app/utils/duration';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { TimeLimitedContentEndComponent } from '../time-limited-content-end/time-limited-content-end.component';
 
 /**
  * Select the current result, will be`null` if we know for sure there is no current result and `undefined` if it is not known yet.
@@ -35,6 +36,7 @@ const selectAllowsSubmissionsUntil = createSelector(
   standalone: true,
   imports: [
     DurationAsCountdownPipe,
+    TimeLimitedContentEndComponent,
   ],
   templateUrl: './time-limited-content-info.component.html',
   styleUrl: './time-limited-content-info.component.scss',
@@ -49,10 +51,10 @@ export class TimeLimitedContentInfoComponent {
         if (!submissionUntil) return of(null);
         const timeRemaining = Duration.fromNowUntil(submissionUntil);
         if (!timeRemaining.getMs()) return of(new Duration(0));
-        return interval(1000).pipe(
+        const refreshingRate = timeRemaining.getMs() < 5*MINUTES ? 0.2*SECONDS : 1*SECONDS;
+        return interval(refreshingRate).pipe(
           switchMap(() => this.store.select(fromTimeOffset.selectCurrentTimeOffset).pipe(take(1))),
-          map(offset => Duration.fromNowUntil(submissionUntil).add(-offset)),
-          map(remaining => (remaining.isStrictlyPositive() ? remaining : new Duration(0))),
+          map(offset => Duration.fromNowUntil(submissionUntil, new Date(Date.now() - offset))),
         );
       }),
     ), { initialValue: null }

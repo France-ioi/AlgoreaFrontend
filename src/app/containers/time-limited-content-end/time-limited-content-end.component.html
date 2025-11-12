@@ -1,0 +1,25 @@
+@if (rootItem(); as rootItem) {
+
+  <p-dialog
+    i18n-header header="The activity is over"
+    [visible]="visible()"
+    [style]="{width: '50vw'}"
+    [modal]="true"
+    [closeOnEscape]="false"
+    [closable]="false"
+  >
+
+    <div i18n>
+      The activity "{{ rootItem.title }}" has ended.
+    </div>
+
+    <a
+      alg-button
+      (click)="closeDialog()"
+      i18n
+    >
+      Back to the root of the activity
+    </a>
+  </p-dialog>
+}
+

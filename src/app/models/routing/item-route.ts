@@ -64,6 +64,13 @@ export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|und
   return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
 }
 
+/**
+ * Remove the attempt from the given route and use the given parent attempt id
+ */
+export function itemRouteUsingParentAttempt<T extends RawItemRoute, U extends T>(route: T, parentAttemptId: string|undefined): U {
+  return { ...route, attemptId: undefined, parentAttemptId } as U;
+}
+
 export function routeWithNoObservation(route: FullItemRoute): FullItemRoute {
   // when leaving observation, we also leave the loaded answer if any
   return { ...route, observedGroup: undefined, answer: undefined };
