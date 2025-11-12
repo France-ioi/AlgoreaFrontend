@@ -6,7 +6,7 @@ import { fromItemContent } from 'src/app/items/store';
 import { DurationAsCountdownPipe } from 'src/app/pipes/duration';
 import { isInfinite } from 'src/app/utils/date';
 import { fromTimeOffset } from 'src/app/store/time-offset';
-import { Duration } from 'src/app/utils/duration';
+import { Duration, MINUTES, SECONDS } from 'src/app/utils/duration';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { TimeLimitedContentEndComponent } from '../time-limited-content-end/time-limited-content-end.component';
 
@@ -51,7 +51,7 @@ export class TimeLimitedContentInfoComponent {
         if (!submissionUntil) return of(null);
         const timeRemaining = Duration.fromNowUntil(submissionUntil);
         if (!timeRemaining.getMs()) return of(new Duration(0));
-        const refreshingRate = timeRemaining.getMs() < 5*60*1000 ? 200 : 1000;
+        const refreshingRate = timeRemaining.getMs() < 5*MINUTES ? 0.2*SECONDS : 1*SECONDS;
         return interval(refreshingRate).pipe(
           switchMap(() => this.store.select(fromTimeOffset.selectCurrentTimeOffset).pipe(take(1))),
           map(offset => Duration.fromNowUntil(submissionUntil, new Date(Date.now() - offset))),
