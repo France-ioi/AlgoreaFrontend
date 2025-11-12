@@ -4,7 +4,6 @@ import { DialogModule } from 'primeng/dialog';
 import { fromItemContent } from 'src/app/items/store';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouter } from 'src/app/models/routing/item-router';
@@ -56,12 +55,10 @@ export class TimeLimitedContentEndComponent {
   private itemRouter = inject(ItemRouter);
   private store = inject(Store);
 
-  private rootItem$ = this.store.select(selectTimeLimitedContentRootItem);
-  rootItem = toSignal(this.rootItem$, { requireSync: true });
+  rootItem = this.store.selectSignal(selectTimeLimitedContentRootItem);
   visible = signal(true);
 
-  private activeContentIsRoot$ = this.store.select(selectActiveContentIsTimeLimitedContentRoot);
-  activeContentIsRoot = toSignal(this.activeContentIsRoot$, { requireSync: true });
+  activeContentIsRoot = this.store.selectSignal(selectActiveContentIsTimeLimitedContentRoot);
 
   closeDialog(): void {
     this.visible.set(false);
