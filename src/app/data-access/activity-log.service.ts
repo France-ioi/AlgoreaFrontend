@@ -10,6 +10,7 @@ import { requestTimeout } from '../interceptors/interceptor_common';
 import { itemTypeSchema } from '../items/models/item-type';
 import { participantTypeSchema } from '../groups/models/group-types';
 import { userBaseSchema, withId } from '../groups/models/user';
+import { ThreadId } from '../forum/models/threads';
 
 const activityLogsSchema = z.array(
   z.object({
@@ -114,6 +115,27 @@ export class ActivityLogService {
 
     return this.http
       .get<unknown[]>(`${this.config.apiUrl}/items/log`, {
+        params: params,
+        context: new HttpContext().set(requestTimeout, logServicesTimeout),
+      })
+      .pipe(decodeSnakeCase(activityLogsSchema));
+  }
+
+  getThreadActivityLog(threadId: ThreadId, options?: {
+    limit?: number,
+    from?: { attemptId: string, answerId: string, activityType: string },
+  }): Observable<ActivityLogs> {
+    let params = new HttpParams();
+    const limit = options?.limit ?? logDefaultLimit;
+    params = params.set('limit', limit.toString());
+
+    if (options?.from !== undefined) {
+      params = params.set('from.attempt_id', options.from.attemptId);
+      params = params.set('from.answer_id', options.from.answerId);
+      params = params.set('from.activity_type', options.from.activityType);
+    }
+    return this.http
+      .get<unknown[]>(`${this.config.apiUrl}/items/${threadId.itemId}/participant/${threadId.participantId}/thread/log`, {
         params: params,
         context: new HttpContext().set(requestTimeout, logServicesTimeout),
       })
