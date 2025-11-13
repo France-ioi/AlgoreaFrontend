@@ -111,7 +111,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           score: itemData.score,
           validated: itemData.validated,
           currentUserPermissions: itemData.currentUserPermissions,
-          noScore: item.noScore,
+          noScore: itemData.noScore,
         })),
       ])))
     ),
