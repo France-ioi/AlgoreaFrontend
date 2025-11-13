@@ -49,7 +49,7 @@
                 <a
                   class="alg-link"
                   [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers }"
-                  [routerLink]="itemRoute | with: { answer: { id: event.answerId } } | url"
+                  [routerLink]="itemRoute | with: { answer: { id: event.answerId } } | url: ['task', 'editor']"
                   *ngIf="itemRoute"
                   i18n
                 >
