@@ -1,0 +1,19 @@
+@if (allowToClose()) {
+  <div class="close-wrapper">
+    <button type="button" class="secondary" alg-button-icon icon="ph ph-x" (click)="closeEvent.emit()"></button>
+  </div>
+}
+
+@if (showIcon()) {
+  <div class="icon-wrapper">
+    <span class="ph ph-warning icon"></span>
+  </div>
+}
+
+@if (title(); as title) {
+  <div class="title alg-h4">{{ title }}</div>
+}
+
+<div class="body">
+  <ng-content></ng-content>
+</div>
