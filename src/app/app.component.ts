@@ -129,7 +129,7 @@ export class AppComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.add(
       this.fatalError$.pipe(take(1)).subscribe(error =>
-        this.dialogService.open(FatalErrorModalComponent, { data: error, panelClass: 'alg-dialog', disableClose: true })
+        this.dialogService.open(FatalErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined })
       ),
     );
   }
