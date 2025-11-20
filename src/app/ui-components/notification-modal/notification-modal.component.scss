@@ -26,7 +26,12 @@
 }
 
 .title {
+  padding: 0 var(--alg-space-size-5);
   margin-top: var(--alg-space-size-5);
   text-align: center;
+}
+
+.body {
+  padding: 0 var(--alg-space-size-5);
 }
 
