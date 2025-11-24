@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store, createSelector } from '@ngrx/store';
-import { filter, interval, map, of, switchMap, take } from 'rxjs';
+import { filter, interval, map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
 import { fromItemContent } from 'src/app/items/store';
 import { DurationAsCountdownPipe } from 'src/app/pipes/duration';
 import { isInfinite } from 'src/app/utils/date';
@@ -43,6 +43,7 @@ const selectAllowsSubmissionsUntil = createSelector(
 export class TimeLimitedContentInfoComponent {
   private dialogService = inject(Dialog);
 
+  private timerEnded = new Subject<void>();
   timeRemaining = toSignal(
     this.store.select(selectAllowsSubmissionsUntil).pipe(
       filter(isNotUndefined), // still use the previous state when we don't know about the new one
@@ -52,6 +53,7 @@ export class TimeLimitedContentInfoComponent {
         if (!timeRemaining.getMs()) return of(new Duration(0));
         const refreshingRate = timeRemaining.getMs() < 5*MINUTES ? 0.2*SECONDS : 1*SECONDS;
         return interval(refreshingRate).pipe(
+          takeUntil(this.timerEnded),
           switchMap(() => this.store.select(fromTimeOffset.selectCurrentTimeOffset).pipe(take(1))),
           map(offset => Duration.fromNowUntil(submissionUntil, new Date(Date.now() - offset))),
         );
@@ -62,7 +64,7 @@ export class TimeLimitedContentInfoComponent {
   openModalEffect = effect(() => {
     if (this.timeRemaining()?.getMs() === 0) {
       this.dialogService.open(TimeLimitedContentEndComponent, { disableClose: true, autoFocus: undefined });
-      this.openModalEffect.destroy();
+      this.timerEnded.next();
     }
   });
 
