@@ -15,7 +15,7 @@ import { NgStyle, NgIf, NgClass, DecimalPipe } from '@angular/common';
 })
 export class ScoreRingComponent implements OnChanges {
   @Input() diameter = 32;
-  @Input() currentScore = 0;
+  @Input() currentScore: number|undefined = 0;
   @Input() bestScore = 0;
   @Input() isValidated = false;
   /**@deprecated**/
@@ -43,7 +43,7 @@ export class ScoreRingComponent implements OnChanges {
   }
 
   ngOnChanges(_changes: SimpleChanges): void {
-    this.currentScorePath = this.pathFromScore(this.currentScore);
+    this.currentScorePath = this.pathFromScore(this.currentScore ?? 0);
     this.bestScorePath = this.pathFromScore(this.bestScore);
   }
 }

@@ -5,10 +5,10 @@ import { fromObservation } from 'src/app/store/observation';
 const selectActiveItemCurrentUserScore = createSelector(
   fromItemContent.selectActiveContentItem,
   fromItemContent.selectActiveContentCurrentResult,
-  (item, currentResult) => (!item || item.noScore || !currentResult ? null : {
+  (item, currentResult) => (!item || item.noScore ? null : {
     best: item.bestScore,
-    current: currentResult.score,
-    validated: currentResult.validated
+    current: currentResult?.score,
+    validated: !!(currentResult?.validated)
   })
 );
 
