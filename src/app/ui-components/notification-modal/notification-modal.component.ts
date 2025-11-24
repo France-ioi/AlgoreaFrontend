@@ -12,7 +12,7 @@ export class NotificationModalComponent {
   closeEvent = output();
 
   title = input<string | undefined>(undefined);
-  icon = input('ph ph-warning icon');
+  icon = input('ph ph-warning');
   showIcon = input(true);
   allowToClose = input(true);
 }

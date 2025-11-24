@@ -15,9 +15,7 @@ import { CrashReportingService } from './services/crash-reporting.service';
 import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
-import { SharedModule } from 'primeng/api';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
-import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
@@ -26,14 +24,16 @@ import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { fromItemContent } from './items/store';
-import { isNotNull } from './utils/null-undefined-predicates';
+import { isNotNull, isNotNullOrUndefined } from './utils/null-undefined-predicates';
 import { ItemRouter } from './models/routing/item-router';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { routeWithNoObservation } from './models/routing/item-route';
 import { Dialog } from '@angular/cdk/dialog';
 import { FatalErrorModalComponent } from 'src/app/containers/fatal-error-modal/fatal-error-modal.component';
+import {
+  GroupObservationErrorModalComponent
+} from 'src/app/containers/group-observation-error-modal/group-observation-error-modal.component';
 
 @Component({
   selector: 'alg-root',
@@ -50,11 +50,8 @@ import { FatalErrorModalComponent } from 'src/app/containers/fatal-error-modal/f
     RouterOutlet,
     ThreadContainerComponent,
     ToastModule,
-    DialogModule,
     LanguageMismatchComponent,
-    SharedModule,
     AsyncPipe,
-    ButtonComponent,
     CdkScrollable,
   ],
 })
@@ -85,7 +82,6 @@ export class AppComponent implements OnInit, OnDestroy {
   scrolled = false;
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   groupObservationError$ = this.store.select(fromObservation.selectObservationError);
-  showObservationErrorDialog = true;
 
   private readonly subscriptions = new Subscription();
 
@@ -132,6 +128,15 @@ export class AppComponent implements OnInit, OnDestroy {
         this.dialogService.open(FatalErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined })
       ),
     );
+    this.subscriptions.add(
+      this.groupObservationError$.pipe(
+        filter(isNotNullOrUndefined),
+        take(1),
+        switchMap(error =>
+          this.dialogService.open(GroupObservationErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined }).closed
+        ),
+      ).subscribe(() => this.onCloseObservationErrorDialog()),
+    );
   }
 
   ngOnDestroy(): void {
@@ -164,8 +169,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  closeObservationErrorDialog(): void {
-    this.showObservationErrorDialog = false;
+  onCloseObservationErrorDialog(): void {
     this.store.select(fromItemContent.selectActiveContentRoute).pipe(
       take(1),
       filter(isNotNull),

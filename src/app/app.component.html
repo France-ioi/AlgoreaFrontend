@@ -41,24 +41,3 @@
 </div>
 <p-toast position="bottom-left"></p-toast>
 <alg-language-mismatch></alg-language-mismatch>
-@let groupObservationError = groupObservationError$ | async;
-<p-dialog
-  *ngIf="!!groupObservationError"
-  i18n-header header="Error"
-  [visible]="showObservationErrorDialog"
-  [modal]="true"
->
-  @if(groupObservationError.isForbidden) {
-    <ng-container i18n>You are not allowed to watch the group for which you have requested observation.</ng-container>
-  } @else {
-    <ng-container i18n>Something went wrong while enabling group observation. If the problem persists, please contact us.</ng-container>
-  }
-
-  <ng-template pTemplate="footer">
-    <button
-      (click)="closeObservationErrorDialog()"
-      alg-button
-      i18n
-    >Close</button>
-  </ng-template>
-</p-dialog>
