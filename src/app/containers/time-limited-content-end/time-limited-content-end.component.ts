@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRouteUsingParentAttempt } from 'src/app/models/routing/item-route';
+import { CurrentContentService } from 'src/app/services/current-content.service';
 
 const selectCurrentAttemptId = createSelector(
   fromItemContent.selectActiveContentCurrentResult,
@@ -54,6 +55,7 @@ export class TimeLimitedContentEndComponent {
 
   private itemRouter = inject(ItemRouter);
   private store = inject(Store);
+  private currentContentService = inject(CurrentContentService);
 
   rootItem = this.store.selectSignal(selectTimeLimitedContentRootItem);
   visible = signal(true);
@@ -70,6 +72,8 @@ export class TimeLimitedContentEndComponent {
     } else {
       this.itemRouter.navigateTo(rootItem.route);
     }
+
+    this.currentContentService.forceNavMenuReload();
   }
 }
 
