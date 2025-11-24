@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnDestroy, Output, signal } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, EventEmitter, inject, OnDestroy, Output, signal } from '@angular/core';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -12,8 +12,8 @@ import { ProcessGroupInvitationService } from '../../data-access/process-group-i
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import {
-  JoinGroupConfirmationDialogComponent,
-} from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
+  JoinGroupConfirmationDialogComponent, JoinGroupConfirmationDialogResult,
+} from '../join-group-confirmation-dialog-v2/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import {
@@ -31,6 +31,7 @@ import {
 } from '@angular/cdk/table';
 import { TableSortDirective } from 'src/app/ui-components/table-sort/table-sort.directive';
 import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table-sort/table-sort-header/table-sort-header.component';
+import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'alg-user-group-invitations',
@@ -49,7 +50,6 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
     NgSwitchDefault,
     AsyncPipe,
     NgClass,
-    JoinGroupConfirmationDialogComponent,
     ButtonIconComponent,
     CdkTable,
     CdkCell,
@@ -69,12 +69,9 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
 export class UserGroupInvitationsComponent implements OnDestroy {
   @Output() groupJoined = new EventEmitter<void>();
 
+  private dialogService = inject(Dialog);
+
   processing = false;
-  pendingJoinRequest?: {
-    id: string,
-    name: string,
-    params: GroupApprovals,
-  };
 
   private sortSubject = new BehaviorSubject<string[]>([]);
   state$ = this.sortSubject.pipe(
@@ -110,8 +107,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
   }
 
   openJoinGroupConfirmationDialog(groupInvitation: GroupInvitation): void {
-    this.pendingJoinRequest = {
-      id: groupInvitation.group.id,
+    const data = {
       name: groupInvitation.group.name,
       params: {
         requireLockMembershipApprovalUntil: groupInvitation.group.requireLockMembershipApprovalUntil,
@@ -119,25 +115,19 @@ export class UserGroupInvitationsComponent implements OnDestroy {
         requireWatchApproval: groupInvitation.group.requireWatchApproval,
       },
     };
-  }
-
-  closeModal(): void {
-    this.pendingJoinRequest = undefined;
-  }
-
-  accept(groupId: string, groupName: string): void {
-    if (this.pendingJoinRequest === undefined) throw new Error('Unexpected: Missed pendingJoinRequest data');
-    const approvalValues = mapGroupApprovalParamsToValues(this.pendingJoinRequest.params);
-    this.closeModal();
-    this.processing = true;
-    this.processGroupInvitationService.accept(groupId, approvalValues).subscribe({
+    this.dialogService.open<JoinGroupConfirmationDialogResult>(
+      JoinGroupConfirmationDialogComponent,
+      { data, disableClose: true },
+    ).closed.pipe(
+      switchMap(response => (response?.confirmed ? this.accept(groupInvitation.group.id, data.params) : EMPTY))
+    ).subscribe({
       next: result => {
         this.processing = false;
         if (!result.changed) {
-          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ groupName }"`);
+          this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ groupInvitation.group.name }"`);
           return;
         }
-        this.actionFeedbackService.success($localize`The ${ groupName } group has been accepted`);
+        this.actionFeedbackService.success($localize`The ${ groupInvitation.group.name } group has been accepted`);
         this.sortSubject.next(this.sortSubject.value);
         this.groupJoined.emit();
       },
@@ -147,6 +137,11 @@ export class UserGroupInvitationsComponent implements OnDestroy {
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
     });
+  }
+
+  accept(groupId: string, params: GroupApprovals): Observable<{ changed: boolean }> {
+    this.processing = true;
+    return this.processGroupInvitationService.accept(groupId, mapGroupApprovalParamsToValues(params));
   }
 
   onReject(groupInvitation: GroupInvitation): void {
