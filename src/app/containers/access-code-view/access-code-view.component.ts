@@ -6,7 +6,7 @@ import { ItemData } from 'src/app/items/models/item-data';
 import { FormsModule } from '@angular/forms';
 import {
   JoinGroupConfirmationDialogComponent, JoinGroupConfirmationDialogResult
-} from 'src/app/groups/containers/join-group-confirmation-dialog-v2/join-group-confirmation-dialog.component';
+} from 'src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { catchError, switchMap } from 'rxjs/operators';

@@ -1,24 +1,12 @@
 @import '../../../../assets/scss/functions';
 
-.footer {
-  display: flex;
-  justify-content: center;
+:host {
+  display: block;
+  width: 50vw;
 }
 
-.dialog-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.dialog-header {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.dialog-title {
-  font-size: toRem(20);
-  flex: 1;
+.button {
+  margin-right: var(--alg-space-size-6);
 }
 
 .description {
@@ -29,11 +17,12 @@
   margin-top: toRem(16);
 }
 
-.error-message {
-  margin-right: .3rem;
-}
-
 .switch-field {
   display: block;
   margin-top: var(--alg-space-size-5);
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
 }
