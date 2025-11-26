@@ -1,23 +1,24 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
 import { ItemData } from 'src/app/items/models/item-data';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
-import { SectionParagraphComponent } from '../../ui-components/section-paragraph/section-paragraph.component';
 import {
-  JoinGroupConfirmationDialogComponent
+  JoinGroupConfirmationDialogComponent, JoinGroupConfirmationDialogResult
 } from 'src/app/groups/containers/join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { catchError, switchMap } from 'rxjs/operators';
+import { Dialog } from '@angular/cdk/dialog';
+import { EMPTY, Observable, throwError } from 'rxjs';
 
 @Component({
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
   standalone: true,
-  imports: [ SectionParagraphComponent, NgClass, FormsModule, JoinGroupConfirmationDialogComponent, ButtonComponent ]
+  imports: [ FormsModule, ButtonComponent ]
 })
 export class AccessCodeViewComponent {
   @Input() sectionLabel = '';
@@ -25,12 +26,10 @@ export class AccessCodeViewComponent {
   @Input() itemData?: ItemData;
   @Output() groupJoined = new EventEmitter<void>();
 
+  private dialogService = inject(Dialog);
+
   code = '';
   state: 'ready'|'loading' = 'ready';
-  pendingJoinRequest?: {
-    name: string,
-    params: GroupApprovals,
-  };
 
   constructor(
     private joinByCodeService: JoinByCodeService,
@@ -39,51 +38,54 @@ export class AccessCodeViewComponent {
 
   checkCodeValidity(): void {
     this.state = 'loading';
+    this.joinByCodeService.checkCodeValidity(this.code).pipe(
+      catchError(() =>
+        throwError(() => new Error($localize`Failed to check code validity, please retry. If the problem persists, contact us.`))
+      ),
+      switchMap(({ valid, group, reason }) => {
+        if (!valid) throw new Error(
+          reason ? this.invalidCodeReasonToString(reason): $localize`The provided code is invalid`
+        );
 
-    this.joinByCodeService.checkCodeValidity(this.code).subscribe({
-      error: () => {
-        this.actionFeedbackService.error($localize`Failed to check code validity, please retry. If the problem persists, contact us.`);
-      },
-      next: response => {
-        this.state = 'ready';
+        if (!group) throw new Error('Unexpected: Missed group for valid state');
 
-        if (!response.valid) {
-          this.actionFeedbackService.error(
-            response.reason ? this.invalidCodeReasonToString(response.reason): $localize`The provided code is invalid`
-          );
-          return;
-        }
-
-        if (!response.group) throw new Error('Unexpected: Missed group for valid state');
-
-        this.pendingJoinRequest = {
-          name: response.group.name,
-          params: response.group,
-        };
-      },
-    });
-  }
-
-  closeModal(): void {
-    this.pendingJoinRequest = undefined;
-  }
-
-  joinGroup(code: string, params: GroupApprovals): void {
-    const approvalValues = mapGroupApprovalParamsToValues(params);
-    this.closeModal();
-    this.state = 'loading';
-    this.joinByCodeService.joinGroupThroughCode(code, approvalValues).subscribe({
-      next: _result => {
-        this.state = 'ready';
+        return this.dialogService.open<JoinGroupConfirmationDialogResult>(
+          JoinGroupConfirmationDialogComponent,
+          {
+            data: {
+              name: group.name,
+              params: group,
+            },
+            disableClose: true,
+          },
+        ).closed.pipe(
+          switchMap(result => (result?.confirmed ? this.joinGroup(this.code, group) : EMPTY))
+        );
+      }),
+    ).subscribe({
+      next: () => {
         this.code = '';
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
       },
-      error: err => {
-        this.actionFeedbackService.unexpectedError();
-        if (!(err instanceof HttpErrorResponse)) throw err;
+      error: (error: unknown) => {
+        this.state = 'ready';
+        if (error instanceof Error) {
+          this.actionFeedbackService.error(error.message);
+        } else if (error instanceof HttpErrorResponse) {
+          this.actionFeedbackService.unexpectedError();
+        } else {
+          throw error;
+        }
       },
+      complete: () => {
+        this.state = 'ready';
+      }
     });
+  }
+
+  joinGroup(code: string, params: GroupApprovals): Observable<void> {
+    return this.joinByCodeService.joinGroupThroughCode(code, mapGroupApprovalParamsToValues(params));
   }
 
   invalidCodeReasonToString(reason: InvalidCodeReason): string {

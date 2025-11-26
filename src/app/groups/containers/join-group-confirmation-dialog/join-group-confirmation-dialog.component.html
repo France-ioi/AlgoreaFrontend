@@ -1,76 +1,53 @@
-<p-dialog
-  [visible]="true"
-  [modal]="true"
-  [draggable]="false"
-  [closable]="false"
-  styleClass="alg-permissions-edit-dialog"
->
-  <p-header>
-    <div class="dialog-header">
-      <span class="dialog-title" i18n>Joining a new group</span>
-      <button
-        type="button"
-        class="size-l stroke"
-        icon="ph-bold ph-x"
-        (click)="cancelEvent.emit()"
-        alg-button-icon
-      ></button>
-    </div>
-  </p-header>
-
-  <div class="dialog-container">
-    <div class="dialog-content">
-      <p class="description" i18n>Do you want to join the group "{{ name }}"?</p>
-      @if (form) {
-        <form class="form" [formGroup]="form">
-          @if (form.get('agreeWithPersonalInfoView')) {
-            <alg-switch-field
-              formControlName="agreeWithPersonalInfoView"
-              data-testid="switch-agree-with-personal-info-view"
-            >
-              <ng-template #label>
-                <span i18n>
-                  The managers of this group will be able to
-                  { params.requirePersonalInfoAccessApproval, select, view {view} other {edit} }
-                  the personal info (firstname, lastname, email, grade, ...) you entered in your profile
-                </span>
-              </ng-template>
-            </alg-switch-field>
-          }
-          @if (form.get('agreeWithLockMembership')) {
-            <alg-switch-field
-              class="switch-field"
-              formControlName="agreeWithLockMembership"
-              data-testid="switch-agree-with-lock-membership"
-            >
-              <ng-template #label>
-                <span i18n>
-                  You will not be able to leave this group until {{ params.requireLockMembershipApprovalUntil | date: 'short' }}
-                </span>
-              </ng-template>
-            </alg-switch-field>
-          }
-        </form>
+<alg-modal i18n-title title="Joining a new group" (closeEvent)="dialogRef.close()">
+  <p class="description" i18n>Do you want to join the group "{{ data().name }}"?</p>
+  @if (form) {
+    <form class="form" [formGroup]="form">
+      @if (form.get('agreeWithPersonalInfoView')) {
+        <alg-switch-field
+          formControlName="agreeWithPersonalInfoView"
+          data-testid="switch-agree-with-personal-info-view"
+        >
+          <ng-template #label>
+            <span i18n>
+              The managers of this group will be able to
+              { data().params.requirePersonalInfoAccessApproval, select, view {view} other {edit} }
+              the personal info (firstname, lastname, email, grade, ...) you entered in your profile
+            </span>
+          </ng-template>
+        </alg-switch-field>
       }
-    </div>
-  </div>
+      @if (form.get('agreeWithLockMembership')) {
+        <alg-switch-field
+          class="switch-field"
+          formControlName="agreeWithLockMembership"
+          data-testid="switch-agree-with-lock-membership"
+        >
+          <ng-template #label>
+            <span i18n>
+              You will not be able to leave this group until {{ data().params.requireLockMembershipApprovalUntil | date: 'short' }}
+            </span>
+          </ng-template>
+        </alg-switch-field>
+      }
+    </form>
+  }
 
-  <p-footer>
-    <div class="footer">
+  <footer>
+    <div class="footer-container">
       <button
-        class="stroke"
+        class="stroke button"
         icon="ph-bold ph-x"
-        (click)="cancelEvent.emit()"
+        (click)="dialogRef.close()"
         alg-button
         i18n
       >Cancel</button>
       <button
         icon="ph-bold ph-check"
-        (click)="confirmEvent.emit()"
+        (click)="dialogRef.close({ confirmed: true })"
         [disabled]="form?.invalid"
         alg-button
         i18n
       >Join group</button>
     </div>
-  </p-footer>
-</p-dialog>
+  </footer>
+</alg-modal>

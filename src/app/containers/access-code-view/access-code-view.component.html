@@ -18,12 +18,3 @@
     >{{ buttonLabel }}</button>
   </div>
 </div>
-
-@if (pendingJoinRequest) {
-  <alg-join-group-confirmation-dialog
-    [name]="pendingJoinRequest.name"
-    [params]="pendingJoinRequest.params"
-    (confirmEvent)="joinGroup(code, pendingJoinRequest.params)"
-    (cancelEvent)="closeModal()"
-  ></alg-join-group-confirmation-dialog>
-}

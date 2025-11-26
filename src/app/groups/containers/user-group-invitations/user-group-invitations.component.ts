@@ -13,7 +13,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import {
   JoinGroupConfirmationDialogComponent, JoinGroupConfirmationDialogResult,
-} from '../join-group-confirmation-dialog-v2/join-group-confirmation-dialog.component';
+} from '../join-group-confirmation-dialog/join-group-confirmation-dialog.component';
 import { GroupApprovals, mapGroupApprovalParamsToValues } from 'src/app/groups/models/group-approvals';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import {
