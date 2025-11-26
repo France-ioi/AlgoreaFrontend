@@ -28,5 +28,6 @@ test('backend is down', async ({ page }) => {
     route.abort();
   });
   await page.goto('/');
-  await expect(page.getByText('Oops, we are unable to make')).toBeVisible();
+  await expect.soft(page.getByText('Oops...')).toBeVisible();
+  await expect(page.getByText('We are unable to make')).toBeVisible();
 });

@@ -1,0 +1,24 @@
+<div class="container">
+  <ng-content select="header">
+    <div class="header">
+      <ng-content select="title">
+        <p class="title">{{ title() }}</p>
+      </ng-content>
+      @if (allowToClose()) {
+        <div class="close-wrapper">
+          <button type="button" class="secondary" alg-button-icon icon="ph ph-x" (click)="closeEvent.emit()"></button>
+        </div>
+      }
+    </div>
+  </ng-content>
+
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+
+  @if (showFooter()) {
+    <div class="footer">
+      <ng-content select="footer"></ng-content>
+    </div>
+  }
+</div>

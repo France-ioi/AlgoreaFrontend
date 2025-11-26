@@ -1,0 +1,19 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  width: 50vw;
+}
+
+.error-message, .error-refresh-button, .error-note {
+  text-align: center;
+}
+
+.error-refresh-button {
+  margin: var(--alg-space-size-6) 0;
+}
+
+.error-note {
+  margin-bottom: 0;
+  font-size: toRem(14);
+}

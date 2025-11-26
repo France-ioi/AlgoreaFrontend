@@ -129,18 +129,6 @@
   padding-bottom: var(--alg-space-size-1);
 }
 
-.error-message, .error-refresh-button, .error-note {
-  text-align: center;
-}
-
-.error-refresh-button {
-  margin: .6rem 0;
-}
-
-.error-note {
-  font-size: 1rem;
-}
-
 @media screen and (max-width: 599.98px) {
   .left-menu {
     width: 100%;

@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { DialogModule } from 'primeng/dialog';
 import { fromItemContent } from 'src/app/items/store';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
-import { RouterLink } from '@angular/router';
-import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRouteUsingParentAttempt } from 'src/app/models/routing/item-route';
 import { CurrentContentService } from 'src/app/services/current-content.service';
+import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
+import { DialogRef } from '@angular/cdk/dialog';
 
 const selectCurrentAttemptId = createSelector(
   fromItemContent.selectActiveContentCurrentResult,
@@ -42,10 +41,8 @@ const selectActiveContentIsTimeLimitedContentRoot = createSelector(
   selector: 'alg-time-limited-content-end',
   standalone: true,
   imports: [
-    DialogModule,
     ButtonComponent,
-    RouterLink,
-    RouteUrlPipe,
+    NotificationModalComponent,
   ],
   templateUrl: './time-limited-content-end.component.html',
   styleUrl: './time-limited-content-end.component.scss',
@@ -56,14 +53,13 @@ export class TimeLimitedContentEndComponent {
   private itemRouter = inject(ItemRouter);
   private store = inject(Store);
   private currentContentService = inject(CurrentContentService);
+  private dialogRef = inject(DialogRef);
 
   rootItem = this.store.selectSignal(selectTimeLimitedContentRootItem);
-  visible = signal(true);
 
   activeContentIsRoot = this.store.selectSignal(selectActiveContentIsTimeLimitedContentRoot);
 
   closeDialog(): void {
-    this.visible.set(false);
     const rootItem = this.rootItem();
     if (!rootItem) throw new Error('unexpected: null rootItem with close dialog?');
 
@@ -74,6 +70,7 @@ export class TimeLimitedContentEndComponent {
     }
 
     this.currentContentService.forceNavMenuReload();
+    this.dialogRef.close();
   }
 }
 
