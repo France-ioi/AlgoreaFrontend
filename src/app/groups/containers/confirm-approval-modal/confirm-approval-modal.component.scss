@@ -1,0 +1,12 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  width: toRem(540);
+}
+
+.buttons {
+  margin-top: var(--alg-space-size-4);
+  display: flex;
+  justify-content: center;
+}

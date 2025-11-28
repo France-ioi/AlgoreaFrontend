@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { readyData } from 'src/app/utils/operators/state';
-import { of, Subscription, combineLatest, take, takeWhile, BehaviorSubject, switchMap } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { of, Subscription, combineLatest, switchMap, EMPTY } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/data-access/create-item.service';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { NoAssociatedItem, NewAssociatedItem, ExistingAssociatedItem,
@@ -27,13 +27,15 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { GroupApprovals, RequirePersonalInfoAccessApproval as PIApproval } from 'src/app/groups/models/group-approvals';
-import { DialogModule } from 'primeng/dialog';
 import { GetGroupMembersService } from '../../data-access/get-group-members.service';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
-import { LetDirective } from '@ngrx/component';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LocaleService } from 'src/app/services/localeService';
+import { Dialog } from '@angular/cdk/dialog';
+import {
+  ConfirmApprovalModalComponent,
+  ConfirmApprovalModalResult
+} from 'src/app/groups/containers/confirm-approval-modal/confirm-approval-modal.component';
 
 @Component({
   selector: 'alg-group-edit',
@@ -56,14 +58,13 @@ import { LocaleService } from 'src/app/services/localeService';
     SelectionComponent,
     MessageInfoComponent,
     InputDateComponent,
-    DialogModule,
-    LetDirective,
-    ButtonComponent,
     CanCurrentUserManageMembersAndGroupPipe,
     IsCurrentUserManagerPipe,
   ],
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
+  private dialogService = inject(Dialog);
+
   approvalOptions: { label: string, value: string }[] = [
     {
       label: $localize`No`,
@@ -91,10 +92,6 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   });
   initialFormData?: Group;
   minLockMembershipApprovalUntilDate?: Date;
-  showConfirmApprovalDialog = new BehaviorSubject<{
-    opened: boolean,
-    data?: GroupChanges['approval_change_action'],
-  }>({ opened: false });
 
   state$ = this.store.select(fromGroupContent.selectActiveContentGroupState);
 
@@ -129,20 +126,10 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.pendingChangesService.clear();
-    this.showConfirmApprovalDialog.complete();
   }
 
   isDirty(): boolean {
     return this.groupForm.dirty;
-  }
-
-  onConfirmApprovalDialogCancel(): void {
-    this.showConfirmApprovalDialog.next({ opened: false });
-    this.groupForm.enable();
-  }
-
-  onConfirmApprovalDialogChange(event: GroupChanges['approval_change_action']): void {
-    this.showConfirmApprovalDialog.next({ opened: false, data: event });
   }
 
   save(): void {
@@ -213,15 +200,11 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     const confirmApprovalParams$ = this.getGroupMembersService.getGroupMembers(id).pipe(
       switchMap(members => {
         if (members.length === 0) return of(undefined);
-        this.showConfirmApprovalDialog.next({ opened: true });
-        return this.showConfirmApprovalDialog.pipe(
-          takeWhile(dialog =>
-            dialog.opened || !dialog.opened && dialog.data !== undefined
-          ),
-          filter(dialog => !dialog.opened && dialog.data !== undefined),
-          map(dialog => ({ approval_change_action: dialog.data })),
-          take(1),
-        );
+        else return this.dialogService.open<ConfirmApprovalModalResult>(ConfirmApprovalModalComponent, { disableClose: true })
+          .closed
+          .pipe(
+            switchMap(result => (result !== undefined ? of({ approval_change_action: result }) : EMPTY)),
+          );
       }),
     );
 
@@ -234,16 +217,17 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
       switchMap(params => this.groupUpdateService.updateGroup(id, params)),
     ).subscribe({
       next: () => {
-        this.showConfirmApprovalDialog.next({ opened: false });
         this.store.dispatch(fromGroupContent.groupPageActions.refresh()); // will re-enable the form
         this.refreshNav();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
       error: (err: any) => {
-        this.showConfirmApprovalDialog.next({ opened: false });
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
+      },
+      complete: () => {
+        this.groupForm.enable();
       },
     });
   }

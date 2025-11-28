@@ -1,0 +1,28 @@
+<alg-notification-modal
+  icon="ph ph-warning-circle"
+  [allowToClose]="false"
+>
+  <p i18n>As you have strengthened approval conditions, all group members have to re-approve the new conditions</p>
+  <div class="buttons">
+    <button
+      type="button"
+      class="stroke alg-button-margin-right"
+      alg-button
+      (click)="dialogRef.close(undefined)"
+      i18n
+    >Cancel</button>
+    <button
+      type="button"
+      class="stroke alg-button-margin-right"
+      alg-button
+      (click)="dialogRef.close('empty')"
+      i18n
+    >Remove all members</button>
+    <button
+      type="button"
+      alg-button
+      (click)="dialogRef.close('reinvite')"
+      i18n
+    >Remove and re-invite all members</button>
+  </div>
+</alg-notification-modal>
