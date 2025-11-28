@@ -3,7 +3,7 @@
   [icon]="error().isForbidden ? 'ph ph-prohibit' : 'ph ph-warning'"
   (closeEvent)="dialogRef.close()"
 >
-  <p class="text-center">
+  <p class="message text-center">
     @if (error().isForbidden) {
       <ng-container i18n>You are not allowed to watch the group for which you have requested observation.</ng-container>
     } @else {

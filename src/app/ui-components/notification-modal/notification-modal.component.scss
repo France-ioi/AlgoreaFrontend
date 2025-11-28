@@ -1,15 +1,19 @@
 @import 'src/assets/scss/functions';
 
 :host {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 100%;
   background: var(--alg-white-color);
   border-radius: toRem(8);
-  padding: calc(var(--alg-space-size-6) + toRem(4)) calc(var(--alg-space-size-6) + toRem(4)) var(--alg-space-size-4);
+  padding: var(--alg-space-size-3);
 }
 
 .close-wrapper {
+  position: absolute;
+  top: toRem(10);
+  right: toRem(10);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -29,9 +33,5 @@
   padding: 0 var(--alg-space-size-5);
   margin-top: var(--alg-space-size-5);
   text-align: center;
-}
-
-.body {
-  padding: 0 var(--alg-space-size-5);
 }
 
