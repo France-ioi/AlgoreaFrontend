@@ -1,24 +1,4 @@
-<p-dialog
-  [visible]="true"
-  [modal]="true"
-  [draggable]="false"
-  [closable]="false"
-  styleClass="alg-permissions-edit-dialog"
-  appendTo="body"
->
-  <p-header>
-    <div class="dialog-header">
-      <span class="dialog-title" i18n>Permission propagation configuration</span>
-      <button
-        type="button"
-        class="stroke size-l"
-        icon="ph-bold ph-x"
-        (click)="closeEvent.emit(undefined)"
-        alg-button-icon
-      ></button>
-    </div>
-  </p-header>
-
+<alg-modal i18n-title title="Permission propagation configuration" (closeEvent)="dialogRef.close()" [showFooter]="false">
   <div class="dialog-container">
     <p class="description">
       @let item = data().item;
@@ -40,7 +20,7 @@
     <alg-propagation-advanced-configuration-form
       [giverPermissions]="data().permissions"
       [itemPropagations]="data().itemPropagations"
-      (closeEvent)="closeEvent.emit($event)"
+      (closeEvent)="dialogRef.close($event)"
     ></alg-propagation-advanced-configuration-form>
   </div>
-</p-dialog>
+</alg-modal>

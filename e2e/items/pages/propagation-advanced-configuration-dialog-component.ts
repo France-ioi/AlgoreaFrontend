@@ -44,7 +44,7 @@ export class PropagationAdvancedConfigurationDialogComponent {
       has: this.page.getByText(option, { exact: true }),
     });
     await expect.soft(progressSelectionLocation).toBeVisible();
-    await progressSelectionLocation.hover({ force: true });
+    await progressSelectionLocation.hover({ position: { x: 10, y: 10 }, force: true });
   }
 
   async hoverOnSwitchValue(name: string): Promise<void> {

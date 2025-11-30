@@ -1,19 +1,14 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  display: block;
+  width: 47.5rem;
+  max-height: 65vh;
+}
+
 .dialog-container {
   display: flex;
   flex-direction: column;
-}
-
-.dialog-header {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.dialog-title {
-  font-size: toRem(20);
-  flex: 1;
 }
 
 .description {

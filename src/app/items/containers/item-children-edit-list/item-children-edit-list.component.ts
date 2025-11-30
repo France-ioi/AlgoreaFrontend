@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, Input, OnChanges, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnChanges, Output, signal } from '@angular/core';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
@@ -20,7 +20,7 @@ import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import {
-  PropagationAdvancedConfigurationDialogComponent, PropagationAdvancedConfigurationDialogData
+  PropagationAdvancedConfigurationDialogComponent,
 } from 'src/app/items/containers/propagation-advanced-configuration-dialog/propagation-advanced-configuration-dialog.component';
 import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
 import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
@@ -38,6 +38,7 @@ import {
 } from '@angular/cdk/table';
 import { FindInArray } from 'src/app/pipes/findInArray';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -56,7 +57,6 @@ import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk
     RouteUrlPipe,
     EmptyContentComponent,
     ButtonIconComponent,
-    PropagationAdvancedConfigurationDialogComponent,
     InputNumberComponent,
     CdkMenuTrigger,
     CdkMenu,
@@ -79,15 +79,13 @@ export class ItemChildrenEditListComponent implements OnChanges {
   @Input() data: PossiblyInvisibleChildData[] = [];
   @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
 
+  private dialogService = inject(Dialog);
+
   selectedRows: PossiblyInvisibleChildData[] = [];
   scoreWeightEnabled = signal(false);
   propagationEditItemIdx?: number;
   addedItemIds: string[] = [];
 
-  advancedPermPropagationConfigurationDialogData = signal<{
-    childIdx: number,
-    data: PropagationAdvancedConfigurationDialogData,
-  } | undefined>(undefined);
   propagationEditMenuPositions = signal<ConnectedPosition[]>([
     {
       originX: 'end',
@@ -222,8 +220,9 @@ export class ItemChildrenEditListComponent implements OnChanges {
     if (!title) throw new Error('Unexpected: missed title');
     const childTitle = child.isVisible ? child.title : undefined;
     if (childTitle === null) throw new Error('Unexpected: missed child title');
-    this.advancedPermPropagationConfigurationDialogData.set({
-      childIdx,
+
+    this.dialogService.open<ItemPermPropagations>(PropagationAdvancedConfigurationDialogComponent, {
+      disableClose: true,
       data: {
         item: {
           id: item.id,
@@ -239,12 +238,11 @@ export class ItemChildrenEditListComponent implements OnChanges {
           watchPropagation: child.watchPropagation,
         },
       },
+    }).closed.subscribe(result => {
+      if (result) {
+        this.emitChildPermPropagations(result, childIdx);
+      }
     });
-  }
-
-  closeAdvancedPermPropagationConfigurationDialog(childIdx: number, event?: ItemPermPropagations): void {
-    if (event) this.emitChildPermPropagations(event, childIdx);
-    this.advancedPermPropagationConfigurationDialogData.set(undefined);
   }
 
   whenItemVisible = (_: number, item: PossiblyInvisibleChildData): boolean => item.isVisible;
