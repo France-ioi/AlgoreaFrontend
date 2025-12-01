@@ -5,6 +5,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRouteUsingParentAttempt } from 'src/app/models/routing/item-route';
+import { CurrentContentService } from 'src/app/services/current-content.service';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
 import { DialogRef } from '@angular/cdk/dialog';
 
@@ -51,6 +52,7 @@ export class TimeLimitedContentEndComponent {
 
   private itemRouter = inject(ItemRouter);
   private store = inject(Store);
+  private currentContentService = inject(CurrentContentService);
   private dialogRef = inject(DialogRef);
 
   rootItem = this.store.selectSignal(selectTimeLimitedContentRootItem);
@@ -67,6 +69,7 @@ export class TimeLimitedContentEndComponent {
       this.itemRouter.navigateTo(rootItem.route);
     }
 
+    this.currentContentService.forceNavMenuReload();
     this.dialogRef.close();
   }
 }
