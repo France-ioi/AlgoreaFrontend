@@ -1,6 +1,7 @@
 import { userBaseSchema, withGroupId } from 'src/app/groups/models/user';
 import { canCurrentUserViewContent, ItemPermWithView } from './item-view-permission';
 import { z } from 'zod';
+import { Pipe, PipeTransform } from '@angular/core';
 
 export const attemptResultSchema = z.object({
   id: z.string(),
@@ -54,4 +55,18 @@ interface Item {
 
 export function implicitResultStart(item: Item): boolean {
   return canCurrentUserViewContent(item) && !item.requiresExplicitEntry;
+}
+
+/**
+ * Returns true if the user can (still) submit on this result.
+ */
+@Pipe({
+  name: 'isActive', pure: true,
+  standalone: true
+})
+export class ResultIsActivePipe implements PipeTransform {
+
+  transform(result: Result): boolean {
+    return result.startedAt !== null && new Date().getTime() < result.allowsSubmissionsUntil.getTime();
+  }
 }

@@ -50,7 +50,7 @@ export class TimeLimitedContentInfoComponent {
       switchMap(submissionUntil => {
         if (!submissionUntil) return of(null);
         const timeRemaining = Duration.fromNowUntil(submissionUntil);
-        if (!timeRemaining.getMs()) return of(new Duration(0));
+        if (timeRemaining.getMs() === 0) return of(null); // it is already over, do not show any countdown
         const refreshingRate = timeRemaining.getMs() < 5*MINUTES ? 0.2*SECONDS : 1*SECONDS;
         return interval(refreshingRate).pipe(
           takeUntil(this.timerEnded),
