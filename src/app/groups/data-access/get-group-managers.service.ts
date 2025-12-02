@@ -17,7 +17,7 @@ export const managerSchema = z.object({
   canGrantGroupAccessThroughAncestorGroups: z.boolean().optional(), // not set when include_managers_of_ancestor_groups != 1
   canWatchMembers: z.boolean(),
   canWatchMembersThroughAncestorGroups: z.boolean().optional(), // not set when include_managers_of_ancestor_groups != 1
-}).merge(userBaseSchema.partial());
+}).extend(userBaseSchema.partial().shape);
 
 export type Manager = z.infer<typeof managerSchema>;
 
