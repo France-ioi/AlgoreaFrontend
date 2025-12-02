@@ -7,61 +7,76 @@
     'started': event.kind === 'result_started',
     'participant': !userInfo?.isCurrentUser && userInfo?.isThreadParticipant && event.kind === 'message'
   }"
->
+  >
   <div class="message">
-    <div class="name-section" *ngIf="event.kind === 'message'">
-      <span class="name" *ngIf="!userInfo?.isCurrentUser">{{ userInfo?.name }}</span>
-      <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
-    </div>
+    @if (event.kind === 'message') {
+      <div class="name-section">
+        @if (!userInfo?.isCurrentUser) {
+          <span class="name">{{ userInfo?.name }}</span>
+        }
+        <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
+      </div>
+    }
     <div class="bubble">
-      <div
-        class="message-event"
-        [innerHTML]="(event.text | allowDisplayCodeSnippet : userInfo?.isCurrentUser && event.kind === 'message' ? 'light' : 'dark') | breakLines"
-        *ngIf="event.kind === 'message'"
-      ></div>
-      <ng-container *ngIf="['result_started', 'submission'].includes(event.kind)">
-        <hr class="divider alg-divider" *ngIf="event.kind === 'submission'">
+      @if (event.kind === 'message') {
+        <div
+          class="message-event"
+          [innerHTML]="(event.text | allowDisplayCodeSnippet : userInfo?.isCurrentUser && event.kind === 'message' ? 'light' : 'dark') | breakLines"
+        ></div>
+      }
+      @if (['result_started', 'submission'].includes(event.kind)) {
+        @if (event.kind === 'submission') {
+          <hr class="divider alg-divider">
+        }
         <div class="classical-event">
-          <alg-score-ring
-            class="score-ring"
-            [currentScore]="event.score"
-            [diameter]="32"
-            *ngIf="event.kind === 'submission' && event.score !== undefined"
-          ></alg-score-ring>
+          @if (event.kind === 'submission' && event.score !== undefined) {
+            <alg-score-ring
+              class="score-ring"
+              [currentScore]="event.score"
+              [diameter]="32"
+            ></alg-score-ring>
+          }
           <div>
             <div>
-              <span *ngIf="userInfo?.isCurrentUser; else notCurrentUser" i18n>
+              @if (userInfo?.isCurrentUser) {
+                <span i18n>
                 You
               </span>
-              <ng-template #notCurrentUser>
-                <span *ngIf="userInfo?.isThreadParticipant; else anotherUser" i18n>
+              } @else {
+                @if (userInfo?.isThreadParticipant) {
+                  <span i18n>
                   The user
                 </span>
-              </ng-template>
-              <ng-template #anotherUser>
-                <span>
-                  {{ userInfo?.name }}
-                </span>
-              </ng-template>
-              <span *ngIf="event.kind === 'result_started'" i18n>started the activity</span>
-              <ng-container *ngIf="event.kind === 'submission'">
+                } @else {
+                  <span>
+                    {{ userInfo?.name }}
+                  </span>
+                }
+              }
+              @if (event.kind === 'result_started') {
+                <span i18n>started the activity</span>
+              }
+              @if (event.kind === 'submission') {
                 <span i18n>submitted a</span>
-                <a
-                  class="alg-link"
-                  [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers }"
-                  [routerLink]="itemRoute | with: { answer: { id: event.answerId } } | url: ['task', 'editor']"
-                  *ngIf="itemRoute"
-                  i18n
-                >
+                @if (itemRoute) {
+                  <a
+                    class="alg-link"
+                    [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers }"
+                    [routerLink]="itemRoute | with: { answer: { id: event.answerId } } | url: ['task', 'editor']"
+                    i18n
+                    >
                   solution
                 </a>
-              </ng-container>
+                }
+              }
             </div>
             <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
           </div>
         </div>
-        <hr class="divider alg-divider" *ngIf="event.kind === 'submission'">
-      </ng-container>
+        @if (event.kind === 'submission') {
+          <hr class="divider alg-divider">
+        }
+      }
     </div>
   </div>
 </div>
