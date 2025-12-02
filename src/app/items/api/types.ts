@@ -9,7 +9,7 @@ export const taskParamsSchema = z.object({
   noScore: z.number(),
   randomSeed: z.number(),
   readOnly: z.boolean(),
-  options: z.record(z.unknown()),
+  options: z.record(z.string(), z.unknown()),
 });
 export type TaskParams = z.infer<typeof taskParamsSchema>;
 
@@ -18,7 +18,7 @@ export const taskParamsValueSchema = z.union([
   z.string(),
   z.number(),
   z.boolean(),
-  z.record(z.unknown()),
+  z.record(z.string(), z.unknown()),
   taskParamsSchema,
 ]);
 export type TaskParamsValue = z.infer<typeof taskParamsValueSchema> | undefined;
@@ -39,7 +39,7 @@ export const taskViewSchema = z.object({
 }).partial();
 export type TaskView = z.infer<typeof taskViewSchema>;
 
-export const taskViewsSchema = z.record(taskViewSchema);
+export const taskViewsSchema = z.record(z.string(), taskViewSchema);
 export type TaskViews = z.infer<typeof taskViewsSchema>;
 
 // Task grading results
