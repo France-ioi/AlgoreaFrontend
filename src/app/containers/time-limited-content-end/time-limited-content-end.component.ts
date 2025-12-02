@@ -4,7 +4,7 @@ import { fromItemContent } from 'src/app/items/store';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
 import { ItemRouter } from 'src/app/models/routing/item-router';
-import { itemRouteUsingParentAttempt } from 'src/app/models/routing/item-route';
+import { itemRouteWith } from 'src/app/models/routing/item-route';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
 import { DialogRef } from '@angular/cdk/dialog';
@@ -18,11 +18,12 @@ const selectTimeLimitedContentRootItem = createSelector(
   fromItemContent.selectActiveContentBreadcrumbsState,
   selectCurrentAttemptId,
   (breadcrumbsState, attemptId) => {
-    if (!breadcrumbsState.isReady) return null;
+    if (!breadcrumbsState.isReady || attemptId === null) return null;
     let curBreadcrumb = breadcrumbsState.data[breadcrumbsState.data.length - 1]!;
     for (let i = breadcrumbsState.data.length - 2; i >= 0; i--) {
-      if (breadcrumbsState.data[i]!.route.attemptId !== attemptId) {
-        const route = itemRouteUsingParentAttempt(curBreadcrumb.route, breadcrumbsState.data[i]!.route.attemptId);
+      const parentAttemptId = breadcrumbsState.data[i]!.route.attemptId;
+      if (parentAttemptId !== undefined && parentAttemptId !== attemptId) {
+        const route = itemRouteWith(curBreadcrumb.route, { attemptId });
         return { ...curBreadcrumb, route };
       }
       curBreadcrumb = breadcrumbsState.data[i]!;
@@ -34,7 +35,7 @@ const selectTimeLimitedContentRootItem = createSelector(
 const selectActiveContentIsTimeLimitedContentRoot = createSelector(
   fromItemContent.selectActiveContentRoute,
   selectTimeLimitedContentRootItem,
-  (route, rootItem) => route?.id === rootItem?.route.id
+  (route, rootItem) => route?.id === rootItem?.route.id && route?.attemptId === rootItem?.route.attemptId
 );
 
 @Component({
