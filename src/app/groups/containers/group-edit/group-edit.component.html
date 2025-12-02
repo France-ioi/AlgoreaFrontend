@@ -87,33 +87,6 @@
       (cancel)="resetForm()"
     ></alg-floating-save>
 
-    @if (showConfirmApprovalDialog | async; as dialog) {
-      @if (dialog.opened) {
-        <p-dialog [visible]="true" position="bottomright" [showHeader]="false">
-          <p i18n>As you have strengthened approval conditions, all group members have to re-approve the new conditions</p>
-          <div class="approval-buttons">
-            <button
-              class="stroke alg-button-margin-right"
-              (click)="onConfirmApprovalDialogCancel()"
-              alg-button
-              i18n
-            >Cancel</button>
-            <button
-              class="stroke alg-button-margin-right"
-              (click)="onConfirmApprovalDialogChange('empty')"
-              alg-button
-              i18n
-            >Remove all members</button>
-            <button
-              (click)="onConfirmApprovalDialogChange('reinvite')"
-              alg-button
-              i18n
-            >Remove and re-invite all members</button>
-          </div>
-        </p-dialog>
-      }
-    }
-
     <ng-template #notAuthorized>
       <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
     </ng-template>
