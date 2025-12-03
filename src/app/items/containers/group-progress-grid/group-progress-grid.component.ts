@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, signal, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, signal, SimpleChanges } from '@angular/core';
 import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
@@ -25,7 +25,7 @@ import { itemRoute } from 'src/app/models/routing/item-route';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
-import { PermissionsEditDialogComponent } from '../../containers/permissions-edit-dialog/permissions-edit-dialog.component';
+import { PermissionsEditDialogComponent } from '../../containers/permissions-edit-dialog-v2/permissions-edit-dialog.component';
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
@@ -37,6 +37,8 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
+import { Dialog } from '@angular/cdk/dialog';
+import { PermissionsEditDialogParams } from 'src/app/items/containers/permissions-edit-dialog-v2/permissions-edit-dialog.component';
 
 const progressListLimit = 25;
 
@@ -104,7 +106,6 @@ interface ProgressDataDialog {
     TooltipModule,
     RouterLink,
     UserProgressComponent,
-    PermissionsEditDialogComponent,
     AsyncPipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
@@ -121,6 +122,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;
   @Input() itemData?: ItemData;
 
+  private dialogService = inject(Dialog);
+
   defaultFilter: TypeFilter = 'Users';
 
   currentFilter = this.defaultFilter;
@@ -128,8 +131,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   progressOverlay?: ProgressData;
   progressDataDialog?: ProgressDataDialog;
   sourceGroup?: RawGroupRoute;
-
-  isPermissionsDialogOpened = false;
 
   isCSVDataFetching = false;
   canAccess = false;
@@ -199,7 +200,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.isPermissionsDialogOpened = false;
     if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
     if (this.group) {
       this.fetchRows();
@@ -339,12 +339,22 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   onAccessPermissions(): void {
     this.hideProgressDetail();
-    this.isPermissionsDialogOpened = true;
-  }
-
-  onDialogClose(): void {
-    this.isPermissionsDialogOpened = false;
-    this.progressDataDialog = undefined;
+    if (!this.progressDataDialog) throw new Error('Unexpected: progress data dialog');
+    if (!this.itemData) throw new Error('Unexpected: missed item data');
+    if (!this.sourceGroup) throw new Error('Unexpected: missed source group');
+    this.dialogService.open<boolean, PermissionsEditDialogParams>(PermissionsEditDialogComponent, {
+      data: {
+        currentUserPermissions: this.itemData.item.permissions,
+        item: this.progressDataDialog.item,
+        group: this.progressDataDialog.group,
+        sourceGroup: this.sourceGroup,
+        permReceiverName: this.progressDataDialog.groupName,
+        permGiverName: this.progressDataDialog.sourceGroupName,
+      },
+      disableClose: true,
+    }).closed.subscribe(() => {
+      this.progressDataDialog = undefined;
+    });
   }
 
   getCSVDownloadTypeByFilter(): 'group' | 'team' | 'user' {
