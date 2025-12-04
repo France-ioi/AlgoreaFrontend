@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Group } from '../../models/group';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { ProgressSelectValue, ProgressSelectComponent } from
@@ -7,19 +7,27 @@ import { GroupManagerPermissionChanges, UpdateGroupManagersService } from '../..
 import { formatUser } from 'src/app/groups/models/user';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'primeng/api';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
-import { DialogModule } from 'primeng/dialog';
 import { NgIf } from '@angular/common';
-import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import { Observable, of } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { groupManagershipLevelEnum as l } from '../../models/group-management';
+import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+
+export interface ManagerPermissionDialogParams {
+  group: Group,
+  manager: Manager,
+}
+
+export interface ManagerPermissionDialogResult {
+  updated: boolean,
+}
 
 @Component({
   selector: 'alg-manager-permission-dialog',
@@ -28,24 +36,19 @@ import { groupManagershipLevelEnum as l } from '../../models/group-management';
   standalone: true,
   imports: [
     NgIf,
-    DialogModule,
-    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     CollapsibleSectionComponent,
     ProgressSelectComponent,
     SwitchFieldComponent,
     LoadingComponent,
-    ButtonIconComponent,
     ButtonComponent,
+    ModalComponent,
   ],
 })
-export class ManagerPermissionDialogComponent implements OnChanges {
-  @Input() visible?: boolean;
-  @Input() group?: Group;
-  @Input() manager?: Manager;
-
-  @Output() close = new EventEmitter<{ updated: boolean }>();
+export class ManagerPermissionDialogComponent implements OnInit {
+  params = signal(inject<ManagerPermissionDialogParams>(DIALOG_DATA));
+  dialogRef = inject(DialogRef<ManagerPermissionDialogResult>);
 
   managementLevelValues: ProgressSelectValue<GroupManagerPermissionChanges['canManage']>[] = [
     {
@@ -82,30 +85,29 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     private confirmationModalService: ConfirmationModalService,
   ) {}
 
-  ngOnChanges(): void {
-    if (this.manager) {
-      this.form.reset({
-        canManage: this.manager.canManage,
-        canGrantGroupAccess: this.manager.canGrantGroupAccess,
-        canWatchMembers: this.manager.canWatchMembers,
-      }, { emitEvent: false });
+  ngOnInit(): void {
+    const manager = this.params().manager;
 
-      this.userCaption = this.manager.login ? formatUser({
-        login: this.manager.login,
-        firstName: this.manager.firstName,
-        lastName: this.manager.lastName,
-      }) : this.manager.name;
-    }
+    this.form.reset({
+      canManage: manager.canManage,
+      canGrantGroupAccess: manager.canGrantGroupAccess,
+      canWatchMembers: manager.canWatchMembers,
+    }, { emitEvent: false });
+
+    this.userCaption = manager.login ? formatUser({
+      login: manager.login,
+      firstName: manager.firstName,
+      lastName: manager.lastName,
+    }) : manager.name;
   }
 
   onClose(): void {
-    this.close.emit({ updated: false });
+    this.dialogRef.close();
   }
 
   onAccept(): void {
-    const manager = this.manager;
-    const group = this.group;
-    if (!manager || !group) throw new Error('Unexpected: Missed input component params');
+    const manager = this.params().manager;
+    const group = this.params().group;
 
     const currentUserId = this.sessionService.session$.value?.groupId;
     if (!currentUserId) throw new Error('Unexpected: Missed current used ID');
@@ -138,7 +140,7 @@ export class ManagerPermissionDialogComponent implements OnChanges {
     ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`New permissions successfully saved.`);
-        this.close.emit({ updated: true });
+        this.dialogRef.close({ updated: true });
       },
       error: () => {
         this.actionFeedbackService.error($localize`Failed to save permissions.`);

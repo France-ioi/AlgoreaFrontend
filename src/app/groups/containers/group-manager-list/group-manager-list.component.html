@@ -176,10 +176,4 @@
       ></alg-group-manager-add>
     }
   }
-  <alg-manager-permission-dialog
-    [visible]="!!editingManager"
-    [group]="group()"
-    [manager]="editingManager"
-    (close)="closePermissionsEditDialog($event)"
-  ></alg-manager-permission-dialog>
 }
