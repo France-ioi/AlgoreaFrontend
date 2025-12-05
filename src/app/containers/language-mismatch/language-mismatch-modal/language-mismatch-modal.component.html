@@ -1,0 +1,60 @@
+<alg-notification-modal i18n-title title="Language mismatch" [allowToClose]="false">
+  @if (currentLanguage) {
+    @let languageMismatch = params();
+
+    @if (updating) {
+      <div class="spinner-overlay">
+        <alg-loading></alg-loading>
+      </div>
+    }
+
+    @if (languageMismatch.userDefaultLanguageIsSupported) {
+      <p class="message" i18n>
+        The current language "{{ currentLanguage }}" does not correspond to your account's default language "{{ languageMismatch.userDefaultLanguage }}".
+        Do you want to continue in this language?
+      </p>
+
+      <div class="actions">
+        <button
+          class="action-button"
+          type="button"
+          (click)="onUpdateUserLanguage(currentLanguage)"
+          alg-button
+        >
+          <span i18n>
+            Continue in "{{ currentLanguage }}" and change my default language to "{{ currentLanguage }}" for this platform
+          </span>
+        </button>
+        <button
+          class="action-button"
+          type="button"
+          (click)="onVisitPlatformInUserLanguage(languageMismatch.userDefaultLanguage)"
+          alg-button
+        >
+          <span i18n>
+            Visit the platform in "{{ languageMismatch.userDefaultLanguage }}"
+          </span>
+        </button>
+      </div>
+    } @else {
+      <p i18n>
+        The platform does not exist in your default language "{{ languageMismatch.userDefaultLanguage }}".
+      </p>
+      <div class="actions">
+        <button
+          type="button"
+          (click)="onUpdateUserLanguage(currentLanguage)"
+          alg-button
+        >
+            <span i18n>
+              Continue in "{{ currentLanguage }}" and change my default language to "{{ currentLanguage }}" for this platform.
+            </span>
+        </button>
+      </div>
+    }
+
+    <div class="text-center">
+      <small i18n>The language can always be modified through your profile page.</small>
+    </div>
+  }
+</alg-notification-modal>
