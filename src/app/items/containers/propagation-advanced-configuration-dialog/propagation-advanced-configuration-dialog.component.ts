@@ -1,11 +1,11 @@
-import { Component, input, output } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { Component, inject, input, output } from '@angular/core';
 import {
   PropagationAdvancedConfigurationFormComponent
 } from 'src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
 
 export interface PropagationAdvancedConfigurationDialogData {
   item: {
@@ -23,13 +23,14 @@ export interface PropagationAdvancedConfigurationDialogData {
   styleUrls: [ 'propagation-advanced-configuration-dialog.component.scss' ],
   standalone: true,
   imports: [
-    DialogModule,
-    ButtonIconComponent,
     PropagationAdvancedConfigurationFormComponent,
+    ModalComponent,
   ],
 })
 export class PropagationAdvancedConfigurationDialogComponent {
-  data = input.required<PropagationAdvancedConfigurationDialogData>();
+  data = input(inject<PropagationAdvancedConfigurationDialogData>(DIALOG_DATA));
+
+  dialogRef = inject(DialogRef);
 
   closeEvent = output<ItemPermPropagations | undefined>();
 }

@@ -177,11 +177,3 @@
     }
   }
 </ng-template>
-
-@let modalData = this.advancedPermPropagationConfigurationDialogData();
-@if (modalData) {
-  <alg-propagation-advanced-configuration-dialog
-    [data]="modalData.data"
-    (closeEvent)="closeAdvancedPermPropagationConfigurationDialog(modalData.childIdx, $event)"
-  ></alg-propagation-advanced-configuration-dialog>
-}
