@@ -13,8 +13,9 @@ export const durationSchema = z.string().transform((val, ctx) => {
   const duration = Duration.fromString(val);
   if (!duration.isValid()) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       message: 'Not a duration',
+      input: val,
     });
     return z.NEVER;
   }
