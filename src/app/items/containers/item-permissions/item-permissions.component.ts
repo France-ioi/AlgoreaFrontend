@@ -14,8 +14,8 @@ import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } 
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe, ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import {
   PermissionsEditDialogComponent,
-  PermissionsEditDialogParams
-} from '../permissions-edit-dialog-v2/permissions-edit-dialog.component';
+  PermissionsEditDialogParams,
+} from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
