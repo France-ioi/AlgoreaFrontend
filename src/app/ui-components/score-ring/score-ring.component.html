@@ -28,7 +28,7 @@
       />
     </svg>
     <div class="score-data">
-      <span class="score-caption" [ngClass]="{ 'zero-value': currentScore === 0 }" *ngIf="!compact">
+      <span class="score-caption" [ngClass]="{ 'zero-value': currentScore === 0 }" *ngIf="!compact && currentScore !== undefined">
         {{ currentScore | number:'1.0-0' }}
       </span>
     </div>

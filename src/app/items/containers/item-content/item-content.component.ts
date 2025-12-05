@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ResultIsActivePipe } from '../../models/attempts';
 
 @Component({
   selector: 'alg-item-content',
@@ -50,6 +51,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     IsAChapterPipe,
     IsASkillPipe,
     FormsModule,
+    ResultIsActivePipe,
   ],
 })
 export class ItemContentComponent implements PendingChangesComponent {

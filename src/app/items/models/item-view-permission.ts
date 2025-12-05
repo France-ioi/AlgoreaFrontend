@@ -55,7 +55,7 @@ export function canCurrentUserViewContent(i: ItemWithViewPerm): boolean {
 }
 
 export function canCurrentUserViewSolution(i: ItemWithViewPerm, result?: { validated: boolean }): boolean {
-  return allowsViewingSolution(i.permissions) || !!result?.validated;
+  return allowsViewingSolution(i.permissions) || (canCurrentUserViewContent(i) && !!result?.validated);
 }
 
 // ********************************************
