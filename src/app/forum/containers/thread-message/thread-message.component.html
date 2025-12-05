@@ -46,9 +46,13 @@
                 <span i18n>
                   The user
                 </span>
-              } @else {
+              } @else if (userInfo?.name) {
                 <span>
                   {{ userInfo?.name }}
+                </span>
+              } @else {
+                <span i18n>
+                  An unknown user
                 </span>
               }
               @if (event.kind === 'result_started') {

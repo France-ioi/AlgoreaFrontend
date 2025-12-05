@@ -36,12 +36,12 @@ export class ThreadMessageComponent implements OnChanges {
   @Input() userCache: UserInfo[] = [];
   @Input() canCurrentUserLoadAnswers = false;
   @Input() itemRoute?: RawItemRoute;
-  userInfo?: UserInfo & { name: string };
+  userInfo?: UserInfo;
 
   ngOnChanges(): void {
     const userId = isMessageEvent(this.event) ? this.event.authorId : this.threadId.participantId;
-    const userInfo = this.userCache.find(user => user.id === userId);
-    this.userInfo = userInfo ? { ...userInfo, name: userInfo.name ?? $localize`An unknown user` } : undefined;
+    const cachedInfo = this.userCache.find(user => user.id === userId);
+    this.userInfo = cachedInfo ?? { id: userId, isCurrentUser: false, isThreadParticipant: false };
   }
 
 }
