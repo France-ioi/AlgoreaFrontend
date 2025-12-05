@@ -40,18 +40,16 @@
             <div>
               @if (userInfo?.isCurrentUser) {
                 <span i18n>
-                You
-              </span>
-              } @else {
-                @if (userInfo?.isThreadParticipant) {
-                  <span i18n>
+                  You
+                </span>
+              } @else if (userInfo?.isThreadParticipant) {
+                <span i18n>
                   The user
                 </span>
-                } @else {
-                  <span>
-                    {{ userInfo?.name }}
-                  </span>
-                }
+              } @else {
+                <span>
+                  {{ userInfo?.name }}
+                </span>
               }
               @if (event.kind === 'result_started') {
                 <span i18n>started the activity</span>
