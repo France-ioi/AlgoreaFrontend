@@ -159,14 +159,6 @@
            >Edit permissions</button>
           </span>
 
-          <alg-permissions-edit-dialog
-            [currentUserPermissions]="itemData.item.permissions"
-            [item]="itemData.item"
-            [group]="observedGroup.route"
-            [permReceiverName]="observedGroup.name"
-            (close)="closePermissionsDialog($event)"
-            *ngIf="isPermissionsDialogOpened"
-          ></alg-permissions-edit-dialog>
         </ng-container>
       </div>
     </ng-container>

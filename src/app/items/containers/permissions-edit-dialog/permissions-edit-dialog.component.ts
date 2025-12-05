@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
@@ -13,37 +13,37 @@ import { PermissionsEditFormComponent } from '../permissions-edit-dialog-form/pe
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, AsyncPipe } from '@angular/common';
-import { SharedModule } from 'primeng/api';
-import { DialogModule } from 'primeng/dialog';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
-import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
+
+export interface PermissionsEditDialogParams {
+  currentUserPermissions: ItemCorePerm,
+  item: { id: string, requiresExplicitEntry: boolean, string: { title: string | null } },
+  group: RawGroupRoute,
+  permReceiverName: string,
+  sourceGroup?: RawGroupRoute,
+  permGiverName?: string,
+}
 
 @Component({
-  selector: 'alg-permissions-edit-dialog[currentUserPermissions][item][group][permReceiverName]',
+  selector: 'alg-permissions-edit-dialog',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ],
   standalone: true,
   imports: [
-    DialogModule,
-    SharedModule,
     NgIf,
     ErrorComponent,
     LoadingComponent,
     PermissionsEditFormComponent,
     AsyncPipe,
     GroupIsUserPipe,
-    ButtonIconComponent,
+    ModalComponent,
   ],
 })
-export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
-  @Output() close = new EventEmitter<boolean>();
-
-  @Input() currentUserPermissions!: ItemCorePerm;
-  @Input() item!: { id: string, requiresExplicitEntry: boolean, string: { title: string | null } };
-  @Input() group!: RawGroupRoute;
-  @Input() sourceGroup?: RawGroupRoute;
-  @Input() permReceiverName!: string;
-  @Input() permGiverName?: string;
+export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
+  params = signal(inject<PermissionsEditDialogParams>(DIALOG_DATA));
+  private dialogRef = inject(DialogRef);
 
   private params$ = new ReplaySubject<{ sourceGroupId: string, groupId: string, itemId: string }>(1);
   state$ = this.params$.pipe(
@@ -69,37 +69,39 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
     this.params$.complete();
   }
 
-  ngOnChanges(): void {
-    if (isUser(this.group) && !this.sourceGroup) {
+  ngOnInit(): void {
+    if (isUser(this.params().group) && !this.params().sourceGroup) {
       return;
     }
 
-    if (this.sourceGroup && isUser(this.sourceGroup)) {
+    const sourceGroup = this.params().sourceGroup;
+    if (sourceGroup && isUser(sourceGroup)) {
       throw new Error('Unexpected: Source group must not be a user');
     }
 
-    this.targetType = isUser(this.group) ? 'Users' : 'Groups';
+    this.targetType = isUser(this.params().group) ? 'Users' : 'Groups';
     this.params$.next({
-      sourceGroupId: this.sourceGroup?.id ?? this.group.id,
-      groupId: this.group.id,
-      itemId: this.item.id,
+      sourceGroupId: this.params().sourceGroup?.id ?? this.params().group.id,
+      groupId: this.params().group.id,
+      itemId: this.params().item.id,
     });
   }
 
   onPermissionsDialogSave(permissions: Partial<GroupPermissions>): void {
-    if (this.sourceGroup && isUser(this.sourceGroup)) {
+    const sourceGroup = this.params().sourceGroup;
+    if (sourceGroup && isUser(sourceGroup)) {
       throw new Error('Unexpected: Source group must not be a user');
     }
 
-    if (isUser(this.group) && !this.sourceGroup) {
+    if (isUser(this.params().group) && !this.params().sourceGroup) {
       throw new Error('Unexpected: A user group must be provided with source group');
     }
 
     this.updateInProcess = true;
     this.groupPermissionsService.updatePermissions(
-      this.sourceGroup?.id ?? this.group.id,
-      this.group.id,
-      this.item.id,
+      this.params().sourceGroup?.id ?? this.params().group.id,
+      this.params().group.id,
+      this.params().item.id,
       permissions,
     )
       .subscribe({
@@ -118,11 +120,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnChanges {
       });
   }
 
-  onCancel(): void {
-    this.closeDialog();
-  }
-
   closeDialog(changed = false): void {
-    this.close.emit(changed);
+    this.dialogRef.close(changed);
   }
 }

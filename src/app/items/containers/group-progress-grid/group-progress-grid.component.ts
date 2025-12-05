@@ -25,7 +25,10 @@ import { itemRoute } from 'src/app/models/routing/item-route';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
-import { PermissionsEditDialogComponent } from '../../containers/permissions-edit-dialog-v2/permissions-edit-dialog.component';
+import {
+  PermissionsEditDialogComponent,
+  PermissionsEditDialogParams,
+} from '../../containers/permissions-edit-dialog/permissions-edit-dialog.component';
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
@@ -38,7 +41,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
-import { PermissionsEditDialogParams } from 'src/app/items/containers/permissions-edit-dialog-v2/permissions-edit-dialog.component';
 
 const progressListLimit = 25;
 
