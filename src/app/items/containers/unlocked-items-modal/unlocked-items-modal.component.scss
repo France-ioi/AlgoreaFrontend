@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  width: toRem(760);
+  max-height: 65vh;
+}
+
+.unlocked-item {
+  display: flex;
+  justify-content: center;
+
+  &:not(:first-child) {
+    margin-top: var(--alg-space-size-6);
+  }
+}
+
+.unlocked-item-title {
+  margin-left: var(--alg-space-size-6);
+}
+
+.unlocked-items-controls {
+  margin-top: var(--alg-space-size-5);
+  display: flex;
+  justify-content: center;
+}
+

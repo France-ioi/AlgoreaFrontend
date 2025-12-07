@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -41,7 +42,7 @@ import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemPermWithEdit, ItemEditPerm, AllowsEditingAllItemPipe } from 'src/app/items/models/item-edit-permission';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { GetBreadcrumbsFromRootsService } from 'src/app/data-access/get-breadcrumbs-from-roots.service';
@@ -50,11 +51,10 @@ import { closestBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
-import { DialogModule } from 'primeng/dialog';
 import { UnlockedItems } from 'src/app/items/data-access/grade.service';
-import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
-import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { Dialog } from '@angular/cdk/dialog';
+import { UnlockedItemsModalComponent } from 'src/app/items/containers/unlocked-items-modal/unlocked-items-modal.component';
 
 export interface TaskTab {
   name: string,
@@ -77,10 +77,6 @@ const heightSyncInterval = 0.2*SECONDS;
     LoadingComponent,
     AsyncPipe,
     AllowsEditingAllItemPipe,
-    DialogModule,
-    ItemRoutePipe,
-    RouterLink,
-    RouteUrlPipe,
     ButtonComponent,
   ],
 })
@@ -98,6 +94,8 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   @Output() refresh = new EventEmitter<void>();
 
   @ViewChild('iframe') iframe?: ElementRef<HTMLIFrameElement>;
+
+  private dialogService = inject(Dialog);
 
   state$ = merge(this.taskService.loadedTask$, this.taskService.error$).pipe(mapToFetchState());
   @Output() loadingComplete = this.state$.pipe(map(s => !s.isFetching), distinctUntilChanged());
@@ -222,7 +220,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     }),
 
     this.taskService.unlockedItems$.subscribe(items =>
-      this.unlockedItems = items
+      this.openUnlockedItemsDialog(items)
     ),
   ];
 
@@ -286,11 +284,10 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     }
   }
 
-  closeUnlockedItemsDialog(): void {
-    this.unlockedItems = undefined;
-  }
-
-  onCloseUnlockedItemsDialog(event: boolean): void {
-    if (!event) this.closeUnlockedItemsDialog();
+  openUnlockedItemsDialog(items: UnlockedItems): void {
+    this.dialogService.open(UnlockedItemsModalComponent, {
+      data: items,
+      autoFocus: undefined,
+    });
   }
 }
