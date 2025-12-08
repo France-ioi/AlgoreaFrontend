@@ -57,20 +57,39 @@
                   An unknown user
                 </span>
               }
-              @if (eventVal | isAttemptStartedEvent) {
-                <span i18n>started the activity</span>
-              }
-              @if (eventVal | isSubmissionEvent) {
-                <span i18n>submitted a</span>
-                @if (itemRoute(); as route) {
-                  <a
-                    class="alg-link"
-                    [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers() }"
-                    [routerLink]="route | with: { answer: { id: eventVal.answerId } } | url: ['task', 'editor']"
-                    i18n
-                    >
-                  solution
-                </a>
+              @if (userInfo().isCurrentUser) {
+                @if (eventVal | isAttemptStartedEvent) {
+                  <span i18n="Forum if the subjet is 'you'@@forumYouStartedActivity">started the activity</span>
+                }
+                @if (eventVal | isSubmissionEvent) {
+                  <span i18n="Forum if the subjet is 'you'@@forumYouSubmittedActivity">submitted a</span>
+                  @if (itemRoute(); as route) {
+                    <a
+                      class="alg-link"
+                      [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers() }"
+                      [routerLink]="route | with: { answer: { id: eventVal.answerId } } | url: ['task', 'editor']"
+                      i18n
+                      >
+                    solution
+                  </a>
+                  }
+                }
+              } @else {
+                @if (eventVal | isAttemptStartedEvent) {
+                  <span i18n="Forum if the subjet is another user@@forumUserStartedActivity">started the activity</span>
+                }
+                @if (eventVal | isSubmissionEvent) {
+                  <span i18n="Forum if the subjet is another user@@forumUserSubmittedActivity">submitted a</span>
+                  @if (itemRoute(); as route) {
+                    <a
+                      class="alg-link"
+                      [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers() }"
+                      [routerLink]="route | with: { answer: { id: eventVal.answerId } } | url: ['task', 'editor']"
+                      i18n
+                      >
+                    solution
+                  </a>
+                  }
                 }
               }
             </div>
