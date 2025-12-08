@@ -1,3 +1,4 @@
+import { Pipe, PipeTransform } from '@angular/core';
 
 export enum EventKind {
   AttemptStarted = 'result_started',
@@ -72,4 +73,21 @@ export function mergeEvents(eventLists: ThreadEvent[][]): ThreadEvent[] {
     .flat()
     .sort((a, b) => a.time.valueOf() - b.time.valueOf()) // sort by date ascending
     .filter((el, i, list) => el.kind !== list[i-1]?.kind || el.time.valueOf() !== list[i-1]?.time.valueOf()); // remove duplicate
+}
+
+
+/**
+ * Pipes for type assertion
+ */
+@Pipe({ name: 'isMessageEvent', pure: true, standalone: true })
+export class IsMessageEventPipe implements PipeTransform {
+  transform = isMessageEvent;
+}
+@Pipe({ name: 'isAttemptStartedEvent', pure: true, standalone: true })
+export class IsAttemptStartedEventPipe implements PipeTransform {
+  transform = isAttemptStartedEvent;
+}
+@Pipe({ name: 'isSubmissionEvent', pure: true, standalone: true })
+export class IsSubmissionEventPipe implements PipeTransform {
+  transform = isSubmissionEvent;
 }
