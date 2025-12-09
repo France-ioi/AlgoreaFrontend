@@ -1,26 +1,7 @@
-<p-dialog
-  [visible]="true"
-  [modal]="true"
-  [draggable]="false"
-  [closable]="false"
-  styleClass="alg-permissions-edit-dialog"
->
-  <p-header>
-    <div class="dialog-header">
-      <span class="dialog-title" i18n>Permission editor</span>
-      <button
-        type="button"
-        class="stroke size-l"
-        icon="ph-bold ph-x"
-        (click)="onCancel()"
-        alg-button-icon
-      ></button>
-    </div>
-  </p-header>
-
+<alg-modal i18n-title title="Permission editor" [showFooter]="false" (closeEvent)="closeDialog()">
   <alg-error
     i18n-message message="User permissions cannot be changed via this page for the moment"
-    *ngIf="(group | isUser) && !sourceGroup; else stateBlock"
+    *ngIf="(params().group | isUser) && !params().sourceGroup; else stateBlock"
   ></alg-error>
 
   <ng-template #stateBlock>
@@ -34,31 +15,30 @@
 
       <div class="dialog-container" *ngIf="state.isReady">
         <div class="dialog-content">
-          <ng-container *ngIf="item.string.title">
-            @if(permGiverName) {
+          <ng-container *ngIf="params().item.string.title">
+            @if(params().permGiverName) {
               <p class="dialog-description" i18n>
-                These are the permissions given by "{{ permGiverName }}" to "{{ permReceiverName }}" on "{{ item.string.title }}".
+                These are the permissions given by "{{ params().permGiverName }}" to "{{ params().permReceiverName }}" on "{{ params().item.string.title }}".
               </p>
             } @else {
               <p class="dialog-description" i18n>
-                These are the permissions given to "{{ permReceiverName }}" on "{{ item.string.title }}".
+                These are the permissions given to "{{ params().permReceiverName }}" on "{{ params().item.string.title }}".
               </p>
             }
           </ng-container>
 
           <alg-permissions-edit-form
             (save)="onPermissionsDialogSave($event)"
-            (cancel)="onCancel()"
+            (cancel)="closeDialog()"
             [targetType]="targetType"
             [permissions]="state.data.granted"
             [computedPermissions]="state.data.computed"
-            [giverPermissions]="currentUserPermissions"
+            [giverPermissions]="params().currentUserPermissions"
             [acceptButtonDisabled]="updateInProcess"
-            [requiresExplicitEntry]="item.requiresExplicitEntry"
+            [requiresExplicitEntry]="params().item.requiresExplicitEntry"
           ></alg-permissions-edit-form>
         </div>
       </div>
     </ng-container>
   </ng-template>
-</p-dialog>
-
+</alg-modal>

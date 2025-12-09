@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   ProgressSelectValue,
@@ -12,7 +12,10 @@ import {
 } from '../../models/permissions-texts';
 import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe, ItemViewPerm } from 'src/app/items/models/item-view-permission';
-import { PermissionsEditDialogComponent } from '../permissions-edit-dialog/permissions-edit-dialog.component';
+import {
+  PermissionsEditDialogComponent,
+  PermissionsEditDialogParams,
+} from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
@@ -26,6 +29,7 @@ import { GroupPermissionsService } from 'src/app/data-access/group-permissions.s
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -39,7 +43,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     ProgressSelectComponent,
     FormsModule,
     TooltipModule,
-    PermissionsEditDialogComponent,
     I18nSelectPipe,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
@@ -55,11 +58,12 @@ export class ItemPermissionsComponent implements OnChanges {
   @Input() itemData?: ItemData;
   @Input() observedGroup?: { route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean };
 
+  private dialogService = inject(Dialog);
+
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   canGrantViewValues: ProgressSelectValue<string>[] = generateCanGrantViewValues('Groups');
   canWatchValues: ProgressSelectValue<string>[] = generateCanWatchValues('Groups');
   canEditValues: ProgressSelectValue<string>[] = generateCanEditValues('Groups');
-  isPermissionsDialogOpened = false;
   watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
   lockEdit?: 'content' | 'group' | 'contentGroup';
   collapsed = true;
@@ -91,14 +95,21 @@ export class ItemPermissionsComponent implements OnChanges {
   }
 
   openPermissionsDialog(): void {
-    this.isPermissionsDialogOpened = true;
-  }
-
-  closePermissionsDialog(changed: boolean): void {
-    this.isPermissionsDialogOpened = false;
-    if (changed) {
-      this.changed.emit();
-    }
+    if (!this.itemData) throw new Error('Unexpected: missed item data');
+    if (!this.observedGroup) throw new Error('Unexpected: missed observed group');
+    this.dialogService.open<boolean, PermissionsEditDialogParams>(PermissionsEditDialogComponent, {
+      data: {
+        currentUserPermissions: this.itemData.item.permissions,
+        item: this.itemData.item,
+        group: this.observedGroup.route,
+        permReceiverName: this.observedGroup.name,
+      },
+      disableClose: true,
+    }).closed.subscribe(changed => {
+      if (changed) {
+        this.changed.emit();
+      }
+    });
   }
 
   grantViewContentAccess(): void {
