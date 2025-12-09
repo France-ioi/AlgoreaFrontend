@@ -45,7 +45,7 @@ test('check chapter is locked message for temp user', async ({ page, itemContent
 
 test('check chapter is locked message for auth user', async ({ page, itemContentPage }) => {
   await initAsTesterUser(page);
-  await page.goto('a/457754150968902848;p=4702,7528142386663912287,944619266928306927;pa=0');
+  await page.goto('a/7765874445258315610;p=4702,7528142386663912287,944619266928306927;pa=0');
   const itemTitleLocator = page.getByTestId('item-title').getByText('Chapter unlocked by other tasks');
   await expect.soft(itemTitleLocator).toBeVisible();
   await itemContentPage.checksIsChapterLockedMessageVisible();
