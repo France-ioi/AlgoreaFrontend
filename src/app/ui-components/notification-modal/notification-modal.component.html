@@ -6,7 +6,7 @@
 
 @if (showIcon()) {
   <div class="icon-wrapper">
-    <span class="{{ icon() }} icon"></span>
+    <span class="{{ icon() }} {{ iconStyleClass() || '' }} icon"></span>
   </div>
 }
 

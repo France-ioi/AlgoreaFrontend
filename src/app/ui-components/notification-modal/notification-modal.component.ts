@@ -13,6 +13,7 @@ export class NotificationModalComponent {
 
   title = input<string | undefined>(undefined);
   icon = input('ph ph-warning');
+  iconStyleClass = input<string>();
   showIcon = input(true);
   allowToClose = input(true);
 }
