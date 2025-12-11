@@ -15,6 +15,10 @@
 
 .body {
   margin: var(--alg-space-size-5) var(--alg-space-size-6) 0 var(--alg-space-size-6);
+
+  &.without-close-padding {
+    margin-top: var(--alg-space-size-6);
+  }
 }
 
 .title {
