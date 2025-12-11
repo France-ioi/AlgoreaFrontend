@@ -13,7 +13,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 export class ModalComponent {
   closeEvent = output<void>();
 
-  title = input<string | undefined>(undefined);
+  modalTitle = input<string | undefined>(undefined);
   allowToClose = input(true);
   showFooter = input(true);
 }

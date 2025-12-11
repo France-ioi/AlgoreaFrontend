@@ -2,7 +2,7 @@
   <ng-content select="header">
     <div class="header">
       <ng-content select="title">
-        <p class="title">{{ title() }}</p>
+        <p class="title">{{ modalTitle() }}</p>
       </ng-content>
       @if (allowToClose()) {
         <div class="close-wrapper">
