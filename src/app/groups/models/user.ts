@@ -36,10 +36,10 @@ export function formatUser<T extends UserBase>(user: T) : string {
 export const userSchema = withGroupId(z.object({
   login: z.string(),
   profile: z.object({
-    firstName: z.string().nullable(),
-    lastName: z.string().nullable(),
-    webSite: z.string().nullable(),
-    freeText: z.string().nullable(),
+    firstName: z.string().nullable().catch(null),
+    lastName: z.string().nullable().catch(null),
+    webSite: z.string().nullable().catch(null),
+    freeText: z.string().nullable().catch(null),
   }).partial().optional(),
   tempUser: z.boolean(),
   isCurrentUser: z.boolean(),
