@@ -15,7 +15,8 @@ test('checks edit parameters components are visible', async ({ page }) => {
   await expect.soft(page.getByRole('heading', { name: 'Score & Validation' })).toBeVisible();
 });
 
-test('checks edit parameters teams size input', async ({ page }) => {
+// currently disabled as settings for teams is currently hidden
+test.skip('checks edit parameters teams size input', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('a/6707691810849260111;p=;a=0/parameters');
   const teamBlockLocator = page.getByTestId('edit-team-section');
