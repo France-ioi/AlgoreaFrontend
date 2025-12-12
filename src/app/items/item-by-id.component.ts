@@ -37,8 +37,6 @@ import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
 import { allowsWatchingAnswers, AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
-import { SharedModule } from 'primeng/api';
-import { DialogModule } from 'primeng/dialog';
 import { ItemForumComponent } from './containers/item-forum/item-forum.component';
 import { ItemDependenciesComponent } from './containers/item-dependencies/item-dependencies.component';
 import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
@@ -67,6 +65,7 @@ import { itemRouteAsUrlCommand } from '../models/routing/item-route-serializatio
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
 import { areSameThreads } from '../forum/models/threads';
+import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 const selectState = createSelector(
   fromItemContent.selectActiveContentRouteErrorHandlingState,
@@ -104,8 +103,6 @@ const selectState = createSelector(
     ItemExtraTimeComponent,
     ItemForumComponent,
     RouterLinkActive,
-    DialogModule,
-    SharedModule,
     AsyncPipe,
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
@@ -114,6 +111,7 @@ const selectState = createSelector(
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
   private config = inject(APPCONFIG);
+  private confirmationModalService = inject(ConfirmationModalService);
 
   @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
   @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
@@ -297,6 +295,26 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       filter(isNotNull), // leave the forum as it is if no new value
       distinctUntilChanged((x, y) => areSameThreads(x.id, y.id)),
     ).subscribe(thread => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId(thread))),
+
+    this.saveBeforeUnloadError$.pipe(
+      filter(isError => isError),
+      switchMap(() => this.confirmationModalService.open({
+        title: $localize`Leave unsaved task`,
+        message: $localize`You do not appear to be connected to the Internet, if you leave this task you may loose your progress.
+          Are you sure you want to continue?`,
+        acceptButtonCaption: $localize`Loose progress and leave the task`,
+        acceptButtonStyleClass: 'danger',
+        rejectButtonCaption: $localize`Retry`,
+        rejectButtonStyleClass: 'primary',
+        allowToClose: false,
+      }, { maxWidth: '34rem', disableClose: true }))
+    ).subscribe(confirmed => {
+      if (confirmed) {
+        this.skipBeforeUnload();
+      } else {
+        this.retryBeforeUnload();
+      }
+    }),
   ];
 
   editorUrl?: string;
