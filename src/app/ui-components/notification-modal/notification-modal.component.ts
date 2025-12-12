@@ -11,7 +11,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 export class NotificationModalComponent {
   closeEvent = output();
 
-  title = input<string | undefined>(undefined);
+  modalTitle = input<string | undefined>(undefined);
   icon = input('ph ph-warning');
   iconStyleClass = input<string>();
   showIcon = input(true);
