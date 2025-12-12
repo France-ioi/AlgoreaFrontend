@@ -30,24 +30,27 @@ export function formatUser<T extends UserBase>(user: T) : string {
 
     return `${ fullName } (${ user.login })`;
   }
-
   return user.login;
 }
 
-export const userSchema = userBaseSchema.and(
-  withGroupId(z.object({
-    tempUser: z.boolean(),
-    webSite: z.string().nullable(),
-    freeText: z.string().nullable(),
-    isCurrentUser: z.boolean(),
-    ancestorsCurrentUserIsManagerOf: z.array(z.object({
-      id: z.string(),
-      name: z.string(),
-    })),
-    currentUserCanWatchUser: z.boolean().optional(),
-    currentUserCanGrantUserAccess: z.boolean().optional(),
-    personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalSchema.optional(),
-  })));
+export const userSchema = withGroupId(z.object({
+  login: z.string(),
+  profile: z.object({
+    firstName: z.string().nullable().catch(null),
+    lastName: z.string().nullable().catch(null),
+    webSite: z.string().nullable().catch(null),
+    freeText: z.string().nullable().catch(null),
+  }).partial().optional(),
+  tempUser: z.boolean(),
+  isCurrentUser: z.boolean(),
+  ancestorsCurrentUserIsManagerOf: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+  })),
+  currentUserCanWatchUser: z.boolean().optional(),
+  currentUserCanGrantUserAccess: z.boolean().optional(),
+  personalInfoAccessApprovalToCurrentUser: requirePersonalInfoAccessApprovalSchema.optional(),
+})).transform(user => ({ firstName: user.profile?.firstName, lastName: user.profile?.lastName, ...user }));
 
 export type User = z.infer<typeof userSchema>;
 
