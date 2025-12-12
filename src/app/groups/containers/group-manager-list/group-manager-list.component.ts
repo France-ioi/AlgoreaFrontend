@@ -1,4 +1,4 @@
-import { Component, computed, effect, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { Observable, of, switchMap } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
@@ -10,7 +10,10 @@ import { DataPager } from 'src/app/utils/data-pager';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
-import { ManagerPermissionDialogComponent } from '../manager-permission-dialog/manager-permission-dialog.component';
+import {
+  ManagerPermissionDialogComponent,
+  ManagerPermissionDialogParams, ManagerPermissionDialogResult
+} from '../manager-permission-dialog/manager-permission-dialog.component';
 import { GroupManagerAddComponent } from '../group-manager-add/group-manager-add.component';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -41,6 +44,7 @@ import {
   CdkTable
 } from '@angular/cdk/table';
 import { FindInArray } from 'src/app/pipes/findInArray';
+import { Dialog } from '@angular/cdk/dialog';
 
 const managersLimit = 25;
 
@@ -54,7 +58,6 @@ const managersLimit = 25;
     ErrorComponent,
     RouterLink,
     GroupManagerAddComponent,
-    ManagerPermissionDialogComponent,
     AsyncPipe,
     GroupLinkPipe,
     UserCaptionPipe,
@@ -80,9 +83,10 @@ export class GroupManagerListComponent {
 
   group = input.required<Group>();
 
+  private dialogService = inject(Dialog);
+
   selection: Manager[] = [];
   removalInProgress = false;
-  editingManager?: Manager; // the manager being edited in the dialog, undefined when the dialog is closed
 
   readonly datapager = new DataPager({
     fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => this.getGroupManagersService.getGroupManagers(
@@ -215,16 +219,18 @@ export class GroupManagerListComponent {
   }
 
   openPermissionsEditDialog(manager: Manager): void {
-    this.editingManager = manager;
-  }
-
-  closePermissionsEditDialog(event: { updated: boolean }): void {
-    this.editingManager = undefined;
-
-    if (event.updated) {
-      this.fetchData();
-      this.store.dispatch(fromGroupContent.groupPageActions.refresh());
-    }
+    this.dialogService.open<ManagerPermissionDialogResult, ManagerPermissionDialogParams>(ManagerPermissionDialogComponent, {
+      data: {
+        group: this.group(),
+        manager,
+      },
+      disableClose: true,
+    }).closed.subscribe(result => {
+      if (result?.updated) {
+        this.fetchData();
+        this.store.dispatch(fromGroupContent.groupPageActions.refresh());
+      }
+    });
   }
 
   onAdded(): void {

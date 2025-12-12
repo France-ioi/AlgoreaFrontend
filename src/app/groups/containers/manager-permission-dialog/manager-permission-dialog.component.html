@@ -1,26 +1,4 @@
-<p-dialog
-  [visible]="!!visible"
-  (visibleChange)="visible = $event"
-  [modal]="true"
-  [draggable]="false"
-  [closable]="false"
-  maskStyleClass="alg-z-index-999"
-  styleClass="alg-permissions-edit-dialog"
-  *ngIf="userCaption"
->
-  <p-header>
-    <div class="dialog-header">
-      <span class="dialog-title" i18n>{{ group?.name }}: manager access given to {{ userCaption }}</span>
-      <button
-        type="button"
-        class="size-l stroke"
-        icon="ph-bold ph-x"
-        (click)="onClose()"
-        alg-button-icon
-      ></button>
-    </div>
-  </p-header>
-
+<alg-modal i18n-modalTitle modalTitle="{{ params().group.name }}: manager access given to {{ userCaption }}" (closeEvent)="onClose()">
   <div class="dialog-container">
     <div class="dialog-content">
       <p class="dialog-description" i18n>
@@ -81,12 +59,12 @@
     </div>
   </div>
 
-  <p-footer>
+  <footer>
     <div class="footer">
       <alg-loading *ngIf="isUpdating; else buttonsSection"></alg-loading>
       <ng-template #buttonsSection>
         <button
-          class="stroke"
+          class="stroke button"
           icon="ph-bold ph-x"
           (click)="onClose()"
           alg-button
@@ -101,5 +79,5 @@
         >Proceed</button>
       </ng-template>
     </div>
-  </p-footer>
-</p-dialog>
+  </footer>
+</alg-modal>

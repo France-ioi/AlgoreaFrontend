@@ -1,5 +1,11 @@
 @import 'src/assets/scss/functions';
 
+:host {
+  display: block;
+  width: 47.5rem;
+  max-height: 65vh;
+}
+
 .footer {
   display: flex;
   justify-content: center;
@@ -27,4 +33,8 @@
 
 .dialog-description {
   margin-top: 0;
+}
+
+.button {
+  margin-right: var(--alg-space-size-6);
 }
