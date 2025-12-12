@@ -116,13 +116,13 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       })),
     ),
     mergeScan((acc: UserInfo[], users) => combineLatest(users.map(u => {
-      if (u.name !== undefined) return of({ ...u, notVisibleUser: false });
+      if (u.name !== undefined) return of(u);
       const lookup = acc.find(user => user.id === u.id);
-      if (lookup?.name !== undefined || lookup?.notVisibleUser) return of(lookup);
+      if (lookup?.name !== undefined) return of(lookup);
       return this.userService.getForId(u.id).pipe(
-        map(user => ({ ...u, notVisibleUser: false, name: formatUser(user) })),
-        startWith({ ...u, notVisibleUser: false }),
-        catchError(() => of({ ...u, notVisibleUser: true })),
+        map(user => ({ ...u, name: formatUser(user) })),
+        startWith(u),
+        catchError(() => of(u)),
       );
     })), [] /* scan seed */, 1 /* no concurrency */),
   );
