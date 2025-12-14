@@ -20,7 +20,6 @@ import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { SharedModule } from 'primeng/api';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
@@ -54,7 +53,6 @@ const logsLimit = 20;
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    SharedModule,
     ScoreRingComponent,
     NgClass,
     RouterLink,

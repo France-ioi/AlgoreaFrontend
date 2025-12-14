@@ -1,6 +1,5 @@
 import { Component, computed, input, OnChanges, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { PaginatorModule } from 'primeng/paginator';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
 import { generatePropagationsValuesWithValidation } from 'src/app/items/models/item-perm-propagation-values';
@@ -20,7 +19,6 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
   styleUrls: [ './propagation-advanced-configuration-form.component.scss' ],
   standalone: true,
   imports: [
-    PaginatorModule,
     ReactiveFormsModule,
     CollapsibleSectionComponent,
     ProgressSelectComponent,

@@ -16,7 +16,6 @@ import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-secti
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
 import { DatePipe, JsonPipe, NgIf } from '@angular/common';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
-import { CalendarModule } from 'primeng/calendar';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { backendInfiniteDateString, farFutureDateString, isInfinite } from 'src/app/utils/date';
 import { CanEnterComponent, CanEnterValue } from 'src/app/ui-components/collapsible-section/can-enter/can-enter.component';
@@ -39,7 +38,6 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
     SwitchFieldComponent,
     JsonPipe,
     SwitchComponent,
-    CalendarModule,
     InputDateComponent,
     DatePipe,
     CanEnterComponent,

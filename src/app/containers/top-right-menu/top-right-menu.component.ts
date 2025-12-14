@@ -14,7 +14,7 @@ import { LetDirective } from '@ngrx/component';
 import { RouterLink } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
-interface MenuItem {
+export interface MenuItem {
   label: string,
   icon: string,
   routerLink?: UrlCommand,
