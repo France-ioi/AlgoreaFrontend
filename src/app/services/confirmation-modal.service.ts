@@ -13,6 +13,7 @@ export interface ConfirmationModalData {
   rejectButtonCaption?: string,
   rejectButtonStyleClass?: string,
   rejectButtonIcon?: string,
+  allowToClose?: boolean,
 }
 
 @Injectable({
