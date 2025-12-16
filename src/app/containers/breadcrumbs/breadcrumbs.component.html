@@ -10,8 +10,9 @@
           class="breadcrumb-item"
           [ngClass]="{ 'active': last, 'routable': breadcrumb.navigateTo }"
           (click)="onElementClick(breadcrumb)"
-          [pTooltip]="breadcrumb.title"
+          [algTooltip]="breadcrumb.title"
           tooltipPosition="bottom"
+          tooltipStyleClass="secondary"
         >
           <span class="label">{{ breadcrumb.title }}</span>
         </li>
