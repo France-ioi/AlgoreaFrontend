@@ -1,0 +1,7 @@
+<div class="container {{ position() }} {{ styleClass() }}">
+  @if (contentTemplate(); as template) {
+    <ng-container [ngTemplateOutlet]="template"></ng-container>
+  } @else {
+    {{ text() }}
+  }
+</div>
