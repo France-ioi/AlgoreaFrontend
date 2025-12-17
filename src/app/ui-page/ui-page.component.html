@@ -86,3 +86,156 @@
   <button class="size-l primary stroke alg-button-margin-right" alg-button-icon icon="ph-bold ph-check"></button>
   <button class="size-s primary" alg-button-icon icon="ph ph-arrow-left"></button>
 </div>
+
+<hr>
+
+<h1 class="alg-h1 alg-base-title-primary-space">
+  Tooltip
+</h1>
+
+<h2 class="alg-h2 alg-base-title-space">
+  Regular
+</h2>
+
+<div>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="top"
+  >Top</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="bottom"
+  >Bottom</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="left"
+  >Left</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="right"
+  >Right</button>
+</div>
+
+<h2 class="alg-h2 alg-base-title-space">
+  Secondary
+</h2>
+
+<div>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipStyleClass="secondary"
+    tooltipPosition="top"
+  >Top</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipStyleClass="secondary"
+    tooltipPosition="bottom"
+  >Bottom</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipStyleClass="secondary"
+    tooltipPosition="left"
+  >Left</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipStyleClass="secondary"
+    tooltipPosition="right"
+  >Right</button>
+</div>
+
+<h2 class="alg-h2 alg-base-title-space">Other</h2>
+<div>
+  <p class="alg-text-small">Delay</p>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="top"
+    [tooltipDelay]="1000"
+  >Delay 1000</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="top"
+    [tooltipDelay]="3000"
+  >Delay 3000</button>
+</div>
+
+<div class="alg-base-title-space">
+  <p class="alg-text-small">Enable/Disable (click for change)</p>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="tooltipDisabled.set(!tooltipDisabled())"
+  >{{ tooltipDisabled() ? 'Enable' : 'Disable' }} tooltip</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="Parcours officiels"
+    tooltipPosition="top"
+    [tooltipDisabled]="tooltipDisabled()"
+  >Hover on me</button>
+</div>
+
+<div class="alg-base-title-space">
+  <p class="alg-text-small">Hover/Focus (click for change)</p>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="tooltipEvent.set(tooltipEvent() === 'hover' ? 'focus' : 'hover')"
+  >{{ tooltipEvent() }} tooltip</button>
+  <input
+    type="text"
+    placeholder="Do {{ tooltipEvent() }}"
+    algTooltip="Parcours officiels"
+    tooltipPosition="top"
+    [tooltipEvent]="tooltipEvent()"
+  >
+</div>
+
+<div class="alg-base-title-space">
+  <p class="alg-text-small">Text wrap</p>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
+    tooltipPosition="top"
+    tooltipStyleClass="no-text-wrap"
+  >No text wrap</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    algTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
+    tooltipPosition="top"
+  >Text wrap</button>
+
+  <p class="alg-text-small">Custom template</p>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    [algTooltip]="observationText"
+    tooltipStyleClass="observation-mode"
+    tooltipPosition="top"
+  >Template</button>
+  <ng-template #observationText>
+    Only the content visible by the user you are observing (Group #1) is shown.
+  </ng-template>
+</div>
+

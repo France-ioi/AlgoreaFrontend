@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-ui-page',
@@ -9,7 +10,11 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   standalone: true,
   imports: [
     ButtonComponent,
-    ButtonIconComponent
+    ButtonIconComponent,
+    TooltipDirective,
   ]
 })
-export class UiPageComponent {}
+export class UiPageComponent {
+  tooltipDisabled = signal(false);
+  tooltipEvent = signal<'hover' | 'focus'>('hover');
+}
