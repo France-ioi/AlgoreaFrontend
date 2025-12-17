@@ -1,11 +1,10 @@
-import { Component, Input, OnChanges, Output, EventEmitter, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
 import { isASkill, ItemType, ItemTypeCategory, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
@@ -55,8 +54,6 @@ export const DEFAULT_SCORE_WEIGHT = 1;
 })
 export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
   @Input() itemData?: ItemData;
-
-  @ViewChild('op') op?: OverlayPanel;
 
   activities: PossiblyInvisibleChildData[] = [];
   skills: PossiblyInvisibleChildData[] = [];

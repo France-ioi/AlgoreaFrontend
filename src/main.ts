@@ -3,7 +3,6 @@ import { AppComponent } from './app/app.component';
 import { ToastModule } from 'primeng/toast';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { LetDirective } from '@ngrx/component';
@@ -57,7 +56,6 @@ bootstrapApplication(AppComponent, {
       LetDirective,
       NgScrollbarModule,
       TooltipModule,
-      DialogModule,
       FormsModule,
       LayoutModule,
       ReactiveFormsModule,

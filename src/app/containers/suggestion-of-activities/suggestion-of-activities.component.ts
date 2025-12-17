@@ -7,7 +7,6 @@ import { Subject } from 'rxjs';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
-import { SharedModule } from 'primeng/api';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { NgIf, AsyncPipe, NgFor } from '@angular/common';
@@ -24,7 +23,6 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
     NgIf,
     LoadingComponent,
     ErrorComponent,
-    SharedModule,
     RouterLink,
     AsyncPipe,
     ItemRoutePipe,

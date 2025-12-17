@@ -8,8 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { Observable, combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
+import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
@@ -33,7 +32,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   showPrevButton = false;
   showNextButton = false;
 
-  tabs$: Observable<MenuItem[]> = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
+  tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
     map(([ tabs, active ]) => tabs.map(tab => ({
       label: tab.title,
       routerLink: tab.command,
@@ -82,9 +81,8 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     this.resizeEvent.complete();
   }
 
-  onChange(tab: MenuItem): void {
-    if (!tab.id) throw new Error('unexpected: the tab should have an id!');
-    this.tabService.setActiveTab(tab.id);
+  onChange(id: string): void {
+    this.tabService.setActiveTab(id);
   }
 
   handleArrows(): void {

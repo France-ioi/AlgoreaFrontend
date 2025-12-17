@@ -6,7 +6,6 @@ import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/a
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -42,7 +41,6 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
     NgSwitchCase,
     TooltipModule,
     NgSwitchDefault,
-    RippleModule,
     AsyncPipe,
     DatePipe,
     ButtonIconComponent,

@@ -14,7 +14,6 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { SharedModule } from 'primeng/api';
 import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -59,7 +58,6 @@ const logsLimit = 20;
     ErrorComponent,
     LetDirective,
     RouterLink,
-    SharedModule,
     NgSwitch,
     NgSwitchCase,
     ScoreRingComponent,

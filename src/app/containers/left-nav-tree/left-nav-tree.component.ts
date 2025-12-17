@@ -1,5 +1,4 @@
 import { Component, effect, input, Input, signal } from '@angular/core';
-import { SharedModule } from 'primeng/api';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { SkillProgressComponent } from '../../ui-components/skill-progress/skill-progress.component';
@@ -39,7 +38,6 @@ interface TreeNode<T> {
     LeftMenuBackButtonComponent,
     RouterLink,
     RouterLinkActive,
-    SharedModule,
     NgClass,
     ScoreRingComponent,
     TooltipModule,
