@@ -6,7 +6,6 @@ import { NO_SORT, sortEquals, multisortEventToOptions, SortOptions } from 'src/a
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { TooltipModule } from 'primeng/tooltip';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
@@ -27,6 +26,7 @@ import {
 } from '@angular/cdk/table';
 import { TableSortDirective } from 'src/app/ui-components/table-sort/table-sort.directive';
 import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table-sort/table-sort-header/table-sort-header.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-joined-group-list',
@@ -39,7 +39,6 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
     RouterLink,
     NgSwitch,
     NgSwitchCase,
-    TooltipModule,
     NgSwitchDefault,
     AsyncPipe,
     DatePipe,
@@ -57,7 +56,8 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
     CdkHeaderCell,
     CdkHeaderCellDef,
     TableSortHeaderComponent,
-    NgClass
+    NgClass,
+    TooltipDirective
   ],
 })
 export class JoinedGroupListComponent implements OnDestroy {
