@@ -2,8 +2,8 @@ import { Component, Output, EventEmitter, Input, output } from '@angular/core';
 import { PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AllowsGrantingViewItemPipe, AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { NgClass } from '@angular/common';
-import { TooltipModule } from 'primeng/tooltip';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-propagation-edit-menu',
@@ -14,8 +14,8 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
     NgClass,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
-    TooltipModule,
     ButtonComponent,
+    TooltipDirective,
   ],
 })
 export class PropagationEditMenuComponent {
