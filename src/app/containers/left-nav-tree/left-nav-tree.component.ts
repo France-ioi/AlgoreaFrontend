@@ -2,7 +2,6 @@ import { Component, effect, input, Input, signal } from '@angular/core';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { SkillProgressComponent } from '../../ui-components/skill-progress/skill-progress.component';
-import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
@@ -16,6 +15,7 @@ import {
   CdkTreeNodeOutlet,
   NestedTreeControl
 } from '@angular/cdk/tree';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 interface TreeNode<T> {
   data: T,
@@ -40,7 +40,6 @@ interface TreeNode<T> {
     RouterLinkActive,
     NgClass,
     ScoreRingComponent,
-    TooltipModule,
     SkillProgressComponent,
     I18nSelectPipe,
     ButtonComponent,
@@ -49,6 +48,7 @@ interface TreeNode<T> {
     CdkTreeNodeDef,
     CdkTreeNodeOutlet,
     CdkTree,
+    TooltipDirective,
   ],
 })
 export class LeftNavTreeComponent {

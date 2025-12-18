@@ -83,7 +83,7 @@
                   class="tree-nav-icon"
                   tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
-                  i18n-pTooltip pTooltip="Your current access rights do not allow you to list the content of this chapter."
+                  i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this chapter."
                   *ngIf="node.data.locked"
                 >
                   <i class="ph-duotone ph-lock-key"></i>
@@ -176,7 +176,7 @@
                   class="tree-nav-icon"
                   tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
-                  i18n-pTooltip pTooltip="Your current access rights do not allow you to list the content of this skill."
+                  i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this skill."
                   *ngIf="node.data.locked"
                 >
                   <i class="ph-duotone ph-lock-key"></i>
@@ -226,7 +226,7 @@
                   [class.fade]="node.data.groupRelation.managership === 'descendant'"
                   tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
-                  [pTooltip]="node.data.groupRelation.managership | i18nSelect : managershipTooltipCaptions"
+                  [algTooltip]="node.data.groupRelation.managership | i18nSelect : managershipTooltipCaptions"
                   *ngIf="node.data.groupRelation.managership !== 'none'"
                 >
                   <i class="ph-duotone ph-crown"></i>
@@ -273,7 +273,7 @@
                   class="tree-nav-icon"
                   tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
-                  i18n-pTooltip pTooltip="Your current access rights do not allow you to start the activity."
+                  i18n-algTooltip algTooltip="Your current access rights do not allow you to start the activity."
                   *ngIf="node.data.locked"
                 >
                   <i class="ph-duotone ph-lock-key"></i>
