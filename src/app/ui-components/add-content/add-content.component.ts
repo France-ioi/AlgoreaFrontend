@@ -6,13 +6,13 @@ import { ItemCorePerm } from '../../items/models/item-permissions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from '../../utils/state';
 import { LoadingComponent } from '../loading/loading.component';
-import { TooltipModule } from 'primeng/tooltip';
 import { InputComponent } from '../input/input.component';
 import { NgIf, NgClass, NgFor, SlicePipe } from '@angular/common';
 import { PathSuggestionComponent } from '../../containers/path-suggestion/path-suggestion.component';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 export interface AddedContent<T> {
   id?: string,
@@ -40,7 +40,6 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   imports: [
     NgIf,
     InputComponent,
-    TooltipModule,
     NgClass,
     LoadingComponent,
     NgFor,
@@ -49,6 +48,7 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
     ButtonComponent,
+    TooltipDirective,
   ],
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {

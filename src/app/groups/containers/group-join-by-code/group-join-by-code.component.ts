@@ -10,7 +10,6 @@ import { of } from 'rxjs';
 import { CodeLifetime } from '../../models/code-lifetime';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DurationToMinPipe } from 'src/app/pipes/duration';
-import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
@@ -20,6 +19,7 @@ import { NgIf, DecimalPipe, DatePipe } from '@angular/common';
 import { LoadingComponent } from '../../../ui-components/loading/loading.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-group-join-by-code',
@@ -33,13 +33,13 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     SelectionComponent,
     DurationComponent,
     FormsModule,
-    TooltipModule,
     DecimalPipe,
     DatePipe,
     DurationToMinPipe,
     LoadingComponent,
     ButtonComponent,
     ButtonIconComponent,
+    TooltipDirective,
   ],
 })
 

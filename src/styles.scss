@@ -85,22 +85,6 @@ button, input, textarea {
   margin-bottom: -2rem;
 }
 
-.p-tooltip.tooltip-custom {
-
-  .p-tooltip-text {
-    background-color: var(--base-color);
-    border-radius: 1rem;
-    padding: 1rem 2rem;
-  }
-
-  &.p-tooltip-top {
-    .p-tooltip-arrow {
-      border-top-color: var(--base-color);
-    }
-  }
-
-}
-
 .html-container {
   a {
     @extend .alg-link;

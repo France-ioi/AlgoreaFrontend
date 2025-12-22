@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, DatePipe } from '@angular/common';
 import { RelativeTimePipe } from '../../pipes/relativeTime';
+import { TooltipDirective, TooltipPosition } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-relative-time',
@@ -11,11 +11,11 @@ import { RelativeTimePipe } from '../../pipes/relativeTime';
   imports: [
     NgIf,
     DatePipe,
-    TooltipModule,
     RelativeTimePipe,
+    TooltipDirective,
   ]
 })
 export class RelativeTimeComponent {
   @Input() value?: string;
-  @Input() tooltipPosition = 'bottom';
+  @Input() tooltipPosition: TooltipPosition = 'bottom';
 }

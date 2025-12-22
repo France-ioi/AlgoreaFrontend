@@ -81,7 +81,6 @@
                 ></alg-score-ring>
                 <div
                   class="tree-nav-icon"
-                  tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
                   i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this chapter."
                   *ngIf="node.data.locked"
@@ -174,7 +173,6 @@
                 ></alg-skill-progress>
                 <div
                   class="tree-nav-icon"
-                  tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
                   i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this skill."
                   *ngIf="node.data.locked"
@@ -224,7 +222,6 @@
                 <div
                   class="tree-nav-icon"
                   [class.fade]="node.data.groupRelation.managership === 'descendant'"
-                  tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
                   [algTooltip]="node.data.groupRelation.managership | i18nSelect : managershipTooltipCaptions"
                   *ngIf="node.data.groupRelation.managership !== 'none'"
@@ -271,7 +268,6 @@
                 ></alg-score-ring>
                 <div
                   class="tree-nav-icon"
-                  tooltipStyleClass="alg-tooltip"
                   tooltipPosition="top"
                   i18n-algTooltip algTooltip="Your current access rights do not allow you to start the activity."
                   *ngIf="node.data.locked"

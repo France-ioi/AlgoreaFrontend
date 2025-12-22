@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
-import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -12,13 +11,14 @@ import { filter, take } from 'rxjs';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { routeWithNoObservation } from 'src/app/models/routing/item-route';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-observation-bar',
   templateUrl: './observation-bar.component.html',
   styleUrls: [ './observation-bar.component.scss' ],
   standalone: true,
-  imports: [ NgIf, NgClass, TooltipModule, RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent ]
+  imports: [ NgIf, NgClass, RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent, TooltipDirective ]
 })
 export class ObservationBarComponent {
   @Output() cancel = new EventEmitter<void>();

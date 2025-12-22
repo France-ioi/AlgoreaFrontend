@@ -129,10 +129,12 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
   }
 
   private attachOverlay(): void {
+    const tooltipContent = this.tooltipContent();
+    if (typeof tooltipContent === 'string' && tooltipContent.trim() === '') return;
+
     if (!this.overlayRef.hasAttached()) {
       const tooltipPortal = new ComponentPortal(TooltipComponent);
       const tooltipRef: ComponentRef<TooltipComponent> = this.overlayRef.attach(tooltipPortal);
-      const tooltipContent = this.tooltipContent();
 
       if (tooltipContent instanceof TemplateRef) {
         tooltipRef.instance.contentTemplate.set(tooltipContent);

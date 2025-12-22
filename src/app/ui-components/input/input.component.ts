@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { TooltipModule } from 'primeng/tooltip';
 import { NgIf, NgClass } from '@angular/common';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-input',
@@ -19,8 +19,8 @@ import { NgIf, NgClass } from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     NgClass,
-    TooltipModule,
     FormErrorComponent,
+    TooltipDirective,
   ],
 })
 export class InputComponent {
@@ -33,8 +33,8 @@ export class InputComponent {
   @Input() buttonIcon?: string; // a phosphor-icon identifier for the input button
   @Input() hasClearButton = false;
 
-  @Input() pTooltip = '';
-  @Input() tooltipEvent = 'hover';
+  @Input() tooltipText = '';
+  @Input() tooltipEvent: 'hover' | 'focus' = 'hover';
   @Input() tooltipPosition: 'left' | 'right' | 'top' | 'bottom' = 'right';
   @Input() tooltipDisabled = false;
 

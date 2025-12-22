@@ -40,10 +40,8 @@
       </div>
     </div>
     <div *ngIf="disabledTooltip.length" class="gray-overlay tool"
-      [pTooltip]="disabledTooltip.join('\n') || ''"
+      [algTooltip]="disabledTooltip.join('\n') || ''"
       tooltipPosition="top"
-      tooltipStyleClass="alg-tooltip"
-      [escape]="false"
     ></div>
   </div>
 </div>

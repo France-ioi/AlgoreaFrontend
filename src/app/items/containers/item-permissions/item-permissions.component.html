@@ -144,9 +144,8 @@
         <ng-container *ngIf="itemData?.item?.permissions">
           <span
             class="give-access-button"
-            [pTooltip]="lockEdit | i18nSelect : lockEditTooltipCaptions"
+            [algTooltip]="lockEdit | i18nSelect : lockEditTooltipCaptions"
             tooltipPosition="bottom"
-            tooltipStyleClass="alg-tooltip"
             [tooltipDisabled]="!lockEdit"
           >
            <button

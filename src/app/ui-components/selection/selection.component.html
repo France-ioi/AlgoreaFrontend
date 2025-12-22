@@ -5,10 +5,8 @@
       class="tabs-item alg-flex-1"
       [ngClass]="{ active: idx === selected, next: idx === selected + 1 }"
       (click)="itemChanged(idx)"
-      [pTooltip]="item.tooltip ?? ''"
-      tooltipStyleClass="alg-tooltip"
+      [algTooltip]="item.tooltip ?? ''"
       tooltipPosition="top"
-      tooltipEvent="hover"
       data-testid="selection-control-value"
     >
       <span class="label">{{ item.label }}</span>

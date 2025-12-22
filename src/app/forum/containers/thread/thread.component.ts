@@ -23,7 +23,6 @@ import { ActionFeedbackService } from '../../../services/action-feedback.service
 import { FetchState, fetchingState, readyState } from '../../../utils/state';
 import { errorIsHTTPForbidden } from '../../../utils/errors';
 import { UpdateThreadService } from '../../../data-access/update-thread.service';
-import { TooltipModule } from 'primeng/tooltip';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { AsyncPipe } from '@angular/common';
@@ -47,6 +46,7 @@ import { ThreadMessageService } from 'src/app/data-access/thread-message.service
 import { HttpErrorResponse } from '@angular/common/http';
 import { isMessageEvent } from '../../models/thread-events';
 import { v4 as uuidv4 } from 'uuid';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -70,12 +70,12 @@ const selectThreadInfo = createSelector(
     FormsModule,
     ReactiveFormsModule,
     ItemRoutePipe,
-    TooltipModule,
     AsyncPipe,
     RouterLink,
     ButtonIconComponent,
     ButtonComponent,
     AutoResizeDirective,
+    TooltipDirective,
   ],
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {

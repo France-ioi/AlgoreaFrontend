@@ -87,10 +87,9 @@
                   </div>
                   <div
                     *ngrxLet="!!threadStatus && !!threadStatus.data && ((threadStatus.data.open && threadStatus.data.canClose) || (!threadStatus.data.open && threadStatus.data.canOpen)) as canSwitch"
-                    [pTooltip]="threadStatusTooltip"
+                    [algTooltip]="threadStatusTooltip"
                     [tooltipDisabled]="canSwitch"
                     tooltipPosition="top"
-                    tooltipStyleClass="alg-tooltip"
                     >
                     @if (threadStatus && threadStatus.data) {
                       <button
