@@ -71,16 +71,16 @@
                   <ng-container *ngIf="membership.group.type === 'Team'" [ngSwitch]="membership.canLeaveTeam">
                     <div
                       *ngSwitchCase="'frozen_membership'"
-                      i18n-pTooltip pTooltip="This team membership is now frozen and cannot be modified."
+                      i18n-algTooltip algTooltip="This team membership is now frozen and cannot be modified."
                       tooltipPosition="left"
-                      tooltipEvent="hover"
+                      tooltipStyleClass="secondary"
                       class="ph-duotone ph-lock"
                     ></div>
                     <div
                       *ngSwitchCase="'would_break_entry_conditions'"
-                      i18n-pTooltip pTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
+                      i18n-algTooltip algTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
                       tooltipPosition="left"
-                      tooltipEvent="hover"
+                      tooltipStyleClass="secondary"
                       class="ph-duotone ph-lock"
                     ></div>
                     <div *ngSwitchDefault class="ph-duotone ph-lock"></div>
@@ -88,16 +88,18 @@
 
                   <ng-container *ngIf="membership.group.type !== 'Team'">
                     <div
-                      i18n-pTooltip pTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
+                      i18n-algTooltip algTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
                       tooltipPosition="left"
-                      tooltipEvent="hover"
+                      tooltipStyleClass="secondary"
                       class="ph-duotone ph-lock"
                     ></div>
                   </ng-container>
                 </ng-template>
                 <ng-template #canLeaveActions>
                   <button
-                    i18n-pTooltip pTooltip="Leave the group"
+                    i18n-algTooltip algTooltip="Leave the group"
+                    tooltipPosition="left"
+                    tooltipStyleClass="secondary"
                     type="button"
                     icon="ph-duotone ph-sign-out"
                     class="stroke size-l"

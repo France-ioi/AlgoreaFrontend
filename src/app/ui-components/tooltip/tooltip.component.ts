@@ -1,5 +1,4 @@
 import { Component, signal, TemplateRef } from '@angular/core';
-import { TooltipPosition } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
@@ -13,7 +12,6 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class TooltipComponent {
   text = signal<string>('');
-  position = signal<TooltipPosition>('bottom');
   styleClass = signal('');
   contentTemplate = signal<TemplateRef<HTMLElement> | undefined>(undefined);
 }

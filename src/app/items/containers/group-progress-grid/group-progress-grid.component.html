@@ -68,7 +68,13 @@
                 @for (col of columnsState.data; track $index) {
                   <th class="alg-table-th sticky-th">
                     <div class="alg-table-slanted-header slanted-header">
-                      <div class="alg-table-slanted-header-content" pTooltip="{{ col.title }}" tooltipPosition="top" [showDelay]="100">
+                      <div
+                        class="alg-table-slanted-header-content"
+                        algTooltip="{{ col.title }}"
+                        tooltipPosition="top"
+                        tooltipStyleClass="secondary"
+                        [tooltipDelay]="100"
+                      >
                         <a
                           class="alg-link cursor-pointer alg-text-bold"
                           [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
@@ -85,7 +91,13 @@
             <tbody>
               @for (row of rowsState.data; track row.id) {
                 <tr class="alg-table-body-tr">
-                  <td class="alg-table-td users-td" pTooltip="{{ row.header }}" tooltipPosition="left" [showDelay]="100">
+                  <td
+                    class="alg-table-td users-td"
+                    algTooltip="{{ row.header }}"
+                    tooltipPosition="left"
+                    tooltipStyleClass="secondary"
+                    [tooltipDelay]="100"
+                  >
                     <a
                       class="alg-link cursor-pointer"
                       [routerLink]="{ id: row.id, isUser: currentFilter === 'Users' } | groupLink"

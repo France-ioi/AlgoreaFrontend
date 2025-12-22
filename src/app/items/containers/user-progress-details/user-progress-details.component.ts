@@ -8,13 +8,13 @@ import { AllowsWatchingItemAnswersPipe } from 'src/app/items/models/item-watch-p
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
-import { TooltipModule } from 'primeng/tooltip';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { NgIf, NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
 import { ItemType } from 'src/app/items/models/item-type';
 import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
 import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 export interface ProgressData {
   progress: Progress,
@@ -33,7 +33,6 @@ export interface ProgressData {
   imports: [
     NgIf,
     ScoreRingComponent,
-    TooltipModule,
     NgClass,
     RouterLink,
     AsyncPipe,
@@ -45,6 +44,7 @@ export interface ProgressData {
     RelativeTimePipe,
     DecimalPipe,
     ButtonComponent,
+    TooltipDirective,
   ],
 })
 export class UserProgressDetailsComponent implements OnChanges {

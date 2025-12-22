@@ -61,7 +61,8 @@
       <ng-container *ngIf="currentUser$ | async as currentUser">
         <div
           class="view-answer-section"
-          i18n-pTooltip pTooltip="You cannot view answers for this content."
+          i18n-algTooltip algTooltip="You cannot view answers for this content."
+          tooltipStyleClass="secondary"
           [tooltipDisabled]="(progressData.colItem.permissions | allowsWatchingAnswers) || progressData.progress.groupId === currentUser.groupId"
         >
           <a

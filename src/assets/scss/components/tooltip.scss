@@ -2,9 +2,9 @@
 
 .alg-tooltip {
   &.secondary {
-   .p-tooltip-text {
-     background-color: var(--alg-secondary-color);
-   }
+    .p-tooltip-text {
+      background-color: var(--alg-secondary-color);
+    }
 
     &.p-tooltip-right .p-tooltip-arrow {
       border-right-color: var(--alg-secondary-color);
@@ -60,5 +60,128 @@
     line-height: toRem(16);
     letter-spacing: toRem(0.4);
     background-color: var(--alg-primary-color);
+  }
+}
+
+.alg-tooltip-container {
+  display: flex;
+  position: relative;
+  padding: var(--alg-space-size-5);
+  border-radius: toRem(10);
+  color: #fff;
+  font-size: toRem(12);
+  font-weight: 500;
+  line-height: toRem(16);
+  letter-spacing: toRem(0.4);
+  background-color: var(--alg-primary-color);
+  max-width: toRem(230);
+
+  &.secondary {
+    background-color: var(--alg-secondary-color);
+  }
+
+  &.no-text-wrap {
+    max-width: none;
+    text-wrap: nowrap;
+  }
+
+  &.observation-mode {
+    min-width: toRem(280);
+  }
+}
+
+.alg-tooltip-top {
+  .alg-tooltip-container {
+    margin-bottom: toRem(10);
+    justify-content: center;
+
+    &:after {
+      position: absolute;
+      bottom: toRem(-16);
+      width: 0;
+      height: 0;
+      content: '';
+      border-width: toRem(8);
+      border-style: solid;
+      border-color: var(--alg-primary-color) transparent transparent transparent;
+    }
+
+    &.secondary {
+      &:after {
+        border-top-color: var(--alg-secondary-color);
+      }
+    }
+  }
+}
+
+.alg-tooltip-bottom {
+  .alg-tooltip-container {
+    margin-top: toRem(10);
+    justify-content: center;
+
+    &:after {
+      position: absolute;
+      top: toRem(-16);
+      width: 0;
+      height: 0;
+      content: '';
+      border-width: toRem(8);
+      border-style: solid;
+      border-color: transparent transparent var(--alg-primary-color) transparent;
+    }
+
+    &.secondary {
+      &:after {
+        border-bottom-color: var(--alg-secondary-color);
+      }
+    }
+  }
+}
+
+.alg-tooltip-left {
+  .alg-tooltip-container {
+    margin-right: toRem(10);
+    align-items: center;
+
+    &:after {
+      position: absolute;
+      right: toRem(-16);
+      width: 0;
+      height: 0;
+      content: '';
+      border-width: toRem(8);
+      border-style: solid;
+      border-color: transparent transparent transparent var(--alg-primary-color);
+    }
+
+    &.secondary {
+      &:after {
+        border-left-color: var(--alg-secondary-color);
+      }
+    }
+  }
+}
+
+.alg-tooltip-right {
+  .alg-tooltip-container {
+    margin-left: toRem(10);
+    align-items: center;
+
+    &:after {
+      position: absolute;
+      left: toRem(-16);
+      width: 0;
+      height: 0;
+      content: '';
+      border-width: toRem(8);
+      border-style: solid;
+      border-color: transparent var(--alg-primary-color) transparent transparent;
+    }
+
+    &.secondary {
+      &:after {
+        border-right-color: var(--alg-secondary-color);
+      }
+    }
   }
 }

@@ -5,7 +5,8 @@ import {
   ElementRef,
   inject,
   input,
-  OnDestroy, TemplateRef,
+  OnDestroy,
+  TemplateRef,
 } from '@angular/core';
 import { ConnectedPosition, Overlay } from '@angular/cdk/overlay';
 import { BehaviorSubject, merge, Subject, combineLatest, EMPTY, fromEvent } from 'rxjs';
@@ -16,33 +17,43 @@ import { toObservable } from '@angular/core/rxjs-interop';
 
 export type TooltipPosition = 'top' | 'bottom' | 'right' | 'left';
 
-const defaultPosition: ConnectedPosition = {
+const topPosition: ConnectedPosition = {
+  originX: 'center',
+  originY: 'top',
+  overlayX: 'center',
+  overlayY: 'bottom',
+  panelClass: 'alg-tooltip-top',
+};
+
+const bottomPosition: ConnectedPosition = {
   originX: 'center',
   originY: 'bottom',
   overlayX: 'center',
   overlayY: 'top',
+  panelClass: 'alg-tooltip-bottom',
 };
 
-const positions = new Map<TooltipPosition, ConnectedPosition>([
-  [ 'top', {
-    originX: 'center',
-    originY: 'top',
-    overlayX: 'center',
-    overlayY: 'bottom',
-  }],
-  [ 'bottom', defaultPosition ],
-  [ 'left', {
-    originX: 'start',
-    originY: 'center',
-    overlayX: 'end',
-    overlayY: 'center',
-  }],
-  [ 'right', {
-    originX: 'end',
-    originY: 'center',
-    overlayX: 'start',
-    overlayY: 'center',
-  }],
+const leftPosition: ConnectedPosition = {
+  originX: 'start',
+  originY: 'center',
+  overlayX: 'end',
+  overlayY: 'center',
+  panelClass: 'alg-tooltip-left',
+};
+
+const rightPosition: ConnectedPosition = {
+  originX: 'end',
+  originY: 'center',
+  overlayX: 'start',
+  overlayY: 'center',
+  panelClass: 'alg-tooltip-right',
+};
+
+const positions = new Map<TooltipPosition, ConnectedPosition[]>([
+  [ 'top', [ topPosition, bottomPosition ] ],
+  [ 'bottom', [ bottomPosition, topPosition ] ],
+  [ 'left', [ leftPosition, rightPosition ] ],
+  [ 'right', [ rightPosition, leftPosition ] ],
 ]);
 
 @Directive({
@@ -84,9 +95,7 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
     this.overlayRef.updatePositionStrategy(
       this.overlay.position()
         .flexibleConnectedTo(this.elementRef.nativeElement)
-        .withPositions([
-          positions.get(this.tooltipPosition()) || defaultPosition,
-        ])
+        .withPositions(positions.get(this.tooltipPosition()) || [ bottomPosition, topPosition ])
         .withFlexibleDimensions(false)
         .withPush(false)
     );
@@ -131,7 +140,6 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
         tooltipRef.instance.text.set(tooltipContent);
       }
 
-      tooltipRef.instance.position.set(this.tooltipPosition());
       tooltipRef.instance.styleClass.set(this.tooltipStyleClass());
     }
   }

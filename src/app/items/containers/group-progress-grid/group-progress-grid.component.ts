@@ -31,7 +31,6 @@ import {
 } from '../../containers/permissions-edit-dialog/permissions-edit-dialog.component';
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
 import { RouterLink } from '@angular/router';
-import { TooltipModule } from 'primeng/tooltip';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { NgIf, AsyncPipe } from '@angular/common';
@@ -41,6 +40,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 const progressListLimit = 25;
 
@@ -105,7 +105,6 @@ interface ProgressDataDialog {
     ErrorComponent,
     LoadingComponent,
     UserProgressDetailsComponent,
-    TooltipModule,
     RouterLink,
     UserProgressComponent,
     AsyncPipe,
@@ -117,6 +116,7 @@ interface ProgressDataDialog {
     ButtonIconComponent,
     CdkMenuTrigger,
     CdkMenu,
+    TooltipDirective,
   ],
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
