@@ -2,10 +2,10 @@
   <div class="left-section alg-flex-1">
     <i
       class="left-icon alg-secondary-color ph-duotone ph-eye"
-      [pTooltip]="observationModeTooltip"
+      [algTooltip]="observationModeTooltip"
       [tooltipDisabled]="!showTooltip"
-      [positionLeft]="5"
-      tooltipStyleClass="alg-tooltip observation-mode"
+      tooltipPosition="right"
+      tooltipStyleClass="observation-mode"
     ></i>
     <ng-template #observationModeTooltip>
       <span *ngIf="(observedGroup.route | isUser); else groupName" i18n>
