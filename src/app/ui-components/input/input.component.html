@@ -8,10 +8,11 @@
     [formControlName]="name"
     (focus)="focus.emit($event)"
     (blur)="blur.emit($event)"
-    [pTooltip]="pTooltip"
+    [algTooltip]="tooltipText"
     [tooltipEvent]="tooltipEvent"
     [tooltipPosition]="tooltipPosition"
     [tooltipDisabled]="tooltipDisabled"
+    tooltipStyleClass="secondary"
   >
   <button
     class="icon-wrapper clear-button"
