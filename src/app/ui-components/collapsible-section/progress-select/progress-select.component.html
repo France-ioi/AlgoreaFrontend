@@ -18,9 +18,8 @@
   <div
     *ngFor="let item of values; trackBy: trackByFn; let idx = index;"
     class="progress-select-item"
-    [pTooltip]="item.tooltip?.join('\n') || ''"
+    [algTooltip]="item.tooltip?.join('\n') || ''"
     tooltipPosition="top"
-    tooltipStyleClass="alg-tooltip"
     [tooltipDisabled]="!item.disabled"
   >
     <div
