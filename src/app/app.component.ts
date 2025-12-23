@@ -16,7 +16,6 @@ import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
-import { ToastModule } from 'primeng/toast';
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
 import { LetDirective } from '@ngrx/component';
@@ -34,6 +33,7 @@ import { FatalErrorModalComponent } from 'src/app/containers/fatal-error-modal/f
 import {
   GroupObservationErrorModalComponent
 } from 'src/app/containers/group-observation-error-modal/group-observation-error-modal.component';
+import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toast-messages.component';
 
 @Component({
   selector: 'alg-root',
@@ -49,10 +49,10 @@ import {
     HtmlElLoadedDirective,
     RouterOutlet,
     ThreadContainerComponent,
-    ToastModule,
     LanguageMismatchComponent,
     AsyncPipe,
     CdkScrollable,
+    ToastMessagesComponent,
   ],
 })
 export class AppComponent implements OnInit, OnDestroy {
