@@ -239,3 +239,32 @@
   </ng-template>
 </div>
 
+<h2 class="alg-h2 alg-base-title-space">Toast</h2>
+
+<div class="alg-base-title-space">
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="actionFeedbackService.unexpectedError()"
+  >Unexpected Error</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="actionFeedbackService.success('The changes saved successfully')"
+  >Success</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="actionFeedbackService.error('Failure to save changes')"
+  >Error</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="actionFeedbackService.partial('The changes saved partly')"
+  >Partial</button>
+  <button
+    class="size-s alg-button-margin-right"
+    alg-button
+    (click)="actionFeedbackService.success('The changes saved successfully', { life: 1000 })"
+  >Life 1sec</button>
+</div>

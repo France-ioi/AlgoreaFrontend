@@ -91,6 +91,26 @@
   --alg-message-error-bg-color: rgba(255, 231, 230, 0.7);
   --alg-success-btn-color: #34a835;
 
+  --toast-success-bg: #EAF7EF;
+  --toast-success-border: #4CAF50;
+  --toast-success-text: #256029;
+  --toast-success-icon: #4CAF50;
+
+  --toast-info-bg:     #EDF4FF;
+  --toast-info-border: #3B82F6;
+  --toast-info-text:   #1E3A8A;
+  --toast-info-icon:   #3B82F6;
+
+  --toast-warning-bg:     #FFF7E6;
+  --toast-warning-border: #F59E0B;
+  --toast-warning-text:   #92400E;
+  --toast-warning-icon:   #F59E0B;
+
+  --toast-error-bg:     #FDECEC;
+  --toast-error-border: #EF4444;
+  --toast-error-text:   #7F1D1D;
+  --toast-error-icon:   #EF4444;
+
   // Spacers
   --alg-space-size-1: 4rem;
   --alg-space-size-2: 3rem;

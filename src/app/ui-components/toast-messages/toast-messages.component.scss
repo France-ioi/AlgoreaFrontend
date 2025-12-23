@@ -1,0 +1,80 @@
+@import 'src/assets/scss/functions';
+
+:host {
+  position: fixed;
+  bottom: toRem(16);
+  left: toRem(16);
+  z-index: 9999;
+}
+
+.container {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.message {
+  position: relative;
+  display: flex;
+  width: toRem(348);
+  padding: toRem(16);
+  background-color: var(--alg-white-color);
+  border-radius: toRem(10);
+  border: toRem(2) solid var(--alg-black-color);
+
+  &:not(:first-child) {
+    margin-bottom: toRem(16);
+  }
+
+  &.success {
+    border: toRem(2) solid var(--toast-success-border);
+    background-color: var(--toast-success-bg);
+
+    .message-icon {
+      color: var(--toast-success-icon);
+    }
+  }
+  &.info {
+    border: toRem(2) solid var(--toast-info-border);
+    background-color: var(--toast-info-bg);
+
+    .message-icon {
+      color: var(--toast-info-icon);
+    }
+  }
+  &.warn {
+    border: toRem(2) solid var(--toast-warning-border);
+    background-color: var(--toast-warning-bg);
+
+    .message-icon {
+      color: var(--toast-warning-icon);
+    }
+  }
+  &.error {
+    border: toRem(2) solid var(--toast-error-border);
+    background-color: var(--toast-error-bg);
+
+    .message-icon {
+      color: var(--toast-error-icon);
+    }
+  }
+}
+
+.message-icon-container {
+  margin-right: toRem(16);
+}
+
+.message-icon {
+  font-size: toRem(24);
+  color: var(--alg-black-color);
+}
+
+.close-button-container {
+  position: absolute;
+  top: toRem(4);
+  right: toRem(4);
+}
+
+.message-text {
+  margin-top: toRem(6);
+  font-size: toRem(14);
+}
