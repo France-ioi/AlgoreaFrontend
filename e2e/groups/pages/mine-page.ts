@@ -62,7 +62,7 @@ export class MinePage {
     const leaveGroupButtonLocator = this.page.getByRole('button', { name: 'Yes, leave group' });
     await expect.soft(leaveGroupButtonLocator).toBeVisible();
     await leaveGroupButtonLocator.click();
-    await expect.soft(this.page.locator('p-toastitem', { hasText: `You have left "${ groupName }"` })).toBeVisible();
+    await expect.soft(this.page.locator('alg-toast-messages', { hasText: `You have left "${ groupName }"` })).toBeVisible();
   }
 
   async checkGroupIsLockToLeave(groupName: string): Promise<void> {
