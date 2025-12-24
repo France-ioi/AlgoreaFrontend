@@ -1,0 +1,24 @@
+<div class="container">
+  @for (message of messages(); track $index) {
+    <div class="message {{ message.severity || '' }}">
+      <div class="close-button-container">
+        <button
+          type="button"
+          class="secondary"
+          alg-button-icon
+          icon="ph ph-x"
+          (click)="onClose(message)"
+        ></button>
+      </div>
+      <div class="message-icon-container">
+        <i class="message-icon ph ph-check"></i>
+      </div>
+      <div class="message-body">
+        @if (message.summary; as summary) {
+          <div class="message-title">{{ summary }}</div>
+        }
+        <div class="message-text">{{ message.detail }}</div>
+      </div>
+    </div>
+  }
+</div>
