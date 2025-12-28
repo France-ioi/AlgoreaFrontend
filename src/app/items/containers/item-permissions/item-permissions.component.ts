@@ -16,7 +16,6 @@ import {
   PermissionsEditDialogComponent,
   PermissionsEditDialogParams,
 } from '../permissions-edit-dialog/permissions-edit-dialog.component';
-import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
 import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
@@ -30,6 +29,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Dialog } from '@angular/cdk/dialog';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -42,7 +42,6 @@ import { Dialog } from '@angular/cdk/dialog';
     SectionHeaderComponent,
     ProgressSelectComponent,
     FormsModule,
-    TooltipModule,
     I18nSelectPipe,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
@@ -50,6 +49,7 @@ import { Dialog } from '@angular/cdk/dialog';
     GroupIsUserPipe,
     AllowsGrantingContentViewItemPipe,
     ButtonComponent,
+    TooltipDirective,
   ],
 })
 export class ItemPermissionsComponent implements OnChanges {
