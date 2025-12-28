@@ -14,7 +14,6 @@ import { APPCONFIG } from 'src/app/config';
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
   styleUrls: [ './left-header.component.scss' ],
-  standalone: true,
   imports: [ NgIf, LetDirective, NgClass, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent ]
 })
 export class LeftHeaderComponent {

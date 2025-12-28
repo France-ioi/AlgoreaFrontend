@@ -7,7 +7,6 @@ import { TooltipDirective, TooltipPosition } from 'src/app/ui-components/tooltip
   selector: 'alg-relative-time',
   templateUrl: './relative-time.component.html',
   styleUrls: [ './relative-time.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     DatePipe,

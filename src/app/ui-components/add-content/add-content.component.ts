@@ -36,7 +36,6 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     InputComponent,
@@ -49,7 +48,7 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     ShowOverlayHoverTargetDirective,
     ButtonComponent,
     TooltipDirective,
-  ],
+  ]
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];

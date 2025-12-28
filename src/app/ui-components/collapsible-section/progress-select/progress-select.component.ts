@@ -39,7 +39,6 @@ export interface ProgressSelectValue<T> {
       multi: true,
     }
   ],
-  standalone: true,
   imports: [ NgIf, ProgressLevelComponent, NgClass, NgTemplateOutlet, NgFor, TooltipDirective ]
 })
 export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {

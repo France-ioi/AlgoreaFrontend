@@ -8,7 +8,6 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
   selector: 'alg-language-picker',
   templateUrl: './language-picker.component.html',
   styleUrls: [ './language-picker.component.scss' ],
-  standalone: true,
   imports: [ FormsModule, SelectComponent, SelectOptionComponent, SelectOptionComponent ]
 })
 export class LanguagePickerComponent implements OnInit, OnChanges {

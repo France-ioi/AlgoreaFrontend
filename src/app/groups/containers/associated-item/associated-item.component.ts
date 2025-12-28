@@ -42,7 +42,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
       multi: true,
     }
   ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -58,7 +57,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ItemRoutePipe,
     RouteUrlPipe,
     ButtonIconComponent,
-  ],
+  ]
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
 

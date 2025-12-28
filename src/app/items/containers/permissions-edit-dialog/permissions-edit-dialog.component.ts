@@ -30,7 +30,6 @@ export interface PermissionsEditDialogParams {
   selector: 'alg-permissions-edit-dialog',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     ErrorComponent,
@@ -39,7 +38,7 @@ export interface PermissionsEditDialogParams {
     AsyncPipe,
     GroupIsUserPipe,
     ModalComponent,
-  ],
+  ]
 })
 export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
   params = signal(inject<PermissionsEditDialogParams>(DIALOG_DATA));

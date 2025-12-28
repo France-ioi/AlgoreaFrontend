@@ -8,7 +8,6 @@ import { NgIf } from '@angular/common';
   selector: 'alg-task-loader',
   templateUrl: './task-loader.component.html',
   styleUrls: [ './task-loader.component.scss' ],
-  standalone: true,
   imports: [ NgIf, LoadingComponent ]
 })
 export class TaskLoaderComponent implements OnInit, OnDestroy {

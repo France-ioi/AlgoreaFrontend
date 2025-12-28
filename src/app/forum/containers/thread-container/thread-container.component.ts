@@ -13,7 +13,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-thread-container',
   templateUrl: './thread-container.component.html',
   styleUrls: [ './thread-container.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     RouterLink,
@@ -22,7 +21,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ItemRoutePipe,
     RouteUrlPipe,
     ButtonIconComponent,
-  ],
+  ]
 })
 export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   @ViewChild(ThreadComponent) threadComponent?: ThreadComponent;

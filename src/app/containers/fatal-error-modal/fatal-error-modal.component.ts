@@ -7,8 +7,7 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
   selector: 'alg-fatal-error-modal',
   templateUrl: './fatal-error-modal.component.html',
   styleUrls: [ './fatal-error-modal.component.scss' ],
-  standalone: true,
-  imports: [ ButtonComponent, NotificationModalComponent ],
+  imports: [ ButtonComponent, NotificationModalComponent ]
 })
 export class FatalErrorModalComponent {
   error = signal(inject<Error>(DIALOG_DATA));

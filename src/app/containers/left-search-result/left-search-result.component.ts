@@ -14,7 +14,6 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
   selector: 'alg-left-search-result',
   templateUrl: './left-search-result.component.html',
   styleUrls: [ './left-search-result.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LeftMenuBackButtonComponent,
@@ -28,7 +27,7 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
     RouteUrlPipe,
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective
-  ],
+  ]
 })
 export class LeftSearchResultComponent {
   @Input() data?: SearchResponse['searchResults'];

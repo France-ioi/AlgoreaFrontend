@@ -21,11 +21,10 @@ export interface PropagationAdvancedConfigurationDialogData {
   selector: 'alg-propagation-advanced-configuration-dialog',
   templateUrl: 'propagation-advanced-configuration-dialog.component.html',
   styleUrls: [ 'propagation-advanced-configuration-dialog.component.scss' ],
-  standalone: true,
   imports: [
     PropagationAdvancedConfigurationFormComponent,
     ModalComponent,
-  ],
+  ]
 })
 export class PropagationAdvancedConfigurationDialogComponent {
   data = input(inject<PropagationAdvancedConfigurationDialogData>(DIALOG_DATA));

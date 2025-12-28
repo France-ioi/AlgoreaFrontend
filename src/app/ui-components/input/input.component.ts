@@ -13,7 +13,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-input',
   templateUrl: './input.component.html',
   styleUrls: [ './input.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
@@ -21,7 +20,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     NgClass,
     FormErrorComponent,
     TooltipDirective,
-  ],
+  ]
 })
 export class InputComponent {
   @Input() name = ''; // name of the input in the parent form

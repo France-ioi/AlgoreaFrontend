@@ -7,8 +7,7 @@ import { InputComponent } from 'src/app/ui-components/input/input.component';
   selector: 'alg-left-menu-search',
   templateUrl: 'left-menu-search.component.html',
   styleUrls: [ 'left-menu-search.component.scss' ],
-  standalone: true,
-  imports: [ InputComponent ],
+  imports: [ InputComponent ]
 })
 export class LeftMenuSearchComponent implements OnChanges {
 

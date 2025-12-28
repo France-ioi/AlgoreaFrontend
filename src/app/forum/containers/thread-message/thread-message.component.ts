@@ -16,7 +16,6 @@ import { RelativeTimePipe } from '../../../pipes/relativeTime';
   selector: 'alg-thread-message',
   templateUrl: './thread-message.component.html',
   styleUrls: [ './thread-message.component.scss' ],
-  standalone: true,
   imports: [
     NgClass,
     NgIf,
@@ -29,7 +28,7 @@ import { RelativeTimePipe } from '../../../pipes/relativeTime';
     AllowDisplayCodeSnippet,
     BreakLinesPipe,
     RelativeTimePipe,
-  ],
+  ]
 })
 export class ThreadMessageComponent implements OnChanges {
   @Input({ required: true }) threadId!: ThreadId;

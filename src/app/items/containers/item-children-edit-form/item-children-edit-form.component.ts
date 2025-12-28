@@ -26,14 +26,13 @@ import { LocaleService } from 'src/app/services/localeService';
   selector: 'alg-item-children-edit-form',
   templateUrl: './item-children-edit-form.component.html',
   styleUrls: [ './item-children-edit-form.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     ItemChildrenEditComponent,
     NgClass,
     FloatingSaveComponent,
     AllowsEditingChildrenItemPipe,
-  ],
+  ]
 })
 export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComponent, OnDestroy {
   @Input() itemData?: ItemData;

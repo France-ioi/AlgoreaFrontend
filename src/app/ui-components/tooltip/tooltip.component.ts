@@ -5,7 +5,6 @@ import { NgTemplateOutlet } from '@angular/common';
   selector: 'alg-tooltip',
   templateUrl: './tooltip.component.html',
   styleUrls: [ './tooltip.component.scss' ],
-  standalone: true,
   imports: [
     NgTemplateOutlet
   ]

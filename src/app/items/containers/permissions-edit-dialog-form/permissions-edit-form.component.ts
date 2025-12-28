@@ -28,7 +28,6 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
   selector: 'alg-permissions-edit-form[giverPermissions]',
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
@@ -42,7 +41,7 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
     DatePipe,
     CanEnterComponent,
     ButtonComponent,
-  ],
+  ]
 })
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   @Input() permissions?: GroupPermissions;

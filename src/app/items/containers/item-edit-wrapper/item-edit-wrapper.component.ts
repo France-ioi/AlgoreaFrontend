@@ -58,7 +58,6 @@ enum UpdateOrDeleteStringsRequestType {
   selector: 'alg-item-edit-wrapper',
   templateUrl: './item-edit-wrapper.component.html',
   styleUrls: [ './item-edit-wrapper.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
@@ -68,7 +67,7 @@ enum UpdateOrDeleteStringsRequestType {
     AllowsEditingAllItemPipe,
     ErrorComponent,
     ItemAllStringsFormComponent,
-  ],
+  ]
 })
 export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
   @Input() itemData?: ItemData;

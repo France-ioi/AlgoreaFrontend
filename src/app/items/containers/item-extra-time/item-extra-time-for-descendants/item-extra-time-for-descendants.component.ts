@@ -31,7 +31,6 @@ import {
  */
 @Component({
   selector: 'alg-item-extra-time-for-descendants',
-  standalone: true,
   imports: [
     ErrorComponent,
     LoadingComponent,
@@ -51,7 +50,7 @@ import {
   ],
   templateUrl: './item-extra-time-for-descendants.component.html',
   styleUrl: './item-extra-time-for-descendants.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
   itemId = input.required<string>();

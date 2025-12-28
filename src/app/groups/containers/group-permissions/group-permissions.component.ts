@@ -7,12 +7,11 @@ import { NgIf, DatePipe } from '@angular/common';
   selector: 'alg-group-permissions',
   templateUrl: './group-permissions.component.html',
   styleUrls: [ './group-permissions.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     DatePipe,
     GroupPermissionCaptionPipe,
-  ],
+  ]
 })
 export class GroupPermissionsComponent {
   @Input() permissions?: GrantedPermissions['permissions'];

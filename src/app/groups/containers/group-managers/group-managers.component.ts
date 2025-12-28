@@ -8,8 +8,7 @@ import { Group } from '../../models/group';
   selector: 'alg-group-managers',
   templateUrl: './group-managers.component.html',
   styleUrls: [ './group-managers.component.scss' ],
-  standalone: true,
-  imports: [ GroupManagerListComponent, IsCurrentUserManagerPipe, IsCurrentUserMemberPipe ],
+  imports: [ GroupManagerListComponent, IsCurrentUserManagerPipe, IsCurrentUserMemberPipe ]
 })
 export class GroupManagersComponent {
   group = input.required<Group>();

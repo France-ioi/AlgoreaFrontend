@@ -22,8 +22,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
       multi: true,
     }
   ],
-  standalone: true,
-  imports: [ FormsModule ],
+  imports: [ FormsModule ]
 })
 export class SwitchComponent implements ControlValueAccessor {
   checked = signal(false);

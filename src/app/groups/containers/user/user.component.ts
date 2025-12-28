@@ -24,7 +24,6 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   selector: 'alg-user',
   templateUrl: './user.component.html',
   styleUrls: [ './user.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -38,7 +37,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
     AsyncPipe,
     UserInfoComponent,
     NgTemplateOutlet,
-  ],
+  ]
 })
 export class UserComponent implements OnInit, OnDestroy {
   userRoute$ = this.store.select(fromGroupContent.selectActiveContentRoute).pipe(filter(isNotNull));

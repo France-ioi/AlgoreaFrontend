@@ -26,7 +26,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-content-top-bar',
   templateUrl: './content-top-bar.component.html',
   styleUrls: [ './content-top-bar.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     ScoreRingComponent,
@@ -39,7 +38,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     AsyncPipe,
     PushPipe,
     ButtonIconComponent,
-  ],
+  ]
 })
 export class ContentTopBarComponent {
   @Input() showBreadcrumbs = true;

@@ -7,7 +7,6 @@ import { NgIf } from '@angular/common';
   selector: 'alg-item-task-edit',
   templateUrl: './item-task-edit.component.html',
   styleUrls: [ './item-task-edit.component.scss' ],
-  standalone: true,
   imports: [ NgIf, FullHeightContentDirective ]
 })
 export class ItemTaskEditComponent implements OnChanges {

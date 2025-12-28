@@ -26,7 +26,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  standalone: true,
   imports: [ NgFor, NgClass, TooltipDirective ]
 })
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {

@@ -45,13 +45,12 @@ const loginIdParam = 'user_id';
   selector: 'alg-lti',
   templateUrl: './lti.component.html',
   styleUrls: [ './lti.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
     ErrorComponent,
     AsyncPipe,
-  ],
+  ]
 })
 export class LTIComponent implements OnDestroy {
 

@@ -39,7 +39,6 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
   selector: 'alg-root',
   templateUrl: './app.component.html',
   styleUrls: [ './app.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     NgClass,
@@ -53,7 +52,7 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
     AsyncPipe,
     CdkScrollable,
     ToastMessagesComponent,
-  ],
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   private config = inject(APPCONFIG);

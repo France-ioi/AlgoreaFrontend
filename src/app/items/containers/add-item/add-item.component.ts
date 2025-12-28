@@ -15,7 +15,6 @@ import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-secti
   selector: 'alg-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: [ './add-item.component.scss' ],
-  standalone: true,
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddItemComponent implements OnChanges {

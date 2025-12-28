@@ -7,13 +7,12 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   selector: 'alg-error',
   templateUrl: './error.component.html',
   styleUrls: [ './error.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     NgClass,
     RouterLink,
     ButtonComponent,
-  ],
+  ]
 })
 export class ErrorComponent {
   @Output() refresh = new EventEmitter<MouseEvent>();

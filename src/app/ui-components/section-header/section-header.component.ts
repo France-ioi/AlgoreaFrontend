@@ -5,12 +5,11 @@ import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
   selector: 'alg-section-header',
   templateUrl: './section-header.component.html',
   styleUrls: [ './section-header.component.scss' ],
-  standalone: true,
   imports: [
     NgClass,
     NgIf,
     NgTemplateOutlet,
-  ],
+  ]
 })
 export class SectionHeaderComponent {
 

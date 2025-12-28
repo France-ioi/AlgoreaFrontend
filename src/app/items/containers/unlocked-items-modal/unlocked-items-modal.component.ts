@@ -12,7 +12,6 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
   selector: 'alg-unlocked-items-modal',
   templateUrl: './unlocked-items-modal.component.html',
   styleUrls: [ './unlocked-items-modal.component.scss' ],
-  standalone: true,
   imports: [
     ButtonComponent,
     ItemRoutePipe,
@@ -20,7 +19,7 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
     RouterLink,
     NgClass,
     NotificationModalComponent,
-  ],
+  ]
 })
 export class UnlockedItemsModalComponent {
   items = signal(inject<UnlockedItems>(DIALOG_DATA));

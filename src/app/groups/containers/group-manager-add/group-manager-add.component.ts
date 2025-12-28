@@ -15,7 +15,6 @@ import { Group } from '../../models/group';
   selector: 'alg-group-manager-add',
   templateUrl: './group-manager-add.component.html',
   styleUrls: [ './group-manager-add.component.scss' ],
-  standalone: true,
   imports: [ SectionParagraphComponent, FormsModule, ButtonComponent ]
 })
 export class GroupManagerAddComponent {

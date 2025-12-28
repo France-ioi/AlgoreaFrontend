@@ -25,7 +25,6 @@ export interface MenuItem {
   selector: 'alg-top-right-menu',
   templateUrl: './top-right-menu.component.html',
   styleUrls: [ './top-right-menu.component.scss' ],
-  standalone: true,
   imports: [
     AsyncPipe,
     ButtonIconComponent,
@@ -36,7 +35,7 @@ export interface MenuItem {
     NgTemplateOutlet,
     LetDirective,
     RouterLink,
-  ],
+  ]
 })
 export class TopRightMenuComponent {
   private config = inject(APPCONFIG);

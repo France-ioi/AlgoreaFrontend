@@ -37,7 +37,6 @@ import { Dialog } from '@angular/cdk/dialog';
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
   styleUrls: [ './user-group-invitations.component.scss' ],
-  standalone: true,
   imports: [
     LoadingComponent,
     NgIf,
@@ -64,7 +63,7 @@ import { Dialog } from '@angular/cdk/dialog';
     CdkNoDataRow,
     TableSortDirective,
     TableSortHeaderComponent,
-  ],
+  ]
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
   @Output() groupJoined = new EventEmitter<void>();

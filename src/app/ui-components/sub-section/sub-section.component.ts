@@ -5,8 +5,7 @@ import { NgIf } from '@angular/common';
   selector: 'alg-sub-section',
   templateUrl: './sub-section.component.html',
   styleUrls: [ './sub-section.component.scss' ],
-  standalone: true,
-  imports: [ NgIf ],
+  imports: [ NgIf ]
 })
 export class SubSectionComponent {
   @Input() label?: string;

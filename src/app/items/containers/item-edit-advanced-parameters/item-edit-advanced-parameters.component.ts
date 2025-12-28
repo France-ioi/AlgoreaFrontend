@@ -21,7 +21,6 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
   selector: 'alg-item-edit-advanced-parameters',
   templateUrl: './item-edit-advanced-parameters.component.html',
   styleUrls: [ './item-edit-advanced-parameters.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
@@ -37,7 +36,7 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
     SelectComponent,
     SelectOptionComponent,
     InputNumberComponent
-  ],
+  ]
 })
 export class ItemEditAdvancedParametersComponent implements OnInit {
   @Output() confirmRemoval = new EventEmitter<void>();

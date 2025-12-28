@@ -23,7 +23,6 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   selector: 'alg-managed-group-list',
   templateUrl: './managed-group-list.component.html',
   styleUrls: [ './managed-group-list.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     ErrorComponent,
@@ -41,7 +40,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
     CdkHeaderRow,
     CdkHeaderRowDef,
     LoadingComponent,
-  ],
+  ]
 })
 export class ManagedGroupListComponent implements OnInit {
 

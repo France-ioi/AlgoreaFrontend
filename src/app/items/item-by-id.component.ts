@@ -81,7 +81,6 @@ const selectState = createSelector(
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
   providers: [ InitialAnswerDataSource, ItemTabs ],
-  standalone: true,
   imports: [
     NgClass,
     ItemHeaderComponent,
@@ -107,7 +106,7 @@ const selectState = createSelector(
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
     ButtonComponent,
-  ],
+  ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
   private config = inject(APPCONFIG);

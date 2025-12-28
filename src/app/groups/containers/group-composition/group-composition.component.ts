@@ -24,7 +24,6 @@ export interface GroupChildData {
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
   styleUrls: [ './group-composition.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     MemberListComponent,
@@ -34,7 +33,7 @@ export interface GroupChildData {
     GroupNoPermissionComponent,
     IsCurrentUserManagerPipe,
     CanCurrentUserManageMembersPipe,
-  ],
+  ]
 })
 export class GroupCompositionComponent {
   @ViewChild('addSubGroupComponent') addSubGroupComponent?: AddSubGroupComponent;

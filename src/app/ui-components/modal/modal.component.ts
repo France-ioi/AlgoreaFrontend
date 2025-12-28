@@ -5,7 +5,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-modal',
   templateUrl: './modal.component.html',
   styleUrls: [ './modal.component.scss' ],
-  standalone: true,
   imports: [
     ButtonIconComponent,
   ]

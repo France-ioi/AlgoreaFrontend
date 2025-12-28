@@ -11,7 +11,6 @@ import { UserGroupsWithGrantsComponent } from '../user-groups-with-grants/user-g
   selector: 'alg-user-info',
   templateUrl: './user-info.component.html',
   styleUrls: [ './user-info.component.scss' ],
-  standalone: true,
   imports: [
     ButtonComponent,
     UserGroupsWithGrantsComponent,

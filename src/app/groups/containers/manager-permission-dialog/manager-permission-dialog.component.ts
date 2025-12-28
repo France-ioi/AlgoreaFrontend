@@ -33,7 +33,6 @@ export interface ManagerPermissionDialogResult {
   selector: 'alg-manager-permission-dialog',
   templateUrl: './manager-permission-dialog.component.html',
   styleUrls: [ './manager-permission-dialog.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
@@ -44,7 +43,7 @@ export interface ManagerPermissionDialogResult {
     LoadingComponent,
     ButtonComponent,
     ModalComponent,
-  ],
+  ]
 })
 export class ManagerPermissionDialogComponent implements OnInit {
   params = signal(inject<ManagerPermissionDialogParams>(DIALOG_DATA));

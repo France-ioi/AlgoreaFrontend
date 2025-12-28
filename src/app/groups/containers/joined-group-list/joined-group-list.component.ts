@@ -32,7 +32,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-joined-group-list',
   templateUrl: './joined-group-list.component.html',
   styleUrls: [ './joined-group-list.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     ErrorComponent,
@@ -58,7 +57,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     TableSortHeaderComponent,
     NgClass,
     TooltipDirective
-  ],
+  ]
 })
 export class JoinedGroupListComponent implements OnDestroy {
   private refresh$ = new Subject<void>();

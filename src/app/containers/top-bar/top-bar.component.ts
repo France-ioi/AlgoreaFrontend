@@ -8,13 +8,12 @@ import { NgIf } from '@angular/common';
   selector: 'alg-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: [ './top-bar.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LeftHeaderComponent,
     ContentTopBarComponent,
     TopRightControlsComponent,
-  ],
+  ]
 })
 export class TopBarComponent {
   @Input() showBreadcrumbs = true;

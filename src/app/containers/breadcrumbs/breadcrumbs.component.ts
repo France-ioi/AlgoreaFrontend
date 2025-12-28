@@ -18,7 +18,6 @@ const selectBreadcrumbsDefaultOnTitle = createSelector(
   selector: 'alg-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
   styleUrls: [ './breadcrumbs.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     NgFor,

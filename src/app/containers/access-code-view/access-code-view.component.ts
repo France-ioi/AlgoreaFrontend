@@ -17,7 +17,6 @@ import { EMPTY, Observable, throwError } from 'rxjs';
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
-  standalone: true,
   imports: [ FormsModule, ButtonComponent ]
 })
 export class AccessCodeViewComponent {

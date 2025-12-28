@@ -7,7 +7,6 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
   selector: 'alg-composition-filter',
   templateUrl: './composition-filter.component.html',
   styleUrls: [ './composition-filter.component.scss' ],
-  standalone: true,
   imports: [ SelectionComponent ]
 })
 export class CompositionFilterComponent implements OnInit {

@@ -16,7 +16,6 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
   selector: 'alg-manage-groups',
   templateUrl: './manage-groups.component.html',
   styleUrls: [ './manage-groups.component.scss' ],
-  standalone: true,
   imports: [
     AsyncPipe,
     AddGroupComponent,

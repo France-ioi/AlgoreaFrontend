@@ -31,7 +31,6 @@ import { ResultIsActivePipe } from '../../models/attempts';
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
   styleUrls: [ './item-content.component.scss' ],
-  standalone: true,
   imports: [
     HasHTMLDirective,
     SwitchComponent,
@@ -52,7 +51,7 @@ import { ResultIsActivePipe } from '../../models/attempts';
     IsASkillPipe,
     FormsModule,
     ResultIsActivePipe,
-  ],
+  ]
 })
 export class ItemContentComponent implements PendingChangesComponent {
   @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;

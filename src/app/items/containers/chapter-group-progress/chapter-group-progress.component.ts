@@ -16,7 +16,6 @@ import { fromObservation } from 'src/app/store/observation';
   selector: 'alg-chapter-group-progress',
   templateUrl: './chapter-group-progress.component.html',
   styleUrls: [ './chapter-group-progress.component.scss' ],
-  standalone: true,
   imports: [ NgIf, GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ChapterGroupProgressComponent implements OnDestroy {

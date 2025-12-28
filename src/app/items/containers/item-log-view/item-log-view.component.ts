@@ -51,7 +51,6 @@ const logsLimit = 20;
   selector: 'alg-item-log-view',
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -86,7 +85,7 @@ const logsLimit = 20;
     CdkRow,
     CdkRowDef,
     CdkNoDataRow,
-  ],
+  ]
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 

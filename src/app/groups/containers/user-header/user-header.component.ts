@@ -8,12 +8,11 @@ import { NgIf, AsyncPipe } from '@angular/common';
   selector: 'alg-user-header[user][route]',
   templateUrl: './user-header.component.html',
   styleUrls: [ './user-header.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     AsyncPipe,
     UserCaptionPipe,
-  ],
+  ]
 })
 export class UserHeaderComponent {
   @Input() user!: User;

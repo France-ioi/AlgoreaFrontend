@@ -68,7 +68,6 @@ const heightSyncInterval = 0.2*SECONDS;
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
-  standalone: true,
   imports: [
     NgIf,
     NgClass,
@@ -78,7 +77,7 @@ const heightSyncInterval = 0.2*SECONDS;
     AsyncPipe,
     AllowsEditingAllItemPipe,
     ButtonComponent,
-  ],
+  ]
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
   @Input() route!: FullItemRoute;

@@ -41,7 +41,6 @@ import {
   selector: 'alg-group-edit',
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -60,7 +59,7 @@ import {
     InputDateComponent,
     CanCurrentUserManageMembersAndGroupPipe,
     IsCurrentUserManagerPipe,
-  ],
+  ]
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
   private dialogService = inject(Dialog);

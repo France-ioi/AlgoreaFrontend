@@ -52,7 +52,6 @@ const managersLimit = 25;
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
   styleUrls: [ './group-manager-list.component.scss' ],
-  standalone: true,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -77,7 +76,7 @@ const managersLimit = 25;
     CdkHeaderCellDef,
     CdkHeaderRow,
     CdkHeaderRowDef,
-  ],
+  ]
 })
 export class GroupManagerListComponent {
 

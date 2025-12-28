@@ -34,7 +34,6 @@ const selectAllowsSubmissionsUntil = createSelector(
 
 @Component({
   selector: 'alg-time-limited-content-info',
-  standalone: true,
   imports: [ DurationAsCountdownPipe ],
   templateUrl: './time-limited-content-info.component.html',
   styleUrl: './time-limited-content-info.component.scss',

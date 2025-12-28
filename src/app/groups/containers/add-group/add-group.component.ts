@@ -14,8 +14,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
   selector: 'alg-add-group',
   templateUrl: 'add-group.component.html',
   styleUrls: [ 'add-group.component.scss' ],
-  standalone: true,
-  imports: [ AddContentComponent ],
+  imports: [ AddContentComponent ]
 })
 export class AddGroupComponent {
   allowedNewGroupTypes: NewContentType<GroupType>[] = [

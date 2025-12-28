@@ -23,13 +23,12 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
-  standalone: true,
   imports: [
     TextareaComponent,
     ButtonComponent,
     MessageInfoComponent,
     NgClass,
-  ],
+  ]
 })
 export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 

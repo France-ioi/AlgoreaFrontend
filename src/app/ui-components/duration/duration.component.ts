@@ -45,7 +45,6 @@ const MAX_SECONDS_VALUE = 59;
       multi: true,
     },
   ],
-  standalone: true,
   imports: [ NgIf, FormsModule, FormErrorComponent, NgxMaskDirective ]
 })
 export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {

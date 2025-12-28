@@ -10,8 +10,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   selector: 'alg-group-leave',
   templateUrl: './group-leave.component.html',
   styleUrls: [ './group-leave.component.scss' ],
-  standalone: true,
-  imports: [ NgIf, ButtonComponent ],
+  imports: [ NgIf, ButtonComponent ]
 })
 export class GroupLeaveComponent {
   @Output() leave = new EventEmitter<void>();

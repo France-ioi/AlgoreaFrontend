@@ -83,13 +83,12 @@ const descendantTeamsColumns: Column[] = [
 const membersLimit = 25;
 
 type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string }) &
- { route: RawGroupRoute };
+{ route: RawGroupRoute };
 
 @Component({
   selector: 'alg-member-list',
   templateUrl: './member-list.component.html',
   styleUrls: [ './member-list.component.scss' ],
-  standalone: true,
   imports: [
     GroupCompositionFilterComponent,
     NgIf,
@@ -119,7 +118,7 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
     TableSortHeaderComponent,
     FindInArray,
     LoadingComponent,
-  ],
+  ]
 })
 export class MemberListComponent implements OnChanges, OnDestroy {
 

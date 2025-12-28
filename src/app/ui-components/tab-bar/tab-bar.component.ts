@@ -22,8 +22,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
-  standalone: true,
-  imports: [ LetDirective, AsyncPipe, NgForOf, NgClass, RouterLink, NgIf, NgScrollbar, ButtonComponent, ButtonIconComponent ],
+  imports: [ LetDirective, AsyncPipe, NgForOf, NgClass, RouterLink, NgIf, NgScrollbar, ButtonComponent, ButtonIconComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;

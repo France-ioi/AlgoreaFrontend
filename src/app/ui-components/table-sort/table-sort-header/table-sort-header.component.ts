@@ -11,8 +11,7 @@ export interface SortEvent {
   selector: 'th[alg-table-sort-header]',
   templateUrl: './table-sort-header.component.html',
   styleUrls: [ './table-sort-header.component.scss' ],
-  standalone: true,
-  imports: [ ButtonIconComponent, NgClass ],
+  imports: [ ButtonIconComponent, NgClass ]
 })
 export class TableSortHeaderComponent {
   sortField = input.required<string>({ alias: 'alg-table-sort-header' });

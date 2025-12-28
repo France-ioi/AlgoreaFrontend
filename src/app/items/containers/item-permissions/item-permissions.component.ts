@@ -35,7 +35,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-item-permissions',
   templateUrl: './item-permissions.component.html',
   styleUrls: [ './item-permissions.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     SectionParagraphComponent,
@@ -50,7 +49,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     AllowsGrantingContentViewItemPipe,
     ButtonComponent,
     TooltipDirective,
-  ],
+  ]
 })
 export class ItemPermissionsComponent implements OnChanges {
   @Output() changed = new EventEmitter<void>();

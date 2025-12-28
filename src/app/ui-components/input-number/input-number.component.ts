@@ -7,7 +7,6 @@ import { isString } from 'src/app/utils/type-checkers';
   selector: 'alg-input-number',
   templateUrl: './input-number.component.html',
   styleUrls: [ './input-number.component.scss' ],
-  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -18,7 +17,7 @@ import { isString } from 'src/app/utils/type-checkers';
   imports: [
     FormsModule,
     NgxMaskDirective,
-  ],
+  ]
 })
 export class InputNumberComponent implements ControlValueAccessor {
   inputStyleClass = input('');

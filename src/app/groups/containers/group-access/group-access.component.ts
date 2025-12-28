@@ -16,7 +16,6 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
   selector: 'alg-group-access',
   templateUrl: './group-access.component.html',
   styleUrls: [ './group-access.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -26,7 +25,7 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     GroupPermissionsComponent,
     AsyncPipe,
     GroupLinkPipe,
-  ],
+  ]
 })
 export class GroupAccessComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;

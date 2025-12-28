@@ -29,7 +29,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  standalone: true,
   imports: [ NgIf, NgTemplateOutlet, SwitchComponent, NgClass, FormsModule, TooltipDirective ]
 })
 export class SwitchFieldComponent implements ControlValueAccessor {
