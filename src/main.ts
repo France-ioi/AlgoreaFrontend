@@ -10,8 +10,7 @@ import { WithCredentialsInterceptor } from './app/interceptors/with_credentials.
 import { AuthenticationInterceptor } from './app/interceptors/authentication.interceptor';
 import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
 import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
-import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
+import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule, NgScrollbarOptions } from 'ngx-scrollbar';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';

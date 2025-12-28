@@ -14,8 +14,6 @@ export function initErrorTracking(): void {
     release: version,
     integrations: [],
     profilesSampleRate: 0, // disable profiling
-    autoSessionTracking: false,
-    enableTracing: false,
     ignoreErrors: [
       'Cannot redefine property: googletag',
       "Cannot read properties of undefined (reading 'sendMessage')", // a chrome extension error
