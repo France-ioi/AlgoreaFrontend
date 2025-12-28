@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 
 @Component({
   selector: 'alg-ui-page',
@@ -17,4 +18,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 export class UiPageComponent {
   tooltipDisabled = signal(false);
   tooltipEvent = signal<'hover' | 'focus'>('hover');
+
+  actionFeedbackService = inject(ActionFeedbackService);
 }

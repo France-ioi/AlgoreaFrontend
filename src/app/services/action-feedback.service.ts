@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Message, MessageService } from 'primeng/api';
-import { SECONDS } from '../utils/duration';
+import { MessageService } from 'src/app/services/message.service';
+import { MessageV2 } from 'src/app/services/message.service';
 
-const DISPLAY_DURATION = 5*SECONDS;
-type FeedbackOptions = Omit<Message, 'key' | 'detail' | 'severity'>;
+type FeedbackOptions = Omit<MessageV2, 'summary' | 'detail' | 'severity'>;
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +10,16 @@ type FeedbackOptions = Omit<Message, 'key' | 'detail' | 'severity'>;
 export class ActionFeedbackService implements OnDestroy {
   hasFeedback = false;
 
-  private subscriptions = [
-    this.messageService.clearObserver.subscribe(() => (this.hasFeedback = false)),
-    this.messageService.messageObserver.subscribe(() => (this.hasFeedback = true)),
-  ];
+  private subscription = this.messageService.messages$.subscribe(messages =>
+    (this.hasFeedback = messages.length > 0)
+  );
 
   constructor(
     private messageService: MessageService,
   ) {}
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscription.unsubscribe();
   }
 
   error(txt: string, options?: FeedbackOptions): void {
@@ -45,7 +43,7 @@ export class ActionFeedbackService implements OnDestroy {
   }
 
   private message(severity: 'success'|'info'|'warn'|'error', summary: string, detail: string, options?: FeedbackOptions): void {
-    this.messageService.add({ severity, summary, detail, life: DISPLAY_DURATION, ...options });
+    this.messageService.add({ severity, summary, detail, ...options });
   }
 
 }

@@ -88,11 +88,11 @@ export class GroupSettingsPage {
   }
 
   async checkSuccessfulNotification(): Promise<void> {
-    const toastLocator = this.page.locator('p-toast');
+    const toastLocator = this.page.locator('alg-toast-messages');
     const successfulLocator = toastLocator.getByText('SuccessChanges successfully');
     await expect.soft(successfulLocator).toBeVisible();
-    await expect.soft(toastLocator.getByLabel('Close')).toBeVisible();
-    await toastLocator.getByLabel('Close').click();
+    await expect.soft(toastLocator.getByRole('button')).toBeVisible();
+    await toastLocator.getByRole('button').click();
     await expect.soft(successfulLocator).not.toBeVisible();
   }
 

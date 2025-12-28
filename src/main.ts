@@ -1,6 +1,5 @@
 import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@angular/core';
 import { AppComponent } from './app/app.component';
-import { ToastModule } from 'primeng/toast';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -13,7 +12,6 @@ import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
 import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgScrollbarOptions } from 'ngx-scrollbar/lib/ng-scrollbar.model';
 import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule } from 'ngx-scrollbar';
-import { MessageService } from 'primeng/api';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';
@@ -57,9 +55,7 @@ bootstrapApplication(AppComponent, {
       FormsModule,
       LayoutModule,
       ReactiveFormsModule,
-      ToastModule
     ),
-    MessageService,
     {
       provide: NG_SCROLLBAR_OPTIONS,
       useValue: DEFAULT_SCROLLBAR_OPTIONS,
