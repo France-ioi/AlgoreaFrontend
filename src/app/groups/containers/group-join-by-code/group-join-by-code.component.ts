@@ -25,7 +25,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: [ './group-join-by-code.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     SectionParagraphComponent,
@@ -40,7 +39,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     ButtonComponent,
     ButtonIconComponent,
     TooltipDirective,
-  ],
+  ]
 })
 
 export class GroupJoinByCodeComponent implements OnChanges {

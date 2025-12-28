@@ -7,12 +7,11 @@ import { InputNumberComponent } from 'src/app/ui-components/input-number/input-n
   selector: 'alg-item-extra-time-input',
   templateUrl: './item-extra-time-input.component.html',
   styleUrls: [ './item-extra-time-input.component.scss' ],
-  standalone: true,
   imports: [
     FormsModule,
     ButtonIconComponent,
     InputNumberComponent,
-  ],
+  ]
 })
 export class ItemExtraTimeInputComponent {
   inputStyleClass = input('');

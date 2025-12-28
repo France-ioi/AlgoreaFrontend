@@ -33,12 +33,11 @@ import { NgxMaskDirective } from 'ngx-mask';
       multi: true,
     },
   ],
-  standalone: true,
   imports: [
     FormsModule,
     FormErrorComponent,
     NgxMaskDirective,
-  ],
+  ]
 })
 export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() minDate?: Date;

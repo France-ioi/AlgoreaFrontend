@@ -19,7 +19,6 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
   selector: 'alg-my-groups',
   templateUrl: './my-groups.component.html',
   styleUrls: [ './my-groups.component.scss' ],
-  standalone: true,
   imports: [
     UserGroupInvitationsComponent,
     JoinedGroupListComponent,
@@ -28,7 +27,7 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
     AddGroupComponent,
     AsyncPipe,
     ErrorComponent
-  ],
+  ]
 })
 export class MyGroupsComponent implements OnDestroy, OnInit {
   @ViewChild('joinedGroupList') joinedGroupList?: JoinedGroupListComponent;

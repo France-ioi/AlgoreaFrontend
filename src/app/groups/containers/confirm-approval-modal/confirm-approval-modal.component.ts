@@ -9,11 +9,10 @@ export type ConfirmApprovalModalResult = 'empty' | 'reinvite' | undefined;
   selector: 'alg-confirm-approval-modal',
   templateUrl: './confirm-approval-modal.component.html',
   styleUrls: [ './confirm-approval-modal.component.scss' ],
-  standalone: true,
   imports: [
     NotificationModalComponent,
     ButtonComponent,
-  ],
+  ]
 })
 export class ConfirmApprovalModalComponent {
   name = inject<string>(DIALOG_DATA);

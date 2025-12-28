@@ -16,7 +16,6 @@ import { NgIf, AsyncPipe } from '@angular/common';
   selector: 'alg-sub-skills',
   templateUrl: './sub-skills.component.html',
   styleUrls: [ './sub-skills.component.scss' ],
-  standalone: true,
   imports: [ NgIf, LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe ]
 })
 export class SubSkillsComponent implements OnChanges, OnDestroy {

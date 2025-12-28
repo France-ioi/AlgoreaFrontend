@@ -11,13 +11,12 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
   selector: 'alg-platform-settings',
   templateUrl: './platform-settings.component.html',
   styleUrls: [ './platform-settings.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LanguagePickerComponent,
     AsyncPipe,
     SelectComponent,
-  ],
+  ]
 })
 export class PlatformSettingsComponent {
   currentUser$ = this.userSessionService.userProfile$;

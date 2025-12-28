@@ -10,7 +10,6 @@ import { LeftHeaderComponent } from '../left-header/left-header.component';
   selector: 'alg-left-menu',
   templateUrl: './left-menu.component.html',
   styleUrls: [ './left-menu.component.scss' ],
-  standalone: true,
   imports: [ LeftHeaderComponent, LeftNavComponent, NgIf, LeftMenuSearchComponent ]
 })
 export class LeftMenuComponent implements OnDestroy {

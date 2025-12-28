@@ -17,14 +17,13 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
   selector: 'alg-propagation-advanced-configuration-form',
   templateUrl: './propagation-advanced-configuration-form.component.html',
   styleUrls: [ './propagation-advanced-configuration-form.component.scss' ],
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     CollapsibleSectionComponent,
     ProgressSelectComponent,
     SwitchFieldComponent,
     ButtonComponent,
-  ],
+  ]
 })
 export class PropagationAdvancedConfigurationFormComponent implements OnChanges {
   closeEvent = output<ItemPermPropagations | undefined>();

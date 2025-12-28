@@ -11,12 +11,11 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'alg-redirect-to-id',
   templateUrl: './redirect-to-id.component.html',
-  standalone: true,
   imports: [
     NgIf,
     RouterLink,
     LoadingComponent,
-  ],
+  ]
 })
 export class RedirectToIdComponent implements OnDestroy {
   private config = inject(APPCONFIG);

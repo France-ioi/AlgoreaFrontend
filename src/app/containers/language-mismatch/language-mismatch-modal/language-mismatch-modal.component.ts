@@ -18,7 +18,6 @@ export interface LanguageMismatchModalParams {
   selector: 'alg-language-mismatch-modal',
   templateUrl: './language-mismatch-modal.component.html',
   styleUrls: [ './language-mismatch-modal.component.scss' ],
-  standalone: true,
   imports: [
     NotificationModalComponent,
     LoadingComponent,

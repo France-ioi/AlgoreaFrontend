@@ -17,7 +17,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-observation-bar',
   templateUrl: './observation-bar.component.html',
   styleUrls: [ './observation-bar.component.scss' ],
-  standalone: true,
   imports: [ NgIf, NgClass, RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent, TooltipDirective ]
 })
 export class ObservationBarComponent {

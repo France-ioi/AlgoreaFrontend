@@ -7,7 +7,6 @@ import { NgIf } from '@angular/common';
   selector: 'alg-user-indicator',
   templateUrl: './user-indicator.component.html',
   styleUrls: [ './user-indicator.component.scss' ],
-  standalone: true,
   imports: [ NgIf, GroupLinksComponent ]
 })
 export class UserIndicatorComponent {

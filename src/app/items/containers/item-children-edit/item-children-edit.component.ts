@@ -49,7 +49,6 @@ export const DEFAULT_SCORE_WEIGHT = 1;
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
   styleUrls: [ './item-children-edit.component.scss' ],
-  standalone: true,
   imports: [ NgIf, ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {

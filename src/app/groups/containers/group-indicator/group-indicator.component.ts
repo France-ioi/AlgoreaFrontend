@@ -8,7 +8,6 @@ import { RouterLink } from '@angular/router';
   selector: 'alg-group-indicator',
   templateUrl: './group-indicator.component.html',
   styleUrls: [ './group-indicator.component.scss' ],
-  standalone: true,
   imports: [
     GroupLinksComponent,
     NgScrollbar,

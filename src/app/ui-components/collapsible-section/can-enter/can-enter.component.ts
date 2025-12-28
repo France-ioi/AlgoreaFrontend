@@ -26,7 +26,6 @@ export interface CanEnterValue {
   selector: 'alg-can-enter',
   templateUrl: './can-enter.component.html',
   styleUrls: [ './can-enter.component.scss' ],
-  standalone: true,
   imports: [
     SwitchComponent,
     InputDateComponent,
@@ -45,7 +44,7 @@ export interface CanEnterValue {
       useExisting: forwardRef(() => CanEnterComponent),
       multi: true,
     },
-  ],
+  ]
 })
 export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @ViewChild('canEnterFromRef') canEnterFromRef?: InputDateComponent;

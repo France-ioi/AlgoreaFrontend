@@ -22,7 +22,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-item-all-strings-form',
   templateUrl: './item-all-strings-form.component.html',
   styleUrls: [ './item-all-strings-form.component.scss' ],
-  standalone: true,
   imports: [
     ItemStringsControlComponent,
     ReactiveFormsModule,
@@ -41,7 +40,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
       useExisting: forwardRef(() => ItemAllStringsFormComponent),
       multi: true,
     },
-  ],
+  ]
 })
 export class ItemAllStringsFormComponent {
   allStringControls = viewChildren(ItemStringsControlComponent);

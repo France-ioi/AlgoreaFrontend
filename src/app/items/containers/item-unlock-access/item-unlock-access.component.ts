@@ -21,7 +21,6 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
   selector: 'alg-item-unlock-access',
   templateUrl: './item-unlock-access.component.html',
   styleUrls: [ './item-unlock-access.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -35,7 +34,7 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
     RouteUrlPipe,
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
-  ],
+  ]
 })
 export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

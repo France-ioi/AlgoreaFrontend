@@ -8,7 +8,6 @@ import { NgClass, NgIf } from '@angular/common';
   selector: 'alg-user-progress[userProgress]',
   templateUrl: './user-progress.component.html',
   styleUrls: [ './user-progress.component.scss' ],
-  standalone: true,
   imports: [ NgClass, NgIf, ScoreRingComponent ]
 })
 export class UserProgressComponent implements OnInit, OnChanges {

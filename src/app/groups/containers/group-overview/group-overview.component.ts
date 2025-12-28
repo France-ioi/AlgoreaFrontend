@@ -9,12 +9,11 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
   selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
   styleUrls: [ './group-overview.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     GroupLeaveComponent,
     IsCurrentUserMemberPipe,
-  ],
+  ]
 })
 export class GroupOverviewComponent {
   @Output() groupRefreshRequired = new EventEmitter<void>();

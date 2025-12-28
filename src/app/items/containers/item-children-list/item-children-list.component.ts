@@ -14,7 +14,6 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
   selector: 'alg-item-children-list',
   templateUrl: './item-children-list.component.html',
   styleUrls: [ './item-children-list.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     NgClass,
@@ -27,7 +26,7 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
     RouteUrlPipe,
     ErrorComponent,
     EmptyContentComponent,
-  ],
+  ]
 })
 export class ItemChildrenListComponent {
   @Input() type: ItemTypeCategory = 'activity';

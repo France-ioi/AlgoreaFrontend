@@ -21,7 +21,6 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 
 @Component({
   selector: 'alg-item-extra-time',
-  standalone: true,
   imports: [
     IsTimeLimitedActivityPipe,
     CanCurrentUserSetExtraTimePipe,
@@ -34,7 +33,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
   ],
   templateUrl: './item-extra-time.component.html',
   styleUrl: './item-extra-time.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemExtraTimeComponent implements OnDestroy {
   @ViewChild(ItemExtraTimeForDescendantsComponent) itemExtraTimeForDescendantsComponent?: ItemExtraTimeForDescendantsComponent;

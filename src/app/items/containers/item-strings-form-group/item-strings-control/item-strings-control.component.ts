@@ -22,7 +22,6 @@ export interface StringsValue {
   selector: 'alg-item-strings-control',
   templateUrl: './item-strings-control.component.html',
   styleUrls: [ './item-strings-control.component.scss' ],
-  standalone: true,
   imports: [
     InputComponent,
     ItemEditContentComponent,
@@ -38,7 +37,7 @@ export interface StringsValue {
       useExisting: forwardRef(() => ItemStringsControlComponent),
       multi: true,
     },
-  ],
+  ]
 })
 export class ItemStringsControlComponent implements ControlValueAccessor {
   showDescription = input(false);

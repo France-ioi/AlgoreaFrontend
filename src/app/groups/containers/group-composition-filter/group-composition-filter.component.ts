@@ -20,7 +20,6 @@ export interface Filter {
   selector: 'alg-group-composition-filter',
   templateUrl: './group-composition-filter.component.html',
   styleUrls: [ './group-composition-filter.component.scss' ],
-  standalone: true,
   imports: [ SelectionComponent, NgIf, SwitchComponent, FormsModule ]
 })
 export class GroupCompositionFilterComponent implements OnInit{

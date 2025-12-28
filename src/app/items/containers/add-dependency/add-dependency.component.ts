@@ -13,7 +13,6 @@ import { SearchItemService } from 'src/app/data-access/search-item.service';
   selector: 'alg-add-dependency',
   templateUrl: './add-dependency.component.html',
   styleUrls: [ './add-dependency.component.scss' ],
-  standalone: true,
   imports: [ AddContentComponent ]
 })
 export class AddDependencyComponent implements OnChanges {

@@ -48,7 +48,6 @@ const logsLimit = 20;
   selector: 'alg-group-log-view',
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -79,7 +78,7 @@ const logsLimit = 20;
     CdkRow,
     CdkRowDef,
     CdkNoDataRow,
-  ],
+  ]
 })
 export class GroupLogViewComponent implements OnChanges {
 

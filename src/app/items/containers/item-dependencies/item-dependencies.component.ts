@@ -27,7 +27,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-item-dependencies',
   templateUrl: './item-dependencies.component.html',
   styleUrls: [ './item-dependencies.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -42,7 +41,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
     ButtonIconComponent,
-  ],
+  ]
 })
 export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

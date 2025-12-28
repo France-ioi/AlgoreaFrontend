@@ -33,7 +33,6 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
   selector: 'alg-group-by-id',
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     GroupHeaderComponent,
@@ -53,7 +52,7 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
     IsCurrentUserMemberPipe,
     CanCurrentUserGrantGroupAccessPipe,
     CanCurrentUserManageMembersAndGroupPipe,
-  ],
+  ]
 })
 export class GroupByIdComponent implements OnDestroy {
   private config = inject(APPCONFIG);

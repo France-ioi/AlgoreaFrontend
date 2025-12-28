@@ -6,7 +6,6 @@ import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
   selector: 'alg-collapsible-section',
   templateUrl: './collapsible-section.component.html',
   styleUrls: [ './collapsible-section.component.scss' ],
-  standalone: true,
   imports: [ NgClass, SectionHeaderComponent, NgIf, NgTemplateOutlet ]
 })
 export class CollapsibleSectionComponent {

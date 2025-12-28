@@ -14,7 +14,6 @@ import { NgIf, AsyncPipe, SlicePipe } from '@angular/common';
   selector: 'alg-parent-skills',
   templateUrl: './parent-skills.component.html',
   styleUrls: [ './parent-skills.component.scss' ],
-  standalone: true,
   imports: [ NgIf, LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
 export class ParentSkillsComponent implements OnChanges, OnDestroy {

@@ -5,13 +5,12 @@ import { NgStyle, NgIf, NgClass, DecimalPipe } from '@angular/common';
   selector: 'alg-score-ring',
   templateUrl: './score-ring.component.html',
   styleUrls: [ './score-ring.component.scss' ],
-  standalone: true,
   imports: [
     NgStyle,
     NgIf,
     NgClass,
     DecimalPipe,
-  ],
+  ]
 })
 export class ScoreRingComponent implements OnChanges {
   @Input() diameter = 32;

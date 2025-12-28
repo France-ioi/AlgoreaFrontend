@@ -9,14 +9,13 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-propagation-edit-menu',
   templateUrl: 'propagation-edit-menu.component.html',
   styleUrls: [ 'propagation-edit-menu.component.scss' ],
-  standalone: true,
   imports: [
     NgClass,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
     ButtonComponent,
     TooltipDirective,
-  ],
+  ]
 })
 export class PropagationEditMenuComponent {
   openAdvancedConfigurationDialogEvent = output<void>();

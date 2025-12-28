@@ -98,7 +98,6 @@ interface ProgressDataDialog {
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
   styleUrls: [ './group-progress-grid.component.scss' ],
-  standalone: true,
   imports: [
     CompositionFilterComponent,
     NgIf,
@@ -117,7 +116,7 @@ interface ProgressDataDialog {
     CdkMenuTrigger,
     CdkMenu,
     TooltipDirective,
-  ],
+  ]
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 

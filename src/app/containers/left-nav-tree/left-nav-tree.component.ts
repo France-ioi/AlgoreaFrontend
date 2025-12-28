@@ -32,7 +32,6 @@ interface TreeNode<T> {
   selector: 'alg-left-nav-tree',
   templateUrl: './left-nav-tree.component.html',
   styleUrls: [ './left-nav-tree.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LeftMenuBackButtonComponent,
@@ -49,7 +48,7 @@ interface TreeNode<T> {
     CdkTreeNodeOutlet,
     CdkTree,
     TooltipDirective,
-  ],
+  ]
 })
 export class LeftNavTreeComponent {
   data = input.required<NavTreeData>();

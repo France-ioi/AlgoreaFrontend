@@ -21,7 +21,6 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   selector: 'alg-item-remove-button',
   templateUrl: './item-remove-button.component.html',
   styleUrls: [ './item-remove-button.component.scss' ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LoadingComponent,
@@ -29,7 +28,7 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
     IsAChapterPipe,
     IsASkillPipe,
     ButtonComponent,
-  ],
+  ]
 })
 export class ItemRemoveButtonComponent implements OnDestroy {
 

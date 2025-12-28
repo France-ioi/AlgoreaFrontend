@@ -10,10 +10,9 @@ export interface SelectOption {
   selector: 'alg-select-option',
   templateUrl: './select-option.component.html',
   styleUrls: [ './select-option.component.scss' ],
-  standalone: true,
   imports: [
     NgClass
-  ],
+  ]
 })
 export class SelectOptionComponent {
   value = input.required<SelectOption>();
