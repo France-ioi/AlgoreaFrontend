@@ -5,6 +5,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-user-header[user][route]',
   templateUrl: './user-header.component.html',
   styleUrls: [ './user-header.component.scss' ],

@@ -30,6 +30,7 @@ const MAX_MINUTES_VALUE = 59;
 const MAX_SECONDS_VALUE = 59;
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-duration[ngModel], alg-duration[formControl], alg-duration[formControlName]',
   templateUrl: './duration.component.html',
   styleUrls: [ './duration.component.scss' ],

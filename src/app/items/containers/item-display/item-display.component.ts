@@ -64,6 +64,7 @@ export interface TaskTab {
 const heightSyncInterval = 0.2*SECONDS;
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-item-display[url][route]',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
