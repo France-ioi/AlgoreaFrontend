@@ -12,7 +12,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-explicit-entry',
-  standalone: true,
   imports: [
     IsTeamActivityPipe,
     CanEnterNowPipe,

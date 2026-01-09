@@ -42,7 +42,6 @@ const minQueryLength = 3;
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     NgClass,
@@ -55,7 +54,7 @@ const minQueryLength = 3;
     ObservationBarComponent,
     LeftNavTreeComponent,
     AsyncPipe
-  ],
+  ]
 })
 export class LeftNavComponent implements OnChanges {
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;

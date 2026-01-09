@@ -6,8 +6,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-message-info',
   templateUrl: './message-info.component.html',
   styleUrls: [ 'message-info.component.scss' ],
-  standalone: true,
-  imports: [ NgClass, ButtonIconComponent ],
+  imports: [ NgClass, ButtonIconComponent ]
 })
 export class MessageInfoComponent {
   closeEvent = output<void>();

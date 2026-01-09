@@ -63,7 +63,6 @@ const selectThreadInfo = createSelector(
   selector: 'alg-thread',
   templateUrl: './thread.component.html',
   styleUrls: [ './thread.component.scss' ],
-  standalone: true,
   imports: [
     ThreadMessageComponent,
     LetDirective,
@@ -76,7 +75,7 @@ const selectThreadInfo = createSelector(
     ButtonComponent,
     AutoResizeDirective,
     TooltipDirective,
-  ],
+  ]
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
   private config = inject(APPCONFIG);
@@ -146,8 +145,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     map(([ user, threadId ]) => user.groupId === threadId?.participantId)
   );
   readonly threadStatus$ : Observable<undefined | FetchState<
-    { open: true, canClose: boolean } |
-    { open: false, canOpen: boolean }
+  { open: true, canClose: boolean } |
+  { open: false, canOpen: boolean }
   >> = combineLatest([
       this.store.select(selectThreadInfo),
       this.isCurrentUserThreadParticipant$,

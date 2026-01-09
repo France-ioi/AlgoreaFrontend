@@ -12,13 +12,12 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
   selector: 'alg-user-groups-with-grants',
   templateUrl: './user-groups-with-grants.component.html',
   styleUrls: [ './user-groups-with-grants.component.scss' ],
-  standalone: true,
   imports: [
     LoadingComponent,
     ErrorComponent,
     AsyncPipe,
     GroupLinksComponent,
-  ],
+  ]
 })
 export class UserGroupsWithGrantsComponent {
 

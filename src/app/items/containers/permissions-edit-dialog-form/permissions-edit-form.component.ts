@@ -25,10 +25,10 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 const canEnterWarningMessage = $localize`As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.`;
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-permissions-edit-form[giverPermissions]',
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
@@ -42,7 +42,7 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
     DatePipe,
     CanEnterComponent,
     ButtonComponent,
-  ],
+  ]
 })
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   @Input() permissions?: GroupPermissions;

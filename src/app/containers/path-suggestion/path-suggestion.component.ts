@@ -15,7 +15,6 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
   selector: 'alg-path-suggestion',
   templateUrl: './path-suggestion.component.html',
   styleUrls: [ './path-suggestion.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -25,7 +24,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
     AsyncPipe,
     ItemRoutePipe,
     RouteUrlPipe,
-  ],
+  ]
 })
 export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {
 

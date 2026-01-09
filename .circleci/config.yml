@@ -195,7 +195,7 @@ jobs:
 
   e2e-no-parallelism:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.47.2-noble
+      - image: mcr.microsoft.com/playwright:v1.57.0-noble
     resource_class: large
     steps:
       - attach_workspace:
@@ -211,7 +211,7 @@ jobs:
       project:
         type: string
     docker:
-      - image: mcr.microsoft.com/playwright:v1.47.2-noble
+      - image: mcr.microsoft.com/playwright:v1.57.0-noble
     parallelism: 2
     resource_class: large
     steps:

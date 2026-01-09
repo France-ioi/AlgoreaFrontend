@@ -7,8 +7,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'alg-time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: [ './time-picker.component.scss' ],
-  standalone: true,
-  imports: [ FormsModule, NgClass ],
+  imports: [ FormsModule, NgClass ]
 })
 export class TimePickerComponent implements OnChanges {
   @Input() initialValue? : Duration;

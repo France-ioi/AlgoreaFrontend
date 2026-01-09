@@ -6,8 +6,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
   selector: 'alg-group-observation-error-modal',
   templateUrl: './group-observation-error-modal.component.html',
   styleUrls: [ './group-observation-error-modal.component.scss' ],
-  standalone: true,
-  imports: [ NotificationModalComponent ],
+  imports: [ NotificationModalComponent ]
 })
 export class GroupObservationErrorModalComponent {
   error = signal(inject<{ isForbidden: boolean }>(DIALOG_DATA));

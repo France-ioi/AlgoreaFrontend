@@ -28,7 +28,6 @@ import {
   selector: 'alg-select',
   templateUrl: './select.component.html',
   styleUrls: [ './select.component.scss' ],
-  standalone: true,
   imports: [
     ButtonComponent,
     CdkOverlayOrigin,
@@ -40,7 +39,7 @@ import {
       useExisting: forwardRef(() => SelectComponent),
       multi: true,
     },
-  ],
+  ]
 })
 export class SelectComponent implements ControlValueAccessor {
   trigger = viewChild.required<CdkOverlayOrigin>('trigger');

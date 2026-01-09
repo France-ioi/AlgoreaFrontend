@@ -13,14 +13,13 @@ export type JoinGroupConfirmationDialogResult = { confirmed: true } | undefined;
   selector: 'alg-join-group-confirmation-dialog',
   templateUrl: './join-group-confirmation-dialog.component.html',
   styleUrls: [ './join-group-confirmation-dialog.component.scss' ],
-  standalone: true,
   imports: [
     SwitchFieldComponent,
     ReactiveFormsModule,
     DatePipe,
     ButtonComponent,
     ModalComponent,
-  ],
+  ]
 })
 export class JoinGroupConfirmationDialogComponent implements OnInit {
   dialogRef = inject(DialogRef<JoinGroupConfirmationDialogResult>);

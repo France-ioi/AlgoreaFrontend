@@ -44,7 +44,6 @@ import { Dialog } from '@angular/cdk/dialog';
   selector: 'alg-item-children-edit-list',
   templateUrl: './item-children-edit-list.component.html',
   styleUrls: [ './item-children-edit-list.component.scss' ],
-  standalone: true,
   imports: [
     SwitchComponent,
     FormsModule,
@@ -71,7 +70,7 @@ import { Dialog } from '@angular/cdk/dialog';
     FindInArray,
     CdkDropList,
     CdkDrag,
-  ],
+  ]
 })
 export class ItemChildrenEditListComponent implements OnChanges {
   @Input() itemData?: ItemData;

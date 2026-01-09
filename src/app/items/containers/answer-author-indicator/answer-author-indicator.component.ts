@@ -23,10 +23,10 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-answer-author-indicator[answer]',
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -41,7 +41,7 @@ import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-naviga
     RouteUrlPipe,
     LetDirective,
     ButtonComponent,
-  ],
+  ]
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 

@@ -17,7 +17,6 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ],
-  standalone: true,
   imports: [ NgIf, LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {

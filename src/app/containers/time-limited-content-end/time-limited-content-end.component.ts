@@ -40,7 +40,6 @@ const selectActiveContentIsTimeLimitedContentRoot = createSelector(
 
 @Component({
   selector: 'alg-time-limited-content-end',
-  standalone: true,
   imports: [
     ButtonComponent,
     NotificationModalComponent,

@@ -31,7 +31,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
       ]),
     ]),
   ],
-  standalone: true,
   imports: [ NgIf, ButtonIconComponent, ButtonComponent, NgClass ]
 })
 export class NeighborWidgetComponent {

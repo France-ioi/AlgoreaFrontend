@@ -24,7 +24,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
   styleUrls: [ './chapter-children.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     LoadingComponent,
@@ -38,7 +37,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
     NgClass,
-  ],
+  ]
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

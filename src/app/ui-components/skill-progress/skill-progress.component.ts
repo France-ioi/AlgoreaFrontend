@@ -9,8 +9,7 @@ import { NgClass, NgStyle } from '@angular/common';
   selector: 'alg-skill-progress',
   templateUrl: './skill-progress.component.html',
   styleUrls: [ './skill-progress.component.scss' ],
-  standalone: true,
-  imports: [ NgClass, NgStyle ],
+  imports: [ NgClass, NgStyle ]
 })
 export class SkillProgressComponent implements OnChanges {
   @Input() type: 'thin' | 'bold' | 'thick-horizontal' = 'thin';

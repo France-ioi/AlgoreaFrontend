@@ -6,7 +6,6 @@ import { style, trigger, transition, animate } from '@angular/animations';
   selector: 'button[alg-button], a[alg-button]',
   templateUrl: './button.component.html',
   styleUrls: [ './button.component.scss' ],
-  standalone: true,
   imports: [
     NgClass
   ],
@@ -30,7 +29,7 @@ import { style, trigger, transition, animate } from '@angular/animations';
     '[class.no-caption]': '!showCaption()',
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '[class.no-caption-animatable]': 'withAnimation()',
-  },
+  }
 })
 export class ButtonComponent {
   icon = input<string>();

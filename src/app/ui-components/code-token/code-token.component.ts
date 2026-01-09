@@ -7,13 +7,12 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-code-token',
   templateUrl: './code-token.component.html',
   styleUrls: [ './code-token.component.scss' ],
-  standalone: true,
   imports: [
     NgClass,
     NgIf,
     ButtonIconComponent,
     TooltipDirective,
-  ],
+  ]
 })
 export class CodeTokenComponent {
   @Input() showRefresh = true;

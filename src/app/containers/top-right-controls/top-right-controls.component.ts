@@ -12,7 +12,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-top-right-controls',
   templateUrl: './top-right-controls.component.html',
   styleUrls: [ './top-right-controls.component.scss' ],
-  standalone: true,
   imports: [ LetDirective, NgClass, NgIf, TopRightMenuComponent, LanguagePickerComponent, ButtonIconComponent ]
 })
 export class TopRightControlsComponent{

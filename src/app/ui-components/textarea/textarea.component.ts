@@ -7,14 +7,13 @@ import { NgIf, NgClass } from '@angular/common';
   selector: 'alg-textarea',
   templateUrl: './textarea.component.html',
   styleUrls: [ './textarea.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,
     ReactiveFormsModule,
     NgClass,
     FormErrorComponent,
-  ],
+  ]
 })
 export class TextareaComponent {
   @Input() inputName = ''; // name of the input in the parent form

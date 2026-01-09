@@ -5,8 +5,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-notification-modal',
   templateUrl: './notification-modal.component.html',
   styleUrls: [ './notification-modal.component.scss' ],
-  standalone: true,
-  imports: [ ButtonIconComponent ],
+  imports: [ ButtonIconComponent ]
 })
 export class NotificationModalComponent {
   closeEvent = output();

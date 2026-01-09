@@ -45,7 +45,6 @@ const OPTIONS = [
   selector: 'alg-item-forum',
   templateUrl: './item-forum.component.html',
   styleUrls: [ './item-forum.component.scss' ],
-  standalone: true,
   imports: [
     LetDirective,
     SelectionComponent,
@@ -61,7 +60,7 @@ const OPTIONS = [
     UserCaptionPipe,
     ThreadStatusDisplayPipe,
     ButtonComponent,
-  ],
+  ]
 })
 export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

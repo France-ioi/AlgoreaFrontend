@@ -17,7 +17,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-group-header',
   templateUrl: './group-header.component.html',
   styleUrls: [ './group-header.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     AsyncPipe,
@@ -28,7 +27,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ItemRoutePipe,
     RouteUrlPipe,
     ButtonIconComponent,
-  ],
+  ]
 })
 export class GroupHeaderComponent implements OnDestroy {
   groupData = input.required<GroupData>();

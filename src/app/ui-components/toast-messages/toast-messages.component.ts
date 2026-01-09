@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
   selector: 'alg-toast-messages',
   templateUrl: './toast-messages.component.html',
   styleUrls: [ './toast-messages.component.scss' ],
-  standalone: true,
   imports: [
     ButtonIconComponent,
   ]

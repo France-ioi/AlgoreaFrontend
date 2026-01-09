@@ -6,7 +6,6 @@ import { NgIf } from '@angular/common';
   selector: 'alg-item-header',
   templateUrl: './item-header.component.html',
   styleUrls: [ './item-header.component.scss' ],
-  standalone: true,
   imports: [ NgIf ]
 })
 export class ItemHeaderComponent {

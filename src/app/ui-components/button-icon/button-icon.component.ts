@@ -5,11 +5,10 @@ import { NgClass } from '@angular/common';
   selector: 'button[alg-button-icon], a[alg-button-icon]',
   templateUrl: './button-icon.component.html',
   styleUrls: [ './button-icon.component.scss' ],
-  standalone: true,
   imports: [
     NgClass,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonIconComponent {
   icon = input.required<string>();

@@ -10,8 +10,7 @@ type Tab = 'write' | 'preview';
   selector: 'alg-item-edit-content',
   templateUrl: './item-edit-content.component.html',
   styleUrls: [ './item-edit-content.component.scss' ],
-  standalone: true,
-  imports: [ TextareaComponent, PreviewHtmlComponent ],
+  imports: [ TextareaComponent, PreviewHtmlComponent ]
 })
 export class ItemEditContentComponent {
   @Input() parentForm?: UntypedFormGroup;

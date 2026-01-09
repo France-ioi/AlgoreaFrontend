@@ -29,7 +29,6 @@ export interface ProgressData {
   selector: 'alg-user-progress-details',
   templateUrl: './user-progress-details.component.html',
   styleUrls: [ './user-progress-details.component.scss' ],
-  standalone: true,
   imports: [
     NgIf,
     ScoreRingComponent,
@@ -45,7 +44,7 @@ export interface ProgressData {
     DecimalPipe,
     ButtonComponent,
     TooltipDirective,
-  ],
+  ]
 })
 export class UserProgressDetailsComponent implements OnChanges {
 

@@ -9,12 +9,11 @@ import { NgClass } from '@angular/common';
   selector: 'alg-confirmation-modal',
   templateUrl: './confirmation-modal.component.html',
   styleUrls: [ './confirmation-modal.component.scss' ],
-  standalone: true,
   imports: [
     ButtonIconComponent,
     ButtonComponent,
     NgClass,
-  ],
+  ]
 })
 export class ConfirmationModalComponent {
   data = input({
