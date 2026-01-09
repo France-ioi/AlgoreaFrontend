@@ -5,13 +5,13 @@
         {{ user | userCaption }}
       </h1>
 
-      <div class="user-subtitle" *ngIf="user.webSite">
+      <div class="user-subtitle" *ngIf="user.profile?.webSite">
         <i class="ph ph-arrow-square-out user-subtitle-icon"></i>
-        <a class="alg-link" [attr.href]="user.webSite" target="_blank">{{ user.webSite }}</a>
+        <a class="alg-link" [attr.href]="user.profile?.webSite" target="_blank">{{ user.profile?.webSite }}</a>
       </div>
 
-      <div class="user-subtitle" *ngIf="user.freeText">
-        {{ user.freeText }}
+      <div class="user-subtitle" *ngIf="user.profile?.freeText">
+        {{ user.profile?.freeText }}
       </div>
     </div>
   </div>
