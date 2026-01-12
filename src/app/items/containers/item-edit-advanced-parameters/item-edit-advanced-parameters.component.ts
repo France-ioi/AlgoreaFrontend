@@ -11,8 +11,9 @@ import { DatePipe, NgIf } from '@angular/common';
 import { ItemData } from '../../models/item-data';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { SelectComponent } from 'src/app/ui-components/select/select.component';
-import { SelectOption, SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
+import { SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
 import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
+import { SelectOption } from 'src/app/ui-components/select/select-option/selected-option.service';
 
 export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
 export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
