@@ -1,29 +1,37 @@
-<ng-container *ngIf="state$ | async as state">
-  <div class="spinner-container" *ngIf="state.isFetching">
-    <alg-loading size="small"></alg-loading>
-  </div>
-  <alg-error
-    *ngIf="state.isError"
-    class="light"
-    icon="ph-duotone ph-warning-circle"
-    buttonStyleClass="size-l refresh-button light-border"
-    i18n-message message="Error while loading the activities"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="refresh($event)"
-  ></alg-error>
-  <div class="empty-list" *ngIf="state.isReady && state.data.length === 0" i18n>
-    There are no activities linked to this
-    <ng-container *ngIf="observedGroupRoute$ | async as observedGroupRoute">
-      {(observedGroupRoute | isUser).toString(), select, true {user} other {group}}.
-    </ng-container>
-  </div>
-  <ul class="list" *ngIf="state.isReady && state.data.length > 0">
-    <li class="list-item" *ngFor="let item of state.data">
-      <a class="alg-link dots item-link" [routerLink]="item.activity | itemRoute | url">
-        {{ item.activity.string.title }} ({{ item.name }})
-      </a>
-    </li>
-  </ul>
-
-</ng-container>
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <div class="spinner-container">
+      <alg-loading size="small"></alg-loading>
+    </div>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="light"
+      icon="ph-duotone ph-warning-circle"
+      buttonStyleClass="size-l refresh-button light-border"
+      i18n-message message="Error while loading the activities"
+      [showRefreshButton]="true"
+      refreshButtonType="refresh"
+      (refresh)="refresh($event)"
+    ></alg-error>
+  }
+  @if (state.isReady && state.data.length === 0) {
+    <div class="empty-list" i18n>
+      There are no activities linked to this
+      @if (observedGroupRoute$ | async; as observedGroupRoute) {
+        {(observedGroupRoute | isUser).toString(), select, true {user} other {group}}.
+      }
+    </div>
+  }
+  @if (state.isReady && state.data.length > 0) {
+    <ul class="list">
+      @for (item of state.data; track item) {
+        <li class="list-item">
+          <a class="alg-link dots item-link" [routerLink]="item.activity | itemRoute | url">
+            {{ item.activity.string.title }} ({{ item.name }})
+          </a>
+        </li>
+      }
+    </ul>
+  }
+}

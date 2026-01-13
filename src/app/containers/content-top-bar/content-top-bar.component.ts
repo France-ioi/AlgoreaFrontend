@@ -9,7 +9,7 @@ import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
 import { LetDirective, PushPipe } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { TabService } from '../../services/tab.service';
@@ -27,7 +27,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   templateUrl: './content-top-bar.component.html',
   styleUrls: [ './content-top-bar.component.scss' ],
   imports: [
-    NgIf,
     ScoreRingComponent,
     LetDirective,
     BreadcrumbsComponent,

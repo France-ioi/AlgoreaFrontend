@@ -1,25 +1,28 @@
-<div class="container" *ngIf="!compactMode">
-  <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
-    <div class="left-section alg-flex-1" [ngClass]="{ 'for-mobile': isNarrowScreen }">
-      <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
-        @if (leftHeaderLogoUrl) {
-          <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">
-        } @else {
-          {{ title }}
-        }
-      </a>
-      <button
-        class="left-menu"
-        alg-button-icon
-        type="button"
-        icon="ph ph-list"
-        data-cy="left-menu-btn"
-        (click)="hideLeftMenu()"
-      ></button>
-    </div>
-    <alg-top-right-controls
-      topRightMenuStyleClass="for-mobile"
-      *ngIf="!!(showTopRightControls$ | async) && isNarrowScreen"
-    ></alg-top-right-controls>
-  </ng-container>
-</div>
+@if (!compactMode) {
+  <div class="container">
+    <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
+      <div class="left-section alg-flex-1" [ngClass]="{ 'for-mobile': isNarrowScreen }">
+        <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
+          @if (leftHeaderLogoUrl) {
+            <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">
+          } @else {
+            {{ title }}
+          }
+        </a>
+        <button
+          class="left-menu"
+          alg-button-icon
+          type="button"
+          icon="ph ph-list"
+          data-cy="left-menu-btn"
+          (click)="hideLeftMenu()"
+        ></button>
+      </div>
+      @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
+        <alg-top-right-controls
+          topRightMenuStyleClass="for-mobile"
+        ></alg-top-right-controls>
+      }
+    </ng-container>
+  </div>
+}

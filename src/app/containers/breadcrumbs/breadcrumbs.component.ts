@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgIf, NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { createSelector, Store } from '@ngrx/store';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
@@ -19,8 +19,6 @@ const selectBreadcrumbsDefaultOnTitle = createSelector(
   templateUrl: './breadcrumbs.component.html',
   styleUrls: [ './breadcrumbs.component.scss' ],
   imports: [
-    NgIf,
-    NgFor,
     NgClass,
     TooltipDirective,
   ],

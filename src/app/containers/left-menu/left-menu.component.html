@@ -1,3 +1,5 @@
 <alg-left-header></alg-left-header>
 <alg-left-nav class="alg-flex-1" (selectElement)="onSelectedElementChange($event)" [searchQuery]="searchQuery" (closeSearch)="searchQuery = ''"></alg-left-nav>
-<alg-left-menu-search *ngIf="menuSearchEnabled" [(query)]="searchQuery"></alg-left-menu-search>
+@if (menuSearchEnabled) {
+  <alg-left-menu-search [(query)]="searchQuery"></alg-left-menu-search>
+}

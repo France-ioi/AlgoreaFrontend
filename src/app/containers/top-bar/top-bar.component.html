@@ -1,6 +1,10 @@
-<alg-left-header *ngIf="showLeftMenuOpener" [compactMode]="true"></alg-left-header>
+@if (showLeftMenuOpener) {
+  <alg-left-header [compactMode]="true"></alg-left-header>
+}
 <alg-content-top-bar
   [showBreadcrumbs]="showBreadcrumbs"
   [showLeftMenuOpener]="showLeftMenuOpener"
 ></alg-content-top-bar>
-<alg-top-right-controls *ngIf="showTopRightControls" [drawLeftBorder]="!modeBarDisplayed"></alg-top-right-controls>
+@if (showTopRightControls) {
+  <alg-top-right-controls [drawLeftBorder]="!modeBarDisplayed"></alg-top-right-controls>
+}

@@ -1,5 +1,4 @@
-<ng-container *ngIf="activeTab$ | async as activeTab;">
-
+@if (activeTab$ | async; as activeTab;) {
   @if (showTabs$ | async) {
     <div class="tab-view-container">
       <div class="main-menu">
@@ -13,97 +12,102 @@
           </div>
           <span class="main-menu-title" i18n="|Tab name">Content</span>
         </button>
-
-        <button
-          class="main-menu-button"
-          [ngClass]="{ 'active': activeTab.index === 1, 'compact': currentLanguage === 'fr' }"
-          *ngIf="skillsTabEnabled$ | async"
-          (click)="onSelectionChangedByIdx(1)"
-        >
-          <div class="main-menu-icon-wrapper">
-            <i class="ph ph-graduation-cap main-menu-icon"></i>
-          </div>
-          <span class="main-menu-title" i18n="|Tab name">Skills</span>
-        </button>
-
-        <button
-          class="main-menu-button"
-          [ngClass]="{ 'active': activeTab.index === 2, 'compact': currentLanguage === 'fr' }"
-          data-cy="main-menu-group-btn"
-          *ngIf="groupsTabEnabled$ | async"
-          (click)="onSelectionChangedByIdx(2)"
-        >
-          <div class="main-menu-icon-wrapper">
-            <i class="ph ph-users main-menu-icon"></i>
-          </div>
-          <span class="main-menu-title" i18n="|Tab name">Groups</span>
-        </button>
+        @if (skillsTabEnabled$ | async) {
+          <button
+            class="main-menu-button"
+            [ngClass]="{ 'active': activeTab.index === 1, 'compact': currentLanguage === 'fr' }"
+            (click)="onSelectionChangedByIdx(1)"
+          >
+            <div class="main-menu-icon-wrapper">
+              <i class="ph ph-graduation-cap main-menu-icon"></i>
+            </div>
+            <span class="main-menu-title" i18n="|Tab name">Skills</span>
+          </button>
+        }
+        @if (groupsTabEnabled$ | async) {
+          <button
+            class="main-menu-button"
+            [ngClass]="{ 'active': activeTab.index === 2, 'compact': currentLanguage === 'fr' }"
+            data-cy="main-menu-group-btn"
+            (click)="onSelectionChangedByIdx(2)"
+          >
+            <div class="main-menu-icon-wrapper">
+              <i class="ph ph-users main-menu-icon"></i>
+            </div>
+            <span class="main-menu-title" i18n="|Tab name">Groups</span>
+          </button>
+        }
       </div>
     </div>
   }
-
   <hr class="divider">
   <ng-container *ngrxLet="searchResultState$ as searchResultState">
-    <ng-container *ngIf="searchQuery.length > 0 else navTree">
-      <ng-container *ngIf="searchResultState.isFetching || searchResultState.isError || !searchResultState.data">
+    @if (searchQuery.length > 0) {
+      @if (searchResultState.isFetching || searchResultState.isError || !searchResultState.data) {
         <div class="container">
           <alg-left-menu-back-button (close)="closeSearch.emit()">
             Searching: "{{ searchQuery }}"
           </alg-left-menu-back-button>
         </div>
-        <alg-loading class="alg-flex-1" *ngIf="searchResultState.isFetching"></alg-loading>
-        <alg-error
-          class="alg-flex-1"
-          i18n-message message="Unable to perform the search."
-          icon="ph-duotone ph-warning-circle"
-          [showRefreshButton]="true"
-          buttonCaption="Retry"
-          (refresh)="retrySearch()"
-          *ngIf="searchResultState.isError"
-        ></alg-error>
-      </ng-container>
-
-      <div class="alg-flex-1 scroll-wrapper" *ngIf="searchResultState.isReady">
-        <div class="scroll-container">
-          <ng-scrollbar [sensorThrottleTime]="1">
-            <alg-left-search-result [data]="searchResultState.data" (close)="closeSearch.emit()"></alg-left-search-result>
-          </ng-scrollbar>
+        @if (searchResultState.isFetching) {
+          <alg-loading class="alg-flex-1"></alg-loading>
+        }
+        @if (searchResultState.isError) {
+          <alg-error
+            class="alg-flex-1"
+            i18n-message message="Unable to perform the search."
+            icon="ph-duotone ph-warning-circle"
+            [showRefreshButton]="true"
+            buttonCaption="Retry"
+            (refresh)="retrySearch()"
+          ></alg-error>
+        }
+      }
+      @if (searchResultState.isReady) {
+        <div class="alg-flex-1 scroll-wrapper">
+          <div class="scroll-container">
+            <ng-scrollbar [sensorThrottleTime]="1">
+              <alg-left-search-result [data]="searchResultState.data" (close)="closeSearch.emit()"></alg-left-search-result>
+            </ng-scrollbar>
+          </div>
         </div>
-      </div>
-    </ng-container>
+      }
+    } @else {
+      @if (navTreeServices[activeTab.index]!.state$ | async; as state) {
+        @if (state.isFetching && !state.data) {
+          <alg-loading class="alg-flex-1"></alg-loading>
+        }
+        @if (state.isError) {
+          <alg-error
+            class="alg-flex-1"
+            i18n-message message="Unable to load the list."
+            icon="ph-duotone ph-warning-circle"
+            [showRefreshButton]="true"
+            buttonCaption="Retry"
+            (refresh)="retryError(activeTab.index)"
+          ></alg-error>
+        }
+        @if (state.isReady && (isObserving$ | async) && [0, 1].includes(activeTab.index)) {
+          <div class="watching-warning">
+            <alg-observation-bar
+              [caption]="!!(isNarrowScreen$ | async) ? undefined : observationModeCaption"
+              [showTooltip]="true"
+            ></alg-observation-bar>
+          </div>
+        }
+        @if (state.data) {
+          <div class="alg-flex-1 scroll-wrapper">
+            <div class="scroll-container">
+              <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
+                <alg-left-nav-tree
+                  [data]="state.data"
+                  [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
+                ></alg-left-nav-tree>
+              </ng-scrollbar>
+            </div>
+          </div>
+        }
+      }
+    }
   </ng-container>
-
-  <ng-template #navTree>
-    <ng-container *ngIf="navTreeServices[activeTab.index]!.state$ | async as state">
-      <alg-loading class="alg-flex-1" *ngIf="state.isFetching && !state.data"></alg-loading>
-      <alg-error
-        class="alg-flex-1"
-        i18n-message message="Unable to load the list."
-        icon="ph-duotone ph-warning-circle"
-        [showRefreshButton]="true"
-        buttonCaption="Retry"
-        (refresh)="retryError(activeTab.index)"
-        *ngIf="state.isError"
-      ></alg-error>
-
-      <div class="watching-warning" *ngIf="state.isReady && (isObserving$ | async) && [0, 1].includes(activeTab.index)">
-        <alg-observation-bar
-          [caption]="!!(isNarrowScreen$ | async) ? undefined : observationModeCaption"
-          [showTooltip]="true"
-        ></alg-observation-bar>
-      </div>
-
-      <div class="alg-flex-1 scroll-wrapper" *ngIf="state.data">
-        <div class="scroll-container">
-          <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
-            <alg-left-nav-tree
-              [data]="state.data"
-              [elementType]="$any(['activity', 'skill', 'group'][activeTab.index])"
-            ></alg-left-nav-tree>
-          </ng-scrollbar>
-        </div>
-      </div>
-    </ng-container>
-  </ng-template>
-
-</ng-container>
+}

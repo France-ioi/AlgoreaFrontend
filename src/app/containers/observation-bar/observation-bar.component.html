@@ -1,34 +1,39 @@
-<div class="wrapper" [ngClass]="{ 'only-icon-mode': onlyIcon }" *ngIf="observedGroup$ | async as observedGroup">
-  <div class="left-section alg-flex-1">
-    <i
-      class="left-icon alg-secondary-color ph-duotone ph-eye"
-      [algTooltip]="observationModeTooltip"
-      [tooltipDisabled]="!showTooltip"
-      tooltipPosition="right"
-      tooltipStyleClass="observation-mode"
-    ></i>
-    <ng-template #observationModeTooltip>
-      <span *ngIf="(observedGroup.route | isUser); else groupName" i18n>
-        Only the content visible by the user you are observing ({{ observedGroup.name }}) is shown.
-      </span>
-      <ng-template #groupName>
-        Only the content visible by the group you are observing ({{ observedGroup.name }}) is shown.
+@if (observedGroup$ | async; as observedGroup) {
+  <div class="wrapper" [ngClass]="{ 'only-icon-mode': onlyIcon }">
+    <div class="left-section alg-flex-1">
+      <i
+        class="left-icon alg-secondary-color ph-duotone ph-eye"
+        [algTooltip]="observationModeTooltip"
+        [tooltipDisabled]="!showTooltip"
+        tooltipPosition="right"
+        tooltipStyleClass="observation-mode"
+      ></i>
+      <ng-template #observationModeTooltip>
+        @if ((observedGroup.route | isUser)) {
+          <span i18n>
+            Only the content visible by the user you are observing ({{ observedGroup.name }}) is shown.
+          </span>
+        } @else {
+          Only the content visible by the group you are observing ({{ observedGroup.name }}) is shown.
+        }
       </ng-template>
-    </ng-template>
-    <span class="title text-dots" *ngIf="!onlyIcon">
-      @if(caption) {
-        <span class="alg-secondary-color">{{ caption }}</span>
-      } @else if(observedGroup.name) {
-        <a
-          class="link alg-link hover-underline alg-secondary-color"
-          [routerLink]="observedGroup.route | groupLink"
-        >
-          {{ caption || observedGroup.name }}
-        </a>
+      @if (!onlyIcon) {
+        <span class="title text-dots">
+          @if(caption) {
+            <span class="alg-secondary-color">{{ caption }}</span>
+          } @else if(observedGroup.name) {
+            <a
+              class="link alg-link hover-underline alg-secondary-color"
+              [routerLink]="observedGroup.route | groupLink"
+            >
+              {{ caption || observedGroup.name }}
+            </a>
+          }
+        </span>
       }
-    </span>
+    </div>
+    @if (!(activeContentIsBeingObserved$ | async)) {
+      <button alg-button-icon type="button" icon="ph ph-x" class="size-s no-bg secondary" (click)="onCancelClick()"></button>
+    }
   </div>
-  @if (!(activeContentIsBeingObserved$ | async)) {
-    <button alg-button-icon type="button" icon="ph ph-x" class="size-s no-bg secondary" (click)="onCancelClick()"></button>
-  }
-</div>
+}

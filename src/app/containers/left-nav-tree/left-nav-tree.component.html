@@ -47,46 +47,53 @@
               (click)="selectNode(node)"
             >
               <div class="tree-nav-left">
-                <div class="tree-nav-icon" *ngIf="node.inL1; else dotsWithLine">
-                  <i class="ph-duotone" (click)="toggleFolder(node)" [ngClass]="{
-                    'ph-caret-right': !node.expanded,
-                    'ph-caret-down': node.expanded
-                  }"></i>
-                </div>
-                <ng-template #dotsWithLine>
+                @if (node.inL1) {
+                  <div class="tree-nav-icon">
+                    <i class="ph-duotone" (click)="toggleFolder(node)" [ngClass]="{
+                      'ph-caret-right': !node.expanded,
+                      'ph-caret-down': node.expanded
+                    }"></i>
+                  </div>
+                } @else {
                   <div class="tree-nav-dot-wrapper">
                     <div class="tree-nav-dot"></div>
                   </div>
-                </ng-template>
+                }
                 <div class="tree-nav-caption-wrapper">
-                  <div class="tree-sub-nav-icon" *ngIf="!node.inL1">
-                    <i class="ph-duotone ph-caret-right"></i>
-                  </div>
+                  @if (!node.inL1) {
+                    <div class="tree-sub-nav-icon">
+                      <i class="ph-duotone ph-caret-right"></i>
+                    </div>
+                  }
                   <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
                     {{ node.label }}
-                    <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-                      (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
-                      {{ node.data.associatedGroupNames.join(', ') }})
-                    </span>
+                    @if (node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0) {
+                      <span class="alg-text-small">
+                        (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
+                        {{ node.data.associatedGroupNames.join(', ') }})
+                      </span>
+                    }
                   </div>
                 </div>
               </div>
               <div class="tree-nav-right">
-                <alg-score-ring
-                  *ngIf="node.data.score"
-                  [currentScore]="node.data.score.currentScore"
-                  [bestScore]="node.data.score.bestScore"
-                  [isValidated]="node.data.score.validated"
-                  [compact]="true"
-                ></alg-score-ring>
-                <div
-                  class="tree-nav-icon"
-                  tooltipPosition="top"
-                  i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this chapter."
-                  *ngIf="node.data.locked"
-                >
-                  <i class="ph-duotone ph-lock-key"></i>
-                </div>
+                @if (node.data.score) {
+                  <alg-score-ring
+                    [currentScore]="node.data.score.currentScore"
+                    [bestScore]="node.data.score.bestScore"
+                    [isValidated]="node.data.score.validated"
+                    [compact]="true"
+                  ></alg-score-ring>
+                }
+                @if (node.data.locked) {
+                  <div
+                    class="tree-nav-icon"
+                    tooltipPosition="top"
+                    i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this chapter."
+                    >
+                    <i class="ph-duotone ph-lock-key"></i>
+                  </div>
+                }
               </div>
             </div>
           }
@@ -101,40 +108,49 @@
               (click)="selectNode(node)"
             >
               <div class="tree-nav-left">
-                <div class="tree-nav-icon" *ngIf="node.inL1; else dotsWithLine">
-                  <i class="ph-duotone" [ngClass]="{
-                  'ph-caret-right': !node.expanded,
-                  'ph-caret-down': node.expanded
-                }"></i>
-                </div>
-                <ng-template #dotsWithLine>
+                @if (node.inL1) {
+                  <div class="tree-nav-icon">
+                    <i class="ph-duotone" [ngClass]="{
+                      'ph-caret-right': !node.expanded,
+                      'ph-caret-down': node.expanded
+                    }"></i>
+                  </div>
+                } @else {
                   <div class="tree-nav-dot-wrapper">
                     <div class="tree-nav-dot"></div>
                   </div>
-                </ng-template>
+                }
                 <div class="tree-nav-caption-wrapper">
-                  <div class="tree-sub-nav-icon" *ngIf="!node.inL1">
-                    <i class="ph-duotone ph-caret-right"></i>
-                  </div>
+                  @if (!node.inL1) {
+                    <div class="tree-sub-nav-icon">
+                      <i class="ph-duotone ph-caret-right"></i>
+                    </div>
+                  }
                   <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
                     {{ node.label }}
-                    <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-                      (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
-                      {{ node.data.associatedGroupNames.join(', ') }})
-                    </span>
+                    @if (node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0) {
+                      <span class="alg-text-small">
+                        (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
+                        {{ node.data.associatedGroupNames.join(', ') }})
+                      </span>
+                    }
                   </div>
                 </div>
               </div>
               <div class="tree-nav-right">
-                <div class="tree-nav-skill-progress" *ngIf="elementType === 'skill' && node.data.score">
-                  <alg-skill-progress
-                    [bestScore]="node.data.score.bestScore"
-                    [currentScore]="node.data.score.currentScore"
-                  ></alg-skill-progress>
-                </div>
-                <div class="tree-nav-icon" *ngIf="node.data.locked">
-                  <i class="ph-duotone ph-lock-key"></i>
-                </div>
+                @if (elementType === 'skill' && node.data.score) {
+                  <div class="tree-nav-skill-progress">
+                    <alg-skill-progress
+                      [bestScore]="node.data.score.bestScore"
+                      [currentScore]="node.data.score.currentScore"
+                    ></alg-skill-progress>
+                  </div>
+                }
+                @if (node.data.locked) {
+                  <div class="tree-nav-icon">
+                    <i class="ph-duotone ph-lock-key"></i>
+                  </div>
+                }
               </div>
             </div>
           }
@@ -147,38 +163,43 @@
                 'locked': node.data.locked
               }"
               (click)="selectNode(node)"
-            >
+              >
               <div class="tree-nav-left">
-                <div class="tree-nav-icon" *ngIf="node.inL1; else dotsWithLine">
-                  <i class="ph-duotone ph-graduation-cap"></i>
-                </div>
-                <ng-template #dotsWithLine>
+                @if (node.inL1) {
+                  <div class="tree-nav-icon">
+                    <i class="ph-duotone ph-graduation-cap"></i>
+                  </div>
+                } @else {
                   <div class="tree-nav-dot-wrapper">
                     <div class="tree-nav-dot"></div>
                   </div>
-                </ng-template>
+                }
                 <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
                   {{ node.label }}
-                  <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-                    (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
-                    {{ node.data.associatedGroupNames.join(', ') }})
-                  </span>
+                  @if (node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0) {
+                    <span class="alg-text-small">
+                      (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
+                      {{ node.data.associatedGroupNames.join(', ') }})
+                    </span>
+                  }
                 </div>
               </div>
               <div class="tree-nav-right">
-                <alg-skill-progress
-                  *ngIf="elementType === 'skill' && node.data.score"
-                  [bestScore]="node.data.score.bestScore"
-                  [currentScore]="node.data.score.currentScore"
-                ></alg-skill-progress>
-                <div
-                  class="tree-nav-icon"
-                  tooltipPosition="top"
-                  i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this skill."
-                  *ngIf="node.data.locked"
-                >
-                  <i class="ph-duotone ph-lock-key"></i>
-                </div>
+                @if (elementType === 'skill' && node.data.score) {
+                  <alg-skill-progress
+                    [bestScore]="node.data.score.bestScore"
+                    [currentScore]="node.data.score.currentScore"
+                  ></alg-skill-progress>
+                }
+                @if (node.data.locked) {
+                  <div
+                    class="tree-nav-icon"
+                    tooltipPosition="top"
+                    i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this skill."
+                  >
+                    <i class="ph-duotone ph-lock-key"></i>
+                  </div>
+                }
               </div>
             </div>
           }
@@ -191,43 +212,48 @@
                 'locked': node.data.locked
               }"
               (click)="selectNode(node)"
-            >
+              >
               <div class="tree-nav-left">
-                <div class="tree-nav-icon" *ngIf="node.inL1; else dotsWithLine">
-                  <i class="ph-duotone" [ngClass]="{
-                    'ph-caret-right': !node.expanded,
-                    'ph-caret-down': node.expanded
-                  }"></i>
-                </div>
-                <ng-template #dotsWithLine>
+                @if (node.inL1) {
+                  <div class="tree-nav-icon">
+                    <i class="ph-duotone" [ngClass]="{
+                      'ph-caret-right': !node.expanded,
+                      'ph-caret-down': node.expanded
+                    }"></i>
+                  </div>
+                } @else {
                   <div class="tree-nav-dot-wrapper">
                     <div class="tree-nav-dot"></div>
                   </div>
-                </ng-template>
+                }
                 <div class="tree-nav-caption-wrapper">
-                  <div class="tree-sub-nav-icon" *ngIf="!node.inL1 && node.hasChildren">
-                    <i class="ph-duotone ph-caret-right"></i>
-                  </div>
+                  @if (!node.inL1 && node.hasChildren) {
+                    <div class="tree-sub-nav-icon">
+                      <i class="ph-duotone ph-caret-right"></i>
+                    </div>
+                  }
                   <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">{{ node.label }}</div>
                 </div>
               </div>
               <div class="tree-nav-right">
-                <alg-score-ring
-                  *ngIf="node.data.score"
-                  [currentScore]="node.data.score.currentScore"
-                  [bestScore]="node.data.score.bestScore"
-                  [isValidated]="node.data.score.validated"
-                  [compact]="true"
-                ></alg-score-ring>
-                <div
-                  class="tree-nav-icon"
-                  [class.fade]="node.data.groupRelation.managership === 'descendant'"
-                  tooltipPosition="top"
-                  [algTooltip]="node.data.groupRelation.managership | i18nSelect : managershipTooltipCaptions"
-                  *ngIf="node.data.groupRelation.managership !== 'none'"
-                >
-                  <i class="ph-duotone ph-crown"></i>
-                </div>
+                @if (node.data.score) {
+                  <alg-score-ring
+                    [currentScore]="node.data.score.currentScore"
+                    [bestScore]="node.data.score.bestScore"
+                    [isValidated]="node.data.score.validated"
+                    [compact]="true"
+                  ></alg-score-ring>
+                }
+                @if (node.data.groupRelation.managership !== 'none') {
+                  <div
+                    class="tree-nav-icon"
+                    [class.fade]="node.data.groupRelation.managership === 'descendant'"
+                    tooltipPosition="top"
+                    [algTooltip]="node.data.groupRelation.managership | i18nSelect : managershipTooltipCaptions"
+                  >
+                    <i class="ph-duotone ph-crown"></i>
+                  </div>
+                }
               </div>
             </div>
           }
@@ -240,40 +266,45 @@
                 'locked': node.data.locked
               }"
               (click)="selectNode(node)"
-            >
+              >
               <div class="tree-nav-left">
-                <div class="tree-nav-icon" *ngIf="node.inL1; else dotsWithLine">
-                  <i class="ph-duotone ph-files"></i>
-                </div>
-                <ng-template #dotsWithLine>
+                @if (node.inL1) {
+                  <div class="tree-nav-icon">
+                    <i class="ph-duotone ph-files"></i>
+                  </div>
+                } @else {
                   <div class="tree-nav-dot-wrapper">
                     <div class="tree-nav-dot"></div>
                   </div>
-                </ng-template>
+                }
                 <div class="tree-nav-caption" [ngClass]="{ 'children-caption': !node.inL1 }">
                   {{ node.label }}
-                  <span class="alg-text-small" *ngIf="node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0">
-                    (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
-                    {{ node.data.associatedGroupNames.join(', ') }})
-                  </span>
+                  @if (node.data.associatedGroupNames && node.data.associatedGroupNames.length > 0) {
+                    <span class="alg-text-small">
+                      (<span>{node.data.associatedGroupNames.length, plural, =1 {via group} other {via groups}}:</span>
+                      {{ node.data.associatedGroupNames.join(', ') }})
+                    </span>
+                  }
                 </div>
               </div>
               <div class="tree-nav-right">
-                <alg-score-ring
-                  *ngIf="node.data.score"
-                  [currentScore]="node.data.score.currentScore"
-                  [bestScore]="node.data.score.bestScore"
-                  [isValidated]="node.data.score.validated"
-                  [compact]="true"
-                ></alg-score-ring>
-                <div
-                  class="tree-nav-icon"
-                  tooltipPosition="top"
-                  i18n-algTooltip algTooltip="Your current access rights do not allow you to start the activity."
-                  *ngIf="node.data.locked"
-                >
-                  <i class="ph-duotone ph-lock-key"></i>
-                </div>
+                @if (node.data.score) {
+                  <alg-score-ring
+                    [currentScore]="node.data.score.currentScore"
+                    [bestScore]="node.data.score.bestScore"
+                    [isValidated]="node.data.score.validated"
+                    [compact]="true"
+                  ></alg-score-ring>
+                }
+                @if (node.data.locked) {
+                  <div
+                    class="tree-nav-icon"
+                    tooltipPosition="top"
+                    i18n-algTooltip algTooltip="Your current access rights do not allow you to start the activity."
+                  >
+                    <i class="ph-duotone ph-lock-key"></i>
+                  </div>
+                }
               </div>
             </div>
           }
@@ -291,5 +322,5 @@
       group {You are not a member or manager of any group}
       other {There is no content to display}
     }
-  </div>
+</div>
 }
