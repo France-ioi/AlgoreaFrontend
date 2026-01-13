@@ -1,6 +1,6 @@
 <button
   class="button alg-select-option"
-  [ngClass]="{ 'selected': selected }"
+  [ngClass]="{ 'selected': selected() }"
   type="button"
   (click)="select(value())"
 >

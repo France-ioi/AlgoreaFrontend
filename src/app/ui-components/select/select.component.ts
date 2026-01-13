@@ -1,8 +1,8 @@
 import {
+  afterRenderEffect,
   Component,
   computed,
   contentChildren,
-  effect,
   ElementRef,
   forwardRef,
   inject,
@@ -16,13 +16,14 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { SelectOption, SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
+import { SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
 import {
   ConnectedPosition,
   Overlay,
   CdkOverlayOrigin,
   CdkConnectedOverlay,
 } from '@angular/cdk/overlay';
+import { SelectedOptionService, SelectOption } from 'src/app/ui-components/select/select-option/selected-option.service';
 
 @Component({
   selector: 'alg-select',
@@ -39,6 +40,7 @@ import {
       useExisting: forwardRef(() => SelectComponent),
       multi: true,
     },
+    SelectedOptionService,
   ]
 })
 export class SelectComponent implements ControlValueAccessor {
@@ -69,10 +71,16 @@ export class SelectComponent implements ControlValueAccessor {
   overlay = inject(Overlay);
   scrollStrategy = this.overlay.scrollStrategies.reposition();
 
+  selectOptionService = inject(SelectedOptionService);
+
   private onChange: (value: string) => void = () => {};
 
   constructor() {
-    effect(() => {
+    afterRenderEffect(() => {
+      this.selectOptionService.selected.set(this.selected());
+    });
+
+    afterRenderEffect(() => {
       this.options().forEach(o => {
         o.select = (value: SelectOption): void => {
           this.selectedValue.set(value.value);
@@ -80,7 +88,6 @@ export class SelectComponent implements ControlValueAccessor {
           this.change.emit(value);
           this.isOpen.set(false);
         };
-        o.selected = o.value().value === this.selectedValue();
       });
     });
   }
