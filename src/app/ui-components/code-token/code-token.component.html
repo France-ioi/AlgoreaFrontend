@@ -1,24 +1,26 @@
 <div class="container">
   <div class="alg-text-secondary alg-text-bold" [ngClass]="{'no-button': !showRefresh && !showRemove}">{{ code }}</div>
   <div class="controls">
-    <button
-      *ngIf="showRefresh"
-      class="size-l stroke button"
-      [ngClass]="{'no-remove': !showRemove}"
-      (click)="refreshCode()"
-      i18n-algTooltip algTooltip="Generate a new code and reset expiration"
-      tooltipPosition="top"
-      icon="ph ph-arrow-clockwise"
-      alg-button-icon
-    ></button>
-    <button
-      *ngIf="showRemove"
-      class="size-l stroke"
-      (click)="removeCode()"
-      i18n-algTooltip algTooltip="Disable code access"
-      tooltipPosition="top"
-      icon="ph ph-x"
-      alg-button-icon
-    ></button>
+    @if (showRefresh) {
+      <button
+        class="size-l stroke button"
+        [ngClass]="{'no-remove': !showRemove}"
+        (click)="refreshCode()"
+        i18n-algTooltip algTooltip="Generate a new code and reset expiration"
+        tooltipPosition="top"
+        icon="ph ph-arrow-clockwise"
+        alg-button-icon
+      ></button>
+    }
+    @if (showRemove) {
+      <button
+        class="size-l stroke"
+        (click)="removeCode()"
+        i18n-algTooltip algTooltip="Disable code access"
+        tooltipPosition="top"
+        icon="ph ph-x"
+        alg-button-icon
+      ></button>
+    }
   </div>
 </div>

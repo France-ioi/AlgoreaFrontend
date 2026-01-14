@@ -1,31 +1,35 @@
 <div class="container">
-  <button
-    class="size-s primary no-bg tab-arrow tab-prev prev-button"
-    type="button"
-    icon="ph-bold ph-caret-left"
-    alg-button-icon
-    (click)="onPrev()"
-    *ngIf="showPrevButton"
-  ></button>
+  @if (showPrevButton) {
+    <button
+      class="size-s primary no-bg tab-arrow tab-prev prev-button"
+      type="button"
+      icon="ph-bold ph-caret-left"
+      alg-button-icon
+      (click)="onPrev()"
+    ></button>
+  }
   <ng-scrollbar
     class="alg-top-bar-scrollbar"
     trackClass="alg-top-bar-scrollbar-no-track"
     orientation="horizontal"
     [sensorThrottleTime]="1"
     appearance="native"
-  >
+    >
     <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs">
-      <li class="tabs-item" [ngClass]="tab.styleClass" *ngFor="let tab of tabs">
-        <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
-      </li>
+      @for (tab of tabs; track tab) {
+        <li class="tabs-item" [ngClass]="tab.styleClass">
+          <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
+        </li>
+      }
     </ul>
   </ng-scrollbar>
-  <button
-    class="size-s primary no-bg tab-arrow tab-next next-button"
-    type="button"
-    icon="ph-bold ph-caret-right"
-    alg-button-icon
-    (click)="onNext()"
-    *ngIf="showNextButton"
-  ></button>
+  @if (showNextButton) {
+    <button
+      class="size-s primary no-bg tab-arrow tab-next next-button"
+      type="button"
+      icon="ph-bold ph-caret-right"
+      alg-button-icon
+      (click)="onNext()"
+    ></button>
+  }
 </div>

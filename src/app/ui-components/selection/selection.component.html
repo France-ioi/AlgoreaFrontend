@@ -1,15 +1,16 @@
 <div class="selection-container">
   <ul class="tabs">
-    <li
-      *ngFor="let item of items; index as idx"
-      class="tabs-item alg-flex-1"
-      [ngClass]="{ active: idx === selected, next: idx === selected + 1 }"
-      (click)="itemChanged(idx)"
-      [algTooltip]="item.tooltip ?? ''"
-      tooltipPosition="top"
-      data-testid="selection-control-value"
-    >
-      <span class="label">{{ item.label }}</span>
-    </li>
+    @for (item of items; track item; let idx = $index) {
+      <li
+        class="tabs-item alg-flex-1"
+        [ngClass]="{ active: idx === selected, next: idx === selected + 1 }"
+        (click)="itemChanged(idx)"
+        [algTooltip]="item.tooltip ?? ''"
+        tooltipPosition="top"
+        data-testid="selection-control-value"
+      >
+        <span class="label">{{ item.label }}</span>
+      </li>
+    }
   </ul>
 </div>

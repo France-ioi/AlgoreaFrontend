@@ -1,11 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'alg-sub-section',
   templateUrl: './sub-section.component.html',
   styleUrls: [ './sub-section.component.scss' ],
-  imports: [ NgIf ]
+  imports: []
 })
 export class SubSectionComponent {
   @Input() label?: string;

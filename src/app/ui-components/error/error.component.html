@@ -1,23 +1,29 @@
 <div class="wrapper">
-  <div class="icon-container" *ngIf="icon">
-    <i class="icon" [ngClass]="icon"></i>
-  </div>
+  @if (icon) {
+    <div class="icon-container">
+      <i class="icon" [ngClass]="icon"></i>
+    </div>
+  }
   <div class="message-container">
     <span class="message" [ngClass]="{ 'no-margin-top': !icon }">
       {{ message }}
-      <ng-content *ngIf="!message"></ng-content>
+      @if (!message) {
+        <ng-content></ng-content>
+      }
     </span>
   </div>
-  <button
-    [class]="buttonStyleClass || 'size-l refresh-button'"
-    alg-button
-    (click)="onRefresh($event)"
-    *ngIf="showRefreshButton && !link"
-  >{{ buttonCaption }}</button>
-  <a
-    class="size-l refresh-button"
-    alg-button
-    [routerLink]="link"
-    *ngIf="link"
-  >{{ buttonCaption }}</a>
+  @if (showRefreshButton && !link) {
+    <button
+      [class]="buttonStyleClass || 'size-l refresh-button'"
+      alg-button
+      (click)="onRefresh($event)"
+    >{{ buttonCaption }}</button>
+  }
+  @if (link) {
+    <a
+      class="size-l refresh-button"
+      alg-button
+      [routerLink]="link"
+    >{{ buttonCaption }}</a>
+  }
 </div>

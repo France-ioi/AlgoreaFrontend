@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { NgStyle, NgIf, NgClass, DecimalPipe } from '@angular/common';
+import { NgStyle, NgClass, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-score-ring',
@@ -7,7 +7,6 @@ import { NgStyle, NgIf, NgClass, DecimalPipe } from '@angular/common';
   styleUrls: [ './score-ring.component.scss' ],
   imports: [
     NgStyle,
-    NgIf,
     NgClass,
     DecimalPipe,
   ]

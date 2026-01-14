@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
@@ -31,7 +31,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
       ]),
     ]),
   ],
-  imports: [ NgIf, ButtonIconComponent, ButtonComponent, NgClass ]
+  imports: [ ButtonIconComponent, ButtonComponent, NgClass ]
 })
 export class NeighborWidgetComponent {
   @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};

@@ -1,66 +1,76 @@
 <div class="container">
   <div class="elements">
-    <div class="element alg-flex-1" *ngIf="showField.days">
-      <p class="label">
-        <small i18n>Days</small>
-      </p>
-      <input
-        class="alg-input"
-        data-testid="input-date"
-        mask="9||99||999"
-        placeholder="DDD"
-        [(ngModel)]="days"
-        [dropSpecialCharacters]="false"
-        [clearIfNotMatch]="true"
-        (ngModelChange)="handleChange()"
-      />
-    </div>
-    <div class="element alg-flex-1" *ngIf="showField.hours">
-      <p class="label">
-        <small i18n>Hours</small>
-      </p>
-      <input
-        class="alg-input"
-        data-testid="input-date"
-        [mask]="showField.days ?  '0||00' : '0||00||000'"
-        [placeholder]="showField.days ? 'HH' : 'HHH'"
-        [(ngModel)]="hours"
-        [dropSpecialCharacters]="false"
-        [clearIfNotMatch]="true"
-        (ngModelChange)="handleChange()"
-      />
-    </div>
-    <div class="element alg-flex-1" *ngIf="showField.minutes">
-      <p class="label">
-        <small i18n>Minutes</small>
-      </p>
-      <input
-        class="alg-input"
-        data-testid="input-date"
-        mask="0||00"
-        placeholder="MM"
-        [(ngModel)]="minutes"
-        [dropSpecialCharacters]="false"
-        [clearIfNotMatch]="true"
-        (ngModelChange)="handleChange()"
-      />
-    </div>
-    <div class="element alg-flex-1" *ngIf="showField.seconds">
-      <p class="label">
-        <small i18n>Seconds</small>
-      </p>
-      <input
-        class="alg-input"
-        data-testid="input-date"
-        mask="0||00"
-        placeholder="SS"
-        [(ngModel)]="seconds"
-        [dropSpecialCharacters]="false"
-        [clearIfNotMatch]="true"
-        (ngModelChange)="handleChange()"
-      />
-    </div>
+    @if (showField.days) {
+      <div class="element alg-flex-1">
+        <p class="label">
+          <small i18n>Days</small>
+        </p>
+        <input
+          class="alg-input"
+          data-testid="input-date"
+          mask="9||99||999"
+          placeholder="DDD"
+          [(ngModel)]="days"
+          [dropSpecialCharacters]="false"
+          [clearIfNotMatch]="true"
+          (ngModelChange)="handleChange()"
+        />
+      </div>
+    }
+    @if (showField.hours) {
+      <div class="element alg-flex-1">
+        <p class="label">
+          <small i18n>Hours</small>
+        </p>
+        <input
+          class="alg-input"
+          data-testid="input-date"
+          [mask]="showField.days ?  '0||00' : '0||00||000'"
+          [placeholder]="showField.days ? 'HH' : 'HHH'"
+          [(ngModel)]="hours"
+          [dropSpecialCharacters]="false"
+          [clearIfNotMatch]="true"
+          (ngModelChange)="handleChange()"
+        />
+      </div>
+    }
+    @if (showField.minutes) {
+      <div class="element alg-flex-1">
+        <p class="label">
+          <small i18n>Minutes</small>
+        </p>
+        <input
+          class="alg-input"
+          data-testid="input-date"
+          mask="0||00"
+          placeholder="MM"
+          [(ngModel)]="minutes"
+          [dropSpecialCharacters]="false"
+          [clearIfNotMatch]="true"
+          (ngModelChange)="handleChange()"
+        />
+      </div>
+    }
+    @if (showField.seconds) {
+      <div class="element alg-flex-1">
+        <p class="label">
+          <small i18n>Seconds</small>
+        </p>
+        <input
+          class="alg-input"
+          data-testid="input-date"
+          mask="0||00"
+          placeholder="SS"
+          [(ngModel)]="seconds"
+          [dropSpecialCharacters]="false"
+          [clearIfNotMatch]="true"
+          (ngModelChange)="handleChange()"
+        />
+      </div>
+    }
   </div>
   <alg-input-error [control]="control"></alg-input-error>
-  <div *ngIf="!control?.invalid">&nbsp;</div>
+  @if (!control?.invalid) {
+    <div>&nbsp;</div>
+  }
 </div>

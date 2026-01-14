@@ -1,51 +1,65 @@
-<div *ngIf="collapsed" class="header-content">
-  <div class="header-content-wrapper">
-    <span class="selected-progress-level">{{ values[selected]?.label }}</span>
-    <ng-content select="[header-section]"></ng-content>
+@if (collapsed) {
+  <div class="header-content">
+    <div class="header-content-wrapper">
+      <span class="selected-progress-level">{{ values[selected]?.label }}</span>
+      <ng-content select="[header-section]"></ng-content>
+    </div>
+    <alg-progress-level [valuesLength]="values.length" [value]="selected" [colorTheme]="theme"></alg-progress-level>
   </div>
-  <alg-progress-level [valuesLength]="values.length" [value]="selected" [colorTheme]="theme"></alg-progress-level>
-</div>
+}
 
-<div *ngIf="!collapsed" class="progress-select-body">
-  <div class="progress-select-item">
-    <div class="progress-control">
-      <span *ngIf="values.length > 0" class="progress-branch" [ngClass]="{active: selected >= 0}"></span>
-    </div>
-    <div class="progress-desc header-comment" *ngIf="descriptionTemplate">
-      <ng-container [ngTemplateOutlet]="descriptionTemplate" [ngTemplateOutletContext]="{ $implicit: value }"></ng-container>
-    </div>
-  </div>
-  <div
-    *ngFor="let item of values; trackBy: trackByFn; let idx = index;"
-    class="progress-select-item"
-    [algTooltip]="item.tooltip?.join('\n') || ''"
-    tooltipPosition="top"
-    [tooltipDisabled]="!item.disabled"
-  >
-    <div
-      class="progress-select-clickable-area"
-      [ngClass]="{ disabled: item.disabled, selected: item.selected }"
-      data-testid="progress-selection"
-      (click)="onSet(item.value)"
-    >
+@if (!collapsed) {
+  <div class="progress-select-body">
+    <div class="progress-select-item">
       <div class="progress-control">
-        <span
-          class="progress-point"
-          [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1, 'active-light': item.selected}"
-        >
-          <i *ngIf="idx < selected || item.selected" class="ph-bold ph-check"></i>
-          <i *ngIf="idx === selected" class="ph-bold ph-check"></i>
-        </span>
-        <span
-          *ngIf="idx + 1 < values.length"
-          class="progress-branch"
-          [ngClass]="{ active: idx < selected, disabled: values[idx + 1]?.disabled }"
-        ></span>
+        @if (values.length > 0) {
+          <span class="progress-branch" [ngClass]="{active: selected >= 0}"></span>
+        }
       </div>
-      <div class="progress-desc">
-        <div class="progress-desc-name" [ngClass]="{ active: idx < selected + 1 }" (click)="onSet(item.value)">{{ item.label }}</div>
-        <div class="progress-desc-comment">{{ item.comment }}</div>
-      </div>
+      @if (descriptionTemplate) {
+        <div class="progress-desc header-comment">
+          <ng-container [ngTemplateOutlet]="descriptionTemplate" [ngTemplateOutletContext]="{ $implicit: value }"></ng-container>
+        </div>
+      }
     </div>
+    @for (item of values; track trackByFn; let idx = $index) {
+      <div
+        class="progress-select-item"
+        [algTooltip]="item.tooltip?.join('\n') || ''"
+        tooltipPosition="top"
+        [tooltipDisabled]="!item.disabled"
+      >
+        <div
+          class="progress-select-clickable-area"
+          [ngClass]="{ disabled: item.disabled, selected: item.selected }"
+          data-testid="progress-selection"
+          (click)="onSet(item.value)"
+        >
+          <div class="progress-control">
+            <span
+              class="progress-point"
+              [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1, 'active-light': item.selected}"
+            >
+              @if (idx < selected || item.selected) {
+                <i class="ph-bold ph-check"></i>
+              }
+              @if (idx === selected) {
+                <i class="ph-bold ph-check"></i>
+              }
+            </span>
+            @if (idx + 1 < values.length) {
+              <span
+                class="progress-branch"
+                [ngClass]="{ active: idx < selected, disabled: values[idx + 1]?.disabled }"
+              ></span>
+            }
+          </div>
+          <div class="progress-desc">
+            <div class="progress-desc-name" [ngClass]="{ active: idx < selected + 1 }" (click)="onSet(item.value)">{{ item.label }}</div>
+            <div class="progress-desc-comment">{{ item.comment }}</div>
+          </div>
+        </div>
+      </div>
+    }
   </div>
-</div>
+}

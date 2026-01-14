@@ -22,7 +22,6 @@ import {
 } from '@angular/forms';
 import { Duration, MAX_SECONDS_FORMAT_DURATION, MAX_TIME_FORMAT_DURATION } from 'src/app/utils/duration';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { NgIf } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 
 const MAX_HOURS_VALUE = 23;
@@ -46,7 +45,7 @@ const MAX_SECONDS_VALUE = 59;
       multi: true,
     },
   ],
-  imports: [ NgIf, FormsModule, FormErrorComponent, NgxMaskDirective ]
+  imports: [ FormsModule, FormErrorComponent, NgxMaskDirective ]
 })
 export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
   @Output() change = new EventEmitter<Duration | null>();

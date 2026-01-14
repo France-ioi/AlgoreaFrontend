@@ -1,47 +1,57 @@
-<div *ngIf="collapsed" class="header-content">
-  @if (value) {
-    @if (headerContent) {
-      <ng-container
-        [ngTemplateOutlet]="headerContent"
-        [ngTemplateOutletContext]="{ $implicit: value }"
-      ></ng-container>
+@if (collapsed) {
+  <div class="header-content">
+    @if (value) {
+      @if (headerContent) {
+        <ng-container
+          [ngTemplateOutlet]="headerContent"
+          [ngTemplateOutletContext]="{ $implicit: value }"
+        ></ng-container>
+      } @else {
+        <span i18n>Yes</span>
+      }
     } @else {
-      <span i18n>Yes</span>
+      <span i18n>No</span>
     }
-  } @else {
-    <span i18n>No</span>
-  }
-</div>
+  </div>
+}
 
-<div *ngIf="!collapsed" class="body">
-  <div class="item" *ngIf="descriptionTemplate">
-    <div class="desc header-comment">
-      <ng-container [ngTemplateOutlet]="descriptionTemplate"></ng-container>
+@if (!collapsed) {
+  <div class="body">
+    @if (descriptionTemplate) {
+      <div class="item">
+        <div class="desc header-comment">
+          <ng-container [ngTemplateOutlet]="descriptionTemplate"></ng-container>
+        </div>
+      </div>
+    }
+    <div class="item">
+      <div class="switch">
+        <alg-switch [(ngModel)]="value" (change)="onSet($event)"></alg-switch>
+      </div>
+      <div class="desc">
+        <div class="desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
+          @if (labelTemplate) {
+            <ng-container
+              [ngTemplateOutlet]="labelTemplate"
+              [ngTemplateOutletContext]="{ $implicit: value }"
+            ></ng-container>
+          }
+        </div>
+        <div>
+          @if (contentTemplate) {
+            <ng-container
+              [ngTemplateOutlet]="contentTemplate"
+              [ngTemplateOutletContext]="{ $implicit: value }"
+            ></ng-container>
+          }
+        </div>
+      </div>
+      @if (disabledTooltip.length) {
+        <div class="gray-overlay tool"
+          [algTooltip]="disabledTooltip.join('\n') || ''"
+          tooltipPosition="top"
+        ></div>
+      }
     </div>
   </div>
-  <div class="item">
-    <div class="switch">
-      <alg-switch [(ngModel)]="value" (change)="onSet($event)"></alg-switch>
-    </div>
-    <div class="desc">
-      <div class="desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
-        <ng-container
-          *ngIf="labelTemplate"
-          [ngTemplateOutlet]="labelTemplate"
-          [ngTemplateOutletContext]="{ $implicit: value }"
-        ></ng-container>
-      </div>
-      <div>
-        <ng-container
-          *ngIf="contentTemplate"
-          [ngTemplateOutlet]="contentTemplate"
-          [ngTemplateOutletContext]="{ $implicit: value }"
-        ></ng-container>
-      </div>
-    </div>
-    <div *ngIf="disabledTooltip.length" class="gray-overlay tool"
-      [algTooltip]="disabledTooltip.join('\n') || ''"
-      tooltipPosition="top"
-    ></div>
-  </div>
-</div>
+}

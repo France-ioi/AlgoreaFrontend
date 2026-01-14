@@ -3,10 +3,12 @@
     <i class="icon {{ icon }}"></i>
     <span class="title">{{ caption }}</span>
   </div>
-  <div class="template" *ngIf="contentTemplate">
-    <ng-container
-      [ngTemplateOutlet]="contentTemplate"
-      [ngTemplateOutletContext]="{ $implicit: true }"
-    ></ng-container>
-  </div>
+  @if (contentTemplate) {
+    <div class="template">
+      <ng-container
+        [ngTemplateOutlet]="contentTemplate"
+        [ngTemplateOutletContext]="{ $implicit: true }"
+      ></ng-container>
+    </div>
+  }
 </div>

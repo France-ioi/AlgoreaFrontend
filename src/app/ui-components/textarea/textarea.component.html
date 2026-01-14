@@ -1,14 +1,18 @@
-<ng-container *ngIf="parentForm" [formGroup]="parentForm">
-  <textarea
-    class="textarea-element"
-    [formControlName]="inputName"
-    rows="5"
-    [placeholder]="placeholder"
-    [ngClass]="{'no-icon': !icon}"
-  >
-  </textarea>
-  <span class="placeholder-icon" *ngIf="icon">
-    <i class="ph ph-text-t"></i>
-  </span>
-  <alg-input-error [form]="parentForm" [inputName]="inputName"></alg-input-error>
-</ng-container>
+@if (parentForm) {
+  <ng-container [formGroup]="parentForm">
+    <textarea
+      class="textarea-element"
+      [formControlName]="inputName"
+      rows="5"
+      [placeholder]="placeholder"
+      [ngClass]="{'no-icon': !icon}"
+      >
+    </textarea>
+    @if (icon) {
+      <span class="placeholder-icon">
+        <i class="ph ph-text-t"></i>
+      </span>
+    }
+    <alg-input-error [form]="parentForm" [inputName]="inputName"></alg-input-error>
+  </ng-container>
+}

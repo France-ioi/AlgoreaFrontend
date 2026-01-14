@@ -1,34 +1,41 @@
-<div class="input-wrapper" *ngIf="parentForm" [formGroup]="parentForm">
-  <input
-    class="input-element"
-    #input
-    [type]="inputType"
-    [placeholder]="placeholder"
-    [ngClass]="{ 'has-button': buttonIcon, 'has-input-icon': inputIcon }"
-    [formControlName]="name"
-    (focus)="focus.emit($event)"
-    (blur)="blur.emit($event)"
-    [algTooltip]="tooltipText"
-    [tooltipEvent]="tooltipEvent"
-    [tooltipPosition]="tooltipPosition"
-    [tooltipDisabled]="tooltipDisabled"
-    tooltipStyleClass="secondary"
-  >
-  <button
-    class="icon-wrapper clear-button"
-    type="button"
-    (click)="clearInput(); input.focus()"
-    tabindex="-1"
-    *ngIf="hasClearButton && input.value"
-  >
-    <i class="icon ph ph-x"></i>
-  </button>
-  <span class="icon-wrapper" *ngIf="inputIcon">
-    <i class="icon {{ inputIcon }}"></i>
-  </span>
-  <span *ngIf="buttonIcon" class="input-button" (click)="onButtonClick()">
-    <i class="{{ buttonIcon }}"></i>
-  </span>
-</div>
+@if (parentForm) {
+  <div class="input-wrapper" [formGroup]="parentForm">
+    <input
+      class="input-element"
+      #input
+      [type]="inputType"
+      [placeholder]="placeholder"
+      [ngClass]="{ 'has-button': buttonIcon, 'has-input-icon': inputIcon }"
+      [formControlName]="name"
+      (focus)="focus.emit($event)"
+      (blur)="blur.emit($event)"
+      [algTooltip]="tooltipText"
+      [tooltipEvent]="tooltipEvent"
+      [tooltipPosition]="tooltipPosition"
+      [tooltipDisabled]="tooltipDisabled"
+      tooltipStyleClass="secondary"
+    >
+    @if (hasClearButton && input.value) {
+      <button
+        class="icon-wrapper clear-button"
+        type="button"
+        (click)="clearInput(); input.focus()"
+        tabindex="-1"
+      >
+        <i class="icon ph ph-x"></i>
+      </button>
+    }
+    @if (inputIcon) {
+      <span class="icon-wrapper">
+        <i class="icon {{ inputIcon }}"></i>
+      </span>
+    }
+    @if (buttonIcon) {
+      <span class="input-button" (click)="onButtonClick()">
+        <i class="{{ buttonIcon }}"></i>
+      </span>
+    }
+  </div>
+}
 
 <alg-input-error [form]="parentForm" [inputName]="name"></alg-input-error>

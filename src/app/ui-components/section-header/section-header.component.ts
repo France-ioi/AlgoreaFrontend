@@ -1,5 +1,5 @@
 import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'alg-section-header',
@@ -7,7 +7,6 @@ import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
   styleUrls: [ './section-header.component.scss' ],
   imports: [
     NgClass,
-    NgIf,
     NgTemplateOutlet,
   ]
 })

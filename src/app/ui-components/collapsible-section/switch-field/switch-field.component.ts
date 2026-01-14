@@ -1,7 +1,7 @@
 import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { SwitchComponent } from '../../switch/switch.component';
-import { NgIf, NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 /**
@@ -29,7 +29,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  imports: [ NgIf, NgTemplateOutlet, SwitchComponent, NgClass, FormsModule, TooltipDirective ]
+  imports: [ NgTemplateOutlet, SwitchComponent, NgClass, FormsModule, TooltipDirective ]
 })
 export class SwitchFieldComponent implements ControlValueAccessor {
 

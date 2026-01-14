@@ -2,7 +2,7 @@
   class="score-container"
   [ngStyle]="{ width: (compact ? 14 / 16 : diameter / 16) + 'rem', height: (compact ? 14 / 16 : diameter / 16) + 'rem' }"
 >
-  <ng-container *ngIf="!isValidated; else validatedSection">
+  @if (!isValidated) {
     <svg class="svg-element" [attr.viewBox]="compact ? '-2 -2 69 69' : '0 0 65 65'">
       <path
         class="round-path"
@@ -28,12 +28,13 @@
       />
     </svg>
     <div class="score-data">
-      <span class="score-caption" [ngClass]="{ 'zero-value': currentScore === 0 }" *ngIf="!compact && currentScore !== undefined">
-        {{ currentScore | number:'1.0-0' }}
-      </span>
+      @if (!compact && currentScore !== undefined) {
+        <span class="score-caption" [ngClass]="{ 'zero-value': currentScore === 0 }">
+          {{ currentScore | number:'1.0-0' }}
+        </span>
+      }
     </div>
-  </ng-container>
-  <ng-template #validatedSection>
+  } @else {
     <i class="ph-bold ph-check alg-primary-color icon"></i>
-  </ng-template>
+  }
 </div>
