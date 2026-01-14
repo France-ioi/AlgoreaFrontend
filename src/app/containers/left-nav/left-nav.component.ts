@@ -22,7 +22,7 @@ import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
 import { LetDirective } from '@ngrx/component';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { LocaleService } from '../../services/localeService';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -43,7 +43,6 @@ const minQueryLength = 3;
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ],
   imports: [
-    NgIf,
     NgClass,
     LetDirective,
     LeftMenuBackButtonComponent,

@@ -1,48 +1,54 @@
-<ng-container *ngIf="state$ | async as state">
-  <div class="spinner-container" *ngIf="state.isFetching">
-    <alg-loading size="small"></alg-loading>
-  </div>
-  <alg-error
-    *ngIf="state.isError"
-    class="alg-flex-1 light"
-    icon="ph-duotone ph-warning-circle"
-    i18n-buttonCaption buttonCaption="Retry"
-    [showRefreshButton]="$any(state.error).status !== 403"
-    buttonStyleClass="size-l refresh-button light-border"
-    (refresh)="refresh()"
-  >
-    <ng-container *ngIf="$any(state.error).status === 403; else otherError;">
-      <span class="no-access" i18n>There is currently no way for you to access this content.</span>
-    </ng-container>
-    <ng-template #otherError>
-      <span i18n>Error while loading path suggestion</span>
-    </ng-template>
-  </alg-error>
-  <ng-container *ngIf="state.isReady">
-    <ng-container *ngIf="state.data; else noPath">
-      <ng-container *ngIf="state.data?.length === 1 && state.data?.[0]?.length === 1; else pathsSection">
-        <alg-error class="alg-flex-1 light" *ngIf="state.data?.[0]?.[0] as rootItem">
-          <span class="error-caption" i18n>
-            This content is one of your root {rootItem.type, select, Skill {skill} other {activity}}
-          </span>
-        </alg-error>
-      </ng-container>
-      <ng-template #pathsSection>
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <div class="spinner-container">
+      <alg-loading size="small"></alg-loading>
+    </div>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="alg-flex-1 light"
+      icon="ph-duotone ph-warning-circle"
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="$any(state.error).status !== 403"
+      buttonStyleClass="size-l refresh-button light-border"
+      (refresh)="refresh()"
+    >
+      @if ($any(state.error).status === 403) {
+        <span class="no-access" i18n>There is currently no way for you to access this content.</span>
+      } @else {
+        <span i18n>Error while loading path suggestion</span>
+      }
+    </alg-error>
+  }
+  @if (state.isReady) {
+    @if (state.data) {
+      @if (state.data?.length === 1 && state.data?.[0]?.length === 1) {
+        @if (state.data?.[0]?.[0]; as rootItem) {
+          <alg-error class="alg-flex-1 light">
+            <span class="error-caption" i18n>
+              This content is one of your root {rootItem.type, select, Skill {skill} other {activity}}
+            </span>
+          </alg-error>
+        }
+      } @else {
         <p class="breadcrumbs-title" i18n>This content can be found in...</p>
-        <div class="breadcrumbs-container" *ngFor="let breadcrumbs of state.data">
-          <i class="ph-duotone ph-link breadcrumbs-prefix-icon"></i>
-          <ul class="breadcrumbs">
-            <li class="breadcrumbs-item" *ngFor="let item of breadcrumbs">
-              <a class="breadcrumbs-item-link alg-link" [routerLink]="item | itemRoute: { path: item.path } | url">{{ item.title }}</a>
-            </li>
-          </ul>
-        </div>
-      </ng-template>
-    </ng-container>
-    <ng-template #noPath>
+        @for (breadcrumbs of state.data; track breadcrumbs) {
+          <div class="breadcrumbs-container">
+            <i class="ph-duotone ph-link breadcrumbs-prefix-icon"></i>
+            <ul class="breadcrumbs">
+              @for (item of breadcrumbs; track item) {
+                <li class="breadcrumbs-item">
+                  <a class="breadcrumbs-item-link alg-link" [routerLink]="item | itemRoute: { path: item.path } | url">{{ item.title }}</a>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    } @else {
       <alg-error class="dark small">
         <span i18n>You have no path to this content.</span>
       </alg-error>
-    </ng-template>
-  </ng-container>
-</ng-container>
+    }
+  }
+}

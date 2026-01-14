@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { mapBreadcrumbsWithPath } from 'src/app/models/content/content-breadcrumbs';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -16,10 +16,8 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
   templateUrl: './path-suggestion.component.html',
   styleUrls: [ './path-suggestion.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgFor,
     RouterLink,
     AsyncPipe,
     ItemRoutePipe,

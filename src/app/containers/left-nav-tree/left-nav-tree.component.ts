@@ -5,7 +5,7 @@ import { SkillProgressComponent } from '../../ui-components/skill-progress/skill
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgIf, NgClass, I18nSelectPipe } from '@angular/common';
+import { NgClass, I18nSelectPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   CdkNestedTreeNode,
@@ -33,7 +33,6 @@ interface TreeNode<T> {
   templateUrl: './left-nav-tree.component.html',
   styleUrls: [ './left-nav-tree.component.scss' ],
   imports: [
-    NgIf,
     LeftMenuBackButtonComponent,
     RouterLink,
     RouterLinkActive,

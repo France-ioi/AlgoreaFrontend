@@ -3,14 +3,13 @@ import { debounceTime, Subject } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { LeftMenuSearchComponent } from '../../ui-components/left-menu-search/left-menu-search.component';
-import { NgIf } from '@angular/common';
 import { LeftHeaderComponent } from '../left-header/left-header.component';
 
 @Component({
   selector: 'alg-left-menu',
   templateUrl: './left-menu.component.html',
   styleUrls: [ './left-menu.component.scss' ],
-  imports: [ LeftHeaderComponent, LeftNavComponent, NgIf, LeftMenuSearchComponent ]
+  imports: [ LeftHeaderComponent, LeftNavComponent, LeftMenuSearchComponent ]
 })
 export class LeftMenuComponent implements OnDestroy {
   private config = inject(APPCONFIG);

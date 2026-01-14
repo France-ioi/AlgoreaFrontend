@@ -1,22 +1,15 @@
 <div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
-  <ng-container
-    *ngIf="session && !session.tempUser; then authenticated else notAuthenticated"
-  ></ng-container>
-
-  <ng-template #authenticated>
+  @if (session && !session.tempUser) {
     <alg-top-right-menu [styleClass]="topRightMenuStyleClass"></alg-top-right-menu>
-  </ng-template>
-
-  <ng-template #notAuthenticated>
-    <alg-language-picker
-      class="lang-button"
-      *ngIf="languages.length > 1"
-    ></alg-language-picker>
+  } @else {
+    @if (languages.length > 1) {
+      <alg-language-picker class="lang-button"></alg-language-picker>
+    }
     <button
       icon="ph-bold ph-power"
       (click)="login()"
       alg-button-icon
       [disabled]="isLoginButtonClicked()"
     ></button>
-  </ng-template>
+  }
 </div>

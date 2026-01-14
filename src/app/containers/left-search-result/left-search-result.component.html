@@ -1,27 +1,34 @@
-<div class="container" *ngIf="data !== undefined">
-  <alg-left-menu-back-button (close)="close.emit()">
-    <ng-container *ngIf="data.length < 10; else moreResultsCaption" i18n>
+@if (data !== undefined) {
+  <div class="container">
+    <alg-left-menu-back-button (close)="close.emit()">
+      @if (data.length < 10) {
+        <ng-container i18n>
       {data.length, plural, =0 {No result found} =1 {{{ data.length }} result found} other {{{ data.length }} results found}}
     </ng-container>
-    <ng-template #moreResultsCaption>
-      <span i18n>First {{ data.length }} results</span>
-    </ng-template>
-  </alg-left-menu-back-button>
-</div>
+      } @else {
+        <span i18n>First {{ data.length }} results</span>
+      }
+    </alg-left-menu-back-button>
+  </div>
+}
 
-<div class="container" *ngIf="data === undefined">
-  <alg-message-info class="search" icon="ph-duotone ph-warning-circle" i18n>
-    Type at least 3 letters to search content
-  </alg-message-info>
-</div>
+@if (data === undefined) {
+  <div class="container">
+    <alg-message-info class="search" icon="ph-duotone ph-warning-circle" i18n>
+      Type at least 3 letters to search content
+    </alg-message-info>
+  </div>
+}
 
-<div class="container" *ngIf="data !== undefined && data.length === 0">
-  <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
-    No results
-  </alg-message-info>
-</div>
+@if (data !== undefined && data.length === 0) {
+  <div class="container">
+    <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+      No results
+    </alg-message-info>
+  </div>
+}
 
-<ng-container *ngFor="let item of data;">
+@for (item of data; track item) {
   <div class="container">
     <ul class="result-list alg-search-result">
       <li
@@ -40,19 +47,26 @@
           }"
           ></i>
           <span class="result-list-link-caption" algShowOverlayHoverTarget>
-            <span [innerHTML]="titleHighlight" *ngIf="item.titleHighlight as titleHighlight; else noTitleHighlight"></span>
-            <ng-template #noTitleHighlight>{{ item.title }}</ng-template>
+            @if (item.titleHighlight; as titleHighlight) {
+              <span [innerHTML]="titleHighlight"></span>
+            } @else {
+              {{ item.title }}
+            }
           </span>
         </a>
-        <div class="result-list-description-wrapper" *ngIf="item.highlights.length > 0">
-          <p class="result-list-description" *ngFor="let highlight of item.highlights" [innerHTML]="highlight"></p>
-        </div>
+        @if (item.highlights.length > 0) {
+          <div class="result-list-description-wrapper">
+            @for (highlight of item.highlights; track highlight) {
+              <p class="result-list-description" [innerHTML]="highlight"></p>
+            }
+          </div>
+        }
         <ng-template #op>
           <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
         </ng-template>
       </li>
     </ul>
   </div>
-</ng-container>
+}
 
 

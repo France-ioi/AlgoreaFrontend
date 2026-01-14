@@ -9,7 +9,7 @@ import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, NgFor } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
@@ -20,14 +20,12 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
   styleUrls: [ './suggestion-of-activities.component.scss' ],
   standalone: true,
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     RouterLink,
     AsyncPipe,
     ItemRoutePipe,
     RouteUrlPipe,
-    NgFor,
     GroupIsUserPipe,
   ],
 })

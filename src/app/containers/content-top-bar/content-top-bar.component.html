@@ -1,13 +1,15 @@
 <div class="content-top-bar">
   <div class="left-pane">
-    <div class="margin-right" *ngIf="showLeftMenuOpener">
-      <button
-        alg-button-icon
-        type="button"
-        icon="ph ph-list"
-        (click)="showLeftMenu()"
-      ></button>
-    </div>
+    @if (showLeftMenuOpener) {
+      <div class="margin-right">
+        <button
+          alg-button-icon
+          type="button"
+          icon="ph ph-list"
+          (click)="showLeftMenu()"
+        ></button>
+      </div>
+    }
     @if (isItemContentActive()) {
       <div class="margin-right score-section">
         @if (score(); as scoreVal) {
@@ -25,46 +27,48 @@
       shouldDisplayTabBar: shouldDisplayTabBar$,
       isNarrowScreen: isNarrowScreen$,
     } as behaviourInfo">
-      <div
-        class="left-pane-title margin-right"
-        *ngIf="!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed"
-      >
-        @let titleVal = title();
-        @if (!showBreadcrumbs && titleVal) {
-          <p class="left-pane-title-text">{{ titleVal }}</p>
-        } @else {
-          <alg-breadcrumbs class="breadcrumbs"></alg-breadcrumbs>
-        }
-      </div>
-      <alg-tab-bar
-        class="tab-bar"
-        styleClass="for-header"
-        *ngIf="behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed"
-      ></alg-tab-bar>
+      @if (!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) {
+        <div class="left-pane-title margin-right">
+          @let titleVal = title();
+          @if (!showBreadcrumbs && titleVal) {
+            <p class="left-pane-title-text">{{ titleVal }}</p>
+          } @else {
+            <alg-breadcrumbs class="breadcrumbs"></alg-breadcrumbs>
+          }
+        </div>
+      }
+      @if (behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed) {
+        <alg-tab-bar
+          class="tab-bar"
+          styleClass="for-header"
+        ></alg-tab-bar>
+      }
     </ng-container>
   </div>
   <div class="right-pane">
     <alg-time-limited-content-info></alg-time-limited-content-info>
     <alg-observation-bar></alg-observation-bar>
-    <button
-      *ngIf="hasForumThreadConfigured$ | ngrxPush"
-      class="size-s"
-      alg-button-icon
-      type="button"
-      icon="ph-duotone ph-chats-circle"
-      (click)="toggleDiscussionPanelVisibility()"
-    ></button>
-    <alg-neighbor-widget
-      *ngIf="navigationNeighbors$ | async as navigationNeighbors"
-      class="neighbor-widget margin-left"
-      [navigationMode]="{
-        parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
-        left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
-        right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
-      }"
-      (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
-      (left)="navigationNeighbors?.data?.previous?.navigateTo()"
-      (right)="navigationNeighbors?.data?.next?.navigateTo()"
-    ></alg-neighbor-widget>
+    @if (hasForumThreadConfigured$ | ngrxPush) {
+      <button
+        class="size-s"
+        alg-button-icon
+        type="button"
+        icon="ph-duotone ph-chats-circle"
+        (click)="toggleDiscussionPanelVisibility()"
+      ></button>
+    }
+    @if (navigationNeighbors$ | async; as navigationNeighbors) {
+      <alg-neighbor-widget
+        class="neighbor-widget margin-left"
+        [navigationMode]="{
+          parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
+          left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
+          right: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.next
+        }"
+        (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
+        (left)="navigationNeighbors?.data?.previous?.navigateTo()"
+        (right)="navigationNeighbors?.data?.next?.navigateTo()"
+      ></alg-neighbor-widget>
+    }
   </div>
 </div>

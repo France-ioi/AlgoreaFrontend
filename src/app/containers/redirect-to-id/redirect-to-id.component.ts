@@ -6,13 +6,12 @@ import { itemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { CurrentContentService } from '../../services/current-content.service';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'alg-redirect-to-id',
   templateUrl: './redirect-to-id.component.html',
   imports: [
-    NgIf,
     RouterLink,
     LoadingComponent,
   ]

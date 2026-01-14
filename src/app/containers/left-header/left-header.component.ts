@@ -6,7 +6,7 @@ import { delay } from 'rxjs/operators';
 import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
 import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
-import { NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { APPCONFIG } from 'src/app/config';
 
@@ -14,7 +14,7 @@ import { APPCONFIG } from 'src/app/config';
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
   styleUrls: [ './left-header.component.scss' ],
-  imports: [ NgIf, LetDirective, NgClass, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent ]
+  imports: [ LetDirective, NgClass, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent ]
 })
 export class LeftHeaderComponent {
 
