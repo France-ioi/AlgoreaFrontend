@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'alg-input-error',
   templateUrl: './form-error.component.html',
   styleUrls: [ './form-error.component.scss' ],
-  imports: [ NgIf, DatePipe ]
+  imports: [ DatePipe ]
 })
 export class FormErrorComponent implements OnChanges {
   @Input() form?: UntypedFormGroup;

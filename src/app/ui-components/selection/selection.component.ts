@@ -2,7 +2,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ensureDefined } from 'src/app/utils/assert';
-import { NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 /**
@@ -26,7 +26,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  imports: [ NgFor, NgClass, TooltipDirective ]
+  imports: [ NgClass, TooltipDirective ]
 })
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
   @Input() items: { label: string, value: T, icon?: string, tooltip?: string }[] = [];

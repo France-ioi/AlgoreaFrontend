@@ -1,14 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-textarea',
   templateUrl: './textarea.component.html',
   styleUrls: [ './textarea.component.scss' ],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     NgClass,

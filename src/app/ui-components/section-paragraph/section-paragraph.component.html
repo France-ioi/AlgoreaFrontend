@@ -1,29 +1,44 @@
 <div class="section-container" [ngClass]="theme">
   <div class="section-header" [ngClass]="{'show-cursor': collapsible}" (click)="toggleContent()">
     <div class="section-handler">
-      <i class="{{icon}}" *ngIf="icon && (!data || !data.ID)"></i>
-      <div class="score-container" *ngIf="data && data.ID">
-        <alg-score-ring
-          [currentScore]="data.progress.currentScore"
-          [icon]="data.progress.isStarted === false ? 'flag-checkered' : ''"
-          [bestScore]="data.progress.bestScore" [diameter]="24"
-        ></alg-score-ring>
-      </div>
+      @if (icon && (!data || !data.ID)) {
+        <i class="{{icon}}"></i>
+      }
+      @if (data && data.ID) {
+        <div class="score-container">
+          <alg-score-ring
+            [currentScore]="data.progress.currentScore"
+            [icon]="data.progress.isStarted === false ? 'flag-checkered' : ''"
+            [bestScore]="data.progress.bestScore" [diameter]="24"
+          ></alg-score-ring>
+        </div>
+      }
     </div>
     <div class="section-header-content" [ngClass]="{'show-border': hasBorder && !collapsed}">
-      <span *ngIf="remainOrigin || !collapsed || !data.ID" class="section-title">
-        <ng-container *ngIf="label; else labelSection">{{ label }}</ng-container>
-        <ng-template #labelSection><ng-content select="[label-section]"></ng-content></ng-template>
-      </span>
-      <div class="additional-content" *ngIf="headerTemplate">
-        <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
-      </div>
-      <span *ngIf="collapsible" class="toggle-content">
-        <img [ngClass]="{down: collapsed}" src="images/collapse.svg">
-      </span>
+      @if (remainOrigin || !collapsed || !data.ID) {
+        <span class="section-title">
+          @if (label) {
+            {{ label }}
+          } @else {
+            <ng-content select="[label-section]"></ng-content>
+          }
+        </span>
+      }
+      @if (headerTemplate) {
+        <div class="additional-content">
+          <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
+        </div>
+      }
+      @if (collapsible) {
+        <span class="toggle-content">
+          <img [ngClass]="{down: collapsed}" src="images/collapse.svg">
+        </span>
+      }
     </div>
   </div>
-  <div *ngIf="!(collapsible && collapsed)" class="section-content">
-    <ng-content></ng-content>
-  </div>
+  @if (!(collapsible && collapsed)) {
+    <div class="section-content">
+      <ng-content></ng-content>
+    </div>
+  }
 </div>

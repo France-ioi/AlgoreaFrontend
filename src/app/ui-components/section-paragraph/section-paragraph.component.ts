@@ -1,6 +1,6 @@
 import { Component, Input, ContentChild, Output, EventEmitter, TemplateRef } from '@angular/core';
 import { ScoreRingComponent } from '../score-ring/score-ring.component';
-import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'alg-section-paragraph',
@@ -8,7 +8,6 @@ import { NgClass, NgIf, NgTemplateOutlet } from '@angular/common';
   styleUrls: [ './section-paragraph.component.scss' ],
   imports: [
     NgClass,
-    NgIf,
     ScoreRingComponent,
     NgTemplateOutlet,
   ]

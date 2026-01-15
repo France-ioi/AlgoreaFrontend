@@ -7,7 +7,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from '../../utils/state';
 import { LoadingComponent } from '../loading/loading.component';
 import { InputComponent } from '../input/input.component';
-import { NgIf, NgClass, NgFor, SlicePipe } from '@angular/common';
+import { NgClass, SlicePipe } from '@angular/common';
 import { PathSuggestionComponent } from '../../containers/path-suggestion/path-suggestion.component';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
@@ -37,11 +37,9 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
   imports: [
-    NgIf,
     InputComponent,
     NgClass,
     LoadingComponent,
-    NgFor,
     SlicePipe,
     PathSuggestionComponent,
     ShowOverlayDirective,

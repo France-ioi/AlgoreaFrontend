@@ -1,8 +1,9 @@
-<span
-  algTooltip="{{ value | date: 'dd/MM/yyyy h:mm:ss a zzzz' }}"
-  [tooltipPosition]="tooltipPosition"
-  tooltipStyleClass="no-text-wrap"
-  *ngIf="value"
->
-  {{ value | relativeTime }}
-</span>
+@if (value) {
+  <span
+    algTooltip="{{ value | date: 'dd/MM/yyyy h:mm:ss a zzzz' }}"
+    [tooltipPosition]="tooltipPosition"
+    tooltipStyleClass="no-text-wrap"
+  >
+    {{ value | relativeTime }}
+  </span>
+}

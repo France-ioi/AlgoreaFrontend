@@ -1,12 +1,16 @@
 <div class="section-container">
   <div>
     <span class="section-title">{{ label }}</span>
-    <span class="section-help" *ngIf="tooltip" [title]="tooltip">
-      <i class="ph ph-question"></i>
-    </span>
-    <span class="section-close" *ngIf="canClose" (click)="onCloseEvent($event)">
-      <i class="ph-bold ph-x"></i>
-    </span>
+    @if (tooltip) {
+      <span class="section-help" [title]="tooltip">
+        <i class="ph ph-question"></i>
+      </span>
+    }
+    @if (canClose) {
+      <span class="section-close" (click)="onCloseEvent($event)">
+        <i class="ph-bold ph-x"></i>
+      </span>
+    }
   </div>
   <div class="section-content">
     <ng-content></ng-content>

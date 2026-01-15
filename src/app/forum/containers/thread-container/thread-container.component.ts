@@ -4,7 +4,7 @@ import { ThreadComponent } from '../thread/thread.component';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { fromForum } from 'src/app/forum/store';
 import { Store } from '@ngrx/store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -14,7 +14,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   templateUrl: './thread-container.component.html',
   styleUrls: [ './thread-container.component.scss' ],
   imports: [
-    NgIf,
     RouterLink,
     ThreadComponent,
     AsyncPipe,

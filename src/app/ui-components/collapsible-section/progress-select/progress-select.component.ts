@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges,
   Output, EventEmitter, OnInit, ContentChild, TemplateRef, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ProgressLevelComponent } from '../../progress-level/progress-level.component';
-import { NgIf, NgClass, NgTemplateOutlet, NgFor } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 export interface ProgressSelectValue<T> {
@@ -39,7 +39,7 @@ export interface ProgressSelectValue<T> {
       multi: true,
     }
   ],
-  imports: [ NgIf, ProgressLevelComponent, NgClass, NgTemplateOutlet, NgFor, TooltipDirective ]
+  imports: [ ProgressLevelComponent, NgClass, NgTemplateOutlet, TooltipDirective ]
 })
 export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {
 

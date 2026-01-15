@@ -1,3 +1,5 @@
 <div class="progress-level-container" [ngClass]="colorTheme">
-  <span class="progress-level-item" [ngClass]="{ 'progress-level-item-active': i < value }" *ngFor="let i of totalArray"></span>
+  @for (i of totalArray; track i) {
+    <span class="progress-level-item" [ngClass]="{ 'progress-level-item-active': i < value }"></span>
+  }
 </div>

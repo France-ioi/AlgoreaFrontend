@@ -14,23 +14,32 @@
             {{ errorMessage }}
           </div>
         }
-        <div class="template alg-flex-1" *ngIf="contentTemplate && collapsed && collapsible">
-          <ng-container
-            [ngTemplateOutlet]="contentTemplate"
-            [ngTemplateOutletContext]="{ $implicit: true }"
-          ></ng-container>
-        </div>
-        <span class="toggle-expand" *ngIf="collapsible">
-          <i *ngIf="collapsed" class="ph-bold ph-caret-down"></i>
-          <i *ngIf="!collapsed" class="ph-bold ph-caret-up"></i>
-        </span>
+        @if (contentTemplate && collapsed && collapsible) {
+          <div class="template alg-flex-1">
+            <ng-container
+              [ngTemplateOutlet]="contentTemplate"
+              [ngTemplateOutletContext]="{ $implicit: true }"
+            ></ng-container>
+          </div>
+        }
+        @if (collapsible) {
+          <span class="toggle-expand">
+            @if (collapsed) {
+              <i class="ph-bold ph-caret-down"></i>
+            }
+            @if (!collapsed) {
+              <i class="ph-bold ph-caret-up"></i>
+            }
+          </span>
+        }
       </div>
     </ng-template>
   </alg-section-header>
 
-  <ng-container
-    *ngIf="contentTemplate && (!collapsed || !collapsible)"
-    [ngTemplateOutlet]="contentTemplate"
-    [ngTemplateOutletContext]="{ $implicit: false }"
-  ></ng-container>
+  @if (contentTemplate && (!collapsed || !collapsible)) {
+    <ng-container
+      [ngTemplateOutlet]="contentTemplate"
+      [ngTemplateOutletContext]="{ $implicit: false }"
+    ></ng-container>
+  }
 </div>

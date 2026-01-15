@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
@@ -8,7 +8,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   templateUrl: './error.component.html',
   styleUrls: [ './error.component.scss' ],
   imports: [
-    NgIf,
     NgClass,
     RouterLink,
     ButtonComponent,

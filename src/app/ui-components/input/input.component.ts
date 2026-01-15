@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
@@ -14,7 +14,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   templateUrl: './input.component.html',
   styleUrls: [ './input.component.scss' ],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     NgClass,
