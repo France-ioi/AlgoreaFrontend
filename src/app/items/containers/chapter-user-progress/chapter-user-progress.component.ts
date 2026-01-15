@@ -15,7 +15,7 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass, NgSwitchDefault, AsyncPipe, DatePipe } from '@angular/common';
+import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   CdkCell,
@@ -48,16 +48,11 @@ interface RowData {
   templateUrl: './chapter-user-progress.component.html',
   styleUrls: [ './chapter-user-progress.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgFor,
-    NgSwitch,
-    NgSwitchCase,
     NgClass,
     RouterLink,
     ScoreRingComponent,
-    NgSwitchDefault,
     AsyncPipe,
     DatePipe,
     ItemRoutePipe,

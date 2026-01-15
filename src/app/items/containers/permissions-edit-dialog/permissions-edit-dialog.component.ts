@@ -12,7 +12,7 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
 import { PermissionsEditFormComponent } from '../permissions-edit-dialog-form/permissions-edit-form.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
@@ -31,7 +31,6 @@ export interface PermissionsEditDialogParams {
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ],
   imports: [
-    NgIf,
     ErrorComponent,
     LoadingComponent,
     PermissionsEditFormComponent,

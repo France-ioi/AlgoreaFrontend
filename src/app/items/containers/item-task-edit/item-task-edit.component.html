@@ -1,12 +1,13 @@
 
-<div
-  *ngIf="!!sanitizedUrl"
-  class="iframe-container"
-  [algFullHeightContent]="true"
->
-  <iframe
-    [src]="sanitizedUrl"
+@if (!!sanitizedUrl) {
+  <div
+    class="iframe-container"
     [algFullHeightContent]="true"
-    allowfullscreen
-  ></iframe>
-</div>
+  >
+    <iframe
+      [src]="sanitizedUrl"
+      [algFullHeightContent]="true"
+      allowfullscreen
+    ></iframe>
+  </div>
+}

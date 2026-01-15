@@ -23,7 +23,7 @@ import { PendingChangesService } from 'src/app/services/pending-changes-service'
 import { AllowsEditingAllItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
 import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
-import { NgIf } from '@angular/common';
+
 import { fromItemContent } from '../../store';
 import { Store } from '@ngrx/store';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -59,7 +59,6 @@ enum UpdateOrDeleteStringsRequestType {
   templateUrl: './item-edit-wrapper.component.html',
   styleUrls: [ './item-edit-wrapper.component.scss' ],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     ItemEditAdvancedParametersComponent,

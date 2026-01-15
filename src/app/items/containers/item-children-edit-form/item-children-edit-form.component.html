@@ -1,17 +1,17 @@
-<ng-container *ngIf="itemData">
-  <ng-container *ngIf="itemData.item.permissions | allowsEditingChildren; else notAuthorized">
+@if (itemData) {
+  @if (itemData.item.permissions | allowsEditingChildren) {
     <alg-item-children-edit
       #childrenEdit
       (childrenChanges)="updateItemChanges($event)"
       [itemData]="itemData"
       [ngClass]="{disabled: disabled}"
     ></alg-item-children-edit>
-
-    <alg-floating-save *ngIf="dirty" [saving]="disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
-  </ng-container>
-  <ng-template #notAuthorized>
+    @if (dirty) {
+      <alg-floating-save [saving]="disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
+    }
+  } @else {
     <p class="validation-text" i18n>
       You do not have the permissions to edit this content.
     </p>
-  </ng-template>
-</ng-container>
+  }
+}

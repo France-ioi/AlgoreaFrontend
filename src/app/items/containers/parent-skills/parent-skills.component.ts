@@ -8,13 +8,13 @@ import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permis
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, SlicePipe } from '@angular/common';
+import { AsyncPipe, SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'alg-parent-skills',
   templateUrl: './parent-skills.component.html',
   styleUrls: [ './parent-skills.component.scss' ],
-  imports: [ NgIf, LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
+  imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
 export class ParentSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

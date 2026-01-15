@@ -18,9 +18,11 @@
       </alg-item-edit-advanced-parameters>
     </form>
 
-    <alg-floating-save *ngIf="itemForm.dirty" [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
+    @if (itemForm.dirty) {
+      <alg-floating-save [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
+    }
   } @else {
-   <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
+    <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
   }
 }
 

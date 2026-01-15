@@ -14,7 +14,7 @@ import { withComputePermissions } from '../../models/computed-permissions';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
-import { DatePipe, JsonPipe, NgIf } from '@angular/common';
+import { DatePipe, JsonPipe } from '@angular/common';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { backendInfiniteDateString, farFutureDateString, isInfinite } from 'src/app/utils/date';
@@ -30,7 +30,6 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     CollapsibleSectionComponent,

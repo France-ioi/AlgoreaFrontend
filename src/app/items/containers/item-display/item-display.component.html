@@ -1,83 +1,81 @@
-<div
-  class="item-display alg-flex-1"
-  [ngClass]="{ 'full-frame': fullFrame$ | async }"
-  *ngIf="state$ | async as state"
->
-  <div class="error-container alg-flex-1" *ngIf="(state.isError || (metadataError$ | async)) && !showTaskAnyway" [algFullHeightContent]="true">
-    <ng-template #defaultErrorMessage>
-      <alg-error
-        i18n-message message="Unable to load the task"
-        icon="ph-duotone ph-warning-circle"
-      ></alg-error>
-    </ng-template>
-
-    <ng-container *ngIf="editingPermission | allowsEditingAll; else defaultErrorMessage">
-      <alg-error
-        *ngIf="initError$ | async; else urlError"
-        i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
-        icon="ph-duotone ph-warning-circle"
-      ></alg-error>
-
-      <ng-template #urlError>
-        <alg-error
-          *ngIf="urlError$ | async as error; else metadataError"
-          message="{{ error.message }}"
-          icon="ph-duotone ph-warning-circle"
-        ></alg-error>
-      </ng-template>
-
-      <ng-template #metadataError>
-        <alg-error
-          *ngIf="metadataError$ | async; else unknownError"
-          i18n-message message="Error while requesting task metadata"
-          icon="ph-duotone ph-warning-circle"
-        ></alg-error>
-      </ng-template>
-
-      <ng-template #unknownError>
-        <alg-error
-          *ngIf="unknownError$ | async"
-          [message]="errorMessage"
-          icon="ph-duotone ph-warning-circle"
-        ></alg-error>
-      </ng-template>
-
-    </ng-container>
-
-    <div class="error-buttons">
-      <button
-        alg-button
-        class="size-l error-button"
-        (click)="showTaskAnyway = true"
-        i18n
-      >Show task anyway (for debugging)</button>
-      <button
-        alg-button
-        class="size-l error-button"
-        (click)="refresh.emit()"
-        i18n
-      >Retry</button>
-    </div>
-  </div>
+@if (state$ | async; as state) {
   <div
-    class="iframe-container alg-flex-1"
+    class="item-display alg-flex-1"
+    [ngClass]="{ 'full-frame': fullFrame$ | async }"
   >
-    <div class="saving-answer" *ngIf="savingAnswer">
-      <p class="saving-answer-message">
-        <span i18n>Saving answer...</span>
-        <alg-loading size="medium"></alg-loading>
-        <button alg-button type="button" (click)="skipSave.emit()" i18n>Skip</button>
-      </p>
+    @if ((state.isError || (metadataError$ | async)) && !showTaskAnyway) {
+      <div class="error-container alg-flex-1" [algFullHeightContent]="true">
+        @if (editingPermission | allowsEditingAll) {
+          @if (initError$ | async) {
+            <alg-error
+              i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
+              icon="ph-duotone ph-warning-circle"
+            ></alg-error>
+          } @else {
+            @if (urlError$ | async; as error) {
+              <alg-error
+                message="{{ error.message }}"
+                icon="ph-duotone ph-warning-circle"
+              ></alg-error>
+            } @else {
+              @if (metadataError$ | async) {
+                <alg-error
+                  i18n-message message="Error while requesting task metadata"
+                  icon="ph-duotone ph-warning-circle"
+                ></alg-error>
+              } @else {
+                @if (unknownError$ | async) {
+                  <alg-error
+                    [message]="errorMessage"
+                    icon="ph-duotone ph-warning-circle"
+                  ></alg-error>
+                }
+              }
+            }
+          }
+        } @else {
+          <alg-error
+            i18n-message message="Unable to load the task"
+            icon="ph-duotone ph-warning-circle"
+          ></alg-error>
+        }
+        <div class="error-buttons">
+          <button
+            alg-button
+            class="size-l error-button"
+            (click)="showTaskAnyway = true"
+            i18n
+          >Show task anyway (for debugging)</button>
+          <button
+            alg-button
+            class="size-l error-button"
+            (click)="refresh.emit()"
+            i18n
+          >Retry</button>
+        </div>
+      </div>
+    }
+    <div class="iframe-container alg-flex-1">
+      @if (savingAnswer) {
+        <div class="saving-answer">
+          <p class="saving-answer-message">
+            <span i18n>Saving answer...</span>
+            <alg-loading size="medium"></alg-loading>
+            <button alg-button type="button" (click)="skipSave.emit()" i18n>Skip</button>
+          </p>
+        </div>
+      }
+      @if (iframeSrc$ | async; as iframeSrc) {
+        <iframe
+          class="iframe-element"
+          [class.alg-flex-1]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
+          [style.height]="(state.isReady || showTaskAnyway) ? (iframeHeight$ | async) : undefined"
+          [src]="iframeSrc"
+          #iframe
+          allowfullscreen
+          allow="bluetooth"
+        ></iframe>
+      }
     </div>
-    <iframe
-      *ngIf="iframeSrc$ | async as iframeSrc"
-      class="iframe-element"
-      [class.alg-flex-1]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
-      [style.height]="(state.isReady || showTaskAnyway) ? (iframeHeight$ | async) : undefined"
-      [src]="iframeSrc"
-      #iframe
-      allowfullscreen
-      allow="bluetooth"
-    ></iframe>
   </div>
-</div>
+}

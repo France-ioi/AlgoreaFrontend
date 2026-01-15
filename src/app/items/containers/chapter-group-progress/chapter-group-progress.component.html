@@ -1,19 +1,22 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-group-progress-grid
-    *ngIf="state.isReady"
-    [itemData]="itemData"
-    [group]="state.data"
-  >
-  </alg-group-progress-grid>
-
-  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching"></alg-loading>
-  <alg-error
-    class="alg-flex-1"
-    i18n-message message="Error while loading the group progress"
-    [showRefreshButton]="true"
-    (refresh)="refresh()"
-    *ngIf="state.isError"
-  ></alg-error>
-</ng-container>
+@if (state$ | async; as state) {
+  @if (state.isReady) {
+    <alg-group-progress-grid
+      [itemData]="itemData"
+      [group]="state.data"
+    >
+    </alg-group-progress-grid>
+  }
+  @if (state.isFetching) {
+    <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="alg-flex-1"
+      i18n-message message="Error while loading the group progress"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+}
 
 

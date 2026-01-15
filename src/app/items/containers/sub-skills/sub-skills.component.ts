@@ -10,13 +10,13 @@ import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permis
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-sub-skills',
   templateUrl: './sub-skills.component.html',
   styleUrls: [ './sub-skills.component.scss' ],
-  imports: [ NgIf, LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe ]
+  imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe ]
 })
 export class SubSkillsComponent implements OnChanges, OnDestroy {
   @Input() itemData?: ItemData;

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'alg-item-task-edit',
   templateUrl: './item-task-edit.component.html',
   styleUrls: [ './item-task-edit.component.scss' ],
-  imports: [ NgIf, FullHeightContentDirective ]
+  imports: [ FullHeightContentDirective ]
 })
 export class ItemTaskEditComponent implements OnChanges {
   @Input() editorUrl?: string;

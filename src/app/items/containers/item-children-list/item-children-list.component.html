@@ -1,67 +1,71 @@
-<ul
-  class="data-list-container"
-  [ngClass]="{'activity-type': type === 'activity'}"
-  *ngIf="children.length > 0; else noChildrenSection"
->
-  <li class="data-list-item" *ngFor="let item of children; let i = index">
-    <a
-      class="item-link"
-      [ngClass]="{ locked: item.isLocked }"
-      [routerLink]="item | itemRoute: { path: routeParams.path } |
-        with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: routeParams.parentAttemptId }) |
-        url"
-      *ngIf="routeParams"
-    >
-      <div class="left-container">
-        <div class="item-number">
-          {{ i + 1 }}
-        </div>
-        <div class="item-title-section">
-          <div class="item-title">
-            {{ item.string.title }}
-          </div>
-          <div class="item-subtitle" *ngIf="item.string.subtitle">
-            {{ item.string.subtitle }}
-          </div>
-        </div>
-      </div>
-      <div class="right-container">
-        <ng-container *ngIf="item.isLocked; else unlockedSection">
-          <i class="item-icon ph-duotone ph-lock-key"></i>
-        </ng-container>
-        <ng-template #unlockedSection>
-          <ng-container *ngIf="type === 'activity'">
-            <alg-score-ring
-              *ngIf="!item.noScore && (!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined); else iconSection"
-              [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
-              [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
-              [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
-            ></alg-score-ring>
-            <ng-template #iconSection>
-              <div class="alg-rounded-icon-wrapper">
-                <i class="ph-duotone" [ngClass]="{ 'ph-files': item.type === 'Task', 'ph-folders': item.type === 'Chapter' }"></i>
+@if (children.length > 0) {
+  <ul
+    class="data-list-container"
+    [ngClass]="{'activity-type': type === 'activity'}"
+  >
+    @for (item of children; track item; let i = $index) {
+      <li class="data-list-item">
+        @if (routeParams) {
+          <a
+            class="item-link"
+            [ngClass]="{ locked: item.isLocked }"
+            [routerLink]="item | itemRoute: { path: routeParams.path } |
+              with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: routeParams.parentAttemptId }) |
+              url"
+          >
+            <div class="left-container">
+              <div class="item-number">
+                {{ i + 1 }}
               </div>
-            </ng-template>
-          </ng-container>
-          <ng-container *ngIf="type === 'skill' && item.result">
-            <div class="alg-rounded-icon-wrapper" *ngIf="item.result.validated; else notValidated">
-              <i class="ph-duotone ph-duotone ph-medal"></i>
+              <div class="item-title-section">
+                <div class="item-title">
+                  {{ item.string.title }}
+                </div>
+                @if (item.string.subtitle) {
+                  <div class="item-subtitle">
+                    {{ item.string.subtitle }}
+                  </div>
+                }
+              </div>
             </div>
-            <ng-template #notValidated>
-              <alg-skill-progress
-                type="bold"
-                [bestScore]="item.bestScore"
-                [currentScore]="item.result.score"
-              ></alg-skill-progress>
-            </ng-template>
-          </ng-container>
-        </ng-template>
-      </div>
-    </a>
-  </li>
-</ul>
-
-<ng-template #noChildrenSection>
+            <div class="right-container">
+              @if (item.isLocked) {
+                <i class="item-icon ph-duotone ph-lock-key"></i>
+              } @else {
+                @if (type === 'activity') {
+                  @if (!item.noScore && (!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined)) {
+                    <alg-score-ring
+                      [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
+                      [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
+                      [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
+                    ></alg-score-ring>
+                  } @else {
+                    <div class="alg-rounded-icon-wrapper">
+                      <i class="ph-duotone" [ngClass]="{ 'ph-files': item.type === 'Task', 'ph-folders': item.type === 'Chapter' }"></i>
+                    </div>
+                  }
+                }
+                @if (type === 'skill' && item.result) {
+                  @if (item.result.validated) {
+                    <div class="alg-rounded-icon-wrapper">
+                      <i class="ph-duotone ph-duotone ph-medal"></i>
+                    </div>
+                  } @else {
+                    <alg-skill-progress
+                      type="bold"
+                      [bestScore]="item.bestScore"
+                      [currentScore]="item.result.score"
+                    ></alg-skill-progress>
+                  }
+                }
+              }
+            </div>
+          </a>
+        }
+      </li>
+    }
+  </ul>
+} @else {
   @if (emptyMessage) {
     <alg-empty-content
       class="empty-content"
@@ -69,4 +73,5 @@
       [message]="emptyMessage"
     ></alg-empty-content>
   }
-</ng-template>
+}
+

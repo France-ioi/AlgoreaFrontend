@@ -17,7 +17,7 @@ import { PendingChangesService } from 'src/app/services/pending-changes-service'
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from '../../store';
 import { LocaleService } from 'src/app/services/localeService';
@@ -27,7 +27,6 @@ import { LocaleService } from 'src/app/services/localeService';
   templateUrl: './item-children-edit-form.component.html',
   styleUrls: [ './item-children-edit-form.component.scss' ],
   imports: [
-    NgIf,
     ItemChildrenEditComponent,
     NgClass,
     FloatingSaveComponent,

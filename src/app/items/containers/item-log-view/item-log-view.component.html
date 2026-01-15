@@ -1,21 +1,23 @@
 <p i18n>In this tab, you will find a list of all your past activity for this content. For exercises, you may reload your previous submissions.</p>
 
-<ng-container *ngIf="state$ | async as state">
-  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
-  <alg-error
-    *ngIf="state.isError"
-    class="alg-flex-1"
-    icon="ph-duotone ph-warning-circle"
-    i18n-message message="Unable to load the recent activity"
-    [showRefreshButton]="true"
-    (refresh)="refresh()"
-  ></alg-error>
-
-  <ng-container *ngIf="state.data">
+@if (state$ | async; as state) {
+  @if (state.isFetching && !state.data) {
+    <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="alg-flex-1"
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load the recent activity"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (state.data) {
     <div class="operation-buttons">
       <div>
-        <ng-container *ngIf="itemData && itemData.currentResult?.attemptId as parentAttemptId">
-          <ng-container *ngIf="itemData && itemData.item.type === 'Task'">
+        @if (itemData && itemData.currentResult?.attemptId; as parentAttemptId) {
+          @if (itemData && itemData.item.type === 'Task') {
             <a class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise"
               [routerLink]="itemData.route | with: {
                   parentAttemptId,
@@ -28,14 +30,13 @@
                 other {Reload the best answer}
               }
             </a>
-          </ng-container>
-        </ng-container>
+          }
+        }
       </div>
       <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
         Refresh
       </button>
     </div>
-
     @let isObserving = isObserving$ | async;
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
@@ -44,17 +45,17 @@
             <ng-container [cdkColumnDef]="column.field">
               <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>{{ column.header }}</th>
               <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
-                <ng-container [ngSwitch]="column.field">
-                  <ng-container *ngSwitchCase="'activityType'">
+                @switch (column.field) {
+                  @case ('activityType') {
                     <div class="item-title-section">
                       <div class="item-title-section-left">
-                        <alg-score-ring
-                          [currentScore]="rowData.score"
-                          *ngIf="rowData.score; else iconSection"
-                        ></alg-score-ring>
-                        <ng-template #iconSection>
+                        @if (rowData.score) {
+                          <alg-score-ring
+                            [currentScore]="rowData.score"
+                          ></alg-score-ring>
+                        } @else {
                           <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
-                        </ng-template>
+                        }
                       </div>
                       <div class="item-title">
                         <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
@@ -84,26 +85,26 @@
                         }
                       </div>
                     </div>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'item.string.title'">
+                  }
+                  @case ('item.string.title') {
                     <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
                       {{ rowData.item.string.title }}
                     </a>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'item.user'">
+                  }
+                  @case ('item.user') {
                     @if (rowData.user) {
                       <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
                     } @else {
                       {{ rowData.participant.name }}
                     }
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'at'">
+                  }
+                  @case ('at') {
                     <alg-relative-time [value]="rowData.at"></alg-relative-time>
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
+                  }
+                  @default {
                     {{ rowData[column.field] }}
-                  </ng-container>
-                </ng-container>
+                  }
+                }
               </td>
             </ng-container>
           }
@@ -117,7 +118,6 @@
         </table>
       </div>
     </div>
-
     @if (datapager.canLoadMore$ | async) {
       <div class="alg-table-load-more">
         <button
@@ -128,5 +128,5 @@
         >Load more</button>
       </div>
     }
-  </ng-container>
-</ng-container>
+  }
+}

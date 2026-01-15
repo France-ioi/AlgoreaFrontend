@@ -9,7 +9,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { NgIf, NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
+import { NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
 import { ItemType } from 'src/app/items/models/item-type';
 import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
 import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
@@ -30,7 +30,6 @@ export interface ProgressData {
   templateUrl: './user-progress-details.component.html',
   styleUrls: [ './user-progress-details.component.scss' ],
   imports: [
-    NgIf,
     ScoreRingComponent,
     NgClass,
     RouterLink,

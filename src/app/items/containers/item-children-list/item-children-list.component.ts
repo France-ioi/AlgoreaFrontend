@@ -6,7 +6,7 @@ import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { SkillProgressComponent } from 'src/app/ui-components/skill-progress/skill-progress.component';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
-import { NgIf, NgClass, NgFor } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
 
@@ -15,9 +15,7 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
   templateUrl: './item-children-list.component.html',
   styleUrls: [ './item-children-list.component.scss' ],
   imports: [
-    NgIf,
     NgClass,
-    NgFor,
     RouterLink,
     ScoreRingComponent,
     SkillProgressComponent,

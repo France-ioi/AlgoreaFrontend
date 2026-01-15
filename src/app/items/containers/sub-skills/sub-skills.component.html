@@ -1,36 +1,36 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
-
-  <alg-error
-    class="alg-flex-1"
-    i18n-message message="Error while loading content"
-    [showRefreshButton]="true"
-    (refresh)="refresh()"
-    *ngIf="state.isError"
-  ></alg-error>
-
-  <ng-container *ngIf="state.isReady && state.data as data">
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading class="alg-flex-1"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="alg-flex-1"
+      i18n-message message="Error while loading content"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (state.isReady && state.data; as data) {
     <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>
       Sub-skills
     </h2>
-
-    <alg-item-children-list
-      type="skill"
-      i18n-emptyMessage emptyMessage="This skill does not have subskills."
-      [children]="data.skills"
-      [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
-      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
-    ></alg-item-children-list>
-
+    @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+      <alg-item-children-list
+        type="skill"
+        i18n-emptyMessage emptyMessage="This skill does not have subskills."
+        [children]="data.skills"
+        [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+      ></alg-item-children-list>
+    }
     <div class="section-title alg-h2" i18n>
       Activities to learn or reinforce this skill
     </div>
-
-    <alg-item-children-list
-      i18n-emptyMessage emptyMessage="This skill does not have related activities."
-      [children]="data.activities"
-      [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
-      *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
-    ></alg-item-children-list>
-  </ng-container>
-</ng-container>
+    @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+      <alg-item-children-list
+        i18n-emptyMessage emptyMessage="This skill does not have related activities."
+        [children]="data.activities"
+        [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+      ></alg-item-children-list>
+    }
+  }
+}
