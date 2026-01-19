@@ -3,10 +3,12 @@
   [selected]="selectedTypeFilter"
   (change)="onTypeFilterChanged($event)"
 ></alg-selection>
-<div class="switch-control" *ngIf="allowToCheckAllDescendants">
-  <alg-switch
-    [(ngModel)]="allDescendantsChecked"
-    (ngModelChange)="onChildrenFilterChanged($event)"
-  ></alg-switch>
-  <p class="switch-control-caption" i18n>All descendants</p>
-</div>
+@if (allowToCheckAllDescendants) {
+  <div class="switch-control">
+    <alg-switch
+      [(ngModel)]="allDescendantsChecked"
+      (ngModelChange)="onChildrenFilterChanged($event)"
+    ></alg-switch>
+    <p class="switch-control-caption" i18n>All descendants</p>
+  </div>
+}

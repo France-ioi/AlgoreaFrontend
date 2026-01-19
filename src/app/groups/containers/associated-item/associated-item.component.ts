@@ -20,7 +20,7 @@ import { RouterLink } from '@angular/router';
 import { AddContentComponent } from 'src/app/ui-components/add-content/add-content.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { AllowsViewingItemInfoPipe } from 'src/app/items/models/item-view-permission';
@@ -43,11 +43,8 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     }
   ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgSwitch,
-    NgSwitchCase,
     AddContentComponent,
     RouterLink,
     NgTemplateOutlet,

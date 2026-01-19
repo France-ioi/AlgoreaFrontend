@@ -1,18 +1,22 @@
-<div class="user-header-container" *ngIf="user">
-  <div class="user-header">
-    <div class="user-title-container">
-      <h1 class="user-title alg-h1">
-        {{ user | userCaption }}
-      </h1>
-
-      <div class="user-subtitle" *ngIf="user.profile?.webSite">
-        <i class="ph ph-arrow-square-out user-subtitle-icon"></i>
-        <a class="alg-link" [attr.href]="user.profile?.webSite" target="_blank">{{ user.profile?.webSite }}</a>
-      </div>
-
-      <div class="user-subtitle" *ngIf="user.profile?.freeText">
-        {{ user.profile?.freeText }}
+@if (user) {
+  <div class="user-header-container">
+    <div class="user-header">
+      <div class="user-title-container">
+        <h1 class="user-title alg-h1">
+          {{ user | userCaption }}
+        </h1>
+        @if (user.profile?.webSite) {
+          <div class="user-subtitle">
+            <i class="ph ph-arrow-square-out user-subtitle-icon"></i>
+            <a class="alg-link" [attr.href]="user.profile?.webSite" target="_blank">{{ user.profile?.webSite }}</a>
+          </div>
+        }
+        @if (user.profile?.freeText) {
+          <div class="user-subtitle">
+            {{ user.profile?.freeText }}
+          </div>
+        }
       </div>
     </div>
   </div>
-</div>
+}

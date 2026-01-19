@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
 import { UserSessionService } from '../../../services/user-session.service';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
@@ -49,7 +49,6 @@ const logsLimit = 20;
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     ScoreRingComponent,

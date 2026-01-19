@@ -10,17 +10,15 @@ import { GroupPermissionsComponent } from '../group-permissions/group-permission
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-group-access',
   templateUrl: './group-access.component.html',
   styleUrls: [ './group-access.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgFor,
     RouterLink,
     GroupPermissionsComponent,
     AsyncPipe,

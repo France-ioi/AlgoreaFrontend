@@ -12,7 +12,7 @@ import { UserIndicatorComponent } from '../user-indicator/user-indicator.compone
 import { UserHeaderComponent } from '../user-header/user-header.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from '../../store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
@@ -25,7 +25,6 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   templateUrl: './user.component.html',
   styleUrls: [ './user.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     UserHeaderComponent,

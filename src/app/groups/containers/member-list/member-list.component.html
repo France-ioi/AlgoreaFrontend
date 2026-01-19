@@ -1,16 +1,14 @@
 <alg-group-composition-filter #compositionFilter (change)="onFilterChange($event)" [defaultValue]="defaultFilter"></alg-group-composition-filter>
-<ng-container *ngIf="rows$ | async as state">
-
-  <alg-error
-    *ngIf="state.isError; else noError"
-    class="error dark"
-    i18n-message message="Error while loading the group members"
-    icon="ph-duotone ph-warning-circle"
-    [showRefreshButton]="true"
-    (refresh)="fetchRows()"
-  ></alg-error>
-
-  <ng-template #noError>
+@if (rows$ | async; as state) {
+  @if (state.isError) {
+    <alg-error
+      class="error dark"
+      i18n-message message="Error while loading the group members"
+      icon="ph-duotone ph-warning-circle"
+      [showRefreshButton]="true"
+      (refresh)="fetchRows()"
+    ></alg-error>
+  } @else {
     <div class="alg-table-page-wrapper member-list-table">
       <div class="alg-table-horizontal-scroll">
         <table class="alg-table-v2" cdk-table [dataSource]="state.data || []" algTableSort (sortChange)="onSortChange($event)">
@@ -21,7 +19,6 @@
               <input type="checkbox" [checked]="isSelected" (change)="onSelect(rowData)" />
             </td>
           </ng-container>
-
           @for (column of columns(); track column.field) {
             <ng-container [cdkColumnDef]="column.field">
               <th
@@ -32,38 +29,37 @@
                 *cdkHeaderCellDef
               >{{ column.header }}</th>
               <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
-                <ng-container [ngSwitch]="column.field">
-                  <ng-container *ngSwitchCase="'user.login'">
-                    <ng-container *ngIf="rowData.user">
+                @switch (column.field) {
+                  @case ('user.login') {
+                    @if (rowData.user) {
                       <a
                         class="alg-link"
                         [routerLink]="rowData.route | groupLink"
                       >
                         {{ rowData.user | userCaption }}
                       </a>
-                    </ng-container>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'name'">
+                    }
+                  }
+                  @case ('name') {
                     <a
                       class="alg-link"
                       [routerLink]="rowData.route | groupLink"
                     >
                       {{ rowData.name }}
                     </a>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'member_since'">
-                    <ng-container *ngIf="rowData.memberSince">
+                  }
+                  @case ('member_since') {
+                    @if (rowData.memberSince) {
                       {{ rowData.memberSince | date:'short' }}
-                    </ng-container>
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
+                    }
+                  }
+                  @default {
                     {{ rowData[column.field] }}
-                  </ng-container>
-                </ng-container>
+                  }
+                }
               </td>
             </ng-container>
           }
-
           <tr
             class="alg-table-header-tr"
             [ngClass]="{ 'alg-display-none': !state.isReady || state.data.length === 0 }"
@@ -112,7 +108,6 @@
         </div>
       }
     </div>
-
     @if (datapager.canLoadMore$ | async) {
       <div class="alg-table-load-more">
         <button
@@ -125,5 +120,5 @@
         >Load more</button>
       </div>
     }
-  </ng-template>
-</ng-container>
+  }
+}

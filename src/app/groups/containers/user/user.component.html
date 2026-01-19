@@ -1,39 +1,40 @@
-<ng-container *ngIf="state$ | async as state">
-
-  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
-
-  <alg-error
-    *ngIf="state.isError"
-    class="dark alg-flex-1"
-    i18n-message message="Error while loading the user info"
-    icon="ph-duotone ph-warning-circle"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="refresh()"
-  ></alg-error>
-
-  <ng-container *ngIf="state.isReady">
-
-    <alg-user-header *ngIf="userRoute$ | async as route" [user]="state.data" [route]="route" ></alg-user-header>
-
-    <alg-user-indicator
-      class="user-indicator"
-      [user]="state.data"
-      *ngIf="!state.data.isCurrentUser && state.data.ancestorsCurrentUserIsManagerOf.length > 0"
-    ></alg-user-indicator>
-
-    <nav class="alg-nav-tab" *ngIf="state.data.isCurrentUser || !state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none' || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings'">
-      <a
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading class="alg-flex-1"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="dark alg-flex-1"
+      i18n-message message="Error while loading the user info"
+      icon="ph-duotone ph-warning-circle"
+      [showRefreshButton]="true"
+      refreshButtonType="refresh"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (state.isReady) {
+    @if (userRoute$ | async; as route) {
+      <alg-user-header [user]="state.data" [route]="route" ></alg-user-header>
+    }
+    @if (!state.data.isCurrentUser && state.data.ancestorsCurrentUserIsManagerOf.length > 0) {
+      <alg-user-indicator
+        class="user-indicator"
+        [user]="state.data"
+      ></alg-user-indicator>
+    }
+    @if (state.data.isCurrentUser || !state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none' || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings') {
+      <nav class="alg-nav-tab">
+        <a
           class="alg-nav-tab-item"
           [routerLink]="'./'"
           routerLinkActive #progress="routerLinkActive"
           [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
           [class.active]="progress.isActive"
           i18n
-      >
-        Progress
-      </a>
-      <a
+        >
+          Progress
+        </a>
+        <a
           class="alg-nav-tab-item"
           [routerLink]="'./personal-data'"
           routerLinkActive #personalData="routerLinkActive"
@@ -41,10 +42,10 @@
           [class.active]="personalData.isActive"
           i18n
           [hidden]="!state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser === 'none' && (activeRoute$ | async) !== 'personal-data'"
-      >
-        Personal data
-      </a>
-      <a
+        >
+          Personal data
+        </a>
+        <a
           class="alg-nav-tab-item"
           [routerLink]="'./settings'"
           routerLinkActive #settings="routerLinkActive"
@@ -52,32 +53,28 @@
           [class.active]="settings.isActive"
           i18n
           [hidden]="!state.data.isCurrentUser && (activeRoute$ | async) !== 'settings'"
-      >
-        Settings
-      </a>
-    </nav>
-
-    <ng-container *ngIf="activeRoute$ | async as activeRoute">
-      <ng-container *ngIf="activeRoute === 'progress'">
+        >
+          Settings
+        </a>
+      </nav>
+    }
+    @if (activeRoute$ | async; as activeRoute) {
+      @if (activeRoute === 'progress') {
         <alg-group-log-view
           [groupId]="!state.data.isCurrentUser ? state.data.groupId : undefined"
           [showUserColumn]="false"
         ></alg-group-log-view>
-      </ng-container>
-
-      <ng-container *ngIf="activeRoute === 'personal-data'">
+      }
+      @if (activeRoute === 'personal-data') {
         <alg-user-info [user]="state.data" (hasChanged)="refresh()"></alg-user-info>
-      </ng-container>
-
-      <ng-container *ngIf="activeRoute === 'settings'">
-        <ng-container *ngIf="state.data.isCurrentUser; else forbidden">
+      }
+      @if (activeRoute === 'settings') {
+        @if (state.data.isCurrentUser) {
           <alg-platform-settings></alg-platform-settings>
-        </ng-container>
-      </ng-container>
-
-      <ng-template #forbidden>
-        <alg-error class="alg-flex-1" i18n-message message="You cannot access this page for this user"></alg-error>
-      </ng-template>
-    </ng-container>
-  </ng-container>
-</ng-container>
+        } @else {
+          <alg-error class="alg-flex-1" i18n-message message="You cannot access this page for this user"></alg-error>
+        }
+      }
+    }
+  }
+}

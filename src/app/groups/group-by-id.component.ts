@@ -19,7 +19,7 @@ import { GroupCompositionComponent } from './containers/group-composition/group-
 import { GroupOverviewComponent } from './containers/group-overview/group-overview.component';
 import { GroupIndicatorComponent } from './containers/group-indicator/group-indicator.component';
 import { GroupHeaderComponent } from './containers/group-header/group-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from './store';
 import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.service';
@@ -34,7 +34,6 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
   imports: [
-    NgIf,
     GroupHeaderComponent,
     GroupIndicatorComponent,
     RouterLinkActive,

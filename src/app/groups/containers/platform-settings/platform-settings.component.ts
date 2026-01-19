@@ -4,7 +4,7 @@ import { LocaleService } from 'src/app/services/localeService';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguagePickerComponent } from 'src/app/containers/language-picker/language-picker.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { SelectComponent } from 'src/app/ui-components/select/select.component';
 
 @Component({
@@ -12,7 +12,6 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
   templateUrl: './platform-settings.component.html',
   styleUrls: [ './platform-settings.component.scss' ],
   imports: [
-    NgIf,
     LanguagePickerComponent,
     AsyncPipe,
     SelectComponent,

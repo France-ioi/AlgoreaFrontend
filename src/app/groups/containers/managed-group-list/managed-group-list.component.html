@@ -1,13 +1,12 @@
-<alg-error
-  *ngIf="state === 'error'; else noError"
-  class="dark"
-  icon="ph-duotone ph-warning-circle"
-  i18n-message message="Error while loading the group you manage"
-  [showRefreshButton]="true"
-  (refresh)="fetchData()"
-></alg-error>
-
-<ng-template #noError>
+@if (state === 'error') {
+  <alg-error
+    class="dark"
+    icon="ph-duotone ph-warning-circle"
+    i18n-message message="Error while loading the group you manage"
+    [showRefreshButton]="true"
+    (refresh)="fetchData()"
+  ></alg-error>
+} @else {
   @if (state === 'fetching') {
     <alg-loading></alg-loading>
   } @else {
@@ -41,8 +40,12 @@
                   unlocked: !group.canWatchMembers
                 }"
               >
-                <i *ngIf="!group.canWatchMembers" class="ph-bold ph-x"></i>
-                <i *ngIf="group.canWatchMembers" class="ph-bold ph-check"></i>
+                @if (!group.canWatchMembers) {
+                  <i class="ph-bold ph-x"></i>
+                }
+                @if (group.canWatchMembers) {
+                  <i class="ph-bold ph-check"></i>
+                }
               </span>
             </td>
           </ng-container>
@@ -57,8 +60,12 @@
                   unlocked: !group.canGrantGroupAccess
                 }"
               >
-                <i *ngIf="!group.canGrantGroupAccess" class="ph-bold ph-x"></i>
-                <i *ngIf="group.canGrantGroupAccess" class="ph-bold ph-check"></i>
+                @if (!group.canGrantGroupAccess) {
+                  <i class="ph-bold ph-x"></i>
+                }
+                @if (group.canGrantGroupAccess) {
+                  <i class="ph-bold ph-check"></i>
+                }
               </span>
             </td>
           </ng-container>
@@ -76,4 +83,5 @@
       </div>
     </div>
   }
-</ng-template>
+}
+

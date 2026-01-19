@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
@@ -17,7 +17,7 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ],
-  imports: [ NgIf, LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
+  imports: [ LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   @Input() group?: Group;

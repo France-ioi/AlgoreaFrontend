@@ -1,10 +1,12 @@
-<ng-container *ngIf="group">
+@if (group) {
   <h2 class="alg-h2" i18n>Presentation</h2>
-  <p *ngIf="group.description ; else noDesc">{{ group.description }}</p>
-  <ng-template #noDesc><span i18n>This group has no description</span></ng-template>
-
-  <ng-container *ngIf="group | isCurrentUserMember">
+  @if (group.description ) {
+    <p>{{ group.description }}</p>
+  } @else {
+    <span i18n>This group has no description</span>
+  }
+  @if (group | isCurrentUserMember) {
     <h2 class="alg-h2" i18n>Leave the group?</h2>
     <alg-group-leave [group]="group" (leave)="onLeave()"></alg-group-leave>
-  </ng-container>
-</ng-container>
+  }
+}
