@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { EMPTY, map, merge, retry, shareReplay, startWith, Subject, switchMap, timer } from 'rxjs';
-import { webSocket } from 'rxjs/webSocket';
+import { EMPTY, map, merge, retry, shareReplay, startWith, Subject, switchMap, tap, timer } from 'rxjs';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { MINUTES, SECONDS } from 'src/app/utils/duration';
 import { APPCONFIG } from '../config';
+import { IdentityTokenService } from '../services/auth/identity-token.service';
 
 const wsRetryDelay = 5*SECONDS;
 const heartbeatStartDelay = 1*MINUTES;
@@ -14,13 +15,14 @@ const heartbeatStartPeriod = 4*MINUTES; // API gatetway closes the connection af
 export class WebsocketClient implements OnDestroy {
 
   private config = inject(APPCONFIG);
+  private identityTokenService = inject(IdentityTokenService);
 
   private openEvents$ = new Subject<Event>();
   private closeEvents$ = new Subject<CloseEvent>();
   private wsUrl = this.config.slsWsUrl;
-  private ws$ = this.wsUrl ?
-    webSocket<unknown>({ url: this.wsUrl, openObserver: this.openEvents$, closeObserver: this.closeEvents$ }) :
-    undefined;
+
+  // Track current ws for send() method
+  private currentWs: WebSocketSubject<unknown> | null = null;
 
   isWsOpen$ = merge(
     this.openEvents$.pipe(map(() => true)),
@@ -30,7 +32,29 @@ export class WebsocketClient implements OnDestroy {
     shareReplay(1)
   );
 
-  inputMessages$ = this.ws$ ? this.ws$.pipe(retry({ delay: wsRetryDelay })) : EMPTY;
+  /**
+   * Messages from the websocket.
+   * - Creates websocket lazily on first subscription
+   * - Recreates when user identity (token) changes
+   * - On close/error, retries with a fresh token (if expired)
+   */
+  inputMessages$ = this.wsUrl ? this.identityTokenService.identityToken$.pipe(
+    tap(() => this.currentWs?.complete()),
+    map(token => {
+      const url = new URL(this.wsUrl!);
+      url.searchParams.set('token', token);
+      return webSocket<unknown>({
+        url: url.toString(),
+        openObserver: this.openEvents$,
+        closeObserver: this.closeEvents$
+      });
+    }),
+    tap(ws => this.currentWs = ws),
+    switchMap(ws => ws),
+    // Retry re-subscribes to identityToken$, which checks expiry via defer
+    retry({ delay: wsRetryDelay }),
+    shareReplay(1),
+  ) : EMPTY;
 
   private heartbeatSubscription = this.isWsOpen$.pipe(
     switchMap(open => {
@@ -41,15 +65,15 @@ export class WebsocketClient implements OnDestroy {
 
   ngOnDestroy(): void {
     this.heartbeatSubscription.unsubscribe();
-    this.ws$?.complete();
+    this.currentWs?.complete();
     this.openEvents$.complete();
     this.closeEvents$.complete();
   }
 
   send(msg: unknown): void {
-    if (!this.ws$) throw new Error('Unexpected: sending message while websocket is not initialized');
+    if (!this.currentWs) throw new Error('Unexpected: sending message while websocket is not initialized');
     // the websocket will queue the messages while the connection is not established
-    this.ws$.next(msg);
+    this.currentWs.next(msg);
   }
 
 }
