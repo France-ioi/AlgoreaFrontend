@@ -6,8 +6,8 @@ import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { SECONDS } from 'src/app/utils/duration';
 
 interface TokenState {
-  token: string;
-  expiresAt: number;
+  token: string,
+  expiresAt: number,
 }
 
 @Injectable({
