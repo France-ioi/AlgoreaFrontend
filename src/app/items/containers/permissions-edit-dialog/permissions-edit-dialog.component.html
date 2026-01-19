@@ -1,44 +1,47 @@
 <alg-modal i18n-modalTitle modalTitle="Permission editor" [showFooter]="false" (closeEvent)="closeDialog()">
-  <alg-error
-    i18n-message message="User permissions cannot be changed via this page for the moment"
-    *ngIf="(params().group | isUser) && !params().sourceGroup; else stateBlock"
-  ></alg-error>
-
-  <ng-template #stateBlock>
-    <ng-container *ngIf="state$ | async as state">
-      <alg-loading *ngIf="state.isFetching"></alg-loading>
-
-      <alg-error *ngIf="state.isError">
-        <span class="error-message" i18n>The permissions cannot be retrieved.</span>
-        <span i18n="@@contactUs">If the problem persists, please contact us.</span>
-      </alg-error>
-
-      <div class="dialog-container" *ngIf="state.isReady">
-        <div class="dialog-content">
-          <ng-container *ngIf="params().item.string.title">
-            @if(params().permGiverName) {
-              <p class="dialog-description" i18n>
-                These are the permissions given by "{{ params().permGiverName }}" to "{{ params().permReceiverName }}" on "{{ params().item.string.title }}".
-              </p>
-            } @else {
-              <p class="dialog-description" i18n>
-                These are the permissions given to "{{ params().permReceiverName }}" on "{{ params().item.string.title }}".
-              </p>
+  @if ((params().group | isUser) && !params().sourceGroup) {
+    <alg-error
+      i18n-message message="User permissions cannot be changed via this page for the moment"
+    ></alg-error>
+  } @else {
+    @if (state$ | async; as state) {
+      @if (state.isFetching) {
+        <alg-loading></alg-loading>
+      }
+      @if (state.isError) {
+        <alg-error>
+          <span class="error-message" i18n>The permissions cannot be retrieved.</span>
+          <span i18n="@@contactUs">If the problem persists, please contact us.</span>
+        </alg-error>
+      }
+      @if (state.isReady) {
+        <div class="dialog-container">
+          <div class="dialog-content">
+            @if (params().item.string.title) {
+              @if(params().permGiverName) {
+                <p class="dialog-description" i18n>
+                  These are the permissions given by "{{ params().permGiverName }}" to "{{ params().permReceiverName }}" on "{{ params().item.string.title }}".
+                </p>
+              } @else {
+                <p class="dialog-description" i18n>
+                  These are the permissions given to "{{ params().permReceiverName }}" on "{{ params().item.string.title }}".
+                </p>
+              }
             }
-          </ng-container>
-
-          <alg-permissions-edit-form
-            (save)="onPermissionsDialogSave($event)"
-            (cancel)="closeDialog()"
-            [targetType]="targetType"
-            [permissions]="state.data.granted"
-            [computedPermissions]="state.data.computed"
-            [giverPermissions]="params().currentUserPermissions"
-            [acceptButtonDisabled]="updateInProcess"
-            [requiresExplicitEntry]="params().item.requiresExplicitEntry"
-          ></alg-permissions-edit-form>
+            <alg-permissions-edit-form
+              (save)="onPermissionsDialogSave($event)"
+              (cancel)="closeDialog()"
+              [targetType]="targetType"
+              [permissions]="state.data.granted"
+              [computedPermissions]="state.data.computed"
+              [giverPermissions]="params().currentUserPermissions"
+              [acceptButtonDisabled]="updateInProcess"
+              [requiresExplicitEntry]="params().item.requiresExplicitEntry"
+            ></alg-permissions-edit-form>
+          </div>
         </div>
-      </div>
-    </ng-container>
-  </ng-template>
+      }
+    }
+  }
+
 </alg-modal>

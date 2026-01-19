@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of, Subject } from 'rxjs';
-import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { Location, NgClass, AsyncPipe } from '@angular/common';
 import {
   catchError,
   distinctUntilChanged,
@@ -70,7 +70,6 @@ const heightSyncInterval = 0.2*SECONDS;
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
   imports: [
-    NgIf,
     NgClass,
     FullHeightContentDirective,
     ErrorComponent,

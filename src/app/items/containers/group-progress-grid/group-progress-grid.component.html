@@ -3,33 +3,34 @@
   (change)="onFilterChange($event)"
 ></alg-composition-filter>
 
-<ng-container *ngIf="columns$ | async as columnsState">
-  <ng-container *ngIf="rows$ | async as rowsState">
-    <alg-error
-      *ngIf="rowsState.isError || columnsState.isError; else noError"
-      class="dark"
-      i18n-message message="Error while loading the data"
-      icon="ph-duotone ph-warning-circle"
-      [showRefreshButton]="true"
-      (refresh)="fetchRows()"
-    ></alg-error>
-
-    <ng-template #noError>
-      <div class="loader" *ngIf="rowsState.isFetching && (!rowsState.data || rowsState.data.length === 0)">
-        <alg-loading></alg-loading>
-      </div>
-
-      <p class="empty-message" *ngIf="rowsState.isReady && rowsState.data.length === 0">
-        <alg-error
-          buttonCaption="Refresh"
-          [showRefreshButton]="true"
-          (refresh)="fetchRows()"
-          i18n
-        >
+@if (columns$ | async; as columnsState) {
+  @if (rows$ | async; as rowsState) {
+    @if (rowsState.isError || columnsState.isError) {
+      <alg-error
+        class="dark"
+        i18n-message message="Error while loading the data"
+        icon="ph-duotone ph-warning-circle"
+        [showRefreshButton]="true"
+        (refresh)="fetchRows()"
+      ></alg-error>
+    } @else {
+      @if (rowsState.isFetching && (!rowsState.data || rowsState.data.length === 0)) {
+        <div class="loader">
+          <alg-loading></alg-loading>
+        </div>
+      }
+      @if (rowsState.isReady && rowsState.data.length === 0) {
+        <p class="empty-message">
+          <alg-error
+            buttonCaption="Refresh"
+            [showRefreshButton]="true"
+            (refresh)="fetchRows()"
+            i18n
+          >
           This group has no {currentFilter, select, Users {users} Teams {teams} other {sub-groups}}
         </alg-error>
-      </p>
-
+        </p>
+      }
       <ng-template #menu>
         <div class="menu" cdkMenu (closed)="hideProgressDetail()">
           <alg-user-progress-details
@@ -40,7 +41,7 @@
         </div>
       </ng-template>
 
-      <ng-container *ngIf="rowsState.data && columnsState.data && rowsState.data.length > 0">
+      @if (rowsState.data && columnsState.data && rowsState.data.length > 0) {
         <div class="operations">
           <button
             alg-button
@@ -75,13 +76,14 @@
                         tooltipStyleClass="secondary"
                         [tooltipDelay]="100"
                       >
-                        <a
-                          class="alg-link cursor-pointer alg-text-bold"
-                          [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
-                            with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
-                            url : [ 'progress', 'chapter' ]"
-                              *ngIf="itemData && itemData.currentResult && itemData.currentResult.attemptId as attemptId"
+                        @if (itemData && itemData.currentResult && itemData.currentResult.attemptId; as attemptId) {
+                          <a
+                            class="alg-link cursor-pointer alg-text-bold"
+                            [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
+                              with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
+                              url : [ 'progress', 'chapter' ]"
                           >{{ col.title }}</a>
+                        }
                       </div>
                     </div>
                   </th>
@@ -134,8 +136,7 @@
             >Load more</button>
           </div>
         }
-      </ng-container>
-
-    </ng-template>
-  </ng-container>
-</ng-container>
+      }
+    }
+  }
+}

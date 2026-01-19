@@ -1,49 +1,52 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching"></alg-loading>
-
-  <alg-error
-    class="alg-flex-1"
-    icon="ph-duotone ph-warning-circle"
-    i18n-message message="Unable to load the dependencies"
-    [showRefreshButton]="true"
-    (refresh)="refresh()"
-    *ngIf="state.isError"
-  ></alg-error>
-
-  <ng-container *ngIf="!state.isFetching && (state.data || []).length > 0">
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="alg-flex-1"
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load the dependencies"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (!state.isFetching && (state.data || []).length > 0) {
     <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Prerequisites</h2>
     <p i18n>You can unlock access by validating one of the following content.</p>
     <ul class="alg-data-list">
-      <li
-        class="alg-data-list-item"
-        *ngFor="let item of state.data; let i = index"
-        [algShowOverlay]="op"
-        (overlayOpenEvent)="itemId.set(item.id)"
-        (overlayCloseEvent)="itemId.set(undefined)"
-        #overlay="algShowOverlay"
-      >
-        <div class="list-item-left">
-          <span class="activity-progress">
-            <alg-score-ring
-              [diameter]="30"
-              [bestScore]="item.bestScore"
-              [currentScore]="item.bestScore"
-            ></alg-score-ring>
-          </span>
-          <a
-            class="alg-link"
-            [routerLink]="item | itemRoute | url"
-            algShowOverlayHoverTarget
-          >
-            {{ item.string.title }}
-          </a>
-        </div>
-        <i class="lock-icon ph-duotone ph-lock" *ngIf="item.isLocked"></i>
-        <ng-template #op>
-          <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
-        </ng-template>
-      </li>
+      @for (item of state.data; track item; let i = $index) {
+        <li
+          class="alg-data-list-item"
+          [algShowOverlay]="op"
+          (overlayOpenEvent)="itemId.set(item.id)"
+          (overlayCloseEvent)="itemId.set(undefined)"
+          #overlay="algShowOverlay"
+        >
+          <div class="list-item-left">
+            <span class="activity-progress">
+              <alg-score-ring
+                [diameter]="30"
+                [bestScore]="item.bestScore"
+                [currentScore]="item.bestScore"
+              ></alg-score-ring>
+            </span>
+            <a
+              class="alg-link"
+              [routerLink]="item | itemRoute | url"
+              algShowOverlayHoverTarget
+            >
+              {{ item.string.title }}
+            </a>
+          </div>
+          @if (item.isLocked) {
+            <i class="lock-icon ph-duotone ph-lock"></i>
+          }
+          <ng-template #op>
+            <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+          </ng-template>
+        </li>
+      }
     </ul>
-
-  </ng-container>
-</ng-container>
+  }
+}

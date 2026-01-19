@@ -3,13 +3,16 @@
   [ngClass]="state"
   [class.pointer]="state !== 'not-started'"
 >
-  <alg-score-ring
-    *ngIf="state !== 'success' && state !== 'not-started'"
-    [currentScore]="userProgress.score"
-    [diameter]="32"
-    [scoreFillColor]="'#FFF'"
-  ></alg-score-ring>
-  <span class="situation-check" *ngIf="state === 'success'">
-    <i class="ph-bold ph-check"></i>
-  </span>
+  @if (state !== 'success' && state !== 'not-started') {
+    <alg-score-ring
+      [currentScore]="userProgress.score"
+      [diameter]="32"
+      [scoreFillColor]="'#FFF'"
+    ></alg-score-ring>
+  }
+  @if (state === 'success') {
+    <span class="situation-check">
+      <i class="ph-bold ph-check"></i>
+    </span>
+  }
 </div>

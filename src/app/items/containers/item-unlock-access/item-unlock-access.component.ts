@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
@@ -22,10 +22,8 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
   templateUrl: './item-unlock-access.component.html',
   styleUrls: [ './item-unlock-access.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgFor,
     ScoreRingComponent,
     RouterLink,
     PathSuggestionComponent,

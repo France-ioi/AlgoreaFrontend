@@ -18,7 +18,7 @@ import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -28,10 +28,8 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   templateUrl: './item-dependencies.component.html',
   styleUrls: [ './item-dependencies.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgFor,
     RouterLink,
     AddDependencyComponent,
     PathSuggestionComponent,

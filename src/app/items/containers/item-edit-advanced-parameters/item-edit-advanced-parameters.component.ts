@@ -7,7 +7,7 @@ import { DurationComponent } from 'src/app/ui-components/duration/duration.compo
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ItemData } from '../../models/item-data';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { SelectComponent } from 'src/app/ui-components/select/select.component';
@@ -23,7 +23,6 @@ export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
   templateUrl: './item-edit-advanced-parameters.component.html',
   styleUrls: [ './item-edit-advanced-parameters.component.scss' ],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     InputComponent,

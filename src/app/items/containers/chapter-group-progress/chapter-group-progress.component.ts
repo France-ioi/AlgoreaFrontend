@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components//loading/loading.component';
 import { GroupProgressGridComponent } from '../group-progress-grid/group-progress-grid.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 
@@ -16,7 +16,7 @@ import { fromObservation } from 'src/app/store/observation';
   selector: 'alg-chapter-group-progress',
   templateUrl: './chapter-group-progress.component.html',
   styleUrls: [ './chapter-group-progress.component.scss' ],
-  imports: [ NgIf, GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
+  imports: [ GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ChapterGroupProgressComponent implements OnDestroy {
 

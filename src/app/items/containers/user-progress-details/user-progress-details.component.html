@@ -1,5 +1,5 @@
 <div class="container">
-  <ng-container *ngIf="progress && (progress.latestActivityAt !== null || progress.score > 0); else noActivity">
+  @if (progress && (progress.latestActivityAt !== null || progress.score > 0)) {
     <div class="value-section">
       <i class="ph ph-clock icon"></i>
       <span class="label" i18n>
@@ -55,10 +55,8 @@
         ></alg-score-ring>
       </span>
     }
-    <ng-container
-      *ngIf="progressData && progress.type === 'user' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0"
-    >
-      <ng-container *ngIf="currentUser$ | async as currentUser">
+    @if (progressData && progress.type === 'user' && progressData.colItem.type === 'Task' && progressData.progress.submissions > 0) {
+      @if (currentUser$ | async; as currentUser) {
         <div
           class="view-answer-section"
           i18n-algTooltip algTooltip="You cannot view answers for this content."
@@ -75,12 +73,11 @@
             View answer
           </a>
         </div>
-      </ng-container>
-    </ng-container>
-  </ng-container>
-  <ng-template #noActivity>
+      }
+    }
+  } @else {
     <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
-  </ng-template>
+  }
   @if (canEditPermissions) {
     <div class="button-section">
       <button

@@ -1,246 +1,259 @@
 @let item = itemData.item;
 
-<form *ngIf="item && parentForm" [formGroup]="parentForm">
-  <div *ngIf="item.type === 'Task'">
-    <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
+@if (item && parentForm) {
+  <form [formGroup]="parentForm">
+    @if (item.type === 'Task') {
+      <div>
+        <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
 
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Url</span>
-      <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder name="url"></alg-input>
-      </div>
-    </div>
+        <div class="form-item-view">
+          <span class="form-item-label" i18n>Url</span>
+          <div class="form-item-control">
+            <alg-input [parentForm]="parentForm" inputName="url" i18n-placeholder name="url"></alg-input>
+          </div>
+        </div>
 
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Uses API</span>
-      <div class="form-item-control">
-        <alg-switch formControlName="uses_api"></alg-switch>
-      </div>
-    </div>
+        <div class="form-item-view">
+          <span class="form-item-label" i18n>Uses API</span>
+          <div class="form-item-control">
+            <alg-switch formControlName="uses_api"></alg-switch>
+          </div>
+        </div>
 
-    <div class="form-item-view">
-      <span class="form-item-label">TextID</span>
-      <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id"></alg-input>
-        <small class="alg-validation-error" *ngIf="parentForm.errors?.text_id.includes('text_id must be unique')" i18n>
-          This value is already used by another content. The text id must be unique across the platform.
-        </small>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="['Chapter','Skill'].includes(item.type)">
-    <h2 class="alg-h2 alg-text-normal title" i18n>Score & Validation</h2>
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Validation criteria</span>
-      <div class="form-item-control">
-        <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="validation_type">
-          @for (option of validationCriteriaOptions; track $index) {
-            <alg-select-option [value]="option">
-              {{ option.label }}
-            </alg-select-option>
-          }
-        </alg-select>
-      </div>
-    </div>
-
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Disable score</span>
-      <div class="form-item-control">
-        <alg-switch formControlName="no_score"></alg-switch>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="item.type !== 'Skill'">
-    <h2 class="alg-h2 alg-text-normal title" i18n>Display</h2>
-    <div class="form-item-view alg-display-none">
-      <span class="form-item-label">
-        <ng-container i18n>Display header</ng-container>&nbsp;
-        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
-      </span>
-      <div class="form-item-control">
-        <alg-switch formControlName="title_bar_visible"></alg-switch>
-      </div>
-    </div>
-    <div class="form-item-view">
-      <span class="form-item-label" i18n>Display group code header</span>
-      <div class="form-item-control">
-        <alg-switch formControlName="prompt_to_join_group_by_code"></alg-switch>
-      </div>
-    </div>
-    <div class="form-item-view alg-display-none">
-      <span class="form-item-label">
-        <ng-container i18n>Full screen</ng-container>&nbsp;
-        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
-      </span>
-      <div class="form-item-control">
-        <alg-selection formControlName="full_screen" [items]="fullScreenOptions"></alg-selection>
-      </div>
-    </div>
-    <div class="form-item-view" *ngIf="item.type !== 'Task'">
-      <span class="form-item-label">
-        <ng-container i18n>Children layout</ng-container>
-      </span>
-      <div class="form-item-control">
-        <alg-selection formControlName="children_layout" [items]="childrenLayoutOptions"></alg-selection>
-      </div>
-    </div>
-    <div class="form-item-view" *ngIf="['Task', 'Chapter'].includes(item.type)">
-      <span class="form-item-label">
-        <ng-container i18n>Thumbnail url</ng-container>
-      </span>
-      <div class="form-item-control">
-        <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url"></alg-input>
-        <ng-container *ngIf="parentForm.get('image_url')?.value as imageUrlValue">
-          <span
-            class="alg-warning-message"
-            *ngIf="imageUrlValue.trim().length > 0 && !imageUrlValue.startsWith('https://')"
-            i18n
-          >
-              The url should start with "https://" so that it is visible on any browser.
-          </span>
-        </ng-container>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="item.type !== 'Skill'">
-    <h2 class="alg-h2 alg-text-normal title" i18n>Participation</h2>
-    <div class="form-item-view alg-display-none">
-      <span class="form-item-label">
-        <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
-        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
-      </span>
-      <div class="form-item-control">
-        <alg-switch formControlName="allows_multiple_attempts"></alg-switch>
-      </div>
-    </div>
-    <div class="form-item-view" data-testid="form-item-view">
-      <span class="form-item-label" i18n>Start participation manually</span>
-      <div class="form-item-control">
-        <alg-switch
-            formControlName="requires_explicit_entry"
-            (ngModelChange)="onRequiresExplicitEntryChange()"
-        >
-        </alg-switch>
-      </div>
-    </div>
-    <ng-container *ngIf="!!parentForm.get('requires_explicit_entry')?.value">
-      <div class="form-item-view form-item-duration" data-testid="form-item-view">
-        <span class="form-item-label">
-          <ng-container i18n>Duration</ng-container>&nbsp;
-        </span>
-        <div class="form-item-control another-input">
-          <alg-switch
-              class="first-child"
-              formControlName="duration_enabled"
-              (ngModelChange)="onDurationEnabledChange()"
-          >
-          </alg-switch>
-          <div class="input-wrapper-duration alg-flex-1">
-            <alg-duration
-                class="alg-duration"
-                formControlName="duration"
-                name="duration"
-                [parentForm]="parentForm"
-                layout="HMS"
-                [limitToTimeMax]="true"
-                *ngIf="!!parentForm.get('duration_enabled')?.value"
-            >
-            </alg-duration>
+        <div class="form-item-view">
+          <span class="form-item-label">TextID</span>
+          <div class="form-item-control">
+            <alg-input [parentForm]="parentForm" inputName="text_id" name="text_id"></alg-input>
+            @if (parentForm.errors?.text_id.includes('text_id must be unique')) {
+              <small class="alg-validation-error" i18n>
+                This value is already used by another content. The text id must be unique across the platform.
+              </small>
+            }
           </div>
         </div>
       </div>
-      <div class="form-item-view form-item-datepicker" data-testid="entering-time-min-container">
-        <span class="form-item-label" i18n>First allowed entering time</span>
-        <div class="form-item-control another-input">
-          <alg-switch
-            class="first-child"
-            formControlName="entering_time_min_enabled"
-            (ngModelChange)="onEnteringTimeMinEnabledChange($event)"
-          >
-          </alg-switch>
-          <ng-container *ngIf="!!parentForm.get('entering_time_min_enabled')?.value">
-            <div>
-              <alg-input-date formControlName="entering_time_min" (change)="onDateChange()"></alg-input-date>
-              @if (parentForm.get('entering_time_min')?.valid) {
-                <p class="alg-text-small date-note" i18n>
-                  The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
-                </p>
+    }
+    @if (['Chapter','Skill'].includes(item.type)) {
+      <div>
+        <h2 class="alg-h2 alg-text-normal title" i18n>Score & Validation</h2>
+        <div class="form-item-view">
+          <span class="form-item-label" i18n>Validation criteria</span>
+          <div class="form-item-control">
+            <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="validation_type">
+              @for (option of validationCriteriaOptions; track $index) {
+                <alg-select-option [value]="option">
+                  {{ option.label }}
+                </alg-select-option>
               }
-            </div>
-          </ng-container>
+            </alg-select>
+          </div>
         </div>
-      </div>
-      <div class="form-item-view form-item-datepicker" data-testid="entering-time-max-container">
-        <span class="form-item-label" i18n>Latest allowed entering time</span>
-        <div class="form-item-control another-input">
-          <alg-switch
-            class="first-child"
-            formControlName="entering_time_max_enabled"
-            (ngModelChange)="onEnteringTimeMaxEnabledChange($event)"
-          >
-          </alg-switch>
-          <ng-container *ngIf="!!parentForm.get('entering_time_max_enabled')?.value">
-            <div>
-              <alg-input-date
-                formControlName="entering_time_max"
-                [minDate]="minEnteringTimeMaxDate"
-                (change)="onDateChange()"
-              ></alg-input-date>
-              @if (parentForm.get('entering_time_max')?.valid) {
-                <p class="alg-text-small date-note" i18n>
-                  The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
-                </p>
-              }
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </ng-container>
-  </div>
 
-  <div *ngIf="item.type !== 'Skill'" data-testid="edit-team-section" class="alg-display-none">
-    <h2 class="alg-h2 alg-text-normal title" i18n>Team</h2>
-    <div class="form-item-view">
-      <span class="form-item-label">
-        <ng-container i18n>Participation as a team (only)</ng-container>&nbsp;
-        <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
-      </span>
-      <div class="form-item-control">
-        <alg-switch formControlName="entry_participant_type"></alg-switch>
-      </div>
-    </div>
-    <ng-container *ngIf="!!parentForm.get('entry_participant_type')?.value">
-      <div class="form-item-view">
-        <span class="form-item-label" i18n>Freeze team on entry</span>
-        <div class="form-item-control">
-          <alg-switch formControlName="entry_frozen_teams"></alg-switch>
+        <div class="form-item-view">
+          <span class="form-item-label" i18n>Disable score</span>
+          <div class="form-item-control">
+            <alg-switch formControlName="no_score"></alg-switch>
+          </div>
         </div>
       </div>
-      <div class="form-item-view">
-        <span class="form-item-label" i18n>Maximum team size</span>
-        <div class="form-item-control">
-          <alg-input-number formControlName="entry_max_team_size"></alg-input-number>
-          <alg-input-error [form]="parentForm" inputName="entry_max_team_size"></alg-input-error>
+    }
+    @if (item.type !== 'Skill') {
+      <div>
+        <h2 class="alg-h2 alg-text-normal title" i18n>Display</h2>
+        <div class="form-item-view alg-display-none">
+          <span class="form-item-label">
+            <ng-container i18n>Display header</ng-container>&nbsp;
+            <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+          </span>
+          <div class="form-item-control">
+            <alg-switch formControlName="title_bar_visible"></alg-switch>
+          </div>
         </div>
-      </div>
-      <div class="form-item-view">
-        <span class="form-item-label" i18n>Minimum admitted members</span>
-        <div class="form-item-control">
-          <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="entry_min_admitted_members_ratio">
-            @for (option of minAdmittedMembersRatioOptions; track $index) {
-              <alg-select-option [value]="option">
-                {{ option.label }}
-              </alg-select-option>
-            }
-          </alg-select>
+        <div class="form-item-view">
+          <span class="form-item-label" i18n>Display group code header</span>
+          <div class="form-item-control">
+            <alg-switch formControlName="prompt_to_join_group_by_code"></alg-switch>
+          </div>
         </div>
+        <div class="form-item-view alg-display-none">
+          <span class="form-item-label">
+            <ng-container i18n>Full screen</ng-container>&nbsp;
+            <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+          </span>
+          <div class="form-item-control">
+            <alg-selection formControlName="full_screen" [items]="fullScreenOptions"></alg-selection>
+          </div>
+        </div>
+        @if (item.type !== 'Task') {
+          <div class="form-item-view">
+            <span class="form-item-label">
+              <ng-container i18n>Children layout</ng-container>
+            </span>
+            <div class="form-item-control">
+              <alg-selection formControlName="children_layout" [items]="childrenLayoutOptions"></alg-selection>
+            </div>
+          </div>
+        }
+        @if (['Task', 'Chapter'].includes(item.type)) {
+          <div class="form-item-view">
+            <span class="form-item-label">
+              <ng-container i18n>Thumbnail url</ng-container>
+            </span>
+            <div class="form-item-control">
+              <alg-input [parentForm]="parentForm" inputName="image_url" name="image_url"></alg-input>
+              @if (parentForm.get('image_url')?.value; as imageUrlValue) {
+                @if (imageUrlValue.trim().length > 0 && !imageUrlValue.startsWith('https://')) {
+                  <span class="alg-warning-message" i18n>
+                    The url should start with "https://" so that it is visible on any browser.
+                  </span>
+                }
+              }
+            </div>
+          </div>
+        }
       </div>
-    </ng-container>
-  </div>
-</form>
+    }
+    @if (item.type !== 'Skill') {
+      <div>
+        <h2 class="alg-h2 alg-text-normal title" i18n>Participation</h2>
+        <div class="form-item-view alg-display-none">
+          <span class="form-item-label">
+            <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
+            <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+          </span>
+          <div class="form-item-control">
+            <alg-switch formControlName="allows_multiple_attempts"></alg-switch>
+          </div>
+        </div>
+        <div class="form-item-view" data-testid="form-item-view">
+          <span class="form-item-label" i18n>Start participation manually</span>
+          <div class="form-item-control">
+            <alg-switch
+              formControlName="requires_explicit_entry"
+              (ngModelChange)="onRequiresExplicitEntryChange()"
+            >
+            </alg-switch>
+          </div>
+        </div>
+        @if (!!parentForm.get('requires_explicit_entry')?.value) {
+          <div class="form-item-view form-item-duration" data-testid="form-item-view">
+            <span class="form-item-label">
+              <ng-container i18n>Duration</ng-container>&nbsp;
+            </span>
+            <div class="form-item-control another-input">
+              <alg-switch
+                class="first-child"
+                formControlName="duration_enabled"
+                (ngModelChange)="onDurationEnabledChange()"
+              >
+              </alg-switch>
+              <div class="input-wrapper-duration alg-flex-1">
+                @if (!!parentForm.get('duration_enabled')?.value) {
+                  <alg-duration
+                    class="alg-duration"
+                    formControlName="duration"
+                    name="duration"
+                    [parentForm]="parentForm"
+                    layout="HMS"
+                    [limitToTimeMax]="true"
+                  >
+                  </alg-duration>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="form-item-view form-item-datepicker" data-testid="entering-time-min-container">
+            <span class="form-item-label" i18n>First allowed entering time</span>
+            <div class="form-item-control another-input">
+              <alg-switch
+                class="first-child"
+                formControlName="entering_time_min_enabled"
+                (ngModelChange)="onEnteringTimeMinEnabledChange($event)"
+              >
+              </alg-switch>
+              @if (!!parentForm.get('entering_time_min_enabled')?.value) {
+                <div>
+                  <alg-input-date formControlName="entering_time_min" (change)="onDateChange()"></alg-input-date>
+                  @if (parentForm.get('entering_time_min')?.valid) {
+                    <p class="alg-text-small date-note" i18n>
+                      The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+                    </p>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+          <div class="form-item-view form-item-datepicker" data-testid="entering-time-max-container">
+            <span class="form-item-label" i18n>Latest allowed entering time</span>
+            <div class="form-item-control another-input">
+              <alg-switch
+                class="first-child"
+                formControlName="entering_time_max_enabled"
+                (ngModelChange)="onEnteringTimeMaxEnabledChange($event)"
+              >
+              </alg-switch>
+              @if (!!parentForm.get('entering_time_max_enabled')?.value) {
+                <div>
+                  <alg-input-date
+                    formControlName="entering_time_max"
+                    [minDate]="minEnteringTimeMaxDate"
+                    (change)="onDateChange()"
+                  ></alg-input-date>
+                  @if (parentForm.get('entering_time_max')?.valid) {
+                    <p class="alg-text-small date-note" i18n>
+                      The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+                    </p>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @if (item.type !== 'Skill') {
+      <div data-testid="edit-team-section" class="alg-display-none">
+        <h2 class="alg-h2 alg-text-normal title" i18n>Team</h2>
+        <div class="form-item-view">
+          <span class="form-item-label">
+            <ng-container i18n>Participation as a team (only)</ng-container>&nbsp;
+            <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+          </span>
+          <div class="form-item-control">
+            <alg-switch formControlName="entry_participant_type"></alg-switch>
+          </div>
+        </div>
+        @if (!!parentForm.get('entry_participant_type')?.value) {
+          <div class="form-item-view">
+            <span class="form-item-label" i18n>Freeze team on entry</span>
+            <div class="form-item-control">
+              <alg-switch formControlName="entry_frozen_teams"></alg-switch>
+            </div>
+          </div>
+          <div class="form-item-view">
+            <span class="form-item-label" i18n>Maximum team size</span>
+            <div class="form-item-control">
+              <alg-input-number formControlName="entry_max_team_size"></alg-input-number>
+              <alg-input-error [form]="parentForm" inputName="entry_max_team_size"></alg-input-error>
+            </div>
+          </div>
+          <div class="form-item-view">
+            <span class="form-item-label" i18n>Minimum admitted members</span>
+            <div class="form-item-control">
+              <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="entry_min_admitted_members_ratio">
+                @for (option of minAdmittedMembersRatioOptions; track $index) {
+                  <alg-select-option [value]="option">
+                    {{ option.label }}
+                  </alg-select-option>
+                }
+              </alg-select>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </form>
+}
 
 <div class="delete-button">
   <alg-item-remove-button [itemData]="itemData" (confirmRemoval)="onConfirmRemoval()"></alg-item-remove-button>

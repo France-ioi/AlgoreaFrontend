@@ -1,44 +1,45 @@
-<ng-container *ngIf="observedGroup">
-  <ng-container *ngIf="itemData">
+@if (observedGroup) {
+  @if (itemData) {
     <div class="header" (click)="collapsed = !collapsed">
       <i class="header-icon ph-duotone ph-lock-open"></i>
       <div class="header-title">
-        <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchLabel" label-section i18n>
-          «{{ observedGroup.name }}»
-          {(watchedGroupPermissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
-          access this
-          {itemData.item.type, select, Skill {skill} other {activity}}
-        </ng-container>
-        <ng-template #noPermissionToWatchLabel>
+        @if (watchedGroupPermissions) {
+          <ng-container label-section i18n>
+            «{{ observedGroup.name }}»
+            {(watchedGroupPermissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
+            access this
+            {itemData.item.type, select, Skill {skill} other {activity}}
+          </ng-container>
+        } @else {
           <ng-container i18n>
             You cannot watch other users progress on this {itemData.item.type, select, Skill {skill} other {activity}}
           </ng-container>
-        </ng-template>
+        }
       </div>
       <i class="header-arrow-icon ph" [ngClass]="{ 'ph-caret-down': collapsed, 'ph-caret-up': !collapsed }"></i>
     </div>
 
-    <ng-container *ngIf="!collapsed">
+    @if (!collapsed) {
       <div class="content">
-        <ng-container *ngIf="watchedGroupPermissions; else noPermissionToWatchContent">
-          <div class="no-access" *ngIf="!(watchedGroupPermissions | allowsViewingInfo)" i18n>
-            This {(observedGroup.route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
-          </div>
-
-          <div class="no-access" *ngIf="(watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)" i18n>
-            This {(observedGroup.route | isUser).toString(), select, true {user} other {group}}
-            can view the title, subtitle and description of this {itemData.item.type, select, Skill {skill} other {activity}}
-            but may not be able to {itemData.item.type, select, Task {view its content} other {view what it contains}}.
-          </div>
-        </ng-container>
-
-        <ng-template #noPermissionToWatchContent>
+        @if (watchedGroupPermissions) {
+          @if (!(watchedGroupPermissions | allowsViewingInfo)) {
+            <div class="no-access" i18n>
+              This {(observedGroup.route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
+            </div>
+          }
+          @if ((watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)) {
+            <div class="no-access" i18n>
+              This {(observedGroup.route | isUser).toString(), select, true {user} other {group}}
+              can view the title, subtitle and description of this {itemData.item.type, select, Skill {skill} other {activity}}
+              but may not be able to {itemData.item.type, select, Task {view its content} other {view what it contains}}.
+            </div>
+          }
+        } @else {
           <div class="no-access" i18n>
             You cannot watch other users' activity on this content
           </div>
-        </ng-template>
-
-        <ng-container *ngIf="watchedGroupPermissions">
+        }
+        @if (watchedGroupPermissions) {
           @if (watchedGroupPermissions.isOwner) {
             <div class="permission-indicator-section">
               <alg-section-header
@@ -135,31 +136,32 @@
               </div>
             }
           }
-        </ng-container>
+        }
       </div>
       <div class="footer">
-        <div class="footer-caption" *ngIf="!(observedGroup.route | isUser)" i18n>
-          Note that some members or sub-groups of this group may have obtained additional access rights on this {itemData.item.type, select, Skill {skill} other {activity}}.
-        </div>
-        <ng-container *ngIf="itemData?.item?.permissions">
+        @if (!(observedGroup.route | isUser)) {
+          <div class="footer-caption" i18n>
+            Note that some members or sub-groups of this group may have obtained additional access rights on this {itemData.item.type, select, Skill {skill} other {activity}}.
+          </div>
+        }
+        @if (itemData?.item?.permissions) {
           <span
             class="give-access-button"
             [algTooltip]="lockEdit | i18nSelect : lockEditTooltipCaptions"
             tooltipPosition="bottom"
             [tooltipDisabled]="!lockEdit"
           >
-           <button
-             alg-button
-             type="button"
-             class="only-caption accent-dark"
-             [disabled]="lockEdit"
-             (click)="openPermissionsDialog()"
-             i18n
-           >Edit permissions</button>
+            <button
+              alg-button
+              type="button"
+              class="only-caption accent-dark"
+              [disabled]="lockEdit"
+              (click)="openPermissionsDialog()"
+              i18n
+            >Edit permissions</button>
           </span>
-
-        </ng-container>
+        }
       </div>
-    </ng-container>
-  </ng-container>
-</ng-container>
+    }
+  }
+}

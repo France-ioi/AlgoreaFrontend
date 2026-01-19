@@ -14,7 +14,7 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, NgFor, AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { LayoutService } from 'src/app/services/layout.service';
@@ -25,10 +25,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
   templateUrl: './chapter-children.component.html',
   styleUrls: [ './chapter-children.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
-    NgFor,
     RouterLink,
     ScoreRingComponent,
     ItemChildrenListComponent,

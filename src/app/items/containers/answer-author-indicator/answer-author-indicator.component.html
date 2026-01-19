@@ -1,48 +1,57 @@
 <ng-container *ngrxLet="{ currentUserId: currentUserId$, isObserving: isObserving$ } as info">
-  <ng-container *ngIf="answer$ | async as answer">
-    <div class="container" *ngIf="author$ | async as author">
-      <alg-loading class="no-padding" *ngIf="author.isFetching && !author.data" size="small"></alg-loading>
-      <alg-error *ngIf="author.isError" i18n-message message="Error while fetching author info"></alg-error>
-
-      <div class="content" *ngIf="author.isReady && author.data as author">
-        <div class="content-left">
-          <alg-score-ring
-            class="score-ring"
-            [currentScore]="answer.score"
-            [diameter]="32"
-            *ngIf="answer.score || answer.score === 0"
-          ></alg-score-ring>
-          <div class="description" i18n>
-            Submitted by
-            <ng-container *ngIf="author.groupId === info.currentUserId; else otherUser">
-              yourself
-            </ng-container>
-            <ng-template #otherUser>
-              <a [routerLink]="groupLink$ | async" class="alg-link base-color">{{ author | userCaption }}</a>
-            </ng-template>
-            on {{ answer.createdAt | date:'short' }}.
+  @if (answer$ | async; as answer) {
+    @if (author$ | async; as author) {
+      <div class="container">
+        @if (author.isFetching && !author.data) {
+          <alg-loading class="no-padding" size="small"></alg-loading>
+        }
+        @if (author.isError) {
+          <alg-error i18n-message message="Error while fetching author info"></alg-error>
+        }
+        @if (author.isReady && author.data; as author) {
+          <div class="content">
+            <div class="content-left">
+              @if (answer.score || answer.score === 0) {
+                <alg-score-ring
+                  class="score-ring"
+                  [currentScore]="answer.score"
+                  [diameter]="32"
+                ></alg-score-ring>
+              }
+              <div class="description" i18n>
+                Submitted by
+                @if (author.groupId === info.currentUserId) {
+                  yourself
+                } @else {
+                  <a [routerLink]="groupLink$ | async" class="alg-link base-color">{{ author | userCaption }}</a>
+                }
+                on {{ answer.createdAt | date:'short' }}.
+              </div>
+            </div>
+            @if (!info.isObserving && author.groupId === info.currentUserId && itemData) {
+              <div class="buttons">
+                <a
+                  class="size-xs button"
+                  alg-button
+                  [routerLink]="itemData.item | itemRoute | url"
+                  [algLoadAnswerAsCurrent]="answer.id"
+                  i18n
+                >
+                  Edit it
+                </a>
+                <a
+                  class="size-xs"
+                  alg-button
+                  [routerLink]="itemData.item | itemRoute | url"
+                  i18n
+                >
+                  Back to your current answer
+                </a>
+              </div>
+            }
           </div>
-        </div>
-        <div class="buttons" *ngIf="!info.isObserving && author.groupId === info.currentUserId && itemData">
-          <a
-            class="size-xs button"
-            alg-button
-            [routerLink]="itemData.item | itemRoute | url"
-            [algLoadAnswerAsCurrent]="answer.id"
-            i18n
-          >
-            Edit it
-          </a>
-          <a
-            class="size-xs"
-            alg-button
-            [routerLink]="itemData.item | itemRoute | url"
-            i18n
-          >
-            Back to your current answer
-          </a>
-        </div>
+        }
       </div>
-    </div>
-  </ng-container>
+    }
+  }
 </ng-container>

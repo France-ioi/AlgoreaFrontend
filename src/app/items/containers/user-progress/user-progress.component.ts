@@ -2,14 +2,14 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { mustNotBeUndefined } from 'src/app/utils/assert';
 import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-user-progress[userProgress]',
   templateUrl: './user-progress.component.html',
   styleUrls: [ './user-progress.component.scss' ],
-  imports: [ NgClass, NgIf, ScoreRingComponent ]
+  imports: [ NgClass, ScoreRingComponent ]
 })
 export class UserProgressComponent implements OnInit, OnChanges {
 

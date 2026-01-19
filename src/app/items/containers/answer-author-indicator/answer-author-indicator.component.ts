@@ -10,7 +10,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
 import { ItemRoutePipe } from '../../../pipes/itemRoute';
 import { ItemData } from '../../models/item-data';
@@ -28,7 +28,6 @@ import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-naviga
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     RouterLink,

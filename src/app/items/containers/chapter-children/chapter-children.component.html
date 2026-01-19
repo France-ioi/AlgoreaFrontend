@@ -1,82 +1,89 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-loading class="alg-flex-1" *ngIf="state.isFetching"></alg-loading>
-  <alg-error
-    class="alg-flex-1"
-    i18n-message message="Error while loading this chapter's children"
-    [showRefreshButton]="true"
-    (refresh)="refresh()"
-    *ngIf="state.isError"
-  ></alg-error>
-
-  <ng-container *ngIf="state.isReady && state.data as data">
-    <p class="validation-text" *ngIf="data.missingValidation" i18n>
-      To validate this chapter, solve at least all tasks with Validation type
-    </p>
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading class="alg-flex-1"></alg-loading>
+  }
+  @if (state.isError) {
     <alg-error
       class="alg-flex-1"
-      icon="ph ph-folder-simple-lock"
-      i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
-      *ngIf="data.children.length === 0"
+      i18n-message message="Error while loading this chapter's children"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
     ></alg-error>
-
-    <ng-container *ngIf="itemData && itemData.item.childrenLayout === 'Grid'; else listSection">
-      <div
-        class="grid-container"
-        [ngClass]="{ 'left-menu-shown': leftMenuShown() }"
-        *ngIf="data.children.length > 0"
-      >
-        <div class="grid-item" *ngFor="let item of data.children; let i = index">
-          <a class="grid-card"
-            [routerLink]="item | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]) } |
-              with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: attemptId }) |
-              url"
-            *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
-          >
-            <div class="grid-card-image-section">
-              <ng-container *ngIf="item.isLocked">
-                <div class="grid-card-lock-status">
-                  <i class="grid-card-lock-status-icon ph ph-lock"></i>
-                </div>
-                <div class="grid-card-lock-bg"></div>
-              </ng-container>
-              <div
-                class="grid-card-image"
-                [style.background-image]="'url(' + item.string.imageUrl + ')'"
-                *ngIf="item.string.imageUrl; else defaultImage"
-              ></div>
-              <ng-template #defaultImage>
-                <div class="grid-card-image grid-card-image-default-bg"></div>
-              </ng-template>
+  }
+  @if (state.isReady && state.data; as data) {
+    @if (data.missingValidation) {
+      <p class="validation-text" i18n>
+        To validate this chapter, solve at least all tasks with Validation type
+      </p>
+    }
+    @if (data.children.length === 0) {
+      <alg-error
+        class="alg-flex-1"
+        icon="ph ph-folder-simple-lock"
+        i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
+      ></alg-error>
+    }
+    @if (itemData && itemData.item.childrenLayout === 'Grid') {
+      @if (data.children.length > 0) {
+        <div
+          class="grid-container"
+          [ngClass]="{ 'left-menu-shown': leftMenuShown() }"
+        >
+          @for (item of data.children; track item; let i = $index) {
+            <div class="grid-item">
+              @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+                <a class="grid-card"
+                  [routerLink]="item | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]) } |
+                    with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: attemptId }) |
+                    url"
+                >
+                  <div class="grid-card-image-section">
+                    @if (item.isLocked) {
+                      <div class="grid-card-lock-status">
+                        <i class="grid-card-lock-status-icon ph ph-lock"></i>
+                      </div>
+                      <div class="grid-card-lock-bg"></div>
+                    }
+                    @if (item.string.imageUrl) {
+                      <div
+                        class="grid-card-image"
+                        [style.background-image]="'url(' + item.string.imageUrl + ')'"
+                      ></div>
+                    } @else {
+                      <div class="grid-card-image grid-card-image-default-bg"></div>
+                    }
+                  </div>
+                  @if (!item.noScore && ((!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined))) {
+                    <div class="grid-card-activity-progress">
+                      <alg-score-ring
+                        [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
+                        [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
+                        [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
+                        [compact]="true"
+                      ></alg-score-ring>
+                    </div>
+                  }
+                  <div class="grid-card-text-section">
+                    <div class="grid-card-title text-dots">{{ item.string.title }}</div>
+                    @if (item.string.subtitle) {
+                      <div class="grid-card-description">
+                        {{ item.string.subtitle }}
+                      </div>
+                    }
+                  </div>
+                </a>
+              }
             </div>
-            <div
-              class="grid-card-activity-progress"
-              *ngIf="!item.noScore && ((!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined))"
-            >
-              <alg-score-ring
-                [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
-                [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
-                [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
-                [compact]="true"
-              ></alg-score-ring>
-            </div>
-            <div class="grid-card-text-section">
-              <div class="grid-card-title text-dots">{{ item.string.title }}</div>
-              <div class="grid-card-description" *ngIf="item.string.subtitle">
-                {{ item.string.subtitle }}
-              </div>
-            </div>
-          </a>
+          }
         </div>
-      </div>
-    </ng-container>
-
-    <ng-template #listSection>
-      <alg-item-children-list
-        [children]="data.children"
-        [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
-        *ngIf="itemData && itemData.currentResult?.attemptId as attemptId"
-      ></alg-item-children-list>
-    </ng-template>
-
-  </ng-container>
-</ng-container>
+      }
+    } @else {
+      @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+        <alg-item-children-list
+          [children]="data.children"
+          [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+        ></alg-item-children-list>
+      }
+    }
+  }
+}

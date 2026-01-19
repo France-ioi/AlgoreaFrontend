@@ -1,10 +1,14 @@
 <div class="container alg-flex-1">
   <div class="loading text-center">
-    <div *ngIf="label" class="alg-text-secondary">{{ label }}</div>
+    @if (label) {
+      <div class="alg-text-secondary">{{ label }}</div>
+    }
     <alg-loading></alg-loading>
-    <div *ngIf="delayedLabel" class="sub-label" [style.visibility]="showDelayedLabel ? undefined : 'hidden'">
-      {{ delayedLabel }}
-    </div>
+    @if (delayedLabel) {
+      <div class="sub-label" [style.visibility]="showDelayedLabel ? undefined : 'hidden'">
+        {{ delayedLabel }}
+      </div>
+    }
   </div>
 </div>
 

@@ -1,128 +1,130 @@
-<ng-container *ngIf="itemData">
+@if (itemData) {
   <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Prerequisites</h2>
-  <ng-container *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit); else notAllowToView">
-    <div *ngIf="state$ | async as state">
-      <alg-loading class="loading" size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
-
-      <alg-error
-        *ngIf="state.isError"
-        icon="ph-duotone ph-warning-circle"
-        i18n-message message="Unable to load the prerequisites"
-        i18n-buttonCaption buttonCaption="Retry to load prerequisites"
-        [showRefreshButton]="true"
-        (refresh)="refresh()"
-      ></alg-error>
-
-      <ng-container *ngIf="!state.isFetching && !changeInProgress && state.data">
-        <ng-container *ngIf="state.data.length > 0; else emptyList">
-          <p class="explanation" i18n>
-            Users will unlock access to this content if they solve <strong>at least one</strong> of the content below.
-          </p>
-          <ul class="list">
-            <li
-              class="list-item"
-              *ngFor="let item of state.data; let i = index"
-              [algShowOverlay]="op"
-              (overlayOpenEvent)="itemId.set(item.id)"
-              (overlayCloseEvent)="itemId.set(undefined)"
-              #overlay="algShowOverlay"
-            >
-              <a
-                class="alg-link"
-                [routerLink]="item | itemRoute | url"
-                algShowOverlayHoverTarget
-              >
-                {{ item.string.title }}
-              </a>
-              <button
-                class="size-s"
-                type="button"
-                icon="ph-duotone ph-trash"
-                (click)="onRemove(item.id)"
-                alg-button-icon
-              ></button>
-              <ng-template #op>
-                <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
-              </ng-template>
-            </li>
-          </ul>
-          <p class="note-caption" i18n>
+  @if (['all','all_with_grant'].includes(itemData.item.permissions.canEdit)) {
+    @if (state$ | async; as state) {
+      <div>
+        @if (state.isFetching || changeInProgress) {
+          <alg-loading class="loading" size="medium"></alg-loading>
+        }
+        @if (state.isError) {
+          <alg-error
+            icon="ph-duotone ph-warning-circle"
+            i18n-message message="Unable to load the prerequisites"
+            i18n-buttonCaption buttonCaption="Retry to load prerequisites"
+            [showRefreshButton]="true"
+            (refresh)="refresh()"
+          ></alg-error>
+        }
+        @if (!state.isFetching && !changeInProgress && state.data) {
+          @if (state.data.length > 0) {
+            <p class="explanation" i18n>
+              Users will unlock access to this content if they solve <strong>at least one</strong> of the content below.
+            </p>
+            <ul class="list">
+              @for (item of state.data; track item; let i = $index) {
+                <li
+                  class="list-item"
+                  [algShowOverlay]="op"
+                  (overlayOpenEvent)="itemId.set(item.id)"
+                  (overlayCloseEvent)="itemId.set(undefined)"
+                  #overlay="algShowOverlay"
+                >
+                  <a
+                    class="alg-link"
+                    [routerLink]="item | itemRoute | url"
+                    algShowOverlayHoverTarget
+                  >
+                    {{ item.string.title }}
+                  </a>
+                  <button
+                    class="size-s"
+                    type="button"
+                    icon="ph-duotone ph-trash"
+                    (click)="onRemove(item.id)"
+                    alg-button-icon
+                  ></button>
+                  <ng-template #op>
+                    <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+                  </ng-template>
+                </li>
+              }
+            </ul>
+            <p class="note-caption" i18n>
             Users will see the list of dependencies on the "content" tab and only when they do not have access to the content yet.
             They will only see dependencies they are allowed to view already.
           </p>
-        </ng-container>
-      </ng-container>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="addedIds$ | async as addedIds">
-    <alg-add-dependency
-      class="add-dependency"
-      *ngIf="['all','all_with_grant'].includes(itemData.item.permissions.canEdit)"
-      (contentAdded)="onAdd($event)"
-      [addedIds]="addedIds"
-      #addDependencyComponent
-    ></alg-add-dependency>
-  </ng-container>
-
+          } @else {
+            <alg-error i18n>
+              There are no prerequisites for this
+              {itemData.item.type, select, Skill {skill} other {activity}}.
+              Users will have access to it only if they are given access manually or if the "default access" is configured as
+              "open" in its parent {itemData.item.type, select, Skill {skill} Chapter {chapter} other {activity}}.
+            </alg-error>
+          }
+        }
+      </div>
+    }
+  } @else {
+    <alg-error icon="ph ph-prohibit" i18n>You are not allowed to view dependencies for this content</alg-error>
+  }
+  @if (addedIds$ | async; as addedIds) {
+    @if (['all','all_with_grant'].includes(itemData.item.permissions.canEdit)) {
+      <alg-add-dependency
+        class="add-dependency"
+        (contentAdded)="onAdd($event)"
+        [addedIds]="addedIds"
+        #addDependencyComponent
+      ></alg-add-dependency>
+    }
+  }
   <h2 class="alg-h2 alg-text-normal depending-content-title" i18n>Content depending on this one</h2>
-  <div *ngIf="dependenciesState$ | async as state">
-    <alg-loading size="medium" *ngIf="state.isFetching || changeInProgress"></alg-loading>
-
-    <alg-error
-      *ngIf="state.isError"
-      icon="ph-duotone ph-warning-circle"
-      i18n-message message="Unable to load the dependencies"
-      i18n-buttonCaption buttonCaption="Retry to load dependencies"
-      [showRefreshButton]="true"
-      (refresh)="refresh()"
-    ></alg-error>
-
-    <ng-container *ngIf="!state.isFetching && !changeInProgress && state.data">
-      <ng-container *ngIf="state.data.length > 0; else noOtherContent">
-        <ul class="list">
-          <li
-            class="list-item"
-            *ngFor="let item of state.data; let i = index"
-            [algShowOverlay]="op"
-            (overlayOpenEvent)="itemId.set(item.id)"
-            (overlayCloseEvent)="itemId.set(undefined)"
-            #overlay="algShowOverlay"
-          >
-            <a
-                class="alg-link list-item-link"
-                [routerLink]="item | itemRoute | url"
-                algShowOverlayHoverTarget
-            >
-              {{ item.string.title }}
-            </a>
-            <ng-template #op>
-              <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
-            </ng-template>
-          </li>
-        </ul>
-        <p class="note-caption" i18n>
+  @if (dependenciesState$ | async; as state) {
+    <div>
+      @if (state.isFetching || changeInProgress) {
+        <alg-loading size="medium"></alg-loading>
+      }
+      @if (state.isError) {
+        <alg-error
+          icon="ph-duotone ph-warning-circle"
+          i18n-message message="Unable to load the dependencies"
+          i18n-buttonCaption buttonCaption="Retry to load dependencies"
+          [showRefreshButton]="true"
+          (refresh)="refresh()"
+        ></alg-error>
+      }
+      @if (!state.isFetching && !changeInProgress && state.data) {
+        @if (state.data.length > 0) {
+          <ul class="list">
+            @for (item of state.data; track item; let i = $index) {
+              <li
+                class="list-item"
+                [algShowOverlay]="op"
+                (overlayOpenEvent)="itemId.set(item.id)"
+                (overlayCloseEvent)="itemId.set(undefined)"
+                #overlay="algShowOverlay"
+              >
+                <a
+                  class="alg-link list-item-link"
+                  [routerLink]="item | itemRoute | url"
+                  algShowOverlayHoverTarget
+                >
+                  {{ item.string.title }}
+                </a>
+                <ng-template #op>
+                  <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+                </ng-template>
+              </li>
+            }
+          </ul>
+          <p class="note-caption" i18n>
           Only the content that is visible to you is listed. Other content may depend on it.
         </p>
-      </ng-container>
-    </ng-container>
-  </div>
-  <ng-template #noOtherContent>
-    <alg-error i18n>
-      There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to.
-    </alg-error>
-  </ng-template>
-
-  <ng-template #emptyList>
-    <alg-error i18n>
-      There are no prerequisites for this
-      {itemData.item.type, select, Skill {skill} other {activity}}.
-      Users will have access to it only if they are given access manually or if the "default access" is configured as
-      "open" in its parent {itemData.item.type, select, Skill {skill} Chapter {chapter} other {activity}}.
-    </alg-error>
-  </ng-template>
-
-  <ng-template #notAllowToView>
-    <alg-error icon="ph ph-prohibit" i18n>You are not allowed to view dependencies for this content</alg-error>
-  </ng-template>
-</ng-container>
+        } @else {
+          <alg-error i18n>
+            There are no other content (visible to you) which depends on this one to unlock. To add some, visit this same tab on the content you want to grant access to.
+          </alg-error>
+        }
+      }
+    </div>
+  }
+}

@@ -1,9 +1,7 @@
-<ng-container *ngIf="state$ | async as state">
-  <ng-container *ngIf="itemData">
-
-    <ng-container *ngIf="state.isReady">
-
-      <ng-container *ngIf="itemData.item.type === 'Skill'; else childrenEditWithNoTitle">
+@if (state$ | async; as state) {
+  @if (itemData) {
+    @if (state.isReady) {
+      @if (itemData.item.type === 'Skill') {
         <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Sub-skills</h2>
         <alg-item-children-edit-list
           type="skill"
@@ -20,28 +18,25 @@
           [itemData]="itemData"
           (childrenChanges)="onDataChange($event)"
         ></alg-item-children-edit-list>
-      </ng-container>
-
-      <ng-template #childrenEditWithNoTitle>
+      } @else {
         <alg-item-children-edit-list
           [data]="activities"
           [itemData]="itemData"
           (childrenChanges)="onDataChange($event)"
         ></alg-item-children-edit-list>
-      </ng-template>
-
-    </ng-container>
-
-    <alg-loading *ngIf="state.isFetching"></alg-loading>
-
-    <alg-error
-      *ngIf="state.isError"
-      class="dark"
-      i18n-message message="Error while loading the children items"
-      [showRefreshButton]="true"
-      (refresh)="reloadData()"
-    ></alg-error>
-
-  </ng-container>
-</ng-container>
+      }
+    }
+    @if (state.isFetching) {
+      <alg-loading></alg-loading>
+    }
+    @if (state.isError) {
+      <alg-error
+        class="dark"
+        i18n-message message="Error while loading the children items"
+        [showRefreshButton]="true"
+        (refresh)="reloadData()"
+      ></alg-error>
+    }
+  }
+}
 

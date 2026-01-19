@@ -33,7 +33,7 @@ import { UserProgressComponent } from '../../containers/user-progress/user-progr
 import { RouterLink } from '@angular/router';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { CompositionFilterComponent } from '../../containers/composition-filter/composition-filter.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -100,7 +100,6 @@ interface ProgressDataDialog {
   styleUrls: [ './group-progress-grid.component.scss' ],
   imports: [
     CompositionFilterComponent,
-    NgIf,
     ErrorComponent,
     LoadingComponent,
     UserProgressDetailsComponent,

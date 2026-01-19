@@ -1,8 +1,12 @@
-<div class="item-header-container" *ngIf="itemData">
-  <div class="item-header">
-    <div class="item-title-container">
-      <h1 class="item-title alg-h1" data-testid="item-title">{{ itemData.item.string.title }}</h1>
-      <p class="item-subtitle" *ngIf="itemData.item.string.subtitle">{{ itemData.item.string.subtitle }}</p>
+@if (itemData) {
+  <div class="item-header-container">
+    <div class="item-header">
+      <div class="item-title-container">
+        <h1 class="item-title alg-h1" data-testid="item-title">{{ itemData.item.string.title }}</h1>
+        @if (itemData.item.string.subtitle) {
+          <p class="item-subtitle">{{ itemData.item.string.subtitle }}</p>
+        }
+      </div>
     </div>
   </div>
-</div>
+}
