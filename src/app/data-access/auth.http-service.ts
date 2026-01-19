@@ -7,10 +7,21 @@ import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { AuthResult, cookieAuthFromServiceResp, tokenAuthFromServiceResp } from '../services/auth/auth-info';
 import { requestTimeout, retryOnceOn401, useAuthInterceptor } from '../interceptors/interceptor_common';
+import { z } from 'zod';
+import { decodeSnakeCase } from '../utils/operators/decode';
 
-interface CookieAuthPayload { expires_in: number }
-interface TokenAuthPayload { access_token: string, expires_in: number }
-type AuthPayload = CookieAuthPayload|TokenAuthPayload;
+const cookieAuthPayloadSchema = z.object({
+  expiresIn: z.number(),
+});
+
+const tokenAuthPayloadSchema = z.object({
+  accessToken: z.string(),
+  expiresIn: z.number(),
+});
+
+const authPayloadSchema = z.union([cookieAuthPayloadSchema, tokenAuthPayloadSchema]);
+
+type AuthPayload = z.infer<typeof authPayloadSchema>;
 
 type RefreshAuthOpts = { createTempUserOnRefreshFailure: true, tempUserDefaultLanguage: string }|{ createTempUserOnRefreshFailure: false };
 
@@ -61,18 +72,19 @@ export class AuthHttpService {
 
   createTempUser(defaultLanguage: string): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<AuthPayload>>(`${this.config.apiUrl}/auth/temp-user`, null, {
+      .post<ActionResponse<unknown>>(`${this.config.apiUrl}/auth/temp-user`, null, {
         params: new HttpParams({ fromObject: { ...this.cookieParams, default_language: defaultLanguage } }),
         context: new HttpContext().set(useAuthInterceptor, false),
       }).pipe(
         map(successData),
-        map(p => this.authPayloadToResult(p))
+        decodeSnakeCase(authPayloadSchema),
+        map((p: AuthPayload) => this.authPayloadToResult(p))
       );
   }
 
   createTokenFromCode(code: string, redirectUri: string): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<AuthPayload>>(
+      .post<ActionResponse<unknown>>(
         `${this.config.apiUrl}/auth/token`,
         { code: code, redirect_uri: redirectUri }, // payload data
         {
@@ -83,13 +95,14 @@ export class AuthHttpService {
         }
       ).pipe(
         map(successData),
-        map(p => this.authPayloadToResult(p))
+        decodeSnakeCase(authPayloadSchema),
+        map((p: AuthPayload) => this.authPayloadToResult(p))
       );
   }
 
   refreshAuth(options: RefreshAuthOpts = { createTempUserOnRefreshFailure: false }): Observable<AuthResult> {
     return this.http
-      .post<ActionResponse<TokenAuthPayload>>(`${this.config.apiUrl}/auth/token`, null, {
+      .post<ActionResponse<unknown>>(`${this.config.apiUrl}/auth/token`, null, {
         params: new HttpParams({ fromObject: options.createTempUserOnRefreshFailure ?
           { ...this.cookieParams, create_temp_user_if_not_authorized: 1, default_language: options.tempUserDefaultLanguage } :
           this.cookieParams
@@ -100,7 +113,8 @@ export class AuthHttpService {
           .set(useAuthInterceptor, false),
       }).pipe(
         map(successData),
-        map(p => this.authPayloadToResult(p))
+        decodeSnakeCase(authPayloadSchema),
+        map((p: AuthPayload) => this.authPayloadToResult(p))
       );
   }
 
@@ -116,12 +130,12 @@ export class AuthHttpService {
   }
 
   private authPayloadToResult(payload: AuthPayload): AuthResult {
-    if ('access_token' in payload) {
+    if ('accessToken' in payload) {
       if (this.config.authType !== 'tokens') throw new Error('token received while not using tokens');
-      return tokenAuthFromServiceResp(payload.access_token, payload.expires_in);
+      return tokenAuthFromServiceResp(payload.accessToken, payload.expiresIn);
     } else {
       if (this.config.authType === 'tokens') throw new Error('no token received while using tokens');
-      return cookieAuthFromServiceResp(payload.expires_in);
+      return cookieAuthFromServiceResp(payload.expiresIn);
     }
   }
 
