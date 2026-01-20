@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .control-container {
   display: flex;
@@ -7,8 +7,8 @@
 }
 
 .label {
-  width: toRem(50);
-  font-size: toRem(14);
+  width: functions.toRem(50);
+  font-size: functions.toRem(14);
 }
 
 .control {

@@ -1,16 +1,16 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .header {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: toRem(42);
+  height: functions.toRem(42);
   color: var(--alg-white-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .footer {
-  padding: toRem(2) toRem(8) toRem(6) toRem(8);
+  padding: functions.toRem(2) functions.toRem(8) functions.toRem(6) functions.toRem(8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +32,8 @@
   flex-direction: column;
   justify-content: stretch;
   position: relative;
-  padding: 0 toRem(6);
-  margin-bottom: toRem(12);
+  padding: 0 functions.toRem(6);
+  margin-bottom: functions.toRem(12);
 
   &:not(:last-child) {
     &:after {
@@ -41,26 +41,26 @@
       display: block;
       position: absolute;
       left: 0;
-      bottom: toRem(-6);
+      bottom: functions.toRem(-6);
       width: 100%;
-      border-bottom: toRem(1) solid rgba(0, 0, 0, .1);
+      border-bottom: functions.toRem(1) solid rgba(0, 0, 0, .1);
     }
   }
 
   &:last-child {
-    margin-bottom: toRem(6);
+    margin-bottom: functions.toRem(6);
   }
 }
 
 .menu-item-button {
-  height: toRem(42);
+  height: functions.toRem(42);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 .7rem;
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   color: var(--alg-white-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-weight: 500;
   text-transform: capitalize;
   border: none;
@@ -84,13 +84,13 @@
 }
 
 .menu-item-title {
-  margin-right: toRem(16);
+  margin-right: functions.toRem(16);
 }
 
 .menu-item-icon {
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .note-icon {
-  margin-left: toRem(4);
+  margin-left: functions.toRem(4);
 }

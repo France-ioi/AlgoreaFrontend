@@ -1,10 +1,10 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@use 'src/variables';
+@use 'src/geometry.scss';
 
 .selection-tool {
   display: flex;
   flex-direction: column;
-  border-radius: $border-radius;
+  border-radius: geometry.$border-radius;
   background-color: var(--base-bk-color);
 
   max-width: 56rem;

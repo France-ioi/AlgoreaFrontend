@@ -1,42 +1,45 @@
+@use "sass:meta";
+@use 'assets/scss/helpers';
+@use 'src/geometry';
+@use 'src/variables';
+@use "assets/scss/functions";
+
 /* You can add global styles to this file, and also import other style files */
-@import '@angular/cdk/overlay-prebuilt.css';
-@import 'src/variables';
-@import 'src/geometry';
-@import 'assets/scss/helpers';
-@import 'assets/scss/components/page-header';
-@import 'assets/scss/components/table-v2';
-@import 'assets/scss/components/table-slanted';
-@import 'assets/scss/components/error-message';
-@import 'assets/scss/components/data-list-container';
-@import 'assets/scss/components/mode-bar';
-@import 'assets/scss/components/calendar';
-@import 'assets/scss/components/tab-rounded';
-@import 'assets/scss/components/tab-nav';
-@import 'assets/scss/components/login-button';
-@import 'assets/scss/components/button';
-@import 'assets/scss/components/button-icon';
-@import 'assets/scss/components/messages';
-@import 'assets/scss/components/propagation-edit-menu';
-@import 'assets/scss/components/group-join-by-code';
-@import 'assets/scss/components/block-ui';
-@import 'assets/scss/components/tooltip';
-@import 'assets/scss/components/path-suggestion-overlay';
-@import 'assets/scss/components/suggestion-of-activities-overlay';
-@import 'assets/scss/components/user-progress-overlay';
-@import 'assets/scss/components/rounded-icon-wrapper';
-@import 'assets/scss/components/input';
-@import 'assets/scss/components/top-bar-scrollbar';
-@import 'assets/scss/components/common-confirm-dialog';
-@import 'assets/scss/components/tag';
+@include meta.load-css('@angular/cdk/overlay-prebuilt.css');
+@include meta.load-css('assets/scss/components/page-header');
+@include meta.load-css('assets/scss/components/table-v2');
+@include meta.load-css('assets/scss/components/table-slanted');
+@include meta.load-css('assets/scss/components/error-message');
+@include meta.load-css('assets/scss/components/data-list-container');
+@include meta.load-css('assets/scss/components/mode-bar');
+@include meta.load-css('assets/scss/components/calendar');
+@include meta.load-css('assets/scss/components/tab-rounded');
+@include meta.load-css('assets/scss/components/tab-nav');
+@include meta.load-css('assets/scss/components/login-button');
+@include meta.load-css('assets/scss/components/button');
+@include meta.load-css('assets/scss/components/button-icon');
+@include meta.load-css('assets/scss/components/messages');
+@include meta.load-css('assets/scss/components/propagation-edit-menu');
+@include meta.load-css('assets/scss/components/group-join-by-code');
+@include meta.load-css('assets/scss/components/block-ui');
+@include meta.load-css('assets/scss/components/tooltip');
+@include meta.load-css('assets/scss/components/path-suggestion-overlay');
+@include meta.load-css('assets/scss/components/suggestion-of-activities-overlay');
+@include meta.load-css('assets/scss/components/user-progress-overlay');
+@include meta.load-css('assets/scss/components/rounded-icon-wrapper');
+@include meta.load-css('assets/scss/components/input');
+@include meta.load-css('assets/scss/components/top-bar-scrollbar');
+@include meta.load-css('assets/scss/components/common-confirm-dialog');
+@include meta.load-css('assets/scss/components/tag');
 
 // New Design
-@import 'assets/scss/text-colors';
-@import 'assets/scss/text-sizes';
+@include meta.load-css('assets/scss/text-colors');
+@include meta.load-css('assets/scss/text-sizes');
 
 /* Custom themes */
-@import 'assets/scss/themes/coursera-pt';
-@import 'assets/scss/themes/probabl';
-@import 'assets/scss/themes/thymio';
+@include meta.load-css('assets/scss/themes/coursera-pt');
+@include meta.load-css('assets/scss/themes/probabl');
+@include meta.load-css('assets/scss/themes/thymio');
 
 @media screen and (max-width: 599.98px) {
   :root {
@@ -139,7 +142,7 @@ button, input, textarea {
 .alg-divider {
   margin: 0;
   padding: 0;
-  height: toRem(1);
+  height: functions.toRem(1);
   border: none;
   background: rgb(255,255,255);
   background: -moz-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
@@ -150,7 +153,7 @@ button, input, textarea {
 
 .alg-search-result {
   em {
-    padding: toRem(1);
+    padding: functions.toRem(1);
     color: var(--alg-primary-color);
     background-color: var(--alg-search-result-highlight);
     font-style: normal;

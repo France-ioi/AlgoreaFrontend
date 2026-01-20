@@ -1,8 +1,8 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: block;
-  width: toRem(540);
+  width: functions.toRem(540);
 }
 
 .buttons {

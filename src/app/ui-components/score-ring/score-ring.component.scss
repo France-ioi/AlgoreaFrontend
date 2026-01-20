@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -23,7 +23,7 @@
 }
 
 .icon {
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
 }
 
 .round-path {
@@ -52,7 +52,7 @@
 
 .score-caption {
   color: var(--alg-primary-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-weight: 400;
   font-family: var(--alg-primary-color);
 

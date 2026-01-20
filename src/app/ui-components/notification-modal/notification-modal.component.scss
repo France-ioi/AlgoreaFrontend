@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   position: relative;
@@ -6,14 +6,14 @@
   flex-direction: column;
   max-width: 100%;
   background: var(--alg-white-color);
-  border-radius: toRem(8);
+  border-radius: functions.toRem(8);
   padding: var(--alg-space-size-3);
 }
 
 .close-wrapper {
   position: absolute;
-  top: toRem(10);
-  right: toRem(10);
+  top: functions.toRem(10);
+  right: functions.toRem(10);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -26,7 +26,7 @@
 
 .icon {
   color: var(--alg-message-error-color);
-  font-size: toRem(84);
+  font-size: functions.toRem(84);
 }
 
 .title {

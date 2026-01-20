@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .tri-tag {
   position: absolute;
@@ -101,19 +101,19 @@
 }
 
 .alg-base-title-primary-space {
-  margin: toRem(6) 0 toRem(16) 0;
+  margin: functions.toRem(6) 0 functions.toRem(16) 0;
 }
 
 .alg-base-title-space {
-  margin: toRem(38) 0 toRem(16) 0;
+  margin: functions.toRem(38) 0 functions.toRem(16) 0;
 }
 
 .alg-button-margin-right {
-  margin-right: toRem(8);
+  margin-right: functions.toRem(8);
 }
 
 .alg-button-margin-bottom {
-  margin-bottom: toRem(8);
+  margin-bottom: functions.toRem(8);
 }
 
 .alg-no-top-margin {

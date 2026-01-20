@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .select-button-label {
   text-transform: capitalize;
@@ -9,13 +9,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-top: toRem(10);
+  margin-top: functions.toRem(10);
   background-color: var(--alg-primary-color);
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   border: none;
-  box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
 
   &:before {
     content: "";

@@ -1,14 +1,14 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-top-right-triangle {
   &:after {
     position: absolute;
-    top: toRem(-20);
-    right: toRem(10);
+    top: functions.toRem(-20);
+    right: functions.toRem(10);
     width: 0;
     height: 0;
     content: '';
-    border-width: toRem(10);
+    border-width: functions.toRem(10);
     border-style: solid;
     border-color: transparent transparent var(--alg-primary-color) transparent;
   }
@@ -23,12 +23,12 @@
 .alg-bottom-right-triangle {
   &:after {
     position: absolute;
-    bottom: toRem(-20);
-    right: toRem(10);
+    bottom: functions.toRem(-20);
+    right: functions.toRem(10);
     width: 0;
     height: 0;
     content: '';
-    border-width: toRem(10);
+    border-width: functions.toRem(10);
     border-style: solid;
     border-color: var(--alg-primary-color) transparent transparent transparent;
   }
@@ -43,13 +43,13 @@
 .alg-top-center-triangle {
   &:after {
     position: absolute;
-    top: toRem(-20);
-    margin-left: toRem(-10);
+    top: functions.toRem(-20);
+    margin-left: functions.toRem(-10);
     left: 50%;
     width: 0;
     height: 0;
     content: '';
-    border-width: toRem(10);
+    border-width: functions.toRem(10);
     border-style: solid;
     border-color: transparent transparent var(--alg-primary-color) transparent;
   }
@@ -64,13 +64,13 @@
 .alg-bottom-center-triangle {
   &:after {
     position: absolute;
-    bottom: toRem(-20);
-    margin-left: toRem(-10);
+    bottom: functions.toRem(-20);
+    margin-left: functions.toRem(-10);
     left: 50%;
     width: 0;
     height: 0;
     content: '';
-    border-width: toRem(10);
+    border-width: functions.toRem(10);
     border-style: solid;
     border-color: var(--alg-primary-color) transparent transparent transparent;
   }
@@ -85,13 +85,13 @@
 .alg-left-center-triangle {
   &:after {
     position: absolute;
-    right: toRem(-20);
-    margin-top: toRem(-10);
+    right: functions.toRem(-20);
+    margin-top: functions.toRem(-10);
     top: 50%;
     width: 0;
     height: 0;
     content: '';
-    border-width: toRem(10);
+    border-width: functions.toRem(10);
     border-style: solid;
     border-color: transparent transparent transparent var(--alg-primary-color);
   }
@@ -107,7 +107,7 @@
   min-width: 30rem;
   max-width: 50rem;
   background-color: var(--alg-primary-color);
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   border: none;
   z-index: 2;
 

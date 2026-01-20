@@ -1,5 +1,5 @@
-@import 'src/assets/scss/components/input-base';
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/components/input-base';
+@use 'src/assets/scss/functions';
 
 :host {
   &.transparent {
@@ -36,13 +36,13 @@
   }
 
   .clear-button {
-    right: toRem(4);
+    right: functions.toRem(4);
     left: auto;
     cursor: pointer;
     border: none;
     outline: none;
     background-color: transparent;
-    font-size: toRem(24);
+    font-size: functions.toRem(24);
   }
 
   .input-button {
@@ -63,9 +63,9 @@
   position: absolute;
   top: 0;
   left: 0;
-  font-size: toRem(24);
-  width: toRem(40);
-  height: toRem(40);
+  font-size: functions.toRem(24);
+  width: functions.toRem(40);
+  height: functions.toRem(40);
   color: var(--alg-primary-color);
   display: flex;
   justify-content: center;
@@ -73,9 +73,9 @@
 }
 
 .input-element {
-  @include input-base;
+  @include input-base.input-base;
 
   &.has-input-icon {
-    padding-left: toRem(40);
+    padding-left: functions.toRem(40);
   }
 }

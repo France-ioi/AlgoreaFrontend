@@ -1,6 +1,6 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
-@import 'src/assets/scss/functions';
+@use 'src/variables';
+@use 'src/geometry.scss';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -13,8 +13,8 @@
 }
 
 .label {
-  margin: 0 toRem(20);
-  font-size: toRem(16);
+  margin: 0 functions.toRem(20);
+  font-size: functions.toRem(16);
 }
 
 .input-light {
@@ -40,10 +40,10 @@
   padding: 1rem;
   background-color: transparent;
   cursor: pointer;
-  min-width: toRem(128);
-  min-height: toRem(128);
-  margin: 0 toRem(20);
-  border: toRem(2) solid var(--alg-border-color);
+  min-width: functions.toRem(128);
+  min-height: functions.toRem(128);
+  margin: 0 functions.toRem(20);
+  border: functions.toRem(2) solid var(--alg-border-color);
   border-radius: var(--border-radius);
 
   &:first-child {
@@ -55,7 +55,7 @@
   }
 
   &:hover, &.selected {
-    border: toRem(2) solid var(--alg-primary-color) ;
+    border: functions.toRem(2) solid var(--alg-primary-color) ;
   }
 }
 
@@ -63,18 +63,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: toRem(60);
+  font-size: functions.toRem(60);
   color: var(--alg-primary-color);
 }
 
 .item-title {
-  margin-top: toRem(10);
+  margin-top: functions.toRem(10);
   color: var(--alg-secondary-color);
 }
 
 .item-description {
-  margin-top: toRem(10);
-  font-size: toRem(14);
+  margin-top: functions.toRem(10);
+  font-size: functions.toRem(14);
   text-align: center;
   flex: 1;
   overflow: hidden;
@@ -82,7 +82,7 @@
 
 .more-items {
   color: var(--alg-secondary-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
 }
 
 .input-group {
@@ -103,15 +103,15 @@
 }
 
 .add-content-list-item {
-  padding: toRem(8) 0;
+  padding: functions.toRem(8) 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: toRem(1) solid var(--alg-border-color);
+  border-bottom: functions.toRem(1) solid var(--alg-border-color);
 }
 
 .add-content-type {
-  margin-right: toRem(32);
+  margin-right: functions.toRem(32);
   color: var(--alg-secondary-color);
 }
 
@@ -120,11 +120,11 @@
 }
 
 .select-caption {
-  margin: toRem(30) 0 toRem(16) 0;
+  margin: functions.toRem(30) 0 functions.toRem(16) 0;
   color: var(--alg-secondary-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
 }
 
 .loading {
-  margin-top: toRem(16);
+  margin-top: functions.toRem(16);
 }

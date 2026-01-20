@@ -1,17 +1,17 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-tooltip-container {
   display: flex;
   position: relative;
   padding: var(--alg-space-size-5);
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   color: #fff;
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-weight: 500;
-  line-height: toRem(16);
-  letter-spacing: toRem(0.4);
+  line-height: functions.toRem(16);
+  letter-spacing: functions.toRem(0.4);
   background-color: var(--alg-primary-color);
-  max-width: toRem(230);
+  max-width: functions.toRem(230);
 
   &.secondary {
     background-color: var(--alg-secondary-color);
@@ -23,22 +23,22 @@
   }
 
   &.observation-mode {
-    min-width: toRem(280);
+    min-width: functions.toRem(280);
   }
 }
 
 .alg-tooltip-top {
   .alg-tooltip-container {
-    margin-bottom: toRem(10);
+    margin-bottom: functions.toRem(10);
     justify-content: center;
 
     &:after {
       position: absolute;
-      bottom: toRem(-16);
+      bottom: functions.toRem(-16);
       width: 0;
       height: 0;
       content: '';
-      border-width: toRem(8);
+      border-width: functions.toRem(8);
       border-style: solid;
       border-color: var(--alg-primary-color) transparent transparent transparent;
     }
@@ -53,16 +53,16 @@
 
 .alg-tooltip-bottom {
   .alg-tooltip-container {
-    margin-top: toRem(10);
+    margin-top: functions.toRem(10);
     justify-content: center;
 
     &:after {
       position: absolute;
-      top: toRem(-16);
+      top: functions.toRem(-16);
       width: 0;
       height: 0;
       content: '';
-      border-width: toRem(8);
+      border-width: functions.toRem(8);
       border-style: solid;
       border-color: transparent transparent var(--alg-primary-color) transparent;
     }
@@ -77,16 +77,16 @@
 
 .alg-tooltip-left {
   .alg-tooltip-container {
-    margin-right: toRem(10);
+    margin-right: functions.toRem(10);
     align-items: center;
 
     &:after {
       position: absolute;
-      right: toRem(-16);
+      right: functions.toRem(-16);
       width: 0;
       height: 0;
       content: '';
-      border-width: toRem(8);
+      border-width: functions.toRem(8);
       border-style: solid;
       border-color: transparent transparent transparent var(--alg-primary-color);
     }
@@ -101,16 +101,16 @@
 
 .alg-tooltip-right {
   .alg-tooltip-container {
-    margin-left: toRem(10);
+    margin-left: functions.toRem(10);
     align-items: center;
 
     &:after {
       position: absolute;
-      left: toRem(-16);
+      left: functions.toRem(-16);
       width: 0;
       height: 0;
       content: '';
-      border-width: toRem(8);
+      border-width: functions.toRem(8);
       border-style: solid;
       border-color: transparent var(--alg-primary-color) transparent transparent;
     }

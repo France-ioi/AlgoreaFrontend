@@ -1,9 +1,9 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@use 'src/variables';
+@use 'src/geometry.scss';
 
 .time-picker {
   display: flex;
-  border-radius: $border-radius;
+  border-radius: geometry.$border-radius;
   height: 3rem;
   width: 12rem;
   position: relative;
@@ -17,8 +17,8 @@
     display: flex;
     align-items: center;
     padding-left: 1rem;
-    border-top-left-radius: $border-radius;
-    border-bottom-left-radius: $border-radius;
+    border-top-left-radius: geometry.$border-radius;
+    border-bottom-left-radius: geometry.$border-radius;
 
     .time-input {
       display: flex;
@@ -56,8 +56,8 @@
     background-color: var(--input-transparency-color);
     border: none;
     box-shadow: 0 .1rem #C9CFD7 inset;
-    border-top-left-radius: $border-radius;
-    border-bottom-left-radius: $border-radius;
+    border-top-left-radius: geometry.$border-radius;
+    border-bottom-left-radius: geometry.$border-radius;
     padding-left: 3rem;
     font-size: 1.2rem;
     color: var(--dark-text-color);
@@ -83,8 +83,8 @@
     align-items: center;
     justify-content: center;
     color: white;
-    border-top-right-radius: $border-radius;
-    border-bottom-right-radius: $border-radius;
+    border-top-right-radius: geometry.$border-radius;
+    border-bottom-right-radius: geometry.$border-radius;
     cursor: pointer;
 
     &.disabled {

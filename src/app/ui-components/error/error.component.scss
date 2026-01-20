@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -33,20 +33,20 @@
 }
 
 .icon {
-  font-size: toRem(96);
+  font-size: functions.toRem(96);
   color: var(--alg-primary-color);
 }
 
 .message {
   &:not(.no-margin-top) {
-    margin-top: toRem(12);
+    margin-top: functions.toRem(12);
   }
   color: var(--alg-secondary-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   text-align: center;
 }
 
 .refresh-button {
-  margin-top: toRem(17);
-  font-size: toRem(16);
+  margin-top: functions.toRem(17);
+  font-size: functions.toRem(16);
 }

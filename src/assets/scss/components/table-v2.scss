@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-table-v2 {
   width: 100%;
@@ -6,31 +6,31 @@
   border-spacing: 0;
 
   .alg-table-th {
-    padding: toRem(13) toRem(19);
+    padding: functions.toRem(13) functions.toRem(19);
     color: var(--alg-secondary-color);
-    font-size: toRem(16);
+    font-size: functions.toRem(16);
     font-weight: 400;
     text-align: left;
     opacity: .5;
   }
 
   .alg-table-td {
-    padding: 0 toRem(19);
+    padding: 0 functions.toRem(19);
     color: var(--alg-secondary-color);
-    font-size: toRem(16);
+    font-size: functions.toRem(16);
     border: none;
-    height: toRem(56);
+    height: functions.toRem(56);
 
     &:first-child {
-      border-radius: toRem(10) 0 0 toRem(10);
+      border-radius: functions.toRem(10) 0 0 functions.toRem(10);
     }
 
     &:last-child {
-      border-radius: 0 toRem(10) toRem(10) 0;
+      border-radius: 0 functions.toRem(10) functions.toRem(10) 0;
     }
 
     &.empty-td {
-      border-radius: toRem(10) !important;
+      border-radius: functions.toRem(10) !important;
     }
 
     &.reorder-handle {
@@ -49,27 +49,27 @@
 
     .alg-table-body-tr {
       display: flex;
-      border-radius: toRem(12);
-      margin-bottom: toRem(4);
+      border-radius: functions.toRem(12);
+      margin-bottom: functions.toRem(4);
       height: 3rem;
       background-color: rgba(0, 0, 0, 0.04);
     }
 
     .alg-table-td {
-      padding: 0 toRem(13);
+      padding: 0 functions.toRem(13);
       color: var(--alg-secondary-color);
       border: none;
       background-color: transparent;
       display: flex;
       align-items: center;
-      font-size: toRem(16);
+      font-size: functions.toRem(16);
       height: auto;
     }
   }
 }
 
 .alg-table-page-wrapper {
-  margin: 0 toRem(-18);
+  margin: 0 functions.toRem(-18);
 }
 
 .alg-table-horizontal-scroll {
@@ -77,7 +77,7 @@
 }
 
 .alg-table-load-more {
-  padding: toRem(10);
+  padding: functions.toRem(10);
   text-align: center;
 }
 
@@ -85,7 +85,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: toRem(13) toRem(14);
+  padding: functions.toRem(13) functions.toRem(14);
 }
 
 .alg-table-footer-left {
@@ -94,30 +94,30 @@
   align-items: center;
 
   &.editable {
-    margin-left: toRem(24);
+    margin-left: functions.toRem(24);
   }
 }
 
 .alg-table-footer-checkbox {
-  margin-left: toRem(32);
+  margin-left: functions.toRem(32);
 }
 
 .alg-table-footer-select-all {
-  margin-left: toRem(16);
-  font-size: toRem(14);
+  margin-left: functions.toRem(16);
+  font-size: functions.toRem(14);
 }
 
 .alg-table-drag-preview {
-  padding: 0 toRem(13);
+  padding: 0 functions.toRem(13);
   color: var(--alg-secondary-color);
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   background-color: rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   height: auto;
-  box-shadow: 0 toRem(5) toRem(5) toRem(-3) rgba(0, 0, 0, 0.2),
-  0 toRem(8) toRem(10) toRem(1) rgba(0, 0, 0, 0.14),
-  0 toRem(3) toRem(14) toRem(2) rgba(0, 0, 0, 0.12);
+  box-shadow: 0 functions.toRem(5) functions.toRem(5) functions.toRem(-3) rgba(0, 0, 0, 0.2),
+  0 functions.toRem(8) functions.toRem(10) functions.toRem(1) rgba(0, 0, 0, 0.14),
+  0 functions.toRem(3) functions.toRem(14) functions.toRem(2) rgba(0, 0, 0, 0.12);
 }

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   display: flex;
@@ -10,13 +10,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 toRem(14);
-  height: toRem(57);
+  padding: 0 functions.toRem(14);
+  height: functions.toRem(57);
   border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
 }
 
 .header-title, .header-icon {
-  font-size: toRem(20);
+  font-size: functions.toRem(20);
 }
 
 .header-icon {
@@ -24,12 +24,12 @@
 }
 
 .header-title {
-  margin-left: toRem(14);
+  margin-left: functions.toRem(14);
   color: var(--alg-black-color);
 }
 
 .header-button {
-  margin-left: toRem(15);
+  margin-left: functions.toRem(15);
 }
 
 .thread {

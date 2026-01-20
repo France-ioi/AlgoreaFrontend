@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   position: relative;
@@ -39,7 +39,7 @@
   color: var(--alg-form-item-label);
 
   &.field-validity {
-    height: toRem(40);
+    height: functions.toRem(40);
     display: flex;
     align-items: center;
   }
@@ -47,5 +47,5 @@
 
 .field-value {
   width: 70%;
-  margin-left: toRem(16);
+  margin-left: functions.toRem(16);
 }

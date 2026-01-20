@@ -1,7 +1,7 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .permission-indicator-section {
-  margin: toRem(16);
+  margin: functions.toRem(16);
 }
 
 .note-caption {
@@ -10,12 +10,12 @@
 
 :host {
   background-color: var(--alg-observation-button-bg-color);
-  border-radius: toRem(8);
+  border-radius: functions.toRem(8);
 }
 
 .header {
-  padding: 0 toRem(16);
-  height: toRem(40);
+  padding: 0 functions.toRem(16);
+  height: functions.toRem(40);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,24 +28,24 @@
 }
 
 .header-icon {
-  margin-right: toRem(8);
+  margin-right: functions.toRem(8);
   color: var(--alg-accent-dark-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .header-arrow-icon {
   color: var(--alg-accent-dark-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .content {
-  border-top: toRem(1) solid rgba(0, 0, 0, 0.1);
-  border-bottom: toRem(1) solid rgba(0, 0, 0, 0.1);
+  border-top: functions.toRem(1) solid rgba(0, 0, 0, 0.1);
+  border-bottom: functions.toRem(1) solid rgba(0, 0, 0, 0.1);
 }
 
 .footer {
-  padding: 0 toRem(16);
-  height: toRem(40);
+  padding: 0 functions.toRem(16);
+  height: functions.toRem(40);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,7 +54,7 @@
 .footer-caption {
   flex: 1;
   color: var(--alg-secondary-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-style: italic;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .no-access {
-  margin: toRem(16);
+  margin: functions.toRem(16);
 }
 
 .can-view-container {

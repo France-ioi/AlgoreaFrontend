@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .progress-level-container {
   display: flex;
@@ -17,9 +17,9 @@
 
 .progress-level-item {
   display: flex;
-  margin-right: toRem(4);
-  width: toRem(8);
-  height: toRem(8);
+  margin-right: functions.toRem(4);
+  width: functions.toRem(8);
+  height: functions.toRem(8);
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 50%;
 }
@@ -33,10 +33,10 @@
     display: block;
     position: absolute;
     top: 50%;
-    margin-top: toRem(-1);
-    left: toRem(-5);
-    width: toRem(6);
-    height: toRem(2);
+    margin-top: functions.toRem(-1);
+    left: functions.toRem(-5);
+    width: functions.toRem(6);
+    height: functions.toRem(2);
     background-color: var(--alg-primary-color);
   }
 }

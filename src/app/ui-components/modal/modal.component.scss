@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -6,7 +6,7 @@
   max-width: 100%;
   max-height: inherit;
   background: var(--alg-white-color);
-  border-radius: toRem(8);
+  border-radius: functions.toRem(8);
 }
 
 .container {
@@ -19,13 +19,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: (calc(var(--alg-space-size-6) + toRem(4))) (calc(var(--alg-space-size-6) + toRem(4))) (calc(var(--alg-space-size-6) + toRem(4))) var(--alg-space-size-5);
+  padding: (calc(var(--alg-space-size-6) + functions.toRem(4))) (calc(var(--alg-space-size-6) + functions.toRem(4))) (calc(var(--alg-space-size-6) + functions.toRem(4))) var(--alg-space-size-5);
   border-bottom: 1px solid var(--alg-border-color);
 }
 
 .title {
   margin: 0;
-  font-size: toRem(18);
+  font-size: functions.toRem(18);
   font-weight: 600;
 }
 
@@ -47,6 +47,6 @@
 }
 
 .footer {
-  padding: (calc(var(--alg-space-size-6) + toRem(4))) var(--alg-space-size-5);
+  padding: (calc(var(--alg-space-size-6) + functions.toRem(4))) var(--alg-space-size-5);
   border-top: 1px solid var(--alg-border-color);
 }

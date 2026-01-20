@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   display: flex;
@@ -13,7 +13,7 @@
 }
 
 .left {
-  margin-right: toRem(8);
+  margin-right: functions.toRem(8);
 }
 
 .template {
@@ -21,12 +21,12 @@
 }
 
 .icon {
-  margin-right: toRem(8);
+  margin-right: functions.toRem(8);
   color: var(--alg-primary-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .title {
   color: #000;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }

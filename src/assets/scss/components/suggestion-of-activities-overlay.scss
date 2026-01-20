@@ -1,8 +1,8 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-suggestion-of-activities-overlay {
   background-color: var(--alg-primary-color);
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   border: none;
 
   &:before {

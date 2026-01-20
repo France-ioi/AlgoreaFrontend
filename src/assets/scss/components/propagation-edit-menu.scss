@@ -1,5 +1,5 @@
-@import '../../../variables';
-@import 'src/geometry';
+@use '../../../variables';
+@use 'src/geometry';
 
 .alg-propagation-edit-menu {
   background: var(--base-color);
@@ -15,7 +15,7 @@
   }
 
   &.p-overlaypanel {
-    border-radius: $border-radius;
+    border-radius: geometry.$border-radius;
   }
 
   .p-overlaypanel-content {

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-nav-tab {
   display: flex;
@@ -12,7 +12,7 @@
     bottom: 0;
     display: block;
     width: 100%;
-    height: toRem(1);
+    height: functions.toRem(1);
     background: rgb(255,255,255);
     background: -moz-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
     background: -webkit-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
@@ -22,32 +22,32 @@
 }
 
 .alg-nav-tab-item {
-  padding: 0 0 toRem(10) 0;
+  padding: 0 0 functions.toRem(10) 0;
   background: none;
   color: var(--alg-secondary-color);
   font-family: inherit;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   font-weight: 300;
   text-decoration: none;
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: toRem(3) solid transparent;
+  border-bottom: functions.toRem(3) solid transparent;
   opacity: .5;
   position: relative;
   z-index: 1;
 
   &:not(:first-child) {
-    margin-left: toRem(16);
+    margin-left: functions.toRem(16);
   }
 
   &:not(:last-child) {
-    margin-right: toRem(16);
+    margin-right: functions.toRem(16);
   }
 
   &.active {
     color: var(--alg-primary-color);
-    border-bottom: toRem(3) solid var(--alg-primary-color);
+    border-bottom: functions.toRem(3) solid var(--alg-primary-color);
     opacity: 1;
   }
 }
