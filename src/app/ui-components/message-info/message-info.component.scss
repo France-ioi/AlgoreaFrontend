@@ -1,16 +1,16 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   &.search {
     .container {
-      padding: .719rem toRem(12);
+      padding: .719rem functions.toRem(12);
     }
   }
 
   &.overflow {
     .container {
-      padding: 0 toRem(12);
-      height: toRem(40);
+      padding: 0 functions.toRem(12);
+      height: functions.toRem(40);
     }
 
     .message-text {
@@ -55,13 +55,13 @@
 }
 
 .container {
-  padding: toRem(12);
+  padding: functions.toRem(12);
   height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--alg-accent-color);
-  border-radius: toRem(8);
+  border-radius: functions.toRem(8);
 }
 
 .content {
@@ -71,12 +71,12 @@
 }
 
 .message-icon {
-  margin: 0 toRem(10) 0 0;
+  margin: 0 functions.toRem(10) 0 0;
   color: var(--alg-accent-dark-color);
-  font-size: toRem(17);
+  font-size: functions.toRem(17);
 }
 
 .message-text {
   color: RGBA(0, 0, 0, .5);
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
 }

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -6,5 +6,5 @@
 }
 
 .section-title {
-  margin: toRem(30) 0 toRem(10) 0;
+  margin: functions.toRem(30) 0 functions.toRem(10) 0;
 }

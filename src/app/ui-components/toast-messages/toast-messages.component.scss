@@ -1,9 +1,9 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   position: fixed;
-  bottom: toRem(16);
-  left: toRem(16);
+  bottom: functions.toRem(16);
+  left: functions.toRem(16);
   z-index: 9999;
 }
 
@@ -15,18 +15,18 @@
 .message {
   position: relative;
   display: flex;
-  width: toRem(348);
-  padding: toRem(16);
+  width: functions.toRem(348);
+  padding: functions.toRem(16);
   background-color: var(--alg-white-color);
-  border-radius: toRem(10);
-  border: toRem(2) solid var(--alg-black-color);
+  border-radius: functions.toRem(10);
+  border: functions.toRem(2) solid var(--alg-black-color);
 
   &:not(:first-child) {
-    margin-bottom: toRem(16);
+    margin-bottom: functions.toRem(16);
   }
 
   &.success {
-    border: toRem(2) solid var(--toast-success-border);
+    border: functions.toRem(2) solid var(--toast-success-border);
     background-color: var(--toast-success-bg);
 
     .message-icon {
@@ -34,7 +34,7 @@
     }
   }
   &.info {
-    border: toRem(2) solid var(--toast-info-border);
+    border: functions.toRem(2) solid var(--toast-info-border);
     background-color: var(--toast-info-bg);
 
     .message-icon {
@@ -42,7 +42,7 @@
     }
   }
   &.warn {
-    border: toRem(2) solid var(--toast-warning-border);
+    border: functions.toRem(2) solid var(--toast-warning-border);
     background-color: var(--toast-warning-bg);
 
     .message-icon {
@@ -50,7 +50,7 @@
     }
   }
   &.error {
-    border: toRem(2) solid var(--toast-error-border);
+    border: functions.toRem(2) solid var(--toast-error-border);
     background-color: var(--toast-error-bg);
 
     .message-icon {
@@ -60,21 +60,21 @@
 }
 
 .message-icon-container {
-  margin-right: toRem(16);
+  margin-right: functions.toRem(16);
 }
 
 .message-icon {
-  font-size: toRem(24);
+  font-size: functions.toRem(24);
   color: var(--alg-black-color);
 }
 
 .close-button-container {
   position: absolute;
-  top: toRem(4);
-  right: toRem(4);
+  top: functions.toRem(4);
+  right: functions.toRem(4);
 }
 
 .message-text {
-  margin-top: toRem(6);
-  font-size: toRem(14);
+  margin-top: functions.toRem(6);
+  font-size: functions.toRem(14);
 }

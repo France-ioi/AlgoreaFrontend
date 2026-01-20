@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .form {
   display: flex;
@@ -7,7 +7,7 @@
 }
 
 .button {
-  margin-left: toRem(4);
+  margin-left: functions.toRem(4);
 }
 
 .extra-time-input {

@@ -1,4 +1,4 @@
-@import '../../../../assets/scss/functions';
+@use '../../../../assets/scss/functions';
 
 :host {
   display: block;
@@ -14,7 +14,7 @@
 }
 
 .form {
-  margin-top: toRem(16);
+  margin-top: functions.toRem(16);
 }
 
 .switch-field {

@@ -1,22 +1,22 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .progress-bar-wrapper {
-  width: toRem(32);
-  height: toRem(4);
-  border-radius: toRem(4);
+  width: functions.toRem(32);
+  height: functions.toRem(4);
+  border-radius: functions.toRem(4);
   position: relative;
   margin: 0;
   overflow: hidden;
   background-color: var(--alg-border-light-color);
 
   &.bold {
-    height: toRem(8);
+    height: functions.toRem(8);
   }
 }
 
 .progress-current-score {
   height: 100%;
-  border-radius: toRem(4);
+  border-radius: functions.toRem(4);
   position: absolute;
   left: 0;
   top: 0;

@@ -1,14 +1,14 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-tag {
   display: flex;
   align-items: center;
-  padding: toRem(4) toRem(6);
+  padding: functions.toRem(4) functions.toRem(6);
 
-  border-radius: toRem(4);
+  border-radius: functions.toRem(4);
   background-color: var(--alg-message-info-color);
   color: var(--alg-white-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-weight: 700;
 
   &.success {

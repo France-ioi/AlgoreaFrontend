@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -30,5 +30,5 @@
 }
 
 .alg-table-footer-checkbox {
-  margin-left: toRem(2);
+  margin-left: functions.toRem(2);
 }

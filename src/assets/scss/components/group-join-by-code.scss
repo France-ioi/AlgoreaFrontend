@@ -1,6 +1,8 @@
+@use "src/geometry";
+
 alg-group-join-by-code {
   .submit-duration-button {
-    border-radius: $border-radius;
+    border-radius: geometry.$border-radius;
   }
 
   .alg-button {

@@ -1,15 +1,15 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .item-strings-control {
   &:not(:first-child) {
-    margin-top: toRem(38);
+    margin-top: functions.toRem(38);
   }
 }
 
 .button-section {
   display: flex;
   align-items: center;
-  height: toRem(24);
+  height: functions.toRem(24);
   margin-top: var(--alg-space-size-5);
 }
 

@@ -1,8 +1,8 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
   flex-direction: column;
   padding: var(--alg-space-size-6) var(--alg-space-size-5);
-  border-top: toRem(1) solid var(--alg-border-color);
+  border-top: functions.toRem(1) solid var(--alg-border-color);
 }

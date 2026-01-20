@@ -1,9 +1,9 @@
-@import "src/assets/scss/functions";
+@use "src/assets/scss/functions";
 
 :host {
   display: inline-flex;
   flex-direction: column;
-  margin: toRem(6);
+  margin: functions.toRem(6);
 
   &:not(:last-child) {
     margin-bottom: 0;
@@ -14,11 +14,11 @@
   display: block;
   padding: .7rem;
   flex-direction: row-reverse;
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   border: none;
   color: var(--alg-white-color);
   background: none;
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-weight: 500;
   text-transform: capitalize;
   text-align: center;

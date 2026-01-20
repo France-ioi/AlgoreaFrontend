@@ -1,11 +1,11 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
-  height: toRem(57);
+  height: functions.toRem(57);
   padding: 0 var(--alg-space-size-3);
   display: flex;
   align-items: center;
   border-bottom: 0.1rem solid var(--alg-light-color);
   background-color: var(--alg-white-color);
-  border-radius: toRem(16) 0 0 0;
+  border-radius: functions.toRem(16) 0 0 0;
 }

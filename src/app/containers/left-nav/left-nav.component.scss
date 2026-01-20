@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -12,11 +12,11 @@
 }
 
 .watching-warning {
-  margin: toRem(16);
+  margin: functions.toRem(16);
 }
 
 .tab-view-container {
-  margin: toRem(25) 0 toRem(42) 0;
+  margin: functions.toRem(25) 0 functions.toRem(42) 0;
   padding: 0 var(--alg-space-size-3);
 }
 
@@ -35,7 +35,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  padding: 0 toRem(12);
+  padding: 0 functions.toRem(12);
 
   &:not(.compact) {
     margin: 0 var(--alg-space-size-6);
@@ -43,7 +43,7 @@
 
   &.compact {
     .main-menu-title {
-      font-size: toRem(14);
+      font-size: functions.toRem(14);
     }
   }
 
@@ -62,28 +62,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: toRem(48);
-  height: toRem(48);
+  width: functions.toRem(48);
+  height: functions.toRem(48);
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.05);
 }
 
 .main-menu-icon {
   color: var(--alg-secondary-color);
-  font-size: toRem(24);
+  font-size: functions.toRem(24);
 }
 
 .main-menu-title {
   margin-top: var(--alg-space-size-6);
   color: var(--alg-secondary-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   font-weight: 400;
 }
 
 .divider {
   margin: 0 var(--alg-space-size-5) var(--alg-space-size-6) var(--alg-space-size-5);
   padding: 0;
-  height: toRem(1);
+  height: functions.toRem(1);
   border: none;
   background: rgb(255,255,255);
   background: -moz-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);

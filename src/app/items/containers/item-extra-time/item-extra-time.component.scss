@@ -1,9 +1,9 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .description {
   display: inline;
   align-items: center;
-  line-height: toRem(32);
+  line-height: functions.toRem(32);
 }
 
 .extra-time-input {

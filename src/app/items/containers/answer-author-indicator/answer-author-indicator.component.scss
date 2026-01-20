@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   display: flex;
@@ -8,7 +8,7 @@
   color: var(--alg-secondary-color);
   background-color: var(--alg-light-bg-color);
   border-radius: var(--border-radius);
-  height: toRem(48);
+  height: functions.toRem(48);
 }
 
 .content, .content-text {
@@ -27,11 +27,11 @@
 }
 
 .score-ring {
-  margin-right: toRem(8);
+  margin-right: functions.toRem(8);
 }
 
 .button {
-  margin-right: toRem(6);
+  margin-right: functions.toRem(6);
 }
 
 .links, .score {
@@ -43,5 +43,5 @@
 }
 
 .description {
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
 }

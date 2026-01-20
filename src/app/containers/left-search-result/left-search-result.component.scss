@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   padding: 0 var(--alg-space-size-5);
@@ -12,7 +12,7 @@
 
 .result-list-icon {
   color: var(--alg-primary-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .result-list-link {
@@ -21,12 +21,12 @@
   align-items: center;
   cursor: pointer;
   position: relative;
-  padding: toRem(11) var(--alg-space-size-5);
-  border-radius: toRem(10);
+  padding: functions.toRem(11) var(--alg-space-size-5);
+  border-radius: functions.toRem(10);
   text-decoration: none;
 
   &.selected {
-    border-radius: toRem(10);
+    border-radius: functions.toRem(10);
     background-color: var(--alg-tree-selected-color);
   }
 }
@@ -39,16 +39,16 @@
 }
 
 .result-list-description {
-  margin: toRem(11) var(--alg-space-size-5);
-  padding-left: toRem(32);
+  margin: functions.toRem(11) var(--alg-space-size-5);
+  padding-left: functions.toRem(32);
   color: #616F8280;
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
 
   &:first-child {
     margin-top: 0;
   }
 
   &:last-child {
-    margin-bottom: toRem(16);
+    margin-bottom: functions.toRem(16);
   }
 }

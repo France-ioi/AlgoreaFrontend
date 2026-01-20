@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-table-slanted {
   width: 100%;
@@ -6,12 +6,12 @@
 
   &.border-style {
     .alg-table-th {
-      border-bottom: toRem(1) solid var(--alg-border-color) !important;
+      border-bottom: functions.toRem(1) solid var(--alg-border-color) !important;
       background: #fff !important;
     }
 
     .alg-table-td {
-      border-right: toRem(1) solid var(--alg-border-color) !important;
+      border-right: functions.toRem(1) solid var(--alg-border-color) !important;
       background: #fff !important;
     }
   }
@@ -70,7 +70,7 @@
       text-align: center;
       justify-content: center;
       color: var(--alg-secondary-color);
-      height: toRem(56);
+      height: functions.toRem(56);
 
       &:nth-child(odd) {
         background-color: white;
@@ -84,7 +84,7 @@
   }
 
   .alg-table-selection-col {
-    width: toRem(80);
+    width: functions.toRem(80);
   }
 }
 

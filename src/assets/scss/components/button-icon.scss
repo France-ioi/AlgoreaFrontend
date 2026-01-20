@@ -1,11 +1,11 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-button-icon {
   border: none;
   cursor: pointer;
 
   .p-button-icon {
-    font-size: toRem(18);
+    font-size: functions.toRem(18);
   }
 
   &.base-color {
@@ -21,12 +21,12 @@
   }
 
   &.rounded {
-    width: toRem(24);
-    height: toRem(24);
+    width: functions.toRem(24);
+    height: functions.toRem(24);
     border-radius: 50%;
 
     .p-button-icon {
-      font-size: toRem(16);
+      font-size: functions.toRem(16);
     }
   }
 
@@ -87,7 +87,7 @@
 
   &.login {
     .p-button-icon {
-      font-size: toRem(24);
+      font-size: functions.toRem(24);
     }
   }
 
@@ -110,16 +110,16 @@
   }
 
   &.send-button {
-    width: toRem(40);
-    height: toRem(40);
+    width: functions.toRem(40);
+    height: functions.toRem(40);
 
     .p-button-icon {
-      font-size: toRem(18);
+      font-size: functions.toRem(18);
     }
   }
 
   &.tab-arrow {
-    width: toRem(30);
+    width: functions.toRem(30);
     height: 100%;
     border-radius: 0;
     background-color: var(--alg-white-color);
@@ -133,16 +133,16 @@
     }
 
     &.tab-prev {
-      box-shadow: toRem(1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
+      box-shadow: functions.toRem(1) functions.toRem(1) functions.toRem(5) functions.toRem(1) rgba(0,0,0,0.3);
     }
 
     &.tab-next {
-      box-shadow: toRem(-1) toRem(1) toRem(5) toRem(1) rgba(0,0,0,0.3);
+      box-shadow: functions.toRem(-1) functions.toRem(1) functions.toRem(5) functions.toRem(1) rgba(0,0,0,0.3);
     }
   }
 
   &.stroke {
-    border: toRem(1) solid rgba(0, 0, 0, 0.1);
+    border: functions.toRem(1) solid rgba(0, 0, 0, 0.1);
     background-color: transparent;
 
     &:hover {
@@ -155,26 +155,26 @@
       }
 
       &:hover {
-        border: toRem(1) solid var(--alg-primary-color);
+        border: functions.toRem(1) solid var(--alg-primary-color);
       }
     }
 
     &.regular-size {
-      width: toRem(40);
-      height: toRem(40);
+      width: functions.toRem(40);
+      height: functions.toRem(40);
 
       .p-button-icon {
-        font-size: toRem(18);
+        font-size: functions.toRem(18);
       }
     }
   }
 
   &.nav-arrow {
-    padding: 0 toRem(12);
+    padding: 0 functions.toRem(12);
     height: 100%;
 
     @media screen and (max-width: 599.98px) {
-      padding: 0 toRem(2);
+      padding: 0 functions.toRem(2);
     }
   }
 }

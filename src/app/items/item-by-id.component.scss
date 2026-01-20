@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   flex: 1;
@@ -24,7 +24,7 @@
 }
 
 .indicator {
-  padding: toRem(16);
+  padding: functions.toRem(16);
 
   &.no-left-padding {
     padding-left: 0;
@@ -32,16 +32,16 @@
 }
 
 .stats-title {
-  margin-top: toRem(30);
+  margin-top: functions.toRem(30);
   margin-bottom: 0;
 }
 
 .tab-bar {
-  height: toRem(33);
+  height: functions.toRem(33);
 }
 
 .item-permissions {
-  margin-bottom: toRem(16);
+  margin-bottom: functions.toRem(16);
 
   &.with-margin {
     margin: var(--alg-space-size-5);

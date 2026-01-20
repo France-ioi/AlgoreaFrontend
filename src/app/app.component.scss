@@ -1,6 +1,6 @@
-@import '../variables';
-@import 'src/geometry.scss';
-@import 'src/assets/scss/functions';
+@use '../variables';
+@use 'src/geometry.scss';
+@use 'src/assets/scss/functions';
 
 .container {
   position: absolute;
@@ -57,13 +57,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: toRem(16);
+  border-radius: functions.toRem(16);
   background-color: var(--alg-white-color);
   overflow: hidden;
   flex: 1;
-  box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
-  -webkit-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
-  -moz-box-shadow: 0 toRem(7) toRem(10) 0 rgba(0,0,0,0.1);
+  box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
 
   &.animated {
     transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);

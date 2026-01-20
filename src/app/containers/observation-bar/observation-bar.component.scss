@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   overflow: hidden;
@@ -8,18 +8,18 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0 toRem(16);
-  height: toRem(32);
-  border-radius: toRem(20);
+  padding: 0 functions.toRem(16);
+  height: functions.toRem(32);
+  border-radius: functions.toRem(20);
   background-color: var(--alg-observation-button-bg-color);
 
   &.only-icon-mode {
     .left-icon {
-      margin-right: toRem(6);
+      margin-right: functions.toRem(6);
     }
 
     @media screen and (max-width: 599.98px) {
-      padding: 0 toRem(8);
+      padding: 0 functions.toRem(8);
     }
   }
 }
@@ -32,8 +32,8 @@
 }
 
 .title {
-  margin: 0 toRem(16);
-  font-size: toRem(12);
+  margin: 0 functions.toRem(16);
+  font-size: functions.toRem(12);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

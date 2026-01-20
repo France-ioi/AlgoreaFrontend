@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-h1 {
   font-size: 3rem;
@@ -49,5 +49,5 @@
 }
 
 .alg-font-size-38 {
-  font-size: toRem(38) !important;
+  font-size: functions.toRem(38) !important;
 }

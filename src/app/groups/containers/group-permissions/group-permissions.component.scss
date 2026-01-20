@@ -1,5 +1,5 @@
-@import 'src/variables';
-@import "src/geometry.scss";
+@use 'src/variables';
+@use "src/geometry.scss";
 
 .captions {
   margin: 0;

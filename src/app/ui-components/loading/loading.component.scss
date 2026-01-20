@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 @keyframes fade {
   0% {
@@ -30,11 +30,11 @@
 }
 
 .dot {
-  margin: 0 toRem(2);
-  width: toRem(12);
-  height: toRem(12);
+  margin: 0 functions.toRem(2);
+  width: functions.toRem(12);
+  height: functions.toRem(12);
   background-color: #d2dfff;
-  border: toRem(3) solid var(--alg-primary-color);
+  border: functions.toRem(3) solid var(--alg-primary-color);
   border-radius: 50%;
   animation-duration: 1s;
   animation-timing-function: ease-out;

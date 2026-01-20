@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .field {
   display: flex;
@@ -16,10 +16,10 @@
   float: left;
   width: 70%;
   margin-top: 6px;
-  margin-left: toRem(16);
+  margin-left: functions.toRem(16);
 }
 
 .item-edit-content {
   display: block;
-  margin-top: toRem(10);
+  margin-top: functions.toRem(10);
 }

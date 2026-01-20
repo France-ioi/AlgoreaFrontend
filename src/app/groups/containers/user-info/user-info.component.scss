@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .modify-section {
   display: flex;
@@ -7,6 +7,6 @@
 }
 
 .modify-description {
-  padding-right: toRem(16);
+  padding-right: functions.toRem(16);
   overflow: hidden;
 }

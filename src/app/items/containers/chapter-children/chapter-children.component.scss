@@ -1,5 +1,5 @@
-@import 'src/assets/scss/functions';
-@import 'src/geometry.scss';
+@use 'src/assets/scss/functions';
+@use 'src/geometry.scss';
 
 :host {
   display: flex;
@@ -65,26 +65,26 @@
 
 .grid-item {
   overflow: hidden;
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
 }
 
 .grid-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  border: toRem(1) solid #DEDEDE;
-  border-radius: toRem(10);
+  border: functions.toRem(1) solid #DEDEDE;
+  border-radius: functions.toRem(10);
   cursor: pointer;
   text-decoration: none;
   overflow: hidden;
-  box-shadow: 0 toRem(6) toRem(11) 0 rgba(0,0,0,0.1);
-  -webkit-box-shadow: 0 toRem(6) toRem(11) 0 rgba(0,0,0,0.1);
-  -moz-box-shadow: 0 toRem(6) toRem(11) 0 rgba(0,0,0,0.1);
+  box-shadow: 0 functions.toRem(6) functions.toRem(11) 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 functions.toRem(6) functions.toRem(11) 0 rgba(0,0,0,0.1);
+  -moz-box-shadow: 0 functions.toRem(6) functions.toRem(11) 0 rgba(0,0,0,0.1);
 }
 
 .grid-card-text-section {
-  padding: toRem(15);
-  height: toRem(78);
+  padding: functions.toRem(15);
+  height: functions.toRem(78);
 
   &:after {
     content: '';
@@ -93,7 +93,7 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: toRem(20);
+    height: functions.toRem(20);
     background: rgb(255,255,255);
     background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8001794467787114) 50%, rgba(255,255,255,0.6) 70%, rgba(255,255,255,0.4) 80%, rgba(255,255,255,0.2) 90%, rgba(255,255,255,0) 100%);
   }
@@ -101,14 +101,14 @@
 
 .grid-card-title {
   color: #545454;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   font-weight: 700;
 }
 
 .grid-card-description {
-  margin-top: toRem(10);
+  margin-top: functions.toRem(10);
   color: var(--alg-secondary-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
 }
 
 .grid-card-image-section {
@@ -160,10 +160,10 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: toRem(10);
-  right: toRem(10);
-  width: toRem(18);
-  height: toRem(18);
+  top: functions.toRem(10);
+  right: functions.toRem(10);
+  width: functions.toRem(18);
+  height: functions.toRem(18);
   background-color: #fff;
   border-radius: 50%;
   z-index: 1;

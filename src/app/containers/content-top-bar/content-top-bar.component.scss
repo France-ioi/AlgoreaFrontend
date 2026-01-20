@@ -1,6 +1,6 @@
-@import "src/variables";
-@import "src/geometry.scss";
-@import "src/assets/scss/functions";
+@use "src/variables";
+@use "src/geometry.scss";
+@use "src/assets/scss/functions";
 
 :host {
   width: 100%;
@@ -27,7 +27,7 @@
 }
 
 .left-pane-title-text {
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   color: var(--alg-black-color);
   text-overflow: ellipsis;
   overflow: hidden;
@@ -52,7 +52,7 @@
 }
 
 .score-section {
-  width: toRem(32);
+  width: functions.toRem(32);
 }
 
 .tab-bar {

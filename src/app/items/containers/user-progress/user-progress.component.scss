@@ -1,11 +1,11 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .group-situation-data {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: toRem(50);
+  height: functions.toRem(50);
 
   &.pointer {
     cursor: pointer;

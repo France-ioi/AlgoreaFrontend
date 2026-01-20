@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -9,10 +9,10 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: toRem(13);
+  margin-bottom: functions.toRem(13);
 }
 
 .item-title-link {
   display: inline-block;
-  margin-top: toRem(5);
+  margin-top: functions.toRem(5);
 }
