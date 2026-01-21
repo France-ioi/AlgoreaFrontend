@@ -22,8 +22,8 @@
   }
   @if (state.isReady) {
     @if (state.data) {
-      @if (state.data?.length === 1 && state.data?.[0]?.length === 1) {
-        @if (state.data?.[0]?.[0]; as rootItem) {
+      @if (state.data.length === 1 && state.data[0]?.length === 1) {
+        @if (state.data[0]?.[0]; as rootItem) {
           <alg-error class="alg-flex-1 light">
             <span class="error-caption" i18n>
               This content is one of your root {rootItem.type, select, Skill {skill} other {activity}}
