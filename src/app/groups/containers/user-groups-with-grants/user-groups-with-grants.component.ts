@@ -3,7 +3,6 @@ import { JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
 import { mapStateData, mapToFetchState } from 'src/app/utils/operators/state';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RequirePersonalInfoAccessApproval as A } from 'src/app/groups/models/group-approvals';
 import { GroupLinksComponent } from '../group-links/group-links.component';
@@ -15,7 +14,6 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
   imports: [
     LoadingComponent,
     ErrorComponent,
-    AsyncPipe,
     GroupLinksComponent,
   ]
 })

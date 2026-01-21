@@ -14,9 +14,7 @@ import { withComputePermissions } from '../../models/computed-permissions';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
-import { DatePipe, JsonPipe } from '@angular/common';
-import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
-import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
+import { DatePipe } from '@angular/common';
 import { backendInfiniteDateString, farFutureDateString, isInfinite } from 'src/app/utils/date';
 import { CanEnterComponent, CanEnterValue } from 'src/app/ui-components/collapsible-section/can-enter/can-enter.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -35,9 +33,6 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
     CollapsibleSectionComponent,
     ProgressSelectComponent,
     SwitchFieldComponent,
-    JsonPipe,
-    SwitchComponent,
-    InputDateComponent,
     DatePipe,
     CanEnterComponent,
     ButtonComponent,

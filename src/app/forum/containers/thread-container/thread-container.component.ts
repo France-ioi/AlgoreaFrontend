@@ -2,7 +2,6 @@ import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/
 import { filter, Subscription } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { fromForum } from 'src/app/forum/store';
@@ -17,7 +16,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     RouterLink,
     ThreadComponent,
     AsyncPipe,
-    ItemRoutePipe,
     RouteUrlPipe,
     ButtonIconComponent,
   ]

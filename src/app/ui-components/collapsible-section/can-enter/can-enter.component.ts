@@ -1,5 +1,5 @@
 import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import {
   AbstractControl,
@@ -27,7 +27,6 @@ export interface CanEnterValue {
   templateUrl: './can-enter.component.html',
   styleUrls: [ './can-enter.component.scss' ],
   imports: [
-    SwitchComponent,
     InputDateComponent,
     FormsModule,
     DatePipe,

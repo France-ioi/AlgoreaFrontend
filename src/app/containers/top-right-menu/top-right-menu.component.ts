@@ -10,7 +10,6 @@ import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { UrlCommand } from 'src/app/utils/url';
-import { LetDirective } from '@ngrx/component';
 import { RouterLink } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
@@ -33,7 +32,6 @@ export interface MenuItem {
     CdkMenuItem,
     NgClass,
     NgTemplateOutlet,
-    LetDirective,
     RouterLink,
   ]
 })
