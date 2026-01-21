@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ensureDefined } from 'src/app/utils/assert';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
-import { NgIf } from '@angular/common';
+
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 
 export enum TypeFilter {
@@ -20,7 +20,7 @@ export interface Filter {
   selector: 'alg-group-composition-filter',
   templateUrl: './group-composition-filter.component.html',
   styleUrls: [ './group-composition-filter.component.scss' ],
-  imports: [ SelectionComponent, NgIf, SwitchComponent, FormsModule ]
+  imports: [ SelectionComponent, SwitchComponent, FormsModule ]
 })
 export class GroupCompositionFilterComponent implements OnInit{
   @Input() defaultValue?: Filter;

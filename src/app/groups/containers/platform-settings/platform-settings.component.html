@@ -1,4 +1,4 @@
-<ng-container *ngIf="currentUser$ | async as currentUser">
+@if (currentUser$ | async; as currentUser) {
   <ul class="alg-data-list list">
     <li class="alg-data-list-item">
       <span class="alg-data-list-item-caption" i18n>Platform language</span>
@@ -11,4 +11,4 @@
       </span>
     </li>
   </ul>
-</ng-container>
+}

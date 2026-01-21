@@ -24,7 +24,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { LTIDataSource } from './lti-datasource.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 enum LTIError {
   FetchError = 'fetch_error',
@@ -46,7 +46,6 @@ const loginIdParam = 'user_id';
   templateUrl: './lti.component.html',
   styleUrls: [ './lti.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     AsyncPipe,

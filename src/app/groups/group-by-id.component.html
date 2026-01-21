@@ -1,128 +1,136 @@
-<ng-container *ngIf="state$ | async as state">
-
+@if (state$ | async; as state) {
   @if (state.data && state.data.group; as group) {
     <alg-group-header [groupData]="state.data"></alg-group-header>
 <!--    <alg-pending-join-requests
-        *ngIf="(group | isCurrentUserManager) && group.currentUserCanManage !== 'none'"
-        [groupId]="group.id"
-    ></alg-pending-join-requests>-->
+    *ngIf="(group | isCurrentUserManager) && group.currentUserCanManage !== 'none'"
+    [groupId]="group.id"
+  ></alg-pending-join-requests>-->
+  @if ((group | isCurrentUserManager) || (group | isCurrentUserMember) || group.currentUserHasPendingInvitation) {
     <alg-group-indicator
-        class="group-indicator"
-        *ngIf="(group | isCurrentUserManager) || (group | isCurrentUserMember) || group.currentUserHasPendingInvitation"
-        [group]="group"
-    >
+      class="group-indicator"
+      [group]="group"
+      >
     </alg-group-indicator>
-    <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-    <div [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
-      <div class="alg-nav-tab" data-testid="alg-nav-tab">
-        <a
-          class="alg-nav-tab-item"
-          [routerLink]="'./'"
-          routerLinkActive #overviewTab="routerLinkActive"
-          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
-          [class.active]="overviewTab.isActive"
-          i18n
-        >
+  }
+  <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
+  <div [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
+    <div class="alg-nav-tab" data-testid="alg-nav-tab">
+      <a
+        class="alg-nav-tab-item"
+        [routerLink]="'./'"
+        routerLinkActive #overviewTab="routerLinkActive"
+        [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+        [class.active]="overviewTab.isActive"
+        i18n
+      >
           Overview
         </a>
-        <a
-          [hidden]="!group.currentUserCanWatchMembers && !historyTab.isActive"
-          class="alg-nav-tab-item"
-          [routerLink]="'./history'"
-          routerLinkActive #historyTab="routerLinkActive"
-          [class.active]="historyTab.isActive"
-          i18n
-        >
+      <a
+        [hidden]="!group.currentUserCanWatchMembers && !historyTab.isActive"
+        class="alg-nav-tab-item"
+        [routerLink]="'./history'"
+        routerLinkActive #historyTab="routerLinkActive"
+        [class.active]="historyTab.isActive"
+        i18n
+      >
           History
         </a>
-        <a
-          [hidden]="!(group | isCurrentUserManager) && !compositionTab?.isActive"
-          class="alg-nav-tab-item"
-          [routerLink]="'./members'"
-          routerLinkActive #compositionTab="routerLinkActive"
-          [class.active]="compositionTab.isActive"
-          i18n
-        >
+      <a
+        [hidden]="!(group | isCurrentUserManager) && !compositionTab?.isActive"
+        class="alg-nav-tab-item"
+        [routerLink]="'./members'"
+        routerLinkActive #compositionTab="routerLinkActive"
+        [class.active]="compositionTab.isActive"
+        i18n
+      >
           Composition
         </a>
-        <a
-          [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !adminTab?.isActive"
-          class="alg-nav-tab-item"
-          [routerLink]="'./managers'"
-          routerLinkActive #adminTab="routerLinkActive"
-          [class.active]="adminTab.isActive"
-          i18n
-        >
+      <a
+        [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !adminTab?.isActive"
+        class="alg-nav-tab-item"
+        [routerLink]="'./managers'"
+        routerLinkActive #adminTab="routerLinkActive"
+        [class.active]="adminTab.isActive"
+        i18n
+      >
           Managers
         </a>
-        <a
-          [hidden]="(hideAccessTab || !(group | canCurrentUserGrantGroupAccess)) && !accessTab?.isActive"
-          class="alg-nav-tab-item"
-          [routerLink]="'./access'"
-          routerLinkActive #accessTab="routerLinkActive"
-          [class.active]="accessTab.isActive"
-          i18n
-        >
+      <a
+        [hidden]="(hideAccessTab || !(group | canCurrentUserGrantGroupAccess)) && !accessTab?.isActive"
+        class="alg-nav-tab-item"
+        [routerLink]="'./access'"
+        routerLinkActive #accessTab="routerLinkActive"
+        [class.active]="accessTab.isActive"
+        i18n
+      >
           Access
         </a>
-        <a
-          [hidden]="!(group | canCurrentUserManageMembersAndGroup) && !settingsTab?.isActive"
-          class="alg-nav-tab-item"
-          [routerLink]="'./settings'"
-          routerLinkActive #settingsTab="routerLinkActive"
-          [class.active]="settingsTab.isActive"
-          i18n
-        >
+      <a
+        [hidden]="!(group | canCurrentUserManageMembersAndGroup) && !settingsTab?.isActive"
+        class="alg-nav-tab-item"
+        [routerLink]="'./settings'"
+        routerLinkActive #settingsTab="routerLinkActive"
+        [class.active]="settingsTab.isActive"
+        i18n
+      >
           Settings
         </a>
-      </div>
     </div>
-
+  </div>
+  @if (overviewTab?.isActive || !overviewTab && !(group | isCurrentUserManager) && !(group | isCurrentUserMember)) {
     <alg-group-overview
-      *ngIf="overviewTab?.isActive || !overviewTab && !(group | isCurrentUserManager) && !(group | isCurrentUserMember)"
       class="alg-flex-1"
       [group]="group"
       (groupRefreshRequired)="onGroupRefreshRequired()"
       (leftGroup)="refreshNav()"
     ></alg-group-overview>
-    @if (!!historyTab?.isActive) {
-      @if (group.currentUserCanWatchMembers) {
-        <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
-      } @else {
-        <alg-error class="alg-flex-1">
-          <ng-container i18n>
+  }
+  @if (!!historyTab?.isActive) {
+    @if (group.currentUserCanWatchMembers) {
+      <alg-group-log-view class="alg-flex-1" [groupId]="group.id"></alg-group-log-view>
+    } @else {
+      <alg-error class="alg-flex-1">
+        <ng-container i18n>
             You don't have permission to view this group's history.
-          </ng-container>
-        </alg-error>
-      }
+        </ng-container>
+      </alg-error>
     }
+  }
+  @if (!!compositionTab?.isActive) {
     <alg-group-composition
-      *ngIf="!!compositionTab?.isActive"
       class="alg-flex-1"
       [groupData]="state.data"
       (groupRefreshRequired)="onGroupRefreshRequired()"
       (addedGroup)="refreshNav()"
       (removedGroup)="refreshNav()"
     ></alg-group-composition>
-    <alg-group-managers *ngIf="!!adminTab?.isActive" class="alg-flex-1" [group]="group"></alg-group-managers>
-    <alg-group-access *ngIf="!!accessTab?.isActive" class="alg-flex-1" [group]="group"></alg-group-access>
-    <alg-group-edit *ngIf="!!settingsTab?.isActive" class="alg-flex-1" #groupEdit></alg-group-edit>
   }
-
-  <alg-loading class="alg-flex-1" *ngIf="state.isFetching && !state.data"></alg-loading>
-
+  @if (!!adminTab?.isActive) {
+    <alg-group-managers class="alg-flex-1" [group]="group"></alg-group-managers>
+  }
+  @if (!!accessTab?.isActive) {
+    <alg-group-access class="alg-flex-1" [group]="group"></alg-group-access>
+  }
+  @if (!!settingsTab?.isActive) {
+    <alg-group-edit class="alg-flex-1" #groupEdit></alg-group-edit>
+  }
+}
+@if (state.isFetching && !state.data) {
+  <alg-loading class="alg-flex-1"></alg-loading>
+}
+@if (state.isError) {
   <alg-error
-    *ngIf="state.isError"
     class="alg-flex-1"
     [showRefreshButton]="$any(state.error).status !== 403"
     (refresh)="onGroupRefreshRequired()"
   >
-    <ng-container *ngIf="$any(state.error).status === 403; else otherError;" i18n>
-      You are not allowed to view this group page.
-    </ng-container>
-    <ng-template #otherError>
+    @if ($any(state.error).status === 403) {
+      <ng-container i18n>
+        You are not allowed to view this group page.
+      </ng-container>
+    } @else {
       <ng-container i18n>Error while loading the group info</ng-container>
-    </ng-template>
+    }
   </alg-error>
-
-</ng-container>
+}
+}

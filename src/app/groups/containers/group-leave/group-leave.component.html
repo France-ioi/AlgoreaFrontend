@@ -1,15 +1,15 @@
-<ng-container *ngIf="group">
+@if (group) {
   <p>
-    <ng-container *ngIf="group.isMembershipLocked; else allow" i18n>
-      You are currently not allowed to leave this group.
-    </ng-container>
-    <ng-template #allow>
+    @if (group.isMembershipLocked) {
+      <ng-container i18n>
+        You are currently not allowed to leave this group.
+      </ng-container>
+    } @else {
       <ng-container i18n>
         You can freely leave this group. Note that you may lose access to content if this group was granting some permissions to its members.
       </ng-container>
-    </ng-template>
+    }
   </p>
-
   <div class="button">
     <button
       class="size-l"
@@ -20,4 +20,4 @@
       i18n
     >Leave this group</button>
   </div>
-</ng-container>
+}

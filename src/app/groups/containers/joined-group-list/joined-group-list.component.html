@@ -1,14 +1,14 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-error
-    *ngIf="state.isError"
-    class="dark"
-    icon="ph-duotone ph-warning-circle"
-    i18n-message message="Error while loading the group you joined"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="refresh()"
-  ></alg-error>
-
+@if (state$ | async; as state) {
+  @if (state.isError) {
+    <alg-error
+      class="dark"
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Error while loading the group you joined"
+      [showRefreshButton]="true"
+      refreshButtonType="refresh"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
   @if (!state.isError) {
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
@@ -34,97 +34,99 @@
 
           <!-- <th i18n>Can watch your activities</th> -->
           <!-- <td>
+          <span class="table-icon">
+            @if(membership.group.requireWatchApproval) {
+              <i class="ph ph-check"></i>
+            } @else {
+              <i class="ph ph-x"></i>
+            }
+          </span>
+        </td> -->
+
+        <ng-container cdkColumnDef="requirePersonalInfoAccessApproval">
+          <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Personal info access</th>
+          <td class="alg-table-td" cdk-cell *cdkCellDef="let membership">
             <span class="table-icon">
-              @if(membership.group.requireWatchApproval) {
-                <i class="ph ph-check"></i>
-              } @else {
-                <i class="ph ph-x"></i>
+              @switch(membership.group.requirePersonalInfoAccessApproval) {
+                @case('view') {
+                  <i class="ph ph-eye"></i>
+                }
+                @case('edit') {
+                  <i class="ph ph-pen"></i>
+                }
+                @default {
+                  <i class="ph ph-eye-slash"></i>
+                }
               }
             </span>
-          </td> -->
+          </td>
+        </ng-container>
 
-          <ng-container cdkColumnDef="requirePersonalInfoAccessApproval">
-            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Personal info access</th>
-            <td class="alg-table-td" cdk-cell *cdkCellDef="let membership">
-              <span class="table-icon">
-                @switch(membership.group.requirePersonalInfoAccessApproval) {
-                  @case('view') {
-                    <i class="ph ph-eye"></i>
-                  }
-                  @case('edit') {
-                    <i class="ph ph-pen"></i>
-                  }
-                  @default {
-                    <i class="ph ph-eye-slash"></i>
+        <ng-container cdkColumnDef="actions">
+          <th class="alg-table-th th-action" cdk-header-cell *cdkHeaderCellDef></th>
+          <td class="alg-table-td" cdk-cell *cdkCellDef="let membership">
+            <div class="actions">
+              @if (membership.isMembershipLocked || (membership.group.type === 'Team' && membership.canLeaveTeam !== 'free_to_leave')) {
+                @if (membership.group.type === 'Team') {
+                  @switch (membership.canLeaveTeam) {
+                    @case ('frozen_membership') {
+                      <div
+                        i18n-algTooltip algTooltip="This team membership is now frozen and cannot be modified."
+                        tooltipPosition="left"
+                        tooltipStyleClass="secondary"
+                        class="ph-duotone ph-lock"
+                      ></div>
+                    }
+                    @case ('would_break_entry_conditions') {
+                      <div
+                        i18n-algTooltip algTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
+                        tooltipPosition="left"
+                        tooltipStyleClass="secondary"
+                        class="ph-duotone ph-lock"
+                      ></div>
+                    }
+                    @default {
+                      <div class="ph-duotone ph-lock"></div>
+                    }
                   }
                 }
-              </span>
-            </td>
-          </ng-container>
-
-          <ng-container cdkColumnDef="actions">
-            <th class="alg-table-th th-action" cdk-header-cell *cdkHeaderCellDef></th>
-            <td class="alg-table-td" cdk-cell *cdkCellDef="let membership">
-              <div class="actions">
-                <ng-container *ngIf="membership.isMembershipLocked || (membership.group.type === 'Team' && membership.canLeaveTeam !== 'free_to_leave'); then cannotLeaveActions else canLeaveActions"></ng-container>
-                <ng-template #cannotLeaveActions>
-                  <ng-container *ngIf="membership.group.type === 'Team'" [ngSwitch]="membership.canLeaveTeam">
-                    <div
-                      *ngSwitchCase="'frozen_membership'"
-                      i18n-algTooltip algTooltip="This team membership is now frozen and cannot be modified."
-                      tooltipPosition="left"
-                      tooltipStyleClass="secondary"
-                      class="ph-duotone ph-lock"
-                    ></div>
-                    <div
-                      *ngSwitchCase="'would_break_entry_conditions'"
-                      i18n-algTooltip algTooltip="You cannot leave this team as it would break entry condition to some content your team participating to."
-                      tooltipPosition="left"
-                      tooltipStyleClass="secondary"
-                      class="ph-duotone ph-lock"
-                    ></div>
-                    <div *ngSwitchDefault class="ph-duotone ph-lock"></div>
-                  </ng-container>
-
-                  <ng-container *ngIf="membership.group.type !== 'Team'">
-                    <div
-                      i18n-algTooltip algTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
-                      tooltipPosition="left"
-                      tooltipStyleClass="secondary"
-                      class="ph-duotone ph-lock"
-                    ></div>
-                  </ng-container>
-                </ng-template>
-                <ng-template #canLeaveActions>
-                  <button
-                    i18n-algTooltip algTooltip="Leave the group"
+                @if (membership.group.type !== 'Team') {
+                  <div
+                    i18n-algTooltip algTooltip="You cannot leave the group for the moment. Contact the group manager for more information."
                     tooltipPosition="left"
                     tooltipStyleClass="secondary"
-                    type="button"
-                    icon="ph-duotone ph-sign-out"
-                    class="stroke size-l"
-                    (click)="onGroupLeaveClick(membership)"
-                    alg-button-icon
-                  ></button>
-                </ng-template>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr
-            class="alg-table-header-tr"
-            [ngClass]="{ 'alg-display-none': !state.isReady || state.data.length === 0 }"
-            cdk-header-row
-            *cdkHeaderRowDef="displayedColumns()"
-          ></tr>
-          <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
-          <tr class="alg-table-body-tr" *cdkNoDataRow>
-            <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
-              <p class="empty-message" i18n>This list is empty.</p>
-            </td>
-          </tr>
-        </table>
-      </div>
+                    class="ph-duotone ph-lock"
+                  ></div>
+                }
+              } @else {
+                <button
+                  i18n-algTooltip algTooltip="Leave the group"
+                  tooltipPosition="left"
+                  tooltipStyleClass="secondary"
+                  type="button"
+                  icon="ph-duotone ph-sign-out"
+                  class="stroke size-l"
+                  (click)="onGroupLeaveClick(membership)"
+                  alg-button-icon
+                ></button>
+              }
+            </div>
+          </td>
+        </ng-container>
+        <tr
+          class="alg-table-header-tr"
+          [ngClass]="{ 'alg-display-none': !state.isReady || state.data.length === 0 }"
+          cdk-header-row
+          *cdkHeaderRowDef="displayedColumns()"
+        ></tr>
+        <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
+        <tr class="alg-table-body-tr" *cdkNoDataRow>
+          <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
+            <p class="empty-message" i18n>This list is empty.</p>
+          </td>
+        </tr>
+      </table>
     </div>
-  }
-</ng-container>
+  </div>
+}
+}

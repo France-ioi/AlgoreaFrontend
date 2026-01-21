@@ -1,6 +1,6 @@
 import { Component, input, OnDestroy } from '@angular/core';
 import { GroupData } from '../../models/group-data';
-import { AsyncPipe, JsonPipe, NgIf } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -18,7 +18,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   templateUrl: './group-header.component.html',
   styleUrls: [ './group-header.component.scss' ],
   imports: [
-    NgIf,
     AsyncPipe,
     JsonPipe,
     LoadingComponent,

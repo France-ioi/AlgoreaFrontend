@@ -2,87 +2,99 @@
   Let users join using a code
 </h2>
 
-<alg-loading *ngIf="processing; else loadedSection"></alg-loading>
-
-<ng-template #loadedSection>
+@if (processing) {
+  <alg-loading></alg-loading>
+} @else {
   <p class="alg-text-secondary" i18n>Let users access this group using a password you send them.</p>
-
-  <ng-container *ngIf="codeInfo">
-    <p class="alg-text-small" *ngIf="codeInfo.hasCodeNotSet" i18n>There is currently no code set.</p>
-    <p class="alg-text-small" *ngIf="codeInfo.hasCodeUnused" i18n>This code has not been used yet (or usage resetted).</p>
-    <p class="alg-text-small" *ngIf="codeInfo.hasUnexpiringCode" i18n>This code can be used multiple times without expiring.</p>
-    <ng-container *ngIf="codeInfo.hasCodeInUse && codeInfo.durationSinceFirstCodeUse && codeInfo.durationBeforeCodeExpiration">
-      <p class="alg-text-small success" i18n *ngIf="codeInfo.durationSinceFirstCodeUse.ms > 0; else disabledUntil">
-        This code has been activated {{ codeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }} minutes ago,
-        it will be disabled in {{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
-      </p>
-      <ng-template #disabledUntil>
+  @if (codeInfo) {
+    @if (codeInfo.hasCodeNotSet) {
+      <p class="alg-text-small" i18n>There is currently no code set.</p>
+    }
+    @if (codeInfo.hasCodeUnused) {
+      <p class="alg-text-small" i18n>This code has not been used yet (or usage resetted).</p>
+    }
+    @if (codeInfo.hasUnexpiringCode) {
+      <p class="alg-text-small" i18n>This code can be used multiple times without expiring.</p>
+    }
+    @if (codeInfo.hasCodeInUse && codeInfo.durationSinceFirstCodeUse && codeInfo.durationBeforeCodeExpiration) {
+      @if (codeInfo.durationSinceFirstCodeUse.ms > 0) {
+        <p class="alg-text-small success" i18n>
+          This code has been activated {{ codeInfo.durationSinceFirstCodeUse | toMin | number:'1.0-0' }} minutes ago,
+          it will be disabled in {{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
+        </p>
+      } @else {
         <p class="alg-text-small success" i18n>
           This code will be disabled in {{ codeInfo.durationBeforeCodeExpiration | toMin | number:'1.0-0' }} minutes.
         </p>
-      </ng-template>
-    </ng-container>
-    <p class="alg-text-small failure" *ngIf="!codeInfo.hasCodeNotSet && codeInfo.hasCodeExpired" i18n>
-      This code has expired on {{ codeInfo.codeExpiration | date:'medium' }}
-    </p>
-    <button
-      class="size-l"
-      icon="ph-bold ph-plus"
-      (click)="generateNewCode()"
-      [disabled]="processing"
-      i18n
-      alg-button
-      *ngIf="codeInfo.hasCodeNotSet"
-    >Generate a code</button>
-  </ng-container>
-
-  <div *ngIf="group && group.code">
-    <div class="field">
-      <span class="field-name" i18n>Code</span>
-      <div class="field-value">
-        <alg-code-token
-          [code]="group.code"
-          [showRefresh]="true"
-          [showRemove]="true"
-          (refresh)="generateNewCode()"
-          (remove)="removeCode()"
-        ></alg-code-token>
+      }
+    }
+    @if (!codeInfo.hasCodeNotSet && codeInfo.hasCodeExpired) {
+      <p class="alg-text-small failure" i18n>
+        This code has expired on {{ codeInfo.codeExpiration | date:'medium' }}
+      </p>
+    }
+    @if (codeInfo.hasCodeNotSet) {
+      <button
+        class="size-l"
+        icon="ph-bold ph-plus"
+        (click)="generateNewCode()"
+        [disabled]="processing"
+        i18n
+        alg-button
+      >Generate a code</button>
+    }
+  }
+  @if (group && group.code) {
+    <div>
+      <div class="field">
+        <span class="field-name" i18n>Code</span>
+        <div class="field-value">
+          <alg-code-token
+            [code]="group.code"
+            [showRefresh]="true"
+            [showRemove]="true"
+            (refresh)="generateNewCode()"
+            (remove)="removeCode()"
+          ></alg-code-token>
+        </div>
       </div>
-    </div>
-    <div class="field align-top">
-      <span class="field-name field-validity" i18n>Validity</span>
-      <div class="field-value">
-        <alg-selection
-          [items]="codeLifetimeOptions"
-          [selected]="selectedCodeLifetimeOption"
-          (change)="changeCodeLifetime($event)"
-        ></alg-selection>
-
-        <div class="duration-form-group" *ngIf="selectedCodeLifetimeOption === customCodeLifetimeOption">
-          <alg-duration
-            class="alg-duration"
-            ngDefaultControl
-            layout="DHM"
-            [(ngModel)]="codeLifetimeControlValue"
-            #control="ngModel"
-            required
-          ></alg-duration>
-          <span
-            class="button-section"
-            [algTooltip]="durationTooltip"
-            tooltipPosition="right"
-          >
-            <button
-              data-testid="save-code-life-time-btn"
-              class="size-l stroke"
-              icon="ph-bold ph-check"
-              (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
-              [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
-              alg-button-icon
-            ></button>
-          </span>
+      <div class="field align-top">
+        <span class="field-name field-validity" i18n>Validity</span>
+        <div class="field-value">
+          <alg-selection
+            [items]="codeLifetimeOptions"
+            [selected]="selectedCodeLifetimeOption"
+            (change)="changeCodeLifetime($event)"
+          ></alg-selection>
+          @if (selectedCodeLifetimeOption === customCodeLifetimeOption) {
+            <div class="duration-form-group">
+              <alg-duration
+                class="alg-duration"
+                ngDefaultControl
+                layout="DHM"
+                [(ngModel)]="codeLifetimeControlValue"
+                #control="ngModel"
+                required
+              ></alg-duration>
+              <span
+                class="button-section"
+                [algTooltip]="durationTooltip"
+                tooltipPosition="right"
+              >
+                <button
+                  data-testid="save-code-life-time-btn"
+                  class="size-l stroke"
+                  icon="ph-bold ph-check"
+                  (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
+                  [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
+                  alg-button-icon
+                ></button>
+              </span>
+            </div>
+          }
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
+  }
+}
+

@@ -8,7 +8,7 @@ import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import {
@@ -33,12 +33,8 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   templateUrl: './joined-group-list.component.html',
   styleUrls: [ './joined-group-list.component.scss' ],
   imports: [
-    NgIf,
     ErrorComponent,
     RouterLink,
-    NgSwitch,
-    NgSwitchCase,
-    NgSwitchDefault,
     AsyncPipe,
     DatePipe,
     ButtonIconComponent,

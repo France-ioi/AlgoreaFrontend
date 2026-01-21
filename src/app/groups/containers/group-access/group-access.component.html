@@ -1,86 +1,82 @@
-<ng-container *ngIf="group?.currentUserCanGrantGroupAccess; else noAccess">
+@if (group?.currentUserCanGrantGroupAccess) {
   <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Activity associated to {{ group?.name }}</h2>
-  <ng-container *ngIf="rootActivityState$ | async as rootActivityState">
-    <div class="spinner" *ngIf="rootActivityState.isFetching">
-      <alg-loading size="medium"></alg-loading>
-    </div>
-
-    <alg-error
-      *ngIf="rootActivityState.isError"
-      icon="ph-duotone ph-warning-circle"
-      i18n-message message="Error while loading the root activity."
-      [showRefreshButton]="true"
-      refreshButtonType="refresh"
-      (refresh)="refresh()"
-    ></alg-error>
-
-    <ng-container *ngIf="rootActivityState.isReady">
-      <ng-container *ngIf="rootActivityState.data; else noActivity">
+  @if (rootActivityState$ | async; as rootActivityState) {
+    @if (rootActivityState.isFetching) {
+      <div class="spinner">
+        <alg-loading size="medium"></alg-loading>
+      </div>
+    }
+    @if (rootActivityState.isError) {
+      <alg-error
+        icon="ph-duotone ph-warning-circle"
+        i18n-message message="Error while loading the root activity."
+        [showRefreshButton]="true"
+        refreshButtonType="refresh"
+        (refresh)="refresh()"
+      ></alg-error>
+    }
+    @if (rootActivityState.isReady) {
+      @if (rootActivityState.data) {
         <div class="item">
           <div>
             <i class="icon ph-duotone ph-folder"></i>
             <strong><ng-container i18n>Root activity:</ng-container> {{ rootActivityState.data.string.title }}</strong>
           </div>
         </div>
-      </ng-container>
-
-      <ng-template #noActivity>
+      } @else {
         <div i18n>This group has no root activity.</div>
-      </ng-template>
-    </ng-container>
-  </ng-container>
-
+      }
+    }
+  }
   <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Specific permissions given to the group on content</h2>
-  <ng-container *ngIf="permissionState$ | async as permissionState">
-    <div class="spinner" *ngIf="permissionState.isFetching">
-      <alg-loading size="medium"></alg-loading>
-    </div>
-
-    <alg-error
-      *ngIf="permissionState.isError"
-      icon="ph-duotone ph-warning-circle"
-      i18n-message message="Error while loading permissions."
-      [showRefreshButton]="true"
-      refreshButtonType="refresh"
-      (refresh)="refreshPermissions()"
-    ></alg-error>
-
-    <ng-container *ngIf="permissionState.isReady">
-      <ng-container *ngIf="permissionState.data.length > 1; else noPermissions">
-        <div class="item" *ngFor="let grantedPermission of permissionState.data">
-        <div>
-          <i class="icon ph-duotone ph-folder"></i>
-          <strong>
-            {{ grantedPermission.item.title }}.
-          </strong>
-          <ng-container
-            *ngIf="grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id; else currentGroup">
-              <span i18n>Given by</span>
-              <a
-                class="alg-link"
-                [routerLink]="{ id: grantedPermission.sourceGroup.id, isUser: false } | groupLink"
-              >
-                {{ grantedPermission.sourceGroup.name }}
-              </a>
-          </ng-container>
-          <ng-template #currentGroup>
-            <span i18n>Given by this group</span>
-          </ng-template>
-        </div>
-        <alg-group-permissions [permissions]="grantedPermission.permissions"></alg-group-permissions>
+  @if (permissionState$ | async; as permissionState) {
+    @if (permissionState.isFetching) {
+      <div class="spinner">
+        <alg-loading size="medium"></alg-loading>
       </div>
-      </ng-container>
-
-      <ng-template #noPermissions>
+    }
+    @if (permissionState.isError) {
+      <alg-error
+        icon="ph-duotone ph-warning-circle"
+        i18n-message message="Error while loading permissions."
+        [showRefreshButton]="true"
+        refreshButtonType="refresh"
+        (refresh)="refreshPermissions()"
+      ></alg-error>
+    }
+    @if (permissionState.isReady) {
+      @if (permissionState.data.length > 1) {
+        @for (grantedPermission of permissionState.data; track grantedPermission) {
+          <div class="item">
+            <div>
+              <i class="icon ph-duotone ph-folder"></i>
+              <strong>
+                {{ grantedPermission.item.title }}.
+              </strong>
+              @if (grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id) {
+                <span i18n>Given by</span>
+                <a
+                  class="alg-link"
+                  [routerLink]="{ id: grantedPermission.sourceGroup.id, isUser: false } | groupLink"
+                >
+                  {{ grantedPermission.sourceGroup.name }}
+                </a>
+              } @else {
+                <span i18n>Given by this group</span>
+              }
+            </div>
+            <alg-group-permissions [permissions]="grantedPermission.permissions"></alg-group-permissions>
+          </div>
+        }
+      } @else {
         <div i18n>This group has no specific permissions.</div>
-      </ng-template>
-    </ng-container>
-  </ng-container>
-</ng-container>
-
-<ng-template #noAccess>
+      }
+    }
+  }
+} @else {
   <alg-error
     icon="ph-duotone ph-prohibit"
     i18n-message message="You are not allowed to manage permissions of this group."
   ></alg-error>
-</ng-template>
+}
+

@@ -1,28 +1,30 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-loading class="alg-flex-1" size="medium" *ngIf="state.isFetching && !state.data"></alg-loading>
-  <alg-error
-    *ngIf="state.isError"
-    class="alg-flex-1"
-    [class.dark]="$any(state).error.status !== 403"
-    [icon]="$any(state).error.status !== 403 ? 'ph-duotone ph-warning-circle' : undefined"
-    [showRefreshButton]="$any(state).error.status !== 403"
-    (refresh)="refresh()"
-  >
-    <span i18n *ngIf="$any(state).error.status === 403; else unknownError">
-      You are not allowed to see activities of this user.
-    </span>
-    <ng-template #unknownError>
-      <span i18n>Unable to load the recent activity</span>
-    </ng-template>
-  </alg-error>
-
-  <ng-container *ngIf="state.data">
+@if (state$ | async; as state) {
+  @if (state.isFetching && !state.data) {
+    <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="alg-flex-1"
+      [class.dark]="$any(state).error.status !== 403"
+      [icon]="$any(state).error.status !== 403 ? 'ph-duotone ph-warning-circle' : undefined"
+      [showRefreshButton]="$any(state).error.status !== 403"
+      (refresh)="refresh()"
+    >
+      @if ($any(state).error.status === 403) {
+        <span i18n>
+          You are not allowed to see activities of this user.
+        </span>
+      } @else {
+        <span i18n>Unable to load the recent activity</span>
+      }
+    </alg-error>
+  }
+  @if (state.data) {
     <div class="refresh-button">
       <button class="stroke size-s" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
         Refresh
       </button>
     </div>
-
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
         <table class="alg-table-v2" cdk-table [dataSource]="state.data">
@@ -31,29 +33,29 @@
             <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
               <div class="item-title-section">
                 <div class="item-title-section-left">
-                  <alg-score-ring
-                    [currentScore]="rowData.score"
-                    [diameter]="32"
-                    *ngIf="rowData.score; else iconSection"
-                  ></alg-score-ring>
-                  <ng-template #iconSection>
+                  @if (rowData.score) {
+                    <alg-score-ring
+                      [currentScore]="rowData.score"
+                      [diameter]="32"
+                    ></alg-score-ring>
+                  } @else {
                     <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
-                  </ng-template>
+                  }
                 </div>
                 <div class="item-title">
                   <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                  <a
-                    class="alg-link"
-                    [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url: ['task', 'editor']"
-                    *ngIf="rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId"
-                  >
-                    View answer
-                  </a>
+                  @if (rowData.allowToViewAnswer && [ 'submission', 'saved_answer' ].includes(rowData.activityType) && rowData.answerId) {
+                    <a
+                      class="alg-link"
+                      [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url: ['task', 'editor']"
+                    >
+                      View answer
+                    </a>
+                  }
                 </div>
               </div>
             </td>
           </ng-container>
-
           <ng-container cdkColumnDef="content">
             <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Content</th>
             <td
@@ -109,7 +111,6 @@
         </table>
       </div>
     </div>
-
     @if (datapager.canLoadMore$ | async) {
       <div class="alg-table-load-more">
         <button
@@ -122,5 +123,5 @@
         >Load more</button>
       </div>
     }
-  </ng-container>
-</ng-container>
+  }
+}

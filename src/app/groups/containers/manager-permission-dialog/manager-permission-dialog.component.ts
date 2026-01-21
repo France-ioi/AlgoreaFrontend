@@ -11,7 +11,6 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
-import { NgIf } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import { Observable, of } from 'rxjs';
@@ -34,7 +33,6 @@ export interface ManagerPermissionDialogResult {
   templateUrl: './manager-permission-dialog.component.html',
   styleUrls: [ './manager-permission-dialog.component.scss' ],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     CollapsibleSectionComponent,

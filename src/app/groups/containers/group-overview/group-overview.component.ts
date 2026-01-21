@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Group } from '../../models/group';
 import { Router } from '@angular/router';
 import { GroupLeaveComponent } from '../group-leave/group-leave.component';
-import { NgIf } from '@angular/common';
+
 import { IsCurrentUserMemberPipe } from '../../models/group-membership';
 
 @Component({
@@ -10,7 +10,6 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
   templateUrl: './group-overview.component.html',
   styleUrls: [ './group-overview.component.scss' ],
   imports: [
-    NgIf,
     GroupLeaveComponent,
     IsCurrentUserMemberPipe,
   ]

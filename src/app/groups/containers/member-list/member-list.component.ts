@@ -20,7 +20,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import {
@@ -91,12 +91,8 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
   styleUrls: [ './member-list.component.scss' ],
   imports: [
     GroupCompositionFilterComponent,
-    NgIf,
     ErrorComponent,
-    NgSwitch,
-    NgSwitchCase,
     RouterLink,
-    NgSwitchDefault,
     AsyncPipe,
     DatePipe,
     GroupLinkPipe,

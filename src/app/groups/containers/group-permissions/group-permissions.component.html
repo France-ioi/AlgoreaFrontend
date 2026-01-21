@@ -1,4 +1,4 @@
-<ng-container *ngIf="permissions">
+@if (permissions) {
   <ul class="captions">
     <li class="caption-item">
       <div class="caption">Can View: {{ permissions.canView | groupPermissionCaption }}</div>
@@ -13,4 +13,4 @@
       <div class="caption">Until: {{ permissions.canEnterUntil | date:'d/MM/y' }}</div>
     </li>
   </ul>
-</ng-container>
+}

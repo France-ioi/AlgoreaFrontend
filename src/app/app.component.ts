@@ -12,7 +12,7 @@ import { inject } from '@angular/core';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
-import { Location, NgIf, NgClass, AsyncPipe } from '@angular/common';
+import { Location, NgClass, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
@@ -40,7 +40,6 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
   templateUrl: './app.component.html',
   styleUrls: [ './app.component.scss' ],
   imports: [
-    NgIf,
     NgClass,
     LeftMenuComponent,
     LetDirective,

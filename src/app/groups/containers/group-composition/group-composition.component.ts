@@ -11,7 +11,7 @@ import { AddSubGroupComponent } from '../add-sub-group/add-sub-group.component';
 import { GroupNoPermissionComponent } from '../group-no-permission/group-no-permission.component';
 import { GroupInviteUsersComponent } from '../group-invite-users/group-invite-users.component';
 import { GroupJoinByCodeComponent } from '../group-join-by-code/group-join-by-code.component';
-import { NgIf } from '@angular/common';
+
 import { IsCurrentUserManagerPipe, CanCurrentUserManageMembersPipe } from '../../models/group-management';
 
 export interface GroupChildData {
@@ -25,7 +25,6 @@ export interface GroupChildData {
   templateUrl: './group-composition.component.html',
   styleUrls: [ './group-composition.component.scss' ],
   imports: [
-    NgIf,
     MemberListComponent,
     AddSubGroupComponent,
     GroupJoinByCodeComponent,

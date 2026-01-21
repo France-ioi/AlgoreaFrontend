@@ -21,7 +21,7 @@ import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.compo
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
@@ -42,7 +42,6 @@ import {
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ],
   imports: [
-    NgIf,
     LoadingComponent,
     ErrorComponent,
     FormsModule,

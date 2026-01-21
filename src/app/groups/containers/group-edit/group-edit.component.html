@@ -1,94 +1,93 @@
-<ng-container *ngIf="state$ | async as state">
-  <alg-loading *ngIf="state.isFetching"></alg-loading>
-
-  <alg-error
-    *ngIf="state.isError"
-    class="dark"
-    i18n-message message="Error while loading the group"
-    [showRefreshButton]="true"
-    refreshButtonType="refresh"
-    (refresh)="refreshGroup()"
-  ></alg-error>
-
-  <ng-container *ngIf="state.isReady">
-    <form [formGroup]="groupForm" *ngIf="(state.data | isCurrentUserManager) && (state.data | canCurrentUserManageMembersAndGroup); else notAuthorized">
-      <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Group information</h2>
-      <div class="field">
-        <div class="field-name" i18n>
-          Name
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      class="dark"
+      i18n-message message="Error while loading the group"
+      [showRefreshButton]="true"
+      refreshButtonType="refresh"
+      (refresh)="refreshGroup()"
+    ></alg-error>
+  }
+  @if (state.isReady) {
+    @if ((state.data | isCurrentUserManager) && (state.data | canCurrentUserManageMembersAndGroup)) {
+      <form [formGroup]="groupForm">
+        <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Group information</h2>
+        <div class="field">
+          <div class="field-name" i18n>
+            Name
+          </div>
+          <div class="field-value">
+            <alg-input [parentForm]="groupForm" name="name"></alg-input>
+          </div>
         </div>
-        <div class="field-value">
-          <alg-input [parentForm]="groupForm" name="name"></alg-input>
+        <div class="field">
+          <div class="field-name" i18n>
+            Description
+          </div>
+          <div class="field-value">
+            <alg-textarea [parentForm]="groupForm" inputName="description"></alg-textarea>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="field-name" i18n>
-          Description
+        <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Required approvals</h2>
+        <alg-message-info icon="ph-duotone ph-info" i18n>
+          If you enable some of the rules below, users joining the group will have to approve them first.
+        </alg-message-info>
+        <div class="field">
+          <div class="field-name" i18n>
+            Lock membership until a given date
+          </div>
+          <div class="field-value datepicker-value">
+            <alg-switch
+              data-testid="switch-require-lock-until-enabled"
+              formControlName="requireLockMembershipApprovalUntilEnabled"
+              (change)="onRequireLockMembershipApprovalUntilEnabledChange($event)"
+            ></alg-switch>
+            @if (!!groupForm.get('requireLockMembershipApprovalUntilEnabled')?.value) {
+              <div class="datepicker">
+                <alg-input-date
+                  formControlName="requireLockMembershipApprovalUntil"
+                  [minDate]="minLockMembershipApprovalUntilDate"
+                ></alg-input-date>
+              </div>
+            }
+          </div>
         </div>
-        <div class="field-value">
-          <alg-textarea [parentForm]="groupForm" inputName="description"></alg-textarea>
+        <div class="field">
+          <div class="field-name" i18n>
+            Managers can access member's personal information
+          </div>
+          <div class="field-value">
+            <alg-selection formControlName="requirePersonalInfoAccessApproval" [items]="approvalOptions"></alg-selection>
+          </div>
         </div>
-      </div>
-      <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Required approvals</h2>
-      <alg-message-info icon="ph-duotone ph-info" i18n>
-        If you enable some of the rules below, users joining the group will have to approve them first.
-      </alg-message-info>
-      <div class="field">
-        <div class="field-name" i18n>
-          Lock membership until a given date
-        </div>
-        <div class="field-value datepicker-value">
-          <alg-switch
-            data-testid="switch-require-lock-until-enabled"
-            formControlName="requireLockMembershipApprovalUntilEnabled"
-            (change)="onRequireLockMembershipApprovalUntilEnabledChange($event)"
-          ></alg-switch>
-          @if (!!groupForm.get('requireLockMembershipApprovalUntilEnabled')?.value) {
-            <div class="datepicker">
-              <alg-input-date
-                formControlName="requireLockMembershipApprovalUntil"
-                [minDate]="minLockMembershipApprovalUntilDate"
-              ></alg-input-date>
-            </div>
-          }
-        </div>
-      </div>
-      <div class="field">
-        <div class="field-name" i18n>
-          Managers can access member's personal information
-        </div>
-        <div class="field-value">
-          <alg-selection formControlName="requirePersonalInfoAccessApproval" [items]="approvalOptions"></alg-selection>
-        </div>
-      </div>
-
-      <alg-associated-item
-        [group]="state.data"
-        formControlName="rootActivity"
-        contentType="activity"
-      ></alg-associated-item>
-      <alg-associated-item
-        [group]="state.data"
-        formControlName="rootSkill"
-        contentType="skill"
-      ></alg-associated-item>
-
-      <alg-group-remove-button
-        class="remove-button-section"
-        [group]="state.data"
-        (groupDeleted)="refreshNav()"
-      ></alg-group-remove-button>
-    </form>
-
-    <alg-floating-save
-      *ngIf="groupForm.dirty"
-      [saving]="groupForm.disabled"
-      (save)="save()"
-      (cancel)="resetForm()"
-    ></alg-floating-save>
-
-    <ng-template #notAuthorized>
+        <alg-associated-item
+          [group]="state.data"
+          formControlName="rootActivity"
+          contentType="activity"
+        ></alg-associated-item>
+        <alg-associated-item
+          [group]="state.data"
+          formControlName="rootSkill"
+          contentType="skill"
+        ></alg-associated-item>
+        <alg-group-remove-button
+          class="remove-button-section"
+          [group]="state.data"
+          (groupDeleted)="refreshNav()"
+        ></alg-group-remove-button>
+      </form>
+    } @else {
       <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
-    </ng-template>
-  </ng-container>
-</ng-container>
+    }
+    @if (groupForm.dirty) {
+      <alg-floating-save
+        [saving]="groupForm.disabled"
+        (save)="save()"
+        (cancel)="resetForm()"
+      ></alg-floating-save>
+    }
+  }
+}

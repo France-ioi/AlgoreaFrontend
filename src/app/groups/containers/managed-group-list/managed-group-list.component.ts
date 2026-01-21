@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { GroupManagershipLevel, groupManagershipLevelEnum as l } from '../../models/group-management';
 import {
   CdkCell,
@@ -24,7 +24,6 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   templateUrl: './managed-group-list.component.html',
   styleUrls: [ './managed-group-list.component.scss' ],
   imports: [
-    NgIf,
     ErrorComponent,
     RouterLink,
     NgClass,
