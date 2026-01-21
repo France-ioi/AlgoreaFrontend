@@ -18,7 +18,7 @@ import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -59,7 +59,6 @@ const logsLimit = 20;
     ScoreRingComponent,
     NgClass,
     AsyncPipe,
-    DatePipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     LoadAnswerAsCurrentDirective,

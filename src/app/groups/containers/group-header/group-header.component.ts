@@ -1,12 +1,10 @@
 import { Component, input, OnDestroy } from '@angular/core';
 import { GroupData } from '../../models/group-data';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { RouterLink } from '@angular/router';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
@@ -19,9 +17,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   styleUrls: [ './group-header.component.scss' ],
   imports: [
     AsyncPipe,
-    JsonPipe,
-    LoadingComponent,
-    ErrorComponent,
     RouterLink,
     ItemRoutePipe,
     RouteUrlPipe,

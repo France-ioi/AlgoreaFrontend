@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { myGroupsInfo } from 'src/app/models/content/group-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { JoinedGroupListComponent } from '../joined-group-list/joined-group-list.component';
-import { AddGroupComponent } from '../add-group/add-group.component';
-import { ManagedGroupListComponent } from '../managed-group-list/managed-group-list.component';
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
 import { UserGroupInvitationsComponent } from '../user-group-invitations/user-group-invitations.component';
 import { delay } from 'rxjs/operators';
@@ -23,8 +21,6 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
     UserGroupInvitationsComponent,
     JoinedGroupListComponent,
     AccessCodeViewComponent,
-    ManagedGroupListComponent,
-    AddGroupComponent,
     AsyncPipe,
     ErrorComponent
   ]

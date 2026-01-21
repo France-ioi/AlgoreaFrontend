@@ -5,7 +5,6 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguagePickerComponent } from 'src/app/containers/language-picker/language-picker.component';
 import { AsyncPipe } from '@angular/common';
-import { SelectComponent } from 'src/app/ui-components/select/select.component';
 
 @Component({
   selector: 'alg-platform-settings',
@@ -14,7 +13,6 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
   imports: [
     LanguagePickerComponent,
     AsyncPipe,
-    SelectComponent,
   ]
 })
 export class PlatformSettingsComponent {

@@ -7,7 +7,6 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Group } from '../../models/group';
 
@@ -15,7 +14,7 @@ import { Group } from '../../models/group';
   selector: 'alg-group-manager-add',
   templateUrl: './group-manager-add.component.html',
   styleUrls: [ './group-manager-add.component.scss' ],
-  imports: [ SectionParagraphComponent, FormsModule, ButtonComponent ]
+  imports: [ FormsModule, ButtonComponent ]
 })
 export class GroupManagerAddComponent {
 

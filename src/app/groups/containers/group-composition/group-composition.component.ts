@@ -12,7 +12,7 @@ import { GroupNoPermissionComponent } from '../group-no-permission/group-no-perm
 import { GroupInviteUsersComponent } from '../group-invite-users/group-invite-users.component';
 import { GroupJoinByCodeComponent } from '../group-join-by-code/group-join-by-code.component';
 
-import { IsCurrentUserManagerPipe, CanCurrentUserManageMembersPipe } from '../../models/group-management';
+import { IsCurrentUserManagerPipe } from '../../models/group-management';
 
 export interface GroupChildData {
   id?: string,
@@ -31,7 +31,6 @@ export interface GroupChildData {
     GroupInviteUsersComponent,
     GroupNoPermissionComponent,
     IsCurrentUserManagerPipe,
-    CanCurrentUserManageMembersPipe,
   ]
 })
 export class GroupCompositionComponent {

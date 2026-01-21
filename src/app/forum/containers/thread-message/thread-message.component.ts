@@ -6,7 +6,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouterLink } from '@angular/router';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
-import { NgClass, NgTemplateOutlet, DatePipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { BreakLinesPipe } from '../../../pipes/breakLines';
 import { ThreadId } from '../../models/threads';
 import {
@@ -27,7 +27,6 @@ import { RelativeTimePipe } from '../../../pipes/relativeTime';
     NgTemplateOutlet,
     ScoreRingComponent,
     RouterLink,
-    DatePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
     AllowDisplayCodeSnippet,
