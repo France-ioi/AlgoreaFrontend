@@ -6,10 +6,9 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ProcessGroupInvitationService } from '../../data-access/process-group-invitation.service';
-import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import {
   JoinGroupConfirmationDialogComponent, JoinGroupConfirmationDialogResult,
@@ -41,9 +40,7 @@ import { Dialog } from '@angular/cdk/dialog';
     LoadingComponent,
     ErrorComponent,
     DatePipe,
-    UserCaptionPipe,
     AsyncPipe,
-    NgClass,
     ButtonIconComponent,
     CdkTable,
     CdkCell,

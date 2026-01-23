@@ -12,7 +12,6 @@ import { PathSuggestionComponent } from '../../containers/path-suggestion/path-s
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 export interface AddedContent<T> {
   id?: string,
@@ -45,7 +44,6 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     ShowOverlayDirective,
     ShowOverlayHoverTargetDirective,
     ButtonComponent,
-    TooltipDirective,
   ]
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {

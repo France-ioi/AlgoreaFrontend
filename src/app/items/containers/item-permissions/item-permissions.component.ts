@@ -18,7 +18,6 @@ import {
 } from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
-import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { I18nSelectPipe, NgClass } from '@angular/common';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
@@ -36,7 +35,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   templateUrl: './item-permissions.component.html',
   styleUrls: [ './item-permissions.component.scss' ],
   imports: [
-    SectionParagraphComponent,
     SectionHeaderComponent,
     ProgressSelectComponent,
     FormsModule,

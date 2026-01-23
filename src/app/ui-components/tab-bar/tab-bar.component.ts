@@ -11,18 +11,17 @@ import {
 import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
-  imports: [ LetDirective, AsyncPipe, NgClass, RouterLink, NgScrollbar, ButtonComponent, ButtonIconComponent ]
+  imports: [ LetDirective, NgClass, RouterLink, NgScrollbar, ButtonIconComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;

@@ -14,7 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { CodeTokenComponent } from 'src/app/ui-components/code-token/code-token.component';
-import { SectionParagraphComponent } from 'src/app/ui-components/section-paragraph/section-paragraph.component';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { LoadingComponent } from '../../../ui-components/loading/loading.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -26,7 +25,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   templateUrl: './group-join-by-code.component.html',
   styleUrls: [ './group-join-by-code.component.scss' ],
   imports: [
-    SectionParagraphComponent,
     CodeTokenComponent,
     SelectionComponent,
     DurationComponent,

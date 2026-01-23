@@ -7,7 +7,6 @@ import { SkillProgressComponent } from 'src/app/ui-components/skill-progress/ski
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
 
 @Component({
@@ -22,7 +21,6 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
-    ErrorComponent,
     EmptyContentComponent,
   ]
 })
