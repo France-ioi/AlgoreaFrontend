@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -6,9 +6,9 @@
 }
 
 .member-list-table {
-  margin-top: toRem(20);
+  margin-top: functions.toRem(20);
 }
 
 .alg-table-footer-checkbox {
-  margin-left: toRem(8.8);
+  margin-left: functions.toRem(8.8);
 }

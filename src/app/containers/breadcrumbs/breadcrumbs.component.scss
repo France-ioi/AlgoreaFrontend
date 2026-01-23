@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   max-width: 100%;
@@ -33,11 +33,11 @@
   }
 
   &.separator {
-    margin: 0 toRem(8) 0 toRem(12);
+    margin: 0 functions.toRem(8) 0 functions.toRem(12);
 
     .separator-icon {
       color: var(--alg-primary-color);
-      font-size: toRem(12);
+      font-size: functions.toRem(12);
     }
   }
 
@@ -48,7 +48,7 @@
 
   .label {
     padding: 0;
-    font-size: toRem(12);
+    font-size: functions.toRem(12);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

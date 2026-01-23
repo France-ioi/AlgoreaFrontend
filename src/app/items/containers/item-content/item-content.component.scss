@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -27,8 +27,8 @@
 .description, .html-container {
   margin: 0 0 var(--alg-space-size-4) 0;
   font-weight: 300;
-  line-height: toRem(24);
-  max-width: toRem(920);
+  line-height: functions.toRem(24);
+  max-width: functions.toRem(920);
 }
 
 .task-loader {
@@ -48,7 +48,7 @@
 }
 
 .no-access-message-icon-container {
-  padding-bottom: toRem(15);
+  padding-bottom: functions.toRem(15);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -59,21 +59,21 @@
 .no-access-message-icon {
   position: relative;
   color: var(--alg-primary-color);
-  font-size: toRem(144);
+  font-size: functions.toRem(144);
   z-index: 2;
 }
 
 .no-access-message-icon-bg {
   position: absolute;
   bottom: 0;
-  width: toRem(174);
-  height: toRem(57);
+  width: functions.toRem(174);
+  height: functions.toRem(57);
   background-color: rgb(238, 238, 238);
   border-radius: 50%;
   z-index: 1;
 }
 
 .no-access-message-text {
-  margin-top: toRem(10);
+  margin-top: functions.toRem(10);
   text-align: center;
 }

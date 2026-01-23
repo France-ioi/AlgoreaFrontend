@@ -1,11 +1,11 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .section-chapter-wrapper {
   padding: 0;
 }
 
 .add-item-container {
-  margin-top: toRem(16);
+  margin-top: functions.toRem(16);
 }
 
 .reorder-handle {
@@ -14,12 +14,12 @@
 
 .main {
   flex: 1;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .type {
   color: var(--alg-secondary-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .score-weight-container {
@@ -41,10 +41,10 @@
   display: flex;
   flex-direction: column;
   background-color: var(--alg-primary-color);
-  border-radius: toRem(10);
+  border-radius: functions.toRem(10);
   border: none;
   overflow: hidden;
-  box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 toRem(6) toRem(10) 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
 }

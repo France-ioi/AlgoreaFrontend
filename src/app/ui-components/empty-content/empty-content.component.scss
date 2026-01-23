@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: block;
@@ -11,7 +11,7 @@
 }
 
 .icon-container {
-  margin-left: toRem(14);
+  margin-left: functions.toRem(14);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -22,15 +22,15 @@
 .icon {
   position: relative;
   color: var(--alg-primary-color);
-  font-size: toRem(49);
+  font-size: functions.toRem(49);
   z-index: 3;
 }
 
 .icon-bg-overlay {
   position: absolute;
-  bottom: toRem(10);
-  width: toRem(40);
-  height: toRem(28.5);
+  bottom: functions.toRem(10);
+  width: functions.toRem(40);
+  height: functions.toRem(28.5);
   background-color: #fff;
   z-index: 2;
 }
@@ -38,15 +38,15 @@
 .icon-bg {
   position: absolute;
   bottom: 0;
-  width: toRem(70);
-  height: toRem(28.5);
+  width: functions.toRem(70);
+  height: functions.toRem(28.5);
   background-color: rgb(238, 238, 238);
   border-radius: 50%;
   z-index: 1;
 }
 
 .message {
-  margin-top: toRem(7);
-  margin-left: toRem(34);
+  margin-top: functions.toRem(7);
+  margin-left: functions.toRem(34);
   color: var(--alg-secondary-color);
 }

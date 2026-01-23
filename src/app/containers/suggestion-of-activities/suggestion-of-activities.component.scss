@@ -1,7 +1,7 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .list {
-  margin: toRem(6);
+  margin: functions.toRem(6);
   padding: 0;
   list-style-type: none;
   overflow: hidden;
@@ -13,10 +13,10 @@
 }
 
 .item-link {
-  padding: toRem(5);
-  border-radius: toRem(8);
+  padding: functions.toRem(5);
+  border-radius: functions.toRem(8);
   color: var(--alg-white-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
   font-weight: 500;
   overflow: hidden;
   white-space: nowrap;
@@ -28,8 +28,8 @@
 }
 
 .empty-list {
-  padding: 0 toRem(16);
-  font-size: toRem(12);
+  padding: 0 functions.toRem(16);
+  font-size: functions.toRem(12);
   color: var(--alg-white-color);
 }
 
@@ -37,5 +37,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: toRem(40);
+  height: functions.toRem(40);
 }

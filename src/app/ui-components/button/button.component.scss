@@ -1,14 +1,14 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  height: toRem(32);
-  padding: 0 toRem(18);
-  font-size: toRem(12);
+  height: functions.toRem(32);
+  padding: 0 functions.toRem(18);
+  font-size: functions.toRem(12);
   text-decoration: none;
-  border-radius: toRem(20);
+  border-radius: functions.toRem(20);
   border: none;
   cursor: pointer;
   background: none;
@@ -21,37 +21,37 @@
   }
 
   &.size-xs {
-    padding: 0 toRem(8);
-    height: toRem(20);
-    font-size: toRem(12);
-    border-radius: toRem(12);
+    padding: 0 functions.toRem(8);
+    height: functions.toRem(20);
+    font-size: functions.toRem(12);
+    border-radius: functions.toRem(12);
     font-weight: 500;
 
     &:has(.icon) {
-      padding: 0 toRem(7) 0 toRem(15);
+      padding: 0 functions.toRem(7) 0 functions.toRem(15);
     }
   }
 
   &.size-s {
-    height: toRem(24);
-    font-size: toRem(12);
-    border-radius: toRem(12);
+    height: functions.toRem(24);
+    font-size: functions.toRem(12);
+    border-radius: functions.toRem(12);
 
     &:has(.icon) {
-      padding: 0 toRem(7) 0 toRem(15);
+      padding: 0 functions.toRem(7) 0 functions.toRem(15);
     }
   }
 
   &.size-l {
-    height: toRem(40);
-    font-size: toRem(16);
-    border-radius: toRem(20);
+    height: functions.toRem(40);
+    font-size: functions.toRem(16);
+    border-radius: functions.toRem(20);
   }
 
   &.width-full {
     width: 100%;
-    padding-left: toRem(4);
-    padding-right: toRem(4);
+    padding-left: functions.toRem(4);
+    padding-right: functions.toRem(4);
   }
 
   &:not(.stroke) {
@@ -60,7 +60,7 @@
   }
 
   &.stroke {
-    border: toRem(1) solid var(--alg-border-color);
+    border: functions.toRem(1) solid var(--alg-border-color);
 
     .icon {
       color: var(--alg-primary-color);
@@ -81,7 +81,7 @@
 
   &.secondary {
     color: var(--alg-secondary-color);
-    border: toRem(1) solid var(--alg-border-color);
+    border: functions.toRem(1) solid var(--alg-border-color);
     background: var(--alg-white-color);
 
     .icon {
@@ -90,13 +90,13 @@
   }
 
   &.success {
-    border: toRem(1) solid var(--alg-success-color);
+    border: functions.toRem(1) solid var(--alg-success-color);
     background: var(--alg-success-color);
   }
 
   &.accent-dark:not(.only-caption) {
     color: var(--alg-white-color);
-    border: toRem(1) solid var(--alg-accent-dark-color);
+    border: functions.toRem(1) solid var(--alg-accent-dark-color);
     background: var(--alg-accent-dark-color);
 
     .icon {
@@ -114,12 +114,12 @@
   }
 
   &.danger {
-    border: toRem(1) solid var(--alg-message-error-color);
+    border: functions.toRem(1) solid var(--alg-message-error-color);
     background: var(--alg-message-error-color);
   }
 
   &.light-border {
-    border: toRem(1) solid var(--alg-white-color);
+    border: functions.toRem(1) solid var(--alg-white-color);
 
     &.with-hover-eff {
       &:hover {
@@ -133,8 +133,8 @@
     border-color: #0000000d;
 
     .icon {
-      font-size: toRem(24);
-      margin-right: toRem(7.5);
+      font-size: functions.toRem(24);
+      margin-right: functions.toRem(7.5);
     }
 
     &.selected {
@@ -143,9 +143,9 @@
   }
 
   &.select-button {
-    padding-left: toRem(9) !important;
-    padding-right: toRem(5) !important;
-    border: toRem(1) solid var(--alg-light-color);
+    padding-left: functions.toRem(9) !important;
+    padding-right: functions.toRem(5) !important;
+    border: functions.toRem(1) solid var(--alg-light-color);
   }
 
   &.select-form-button {
@@ -163,16 +163,16 @@
   }
 
   &.neighbor-nav {
-    padding-left: toRem(12);
-    padding-right: toRem(7);
+    padding-left: functions.toRem(12);
+    padding-right: functions.toRem(7);
 
     .icon {
-      font-size: toRem(18);
+      font-size: functions.toRem(18);
     }
   }
 
   &.no-caption {
-    padding: 0 toRem(12);
+    padding: 0 functions.toRem(12);
 
     &:not(&.stroke) {
       background-color: transparent;
@@ -216,7 +216,7 @@
 }
 
 .icon {
-  margin-left: toRem(7);
+  margin-left: functions.toRem(7);
   color: var(--alg-white-color);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }

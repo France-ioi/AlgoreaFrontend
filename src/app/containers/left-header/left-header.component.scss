@@ -1,8 +1,8 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   position: relative;
-  height: toRem(57);
+  height: functions.toRem(57);
   padding: 0 var(--alg-space-size-3);
   display: flex;
   justify-content: space-between;
@@ -19,11 +19,11 @@
     flex-direction: row-reverse;
 
     .link {
-      margin-left: toRem(14);
+      margin-left: functions.toRem(14);
     }
 
     .logo {
-      max-height: toRem(32);
+      max-height: functions.toRem(32);
     }
   }
 }
@@ -31,17 +31,17 @@
 .link {
   display: inline-flex;
   align-items: center;
-  margin-right: toRem(14);
+  margin-right: functions.toRem(14);
 }
 
 .platform-name {
   color: var(--alg-primary-color);
   text-transform: uppercase;
   text-decoration: none;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
 }
 
 .logo {
   max-width: 80%;
-  max-height: toRem(38);
+  max-height: functions.toRem(38);
 }

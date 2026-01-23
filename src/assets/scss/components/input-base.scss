@@ -1,29 +1,29 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 @mixin input-base {
   width: 100%;
-  height: toRem(40);
+  height: functions.toRem(40);
   display: flex;
-  padding: 0 toRem(16);
+  padding: 0 functions.toRem(16);
   background-color: var(--alg-light-color);
   border: none;
   border-radius: var(--border-radius);
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   color: var(--alg-secondary-color);
 
   &.size-s {
-    height: toRem(24);
-    padding: 0 toRem(8);
+    height: functions.toRem(24);
+    padding: 0 functions.toRem(8);
   }
 
   &:focus {
-    outline: toRem(2) solid var(--alg-primary-color);
+    outline: functions.toRem(2) solid var(--alg-primary-color);
     box-shadow: none;
   }
 
   &::placeholder {
     color: var(--alg-secondary-color);
-    font-size: toRem(16);
+    font-size: functions.toRem(16);
     font-style: italic;
     opacity: .5;
   }

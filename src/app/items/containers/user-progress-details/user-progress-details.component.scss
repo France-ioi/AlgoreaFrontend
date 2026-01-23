@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   padding: var(--alg-space-size-5);
@@ -11,18 +11,18 @@
 }
 
 .label {
-  margin-right: toRem(4);
-  font-size: toRem(14);
+  margin-right: functions.toRem(4);
+  font-size: functions.toRem(14);
   color: var(--alg-secondary-color);
 }
 
 .value {
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
 }
 
 .icon {
-  margin-right: toRem(4);
-  font-size: toRem(18);
+  margin-right: functions.toRem(4);
+  font-size: functions.toRem(18);
   color: var(--alg-secondary-color);
 }
 
@@ -33,8 +33,8 @@
 }
 
 .not-started {
-  min-width: toRem(140);
+  min-width: functions.toRem(140);
   display: flex;
   justify-content: center;
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
 }

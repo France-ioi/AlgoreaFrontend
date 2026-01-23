@@ -1,5 +1,5 @@
-@import 'src/assets/scss/components/input-base';
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/components/input-base';
+@use 'src/assets/scss/functions';
 
 .alg-calendar {
   .p-datepicker-trigger {
@@ -13,7 +13,7 @@
   }
 
   .p-inputtext {
-    @include input-base;
+    @include input-base.input-base;
 
     &:focus {
       box-shadow: none;

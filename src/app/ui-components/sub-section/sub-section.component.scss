@@ -1,6 +1,7 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
-@import 'src/typography.scss';
+@use 'src/variables';
+@use 'src/geometry.scss';
+@use 'src/typography.scss';
+@use 'src/assets/scss/functions';
 
 :host {
   display: block;
@@ -19,7 +20,7 @@
 
 .section-title {
   color: var(--alg-secondary-color);
-  font-size: toRem(24);
+  font-size: functions.toRem(24);
   font-weight: 400;
   flex: 1;
 }
@@ -47,5 +48,5 @@
 }
 
 .section-content {
-  margin-top: toRem(20);
+  margin-top: functions.toRem(20);
 }

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .container {
   display: flex;
@@ -6,9 +6,9 @@
   flex-direction: column;
   justify-content: center;
   color: var(--alg-secondary-color);
-  border-radius: toRem(8);
+  border-radius: functions.toRem(8);
   background-color: var(--alg-primary-light-color);
-  min-height: toRem(40);
+  min-height: functions.toRem(40);
   overflow-x: scroll;
   white-space: nowrap;
 }

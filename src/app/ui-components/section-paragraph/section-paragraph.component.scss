@@ -1,16 +1,16 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
-@import 'src/typography.scss';
+@use 'src/variables';
+@use 'src/geometry.scss';
+@use 'src/typography.scss';
 
 @mixin section-format($bk-color, $handle-color, $handle-border-color) {
   border-bottom: .1rem solid var(--light-border-color);
   background-color: $bk-color;
-  border-radius: $border-radius;
+  border-radius: geometry.$border-radius;
   margin-top: 0;
   margin-bottom: 3rem;
 
   .section-header {
-    @include section-header;
+    @include geometry.section-header;
 
     &.show-cursor {
       cursor: pointer;
@@ -18,7 +18,7 @@
     }
 
     .section-handler {
-      @include section-handler($handle-color,$handle-border-color);
+      @include geometry.section-handler($handle-color,$handle-border-color);
 
       // i {
       //   color: white;
@@ -51,7 +51,7 @@
       }
 
       .section-title {
-        @include h2-title;
+        @include typography.h2-title;
         flex: 1;
       }
 

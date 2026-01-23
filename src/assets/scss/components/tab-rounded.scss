@@ -1,5 +1,5 @@
-@import '../../../variables';
-@import 'src/geometry.scss';
+@use '../../../variables';
+@use 'src/geometry.scss';
 
 .tab-rounded {
   display: flex;

@@ -1,10 +1,10 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   position: relative;
   display: inline-block;
-  width: toRem(48);
-  height: toRem(24);
+  width: functions.toRem(48);
+  height: functions.toRem(24);
 }
 
 .input-element {
@@ -23,15 +23,15 @@
   background-color: var(--alg-switch-input-bg);
   -webkit-transition: .2s;
   transition: .2s;
-  border-radius: toRem(24);
+  border-radius: functions.toRem(24);
 
   &:before {
     position: absolute;
     content: "";
-    height: toRem(18);
-    width: toRem(18);
-    left: toRem(4);
-    bottom: toRem(3);
+    height: functions.toRem(18);
+    width: functions.toRem(18);
+    left: functions.toRem(4);
+    bottom: functions.toRem(3);
     background-color: var(--alg-white-color);
     -webkit-transition: .2s;
     transition: .2s;
@@ -43,18 +43,18 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 toRem(2) var(--alg-primary-color);
+  box-shadow: 0 0 functions.toRem(2) var(--alg-primary-color);
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(toRem(22));
-  -ms-transform: translateX(toRem(22));
-  transform: translateX(toRem(22));
+  -webkit-transform: translateX(functions.toRem(22));
+  -ms-transform: translateX(functions.toRem(22));
+  transform: translateX(functions.toRem(22));
 }
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: toRem(24);
+  border-radius: functions.toRem(24);
 }
 
 .slider {

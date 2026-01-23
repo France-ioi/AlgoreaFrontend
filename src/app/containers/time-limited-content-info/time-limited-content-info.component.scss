@@ -1,12 +1,12 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .wrapper {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0 toRem(16);
-  height: toRem(32);
-  border-radius: toRem(20);
+  padding: 0 functions.toRem(16);
+  height: functions.toRem(32);
+  border-radius: functions.toRem(20);
   background-color: #ffcb30;
 }
 
@@ -17,6 +17,6 @@
 }
 
 .title {
-  margin: 0 toRem(16);
-  font-size: toRem(12);
+  margin: 0 functions.toRem(16);
+  font-size: functions.toRem(12);
 }

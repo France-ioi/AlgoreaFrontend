@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .user-header-container {
   padding: var(--alg-space-size-3) 0;
@@ -21,7 +21,7 @@
 }
 
 .user-subtitle {
-  margin-top: toRem(16);
+  margin-top: functions.toRem(16);
 }
 
 .user-subtitle-icon {

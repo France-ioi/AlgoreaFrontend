@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .margin-right {
   margin-right: var(--alg-space-size-6);
@@ -11,5 +11,5 @@
 
 .empty-message {
   text-align: left;
-  margin-left: toRem(16);
+  margin-left: functions.toRem(16);
 }

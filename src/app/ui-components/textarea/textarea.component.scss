@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: block;
@@ -7,11 +7,11 @@
 
 .textarea-element {
   width: 100%;
-  padding: toRem(16);
+  padding: functions.toRem(16);
   background-color: var(--alg-light-color);
   border-radius: var(--border-radius);
   border: none;
-  font-size: toRem(16);
+  font-size: functions.toRem(16);
   color: var(--alg-secondary-color);
   resize: none;
   box-sizing: border-box;
@@ -22,13 +22,13 @@
   }
 
   &:focus, &:active {
-    outline: toRem(2) solid var(--alg-primary-color);
+    outline: functions.toRem(2) solid var(--alg-primary-color);
     box-shadow: none;
   }
 
   &::placeholder {
     color: var(--alg-secondary-color);
-    font-size: toRem(16);
+    font-size: functions.toRem(16);
     font-style: italic;
     opacity: .5;
   }

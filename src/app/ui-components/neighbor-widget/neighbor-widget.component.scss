@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .neighbor-widget {
   display: flex;
@@ -18,7 +18,7 @@
         color: var(--alg-border-light-color);
 
         @media screen and (max-width: 599.98px) {
-          margin: 0 toRem(2);
+          margin: 0 functions.toRem(2);
         }
       }
     }
@@ -26,8 +26,8 @@
 }
 
 .right-margin {
-  margin-right: toRem(12);
+  margin-right: functions.toRem(12);
 }
 .left-margin {
-  margin-left: toRem(12);
+  margin-left: functions.toRem(12);
 }

@@ -1,12 +1,12 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .alg-messages {
   .p-message {
-    border-radius: toRem(10);
+    border-radius: functions.toRem(10);
     color: var(--alg-white-color);
 
     .p-message-wrapper {
-      padding: toRem(8) toRem(16);
+      padding: functions.toRem(8) functions.toRem(16);
     }
 
     &.p-message-success  {

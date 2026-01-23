@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: flex;
@@ -13,7 +13,7 @@
   justify-content: center;
   align-items: center;
   list-style-type: none;
-  border-radius: toRem(20);
+  border-radius: functions.toRem(20);
   overflow: hidden;
   background-color: var(--alg-light-color);
 }
@@ -24,12 +24,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: toRem(40);
+  height: functions.toRem(40);
   cursor: pointer;
 
   &.active {
     background-color: var(--alg-primary-color);
-    border-radius: toRem(20);
+    border-radius: functions.toRem(20);
 
     .label {
       color: var(--alg-light-color);
@@ -41,7 +41,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: toRem(1);
+    width: functions.toRem(1);
     height: 100%;
     background: rgb(255, 255, 255);
     background: -moz-linear-gradient(0, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
@@ -54,6 +54,6 @@
 .label {
   color: var(--alg-secondary-color);
   text-align: center;
-  line-height: toRem(14);
-  font-size: toRem(16);
+  line-height: functions.toRem(14);
+  font-size: functions.toRem(16);
 }

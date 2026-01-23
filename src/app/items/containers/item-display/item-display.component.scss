@@ -1,5 +1,5 @@
-@import 'src/variables';
-@import 'src/geometry.scss';
+@use 'src/variables';
+@use 'src/geometry.scss';
 
 :host {
   flex: 1;
@@ -41,7 +41,7 @@
   margin-top: 5rem;
   padding: 0.5rem 2rem;
   background: var(--base-bk-color);
-  border-radius: $border-radius;
+  border-radius: geometry.$border-radius;
   font-size: 1.25em;
   display: inline-flex;
   align-items: center;

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 .widget {
   display: block;
@@ -28,13 +28,13 @@
 
 .widget-scroll {
   display: block;
-  padding: toRem(16) toRem(6);
+  padding: functions.toRem(16) functions.toRem(6);
   overflow-y: auto;
 }
 
 .thread-message {
   display: block;
-  margin-top: toRem(8);
+  margin-top: functions.toRem(8);
 
   &:first-child {
     margin-top: 0;
@@ -42,7 +42,7 @@
 }
 
 .footer-panel {
-  margin: toRem(22) toRem(6) 0 toRem(6);
+  margin: functions.toRem(22) functions.toRem(6) 0 functions.toRem(6);
   display: flex;
   flex-direction: column;
 }
@@ -52,12 +52,12 @@
   justify-content: flex-start;
   align-items: center;
   background-color: rgba(0, 0, 0, .05);
-  border-radius: toRem(8);
-  padding: toRem(12) toRem(12) toRem(12) toRem(16);
+  border-radius: functions.toRem(8);
+  padding: functions.toRem(12) functions.toRem(12) functions.toRem(12) functions.toRem(16);
 }
 
 .thread-status {
-  margin-top: toRem(8);
+  margin-top: functions.toRem(8);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -87,32 +87,32 @@
 }
 
 .no-messages {
-  padding: 0 toRem(6);
+  padding: 0 functions.toRem(6);
   color: var(--alg-secondary-color);
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
   text-align: center;
 }
 
 .user-indicator-container {
   width: 100%;
   position: absolute;
-  top: toRem(8);
+  top: functions.toRem(8);
   z-index: 999;
 }
 
 .user-indicator {
-  margin: 0 toRem(16);
-  padding: 0 toRem(16);
-  height: toRem(32);
+  margin: 0 functions.toRem(16);
+  padding: 0 functions.toRem(16);
+  height: functions.toRem(32);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border-radius: toRem(20);
+  border-radius: functions.toRem(20);
   background-color: var(--alg-observation-button-bg-color);
   color: var(--alg-secondary-color);
-  font-size: toRem(12);
+  font-size: functions.toRem(12);
 }
 
 .user-indicator-link {
-  margin-left: toRem(4);
+  margin-left: functions.toRem(4);
 }

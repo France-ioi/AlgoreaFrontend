@@ -1,4 +1,4 @@
-@import 'src/assets/scss/components/input-base';
+@use 'src/assets/scss/components/input-base';
 
 .input-container {
   display: flex;
@@ -9,5 +9,5 @@
 }
 
 .input-element {
-  @include input-base;
+  @include input-base.input-base;
 }

@@ -1,4 +1,4 @@
-@import 'src/assets/scss/functions';
+@use 'src/assets/scss/functions';
 
 :host {
   display: block;
@@ -15,5 +15,5 @@
 
 .error-note {
   margin-bottom: 0;
-  font-size: toRem(14);
+  font-size: functions.toRem(14);
 }
