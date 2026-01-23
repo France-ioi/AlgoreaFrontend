@@ -63,7 +63,7 @@ export class LeftNavTreeComponent {
 
   updateNodesEffect = effect(() => {
     this.nodes.set(this.mapItemToNodes(this.data()).map(n => ({ ...n, inL1: true })));
-  }, { allowSignalWrites: true });
+  });
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
