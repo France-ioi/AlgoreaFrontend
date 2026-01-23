@@ -144,7 +144,7 @@
             Note that some members or sub-groups of this group may have obtained additional access rights on this {itemData.item.type, select, Skill {skill} other {activity}}.
           </div>
         }
-        @if (itemData?.item?.permissions) {
+        @if (itemData.item.permissions) {
           <span
             class="give-access-button"
             [algTooltip]="lockEdit | i18nSelect : lockEditTooltipCaptions"

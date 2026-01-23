@@ -22,7 +22,7 @@
         </div>
       }
     </div>
-    @for (item of values; track trackByFn; let idx = $index) {
+    @for (item of values; track idx; let idx = $index) {
       <div
         class="progress-select-item"
         [algTooltip]="item.tooltip?.join('\n') || ''"
