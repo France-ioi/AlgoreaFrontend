@@ -7,7 +7,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { forumThreadListActions, itemPageActions, threadPanelActions } from './current-thread.actions';
 import { areSameThreads } from '../../models/threads';
 import { Store } from '@ngrx/store';
-import { fromForum } from '..';
+import { fromForum } from '../forum.feature';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { APPCONFIG } from 'src/app/config';
 

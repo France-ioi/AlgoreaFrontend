@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { filter, map, switchMap } from 'rxjs';
 import { ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { Store } from '@ngrx/store';
-import { fromForum } from '..';
+import { fromForum } from '../forum.feature';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { eventFetchingActions } from './event-fetching.actions';
 import { convertActivityLogsToThreadEvents, convertThreadMessageToThreadEvents } from '../../models/thread-events-conversions';

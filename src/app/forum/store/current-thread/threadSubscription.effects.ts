@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, merge, filter, switchMap, EMPTY } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { areSameThreads } from '../../models/threads';
-import { fromForum } from '..';
+import { fromForum } from '../forum.feature';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';

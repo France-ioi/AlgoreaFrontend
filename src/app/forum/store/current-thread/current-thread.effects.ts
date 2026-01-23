@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { EMPTY, tap, withLatestFrom } from 'rxjs';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { Store } from '@ngrx/store';
-import { fromForum } from '..';
+import { fromForum } from '../forum.feature';
 import { areSameThreads } from '../../models/threads';
 import { APPCONFIG } from 'src/app/config';
 
