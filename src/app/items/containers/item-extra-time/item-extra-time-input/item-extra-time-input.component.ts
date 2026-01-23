@@ -24,7 +24,7 @@ export class ItemExtraTimeInputComponent {
   constructor() {
     effect(() => {
       this.value.set(this.initialValue());
-    }, { allowSignalWrites: true });
+    });
   }
 
   onSave(): void {
