@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { PossiblyInvisibleChildData } from '../../containers/item-children-edit/item-children-edit.component';
+import { PossiblyInvisibleChildData } from 'src/app/items/models/item-children-edit';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { PreviewHtmlComponent } from 'src/app/containers/preview-html/preview-html.component';
 

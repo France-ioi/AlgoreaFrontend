@@ -1,5 +1,5 @@
 import { Component, computed, EventEmitter, inject, Input, OnChanges, Output, signal } from '@angular/core';
-import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
+import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from 'src/app/items/models/item-children-edit';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';

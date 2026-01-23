@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, Input, output } from '@angular/core';
-import { PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
+import { PossiblyInvisibleChildData } from 'src/app/items/models/item-children-edit';
 import { AllowsGrantingViewItemPipe, AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';

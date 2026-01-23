@@ -1,11 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ItemData } from '../../models/item-data';
-import {
-  ChildDataWithId,
-  hasId,
-  ItemChildrenEditComponent,
-  PossiblyInvisibleChildData
-} from '../item-children-edit/item-children-edit.component';
+import { ItemChildrenEditComponent } from '../item-children-edit/item-children-edit.component';
 import { forkJoin, Observable, of } from 'rxjs';
 import { CreateItemService, NewItem } from 'src/app/data-access/create-item.service';
 import { map, switchMap } from 'rxjs/operators';
@@ -21,6 +16,7 @@ import { NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from '../../store';
 import { LocaleService } from 'src/app/services/localeService';
+import { ChildDataWithId, hasId, PossiblyInvisibleChildData } from 'src/app/items/models/item-children-edit';
 
 @Component({
   selector: 'alg-item-children-edit-form',

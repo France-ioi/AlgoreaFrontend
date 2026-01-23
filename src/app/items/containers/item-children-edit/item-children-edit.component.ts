@@ -1,49 +1,17 @@
-import { Component, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, share, switchMap } from 'rxjs/operators';
-import { isASkill, ItemType, ItemTypeCategory, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
+import { isASkill, ItemTypeCategory, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
-import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemChildrenEditListComponent } from '../item-children-edit-list/item-children-edit-list.component';
 import { AsyncPipe } from '@angular/common';
-import { ItemPermPropagations } from 'src/app/items/models/item-perm-propagation';
-
-type BaseChildData = Partial<ItemPermPropagations> & {
-  scoreWeight: number,
-  permissions?: ItemCorePerm,
-  type: ItemType,
-};
-interface InvisibleChildData extends BaseChildData {
-  id: string,
-  isVisible: false,
-}
-interface ChildData extends BaseChildData {
-  id?: string,
-  isVisible: true,
-  title: string | null,
-  url?: string,
-  result?: {
-    attemptId: string,
-    validated: boolean,
-    score: number,
-  },
-}
-
-export type PossiblyInvisibleChildData = ChildData | InvisibleChildData;
-
-export type ChildDataWithId = InvisibleChildData | (ChildData & { id: string });
-
-export function hasId(child: PossiblyInvisibleChildData): child is ChildDataWithId {
-  return !!child.id;
-}
-
-export const DEFAULT_SCORE_WEIGHT = 1;
+import { BaseChildData, PossiblyInvisibleChildData } from 'src/app/items/models/item-children-edit';
 
 @Component({
   selector: 'alg-item-children-edit',
