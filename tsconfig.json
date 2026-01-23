@@ -46,6 +46,7 @@
     "extendedDiagnostics": {
       "checks": {
         "unusedStandaloneImports": "error",
+        "optionalChainNotNullable": "error",
       },
     },
   }
