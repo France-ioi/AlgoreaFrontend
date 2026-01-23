@@ -5,7 +5,7 @@ import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { groupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
-import { Answer } from '../../services/item-task.service';
+import { Answer } from 'src/app/items/models/answers';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';

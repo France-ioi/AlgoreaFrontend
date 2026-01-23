@@ -16,12 +16,10 @@ import {
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/utils/duration';
 import { AnswerTokenService } from '../data-access/answer-token.service';
-import { AnswerService } from '../data-access/answer.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GradeService, UnlockedItems } from '../data-access/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
-import { Answer } from './item-task.service';
-import { areStateAnswerEqual } from '../models/answers';
+import { Answer, areStateAnswerEqual } from '../models/answers';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 
@@ -136,7 +134,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   constructor(
     private taskInitService: ItemTaskInitService,
     private currentAnswerService: CurrentAnswerService,
-    private answerService: AnswerService,
     private answerTokenService: AnswerTokenService,
     private gradeService: GradeService,
   ) {}

@@ -6,14 +6,11 @@ import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tre
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { AskHintService } from '../data-access/ask-hint.service';
-import { Answer as GetAnswerType } from '../data-access/get-answer.service';
 import { Task, TaskPlatform } from '../api/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
-
-export type Answer =
-  Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'|'participantId'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
+import { Answer } from 'src/app/items/models/answers';
 
 export interface TaskConfig {
   readOnly: boolean,

@@ -21,8 +21,7 @@ import { GetAnswerService } from '../data-access/get-answer.service';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { loadAnswerAsCurrentFromNavigationState } from 'src/app/models/routing/item-navigation-state';
-import { areStateAnswerEqual } from '../models/answers';
-import { Answer } from './item-task.service';
+import { Answer, areStateAnswerEqual } from '../models/answers';
 import { AnswerService } from '../data-access/answer.service';
 
 type Strategy =

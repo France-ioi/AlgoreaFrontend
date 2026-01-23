@@ -17,7 +17,7 @@ import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
-import { Answer } from './item-task.service';
+import { Answer } from 'src/app/items/models/answers';
 import { TaskToken, TaskTokenService } from '../data-access/task-token.service';
 
 const taskChannelIdPrefix = 'task-';
