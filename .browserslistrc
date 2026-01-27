@@ -9,4 +9,16 @@
 last 2 versions
 Firefox ESR
 not dead
-not IE 9-11 # For IE 9-11 support, remove 'not'.
+not IE 9-11
+
+# Browsers that require ES5 output (not supported by Angular CLI)
+not kaios > 0
+not op_mini all
+
+# Browsers outside Angular's browser support
+not and_qq > 0
+not and_uc > 0
+not op_mob > 0
+not android > 0
+not opera > 0
+not samsung > 0
