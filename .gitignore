@@ -66,3 +66,8 @@ Thumbs.db
 
 # secrets
 .e2e.env
+
+# Local Cursor configuration (user-specific, not committed)
+.cursor/features/*
+.cursor/plans/*
+.cursor/rules/local.mdc
