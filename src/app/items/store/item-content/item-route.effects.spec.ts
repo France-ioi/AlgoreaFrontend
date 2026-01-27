@@ -8,6 +8,9 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { TestScheduler } from 'rxjs/testing';
 import { errorState, fetchingState } from 'src/app/utils/state';
 import { itemRouteErrorHandlingActions } from './item-content.actions';
+import { TestBed } from '@angular/core/testing';
+import { provideEffects } from '@ngrx/effects';
+import { configEffects } from 'src/app/store/config';
 
 describe('routeParamParsingEffect', () => {
   const mockError = new Error('mock service error');
@@ -27,6 +30,14 @@ describe('routeParamParsingEffect', () => {
 
   beforeEach(() => {
     itemRouterSpy.navigateTo.calls.reset();
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [
+        provideEffects(
+          configEffects,
+        ),
+      ]
+    });
   });
 
   it('does not emit action when there is no error', done => {
