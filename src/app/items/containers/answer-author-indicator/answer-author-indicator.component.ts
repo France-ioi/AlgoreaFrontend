@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, input, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
@@ -23,8 +23,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'alg-answer-author-indicator[answer]',
+  selector: 'alg-answer-author-indicator',
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
   imports: [
@@ -44,7 +43,7 @@ import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-naviga
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 
-  @Input() answer!: Answer;
+  answer = input.required<Answer>();
   @Input() itemData?: ItemData;
 
   answer$ = new ReplaySubject<Answer>(1);
@@ -70,7 +69,7 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.answer) this.answer$.next(this.answer);
+    if (changes.answer) this.answer$.next(this.answer());
   }
 
   ngOnDestroy(): void {
