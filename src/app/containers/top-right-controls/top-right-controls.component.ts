@@ -3,6 +3,7 @@ import { delay } from 'rxjs/operators';
 import { UserSessionService } from '../../services/user-session.service';
 import { LocaleService } from '../../services/localeService';
 import { LanguagePickerComponent } from '../language-picker/language-picker.component';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 import { TopRightMenuComponent } from '../top-right-menu/top-right-menu.component';
 import { NgClass } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
@@ -12,7 +13,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-top-right-controls',
   templateUrl: './top-right-controls.component.html',
   styleUrls: [ './top-right-controls.component.scss' ],
-  imports: [ LetDirective, NgClass, TopRightMenuComponent, LanguagePickerComponent, ButtonIconComponent ]
+  imports: [ LetDirective, NgClass, TopRightMenuComponent, LanguagePickerComponent, ButtonIconComponent, NotificationBellComponent ]
 })
 export class TopRightControlsComponent{
 

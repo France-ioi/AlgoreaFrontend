@@ -94,8 +94,10 @@ module.exports = {
         {
           group: [
             '**/store/*',
+            '!@ngrx/store/testing',
             '!**/utils/store/**',
             '!**/store/config',
+            '!**/store/notification',
             '!**/store/observation',
             '!**/store/time-offset',
             '!**/store/router',
