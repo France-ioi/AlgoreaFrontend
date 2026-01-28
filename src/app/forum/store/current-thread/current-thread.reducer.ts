@@ -6,6 +6,7 @@ import { State, initialState } from './current-thread.store';
 import { forumThreadListActions, itemPageActions, threadPanelActions, topBarActions } from './current-thread.actions';
 import { eventFetchingActions } from './event-fetching.actions';
 import { websocketIncomingMessageActions } from './websocket-incoming-message.actions';
+import { mergeSubmissionEvent } from '../../models/thread-events-conversions';
 
 const reducer = createReducer(
   initialState,
@@ -13,6 +14,13 @@ const reducer = createReducer(
   on(websocketIncomingMessageActions.forumMessageReceived, (state, { threadId, message }): State => ({
     ...state,
     wsEvents: state.id && areSameThreads(state.id, threadId) ? [ ...state.wsEvents, message ] : state.wsEvents,
+  })),
+
+  on(websocketIncomingMessageActions.forumSubmissionReceived, (state, { threadId, submission }): State => ({
+    ...state,
+    wsEvents: state.id && areSameThreads(state.id, threadId)
+      ? mergeSubmissionEvent(state.wsEvents, submission)
+      : state.wsEvents,
   })),
 
   on(eventFetchingActions.logEventsFetchStateChanged, (state, { fetchState }): State => ({
