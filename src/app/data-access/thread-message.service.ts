@@ -6,6 +6,7 @@ import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { assertSuccess, SimpleActionResponse } from './action-response';
+import { ItemId, ParticipantId } from '../models/ids';
 
 const messageSchema = z.object({
   time: z.number().transform(val => new Date(val)),
@@ -23,20 +24,28 @@ export class ThreadMessageService {
 
   constructor(private http: HttpClient) {}
 
-  create(message: { text: string, uuid: string }, options: { authToken: string }): Observable<void> {
+  create(
+    itemId: ItemId,
+    participantId: ParticipantId,
+    message: { text: string, uuid: string },
+    options: { authToken: string },
+  ): Observable<void> {
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const headers = { Authorization: `Bearer ${options.authToken}` };
 
     return this.http
-      .post<SimpleActionResponse>(`${this.config.slsApiUrl}/forum/message`, message, { headers })
+      .post<SimpleActionResponse>(`${this.config.slsApiUrl}/forum/thread/${itemId}/${participantId}/messages`, message, { headers })
       .pipe(
         map(assertSuccess),
       );
   }
 
-  getAll(options: { authToken: string, limit?: number, from?: Date }): Observable<ThreadMessage[]> {
-    // thread id is deduce from the token
+  getAll(
+    itemId: ItemId,
+    participantId: ParticipantId,
+    options: { authToken: string, limit?: number, from?: Date },
+  ): Observable<ThreadMessage[]> {
     let params = new HttpParams();
     if (options?.limit) params = params.set('limit', options.limit);
     if (options?.from) params = params.set('from', options.from.valueOf());
@@ -44,7 +53,7 @@ export class ThreadMessageService {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const headers = { Authorization: `Bearer ${options.authToken}` };
 
-    return this.http.get<unknown>(`${this.config.slsApiUrl}/forum/message`, { params, headers }).pipe(
+    return this.http.get<unknown>(`${this.config.slsApiUrl}/forum/thread/${itemId}/${participantId}/messages`, { params, headers }).pipe(
       decodeSnakeCase(z.array(messageSchema)),
     );
   }

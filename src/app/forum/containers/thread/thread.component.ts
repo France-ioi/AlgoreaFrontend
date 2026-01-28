@@ -258,7 +258,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       switchMap(() => this.store.select(fromForum.selectThreadToken)),
       filter(isNotUndefined),
       take(1),
-      switchMap(token => this.threadMessageService.create({ text: messageToSend, uuid }, { authToken: token })),
+      switchMap(token =>
+        this.threadMessageService.create(threadId.itemId, threadId.participantId, { text: messageToSend, uuid }, { authToken: token })
+      ),
       switchMap(() => this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })),
     ).subscribe({
       next: () => {
