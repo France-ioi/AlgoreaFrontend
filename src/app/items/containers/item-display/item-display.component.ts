@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   inject,
+  input,
   Input,
   OnChanges,
   OnDestroy,
@@ -64,8 +65,7 @@ export interface TaskTab {
 const heightSyncInterval = 0.2*SECONDS;
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'alg-item-display[url][route]',
+  selector: 'alg-item-display',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
@@ -80,8 +80,8 @@ const heightSyncInterval = 0.2*SECONDS;
   ]
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
-  @Input() route!: FullItemRoute;
-  @Input() url!: string;
+  route = input.required<FullItemRoute>();
+  url = input.required<string>();
   @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
   @Input() attemptId?: string;
   @Input() view?: TaskTab['view'];
@@ -209,7 +209,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
         else this.actionFeedbackService.error($localize`Unable to get linked page information. If the problem persists, contact us.`);
       }
       if (state.isReady) {
-        const breadcrumbs = closestBreadcrumbs(this.route.path, state.data.breadcrumbs); // choose the closest, TODO: ask the user instead
+        const breadcrumbs = closestBreadcrumbs(this.route().path, state.data.breadcrumbs); // choose the closest, TODO: ask the user instead
         const lastElement = breadcrumbs.pop();
         if (!lastElement) throw new Error('unexpected: get all breadcrumbs services are expected to return non-empty breadcrumbs');
         const route = itemRoute(typeCategoryOfItem(lastElement), lastElement.id, { path: breadcrumbs.map(b => b.id) });
@@ -247,7 +247,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.taskConfig || changes.attemptId) this.taskService.configure(this.route, this.url, this.attemptId, this.taskConfig);
+    if (changes.taskConfig || changes.attemptId) this.taskService.configure(this.route(), this.url(), this.attemptId, this.taskConfig);
     if (changes.view) this.taskService.showView(this.view ?? 'task');
     if (
       changes.route &&
