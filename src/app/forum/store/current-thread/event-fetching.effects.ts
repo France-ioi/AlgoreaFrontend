@@ -31,7 +31,7 @@ export const slsEventFetchingEffect = createEffect(
     threadMessageService = inject(ThreadMessageService),
   ) => store$.select(fromForum.selectInfo).pipe(
     readyData(),
-    switchMap(thread => threadMessageService.getAll(thread.itemId, thread.participantId,{ authToken: thread.token, limit: 11 }).pipe(
+    switchMap(thread => threadMessageService.getAll(thread.itemId, thread.participantId, { authToken: thread.token, limit: 11 }).pipe(
       map(convertThreadMessageToThreadEvents),
       mapToFetchState(),
     )),
