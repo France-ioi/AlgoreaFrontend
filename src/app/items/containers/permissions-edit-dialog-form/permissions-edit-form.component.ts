@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../models/permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from 'src/app/data-access/group-permissions.service';
@@ -23,8 +23,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 const canEnterWarningMessage = $localize`As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.`;
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'alg-permissions-edit-form[giverPermissions]',
+  selector: 'alg-permissions-edit-form',
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
   imports: [
@@ -41,7 +40,7 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   @Input() permissions?: GroupPermissions;
   @Input() computedPermissions?: GroupComputedPermissions;
-  @Input() giverPermissions!: ItemCorePerm;
+  giverPermissions = input.required<ItemCorePerm>();
   @Input() targetType: TypeFilter = 'Users';
   @Input() acceptButtonDisabled = false;
   @Input() requiresExplicitEntry = false;
@@ -76,7 +75,7 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   ).subscribe(() => {
     if (this.permissions) {
       const receiverPermissions = this.form.value as GroupPermissions & { canEnter: CanEnterValue | null };
-      this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions);
+      this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions());
 
       if (this.computedPermissions) {
         this.permissionsDialogData = withComputePermissions(
@@ -106,7 +105,7 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.targetTypeString = getTargetTypeString(this.targetType);
     if ((changes.permissions || changes.giverPermissions) && this.permissions) {
-      this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions, this.targetType));
+      this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions(), this.targetType));
       this.form.updateValueAndValidity();
       this.form.reset({
         ...this.permissions,
