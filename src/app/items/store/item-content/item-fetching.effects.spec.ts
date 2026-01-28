@@ -10,6 +10,9 @@ import { FullItemRoute, itemRoute } from 'src/app/models/routing/item-route';
 import { Result } from '../../models/attempts';
 import { ResultFetchingService } from '../../services/result-fetching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
+import { TestBed } from '@angular/core/testing';
+import { provideEffects } from '@ngrx/effects';
+import { configEffects } from 'src/app/store/config';
 
 const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
@@ -19,6 +22,17 @@ const userSessionServiceMock = { userChanged$: EMPTY, userProfile$: EMPTY } as u
 
 describe('itemFetchingEffect', () => {
   const mockItem = 'mockItem' as unknown as Item;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [
+        provideEffects(
+          configEffects,
+        ),
+      ]
+    });
+  });
 
   it('does not refetch if we come back to the same item after a non-item page', done => {
     const getItemServiceSpy = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
