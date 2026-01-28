@@ -52,6 +52,7 @@ Groups are accessed via `/groups/by-id/:id` or `/groups/users/:id`.
 Root Store
 ├── config          # Application configuration
 ├── navigation      # Current/selected content state
+├── notification    # User notifications from SLS API
 ├── router          # Router state (via @ngrx/router-store)
 └── time-offset     # Server time synchronization
 
@@ -75,6 +76,20 @@ feature/store/
 ```
 
 Stores are exported via `fromFeature` namespace (e.g., `fromItemContent`, `fromGroupContent`).
+
+### FetchState Pattern
+
+Async state uses `FetchState<T>` from `src/app/utils/state.ts`:
+
+```typescript
+type FetchState<T> = Ready<T> | Fetching<T> | FetchError;
+```
+
+- `fetchingState()` - loading state, `isFetching: true`
+- `readyState(data)` - success state, `isReady: true`, `data: T`
+- `errorState(error)` - error state, `isError: true`
+
+Use `mapToFetchState()` operator in effects to handle the full fetch lifecycle.
 
 ## Data Flow
 
@@ -100,10 +115,18 @@ Component -> Action -> Effect -> API Service -> Effect -> Action -> Reducer -> S
 
 ### Interceptors
 
-- `authentication.interceptor.ts`: Adds auth tokens to requests
+- `authentication.interceptor.ts`: Adds auth tokens to requests (only for `apiUrl`)
 - `time_offset.interceptor.ts`: Handles server time synchronization
 - `timeout.interceptor.ts`: Request timeout handling
 - `with_credentials.interceptor.ts`: Cookie-based auth support
+
+### SLS API
+
+The SLS (serverless) API is separate from the main backend API:
+- Configured via `slsApiUrl` in config
+- Auth interceptor does NOT handle SLS requests
+- Use `IdentityTokenService.identityToken$` to get the bearer token manually
+- Example: notifications, websocket connections
 
 ## Routing
 
