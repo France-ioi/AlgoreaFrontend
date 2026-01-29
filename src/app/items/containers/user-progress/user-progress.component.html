@@ -5,7 +5,7 @@
 >
   @if (state !== 'success' && state !== 'not-started') {
     <alg-score-ring
-      [currentScore]="userProgress.score"
+      [currentScore]="userProgress().score"
       [diameter]="32"
       [scoreFillColor]="'#FFF'"
     ></alg-score-ring>
