@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
@@ -16,7 +16,6 @@ import {
 } from 'rxjs/operators';
 import { SECONDS } from 'src/app/utils/duration';
 import { AnswerTokenService } from '../data-access/answer-token.service';
-import { AnswerService } from '../data-access/answer.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { GradeService, UnlockedItems } from '../data-access/grade.service';
 import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
@@ -32,6 +31,11 @@ type RunningItemTaskConfig = ItemTaskConfig & { attemptId: string };
 
 @Injectable()
 export class ItemTaskAnswerService implements OnDestroy {
+  private taskInitService = inject(ItemTaskInitService);
+  private currentAnswerService = inject(CurrentAnswerService);
+  private answerTokenService = inject(AnswerTokenService);
+  private gradeService = inject(GradeService);
+
   private destroyed$ = new Subject<void>();
 
   private errorSubject = new Subject<unknown>();
@@ -132,14 +136,6 @@ export class ItemTaskAnswerService implements OnDestroy {
     }),
     this.autoSaveCurrentState$.subscribe(),
   ];
-
-  constructor(
-    private taskInitService: ItemTaskInitService,
-    private currentAnswerService: CurrentAnswerService,
-    private answerService: AnswerService,
-    private answerTokenService: AnswerTokenService,
-    private gradeService: GradeService,
-  ) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());

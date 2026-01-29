@@ -9,9 +9,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SetExtraTimeService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   set(itemId: string, groupId: string, seconds: number): Observable<void> {
     return this.http

@@ -28,9 +28,8 @@ export type UnlockedItems = SaveGradeResult['unlockedItems'];
   providedIn: 'root',
 })
 export class GradeService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   save(
     taskToken: TaskToken,

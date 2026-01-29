@@ -31,6 +31,11 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   ]
 })
 export class ItemRemoveButtonComponent implements OnDestroy {
+  private getItemChildrenService = inject(GetItemChildrenService);
+  private confirmationModalService = inject(ConfirmationModalService);
+  private removeItemService = inject(RemoveItemService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private itemRouter = inject(ItemRouter);
 
   confirmRemoval = output();
   itemData = input.required<ItemData>();
@@ -56,15 +61,6 @@ export class ItemRemoveButtonComponent implements OnDestroy {
   deletionInProgress = signal(false);
 
   defaultActivityRoute = inject(DEFAULT_ACTIVITY_ROUTE);
-
-  constructor(
-    private getItemChildrenService: GetItemChildrenService,
-    private confirmationModalService: ConfirmationModalService,
-    private removeItemService: RemoveItemService,
-    private actionFeedbackService: ActionFeedbackService,
-    private itemRouter: ItemRouter,
-  ) {
-  }
 
   ngOnDestroy(): void {
     this.refresh$.complete();

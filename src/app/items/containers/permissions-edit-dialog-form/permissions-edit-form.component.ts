@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject } from '@angular/core';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../models/permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from 'src/app/data-access/group-permissions.service';
@@ -38,6 +38,8 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
   ]
 })
 export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
+  private fb = inject(UntypedFormBuilder);
+
   @Input() permissions?: GroupPermissions;
   @Input() computedPermissions?: GroupComputedPermissions;
   giverPermissions = input.required<ItemCorePerm>();
@@ -94,8 +96,6 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
         : undefined;
     }
   });
-
-  constructor(private fb: UntypedFormBuilder) {}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

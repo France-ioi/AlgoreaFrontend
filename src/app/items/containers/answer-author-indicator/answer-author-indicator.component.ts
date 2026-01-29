@@ -1,4 +1,4 @@
-import { Component, input, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, input, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
@@ -42,6 +42,10 @@ import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-naviga
   ]
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
+  private store = inject(Store);
+  private groupRouter = inject(GroupRouter);
+  private getUserService = inject(GetUserService);
+  private userSessionService = inject(UserSessionService);
 
   answer = input.required<Answer>();
   @Input() itemData?: ItemData;
@@ -60,13 +64,6 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
-
-  constructor(
-    private store: Store,
-    private groupRouter: GroupRouter,
-    private getUserService: GetUserService,
-    private userSessionService: UserSessionService,
-  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.answer) this.answer$.next(this.answer());

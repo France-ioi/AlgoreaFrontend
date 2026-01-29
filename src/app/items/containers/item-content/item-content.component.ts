@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, computed, input, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, computed, input, signal, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -17,7 +17,6 @@ import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.compo
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
 import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
 import { NgClass } from '@angular/common';
-import { Store } from '@ngrx/store';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
@@ -54,6 +53,10 @@ import { ResultIsActivePipe } from '../../models/attempts';
   ]
 })
 export class ItemContentComponent implements PendingChangesComponent {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private userSessionService = inject(UserSessionService);
+
   @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;
   @ViewChild(ItemChildrenEditFormComponent) itemChildrenEditFormComponent?: ItemChildrenEditFormComponent;
   @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
@@ -89,13 +92,6 @@ export class ItemContentComponent implements PendingChangesComponent {
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent?.dirty;
   }
-
-  constructor(
-    private store: Store,
-    private router: Router,
-    private route: ActivatedRoute,
-    private userSessionService: UserSessionService,
-  ) {}
 
   onEditModeEnableChange(editModeEnabled: boolean): void {
     void this.router.navigate([ editModeEnabled ? './edit-children' : './' ], {

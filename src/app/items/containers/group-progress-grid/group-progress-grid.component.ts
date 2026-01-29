@@ -118,6 +118,12 @@ interface ProgressDataDialog {
   ]
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
+  private getItemChildrenService = inject(GetItemChildrenService);
+  private getGroupDescendantsService = inject(GetGroupDescendantsService);
+  private getGroupUsersProgressService = inject(GetGroupProgressService);
+  private getGroupChildrenService = inject(GetGroupChildrenService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private progressCSVService = inject(ProgressCSVService);
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -189,15 +195,6 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       panelClass: [ 'alg-left-center-triangle', 'grey' ],
     },
   ]);
-
-  constructor(
-    private getItemChildrenService: GetItemChildrenService,
-    private getGroupDescendantsService: GetGroupDescendantsService,
-    private getGroupUsersProgressService: GetGroupProgressService,
-    private getGroupChildrenService: GetGroupChildrenService,
-    private actionFeedbackService: ActionFeedbackService,
-    private progressCSVService: ProgressCSVService,
-  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);

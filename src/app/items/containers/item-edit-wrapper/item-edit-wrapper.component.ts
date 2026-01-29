@@ -69,6 +69,13 @@ enum UpdateOrDeleteStringsRequestType {
   ]
 })
 export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
+  private store = inject(Store);
+  private currentContentService = inject(CurrentContentService);
+  private updateItemService = inject(UpdateItemService);
+  private updateItemStringService = inject(UpdateItemStringService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private pendingChangesService = inject(PendingChangesService);
+
   @Input() itemData?: ItemData;
 
   private config = inject(APPCONFIG);
@@ -117,15 +124,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   get enableTeam(): boolean {
     return this.initialFormData?.type !== 'Skill';
   }
-
-  constructor(
-    private store: Store,
-    private currentContentService: CurrentContentService,
-    private updateItemService: UpdateItemService,
-    private updateItemStringService: UpdateItemStringService,
-    private actionFeedbackService: ActionFeedbackService,
-    private pendingChangesService: PendingChangesService,
-  ) {}
 
   ngOnInit(): void {
     this.pendingChangesService.set(this);

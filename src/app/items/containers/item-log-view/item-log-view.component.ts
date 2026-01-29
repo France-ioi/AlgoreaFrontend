@@ -1,4 +1,4 @@
-import { Component, computed, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
@@ -83,6 +83,10 @@ const logsLimit = 20;
   ]
 })
 export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
+  private store = inject(Store);
+  private activityLogService = inject(ActivityLogService);
+  private sessionService = inject(UserSessionService);
+  private actionFeedbackService = inject(ActionFeedbackService);
 
   @Input() itemData?: ItemData;
 
@@ -117,13 +121,6 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
 
   columns = toSignal(this.columns$, { initialValue: [] });
   displayedColumns = computed(() => this.columns().map(column => column.field));
-
-  constructor(
-    private store: Store,
-    private activityLogService: ActivityLogService,
-    private sessionService: UserSessionService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) {}
 
   ngOnInit(): void{
     this.resetRows();

@@ -33,9 +33,8 @@ interface UpdateCurrentAnswerBody {
   providedIn: 'root',
 })
 export class CurrentAnswerService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(itemId: string, attemptId: string, asTeamId?: string): Observable<ExistingCurrentAnswer|null> {
     const params = new HttpParams({

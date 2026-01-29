@@ -9,9 +9,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AddItemPrerequisiteService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   create(dependentItemId: string, prerequisiteItemId: string): Observable<void> {
     return this.http

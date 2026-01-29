@@ -10,10 +10,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class RemoveItemPrerequisiteService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   delete(dependentItemId: string, prerequisiteItemId: string): Observable<void> {
     const url = `${this.config.apiUrl}/items/${dependentItemId}/prerequisites/${prerequisiteItemId}`;

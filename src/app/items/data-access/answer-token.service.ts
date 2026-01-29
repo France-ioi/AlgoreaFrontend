@@ -18,9 +18,8 @@ export type AnswerToken = AnswerTokenData['answerToken'];
   providedIn: 'root',
 })
 export class AnswerTokenService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   generate(answer: string, taskToken: string): Observable<AnswerToken> {
     return this.http.post<ActionResponse<unknown>>(`${this.config.apiUrl}/answers`, {

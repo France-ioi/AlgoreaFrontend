@@ -1,4 +1,4 @@
-import { SimpleChanges } from '@angular/core';
+import { SimpleChanges, inject } from '@angular/core';
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
@@ -46,6 +46,7 @@ export interface ProgressData {
   ]
 })
 export class UserProgressDetailsComponent implements OnChanges {
+  private userSessionService = inject(UserSessionService);
 
   @Input() progressData?: ProgressData;
   @Input() canEditPermissions?: boolean;
@@ -55,9 +56,6 @@ export class UserProgressDetailsComponent implements OnChanges {
   progress?: ProgressData['progress'];
 
   currentUser$ = this.userSessionService.userProfile$;
-
-  constructor(private userSessionService: UserSessionService) {
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.progressData && !changes.progressData.firstChange) {

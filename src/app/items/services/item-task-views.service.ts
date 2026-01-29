@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { combineLatest, EMPTY, merge, ReplaySubject, Subject } from 'rxjs';
 import { catchError, delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
@@ -7,6 +7,8 @@ import { ItemTaskInitService } from './item-task-init.service';
 
 @Injectable()
 export class ItemTaskViewsService implements OnDestroy {
+  private initService = inject(ItemTaskInitService);
+
   private errorSubject = new Subject<unknown>();
   readonly error$ = this.errorSubject.asObservable();
 
@@ -47,10 +49,6 @@ export class ItemTaskViewsService implements OnDestroy {
       mainContentWrapperEl.scrollTo({ behavior: 'smooth', top: iframeTopInPx + scrollTopInPx });
     }),
   ];
-
-  constructor(
-    private initService: ItemTaskInitService,
-  ) {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());

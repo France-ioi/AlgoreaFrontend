@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   ChildDataWithId,
@@ -34,6 +34,14 @@ import { LocaleService } from 'src/app/services/localeService';
   ]
 })
 export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComponent, OnDestroy {
+  private store = inject(Store);
+  private localeService = inject(LocaleService);
+  private createItemService = inject(CreateItemService);
+  private updateItemService = inject(UpdateItemService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private pendingChangesService = inject(PendingChangesService);
+  private currentContentService = inject(CurrentContentService);
+
   @Input() itemData?: ItemData;
 
   @ViewChild('childrenEdit') private childrenEdit?: ItemChildrenEditComponent;
@@ -45,16 +53,6 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   isDirty(): boolean {
     return this.dirty;
   }
-
-  constructor(
-    private store: Store,
-    private localeService: LocaleService,
-    private createItemService: CreateItemService,
-    private updateItemService: UpdateItemService,
-    private actionFeedbackService: ActionFeedbackService,
-    private pendingChangesService: PendingChangesService,
-    private currentContentService: CurrentContentService,
-  ) {}
 
   ngOnInit(): void {
     this.pendingChangesService.set(this);

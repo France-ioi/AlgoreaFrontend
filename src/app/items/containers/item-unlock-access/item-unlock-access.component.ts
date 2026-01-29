@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, share } from 'rxjs/operators';
@@ -35,6 +35,8 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
   ]
 })
 export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
+  private getItemPrerequisitesService = inject(GetItemPrerequisitesService);
+
   @Input() itemData?: ItemData;
 
   @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
@@ -58,11 +60,6 @@ export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
   ));
 
   itemId = signal<string | undefined>(undefined);
-
-  constructor(
-    private getItemPrerequisitesService: GetItemPrerequisitesService,
-  ) {
-  }
 
   ngOnChanges(): void {
     if (this.itemData) {

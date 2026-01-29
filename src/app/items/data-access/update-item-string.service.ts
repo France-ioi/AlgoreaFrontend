@@ -16,10 +16,8 @@ export interface ItemStringChanges {
   providedIn: 'root'
 })
 export class UpdateItemStringService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   updateItem(
     itemId: string,

@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   NewContentType,
@@ -18,6 +18,8 @@ import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-secti
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddItemComponent implements OnChanges {
+  private searchItemService = inject(SearchItemService);
+
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;
 
   type = input<ItemTypeCategory>('activity');
@@ -32,10 +34,6 @@ export class AddItemComponent implements OnChanges {
     this.searchItemService.search(
       value, getAllowedNewItemTypes({ allowActivities: !this.isSkill(), allowSkills: this.isSkill() }).map(item => item.type)
     );
-
-  constructor(
-    private searchItemService: SearchItemService
-  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: !this.isSkill(), allowSkills: this.isSkill() });

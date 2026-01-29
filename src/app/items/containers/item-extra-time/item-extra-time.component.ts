@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, OnDestroy, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnDestroy, signal, ViewChild, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { CanCurrentUserSetExtraTimePipe, IsTimeLimitedActivityPipe } from '../../models/time-limited-activity';
 import { DurationToReadablePipe } from 'src/app/pipes/duration';
@@ -36,6 +36,11 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemExtraTimeComponent implements OnDestroy {
+  private store = inject(Store);
+  private itemGetExtraTimeService = inject(ItemGetExtraTimeService);
+  private setExtraTimeService = inject(SetExtraTimeService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+
   @ViewChild(ItemExtraTimeForDescendantsComponent) itemExtraTimeForDescendantsComponent?: ItemExtraTimeForDescendantsComponent;
 
   itemData = input.required<ItemData>();
@@ -56,13 +61,6 @@ export class ItemExtraTimeComponent implements OnDestroy {
   stateSignal = toSignal(this.state$, { requireSync: true });
 
   updating = signal(false);
-
-  constructor(
-    private store: Store,
-    private itemGetExtraTimeService: ItemGetExtraTimeService,
-    private setExtraTimeService: SetExtraTimeService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) {}
 
   ngOnDestroy(): void {
     this.refreshSubject.complete();

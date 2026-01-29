@@ -40,6 +40,10 @@ export interface PermissionsEditDialogParams {
   ]
 })
 export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
+  private groupPermissionsService = inject(GroupPermissionsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private currentContentService = inject(CurrentContentService);
+
   params = signal(inject<PermissionsEditDialogParams>(DIALOG_DATA));
   private dialogRef = inject(DialogRef);
 
@@ -55,13 +59,6 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
   permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
   updateInProcess = false;
   targetType: TypeFilter = 'Users';
-
-  constructor(
-    private groupPermissionsService: GroupPermissionsService,
-    private actionFeedbackService: ActionFeedbackService,
-    private currentContentService: CurrentContentService,
-  ) {
-  }
 
   ngOnDestroy(): void {
     this.params$.complete();

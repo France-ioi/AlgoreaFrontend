@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
 
@@ -10,14 +10,12 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
   imports: [ FullHeightContentDirective ]
 })
 export class ItemTaskEditComponent implements OnChanges {
+  private sanitizer = inject(DomSanitizer);
+
   @Input() editorUrl?: string;
   @Output() redirectToDefaultTab = new EventEmitter<void>();
 
   sanitizedUrl?: SafeResourceUrl;
-
-  constructor(
-    private sanitizer: DomSanitizer,
-  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.editorUrl) {

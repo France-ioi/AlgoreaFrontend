@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import {
   catchError,
   combineLatest,
@@ -34,6 +34,10 @@ type Strategy =
 
 @Injectable()
 export class InitialAnswerDataSource implements OnDestroy {
+  private store = inject(Store);
+  private currentAnswerService = inject(CurrentAnswerService);
+  private getAnswerService = inject(GetAnswerService);
+  private answerService = inject(AnswerService);
 
   private readonly itemInfo$ = new ReplaySubject<{ route: FullItemRoute, isTask: boolean|undefined }>();
   private readonly destroyed$ = new Subject<void>();
@@ -76,13 +80,6 @@ export class InitialAnswerDataSource implements OnDestroy {
     distinctUntilChanged(),
     catchError((e: unknown) => of({ error: e })), // convert stream error to value
   );
-
-  constructor(
-    private store: Store,
-    private currentAnswerService: CurrentAnswerService,
-    private getAnswerService: GetAnswerService,
-    private answerService: AnswerService,
-  ) {}
 
   setInfo(route: FullItemRoute, isTask: boolean|undefined): void {
     this.itemInfo$.next({ route, isTask });

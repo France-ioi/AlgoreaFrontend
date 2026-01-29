@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import {
   AddContentComponent,
   AddedContent,
@@ -16,6 +16,8 @@ import { SearchItemService } from 'src/app/data-access/search-item.service';
   imports: [ AddContentComponent ]
 })
 export class AddDependencyComponent implements OnChanges {
+  private searchItemService = inject(SearchItemService);
+
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;
   @Input() allowSkills = false;
   @Input() addedIds: string[] = [];
@@ -27,10 +29,6 @@ export class AddDependencyComponent implements OnChanges {
     this.searchItemService.search(
       value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills }).map(item => item.type)
     );
-
-  constructor(
-    private searchItemService: SearchItemService
-  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills });

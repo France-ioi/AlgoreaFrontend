@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
@@ -52,6 +52,8 @@ export const DEFAULT_SCORE_WEIGHT = 1;
   imports: [ ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
+  private getItemChildrenService = inject(GetItemChildrenService);
+
   @Input() itemData?: ItemData;
 
   activities: PossiblyInvisibleChildData[] = [];
@@ -104,10 +106,6 @@ export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {
     mapToFetchState({ resetter: this.refresh$ }),
     share(),
   );
-
-  constructor(
-    private getItemChildrenService: GetItemChildrenService,
-  ) {}
 
   ngOnInit(): void {
     this.subscription = this.state$.pipe(readyData()).subscribe(data => {

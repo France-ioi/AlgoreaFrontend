@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnDestroy, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, Subject, switchMap } from 'rxjs';
 import { ExtraTimeService } from 'src/app/items/data-access/extra-time.service';
@@ -53,6 +53,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
+  private extraTimeService = inject(ExtraTimeService);
+  private setExtraTimeService = inject(SetExtraTimeService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+
   itemId = input.required<string>();
   groupId = input.required<string>();
 
@@ -65,12 +69,6 @@ export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
   stateSignal = toSignal(this.state$, { requireSync: true });
   updating = signal(false);
   displayedColumns = signal([ 'name', 'additionalTime', 'totalAdditionalTime' ]);
-
-  constructor(
-    private extraTimeService: ExtraTimeService,
-    private setExtraTimeService: SetExtraTimeService,
-    private actionFeedbackService: ActionFeedbackService,
-  ){}
 
   ngOnDestroy(): void {
     this.refreshSubject.complete();

@@ -10,7 +10,6 @@ import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/i
 import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { NavigationEnd, Router } from '@angular/router';
-import { ItemRouter } from 'src/app/models/routing/item-router';
 import { arraysEqual } from 'src/app/utils/array';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { Store } from '@ngrx/store';
@@ -36,6 +35,10 @@ const solutionTabView = 'solution'; // 'view' name used by tasks for the solutio
  */
 @Injectable()
 export class ItemTabs implements OnDestroy {
+  private store = inject(Store);
+  private router = inject(Router);
+  private tabService = inject(TabService);
+  private userSession = inject(UserSessionService);
 
   private disablePlatformProgressOnTasks$ = new BehaviorSubject<boolean>(true); /* given by the task */
   private editTabEnabled$ = new BehaviorSubject<boolean>(false);
@@ -104,14 +107,6 @@ export class ItemTabs implements OnDestroy {
   private tabUpdateSubscription = this.tabs$.subscribe(tabs => this.tabService.setTabs(tabs));
 
   private config = inject(APPCONFIG);
-
-  constructor(
-    private store: Store,
-    private router: Router,
-    private itemRouter: ItemRouter,
-    private tabService: TabService,
-    private userSession: UserSessionService,
-  ) {}
 
   /**
    * Called when a task defines the tabs to be displayed

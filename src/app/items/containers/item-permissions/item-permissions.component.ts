@@ -49,6 +49,10 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   ]
 })
 export class ItemPermissionsComponent implements OnChanges {
+  private groupPermissionsService = inject(GroupPermissionsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private currentContentService = inject(CurrentContentService);
+
   @Output() changed = new EventEmitter<void>();
 
   @Input() itemData?: ItemData;
@@ -69,12 +73,6 @@ export class ItemPermissionsComponent implements OnChanges {
     contentGroup: $localize`You are not allowed to give permissions on this content and to this group`,
   };
   updateInProcess = false;
-
-  constructor(
-    private groupPermissionsService: GroupPermissionsService,
-    private actionFeedbackService: ActionFeedbackService,
-    private currentContentService: CurrentContentService,
-  ) {}
 
   ngOnChanges(): void {
     this.watchedGroupPermissions = this.itemData?.item?.watchedGroup?.permissions ? {

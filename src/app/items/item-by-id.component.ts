@@ -109,6 +109,18 @@ const selectState = createSelector(
   ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
+  private store = inject(Store);
+  private itemRouter = inject(ItemRouter);
+  private activatedRoute = inject(ActivatedRoute);
+  private currentContent = inject(CurrentContentService);
+  private initialAnswerDataSource = inject(InitialAnswerDataSource);
+  private itemTabs = inject(ItemTabs);
+  private userSessionService = inject(UserSessionService);
+  private breadcrumbService = inject(ItemBreadcrumbsWithFailoverService);
+  private layoutService = inject(LayoutService);
+  private currentContentService = inject(CurrentContentService);
+  private tabService = inject(TabService);
+  private localeService = inject(LocaleService);
   private config = inject(APPCONFIG);
   private confirmationModalService = inject(ConfirmationModalService);
 
@@ -321,21 +333,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   showItemThreadWidget = this.config.featureFlags.enableForum;
-
-  constructor(
-    private store: Store,
-    private itemRouter: ItemRouter,
-    private activatedRoute: ActivatedRoute,
-    private currentContent: CurrentContentService,
-    private initialAnswerDataSource: InitialAnswerDataSource,
-    private itemTabs: ItemTabs,
-    private userSessionService: UserSessionService,
-    private breadcrumbService: ItemBreadcrumbsWithFailoverService,
-    private layoutService: LayoutService,
-    private currentContentService: CurrentContentService,
-    private tabService: TabService,
-    private localeService: LocaleService,
-  ) {}
 
   ngOnDestroy(): void {
     this.tabService.setTabs([]);

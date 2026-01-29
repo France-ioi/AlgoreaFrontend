@@ -16,9 +16,8 @@ type ItemAdditionalTimeSchema = z.infer<typeof itemAdditionalTimeSchema>;
   providedIn: 'root'
 })
 export class ItemGetExtraTimeService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getForGroup(itemId: string, groupId: string): Observable<ItemAdditionalTimeSchema> {
     return this.http

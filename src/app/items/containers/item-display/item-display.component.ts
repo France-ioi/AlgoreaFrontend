@@ -80,6 +80,17 @@ const heightSyncInterval = 0.2*SECONDS;
   ]
 })
 export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDestroy {
+  private router = inject(Router);
+  private itemRouter = inject(ItemRouter);
+  private location = inject(Location);
+  private taskService = inject(ItemTaskService);
+  private sanitizer = inject(DomSanitizer);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private publishResultService = inject(PublishResultsService);
+  private activityNavTreeService = inject(ActivityNavTreeService);
+  private breadcrumbsService = inject(GetBreadcrumbsFromRootsService);
+  private ltiDataSource = inject(LTIDataSource);
+
   route = input.required<FullItemRoute>();
   url = input.required<string>();
   @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
@@ -227,19 +238,6 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
     $localize`:@@contactUs:If the problem persists, please contact us.`;
 
   unlockedItems?: UnlockedItems = undefined;
-
-  constructor(
-    private router: Router,
-    private itemRouter: ItemRouter,
-    private location: Location,
-    private taskService: ItemTaskService,
-    private sanitizer: DomSanitizer,
-    private actionFeedbackService: ActionFeedbackService,
-    private publishResultService: PublishResultsService,
-    private activityNavTreeService: ActivityNavTreeService,
-    private breadcrumbsService: GetBreadcrumbsFromRootsService,
-    private ltiDataSource: LTIDataSource,
-  ) {}
 
   ngAfterViewChecked(): void {
     if (!this.iframe || this.taskService.initialized) return;

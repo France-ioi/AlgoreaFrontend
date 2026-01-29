@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
@@ -19,6 +19,8 @@ import { AsyncPipe } from '@angular/common';
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe ]
 })
 export class SubSkillsComponent implements OnChanges, OnDestroy {
+  private getItemChildrenService = inject(GetItemChildrenService);
+
   @Input() itemData?: ItemData;
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
@@ -47,10 +49,6 @@ export class SubSkillsComponent implements OnChanges, OnDestroy {
     }),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  constructor(
-    private getItemChildrenService: GetItemChildrenService,
-  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.itemData?.currentResult) {

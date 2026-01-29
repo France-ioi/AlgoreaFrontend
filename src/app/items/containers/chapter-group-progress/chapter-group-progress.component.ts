@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, inject } from '@angular/core';
 import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
 import { ItemData } from '../../models/item-data';
@@ -19,6 +19,8 @@ import { fromObservation } from 'src/app/store/observation';
   imports: [ GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ChapterGroupProgressComponent implements OnDestroy {
+  private store = inject(Store);
+  private getGroupByIdService = inject(GetGroupByIdService);
 
   @Input() itemData?: ItemData;
 
@@ -28,11 +30,6 @@ export class ChapterGroupProgressComponent implements OnDestroy {
     switchMap(observedGroupId => this.getGroupByIdService.get(observedGroupId)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  constructor(
-    private store: Store,
-    private getGroupByIdService: GetGroupByIdService,
-  ) {}
 
   ngOnDestroy(): void {
     this.refresh$.complete();

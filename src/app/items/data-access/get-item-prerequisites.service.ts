@@ -14,9 +14,8 @@ type ItemPrerequisites = z.infer<typeof itemPrerequisitesSchema>;
   providedIn: 'root',
 })
 export class GetItemPrerequisitesService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(itemId: string): Observable<ItemPrerequisites> {
     return this.http

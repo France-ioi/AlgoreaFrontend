@@ -1,4 +1,4 @@
-import { Component, computed, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, computed, Input, OnChanges, OnDestroy, inject } from '@angular/core';
 import { GetParticipantProgressService } from '../../data-access/get-participant-progress.service';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -74,6 +74,8 @@ interface RowData {
   ]
 })
 export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
+  private getParticipantProgressService = inject(GetParticipantProgressService);
+
   @Input() itemData?: ItemData;
 
   private readonly item$ = new ReplaySubject<Item>(1);
@@ -143,10 +145,6 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
 
   columns = toSignal(this.columns$, { initialValue: [] });
   displayedColumns = computed(() => this.columns().map(column => column.field));
-
-  constructor(
-    private getParticipantProgressService: GetParticipantProgressService,
-  ) { }
 
   ngOnChanges(): void {
     if (this.itemData) {
