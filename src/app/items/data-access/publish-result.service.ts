@@ -12,9 +12,8 @@ const publishServiceTimeout = 5000; // it the backend service depends on other s
   providedIn: 'root',
 })
 export class PublishResultsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   publish(itemId: string, attemptId: string): Observable<void> {
     return this.http

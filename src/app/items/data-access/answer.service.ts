@@ -15,9 +15,8 @@ export interface SaveAnswerPayload {
   providedIn: 'root',
 })
 export class AnswerService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   save(itemId: string, attemptId: string, payload: SaveAnswerPayload): Observable<void> {
     return this.http

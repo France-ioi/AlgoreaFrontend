@@ -25,9 +25,8 @@ export type Answer = z.infer<typeof answerSchema>;
   providedIn: 'root',
 })
 export class GetAnswerService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(answerId: string): Observable<Answer> {
     return this.http

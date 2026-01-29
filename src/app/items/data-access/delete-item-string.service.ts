@@ -9,10 +9,8 @@ import { APPCONFIG } from 'src/app/config';
   providedIn: 'root'
 })
 export class DeleteItemStringService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   delete(
     itemId: string,

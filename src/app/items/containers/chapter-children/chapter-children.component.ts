@@ -38,6 +38,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
   ]
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
+  private store = inject(Store);
+  private getItemChildrenService = inject(GetItemChildrenService);
+
   @Input() itemData?: ItemData;
 
   layoutService = inject(LayoutService);
@@ -70,11 +73,6 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
   );
   leftMenuShown = toSignal(this.layoutService.leftMenu$.pipe(map(({ shown }) => shown)), { initialValue: true });
-
-  constructor(
-    private store: Store,
-    private getItemChildrenService: GetItemChildrenService,
-  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.itemData?.currentResult) {

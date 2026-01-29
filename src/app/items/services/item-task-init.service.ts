@@ -34,6 +34,8 @@ export interface ItemTaskConfig {
 
 @Injectable()
 export class ItemTaskInitService implements OnDestroy {
+  private taskTokenService = inject(TaskTokenService);
+
   private config = inject(APPCONFIG);
   private destroyed$ = new Subject<void>();
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
@@ -123,10 +125,6 @@ export class ItemTaskInitService implements OnDestroy {
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
   tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY)).subscribe();
-
-  constructor(
-    private taskTokenService: TaskTokenService,
-  ) {}
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.

@@ -27,9 +27,8 @@ type EnterResponseData = z.infer<typeof enterResponseDataSchema>;
   providedIn: 'root'
 })
 export class ItemEntryService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getEntryState(itemId: string): Observable<EntryState> {
     return this.http

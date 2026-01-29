@@ -44,10 +44,8 @@ const serviceTimeout = 20*SECONDS;
   providedIn: 'root',
 })
 export class UpdateItemService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   updateItem(
     itemId: string,

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { animationFrames, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
@@ -23,6 +23,13 @@ export interface TaskConfig {
 
 @Injectable()
 export class ItemTaskService implements OnDestroy {
+  private initService = inject(ItemTaskInitService);
+  private answerService = inject(ItemTaskAnswerService);
+  private viewsService = inject(ItemTaskViewsService);
+  private activityNavTreeService = inject(ActivityNavTreeService);
+  private location = inject(Location);
+  private askHintService = inject(AskHintService);
+
   readonly destroyed$ = new Subject<void>();
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(takeUntil(this.destroyed$), shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(takeUntil(this.destroyed$), shareReplay(1));
@@ -66,15 +73,6 @@ export class ItemTaskService implements OnDestroy {
 
   private readOnly = false;
   private attemptId$ = new ReplaySubject(1);
-
-  constructor(
-    private initService: ItemTaskInitService,
-    private answerService: ItemTaskAnswerService,
-    private viewsService: ItemTaskViewsService,
-    private activityNavTreeService: ActivityNavTreeService,
-    private location: Location,
-    private askHintService: AskHintService,
-  ) {}
 
   ngOnDestroy(): void {
     this.hintError$.complete();

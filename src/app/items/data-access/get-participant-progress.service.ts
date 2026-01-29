@@ -42,9 +42,8 @@ export type ParticipantProgress = z.infer<typeof participantProgressSchema>;
   providedIn: 'root'
 })
 export class GetParticipantProgressService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   get(id: string): Observable<ParticipantProgress> {
     return this.http

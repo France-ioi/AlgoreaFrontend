@@ -13,9 +13,8 @@ import { Result, attemptResultSchema, resultFromFetchedResult } from '../models/
   providedIn: 'root'
 })
 export class GetResultsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getResults(item: FullItemRoute): Observable<Result[]> {
     return this.http

@@ -18,9 +18,8 @@ export type TaskToken = TaskTokenData['taskToken'];
   providedIn: 'root',
 })
 export class TaskTokenService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   generate(itemId: string, attemptId: string, asTeamId?: string): Observable<TaskToken> {
     const params = asTeamId ? new HttpParams({ fromObject: { as_team_id: asTeamId } }) : undefined;

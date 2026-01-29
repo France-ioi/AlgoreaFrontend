@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
 import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
@@ -63,6 +63,11 @@ const OPTIONS = [
   ]
 })
 export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
+  private store = inject(Store);
+  private getThreadService = inject(GetThreadsService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
   @Input() itemData?: ItemData;
 
   private readonly url$ = this.router.events.pipe(
@@ -98,14 +103,6 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   );
   currentThreadInfo$ = this.store.select(fromForum.selectThreadId);
   isDiscussionVisible$ = this.store.select(fromForum.selectVisible);
-
-  constructor(
-    private store: Store,
-    private getThreadService: GetThreadsService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-  ) {
-  }
 
   ngOnChanges(): void {
     if (this.itemData) {

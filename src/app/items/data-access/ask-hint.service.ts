@@ -17,11 +17,8 @@ export type AskHintData = z.infer<typeof askHintDataSchema>;
   providedIn: 'root',
 })
 export class AskHintService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(
-    private http: HttpClient,
-  ) {}
 
   ask(taskToken: string, hintRequested: string): Observable<AskHintData> {
 

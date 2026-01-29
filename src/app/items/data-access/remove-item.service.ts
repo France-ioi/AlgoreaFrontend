@@ -9,10 +9,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class RemoveItemService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   delete(itemId: string): Observable<void> {
     return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/items/${itemId}`).pipe(

@@ -1,4 +1,4 @@
-import { Component, computed, input, OnChanges, output } from '@angular/core';
+import { Component, computed, input, OnChanges, output, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
@@ -26,6 +26,8 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
   ]
 })
 export class PropagationAdvancedConfigurationFormComponent implements OnChanges {
+  private fb = inject(FormBuilder);
+
   closeEvent = output<ItemPermPropagations | undefined>();
   giverPermissions = input.required<ItemCorePerm>();
   itemPropagations = input.required<Partial<ItemPermPropagations>>();
@@ -45,9 +47,6 @@ export class PropagationAdvancedConfigurationFormComponent implements OnChanges 
     watchPropagation: this.fb.nonNullable.control<ItemPermPropagations['watchPropagation']>(false),
     editPropagation: this.fb.nonNullable.control<ItemPermPropagations['editPropagation']>(false),
   });
-
-  constructor(private fb: FormBuilder) {
-  }
 
   ngOnChanges(): void {
     const {

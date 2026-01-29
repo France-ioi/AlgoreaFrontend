@@ -35,9 +35,8 @@ export interface BreadcrumbItem {
   providedIn: 'root'
 })
 export class GetBreadcrumbService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getBreadcrumb(itemRoute: FullItemRoute): Observable<BreadcrumbItem[]> {
     return this.http

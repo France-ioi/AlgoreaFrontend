@@ -15,9 +15,8 @@ type ItemDependencies = z.infer<typeof itemDependenciesSchema>;
   providedIn: 'root',
 })
 export class GetItemDependenciesService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(itemId: string): Observable<ItemDependencies> {
     return this.http

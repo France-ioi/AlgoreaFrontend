@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { FullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { GetResultsService } from '../data-access/get-results.service';
@@ -18,11 +18,9 @@ export function canCreateResults(item: Item): boolean {
   providedIn: 'root'
 })
 export class ResultFetchingService {
+  private resultsService = inject(GetResultsService);
+  private resultActionsService = inject(ResultActionsService);
 
-  constructor(
-    private resultsService: GetResultsService,
-    private resultActionsService: ResultActionsService,
-  ){}
 
   fetchResults(itemRoute: FullItemRoute, item: Item): Observable<{ results: Result[], currentResult?: Result }> {
     if (!canFetchResults(item)) return of({ results: [] });

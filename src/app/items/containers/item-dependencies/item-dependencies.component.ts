@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, signal, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, signal, ViewChild, inject } from '@angular/core';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -42,6 +42,12 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ]
 })
 export class ItemDependenciesComponent implements OnChanges, OnDestroy {
+  private getItemPrerequisitesService = inject(GetItemPrerequisitesService);
+  private addItemPrerequisiteService = inject(AddItemPrerequisiteService);
+  private removeItemPrerequisiteService = inject(RemoveItemPrerequisiteService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private getItemDependenciesService = inject(GetItemDependenciesService);
+
   @Input() itemData?: ItemData;
 
   @ViewChild('addDependencyComponent') addDependencyComponent?: AddDependencyComponent;
@@ -65,15 +71,6 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
 
   changeInProgress = false;
   itemId = signal<string | undefined>(undefined);
-
-  constructor(
-    private getItemPrerequisitesService: GetItemPrerequisitesService,
-    private addItemPrerequisiteService: AddItemPrerequisiteService,
-    private removeItemPrerequisiteService: RemoveItemPrerequisiteService,
-    private actionFeedbackService: ActionFeedbackService,
-    private getItemDependenciesService: GetItemDependenciesService,
-  ) {
-  }
 
   ngOnChanges(): void {
     if (this.itemData) {

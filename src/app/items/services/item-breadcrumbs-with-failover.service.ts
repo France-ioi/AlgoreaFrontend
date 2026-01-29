@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BreadcrumbItem, GetBreadcrumbService } from '../data-access/get-breadcrumb.service';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { Observable, Subject, catchError, retry, tap } from 'rxjs';
@@ -9,15 +9,12 @@ import { ResultActionsService } from 'src/app/data-access/result-actions.service
   providedIn: 'root'
 })
 export class ItemBreadcrumbsWithFailoverService {
+  private breadcrumbService = inject(GetBreadcrumbService);
+  private resultActionsService = inject(ResultActionsService);
 
   private resultPathStarted = new Subject<void>();
   /** Indicate that we have started the full result path of the current item (was not started before doing it) */
   readonly resultPathStarted$ = this.resultPathStarted.asObservable();
-
-  constructor(
-    private breadcrumbService: GetBreadcrumbService,
-    private resultActionsService: ResultActionsService,
-  ) {}
 
   get(itemRoute: FullItemRoute): Observable<BreadcrumbItem[]> {
     return this.breadcrumbService.getBreadcrumb(itemRoute).pipe(

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, input, output, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { IsTeamActivityPipe } from '../../models/team-activity';
@@ -23,6 +23,9 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplicitEntryComponent implements OnDestroy {
+  private itemEntryService = inject(ItemEntryService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+
   itemData = input.required<ItemData>();
   itemRefreshRequired = output();
 
@@ -35,11 +38,6 @@ export class ExplicitEntryComponent implements OnDestroy {
   enterActivityInProgress = signal(false);
 
   private subscription?: Subscription;
-
-  constructor(
-    private itemEntryService: ItemEntryService,
-    private actionFeedbackService: ActionFeedbackService,
-  ){}
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();

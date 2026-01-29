@@ -33,9 +33,8 @@ type ItemParents = z.infer<typeof itemParentsSchema>;
   providedIn: 'root'
 })
 export class GetItemParentsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   get(id: string, attemptId: string): Observable<ItemParents> {
     let params = new HttpParams();

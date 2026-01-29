@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemParentsService } from '../../data-access/get-item-parents.service';
@@ -17,6 +17,8 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
 export class ParentSkillsComponent implements OnChanges, OnDestroy {
+  private getItemParentsService = inject(GetItemParentsService);
+
   @Input() itemData?: ItemData;
 
   private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
@@ -35,10 +37,6 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
     }))),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  constructor(
-    private getItemParentsService: GetItemParentsService,
-  ) {}
 
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.itemData?.currentResult) {
