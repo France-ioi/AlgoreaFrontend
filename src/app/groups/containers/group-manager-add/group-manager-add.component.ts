@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { GetUserByLoginService } from 'src/app/data-access/get-user-by-login.service';
@@ -17,6 +17,9 @@ import { Group } from '../../models/group';
   imports: [ FormsModule, ButtonComponent ]
 })
 export class GroupManagerAddComponent {
+  private getUserByLoginService = inject(GetUserByLoginService);
+  private groupCreateManagerService = inject(GroupCreateManagerService);
+  private actionFeedbackService = inject(ActionFeedbackService);
 
   @Output() added = new EventEmitter<void>();
 
@@ -25,12 +28,6 @@ export class GroupManagerAddComponent {
 
   state: 'ready' | 'error' | 'loading' = 'ready';
   login = '';
-
-  constructor(
-    private getUserByLoginService: GetUserByLoginService,
-    private groupCreateManagerService: GroupCreateManagerService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) {}
 
   onClick(): void {
     if (!this.managers) {

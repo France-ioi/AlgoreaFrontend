@@ -61,6 +61,15 @@ import {
   ]
 })
 export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComponent {
+  private store = inject(Store);
+  private localeService = inject(LocaleService);
+  private currentContentService = inject(CurrentContentService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private formBuilder = inject(UntypedFormBuilder);
+  private groupUpdateService = inject(GroupUpdateService);
+  private createItemService = inject(CreateItemService);
+  private pendingChangesService = inject(PendingChangesService);
+  private getGroupMembersService = inject(GetGroupMembersService);
   private dialogService = inject(Dialog);
 
   approvalOptions: { label: string, value: string }[] = [
@@ -95,17 +104,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
 
   subscription?: Subscription;
 
-  constructor(
-    private store: Store,
-    private localeService: LocaleService,
-    private currentContentService: CurrentContentService,
-    private actionFeedbackService: ActionFeedbackService,
-    private formBuilder: UntypedFormBuilder,
-    private groupUpdateService: GroupUpdateService,
-    private createItemService: CreateItemService,
-    private pendingChangesService: PendingChangesService,
-    private getGroupMembersService: GetGroupMembersService,
-  ) {
+  constructor() {
     this.subscription = this.state$
       .pipe(readyData<Group, { id: string }>())
       .subscribe(item => {

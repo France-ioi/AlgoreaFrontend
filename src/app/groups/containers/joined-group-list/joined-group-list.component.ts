@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, OnDestroy, signal, inject } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, startWith, switchMap } from 'rxjs/operators';
 import { GroupMembership, JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
@@ -56,6 +56,11 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   ]
 })
 export class JoinedGroupListComponent implements OnDestroy {
+  private joinedGroupsService = inject(JoinedGroupsService);
+  private groupLeaveService = inject(GroupLeaveService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private confirmationModalService = inject(ConfirmationModalService);
+
   private refresh$ = new Subject<void>();
   private readonly sort$ = new ReplaySubject<SortOptions>(1);
   readonly state$ = this.sort$.pipe(
@@ -66,13 +71,6 @@ export class JoinedGroupListComponent implements OnDestroy {
   );
 
   displayedColumns = signal([ 'name', 'type', 'memberSince', 'requirePersonalInfoAccessApproval', 'actions' ]);
-
-  constructor(
-    private joinedGroupsService: JoinedGroupsService,
-    private groupLeaveService: GroupLeaveService,
-    private actionFeedbackService: ActionFeedbackService,
-    private confirmationModalService: ConfirmationModalService,
-  ) {}
 
   ngOnDestroy(): void {
     this.sort$.complete();

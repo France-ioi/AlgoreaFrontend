@@ -1,4 +1,4 @@
-import { Component, input, OnDestroy } from '@angular/core';
+import { Component, input, OnDestroy, inject } from '@angular/core';
 import { GroupData } from '../../models/group-data';
 import { AsyncPipe } from '@angular/common';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
@@ -24,6 +24,8 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ]
 })
 export class GroupHeaderComponent implements OnDestroy {
+  private getItemByIdService = inject(GetItemByIdService);
+
   groupData = input.required<GroupData>();
 
   private refreshSubject = new Subject<void>();
@@ -36,8 +38,6 @@ export class GroupHeaderComponent implements OnDestroy {
       ))
     ),
   );
-
-  constructor(private getItemByIdService: GetItemByIdService) {}
 
   ngOnDestroy(): void {
     this.refreshSubject.complete();

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Duration } from 'src/app/utils/duration';
 import { Group } from '../../models/group';
@@ -40,6 +40,9 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 })
 
 export class GroupJoinByCodeComponent implements OnChanges {
+  private groupActionsService = inject(GroupActionsService);
+  private codeActionsService = inject(CodeActionsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
 
   @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
@@ -70,12 +73,6 @@ export class GroupJoinByCodeComponent implements OnChanges {
   selectedCodeLifetimeOption = 0;
   durationTooltip = $localize`:@@expireDuration:This code will expire after the given duration ` +
     $localize`:@@resetCurrentExpiration:(reset current expiration)`;
-
-  constructor(
-    private groupActionsService: GroupActionsService,
-    private codeActionsService: CodeActionsService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.group && !this.group) this.codeInfo = undefined;

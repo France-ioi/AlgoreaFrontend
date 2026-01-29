@@ -31,10 +31,8 @@ export type GrantedPermissions = z.infer<typeof grantedPermissionsSchema>;
   providedIn: 'root'
 })
 export class GrantedPermissionsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   get(id: string, descendants = 0): Observable<GrantedPermissions[]> {
     const httpParams = new HttpParams().set('descendants', descendants);

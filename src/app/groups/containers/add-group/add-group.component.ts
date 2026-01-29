@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AddedContent, NewContentType } from 'src/app/ui-components/add-content/add-content.component';
 import { GroupCreationService } from '../../data-access/group-creation.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -17,6 +17,11 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
   imports: [ AddContentComponent ]
 })
 export class AddGroupComponent {
+  private groupCreationService = inject(GroupCreationService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private groupRouter = inject(GroupRouter);
+  private currentContentService = inject(CurrentContentService);
+
   allowedNewGroupTypes: NewContentType<GroupType>[] = [
     {
       type: 'Class',
@@ -45,13 +50,6 @@ export class AddGroupComponent {
   ];
 
   state: 'addingGroup' | 'ready' = 'ready';
-
-  constructor(
-    private groupCreationService: GroupCreationService,
-    private actionFeedbackService: ActionFeedbackService,
-    private groupRouter: GroupRouter,
-    private currentContentService: CurrentContentService,
-  ) {}
 
   addChild(group: AddedContent<GroupType>): void {
     this.state = 'addingGroup';

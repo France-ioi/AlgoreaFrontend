@@ -15,9 +15,8 @@ import { breadcrumbServiceTag } from 'src/app/items/data-access/get-breadcrumb.s
   providedIn: 'root'
 })
 export class GetGroupBreadcrumbsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getBreadcrumbs(route: GroupRoute): Observable<GroupBreadcrumbs> {
     const groupIds = [ ...route.path, route.id ];

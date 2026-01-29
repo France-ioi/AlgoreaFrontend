@@ -19,10 +19,8 @@ export function parseResults(data: SimpleActionResponse[]): Result {
   providedIn: 'root',
 })
 export class RemoveGroupService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   remove(id: string): Observable<SimpleActionResponse> {
     return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/groups/${id}`);

@@ -14,9 +14,8 @@ interface NewGroupData {
   providedIn: 'root'
 })
 export class GroupCreationService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   create(name: string, type: 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session'): Observable<string> {
     const body = {

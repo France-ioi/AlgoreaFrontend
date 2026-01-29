@@ -16,10 +16,8 @@ const defaultPermissions: GroupManagerPermissionChanges = {
   providedIn: 'root',
 })
 export class GroupCreateManagerService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   create(
     groupId: string,

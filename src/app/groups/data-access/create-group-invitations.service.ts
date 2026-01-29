@@ -17,9 +17,8 @@ export enum InvitationResult {
   providedIn: 'root'
 })
 export class CreateGroupInvitationsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   createInvitations(
     groupId: string,

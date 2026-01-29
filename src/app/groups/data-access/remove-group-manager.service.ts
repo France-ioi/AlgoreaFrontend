@@ -23,10 +23,8 @@ export function parseResults(data: boolean[]): Result {
   providedIn: 'root',
 })
 export class RemoveGroupManagerService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   remove(groupId: string, managerId: string): Observable<void> {
     return this.http

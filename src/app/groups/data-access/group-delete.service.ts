@@ -8,10 +8,8 @@ import { assertSuccess, SimpleActionResponse } from '../../data-access/action-re
 
 @Injectable()
 export class GroupDeleteService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   delete(groupId: string): Observable<void> {
     return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/groups/${groupId}`).pipe(

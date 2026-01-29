@@ -58,6 +58,11 @@ import { Dialog } from '@angular/cdk/dialog';
   ]
 })
 export class UserGroupInvitationsComponent implements OnDestroy {
+  private getRequestsService = inject(GetRequestsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private currentContentService = inject(CurrentContentService);
+  private processGroupInvitationService = inject(ProcessGroupInvitationService);
+
   @Output() groupJoined = new EventEmitter<void>();
 
   private dialogService = inject(Dialog);
@@ -74,13 +79,6 @@ export class UserGroupInvitationsComponent implements OnDestroy {
   );
 
   displayedColumns = signal([ 'name', 'type', 'at', 'operations' ]);
-
-  constructor(
-    private getRequestsService: GetRequestsService,
-    private actionFeedbackService: ActionFeedbackService,
-    private currentContentService: CurrentContentService,
-    private processGroupInvitationService: ProcessGroupInvitationService,
-  ) {}
 
   ngOnDestroy(): void {
     this.sortSubject.complete();

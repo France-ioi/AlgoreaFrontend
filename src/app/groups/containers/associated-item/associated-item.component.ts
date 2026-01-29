@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, input, OnDestroy, signal } from '@angular/core';
+import { Component, computed, forwardRef, input, OnDestroy, signal, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
@@ -57,6 +57,9 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ]
 })
 export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy {
+  private getItemByIdService = inject(GetItemByIdService);
+  private searchItemService = inject(SearchItemService);
+
 
   group = input.required<Group>();
   contentType = input.required<ItemTypeCategory>();
@@ -104,11 +107,6 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(value, this.contentType() === 'activity' ? [ 'Chapter', 'Task' ] : [ 'Skill' ]);
-
-  constructor(
-    private getItemByIdService: GetItemByIdService,
-    private searchItemService: SearchItemService,
-  ) { }
 
   ngOnDestroy(): void {
     this.refresh$.complete();

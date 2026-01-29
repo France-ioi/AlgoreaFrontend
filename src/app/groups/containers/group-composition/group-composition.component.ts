@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -34,6 +34,9 @@ export interface GroupChildData {
   ]
 })
 export class GroupCompositionComponent {
+  private groupCreationService = inject(GroupCreationService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+
   @ViewChild('addSubGroupComponent') addSubGroupComponent?: AddSubGroupComponent;
 
   @Input() groupData?: GroupData;
@@ -45,11 +48,6 @@ export class GroupCompositionComponent {
   @ViewChild('memberList') private memberList?: MemberListComponent;
 
   state: 'addingGroup' | 'ready' = 'ready';
-
-  constructor(
-    private groupCreationService: GroupCreationService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) {}
 
   refreshGroupInfo(): void {
     this.groupRefreshRequired.emit();

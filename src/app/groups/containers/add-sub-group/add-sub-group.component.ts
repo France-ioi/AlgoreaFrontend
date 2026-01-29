@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -20,6 +20,8 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddSubGroupComponent {
+  private searchGroupService = inject(SearchGroupService);
+
   @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<GroupType>;
 
   @Input() group?: Group;
@@ -67,10 +69,6 @@ export class AddSubGroupComponent {
       title: group.name,
       description: group.description,
     }))));
-
-  constructor(
-    private searchGroupService: SearchGroupService,
-  ) {}
 
   addChild(group: AddedContent<GroupType>): void {
     this.addGroup.emit(group);

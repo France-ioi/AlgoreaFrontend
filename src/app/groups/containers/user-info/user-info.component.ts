@@ -19,15 +19,13 @@ import { UserGroupsWithGrantsComponent } from '../user-groups-with-grants/user-g
   ]
 })
 export class UserInfoComponent {
+  private generateProfileEditTokenService = inject(GenerateProfileEditTokenService);
+  private location = inject(Location);
+
   user = input.required<User>();
   hasChanged = output();
 
   private config = inject(APPCONFIG);
-
-  constructor(
-    private generateProfileEditTokenService: GenerateProfileEditTokenService,
-    private location: Location,
-  ) {}
 
   onModifyPassword(): void {
     this.generateProfileEditTokenService.generate(this.user().groupId).subscribe(response => {

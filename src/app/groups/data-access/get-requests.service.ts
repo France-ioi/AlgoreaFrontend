@@ -56,9 +56,8 @@ export type GroupInvitation = GroupInvitations[0];
   providedIn: 'root'
 })
 export class GetRequestsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getGroupPendingRequests(
     groupId?: string,

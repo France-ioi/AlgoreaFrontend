@@ -10,9 +10,8 @@ import { inject } from '@angular/core';
   providedIn: 'root'
 })
 export class GroupActionsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   updateGroup(id: string, changes: object): Observable<void> {
     return this.http

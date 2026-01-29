@@ -12,9 +12,8 @@ type Status = 'invalid'|'success'|'unchanged'|'not_found';
   providedIn: 'root'
 })
 export class GroupUsersService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   removeUsers(groupId: string, usersId: string[]): Observable<Map<string, Status>> {
     const httpParams = new HttpParams().set('user_ids', usersId.join(','));

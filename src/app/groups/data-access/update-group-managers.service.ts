@@ -16,9 +16,8 @@ export interface GroupManagerPermissionChanges {
   providedIn: 'root'
 })
 export class UpdateGroupManagersService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   update(
     groupId: string,

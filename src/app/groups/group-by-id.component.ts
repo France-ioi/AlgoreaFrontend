@@ -54,6 +54,10 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
   ]
 })
 export class GroupByIdComponent implements OnDestroy {
+  private store = inject(Store);
+  private currentContent = inject(CurrentContentService);
+  private groupRouter = inject(GroupRouter);
+  private currentContentService = inject(CurrentContentService);
   private config = inject(APPCONFIG);
 
   state$ = this.store.select(selectGroupData);
@@ -105,13 +109,6 @@ export class GroupByIdComponent implements OnDestroy {
 
 
   private hasRedirected = false;
-
-  constructor(
-    private store: Store,
-    private currentContent: CurrentContentService,
-    private groupRouter: GroupRouter,
-    private currentContentService: CurrentContentService,
-  ) {}
 
   ngOnDestroy(): void {
     this.currentContent.clear();

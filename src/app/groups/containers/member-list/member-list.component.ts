@@ -1,4 +1,16 @@
-import { Component, computed, EventEmitter, Input, OnChanges, OnDestroy, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  signal,
+  SimpleChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { defer, Observable, of, ReplaySubject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
@@ -117,6 +129,14 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
   ]
 })
 export class MemberListComponent implements OnChanges, OnDestroy {
+  private getGroupMembersService = inject(GetGroupMembersService);
+  private getGroupChildrenService = inject(GetGroupChildrenService);
+  private getGroupDescendantsService = inject(GetGroupDescendantsService);
+  private groupUsersService = inject(GroupUsersService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private removeSubgroupService = inject(RemoveSubgroupService);
+  private confirmationModalService = inject(ConfirmationModalService);
+  private removeGroupService = inject(RemoveGroupService);
 
   @Input() groupData? : GroupData;
   @Output() removedGroup = new EventEmitter<void>();
@@ -147,17 +167,6 @@ export class MemberListComponent implements OnChanges, OnDestroy {
     ...(this.currentUserCanManage() ? [ 'checkbox' ] : []),
     ...this.columns().map(column => column.field),
   ]);
-
-  constructor(
-    private getGroupMembersService: GetGroupMembersService,
-    private getGroupChildrenService: GetGroupChildrenService,
-    private getGroupDescendantsService: GetGroupDescendantsService,
-    private groupUsersService: GroupUsersService,
-    private actionFeedbackService: ActionFeedbackService,
-    private removeSubgroupService: RemoveSubgroupService,
-    private confirmationModalService: ConfirmationModalService,
-    private removeGroupService: RemoveGroupService,
-  ) { }
 
   ngOnDestroy(): void {
     this.removalInProgress$.complete();

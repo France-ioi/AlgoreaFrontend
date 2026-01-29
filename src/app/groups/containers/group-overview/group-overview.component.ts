@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Group } from '../../models/group';
 import { Router } from '@angular/router';
 import { GroupLeaveComponent } from '../group-leave/group-leave.component';
@@ -15,12 +15,12 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
   ]
 })
 export class GroupOverviewComponent {
+  private router = inject(Router);
+
   @Output() groupRefreshRequired = new EventEmitter<void>();
   @Output() leftGroup = new EventEmitter<void>();
 
   @Input() group?: Group;
-
-  constructor(private router: Router) {}
 
   onLeave(): void {
     if (this.group?.isPublic) {

@@ -10,9 +10,8 @@ import { Group, groupSchema } from '../models/group';
   providedIn: 'root',
 })
 export class GetGroupByIdService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(id: string): Observable<Group> {
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${id}`).pipe(

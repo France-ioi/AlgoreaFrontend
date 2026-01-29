@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
 import { Group } from '../../models/group';
 import { UntypedFormBuilder } from '@angular/forms';
@@ -31,6 +31,9 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
   ]
 })
 export class GroupInviteUsersComponent implements OnInit, OnDestroy {
+  private createGroupInvitationsService = inject(CreateGroupInvitationsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private formBuilder = inject(UntypedFormBuilder);
 
   @Input() group?: Group;
   @Output() refreshRequired = new EventEmitter<void>();
@@ -40,13 +43,6 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
 
   messages: Message[] = [];
   subscription?: Subscription;
-
-  constructor(
-    private createGroupInvitationsService: CreateGroupInvitationsService,
-    private actionFeedbackService: ActionFeedbackService,
-    private formBuilder: UntypedFormBuilder,
-  ) {
-  }
 
   ngOnInit(): void {
     this.subscription = this.inviteForm.get('logins')?.valueChanges.subscribe((change: string) => this.loginListChanged(change));

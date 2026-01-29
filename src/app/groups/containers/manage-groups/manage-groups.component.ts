@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { delay } from 'rxjs/operators';
 import { AsyncPipe } from '@angular/common';
@@ -24,15 +24,12 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
   ]
 })
 export class ManageGroupsComponent implements OnInit, OnDestroy {
-  currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
+  private store = inject(Store);
+  private layoutService = inject(LayoutService);
+  private currentContent = inject(CurrentContentService);
+  private sessionService = inject(UserSessionService);
 
-  constructor(
-    private store: Store,
-    private layoutService: LayoutService,
-    private currentContent: CurrentContentService,
-    private sessionService: UserSessionService,
-  ) {
-  }
+  currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
   ngOnInit(): void {
     this.currentContent.replace(myGroupsInfo({}));

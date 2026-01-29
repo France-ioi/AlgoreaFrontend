@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { myGroupsInfo } from 'src/app/models/content/group-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { JoinedGroupListComponent } from '../joined-group-list/joined-group-list.component';
@@ -26,16 +26,14 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
   ]
 })
 export class MyGroupsComponent implements OnDestroy, OnInit {
+  private store = inject(Store);
+  private layoutService = inject(LayoutService);
+  private currentContent = inject(CurrentContentService);
+  private sessionService = inject(UserSessionService);
+
   @ViewChild('joinedGroupList') joinedGroupList?: JoinedGroupListComponent;
 
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
-
-  constructor(
-    private store: Store,
-    private layoutService: LayoutService,
-    private currentContent: CurrentContentService,
-    private sessionService: UserSessionService,
-  ) {}
 
   ngOnInit(): void {
     this.currentContent.replace(myGroupsInfo({}));

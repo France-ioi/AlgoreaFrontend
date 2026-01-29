@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -42,15 +42,13 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   ]
 })
 export class ManagedGroupListComponent implements OnInit {
+  private managedGroupService = inject(ManagedGroupsService);
 
   state: 'error' | 'ready' | 'fetching' = 'fetching';
 
   data: Group[] = [];
 
   displayedColumns = signal([ 'name', 'type', 'canManage', 'canWatchMembers', 'canGrantGroupAccess' ]);
-
-  constructor(private managedGroupService: ManagedGroupsService) {
-  }
 
   ngOnInit(): void {
     this.fetchData();

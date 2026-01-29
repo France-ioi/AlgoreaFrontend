@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnDestroy, inject } from '@angular/core';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../data-access/request-actions.service';
 import { merge, of, Subject } from 'rxjs';
@@ -30,6 +24,9 @@ const groupColumn = { field: 'group.name', header: $localize`GROUP` };
   standalone: true,
 })
 export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
+  private getRequestsService = inject(GetRequestsService);
+  private requestActionService = inject(RequestActionsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
 
   // if groupId is undefined, pending join requests from all managed group will be used.
   @Input() groupId?: string;
@@ -52,11 +49,7 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
 
   private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
 
-  constructor(
-    private getRequestsService: GetRequestsService,
-    private requestActionService: RequestActionsService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) {
+  constructor() {
     this.dataFetching.pipe(
       switchMap(params =>
         merge(

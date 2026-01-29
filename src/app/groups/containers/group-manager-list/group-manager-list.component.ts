@@ -79,6 +79,12 @@ const managersLimit = 25;
   ]
 })
 export class GroupManagerListComponent {
+  private store = inject(Store);
+  private getGroupManagersService = inject(GetGroupManagersService);
+  private removeGroupManagerService = inject(RemoveGroupManagerService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private userService = inject(UserSessionService);
+  private confirmationModalService = inject(ConfirmationModalService);
 
   group = input.required<Group>();
 
@@ -114,14 +120,7 @@ export class GroupManagerListComponent {
     'operations',
   ]);
 
-  constructor(
-    private store: Store,
-    private getGroupManagersService: GetGroupManagersService,
-    private removeGroupManagerService: RemoveGroupManagerService,
-    private actionFeedbackService: ActionFeedbackService,
-    private userService: UserSessionService,
-    private confirmationModalService: ConfirmationModalService,
-  ) {
+  constructor() {
     effect(() => {
       this.fetchData();
     });

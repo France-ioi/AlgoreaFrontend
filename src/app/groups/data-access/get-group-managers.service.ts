@@ -25,9 +25,8 @@ export type Manager = z.infer<typeof managerSchema>;
   providedIn: 'root'
 })
 export class GetGroupManagersService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getGroupManagers(
     groupId: string,

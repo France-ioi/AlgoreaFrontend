@@ -14,9 +14,8 @@ export interface NewCodeSuccessResponse {
   providedIn: 'root'
 })
 export class CodeActionsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   createNewCode(id: string): Observable<string> {
     return this.http

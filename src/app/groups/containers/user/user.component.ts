@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
@@ -38,6 +38,11 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   ]
 })
 export class UserComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private router = inject(Router);
+  private currentContent = inject(CurrentContentService);
+  private groupRouter = inject(GroupRouter);
+
   userRoute$ = this.store.select(fromGroupContent.selectActiveContentRoute).pipe(filter(isNotNull));
   state$ = this.store.select(fromGroupContent.selectActiveContentUserState);
 
@@ -52,13 +57,6 @@ export class UserComponent implements OnInit, OnDestroy {
   );
 
   private subscription?: Subscription;
-
-  constructor(
-    private store: Store,
-    private router: Router,
-    private currentContent: CurrentContentService,
-    private groupRouter: GroupRouter,
-  ) {}
 
   ngOnInit(): void {
     this.subscription = combineLatest([
