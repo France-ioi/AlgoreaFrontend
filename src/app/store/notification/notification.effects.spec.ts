@@ -1,7 +1,8 @@
 import { toArray } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { fetchNotificationsEffect } from './notification.effects';
-import { Notification, NotificationHttpService } from 'src/app/data-access/notification.service';
+import { NotificationHttpService } from 'src/app/data-access/notification.service';
+import { Notification } from 'src/app/models/notification';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { CurrentUserProfile } from 'src/app/data-access/current-user.service';
 

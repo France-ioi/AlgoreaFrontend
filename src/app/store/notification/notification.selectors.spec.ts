@@ -1,7 +1,7 @@
 import { selectors } from './notification.selectors';
 import { State } from './notification.state';
 import { errorState, fetchingState, readyState } from 'src/app/utils/state';
-import { Notification } from 'src/app/data-access/notification.service';
+import { Notification } from 'src/app/models/notification';
 
 const mockNotifications: Notification[] = [
   { sk: 123, notificationType: 'test', payload: {}, readTime: undefined },

@@ -1,9 +1,12 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Subject } from 'rxjs';
 import { NotificationBellComponent } from './notification-bell.component';
 import { fromNotification } from '../../store/notification';
 import { fetchingState, readyState, errorState } from 'src/app/utils/state';
-import { ForumNewMessageNotification } from 'src/app/data-access/notification.service';
+import { ForumNewMessageNotification } from 'src/app/models/notification';
+import { MessageService } from 'src/app/services/message.service';
 
 const mockForumNotifications: ForumNewMessageNotification[] = [
   {
@@ -24,8 +27,11 @@ describe('NotificationBellComponent', () => {
   let component: NotificationBellComponent;
   let fixture: ComponentFixture<NotificationBellComponent>;
   let store: MockStore<object>;
+  let actions$: Subject<unknown>;
 
   beforeEach(waitForAsync(() => {
+    actions$ = new Subject<unknown>();
+
     TestBed.configureTestingModule({
       imports: [ NotificationBellComponent ],
       providers: [
@@ -33,7 +39,9 @@ describe('NotificationBellComponent', () => {
           selectors: [
             { selector: fromNotification.selectNotificationsState, value: fetchingState() }
           ]
-        })
+        }),
+        provideMockActions(() => actions$),
+        { provide: MessageService, useValue: { add: jasmine.createSpy('add') } },
       ]
     }).compileComponents();
 
