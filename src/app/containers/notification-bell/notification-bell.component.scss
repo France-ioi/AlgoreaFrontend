@@ -1,0 +1,103 @@
+.bell-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.ph-bell {
+  font-size: 1.25rem;
+  color: var(--alg-text-secondary);
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1rem;
+  text-align: center;
+  color: white;
+  background-color: var(--alg-primary-color, #4a6cf5);
+  border-radius: 0.5rem;
+
+  &.error {
+    background-color: #e74c3c;
+  }
+}
+
+.notification-panel {
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: var(--alg-bg-primary, white);
+  border: 1px solid var(--alg-border-color, #e0e0e0);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.panel-header {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--alg-border-color, #e0e0e0);
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--alg-text-secondary, #666);
+}
+
+.panel-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.panel-error {
+  padding: 1rem;
+}
+
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--alg-border-color, #e0e0e0);
+  cursor: pointer;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: var(--alg-bg-secondary, #f5f5f5);
+  }
+}
+
+.notification-type {
+  font-weight: 500;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: var(--alg-text-secondary, #666);
+}
