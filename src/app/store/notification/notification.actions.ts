@@ -1,4 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { Notification } from 'src/app/models/notification';
 import { State } from './notification.state';
 
 export const notificationApiActions = createActionGroup({
@@ -15,5 +16,12 @@ export const notificationTriggerActions = createActionGroup({
   source: 'Notification Trigger',
   events: {
     refresh: emptyProps(),
+  },
+});
+
+export const notificationWebsocketActions = createActionGroup({
+  source: 'Notification WebSocket',
+  events: {
+    notificationReceived: props<{ notification: Notification }>(),
   },
 });

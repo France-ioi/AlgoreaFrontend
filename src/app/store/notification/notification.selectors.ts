@@ -2,7 +2,7 @@ import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from './notification.state';
 import { RootState } from 'src/app/utils/store/root_state';
 import { FetchState } from 'src/app/utils/state';
-import { Notification } from 'src/app/data-access/notification.service';
+import { Notification } from 'src/app/models/notification';
 
 interface NotificationSelectors<T extends RootState> {
   selectNotificationsState: MemoizedSelector<T, FetchState<Notification[]>>,

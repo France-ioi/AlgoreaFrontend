@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { fromNotification } from '../../store/notification';
+import { filter, Subscription } from 'rxjs';
+import { fromNotification, notificationWebsocketActions } from '../../store/notification';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
 import { ToDatePipe } from 'src/app/pipes/toDate';
-import { isForumNewMessageNotification } from 'src/app/data-access/notification.service';
+import { isForumNewMessageNotification } from 'src/app/models/notification';
 import { mapStateData } from 'src/app/utils/state';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'alg-notification-bell',
@@ -16,8 +19,12 @@ import { mapStateData } from 'src/app/utils/state';
   imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimePipe, ToDatePipe ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationBellComponent {
+export class NotificationBellComponent implements OnInit, OnDestroy {
   private store = inject(Store);
+  private actions$ = inject(Actions);
+  private messageService = inject(MessageService);
+  private subscription?: Subscription;
+
   private rawState = this.store.selectSignal(fromNotification.selectNotificationsState);
 
   notificationsState = computed(() =>
@@ -32,4 +39,23 @@ export class NotificationBellComponent {
       case 'ready': return String(s.data.filter(n => n.readTime === undefined).length);
     }
   });
+
+  ngOnInit(): void {
+    this.subscription = this.actions$.pipe(
+      ofType(notificationWebsocketActions.notificationReceived),
+      filter(({ notification }) => isForumNewMessageNotification(notification)),
+    ).subscribe(({ notification }) => {
+      if (isForumNewMessageNotification(notification)) {
+        this.messageService.add({
+          severity: 'info',
+          summary: $localize`New message`,
+          detail: notification.payload.text,
+        });
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
 }
