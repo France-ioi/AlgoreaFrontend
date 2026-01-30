@@ -72,11 +72,16 @@ describe('NotificationBellComponent', () => {
     expect(component.badgeText()).toEqual('0');
   });
 
-  it('should return notifications when ready', () => {
+  it('should return notifications with date when ready', () => {
     store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockNotifications));
     store.refreshState();
     fixture.detectChanges();
-    expect(component.notifications()).toEqual(mockNotifications);
+    const result = component.notifications();
+    expect(result.length).toEqual(2);
+    expect(result[0]?.sk).toEqual(123);
+    expect(result[0]?.date).toEqual(new Date(123));
+    expect(result[1]?.sk).toEqual(124);
+    expect(result[1]?.date).toEqual(new Date(124));
   });
 
   it('should return empty array when fetching', () => {
