@@ -3,11 +3,21 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { NotificationBellComponent } from './notification-bell.component';
 import { fromNotification } from '../../store/notification';
 import { fetchingState, readyState, errorState } from 'src/app/utils/state';
-import { Notification } from 'src/app/data-access/notification.service';
+import { ForumNewMessageNotification } from 'src/app/data-access/notification.service';
 
-const mockNotifications: Notification[] = [
-  { sk: 123, notificationType: 'test', payload: {}, readTime: undefined },
-  { sk: 124, notificationType: 'test2', payload: {}, readTime: undefined },
+const mockForumNotifications: ForumNewMessageNotification[] = [
+  {
+    sk: 123,
+    notificationType: 'forum.new_message',
+    payload: { participantId: '1', itemId: '2', time: 1000, text: 'Hello', authorId: '3', uuid: 'abc' },
+    readTime: undefined,
+  },
+  {
+    sk: 124,
+    notificationType: 'forum.new_message',
+    payload: { participantId: '1', itemId: '2', time: 2000, text: 'World', authorId: '3', uuid: 'def' },
+    readTime: undefined,
+  },
 ];
 
 describe('NotificationBellComponent', () => {
@@ -52,19 +62,24 @@ describe('NotificationBellComponent', () => {
     store.refreshState();
     fixture.detectChanges();
     expect(component.badgeText()).toEqual('!');
-    expect(component.isError()).toBeTrue();
+    expect(component.notificationsState().isError).toBeTrue();
   });
 
   it('should show count when has unread notifications', () => {
-    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockNotifications));
+    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockForumNotifications));
     store.refreshState();
     fixture.detectChanges();
     expect(component.badgeText()).toEqual('2');
   });
 
   it('should show 0 when no unread notifications', () => {
-    const allRead: Notification[] = [
-      { sk: 123, notificationType: 'test', payload: {}, readTime: 1000 }
+    const allRead: ForumNewMessageNotification[] = [
+      {
+        sk: 123,
+        notificationType: 'forum.new_message',
+        payload: { participantId: '1', itemId: '2', time: 1000, text: 'Read msg', authorId: '3', uuid: 'xyz' },
+        readTime: 1000,
+      },
     ];
     store.overrideSelector(fromNotification.selectNotificationsState, readyState(allRead));
     store.refreshState();
@@ -72,36 +87,29 @@ describe('NotificationBellComponent', () => {
     expect(component.badgeText()).toEqual('0');
   });
 
-  it('should return notifications with date when ready', () => {
-    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockNotifications));
+  it('should filter to forum.new_message notifications only', () => {
+    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockForumNotifications));
     store.refreshState();
     fixture.detectChanges();
-    const result = component.notifications();
-    expect(result.length).toEqual(2);
-    expect(result[0]?.sk).toEqual(123);
-    expect(result[0]?.date).toEqual(new Date(123));
-    expect(result[1]?.sk).toEqual(124);
-    expect(result[1]?.date).toEqual(new Date(124));
-  });
-
-  it('should return empty array when fetching', () => {
-    store.overrideSelector(fromNotification.selectNotificationsState, fetchingState());
-    store.refreshState();
-    fixture.detectChanges();
-    expect(component.notifications()).toEqual([]);
+    const state = component.notificationsState();
+    expect(state.isReady).toBeTrue();
+    if (state.isReady) {
+      expect(state.data.length).toEqual(2);
+      expect(state.data[0]?.payload.text).toEqual('Hello');
+    }
   });
 
   it('should report isFetching true when fetching', () => {
     store.overrideSelector(fromNotification.selectNotificationsState, fetchingState());
     store.refreshState();
     fixture.detectChanges();
-    expect(component.isFetching()).toBeTrue();
+    expect(component.notificationsState().isFetching).toBeTrue();
   });
 
   it('should report isFetching false when ready', () => {
-    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockNotifications));
+    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockForumNotifications));
     store.refreshState();
     fixture.detectChanges();
-    expect(component.isFetching()).toBeFalse();
+    expect(component.notificationsState().isFetching).toBeFalse();
   });
 });

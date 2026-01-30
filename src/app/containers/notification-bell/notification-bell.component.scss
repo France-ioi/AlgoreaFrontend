@@ -78,8 +78,9 @@
 
 .notification-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--alg-border-color, #e0e0e0);
   cursor: pointer;
@@ -93,8 +94,36 @@
   }
 }
 
-.notification-type {
+.notification-icon {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  color: var(--alg-primary-color, #4a6cf5);
+  margin-top: 0.125rem;
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.notification-text {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
   font-weight: 500;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2rem;
+    background: linear-gradient(to right, transparent, var(--alg-bg-primary, white));
+  }
 }
 
 .notification-time {

@@ -5,38 +5,31 @@ import { fromNotification } from '../../store/notification';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
+import { ToDatePipe } from 'src/app/pipes/toDate';
+import { isForumNewMessageNotification } from 'src/app/data-access/notification.service';
+import { mapStateData } from 'src/app/utils/state';
 
 @Component({
   selector: 'alg-notification-bell',
   templateUrl: './notification-bell.component.html',
   styleUrl: './notification-bell.component.scss',
-  imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimePipe ],
+  imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimePipe, ToDatePipe ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationBellComponent {
   private store = inject(Store);
-  private notificationsState = this.store.selectSignal(fromNotification.selectNotificationsState);
+  private rawState = this.store.selectSignal(fromNotification.selectNotificationsState);
 
-  isFetching = computed(() => this.notificationsState()?.isFetching ?? true);
-  isError = computed(() => this.notificationsState()?.isError ?? false);
-
-  notifications = computed(() => {
-    const state = this.notificationsState();
-    if (!state?.isReady) return [];
-    return state.data.map(n => ({
-      ...n,
-      date: new Date(n.sk),
-    }));
-  });
+  notificationsState = computed(() =>
+    mapStateData(this.rawState(), data => data.filter(isForumNewMessageNotification))
+  );
 
   badgeText = computed(() => {
-    const state = this.notificationsState();
-    if (state.isFetching) return '?';
-    if (state.isError) return '!';
-    if (state.isReady) {
-      const unreadCount = state.data.filter(n => n.readTime === undefined).length;
-      return String(unreadCount);
+    const s = this.notificationsState();
+    switch (s.tag) {
+      case 'fetching': return '?';
+      case 'error': return '!';
+      case 'ready': return String(s.data.filter(n => n.readTime === undefined).length);
     }
-    return '?'; // Fallback
   });
 }
