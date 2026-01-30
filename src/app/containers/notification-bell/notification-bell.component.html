@@ -1,0 +1,30 @@
+<button class="bell-button" [cdkMenuTriggerFor]="notificationMenu">
+  <i class="ph-bold ph-bell"></i>
+  <span class="badge" [class.error]="isError()">{{ badgeText() }}</span>
+</button>
+
+<ng-template #notificationMenu>
+  <div class="notification-panel" cdkMenu>
+    <div class="panel-header" i18n>Notifications</div>
+    @if (isFetching()) {
+      <alg-loading class="panel-loading"></alg-loading>
+    } @else if (isError()) {
+      <alg-error
+        class="panel-error"
+        i18n-message message="Error loading notifications"
+        icon="ph-duotone ph-warning-circle"
+      ></alg-error>
+    } @else if (notifications().length === 0) {
+      <div class="empty-state" i18n>No notifications</div>
+    } @else {
+      <ul class="notification-list">
+        @for (notification of notifications(); track notification.sk) {
+          <li class="notification-item" cdkMenuItem>
+            <span class="notification-type">{{ notification.notificationType }}</span>
+            <span class="notification-time">{{ notification.date | relativeTime }}</span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</ng-template>
