@@ -32,4 +32,11 @@ export class ToastMessagesComponent implements OnInit, OnDestroy {
   onClose(message: MessageV2): void {
     this.toastService.dismiss(message);
   }
+
+  onMessageClick(message: MessageV2): void {
+    if (message.onClick) {
+      message.onClick();
+      this.toastService.dismiss(message);
+    }
+  }
 }

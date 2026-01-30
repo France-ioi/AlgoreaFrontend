@@ -2,15 +2,19 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, Subscription } from 'rxjs';
+import { catchError, filter, map, of, Subscription } from 'rxjs';
 import { fromNotification, notificationWebsocketActions } from '../../store/notification';
+import { fromForum } from '../../forum/store';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
 import { ToDatePipe } from 'src/app/pipes/toDate';
-import { isForumNewMessageNotification } from 'src/app/models/notification';
+import { ForumNewMessageNotification, isForumNewMessageNotification } from 'src/app/models/notification';
 import { mapStateData } from 'src/app/utils/state';
 import { MessageService } from 'src/app/services/message.service';
+import { itemRoute } from 'src/app/models/routing/item-route';
+import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
+import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 
 @Component({
   selector: 'alg-notification-bell',
@@ -23,6 +27,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private actions$ = inject(Actions);
   private messageService = inject(MessageService);
+  private getItemByIdService = inject(GetItemByIdService);
   private subscription?: Subscription;
 
   private rawState = this.store.selectSignal(fromNotification.selectNotificationsState);
@@ -50,6 +55,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
           severity: 'info',
           summary: $localize`New message`,
           detail: notification.payload.text,
+          onClick: () => this.openThread(notification),
         });
       }
     });
@@ -57,5 +63,21 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+
+  openThread(notification: ForumNewMessageNotification): void {
+    const { participantId, itemId } = notification.payload;
+    this.getItemByIdService.get(itemId).pipe(
+      map(item => item.string.title),
+      catchError(err => of(errorIsHTTPForbidden(err)
+        ? $localize`Not visible content`
+        : $localize`Error fetching content title`
+      )),
+    ).subscribe(title => {
+      this.store.dispatch(fromForum.notificationActions.showThread({
+        id: { participantId, itemId },
+        item: { route: itemRoute('activity', itemId), title },
+      }));
+    });
   }
 }

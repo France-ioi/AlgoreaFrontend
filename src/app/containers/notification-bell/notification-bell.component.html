@@ -26,7 +26,7 @@
         } @else {
           <ul class="notification-list">
             @for (notification of data; track notification.sk) {
-              <li class="notification-item" cdkMenuItem>
+              <li class="notification-item" cdkMenuItem (click)="openThread(notification)">
                 <i class="notification-icon ph-bold ph-chat-circle"></i>
                 <div class="notification-content">
                   <div class="notification-text">{{ notification.payload.text }}</div>

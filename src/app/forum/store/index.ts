@@ -7,7 +7,9 @@ import * as currentThreadEffects from './current-thread/current-thread.effects';
 import * as forumBaseEffects from './forum.effects';
 import * as websocketIncomingMessageEffects from './current-thread/websocket-incoming-message.effects';
 import { getCurrentThreadSelectors } from './current-thread/current-thread.selectors';
-import { topBarActions, forumThreadListActions, threadPanelActions, itemPageActions } from './current-thread/current-thread.actions';
+import {
+  topBarActions, forumThreadListActions, threadPanelActions, itemPageActions, notificationActions
+} from './current-thread/current-thread.actions';
 import { FunctionalEffect } from '@ngrx/effects';
 import { eventFetchingActions } from './current-thread/event-fetching.actions';
 
@@ -33,4 +35,5 @@ export const fromForum = {
   threadPanelActions,
   itemPageActions,
   eventFetchingActions,
+  notificationActions,
 };

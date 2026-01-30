@@ -31,3 +31,10 @@ export const itemPageActions = createActionGroup({
     changeCurrentThreadId: props<{ id: ThreadId, item: ThreadItemInfo }>(),
   },
 });
+
+export const notificationActions = createActionGroup({
+  source: 'Notification',
+  events: {
+    showThread: props<{ id: ThreadId, item: ThreadItemInfo }>(),
+  },
+});

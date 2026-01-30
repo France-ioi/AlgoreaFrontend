@@ -1,13 +1,17 @@
 <div class="container">
   @for (message of messages(); track $index) {
-    <div class="message {{ message.severity || '' }}">
+    <div
+      class="message {{ message.severity || '' }}"
+      [class.clickable]="!!message.onClick"
+      (click)="onMessageClick(message)"
+    >
       <div class="close-button-container">
         <button
           type="button"
           class="secondary"
           alg-button-icon
           icon="ph ph-x"
-          (click)="onClose(message)"
+          (click)="onClose(message); $event.stopPropagation()"
         ></button>
       </div>
       <div class="message-icon-container">

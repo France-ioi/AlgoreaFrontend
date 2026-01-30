@@ -1,12 +1,16 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { NotificationBellComponent } from './notification-bell.component';
 import { fromNotification } from '../../store/notification';
+import { fromForum } from '../../forum/store';
 import { fetchingState, readyState, errorState } from 'src/app/utils/state';
 import { ForumNewMessageNotification } from 'src/app/models/notification';
 import { MessageService } from 'src/app/services/message.service';
+import { itemRoute } from 'src/app/models/routing/item-route';
+import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const mockForumNotifications: ForumNewMessageNotification[] = [
   {
@@ -28,9 +32,12 @@ describe('NotificationBellComponent', () => {
   let fixture: ComponentFixture<NotificationBellComponent>;
   let store: MockStore<object>;
   let actions$: Subject<unknown>;
+  let getItemByIdService: jasmine.SpyObj<GetItemByIdService>;
 
   beforeEach(waitForAsync(() => {
     actions$ = new Subject<unknown>();
+    getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', ['get']);
+    getItemByIdService.get.and.returnValue(of({ string: { title: 'Test Item' } } as Item));
 
     TestBed.configureTestingModule({
       imports: [ NotificationBellComponent ],
@@ -42,6 +49,7 @@ describe('NotificationBellComponent', () => {
         }),
         provideMockActions(() => actions$),
         { provide: MessageService, useValue: { add: jasmine.createSpy('add') } },
+        { provide: GetItemByIdService, useValue: getItemByIdService },
       ]
     }).compileComponents();
 
@@ -120,4 +128,54 @@ describe('NotificationBellComponent', () => {
     fixture.detectChanges();
     expect(component.notificationsState().isFetching).toBeFalse();
   });
+
+  it('should dispatch showThread with fetched title when openThread is called', fakeAsync(() => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    const notification = mockForumNotifications[0]!;
+
+    component.openThread(notification);
+    tick();
+
+    expect(getItemByIdService.get).toHaveBeenCalledWith(notification.payload.itemId);
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      fromForum.notificationActions.showThread({
+        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
+        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Test Item' },
+      })
+    );
+  }));
+
+  it('should dispatch showThread with forbidden message when item fetch is forbidden', fakeAsync(() => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    const notification = mockForumNotifications[0]!;
+    const forbiddenError = new HttpErrorResponse({ status: 403 });
+    getItemByIdService.get.and.returnValue(throwError(() => forbiddenError));
+
+    component.openThread(notification);
+    tick();
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      fromForum.notificationActions.showThread({
+        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
+        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Not visible content' },
+      })
+    );
+  }));
+
+  it('should dispatch showThread with error message when item fetch fails', fakeAsync(() => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    const notification = mockForumNotifications[0]!;
+    const serverError = new HttpErrorResponse({ status: 500 });
+    getItemByIdService.get.and.returnValue(throwError(() => serverError));
+
+    component.openThread(notification);
+    tick();
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      fromForum.notificationActions.showThread({
+        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
+        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Error fetching content title' },
+      })
+    );
+  }));
 });
