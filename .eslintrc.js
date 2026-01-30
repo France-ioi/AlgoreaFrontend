@@ -98,6 +98,7 @@ module.exports = {
             '!**/utils/store/**',
             '!**/store/config',
             '!**/store/notification',
+            '!**/store/websocket',
             '!**/store/observation',
             '!**/store/time-offset',
             '!**/store/router',

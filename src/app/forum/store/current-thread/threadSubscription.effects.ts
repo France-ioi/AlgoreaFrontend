@@ -4,6 +4,7 @@ import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, filter, swit
 import { Store } from '@ngrx/store';
 import { areSameThreads } from '../../models/threads';
 import { fromForum } from '..';
+import { fromWebsocket } from 'src/app/store/websocket';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
@@ -73,7 +74,7 @@ export const threadSubscriptionEffect = createEffect(
     readyData(),
     distinctUntilChanged(areSameThreads),
     // re-emit the thread each time the websocket comes back to `open = true` status
-    switchMap(thread => store$.select(fromForum.selectWebsocketOpen).pipe(
+    switchMap(thread => store$.select(fromWebsocket.selectOpen).pipe(
       filter(open => open),
       map(() => thread),
     )),

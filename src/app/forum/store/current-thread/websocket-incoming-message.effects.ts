@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { filter, map } from 'rxjs';
-import { websocketClientActions } from '../websocket/websocket.actions';
+import { websocketClientActions } from 'src/app/store/websocket';
 import {
   ForumWsMessage,
   forumWsMessageSchema,

@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import { websocketClientActions } from './websocket.actions';
 
 export interface State {
@@ -13,3 +13,8 @@ export const reducer = createReducer(
   initialState,
   on(websocketClientActions.statusChanged, (state, { open }): State => ({ ...state, open })),
 );
+
+export const fromWebsocket = createFeature({
+  name: 'websocket',
+  reducer,
+});
