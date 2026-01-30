@@ -71,4 +71,32 @@ describe('NotificationBellComponent', () => {
     fixture.detectChanges();
     expect(component.badgeText()).toEqual('0');
   });
+
+  it('should return notifications when ready', () => {
+    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockNotifications));
+    store.refreshState();
+    fixture.detectChanges();
+    expect(component.notifications()).toEqual(mockNotifications);
+  });
+
+  it('should return empty array when fetching', () => {
+    store.overrideSelector(fromNotification.selectNotificationsState, fetchingState());
+    store.refreshState();
+    fixture.detectChanges();
+    expect(component.notifications()).toEqual([]);
+  });
+
+  it('should report isFetching true when fetching', () => {
+    store.overrideSelector(fromNotification.selectNotificationsState, fetchingState());
+    store.refreshState();
+    fixture.detectChanges();
+    expect(component.isFetching()).toBeTrue();
+  });
+
+  it('should report isFetching false when ready', () => {
+    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockNotifications));
+    store.refreshState();
+    fixture.detectChanges();
+    expect(component.isFetching()).toBeFalse();
+  });
 });
