@@ -30,6 +30,7 @@ import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
+import { fromWebsocket } from 'src/app/store/websocket';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
@@ -91,7 +92,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   private readonly state$ = this.store.select(fromForum.selectThreadEvents);
   readonly state = this.store.selectSignal(fromForum.selectThreadEvents);
 
-  readonly isWsOpen$ = this.store.select(fromForum.selectWebsocketOpen);
+  readonly isWsOpen$ = this.store.select(fromWebsocket.selectOpen);
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events

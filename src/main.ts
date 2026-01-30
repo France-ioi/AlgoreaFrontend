@@ -20,6 +20,7 @@ import { provideEffects } from '@ngrx/effects';
 import { NavigationActionTiming, provideRouterStore } from '@ngrx/router-store';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromGroupContent, groupStoreEffects } from './app/groups/store';
+import { fromWebsocket, websocketEffects } from './app/store/websocket';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
 import { fromSelectedContent, selectedContentEffects } from './app/store/navigation';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
@@ -79,6 +80,7 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideRouterStore({ serializer: RouterSerializer, navigationActionTiming: NavigationActionTiming.PostActivation }),
     provideState(fromRouter),
+    provideState(fromWebsocket),
     provideState(fromForum),
     provideState(fromGroupContent),
     provideState(fromItemContent),
@@ -88,6 +90,7 @@ bootstrapApplication(AppComponent, {
     provideState(fromConfig),
     provideState(fromNotification),
     provideEffects(
+      websocketEffects,
       forumEffects(),
       groupStoreEffects(),
       itemStoreEffects(),
