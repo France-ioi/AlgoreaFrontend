@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, inject } from '@angular/core';
 import { Group } from '../../models/group';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { ReplaySubject, of, Subject } from 'rxjs';
@@ -26,6 +26,9 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class GroupAccessComponent implements OnChanges, OnDestroy {
+  private getItemByIdService = inject(GetItemByIdService);
+  private grantedPermissionsService = inject(GrantedPermissionsService);
+
   @Input() group?: Group;
 
   private readonly group$ = new ReplaySubject<Group>(1);
@@ -46,12 +49,6 @@ export class GroupAccessComponent implements OnChanges, OnDestroy {
     switchMap(group => this.grantedPermissionsService.get(group.id)),
     mapToFetchState({ resetter: this.permissionsRefresh$ }),
   );
-
-  constructor(
-    private getItemByIdService: GetItemByIdService,
-    private grantedPermissionsService: GrantedPermissionsService,
-  ) {
-  }
 
   ngOnChanges(): void {
     if (this.group) {

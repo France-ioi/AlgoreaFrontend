@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Group } from '../../models/group';
@@ -13,15 +13,12 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   imports: [ ButtonComponent ]
 })
 export class GroupLeaveComponent {
+  private groupLeaveService = inject(GroupLeaveService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+
   @Output() leave = new EventEmitter<void>();
 
   @Input() group?: Group;
-
-  constructor(
-    private groupLeaveService: GroupLeaveService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) {
-  }
 
   leaveGroup(): void {
     if (!this.group) {

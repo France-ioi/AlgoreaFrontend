@@ -10,10 +10,8 @@ import { User, userSchema } from '../models/user';
   providedIn: 'root'
 })
 export class GetUserService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   getForId(id: string): Observable<User> {
     return this.http.get<unknown>(`${this.config.apiUrl}/users/${ id }`)

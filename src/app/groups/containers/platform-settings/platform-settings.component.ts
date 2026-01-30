@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { LocaleService } from 'src/app/services/localeService';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -16,13 +16,11 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class PlatformSettingsComponent {
-  currentUser$ = this.userSessionService.userProfile$;
+  private userSessionService = inject(UserSessionService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private localeService = inject(LocaleService);
 
-  constructor(
-    private userSessionService: UserSessionService,
-    private actionFeedbackService: ActionFeedbackService,
-    private localeService: LocaleService,
-  ) {}
+  currentUser$ = this.userSessionService.userProfile$;
 
   onChangeLang(event: string): void {
     this.update({ default_language: event });

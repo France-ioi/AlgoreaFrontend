@@ -28,9 +28,8 @@ function notBase(group: Group): group is GroupFound {
   providedIn: 'root'
 })
 export class SearchGroupService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   search(
     searchString: string,

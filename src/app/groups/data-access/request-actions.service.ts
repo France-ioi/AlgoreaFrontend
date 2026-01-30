@@ -17,9 +17,8 @@ export enum Action {
   providedIn: 'root'
 })
 export class RequestActionsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   processJoinRequests(ids: Map<string, string[]>, action: Action): Observable<Map<string, Status>[]> {
     const type = action === Action.Accept ? 'accept' : 'reject';

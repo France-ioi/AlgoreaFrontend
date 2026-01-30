@@ -31,9 +31,8 @@ export type GroupType = z.infer<typeof typeSchema>;
   providedIn: 'root'
 })
 export class GetGroupChildrenService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getGroupChildren(
     groupId: string,

@@ -22,9 +22,8 @@ export type GroupMembers = z.infer<typeof groupMembersSchema>;
   providedIn: 'root'
 })
 export class GetGroupMembersService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getGroupMembers(
     groupId: string,

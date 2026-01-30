@@ -12,10 +12,8 @@ import { Result } from '../containers/member-list/group-removal-response-handlin
   providedIn: 'root',
 })
 export class RemoveSubgroupService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   remove(parentGroupId: string, childGroupId: string): Observable<SimpleActionResponse> {
     return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/groups/${parentGroupId}/relations/${childGroupId}`);

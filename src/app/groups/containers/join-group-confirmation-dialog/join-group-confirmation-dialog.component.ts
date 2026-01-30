@@ -22,6 +22,8 @@ export type JoinGroupConfirmationDialogResult = { confirmed: true } | undefined;
   ]
 })
 export class JoinGroupConfirmationDialogComponent implements OnInit {
+  private fb = inject(FormBuilder);
+
   dialogRef = inject(DialogRef<JoinGroupConfirmationDialogResult>);
 
   data = signal(inject<{ name: string, params: GroupApprovals }>(DIALOG_DATA));
@@ -30,9 +32,6 @@ export class JoinGroupConfirmationDialogComponent implements OnInit {
     agreeWithPersonalInfoView?: FormControl<boolean>,
     agreeWithLockMembership?: FormControl<boolean>,
   }>;
-
-  constructor(private fb: FormBuilder) {
-  }
 
   ngOnInit(): void {
     const { requirePersonalInfoAccessApproval, requireLockMembershipApprovalUntil } = this.data().params;

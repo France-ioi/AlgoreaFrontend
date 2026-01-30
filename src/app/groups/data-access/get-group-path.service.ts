@@ -16,9 +16,8 @@ const groupPathResponseSchema = z.object({
   providedIn: 'root'
 })
 export class GetGroupPathService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getGroupPath(groupId: GroupId): Observable<GroupPath> {
     return this.http.get<unknown>(`${this.config.apiUrl}/groups/${groupId}/path-from-root`).pipe(

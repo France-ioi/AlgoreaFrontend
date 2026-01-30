@@ -10,9 +10,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ProcessGroupInvitationService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   accept(groupId: string, approvals: string[] = []): Observable<{ changed: boolean }> {
     const url = `${this.config.apiUrl}/current-user/group-invitations/${groupId}/accept`;

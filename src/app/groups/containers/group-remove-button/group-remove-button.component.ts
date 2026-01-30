@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, inject } from '@angular/core';
 import { Group } from '../../models/group';
 import { distinctUntilChanged, switchMap, map, filter } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
@@ -20,6 +20,12 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   imports: [ LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private confirmationModalService = inject(ConfirmationModalService);
+  private getGroupChildrenService = inject(GetGroupChildrenService);
+  private groupDeleteService = inject(GroupDeleteService);
+  private router = inject(Router);
+
   @Input() group?: Group;
 
   @Output() groupDeleted = new EventEmitter<void>();
@@ -33,14 +39,6 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
     switchMap(id => this.hasGroupChildren$(id)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  constructor(
-    private actionFeedbackService: ActionFeedbackService,
-    private confirmationModalService: ConfirmationModalService,
-    private getGroupChildrenService: GetGroupChildrenService,
-    private groupDeleteService: GroupDeleteService,
-    private router: Router,
-  ) { }
 
   ngOnChanges(): void {
     if (this.group) {

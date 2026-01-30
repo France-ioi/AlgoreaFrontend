@@ -1,12 +1,4 @@
-import {
-  Component,
-  computed,
-  input,
-  Input,
-  OnChanges,
-  signal,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, computed, input, Input, OnChanges, signal, SimpleChanges, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
@@ -80,6 +72,9 @@ const logsLimit = 20;
   ]
 })
 export class GroupLogViewComponent implements OnChanges {
+  private activityLogService = inject(ActivityLogService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private sessionService = inject(UserSessionService);
 
   @Input() groupId?: string;
   showUserColumn = input(true);
@@ -101,12 +96,6 @@ export class GroupLogViewComponent implements OnChanges {
   });
 
   readonly state$ = this.datapager.list$;
-
-  constructor(
-    private activityLogService: ActivityLogService,
-    private actionFeedbackService: ActionFeedbackService,
-    private sessionService: UserSessionService,
-  ) {}
 
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -44,6 +44,12 @@ export interface ManagerPermissionDialogResult {
   ]
 })
 export class ManagerPermissionDialogComponent implements OnInit {
+  private sessionService = inject(UserSessionService);
+  private updateGroupManagersService = inject(UpdateGroupManagersService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private fb = inject(UntypedFormBuilder);
+  private confirmationModalService = inject(ConfirmationModalService);
+
   params = signal(inject<ManagerPermissionDialogParams>(DIALOG_DATA));
   dialogRef = inject(DialogRef<ManagerPermissionDialogResult>);
 
@@ -73,14 +79,6 @@ export class ManagerPermissionDialogComponent implements OnInit {
     canGrantGroupAccess: [ false ],
     canWatchMembers: [ false ],
   });
-
-  constructor(
-    private sessionService: UserSessionService,
-    private updateGroupManagersService: UpdateGroupManagersService,
-    private actionFeedbackService: ActionFeedbackService,
-    private fb: UntypedFormBuilder,
-    private confirmationModalService: ConfirmationModalService,
-  ) {}
 
   ngOnInit(): void {
     const manager = this.params().manager;

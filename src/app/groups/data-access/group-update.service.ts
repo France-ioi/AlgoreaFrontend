@@ -21,10 +21,8 @@ export interface GroupChanges {
   providedIn: 'root'
 })
 export class GroupUpdateService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   updateGroup(groupId: string, changes: GroupChanges) : Observable<void> {
     return this.http.put<SimpleActionResponse>(`${this.config.apiUrl}/groups/${groupId}`, changes).pipe(

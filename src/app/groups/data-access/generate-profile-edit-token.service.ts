@@ -17,9 +17,8 @@ export type ProfileEditToken = z.infer<typeof profileEditTokenSchema>;
   providedIn: 'root'
 })
 export class GenerateProfileEditTokenService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   generate(id: string): Observable<ProfileEditToken> {
     return this.http.post<unknown>(`${this.config.apiUrl}/users/${id}/generate-profile-edit-token`, undefined).pipe(
