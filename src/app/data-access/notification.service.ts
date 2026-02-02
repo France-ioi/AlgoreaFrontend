@@ -33,4 +33,17 @@ export class NotificationHttpService {
       map(response => response.notifications),
     );
   }
+
+  deleteNotification(sk: number): Observable<void> {
+    if (!this.config.slsApiUrl) {
+      throw new Error('slsApiUrl is not configured');
+    }
+    return this.identityTokenService.identityToken$.pipe(
+      switchMap(token => this.http.delete<void>(
+        `${this.config.slsApiUrl}/notifications/${sk}`,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        { headers: { Authorization: `Bearer ${token}` } }
+      )),
+    );
+  }
 }

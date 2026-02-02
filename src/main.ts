@@ -25,7 +25,9 @@ import { fromItemContent, itemStoreEffects } from './app/items/store';
 import { fromSelectedContent, selectedContentEffects } from './app/store/navigation';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
 import { fromTimeOffset } from './app/store/time-offset';
-import { fromNotification, notificationEffects, notificationWebsocketEffects } from './app/store/notification';
+import {
+  fromNotification, notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
+} from './app/store/notification';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { fromConfig, configEffects } from './app/store/config';
@@ -98,6 +100,7 @@ bootstrapApplication(AppComponent, {
       configEffects,
       notificationEffects,
       notificationWebsocketEffects,
+      notificationThreadCleanupEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),

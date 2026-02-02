@@ -25,4 +25,16 @@ export const reducer = createReducer(
       };
     }
   ),
+
+  on(
+    notificationApiActions.notificationDeleted,
+    (state, { sk }): State => {
+      const current = state.notificationsState;
+      if (!current.isReady) return state;
+      return {
+        ...state,
+        notificationsState: readyState(current.data.filter(n => n.sk !== sk)),
+      };
+    }
+  ),
 );

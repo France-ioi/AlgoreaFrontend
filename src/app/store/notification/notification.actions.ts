@@ -6,6 +6,7 @@ export const notificationApiActions = createActionGroup({
   source: 'Notification API',
   events: {
     fetchStateChanged: props<{ fetchState: State['notificationsState'] }>(),
+    notificationDeleted: props<{ sk: number }>(),
   },
 });
 
