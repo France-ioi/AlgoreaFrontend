@@ -6,15 +6,13 @@
   @if (!isWsOpen) {
     <div class="ws-error" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
   } @else {
-    @switch(state().tag) {
-      @case('fetching') {
-        <div class="widget-loading">Loading...</div>
-      }
-      @case('error') {
-        <div class="widget-error">Error!</div>
-      }
-      @case('ready') {
-        <div class="widget-body">
+    @let currentState = state();
+    @if (currentState.isError) {
+      <div class="widget-error">Error!</div>
+    } @else if (currentState.isFetching && !currentState.data) {
+      <div class="widget-loading">Loading...</div>
+    } @else {
+      <div class="widget-body">
           @if (!isMine) {
             @if (participantUser$ | async; as participantUser) {
               @if (participantUser.name) {
@@ -28,14 +26,14 @@
             }
           }
           <div class="widget-scroll" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
-            @if (isCurrentUserThreadParticipant && threadStatus?.isReady && state().data?.length === 0) {
+            @if (isCurrentUserThreadParticipant && threadStatus?.isReady && currentState.data?.length === 0) {
               <div class="no-messages" i18n>
               In this panel, you can request help from other users about the content you are on.
               People who have already validated this activity will see your request and be able to answer.
             </div>
             } @else {
               @if (threadMetadata.id) {
-                @for (event of state().data; track event.time) {
+                @for (event of currentState.data; track event.time) {
                   <alg-thread-message
                     class="thread-message"
                     [threadId]="threadMetadata.id"
@@ -44,6 +42,9 @@
                     [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
                     [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
                   ></alg-thread-message>
+                }
+                @if (currentState.isFetching) {
+                  <div class="refetching-indicator" i18n>Looking for new events...</div>
                 }
               }
             }
@@ -121,7 +122,6 @@
           </div>
         </div>
       }
-    }
   }
 </div>
 

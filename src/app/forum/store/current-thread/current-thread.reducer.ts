@@ -23,15 +23,21 @@ const reducer = createReducer(
       : state.wsEvents,
   })),
 
-  on(eventFetchingActions.logEventsFetchStateChanged, (state, { fetchState }): State => ({
-    ...state,
-    logEvents: fetchState,
-  })),
+  on(eventFetchingActions.logEventsFetchStateChanged, (state, { fetchState }): State => {
+    // Preserve previous data when refetching for the same thread
+    if (fetchState.isFetching && fetchState.identifier && state.id && areSameThreads(fetchState.identifier, state.id)) {
+      return { ...state, logEvents: fetchingState(state.logEvents.data, fetchState.identifier) };
+    }
+    return { ...state, logEvents: fetchState };
+  }),
 
-  on(eventFetchingActions.slsEventsFetchStateChanged, (state, { fetchState }): State => ({
-    ...state,
-    slsEvents: fetchState,
-  })),
+  on(eventFetchingActions.slsEventsFetchStateChanged, (state, { fetchState }): State => {
+    // Preserve previous data when refetching for the same thread
+    if (fetchState.isFetching && fetchState.identifier && state.id && areSameThreads(fetchState.identifier, state.id)) {
+      return { ...state, slsEvents: fetchingState(state.slsEvents.data, fetchState.identifier) };
+    }
+    return { ...state, slsEvents: fetchState };
+  }),
 
   on(topBarActions.toggleCurrentThreadVisibility, (state): State => ({ ...state, visible: !state.visible })),
 

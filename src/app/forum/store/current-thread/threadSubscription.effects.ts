@@ -1,14 +1,11 @@
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { createEffect } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { map, distinctUntilChanged, tap, withLatestFrom, fromEvent, filter, switchMap, pairwise, EMPTY } from 'rxjs';
+import { combineLatest, tap, withLatestFrom, fromEvent, filter, pairwise, EMPTY } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { areSameThreads } from '../../models/threads';
 import { fromForum } from '..';
 import { fromWebsocket } from 'src/app/store/websocket';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
-import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
-import { readyData } from 'src/app/utils/operators/state';
 import { APPCONFIG } from 'src/app/config';
 
 /**
@@ -25,7 +22,7 @@ export const threadUnsubscriptionOnUnloadEffect = createEffect(
       withLatestFrom(store.select(fromForum.selectCurrentThread)),
       tap(([ , state ]) => {
         const thread = state.info.data;
-        if (thread) {
+        if (thread && state.visible) {
           websocketClient.send(unsubscribeAction(thread.token));
         }
       })
@@ -34,11 +31,10 @@ export const threadUnsubscriptionOnUnloadEffect = createEffect(
 );
 
 /**
- * Unsubscribe from the previous thread when the thread id changes.
- * Uses pairwise() to capture the previous state before the reducer clears it.
- * This is done only if there was a token (otherwise a "subscribe" could not have been sent).
+ * Unsubscribe when panel becomes hidden or thread changes.
+ * Uses pairwise() to capture the previous state.
  */
-export const threadUnsubscriptionOnChangeEffect = createEffect(
+export const threadUnsubscriptionEffect = createEffect(
   (
     store = inject(Store),
     websocketClient = inject(WebsocketClient),
@@ -46,10 +42,15 @@ export const threadUnsubscriptionOnChangeEffect = createEffect(
   ) => (config.featureFlags.enableForum ?
     store.select(fromForum.selectCurrentThread).pipe(
       pairwise(),
+      // Only unsubscribe if previous state had a token and was visible
+      filter(([ prev ]) => !!prev.info.data && prev.visible),
       filter(([ prev, curr ]) => {
-        // Only unsubscribe when: previous had a token AND thread ID actually changed
-        if (!prev.info.data || !prev.id) return false;
-        return !curr.id || !areSameThreads(prev.id, curr.id);
+        // Unsubscribe when: visibility changed to false OR thread changed
+        const visibilityChanged = prev.visible && !curr.visible;
+        const threadChanged = !!(prev.id && curr.id &&
+          (prev.id.participantId !== curr.id.participantId || prev.id.itemId !== curr.id.itemId));
+        const threadCleared = !!(prev.id && !curr.id);
+        return visibilityChanged || threadChanged || threadCleared;
       }),
       tap(([ prev ]) => {
         websocketClient.send(unsubscribeAction(prev.info.data!.token));
@@ -59,28 +60,30 @@ export const threadUnsubscriptionOnChangeEffect = createEffect(
 );
 
 /**
- * Subscribe to the thread if there is a new thread id for which the token is known.
- * We must also re-subscribe when the websocket reconnects.
+ * Subscribe when panel becomes visible and we have a token.
+ * Also re-subscribes when websocket reconnects while panel is visible.
  */
 export const threadSubscriptionEffect = createEffect(
   (
-    actions$ = inject(Actions),
     store$ = inject(Store),
     websocketClient = inject(WebsocketClient),
     config = inject(APPCONFIG),
-  ) => (config.featureFlags.enableForum ? actions$.pipe(
-    ofType(fetchThreadInfoActions.fetchStateChanged),
-    map(({ fetchState }) => fetchState),
-    readyData(),
-    distinctUntilChanged(areSameThreads),
-    // re-emit the thread each time the websocket comes back to `open = true` status
-    switchMap(thread => store$.select(fromWebsocket.selectOpen).pipe(
-      filter(open => open),
-      map(() => thread),
-    )),
-    tap(thread => {
-      websocketClient.send(subscribeAction(thread.token));
-    })
-  ) : EMPTY),
+  ) => (config.featureFlags.enableForum ?
+    combineLatest([
+      store$.select(fromForum.selectCurrentThread),
+      store$.select(fromWebsocket.selectOpen),
+    ]).pipe(
+      pairwise(),
+      filter(([ , [ thread, wsOpen ] ]) => thread.visible && !!thread.info.data && wsOpen),
+      filter(([ [ prevThread, prevWsOpen ], [ currThread, currWsOpen ] ]) => {
+        // Subscribe when: token changes OR websocket just opened
+        const tokenChanged = prevThread.info.data?.token !== currThread.info.data?.token;
+        const wsJustOpened = !prevWsOpen && currWsOpen;
+        return tokenChanged || wsJustOpened;
+      }),
+      tap(([ , [ thread ] ]) => {
+        websocketClient.send(subscribeAction(thread.info.data!.token));
+      })
+    ) : EMPTY),
   { functional: true, dispatch: false }
 );

@@ -13,8 +13,8 @@ export interface State {
   id: ThreadId | null,
   info: FetchState<Thread>,
   item: ThreadItemInfo | null, // item information if there is a thread
-  logEvents: FetchState<ThreadEvent[]>,
-  slsEvents: FetchState<ThreadEvent[]>,
+  logEvents: FetchState<ThreadEvent[], ThreadId>,
+  slsEvents: FetchState<ThreadEvent[], ThreadId>,
   wsEvents: ThreadEvent[],
 }
 

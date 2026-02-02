@@ -116,3 +116,13 @@
 .user-indicator-link {
   margin-left: functions.toRem(4);
 }
+
+.refetching-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: functions.toRem(8) functions.toRem(16);
+  color: var(--alg-secondary-color);
+  font-size: functions.toRem(12);
+  font-style: italic;
+}
