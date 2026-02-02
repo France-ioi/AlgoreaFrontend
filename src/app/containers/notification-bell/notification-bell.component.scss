@@ -49,9 +49,27 @@
 }
 
 .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.75rem 1rem;
   font-weight: 600;
   border-bottom: 1px solid var(--alg-border-color, #e0e0e0);
+}
+
+.clear-all-button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--alg-text-secondary, #666);
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--alg-primary-color, #4a6cf5);
+    text-decoration: underline;
+  }
 }
 
 .empty-state {

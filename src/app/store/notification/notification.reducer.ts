@@ -37,4 +37,16 @@ export const reducer = createReducer(
       };
     }
   ),
+
+  on(
+    notificationApiActions.allNotificationsCleared,
+    (state): State => {
+      const current = state.notificationsState;
+      if (!current.isReady) return state;
+      return {
+        ...state,
+        notificationsState: readyState([]),
+      };
+    }
+  ),
 );

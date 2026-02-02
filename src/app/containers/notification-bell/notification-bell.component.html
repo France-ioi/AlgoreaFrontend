@@ -7,7 +7,12 @@
 
 <ng-template #notificationMenu>
   <div class="notification-panel" cdkMenu>
-    <div class="panel-header" i18n>Notifications</div>
+    <div class="panel-header">
+      <span i18n>Notifications</span>
+      @if (state.isReady && state.data.length > 0) {
+        <button class="clear-all-button" (click)="clearAll()" i18n>Clear all</button>
+      }
+    </div>
     @switch (state.tag) {
       @case ('fetching') {
         <alg-loading class="panel-loading"></alg-loading>

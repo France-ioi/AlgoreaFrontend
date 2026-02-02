@@ -3,7 +3,7 @@ import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { catchError, filter, map, of, Subscription } from 'rxjs';
-import { fromNotification, notificationWebsocketActions } from '../../store/notification';
+import { fromNotification, notificationApiActions, notificationWebsocketActions } from '../../store/notification';
 import { fromForum } from '../../forum/store';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -15,6 +15,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { errorIsHTTPForbidden } from 'src/app/utils/errors';
+import { NotificationHttpService } from 'src/app/data-access/notification.service';
 
 @Component({
   selector: 'alg-notification-bell',
@@ -28,6 +29,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   private actions$ = inject(Actions);
   private messageService = inject(MessageService);
   private getItemByIdService = inject(GetItemByIdService);
+  private notificationService = inject(NotificationHttpService);
   private subscription?: Subscription;
 
   private rawState = this.store.selectSignal(fromNotification.selectNotificationsState);
@@ -78,6 +80,16 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
         id: { participantId, itemId },
         item: { route: itemRoute('activity', itemId), title },
       }));
+    });
+  }
+
+  clearAll(): void {
+    this.notificationService.deleteAllNotifications().subscribe({
+      next: () => this.store.dispatch(notificationApiActions.allNotificationsCleared()),
+      error: () => this.messageService.add({
+        severity: 'error',
+        detail: $localize`Failed to clear notifications`,
+      }),
     });
   }
 }
