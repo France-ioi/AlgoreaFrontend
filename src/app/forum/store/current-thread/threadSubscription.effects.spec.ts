@@ -39,12 +39,14 @@ describe('threadSubscriptionEffect', () => {
 
   it('subscribes when panel becomes visible with token and ws open', done => {
     testScheduler.run(({ hot }) => {
-      const threadState$ = hot('--a--|', { a: createThreadState(true, mockThread1) });
-      const wsOpen$ = hot('     1----|', { 1: true });
+      const token$ = hot('--a--|', { a: 'token1' });
+      const visible$ = hot('1----|', { 1: true });
+      const wsOpen$ = hot(' 1----|', { 1: true });
 
       const storeMock$ = {
         select: (selector: unknown) => {
-          if (selector === fromForum.selectCurrentThread) return threadState$;
+          if (selector === fromForum.selectThreadToken) return token$;
+          if (selector === fromForum.selectVisible) return visible$;
           if (selector === fromWebsocket.selectOpen) return wsOpen$;
           throw new Error('Unknown selector');
         }
@@ -62,12 +64,14 @@ describe('threadSubscriptionEffect', () => {
 
   it('does not subscribe when panel is not visible', done => {
     testScheduler.run(({ hot }) => {
-      const threadState$ = hot('--a--|', { a: createThreadState(false, mockThread1) });
-      const wsOpen$ = hot('     1----|', { 1: true });
+      const token$ = hot('--a--|', { a: 'token1' });
+      const visible$ = hot('0----|', { 0: false });
+      const wsOpen$ = hot(' 1----|', { 1: true });
 
       const storeMock$ = {
         select: (selector: unknown) => {
-          if (selector === fromForum.selectCurrentThread) return threadState$;
+          if (selector === fromForum.selectThreadToken) return token$;
+          if (selector === fromForum.selectVisible) return visible$;
           if (selector === fromWebsocket.selectOpen) return wsOpen$;
           throw new Error('Unknown selector');
         }
@@ -84,12 +88,14 @@ describe('threadSubscriptionEffect', () => {
 
   it('does not subscribe when ws is not open', done => {
     testScheduler.run(({ hot }) => {
-      const threadState$ = hot('--a--|', { a: createThreadState(true, mockThread1) });
-      const wsOpen$ = hot('     0----|', { 0: false });
+      const token$ = hot('--a--|', { a: 'token1' });
+      const visible$ = hot('1----|', { 1: true });
+      const wsOpen$ = hot(' 0----|', { 0: false });
 
       const storeMock$ = {
         select: (selector: unknown) => {
-          if (selector === fromForum.selectCurrentThread) return threadState$;
+          if (selector === fromForum.selectThreadToken) return token$;
+          if (selector === fromForum.selectVisible) return visible$;
           if (selector === fromWebsocket.selectOpen) return wsOpen$;
           throw new Error('Unknown selector');
         }
@@ -106,13 +112,15 @@ describe('threadSubscriptionEffect', () => {
 
   it('resubscribes when ws reconnects while panel is visible', done => {
     testScheduler.run(({ hot }) => {
-      const threadState$ = hot('a------|', { a: createThreadState(true, mockThread1) });
+      const token$ = hot('  a------|', { a: 'token1' });
+      const visible$ = hot('1------|', { 1: true });
       // Simulate reconnection: open → close → reopen
-      const wsOpen$ = hot('     1--01--|', { 0: false, 1: true });
+      const wsOpen$ = hot(' 1--01--|', { 0: false, 1: true });
 
       const storeMock$ = {
         select: (selector: unknown) => {
-          if (selector === fromForum.selectCurrentThread) return threadState$;
+          if (selector === fromForum.selectThreadToken) return token$;
+          if (selector === fromForum.selectVisible) return visible$;
           if (selector === fromWebsocket.selectOpen) return wsOpen$;
           throw new Error('Unknown selector');
         }
@@ -130,15 +138,14 @@ describe('threadSubscriptionEffect', () => {
 
   it('subscribes with new token when thread changes', done => {
     testScheduler.run(({ hot }) => {
-      const threadState$ = hot('a-b--|', {
-        a: createThreadState(true, mockThread1),
-        b: createThreadState(true, mockThread2),
-      });
-      const wsOpen$ = hot('     1----|', { 1: true });
+      const token$ = hot('  a-b--|', { a: 'token1', b: 'token2' });
+      const visible$ = hot('1----|', { 1: true });
+      const wsOpen$ = hot(' 1----|', { 1: true });
 
       const storeMock$ = {
         select: (selector: unknown) => {
-          if (selector === fromForum.selectCurrentThread) return threadState$;
+          if (selector === fromForum.selectThreadToken) return token$;
+          if (selector === fromForum.selectVisible) return visible$;
           if (selector === fromWebsocket.selectOpen) return wsOpen$;
           throw new Error('Unknown selector');
         }

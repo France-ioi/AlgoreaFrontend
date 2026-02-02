@@ -11,6 +11,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NotificationHttpService } from 'src/app/data-access/notification.service';
 
 const mockForumNotifications: ForumNewMessageNotification[] = [
   {
@@ -50,6 +51,7 @@ describe('NotificationBellComponent', () => {
         provideMockActions(() => actions$),
         { provide: MessageService, useValue: { add: jasmine.createSpy('add') } },
         { provide: GetItemByIdService, useValue: getItemByIdService },
+        { provide: NotificationHttpService, useValue: { deleteAllNotifications: () => of(undefined) } },
       ]
     }).compileComponents();
 

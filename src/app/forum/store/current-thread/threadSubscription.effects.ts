@@ -7,6 +7,7 @@ import { fromWebsocket } from 'src/app/store/websocket';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { APPCONFIG } from 'src/app/config';
+import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 
 /**
  * Unsubscribe from the current thread on window.beforeunload.
@@ -70,19 +71,13 @@ export const threadSubscriptionEffect = createEffect(
     config = inject(APPCONFIG),
   ) => (config.featureFlags.enableForum ?
     combineLatest([
-      store$.select(fromForum.selectCurrentThread),
+      store$.select(fromForum.selectThreadToken),
       store$.select(fromWebsocket.selectOpen),
+      store$.select(fromForum.selectVisible),
     ]).pipe(
-      pairwise(),
-      filter(([ , [ thread, wsOpen ] ]) => thread.visible && !!thread.info.data && wsOpen),
-      filter(([ [ prevThread, prevWsOpen ], [ currThread, currWsOpen ] ]) => {
-        // Subscribe when: token changes OR websocket just opened
-        const tokenChanged = prevThread.info.data?.token !== currThread.info.data?.token;
-        const wsJustOpened = !prevWsOpen && currWsOpen;
-        return tokenChanged || wsJustOpened;
-      }),
-      tap(([ , [ thread ] ]) => {
-        websocketClient.send(subscribeAction(thread.info.data!.token));
+      filter(([ token, wsOpen, visible ]) => isNotUndefined(token) && wsOpen && visible),
+      tap(([ token ]) => {
+        websocketClient.send(subscribeAction(token!));
       })
     ) : EMPTY),
   { functional: true, dispatch: false }
