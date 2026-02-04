@@ -22,6 +22,7 @@ export const threadPanelActions = createActionGroup({
   events: {
     close: emptyProps(),
     threadStatusChanged: emptyProps(),
+    autoFollowTriggered: props<{ threadId: ThreadId }>(),
   },
 });
 
@@ -29,5 +30,12 @@ export const itemPageActions = createActionGroup({
   source: 'Item Page',
   events: {
     changeCurrentThreadId: props<{ id: ThreadId, item: ThreadItemInfo }>(),
+  },
+});
+
+export const notificationActions = createActionGroup({
+  source: 'Notification',
+  events: {
+    showThread: props<{ id: ThreadId, item: ThreadItemInfo }>(),
   },
 });

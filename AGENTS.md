@@ -35,6 +35,11 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 - Use `.editorconfig` file for basic editor config
 - Max line length: 140 characters
 
+## Styling
+- CSS variables are defined in theme files (`src/assets/scss/themes/`)
+- Primary color: `--alg-primary-color` (not `--alg-primary`)
+- Always provide fallback values for CSS variables
+
 ## Accessibility Requirements
 
 - It MUST pass all AXE checks.
@@ -61,6 +66,13 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 - Use `computed()` for derived state
 - Keep state transformations pure and predictable
 - Do NOT use `mutate` on signals, use `update` or `set` instead
+
+### ngrx Store Patterns
+
+- Use `FetchState<T>` from `src/app/utils/state.ts` for async state (combines loading/success/error states)
+- Use helper functions: `fetchingState()`, `readyState(data)`, `errorState(error)`
+- For actions, prefer a single `fetchStateChanged` action with full `FetchState` instead of separate success/failure actions
+- Store imports must be from index files (e.g., `import { fromNotification } from './store/notification'`)
 
 ## Templates
 

@@ -1,0 +1,47 @@
+@let state = notificationsState();
+
+<button class="bell-button" [cdkMenuTriggerFor]="notificationMenu">
+  <i class="ph-duotone ph-bell"></i>
+  <span class="badge" [class.error]="state.isError">{{ badgeText() }}</span>
+</button>
+
+<ng-template #notificationMenu>
+  <div class="notification-panel" cdkMenu>
+    <div class="panel-header">
+      <span i18n>Notifications</span>
+      @if (state.isReady && state.data.length > 0) {
+        <button class="clear-all-button" (click)="clearAll()" i18n>Clear all</button>
+      }
+    </div>
+    @switch (state.tag) {
+      @case ('fetching') {
+        <alg-loading class="panel-loading"></alg-loading>
+      }
+      @case ('error') {
+        <alg-error
+          class="panel-error"
+          i18n-message message="Error loading notifications"
+          icon="ph-duotone ph-warning-circle"
+        ></alg-error>
+      }
+      @case ('ready') {
+        @let data = state.data;
+        @if (data.length === 0) {
+          <div class="empty-state" i18n>No notifications</div>
+        } @else {
+          <ul class="notification-list">
+            @for (notification of data; track notification.sk) {
+              <li class="notification-item" cdkMenuItem (click)="openThread(notification)">
+                <i class="notification-icon ph-bold ph-chat-circle"></i>
+                <div class="notification-content">
+                  <div class="notification-text">{{ notification.payload.text }}</div>
+                  <span class="notification-time">{{ notification.payload.time | toDate | relativeTime }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      }
+    }
+  </div>
+</ng-template>

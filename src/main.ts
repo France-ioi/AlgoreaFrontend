@@ -20,10 +20,14 @@ import { provideEffects } from '@ngrx/effects';
 import { NavigationActionTiming, provideRouterStore } from '@ngrx/router-store';
 import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromGroupContent, groupStoreEffects } from './app/groups/store';
+import { fromWebsocket, websocketEffects } from './app/store/websocket';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
 import { fromSelectedContent, selectedContentEffects } from './app/store/navigation';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
 import { fromTimeOffset } from './app/store/time-offset';
+import {
+  fromNotification, notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
+} from './app/store/notification';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { fromConfig, configEffects } from './app/store/config';
@@ -78,6 +82,7 @@ bootstrapApplication(AppComponent, {
     provideStore(),
     provideRouterStore({ serializer: RouterSerializer, navigationActionTiming: NavigationActionTiming.PostActivation }),
     provideState(fromRouter),
+    provideState(fromWebsocket),
     provideState(fromForum),
     provideState(fromGroupContent),
     provideState(fromItemContent),
@@ -85,12 +90,17 @@ bootstrapApplication(AppComponent, {
     provideState(fromSelectedContent),
     provideState(fromCurrentContent),
     provideState(fromConfig),
+    provideState(fromNotification),
     provideEffects(
+      websocketEffects,
       forumEffects(),
       groupStoreEffects(),
       itemStoreEffects(),
       selectedContentEffects,
       configEffects,
+      notificationEffects,
+      notificationWebsocketEffects,
+      notificationThreadCleanupEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),

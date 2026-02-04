@@ -3,7 +3,7 @@ import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { inject } from '@angular/core';
 import { filter, map } from 'rxjs';
 import { websocketClientActions } from './websocket.actions';
-import { wsMessageSchema } from '../../models/websocket-messages';
+import { wsMessageSchema } from 'src/app/models/websocket-messages';
 
 export const changeOpenStatusWebsocketClientEffect = createEffect(
   (wsClient$ = inject(WebsocketClient)) => wsClient$.isWsOpen$.pipe(

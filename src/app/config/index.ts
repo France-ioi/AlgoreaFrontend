@@ -43,6 +43,7 @@ const configSchema = z.object({
 
   featureFlags: z.object({
     enableForum: z.boolean().default(false),
+    enableNotifications: z.boolean().default(false),
 
     hideTaskTabs: z.array(z.string()).default([]),
     showGroupAccessTab: z.boolean().default(false),

@@ -15,7 +15,8 @@ interface CurrentThreadSelectors<T> {
   selectThreadToken: MemoizedSelector<T, string | undefined>,
   selectCanCurrentUserLoadThreadAnswers: MemoizedSelector<T, boolean>,
   selectThreadStatusOpen: MemoizedSelector<T, boolean>,
-  selectThreadEvents: MemoizedSelector<T, FetchState<ThreadEvent[]>>,
+  selectThreadEvents: MemoizedSelector<T, FetchState<ThreadEvent[], ThreadId>>,
+  selectFollowStatus: MemoizedSelector<T, FetchState<boolean>>,
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
@@ -46,11 +47,19 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   );
   const selectThreadEvents = createSelector(
     selectCurrentThread,
-    ({ logEvents, slsEvents, wsEvents }) => {
+    ({ logEvents, slsEvents, wsEvents }): FetchState<ThreadEvent[], ThreadId> => {
+      const identifier = logEvents.identifier ?? slsEvents.identifier;
       if (logEvents.isError) return logEvents;
       if (slsEvents.isError) return slsEvents;
-      if (logEvents.isFetching || slsEvents.isFetching) return fetchingState<ThreadEvent[]>();
-      return readyState(mergeEvents([ logEvents.data, slsEvents.data, wsEvents ]));
+      if (logEvents.isFetching || slsEvents.isFetching) {
+        // Preserve previous data while fetching (if available)
+        const hasPreviousData = logEvents.data !== undefined && slsEvents.data !== undefined;
+        if (hasPreviousData) {
+          return fetchingState(mergeEvents([ logEvents.data, slsEvents.data, wsEvents ]), identifier);
+        }
+        return fetchingState<ThreadEvent[], ThreadId>(undefined, identifier);
+      }
+      return readyState(mergeEvents([ logEvents.data, slsEvents.data, wsEvents ]), identifier);
     }
   );
 
@@ -81,6 +90,10 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectInfo,
     info => !!info.data && canCurrentUserLoadAnswers(info.data)
   );
+  const selectFollowStatus = createSelector(
+    selectCurrentThread,
+    state => state.followStatus
+  );
   return {
     selectVisible,
     selectThreadId,
@@ -92,5 +105,6 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectThreadStatus,
     selectThreadToken,
     selectCanCurrentUserLoadThreadAnswers,
+    selectFollowStatus,
   };
 };

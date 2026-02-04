@@ -9,6 +9,7 @@ export interface MessageV2 {
   summary?: string,
   detail: string,
   life?: number,
+  onClick?: () => void,
 }
 
 const DISPLAY_DURATION = 5*SECONDS;

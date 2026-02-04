@@ -25,6 +25,14 @@
     margin-bottom: functions.toRem(16);
   }
 
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(0.97);
+    }
+  }
+
   &.success {
     border: functions.toRem(2) solid var(--toast-success-border);
     background-color: var(--toast-success-bg);
