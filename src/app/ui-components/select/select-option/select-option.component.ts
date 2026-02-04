@@ -17,7 +17,4 @@ export class SelectOptionComponent {
 
   select!: (value: SelectOption) => void;
   selected = computed(() => this.value() === this.selectedOptionService.selected());
-
-  constructor() {
-  }
 }

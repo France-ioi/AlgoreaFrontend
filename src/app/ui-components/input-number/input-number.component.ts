@@ -26,9 +26,6 @@ export class InputNumberComponent implements ControlValueAccessor {
   max = input<number>();
   value = signal<number | null>(null);
 
-  constructor() {
-  }
-
   writeValue(value: number | null): void {
     this.value.set(value);
   }

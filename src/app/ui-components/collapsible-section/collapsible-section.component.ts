@@ -22,8 +22,6 @@ export class CollapsibleSectionComponent {
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
 
-  constructor() { }
-
   onCollapse(): void {
     if (this.collapsible) {
       this.collapsed = !this.collapsed;

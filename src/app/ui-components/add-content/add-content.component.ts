@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
@@ -47,6 +47,8 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   ]
 })
 export class AddContentComponent<Type> implements OnInit, OnDestroy {
+  private formBuilder = inject(UntypedFormBuilder);
+
   @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
   @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
   @Input() loading = false;
@@ -72,8 +74,6 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
   itemId = signal<string | undefined>(undefined);
 
   private subscriptions: Subscription[] = [];
-
-  constructor(private formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {
     if (!this.searchFunction && this.showSearchUI) throw new Error('The input \'searchFunction\' is required');

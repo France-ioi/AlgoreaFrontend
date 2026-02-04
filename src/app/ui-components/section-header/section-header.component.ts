@@ -18,6 +18,4 @@ export class SectionHeaderComponent {
   @Input() styleClass: string | string[] | Set<string> | { [klass: string]: boolean } = '';
 
   @ContentChild('content') contentTemplate?: TemplateRef<any>;
-
-  constructor() { }
 }

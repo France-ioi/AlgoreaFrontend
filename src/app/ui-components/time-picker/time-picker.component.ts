@@ -18,8 +18,6 @@ export class TimePickerComponent implements OnChanges {
 
   readonly minutes = MINUTES; // export to template
 
-  constructor() {}
-
   ngOnChanges(): void {
     if (this.initialValue) this.currentValue = this.initialValue.minutes();
   }

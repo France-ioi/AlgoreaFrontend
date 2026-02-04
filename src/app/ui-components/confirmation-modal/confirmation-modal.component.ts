@@ -22,7 +22,4 @@ export class ConfirmationModalComponent {
     ...inject<ConfirmationModalData>(DIALOG_DATA),
   });
   dialogRef = inject<DialogRef<boolean>>(DialogRef<boolean>);
-
-  constructor() {
-  }
 }

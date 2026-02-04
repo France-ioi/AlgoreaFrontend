@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, inject } from '@angular/core';
 import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
@@ -24,6 +15,10 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   imports: [ LetDirective, NgClass, RouterLink, NgScrollbar, ButtonIconComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
+  private tabService = inject(TabService);
+  private elementRef = inject<ElementRef<HTMLDivElement>>(ElementRef);
+  private cd = inject(ChangeDetectorRef);
+
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
   @Input() styleClass?: string;
 
@@ -50,12 +45,6 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   resize(): void {
     this.handleArrows();
   }
-
-  constructor(
-    private tabService: TabService,
-    private elementRef: ElementRef<HTMLDivElement>,
-    private cd: ChangeDetectorRef,
-  ) {}
 
   ngAfterViewInit(): void {
     if (!this.scrollbarRef) return;

@@ -58,8 +58,6 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
 
   private onChange: (value: T) => void = () => {};
 
-  constructor() { }
-
   writeValue(value: T): void {
     this.value = value;
     this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));

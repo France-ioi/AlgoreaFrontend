@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import {
@@ -46,6 +46,8 @@ export interface CanEnterValue {
   ]
 })
 export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  private injector = inject(Injector);
+
   @ViewChild('canEnterFromRef') canEnterFromRef?: InputDateComponent;
   @ViewChild('canEnterUntilRef') canEnterUntilRef?: InputDateComponent;
 
@@ -53,9 +55,6 @@ export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestro
   canEnterUntil: Date | null = null;
   currentDate = new Date();
   control?: FormControl<CanEnterValue | null>;
-
-  constructor(private injector: Injector) {
-  }
 
   ngOnInit(): void {
     const injectedControl = this.injector.get(NgControl);

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal, inject } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -40,15 +40,14 @@ import { NgxMaskDirective } from 'ngx-mask';
   ]
 })
 export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccessor {
+  private injector = inject(Injector);
+
   @Input() minDate?: Date;
 
   input = '';
   control?: FormControl<Date | null>;
   subscription?: Subscription;
   mask = signal('99/99/9999 99:99');
-
-  constructor(private injector: Injector) {
-  }
 
   ngOnInit(): void {
     const injectedControl = this.injector.get(NgControl);
