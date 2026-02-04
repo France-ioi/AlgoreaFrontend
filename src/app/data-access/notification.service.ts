@@ -6,6 +6,7 @@ import { APPCONFIG } from '../config';
 import { IdentityTokenService } from '../services/auth/identity-token.service';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { Notification, notificationSchema } from '../models/notification';
+import { assertSuccess, SimpleActionResponse } from './action-response';
 
 const notificationsResponseSchema = z.object({
   notifications: z.array(notificationSchema),
@@ -39,11 +40,12 @@ export class NotificationHttpService {
       throw new Error('slsApiUrl is not configured');
     }
     return this.identityTokenService.identityToken$.pipe(
-      switchMap(token => this.http.delete<void>(
+      switchMap(token => this.http.delete<SimpleActionResponse>(
         `${this.config.slsApiUrl}/notifications/${sk}`,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         { headers: { Authorization: `Bearer ${token}` } }
       )),
+      map(assertSuccess),
     );
   }
 
@@ -52,11 +54,12 @@ export class NotificationHttpService {
       throw new Error('slsApiUrl is not configured');
     }
     return this.identityTokenService.identityToken$.pipe(
-      switchMap(token => this.http.delete<void>(
+      switchMap(token => this.http.delete<SimpleActionResponse>(
         `${this.config.slsApiUrl}/notifications/all`,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         { headers: { Authorization: `Bearer ${token}` } }
       )),
+      map(assertSuccess),
     );
   }
 }
