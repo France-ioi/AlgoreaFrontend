@@ -39,6 +39,10 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 - CSS variables are defined in theme files (`src/assets/scss/themes/`)
 - Primary color: `--alg-primary-color` (not `--alg-primary`)
 - Always provide fallback values for CSS variables
+- Use `functions.toRem()` for all pixel values instead of direct `rem` values (e.g., `functions.toRem(16)` not `1rem`)
+- Import functions at the top of SCSS files: `@use 'src/assets/scss/functions';`
+- Avoid `::ng-deep` - use `:host` selectors with class bindings for component-specific styling
+  - Place host-based styles (`:host.class-name`) in the component that owns them, not in parent components
 
 ## Accessibility Requirements
 

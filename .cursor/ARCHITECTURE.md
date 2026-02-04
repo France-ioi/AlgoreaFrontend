@@ -54,12 +54,13 @@ Root Store
 ├── navigation      # Current/selected content state
 ├── notification    # User notifications from SLS API
 ├── router          # Router state (via @ngrx/router-store)
-└── time-offset     # Server time synchronization
+├── time-offset     # Server time synchronization
+└── websocket       # WebSocket connection state
 
 Feature Stores (lazy-loaded)
 ├── items/store     # Item content, fetching, routing
 ├── groups/store    # Group content, fetching, routing
-└── forum/store     # Forum threads, websocket state
+└── forum/store     # Forum threads, messages, follow status
 ```
 
 ### Store Pattern
@@ -125,8 +126,9 @@ Component -> Action -> Effect -> API Service -> Effect -> Action -> Reducer -> S
 The SLS (serverless) API is separate from the main backend API:
 - Configured via `slsApiUrl` in config
 - Auth interceptor does NOT handle SLS requests
-- Use `IdentityTokenService.identityToken$` to get the bearer token manually
-- Example: notifications, websocket connections
+- Use `IdentityTokenService.identityToken$` to get the bearer token manually for user-level requests
+- Use thread tokens from the store for thread-specific operations (e.g., posting, following)
+- Example endpoints: notifications, websocket connections, thread following
 
 ## Routing
 
@@ -191,6 +193,36 @@ Auth flow handled by `AuthService` and `OAuthService` in `services/auth/`.
 | `LocaleService` | Language/locale management |
 | `ItemNavTreeService` | Item navigation tree building |
 | `GroupNavTreeService` | Group navigation tree building |
+| `NotificationHttpService` | Fetch and manage user notifications from SLS API |
+| `ThreadFollowService` | Follow/unfollow forum threads (SLS API) |
+| `IdentityTokenService` | Manage user identity tokens for SLS API |
+| `WebsocketClient` | WebSocket connection management |
+
+## Notifications & WebSocket
+
+### Notification System
+
+- Real-time notifications via WebSocket (SLS API)
+- Notification bell component in top bar with unread count badge
+- Dropdown panel showing forum message notifications
+- Toast notifications for new messages (clickable to open thread)
+- Notifications automatically cleared when visiting the relevant thread
+- Controlled by `enableNotifications` feature flag
+
+### WebSocket Architecture
+
+The WebSocket connection is managed at the root store level:
+- `websocket` store tracks connection state (open/closed)
+- Effects in feature stores subscribe to WebSocket messages
+- Forum threads subscribe/unsubscribe based on visibility
+- Notifications are received via WebSocket and stored in root `notification` store
+
+### Thread Following
+
+- Users can follow/unfollow forum threads they don't own
+- Follow status fetched from SLS API when viewing a thread
+- Auto-follow when posting a message to a thread
+- Thread tokens (not identity tokens) required for follow operations
 
 ## Testing
 
