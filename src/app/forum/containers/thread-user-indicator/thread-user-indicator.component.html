@@ -1,0 +1,25 @@
+<div class="user-indicator-container">
+  <div class="user-indicator">
+    <div class="helping-row">
+      <span class="helping-text" i18n>You are helping</span>
+      <a class="alg-link user-indicator-link" [routerLink]="[ '/groups/users', user().id ]">
+        {{ user().name }}
+      </a>
+    </div>
+    @if (isThreadOpen()) {
+      <div class="follow-toggle">
+        <alg-switch
+          class="small-switch"
+          [ngModel]="followStatus().data ?? false"
+          [class.disabled]="!followStatus().isReady"
+          (change)="onFollowChange($event)"
+        ></alg-switch>
+        @if (followStatus().data) {
+          <span class="follow-label" i18n>You currently follow this thread</span>
+        } @else {
+          <span class="follow-label" i18n>You currently do not follow this thread</span>
+        }
+      </div>
+    }
+  </div>
+</div>

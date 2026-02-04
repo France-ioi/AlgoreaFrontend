@@ -13,15 +13,17 @@
       <div class="widget-loading">Loading...</div>
     } @else {
       <div class="widget-body">
-          @if (!isMine) {
+          @let followStatus = followStatus$ | async;
+          @let threadIdForIndicator = threadId$ | async;
+          @if (!isMine && threadIdForIndicator) {
             @if (participantUser$ | async; as participantUser) {
               @if (participantUser.name) {
-                <div class="user-indicator-container">
-                  <div class="user-indicator">
-                    <span i18n>You are helping</span>
-                    <a class="alg-link user-indicator-link" [routerLink]="[ '/groups/users', participantUser.id ]">{{ participantUser.name }}</a>
-                  </div>
-                </div>
+                <alg-thread-user-indicator
+                  [user]="participantUser"
+                  [followStatus]="followStatus!"
+                  [isThreadOpen]="!!threadStatus?.data?.open"
+                  (followChanged)="onFollowChanged(threadIdForIndicator, $event)"
+                ></alg-thread-user-indicator>
               }
             }
           }

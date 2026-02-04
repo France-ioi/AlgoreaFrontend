@@ -6,12 +6,14 @@ import * as threadSubscriptionEffects from './current-thread/threadSubscription.
 import * as currentThreadEffects from './current-thread/current-thread.effects';
 import * as forumBaseEffects from './forum.effects';
 import * as websocketIncomingMessageEffects from './current-thread/websocket-incoming-message.effects';
+import * as followStatusEffects from './current-thread/follow-status.effects';
 import { getCurrentThreadSelectors } from './current-thread/current-thread.selectors';
 import {
   topBarActions, forumThreadListActions, threadPanelActions, itemPageActions, notificationActions
 } from './current-thread/current-thread.actions';
 import { FunctionalEffect } from '@ngrx/effects';
 import { eventFetchingActions } from './current-thread/event-fetching.actions';
+import { followStatusUiActions } from './current-thread/follow-status.actions';
 
 export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...fetchThreadInfoEffects,
@@ -20,6 +22,7 @@ export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...currentThreadEffects,
   ...forumBaseEffects,
   ...websocketIncomingMessageEffects,
+  ...followStatusEffects,
 });
 
 export const fromForum = {
@@ -36,4 +39,5 @@ export const fromForum = {
   itemPageActions,
   eventFetchingActions,
   notificationActions,
+  followStatusUiActions,
 };

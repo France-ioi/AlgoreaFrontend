@@ -93,30 +93,6 @@
   text-align: center;
 }
 
-.user-indicator-container {
-  width: 100%;
-  position: absolute;
-  top: functions.toRem(8);
-  z-index: 999;
-}
-
-.user-indicator {
-  margin: 0 functions.toRem(16);
-  padding: 0 functions.toRem(16);
-  height: functions.toRem(32);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: functions.toRem(20);
-  background-color: var(--alg-observation-button-bg-color);
-  color: var(--alg-secondary-color);
-  font-size: functions.toRem(12);
-}
-
-.user-indicator-link {
-  margin-left: functions.toRem(4);
-}
-
 .refetching-indicator {
   display: flex;
   justify-content: center;

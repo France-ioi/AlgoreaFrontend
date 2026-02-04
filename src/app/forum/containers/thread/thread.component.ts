@@ -35,7 +35,6 @@ import { ThreadId } from 'src/app/forum/models/threads';
 import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
-import { RouterLink } from '@angular/router';
 import { fromObservation } from 'src/app/store/observation';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -48,6 +47,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { isMessageEvent } from '../../models/thread-events';
 import { v4 as uuidv4 } from 'uuid';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { ThreadUserIndicatorComponent } from '../thread-user-indicator/thread-user-indicator.component';
+import { fromForum as forumActions } from '../../store';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -71,11 +72,11 @@ const selectThreadInfo = createSelector(
     ReactiveFormsModule,
     ItemRoutePipe,
     AsyncPipe,
-    RouterLink,
     ButtonIconComponent,
     ButtonComponent,
     AutoResizeDirective,
     TooltipDirective,
+    ThreadUserIndicatorComponent,
   ]
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
@@ -188,6 +189,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
   threadId$ = this.store.select(fromForum.selectThreadId);
   threadToken = this.store.selectSignal(fromForum.selectThreadToken);
+  readonly followStatus$ = this.store.select(fromForum.selectFollowStatus);
 
   constructor(
     private store: Store,
@@ -267,6 +269,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       next: () => {
         this.clearMessageToSendControl();
         this.disableControls$.next(false);
+        // Auto-follow when sending a message (if not already following)
+        this.store.dispatch(forumActions.threadPanelActions.autoFollowTriggered({ threadId }));
       },
       error: err => {
         this.disableControls$.next(false);
@@ -301,5 +305,9 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
 
   focusOnInput(): void {
     this.messageToSendEl?.nativeElement.focus();
+  }
+
+  onFollowChanged(threadId: ThreadId, follow: boolean): void {
+    this.store.dispatch(forumActions.followStatusUiActions.followToggled({ threadId, follow }));
   }
 }

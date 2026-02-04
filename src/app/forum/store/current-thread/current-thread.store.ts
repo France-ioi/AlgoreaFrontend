@@ -16,6 +16,7 @@ export interface State {
   logEvents: FetchState<ThreadEvent[], ThreadId>,
   slsEvents: FetchState<ThreadEvent[], ThreadId>,
   wsEvents: ThreadEvent[],
+  followStatus: FetchState<boolean>,
 }
 
 export const initialState: State = {
@@ -26,4 +27,5 @@ export const initialState: State = {
   logEvents: fetchingState(),
   slsEvents: fetchingState(),
   wsEvents: [],
+  followStatus: fetchingState(),
 };

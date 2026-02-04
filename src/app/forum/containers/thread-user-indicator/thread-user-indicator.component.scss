@@ -1,0 +1,75 @@
+@use 'src/assets/scss/functions';
+
+.user-indicator-container {
+  width: 100%;
+  position: absolute;
+  top: functions.toRem(8);
+  z-index: 999;
+}
+
+.user-indicator {
+  margin: 0 functions.toRem(16);
+  padding: functions.toRem(8) functions.toRem(16);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: functions.toRem(6);
+  border-radius: functions.toRem(12);
+  background-color: var(--alg-observation-button-bg-color);
+  color: var(--alg-secondary-color);
+  font-size: functions.toRem(12);
+}
+
+.helping-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.helping-text {
+  white-space: nowrap;
+}
+
+.user-indicator-link {
+  margin-left: functions.toRem(4);
+}
+
+.follow-toggle {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(8);
+}
+
+.follow-label {
+  white-space: nowrap;
+}
+
+:host ::ng-deep alg-switch.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+:host ::ng-deep alg-switch.small-switch {
+  width: functions.toRem(32);
+  height: functions.toRem(18);
+
+  .slider {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: functions.toRem(18);
+
+    &::before {
+      width: functions.toRem(14);
+      height: functions.toRem(14);
+      left: functions.toRem(2);
+      bottom: functions.toRem(2);
+    }
+  }
+
+  input:checked + .slider {
+    background-color: var(--alg-primary-color);
+
+    &::before {
+      transform: translateX(functions.toRem(14));
+    }
+  }
+}
