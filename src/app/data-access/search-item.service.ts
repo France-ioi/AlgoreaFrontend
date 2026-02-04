@@ -26,10 +26,8 @@ const itemFoundSchema = z.object({
   providedIn: 'root',
 })
 export class SearchItemService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   search(
     searchString: string,

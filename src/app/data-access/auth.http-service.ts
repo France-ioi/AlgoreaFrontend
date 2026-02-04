@@ -20,6 +20,7 @@ const longAuthServicesTimeout = 6000;
   providedIn: 'root'
 })
 export class AuthHttpService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
   private apiUrl = new URL(this.config.apiUrl, location.origin /* act as base when the url is relative, ignored otherwise */);
@@ -56,8 +57,6 @@ export class AuthHttpService {
      *    Chrome currently sets them, but will stop doing so in 2023.
      */
   } : undefined;
-
-  constructor(private http: HttpClient) {}
 
   createTempUser(defaultLanguage: string): Observable<AuthResult> {
     return this.http

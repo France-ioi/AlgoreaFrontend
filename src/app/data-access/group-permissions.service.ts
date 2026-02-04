@@ -36,9 +36,8 @@ export type GroupComputedPermissions = GroupPermissionsInfo['computed'];
   providedIn: 'root'
 })
 export class GroupPermissionsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http

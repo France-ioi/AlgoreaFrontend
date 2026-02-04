@@ -27,10 +27,8 @@ const breadcrumbsListSchema = z.array(breadcrumbsFromRootSchema);
   providedIn: 'root',
 })
 export class GetBreadcrumbsFromRootsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   get(id: string): Observable<BreadcrumbsFromRootElement[][]> {
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${id}/breadcrumbs-from-roots`).pipe(

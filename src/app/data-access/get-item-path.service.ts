@@ -12,9 +12,8 @@ interface RawItemPath { path: ItemPath }
   providedIn: 'root'
 })
 export class GetItemPathService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getItemPath(itemId: ItemId): Observable<ItemPath> {
     return this.http.get<RawItemPath>(`${this.config.apiUrl}/items/${itemId}/path-from-root`).pipe(

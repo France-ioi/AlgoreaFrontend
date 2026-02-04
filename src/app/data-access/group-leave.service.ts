@@ -14,9 +14,8 @@ interface LeaveGroupResponseData {
   providedIn: 'root'
 })
 export class GroupLeaveService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   leave(groupId: string): Observable<boolean> {
     return this.http.delete<ActionResponse<LeaveGroupResponseData>>(`${this.config.apiUrl}/current-user/group-memberships/${groupId}`)

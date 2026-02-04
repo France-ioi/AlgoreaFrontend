@@ -26,9 +26,8 @@ export type Group = z.infer<typeof groupSchema>;
   providedIn: 'root'
 })
 export class ManagedGroupsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getManagedGroups(): Observable<Group[]> {
     return this.http

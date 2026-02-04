@@ -17,9 +17,8 @@ const startResultPathTimeout = 10000;
   providedIn: 'root'
 })
 export class ResultActionsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   start(itemIdPath: ItemPath, attemptId: AttemptId): Observable<Result> {
     const path = itemIdPath.join('/');

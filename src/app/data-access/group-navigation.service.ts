@@ -37,11 +37,11 @@ export type GroupNavigationData = z.infer<typeof groupNavigationSchema>;
   providedIn: 'root'
 })
 export class GroupNavigationService implements OnDestroy {
+  private http = inject(HttpClient);
+  private currentContent = inject(CurrentContentService);
   private config = inject(APPCONFIG);
 
   private subscription = this.currentContent.navMenuReload$.subscribe(() => cacheBuster$.next());
-
-  constructor(private http: HttpClient, private currentContent: CurrentContentService) {}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

@@ -28,9 +28,8 @@ export type GroupMembership = z.infer<typeof groupMembershipSchema>;
   providedIn: 'root'
 })
 export class JoinedGroupsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getJoinedGroups(sort: SortOptions): Observable<GroupMembership[]> {
     return this.http
