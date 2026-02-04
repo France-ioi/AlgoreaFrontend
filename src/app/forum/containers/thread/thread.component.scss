@@ -30,6 +30,10 @@
   display: block;
   padding: functions.toRem(16) functions.toRem(6);
   overflow-y: auto;
+
+  &.with-user-indicator {
+    padding-top: functions.toRem(70);
+  }
 }
 
 .thread-message {
