@@ -5,6 +5,41 @@
   display: inline-block;
   width: functions.toRem(48);
   height: functions.toRem(24);
+
+  &.small-switch {
+    width: functions.toRem(32);
+    height: functions.toRem(18);
+
+    .slider {
+      border-radius: functions.toRem(18);
+
+      &:before {
+        height: functions.toRem(14);
+        width: functions.toRem(14);
+        left: functions.toRem(2);
+        bottom: functions.toRem(2);
+      }
+
+      &:not(input:checked + &) {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(functions.toRem(14));
+      -ms-transform: translateX(functions.toRem(14));
+      transform: translateX(functions.toRem(14));
+    }
+
+    .slider.round {
+      border-radius: functions.toRem(18);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
 .input-element {

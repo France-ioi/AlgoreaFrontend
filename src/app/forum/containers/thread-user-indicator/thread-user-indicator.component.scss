@@ -43,33 +43,3 @@
 .follow-label {
   white-space: nowrap;
 }
-
-:host ::ng-deep alg-switch.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-:host ::ng-deep alg-switch.small-switch {
-  width: functions.toRem(32);
-  height: functions.toRem(18);
-
-  .slider {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: functions.toRem(18);
-
-    &::before {
-      width: functions.toRem(14);
-      height: functions.toRem(14);
-      left: functions.toRem(2);
-      bottom: functions.toRem(2);
-    }
-  }
-
-  input:checked + .slider {
-    background-color: var(--alg-primary-color);
-
-    &::before {
-      transform: translateX(functions.toRem(14));
-    }
-  }
-}
