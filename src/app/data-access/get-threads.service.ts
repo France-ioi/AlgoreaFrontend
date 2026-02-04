@@ -29,10 +29,8 @@ type Threads = z.infer<typeof threadsSchema>;
   providedIn: 'root',
 })
 export class GetThreadsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   get(itemId: string, options: { isMine: boolean } | { watchedGroupId: string }): Observable<Threads> {
     let params = new HttpParams({ fromObject: { item_id: itemId } });

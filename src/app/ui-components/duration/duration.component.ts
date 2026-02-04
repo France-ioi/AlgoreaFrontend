@@ -1,14 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  forwardRef,
-  Injector,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -48,6 +38,8 @@ const MAX_SECONDS_VALUE = 59;
   imports: [ FormsModule, FormErrorComponent, NgxMaskDirective ]
 })
 export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
+  private injector = inject(Injector);
+
   @Output() change = new EventEmitter<Duration | null>();
 
   @Input() name = '';
@@ -81,8 +73,6 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
     minutes: false,
     seconds: false,
   };
-
-  constructor(private injector: Injector) {}
 
   ngOnInit(): void {
     // Inject NgControl at init to avoid circular dependency

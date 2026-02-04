@@ -46,9 +46,8 @@ export type InvalidCodeReason = z.infer<typeof invalidReasonSchema>;
   providedIn: 'root'
 })
 export class JoinByCodeService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   checkCodeValidity(code: string): Observable<IsCodeValid> {
     let params = new HttpParams();

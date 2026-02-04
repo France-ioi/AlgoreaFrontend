@@ -15,9 +15,8 @@ const responseSchema = z.object({
   providedIn: 'root'
 })
 export class CheckLoginService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   check(loginId: string): Observable<boolean> {
     const params = new HttpParams({ fromObject: { login_id: loginId } });

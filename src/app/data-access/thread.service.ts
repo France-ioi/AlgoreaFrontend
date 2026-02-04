@@ -11,9 +11,8 @@ import { Thread, threadSchema, threadTokenSchema } from '../forum/models/threads
   providedIn: 'root',
 })
 export class ThreadService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(itemId: string, participantId: string): Observable<Thread> {
     return this.http.get<unknown>(`${this.config.apiUrl}/items/${itemId}/participant/${participantId}/thread`).pipe(

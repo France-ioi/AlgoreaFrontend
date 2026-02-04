@@ -45,9 +45,8 @@ const logDefaultLimit = 20;
   providedIn: 'root'
 })
 export class ActivityLogService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getActivityLog(itemId: string, options?: {
     watchedGroupId?: string,

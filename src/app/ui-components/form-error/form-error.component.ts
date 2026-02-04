@@ -13,9 +13,6 @@ export class FormErrorComponent implements OnChanges {
   @Input() inputName = '';
   @Input() control?: AbstractControl;
 
-  constructor() {
-  }
-
   ngOnChanges(): void {
     if (!this.control && this.form && this.inputName) {
       this.control = this.form.get(this.inputName) ?? undefined;

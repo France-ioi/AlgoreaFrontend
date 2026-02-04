@@ -10,10 +10,8 @@ import { User, userSchema } from '../groups/models/user';
   providedIn: 'root'
 })
 export class GetUserByLoginService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   get(login: string): Observable<User> {
     return this.http

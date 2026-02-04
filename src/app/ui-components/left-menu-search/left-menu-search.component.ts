@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { distinctUntilChanged, map } from 'rxjs';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
@@ -10,6 +10,7 @@ import { InputComponent } from 'src/app/ui-components/input/input.component';
   imports: [ InputComponent ]
 })
 export class LeftMenuSearchComponent implements OnChanges {
+  private fb = inject(FormBuilder);
 
   form = this.fb.group({
     search: [ '' ],
@@ -20,10 +21,6 @@ export class LeftMenuSearchComponent implements OnChanges {
     map(value => value.search?.trim() ?? ''),
     distinctUntilChanged(),
   );
-
-  constructor(
-    private fb: FormBuilder,
-  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.query) this.form.setValue({ search: this.query });

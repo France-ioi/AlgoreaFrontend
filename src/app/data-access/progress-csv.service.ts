@@ -10,9 +10,8 @@ import { z } from 'zod';
   providedIn: 'root'
 })
 export class ProgressCSVService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getCSVData(groupId: string, type: 'group' | 'team' | 'user', parentItemIds: string[]): Observable<string> {
     const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));

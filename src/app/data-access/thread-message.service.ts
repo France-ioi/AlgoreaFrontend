@@ -20,9 +20,8 @@ export type ThreadMessage = z.infer<typeof messageSchema>;
   providedIn: 'root'
 })
 export class ThreadMessageService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   create(
     itemId: ItemId,

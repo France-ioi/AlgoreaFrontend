@@ -93,12 +93,11 @@ export type RootItem = z.infer<typeof itemNavigationChildBaseSchema> & { groups:
   providedIn: 'root'
 })
 export class ItemNavigationService implements OnDestroy {
-
+  private http = inject(HttpClient);
+  private currentContent = inject(CurrentContentService);
   private config = inject(APPCONFIG);
 
   private subscription = this.currentContent.navMenuReload$.subscribe(() => cacheBuster$.next());
-
-  constructor(private http: HttpClient, private currentContent: CurrentContentService) {}
 
   @Cacheable(cacheConfig)
   getItemNavigation(

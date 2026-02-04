@@ -17,11 +17,8 @@ export type IdentityTokenResponse = z.infer<typeof identityTokenResponseSchema>;
   providedIn: 'root',
 })
 export class IdentityTokenService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(
-    private http: HttpClient,
-  ) {}
 
   generate(): Observable<IdentityTokenResponse> {
     return this.http

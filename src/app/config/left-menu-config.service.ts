@@ -7,7 +7,7 @@ import { combineLatest, map, of, switchMap } from 'rxjs';
   providedIn: 'root'
 })
 export class LeftMenuConfigService {
-
+  private userSession = inject(UserSessionService);
   private config = inject(APPCONFIG);
 
   skillsTabEnabled$ = of({ hasDefault: !!this.config.defaultSkillId, visibilityConfig: this.config.featureFlags.leftMenu.skills }).pipe(
@@ -32,7 +32,5 @@ export class LeftMenuConfigService {
   showTabBar$ = combineLatest([ this.skillsTabEnabled$, this.groupsTabEnabled$ ]).pipe(
     map(([ skillsTabEnabled, groupsTabEnabled ]) => skillsTabEnabled || groupsTabEnabled)
   );
-
-  constructor(private userSession: UserSessionService) {}
 
 }

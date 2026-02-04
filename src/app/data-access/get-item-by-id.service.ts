@@ -53,10 +53,8 @@ export type Item = z.infer<typeof itemSchema>;
   providedIn: 'root',
 })
 export class GetItemByIdService {
-
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   get(id: string, options?: { watchedGroupId?: string, languageTag?: string }): Observable<Item> {
     let params = new HttpParams();

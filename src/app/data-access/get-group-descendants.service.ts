@@ -41,9 +41,8 @@ type UserDescendants = z.infer<typeof userDescendantsSchema>;
   providedIn: 'root'
 })
 export class GetGroupDescendantsService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getUserDescendants(groupId: string, options?: { sort?: string[], limit?: number, fromId?: string }): Observable<UserDescendants> {
     let params = new HttpParams();

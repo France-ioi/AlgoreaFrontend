@@ -11,8 +11,7 @@ import { inject } from '@angular/core';
 })
 export class AttemptActionsService {
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   create(itemIdPath: string[], parentAttemptId: string): Observable<string> {
     const path = itemIdPath.join('/');

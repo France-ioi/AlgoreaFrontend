@@ -25,10 +25,12 @@ export type SearchResponse = z.infer<typeof searchResponseSchema>;
   providedIn: 'root'
 })
 export class SearchService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
+
   searchApiUrl: string;
 
-  constructor(private http: HttpClient) {
+  constructor() {
     if (!this.config.searchApiUrl) throw new Error('To use the search service you must first check that searchApiUrl is set in config!');
     this.searchApiUrl = this.config.searchApiUrl;
   }

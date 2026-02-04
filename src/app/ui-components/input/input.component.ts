@@ -40,9 +40,6 @@ export class InputComponent {
   @Output() focus = new EventEmitter<FocusEvent>();
   @Output() blur = new EventEmitter<FocusEvent>();
 
-  constructor() {
-  }
-
   onButtonClick(): void {
     this.click.emit();
   }

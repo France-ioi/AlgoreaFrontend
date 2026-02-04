@@ -12,7 +12,4 @@ export class MessageInfoComponent {
   closeEvent = output<void>();
   @Input() icon = 'ph-duotone ph-lock-key';
   @Input() closable = false;
-
-  constructor() {
-  }
 }

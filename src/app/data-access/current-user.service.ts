@@ -42,9 +42,8 @@ export interface UpdateUserBody {
   providedIn: 'root'
 })
 export class CurrentUserHttpService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   getProfileInfo(): Observable<CurrentUserProfile> {
     return this.http

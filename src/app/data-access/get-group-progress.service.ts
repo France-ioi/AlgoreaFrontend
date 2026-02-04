@@ -39,9 +39,8 @@ export type ParticipantProgresses = z.infer<typeof participantProgressesSchema>;
   providedIn: 'root'
 })
 export class GetGroupProgressService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   getUsersProgress(
     groupId: string,

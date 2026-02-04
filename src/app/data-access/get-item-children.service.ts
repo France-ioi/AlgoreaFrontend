@@ -52,9 +52,8 @@ export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChildren
   providedIn: 'root'
 })
 export class GetItemChildrenService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) { }
 
   private getRaw(id: string, attemptId: string, options?: { showInvisible?: boolean, watchedGroupId?: string }): Observable<unknown[]> {
     let params = new HttpParams();

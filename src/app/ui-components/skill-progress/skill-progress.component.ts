@@ -19,8 +19,6 @@ export class SkillProgressComponent implements OnChanges {
   private readonly rangeMin = 0;
   private readonly rangeMax = 100;
 
-  constructor() {}
-
   private validateScore(score: number): number {
     if (score < this.rangeMin) {
       return this.rangeMin;

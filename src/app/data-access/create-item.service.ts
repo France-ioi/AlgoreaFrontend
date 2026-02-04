@@ -22,10 +22,8 @@ export type NewItem = {
   providedIn: 'root'
 })
 export class CreateItemService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {
-  }
 
   create(newItem: NewItem): Observable<string> {
     const body: {[k: string]: any} = {

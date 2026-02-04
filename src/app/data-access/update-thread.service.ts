@@ -24,9 +24,8 @@ export interface IncrementMessageCount {
   providedIn: 'root',
 })
 export class UpdateThreadService {
+  private http = inject(HttpClient);
   private config = inject(APPCONFIG);
-
-  constructor(private http: HttpClient) {}
 
   update(itemId: string, participantId: string, payload: OpenThread | CloseThread | IncrementMessageCount): Observable<void> {
     return this.http.put<SimpleActionResponse>(
