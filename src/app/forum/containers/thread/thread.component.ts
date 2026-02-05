@@ -50,7 +50,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 import { ThreadUserIndicatorComponent } from '../thread-user-indicator/thread-user-indicator.component';
 import { fromForum as forumActions } from '../../store';
 import { mergeEvents, ThreadEvent } from '../../models/thread-events';
-import { computed } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
@@ -96,6 +96,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   disableControls$ = new BehaviorSubject<boolean>(false);
 
   readonly subscriptions = new Subscription();
+  private readonly isPageUnloading = signal(false);
 
   // Select individual event sources
   private readonly logEvents = this.store.selectSignal(fromForum.selectLogEvents);
@@ -108,6 +109,14 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     const sls = this.slsEvents();
     const ws = this.wsEvents();
     const identifier = log.identifier ?? sls.identifier;
+
+    // Don't show errors if page is unloading (prevents flash on refresh)
+    if (this.isPageUnloading()) {
+      const logData = log.data ?? [];
+      const slsData = sls.data ?? [];
+      const mergedData = mergeEvents([ logData, slsData, ws ]);
+      return readyState(mergedData, identifier);
+    }
 
     // Return error if either source has an error
     if (log.isError) return log;
@@ -143,7 +152,18 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly hasActivitiesData = computed(() => this.logEvents().data !== undefined);
   readonly hasMessagesData = computed(() => this.slsEvents().data !== undefined);
 
-  readonly isWsOpen$ = this.store.select(fromWebsocket.selectOpen);
+  private readonly isWsOpenRaw$ = this.store.select(fromWebsocket.selectOpen);
+
+  // Delay showing WebSocket error to avoid flash on brief disconnections or page unload
+  readonly isWsOpen$ = this.isWsOpenRaw$.pipe(
+    switchMap(isOpen => {
+      if (isOpen || this.isPageUnloading()) {
+        return of(true);
+      }
+      // Wait 500ms before showing the error to avoid flash on brief disconnections
+      return of(false).pipe(delay(500));
+    })
+  );
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
@@ -251,7 +271,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private forumWebsocketClient: WebsocketClient,
     private threadMessageService: ThreadMessageService,
     private fb: FormBuilder,
-  ) {}
+  ) {
+    // Track page unload to prevent error flashing when leaving the page
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
 
   ngAfterViewInit(): void {
     this.subscriptions.add(
@@ -284,7 +307,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
+
+  private handleBeforeUnload = (): void => {
+    this.isPageUnloading.set(true);
+  };
 
   clearMessageToSendControl(): void {
     this.form.reset({
