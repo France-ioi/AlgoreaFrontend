@@ -10,7 +10,10 @@
     @if (currentState.isError) {
       <div class="widget-error">Error!</div>
     } @else if (currentState.isFetching && !currentState.data) {
-      <div class="widget-loading">Loading...</div>
+      <div class="widget-loading">
+        <alg-loading></alg-loading>
+        <div class="loading-text" i18n>Loading...</div>
+      </div>
     } @else {
       <div class="widget-body">
           @let followStatus = followStatus$ | async;
@@ -46,8 +49,14 @@
                     [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
                   ></alg-thread-message>
                 }
-                @if (currentState.isFetching) {
-                  <div class="refetching-indicator" i18n>Looking for new events...</div>
+                @if (currentState.isFetching && currentState.data) {
+                  @if (isLoadingActivities() && !hasActivitiesData() && hasMessagesData()) {
+                    <div class="refetching-indicator" i18n>Loading the activities...</div>
+                  } @else if (isLoadingMessages() && !hasMessagesData() && hasActivitiesData()) {
+                    <div class="refetching-indicator" i18n>Loading the messages...</div>
+                  } @else if (isLoadingActivities() || isLoadingMessages()) {
+                    <div class="refetching-indicator" i18n>Looking for new events...</div>
+                  }
                 }
               }
             }
