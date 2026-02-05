@@ -3,27 +3,52 @@ import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxj
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { NgClass } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
+import { UrlCommand } from 'src/app/utils/url';
 
 @Component({
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
-  imports: [ LetDirective, NgClass, RouterLink, NgScrollbar, ButtonIconComponent ]
+  imports: [ LetDirective, NgClass, RouterLink, NgScrollbar, ButtonIconComponent, SelectionComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   private tabService = inject(TabService);
   private elementRef = inject<ElementRef<HTMLDivElement>>(ElementRef);
   private cd = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
   @Input() styleClass?: string;
 
   showPrevButton = false;
   showNextButton = false;
+
+  // Task tabs for segmented button
+  taskTabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
+    map(([ tabs, active ]) => {
+      const taskTabs = tabs.filter(tab => tab.isTaskTab);
+      const activeIndex = taskTabs.findIndex(tab => tab.tag === active);
+      return {
+        items: taskTabs.map(tab => ({ label: tab.title, value: tab.tag, routerLink: tab.command })),
+        selectedIndex: activeIndex >= 0 ? activeIndex : 0,
+      };
+    }),
+  );
+
+  // Regular tabs (non-task tabs)
+  regularTabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
+    map(([ tabs, active ]) => tabs.filter(tab => !tab.isTaskTab).map(tab => ({
+      label: tab.title,
+      routerLink: tab.command,
+      id: tab.tag,
+      styleClass: tab.tag === active ? 'alg-tab-bar-active' : undefined,
+    }))),
+  );
 
   tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
     map(([ tabs, active ]) => tabs.map(tab => {
@@ -75,6 +100,14 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   onChange(id: string): void {
     this.tabService.setActiveTab(id);
+  }
+
+  onTaskTabChange(index: number, items: { label: string, value: string, routerLink: UrlCommand }[]): void {
+    const item = items[index];
+    if (item) {
+      this.tabService.setActiveTab(item.value);
+      void this.router.navigate(item.routerLink as string[]);
+    }
   }
 
   handleArrows(): void {

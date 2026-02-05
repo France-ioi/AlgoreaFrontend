@@ -15,13 +15,23 @@
     [sensorThrottleTime]="1"
     appearance="native"
     >
-    <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs">
-      @for (tab of tabs; track tab) {
-        <li class="tabs-item" [ngClass]="tab.styleClass">
-          <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
-        </li>
+    <div class="tabs-wrapper" [ngClass]="styleClass" *ngrxLet="{ taskTabs: taskTabs$, regularTabs: regularTabs$ } as data">
+      @if (data.taskTabs.items.length > 0) {
+        <alg-selection
+          class="task-tabs-selection"
+          [items]="data.taskTabs.items"
+          [selected]="data.taskTabs.selectedIndex"
+          (change)="onTaskTabChange($event, data.taskTabs.items)"
+        ></alg-selection>
       }
-    </ul>
+      <ul class="tabs">
+        @for (tab of data.regularTabs; track tab) {
+          <li class="tabs-item" [ngClass]="tab.styleClass">
+            <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
+          </li>
+        }
+      </ul>
+    </div>
   </ng-scrollbar>
   @if (showNextButton) {
     <button
