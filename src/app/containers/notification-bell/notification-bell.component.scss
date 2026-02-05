@@ -13,11 +13,11 @@
   &:hover {
     opacity: 0.8;
   }
-}
 
-.ph-bell {
-  font-size: functions.toRem(24);
-  color: var(--alg-primary-color);
+  i {
+    font-size: functions.toRem(24);
+    color: var(--alg-primary-color);
+  }
 }
 
 .badge {
