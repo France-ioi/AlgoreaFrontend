@@ -16,6 +16,15 @@ interface CurrentThreadSelectors<T> {
   selectCanCurrentUserLoadThreadAnswers: MemoizedSelector<T, boolean>,
   selectThreadStatusOpen: MemoizedSelector<T, boolean>,
   selectThreadEvents: MemoizedSelector<T, FetchState<ThreadEvent[], ThreadId>>,
+  selectLogEvents: MemoizedSelector<T, FetchState<ThreadEvent[], ThreadId>>,
+  selectSlsEvents: MemoizedSelector<T, FetchState<ThreadEvent[], ThreadId>>,
+  selectWsEvents: MemoizedSelector<T, ThreadEvent[]>,
+  selectThreadEventsSources: MemoizedSelector<T, {
+    logEvents: FetchState<ThreadEvent[], ThreadId>,
+    slsEvents: FetchState<ThreadEvent[], ThreadId>,
+    wsEvents: ThreadEvent[],
+  }>,
+  selectMergedThreadEvents: MemoizedSelector<T, FetchState<ThreadEvent[], ThreadId>>,
   selectFollowStatus: MemoizedSelector<T, FetchState<boolean>>,
 }
 
@@ -94,12 +103,57 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectCurrentThread,
     state => state.followStatus
   );
+  const selectLogEvents = createSelector(
+    selectCurrentThread,
+    state => state.logEvents
+  );
+  const selectSlsEvents = createSelector(
+    selectCurrentThread,
+    state => state.slsEvents
+  );
+  const selectWsEvents = createSelector(
+    selectCurrentThread,
+    state => state.wsEvents
+  );
+  const selectThreadEventsSources = createSelector(
+    selectLogEvents,
+    selectSlsEvents,
+    selectWsEvents,
+    (logEvents, slsEvents, wsEvents) => ({ logEvents, slsEvents, wsEvents })
+  );
+  const selectMergedThreadEvents = createSelector(
+    selectLogEvents,
+    selectSlsEvents,
+    selectWsEvents,
+    (log, sls, ws): FetchState<ThreadEvent[], ThreadId> => {
+      const identifier = log.identifier ?? sls.identifier;
+      if (log.isError) return log;
+      if (sls.isError) return sls;
+      const bothFetching = log.isFetching && sls.isFetching;
+      const bothHaveNoData = log.data === undefined && sls.data === undefined;
+      if (bothFetching && bothHaveNoData) {
+        return fetchingState<ThreadEvent[], ThreadId>(undefined, identifier);
+      }
+      const logData = log.data ?? [];
+      const slsData = sls.data ?? [];
+      const mergedData = mergeEvents([ logData, slsData, ws ]);
+      if (log.isFetching || sls.isFetching) {
+        return fetchingState(mergedData, identifier);
+      }
+      return readyState(mergedData, identifier);
+    }
+  );
   return {
     selectVisible,
     selectThreadId,
     selectThreadHydratedId,
     selectInfo,
     selectThreadEvents,
+    selectLogEvents,
+    selectSlsEvents,
+    selectWsEvents,
+    selectThreadEventsSources,
+    selectMergedThreadEvents,
     selectHasCurrentThread,
     selectThreadStatusOpen,
     selectThreadStatus,

@@ -4,13 +4,26 @@
   @let isCurrentUserThreadParticipant = isCurrentUserThreadParticipant$ | async;
   @let isMine = isMine$ | async;
   @if (!isWsOpen) {
-    <div class="ws-error" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
+    <div class="ws-error">
+      <alg-error
+        i18n-message message="Connection with the forum lost. Check your connection, or reload the app if it does not recover automatically."
+        icon="ph-duotone ph-wifi-slash"
+      ></alg-error>
+    </div>
   } @else {
     @let currentState = state();
     @if (currentState.isError) {
-      <div class="widget-error">Error!</div>
+      <div class="widget-error">
+        <alg-error
+          i18n-message message="Unable to load the thread messages."
+          icon="ph-duotone ph-warning-circle"
+        ></alg-error>
+      </div>
     } @else if (currentState.isFetching && !currentState.data) {
-      <div class="widget-loading">Loading...</div>
+      <div class="widget-loading">
+        <alg-loading></alg-loading>
+        <div class="loading-text" i18n>Loading...</div>
+      </div>
     } @else {
       <div class="widget-body">
           @let followStatus = followStatus$ | async;
@@ -46,8 +59,14 @@
                     [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
                   ></alg-thread-message>
                 }
-                @if (currentState.isFetching) {
-                  <div class="refetching-indicator" i18n>Looking for new events...</div>
+                @if (currentState.isFetching && currentState.data) {
+                  @if (isLoadingActivities() && !hasActivitiesData() && hasMessagesData()) {
+                    <div class="refetching-indicator" i18n>Loading the activities...</div>
+                  } @else if (isLoadingMessages() && !hasMessagesData() && hasActivitiesData()) {
+                    <div class="refetching-indicator" i18n>Loading the messages...</div>
+                  } @else if (isLoadingActivities() || isLoadingMessages()) {
+                    <div class="refetching-indicator" i18n>Looking for new events...</div>
+                  }
                 }
               }
             }

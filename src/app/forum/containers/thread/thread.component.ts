@@ -49,6 +49,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { ThreadUserIndicatorComponent } from '../thread-user-indicator/thread-user-indicator.component';
 import { fromForum as forumActions } from '../../store';
+import { mergeEvents, ThreadEvent } from '../../models/thread-events';
+import { computed, signal } from '@angular/core';
+import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -77,6 +81,8 @@ const selectThreadInfo = createSelector(
     AutoResizeDirective,
     TooltipDirective,
     ThreadUserIndicatorComponent,
+    LoadingComponent,
+    ErrorComponent,
   ]
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
@@ -90,10 +96,74 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   disableControls$ = new BehaviorSubject<boolean>(false);
 
   readonly subscriptions = new Subscription();
-  private readonly state$ = this.store.select(fromForum.selectThreadEvents);
-  readonly state = this.store.selectSignal(fromForum.selectThreadEvents);
+  private readonly isPageUnloading = signal(false);
 
-  readonly isWsOpen$ = this.store.select(fromWebsocket.selectOpen);
+  // Select individual event sources
+  private readonly logEvents = this.store.selectSignal(fromForum.selectLogEvents);
+  private readonly slsEvents = this.store.selectSignal(fromForum.selectSlsEvents);
+  private readonly wsEvents = this.store.selectSignal(fromForum.selectWsEvents);
+
+  // Merge events with granular loading states
+  readonly state = computed(() => {
+    const log = this.logEvents();
+    const sls = this.slsEvents();
+    const ws = this.wsEvents();
+    const identifier = log.identifier ?? sls.identifier;
+
+    // Don't show errors if page is unloading (prevents flash on refresh)
+    if (this.isPageUnloading()) {
+      const logData = log.data ?? [];
+      const slsData = sls.data ?? [];
+      const mergedData = mergeEvents([ logData, slsData, ws ]);
+      return readyState(mergedData, identifier);
+    }
+
+    // Return error if either source has an error
+    if (log.isError) return log;
+    if (sls.isError) return sls;
+
+    // Check if both are loading (initial load)
+    const bothFetching = log.isFetching && sls.isFetching;
+    const bothHaveNoData = log.data === undefined && sls.data === undefined;
+
+    if (bothFetching && bothHaveNoData) {
+      return fetchingState<ThreadEvent[], ThreadId>(undefined, identifier);
+    }
+
+    // At least one has data - merge what we have
+    const logData = log.data ?? [];
+    const slsData = sls.data ?? [];
+    const mergedData = mergeEvents([ logData, slsData, ws ]);
+
+    // If either is still fetching, mark as fetching but with data
+    if (log.isFetching || sls.isFetching) {
+      return fetchingState(mergedData, identifier);
+    }
+
+    return readyState(mergedData, identifier);
+  });
+
+  // Observable version for backwards compatibility
+  private readonly state$ = this.store.select(fromForum.selectMergedThreadEvents);
+
+  // Computed signals for granular loading states
+  readonly isLoadingActivities = computed(() => this.logEvents().isFetching);
+  readonly isLoadingMessages = computed(() => this.slsEvents().isFetching);
+  readonly hasActivitiesData = computed(() => this.logEvents().data !== undefined);
+  readonly hasMessagesData = computed(() => this.slsEvents().data !== undefined);
+
+  private readonly isWsOpenRaw$ = this.store.select(fromWebsocket.selectOpen);
+
+  // Delay showing WebSocket error to avoid flash on brief disconnections or page unload
+  readonly isWsOpen$ = this.isWsOpenRaw$.pipe(
+    switchMap(isOpen => {
+      if (isOpen || this.isPageUnloading()) {
+        return of(true);
+      }
+      // Wait 500ms before showing the error to avoid flash on brief disconnections
+      return of(false).pipe(delay(500));
+    })
+  );
 
   private distinctUsersInThread = this.state$.pipe(
     map(state => state.data ?? []), // if there is no data, consider there is no events
@@ -201,7 +271,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     private forumWebsocketClient: WebsocketClient,
     private threadMessageService: ThreadMessageService,
     private fb: FormBuilder,
-  ) {}
+  ) {
+    // Track page unload to prevent error flashing when leaving the page
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
 
   ngAfterViewInit(): void {
     this.subscriptions.add(
@@ -234,7 +307,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
+
+  private handleBeforeUnload = (): void => {
+    this.isPageUnloading.set(true);
+  };
 
   clearMessageToSendControl(): void {
     this.form.reset({

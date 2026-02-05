@@ -106,3 +106,9 @@
   font-size: functions.toRem(12);
   font-style: italic;
 }
+
+.loading-text {
+  margin-top: functions.toRem(12);
+  color: var(--alg-secondary-color, #616f82);
+  font-size: functions.toRem(14);
+}
