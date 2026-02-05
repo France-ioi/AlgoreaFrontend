@@ -70,16 +70,29 @@ const configSchema = z.object({
 
 export type AppConfig = z.infer<typeof configSchema>;
 
+let cachedConfig: AppConfig | null = null;
+
 export const APPCONFIG = new InjectionToken<AppConfig>('app.config', {
   factory: (): AppConfig => {
+    // Return cached config if already loaded
+    if (cachedConfig !== null) {
+      return cachedConfig;
+    }
+
     if (!('appConfig' in window)) {
-      throw new Error('No environment config found!');
+      throw new Error('No environment config found! Make sure assets/config.js is loaded before Angular bootstraps.');
     }
     const config = configSchema.safeParse(window.appConfig);
     if (!config.success) {
       throw new Error('Error in config! ' + config.error.message);
     }
+
+    // Cache the config but don't delete from window yet (for safety)
+    cachedConfig = config.data;
+
+    // Delete from window to prevent tampering, but only after successful parse and cache
     delete window.appConfig;
-    return config.data;
+
+    return cachedConfig;
   },
 });
