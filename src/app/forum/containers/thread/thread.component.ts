@@ -52,6 +52,7 @@ import { fromForum as forumActions } from '../../store';
 import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 import { computed } from '@angular/core';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -81,6 +82,7 @@ const selectThreadInfo = createSelector(
     TooltipDirective,
     ThreadUserIndicatorComponent,
     LoadingComponent,
+    ErrorComponent,
   ]
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {

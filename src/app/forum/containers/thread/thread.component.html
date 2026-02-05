@@ -4,11 +4,21 @@
   @let isCurrentUserThreadParticipant = isCurrentUserThreadParticipant$ | async;
   @let isMine = isMine$ | async;
   @if (!isWsOpen) {
-    <div class="ws-error" i18n>The connection with the forum has been lost, try to refresh the current page.</div>
+    <div class="ws-error">
+      <alg-error
+        i18n-message message="Connection with the forum lost. Check your connection, or reload the app if it does not recover automatically."
+        icon="ph-duotone ph-wifi-slash"
+      ></alg-error>
+    </div>
   } @else {
     @let currentState = state();
     @if (currentState.isError) {
-      <div class="widget-error">Error!</div>
+      <div class="widget-error">
+        <alg-error
+          i18n-message message="Unable to load the thread messages."
+          icon="ph-duotone ph-warning-circle"
+        ></alg-error>
+      </div>
     } @else if (currentState.isFetching && !currentState.data) {
       <div class="widget-loading">
         <alg-loading></alg-loading>
