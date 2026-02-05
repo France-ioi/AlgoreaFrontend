@@ -75,6 +75,14 @@
     }
   }
 
+  &.alg-task-tab {
+    .tabs-item-link {
+      font-weight: 400;
+      opacity: 0.8;
+      color: var(--alg-secondary-color, #4a4a4a) !important;
+    }
+  }
+
   &:first-child {
     margin-left: 0 !important;
   }

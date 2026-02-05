@@ -26,12 +26,17 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   showNextButton = false;
 
   tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
-    map(([ tabs, active ]) => tabs.map(tab => ({
-      label: tab.title,
-      routerLink: tab.command,
-      id: tab.tag,
-      styleClass: tab.tag === active ? 'alg-tab-bar-active' : undefined,
-    }))),
+    map(([ tabs, active ]) => tabs.map(tab => {
+      const classes: string[] = [];
+      if (tab.tag === active) classes.push('alg-tab-bar-active');
+      if (tab.isTaskTab) classes.push('alg-task-tab');
+      return {
+        label: tab.title,
+        routerLink: tab.command,
+        id: tab.tag,
+        styleClass: classes.length > 0 ? classes.join(' ') : undefined,
+      };
+    })),
   );
 
   resizeEvent = new Subject<void>();
