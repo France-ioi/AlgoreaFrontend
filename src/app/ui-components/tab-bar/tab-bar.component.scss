@@ -1,7 +1,7 @@
 @use 'src/assets/scss/functions';
 
 :host {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .container {
@@ -11,9 +11,14 @@
   height: 100%;
 }
 
+::ng-deep .ng-scroll-content {
+  overflow: visible !important;
+}
+
 .tabs {
   width: 100%;
   display: flex;
+  align-items: flex-end;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -50,6 +55,14 @@
       &:last-child {
         margin-right: 0 !important;
       }
+
+      &.alg-task-tab {
+        .tabs-item-link {
+          height: functions.toRem(24);
+          padding: 0 functions.toRem(18);
+          font-size: functions.toRem(12);
+        }
+      }
     }
 
     .tabs-item-link {
@@ -76,10 +89,29 @@
   }
 
   &.alg-task-tab {
+    margin-bottom: functions.toRem(5) !important;
+
     .tabs-item-link {
-      font-weight: 400;
-      opacity: 0.8;
+      opacity: 1;
+      height: functions.toRem(32);
+      padding: 0 functions.toRem(18);
+      font-size: functions.toRem(16);
+      border-radius: functions.toRem(20);
+      border: functions.toRem(1) solid var(--alg-light-color, #e0e0e0);
+      background-color: var(--alg-white-color, #ffffff);
       color: var(--alg-secondary-color, #4a4a4a) !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 0;
+    }
+
+    &.alg-tab-bar-active {
+      .tabs-item-link {
+        background-color: var(--alg-primary-color, #3d5af0);
+        border-color: var(--alg-primary-color, #3d5af0);
+        color: var(--alg-white-color, #ffffff) !important;
+      }
     }
   }
 
