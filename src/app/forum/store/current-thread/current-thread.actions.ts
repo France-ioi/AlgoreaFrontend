@@ -2,13 +2,6 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { ThreadId } from '../../models/threads';
 import { ThreadItemInfo } from './current-thread.store';
 
-export const topBarActions = createActionGroup({
-  source: 'Top bar',
-  events: {
-    toggleCurrentThreadVisibility: emptyProps(),
-  },
-});
-
 export const forumThreadListActions = createActionGroup({
   source: 'Forum Thread List Page',
   events: {
