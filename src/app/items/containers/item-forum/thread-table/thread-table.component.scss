@@ -1,0 +1,16 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: block;
+}
+
+.operation-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: functions.toRem(13);
+}
+
+.empty-message {
+  padding: functions.toRem(12) 0;
+}

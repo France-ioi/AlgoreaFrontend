@@ -23,7 +23,8 @@ const threadsSchema = z.array(
   }),
 );
 
-type Threads = z.infer<typeof threadsSchema>;
+export type Threads = z.infer<typeof threadsSchema>;
+export type Thread = Threads[number];
 
 @Injectable({
   providedIn: 'root',

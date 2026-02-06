@@ -1,151 +1,88 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, computed } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
-import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
+import { Subject, filter, switchMap } from 'rxjs';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
-import { UserCaptionPipe } from 'src/app/pipes/userCaption';
-import { GroupLinkPipe } from 'src/app/pipes/groupLink';
-import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
-import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
-import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { fromObservation } from 'src/app/store/observation';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
-
-
-enum ForumTabUrls {
-  MyThreads= '/forum/my-threads',
-  Others = '/forum/others',
-  Group = '/forum/group',
-}
-
-const OPTIONS = [
-  {
-    label: $localize`My help requests`,
-    value: ForumTabUrls.MyThreads,
-  },
-  {
-    label: $localize`Other users' requests`,
-    value: ForumTabUrls.Others,
-  },
-];
+import { isDefined } from 'src/app/utils/null-undefined-predicates';
+import { ThreadTableComponent } from './thread-table/thread-table.component';
 
 @Component({
   selector: 'alg-item-forum',
   templateUrl: './item-forum.component.html',
   styleUrls: [ './item-forum.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LetDirective,
-    SelectionComponent,
-    ErrorComponent,
-    LoadingComponent,
-    NgClass,
-    RouterLink,
-    AsyncPipe,
-    DatePipe,
-    ItemRoutePipe,
-    RouteUrlPipe,
-    GroupLinkPipe,
-    UserCaptionPipe,
-    ThreadStatusDisplayPipe,
-    ButtonComponent,
+    ThreadTableComponent,
   ]
 })
-export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
+export class ItemForumComponent {
   private store = inject(Store);
   private getThreadService = inject(GetThreadsService);
-  private router = inject(Router);
-  private activatedRoute = inject(ActivatedRoute);
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
-  private readonly url$ = this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd),
-    map(() => this.router.url),
-    startWith(this.router.url),
-    distinctUntilChanged(),
+  // Derived signal for the item
+  private item = computed(() => this.itemData().item);
+
+  // Signals from store
+  private observedGroupId = this.store.selectSignal(fromObservation.selectObservedGroupId);
+  isObserving = this.store.selectSignal(fromObservation.selectIsObserving);
+  visibleThreadId = this.store.selectSignal(fromForum.selectVisibleThreadId);
+
+  // Refresh subjects for each section
+  private refreshMyThreads$ = new Subject<void>();
+  private refreshOthersThreads$ = new Subject<void>();
+  private refreshObservedGroupThreads$ = new Subject<void>();
+
+  // Fetch state for "My help requests"
+  myThreadsState = toSignal(
+    toObservable(this.item).pipe(
+      switchMap(item => this.getThreadService.get(item.id, { isMine: true }).pipe(
+        mapToFetchState({ resetter: this.refreshMyThreads$ })
+      ))
+    )
   );
-  private readonly refresh$ = new Subject<void>();
-  private readonly item$ = new ReplaySubject<Item>(1);
-  isObserving$ = this.store.select(fromObservation.selectIsObserving);
-  selected$ = new ReplaySubject<number>(1);
-  options$ = combineLatest([
-    this.store.select(fromObservation.selectObservedGroupInfo),
-    this.url$,
-  ]).pipe(
-    map(([ observedGroup, url ]) => [
-      ...OPTIONS,
-      ...(observedGroup || url.endsWith(ForumTabUrls.Group)
-        ? [{ label: `${ observedGroup?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
-    ]),
+
+  // Fetch state for "Other users' requests"
+  othersThreadsState = toSignal(
+    toObservable(this.item).pipe(
+      switchMap(item => this.getThreadService.get(item.id, { isMine: false }).pipe(
+        mapToFetchState({ resetter: this.refreshOthersThreads$ })
+      ))
+    )
   );
-  state$ = combineLatest([
-    this.selected$,
-    this.item$,
-    this.store.select(fromObservation.selectObservedGroupId)
-  ]).pipe(
-    switchMap(([ selected, item, watchedGroupId ]) =>
-      this.getThreadService.get(item.id, selected === 2 && watchedGroupId ? { watchedGroupId } : { isMine: selected === 0 }).pipe(
-        mapToFetchState({ resetter: this.refresh$ }),
-      ),
-    ),
+
+  // Fetch state for observed group's requests
+  private observedGroupParams = computed(() => ({
+    item: this.item(),
+    groupId: this.observedGroupId()
+  }));
+
+  observedGroupThreadsState = toSignal(
+    toObservable(this.observedGroupParams).pipe(
+      filter(({ groupId }) => isDefined(groupId)),
+      switchMap(({ item, groupId }) => this.getThreadService.get(item.id, { watchedGroupId: groupId! }).pipe(
+        mapToFetchState({ resetter: this.refreshObservedGroupThreads$ })
+      ))
+    )
   );
-  currentThreadInfo$ = this.store.select(fromForum.selectThreadId);
-  isDiscussionVisible$ = this.store.select(fromForum.selectVisible);
 
-  ngOnChanges(): void {
-    if (this.itemData) {
-      this.item$.next(this.itemData.item);
-    }
+  refreshMyThreads(): void {
+    this.refreshMyThreads$.next();
   }
 
-  ngOnInit(): void {
-    this.url$.pipe(
-      withLatestFrom(this.store.select(fromObservation.selectObservedGroupId)),
-      first(),
-    ).subscribe(([ url, observedGroupId ]) => {
-      if (observedGroupId || url.endsWith(ForumTabUrls.Group)) {
-        this.selected$.next(2);
-        return;
-      } else if (this.itemData?.currentResult?.validated || url.endsWith(ForumTabUrls.Others)) {
-        this.selected$.next(1);
-        return;
-      }
-      this.selected$.next(0);
-    });
+  refreshOthersThreads(): void {
+    this.refreshOthersThreads$.next();
   }
 
-  ngOnDestroy(): void {
-    this.item$.complete();
-    this.selected$.complete();
-    this.refresh$.complete();
-  }
-
-  onChange(selected: number, options: typeof OPTIONS): void {
-    if (!this.itemData) {
-      throw new Error('Unexpected: Missed item data');
-    }
-    this.selected$.next(selected);
-    const selectedOption = options[selected];
-    if (!selectedOption) {
-      throw new Error('Unexpected: Missed selected option');
-    }
-    void this.router.navigate([ `.${ selectedOption.value }` ], { relativeTo: this.activatedRoute });
-  }
-
-  refresh(): void {
-    this.refresh$.next();
+  refreshObservedGroupThreads(): void {
+    this.refreshObservedGroupThreads$.next();
   }
 
   hideThreadPanel(): void {
@@ -157,5 +94,4 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
       fromForum.forumThreadListActions.showAsCurrentThread({ id, item })
     );
   }
-
 }

@@ -60,25 +60,7 @@ const routes: Routes = [
       },
       {
         path: 'forum',
-        children: [
-          {
-            path: '',
-            redirectTo: 'my-threads',
-            pathMatch: 'full',
-          },
-          {
-            path: 'my-threads',
-            children: [],
-          },
-          {
-            path: 'others',
-            children: [],
-          },
-          {
-            path: 'group',
-            children: [],
-          },
-        ],
+        children: [],
       },
       {
         path: '**',

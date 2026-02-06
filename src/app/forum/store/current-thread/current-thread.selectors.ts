@@ -8,6 +8,7 @@ import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 interface CurrentThreadSelectors<T> {
   selectVisible: MemoizedSelector<T, boolean>,
   selectThreadId: MemoizedSelector<T, ThreadId | null>,
+  selectVisibleThreadId: MemoizedSelector<T, ThreadId | null>,
   selectThreadHydratedId: MemoizedSelector<T, { id: ThreadId, item: ThreadItemInfo } | null>,
   selectHasCurrentThread: MemoizedSelector<T, boolean>,
   selectInfo: MemoizedSelector<T, FetchState<Thread>>,
@@ -76,6 +77,11 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   const selectThreadHydratedId = createSelector(
     selectCurrentThread,
     ({ id, item }) => (id && item ? { id, item } : null)
+  );
+  const selectVisibleThreadId = createSelector(
+    selectVisible,
+    selectThreadId,
+    (visible, id) => (visible ? id : null)
   );
   const selectHasCurrentThread = createSelector(
     selectThreadId,
@@ -146,6 +152,7 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
   return {
     selectVisible,
     selectThreadId,
+    selectVisibleThreadId,
     selectThreadHydratedId,
     selectInfo,
     selectThreadEvents,
