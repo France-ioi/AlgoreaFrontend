@@ -14,6 +14,9 @@ import {
 import { FunctionalEffect } from '@ngrx/effects';
 import { eventFetchingActions } from './current-thread/event-fetching.actions';
 import { followStatusUiActions } from './current-thread/follow-status.actions';
+import { createSelectThreadInlineContext } from './thread-inline.selectors';
+
+export { isThreadInline } from './thread-inline.selectors';
 
 export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...fetchThreadInfoEffects,
@@ -25,14 +28,17 @@ export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...followStatusEffects,
 });
 
+const forumFeature = createFeature({
+  name: 'forum',
+  reducer,
+  extraSelectors: ({ selectForumState }) => ({
+    ...getCurrentThreadSelectors(selectForumState)
+  })
+});
+
 export const fromForum = {
-  ...createFeature({
-    name: 'forum',
-    reducer,
-    extraSelectors: ({ selectForumState }) => ({
-      ...getCurrentThreadSelectors(selectForumState)
-    })
-  }),
+  ...forumFeature,
+  selectThreadInlineContext: createSelectThreadInlineContext(forumFeature.selectVisibleThreadId),
   forumThreadListActions,
   threadPanelActions,
   eventFetchingActions,

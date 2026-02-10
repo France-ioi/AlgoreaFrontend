@@ -5,7 +5,7 @@
     </div>
     <ng-container *ngrxLet="{ fullFrameContentDisplayed: fullFrameContentDisplayed$, withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$ } as layout">
       <ng-container *ngrxLet="isObserving$ as isObserving">
-        <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'thread-collapsed': !(isDiscussionVisible$ | async) }">
+        <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'thread-collapsed': !(isDiscussionVisible$ | async) || (isThreadInline$ | async) }">
           <alg-top-bar
             [showBreadcrumbs]="!scrolled && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
             [modeBarDisplayed]="isObserving"
@@ -16,6 +16,7 @@
             id="main-content-wrapper"
             data-testid="main-content-wrapper"
             class="main-content-wrapper alg-flex-1"
+            [class.with-inline-thread]="isThreadInline$ | async"
             algHtmlElLoaded
             (elLoaded)="onLoaded($event)"
             cdkScrollable
@@ -35,7 +36,7 @@
     </ng-container>
     <div
       class="right-thread"
-      [ngClass]="{ 'collapsed': !(isDiscussionVisible$ | async) }"
+      [ngClass]="{ 'collapsed': !(isDiscussionVisible$ | async), 'inline-mode': isThreadInline$ | async }"
     >
       <alg-thread-container></alg-thread-container>
     </div>

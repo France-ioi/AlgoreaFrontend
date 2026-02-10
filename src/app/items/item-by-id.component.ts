@@ -46,6 +46,8 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ItemTaskEditComponent } from './containers/item-task-edit/item-task-edit.component';
 import { AnswerAuthorIndicatorComponent } from './containers/answer-author-indicator/answer-author-indicator.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
+import { ThreadComponent } from 'src/app/forum/containers/thread/thread.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { LetDirective } from '@ngrx/component';
 import { TabBarComponent } from 'src/app/ui-components/tab-bar/tab-bar.component';
 import { ItemPermissionsComponent } from './containers/item-permissions/item-permissions.component';
@@ -53,6 +55,7 @@ import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/acc
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { fromForum, isThreadInline } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
@@ -103,6 +106,8 @@ const selectState = createSelector(
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
     ButtonComponent,
+    ThreadComponent,
+    ButtonIconComponent,
   ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
@@ -153,6 +158,13 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
   readonly observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
+  readonly isThreadInline$ = combineLatest([
+    this.store.select(fromForum.selectThreadInlineContext),
+    this.userSessionService.userProfile$,
+  ]).pipe(
+    map(([ context, userProfile ]) => isThreadInline(context, userProfile.groupId)),
+    distinctUntilChanged(),
+  );
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
@@ -352,6 +364,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   skipBeforeUnload(): void {
     this.skipBeforeUnload$.next();
+  }
+
+  closeThread(): void {
+    this.store.dispatch(fromForum.forumThreadListActions.hideCurrentThread());
   }
 
   navigateToDefaultTab(route: RawItemRoute): void {

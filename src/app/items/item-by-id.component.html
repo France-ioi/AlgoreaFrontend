@@ -154,6 +154,18 @@
             }
           }
         </div>
+        @if (isThreadInline$ | async) {
+          <div class="inline-thread-panel">
+            <button
+              class="inline-thread-close"
+              type="button"
+              icon="ph ph-x"
+              alg-button-icon
+              (click)="closeThread()"
+            ></button>
+            <alg-thread class="inline-thread"></alg-thread>
+          </div>
+        }
       </ng-container>
     </ng-container>
   }

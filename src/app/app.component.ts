@@ -1,7 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
-import { delay, filter, switchMap, take, tap } from 'rxjs/operators';
-import { merge, Subscription } from 'rxjs';
+import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { combineLatest, merge, Subscription } from 'rxjs';
 import { AuthService } from './services/auth/auth.service';
 import { Router, RouterOutlet } from '@angular/router';
 import { LocaleService } from './services/localeService';
@@ -21,7 +21,7 @@ import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
 import { LetDirective } from '@ngrx/component';
 import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
 import { Store } from '@ngrx/store';
-import { fromForum } from 'src/app/forum/store';
+import { fromForum, isThreadInline } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
 import { fromItemContent } from './items/store';
 import { isNotNull, isNotNullOrUndefined } from './utils/null-undefined-predicates';
@@ -77,6 +77,13 @@ export class AppComponent implements OnInit, OnDestroy {
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   isDiscussionVisible$ = this.store.select(fromForum.selectVisible);
+  isThreadInline$ = combineLatest([
+    this.store.select(fromForum.selectThreadInlineContext),
+    this.sessionService.userProfile$,
+  ]).pipe(
+    map(([ context, userProfile ]) => isThreadInline(context, userProfile.groupId)),
+    distinctUntilChanged(),
+  );
   scrolled = false;
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   groupObservationError$ = this.store.select(fromObservation.selectObservationError);

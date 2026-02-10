@@ -46,7 +46,8 @@
   -moz-transition: right var(--right-thread-animation);
   -o-transition: right var(--right-thread-animation);
 
-  &.collapsed {
+  &.collapsed,
+  &.inline-mode {
    right: calc(0rem - var(--right-thread-width));
   }
 }
@@ -95,6 +96,10 @@
   flex-direction: column;
   position: relative;
   overflow-y: auto;
+
+  &.with-inline-thread {
+    margin-right: var(--right-thread-width);
+  }
 }
 
 .main-content {
