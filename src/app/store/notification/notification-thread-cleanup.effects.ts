@@ -17,7 +17,6 @@ export const clearNotificationsOnThreadShownEffect = createEffect(
     ofType(
       fromForum.notificationActions.showThread,
       fromForum.forumThreadListActions.showAsCurrentThread,
-      fromForum.itemPageActions.changeCurrentThreadId,
     ),
     withLatestFrom(store$.select(fromNotification.selectNotificationsState)),
     mergeMap(([ action, state ]) => {

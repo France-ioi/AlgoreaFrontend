@@ -9,7 +9,7 @@ import * as websocketIncomingMessageEffects from './current-thread/websocket-inc
 import * as followStatusEffects from './current-thread/follow-status.effects';
 import { getCurrentThreadSelectors } from './current-thread/current-thread.selectors';
 import {
-  forumThreadListActions, threadPanelActions, itemPageActions, notificationActions
+  forumThreadListActions, threadPanelActions, notificationActions
 } from './current-thread/current-thread.actions';
 import { FunctionalEffect } from '@ngrx/effects';
 import { eventFetchingActions } from './current-thread/event-fetching.actions';
@@ -35,7 +35,6 @@ export const fromForum = {
   }),
   forumThreadListActions,
   threadPanelActions,
-  itemPageActions,
   eventFetchingActions,
   notificationActions,
   followStatusUiActions,

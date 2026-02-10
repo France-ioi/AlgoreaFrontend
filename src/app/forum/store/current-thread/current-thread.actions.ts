@@ -19,13 +19,6 @@ export const threadPanelActions = createActionGroup({
   },
 });
 
-export const itemPageActions = createActionGroup({
-  source: 'Item Page',
-  events: {
-    changeCurrentThreadId: props<{ id: ThreadId, item: ThreadItemInfo }>(),
-  },
-});
-
 export const notificationActions = createActionGroup({
   source: 'Notification',
   events: {

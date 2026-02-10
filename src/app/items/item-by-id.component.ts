@@ -36,7 +36,7 @@ import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
-import { allowsWatchingAnswers, AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
+import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
 import { ItemForumComponent } from './containers/item-forum/item-forum.component';
 import { ItemDependenciesComponent } from './containers/item-dependencies/item-dependencies.component';
 import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
@@ -53,18 +53,15 @@ import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/acc
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromForum } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
-import { isUser } from '../models/routing/group-route';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
-import { areSameThreads } from '../forum/models/threads';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 const selectState = createSelector(
@@ -285,27 +282,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       distinctUntilChanged((x, y) => x.id === y.id && x.display === y.display), // emit once per item for a same display
       map(({ display }) => display),
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
-
-    // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
-    combineLatest([
-      this.itemState$,
-      this.userProfile$,
-      this.store.select(fromObservation.selectObservedGroupRoute),
-      this.initialAnswerDataSource.answer$
-    ]).pipe(
-      map(([ state, userProfile, observedGroupRoute, answer ]) => {
-        if (userProfile.tempUser) return null;
-        if (!state.data || !isATask(state.data.item)) return null;
-        const item = { title: state.data.item.string.title, route: state.data.route };
-        if (answer) return { id: { participantId: answer.participantId, itemId: answer.itemId }, item };
-        if (observedGroupRoute && (!allowsWatchingAnswers(state.data.item.permissions) || !isUser(observedGroupRoute))) return null;
-        if (!observedGroupRoute && !state.data.item.permissions.canRequestHelp) return null;
-        const id = { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
-        return { id, item } ;
-      }),
-      filter(isNotNull), // leave the forum as it is if no new value
-      distinctUntilChanged((x, y) => areSameThreads(x.id, y.id)),
-    ).subscribe(thread => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId(thread))),
 
     this.saveBeforeUnloadError$.pipe(
       filter(isError => isError),

@@ -3,7 +3,7 @@ import { areSameThreads } from '../../models/threads';
 import { fetchingState } from 'src/app/utils/state';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { State, initialState } from './current-thread.store';
-import { forumThreadListActions, itemPageActions, notificationActions, threadPanelActions } from './current-thread.actions';
+import { forumThreadListActions, notificationActions, threadPanelActions } from './current-thread.actions';
 import { eventFetchingActions } from './event-fetching.actions';
 import { websocketIncomingMessageActions } from './websocket-incoming-message.actions';
 import { mergeSubmissionEvent } from '../../models/thread-events-conversions';
@@ -55,7 +55,6 @@ const reducer = createReducer(
   on(threadPanelActions.close, (state): State => ({ ...state, visible: false })),
 
   on(
-    itemPageActions.changeCurrentThreadId,
     forumThreadListActions.showAsCurrentThread,
     notificationActions.showThread,
     (state, { id, item }): State => ({
