@@ -159,7 +159,7 @@ export class ActivityNavTreeService extends ItemNavTreeService {
     const currentContent = inject(CurrentContentService);
     const itemNavService = inject(ItemNavigationService);
     const itemRouter = inject(ItemRouter);
-    const store = inject(Store);
+    const store = inject<Store>(Store);
 
     super('activity', currentContent, itemNavService, itemRouter, store);
   }
@@ -177,7 +177,7 @@ export class SkillNavTreeService extends ItemNavTreeService {
     const currentContent = inject(CurrentContentService);
     const itemNavService = inject(ItemNavigationService);
     const itemRouter = inject(ItemRouter);
-    const store = inject(Store);
+    const store = inject<Store>(Store);
 
     super('skill', currentContent, itemNavService, itemRouter, store);
   }
