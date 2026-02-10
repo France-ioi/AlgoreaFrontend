@@ -8,8 +8,6 @@ import { isRequestToApi } from './interceptor_common';
 export class WithCredentialsInterceptor implements HttpInterceptor {
   private config = inject(APPCONFIG);
 
-  constructor() {}
-
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (!isRequestToApi(req, this.config.apiUrl) || this.config.authType !== 'cookies') return next.handle(req);
 

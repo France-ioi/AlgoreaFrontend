@@ -19,10 +19,9 @@ import { APPCONFIG } from '../config';
  */
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
+  private injector = inject(Injector);
 
   private config = inject(APPCONFIG);
-
-  constructor(private injector: Injector) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // skip interception if not req to API or the context skips it
