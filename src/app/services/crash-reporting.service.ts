@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UserSessionService } from './user-session.service';
 import { setUser, addBreadcrumb, setTag } from '@sentry/angular';
 import { LocaleService } from './localeService';
@@ -9,12 +9,9 @@ import { fromObservation } from 'src/app/store/observation';
   providedIn: 'root'
 })
 export class CrashReportingService {
-
-  constructor(
-    private store: Store,
-    private userSessionService: UserSessionService,
-    private localeService: LocaleService,
-  ){}
+  private store = inject(Store);
+  private userSessionService = inject(UserSessionService);
+  private localeService = inject(LocaleService);
 
   init(): void {
     this.userSessionService.session$.subscribe(session => setUser(session ? { id: session.groupId, username: session.login } : null));

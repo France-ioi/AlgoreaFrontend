@@ -34,6 +34,9 @@ export const maxInvalidToken = 6;
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
+  private oauthService = inject(OAuthService);
+  private authHttp = inject(AuthHttpService);
+  private localeService = inject(LocaleService);
   private config = inject(APPCONFIG);
 
   status$ = new BehaviorSubject<AuthStatus>(notAuthenticated());
@@ -101,12 +104,6 @@ export class AuthService implements OnDestroy {
     if (result.tokenIsExpired) this.invalidToken(result.auth);
     else this.status$.next(result.auth);
   });
-
-  constructor(
-    private oauthService: OAuthService,
-    private authHttp: AuthHttpService,
-    private localeService: LocaleService
-  ) {}
 
   ngOnDestroy(): void {
     this.status$.complete();

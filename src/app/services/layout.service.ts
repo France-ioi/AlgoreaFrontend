@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 
 import { BehaviorSubject, Subject, combineLatest, distinctUntilChanged } from 'rxjs';
 import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
@@ -16,6 +16,7 @@ export enum ContentDisplayType { Default, Show, ShowFullFrame }
   providedIn: 'root'
 })
 export class LayoutService implements OnDestroy {
+  private breakpointObserver = inject(BreakpointObserver);
 
   /* state variables used to make decisions */
   private contentDisplayType$ = new BehaviorSubject<ContentDisplayType>(ContentDisplayType.Default);
@@ -83,10 +84,6 @@ export class LayoutService implements OnDestroy {
     distinctUntilChanged((x, y) => x.shown === y.shown),
   );
 
-  constructor(
-    private breakpointObserver: BreakpointObserver,
-  ){}
-
   ngOnDestroy(): void {
     this.contentDisplayType$.complete();
     this.manualMenuToggle$.complete();
@@ -121,10 +118,8 @@ export class LayoutService implements OnDestroy {
   providedIn: 'root'
 })
 export class DefaultLayoutInitService {
+  private layoutService = inject(LayoutService);
 
-  constructor(
-    private layoutService: LayoutService
-  ) {}
 
   /** just init the default layout */
   canActivate(): boolean {

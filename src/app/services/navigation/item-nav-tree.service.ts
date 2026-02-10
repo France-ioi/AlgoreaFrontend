@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, skip, switchMap, take } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/items/models/attempts';
@@ -155,12 +155,12 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   providedIn: 'root'
 })
 export class ActivityNavTreeService extends ItemNavTreeService {
-  constructor(
-    currentContent: CurrentContentService,
-    itemNavService: ItemNavigationService,
-    itemRouter: ItemRouter,
-    store: Store,
-  ) {
+  constructor() {
+    const currentContent = inject(CurrentContentService);
+    const itemNavService = inject(ItemNavigationService);
+    const itemRouter = inject(ItemRouter);
+    const store = inject(Store);
+
     super('activity', currentContent, itemNavService, itemRouter, store);
   }
 
@@ -173,12 +173,12 @@ export class ActivityNavTreeService extends ItemNavTreeService {
   providedIn: 'root'
 })
 export class SkillNavTreeService extends ItemNavTreeService {
-  constructor(
-    currentContent: CurrentContentService,
-    itemNavService: ItemNavigationService,
-    itemRouter: ItemRouter,
-    store: Store
-  ) {
+  constructor() {
+    const currentContent = inject(CurrentContentService);
+    const itemNavService = inject(ItemNavigationService);
+    const itemRouter = inject(ItemRouter);
+    const store = inject(Store);
+
     super('skill', currentContent, itemNavService, itemRouter, store);
   }
 

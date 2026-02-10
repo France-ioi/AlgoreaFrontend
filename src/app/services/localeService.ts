@@ -8,6 +8,7 @@ import { AppConfig, APPCONFIG } from 'src/app/config';
   providedIn: 'root'
 })
 export class LocaleService implements OnDestroy {
+  private location = inject(Location);
   private config = inject(APPCONFIG);
 
   readonly languages: AppConfig['languages'];
@@ -17,9 +18,7 @@ export class LocaleService implements OnDestroy {
   private navigating$ = new Subject<void>();
   readonly navigatingToNewLanguage$ = this.navigating$.asObservable();
 
-  constructor(
-    private location: Location,
-  ) {
+  constructor() {
     this.languages = this.config.languages;
     this.currentLang = this.languages.find(l => this.location.prepareExternalUrl('').endsWith(l.path));
     this.currentLangError$ = this.currentLang ? EMPTY : of(new Error('unable to set current lang'));

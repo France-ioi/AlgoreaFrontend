@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ContentInfo } from 'src/app/models/content/content-info';
@@ -16,12 +16,11 @@ import { isCurrentUserMember } from 'src/app/groups/models/group-membership';
   providedIn: 'root'
 })
 export class GroupNavTreeService extends NavTreeService<GroupInfo> {
+  private groupNavigationService = inject(GroupNavigationService);
+  private groupRouter = inject(GroupRouter);
 
-  constructor(
-    currentContent: CurrentContentService,
-    private groupNavigationService: GroupNavigationService,
-    private groupRouter: GroupRouter,
-  ) {
+  constructor() {
+    const currentContent = inject(CurrentContentService);
     super(currentContent);
   }
 

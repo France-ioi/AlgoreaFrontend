@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { MessageService } from 'src/app/services/message.service';
 import { MessageV2 } from 'src/app/services/message.service';
 
@@ -8,15 +8,13 @@ type FeedbackOptions = Omit<MessageV2, 'summary' | 'detail' | 'severity'>;
   providedIn: 'root'
 })
 export class ActionFeedbackService implements OnDestroy {
+  private messageService = inject(MessageService);
+
   hasFeedback = false;
 
   private subscription = this.messageService.messages$.subscribe(messages =>
     (this.hasFeedback = messages.length > 0)
   );
-
-  constructor(
-    private messageService: MessageService,
-  ) {}
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
