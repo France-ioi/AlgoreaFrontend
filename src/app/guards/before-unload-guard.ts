@@ -12,8 +12,6 @@ export interface BeforeUnloadComponent {
 @Injectable()
 export class BeforeUnloadGuard {
 
-  constructor() {}
-
   canDeactivate(
     component: BeforeUnloadComponent | null,
     _currentRoute: ActivatedRouteSnapshot,
