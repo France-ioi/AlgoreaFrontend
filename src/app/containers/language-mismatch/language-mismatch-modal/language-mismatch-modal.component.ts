@@ -25,6 +25,9 @@ export interface LanguageMismatchModalParams {
   ]
 })
 export class LanguageMismatchModalComponent implements OnDestroy {
+  private localeService = inject(LocaleService);
+  private sessionService = inject(UserSessionService);
+
   params = signal(inject<LanguageMismatchModalParams>(DIALOG_DATA));
 
   dialogRef = inject(DialogRef);
@@ -40,11 +43,6 @@ export class LanguageMismatchModalComponent implements OnDestroy {
     // An error is not that problematic, no need to break the app for the language of a temp user.
     catchError(() => EMPTY),
   ).subscribe();
-
-  constructor(
-    private localeService: LocaleService,
-    private sessionService: UserSessionService,
-  ) { }
 
   onUpdateUserLanguage(language?: string): void {
     if (!language) throw new Error('language should be defined');

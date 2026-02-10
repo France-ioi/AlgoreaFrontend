@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { LocaleService } from '../../services/localeService';
 import { FormsModule } from '@angular/forms';
 import { SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
@@ -11,16 +11,14 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
   imports: [ FormsModule, SelectComponent, SelectOptionComponent, SelectOptionComponent ]
 })
 export class LanguagePickerComponent implements OnInit, OnChanges {
+  private localeService = inject(LocaleService);
+
   @Input() defaultLang?: string;
   @Input() redirectOnChange = true;
   @Output() changeLang = new EventEmitter<string>();
 
   readonly languages = this.localeService.languages.map(({ tag }) => ({ label: tag, value: tag }));
   current?: string;
-
-  constructor(
-    private localeService: LocaleService,
-  ) {}
 
   ngOnInit(): void {
     this.initCurrentLang();

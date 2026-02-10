@@ -17,6 +17,8 @@ import { APPCONFIG } from 'src/app/config';
   imports: [ LetDirective, NgClass, TopRightMenuComponent, LanguagePickerComponent, ButtonIconComponent, NotificationBellComponent ]
 })
 export class TopRightControlsComponent{
+  private sessionService = inject(UserSessionService);
+  private localeService = inject(LocaleService);
   private config = inject(APPCONFIG);
 
   @Input() drawLeftBorder = true;
@@ -26,11 +28,6 @@ export class TopRightControlsComponent{
   readonly enableNotifications = this.config.featureFlags.enableNotifications;
 
   isLoginButtonClicked = signal(false);
-
-  constructor(
-    private sessionService: UserSessionService,
-    private localeService: LocaleService,
-  ) { }
 
   login(): void {
     this.isLoginButtonClicked.set(true);

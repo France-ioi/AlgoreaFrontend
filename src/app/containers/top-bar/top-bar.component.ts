@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, Input, inject } from '@angular/core';
 import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
 import { ContentTopBarComponent } from 'src/app/containers/content-top-bar/content-top-bar.component';
 import { LeftHeaderComponent } from 'src/app/containers/left-header/left-header.component';
@@ -15,11 +15,10 @@ import { LeftHeaderComponent } from 'src/app/containers/left-header/left-header.
   ]
 })
 export class TopBarComponent {
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   @Input() showBreadcrumbs = true;
   @Input() modeBarDisplayed = false;
   @Input() showTopRightControls = true;
   @Input() showLeftMenuOpener = true;
-
-  constructor(public elementRef: ElementRef<HTMLElement>) {
-  }
 }

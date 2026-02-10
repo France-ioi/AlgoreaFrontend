@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -40,6 +40,13 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   ]
 })
 export class ContentTopBarComponent {
+  private store = inject(Store);
+  private activityNavTreeService = inject(ActivityNavTreeService);
+  private skillNavTreeService = inject(SkillNavTreeService);
+  private groupNavTreeService = inject(GroupNavTreeService);
+  private layoutService = inject(LayoutService);
+  private tabService = inject(TabService);
+
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
 
@@ -64,15 +71,6 @@ export class ContentTopBarComponent {
   readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
-
-  constructor(
-    private store: Store,
-    private activityNavTreeService: ActivityNavTreeService,
-    private skillNavTreeService: SkillNavTreeService,
-    private groupNavTreeService: GroupNavTreeService,
-    private layoutService: LayoutService,
-    private tabService: TabService,
-  ) {}
 
   toggleDiscussionPanelVisibility(): void {
     this.store.dispatch(fromForum.topBarActions.toggleCurrentThreadVisibility());
