@@ -14,6 +14,7 @@ import { ThreadTableComponent } from './thread-table/thread-table.component';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { ThreadService } from 'src/app/data-access/thread.service';
 import { canThreadExist, canOpenThread } from 'src/app/forum/models/thread-context';
+import { isUser } from 'src/app/models/routing/group-route';
 
 interface ThreadContext {
   participantId: string,
@@ -51,6 +52,10 @@ export class ItemForumComponent {
   // Signals from store
   private observationInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
   isObserving = this.store.selectSignal(fromObservation.selectIsObserving);
+  isObservingAUser = computed(() => {
+    const info = this.observationInfo();
+    return info !== null && isUser(info.route);
+  });
   visibleThreadId = this.store.selectSignal(fromForum.selectVisibleThreadId);
 
   /**

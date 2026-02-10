@@ -2,7 +2,7 @@
   <!-- Observed group requests (no title) -->
   <alg-thread-table
     [state]="observedGroupThreadsState()"
-    [showUserColumn]="true"
+    [showUserColumn]="!isObservingAUser()"
     [itemData]="itemData()"
     [visibleThreadId]="visibleThreadId()"
     emptyMessageType="observed"
