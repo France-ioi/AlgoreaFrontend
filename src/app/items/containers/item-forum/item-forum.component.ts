@@ -9,7 +9,7 @@ import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { fromObservation } from 'src/app/store/observation';
 import { FullItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
-import { isDefined } from 'src/app/utils/null-undefined-predicates';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { ThreadTableComponent } from './thread-table/thread-table.component';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { ThreadService } from 'src/app/data-access/thread.service';
@@ -113,34 +113,41 @@ export class ItemForumComponent {
   private refreshOthersThreads$ = new Subject<void>();
   private refreshObservedGroupThreads$ = new Subject<void>();
 
-  // Fetch state for "My help requests"
+  // Parameters for non-observing thread fetches (null when observing)
+  private nonObservingItem = computed(() => (this.isObserving() ? null : this.item()));
+
+  // Fetch state for "My help requests" (only when not observing)
   myThreadsState = toSignal(
-    toObservable(this.item).pipe(
+    toObservable(this.nonObservingItem).pipe(
+      filter(isNotNull),
       switchMap(item => this.getThreadService.get(item.id, { isMine: true }).pipe(
         mapToFetchState({ resetter: this.refreshMyThreads$ })
       ))
     )
   );
 
-  // Fetch state for "Other users' requests"
+  // Fetch state for "Other users' requests" (only when not observing)
   othersThreadsState = toSignal(
-    toObservable(this.item).pipe(
+    toObservable(this.nonObservingItem).pipe(
+      filter(isNotNull),
       switchMap(item => this.getThreadService.get(item.id, { isMine: false }).pipe(
         mapToFetchState({ resetter: this.refreshOthersThreads$ })
       ))
     )
   );
 
-  // Fetch state for observed group's requests
-  private observedGroupParams = computed(() => ({
-    item: this.item(),
-    groupId: this.observationInfo()?.route.id ?? null
-  }));
+  // Parameters for observed group thread fetch (null when not observing)
+  private observedGroupParams = computed(() => {
+    const observationInfo = this.observationInfo();
+    if (!observationInfo) return null;
+    return { item: this.item(), groupId: observationInfo.route.id };
+  });
 
+  // Fetch state for observed group's requests (only when observing)
   observedGroupThreadsState = toSignal(
     toObservable(this.observedGroupParams).pipe(
-      filter(({ groupId }) => isDefined(groupId)),
-      switchMap(({ item, groupId }) => this.getThreadService.get(item.id, { watchedGroupId: groupId! }).pipe(
+      filter(isNotNull),
+      switchMap(({ item, groupId }) => this.getThreadService.get(item.id, { watchedGroupId: groupId }).pipe(
         mapToFetchState({ resetter: this.refreshObservedGroupThreads$ })
       ))
     )
