@@ -1,12 +1,12 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, inject, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: 'textarea[algAutoResize]',
   standalone: true,
 })
 export class AutoResizeDirective implements AfterViewInit {
-  constructor(private el: ElementRef, private renderer: Renderer2) {
-  }
+  private el = inject(ElementRef);
+  private renderer = inject(Renderer2);
 
   @HostListener('input', [ '$event' ])
   onInput(event: Event): void {

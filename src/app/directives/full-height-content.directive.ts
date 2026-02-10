@@ -8,7 +8,8 @@ import {
   OnInit,
   OnChanges,
   Renderer2,
-  SimpleChanges
+  SimpleChanges,
+  inject,
 } from '@angular/core';
 
 @Directive({
@@ -16,6 +17,10 @@ import {
   standalone: true,
 })
 export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnChanges {
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
+  private renderer = inject(Renderer2);
+  private ngZone = inject(NgZone);
+
   @Input() algFullHeightContent = true;
 
   mainContainerEl = document.querySelector('#main-container');
@@ -23,9 +28,6 @@ export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnC
   @HostListener('window:resize')
   resize(): void {
     this.setHeight();
-  }
-
-  constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private ngZone: NgZone) {
   }
 
   ngOnInit(): void {
