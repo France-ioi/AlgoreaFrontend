@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { UrlCommand } from '../../utils/url';
 import { GroupPage, groupPathRouterPrefix, groupPathRouterSubPrefix, RawGroupRoute, urlArrayForGroupRoute } from './group-route';
@@ -7,10 +7,7 @@ import { GroupPage, groupPathRouterPrefix, groupPathRouterSubPrefix, RawGroupRou
   providedIn: 'root'
 })
 export class GroupRouter {
-
-  constructor(
-    private router: Router,
-  ) {}
+  private router = inject(Router);
 
   /**
    * Navigate to given group, on the path page.
