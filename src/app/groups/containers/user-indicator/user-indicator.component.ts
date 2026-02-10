@@ -11,6 +11,4 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
 })
 export class UserIndicatorComponent {
   @Input() user?: User;
-
-  constructor() { }
 }
