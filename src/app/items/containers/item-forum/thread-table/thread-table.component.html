@@ -50,7 +50,8 @@
             >
               @if (itemData().item.type !== 'Task') {
                 <td class="alg-table-td">
-                  <a class="alg-link" [ngClass]="{'disabled': !thread.item}" [routerLink]="threadItemRoute | url"
+                  <a class="alg-link" [ngClass]="{'disabled': !thread.item}"
+                    [routerLink]="threadItemRoute | with: getParticipantObservationParam(thread) | url"
                     (click)="$event.stopPropagation()">
                     {{ thread.item.title }}
                   </a>
@@ -72,7 +73,7 @@
             <tr class="alg-table-body-tr">
               <td class="alg-table-td empty-td" [attr.colspan]="5">
                 <div class="empty-message">
-                  @switch (emptyMessageType()) {
+                  @switch (threadListType()) {
                     @case ('mine') {
                       @if (itemData().item.type === 'Chapter') {
                         <span i18n>

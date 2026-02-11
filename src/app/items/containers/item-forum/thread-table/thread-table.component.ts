@@ -7,14 +7,15 @@ import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
+import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ItemData } from 'src/app/items/models/item-data';
-import { RawItemRoute } from 'src/app/models/routing/item-route';
+import { ItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadId } from 'src/app/forum/models/threads';
 
-export type EmptyMessageType = 'mine' | 'others' | 'observed';
+export type ThreadListType = 'mine' | 'others' | 'observed';
 
 @Component({
   selector: 'alg-thread-table',
@@ -32,12 +33,13 @@ export type EmptyMessageType = 'mine' | 'others' | 'observed';
     UserCaptionPipe,
     ThreadStatusDisplayPipe,
     ButtonComponent,
+    ItemRouteWithExtraPipe,
   ]
 })
 export class ThreadTableComponent {
   state = input<FetchState<Threads>>();
   showUserColumn = input(false);
-  emptyMessageType = input<EmptyMessageType>('mine');
+  threadListType = input<ThreadListType>('mine');
   itemData = input.required<ItemData>();
   visibleThreadId = input<ThreadId | null>(null);
 
@@ -65,6 +67,12 @@ export class ThreadTableComponent {
     return visibleId !== null &&
       visibleId.participantId === thread.participant.id &&
       visibleId.itemId === thread.item.id;
+  }
+
+  /** Route parameter to observe the thread's participant. Empty if viewing own threads. */
+  getParticipantObservationParam(thread: Thread): Partial<ItemRoute> {
+    if (this.threadListType() === 'mine') return {};
+    return { observedGroup: { id: thread.participant.id, isUser: true } };
   }
 
   getThreadItemRoute(thread: Thread): RawItemRoute {
