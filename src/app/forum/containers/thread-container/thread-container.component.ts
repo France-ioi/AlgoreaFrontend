@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, computed, inject, Input, OnDestroy, ViewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, filter, map, of, Subscription, switchMap } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -8,6 +9,7 @@ import { fromForum } from 'src/app/forum/store';
 import { Store } from '@ngrx/store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
+import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
@@ -26,6 +28,7 @@ import { catchError } from 'rxjs/operators';
     RouteUrlPipe,
     ButtonIconComponent,
     GroupLinkPipe,
+    ItemRouteWithExtraPipe,
   ]
 })
 export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
@@ -38,8 +41,17 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
 
   @Input() topCompensation = 0;
 
+  private userProfile = toSignal(this.userSessionService.userProfile$);
+
   visible$ = this.store.select(fromForum.selectVisible);
   threadHydratedId = this.store.selectSignal(fromForum.selectThreadHydratedId);
+
+  /** Route parameter to observe the thread participant. Empty if it's the user's own thread. */
+  threadParticipantRouteParam = computed(() => {
+    const participantId = this.threadHydratedId()?.id.participantId;
+    if (!participantId || participantId === this.userProfile()?.groupId) return {};
+    return { observedGroup: { id: participantId, isUser: true } };
+  });
 
   /** Name of the thread participant for the header pill. Null if it's the user's own thread. */
   participantName$ = combineLatest([
@@ -58,7 +70,7 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   );
 
   /** The participant id, for linking to their profile. */
-  participantId = computed(() => this.store.selectSignal(fromForum.selectThreadId)()?.participantId ?? null);
+  participantId = computed(() => this.threadHydratedId()?.id.participantId ?? null);
 
   private subscription?: Subscription;
 

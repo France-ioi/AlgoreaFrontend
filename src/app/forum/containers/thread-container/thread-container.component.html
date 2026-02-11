@@ -2,11 +2,20 @@
   <div class="container">
     <div class="header">
       <span class="header-icon ph-duotone ph-chats-circle"></span>
-      @let thread = threadHydratedId();
+      @let thread = threadHydratedId()!;
       <div class="header-center">
-        @if (thread && thread.item.title) {
-          <span class="header-title">{{ thread.item.title }}</span>
-        }
+        <div class="title-row">
+          @if (thread.item.title) {
+            <span class="header-title">{{ thread.item.title }}</span>
+          }
+          <a
+            class="nav-button size-s"
+            icon="ph ph-arrow-square-out"
+            alg-button-icon
+            [routerLink]="thread.item.route | with: threadParticipantRouteParam() | url"
+            i18n-title title="Navigate to this content"
+          ></a>
+        </div>
         @if (participantName$ | async; as name) {
           <div class="user-pill">
             <a class="alg-link user-pill-name" [routerLink]="{ id: participantId()!, isUser: true } | groupLink">
@@ -16,14 +25,6 @@
         }
       </div>
       <div class="header-right">
-        @if (thread) {
-          <a
-            class="nav-button size-s"
-            icon="ph ph-arrow-square-out"
-            alg-button-icon
-            [routerLink]="thread.item.route | url"
-          ></a>
-        }
         <button
           class="close-button size-s"
           type="button"
