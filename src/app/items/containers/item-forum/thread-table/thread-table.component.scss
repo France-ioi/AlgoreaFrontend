@@ -11,6 +11,26 @@
   margin-bottom: functions.toRem(13);
 }
 
+.selectable-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  position: relative;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  &.selected {
+    background-color: var(--alg-primary-light-color, #dfe6f7);
+    box-shadow: inset functions.toRem(3) 0 0 var(--alg-primary-color, #4a6fa5);
+  }
+
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #4a6fa5);
+    outline-offset: functions.toRem(-2);
+  }
+}
+
 .empty-message {
   padding: functions.toRem(12) 0;
 }

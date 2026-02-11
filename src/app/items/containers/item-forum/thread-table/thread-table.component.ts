@@ -49,15 +49,15 @@ export class ThreadTableComponent {
     this.refresh.emit();
   }
 
-  onShowThread(thread: Thread, threadItemRoute: RawItemRoute): void {
-    this.showThread.emit({
-      id: { participantId: thread.participant.id, itemId: thread.item.id },
-      item: { title: thread.item.title, route: threadItemRoute }
-    });
-  }
-
-  onHideThread(): void {
-    this.hideThread.emit();
+  onToggleThread(thread: Thread, threadItemRoute: RawItemRoute): void {
+    if (this.isThreadVisible(thread)) {
+      this.hideThread.emit();
+    } else {
+      this.showThread.emit({
+        id: { participantId: thread.participant.id, itemId: thread.item.id },
+        item: { title: thread.item.title, route: threadItemRoute }
+      });
+    }
   }
 
   isThreadVisible(thread: Thread): boolean {

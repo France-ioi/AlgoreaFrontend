@@ -25,7 +25,6 @@
         <thead>
           @if (data.length > 0) {
             <tr class="alg-table-header-tr">
-              <th class="alg-table-th"></th>
               @if (itemData().item.type !== 'Task') {
                 <th class="alg-table-th" i18n>Content</th>
               }
@@ -41,24 +40,26 @@
         <tbody>
           @for (thread of data; track thread.participant.id + thread.item.id) {
             @let threadItemRoute = getThreadItemRoute(thread);
-            <tr class="alg-table-body-tr">
-              <td class="alg-table-td">
-                @if (isThreadVisible(thread)) {
-                  <button class="size-l danger" alg-button type="button" (click)="onHideThread()" i18n>Hide</button>
-                } @else {
-                  <button class="size-l" alg-button type="button" (click)="onShowThread(thread, threadItemRoute)" i18n>Show</button>
-                }
-              </td>
+            <tr
+              class="alg-table-body-tr selectable-row"
+              [class.selected]="isThreadVisible(thread)"
+              tabindex="0"
+              (click)="onToggleThread(thread, threadItemRoute)"
+              (keydown.enter)="onToggleThread(thread, threadItemRoute)"
+              (keydown.space)="onToggleThread(thread, threadItemRoute); $event.preventDefault()"
+            >
               @if (itemData().item.type !== 'Task') {
                 <td class="alg-table-td">
-                  <a class="alg-link" [ngClass]="{'disabled': !thread.item}" [routerLink]="threadItemRoute | url">
+                  <a class="alg-link" [ngClass]="{'disabled': !thread.item}" [routerLink]="threadItemRoute | url"
+                    (click)="$event.stopPropagation()">
                     {{ thread.item.title }}
                   </a>
                 </td>
               }
               @if (showUserColumn()) {
                 <td class="alg-table-td">
-                  <a class="alg-link" [routerLink]="{ id: thread.participant.id, isUser: true } | groupLink">
+                  <a class="alg-link" [routerLink]="{ id: thread.participant.id, isUser: true } | groupLink"
+                    (click)="$event.stopPropagation()">
                     {{ thread.participant | userCaption }}
                   </a>
                 </td>
@@ -69,7 +70,7 @@
             </tr>
           } @empty {
             <tr class="alg-table-body-tr">
-              <td class="alg-table-td empty-td" [attr.colspan]="6">
+              <td class="alg-table-td empty-td" [attr.colspan]="5">
                 <div class="empty-message">
                   @switch (emptyMessageType()) {
                     @case ('mine') {
