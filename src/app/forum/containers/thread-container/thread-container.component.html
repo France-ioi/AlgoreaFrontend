@@ -12,7 +12,8 @@
             class="nav-button size-s"
             icon="ph ph-arrow-square-out"
             alg-button-icon
-            [routerLink]="thread.item.route | with: threadParticipantRouteParam() | url"
+            [routerLink]="thread.item.route | with: threadParticipantRouteParam() | url: ['task', 'editor']"
+            (click)="onNavigateToContent()"
             i18n-title title="Navigate to this content"
           ></a>
         </div>

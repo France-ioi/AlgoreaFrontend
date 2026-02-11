@@ -1,11 +1,14 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { EMPTY, tap, withLatestFrom } from 'rxjs';
+import { distinctUntilChanged, EMPTY, filter, map, skip, switchMap, take, tap, withLatestFrom } from 'rxjs';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
+import { threadPanelActions } from './current-thread.actions';
 import { Store } from '@ngrx/store';
 import { fromForum } from '..';
+import { fromItemContent } from 'src/app/items/store';
 import { areSameThreads } from '../../models/threads';
 import { APPCONFIG } from 'src/app/config';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 export const fetchStateChangeGuardEffect = createEffect(
   (
@@ -21,4 +24,31 @@ export const fetchStateChangeGuardEffect = createEffect(
     }),
   ) : EMPTY),
   { functional: true, dispatch: false }
+);
+
+/**
+ * Clear the stored "previous content route" when the active content item ID changes
+ * AFTER the initial navigation triggered by the button.
+ * Each `navigatedToThreadContent` action starts watching for item changes,
+ * skipping the immediate value and the button-triggered navigation (skip 2),
+ * then clearing on the next real item change.
+ * `switchMap` cancels the previous watcher if the action fires again.
+ */
+export const clearPreviousContentOnItemChangeEffect = createEffect(
+  (
+    actions$ = inject(Actions),
+    store$ = inject(Store),
+  ) => actions$.pipe(
+    ofType(threadPanelActions.navigatedToThreadContent),
+    switchMap(() => store$.select(fromItemContent.selectActiveContentId).pipe(
+      filter(isNotNull),
+      distinctUntilChanged(),
+      // skip(1): current value on subscription
+      // skip(2): the navigation triggered by the button itself
+      skip(2),
+      take(1),
+      map(() => threadPanelActions.clearPreviousContent()),
+    )),
+  ),
+  { functional: true }
 );

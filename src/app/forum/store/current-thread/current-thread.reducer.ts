@@ -73,6 +73,16 @@ const reducer = createReducer(
 
   on(followStatusActions.fetchStateChanged, (state, { fetchState }): State => ({ ...state, followStatus: fetchState })),
 
+  on(threadPanelActions.navigatedToThreadContent, (state, { previousRoute, previousPage }): State => ({
+    ...state,
+    previousContentRoute: { route: previousRoute, page: previousPage },
+  })),
+
+  on(threadPanelActions.clearPreviousContent, (state): State => ({
+    ...state,
+    previousContentRoute: null,
+  })),
+
 );
 
 export default reducer;

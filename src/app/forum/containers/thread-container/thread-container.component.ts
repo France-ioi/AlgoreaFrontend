@@ -6,6 +6,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { fromForum } from 'src/app/forum/store';
+import { fromItemContent } from 'src/app/items/store';
 import { Store } from '@ngrx/store';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
@@ -42,6 +43,9 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   @Input() topCompensation = 0;
 
   private userProfile = toSignal(this.userSessionService.userProfile$);
+
+  private activeContentRoute = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  private activeContentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
 
   visible$ = this.store.select(fromForum.selectVisible);
   threadHydratedId = this.store.selectSignal(fromForum.selectThreadHydratedId);
@@ -83,6 +87,14 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+
+  onNavigateToContent(): void {
+    const previousRoute = this.activeContentRoute();
+    const previousPage = this.activeContentPage();
+    if (previousRoute && previousPage) {
+      this.store.dispatch(fromForum.threadPanelActions.navigatedToThreadContent({ previousRoute, previousPage }));
+    }
   }
 
   onClose(): void {

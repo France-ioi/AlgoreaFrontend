@@ -36,11 +36,20 @@
   );
 }
 
-.inline-thread-close {
+.inline-thread-actions {
   position: absolute;
   top: functions.toRem(8);
   right: functions.toRem(8);
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(4);
+}
+
+.inline-thread-back {
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: var(--alg-white-color);
 }
 
 .inline-thread {

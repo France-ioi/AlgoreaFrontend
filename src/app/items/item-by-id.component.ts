@@ -48,6 +48,7 @@ import { ItemTaskEditComponent } from './containers/item-task-edit/item-task-edi
 import { AnswerAuthorIndicatorComponent } from './containers/answer-author-indicator/answer-author-indicator.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ThreadComponent } from 'src/app/forum/containers/thread/thread.component';
+import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { LetDirective } from '@ngrx/component';
 import { TabBarComponent } from 'src/app/ui-components/tab-bar/tab-bar.component';
@@ -109,6 +110,7 @@ const selectState = createSelector(
     ButtonComponent,
     ThreadComponent,
     ButtonIconComponent,
+    RouteUrlPipe,
   ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
@@ -169,6 +171,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     // doesn't flash during quick inline→inline transitions between items.
     switchMap(value => (value ? of(true) : of(false).pipe(delay(300)))),
   );
+  readonly previousContentRoute = this.store.selectSignal(fromForum.selectPreviousContentRoute);
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(

@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
 import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
@@ -17,6 +17,9 @@ import {
   ThreadEvent
 } from '../../models/thread-events';
 import { RelativeTimePipe } from '../../../pipes/relativeTime';
+import { Store } from '@ngrx/store';
+import { fromForum } from 'src/app/forum/store';
+import { fromItemContent } from 'src/app/items/store';
 
 @Component({
   selector: 'alg-thread-message',
@@ -38,6 +41,10 @@ import { RelativeTimePipe } from '../../../pipes/relativeTime';
   ],
 })
 export class ThreadMessageComponent {
+  private store = inject(Store);
+  private activeContentRoute = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  private activeContentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
+
   threadId = input.required<ThreadId>();
   event = input.required<ThreadEvent>();
   userCache = input<UserInfo[]>([]);
@@ -51,5 +58,12 @@ export class ThreadMessageComponent {
     return userInfo ?? { id, isCurrentUser: false, isThreadParticipant: this.threadId().participantId === id };
   });
 
+  onNavigateToSolution(): void {
+    const previousRoute = this.activeContentRoute();
+    const previousPage = this.activeContentPage();
+    if (previousRoute && previousPage) {
+      this.store.dispatch(fromForum.threadPanelActions.navigatedToThreadContent({ previousRoute, previousPage }));
+    }
+  }
 }
 

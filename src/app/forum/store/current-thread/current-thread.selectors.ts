@@ -2,7 +2,7 @@ import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { State } from '../forum.state';
 import { Thread, ThreadId, canCurrentUserLoadAnswers, statusOpen } from '../../models/threads';
 import { fetchingState, FetchState, readyState } from 'src/app/utils/state';
-import { ThreadItemInfo } from './current-thread.store';
+import { PreviousContentRoute, ThreadItemInfo } from './current-thread.store';
 import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 
 interface CurrentThreadSelectors<T> {
@@ -27,6 +27,7 @@ interface CurrentThreadSelectors<T> {
   }>,
   selectMergedThreadEvents: MemoizedSelector<T, FetchState<ThreadEvent[], ThreadId>>,
   selectFollowStatus: MemoizedSelector<T, FetchState<boolean>>,
+  selectPreviousContentRoute: MemoizedSelector<T, PreviousContentRoute | null>,
 }
 
 // eslint-disable-next-line @ngrx/prefix-selectors-with-select
@@ -127,6 +128,10 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectWsEvents,
     (logEvents, slsEvents, wsEvents) => ({ logEvents, slsEvents, wsEvents })
   );
+  const selectPreviousContentRoute = createSelector(
+    selectCurrentThread,
+    state => state.previousContentRoute
+  );
   const selectMergedThreadEvents = createSelector(
     selectLogEvents,
     selectSlsEvents,
@@ -167,5 +172,6 @@ export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State
     selectThreadToken,
     selectCanCurrentUserLoadThreadAnswers,
     selectFollowStatus,
+    selectPreviousContentRoute,
   };
 };

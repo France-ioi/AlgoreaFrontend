@@ -156,13 +156,26 @@
         </div>
         @if (isThreadInline$ | async) {
           <div class="inline-thread-panel">
-            <button
-              class="inline-thread-close"
-              type="button"
-              icon="ph ph-x"
-              alg-button-icon
-              (click)="closeThread()"
-            ></button>
+            <div class="inline-thread-actions">
+              @if (previousContentRoute(); as prev) {
+                <a
+                  type="button"
+                  class="inline-thread-back size-s stroke"
+                  alg-button
+                  icon="ph ph-arrow-bend-up-left"
+                  [routerLink]="prev.route | url: prev.page"
+                  i18n
+                  >Back to previous content
+                </a>
+              }
+              <button
+                class="inline-thread-close"
+                type="button"
+                icon="ph ph-x"
+                alg-button-icon
+                (click)="closeThread()"
+              ></button>
+            </div>
             <alg-thread class="inline-thread"></alg-thread>
           </div>
         }
