@@ -34,6 +34,10 @@
   &.with-user-indicator {
     padding-top: functions.toRem(70);
   }
+
+  &.with-user-indicator-below-actions {
+    padding-top: functions.toRem(106);
+  }
 }
 
 .thread-message {

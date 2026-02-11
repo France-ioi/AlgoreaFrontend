@@ -41,7 +41,7 @@
             }
           }
           @let showUserIndicator = !isMine && threadIdForIndicator && (participantUser$ | async)?.name;
-          <div class="widget-scroll" [class.with-user-indicator]="showUserIndicator && indicatorLayout() !== 'inline-with-back'" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
+          <div class="widget-scroll" [class.with-user-indicator]="showUserIndicator" [class.with-user-indicator-below-actions]="showUserIndicator && indicatorLayout() === 'inline-with-back'" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
             @if (isCurrentUserThreadParticipant && threadStatus?.isReady && currentState.data?.length === 0) {
               <div class="no-messages" i18n>
               In this panel, you can request help from other users about the content you are on.

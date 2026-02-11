@@ -13,11 +13,9 @@
     }
   }
 
-  // When inlined with back button: push below the action buttons
+  // When inlined with back button: position below the action buttons
   &.layout-inline-with-back {
-    position: relative;
-    top: 0;
-    padding-top: functions.toRem(40);
+    top: functions.toRem(44);
   }
 }
 
