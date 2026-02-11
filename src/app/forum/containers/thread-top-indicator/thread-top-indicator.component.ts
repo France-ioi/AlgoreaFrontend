@@ -3,6 +3,8 @@ import { FetchState } from 'src/app/utils/state';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { FormsModule } from '@angular/forms';
 
+export type IndicatorLayout = 'default' | 'inline' | 'inline-with-back';
+
 @Component({
   selector: 'alg-thread-top-indicator',
   templateUrl: './thread-top-indicator.component.html',
@@ -16,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 export class ThreadTopIndicatorComponent {
   followStatus = input.required<FetchState<boolean>>();
   isThreadOpen = input.required<boolean>();
+  layout = input<IndicatorLayout>('default');
 
   followChanged = output<boolean>();
 

@@ -1,4 +1,4 @@
-<div class="user-indicator-container">
+<div class="user-indicator-container" [class]="'layout-' + layout()">
   <div class="user-indicator">
     @if (isThreadOpen()) {
       <div class="follow-toggle">

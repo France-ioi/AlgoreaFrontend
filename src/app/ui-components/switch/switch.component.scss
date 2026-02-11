@@ -12,6 +12,7 @@
 
     .slider {
       border-radius: functions.toRem(18);
+      background-color: rgba(0, 0, 0, 0.2);
 
       &:before {
         height: functions.toRem(14);
@@ -19,10 +20,10 @@
         left: functions.toRem(2);
         bottom: functions.toRem(2);
       }
+    }
 
-      &:not(input:checked + &) {
-        background-color: rgba(0, 0, 0, 0.2);
-      }
+    input:checked + .slider {
+      background-color: var(--alg-primary-color);
     }
 
     input:checked + .slider:before {

@@ -176,7 +176,7 @@
                 (click)="closeThread()"
               ></button>
             </div>
-            <alg-thread class="inline-thread"></alg-thread>
+            <alg-thread class="inline-thread" [indicatorLayout]="previousContentRoute() ? 'inline-with-back' : 'inline'"></alg-thread>
           </div>
         }
       </ng-container>
