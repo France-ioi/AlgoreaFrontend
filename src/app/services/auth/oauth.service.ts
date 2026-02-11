@@ -15,12 +15,9 @@ const nonceStorageKey = 'oauth_nonce';
   providedIn: 'root'
 })
 export class OAuthService {
+  private authHttp = inject(AuthHttpService);
+  private location = inject(Location);
   private config = inject(APPCONFIG);
-
-  constructor(
-    private authHttp: AuthHttpService,
-    private location: Location,
-  ) {}
 
   /**
    * Init authorization code flow login anf redirect the user to the auth server login url.

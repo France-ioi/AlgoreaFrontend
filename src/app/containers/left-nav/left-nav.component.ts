@@ -56,6 +56,18 @@ const minQueryLength = 3;
   ]
 })
 export class LeftNavComponent implements OnChanges {
+  private store = inject(Store);
+  private currentContent = inject(CurrentContentService);
+  private activityNavTreeService = inject(ActivityNavTreeService);
+  private skillNavTreeService = inject(SkillNavTreeService);
+  private groupNavTreeService = inject(GroupNavTreeService);
+  private injector = inject(Injector);
+  private layoutService = inject(LayoutService);
+  private localeService = inject(LocaleService);
+  private itemRouter = inject(ItemRouter);
+  private groupRouter = inject(GroupRouter);
+  private leftMenuConfig = inject(LeftMenuConfigService);
+
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
 
   @Input() searchQuery = '';
@@ -114,20 +126,6 @@ export class LeftNavComponent implements OnChanges {
   private selectedActivityRoute = this.store.selectSignal(fromSelectedContent.selectActivity);
   private selectedSkillRoute = this.store.selectSignal(fromSelectedContent.selectSkill);
   private selectedGroupRoute = this.store.selectSignal(fromSelectedContent.selectGroup);
-
-  constructor(
-    private store: Store,
-    private currentContent: CurrentContentService,
-    private activityNavTreeService: ActivityNavTreeService,
-    private skillNavTreeService: SkillNavTreeService,
-    private groupNavTreeService: GroupNavTreeService,
-    private injector : Injector,
-    private layoutService: LayoutService,
-    private localeService: LocaleService,
-    private itemRouter: ItemRouter,
-    private groupRouter: GroupRouter,
-    private leftMenuConfig: LeftMenuConfigService,
-  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.searchQuery) this.searchQuery$.next(this.searchQuery);

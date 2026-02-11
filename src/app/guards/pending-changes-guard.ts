@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { PendingChangesService } from '../services/pending-changes-service';
@@ -16,11 +16,8 @@ export interface PendingChangesComponent {
   providedIn: 'root'
 })
 export class PendingChangesGuard {
-
-  constructor(
-    private confirmationModalService: ConfirmationModalService,
-    private pendingChangesService: PendingChangesService,
-  ) {}
+  private confirmationModalService = inject(ConfirmationModalService);
+  private pendingChangesService = inject(PendingChangesService);
 
   canDeactivate(
     component: PendingChangesComponent | null,

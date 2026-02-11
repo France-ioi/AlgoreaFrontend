@@ -36,6 +36,10 @@ export interface MenuItem {
   ]
 })
 export class TopRightMenuComponent {
+  private sessionService = inject(UserSessionService);
+  private authService = inject(AuthService);
+  private groupRouter = inject(GroupRouter);
+  private layoutService = inject(LayoutService);
   private config = inject(APPCONFIG);
   @Input() styleClass?: string;
 
@@ -56,13 +60,6 @@ export class TopRightMenuComponent {
   );
 
   userLogin$ = this.sessionService.session$.pipe(map(session => session?.login), distinctUntilChanged());
-
-  constructor(
-    private sessionService: UserSessionService,
-    private authService: AuthService,
-    private groupRouter: GroupRouter,
-    private layoutService: LayoutService,
-  ) { }
 
   private invalidateToken(): void {
     const authStatus = this.authService.status$.value;

@@ -55,8 +55,6 @@ export class GroupCompositionFilterComponent implements OnInit{
     },
   ];
 
-  constructor() { }
-
   ngOnInit(): void {
     if (this.defaultValue) {
       this.setFilter(this.defaultValue);

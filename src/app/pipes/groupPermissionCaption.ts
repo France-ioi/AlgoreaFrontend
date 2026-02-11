@@ -21,8 +21,6 @@ const PERMISSION_CAPTIONS = {
   standalone: true
 })
 export class GroupPermissionCaptionPipe implements PipeTransform {
-  constructor() {}
-
   transform(value: keyof typeof PERMISSION_CAPTIONS): string {
     return PERMISSION_CAPTIONS[value] ?? $localize`No caption`;
   }

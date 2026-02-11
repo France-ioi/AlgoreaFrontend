@@ -15,6 +15,9 @@ import {
   standalone: true,
 })
 export class LanguageMismatchComponent {
+  private localeService = inject(LocaleService);
+  private sessionService = inject(UserSessionService);
+
   private dialogService = inject(Dialog);
 
   readonly currentLanguage = this.localeService.currentLang?.tag;
@@ -35,10 +38,5 @@ export class LanguageMismatchComponent {
       this.dialogService.open(LanguageMismatchModalComponent, { disableClose: true, data: languageMismatch });
     }
   });
-
-  constructor(
-    private localeService: LocaleService,
-    private sessionService: UserSessionService,
-  ) { }
 
 }

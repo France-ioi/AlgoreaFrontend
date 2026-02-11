@@ -4,12 +4,16 @@ import { TestBed } from '@angular/core/testing';
 import { LocaleService } from '../services/localeService';
 
 describe('RelativeTimePipe', () => {
-  let localeService: LocaleService;
   let pipe: RelativeTimePipe;
 
   beforeEach(() => {
-    localeService = TestBed.inject(LocaleService);
-    pipe = new RelativeTimePipe(localeService);
+    TestBed.configureTestingModule({
+      providers: [LocaleService],
+    });
+
+    pipe = TestBed.runInInjectionContext(() =>
+      new RelativeTimePipe()
+    );
   });
 
   it('transforms now date to "Just now"', () => {

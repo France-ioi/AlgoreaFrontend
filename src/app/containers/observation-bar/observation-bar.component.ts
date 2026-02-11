@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
 import { NgClass, AsyncPipe } from '@angular/common';
@@ -20,6 +20,9 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   imports: [ NgClass, RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent, TooltipDirective ]
 })
 export class ObservationBarComponent {
+  private store = inject(Store);
+  private itemRouter = inject(ItemRouter);
+
   @Output() cancel = new EventEmitter<void>();
   @Input() caption?: string;
   @Input() onlyIcon = false;
@@ -28,11 +31,6 @@ export class ObservationBarComponent {
   observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
   activeContentIsBeingObserved$ = this.store.select(fromObservation.selectActiveContentIsBeingObserved);
   activeItemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute);
-
-  constructor(
-    private store: Store,
-    private itemRouter: ItemRouter,
-  ) {}
 
   onCancelClick(): void {
     this.activeItemRoute$.pipe(

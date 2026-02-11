@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DAYS, HOURS, MINUTES, MONTHS, WEEKS } from '../utils/duration';
 import { LocaleService } from '../services/localeService';
 
@@ -40,9 +40,7 @@ const formatTime = (locale?: string) => (value: string | Date): string => {
 
 @Pipe({ name: 'relativeTime', standalone: true, pure: false })
 export class RelativeTimePipe implements PipeTransform {
-
-  constructor(private localeService: LocaleService) {
-  }
+  private localeService = inject(LocaleService);
 
   transform = formatTime(this.localeService.currentLang?.tag);
 }

@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 import { switchMap, distinctUntilChanged, map, filter, skip, shareReplay, retry } from 'rxjs/operators';
@@ -10,6 +10,8 @@ import { repeatLatestWhen } from '../utils/operators/repeatLatestWhen';
   providedIn: 'root'
 })
 export class UserSessionService implements OnDestroy {
+  private authService = inject(AuthService);
+  private currentUserService = inject(CurrentUserHttpService);
 
   session$ = new BehaviorSubject<CurrentUserProfile|undefined>(undefined);
   userProfileError$ = new Subject<Error>();
@@ -25,10 +27,7 @@ export class UserSessionService implements OnDestroy {
   private subscription?: Subscription;
   private userProfileUpdated$ = new Subject<void>();
 
-  constructor(
-    private authService: AuthService,
-    private currentUserService: CurrentUserHttpService,
-  ) {
+  constructor() {
     this.subscription = this.authService.status$.pipe(
       repeatLatestWhen(this.userProfileUpdated$),
       switchMap(auth => {

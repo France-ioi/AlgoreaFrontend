@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { UrlCommand } from '../utils/url';
 import { GroupLike, isRawGroupRoute, RawGroupRoute, rawGroupRoute } from '../models/routing/group-route';
 import { GroupRouter } from '../models/routing/group-router';
@@ -11,7 +11,7 @@ import { GroupRouter } from '../models/routing/group-router';
   standalone: true
 })
 export class GroupLinkPipe implements PipeTransform {
-  constructor(private groupRouter: GroupRouter) {}
+  private groupRouter = inject(GroupRouter);
 
   transform(groupOrRoute: GroupLike | RawGroupRoute, page?: string[]): UrlCommand {
     const route = isRawGroupRoute(groupOrRoute) ? groupOrRoute : rawGroupRoute(groupOrRoute);

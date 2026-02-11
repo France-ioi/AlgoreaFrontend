@@ -20,6 +20,9 @@ import { EMPTY, Observable, throwError } from 'rxjs';
   imports: [ FormsModule, ButtonComponent ]
 })
 export class AccessCodeViewComponent {
+  private joinByCodeService = inject(JoinByCodeService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+
   @Input() sectionLabel = '';
   @Input() buttonLabel = '';
   @Input() itemData?: ItemData;
@@ -29,11 +32,6 @@ export class AccessCodeViewComponent {
 
   code = '';
   state: 'ready'|'loading' = 'ready';
-
-  constructor(
-    private joinByCodeService: JoinByCodeService,
-    private actionFeedbackService: ActionFeedbackService,
-  ) { }
 
   checkCodeValidity(): void {
     this.state = 'loading';

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { createSelector, Store } from '@ngrx/store';
@@ -25,13 +25,11 @@ const selectBreadcrumbsDefaultOnTitle = createSelector(
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsComponent {
+  private store = inject(Store);
+  private router = inject(Router);
+
 
   breadcrumbs = this.store.selectSignal(selectBreadcrumbsDefaultOnTitle);
-
-  constructor(
-    private store: Store,
-    private router: Router,
-  ) {}
 
   onElementClick(el: { navigateTo?: () => void }): void {
     if (el.navigateTo) el.navigateTo();

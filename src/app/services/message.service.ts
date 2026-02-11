@@ -29,8 +29,6 @@ export class MessageService {
     mergeMap(m => timer(m.life || DISPLAY_DURATION).pipe(map(() => m))),
   );
 
-  constructor() {}
-
   add(message: MessageV2): void {
     this.messageSubject.next([ message, ...this.messageSubject.value ]);
   }

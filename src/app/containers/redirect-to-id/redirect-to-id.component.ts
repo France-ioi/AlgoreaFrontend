@@ -17,6 +17,9 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
   ]
 })
 export class RedirectToIdComponent implements OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
+  private itemRouter = inject(ItemRouter);
+  private currentContentService = inject(CurrentContentService);
   private config = inject(APPCONFIG);
 
   notExisting = false;
@@ -36,11 +39,7 @@ export class RedirectToIdComponent implements OnDestroy {
     else this.notExisting = true;
   });
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private itemRouter: ItemRouter,
-    private currentContentService: CurrentContentService,
-  ) {
+  constructor() {
     this.currentContentService.clear();
   }
 

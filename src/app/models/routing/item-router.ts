@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
 import { itemRouteWith, RawItemRoute, selectObservedGroupRouteAsItemRouteParameter } from './item-route';
 import { APPCONFIG, AppConfig } from 'src/app/config';
@@ -18,12 +18,9 @@ interface NavigateOptions extends ItemNavigationState {
   providedIn: 'root'
 })
 export class ItemRouter {
-
-  constructor(
-    private router: Router,
-    private store: Store,
-    @Inject(APPCONFIG) private config: AppConfig,
-  ) {}
+  private router = inject(Router);
+  private store = inject(Store);
+  private config = inject<AppConfig>(APPCONFIG);
 
   private currentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
   private observedGroupRouteAsItemRouteParameter = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);

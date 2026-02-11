@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, startWith, Subject } from 'rxjs';
 import { UrlCommand } from '../utils/url';
@@ -14,6 +14,7 @@ interface Tab {
   providedIn: 'root'
 })
 export class TabService implements OnDestroy {
+  private router = inject(Router);
 
   private tabs = new BehaviorSubject<Tab[]>([]);
   tabs$ = this.tabs.asObservable();
@@ -43,10 +44,6 @@ export class TabService implements OnDestroy {
     distinctUntilChanged(),
     shareReplay(1),
   );
-
-  constructor(
-    private router: Router,
-  ) {}
 
   ngOnDestroy(): void {
     this.tabs.complete();

@@ -17,6 +17,9 @@ import { APPCONFIG } from 'src/app/config';
   imports: [ LetDirective, NgClass, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent ]
 })
 export class LeftHeaderComponent {
+  private authService = inject(AuthService);
+  private layoutService = inject(LayoutService);
+  private titleService = inject(Title);
 
   @Input() compactMode = false;
 
@@ -25,12 +28,6 @@ export class LeftHeaderComponent {
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   leftHeaderLogoUrl = inject(APPCONFIG).leftHeaderLogoUrl;
-
-  constructor(
-    private authService: AuthService,
-    private layoutService: LayoutService,
-    private titleService: Title,
-  ) { }
 
   hideLeftMenu(): void {
     this.layoutService.toggleLeftMenu(false);

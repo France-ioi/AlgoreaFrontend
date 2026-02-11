@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, retry, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
@@ -52,6 +52,17 @@ const loginIdParam = 'user_id';
   ]
 })
 export class LTIComponent implements OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
+  private itemRouter = inject(ItemRouter);
+  private router = inject(Router);
+  private userSession = inject(UserSessionService);
+  private checkLoginService = inject(CheckLoginService);
+  private layoutService = inject(LayoutService);
+  private activityNavTreeService = inject(ActivityNavTreeService);
+  private getItemPathService = inject(GetItemPathService);
+  private resultActionsService = inject(ResultActionsService);
+  private getItemChildrenService = inject(GetItemChildrenService);
+  private ltiDataSource = inject(LTIDataSource);
 
   private loginId$ = this.activatedRoute.queryParamMap.pipe(map(queryParams => queryParams.get(loginIdParam)));
 
@@ -139,19 +150,7 @@ export class LTIComponent implements OnDestroy {
       }),
   ];
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private itemRouter: ItemRouter,
-    private router: Router,
-    private userSession: UserSessionService,
-    private checkLoginService: CheckLoginService,
-    private layoutService: LayoutService,
-    private activityNavTreeService: ActivityNavTreeService,
-    private getItemPathService: GetItemPathService,
-    private resultActionsService: ResultActionsService,
-    private getItemChildrenService: GetItemChildrenService,
-    private ltiDataSource: LTIDataSource,
-  ) {
+  constructor() {
     this.layoutService.configure({ showTopRightControls: false, canShowLeftMenu: false, canShowBreadcrumbs: false });
   }
 

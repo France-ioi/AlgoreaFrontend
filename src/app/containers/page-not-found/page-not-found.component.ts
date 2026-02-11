@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
@@ -10,9 +10,9 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
   imports: [ FullHeightContentDirective, ErrorComponent ]
 })
 export class PageNotFoundComponent {
-  constructor(
-    private currentContentService: CurrentContentService,
-  ) {
+  private currentContentService = inject(CurrentContentService);
+
+  constructor() {
     this.currentContentService.clear();
   }
 }

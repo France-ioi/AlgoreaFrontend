@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, inject } from '@angular/core';
 import { GetBreadcrumbsFromRootsService } from '../../data-access/get-breadcrumbs-from-roots.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState } from '../../utils/operators/state';
@@ -25,6 +25,8 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
   ]
 })
 export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {
+  private getBreadcrumbsFromRootsService = inject(GetBreadcrumbsFromRootsService);
+  private elementRef = inject<ElementRef<HTMLDivElement>>(ElementRef);
 
   @Output() resize = new EventEmitter<void>();
   @Input() itemId?: string;
@@ -42,9 +44,6 @@ export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChan
     )),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  constructor(private getBreadcrumbsFromRootsService: GetBreadcrumbsFromRootsService, private elementRef: ElementRef<HTMLDivElement>) {
-  }
 
   ngAfterViewInit(): void {
     this.resizeObserver.observe(this.elementRef.nativeElement);

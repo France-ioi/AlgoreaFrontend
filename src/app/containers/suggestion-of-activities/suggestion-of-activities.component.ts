@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ItemNavigationService } from '../../data-access/item-navigation.service';
 import { switchMap, filter, map } from 'rxjs/operators';
 import { isNotNull } from '../../utils/null-undefined-predicates';
@@ -30,6 +30,9 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
   ],
 })
 export class SuggestionOfActivitiesComponent implements OnDestroy {
+  private store = inject(Store);
+  private itemNavigationService = inject(ItemNavigationService);
+
   observedGroupRoute$ = this.store.select(fromObservation.selectObservedGroupRoute);
   private refresh$ = new Subject<void>();
   readonly state$ = this.observedGroupRoute$.pipe(
@@ -44,11 +47,6 @@ export class SuggestionOfActivitiesComponent implements OnDestroy {
     ),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  constructor(
-    private store: Store,
-    private itemNavigationService: ItemNavigationService) {
-  }
 
   ngOnDestroy(): void {
     this.refresh$.complete();

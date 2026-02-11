@@ -1,15 +1,13 @@
-import { AfterViewInit, Directive, ElementRef, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, inject, Output } from '@angular/core';
 
 @Directive({
   selector: '[algHtmlElLoaded]',
   standalone: true,
 })
 export class HtmlElLoadedDirective implements AfterViewInit {
-  @Output() elLoaded = new EventEmitter<HTMLElement>();
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  constructor(
-    private el: ElementRef<HTMLElement>,
-  ) {}
+  @Output() elLoaded = new EventEmitter<HTMLElement>();
 
   ngAfterViewInit(): void {
     this.elLoaded.emit(this.el.nativeElement);

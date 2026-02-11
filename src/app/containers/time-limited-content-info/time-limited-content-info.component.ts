@@ -40,6 +40,7 @@ const selectAllowsSubmissionsUntil = createSelector(
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimeLimitedContentInfoComponent {
+  private store = inject(Store);
   private dialogService = inject(Dialog);
 
   private timerEnded = new Subject<void>();
@@ -66,10 +67,6 @@ export class TimeLimitedContentInfoComponent {
       this.timerEnded.next();
     }
   });
-
-  constructor(
-    private store: Store
-  ) {}
 
 }
 
