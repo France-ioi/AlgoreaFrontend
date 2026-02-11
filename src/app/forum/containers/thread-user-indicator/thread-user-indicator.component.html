@@ -1,11 +1,5 @@
 <div class="user-indicator-container">
   <div class="user-indicator">
-    <div class="helping-row">
-      <span class="helping-text" i18n>You are helping</span>
-      <a class="alg-link user-indicator-link" [routerLink]="[ '/groups/users', user().id ]">
-        {{ user().name }}
-      </a>
-    </div>
     @if (isThreadOpen()) {
       <div class="follow-toggle">
         <alg-switch

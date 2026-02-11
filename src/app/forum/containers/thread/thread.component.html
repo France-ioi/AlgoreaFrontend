@@ -32,7 +32,6 @@
             @if (participantUser$ | async; as participantUser) {
               @if (participantUser.name) {
                 <alg-thread-user-indicator
-                  [user]="participantUser"
                   [followStatus]="followStatus!"
                   [isThreadOpen]="!!threadStatus?.data?.open"
                   (followChanged)="onFollowChanged(threadIdForIndicator, $event)"

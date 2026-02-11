@@ -1,25 +1,37 @@
 @if (visible$ | async) {
   <div class="container">
     <div class="header">
-      <div>
-        <span class="header-icon ph-duotone ph-chats-circle"></span>
-        @let thread = threadHydratedId();
+      <span class="header-icon ph-duotone ph-chats-circle"></span>
+      @let thread = threadHydratedId();
+      <div class="header-center">
         @if (thread && thread.item.title) {
-          <a
-            class="alg-link header-title"
-            [routerLink]="thread.item.route | url"
-          >
-            {{ thread.item.title }}
-          </a>
+          <span class="header-title">{{ thread.item.title }}</span>
+        }
+        @if (participantName$ | async; as name) {
+          <div class="user-pill">
+            <a class="alg-link user-pill-name" [routerLink]="{ id: participantId()!, isUser: true } | groupLink">
+              {{ name }}
+            </a>
+          </div>
         }
       </div>
-      <button
-        class="header-button size-s"
-        type="submit"
-        icon="ph ph-x"
-        alg-button-icon
-        (click)="onClose()"
-      ></button>
+      <div class="header-right">
+        @if (thread) {
+          <a
+            class="nav-button size-s"
+            icon="ph ph-arrow-square-out"
+            alg-button-icon
+            [routerLink]="thread.item.route | url"
+          ></a>
+        }
+        <button
+          class="close-button size-s"
+          type="button"
+          icon="ph ph-x"
+          alg-button-icon
+          (click)="onClose()"
+        ></button>
+      </div>
     </div>
     <alg-thread class="thread"></alg-thread>
   </div>

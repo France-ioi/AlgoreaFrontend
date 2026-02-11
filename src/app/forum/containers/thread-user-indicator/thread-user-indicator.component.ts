@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { FetchState } from 'src/app/utils/state';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { FormsModule } from '@angular/forms';
-import { UserInfo } from '../thread-message/thread-user-info';
 
 @Component({
   selector: 'alg-thread-user-indicator',
@@ -11,13 +9,11 @@ import { UserInfo } from '../thread-message/thread-user-info';
   styleUrls: [ './thread-user-indicator.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    RouterLink,
     SwitchComponent,
     FormsModule,
   ],
 })
 export class ThreadUserIndicatorComponent {
-  user = input.required<UserInfo>();
   followStatus = input.required<FetchState<boolean>>();
   isThreadOpen = input.required<boolean>();
 

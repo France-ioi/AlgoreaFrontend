@@ -8,35 +8,59 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 functions.toRem(14);
+  padding: 0 functions.toRem(8) 0 functions.toRem(14);
   height: functions.toRem(57);
   border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+  gap: functions.toRem(10);
 }
 
-.header-title, .header-icon {
-  font-size: functions.toRem(20);
+.header-center {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .header-icon {
+  font-size: functions.toRem(18);
   color: var(--alg-primary-color);
+  flex-shrink: 0;
 }
 
 .header-title {
-  margin-left: functions.toRem(14);
+  font-size: functions.toRem(16);
   color: var(--alg-black-color);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.header-button {
-  margin-left: functions.toRem(15);
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  max-width: 100%;
+  margin-top: functions.toRem(2);
+  padding: functions.toRem(2) functions.toRem(10);
+  border-radius: functions.toRem(12);
+  background-color: var(--alg-observation-button-bg-color);
+  font-size: functions.toRem(11);
+}
+
+.user-pill-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .thread {
   flex: 1;
   overflow: hidden;
-}
-
-.divider {
-  margin: 0 var(--alg-space-size-5) var(--alg-space-size-6) var(--alg-space-size-5);
 }
