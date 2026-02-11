@@ -47,7 +47,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { isMessageEvent } from '../../models/thread-events';
 import { v4 as uuidv4 } from 'uuid';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
-import { ThreadUserIndicatorComponent } from '../thread-user-indicator/thread-user-indicator.component';
+import { ThreadTopIndicatorComponent } from '../thread-top-indicator/thread-top-indicator.component';
 import { fromForum as forumActions } from '../../store';
 import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 import { computed, signal } from '@angular/core';
@@ -80,7 +80,7 @@ const selectThreadInfo = createSelector(
     ButtonComponent,
     AutoResizeDirective,
     TooltipDirective,
-    ThreadUserIndicatorComponent,
+    ThreadTopIndicatorComponent,
     LoadingComponent,
     ErrorComponent,
   ]

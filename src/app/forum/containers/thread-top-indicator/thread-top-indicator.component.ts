@@ -4,16 +4,16 @@ import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'alg-thread-user-indicator',
-  templateUrl: './thread-user-indicator.component.html',
-  styleUrls: [ './thread-user-indicator.component.scss' ],
+  selector: 'alg-thread-top-indicator',
+  templateUrl: './thread-top-indicator.component.html',
+  styleUrls: [ './thread-top-indicator.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SwitchComponent,
     FormsModule,
   ],
 })
-export class ThreadUserIndicatorComponent {
+export class ThreadTopIndicatorComponent {
   followStatus = input.required<FetchState<boolean>>();
   isThreadOpen = input.required<boolean>();
 
