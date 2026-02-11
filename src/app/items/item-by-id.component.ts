@@ -2,6 +2,7 @@ import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/co
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
+  delay,
   distinctUntilChanged,
   filter,
   map,
@@ -164,6 +165,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   ]).pipe(
     map(([ context, userProfile ]) => isThreadInline(context, userProfile.groupId)),
     distinctUntilChanged(),
+    // Emit true immediately, but delay false by 300ms so the global panel
+    // doesn't flash during quick inline→inline transitions between items.
+    switchMap(value => (value ? of(true) : of(false).pipe(delay(300)))),
   );
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 

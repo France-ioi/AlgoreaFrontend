@@ -1,7 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
 import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { combineLatest, merge, Subscription } from 'rxjs';
+import { combineLatest, merge, of, Subscription } from 'rxjs';
 import { AuthService } from './services/auth/auth.service';
 import { Router, RouterOutlet } from '@angular/router';
 import { LocaleService } from './services/localeService';
@@ -83,6 +83,9 @@ export class AppComponent implements OnInit, OnDestroy {
   ]).pipe(
     map(([ context, userProfile ]) => isThreadInline(context, userProfile.groupId)),
     distinctUntilChanged(),
+    // Emit true immediately, but delay false by 300ms so the global panel
+    // doesn't flash during quick inline→inline transitions between items.
+    switchMap(value => (value ? of(true) : of(false).pipe(delay(300)))),
   );
   scrolled = false;
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
