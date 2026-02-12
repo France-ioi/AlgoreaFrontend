@@ -28,7 +28,7 @@
       <div class="widget-body">
           @let followStatus = followStatus$ | async;
           @let threadIdForIndicator = threadId$ | async;
-          @if (!isMine && threadIdForIndicator) {
+          @if (!isMine && threadIdForIndicator && threadStatus?.data?.open) {
             @if (participantUser$ | async; as participantUser) {
               @if (participantUser.name) {
                 <alg-thread-top-indicator
@@ -40,7 +40,7 @@
               }
             }
           }
-          @let showUserIndicator = !isMine && threadIdForIndicator && (participantUser$ | async)?.name;
+          @let showUserIndicator = !isMine && threadIdForIndicator && threadStatus?.data?.open && (participantUser$ | async)?.name;
           <div class="widget-scroll" [class.with-user-indicator]="showUserIndicator" [class.with-user-indicator-below-actions]="showUserIndicator && indicatorLayout() === 'inline-with-back'" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
             @if (isCurrentUserThreadParticipant && threadStatus?.isReady && currentState.data?.length === 0) {
               <div class="no-messages" i18n>
