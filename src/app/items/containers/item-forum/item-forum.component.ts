@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, computed } f
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
-import { catchError, of, Subject, filter, switchMap, map } from 'rxjs';
+import { Subject, filter, switchMap } from 'rxjs';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
@@ -12,9 +12,12 @@ import { FullItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { ThreadTableComponent } from './thread-table/thread-table.component';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { ThreadService } from 'src/app/data-access/thread.service';
 import { canThreadExist, canOpenThread } from 'src/app/forum/models/thread-context';
 import { isUser } from 'src/app/models/routing/group-route';
+import { isATask } from '../../models/item-type';
+import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 interface ThreadContext {
   participantId: string,
@@ -35,12 +38,14 @@ type AutoShowThreadDecision =
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ThreadTableComponent,
+    LoadingComponent,
+    ErrorComponent,
+    ButtonComponent,
   ]
 })
 export class ItemForumComponent {
   private store = inject(Store);
   private getThreadService = inject(GetThreadsService);
-  private threadService = inject(ThreadService);
   private userSessionService = inject(UserSessionService);
 
   itemData = input.required<ItemData>();
@@ -57,6 +62,14 @@ export class ItemForumComponent {
     return info !== null && isUser(info.route);
   });
   visibleThreadId = this.store.selectSignal(fromForum.selectVisibleThreadId);
+
+  /** Whether the item has at most one thread (Task + not observing, or Task + observing a user). */
+  isSingleThreadMode = computed(() => {
+    const item = this.itemData().item;
+    if (!isATask(item)) return false;
+    const obs = this.observationInfo();
+    return obs === null || isUser(obs.route);
+  });
 
   /**
    * Whether the thread panel should be auto-shown on launch:
@@ -80,34 +93,48 @@ export class ItemForumComponent {
     return { decision: 'check', context };
   });
 
-  /**
-   * Thread info resolved via API for cases where the user lacks direct open permission
-   * but a thread may still exist (e.g. a teacher asked a question).
-   */
-  private autoShowThreadApiCheck = toSignal(
-    toObservable(this.autoShowThreadDecision).pipe(
-      filter((d): d is Extract<AutoShowThreadDecision, { decision: 'check' }> => d.decision === 'check'),
-      switchMap(({ context }) =>
-        this.threadService.get(context.itemId, context.participantId).pipe(
-          map(thread => (thread.status !== 'not_started' ? context : null)),
-          catchError(() => of(null)) // 403 or other error
-        )
-      )
-    )
-  );
+  /** State of the single-thread placeholder (only meaningful when isSingleThreadMode is true). */
+  singleThreadState = computed(() => {
+    const decision = this.autoShowThreadDecision();
+    if (decision.decision === 'none') return 'none' as const;
+
+    const threadData = this.isObserving()
+      ? this.observedGroupThreadsState()
+      : this.myThreadsState();
+    if (!threadData || threadData.isFetching) return 'fetching' as const;
+    if (threadData.isError) return 'error' as const;
+
+    const hasActiveThread = threadData.data?.some(t => t.status !== 'not_started') ?? false;
+
+    if (decision.decision === 'show') {
+      return hasActiveThread ? 'thread-open' as const : 'can-start' as const;
+    }
+    // decision === 'check'
+    return hasActiveThread ? 'thread-open' as const : 'thread-not-started' as const;
+  });
 
   constructor() {
-    // Auto-show thread when conditions are met (either immediate or via API check)
+    // Auto-show thread when conditions are met
     effect(() => {
       const decision = this.autoShowThreadDecision();
-      const context = decision.decision === 'show'
-        ? decision.context
-        : this.autoShowThreadApiCheck();
+      if (decision.decision === 'none') return;
 
-      if (context) {
+      if (decision.decision === 'show') {
         this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({
-          id: { participantId: context.participantId, itemId: context.itemId },
-          item: { title: context.title, route: context.route }
+          id: { participantId: decision.context.participantId, itemId: decision.context.itemId },
+          item: { title: decision.context.title, route: decision.context.route }
+        }));
+        return;
+      }
+
+      // decision === 'check': wait for list data
+      const threadData = this.isObserving()
+        ? this.observedGroupThreadsState()
+        : this.myThreadsState();
+      if (threadData?.isReady && threadData.data.some(t => t.status !== 'not_started')) {
+        this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({
+          id: { participantId: decision.context.participantId, itemId: decision.context.itemId },
+          item: { title: decision.context.title, route: decision.context.route }
         }));
       }
     });
@@ -178,5 +205,15 @@ export class ItemForumComponent {
     this.store.dispatch(
       fromForum.forumThreadListActions.showAsCurrentThread({ id, item })
     );
+  }
+
+  /** Re-show the single thread panel (used by the placeholder button). */
+  showSingleThread(): void {
+    const decision = this.autoShowThreadDecision();
+    if (decision.decision === 'none') return;
+    this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({
+      id: { participantId: decision.context.participantId, itemId: decision.context.itemId },
+      item: { title: decision.context.title, route: decision.context.route }
+    }));
   }
 }
