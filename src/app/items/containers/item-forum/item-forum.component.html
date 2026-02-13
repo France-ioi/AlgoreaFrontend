@@ -1,63 +1,13 @@
-@if (isSingleThreadMode()) {
-  <!-- Single-thread mode: contextual placeholder instead of table -->
-  @switch (singleThreadState()) {
-    @case ('fetching') {
-      <div class="single-thread-placeholder">
-        <alg-loading size="medium"></alg-loading>
-      </div>
-    }
-    @case ('error') {
-      <div class="single-thread-placeholder">
-        <alg-error
-          icon="ph-duotone ph-warning-circle"
-          i18n-message message="Unable to load the thread information."
-          i18n-buttonCaption buttonCaption="Retry"
-          [showRefreshButton]="true"
-          (refresh)="isObserving() ? refreshObservedGroupThreads() : refreshMyThreads()"
-        ></alg-error>
-      </div>
-    }
-    @case ('can-start') {
-      <div class="single-thread-placeholder">
-        <i class="placeholder-icon active ph-duotone ph-chats-circle"></i>
-        @if (visibleThreadId()) {
-          <p class="placeholder-text" i18n>You can start a help request conversation using the panel on the right.</p>
-        } @else {
-          <p class="placeholder-text" i18n>You can start a help request on this content.</p>
-          <button
-            class="placeholder-action"
-            alg-button
-            type="button"
-            icon="ph-duotone ph-chats-circle"
-            (click)="showSingleThread()"
-            i18n
-          >Show conversation</button>
-        }
-      </div>
-    }
-    @case ('thread-open') {
-      <div class="single-thread-placeholder">
-        <i class="placeholder-icon active ph-duotone ph-chats-circle"></i>
-        @if (visibleThreadId()) {
-          <p class="placeholder-text" i18n>Your help request conversation is displayed in the panel on the right.</p>
-        } @else {
-          <p class="placeholder-text" i18n>You have a help request on this content.</p>
-          <button
-            class="placeholder-action"
-            alg-button
-            type="button"
-            icon="ph-duotone ph-chats-circle"
-            (click)="showSingleThread()"
-            i18n
-          >Show conversation</button>
-        }
-      </div>
-    }
-    @case ('thread-not-started') {
-      <div class="single-thread-placeholder">
-        <i class="placeholder-icon ph-duotone ph-chats-circle"></i>
-        <p class="placeholder-text" i18n>No help request has been started for this activity yet. The conversation will appear here when the user or an authorized person starts one.</p>
-      </div>
+@if (singleThreadContext()) {
+  @if (singleThreadInfo().state; as state) {
+    @if (state !== 'none') {
+      <alg-forum-thread-placeholder
+        [state]="state"
+        [isThreadPanelVisible]="!!visibleThreadId()"
+        [isObserving]="isObserving()"
+        (showThread)="showSingleThread()"
+        (refresh)="isObserving() ? refreshObservedGroupThreads() : refreshMyThreads()"
+      />
     }
   }
 

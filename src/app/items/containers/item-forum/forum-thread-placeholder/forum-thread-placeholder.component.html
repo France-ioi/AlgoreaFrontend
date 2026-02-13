@@ -1,0 +1,67 @@
+@switch (state()) {
+  @case ('fetching') {
+    <alg-loading size="medium"></alg-loading>
+  }
+  @case ('error') {
+    <alg-error
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load the thread information."
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="true"
+      (refresh)="refresh.emit()"
+    ></alg-error>
+  }
+  @case ('not-started-can-start') {
+    <i class="placeholder-icon active ph-duotone ph-chats-circle"></i>
+    @if (isThreadPanelVisible()) {
+      @if (isObserving()) {
+        <p class="placeholder-text" i18n>You can start a conversation with the user on this content using the panel on the right.</p>
+      } @else {
+        <p class="placeholder-text" i18n>You can start a help request conversation on this content using the panel on the right.</p>
+      }
+    } @else {
+      @if (isObserving()) {
+        <p class="placeholder-text" i18n>You can start a conversation with the user on this content.</p>
+      } @else {
+        <p class="placeholder-text" i18n>You can start a help request on this content.</p>
+      }
+      <button
+        class="placeholder-action"
+        alg-button
+        type="button"
+        icon="ph-duotone ph-chats-circle"
+        (click)="showThread.emit()"
+        i18n
+      >Show conversation</button>
+    }
+  }
+  @case ('started') {
+    <i class="placeholder-icon active ph-duotone ph-chats-circle"></i>
+    @if (isThreadPanelVisible()) {
+      @if (isObserving()) {
+        <p class="placeholder-text" i18n>The conversation with the user is displayed in the panel on the right.</p>
+      } @else {
+        <p class="placeholder-text" i18n>Your help request conversation is displayed in the panel on the right.</p>
+      }
+    } @else {
+      @if (isObserving()) {
+        <p class="placeholder-text" i18n>There is a conversation with the user on this content.</p>
+      } @else {
+        <p class="placeholder-text" i18n>You have a help request on this content.</p>
+      }
+      <button
+        class="placeholder-action"
+        alg-button
+        type="button"
+        icon="ph-duotone ph-chats-circle"
+        (click)="showThread.emit()"
+        i18n
+      >Show conversation</button>
+    }
+  }
+  @case ('not-started-cannot-start') {
+    <i class="placeholder-icon ph-duotone ph-chats-circle"></i>
+    <p class="placeholder-text" i18n>No help request conversation has been started for this activity yet.
+      The conversation will appear here when the user or an authorized person starts one.</p>
+  }
+}
