@@ -13,8 +13,8 @@
 
   <!-- When NOT observing, still show "Other users' requests" table below -->
   @if (!isObserving()) {
-    <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Other users' requests</h2>
     <alg-thread-table
+      class="section-spaced"
       [state]="othersThreadsState()"
       [showUserColumn]="true"
       [itemData]="itemData()"
@@ -23,7 +23,9 @@
       (refresh)="refreshOthersThreads()"
       (showThread)="showThreadPanel($event.id, $event.item)"
       (hideThread)="hideThreadPanel()"
-    />
+    >
+      <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Other users' requests</h2>
+    </alg-thread-table>
   }
 } @else {
   <!-- Multi-thread mode: existing table layout (chapters, observing a group) -->
@@ -39,7 +41,6 @@
       (hideThread)="hideThreadPanel()"
     />
   } @else {
-    <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>My help requests</h2>
     <alg-thread-table
       [state]="myThreadsState()"
       [showUserColumn]="false"
@@ -49,10 +50,12 @@
       (refresh)="refreshMyThreads()"
       (showThread)="showThreadPanel($event.id, $event.item)"
       (hideThread)="hideThreadPanel()"
-    />
+    >
+      <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>My help requests</h2>
+    </alg-thread-table>
 
-    <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Other users' requests</h2>
     <alg-thread-table
+      class="section-spaced"
       [state]="othersThreadsState()"
       [showUserColumn]="true"
       [itemData]="itemData()"
@@ -61,6 +64,8 @@
       (refresh)="refreshOthersThreads()"
       (showThread)="showThreadPanel($event.id, $event.item)"
       (hideThread)="hideThreadPanel()"
-    />
+    >
+      <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Other users' requests</h2>
+    </alg-thread-table>
   }
 }

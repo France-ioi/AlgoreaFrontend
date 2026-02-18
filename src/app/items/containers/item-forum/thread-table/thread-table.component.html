@@ -14,16 +14,19 @@
   ></alg-error>
 }
 @if (filteredData(); as data) {
-  <div class="operation-buttons">
-    @if (hasClosedThreads()) {
-      <span class="toggle-label">
-        <alg-switch class="small-switch" (change)="showClosedThreads.set($event)"></alg-switch>
-        <span i18n>Show closed</span>
-      </span>
-    }
-    <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="onRefresh()" i18n>
-      Refresh
-    </button>
+  <div class="table-header">
+    <ng-content select="[tableTitle]"></ng-content>
+    <div class="table-actions">
+      @if (hasClosedThreads()) {
+        <span class="toggle-label">
+          <alg-switch class="small-switch" (change)="showClosedThreads.set($event)"></alg-switch>
+          <span i18n>Show closed</span>
+        </span>
+      }
+      <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="onRefresh()" i18n>
+        Refresh
+      </button>
+    </div>
   </div>
   <div class="alg-table-page-wrapper">
     <div class="alg-table-horizontal-scroll">

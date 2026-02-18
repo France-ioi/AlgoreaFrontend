@@ -1,5 +1,15 @@
+@use 'src/assets/scss/functions';
+
 :host {
   display: flex;
   flex-direction: column;
   padding: 0 0 var(--alg-space-size-4) 0;
+}
+
+.section-title {
+  margin: 0;
+}
+
+.section-spaced {
+  margin-top: functions.toRem(32);
 }

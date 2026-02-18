@@ -4,12 +4,19 @@
   display: block;
 }
 
-.operation-buttons {
+.table-header {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: functions.toRem(8);
+  margin-bottom: functions.toRem(13);
+}
+
+.table-actions {
+  display: flex;
   align-items: center;
   gap: functions.toRem(12);
-  margin-bottom: functions.toRem(13);
+  margin-left: auto;
 }
 
 .toggle-label {
