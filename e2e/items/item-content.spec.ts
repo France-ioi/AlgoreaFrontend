@@ -199,15 +199,14 @@ test('checks item description', async ({ page, itemContentPage }) => {
   });
 });
 
-// Chapter, with no view content perm, not explicit entry item, no prerequisite: chapter specific message, no prerequisite part
+// Chapter, with no view content perm, not explicit entry item, no prerequisite, temp user: login wall shown
 test('checks chapter no access message with no prerequisites section', async ({ itemContentPage }) => {
   await Promise.all([
     itemContentPage.goto('a/902356740789159624;p=4702,4102;pa=0'),
     itemContentPage.waitForItemResponse('902356740789159624'),
     itemContentPage.waitForBreadcrumbsResponse('4702/4102/902356740789159624', 'parent_attempt_id=0'),
   ]);
-  await itemContentPage.checksIsChapterNoAccessMessageVisible();
-  await itemContentPage.checksIsPrerequisiteSectionNotVisible();
+  await itemContentPage.checksIsLoginWallVisible();
 });
 
 // Chapter, with no view content perm, not explicit entry item, with prerequisite: chapter specific message, with prerequisite part

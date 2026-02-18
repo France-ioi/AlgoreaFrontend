@@ -51,14 +51,11 @@ test('check chapter is locked message for auth user', async ({ page, itemContent
   await itemContentPage.checksIsChapterLockedMessageVisible();
 });
 
-test('check the temp user is not connected to activity', async ({ page }) => {
+test('check the temp user is not connected to activity', async ({ page, itemContentPage }) => {
   await page.goto('a/6747343693587333585;p=4702,7528142386663912287,944619266928306927;pa=0');
   const itemTitleLocator = page.getByTestId('item-title').getByText('Non-visible task');
   await expect.soft(itemTitleLocator).toBeVisible();
-  await expect.soft(page.getByText('You are not connected and cannot start this activity.')).toBeVisible();
-  await expect.soft(
-    page.getByText('Please sign up or log in using the power button at the top right corner of this screen.')
-  ).toBeVisible();
+  await itemContentPage.checksIsLoginWallVisible();
 });
 
 test('check the auth user has no access rights to activity', async ({ page, itemContentPage }) => {

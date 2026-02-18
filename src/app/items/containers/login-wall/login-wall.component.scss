@@ -1,0 +1,74 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: functions.toRem(360);
+  overflow: hidden;
+  width: 100%;
+}
+
+.login-wall-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: functions.toRem(14);
+  width: 100%;
+  padding: functions.toRem(24) 0;
+}
+
+.placeholder-line {
+  height: functions.toRem(14);
+  border-radius: functions.toRem(4);
+  background-color: var(--alg-border-color, #e0e0e0);
+  opacity: 0.5;
+}
+
+.login-wall-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 15%,
+    rgba(255, 255, 255, 0.92) 40%,
+    white 60%
+  );
+}
+
+.login-wall-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: functions.toRem(420);
+  padding: functions.toRem(36) functions.toRem(40);
+  border-radius: functions.toRem(16);
+  border: functions.toRem(1) solid var(--alg-border-color, #e0e0e0);
+  background: var(--alg-white-color, #fff);
+  box-shadow: 0 functions.toRem(4) functions.toRem(24) rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.login-wall-card-icon {
+  font-size: functions.toRem(56);
+  color: var(--alg-primary-color);
+  margin-bottom: functions.toRem(12);
+}
+
+.login-wall-card-title {
+  margin: 0 0 functions.toRem(8);
+  font-size: functions.toRem(22);
+  font-weight: 600;
+  color: var(--alg-base-text-color, #333);
+  line-height: 1.3;
+}
+
+.login-wall-card-description {
+  margin: 0 0 functions.toRem(24);
+  font-size: functions.toRem(14);
+  color: var(--alg-secondary-color, #666);
+  line-height: 1.5;
+}
