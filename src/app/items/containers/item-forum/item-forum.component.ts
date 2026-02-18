@@ -1,151 +1,130 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
-import { ReplaySubject, switchMap, combineLatest, Subject, first } from 'rxjs';
-import { mapToFetchState } from 'src/app/utils/operators/state';
-import { distinctUntilChanged, filter, map, startWith, withLatestFrom } from 'rxjs/operators';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
-import { UserCaptionPipe } from 'src/app/pipes/userCaption';
-import { GroupLinkPipe } from 'src/app/pipes/groupLink';
-import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
-import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
-import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { fromObservation } from 'src/app/store/observation';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { RawItemRoute } from 'src/app/models/routing/item-route';
+import { FullItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
+import { ThreadTableComponent } from './thread-table/thread-table.component';
+import { ForumThreadPlaceholderComponent, SingleThreadState } from './forum-thread-placeholder/forum-thread-placeholder.component';
+import { UserSessionService } from 'src/app/services/user-session.service';
+import { canThreadExist, canOpenThread } from 'src/app/forum/models/thread-context';
+import { isUser } from 'src/app/models/routing/group-route';
+import { fetchList } from 'src/app/utils/fetch-list';
 
-
-enum ForumTabUrls {
-  MyThreads= '/forum/my-threads',
-  Others = '/forum/others',
-  Group = '/forum/group',
+interface ThreadContext {
+  participantId: string,
+  itemId: string,
+  title: string | null,
+  route: FullItemRoute,
 }
 
-const OPTIONS = [
-  {
-    label: $localize`My help requests`,
-    value: ForumTabUrls.MyThreads,
-  },
-  {
-    label: $localize`Other users' requests`,
-    value: ForumTabUrls.Others,
-  },
-];
+type SingleThreadInfo =
+  | { state: SingleThreadState, context: ThreadContext }
+  | { state: 'none' };
 
 @Component({
   selector: 'alg-item-forum',
   templateUrl: './item-forum.component.html',
   styleUrls: [ './item-forum.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LetDirective,
-    SelectionComponent,
-    ErrorComponent,
-    LoadingComponent,
-    NgClass,
-    RouterLink,
-    AsyncPipe,
-    DatePipe,
-    ItemRoutePipe,
-    RouteUrlPipe,
-    GroupLinkPipe,
-    UserCaptionPipe,
-    ThreadStatusDisplayPipe,
-    ButtonComponent,
-  ]
+    ThreadTableComponent,
+    ForumThreadPlaceholderComponent,
+  ],
 })
-export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
+export class ItemForumComponent {
   private store = inject(Store);
   private getThreadService = inject(GetThreadsService);
-  private router = inject(Router);
-  private activatedRoute = inject(ActivatedRoute);
+  private userSessionService = inject(UserSessionService);
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
-  private readonly url$ = this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd),
-    map(() => this.router.url),
-    startWith(this.router.url),
-    distinctUntilChanged(),
-  );
-  private readonly refresh$ = new Subject<void>();
-  private readonly item$ = new ReplaySubject<Item>(1);
-  isObserving$ = this.store.select(fromObservation.selectIsObserving);
-  selected$ = new ReplaySubject<number>(1);
-  options$ = combineLatest([
-    this.store.select(fromObservation.selectObservedGroupInfo),
-    this.url$,
-  ]).pipe(
-    map(([ observedGroup, url ]) => [
-      ...OPTIONS,
-      ...(observedGroup || url.endsWith(ForumTabUrls.Group)
-        ? [{ label: `${ observedGroup?.name || $localize`Group` }'s`, value: ForumTabUrls.Group }] : [])
-    ]),
-  );
-  state$ = combineLatest([
-    this.selected$,
-    this.item$,
-    this.store.select(fromObservation.selectObservedGroupId)
-  ]).pipe(
-    switchMap(([ selected, item, watchedGroupId ]) =>
-      this.getThreadService.get(item.id, selected === 2 && watchedGroupId ? { watchedGroupId } : { isMine: selected === 0 }).pipe(
-        mapToFetchState({ resetter: this.refresh$ }),
-      ),
-    ),
-  );
-  currentThreadInfo$ = this.store.select(fromForum.selectThreadId);
-  isDiscussionVisible$ = this.store.select(fromForum.selectVisible);
+  // Derived signals
+  private item = computed(() => this.itemData().item);
+  private userProfile = toSignal(this.userSessionService.userProfile$);
 
-  ngOnChanges(): void {
-    if (this.itemData) {
-      this.item$.next(this.itemData.item);
+  // Signals from store
+  private observationInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
+  isObserving = this.store.selectSignal(fromObservation.selectIsObserving);
+  isObservingAUser = computed(() => {
+    const info = this.observationInfo();
+    return info !== null && isUser(info.route);
+  });
+  visibleThreadId = this.store.selectSignal(fromForum.selectVisibleThreadId);
+
+  /** Whether at most one thread can exist in this context (Task + not observing, or Task + observing a user). */
+  singleThreadContext = computed(() => canThreadExist(this.itemData().item, this.observationInfo()));
+
+  // --- Data fetching (using fetchList utility) ---
+
+  private noObservationParams = computed(() => (this.isObserving() ? null : { item: this.item() }));
+
+  private myThreads = fetchList(this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: true }));
+  myThreadsState = this.myThreads.state;
+  refreshMyThreads = this.myThreads.refresh;
+
+  private othersThreads = fetchList(this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: false }));
+  othersThreadsState = this.othersThreads.state;
+  refreshOthersThreads = this.othersThreads.refresh;
+
+  private observedGroupParams = computed(() => {
+    const observationInfo = this.observationInfo();
+    if (!observationInfo) return null;
+    return { item: this.item(), groupId: observationInfo.route.id };
+  });
+
+  private observedGroupThreads = fetchList(this.observedGroupParams, ({ item, groupId }) =>
+    this.getThreadService.get(item.id, { watchedGroupId: groupId }),
+  );
+  observedGroupThreadsState = this.observedGroupThreads.state;
+  refreshObservedGroupThreads = this.observedGroupThreads.refresh;
+
+  // --- Single-thread info (state + context for dispatch) ---
+
+  /** Combined state and context for the single-thread placeholder. */
+  singleThreadInfo = computed((): SingleThreadInfo => {
+    if (!this.singleThreadContext()) return { state: 'none' };
+
+    const itemData = this.itemData();
+    const item = itemData.item;
+    const observationInfo = this.observationInfo();
+
+    const userProfile = this.userProfile();
+    if (!userProfile) throw new Error('Forum should not be shown for unauthenticated users');
+
+    const participantId = observationInfo ? observationInfo.route.id : userProfile.groupId;
+    const context: ThreadContext = { participantId, itemId: item.id, title: item.string.title, route: itemData.route };
+    const canOpen = canOpenThread(item, observationInfo);
+
+    const threadData = this.isObserving() ? this.observedGroupThreadsState() : this.myThreadsState();
+
+    // When user can open the thread directly, don't wait for fetch — return immediately so the
+    // effect dispatches without delay. The state may temporarily be 'not-started-can-start' until
+    // fetch completes and reveals it should be 'started'. This is acceptable as both trigger auto-show.
+    if (canOpen) {
+      const hasStartedThread = threadData?.isReady && threadData.data.some(t => t.status !== 'not_started');
+      return { state: hasStartedThread ? 'started' : 'not-started-can-start', context };
     }
-  }
 
-  ngOnInit(): void {
-    this.url$.pipe(
-      withLatestFrom(this.store.select(fromObservation.selectObservedGroupId)),
-      first(),
-    ).subscribe(([ url, observedGroupId ]) => {
-      if (observedGroupId || url.endsWith(ForumTabUrls.Group)) {
-        this.selected$.next(2);
-        return;
-      } else if (this.itemData?.currentResult?.validated || url.endsWith(ForumTabUrls.Others)) {
-        this.selected$.next(1);
-        return;
+    // Otherwise, wait for fetch data to determine if a thread exists
+    if (!threadData || threadData.isFetching) return { state: 'fetching', context };
+    if (threadData.isError) return { state: 'error', context };
+
+    const hasStartedThread = threadData.data?.some(t => t.status !== 'not_started') ?? false;
+    return { state: hasStartedThread ? 'started' : 'not-started-cannot-start', context };
+  });
+
+  constructor() {
+    // Auto-show thread when conditions are met
+    effect(() => {
+      const info = this.singleThreadInfo();
+      if (info.state === 'started' || info.state === 'not-started-can-start') {
+        this.dispatchShowThread(info.context);
       }
-      this.selected$.next(0);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.item$.complete();
-    this.selected$.complete();
-    this.refresh$.complete();
-  }
-
-  onChange(selected: number, options: typeof OPTIONS): void {
-    if (!this.itemData) {
-      throw new Error('Unexpected: Missed item data');
-    }
-    this.selected$.next(selected);
-    const selectedOption = options[selected];
-    if (!selectedOption) {
-      throw new Error('Unexpected: Missed selected option');
-    }
-    void this.router.navigate([ `.${ selectedOption.value }` ], { relativeTo: this.activatedRoute });
-  }
-
-  refresh(): void {
-    this.refresh$.next();
   }
 
   hideThreadPanel(): void {
@@ -153,9 +132,19 @@ export class ItemForumComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   showThreadPanel(id: ThreadId, item: { title: string, route: RawItemRoute }): void {
-    this.store.dispatch(
-      fromForum.forumThreadListActions.showAsCurrentThread({ id, item })
-    );
+    this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({ id, item }));
   }
 
+  /** Re-show the single thread panel (used by the placeholder button). */
+  showSingleThread(): void {
+    const info = this.singleThreadInfo();
+    if (info.state !== 'none') this.dispatchShowThread(info.context);
+  }
+
+  private dispatchShowThread(context: ThreadContext): void {
+    this.store.dispatch(fromForum.forumThreadListActions.showAsCurrentThread({
+      id: { participantId: context.participantId, itemId: context.itemId },
+      item: { title: context.title, route: context.route },
+    }));
+  }
 }

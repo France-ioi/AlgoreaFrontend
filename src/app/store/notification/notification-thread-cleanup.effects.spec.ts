@@ -154,34 +154,6 @@ describe('clearNotificationsOnThreadShownEffect', () => {
     });
   });
 
-  it('handles itemPageActions.changeCurrentThreadId', done => {
-    testScheduler.run(({ hot, cold }) => {
-      const notification = createForumNotification('p1', 'i1', 100);
-      notificationServiceSpy.deleteNotification.and.callFake(() => cold('-a|', { a: undefined }));
-
-      const actions$ = hot('-a---|', {
-        a: fromForum.itemPageActions.changeCurrentThreadId({
-          id: { participantId: 'p1', itemId: 'i1' },
-          item: { route: itemRoute('activity', 'i1'), title: 'Test' },
-        }),
-      });
-      const notificationsState$ = cold('a----|', {
-        a: readyState([ notification ]),
-      });
-      const store$ = { select: () => notificationsState$ } as never;
-
-      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy)
-        .pipe(toArray())
-        .subscribe({
-          next: actions => {
-            expect(actions.length).toEqual(1);
-            expect(actions[0]).toEqual(notificationApiActions.notificationDeleted({ sk: 100 }));
-            done();
-          },
-        });
-    });
-  });
-
   it('still dispatches notificationDeleted when delete API fails', done => {
     testScheduler.run(({ hot, cold }) => {
       const notification = createForumNotification('p1', 'i1', 100);

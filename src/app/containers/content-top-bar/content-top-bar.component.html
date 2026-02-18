@@ -48,15 +48,6 @@
   <div class="right-pane">
     <alg-time-limited-content-info></alg-time-limited-content-info>
     <alg-observation-bar></alg-observation-bar>
-    @if (hasForumThreadConfigured$ | ngrxPush) {
-      <button
-        class="size-s"
-        alg-button-icon
-        type="button"
-        icon="ph-duotone ph-chats-circle"
-        (click)="toggleDiscussionPanelVisibility()"
-      ></button>
-    }
     @if (navigationNeighbors$ | async; as navigationNeighbors) {
       <alg-neighbor-widget
         class="neighbor-widget margin-left"

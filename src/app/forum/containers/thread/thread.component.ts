@@ -47,10 +47,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { isMessageEvent } from '../../models/thread-events';
 import { v4 as uuidv4 } from 'uuid';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
-import { ThreadUserIndicatorComponent } from '../thread-user-indicator/thread-user-indicator.component';
+import { IndicatorLayout, ThreadTopIndicatorComponent } from '../thread-top-indicator/thread-top-indicator.component';
 import { fromForum as forumActions } from '../../store';
 import { mergeEvents, ThreadEvent } from '../../models/thread-events';
-import { computed, signal } from '@angular/core';
+import { computed, input, signal } from '@angular/core';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
@@ -80,7 +80,7 @@ const selectThreadInfo = createSelector(
     ButtonComponent,
     AutoResizeDirective,
     TooltipDirective,
-    ThreadUserIndicatorComponent,
+    ThreadTopIndicatorComponent,
     LoadingComponent,
     ErrorComponent,
   ]
@@ -89,6 +89,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   private config = inject(APPCONFIG);
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
   @ViewChild('messageToSendEl') messageToSendEl?: ElementRef<HTMLTextAreaElement>;
+
+  indicatorLayout = input<IndicatorLayout>('default');
 
   form = this.fb.nonNullable.group({
     messageToSend: [ '' ],

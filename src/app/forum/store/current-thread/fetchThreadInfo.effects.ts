@@ -4,7 +4,7 @@ import { switchMap, map, distinctUntilChanged, filter, withLatestFrom, EMPTY } f
 import { ThreadService } from 'src/app/data-access/thread.service';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { forumThreadListActions, itemPageActions, notificationActions, threadPanelActions } from './current-thread.actions';
+import { forumThreadListActions, notificationActions, threadPanelActions } from './current-thread.actions';
 import { areSameThreads } from '../../models/threads';
 import { Store } from '@ngrx/store';
 import { fromForum } from '..';
@@ -17,7 +17,7 @@ export const fetchThreadInfoEffect = createEffect(
     threadHttpService = inject(ThreadService),
     config = inject(APPCONFIG),
   ) => (config.featureFlags.enableForum ? actions$.pipe(
-    ofType(forumThreadListActions.showAsCurrentThread, itemPageActions.changeCurrentThreadId, notificationActions.showThread),
+    ofType(forumThreadListActions.showAsCurrentThread, notificationActions.showThread),
     map(({ id }) => id),
     distinctUntilChanged(areSameThreads),
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(

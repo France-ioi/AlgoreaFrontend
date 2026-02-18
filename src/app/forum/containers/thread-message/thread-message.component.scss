@@ -9,7 +9,7 @@
     .bubble {
       color: var(--alg-secondary-color);
       border-radius: 0 functions.toRem(8) functions.toRem(8) functions.toRem(8);
-      background-color: var(--alg-white-color);
+      background-color: var(--thread-left-bubble-bg, var(--alg-white-color));
 
       &:before {
         content: '';
@@ -19,7 +19,7 @@
         width: 0;
         height: 0;
         border-width: 0 functions.toRem(6) functions.toRem(6) 0;
-        border-color: transparent var(--alg-white-color) transparent transparent;
+        border-color: transparent var(--thread-left-bubble-bg, var(--alg-white-color)) transparent transparent;
         border-style: solid;
         border-radius: functions.toRem(2) 0 0;
       }

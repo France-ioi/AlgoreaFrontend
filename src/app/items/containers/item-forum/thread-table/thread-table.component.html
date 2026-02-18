@@ -1,0 +1,131 @@
+@let currentState = state();
+
+@if (currentState?.isFetching && !currentState?.data) {
+  <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+}
+@if (currentState?.isError) {
+  <alg-error
+    class="alg-flex-1"
+    icon="ph-duotone ph-warning-circle"
+    i18n-message message="Unable to load the threads"
+    i18n-buttonCaption buttonCaption="Retry"
+    [showRefreshButton]="true"
+    (refresh)="onRefresh()"
+  ></alg-error>
+}
+@if (filteredData(); as data) {
+  <div class="table-header">
+    <ng-content select="[tableTitle]"></ng-content>
+    <div class="table-actions">
+      @if (hasClosedThreads()) {
+        <span class="toggle-label">
+          <alg-switch class="small-switch" (change)="showClosedThreads.set($event)"></alg-switch>
+          <span i18n>Show closed</span>
+        </span>
+      }
+      <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="onRefresh()" i18n>
+        Refresh
+      </button>
+    </div>
+  </div>
+  <div class="alg-table-page-wrapper">
+    <div class="alg-table-horizontal-scroll">
+      <table class="alg-table-v2">
+        <thead>
+          @if (data.length > 0) {
+            <tr class="alg-table-header-tr">
+              @if (itemData().item.type !== 'Task') {
+                <th class="alg-table-th" i18n>Content</th>
+              }
+              @if (showUserColumn()) {
+                <th class="alg-table-th" i18n>User</th>
+              }
+              @if (showClosedThreads()) {
+                <th class="alg-table-th" i18n>Status</th>
+              }
+              <th class="alg-table-th" i18n># msgs</th>
+              <th class="alg-table-th" i18n>Latest update</th>
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (thread of data; track thread.participant.id + thread.item.id) {
+            @let threadItemRoute = getThreadItemRoute(thread);
+            <tr
+              class="alg-table-body-tr selectable-row"
+              [class.selected]="isThreadVisible(thread)"
+              tabindex="0"
+              (click)="onToggleThread(thread, threadItemRoute)"
+              (keydown.enter)="onToggleThread(thread, threadItemRoute)"
+              (keydown.space)="onToggleThread(thread, threadItemRoute); $event.preventDefault()"
+            >
+              @if (itemData().item.type !== 'Task') {
+                <td class="alg-table-td">
+                  <a class="alg-link" [ngClass]="{'disabled': !thread.item}"
+                    [routerLink]="threadItemRoute | with: getParticipantObservationParam(thread) | url"
+                    (click)="$event.stopPropagation()">
+                    {{ thread.item.title }}
+                  </a>
+                </td>
+              }
+              @if (showUserColumn()) {
+                <td class="alg-table-td">
+                  <a class="alg-link" [routerLink]="{ id: thread.participant.id, isUser: true } | groupLink"
+                    (click)="$event.stopPropagation()">
+                    {{ thread.participant | userCaption }}
+                  </a>
+                </td>
+              }
+              @if (showClosedThreads()) {
+                <td class="alg-table-td">{{ thread.status | threadStatusDisplay }}</td>
+              }
+              <td class="alg-table-td">{{ thread.messageCount }}</td>
+              <td class="alg-table-td">{{ thread.latestUpdateAt | date:'short' }}</td>
+            </tr>
+          } @empty {
+            <tr class="alg-table-body-tr">
+              <td class="alg-table-td empty-td" [attr.colspan]="5">
+                <div class="empty-message">
+                  @switch (threadListType()) {
+                    @case ('mine') {
+                      @if (itemData().item.type === 'Chapter') {
+                        <span i18n>
+                          You have not requested any help for activities in this chapter.
+                        </span>
+                      }
+                      @else if (itemData().item.type === 'Task') {
+                        @if (itemData().item.permissions.canRequestHelp) {
+                          <span i18n>
+                            You have not requested any help for this activity.
+                          </span>
+                        } @else {
+                          <span i18n>You do not have permission to ask for help on this activity.</span>
+                        }
+                      }
+                    }
+                    @case ('others') {
+                      <span i18n>You don't have access to any help request for this activity.</span>
+                      <span i18n>
+                        You may only view requests attached to content you have already
+                        validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted
+                        to members of specific groups.
+                      </span>
+                    }
+                    @case ('observed') {
+                      <span i18n>You don't have access to any help request for that group/user on this activity.</span>
+                      <span i18n>
+                        You may only view requests attached to content you have already
+                        validated, unless you have been granted the "observing" permission on that content. Some requests may also be restricted
+                        to members of specific groups.
+                      </span>
+                    }
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

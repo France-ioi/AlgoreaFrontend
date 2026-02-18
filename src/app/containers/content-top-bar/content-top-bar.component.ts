@@ -7,11 +7,10 @@ import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.se
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
-import { LetDirective, PushPipe } from '@ngrx/component';
+import { LetDirective } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromForum } from 'src/app/forum/store';
 import { TabService } from '../../services/tab.service';
 import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
@@ -35,7 +34,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     TimeLimitedContentInfoComponent,
     NeighborWidgetComponent,
     AsyncPipe,
-    PushPipe,
     ButtonIconComponent,
   ]
 })
@@ -49,8 +47,6 @@ export class ContentTopBarComponent {
 
   @Input() showBreadcrumbs = true;
   @Input() showLeftMenuOpener = false;
-
-  hasForumThreadConfigured$ = this.store.select(fromForum.selectHasCurrentThread);
 
   isItemContentActive = this.store.selectSignal(fromItemContent.selectIsItemContentActive);
   title = this.store.selectSignal(fromCurrentContent.selectTitle);
@@ -71,10 +67,6 @@ export class ContentTopBarComponent {
   readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
-
-  toggleDiscussionPanelVisibility(): void {
-    this.store.dispatch(fromForum.topBarActions.toggleCurrentThreadVisibility());
-  }
 
   showLeftMenu(): void {
     this.layoutService.toggleLeftMenu(true);

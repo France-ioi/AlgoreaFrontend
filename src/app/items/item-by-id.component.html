@@ -150,10 +150,35 @@
                 i18n-message message="You are not allowed to view this content."
               ></alg-error>
             } @else {
-              <alg-item-forum class="alg-flex-1" [itemData]="itemData"></alg-item-forum>
+              <alg-item-forum class="alg-flex-1" [itemData]="itemData!"></alg-item-forum>
             }
           }
         </div>
+        @if (isThreadInline$ | async) {
+          <div class="inline-thread-panel">
+            <div class="inline-thread-actions">
+              @if (previousContentRoute(); as prev) {
+                <a
+                  type="button"
+                  class="inline-thread-back size-s stroke"
+                  alg-button
+                  icon="ph ph-arrow-bend-up-left"
+                  [routerLink]="prev.route | url: prev.page"
+                  i18n
+                  >Back to previous content
+                </a>
+              }
+              <button
+                class="inline-thread-close"
+                type="button"
+                icon="ph ph-x"
+                alg-button-icon
+                (click)="closeThread()"
+              ></button>
+            </div>
+            <alg-thread class="inline-thread" [indicatorLayout]="previousContentRoute() ? 'inline-with-back' : 'inline'"></alg-thread>
+          </div>
+        }
       </ng-container>
     </ng-container>
   }

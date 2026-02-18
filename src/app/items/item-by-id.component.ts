@@ -2,6 +2,7 @@ import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/co
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
+  delay,
   distinctUntilChanged,
   filter,
   map,
@@ -36,7 +37,7 @@ import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
-import { allowsWatchingAnswers, AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
+import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
 import { ItemForumComponent } from './containers/item-forum/item-forum.component';
 import { ItemDependenciesComponent } from './containers/item-dependencies/item-dependencies.component';
 import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
@@ -46,6 +47,9 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ItemTaskEditComponent } from './containers/item-task-edit/item-task-edit.component';
 import { AnswerAuthorIndicatorComponent } from './containers/answer-author-indicator/answer-author-indicator.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
+import { ThreadComponent } from 'src/app/forum/containers/thread/thread.component';
+import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { LetDirective } from '@ngrx/component';
 import { TabBarComponent } from 'src/app/ui-components/tab-bar/tab-bar.component';
 import { ItemPermissionsComponent } from './containers/item-permissions/item-permissions.component';
@@ -53,18 +57,16 @@ import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/acc
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { fromForum } from '../forum/store';
+import { fromForum, isThreadInline } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
 import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
-import { isUser } from '../models/routing/group-route';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { createSelector } from '@ngrx/store';
-import { areSameThreads } from '../forum/models/threads';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
 const selectState = createSelector(
@@ -106,6 +108,9 @@ const selectState = createSelector(
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
     ButtonComponent,
+    ThreadComponent,
+    ButtonIconComponent,
+    RouteUrlPipe,
   ]
 })
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
@@ -156,6 +161,17 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
   readonly observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
+  readonly isThreadInline$ = combineLatest([
+    this.store.select(fromForum.selectThreadInlineContext),
+    this.userSessionService.userProfile$,
+  ]).pipe(
+    map(([ context, userProfile ]) => isThreadInline(context, userProfile.groupId)),
+    distinctUntilChanged(),
+    // Emit true immediately, but delay false by 300ms so the global panel
+    // doesn't flash during quick inline→inline transitions between items.
+    switchMap(value => (value ? of(true) : of(false).pipe(delay(300)))),
+  );
+  readonly previousContentRoute = this.store.selectSignal(fromForum.selectPreviousContentRoute);
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
   readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
@@ -286,27 +302,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       map(({ display }) => display),
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
-    // configuring the forum parameters (if the user can open it on this content for the potentially observed group)
-    combineLatest([
-      this.itemState$,
-      this.userProfile$,
-      this.store.select(fromObservation.selectObservedGroupRoute),
-      this.initialAnswerDataSource.answer$
-    ]).pipe(
-      map(([ state, userProfile, observedGroupRoute, answer ]) => {
-        if (userProfile.tempUser) return null;
-        if (!state.data || !isATask(state.data.item)) return null;
-        const item = { title: state.data.item.string.title, route: state.data.route };
-        if (answer) return { id: { participantId: answer.participantId, itemId: answer.itemId }, item };
-        if (observedGroupRoute && (!allowsWatchingAnswers(state.data.item.permissions) || !isUser(observedGroupRoute))) return null;
-        if (!observedGroupRoute && !state.data.item.permissions.canRequestHelp) return null;
-        const id = { participantId: observedGroupRoute ? observedGroupRoute.id : userProfile.groupId, itemId: state.data.item.id };
-        return { id, item } ;
-      }),
-      filter(isNotNull), // leave the forum as it is if no new value
-      distinctUntilChanged((x, y) => areSameThreads(x.id, y.id)),
-    ).subscribe(thread => this.store.dispatch(fromForum.itemPageActions.changeCurrentThreadId(thread))),
-
     this.saveBeforeUnloadError$.pipe(
       filter(isError => isError),
       switchMap(() => this.confirmationModalService.open({
@@ -376,6 +371,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   skipBeforeUnload(): void {
     this.skipBeforeUnload$.next();
+  }
+
+  closeThread(): void {
+    this.store.dispatch(fromForum.forumThreadListActions.hideCurrentThread());
   }
 
   navigateToDefaultTab(route: RawItemRoute): void {

@@ -31,8 +31,12 @@
   padding: functions.toRem(16) functions.toRem(6);
   overflow-y: auto;
 
-  &.with-user-indicator {
+  &.with-top-indicator {
     padding-top: functions.toRem(70);
+  }
+
+  &.with-top-indicator-below-actions {
+    padding-top: functions.toRem(106);
   }
 }
 

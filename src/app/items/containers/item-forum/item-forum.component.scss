@@ -6,20 +6,10 @@
   padding: 0 0 var(--alg-space-size-4) 0;
 }
 
-.operation-buttons {
-  margin-top: var(--alg-space-size-4);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: functions.toRem(13);
+.section-title {
+  margin: 0;
 }
 
-.empty-message {
-  padding: functions.toRem(12) 0;
-}
-
-.chat-icon {
-  margin: 0 0.2rem;
-  color: var(--alg-primary-color);
-  font-size: functions.toRem(18);
+.section-spaced {
+  margin-top: functions.toRem(32);
 }

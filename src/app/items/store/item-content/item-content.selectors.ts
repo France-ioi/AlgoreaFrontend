@@ -30,7 +30,8 @@ interface UserContentSelectors<T extends RootState> {
    */
   selectActiveContentPage: MemoizedSelector<T, string[]|null>,
   /**
-   * If the content is an item and there is no route error: the item id
+   * If the content is an item: the item id.
+   * Warning: this may return an id even when the route is in error state
    */
   selectActiveContentId: MemoizedSelector<T, string|null>,
   /**
@@ -110,8 +111,8 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   );
 
   const selectActiveContentId = createSelector(
-    selectActiveContentRoute,
-    route => (route ? route.id : null)
+    selectActiveContentRouteParsingResultRoute,
+    route => (route ? route.id ?? null : null)
   );
 
   const selectActiveContentObservedGroup = createSelector(

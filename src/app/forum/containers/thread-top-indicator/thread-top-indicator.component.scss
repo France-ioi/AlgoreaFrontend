@@ -4,7 +4,19 @@
   width: 100%;
   position: absolute;
   top: functions.toRem(8);
-  z-index: 999;
+  z-index: 0;
+
+  // When inlined without back button: leave room for the close button
+  &.layout-inline {
+    .user-indicator {
+      margin-right: functions.toRem(48);
+    }
+  }
+
+  // When inlined with back button: position below the action buttons
+  &.layout-inline-with-back {
+    top: functions.toRem(44);
+  }
 }
 
 .user-indicator {
@@ -15,23 +27,9 @@
   align-items: flex-start;
   gap: functions.toRem(6);
   border-radius: functions.toRem(12);
-  background-color: var(--alg-observation-button-bg-color);
+  background-color: var(--alg-primary-light-color, #dfe6f7);
   color: var(--alg-secondary-color);
   font-size: functions.toRem(12);
-}
-
-.helping-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.helping-text {
-  white-space: nowrap;
-}
-
-.user-indicator-link {
-  margin-left: functions.toRem(4);
 }
 
 .follow-toggle {

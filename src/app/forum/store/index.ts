@@ -9,11 +9,14 @@ import * as websocketIncomingMessageEffects from './current-thread/websocket-inc
 import * as followStatusEffects from './current-thread/follow-status.effects';
 import { getCurrentThreadSelectors } from './current-thread/current-thread.selectors';
 import {
-  topBarActions, forumThreadListActions, threadPanelActions, itemPageActions, notificationActions
+  forumThreadListActions, threadPanelActions, notificationActions
 } from './current-thread/current-thread.actions';
 import { FunctionalEffect } from '@ngrx/effects';
 import { eventFetchingActions } from './current-thread/event-fetching.actions';
 import { followStatusUiActions } from './current-thread/follow-status.actions';
+import { createSelectThreadInlineContext } from './thread-inline.selectors';
+
+export { isThreadInline } from './thread-inline.selectors';
 
 export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...fetchThreadInfoEffects,
@@ -25,18 +28,19 @@ export const forumEffects = (): Record<string, FunctionalEffect> => ({
   ...followStatusEffects,
 });
 
+const forumFeature = createFeature({
+  name: 'forum',
+  reducer,
+  extraSelectors: ({ selectForumState }) => ({
+    ...getCurrentThreadSelectors(selectForumState)
+  })
+});
+
 export const fromForum = {
-  ...createFeature({
-    name: 'forum',
-    reducer,
-    extraSelectors: ({ selectForumState }) => ({
-      ...getCurrentThreadSelectors(selectForumState)
-    })
-  }),
-  topBarActions,
+  ...forumFeature,
+  selectThreadInlineContext: createSelectThreadInlineContext(forumFeature.selectVisibleThreadId),
   forumThreadListActions,
   threadPanelActions,
-  itemPageActions,
   eventFetchingActions,
   notificationActions,
   followStatusUiActions,

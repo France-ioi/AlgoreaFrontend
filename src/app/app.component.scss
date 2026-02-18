@@ -41,12 +41,8 @@
   top: 0;
   background-color: var(--alg-light-bg-color);
 
-  transition: right var(--right-thread-animation);
-  -webkit-transition: right var(--right-thread-animation);
-  -moz-transition: right var(--right-thread-animation);
-  -o-transition: right var(--right-thread-animation);
-
-  &.collapsed {
+  &.collapsed,
+  &.inline-mode {
    right: calc(0rem - var(--right-thread-width));
   }
 }
@@ -66,10 +62,10 @@
   -moz-box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
 
   &.animated {
-    transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
-    -webkit-transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
-    -moz-transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
-    -o-transition: margin-left var(--left-menu-animation), margin-right var(--right-thread-animation);
+    transition: margin-left var(--left-menu-animation);
+    -webkit-transition: margin-left var(--left-menu-animation);
+    -moz-transition: margin-left var(--left-menu-animation);
+    -o-transition: margin-left var(--left-menu-animation);
   }
 
   &.collapsed {
@@ -95,6 +91,10 @@
   flex-direction: column;
   position: relative;
   overflow-y: auto;
+
+  &.with-inline-thread {
+    margin-right: var(--right-thread-width);
+  }
 }
 
 .main-content {
