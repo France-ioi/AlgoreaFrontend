@@ -8,14 +8,14 @@ import { NotificationBellComponent } from '../notification-bell/notification-bel
 import { TopRightMenuComponent } from '../top-right-menu/top-right-menu.component';
 import { NgClass } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
-import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { APPCONFIG } from 'src/app/config';
 
 @Component({
   selector: 'alg-top-right-controls',
   templateUrl: './top-right-controls.component.html',
   styleUrls: [ './top-right-controls.component.scss' ],
-  imports: [ LetDirective, NgClass, TopRightMenuComponent, LanguagePickerComponent, ButtonIconComponent, NotificationBellComponent ]
+  imports: [ LetDirective, NgClass, TopRightMenuComponent, LanguagePickerComponent, ButtonComponent, NotificationBellComponent ]
 })
 export class TopRightControlsComponent implements OnInit {
   private sessionService = inject(UserSessionService);

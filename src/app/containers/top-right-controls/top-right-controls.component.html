@@ -9,10 +9,12 @@
       <alg-language-picker class="lang-button"></alg-language-picker>
     }
     <button
-      icon="ph-bold ph-power"
+      class="large-icon sign-in-button"
+      icon="ph-fill ph-user-circle"
       (click)="login()"
-      alg-button-icon
+      alg-button
       [disabled]="isLoginButtonClicked()"
-    ></button>
+      i18n
+    >Sign in</button>
   }
 </div>
