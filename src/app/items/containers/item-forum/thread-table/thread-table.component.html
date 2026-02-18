@@ -13,8 +13,14 @@
     (refresh)="onRefresh()"
   ></alg-error>
 }
-@if (currentState?.data; as data) {
+@if (filteredData(); as data) {
   <div class="operation-buttons">
+    @if (hasClosedThreads()) {
+      <span class="toggle-label">
+        <alg-switch class="small-switch" (change)="showClosedThreads.set($event)"></alg-switch>
+        <span i18n>Show closed</span>
+      </span>
+    }
     <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="onRefresh()" i18n>
       Refresh
     </button>
@@ -31,7 +37,9 @@
               @if (showUserColumn()) {
                 <th class="alg-table-th" i18n>User</th>
               }
-              <th class="alg-table-th" i18n>Status</th>
+              @if (showClosedThreads()) {
+                <th class="alg-table-th" i18n>Status</th>
+              }
               <th class="alg-table-th" i18n># msgs</th>
               <th class="alg-table-th" i18n>Latest update</th>
             </tr>
@@ -65,7 +73,9 @@
                   </a>
                 </td>
               }
-              <td class="alg-table-td">{{ thread.status | threadStatusDisplay }}</td>
+              @if (showClosedThreads()) {
+                <td class="alg-table-td">{{ thread.status | threadStatusDisplay }}</td>
+              }
               <td class="alg-table-td">{{ thread.messageCount }}</td>
               <td class="alg-table-td">{{ thread.latestUpdateAt | date:'short' }}</td>
             </tr>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass, DatePipe } from '@angular/common';
 import { FetchState } from 'src/app/utils/state';
@@ -11,6 +11,7 @@ import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { ItemData } from 'src/app/items/models/item-data';
 import { ItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadId } from 'src/app/forum/models/threads';
@@ -34,6 +35,7 @@ export type ThreadListType = 'mine' | 'others' | 'observed';
     ThreadStatusDisplayPipe,
     ButtonComponent,
     ItemRouteWithExtraPipe,
+    SwitchComponent,
   ]
 })
 export class ThreadTableComponent {
@@ -46,6 +48,20 @@ export class ThreadTableComponent {
   refresh = output<void>();
   showThread = output<{ id: ThreadId, item: { title: string, route: RawItemRoute } }>();
   hideThread = output<void>();
+
+  showClosedThreads = signal(false);
+
+  filteredData = computed(() => {
+    const data = this.state()?.data;
+    if (!data) return undefined;
+    if (this.showClosedThreads()) return data;
+    return data.filter(t => t.status !== 'closed');
+  });
+
+  hasClosedThreads = computed(() => {
+    const data = this.state()?.data;
+    return data?.some(t => t.status === 'closed') ?? false;
+  });
 
   onRefresh(): void {
     this.refresh.emit();

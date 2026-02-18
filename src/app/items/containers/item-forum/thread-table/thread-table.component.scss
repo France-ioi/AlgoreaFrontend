@@ -8,7 +8,17 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: functions.toRem(12);
   margin-bottom: functions.toRem(13);
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(6);
+  font-size: functions.toRem(13);
+  color: var(--alg-secondary-color, #616f82);
+  cursor: pointer;
 }
 
 .selectable-row {
