@@ -171,6 +171,17 @@
     }
   }
 
+  &.large-icon {
+    padding-left: functions.toRem(12);
+    padding-right: functions.toRem(2);
+    gap: functions.toRem(4);
+
+    .icon {
+      font-size: functions.toRem(26);
+      margin-left: 0;
+    }
+  }
+
   &.no-caption {
     padding: 0 functions.toRem(12);
 
