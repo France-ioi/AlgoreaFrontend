@@ -22,7 +22,7 @@ import { fromRouter, RouterSerializer } from './app/store/router';
 import { fromGroupContent, groupStoreEffects } from './app/groups/store';
 import { fromWebsocket, websocketEffects } from './app/store/websocket';
 import { fromItemContent, itemStoreEffects } from './app/items/store';
-import { fromSelectedContent, selectedContentEffects } from './app/store/navigation';
+import { analyticsTrackingEffects, fromSelectedContent, selectedContentEffects } from './app/store/navigation';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
 import { fromTimeOffset } from './app/store/time-offset';
 import {
@@ -97,6 +97,7 @@ bootstrapApplication(AppComponent, {
       groupStoreEffects(),
       itemStoreEffects(),
       selectedContentEffects,
+      analyticsTrackingEffects,
       configEffects,
       notificationEffects,
       notificationWebsocketEffects,
