@@ -108,6 +108,11 @@ export class ItemContentPage {
     await expect.soft(this.itemChildrenEditFormLocator).toBeVisible();
   }
 
+  async checksIsLoginWallVisible(): Promise<void> {
+    await expect.soft(this.page.getByText('Access hundreds of learning activities for free')).toBeVisible();
+    await expect.soft(this.page.getByText('Sign up or Log in')).toBeVisible();
+  }
+
   async checksIsChapterNoAccessMessageVisible(): Promise<void> {
     await expect.soft(
       this.page.getByText('You are not connected and cannot access the content of this chapter.')
