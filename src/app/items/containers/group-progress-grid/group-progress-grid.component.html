@@ -110,7 +110,7 @@
                       <td
                         class="alg-table-td cursor-pointer user-progress-td"
                         [class.active-cell]="activeCell()?.rowId === row.id && activeCell()?.colIndex === colIndex"
-                        (click)="showProgressDetail(rowData, row, col, colIndex)"
+                        (click)="showProgressDetail(row, col, colIndex)"
                         [cdkMenuTriggerFor]="menu"
                         [cdkMenuPosition]="progressDetailMenuPositions()"
                         data-testid="user-progress-tooltip-target"
