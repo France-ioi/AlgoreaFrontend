@@ -5,18 +5,17 @@ import { AuthHttpService } from '../../data-access/auth.http-service';
 import { base64UrlEncode } from '../../utils/base64';
 import { APPCONFIG } from '../../config';
 import { AuthResult } from './auth-info';
-import { Location } from '@angular/common';
 
 // Use localStorage for nonce if possible localStorage is the only storage who survives a redirect in ALL browsers (also IE)
 const nonceStorage = localStorage;
 const nonceStorageKey = 'oauth_nonce';
+const redirectUriStorageKey = 'oauth_redirect_uri';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OAuthService {
   private authHttp = inject(AuthHttpService);
-  private location = inject(Location);
   private config = inject(APPCONFIG);
 
   /**
@@ -24,20 +23,20 @@ export class OAuthService {
    */
   initCodeFlow(): void {
     const state = this.createNonce();
+    const redirectUri = window.location.href;
     const loginServerUri = this.config.oauthServerUrl+'/oauth/authorize';
     const separationChar = loginServerUri.indexOf('?') > -1 ? '&' : '?';
 
     const url = loginServerUri + separationChar + 'response_type=code&scope=account&approval_prompt=auto' +
       '&client_id=' + encodeURIComponent(this.config.oauthClientId) +
       '&state=' + encodeURIComponent(state) +
-      '&redirect_uri=' + encodeURIComponent(this.appRedirectUri());
+      '&redirect_uri=' + encodeURIComponent(redirectUri);
     // should add PKCE here
     // could add '&prompt=none' here
 
-    // store state for verification after callback return
     nonceStorage.setItem(nonceStorageKey, state);
+    nonceStorage.setItem(redirectUriStorageKey, redirectUri);
 
-    // go to login page
     location.href = url;
   }
 
@@ -61,19 +60,15 @@ export class OAuthService {
     if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {
       return throwError(() => new Error('Invalid state received'));
     }
-    nonceStorage.removeItem(nonceStorageKey); // no need to store the nonce any longer
-    // the code can be used to get a token back
-    return this.authHttp.createTokenFromCode(code, this.appRedirectUri());
+    const redirectUri = nonceStorage.getItem(redirectUriStorageKey) ?? window.location.href;
+    nonceStorage.removeItem(nonceStorageKey);
+    nonceStorage.removeItem(redirectUriStorageKey);
+    return this.authHttp.createTokenFromCode(code, redirectUri);
   }
 
   logoutOnAuthServer(): void {
-    const logoutUri = this.config.oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(this.appRedirectUri());
-    // navigate
+    const logoutUri = this.config.oauthServerUrl+'/logout?' + 'redirect_uri=' + encodeURIComponent(window.location.href);
     location.href = logoutUri;
-  }
-
-  private appRedirectUri(): string {
-    return `${window.location.origin}${this.location.prepareExternalUrl('')}`;
   }
 
   private parseState(state: string): {nonce: string, userState: string} {
