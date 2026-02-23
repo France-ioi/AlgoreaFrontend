@@ -135,6 +135,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   currentFilter = this.defaultFilter;
 
   progressOverlay?: ProgressData;
+  activeCell = signal<{ rowId: string; colIndex: number } | null>(null);
   progressDataDialog?: ProgressDataDialog;
   sourceGroup?: RawGroupRoute;
 
@@ -211,7 +212,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.refresh$.complete();
   }
 
-  showProgressDetail(userProgress: Progress, row: DataRow, col: DataColumn): void {
+  showProgressDetail(userProgress: Progress, row: DataRow, col: DataColumn, colIndex: number): void {
+    this.activeCell.set({ rowId: row.id, colIndex });
     if (!this.itemData) {
       throw new Error('Unexpected: Missed item data');
     }
@@ -255,6 +257,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   hideProgressDetail(): void {
     this.progressOverlay = undefined;
+    this.activeCell.set(null);
   }
 
   fetchRows(): void {
