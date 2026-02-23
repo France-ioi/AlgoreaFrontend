@@ -12,6 +12,7 @@
 
     .alg-table-td {
       border-right: functions.toRem(1) solid var(--alg-border-color) !important;
+      border-bottom: functions.toRem(1) solid var(--alg-border-color) !important;
       background: #fff !important;
     }
   }
