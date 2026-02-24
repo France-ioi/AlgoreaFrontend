@@ -42,6 +42,12 @@ export class GetGroupProgressService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
+  readonly pageSizes = {
+    users: { default: 50, max: 1000 },
+    teams: { default: 50, max: 1000 },
+    groups: { default: 10, max: 20 },
+  } as const;
+
   getUsersProgress(
     groupId: string,
     parentItemIds: string[],
@@ -64,8 +70,15 @@ export class GetGroupProgressService {
   getTeamsProgress(
     groupId: string,
     parentItemIds: string[],
+    options?: {
+      limit?: number,
+      fromId?: string,
+    },
   ): Observable<ParticipantProgresses> {
-    const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    let params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    if (options?.limit !== undefined) params = params.set('limit', options.limit);
+    if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
+
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/team-progress`, { params: params })
       .pipe(
@@ -76,8 +89,15 @@ export class GetGroupProgressService {
   getGroupsProgress(
     groupId: string,
     parentItemIds: string[],
+    options?: {
+      limit?: number,
+      fromId?: string,
+    },
   ): Observable<GroupProgresses> {
-    const params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    let params = new HttpParams().set('parent_item_ids', parentItemIds.join(','));
+    if (options?.limit !== undefined) params = params.set('limit', options.limit);
+    if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
+
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/group-progress`, { params: params })
       .pipe(

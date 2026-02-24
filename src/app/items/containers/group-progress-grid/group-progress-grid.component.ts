@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnChanges, OnDestroy, signal, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
-import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { combineLatestWith, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
 import { Group } from 'src/app/groups/models/group';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
@@ -41,8 +41,6 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
-
-const progressListLimit = 25;
 
 export type Progress = {
   groupId: string,
@@ -135,11 +133,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   currentFilter = this.defaultFilter;
 
   progressOverlay?: ProgressData;
+  activeCell = signal<{ rowId: string, colIndex: number } | null>(null);
   progressDataDialog?: ProgressDataDialog;
   sourceGroup?: RawGroupRoute;
 
   isCSVDataFetching = false;
   canAccess = false;
+  private isRefreshing = signal(false);
 
   private itemData$ = new ReplaySubject<ItemData>(1);
   private refresh$ = new Subject<void>();
@@ -150,8 +150,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     shareReplay(1),
   );
 
+  private pageSizesForFilter(filter: TypeFilter): { default: number, max: number } {
+    return this.getGroupUsersProgressService.pageSizes[filter.toLowerCase() as Lowercase<TypeFilter>];
+  }
+
   readonly datapager = new DataPager<DataRow>({
-    pageSize: progressListLimit,
+    pageSize: this.pageSizesForFilter(this.defaultFilter).default,
+    maxPageSize: this.pageSizesForFilter(this.defaultFilter).max,
     fetch: (pageSize, latestRow?: DataRow): Observable<DataRow[]> => {
       if (!this.group || !this.itemData) throw new Error('properties are missing');
       return this.getRowsWithProgress({
@@ -168,6 +173,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   });
 
   rows$ = this.datapager.list$;
+
+  private refreshSubscription: Subscription = this.rows$.pipe(
+    filter(() => this.isRefreshing()),
+    filter(state => state.isReady || state.isError),
+  ).subscribe(state => {
+    this.isRefreshing.set(false);
+    if (state.isReady) {
+      this.actionFeedbackService.success($localize`Data refreshed successfully`);
+    }
+  });
 
   progressDetailMenuPositions = signal<ConnectedPosition[]>([
     {
@@ -209,9 +224,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.itemData$.complete();
     this.refresh$.complete();
+    this.refreshSubscription.unsubscribe();
   }
 
-  showProgressDetail(userProgress: Progress, row: DataRow, col: DataColumn): void {
+  showProgressDetail(row: DataRow, col: DataColumn, colIndex: number): void {
+    const progress = row.data[colIndex];
+    if (!progress) throw new Error('Unexpected: progress data is missing');
+    this.activeCell.set({ rowId: row.id, colIndex });
     if (!this.itemData) {
       throw new Error('Unexpected: Missed item data');
     }
@@ -221,7 +240,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     const attemptId = this.itemData.currentResult?.attemptId;
     if (!attemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
     this.progressOverlay = {
-      progress: userProgress,
+      progress,
       colItem: {
         type: col.type,
         fullRoute: itemRoute(
@@ -255,6 +274,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   hideProgressDetail(): void {
     this.progressOverlay = undefined;
+    this.activeCell.set(null);
   }
 
   fetchRows(): void {
@@ -270,11 +290,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           map(progress => progress.map(p => ({ ...p, type: 'user' }))),
         );
       case 'Teams':
-        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]).pipe(
+        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ], { limit: pageSize, fromId }).pipe(
           map(progress => progress.map(p => ({ ...p, type: 'user' }))),
         );
       case 'Groups':
-        return this.getGroupUsersProgressService.getGroupsProgress(groupId, [ itemId ])
+        return this.getGroupUsersProgressService.getGroupsProgress(groupId, [ itemId ], { limit: pageSize, fromId })
           .pipe(map(groupsProgress => groupsProgress.map(p => ({
             type: 'group',
             groupId: p.groupId,
@@ -295,10 +315,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         return this.getGroupDescendantsService.getUserDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user) }))));
       case 'Teams':
-        return this.getGroupDescendantsService.getTeamDescendants(groupId)
+        return this.getGroupDescendantsService.getTeamDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(teams => teams.map(team => ({ id: team.id, value: team.name }))));
       case 'Groups':
-        return this.getGroupChildrenService.getGroupChildren(groupId, [], [], [ 'Team', 'User' ])
+        return this.getGroupChildrenService.getGroupChildren(groupId, [], [], [ 'Team', 'User' ], { limit: pageSize, fromId })
           .pipe(map(groups => groups.map(group => ({ id: group.id, value: group.name }))));
     }
   }
@@ -326,8 +346,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   onFilterChange(typeFilter: TypeFilter): void {
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
+      const sizes = this.pageSizesForFilter(typeFilter);
+      this.datapager.setPageSize(sizes.default, sizes.max);
       this.fetchRows();
     }
+  }
+
+  refreshRows(): void {
+    this.isRefreshing.set(true);
+    this.datapager.refresh();
+    this.refresh$.next();
   }
 
   fetchMoreRows(): void {

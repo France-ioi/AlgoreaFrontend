@@ -39,11 +39,14 @@ export class GetGroupChildrenService {
     sort: string[] = [],
     typesInclude: GroupType[] = [],
     typesExclude: GroupType[] = [],
+    options?: { limit?: number, fromId?: string },
   ): Observable<GroupChild[]> {
     let params = new HttpParams();
     if (sort.length > 0) params = params.set('sort', sort.join(','));
     if (typesInclude.length > 0) params = params.set('types_include', typesInclude.join(','));
     if (typesExclude.length > 0) params = params.set('types_exclude', typesExclude.join(','));
+    if (options?.limit !== undefined) params = params.set('limit', options.limit);
+    if (options?.fromId !== undefined) params = params.set('from.id', options.fromId);
     return this.http
       .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/children`, { params: params })
       .pipe(

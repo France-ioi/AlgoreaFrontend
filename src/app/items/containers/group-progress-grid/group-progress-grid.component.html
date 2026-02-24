@@ -62,7 +62,9 @@
                   <button
                     class="size-s"
                     icon="ph ph-arrow-clockwise"
-                    (click)="fetchRows()"
+                    [class.spinning]="rowsState.isFetching"
+                    [disabled]="rowsState.isFetching"
+                    (click)="refreshRows()"
                     alg-button-icon
                   ></button>
                 </th>
@@ -109,7 +111,8 @@
                     @if (row.data[colIndex]; as rowData) {
                       <td
                         class="alg-table-td cursor-pointer user-progress-td"
-                        (click)="showProgressDetail(rowData, row, col)"
+                        [class.active-cell]="activeCell()?.rowId === row.id && activeCell()?.colIndex === colIndex"
+                        (click)="showProgressDetail(row, col, colIndex)"
                         [cdkMenuTriggerFor]="menu"
                         [cdkMenuPosition]="progressDetailMenuPositions()"
                         data-testid="user-progress-tooltip-target"
@@ -125,7 +128,7 @@
             </tbody>
           </table>
         </div>
-        @if (currentFilter === 'Users' && (datapager.canLoadMore$ | async)) {
+        @if (datapager.canLoadMore$ | async) {
           <div class="alg-table-load-more">
             <button
               alg-button
