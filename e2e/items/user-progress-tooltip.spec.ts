@@ -6,7 +6,7 @@ test('checks user progress tooltip', async ({ page }) => {
   await initAsTesterUser(page);
   await Promise.all([
     page.goto('/a/7523720120450464843;p=7528142386663912287;a=0;og=4462192261130512818/progress/chapter'),
-    page.waitForResponse(`${apiUrl}/groups/4462192261130512818/user-progress?parent_item_ids=7523720120450464843&limit=25`),
+    page.waitForResponse(`${apiUrl}/groups/4462192261130512818/user-progress?parent_item_ids=7523720120450464843&limit=50`),
   ]);
 
   await test.step('checks group progress grid is visible', async () => {
@@ -37,7 +37,7 @@ test('checks user progress tooltip', async ({ page }) => {
     await initAsUsualUser(page);
     await Promise.all([
       page.goto('/a/504065524219241180;p=694914435881177216,5,4700,4707,4702,4102,1980584647557587953,39530140456452546;a=0;og=123456/progress/chapter'),
-      page.waitForResponse(`${apiUrl}/groups/123456/user-progress?parent_item_ids=504065524219241180&limit=25`),
+      page.waitForResponse(`${apiUrl}/groups/123456/user-progress?parent_item_ids=504065524219241180&limit=50`),
     ]);
     await expect.soft(page.getByRole('heading', { name: 'Echauffement' })).toBeVisible();
     const notStartedCellLocator = cellLocator.locator('nth=3');
@@ -54,7 +54,7 @@ test('checks group progress tooltip', async ({ page }) => {
 
   await test.step('checks group progress grid is visible', async () => {
     await expect.soft(page.getByRole('heading', { name: '4LA 1ère année UE Informatique' })).toBeVisible();
-    await page.waitForResponse(`${apiUrl}/groups/140728183860941974/user-progress?parent_item_ids=899800937596940136&limit=25`);
+    await page.waitForResponse(`${apiUrl}/groups/140728183860941974/user-progress?parent_item_ids=899800937596940136&limit=50`);
     const groupProgressGridLocator = page.locator('alg-group-progress-grid');
     await expect.soft(groupProgressGridLocator).toBeVisible();
   });
