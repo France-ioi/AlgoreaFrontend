@@ -62,6 +62,8 @@
                   <button
                     class="size-s"
                     icon="ph ph-arrow-clockwise"
+                    [class.spinning]="rowsState.isFetching"
+                    [disabled]="rowsState.isFetching"
                     (click)="refreshRows()"
                     alg-button-icon
                   ></button>

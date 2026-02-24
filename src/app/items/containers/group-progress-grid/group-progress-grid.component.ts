@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnChanges, OnDestroy, signal, SimpleChanges } from '@angular/core';
-import { forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
-import { combineLatestWith, map, shareReplay, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { combineLatestWith, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
 import { Group } from 'src/app/groups/models/group';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
@@ -139,6 +139,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   isCSVDataFetching = false;
   canAccess = false;
+  private isRefreshing = signal(false);
 
   private itemData$ = new ReplaySubject<ItemData>(1);
   private refresh$ = new Subject<void>();
@@ -172,6 +173,16 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   });
 
   rows$ = this.datapager.list$;
+
+  private refreshSubscription: Subscription = this.rows$.pipe(
+    filter(() => this.isRefreshing()),
+    filter(state => state.isReady || state.isError),
+  ).subscribe(state => {
+    this.isRefreshing.set(false);
+    if (state.isReady) {
+      this.actionFeedbackService.success($localize`Data refreshed successfully`);
+    }
+  });
 
   progressDetailMenuPositions = signal<ConnectedPosition[]>([
     {
@@ -213,6 +224,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.itemData$.complete();
     this.refresh$.complete();
+    this.refreshSubscription.unsubscribe();
   }
 
   showProgressDetail(row: DataRow, col: DataColumn, colIndex: number): void {
@@ -341,6 +353,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   }
 
   refreshRows(): void {
+    this.isRefreshing.set(true);
     this.datapager.refresh();
     this.refresh$.next();
   }
