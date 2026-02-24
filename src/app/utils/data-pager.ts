@@ -1,4 +1,4 @@
-import { map, Observable, ReplaySubject, shareReplay, switchScan } from 'rxjs';
+import { map, Observable, of, ReplaySubject, shareReplay, switchMap, switchScan } from 'rxjs';
 import { errorState, fetchingState, FetchState, readyState } from '../utils/state';
 import { mapStateData, mapToFetchState } from './operators/state';
 
@@ -40,23 +40,28 @@ export class DataPager<T> {
 
         if (isReset) prev = fetchingState();
 
-        const fetchPageSize = isRefresh
-          ? Math.min(Math.max(prev.data?.list.length ?? 0, this.options.pageSize), this.options.maxPageSize ?? Infinity)
-          : this.options.pageSize;
-        const latestElement = (isReset || isRefresh) ? undefined : prev.data?.list[prev.data.list.length - 1];
+        if (isRefresh) {
+          const targetCount = Math.max(prev.data?.list.length ?? 0, this.options.pageSize);
+          const batchSize = Math.min(targetCount, this.options.maxPageSize ?? targetCount);
 
-        return this.options.fetch(fetchPageSize, latestElement).pipe(
-          mapToFetchState(),
-          map(state => {
-            if (isRefresh) {
+          return this.fetchPages(batchSize, targetCount).pipe(
+            mapToFetchState(),
+            map(state => {
               if (state.isReady) {
-                const newItems = state.data.length < fetchPageSize ? [] : state.data.slice(-this.options.pageSize);
+                const newItems = state.data.length < targetCount ? [] : state.data.slice(-this.options.pageSize);
                 return readyState({ list: state.data, newItems });
               }
               if (state.isError) return errorState(state.error);
               return fetchingState(prev.data);
-            }
+            })
+          );
+        }
 
+        const latestElement = isReset ? undefined : prev.data?.list[prev.data.list.length - 1];
+
+        return this.options.fetch(this.options.pageSize, latestElement).pipe(
+          mapToFetchState(),
+          map(state => {
             // First fetch (reset or initial load)
             if (prev.data === undefined) {
               if (state.isReady) return readyState({ list: state.data, newItems: state.data });
@@ -74,7 +79,7 @@ export class DataPager<T> {
             }
           })
         );
-      }, fetchingState() as FetchState<PagedData<T>> /* switchScan seed */
+      }, fetchingState() as FetchState<PagedData<T>>
     ),
     shareReplay(1),
   );
@@ -99,5 +104,25 @@ export class DataPager<T> {
 
   refresh(): void {
     this.trigger$.next({ type: 'refresh' });
+  }
+
+  /**
+   * Fetches multiple pages sequentially until at least `targetCount` items
+   * are accumulated, or a batch returns fewer items than `batchSize`.
+   */
+  private fetchPages(batchSize: number, targetCount: number): Observable<T[]> {
+    const fetchBatch = (accumulated: T[]): Observable<T[]> => {
+      const lastElement = accumulated.length > 0 ? accumulated[accumulated.length - 1] : undefined;
+      return this.options.fetch(batchSize, lastElement).pipe(
+        switchMap(batch => {
+          const all = [ ...accumulated, ...batch ];
+          if (batch.length < batchSize || all.length >= targetCount) {
+            return of(all);
+          }
+          return fetchBatch(all);
+        })
+      );
+    };
+    return fetchBatch([]);
   }
 }

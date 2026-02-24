@@ -195,18 +195,44 @@ describe('DataPager', () => {
       expect(fetchSpy.calls.mostRecent().args[0]).toBe(6);
     });
 
-    it('should cap refresh page size to maxPageSize', () => {
+    it('should make multiple requests when maxPageSize < totalLoaded', () => {
+      let call = 0;
+      const fetchSpy = jasmine.createSpy('fetch').and.callFake((_ps: number, last?: number) => {
+        call++;
+        if (call === 1) return of([ 1, 2, 3 ]);
+        if (call === 2) return of([ 4, 5, 6 ]);
+        // refresh: batch 1 (no last element), batch 2 (last=30)
+        if (last === undefined) return of([ 10, 20, 30 ]);
+        return of([ 40, 50, 60 ]);
+      });
+      const { pager } = createPager(fetchSpy, { pageSize: 3, maxPageSize: 3 });
+      const states = collectStates(pager.list$);
+      pager.load();
+      pager.load();
+      pager.refresh();
+      const refreshCalls = fetchSpy.calls.allArgs().slice(2);
+      expect(refreshCalls.length).toBe(2);
+      expect(refreshCalls[0]).toEqual([ 3, undefined ]);
+      expect(refreshCalls[1]).toEqual([ 3, 30 ]);
+      const lastState = states[states.length - 1]!;
+      expect(lastState.isReady).toBeTrue();
+      expect(lastState.data).toEqual([ 10, 20, 30, 40, 50, 60 ]);
+    });
+
+    it('should use single request when maxPageSize >= totalLoaded', () => {
       let call = 0;
       const fetchSpy = jasmine.createSpy('fetch').and.callFake(() => {
         call++;
-        return of(call === 1 ? [ 1, 2, 3 ] : call === 2 ? [ 4, 5, 6 ] : [ 10, 20, 30, 40 ]);
+        return of(call === 1 ? [ 1, 2, 3 ] : call === 2 ? [ 4, 5, 6 ] : [ 10, 20, 30, 40, 50, 60 ]);
       });
-      const { pager } = createPager(fetchSpy, { pageSize: 3, maxPageSize: 4 });
+      const { pager } = createPager(fetchSpy, { pageSize: 3, maxPageSize: 10 });
       collectStates(pager.list$);
       pager.load();
       pager.load();
       pager.refresh();
-      expect(fetchSpy.calls.mostRecent().args[0]).toBe(4);
+      const refreshCalls = fetchSpy.calls.allArgs().slice(2);
+      expect(refreshCalls.length).toBe(1);
+      expect(refreshCalls[0]![0]).toBe(6);
     });
 
     it('should use at least default pageSize for refresh when fewer items loaded', () => {
