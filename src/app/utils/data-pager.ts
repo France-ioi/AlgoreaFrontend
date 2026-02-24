@@ -14,6 +14,7 @@ function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
 interface PagerOptions<T> {
   fetch: (pageSize: number, lastElement?: T) => Observable<T[]>,
   pageSize: number,
+  maxPageSize?: number,
   /**
    * If an error occurs while loading more elements, we do not want the list to appear as broken.
    * The state will remain ready with old data and this callback will be triggered, allowing to display feedback
@@ -26,32 +27,48 @@ interface PagedData<T> {
   newItems: T[],
 }
 
+type TriggerAction = { type: 'loadMore' } | { type: 'reset' } | { type: 'refresh' };
+
 export class DataPager<T> {
-  private trigger$ = new ReplaySubject<{ reset: boolean }>(1);
+  private trigger$ = new ReplaySubject<TriggerAction>(1);
 
   private state$ = this.trigger$.pipe(
     switchScan(
-      (prev, { reset }): Observable<FetchState<PagedData<T>>> => {
-        prev = reset ? fetchingState() : prev;
-        const latestElement = prev.data?.list[prev.data.list.length-1];
-        return this.options.fetch(this.options.pageSize, latestElement).pipe(
+      (prev, action): Observable<FetchState<PagedData<T>>> => {
+        const isReset = action.type === 'reset';
+        const isRefresh = action.type === 'refresh';
+
+        if (isReset) prev = fetchingState();
+
+        const fetchPageSize = isRefresh
+          ? Math.min(Math.max(prev.data?.list.length ?? 0, this.options.pageSize), this.options.maxPageSize ?? Infinity)
+          : this.options.pageSize;
+        const latestElement = (isReset || isRefresh) ? undefined : prev.data?.list[prev.data.list.length - 1];
+
+        return this.options.fetch(fetchPageSize, latestElement).pipe(
           mapToFetchState(),
           map(state => {
-            // Case 1: First fetch
+            if (isRefresh) {
+              if (state.isReady) {
+                const newItems = state.data.length < fetchPageSize ? [] : state.data.slice(-this.options.pageSize);
+                return readyState({ list: state.data, newItems });
+              }
+              if (state.isError) return errorState(state.error);
+              return fetchingState(prev.data);
+            }
+
+            // First fetch (reset or initial load)
             if (prev.data === undefined) {
               if (state.isReady) return readyState({ list: state.data, newItems: state.data });
               else if (state.isError) return errorState(state.error);
               else return fetchingState();
             }
 
-            // Case 2: Additional fetch -> when loading more items
-            // Case 2a: fetching -> pass previous data with previous list
+            // Load more
             if (state.isFetching) return fetchingState(prev.data);
-            // Case 2b: error -> Mark state as ready with previous data to avoid breaking the ui state but trigger the on error callback
             else if (state.isError) {
               this.options.onLoadMoreError(state.error);
               return readyState(prev.data);
-            // Case 2c: ready -> accumulate list and return data enhanced with accumulated list (instead of only the fetch result)
             } else {
               return readyState({ list: [ ...prev.data.list, ...state.data ], newItems: state.data });
             }
@@ -68,12 +85,19 @@ export class DataPager<T> {
 
   constructor(private options: PagerOptions<T>) {}
 
+  setPageSize(pageSize: number, maxPageSize?: number): void {
+    this.options = { ...this.options, pageSize, maxPageSize };
+  }
+
   load(): void {
-    this.trigger$.next({ reset: false });
+    this.trigger$.next({ type: 'loadMore' });
   }
 
   reset(): void {
-    this.trigger$.next({ reset: true });
+    this.trigger$.next({ type: 'reset' });
   }
 
+  refresh(): void {
+    this.trigger$.next({ type: 'refresh' });
+  }
 }

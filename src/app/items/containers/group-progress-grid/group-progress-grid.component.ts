@@ -42,8 +42,6 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
-const progressListLimit = 25;
-
 export type Progress = {
   groupId: string,
   itemId: string,
@@ -151,8 +149,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     shareReplay(1),
   );
 
+  private pageSizesForFilter(filter: TypeFilter): { default: number, max: number } {
+    return this.getGroupUsersProgressService.pageSizes[filter.toLowerCase() as Lowercase<TypeFilter>];
+  }
+
   readonly datapager = new DataPager<DataRow>({
-    pageSize: progressListLimit,
+    pageSize: this.pageSizesForFilter(this.defaultFilter).default,
+    maxPageSize: this.pageSizesForFilter(this.defaultFilter).max,
     fetch: (pageSize, latestRow?: DataRow): Observable<DataRow[]> => {
       if (!this.group || !this.itemData) throw new Error('properties are missing');
       return this.getRowsWithProgress({
@@ -275,11 +278,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           map(progress => progress.map(p => ({ ...p, type: 'user' }))),
         );
       case 'Teams':
-        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ]).pipe(
+        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ], { limit: pageSize, fromId }).pipe(
           map(progress => progress.map(p => ({ ...p, type: 'user' }))),
         );
       case 'Groups':
-        return this.getGroupUsersProgressService.getGroupsProgress(groupId, [ itemId ])
+        return this.getGroupUsersProgressService.getGroupsProgress(groupId, [ itemId ], { limit: pageSize, fromId })
           .pipe(map(groupsProgress => groupsProgress.map(p => ({
             type: 'group',
             groupId: p.groupId,
@@ -300,10 +303,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         return this.getGroupDescendantsService.getUserDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user) }))));
       case 'Teams':
-        return this.getGroupDescendantsService.getTeamDescendants(groupId)
+        return this.getGroupDescendantsService.getTeamDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(teams => teams.map(team => ({ id: team.id, value: team.name }))));
       case 'Groups':
-        return this.getGroupChildrenService.getGroupChildren(groupId, [], [], [ 'Team', 'User' ])
+        return this.getGroupChildrenService.getGroupChildren(groupId, [], [], [ 'Team', 'User' ], { limit: pageSize, fromId })
           .pipe(map(groups => groups.map(group => ({ id: group.id, value: group.name }))));
     }
   }
@@ -331,8 +334,15 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   onFilterChange(typeFilter: TypeFilter): void {
     if (typeFilter !== this.currentFilter) {
       this.currentFilter = typeFilter;
+      const sizes = this.pageSizesForFilter(typeFilter);
+      this.datapager.setPageSize(sizes.default, sizes.max);
       this.fetchRows();
     }
+  }
+
+  refreshRows(): void {
+    this.datapager.refresh();
+    this.refresh$.next();
   }
 
   fetchMoreRows(): void {

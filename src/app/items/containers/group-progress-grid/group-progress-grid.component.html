@@ -62,7 +62,7 @@
                   <button
                     class="size-s"
                     icon="ph ph-arrow-clockwise"
-                    (click)="fetchRows()"
+                    (click)="refreshRows()"
                     alg-button-icon
                   ></button>
                 </th>
@@ -126,7 +126,7 @@
             </tbody>
           </table>
         </div>
-        @if (currentFilter === 'Users' && (datapager.canLoadMore$ | async)) {
+        @if (datapager.canLoadMore$ | async) {
           <div class="alg-table-load-more">
             <button
               alg-button
