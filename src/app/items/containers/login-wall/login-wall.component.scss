@@ -72,3 +72,10 @@
   color: var(--alg-secondary-color, #666);
   line-height: 1.5;
 }
+
+.login-wall-actions {
+  display: flex;
+  flex-direction: column;
+  gap: functions.toRem(12);
+  align-items: center;
+}

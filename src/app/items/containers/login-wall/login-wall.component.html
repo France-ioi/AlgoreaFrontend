@@ -21,6 +21,15 @@
         <ng-container i18n>Create an account to unlock this content and track your progress.</ng-container>
       }
     </p>
-    <button alg-button class="size-l" (click)="login()" [disabled]="isLoginButtonClicked()" i18n>Sign up or Log in</button>
+    <div class="login-wall-actions">
+      <button alg-button class="size-l" (click)="login()" [disabled]="isLoginButtonClicked()" i18n>
+        Sign up or Log in
+      </button>
+      @if (showNavButtons()) {
+        <button alg-button class="size-l secondary" type="button" (click)="goToHome()" i18n>
+          Back to home page
+        </button>
+      }
+    </div>
   </div>
 </div>
