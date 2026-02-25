@@ -73,6 +73,15 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
     }),
   );
 
+  /** Whether the current thread is the user's own thread while observation is active. */
+  isOwnThreadWhileObserving$ = combineLatest([
+    this.store.select(fromForum.selectThreadId).pipe(filter(isNotNull)),
+    this.userSessionService.userProfile$,
+    this.store.select(fromObservation.selectIsObserving),
+  ]).pipe(
+    map(([ threadId, userProfile, isObserving ]) => isObserving && threadId.participantId === userProfile.groupId),
+  );
+
   /** The participant id, for linking to their profile. */
   participantId = computed(() => this.threadHydratedId()?.id.participantId ?? null);
 
