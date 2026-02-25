@@ -33,3 +33,8 @@
   color: var(--alg-secondary-color, #94a3b8);
   opacity: 0.5;
 }
+
+.restricted-content-body {
+  flex: 1;
+  display: grid;
+}
