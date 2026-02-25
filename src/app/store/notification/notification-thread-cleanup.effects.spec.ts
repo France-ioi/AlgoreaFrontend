@@ -1,4 +1,4 @@
-import { toArray } from 'rxjs';
+import { EMPTY, toArray } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { clearNotificationsOnThreadShownEffect } from './notification-thread-cleanup.effects';
 import { notificationApiActions } from './notification.actions';
@@ -7,6 +7,7 @@ import { NotificationHttpService } from 'src/app/data-access/notification.servic
 import { readyState, fetchingState } from 'src/app/utils/state';
 import { fromForum } from 'src/app/forum/store';
 import { itemRoute } from 'src/app/models/routing/item-route';
+import { AppConfig } from 'src/app/config';
 
 const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
@@ -30,6 +31,9 @@ const createGenericNotification = (sk: number): Notification => ({
   readTime: undefined,
 });
 
+const enabledConfig = { featureFlags: { enableNotifications: true } } as AppConfig;
+const disabledConfig = { featureFlags: { enableNotifications: false } } as AppConfig;
+
 describe('clearNotificationsOnThreadShownEffect', () => {
   let notificationServiceSpy: jasmine.SpyObj<NotificationHttpService>;
 
@@ -38,6 +42,18 @@ describe('clearNotificationsOnThreadShownEffect', () => {
       'NotificationHttpService',
       ['deleteNotification']
     );
+  });
+
+  it('does nothing when enableNotifications is false', done => {
+    clearNotificationsOnThreadShownEffect(EMPTY, {} as never, notificationServiceSpy, disabledConfig)
+      .pipe(toArray())
+      .subscribe({
+        next: actions => {
+          expect(actions.length).toEqual(0);
+          expect(notificationServiceSpy.deleteNotification).not.toHaveBeenCalled();
+          done();
+        },
+      });
   });
 
   it('deletes matching notifications when thread is shown', done => {
@@ -59,7 +75,7 @@ describe('clearNotificationsOnThreadShownEffect', () => {
       });
       const store$ = { select: () => notificationsState$ } as never;
 
-      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy)
+      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy, enabledConfig)
         .pipe(toArray())
         .subscribe({
           next: actions => {
@@ -86,7 +102,7 @@ describe('clearNotificationsOnThreadShownEffect', () => {
       const notificationsState$ = cold('a|', { a: fetchingState() });
       const store$ = { select: () => notificationsState$ } as never;
 
-      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy)
+      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy, enabledConfig)
         .pipe(toArray())
         .subscribe({
           next: actions => {
@@ -114,7 +130,7 @@ describe('clearNotificationsOnThreadShownEffect', () => {
       });
       const store$ = { select: () => notificationsState$ } as never;
 
-      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy)
+      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy, enabledConfig)
         .pipe(toArray())
         .subscribe({
           next: actions => {
@@ -142,7 +158,7 @@ describe('clearNotificationsOnThreadShownEffect', () => {
       });
       const store$ = { select: () => notificationsState$ } as never;
 
-      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy)
+      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy, enabledConfig)
         .pipe(toArray())
         .subscribe({
           next: actions => {
@@ -172,7 +188,7 @@ describe('clearNotificationsOnThreadShownEffect', () => {
       });
       const store$ = { select: () => notificationsState$ } as never;
 
-      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy)
+      clearNotificationsOnThreadShownEffect(actions$, store$, notificationServiceSpy, enabledConfig)
         .pipe(toArray())
         .subscribe({
           next: actions => {

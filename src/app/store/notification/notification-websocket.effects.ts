@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, filter, map, mergeMap, of, withLatestFrom } from 'rxjs';
+import { catchError, EMPTY, filter, map, mergeMap, of, withLatestFrom } from 'rxjs';
 import { websocketClientActions } from 'src/app/store/websocket';
 import {
   isForumNewMessageNotification,
@@ -11,6 +11,7 @@ import {
 import { notificationApiActions, notificationWebsocketActions } from './notification.actions';
 import { fromForum } from 'src/app/forum/store';
 import { NotificationHttpService } from 'src/app/data-access/notification.service';
+import { APPCONFIG } from 'src/app/config';
 
 /**
  * Handles incoming WebSocket notifications.
@@ -25,7 +26,8 @@ export const notificationWebsocketEffect = createEffect(
     actions$ = inject(Actions),
     store$ = inject(Store),
     notificationService = inject(NotificationHttpService),
-  ) =>
+    config = inject(APPCONFIG),
+  ) => (config.featureFlags.enableNotifications ?
     actions$.pipe(
       ofType(websocketClientActions.messageReceived),
       filter(({ message }) => isNotificationWsMessage(message)),
@@ -51,6 +53,6 @@ export const notificationWebsocketEffect = createEffect(
         // Normal flow: add notification
         return of(notificationWebsocketActions.notificationReceived({ notification }));
       }),
-    ),
+    ) : EMPTY),
   { functional: true }
 );

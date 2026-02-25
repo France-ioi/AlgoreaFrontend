@@ -4,7 +4,8 @@ import { websocketClientActions } from 'src/app/store/websocket';
 import { notificationApiActions, notificationWebsocketActions } from './notification.actions';
 import { ForumNewMessageNotification } from 'src/app/models/notification';
 import { NotificationHttpService } from 'src/app/data-access/notification.service';
-import { of } from 'rxjs';
+import { EMPTY, of, toArray } from 'rxjs';
+import { AppConfig } from 'src/app/config';
 
 const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
@@ -21,6 +22,9 @@ const createForumNotification = (
   readTime: undefined,
 });
 
+const enabledConfig = { featureFlags: { enableNotifications: true } } as AppConfig;
+const disabledConfig = { featureFlags: { enableNotifications: false } } as AppConfig;
+
 describe('notificationWebsocketEffect', () => {
   let notificationServiceSpy: jasmine.SpyObj<NotificationHttpService>;
 
@@ -30,6 +34,17 @@ describe('notificationWebsocketEffect', () => {
       ['deleteNotification']
     );
     notificationServiceSpy.deleteNotification.and.returnValue(of(undefined));
+  });
+
+  it('does nothing when enableNotifications is false', done => {
+    notificationWebsocketEffect(EMPTY, {} as never, notificationServiceSpy, disabledConfig)
+      .pipe(toArray())
+      .subscribe({
+        next: actions => {
+          expect(actions.length).toEqual(0);
+          done();
+        },
+      });
   });
 
   it('dispatches notificationReceived when thread is not visible', done => {
@@ -43,7 +58,7 @@ describe('notificationWebsocketEffect', () => {
       const threadStatus$ = cold('a|', { a: undefined }); // No active thread
       const store$ = { select: () => threadStatus$ } as never;
 
-      notificationWebsocketEffect(actions$, store$, notificationServiceSpy).subscribe({
+      notificationWebsocketEffect(actions$, store$, notificationServiceSpy, enabledConfig).subscribe({
         next: action => {
           expect(action).toEqual(notificationWebsocketActions.notificationReceived({ notification }));
           expect(notificationServiceSpy.deleteNotification).not.toHaveBeenCalled();
@@ -67,7 +82,7 @@ describe('notificationWebsocketEffect', () => {
       });
       const store$ = { select: () => threadStatus$ } as never;
 
-      notificationWebsocketEffect(actions$, store$, notificationServiceSpy).subscribe({
+      notificationWebsocketEffect(actions$, store$, notificationServiceSpy, enabledConfig).subscribe({
         next: action => {
           expect(action).toEqual(notificationWebsocketActions.notificationReceived({ notification }));
           expect(notificationServiceSpy.deleteNotification).not.toHaveBeenCalled();
@@ -91,7 +106,7 @@ describe('notificationWebsocketEffect', () => {
       });
       const store$ = { select: () => threadStatus$ } as never;
 
-      notificationWebsocketEffect(actions$, store$, notificationServiceSpy).subscribe({
+      notificationWebsocketEffect(actions$, store$, notificationServiceSpy, enabledConfig).subscribe({
         next: action => {
           expect(action).toEqual(notificationWebsocketActions.notificationReceived({ notification }));
           expect(notificationServiceSpy.deleteNotification).not.toHaveBeenCalled();
@@ -115,7 +130,7 @@ describe('notificationWebsocketEffect', () => {
       });
       const store$ = { select: () => threadStatus$ } as never;
 
-      notificationWebsocketEffect(actions$, store$, notificationServiceSpy).subscribe({
+      notificationWebsocketEffect(actions$, store$, notificationServiceSpy, enabledConfig).subscribe({
         next: action => {
           expect(action).toEqual(notificationApiActions.notificationDeleted({ sk: 456 }));
           expect(notificationServiceSpy.deleteNotification).toHaveBeenCalledWith(456);
@@ -142,7 +157,7 @@ describe('notificationWebsocketEffect', () => {
       });
       const store$ = { select: () => threadStatus$ } as never;
 
-      notificationWebsocketEffect(actions$, store$, notificationServiceSpy).subscribe({
+      notificationWebsocketEffect(actions$, store$, notificationServiceSpy, enabledConfig).subscribe({
         next: action => {
           expect(action).toEqual(notificationApiActions.notificationDeleted({ sk: 789 }));
           done();
