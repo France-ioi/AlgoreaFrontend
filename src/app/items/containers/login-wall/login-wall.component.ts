@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -15,6 +15,7 @@ export class LoginWallComponent implements OnInit {
   private userSessionService = inject(UserSessionService);
   private destroyRef = inject(DestroyRef);
 
+  description = input<string>();
   isLoginButtonClicked = signal(false);
 
   ngOnInit(): void {

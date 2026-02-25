@@ -66,6 +66,8 @@ import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { LoginWallComponent } from './containers/login-wall/login-wall.component';
+import { RestrictedContentComponent } from './containers/restricted-content/restricted-content.component';
 import { createSelector } from '@ngrx/store';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 
@@ -108,6 +110,8 @@ const selectState = createSelector(
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
     ButtonComponent,
+    LoginWallComponent,
+    RestrictedContentComponent,
     ThreadComponent,
     ButtonIconComponent,
     RouteUrlPipe,

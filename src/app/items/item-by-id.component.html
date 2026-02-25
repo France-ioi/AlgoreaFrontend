@@ -187,23 +187,44 @@
   }
   @if (state.isError) {
     @if (state.error && ($any(state.error).status === 403 || $any(state.error).status === 404 || $any(state.error).name === 'NoSuchAliasError')) {
-      <p class="alg-error-message" i18n>
-      This content does not exist or you are not allowed to view it.
-    </p>
+      <alg-restricted-content>
+        @if ((userProfile$ | async)?.tempUser) {
+          <alg-login-wall
+            i18n-description
+            description="Log in to see if you have access to this content."
+          ></alg-login-wall>
+        } @else {
+          <p class="alg-error-message" i18n>
+            This content does not exist or you are not allowed to view it.
+          </p>
+          <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
+            <span i18n>Go back to the </span>
+            <a
+              class="alg-link base-color"
+              routerLink="/"
+              [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+              routerLinkActive #backToHome="routerLinkActive"
+              i18n
+            >
+              home page
+            </a>
+          </p>
+        }
+      </alg-restricted-content>
     } @else {
       <p class="alg-error-message" i18n>Error while loading the item.</p>
-    }
-    <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
-      <span i18n>Go back to the </span>
-      <a
-        class="alg-link base-color"
-        routerLink="/"
-        [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
-        routerLinkActive #backToHome="routerLinkActive"
-        i18n
+      <p class="alg-error-message" [style.visibility]="(backToHome.isActive)?'hidden':'visible'">
+        <span i18n>Go back to the </span>
+        <a
+          class="alg-link base-color"
+          routerLink="/"
+          [routerLinkActiveOptions]="{ matrixParams: 'ignored', queryParams: 'ignored', paths: 'exact', fragment: 'ignored'}"
+          routerLinkActive #backToHome="routerLinkActive"
+          i18n
         >
-        home page
-      </a>
-    </p>
+          home page
+        </a>
+      </p>
+    }
   }
 }
