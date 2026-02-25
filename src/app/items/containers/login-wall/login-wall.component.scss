@@ -43,8 +43,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: functions.toRem(420);
-  padding: functions.toRem(36) functions.toRem(40);
+  max-width: functions.toRem(520);
+  padding: functions.toRem(48) functions.toRem(56);
   border-radius: functions.toRem(16);
   border: functions.toRem(1) solid var(--alg-border-color, #e0e0e0);
   background: var(--alg-white-color, #fff);
@@ -71,4 +71,11 @@
   font-size: functions.toRem(14);
   color: var(--alg-secondary-color, #666);
   line-height: 1.5;
+}
+
+.login-wall-actions {
+  display: flex;
+  flex-direction: column;
+  gap: functions.toRem(12);
+  align-items: center;
 }

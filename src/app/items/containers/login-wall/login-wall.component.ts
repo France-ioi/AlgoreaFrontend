@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -14,7 +15,10 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 export class LoginWallComponent implements OnInit {
   private userSessionService = inject(UserSessionService);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
+  description = input<string>();
+  showNavButtons = input(false);
   isLoginButtonClicked = signal(false);
 
   ngOnInit(): void {
@@ -29,5 +33,9 @@ export class LoginWallComponent implements OnInit {
   login(): void {
     this.isLoginButtonClicked.set(true);
     this.userSessionService.login();
+  }
+
+  goToHome(): void {
+    void this.router.navigate([ '/' ]);
   }
 }

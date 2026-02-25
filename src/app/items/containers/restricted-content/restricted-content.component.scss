@@ -1,0 +1,40 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.restricted-content-header {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(16);
+  padding: var(--alg-space-size-3) 0;
+}
+
+.restricted-content-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: functions.toRem(12);
+  background-color: var(--alg-light-color, #eee);
+  border-radius: functions.toRem(16);
+  flex-shrink: 0;
+}
+
+.restricted-content-icon {
+  font-size: functions.toRem(36);
+  color: var(--alg-secondary-color, #94a3b8);
+}
+
+.restricted-content-title {
+  margin: 0;
+  color: var(--alg-secondary-color, #94a3b8);
+  opacity: 0.5;
+}
+
+.restricted-content-body {
+  flex: 1;
+  display: grid;
+}
