@@ -36,6 +36,6 @@ export class LoginWallComponent implements OnInit {
   }
 
   goToHome(): void {
-    this.router.navigate([ '/' ]);
+    void this.router.navigate([ '/' ]);
   }
 }
