@@ -7,13 +7,15 @@ import { fromForum } from 'src/app/forum/store';
 import { isForumNewMessageNotification } from 'src/app/models/notification';
 import { fromNotification } from './notification.store';
 import { notificationApiActions } from './notification.actions';
+import { APPCONFIG } from 'src/app/config';
 
 export const clearNotificationsOnThreadShownEffect = createEffect(
   (
     actions$ = inject(Actions),
     store$ = inject(Store),
     notificationService = inject(NotificationHttpService),
-  ) => actions$.pipe(
+    config = inject(APPCONFIG),
+  ) => (config.featureFlags.enableNotifications ? actions$.pipe(
     ofType(
       fromForum.notificationActions.showThread,
       fromForum.forumThreadListActions.showAsCurrentThread,
@@ -33,6 +35,6 @@ export const clearNotificationsOnThreadShownEffect = createEffect(
       map(() => notificationApiActions.notificationDeleted({ sk })),
       catchError(() => of(notificationApiActions.notificationDeleted({ sk }))),
     )),
-  ),
+  ) : EMPTY),
   { functional: true }
 );
