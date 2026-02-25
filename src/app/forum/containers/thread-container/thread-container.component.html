@@ -23,6 +23,8 @@
               {{ name }}
             </a>
           </div>
+        } @else if (isOwnThreadWhileObserving$ | async) {
+          <div class="user-pill own-thread" i18n>Your own thread</div>
         }
       </div>
       <div class="header-right">
