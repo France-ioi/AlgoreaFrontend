@@ -67,7 +67,7 @@
                           @if (!isObserving) {
                             <a
                               class="alg-link item-title-link"
-                              [routerLink]="route | url"
+                              [routerLink]="route | url: []"
                               [algLoadAnswerAsCurrent]="rowData.answerId"
                               i18n
                             >
