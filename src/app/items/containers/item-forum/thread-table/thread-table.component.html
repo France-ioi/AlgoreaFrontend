@@ -80,7 +80,7 @@
                 <td class="alg-table-td">{{ thread.status | threadStatusDisplay }}</td>
               }
               <td class="alg-table-td">{{ thread.messageCount }}</td>
-              <td class="alg-table-td">{{ thread.latestUpdateAt | date:'short' }}</td>
+              <td class="alg-table-td"><alg-relative-time [value]="thread.latestUpdateAt"></alg-relative-time></td>
             </tr>
           } @empty {
             <tr class="alg-table-body-tr">

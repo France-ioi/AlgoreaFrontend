@@ -14,6 +14,6 @@ import { TooltipDirective, TooltipPosition } from 'src/app/ui-components/tooltip
   ]
 })
 export class RelativeTimeComponent {
-  @Input() value?: string;
+  @Input() value?: string | Date;
   @Input() tooltipPosition: TooltipPosition = 'bottom';
 }
