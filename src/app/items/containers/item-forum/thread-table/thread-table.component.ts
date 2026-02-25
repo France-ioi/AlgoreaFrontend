@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgClass, DatePipe } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FetchState } from 'src/app/utils/state';
 import { Threads, Thread } from 'src/app/data-access/get-threads.service';
 import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
@@ -8,6 +8,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
+import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -26,9 +27,9 @@ export type ThreadListType = 'mine' | 'others' | 'observed';
   imports: [
     ErrorComponent,
     LoadingComponent,
+    RelativeTimeComponent,
     NgClass,
     RouterLink,
-    DatePipe,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
