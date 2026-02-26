@@ -69,11 +69,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: functions.toRem(8);
 }
 
 .thread-status-caption {
   color: var(--alg-secondary-color);
-  font-size: .9rem;
+  font-size: functions.toRem(14);
+}
+
+.thread-assignment {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(6);
+  min-width: 0;
+}
+
+.thread-assignment-label {
+  color: var(--alg-secondary-color, #616f82);
+  font-size: functions.toRem(12);
+  white-space: nowrap;
 }
 
 .textarea {

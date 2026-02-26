@@ -6,19 +6,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { assertSuccess, SimpleActionResponse } from 'src/app/data-access/action-response';
 
-export interface OpenThread {
-  status: 'waiting_for_trainer',
-  helperGroupId: string,
-  messageCountIncrement?: number,
-}
+type ThreadOpenStatus = 'waiting_for_participant' | 'waiting_for_trainer';
 
-interface CloseThread {
-  status: 'closed',
-}
-
-export interface IncrementMessageCount {
-  messageCountIncrement: number,
-}
+type UpdateThreadPayload =
+  | { status: ThreadOpenStatus, helperGroupId: string, messageCountIncrement?: number }
+  | { status: 'closed' }
+  | { messageCountIncrement: number };
 
 @Injectable({
   providedIn: 'root',
@@ -27,17 +20,24 @@ export class UpdateThreadService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
-  update(itemId: string, participantId: string, payload: OpenThread | CloseThread | IncrementMessageCount): Observable<void> {
+  update(itemId: string, participantId: string, payload: UpdateThreadPayload): Observable<void> {
     return this.http.put<SimpleActionResponse>(
       `${this.config.apiUrl}/items/${itemId}/participant/${participantId}/thread`,
-      'status' in payload && payload.status === 'closed' ? {
-        status: payload.status,
-      } : 'status' in payload && payload.status === 'waiting_for_trainer' ? {
-        status: payload.status,
-        helper_group_id: payload.helperGroupId,
-        ...(payload.messageCountIncrement ? { message_count_increment: payload.messageCountIncrement } : {}),
-      } : {
-        message_count_increment: payload.messageCountIncrement,
-      }).pipe(map(assertSuccess));
+      this.toApiBody(payload),
+    ).pipe(map(assertSuccess));
+  }
+
+  private toApiBody(payload: UpdateThreadPayload): Record<string, unknown> {
+    if (!('status' in payload)) {
+      return { message_count_increment: payload.messageCountIncrement };
+    }
+    if (payload.status === 'closed') {
+      return { status: payload.status };
+    }
+    return {
+      status: payload.status,
+      helper_group_id: payload.helperGroupId,
+      ...(payload.messageCountIncrement ? { message_count_increment: payload.messageCountIncrement } : {}),
+    };
   }
 }

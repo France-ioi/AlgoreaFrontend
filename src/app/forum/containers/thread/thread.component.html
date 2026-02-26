@@ -72,14 +72,14 @@
             }
             @if (threadMetadata.id; as threadId) {
               <div class="footer-panel" *ngrxLet="!!(threadStatus && !!threadStatus.data && !!threadStatus.data.open) as isThreadOpened">
-                <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId, isThreadOpened)">
+                <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId, isThreadOpened, !!isMine)">
                   <textarea
                     class="textarea"
                     placeholder="Send a message..."
                     formControlName="messageToSend"
                     [rows]="1"
                     algAutoResize
-                    (keydown.enter)="$event.preventDefault(); sendMessage(threadId, isThreadOpened)"
+                    (keydown.enter)="$event.preventDefault(); sendMessage(threadId, isThreadOpened, !!isMine)"
                     #messageToSendEl
                   ></textarea>
                   <button
@@ -91,38 +91,49 @@
                   ></button>
                 </form>
                 <div class="thread-status">
-                  <div class="thread-status-caption" >
-                    @if (threadStatus?.data?.open) {
-                      <span i18n>This thread is open</span>
-                    }
-                    @if (threadStatus?.data?.open === false) {
-                      <span i18n>This thread is closed</span>
-                    }
-                    @if (threadStatus?.isFetching) {
-                      <span i18n>Loading thread status...</span>
-                    }
-                    @if (threadStatus?.isError) {
-                      <span i18n>Error while loading thread info</span>
-                    }
-                    @if (threadStatus === undefined) {
-                      <span i18n>Could not load thread</span>
-                    }
-                  </div>
+                  @if (threadStatus?.data?.open) {
+                    <div class="thread-assignment">
+                      <span class="thread-assignment-label" i18n>Assigned to:</span>
+                      @if (assignmentItems$ | async; as assignmentItems) {
+                        <alg-selection
+                          class="small"
+                          [items]="assignmentItems"
+                          [selected]="(threadAssignmentIndex$ | async) ?? 1"
+                          (change)="changeAssignment($event, threadId)"
+                        ></alg-selection>
+                      }
+                    </div>
+                  } @else {
+                    <div class="thread-status-caption">
+                      @if (threadStatus?.data?.open === false) {
+                        <span i18n>This thread is closed</span>
+                      }
+                      @if (threadStatus?.isFetching) {
+                        <span i18n>Loading thread status...</span>
+                      }
+                      @if (threadStatus?.isError) {
+                        <span i18n>Error while loading thread info</span>
+                      }
+                      @if (threadStatus === undefined) {
+                        <span i18n>Could not load thread</span>
+                      }
+                    </div>
+                  }
                   <div
                     *ngrxLet="!!threadStatus && !!threadStatus.data && ((threadStatus.data.open && threadStatus.data.canClose) || (!threadStatus.data.open && threadStatus.data.canOpen)) as canSwitch"
                     [algTooltip]="threadStatusTooltip"
                     [tooltipDisabled]="canSwitch"
                     tooltipPosition="top"
-                    >
+                  >
                     @if (threadStatus && threadStatus.data) {
                       <button
                         type="button"
                         [disabled]="!canSwitch"
                         alg-button
-                        (click)="changeThreadStatus({ open: !threadStatus.data.open, threadId: threadId })"
-                        >
+                        (click)="changeThreadStatus({ open: !threadStatus.data.open, threadId: threadId, isParticipant: !!isMine })"
+                      >
                         @if (threadStatus.data.open) {
-                          <span i18n>Close this thread</span>
+                          <span i18n>Close thread</span>
                         } @else {
                           <span i18n>Open this thread</span>
                         }
