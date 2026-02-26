@@ -1,9 +1,10 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { switchMap, map, distinctUntilChanged, filter, withLatestFrom, EMPTY } from 'rxjs';
+import { switchMap, map, distinctUntilChanged, filter, withLatestFrom, EMPTY, catchError } from 'rxjs';
 import { ThreadService } from 'src/app/data-access/thread.service';
 import { fetchThreadInfoActions } from './fetchThreadInfo.actions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
+import { readyState, errorState } from 'src/app/utils/state';
 import { forumThreadListActions, notificationActions, threadPanelActions } from './current-thread.actions';
 import { areSameThreads } from '../../models/threads';
 import { Store } from '@ngrx/store';
@@ -40,11 +41,9 @@ export const refreshThreadInfoEffect = createEffect(
     map(([ , threadId ]) => threadId),
     filter(isNotNull),
     switchMap(({ itemId, participantId }) => threadHttpService.get(itemId, participantId).pipe(
-      mapToFetchState(),
+      map(data => fetchThreadInfoActions.fetchStateChanged({ fetchState: readyState(data) })),
+      catchError(err => [ fetchThreadInfoActions.fetchStateChanged({ fetchState: errorState(err) }) ]),
     )),
-    map(fetchState => fetchThreadInfoActions.fetchStateChanged({ fetchState }))
   ) : EMPTY),
   { functional: true }
 );
-
-

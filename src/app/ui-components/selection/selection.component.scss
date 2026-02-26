@@ -56,4 +56,35 @@
   text-align: center;
   line-height: functions.toRem(14);
   font-size: functions.toRem(16);
+  white-space: nowrap;
+}
+
+:host(.small) {
+  .tabs {
+    border-radius: functions.toRem(14);
+  }
+
+  .tabs-item {
+    height: functions.toRem(28);
+    padding: 0 functions.toRem(8);
+
+    &.active {
+      border-radius: functions.toRem(14);
+    }
+  }
+
+  .label {
+    font-size: functions.toRem(12);
+    line-height: functions.toRem(12);
+  }
+}
+
+:host(.on-colored-bg) {
+  .tabs {
+    background-color: var(--alg-white-color);
+  }
+
+  .label {
+    color: var(--alg-secondary-color);
+  }
 }

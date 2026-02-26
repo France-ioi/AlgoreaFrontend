@@ -17,12 +17,7 @@
   <div class="table-header">
     <ng-content select="[tableTitle]"></ng-content>
     <div class="table-actions">
-      @if (hasClosedThreads()) {
-        <span class="toggle-label">
-          <alg-switch class="small-switch" (change)="showClosedThreads.set($event)"></alg-switch>
-          <span i18n>Show closed</span>
-        </span>
-      }
+      <alg-selection class="small" [items]="filterOptions" (change)="onFilterChanged($event)"></alg-selection>
       <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="onRefresh()" i18n>
         Refresh
       </button>
@@ -40,7 +35,7 @@
               @if (showUserColumn()) {
                 <th class="alg-table-th" i18n>User</th>
               }
-              @if (showClosedThreads()) {
+              @if (threadFilter() !== 'assigned_to_me') {
                 <th class="alg-table-th" i18n>Status</th>
               }
               <th class="alg-table-th" i18n># msgs</th>
@@ -76,8 +71,8 @@
                   </a>
                 </td>
               }
-              @if (showClosedThreads()) {
-                <td class="alg-table-td">{{ thread.status | threadStatusDisplay }}</td>
+              @if (threadFilter() !== 'assigned_to_me') {
+                <td class="alg-table-td">{{ threadStatusLabel(thread) }}</td>
               }
               <td class="alg-table-td">{{ thread.messageCount }}</td>
               <td class="alg-table-td"><alg-relative-time [value]="thread.latestUpdateAt"></alg-relative-time></td>

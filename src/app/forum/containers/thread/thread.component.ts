@@ -38,6 +38,7 @@ import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { fromObservation } from 'src/app/store/observation';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
 import { fromItemContent } from 'src/app/items/store';
 import { fromGroupContent } from 'src/app/groups/store';
@@ -53,6 +54,23 @@ import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 import { computed, input, signal } from '@angular/core';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
+
+const selectThreadAssignmentIndex = createSelector(
+  fromForum.selectInfo,
+  info => {
+    if (!info.data) return 0;
+    return info.data.status === 'waiting_for_participant' ? 0 : 1;
+  }
+);
+
+const selectThreadRawStatus = createSelector(
+  fromForum.selectInfo,
+  info => info.data?.status ?? null,
+);
+
+function truncateLabel(text: string, maxLength: number): string {
+  return text.length > maxLength ? `${ text.slice(0, maxLength) }…` : text;
+}
 
 const selectThreadInfo = createSelector(
   fromItemContent.selectActiveContentItem,
@@ -78,6 +96,7 @@ const selectThreadInfo = createSelector(
     AsyncPipe,
     ButtonIconComponent,
     ButtonComponent,
+    SelectionComponent,
     AutoResizeDirective,
     TooltipDirective,
     ThreadTopIndicatorComponent,
@@ -263,6 +282,34 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   threadToken = this.store.selectSignal(fromForum.selectThreadToken);
   readonly followStatus$ = this.store.select(fromForum.selectFollowStatus);
 
+  readonly assignmentItems$ = combineLatest([
+    this.isMine$,
+    this.participantUser$,
+  ]).pipe(
+    map(([ isMine, participantUser ]) => {
+      const participantLabel = isMine ? $localize`You` : truncateLabel(participantUser?.name ?? '…', 12);
+      return [
+        { label: participantLabel, value: 'participant' as const },
+        { label: $localize`Helpers`, value: 'helpers' as const },
+      ];
+    }),
+  );
+  readonly threadAssignmentIndex$ = this.store.select(selectThreadAssignmentIndex);
+  readonly threadRawStatus$ = this.store.select(selectThreadRawStatus);
+  readonly canCloseThread$ = this.threadStatus$.pipe(
+    map(status => !!status?.data && status.data.open && status.data.canClose),
+  );
+  readonly isLastMessageByCurrentUser$ = combineLatest([
+    this.state$,
+    this.userSessionService.userProfile$,
+  ]).pipe(
+    map(([ state, user ]) => {
+      const events = state.data ?? [];
+      const lastMessage = [ ...events ].reverse().find(isMessageEvent);
+      return !!lastMessage && lastMessage.authorId === user.groupId;
+    }),
+  );
+
   constructor(
     private store: Store,
     private userSessionService: UserSessionService,
@@ -322,7 +369,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  sendMessage(threadId: ThreadId, isThreadOpened: boolean): void {
+  sendMessage(threadId: ThreadId, isThreadOpened: boolean, isParticipant: boolean): void {
     const messageToSend = this.form.value.messageToSend?.trim();
     if (!messageToSend) return;
     this.disableControls$.next(true);
@@ -331,12 +378,14 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     if (!token) throw new Error('unexpected: the thread token is empty');
 
     const uuid = uuidv4(); // used to track a message if we need to (future use)
-    const prerequisite = isThreadOpened ? of(undefined) : this.changeThreadStatus({ open: true, threadId, messageCountIncrement: 1 }).pipe(
-      switchMap(() => this.store.select(fromForum.selectThreadStatusOpen)),
-      filter(open => open),
-      take(1),
-      map(() => undefined)
-    );
+    const prerequisite = isThreadOpened
+      ? of(undefined)
+      : this.changeThreadStatus({ open: true, threadId, isParticipant, messageCountIncrement: 1 }).pipe(
+        switchMap(() => this.store.select(fromForum.selectThreadStatusOpen)),
+        filter(open => open),
+        take(1),
+        map(() => undefined)
+      );
     prerequisite.pipe(
       switchMap(() => this.store.select(fromForum.selectThreadToken)),
       filter(isNotUndefined),
@@ -369,18 +418,39 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   changeThreadStatus(
-    params: { open: true, threadId: ThreadId, messageCountIncrement?: number } | { open: false, threadId: ThreadId }
+    params: { open: boolean, threadId: ThreadId, isParticipant: boolean, messageCountIncrement?: number }
   ): Observable<void> {
-    const update$ = this.updateThreadService.update(params.threadId.itemId, params.threadId.participantId, params.open ? {
-      status: 'waiting_for_trainer',
-      helperGroupId: this.config.allUsersGroupId,
-      ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {})
-    } : { status: 'closed' }).pipe(share());
+    const payload = !params.open
+      ? { status: 'closed' as const }
+      : params.isParticipant
+        ? {
+          status: 'waiting_for_participant' as const,
+          helperGroupId: this.config.allUsersGroupId,
+          ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {}),
+        }
+        : {
+          status: 'waiting_for_trainer' as const,
+          helperGroupId: this.config.allUsersGroupId,
+          ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {}),
+        };
+    const update$ = this.updateThreadService.update(
+      params.threadId.itemId, params.threadId.participantId, payload,
+    ).pipe(share());
     update$.subscribe({
       next: () => this.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
       error: () => this.actionFeedbackService.unexpectedError(),
     });
     return update$;
+  }
+
+  changeAssignment(index: number, threadId: ThreadId): void {
+    const payload = index === 0
+      ? { status: 'waiting_for_participant' as const, helperGroupId: this.config.allUsersGroupId }
+      : { status: 'waiting_for_trainer' as const, helperGroupId: this.config.allUsersGroupId };
+    this.updateThreadService.update(threadId.itemId, threadId.participantId, payload).subscribe({
+      next: () => this.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
+      error: () => this.actionFeedbackService.unexpectedError(),
+    });
   }
 
   focusOnInput(): void {

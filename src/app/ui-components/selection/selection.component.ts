@@ -26,7 +26,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  imports: [ NgClass, TooltipDirective ]
+  imports: [ NgClass, TooltipDirective ],
 })
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
   @Input() items: { label: string, value: T, icon?: string, tooltip?: string }[] = [];
