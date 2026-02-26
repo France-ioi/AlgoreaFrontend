@@ -5,6 +5,7 @@
   @let isMine = isMine$ | async;
   @let threadRawStatus = threadRawStatus$ | async;
   @let canCloseThread = canCloseThread$ | async;
+  @let isLastMessageByCurrentUser = isLastMessageByCurrentUser$ | async;
   @if (!isWsOpen) {
     <div class="ws-error">
       <alg-error
@@ -74,30 +75,32 @@
             }
             @if (threadMetadata.id; as threadId) {
               <div class="footer-panel" *ngrxLet="!!(threadStatus && !!threadStatus.data && !!threadStatus.data.open) as isThreadOpened">
-                @if (isMine && threadRawStatus === 'waiting_for_participant') {
-                  <p class="assignment-suggestion">
-                    <ng-container i18n>The thread is assigned to you. When you are done with your messages,</ng-container>
-                    {{ ' ' }}<button type="button" class="assignment-suggestion-action" (click)="changeAssignment(1, threadId)" i18n>assign it to helpers</button>{{ ' ' }}
-                    <ng-container i18n>so that they can better notice they have to answer.</ng-container>
-                    @if (canCloseThread) {
-                      {{ ' ' }}<ng-container i18n>If you think the discussion has been concluded, you can also</ng-container>
-                      {{ ' ' }}<button type="button" class="assignment-suggestion-action" (click)="changeThreadStatus({ open: false, threadId: threadId, isParticipant: true })" i18n>close it</button><ng-container i18n>.</ng-container>
-                    }
-                  </p>
-                }
-                @if (!isMine && threadRawStatus === 'waiting_for_trainer') {
-                  <p class="assignment-suggestion">
-                    <ng-container i18n>The thread is assigned to helpers. When you are done with your messages,</ng-container>
-                    {{ ' ' }}
-                    @if (participantUser$ | async; as participantUser) {
-                      <button type="button" class="assignment-suggestion-action" (click)="changeAssignment(0, threadId)"><ng-container i18n>assign it to</ng-container>{{ ' ' }}{{ participantUser.name }}</button>
-                    }
-                    {{ ' ' }}<ng-container i18n>so that they can better notice they have to answer.</ng-container>
-                    @if (canCloseThread) {
-                      {{ ' ' }}<ng-container i18n>If you think the discussion has been concluded, you can also</ng-container>
-                      {{ ' ' }}<button type="button" class="assignment-suggestion-action" (click)="changeThreadStatus({ open: false, threadId: threadId, isParticipant: false })" i18n>close it</button><ng-container i18n>.</ng-container>
-                    }
-                  </p>
+                @if (isLastMessageByCurrentUser) {
+                  @if (isMine && threadRawStatus === 'waiting_for_participant') {
+                    <p class="assignment-suggestion">
+                      <ng-container i18n>The thread is assigned to you. When you are done with your messages,</ng-container>
+                      {{ ' ' }}<button type="button" class="assignment-suggestion-action" (click)="changeAssignment(1, threadId)" i18n>assign it to helpers</button>{{ ' ' }}
+                      <ng-container i18n>so that they can better notice they have to answer.</ng-container>
+                      @if (canCloseThread) {
+                        {{ ' ' }}<ng-container i18n>If you think the discussion has been concluded, you can also</ng-container>
+                        {{ ' ' }}<button type="button" class="assignment-suggestion-action" (click)="changeThreadStatus({ open: false, threadId: threadId, isParticipant: true })" i18n>close it</button><ng-container i18n>.</ng-container>
+                      }
+                    </p>
+                  }
+                  @if (!isMine && threadRawStatus === 'waiting_for_trainer') {
+                    <p class="assignment-suggestion">
+                      <ng-container i18n>The thread is assigned to helpers. When you are done with your messages,</ng-container>
+                      {{ ' ' }}
+                      @if (participantUser$ | async; as participantUser) {
+                        <button type="button" class="assignment-suggestion-action" (click)="changeAssignment(0, threadId)"><ng-container i18n>assign it to</ng-container>{{ ' ' }}{{ participantUser.name }}</button>
+                      }
+                      {{ ' ' }}<ng-container i18n>so that they can better notice they have to answer.</ng-container>
+                      @if (canCloseThread) {
+                        {{ ' ' }}<ng-container i18n>If you think the discussion has been concluded, you can also</ng-container>
+                        {{ ' ' }}<button type="button" class="assignment-suggestion-action" (click)="changeThreadStatus({ open: false, threadId: threadId, isParticipant: false })" i18n>close it</button><ng-container i18n>.</ng-container>
+                      }
+                    </p>
+                  }
                 }
                 <form class="send-form" [formGroup]="form" (ngSubmit)="sendMessage(threadId, isThreadOpened, !!isMine)">
                   <textarea

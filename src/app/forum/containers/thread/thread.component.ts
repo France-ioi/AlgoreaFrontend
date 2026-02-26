@@ -299,6 +299,16 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly canCloseThread$ = this.threadStatus$.pipe(
     map(status => !!status?.data && status.data.open && status.data.canClose),
   );
+  readonly isLastMessageByCurrentUser$ = combineLatest([
+    this.state$,
+    this.userSessionService.userProfile$,
+  ]).pipe(
+    map(([ state, user ]) => {
+      const events = state.data ?? [];
+      const lastMessage = [ ...events ].reverse().find(isMessageEvent);
+      return !!lastMessage && lastMessage.authorId === user.groupId;
+    }),
+  );
 
   constructor(
     private store: Store,
