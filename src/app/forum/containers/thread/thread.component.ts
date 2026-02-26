@@ -414,12 +414,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       ? { status: 'closed' as const }
       : params.isParticipant
         ? {
-          status: 'waiting_for_trainer' as const,
+          status: 'waiting_for_participant' as const,
           helperGroupId: this.config.allUsersGroupId,
           ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {}),
         }
         : {
-          status: 'waiting_for_participant' as const,
+          status: 'waiting_for_trainer' as const,
           helperGroupId: this.config.allUsersGroupId,
           ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {}),
         };
