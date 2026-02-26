@@ -12,12 +12,13 @@ import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relat
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { ItemData } from 'src/app/items/models/item-data';
 import { ItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadId } from 'src/app/forum/models/threads';
 
 export type ThreadListType = 'mine' | 'others' | 'observed';
+type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
 
 @Component({
   selector: 'alg-thread-table',
@@ -36,7 +37,7 @@ export type ThreadListType = 'mine' | 'others' | 'observed';
     ThreadStatusDisplayPipe,
     ButtonComponent,
     ItemRouteWithExtraPipe,
-    SwitchComponent,
+    SelectionComponent,
   ]
 })
 export class ThreadTableComponent {
@@ -50,19 +51,35 @@ export class ThreadTableComponent {
   showThread = output<{ id: ThreadId, item: { title: string, route: RawItemRoute } }>();
   hideThread = output<void>();
 
-  showClosedThreads = signal(false);
+  threadFilter = signal<ThreadFilter>('assigned_to_me');
+
+  filterOptions = [
+    { label: $localize`Assigned to me`, value: 'assigned_to_me' as const },
+    { label: $localize`All Open`, value: 'all_open' as const },
+    { label: $localize`Any status`, value: 'any_status' as const },
+  ];
+
+  private assignedToMeStatus = computed(
+    () => (this.threadListType() === 'mine' ? 'waiting_for_participant' : 'waiting_for_trainer')
+  );
 
   filteredData = computed(() => {
     const data = this.state()?.data;
     if (!data) return undefined;
-    if (this.showClosedThreads()) return data;
-    return data.filter(t => t.status !== 'closed');
+    switch (this.threadFilter()) {
+      case 'assigned_to_me':
+        return data.filter(t => t.status === this.assignedToMeStatus());
+      case 'all_open':
+        return data.filter(t => t.status !== 'closed');
+      case 'any_status':
+        return data;
+    }
   });
 
-  hasClosedThreads = computed(() => {
-    const data = this.state()?.data;
-    return data?.some(t => t.status === 'closed') ?? false;
-  });
+  onFilterChanged(index: number): void {
+    const option = this.filterOptions[index];
+    if (option) this.threadFilter.set(option.value);
+  }
 
   onRefresh(): void {
     this.refresh.emit();

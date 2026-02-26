@@ -56,6 +56,7 @@
   text-align: center;
   line-height: functions.toRem(14);
   font-size: functions.toRem(16);
+  white-space: nowrap;
 }
 
 :host(.small) {
