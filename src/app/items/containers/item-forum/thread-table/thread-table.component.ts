@@ -3,8 +3,8 @@ import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { FetchState } from 'src/app/utils/state';
 import { Threads, Thread } from 'src/app/data-access/get-threads.service';
-import { ThreadStatusDisplayPipe } from 'src/app/pipes/threadStatusDisplay';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
+import { formatUser } from 'src/app/groups/models/user';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -34,7 +34,6 @@ type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
-    ThreadStatusDisplayPipe,
     ButtonComponent,
     ItemRouteWithExtraPipe,
     SelectionComponent,
@@ -101,6 +100,20 @@ export class ThreadTableComponent {
     return visibleId !== null &&
       visibleId.participantId === thread.participant.id &&
       visibleId.itemId === thread.item.id;
+  }
+
+  threadStatusLabel(thread: Thread): string {
+    switch (thread.status) {
+      case 'waiting_for_participant':
+        if (this.threadListType() === 'mine') return $localize`Assigned to you`;
+        return $localize`Assigned to ${formatUser(thread.participant)}:participantName:`;
+      case 'waiting_for_trainer':
+        return $localize`Assigned to helpers`;
+      case 'closed':
+        return $localize`Closed`;
+      default:
+        return $localize`Not started`;
+    }
   }
 
   /** Route parameter to observe the thread's participant. Empty if viewing own threads. */

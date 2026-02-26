@@ -72,7 +72,7 @@
                 </td>
               }
               @if (threadFilter() !== 'assigned_to_me') {
-                <td class="alg-table-td">{{ thread.status | threadStatusDisplay }}</td>
+                <td class="alg-table-td">{{ threadStatusLabel(thread) }}</td>
               }
               <td class="alg-table-td">{{ thread.messageCount }}</td>
               <td class="alg-table-td"><alg-relative-time [value]="thread.latestUpdateAt"></alg-relative-time></td>
