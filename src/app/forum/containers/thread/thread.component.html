@@ -127,6 +127,7 @@
                       @if (assignmentItems$ | async; as assignmentItems) {
                         <alg-selection
                           class="small"
+                          [class.on-colored-bg]="indicatorLayout() === 'default'"
                           [items]="assignmentItems"
                           [selected]="(threadAssignmentIndex$ | async) ?? 1"
                           (change)="changeAssignment($event, threadId)"

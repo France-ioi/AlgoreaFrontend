@@ -77,3 +77,13 @@
     line-height: functions.toRem(12);
   }
 }
+
+:host(.on-colored-bg) {
+  .tabs {
+    background-color: var(--alg-white-color);
+  }
+
+  .label {
+    color: var(--alg-secondary-color);
+  }
+}
