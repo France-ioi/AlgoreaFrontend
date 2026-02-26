@@ -63,6 +63,11 @@ const selectThreadAssignmentIndex = createSelector(
   }
 );
 
+const selectThreadRawStatus = createSelector(
+  fromForum.selectInfo,
+  info => info.data?.status ?? null,
+);
+
 function truncateLabel(text: string, maxLength: number): string {
   return text.length > maxLength ? `${ text.slice(0, maxLength) }…` : text;
 }
@@ -290,6 +295,10 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     }),
   );
   readonly threadAssignmentIndex$ = this.store.select(selectThreadAssignmentIndex);
+  readonly threadRawStatus$ = this.store.select(selectThreadRawStatus);
+  readonly canCloseThread$ = this.threadStatus$.pipe(
+    map(status => !!status?.data && status.data.open && status.data.canClose),
+  );
 
   constructor(
     private store: Store,

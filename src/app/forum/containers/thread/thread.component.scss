@@ -55,6 +55,32 @@
   flex-direction: column;
 }
 
+.assignment-suggestion {
+  margin: 0 0 functions.toRem(8) 0;
+  text-align: center;
+  color: var(--alg-secondary-color, #616f82);
+  font-size: functions.toRem(12);
+  line-height: 1.5;
+}
+
+.assignment-suggestion-action {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  color: var(--alg-primary-color, #3f51b5);
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    opacity: .8;
+  }
+}
+
 .send-form {
   display: flex;
   justify-content: flex-start;
