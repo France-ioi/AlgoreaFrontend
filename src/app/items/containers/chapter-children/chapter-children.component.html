@@ -77,7 +77,7 @@
           }
         </div>
       }
-    } @else {
+    } @else if (itemData && itemData.item.childrenLayout === 'List') {
       @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
         <alg-item-children-list
           [children]="data.children"

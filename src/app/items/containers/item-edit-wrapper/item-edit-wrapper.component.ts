@@ -249,7 +249,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     if (fullScreen !== this.initialFormData.fullScreen) itemFormValues.full_screen = fullScreen;
 
-    const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid';
+    const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid' | 'Hide';
     if (childrenLayout !== this.initialFormData.childrenLayout) itemFormValues.children_layout = childrenLayout;
 
     const defaultLanguageTag = this.itemForm.controls.default_language_tag.getRawValue();

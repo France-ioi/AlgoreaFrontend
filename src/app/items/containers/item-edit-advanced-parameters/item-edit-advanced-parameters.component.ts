@@ -79,6 +79,9 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
   }, {
     label: $localize`Grid`,
     value: 'Grid'
+  }, {
+    label: $localize`Hide`,
+    value: 'Hide'
   }];
 
   minEnteringTimeMaxDate = new Date();

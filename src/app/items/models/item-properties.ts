@@ -4,7 +4,7 @@ export const itemValidationTypeSchema = z.enum([ 'None','All','AllButOne','Categ
 
 export const itemFullScreenSchema = z.enum([ 'forceYes','forceNo','default' ]);
 
-export const itemChildrenLayoutSchema = z.enum([ 'List', 'Grid' ]);
+export const itemChildrenLayoutSchema = z.enum([ 'List', 'Grid', 'Hide' ]);
 
 export const itemEntryMinAdmittedMembersRatioSchema = z.enum([ 'All', 'Half', 'One', 'None' ]);
 

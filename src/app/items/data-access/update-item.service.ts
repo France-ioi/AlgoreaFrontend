@@ -24,7 +24,7 @@ export interface ItemChanges {
   no_score?: boolean,
   title_bar_visible?: boolean,
   full_screen?: 'forceYes' | 'forceNo' | 'default',
-  children_layout?: 'List' | 'Grid',
+  children_layout?: 'List' | 'Grid' | 'Hide',
   default_language_tag?: string,
   prompt_to_join_group_by_code?: boolean,
   allows_multiple_attempts?: boolean,
