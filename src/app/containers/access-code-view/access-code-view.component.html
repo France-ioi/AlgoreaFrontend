@@ -12,7 +12,7 @@
     <button
       class="size-l"
       icon="ph-bold ph-check"
-      [disabled]="input.value === '' || state === 'loading'"
+      [disabled]="input.value.trim() === '' || state === 'loading'"
       (click)="checkCodeValidity()"
       alg-button
     >{{ buttonLabel }}</button>

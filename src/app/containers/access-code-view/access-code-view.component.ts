@@ -34,6 +34,7 @@ export class AccessCodeViewComponent {
   state: 'ready'|'loading' = 'ready';
 
   checkCodeValidity(): void {
+    this.code = this.code.trim();
     this.state = 'loading';
     this.joinByCodeService.checkCodeValidity(this.code).pipe(
       catchError(() =>
