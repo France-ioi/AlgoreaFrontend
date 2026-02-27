@@ -7,6 +7,7 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { AddContentComponent } from 'src/app/ui-components/add-content/add-content.component';
+import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-section.component';
 
 type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
 
@@ -14,7 +15,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
   selector: 'alg-add-group',
   templateUrl: 'add-group.component.html',
   styleUrls: [ 'add-group.component.scss' ],
-  imports: [ AddContentComponent ]
+  imports: [ AddContentComponent, SubSectionComponent ]
 })
 export class AddGroupComponent {
   private groupCreationService = inject(GroupCreationService);

@@ -1,5 +1,7 @@
 @use 'src/assets/scss/functions';
 
-.title {
-  margin: functions.toRem(38) 0 functions.toRem(16) 0;
+:host {
+  display: block;
+  margin-top: functions.toRem(16);
+  margin-bottom: functions.toRem(32);
 }
