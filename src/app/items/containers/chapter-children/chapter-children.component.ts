@@ -15,6 +15,7 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe, NgClass } from '@angular/common';
+import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { LayoutService } from 'src/app/services/layout.service';
@@ -35,6 +36,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
     NgClass,
+    ButtonComponent,
   ]
 })
 export class ChapterChildrenComponent implements OnChanges, OnDestroy {
@@ -90,5 +92,9 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  showLeftMenu(): void {
+    this.layoutService.toggleLeftMenu(true);
   }
 }

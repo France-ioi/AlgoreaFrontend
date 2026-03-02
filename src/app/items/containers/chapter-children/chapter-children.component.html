@@ -84,6 +84,20 @@
           [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
         ></alg-item-children-list>
       }
+    } @else if (itemData && itemData.item.childrenLayout === 'Hide') {
+      @if (!leftMenuShown()) {
+        <div class="hidden-children-hint">
+          <i class="hidden-children-hint-icon ph ph-sidebar-simple"></i>
+          <p class="hidden-children-hint-title" i18n>Hidden Sidebar Navigation</p>
+          <p class="hidden-children-hint-description" i18n>
+            Navigation among the content of this chapter only goes through the left menu.
+            Open the sidebar to continue exploring.
+          </p>
+          <button alg-button class="size-l" type="button" icon="ph ph-list" (click)="showLeftMenu()" i18n>
+            Show the left menu
+          </button>
+        </div>
+      }
     }
   }
 }
