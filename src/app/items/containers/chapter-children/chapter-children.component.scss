@@ -1,4 +1,5 @@
 @use 'src/assets/scss/functions';
+@use 'src/assets/scss/info-card';
 @use 'src/geometry.scss';
 
 :host {
@@ -153,6 +154,23 @@
 .grid-card-lock-status-icon {
   color: #f8b42c;
   font-size: 1rem;
+}
+
+.hidden-children-hint {
+  @include info-card.card;
+  margin: functions.toRem(24) auto;
+}
+
+.hidden-children-hint-icon {
+  @include info-card.icon;
+}
+
+.hidden-children-hint-title {
+  @include info-card.title;
+}
+
+.hidden-children-hint-description {
+  @include info-card.description;
 }
 
 .grid-card-activity-progress {
