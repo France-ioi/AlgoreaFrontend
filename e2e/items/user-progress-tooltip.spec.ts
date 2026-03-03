@@ -16,7 +16,7 @@ test('checks user progress tooltip', async ({ page }) => {
   });
 
   const targetRow = page.locator('alg-chapter-group-progress').getByRole('row').filter({
-    has: page.getByRole('link', { name: 'usr_5p020x2thuyu' }),
+    has: page.getByText('usr_5p020x2thuyu'),
   });
   const cellLocator = targetRow.getByTestId('user-progress-tooltip-target');
 
