@@ -88,8 +88,11 @@
                     </a>
                   }
                   @case ('item.user') {
-                    @if (rowData.user) {
-                      <a class="alg-link" [routerLink]="{ id: rowData.user.id, isUser: true } | groupLink">{{ rowData.user | userCaption }}</a>
+                    @if (rowData.user; as user) {
+                      <alg-user-link-with-actions
+                        [user]="user"
+                        [observeLink]="getObserveLink(user)"
+                      ></alg-user-link-with-actions>
                     } @else {
                       {{ rowData.participant.name }}
                     }

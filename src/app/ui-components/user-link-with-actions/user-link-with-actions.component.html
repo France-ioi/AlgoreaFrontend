@@ -1,0 +1,21 @@
+<span class="label">{{ label() }}</span>
+<span class="actions">
+  <a class="action-btn"
+    [routerLink]="profileLink()"
+    i18n-algTooltip algTooltip="View profile"
+    tooltipPosition="top"
+    (click)="$event.stopPropagation()"
+  >
+    <i class="ph ph-user"></i>
+  </a>
+  @if (observeLink(); as link) {
+    <a class="action-btn"
+      [routerLink]="link"
+      i18n-algTooltip algTooltip="Observe user"
+      tooltipPosition="top"
+      (click)="$event.stopPropagation()"
+    >
+      <i class="ph ph-eye"></i>
+    </a>
+  }
+</span>

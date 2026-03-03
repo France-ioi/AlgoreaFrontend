@@ -15,6 +15,7 @@ export const withGrade = <T extends z.ZodRawShape>(user: z.ZodObject<T>) => user
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 export type UserBase = z.infer<typeof userBaseSchema>;
+export type UserBaseWithId = UserBase & { id: string };
 
 export function formatUser<T extends UserBase>(user: T) : string {
   if (user.firstName || user.lastName) {

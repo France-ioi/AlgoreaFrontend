@@ -4,7 +4,7 @@ import { combineLatestWith, filter, map, shareReplay, switchMap } from 'rxjs/ope
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
 import { Group } from 'src/app/groups/models/group';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
-import { formatUser } from 'src/app/groups/models/user';
+import { formatUser, UserBaseWithId } from 'src/app/groups/models/user';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
 import { GetGroupProgressService } from 'src/app/data-access/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -21,8 +21,9 @@ import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/items/models/item-permissions';
-import { itemRoute, selectObservedGroupRouteAsItemRouteParameter } from 'src/app/models/routing/item-route';
+import { itemRoute, itemRouteWith, selectObservedGroupRouteAsItemRouteParameter } from 'src/app/models/routing/item-route';
 import { Store } from '@ngrx/store';
+import { ItemRouter } from 'src/app/models/routing/item-router';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -42,6 +43,8 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { UserLinkWithActionsComponent } from 'src/app/ui-components/user-link-with-actions/user-link-with-actions.component';
+import { UrlTree } from '@angular/router';
 
 export type Progress = {
   groupId: string,
@@ -63,6 +66,7 @@ export type Progress = {
 interface DataRow {
   header: string,
   id: string,
+  user?: UserBaseWithId,
   data: (Progress|undefined)[],
 }
 interface DataColumn {
@@ -114,6 +118,7 @@ interface ProgressDataDialog {
     CdkMenuTrigger,
     CdkMenu,
     TooltipDirective,
+    UserLinkWithActionsComponent,
   ]
 })
 export class GroupProgressGridComponent implements OnChanges, OnDestroy {
@@ -125,6 +130,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   private progressCSVService = inject(ProgressCSVService);
   private store = inject(Store);
   private observedGroupRouteParam = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
+  private itemRouter = inject(ItemRouter);
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -313,11 +319,13 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getRows({ groupId, filter, pageSize, fromId }: Omit<DataFetching, 'itemId'>): Observable<{id :string, value: string}[]> {
+  private getRows(
+    { groupId, filter, pageSize, fromId }: Omit<DataFetching, 'itemId'>,
+  ): Observable<{ id: string, value: string, user?: UserBaseWithId }[]> {
     switch (filter) {
       case 'Users':
         return this.getGroupDescendantsService.getUserDescendants(groupId, { limit: pageSize, fromId })
-          .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user) }))));
+          .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user), user: { ...user.user, id: user.id } }))));
       case 'Teams':
         return this.getGroupDescendantsService.getTeamDescendants(groupId, { limit: pageSize, fromId })
           .pipe(map(teams => teams.map(team => ({ id: team.id, value: team.name }))));
@@ -339,6 +347,7 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           .map(row => ({
             header: row.value,
             id: row.id,
+            user: row.user,
             data: items.map(item =>
               progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
             ),
@@ -384,6 +393,11 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     }).closed.subscribe(() => {
       this.progressDataDialog = undefined;
     });
+  }
+
+  getObserveLink(row: DataRow): UrlTree | undefined {
+    if (!row.user || !this.itemData) return undefined;
+    return this.itemRouter.url(itemRouteWith(this.itemData.route, { observedGroup: { id: row.id, isUser: true } }));
   }
 
   getCSVDownloadTypeByFilter(): 'group' | 'team' | 'user' {
