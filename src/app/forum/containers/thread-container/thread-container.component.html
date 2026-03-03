@@ -4,19 +4,9 @@
       <span class="header-icon ph-duotone ph-chats-circle"></span>
       @let thread = threadHydratedId()!;
       <div class="header-center">
-        <div class="title-row">
-          @if (thread.item.title) {
-            <span class="header-title">{{ thread.item.title }}</span>
-          }
-          <a
-            class="nav-button size-s"
-            icon="ph ph-arrow-square-out"
-            alg-button-icon
-            [routerLink]="thread.item.route | with: threadParticipantRouteParam() | url: ['task', 'editor']"
-            (click)="onNavigateToContent()"
-            i18n-title title="Navigate to this content"
-          ></a>
-        </div>
+        @if (thread.item.title) {
+          <span class="header-title">{{ thread.item.title }}</span>
+        }
         @if (participantName$ | async; as name) {
           <div class="user-pill">
             <a class="alg-link user-pill-name" [routerLink]="{ id: participantId()!, isUser: true } | groupLink">

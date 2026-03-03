@@ -1,5 +1,4 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadId } from '../../models/threads';
 import { ThreadItemInfo } from './current-thread.store';
 
@@ -17,8 +16,6 @@ export const threadPanelActions = createActionGroup({
     close: emptyProps(),
     threadStatusChanged: emptyProps(),
     autoFollowTriggered: props<{ threadId: ThreadId }>(),
-    navigatedToThreadContent: props<{ previousRoute: FullItemRoute, previousPage: string[] }>(),
-    clearPreviousContent: emptyProps(),
   },
 });
 
