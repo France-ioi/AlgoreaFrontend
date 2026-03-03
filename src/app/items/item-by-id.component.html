@@ -108,7 +108,7 @@
                 ></alg-item-log-view>
               }
               @if (currentTab?.tag === 'alg-chapter-progress') {
-                @if (isObserving) {
+                @if (isObserving && (observedGroup$ | async)?.route?.contentType !== 'user') {
                   <alg-chapter-group-progress
                     class="alg-flex-1"
                     [itemData]="itemData"
