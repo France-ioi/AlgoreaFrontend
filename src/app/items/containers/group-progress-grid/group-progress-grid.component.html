@@ -102,10 +102,17 @@
                     tooltipStyleClass="secondary"
                     [tooltipDelay]="100"
                   >
-                    <a
-                      class="alg-link cursor-pointer"
-                      [routerLink]="{ id: row.id, isUser: currentFilter === 'Users' } | groupLink"
-                    >{{ row.header }}</a>
+                    @if (row.user; as user) {
+                      <alg-user-link-with-actions
+                        [user]="user"
+                        [observeLink]="getObserveLink(row)"
+                      ></alg-user-link-with-actions>
+                    } @else {
+                      <a
+                        class="alg-link cursor-pointer"
+                        [routerLink]="{ id: row.id, isUser: false } | groupLink"
+                      >{{ row.header }}</a>
+                    }
                   </td>
                   @for (col of columnsState.data; track $index; let colIndex = $index) {
                     @if (row.data[colIndex]; as rowData) {

@@ -1,0 +1,56 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(4);
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(4);
+  opacity: 0;
+  transform: translateX(functions.toRem(-4));
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+:host:hover .actions,
+:host:focus-within .actions {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: functions.toRem(28);
+  height: functions.toRem(28);
+  border-radius: 50%;
+  border: functions.toRem(1) solid var(--alg-border-color, #d0d0d0);
+  color: var(--alg-primary-color, #4a6fa5);
+  background: var(--alg-white-color, #fff);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  font-size: functions.toRem(14);
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--alg-primary-color, #4a6fa5);
+    color: var(--alg-white-color, #fff);
+    border-color: var(--alg-primary-color, #4a6fa5);
+  }
+
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #4a6fa5);
+    outline-offset: functions.toRem(2);
+  }
+}
