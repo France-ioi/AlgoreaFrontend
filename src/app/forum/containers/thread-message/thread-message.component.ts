@@ -18,7 +18,6 @@ import {
 } from '../../models/thread-events';
 import { RelativeTimePipe } from '../../../pipes/relativeTime';
 import { Store } from '@ngrx/store';
-import { fromForum } from 'src/app/forum/store';
 import { fromItemContent } from 'src/app/items/store';
 
 @Component({
@@ -43,7 +42,6 @@ import { fromItemContent } from 'src/app/items/store';
 export class ThreadMessageComponent {
   private store = inject(Store);
   private router = inject(Router);
-  private activeContentRoute = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
   private activeContentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
 
   threadId = input.required<ThreadId>();
@@ -60,11 +58,7 @@ export class ThreadMessageComponent {
   });
 
   onNavigateToSolution(): void {
-    const previousRoute = this.activeContentRoute();
     const previousPage = this.activeContentPage();
-    if (previousRoute && previousPage) {
-      this.store.dispatch(fromForum.threadPanelActions.navigatedToThreadContent({ previousRoute, previousPage }));
-    }
     let backLabel: string;
     switch (previousPage?.[0]) {
       case 'forum':

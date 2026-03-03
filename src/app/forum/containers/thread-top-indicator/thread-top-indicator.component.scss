@@ -6,16 +6,11 @@
   top: functions.toRem(8);
   z-index: 1;
 
-  // When inlined without back button: leave room for the close button
+  // When inlined: leave room for the close button
   &.layout-inline {
     .user-indicator {
       margin-right: functions.toRem(48);
     }
-  }
-
-  // When inlined with back button: position below the action buttons
-  &.layout-inline-with-back {
-    top: functions.toRem(44);
   }
 }
 

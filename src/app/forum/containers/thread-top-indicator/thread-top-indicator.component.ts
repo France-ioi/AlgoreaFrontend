@@ -3,7 +3,7 @@ import { FetchState } from 'src/app/utils/state';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { FormsModule } from '@angular/forms';
 
-export type IndicatorLayout = 'default' | 'inline' | 'inline-with-back';
+export type IndicatorLayout = 'default' | 'inline';
 
 @Component({
   selector: 'alg-thread-top-indicator',

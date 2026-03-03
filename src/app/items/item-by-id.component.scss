@@ -46,12 +46,6 @@
   gap: functions.toRem(4);
 }
 
-.inline-thread-back {
-  text-decoration: none;
-  white-space: nowrap;
-  background-color: var(--alg-white-color);
-}
-
 .inline-thread {
   flex: 1;
   overflow: hidden;

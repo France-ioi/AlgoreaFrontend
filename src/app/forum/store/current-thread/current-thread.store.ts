@@ -1,12 +1,7 @@
 import { Thread, ThreadId } from '../../models/threads';
 import { FetchState, fetchingState } from 'src/app/utils/state';
-import { FullItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
+import { RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadEvent } from '../../models/thread-events';
-
-export interface PreviousContentRoute {
-  route: FullItemRoute,
-  page: string[],
-}
 
 export interface ThreadItemInfo {
   route: RawItemRoute,
@@ -22,7 +17,6 @@ export interface State {
   slsEvents: FetchState<ThreadEvent[], ThreadId>,
   wsEvents: ThreadEvent[],
   followStatus: FetchState<boolean>,
-  previousContentRoute: PreviousContentRoute | null, // route to navigate back to after clicking "navigate to content"
 }
 
 export const initialState: State = {
@@ -34,5 +28,4 @@ export const initialState: State = {
   slsEvents: fetchingState(),
   wsEvents: [],
   followStatus: fetchingState(),
-  previousContentRoute: null,
 };
