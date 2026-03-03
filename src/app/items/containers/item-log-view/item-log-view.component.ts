@@ -9,8 +9,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { DataPager } from 'src/app/utils/data-pager';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { LogActionDisplayPipe } from 'src/app/pipes/logActionDisplay';
-import { UserCaptionPipe } from 'src/app/pipes/userCaption';
-import { GroupLinkPipe } from 'src/app/pipes/groupLink';
+import { UserLinkWithActionsComponent } from 'src/app/ui-components/user-link-with-actions/user-link-with-actions.component';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -23,6 +22,9 @@ import { RelativeTimeComponent } from '../../../ui-components/relative-time/rela
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
+import { ItemRouter } from 'src/app/models/routing/item-router';
+import { itemRouteWith } from 'src/app/models/routing/item-route';
+import { UrlTree } from '@angular/router';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { fromItemContent } from 'src/app/items/store';
@@ -62,8 +64,7 @@ const logsLimit = 20;
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
-    GroupLinkPipe,
-    UserCaptionPipe,
+    UserLinkWithActionsComponent,
     LogActionDisplayPipe,
     RelativeTimeComponent,
     LogActivityTypeIconPipe,
@@ -87,6 +88,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   private sessionService = inject(UserSessionService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private router = inject(Router);
+  private itemRouter = inject(ItemRouter);
 
   @Input() itemData?: ItemData;
 
@@ -180,6 +182,11 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
         label: $localize`Back to the history page`,
       },
     }));
+  }
+
+  getObserveLink(user: { id: string }): UrlTree | undefined {
+    if (!this.itemData) return undefined;
+    return this.itemRouter.url(itemRouteWith(this.itemData.route, { observedGroup: { id: user.id, isUser: true } }));
   }
 
   private isSelfCurrentAnswer(log: ActivityLogs[number], profileId: string): boolean {
