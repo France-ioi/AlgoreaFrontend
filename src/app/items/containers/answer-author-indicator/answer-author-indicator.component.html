@@ -28,8 +28,8 @@
                 on {{ answer.createdAt | date:'short' }}.
               </div>
             </div>
-            @if (!info.isObserving && author.groupId === info.currentUserId && itemData) {
-              <div class="buttons">
+            <div class="buttons">
+              @if (!info.isObserving && author.groupId === info.currentUserId && itemData) {
                 <a
                   class="size-xs button"
                   alg-button
@@ -40,15 +40,22 @@
                   Edit it
                 </a>
                 <a
-                  class="size-xs"
+                  class="size-xs button"
                   alg-button
                   [routerLink]="itemData.item | itemRoute | url"
                   i18n
                 >
                   Back to your current answer
                 </a>
-              </div>
-            }
+              }
+              @if (answerBackLink(); as backLink) {
+                <button
+                  class="size-xs"
+                  alg-button
+                  (click)="onBackLinkClick(backLink.url)"
+                >{{ backLink.label }}</button>
+              }
+            </div>
           </div>
         }
       </div>

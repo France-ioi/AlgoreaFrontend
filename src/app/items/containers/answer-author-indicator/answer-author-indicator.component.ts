@@ -7,7 +7,7 @@ import { groupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { Answer } from '../../services/item-task.service';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe, DatePipe } from '@angular/common';
@@ -21,6 +21,7 @@ import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
+import { fromItemContent } from 'src/app/items/store';
 
 @Component({
   selector: 'alg-answer-author-indicator',
@@ -43,6 +44,7 @@ import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-naviga
 })
 export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   private store = inject(Store);
+  private router = inject(Router);
   private groupRouter = inject(GroupRouter);
   private getUserService = inject(GetUserService);
   private userSessionService = inject(UserSessionService);
@@ -64,6 +66,7 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
+  readonly answerBackLink = this.store.selectSignal(fromItemContent.selectAnswerBackLink);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.answer) this.answer$.next(this.answer());
@@ -71,5 +74,10 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.answer$.complete();
+  }
+
+  onBackLinkClick(url: string): void {
+    this.store.dispatch(fromItemContent.answerBackLinkActions.clear());
+    void this.router.navigateByUrl(url);
   }
 }

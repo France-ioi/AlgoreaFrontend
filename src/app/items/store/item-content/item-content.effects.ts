@@ -3,15 +3,15 @@ import { inject } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
 import { filter, map } from 'rxjs';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-import { fromItemContent } from './item-content.store';
+import { itemContentStore } from './item-content.store';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 import { formatBreadcrumbs } from '../../models/item-breadcrumbs';
 
 const selectCurrentContent = createSelector(
-  fromItemContent.selectActiveContentRoute,
-  fromItemContent.selectActiveContentBreadcrumbsState,
-  fromItemContent.selectActiveContentItemState,
+  itemContentStore.selectActiveContentRoute,
+  itemContentStore.selectActiveContentBreadcrumbsState,
+  itemContentStore.selectActiveContentItemState,
   (route, breadcrumbsState, itemState) => (route ? { route, breadcrumbs: breadcrumbsState.data, item: itemState.data } : null)
 );
 

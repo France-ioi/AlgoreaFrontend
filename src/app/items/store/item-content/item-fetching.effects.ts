@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, debounceTime, distinctUntilChanged, filter, map, merge, skip, switchMap } from 'rxjs';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-import { fromItemContent } from './item-content.store';
+import { itemContentStore } from './item-content.store';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { itemByIdPageActions, itemFetchingActions } from './item-content.actions';
@@ -26,7 +26,7 @@ export const itemFetchingEffect = createEffect(
     actions$ = inject(Actions),
     userSessionService$ = inject(UserSessionService),
     getItemByIdService = inject(GetItemByIdService),
-  ) => store$.select(fromItemContent.selectActiveContentRoute).pipe(
+  ) => store$.select(itemContentStore.selectActiveContentRoute).pipe(
     // Only do something for non-null item id (so on item page) so that we keep the item data when navigating to another type of page
     // (e.g., group). If we come back on the same item later, there is no more refetch needed.
     filter(isNotNull),
@@ -48,7 +48,7 @@ export const breadcrumbsFetchingEffect = createEffect(
     actions$ = inject(Actions),
     userSessionService$ = inject(UserSessionService),
     breadcrumbsService = inject(ItemBreadcrumbsWithFailoverService),
-  ) => store$.select(fromItemContent.selectActiveContentRoute).pipe(
+  ) => store$.select(itemContentStore.selectActiveContentRoute).pipe(
     filter(isNotNull),
     distinctUntilChanged((x, y) => equal(x, y)),
     switchMap(route => breadcrumbsService.get(route).pipe(
@@ -68,7 +68,7 @@ export const resultsFetchingEffect = createEffect(
     actions$ = inject(Actions),
     userSessionService$ = inject(UserSessionService),
     resultFetchingService = inject(ResultFetchingService),
-  ) => store$.select(fromItemContent.selectActiveContentInfoForFetchingResults).pipe(
+  ) => store$.select(itemContentStore.selectActiveContentInfoForFetchingResults).pipe(
     filter(isNotNull),
     distinctUntilChanged((x, y) => // for results, it needs to be re-fetched only if the route or perm change (+ refresh via the resetter)
       equal(x.route, y.route) && x.item.permissions.canView === y.item.permissions.canView

@@ -2,7 +2,7 @@ import { Store } from '@ngrx/store';
 import { EMPTY, toArray } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { fromItemContent } from './item-content.store';
+import { itemContentStore } from './item-content.store';
 import { breadcrumbsFetchingEffect, itemFetchingEffect, resultsFetchingEffect } from './item-fetching.effects';
 import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
@@ -94,7 +94,7 @@ describe('itemFetchingEffect', () => {
     testScheduler.run(({ hot, cold }) => {
       getItemServiceSpy.get.and.callFake(() => cold('-a|', { a: mockItem }));
       const selectActiveContentRoute$ = hot('a-----|', { a: route });
-      const actions$ = hot('                 --r---|', { r: fromItemContent.itemByIdPageActions.refresh() });
+      const actions$ = hot('                 --r---|', { r: itemContentStore.itemByIdPageActions.refresh() });
       const storeMock$ = {
         select: () => selectActiveContentRoute$
       } as unknown as Store;
@@ -154,7 +154,7 @@ describe('breadcrumbsFetchingEffect', () => {
     testScheduler.run(({ hot, cold }) => {
       breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
       const selectActiveRoute$ = hot('a-x-a----|', { x: null, a: route });
-      const actions$ = hot('          --r---|', { r: fromItemContent.itemByIdPageActions.refresh() });
+      const actions$ = hot('          --r---|', { r: itemContentStore.itemByIdPageActions.refresh() });
       const storeMock$ = {
         select: () => selectActiveRoute$,
       } as unknown as Store;
@@ -265,7 +265,7 @@ describe('resultsFetchingEffect', () => {
     testScheduler.run(({ hot, cold }) => {
       resultsServiceSpy.fetchResults.and.callFake(() => cold('-a|', { a: mockResults }));
       const selectInfo$ = hot('r---|', { r: { route, item: mockItem } });
-      const actions$ = hot('   --r-|', { r: fromItemContent.itemByIdPageActions.refresh() });
+      const actions$ = hot('   --r-|', { r: itemContentStore.itemByIdPageActions.refresh() });
       const storeMock$ = {
         select: () => selectInfo$
       } as unknown as Store;

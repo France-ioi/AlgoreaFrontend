@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { filter, map, startWith, switchMap } from 'rxjs';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-import { fromItemContent } from './item-content.store';
+import { itemContentStore } from './item-content.store';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { repeatLatestWhen } from 'src/app/utils/operators/repeatLatestWhen';
@@ -21,7 +21,7 @@ export const routeErrorHandlingEffect = createEffect(
     getItemPathService = inject(GetItemPathService),
     resultActionsService = inject(ResultActionsService),
     itemRouter = inject(ItemRouter),
-  ) => store$.select(fromItemContent.selectActiveContentRouteError).pipe(
+  ) => store$.select(itemContentStore.selectActiveContentRouteError).pipe(
     filter(isNotNull),
     repeatLatestWhen(userSessionService.userChanged$),
     switchMap(routeError => solveRouteError(routeError, getItemPathService, resultActionsService, itemRouter).pipe(

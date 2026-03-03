@@ -26,6 +26,11 @@
   align-items: center;
 }
 
+.buttons {
+  display: flex;
+  align-items: center;
+}
+
 .score-ring {
   margin-right: functions.toRem(8);
 }
