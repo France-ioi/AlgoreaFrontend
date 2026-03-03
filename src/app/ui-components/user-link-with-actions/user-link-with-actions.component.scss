@@ -20,8 +20,16 @@
   pointer-events: none;
 }
 
-:host:hover .actions,
-:host:focus-within .actions {
+@media (hover: hover) {
+  :host:hover .actions {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+}
+
+:host:focus-within .actions,
+:host.actions-visible .actions {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
