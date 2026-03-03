@@ -25,7 +25,6 @@ import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
 import { fromItemContent } from 'src/app/items/store';
 import {
   CdkCell,
@@ -62,7 +61,6 @@ const logsLimit = 20;
     AsyncPipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
-    LoadAnswerAsCurrentDirective,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
