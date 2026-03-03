@@ -4,7 +4,7 @@ import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { BreakLinesPipe } from '../../../pipes/breakLines';
@@ -42,6 +42,7 @@ import { fromItemContent } from 'src/app/items/store';
 })
 export class ThreadMessageComponent {
   private store = inject(Store);
+  private router = inject(Router);
   private activeContentRoute = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
   private activeContentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
 
@@ -64,6 +65,20 @@ export class ThreadMessageComponent {
     if (previousRoute && previousPage) {
       this.store.dispatch(fromForum.threadPanelActions.navigatedToThreadContent({ previousRoute, previousPage }));
     }
+    let backLabel: string;
+    switch (previousPage?.[0]) {
+      case 'forum':
+        backLabel = $localize`Back to the forum tab`;
+        break;
+      default:
+        backLabel = $localize`Back to the previous content`;
+    }
+    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+      backLink: {
+        url: this.router.url,
+        label: backLabel,
+      },
+    }));
   }
 }
 
