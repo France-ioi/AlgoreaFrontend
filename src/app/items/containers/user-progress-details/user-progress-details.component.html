@@ -68,6 +68,7 @@
             [routerLink]="progressData.colItem.fullRoute | with: { answer: { best: { id: progress.groupId }}} | url: ['task', 'editor']"
             icon="ph ph-code-simple"
             alg-button
+            (click)="onViewAnswer()"
             i18n
           >
             View answer

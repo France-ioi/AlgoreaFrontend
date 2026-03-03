@@ -14,7 +14,7 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -25,7 +25,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { LoadAnswerAsCurrentDirective } from 'src/app/models/routing/item-navigation-state';
+import { fromItemContent } from 'src/app/items/store';
 import {
   CdkCell,
   CdkCellDef,
@@ -61,7 +61,6 @@ const logsLimit = 20;
     AsyncPipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
-    LoadAnswerAsCurrentDirective,
     RouteUrlPipe,
     GroupLinkPipe,
     UserCaptionPipe,
@@ -87,6 +86,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   private activityLogService = inject(ActivityLogService);
   private sessionService = inject(UserSessionService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private router = inject(Router);
 
   @Input() itemData?: ItemData;
 
@@ -173,6 +173,14 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     this.datapager.load();
   }
 
+  onViewAnswer(): void {
+    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+      backLink: {
+        url: this.router.url,
+        label: $localize`Back to the history page`,
+      },
+    }));
+  }
 
   private isSelfCurrentAnswer(log: ActivityLogs[number], profileId: string): boolean {
     return log.activityType === 'current_answer' && log.participant.id === profileId;

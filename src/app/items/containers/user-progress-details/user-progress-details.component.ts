@@ -7,7 +7,7 @@ import { DurationToReadablePipe, SecondsToDurationPipe } from 'src/app/pipes/dur
 import { AllowsWatchingItemAnswersPipe } from 'src/app/items/models/item-watch-permission';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
 import { ItemType } from 'src/app/items/models/item-type';
@@ -15,6 +15,8 @@ import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
 import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from 'src/app/items/store';
 
 export interface ProgressData {
   progress: Progress,
@@ -47,6 +49,8 @@ export interface ProgressData {
 })
 export class UserProgressDetailsComponent implements OnChanges {
   private userSessionService = inject(UserSessionService);
+  private store = inject(Store);
+  private router = inject(Router);
 
   @Input() progressData?: ProgressData;
   @Input() canEditPermissions?: boolean;
@@ -63,4 +67,12 @@ export class UserProgressDetailsComponent implements OnChanges {
     }
   }
 
+  onViewAnswer(): void {
+    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+      backLink: {
+        url: this.router.url,
+        label: $localize`Go back to the stats grid`,
+      },
+    }));
+  }
 }

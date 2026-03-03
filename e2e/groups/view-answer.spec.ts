@@ -158,15 +158,15 @@ test('View answer in logs for a group', async ({ page }) => {
   await expect.soft(page).toHaveURL(/answerId=6216264238928088073/);
 });
 
-test('Reload answer in logs for a item', async ({ page }) => {
+test('View answer in logs for an item', async ({ page }) => {
   await initAsUsualUser(page);
   await page.route(`${apiUrl}/items/4702/log?limit=20`, async route => {
     await route.fulfill({ json: itemLogsJson });
   });
   await page.goto('/a/home;pa=0/progress/history');
   await expect.soft(page.locator('h1').getByText('Parcours officiels')).toBeVisible();
-  await expect.soft(page.getByRole('link', { name: 'Reload answer' })).toBeVisible();
-  await page.getByRole('link', { name: 'Reload answer' }).click();
+  await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
+  await page.getByRole('link', { name: 'View answer' }).click();
   await expect.soft(page.locator('h1').getByText('Task with edit tab')).toBeVisible();
-  await expect.soft(page).not.toHaveURL(/answerId=/);
+  await expect.soft(page).toHaveURL(/answerId=/);
 });

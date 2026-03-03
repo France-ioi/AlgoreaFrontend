@@ -64,19 +64,11 @@
                           @let attemptId = rowData.item.id === itemData.item.id ? itemData.route.attemptId : undefined;
                           @let parentAttemptId = rowData.item.id === itemData.item.id ? itemData.route.parentAttemptId : undefined;
                           @let route = rowData.item | itemRoute: { path, attemptId, parentAttemptId };
-                          @if (!isObserving) {
-                            <a
-                              class="alg-link item-title-link"
-                              [routerLink]="route | url: []"
-                              [algLoadAnswerAsCurrent]="rowData.answerId"
-                              i18n
-                            >
-                              Reload answer
-                            </a>
-                          } @else if (isObserving && !!rowData.canWatchAnswer) {
+                          @if (!isObserving || !!rowData.canWatchAnswer) {
                             <a
                               class="alg-link item-title-link"
                               [routerLink]="route | with: { answer: { id: rowData.answerId } } | url: ['task', 'editor']"
+                              (click)="onViewAnswer()"
                               i18n
                             >
                               View answer
