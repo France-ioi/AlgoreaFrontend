@@ -21,7 +21,8 @@ import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { HttpErrorResponse } from '@angular/common/http';
 import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/items/models/item-permissions';
-import { itemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute, selectObservedGroupRouteAsItemRouteParameter } from 'src/app/models/routing/item-route';
+import { Store } from '@ngrx/store';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -122,6 +123,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
   private getGroupChildrenService = inject(GetGroupChildrenService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private progressCSVService = inject(ProgressCSVService);
+  private store = inject(Store);
+  private observedGroupRouteParam = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
 
   @Input() group?: Group;
   @Input() itemData?: ItemData;
@@ -252,7 +255,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
               attemptId,
             } : {
               parentAttemptId: attemptId,
-            }
+            },
+            ...this.observedGroupRouteParam(),
           }
         ),
         permissions: col.permissions,
