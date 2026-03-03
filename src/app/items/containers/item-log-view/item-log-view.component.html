@@ -1,4 +1,8 @@
-<p i18n>In this tab, you will find a list of all your past activity for this content. For exercises, you may reload your previous submissions.</p>
+@if (isObserving$ | async) {
+  <p i18n>In this tab, you will find a list of all the past activity for this content. For exercises, you may view previous submissions.</p>
+} @else {
+  <p i18n>In this tab, you will find a list of all your past activity for this content. For exercises, you may view your previous submissions.</p>
+}
 
 @if (state$ | async; as state) {
   @if (state.isFetching && !state.data) {
