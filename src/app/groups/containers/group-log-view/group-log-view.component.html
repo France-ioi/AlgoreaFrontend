@@ -48,6 +48,8 @@
                     <a
                       class="alg-link"
                       [routerLink]="rowData.item | itemRoute: $any({ answer: { id: rowData.answerId } }) | url: ['task', 'editor']"
+                      (click)="onViewAnswer()"
+                      i18n
                     >
                       View answer
                     </a>

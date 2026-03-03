@@ -77,6 +77,7 @@
                             <a
                               class="alg-link item-title-link"
                               [routerLink]="route | with: { answer: { id: rowData.answerId } } | url: ['task', 'editor']"
+                              (click)="onViewAnswer()"
                               i18n
                             >
                               View answer

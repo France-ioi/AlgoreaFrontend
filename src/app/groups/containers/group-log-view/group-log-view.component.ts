@@ -10,7 +10,7 @@ import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { PathSuggestionComponent } from 'src/app/containers/path-suggestion/path-suggestion.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -20,6 +20,8 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from 'src/app/items/store';
 import {
   CdkCell,
   CdkCellDef,
@@ -75,6 +77,8 @@ export class GroupLogViewComponent implements OnChanges {
   private activityLogService = inject(ActivityLogService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private sessionService = inject(UserSessionService);
+  private store = inject(Store);
+  private router = inject(Router);
 
   @Input() groupId?: string;
   showUserColumn = input(true);
@@ -139,5 +143,14 @@ export class GroupLogViewComponent implements OnChanges {
 
   fetchMoreRows(): void {
     this.datapager.load();
+  }
+
+  onViewAnswer(): void {
+    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+      backLink: {
+        url: this.router.url,
+        label: $localize`Back to the history page`,
+      },
+    }));
   }
 }
