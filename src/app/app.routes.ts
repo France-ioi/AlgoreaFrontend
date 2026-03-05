@@ -3,6 +3,7 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes-guard';
 import { BeforeUnloadGuard } from 'src/app/guards/before-unload-guard';
 import { GroupDeleteService } from './groups/data-access/group-delete.service';
 import { DefaultLayoutInitService } from './services/layout.service';
+import { communityFeatureFlagGuard } from './community/community-feature-flag.guard';
 
 import { RedirectToIdComponent } from './containers/redirect-to-id/redirect-to-id.component';
 import { homeRedirectGuard } from 'src/app/guards/home-redirect.guard';
@@ -16,6 +17,11 @@ const routes: Routes = [
     // This component should ideally never be reached as the guard always redirects.
     // Assigning PageNotFoundComponent or an empty component for route validity.
     component: PageNotFoundComponent,
+  },
+  {
+    path: 'community',
+    loadChildren: () => import('./community/community.routes'),
+    canActivate: [ communityFeatureFlagGuard, DefaultLayoutInitService ],
   },
   {
     path: 'groups',
