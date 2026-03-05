@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header-container {
+  padding: var(--alg-space-size-3) 0;
+}
+
+.header-title {
+  margin: 0;
+  line-height: 1em;
+}
