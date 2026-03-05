@@ -3,7 +3,6 @@
     <button
       class="main-menu-button"
       [class.active]="activeTabIndex() === 0"
-      [class.compact]="currentLanguage() === 'fr'"
       (click)="tabSelected.emit(0)"
     >
       <div class="main-menu-icon-wrapper">
@@ -15,7 +14,6 @@
       <button
         class="main-menu-button"
         [class.active]="activeTabIndex() === 1"
-        [class.compact]="currentLanguage() === 'fr'"
         (click)="tabSelected.emit(1)"
       >
         <div class="main-menu-icon-wrapper">
@@ -28,7 +26,6 @@
       <button
         class="main-menu-button"
         [class.active]="activeTabIndex() === 2"
-        [class.compact]="currentLanguage() === 'fr'"
         data-cy="main-menu-group-btn"
         (click)="tabSelected.emit(2)"
       >
@@ -42,7 +39,6 @@
       <button
         class="main-menu-button"
         [class.active]="activeTabIndex() === communityTabIdx"
-        [class.compact]="currentLanguage() === 'fr'"
         data-cy="main-menu-community-btn"
         aria-label="Community"
         i18n-aria-label

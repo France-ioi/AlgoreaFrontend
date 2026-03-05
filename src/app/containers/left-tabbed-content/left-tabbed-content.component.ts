@@ -14,7 +14,6 @@ import { SearchService } from '../../data-access/search.service';
 import { repeatLatestWhen } from '../../utils/operators/repeatLatestWhen';
 import { APPCONFIG } from '../../config';
 import { readyState } from '../../utils/state';
-import { LocaleService } from '../../services/localeService';
 import { Store } from '@ngrx/store';
 import { ItemRouter } from '../../models/routing/item-router';
 import { GroupRouter } from '../../models/routing/group-router';
@@ -58,7 +57,6 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
   private store = inject(Store);
   private currentContent = inject(CurrentContentService);
   private injector = inject(Injector);
-  private localeService = inject(LocaleService);
   private itemRouter = inject(ItemRouter);
   private groupRouter = inject(GroupRouter);
   private router = inject(Router);
@@ -104,8 +102,6 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
 
   closeSearch = output();
   selectElement = output<string | undefined>();
-
-  currentLanguage = this.localeService.currentLang?.tag;
 
   private selectedActivityRoute = this.store.selectSignal(fromSelectedContent.selectActivity);
   private selectedSkillRoute = this.store.selectSignal(fromSelectedContent.selectSkill);

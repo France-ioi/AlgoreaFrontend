@@ -6,7 +6,6 @@
       [groupsTabEnabled]="!!(groupsTabEnabled$ | async)"
       [communityTabEnabled]="!!(communityTabEnabled$ | async)"
       [hasUnreadCommunityThreads]="false"
-      [currentLanguage]="currentLanguage"
       (tabSelected)="onSelectionChangedByIdx($event)"
     />
   }

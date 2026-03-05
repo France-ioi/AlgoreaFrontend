@@ -14,7 +14,6 @@ export class LeftTabBarComponent {
   groupsTabEnabled = input(false);
   communityTabEnabled = input(false);
   hasUnreadCommunityThreads = input(false);
-  currentLanguage = input<string | undefined>();
 
   readonly communityTabIdx = communityTabIdx;
 
