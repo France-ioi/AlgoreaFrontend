@@ -1,0 +1,66 @@
+@use 'src/assets/scss/functions';
+
+.tab-view-container {
+  margin: functions.toRem(25) 0 functions.toRem(42) 0;
+  padding: 0 var(--alg-space-size-3);
+}
+
+.main-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-menu-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0 functions.toRem(12);
+
+  &:not(.compact) {
+    margin: 0 var(--alg-space-size-6);
+  }
+
+  &.compact {
+    .main-menu-title {
+      font-size: functions.toRem(14);
+    }
+  }
+
+  &.active {
+    .main-menu-icon-wrapper {
+      background-color: var(--alg-white-color);
+    }
+
+    .main-menu-icon {
+      color: var(--alg-primary-color);
+    }
+  }
+}
+
+.main-menu-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: functions.toRem(48);
+  height: functions.toRem(48);
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.main-menu-icon {
+  color: var(--alg-secondary-color);
+  font-size: functions.toRem(24);
+}
+
+.main-menu-title {
+  margin-top: var(--alg-space-size-6);
+  color: var(--alg-secondary-color);
+  font-size: functions.toRem(16);
+  font-weight: 400;
+}

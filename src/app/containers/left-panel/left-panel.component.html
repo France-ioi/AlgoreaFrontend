@@ -1,0 +1,5 @@
+<alg-left-header></alg-left-header>
+<alg-left-tabbed-content class="alg-flex-1" [searchQuery]="searchQuery" (closeSearch)="searchQuery = ''"></alg-left-tabbed-content>
+@if (menuSearchEnabled) {
+  <alg-left-menu-search [(query)]="searchQuery"></alg-left-menu-search>
+}

@@ -1,0 +1,53 @@
+@if (activeTab$ | async; as activeTab) {
+  @if (showTabs$ | async) {
+    <alg-left-tab-bar
+      [activeTabIndex]="activeTab.index"
+      [skillsTabEnabled]="!!(skillsTabEnabled$ | async)"
+      [groupsTabEnabled]="!!(groupsTabEnabled$ | async)"
+      [currentLanguage]="currentLanguage"
+      (tabSelected)="onSelectionChangedByIdx($event)"
+    />
+  }
+  <hr class="divider">
+  <ng-container *ngrxLet="searchResultState$ as searchResultState">
+    @if (searchQuery.length > 0) {
+      @if (searchResultState.isFetching || searchResultState.isError || !searchResultState.data) {
+        <div class="container">
+          <alg-left-menu-back-button (close)="closeSearch.emit()">
+            Searching: "{{ searchQuery }}"
+          </alg-left-menu-back-button>
+        </div>
+        @if (searchResultState.isFetching) {
+          <alg-loading class="alg-flex-1"></alg-loading>
+        }
+        @if (searchResultState.isError) {
+          <alg-error
+            class="alg-flex-1"
+            i18n-message message="Unable to perform the search."
+            icon="ph-duotone ph-warning-circle"
+            [showRefreshButton]="true"
+            buttonCaption="Retry"
+            (refresh)="retrySearch()"
+          ></alg-error>
+        }
+      }
+      @if (searchResultState.isReady) {
+        <div class="alg-flex-1 scroll-wrapper">
+          <div class="scroll-container">
+            <ng-scrollbar [sensorThrottleTime]="1">
+              <alg-left-search-result [data]="searchResultState.data" (close)="closeSearch.emit()"></alg-left-search-result>
+            </ng-scrollbar>
+          </div>
+        </div>
+      }
+    } @else {
+      @if (isTreeTab(activeTab.index)) {
+        <alg-left-nav
+          class="alg-flex-1"
+          [treeIndex]="tabToTreeIndex(activeTab.index)"
+          (selectElement)="onSelectElement($event)"
+        />
+      }
+    }
+  </ng-container>
+}

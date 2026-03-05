@@ -1,0 +1,42 @@
+<div class="tab-view-container">
+  <div class="main-menu">
+    <button
+      class="main-menu-button"
+      [class.active]="activeTabIndex() === 0"
+      [class.compact]="currentLanguage() === 'fr'"
+      (click)="tabSelected.emit(0)"
+    >
+      <div class="main-menu-icon-wrapper">
+        <i class="ph ph-presentation main-menu-icon"></i>
+      </div>
+      <span class="main-menu-title" i18n="|Tab name">Content</span>
+    </button>
+    @if (skillsTabEnabled()) {
+      <button
+        class="main-menu-button"
+        [class.active]="activeTabIndex() === 1"
+        [class.compact]="currentLanguage() === 'fr'"
+        (click)="tabSelected.emit(1)"
+      >
+        <div class="main-menu-icon-wrapper">
+          <i class="ph ph-graduation-cap main-menu-icon"></i>
+        </div>
+        <span class="main-menu-title" i18n="|Tab name">Skills</span>
+      </button>
+    }
+    @if (groupsTabEnabled()) {
+      <button
+        class="main-menu-button"
+        [class.active]="activeTabIndex() === 2"
+        [class.compact]="currentLanguage() === 'fr'"
+        data-cy="main-menu-group-btn"
+        (click)="tabSelected.emit(2)"
+      >
+        <div class="main-menu-icon-wrapper">
+          <i class="ph ph-users main-menu-icon"></i>
+        </div>
+        <span class="main-menu-title" i18n="|Tab name">Groups</span>
+      </button>
+    }
+  </div>
+</div>

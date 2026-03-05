@@ -19,7 +19,7 @@ import { LanguageMismatchComponent } from './containers/language-mismatch/langua
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
 import { LetDirective } from '@ngrx/component';
-import { LeftMenuComponent } from './containers/left-menu/left-menu.component';
+import { LeftPanelComponent } from './containers/left-panel/left-panel.component';
 import { Store } from '@ngrx/store';
 import { fromForum, isThreadInline } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
@@ -41,7 +41,7 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
   styleUrls: [ './app.component.scss' ],
   imports: [
     NgClass,
-    LeftMenuComponent,
+    LeftPanelComponent,
     LetDirective,
     TopBarComponent,
     HtmlElLoadedDirective,

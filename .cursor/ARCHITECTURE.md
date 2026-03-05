@@ -28,6 +28,21 @@ src/app/
 └── lti/                 # LTI integration module
 ```
 
+## Left Navigation Component Hierarchy
+
+```
+alg-left-panel          → outer shell: header + tabbed-content + search input
+└── alg-left-tabbed-content  → tab bar + search results + tree delegation
+    ├── alg-left-tab-bar
+    └── alg-left-nav
+```
+
+- **`alg-left-panel`**: Outer shell — header, tabbed content area, search input bar
+- **`alg-left-tabbed-content`**: Orchestrator — owns active tab logic, search, tab-to-tree index mapping, scroll-to-element
+- **`alg-left-tab-bar`**: Presentational — renders tab buttons, emits tab selection events
+- **`alg-left-nav`**: Tree rendering — receives a `treeIndex` input, renders the corresponding nav tree
+- Tab indices and tree service indices are decoupled via `tabToTreeIndex()` mapping
+
 ## Core Concepts
 
 ### Items
