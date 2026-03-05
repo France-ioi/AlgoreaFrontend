@@ -12,7 +12,7 @@ import { ForumThreadPlaceholderComponent, SingleThreadState } from './forum-thre
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { canThreadExist, canOpenThread } from 'src/app/forum/models/thread-context';
 import { isUser } from 'src/app/models/routing/group-route';
-import { fetchList } from 'src/app/utils/fetch-list';
+import { fetchListFromParams } from 'src/app/utils/fetch-list';
 
 interface ThreadContext {
   participantId: string,
@@ -62,11 +62,13 @@ export class ItemForumComponent {
 
   private noObservationParams = computed(() => (this.isObserving() ? null : { item: this.item() }));
 
-  private myThreads = fetchList(this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: true }));
+  private myThreads = fetchListFromParams(this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: true }));
   myThreadsState = this.myThreads.state;
   refreshMyThreads = this.myThreads.refresh;
 
-  private othersThreads = fetchList(this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: false }));
+  private othersThreads = fetchListFromParams(
+    this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: false }),
+  );
   othersThreadsState = this.othersThreads.state;
   refreshOthersThreads = this.othersThreads.refresh;
 
@@ -76,7 +78,7 @@ export class ItemForumComponent {
     return { item: this.item(), groupId: observationInfo.route.id };
   });
 
-  private observedGroupThreads = fetchList(this.observedGroupParams, ({ item, groupId }) =>
+  private observedGroupThreads = fetchListFromParams(this.observedGroupParams, ({ item, groupId }) =>
     this.getThreadService.get(item.id, { watchedGroupId: groupId }),
   );
   observedGroupThreadsState = this.observedGroupThreads.state;

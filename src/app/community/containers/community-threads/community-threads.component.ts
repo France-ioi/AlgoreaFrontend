@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
 import { fetchList } from '../../../utils/fetch-list';
@@ -21,7 +21,6 @@ export class CommunityThreadsComponent {
   private getThreadService = inject(GetThreadsService);
 
   private threads = fetchList(
-    computed(() => ({})),
     () => this.getThreadService.get(undefined, { isMine: false }),
   );
   threadsState = this.threads.state;
