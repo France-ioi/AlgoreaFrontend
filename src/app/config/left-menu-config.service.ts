@@ -29,8 +29,10 @@ export class LeftMenuConfigService {
       );
     })
   );
-  showTabBar$ = combineLatest([ this.skillsTabEnabled$, this.groupsTabEnabled$ ]).pipe(
-    map(([ skillsTabEnabled, groupsTabEnabled ]) => skillsTabEnabled || groupsTabEnabled)
+  communityTabEnabled$ = of(this.config.featureFlags.enableCommunity);
+
+  showTabBar$ = combineLatest([ this.skillsTabEnabled$, this.groupsTabEnabled$, this.communityTabEnabled$ ]).pipe(
+    map(([ skillsTabEnabled, groupsTabEnabled, communityTabEnabled ]) => skillsTabEnabled || groupsTabEnabled || communityTabEnabled)
   );
 
 }

@@ -7,8 +7,13 @@
 
 .main-menu {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+
+  &.multi-row {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 }
 
 .main-menu-button {
@@ -24,6 +29,12 @@
 
   &:not(.compact) {
     margin: 0 var(--alg-space-size-6);
+  }
+
+  .multi-row & {
+    flex: 0 0 50%;
+    margin: 0;
+    padding: functions.toRem(8) 0;
   }
 
   &.compact {
@@ -51,6 +62,22 @@
   height: functions.toRem(48);
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.notification-dot {
+  display: none;
+  position: absolute;
+  top: functions.toRem(6);
+  right: functions.toRem(6);
+  width: functions.toRem(8);
+  height: functions.toRem(8);
+  border-radius: 50%;
+  background-color: var(--danger-color, #e00);
+
+  &.visible {
+    display: block;
+  }
 }
 
 .main-menu-icon {

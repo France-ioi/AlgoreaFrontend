@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy, Component, inject, Injector, Input, OnChanges, OnDestroy, output, SimpleChanges, ViewChild
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { isDefined } from '../../utils/null-undefined-predicates';
@@ -32,6 +33,7 @@ import { AsyncPipe } from '@angular/common';
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
 const groupsTabIdx = 2;
+const communityTabIdx = 3;
 
 const minQueryLength = 3;
 
@@ -59,6 +61,7 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
   private localeService = inject(LocaleService);
   private itemRouter = inject(ItemRouter);
   private groupRouter = inject(GroupRouter);
+  private router = inject(Router);
   private leftMenuConfig = inject(LeftMenuConfigService);
   private config = inject(APPCONFIG);
 
@@ -80,15 +83,19 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
 
   skillsTabEnabled$ = this.leftMenuConfig.skillsTabEnabled$;
   groupsTabEnabled$ = this.leftMenuConfig.groupsTabEnabled$;
+  communityTabEnabled$ = this.leftMenuConfig.communityTabEnabled$;
   showTabs$ = this.leftMenuConfig.showTabBar$;
 
   activeTab$ = this.currentContent.content$.pipe(
     distinctUntilChanged((x, y) => x?.type === y?.type && x?.route?.id === y?.route?.id),
     map(content => contentToTabIndex(content)),
     filter(isDefined),
-    withLatestFrom(this.skillsTabEnabled$, this.groupsTabEnabled$),
-    filter(([ idx, skillsTabEnabled, groupsTabEnabled ]) =>
-      idx === activitiesTabIdx || (idx === skillsTabIdx && skillsTabEnabled) || (idx === groupsTabIdx && groupsTabEnabled)),
+    withLatestFrom(this.skillsTabEnabled$, this.groupsTabEnabled$, this.communityTabEnabled$),
+    filter(([ idx, skillsTabEnabled, groupsTabEnabled, communityTabEnabled ]) =>
+      idx === activitiesTabIdx
+      || (idx === skillsTabIdx && skillsTabEnabled)
+      || (idx === groupsTabIdx && groupsTabEnabled)
+      || (idx === communityTabIdx && communityTabEnabled)),
     map(([ idx ]) => idx),
     startWith(0),
     distinctUntilChanged(),
@@ -122,6 +129,9 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
     }
     if (e === groupsTabIdx) {
       this.groupRouter.navigateTo(this.selectedGroupRoute());
+    }
+    if (e === communityTabIdx) {
+      void this.router.navigate([ '/community' ]);
     }
   }
 
@@ -167,6 +177,7 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
 
 function contentToTabIndex(content: ContentInfo | null): number | undefined {
   if (content === null) return undefined;
+  if (content.type === 'community') return communityTabIdx;
   if (isGroupInfo(content) || isMyGroupsInfo(content) || isUserInfo(content)) return groupsTabIdx;
   if (isItemInfo(content)) {
     return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
