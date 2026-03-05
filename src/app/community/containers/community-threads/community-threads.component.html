@@ -1,0 +1,13 @@
+<alg-thread-table
+  [state]="threadsState()"
+  [showUserColumn]="true"
+  [showContentColumn]="true"
+  [emptyMessage]="emptyMessage"
+  [visibleThreadId]="visibleThreadId()"
+  threadListType="others"
+  (refresh)="refreshThreads()"
+  (showThread)="showThreadPanel($event.id, $event.item)"
+  (hideThread)="hideThreadPanel()"
+>
+  <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Threads waiting for reply</h2>
+</alg-thread-table>
