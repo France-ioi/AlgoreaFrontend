@@ -7,7 +7,7 @@ import { fromNotification, notificationApiActions, notificationWebsocketActions 
 import { fromForum } from '../../forum/store';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
+import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
 import { ToDatePipe } from 'src/app/pipes/toDate';
 import { ForumNewMessageNotification, isForumNewMessageNotification } from 'src/app/models/notification';
 import { mapStateData } from 'src/app/utils/state';
@@ -21,7 +21,7 @@ import { NotificationHttpService } from 'src/app/data-access/notification.servic
   selector: 'alg-notification-bell',
   templateUrl: './notification-bell.component.html',
   styleUrl: './notification-bell.component.scss',
-  imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimePipe, ToDatePipe ],
+  imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimeComponent, ToDatePipe ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {

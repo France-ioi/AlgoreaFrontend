@@ -16,7 +16,7 @@ import {
   IsSubmissionEventPipe,
   ThreadEvent
 } from '../../models/thread-events';
-import { RelativeTimePipe } from '../../../pipes/relativeTime';
+import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
 
@@ -33,7 +33,7 @@ import { fromItemContent } from 'src/app/items/store';
     RouteUrlPipe,
     AllowDisplayCodeSnippet,
     BreakLinesPipe,
-    RelativeTimePipe,
+    RelativeTimeComponent,
     IsMessageEventPipe,
     IsAttemptStartedEventPipe,
     IsSubmissionEventPipe,

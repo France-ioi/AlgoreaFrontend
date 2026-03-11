@@ -35,7 +35,7 @@
                 <i class="notification-icon ph-bold ph-chat-circle"></i>
                 <div class="notification-content">
                   <div class="notification-text">{{ notification.payload.text }}</div>
-                  <span class="notification-time">{{ notification.payload.time | toDate | relativeTime }}</span>
+                  <alg-relative-time class="notification-time" [value]="notification.payload.time | toDate" />
                 </div>
               </li>
             }
