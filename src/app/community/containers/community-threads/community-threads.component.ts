@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
+import { UserSessionService } from 'src/app/services/user-session.service';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
-import { fetchList } from '../../../utils/fetch-list';
+import { fetchListFromParams } from '../../../utils/fetch-list';
 import { ThreadTableComponent } from '../../../items/containers/item-forum/thread-table/thread-table.component';
 import { fromForum } from '../../../forum/store';
 import { ThreadId } from '../../../forum/models/threads';
@@ -18,9 +21,13 @@ import { RawItemRoute } from '../../../models/routing/item-route';
 })
 export class CommunityThreadsComponent {
   private store = inject(Store);
+  private userSessionService = inject(UserSessionService);
   private getThreadService = inject(GetThreadsService);
 
-  private threads = fetchList(
+  isCurrentUserTemp = toSignal(this.userSessionService.userProfile$.pipe(map(user => user.tempUser)));
+
+  private threads = fetchListFromParams(
+    computed(() => (this.isCurrentUserTemp() === false ? {} : null)),
     () => this.getThreadService.get(undefined, { isMine: false }),
   );
   threadsState = this.threads.state;
