@@ -28,7 +28,7 @@
         </thead>
         <tbody>
           @for (entry of entries(); track entry.answerId) {
-            <tr class="alg-table-body-tr">
+            <tr class="alg-table-body-tr" [class.is-live]="entry.isLive">
               <td class="alg-table-td">
                 @if (entry.itemTitle === undefined) {
                   <span class="skeleton" aria-label="Loading task name" i18n-aria-label>&nbsp;</span>

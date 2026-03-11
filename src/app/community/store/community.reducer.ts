@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { State, initialState } from './community.state';
-import { communityPageActions, communityPollActions } from './community.actions';
+import { communityActivityFeedActions, communityPageActions, communityPollActions } from './community.actions';
 
 export const reducer = createReducer(
   initialState,
@@ -13,5 +13,15 @@ export const reducer = createReducer(
   on(
     communityPageActions.pageVisited,
     (state): State => ({ ...state, hasUnreadThreads: false })
+  ),
+
+  on(
+    communityActivityFeedActions.opened,
+    (state): State => ({ ...state, activityFeedActive: true })
+  ),
+
+  on(
+    communityActivityFeedActions.closed,
+    (state): State => ({ ...state, activityFeedActive: false })
   ),
 );

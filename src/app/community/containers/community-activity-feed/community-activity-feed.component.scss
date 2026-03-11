@@ -36,3 +36,33 @@
 .empty-message {
   padding: functions.toRem(12) 0;
 }
+
+.is-live {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--alg-tree-selected-color, #d4e1ff);
+    animation: flash-fade 3s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes flash-fade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

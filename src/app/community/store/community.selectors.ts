@@ -4,6 +4,7 @@ import { RootState } from 'src/app/utils/store/root_state';
 
 interface CommunitySelectors<T extends RootState> {
   selectHasUnreadThreads: MemoizedSelector<T, boolean>,
+  selectActivityFeedActive: MemoizedSelector<T, boolean>,
 }
 
 export function selectors<T extends RootState>(selectState: Selector<T, State>): CommunitySelectors<T> {
@@ -12,7 +13,13 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     state => state.hasUnreadThreads
   );
 
+  const selectActivityFeedActive = createSelector(
+    selectState,
+    state => state.activityFeedActive
+  );
+
   return {
     selectHasUnreadThreads,
+    selectActivityFeedActive,
   };
 }

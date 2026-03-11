@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { catchError, forkJoin, map, of, switchMap, take } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { catchError, filter, forkJoin, map, of, switchMap, take } from 'rxjs';
 import { TaskValidationService } from '../../data-access/get-task-validations.service';
-import { DisplayTaskValidation, RawTaskValidation } from '../../models/task-validation';
+import { RawTaskValidation } from '../../models/task-validation';
+import { liveActivityValidationSchema } from '../../models/websocket-community-messages';
+import { communityActivityFeedActions } from '../../store';
+import { websocketClientActions } from '../../../store/websocket';
 import { UserSessionService } from '../../../services/user-session.service';
 import { GetUserService } from '../../../groups/data-access/get-user.service';
 import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
@@ -16,6 +22,7 @@ import { ItemRoutePipe } from '../../../pipes/itemRoute';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
 
 const MAX_ENTRIES = 10;
+const MAX_DISPLAY = 20;
 
 @Component({
   selector: 'alg-community-activity-feed',
@@ -33,6 +40,9 @@ const MAX_ENTRIES = 10;
   ],
 })
 export class CommunityActivityFeedComponent {
+  private store = inject(Store);
+  private actions$ = inject(Actions);
+  private destroyRef = inject(DestroyRef);
   private taskValidationService = inject(TaskValidationService);
   private userSessionService = inject(UserSessionService);
   private getUserService = inject(GetUserService);
@@ -43,19 +53,48 @@ export class CommunityActivityFeedComponent {
 
   private userNames = signal(new Map<string, string | null>());
   private itemTitles = signal(new Map<string, string | null>());
+  private liveEntries = signal<RawTaskValidation[]>([]);
+  private liveAnswerIds = signal(new Set<string>());
 
-  entries = computed<DisplayTaskValidation[]>(() => {
-    const state = this.taskValidationsState();
-    if (!state?.isReady) return [];
-    return state.data.slice(0, MAX_ENTRIES).map(v => ({
+  entries = computed(() => {
+    const restState = this.taskValidationsState();
+    const restData = restState?.isReady ? restState.data.slice(0, MAX_ENTRIES) : [];
+    const seen = new Set<string>();
+    const merged: RawTaskValidation[] = [];
+    for (const entry of [ ...this.liveEntries(), ...restData ]) {
+      if (!seen.has(entry.answerId)) {
+        seen.add(entry.answerId);
+        merged.push(entry);
+      }
+    }
+    return merged.slice(0, MAX_DISPLAY).map(v => ({
       ...v,
       date: new Date(v.time),
       userName: this.userNames().get(v.participantId),
       itemTitle: this.itemTitles().get(v.itemId),
+      isLive: this.liveAnswerIds().has(v.answerId),
     }));
   });
 
   constructor() {
+    this.store.dispatch(communityActivityFeedActions.opened());
+    this.destroyRef.onDestroy(() => this.store.dispatch(communityActivityFeedActions.closed()));
+
+    this.actions$.pipe(
+      ofType(websocketClientActions.messageReceived),
+      map(({ message }) => liveActivityValidationSchema.safeParse(message)),
+      filter(result => result.success),
+      map(result => result.data),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(validation => {
+      this.prependLiveEntry({
+        time: validation.time,
+        participantId: validation.participantId,
+        itemId: validation.itemId,
+        answerId: validation.answerId,
+      });
+    });
+
     effect(() => {
       const state = this.taskValidationsState();
       if (state?.tag !== 'ready') return;
@@ -65,6 +104,19 @@ export class CommunityActivityFeedComponent {
 
   onRefresh(): void {
     this.taskValidations.refresh();
+  }
+
+  private prependLiveEntry(entry: RawTaskValidation): void {
+    const restState = this.taskValidationsState();
+    const restData = restState?.isReady ? restState.data : [];
+    const isDuplicate = this.liveEntries().some(e => e.answerId === entry.answerId)
+      || restData.some(e => e.answerId === entry.answerId);
+    if (isDuplicate) return;
+
+    this.liveEntries.update(entries => [ entry, ...entries ].slice(0, MAX_DISPLAY));
+    this.liveAnswerIds.update(ids => new Set(ids).add(entry.answerId));
+    this.resolveUsers([ entry.participantId ]);
+    this.resolveItems([ entry.itemId ]);
   }
 
   private resolveEntries(taskValidations: RawTaskValidation[]): void {

@@ -13,3 +13,11 @@ export const communityPageActions = createActionGroup({
     pageVisited: emptyProps(),
   },
 });
+
+export const communityActivityFeedActions = createActionGroup({
+  source: 'Community Activity Feed',
+  events: {
+    opened: emptyProps(),
+    closed: emptyProps(),
+  },
+});
