@@ -39,7 +39,7 @@ test('checks path suggestion for search result in left menu', async ({ page, sho
     const leftMenuSearchLocator = page.locator('alg-left-menu-search');
     await expect.soft(leftMenuSearchLocator).toBeVisible();
     await leftMenuSearchLocator.getByRole('textbox').fill('Task');
-    const leftMenuLoadingLocator = page.locator('alg-left-nav').locator('alg-loading');
+    const leftMenuLoadingLocator = page.locator('alg-left-tabbed-content').locator('alg-loading');
     await expect.soft(leftMenuLoadingLocator).toBeVisible();
     await expect.soft(leftMenuLoadingLocator).not.toBeVisible();
   });
