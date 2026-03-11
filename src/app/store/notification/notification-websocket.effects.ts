@@ -6,8 +6,10 @@ import { websocketClientActions } from 'src/app/store/websocket';
 import {
   isForumNewMessageNotification,
   isNotificationWsMessage,
+  NotificationWsMessage,
   notificationWsMessageSchema,
 } from 'src/app/models/notification';
+import { reportAnError } from 'src/app/utils/error-handling/error-reporting';
 import { notificationApiActions, notificationWebsocketActions } from './notification.actions';
 import { fromForum } from 'src/app/forum/store';
 import { NotificationHttpService } from 'src/app/data-access/notification.service';
@@ -31,7 +33,15 @@ export const notificationWebsocketEffect = createEffect(
     actions$.pipe(
       ofType(websocketClientActions.messageReceived),
       filter(({ message }) => isNotificationWsMessage(message)),
-      map(({ message }) => notificationWsMessageSchema.parse(message)),
+      map(({ message }) => {
+        const result = notificationWsMessageSchema.safeParse(message);
+        if (!result.success) {
+          reportAnError(result.error);
+          return undefined;
+        }
+        return result.data;
+      }),
+      filter((msg): msg is NotificationWsMessage => msg !== undefined),
       withLatestFrom(store$.select(fromForum.selectThreadStatus)),
       mergeMap(([ wsMessage, threadStatus ]) => {
         const notification = wsMessage.notification;

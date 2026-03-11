@@ -6,10 +6,11 @@ import { APPCONFIG } from '../config';
 import { IdentityTokenService } from '../services/auth/identity-token.service';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { Notification, notificationSchema } from '../models/notification';
+import { reportAnError } from '../utils/error-handling/error-reporting';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 
 const notificationsResponseSchema = z.object({
-  notifications: z.array(notificationSchema),
+  notifications: z.array(z.unknown()),
 });
 
 @Injectable({
@@ -31,7 +32,14 @@ export class NotificationHttpService {
         { headers: { Authorization: `Bearer ${token}` } }
       )),
       decodeSnakeCase(notificationsResponseSchema),
-      map(response => response.notifications),
+      map(response => response.notifications.flatMap(entry => {
+        const result = notificationSchema.safeParse(entry);
+        if (!result.success) {
+          reportAnError(result.error);
+          return [];
+        }
+        return [ result.data ];
+      })),
     );
   }
 

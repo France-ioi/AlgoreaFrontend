@@ -24,8 +24,10 @@ const forumNewMessageNotificationSchema = baseNotificationSchema.extend({
   payload: forumNewMessagePayloadSchema,
 });
 
+const typedNotificationTypes = [ 'forum.new_message' ] as const;
+
 const genericNotificationSchema = baseNotificationSchema.extend({
-  notificationType: z.string(),
+  notificationType: z.string().refine(t => !(typedNotificationTypes as readonly string[]).includes(t)),
   payload: z.record(z.string(), z.unknown()),
 });
 
