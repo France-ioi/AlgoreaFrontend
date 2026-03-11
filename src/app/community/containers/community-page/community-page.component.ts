@@ -4,6 +4,7 @@ import { CurrentContentService } from '../../../services/current-content.service
 import { fromCurrentContent } from '../../../store/navigation/current-content/current-content.store';
 import { ContentDisplayType, LayoutService } from '../../../services/layout.service';
 import { CommunityThreadsComponent } from '../community-threads/community-threads.component';
+import { CommunityActivityFeedComponent } from '../community-activity-feed/community-activity-feed.component';
 
 @Component({
   selector: 'alg-community-page',
@@ -12,6 +13,7 @@ import { CommunityThreadsComponent } from '../community-threads/community-thread
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommunityThreadsComponent,
+    CommunityActivityFeedComponent,
   ],
 })
 export class CommunityPageComponent implements OnInit, OnDestroy {

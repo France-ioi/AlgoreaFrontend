@@ -1,0 +1,69 @@
+<h2 class="section-title alg-h2 alg-text-normal" i18n>Latest validated tasks</h2>
+
+@if (taskValidationsState()?.isFetching) {
+  <alg-loading class="alg-flex-1"></alg-loading>
+}
+@if (taskValidationsState()?.isError) {
+  <alg-error
+    class="alg-flex-1"
+    icon="ph-duotone ph-warning-circle"
+    i18n-message message="Unable to load the activity feed"
+    i18n-buttonCaption buttonCaption="Retry"
+    [showRefreshButton]="true"
+    (refresh)="onRefresh()"
+  ></alg-error>
+}
+@if (taskValidationsState()?.isReady) {
+  <div class="alg-table-page-wrapper">
+    <div class="alg-table-horizontal-scroll">
+      <table class="alg-table-v2">
+        <thead>
+          @if (entries().length > 0) {
+            <tr class="alg-table-header-tr">
+              <th class="alg-table-th" i18n>Task</th>
+              <th class="alg-table-th" i18n>User</th>
+              <th class="alg-table-th" i18n>When</th>
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (entry of entries(); track entry.answerId) {
+            <tr class="alg-table-body-tr">
+              <td class="alg-table-td">
+                @if (entry.itemTitle === undefined) {
+                  <span class="skeleton" aria-label="Loading task name" i18n-aria-label>&nbsp;</span>
+                } @else if (entry.itemTitle) {
+                  <a
+                    class="alg-link"
+                    [routerLink]="{ id: entry.itemId, contentType: 'activity' } | itemRoute | url"
+                  >{{ entry.itemTitle }}</a>
+                } @else {
+                  <span class="unknown" i18n>Unknown task</span>
+                }
+              </td>
+              <td class="alg-table-td">
+                @if (entry.userName === undefined) {
+                  <span class="skeleton" aria-label="Loading user name" i18n-aria-label>&nbsp;</span>
+                } @else if (entry.userName === null) {
+                  <span class="unknown" i18n>Unknown user</span>
+                } @else {
+                  <a
+                    class="alg-link"
+                    [routerLink]="{ id: entry.participantId, isUser: true } | groupLink"
+                  >{{ entry.userName }}</a>
+                }
+              </td>
+              <td class="alg-table-td"><alg-relative-time [value]="entry.date"></alg-relative-time></td>
+            </tr>
+          } @empty {
+            <tr class="alg-table-body-tr">
+              <td class="alg-table-td empty-td" colspan="3">
+                <div class="empty-message" role="status" i18n>No user has validated a task during the past 2 weeks.</div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
