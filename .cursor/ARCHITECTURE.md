@@ -24,8 +24,24 @@ src/app/
 ├── items/               # Items feature module (activities, skills, tasks)
 ├── groups/              # Groups feature module (users, teams, classes)
 ├── forum/               # Forum feature module (discussions, threads)
+├── community/           # Community feature module (gated by enableCommunity flag)
 └── lti/                 # LTI integration module
 ```
+
+## Left Navigation Component Hierarchy
+
+```
+alg-left-panel          → outer shell: header + tabbed-content + search input
+└── alg-left-tabbed-content  → tab bar + search results + tree delegation
+    ├── alg-left-tab-bar
+    └── alg-left-nav
+```
+
+- **`alg-left-panel`**: Outer shell — header, tabbed content area, search input bar
+- **`alg-left-tabbed-content`**: Orchestrator — owns active tab logic, search, tab-to-tree index mapping, scroll-to-element
+- **`alg-left-tab-bar`**: Presentational — renders tab buttons, emits tab selection events
+- **`alg-left-nav`**: Tree rendering — receives a `treeIndex` input, renders the corresponding nav tree
+- Tab indices and tree service indices are decoupled via `tabToTreeIndex()` mapping
 
 ## Core Concepts
 
@@ -137,6 +153,7 @@ The SLS (serverless) API is separate from the main backend API:
 | Path | Module | Description |
 |------|--------|-------------|
 | `/` | Home redirect | Redirects to default activity |
+| `/community/*` | Community | Community section (requires `enableCommunity` flag) |
 | `/a/:idOrAlias` | Items | Activity content |
 | `/s/:idOrAlias` | Items | Skill content |
 | `/groups/*` | Groups | Group management |
@@ -163,7 +180,12 @@ interface AppConfig {
   defaultSkillId?: string;     // Root skill ID
   allUsersGroupId: string;     // All-users group ID
   languages: Language[];       // Supported languages
-  featureFlags: FeatureFlags;  // Feature toggles
+  featureFlags: {
+    enableForum: boolean;        // default false
+    enableCommunity: boolean;    // default false — gates /community route
+    enableNotifications: boolean;
+    // …
+  };
   theme: string;               // UI theme
 }
 ```

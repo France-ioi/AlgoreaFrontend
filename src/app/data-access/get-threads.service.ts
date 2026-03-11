@@ -33,8 +33,11 @@ export class GetThreadsService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
-  get(itemId: string, options: { isMine: boolean } | { watchedGroupId: string }): Observable<Threads> {
-    let params = new HttpParams({ fromObject: { item_id: itemId } });
+  get(itemId: string | undefined, options: { isMine: boolean } | { watchedGroupId: string }): Observable<Threads> {
+    let params = new HttpParams();
+    if (itemId !== undefined) {
+      params = params.set('item_id', itemId);
+    }
     if ('isMine' in options) {
       params = params.set('is_mine', options.isMine ? 1 : 0);
     }

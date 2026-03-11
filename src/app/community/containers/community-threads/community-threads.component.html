@@ -1,0 +1,21 @@
+@if (isCurrentUserTemp() === true) {
+  <h2 class="section-title alg-h2 alg-text-normal" i18n>Threads waiting for reply</h2>
+  <div class="placeholder">
+    <i class="placeholder-icon ph-duotone ph-chats-circle"></i>
+    <p class="placeholder-text" i18n>Discussions are only available to logged-in users. Sign in to view and participate in conversations.</p>
+  </div>
+} @else if (isCurrentUserTemp() === false) {
+  <alg-thread-table
+    [state]="threadsState()"
+    [showUserColumn]="true"
+    [showContentColumn]="true"
+    [emptyMessage]="emptyMessage"
+    [visibleThreadId]="visibleThreadId()"
+    threadListType="others"
+    (refresh)="refreshThreads()"
+    (showThread)="showThreadPanel($event.id, $event.item)"
+    (hideThread)="hideThreadPanel()"
+  >
+    <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Threads waiting for reply</h2>
+  </alg-thread-table>
+}

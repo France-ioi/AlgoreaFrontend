@@ -1,0 +1,55 @@
+<div class="tab-view-container" [class.multi-row]="multiRow()">
+  <div class="main-menu" [class.multi-row]="multiRow()">
+    <button
+      class="main-menu-button"
+      [class.active]="activeTabIndex() === 0"
+      (click)="tabSelected.emit(0)"
+    >
+      <div class="main-menu-icon-wrapper">
+        <i class="ph ph-presentation main-menu-icon"></i>
+      </div>
+      <span class="main-menu-title" i18n="|Tab name">Content</span>
+    </button>
+    @if (skillsTabEnabled()) {
+      <button
+        class="main-menu-button"
+        [class.active]="activeTabIndex() === 1"
+        (click)="tabSelected.emit(1)"
+      >
+        <div class="main-menu-icon-wrapper">
+          <i class="ph ph-graduation-cap main-menu-icon"></i>
+        </div>
+        <span class="main-menu-title" i18n="|Tab name">Skills</span>
+      </button>
+    }
+    @if (groupsTabEnabled()) {
+      <button
+        class="main-menu-button"
+        [class.active]="activeTabIndex() === 2"
+        data-cy="main-menu-group-btn"
+        (click)="tabSelected.emit(2)"
+      >
+        <div class="main-menu-icon-wrapper">
+          <i class="ph ph-users main-menu-icon"></i>
+        </div>
+        <span class="main-menu-title" i18n="|Tab name">Groups</span>
+      </button>
+    }
+    @if (communityTabEnabled()) {
+      <button
+        class="main-menu-button"
+        [class.active]="activeTabIndex() === communityTabIdx"
+        data-cy="main-menu-community-btn"
+        aria-label="Community"
+        i18n-aria-label
+        (click)="tabSelected.emit(communityTabIdx)"
+      >
+        <div class="main-menu-icon-wrapper">
+          <i class="ph ph-users-three main-menu-icon"></i>
+          <span class="notification-dot" [class.visible]="hasUnreadCommunityThreads()" aria-hidden="true"></span>
+        </div>
+        <span class="main-menu-title" i18n="|Tab name">Community</span>
+      </button>
+    }
+  </div>
+</div>

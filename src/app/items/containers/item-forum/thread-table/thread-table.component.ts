@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
 import { FetchState } from 'src/app/utils/state';
 import { Threads, Thread } from 'src/app/data-access/get-threads.service';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
@@ -13,9 +12,9 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
-import { ItemData } from 'src/app/items/models/item-data';
-import { ItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
+import { FullItemRoute, ItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadId } from 'src/app/forum/models/threads';
+import { typeCategoryOfItem } from 'src/app/items/models/item-type';
 
 export type ThreadListType = 'mine' | 'others' | 'observed';
 type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
@@ -29,7 +28,6 @@ type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
     ErrorComponent,
     LoadingComponent,
     RelativeTimeComponent,
-    NgClass,
     RouterLink,
     RouteUrlPipe,
     GroupLinkPipe,
@@ -42,8 +40,15 @@ type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
 export class ThreadTableComponent {
   state = input<FetchState<Threads>>();
   showUserColumn = input(false);
+  showContentColumn = input(true);
   threadListType = input<ThreadListType>('mine');
-  itemData = input.required<ItemData>();
+  /** Route of the item contextualizing this table. When provided, thread routes are built using its path and content type,
+   * yielding fully-defined `FullItemRoute` values (with path) for navigation.
+   * Omit when the table spans multiple items (e.g. community page), in which case routes are built from each thread's own data
+   * and will lack a path. */
+  contextItemRoute = input<FullItemRoute>();
+  /** Custom empty-state message. When provided, replaces the default per-`threadListType` empty-state block. */
+  emptyMessage = input<string>();
   visibleThreadId = input<ThreadId | null>(null);
 
   refresh = output<void>();
@@ -123,12 +128,8 @@ export class ThreadTableComponent {
   }
 
   getThreadItemRoute(thread: Thread): RawItemRoute {
-    const itemRoute = this.itemData().route;
-    const rowItemRoute = {
-      id: thread.item.id,
-      contentType: itemRoute.contentType,
-      path: itemRoute.path,
-    } as RawItemRoute;
-    return rowItemRoute.id === itemRoute.id ? itemRoute : rowItemRoute;
+    const contextRoute = this.contextItemRoute();
+    if (contextRoute && contextRoute.id === thread.item.id) return contextRoute;
+    return { id: thread.item.id, contentType: typeCategoryOfItem(thread.item) };
   }
 }

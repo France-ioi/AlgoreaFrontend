@@ -28,6 +28,7 @@ import { fromTimeOffset } from './app/store/time-offset';
 import {
   fromNotification, notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
 } from './app/store/notification';
+import { fromCommunity, communityEffects, communityWsSubscriptionEffects } from './app/community/store';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { fromConfig, configEffects } from './app/store/config';
@@ -91,6 +92,7 @@ bootstrapApplication(AppComponent, {
     provideState(fromCurrentContent),
     provideState(fromConfig),
     provideState(fromNotification),
+    provideState(fromCommunity),
     provideEffects(
       websocketEffects,
       forumEffects(),
@@ -102,6 +104,8 @@ bootstrapApplication(AppComponent, {
       notificationEffects,
       notificationWebsocketEffects,
       notificationThreadCleanupEffects,
+      communityEffects,
+      communityWsSubscriptionEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),

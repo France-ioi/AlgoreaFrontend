@@ -1,7 +1,7 @@
 @if (leftMenu$ | async; as leftMenu) {
   <div class="container">
     <div class="left-menu" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
-      <alg-left-menu></alg-left-menu>
+      <alg-left-panel></alg-left-panel>
     </div>
     <ng-container *ngrxLet="{ fullFrameContentDisplayed: fullFrameContentDisplayed$, withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$ } as layout">
       <ng-container *ngrxLet="isObserving$ as isObserving">

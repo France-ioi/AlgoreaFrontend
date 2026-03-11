@@ -1,23 +1,23 @@
 import { Page, expect } from '@playwright/test';
 
 export class LeftMenu {
-  private leftMenuLocator = this.page.locator('alg-left-menu');
-  private leftNavLocator = this.leftMenuLocator.locator('alg-left-nav');
-  private leftNavTreeLocator = this.leftNavLocator.locator('alg-left-nav-tree');
+  private leftPanelLocator = this.page.locator('alg-left-panel');
+  private tabBarLocator = this.leftPanelLocator.locator('alg-left-tab-bar');
+  private leftNavTreeLocator = this.leftPanelLocator.locator('alg-left-nav-tree');
 
   constructor(private page: Page) {
   }
 
   async checksIsLeftMenuVisible(): Promise<void> {
-    await expect.soft(this.leftMenuLocator).toBeVisible();
+    await expect.soft(this.leftPanelLocator).toBeVisible();
   }
 
   async checksIsTabVisible(name: string): Promise<void> {
-    await expect.soft(this.leftNavLocator.getByRole('button').getByText(name)).toBeVisible();
+    await expect.soft(this.tabBarLocator.getByRole('button').getByText(name)).toBeVisible();
   }
 
   async checksIsTabNotVisible(name: string): Promise<void> {
-    await expect.soft(this.leftNavLocator.getByRole('button').getByText(name)).not.toBeVisible();
+    await expect.soft(this.tabBarLocator.getByRole('button').getByText(name)).not.toBeVisible();
   }
 
   async checksIsLeftNavTreeVisible(): Promise<void> {
