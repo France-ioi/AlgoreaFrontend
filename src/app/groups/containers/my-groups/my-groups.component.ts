@@ -11,7 +11,6 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { myGroupsPage } from 'src/app/models/routing/group-route';
 import { Store } from '@ngrx/store';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
-import { ContentDisplayType, LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'alg-my-groups',
@@ -27,7 +26,6 @@ import { ContentDisplayType, LayoutService } from 'src/app/services/layout.servi
 })
 export class MyGroupsComponent implements OnDestroy, OnInit {
   private store = inject(Store);
-  private layoutService = inject(LayoutService);
   private currentContent = inject(CurrentContentService);
   private sessionService = inject(UserSessionService);
 
@@ -37,7 +35,6 @@ export class MyGroupsComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.currentContent.replace(myGroupsInfo({}));
-    this.layoutService.configure({ contentDisplayType: ContentDisplayType.Show });
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route: myGroupsPage,
       title: $localize`My groups`,

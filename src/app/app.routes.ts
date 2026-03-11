@@ -2,7 +2,7 @@ import { Routes, UrlSegment } from '@angular/router';
 import { PendingChangesGuard } from 'src/app/guards/pending-changes-guard';
 import { BeforeUnloadGuard } from 'src/app/guards/before-unload-guard';
 import { GroupDeleteService } from './groups/data-access/group-delete.service';
-import { DefaultLayoutInitService } from './services/layout.service';
+import { ContentDisplayType, DefaultLayoutInitService } from './services/layout.service';
 import { communityFeatureFlagGuard } from './community/community-feature-flag.guard';
 
 import { RedirectToIdComponent } from './containers/redirect-to-id/redirect-to-id.component';
@@ -22,6 +22,7 @@ const routes: Routes = [
     path: 'community',
     loadChildren: () => import('./community/community.routes'),
     canActivate: [ communityFeatureFlagGuard, DefaultLayoutInitService ],
+    data: { contentDisplayType: ContentDisplayType.Show },
   },
   {
     path: 'groups',
