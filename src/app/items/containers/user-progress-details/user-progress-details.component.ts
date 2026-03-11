@@ -11,7 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
 import { ItemType } from 'src/app/items/models/item-type';
-import { RelativeTimePipe } from 'src/app/pipes/relativeTime';
+import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
 import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
@@ -41,7 +41,7 @@ export interface ProgressData {
     AllowsWatchingItemAnswersPipe,
     SecondsToDurationPipe,
     DurationToReadablePipe,
-    RelativeTimePipe,
+    RelativeTimeComponent,
     DecimalPipe,
     ButtonComponent,
     TooltipDirective,

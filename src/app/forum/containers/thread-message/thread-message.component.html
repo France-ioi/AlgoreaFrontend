@@ -107,5 +107,5 @@
 </div>
 
 <ng-template #sentAt>
-  <span i18n>{{ eventVal.time | relativeTime }}</span>
+  <alg-relative-time [value]="eventVal.time" />
 </ng-template>

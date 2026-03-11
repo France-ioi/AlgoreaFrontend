@@ -28,7 +28,7 @@
       <div class="value-section">
         <i class="ph ph-person-arms-spread icon"></i>
         <span class="label" i18n>last activity:</span>
-        <span class="value">{{ progress.latestActivityAt | relativeTime }}</span>
+        <span class="value"><alg-relative-time [value]="progress.latestActivityAt!" /></span>
       </div>
     }
 
