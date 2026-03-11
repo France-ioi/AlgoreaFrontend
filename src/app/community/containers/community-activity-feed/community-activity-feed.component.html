@@ -1,4 +1,12 @@
-<h2 class="section-title alg-h2 alg-text-normal" i18n>Latest validated tasks</h2>
+<h2 class="section-title alg-h2 alg-text-normal">
+  <span i18n>Latest validated tasks</span>
+  @if (isWsLive()) {
+    <span class="live-indicator" aria-label="Live updates active" i18n-aria-label role="status">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span class="live-label" i18n>Live</span>
+    </span>
+  }
+</h2>
 
 @if (taskValidationsState()?.isFetching) {
   <alg-loading class="alg-flex-1"></alg-loading>

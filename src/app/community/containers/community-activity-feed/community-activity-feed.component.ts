@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -8,8 +8,8 @@ import { TaskValidationService } from '../../data-access/get-task-validations.se
 import { EntityResolutionCacheService } from '../../data-access/entity-resolution-cache.service';
 import { RawTaskValidation } from '../../models/task-validation';
 import { liveActivityValidationSchema } from '../../models/websocket-community-messages';
-import { communityActivityFeedActions } from '../../store';
-import { websocketClientActions } from '../../../store/websocket';
+import { communityActivityFeedActions, fromCommunity } from '../../store';
+import { fromWebsocket, websocketClientActions } from '../../../store/websocket';
 import { fetchList } from '../../../utils/fetch-list';
 import { LoadingComponent } from '../../../ui-components/loading/loading.component';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
@@ -42,6 +42,10 @@ export class CommunityActivityFeedComponent {
   private destroyRef = inject(DestroyRef);
   private taskValidationService = inject(TaskValidationService);
   private cache = inject(EntityResolutionCacheService);
+
+  private wsOpen = toSignal(this.store.select(fromWebsocket.selectOpen), { initialValue: false });
+  private feedActive = toSignal(this.store.select(fromCommunity.selectActivityFeedActive), { initialValue: false });
+  isWsLive = computed(() => this.wsOpen() && this.feedActive());
 
   private taskValidations = fetchList(() => this.taskValidationService.getLatest());
   taskValidationsState = this.taskValidations.state;
