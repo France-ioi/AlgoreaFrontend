@@ -57,7 +57,7 @@ export class CommunityActivityFeedComponent {
 
   entries = computed(() => {
     const restState = this.taskValidationsState();
-    const restData = restState?.isReady ? restState.data.slice(0, MAX_ENTRIES) : [];
+    const restData = restState.isReady ? restState.data.slice(0, MAX_ENTRIES) : [];
     const seen = new Set<string>();
     const merged: RawTaskValidation[] = [];
     for (const entry of [ ...this.liveEntries(), ...restData ]) {
@@ -96,7 +96,7 @@ export class CommunityActivityFeedComponent {
 
     effect(() => {
       const state = this.taskValidationsState();
-      if (state?.tag !== 'ready') return;
+      if (state.tag !== 'ready') return;
       this.resolveEntries(state.data.slice(0, MAX_ENTRIES));
     });
   }
@@ -107,7 +107,7 @@ export class CommunityActivityFeedComponent {
 
   private prependLiveEntry(entry: RawTaskValidation): void {
     const restState = this.taskValidationsState();
-    const restData = restState?.isReady ? restState.data : [];
+    const restData = restState.isReady ? restState.data : [];
     const isDuplicate = this.liveEntries().some(e => e.answerId === entry.answerId)
       || restData.some(e => e.answerId === entry.answerId);
     if (isDuplicate) return;

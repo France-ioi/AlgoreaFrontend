@@ -3,30 +3,28 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Observable, Subject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { isNotNull } from './null-undefined-predicates';
-import { FetchState } from './state';
+import { FetchState, fetchingState } from './state';
 import { mapToFetchState } from './operators/state';
 
-interface FetchListResult<T> { state: Signal<FetchState<T> | undefined>, refresh: () => void }
+interface FetchListResult<T> { state: Signal<FetchState<T>>, refresh: () => void }
 
-function makeFetchListResult<P, T>(
+function makeFetchListObservable<P, T>(
   params: Signal<P | null>,
   fetcher: (p: P) => Observable<T>,
-): FetchListResult<T> {
+): { obs$: Observable<FetchState<T>>, refresh$: Subject<void> } {
   const destroyRef = inject(DestroyRef);
   const refresh$ = new Subject<void>();
 
   destroyRef.onDestroy(() => refresh$.complete());
 
-  const state = toSignal(
-    toObservable(params).pipe(
-      filter(isNotNull),
-      switchMap(p => fetcher(p).pipe(
-        mapToFetchState({ resetter: refresh$ }),
-      )),
-    ),
+  const obs$ = toObservable(params).pipe(
+    filter(isNotNull),
+    switchMap(p => fetcher(p).pipe(
+      mapToFetchState({ resetter: refresh$ }),
+    )),
   );
 
-  return { state, refresh: () => refresh$.next() };
+  return { obs$, refresh$ };
 }
 
 /**
@@ -42,7 +40,9 @@ function makeFetchListResult<P, T>(
 export function fetchList<T>(
   fetcher: () => Observable<T>,
 ): FetchListResult<T> {
-  return makeFetchListResult(signal({}), () => fetcher());
+  const { obs$, refresh$ } = makeFetchListObservable(signal({}), () => fetcher());
+  const state = toSignal(obs$, { initialValue: fetchingState<T>() });
+  return { state, refresh: () => refresh$.next() };
 }
 
 /**
@@ -59,6 +59,8 @@ export function fetchList<T>(
 export function fetchListFromParams<P, T>(
   params: Signal<P | null>,
   fetcher: (p: P) => Observable<T>,
-): FetchListResult<T> {
-  return makeFetchListResult(params, fetcher);
+): { state: Signal<FetchState<T> | undefined>, refresh: () => void } {
+  const { obs$, refresh$ } = makeFetchListObservable(params, fetcher);
+  const state = toSignal(obs$);
+  return { state, refresh: () => refresh$.next() };
 }

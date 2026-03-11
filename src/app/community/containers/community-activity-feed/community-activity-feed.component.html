@@ -8,10 +8,10 @@
   }
 </h2>
 
-@if (taskValidationsState()?.isFetching) {
+@if (taskValidationsState().isFetching) {
   <alg-loading class="alg-flex-1"></alg-loading>
 }
-@if (taskValidationsState()?.isError) {
+@if (taskValidationsState().isError) {
   <alg-error
     class="alg-flex-1"
     icon="ph-duotone ph-warning-circle"
@@ -21,7 +21,7 @@
     (refresh)="onRefresh()"
   ></alg-error>
 }
-@if (taskValidationsState()?.isReady) {
+@if (taskValidationsState().isReady) {
   <div class="alg-table-page-wrapper">
     <div class="alg-table-horizontal-scroll">
       <table class="alg-table-v2">
