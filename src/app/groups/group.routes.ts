@@ -5,17 +5,21 @@ import { UserComponent } from './containers/user/user.component';
 import { GroupByIdComponent } from './group-by-id.component';
 import { ManageGroupsComponent } from 'src/app/groups/containers/manage-groups/manage-groups.component';
 import { PageNotFoundComponent } from '../containers/page-not-found/page-not-found.component';
-import { DefaultLayoutInitService } from '../services/layout.service';
+import { ContentDisplayType, DefaultLayoutInitService } from '../services/layout.service';
 import { groupPathRouterSubPrefix, managedGroupsPage, myGroupsPage, userPathRouterSubPrefix } from '../models/routing/group-route';
 
 const routes: Routes = [
   {
     path: myGroupsPage,
     component: MyGroupsComponent,
+    canActivate: [ DefaultLayoutInitService ],
+    data: { contentDisplayType: ContentDisplayType.Show },
   },
   {
     path: managedGroupsPage,
     component: ManageGroupsComponent,
+    canActivate: [ DefaultLayoutInitService ],
+    data: { contentDisplayType: ContentDisplayType.Show },
   },
   {
     path: userPathRouterSubPrefix + '/:id',

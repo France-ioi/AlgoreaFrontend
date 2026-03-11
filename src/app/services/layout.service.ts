@@ -1,5 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Injectable, OnDestroy, inject } from '@angular/core';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 import { BehaviorSubject, Subject, combineLatest, distinctUntilChanged } from 'rxjs';
 import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
@@ -120,10 +121,10 @@ export class LayoutService implements OnDestroy {
 export class DefaultLayoutInitService {
   private layoutService = inject(LayoutService);
 
-
-  /** just init the default layout */
-  canActivate(): boolean {
-    this.layoutService.configure({});
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    this.layoutService.configure({
+      contentDisplayType: route.data['contentDisplayType'] as ContentDisplayType | undefined,
+    });
     return true;
   }
 }
