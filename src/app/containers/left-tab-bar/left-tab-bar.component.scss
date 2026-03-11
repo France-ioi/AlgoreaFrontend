@@ -64,12 +64,14 @@
 .notification-dot {
   display: none;
   position: absolute;
-  top: functions.toRem(6);
-  right: functions.toRem(6);
-  width: functions.toRem(8);
-  height: functions.toRem(8);
+  top: functions.toRem(1);
+  right: functions.toRem(1);
+  width: functions.toRem(10);
+  height: functions.toRem(10);
   border-radius: 50%;
   background-color: var(--danger-color, #e00);
+  border: functions.toRem(2) solid var(--alg-white-color, #fff);
+  box-shadow: 0 0 0 functions.toRem(0.5) rgba(0, 0, 0, 0.08);
 
   &.visible {
     display: block;

@@ -5,7 +5,7 @@
       [skillsTabEnabled]="!!(skillsTabEnabled$ | async)"
       [groupsTabEnabled]="!!(groupsTabEnabled$ | async)"
       [communityTabEnabled]="!!(communityTabEnabled$ | async)"
-      [hasUnreadCommunityThreads]="false"
+      [hasUnreadCommunityThreads]="!!(hasUnreadCommunityThreads$ | async)"
       (tabSelected)="onSelectionChangedByIdx($event)"
     />
   }

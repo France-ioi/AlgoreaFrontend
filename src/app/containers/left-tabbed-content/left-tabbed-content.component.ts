@@ -18,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { ItemRouter } from '../../models/routing/item-router';
 import { GroupRouter } from '../../models/routing/group-router';
 import { fromSelectedContent } from '../../store/navigation';
+import { fromCommunity } from '../../community/store';
 import { LeftMenuConfigService } from '../../config/left-menu-config.service';
 import { LeftTabBarComponent } from '../left-tab-bar/left-tab-bar.component';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
@@ -78,6 +79,8 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
       ? this.searchService!.search(q).pipe(map(r => r.searchResults), mapToFetchState())
       : of(readyState(undefined)))),
   );
+
+  hasUnreadCommunityThreads$ = this.store.select(fromCommunity.selectHasUnreadThreads);
 
   skillsTabEnabled$ = this.leftMenuConfig.skillsTabEnabled$;
   groupsTabEnabled$ = this.leftMenuConfig.groupsTabEnabled$;
