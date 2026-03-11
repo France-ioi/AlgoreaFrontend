@@ -3,8 +3,6 @@ import { PendingChangesGuard } from 'src/app/guards/pending-changes-guard';
 import { BeforeUnloadGuard } from 'src/app/guards/before-unload-guard';
 import { GroupDeleteService } from './groups/data-access/group-delete.service';
 import { ContentDisplayType, DefaultLayoutInitService } from './services/layout.service';
-import { communityFeatureFlagGuard } from './community/community-feature-flag.guard';
-
 import { RedirectToIdComponent } from './containers/redirect-to-id/redirect-to-id.component';
 import { homeRedirectGuard } from 'src/app/guards/home-redirect.guard';
 import { PageNotFoundComponent } from './containers/page-not-found/page-not-found.component';
@@ -21,7 +19,7 @@ const routes: Routes = [
   {
     path: 'community',
     loadChildren: () => import('./community/community.routes'),
-    canActivate: [ communityFeatureFlagGuard, DefaultLayoutInitService ],
+    canActivate: [ DefaultLayoutInitService ],
     data: { contentDisplayType: ContentDisplayType.Show },
   },
   {
