@@ -5,15 +5,15 @@
         <h1 class="user-title alg-h1">
           {{ user | userCaption }}
         </h1>
-        @if (user.profile?.webSite) {
+        @if (user.profile.webSite) {
           <div class="user-subtitle">
             <i class="ph ph-arrow-square-out user-subtitle-icon"></i>
-            <a class="alg-link" [attr.href]="user.profile?.webSite" target="_blank">{{ user.profile?.webSite }}</a>
+            <a class="alg-link" [attr.href]="user.profile.webSite" target="_blank">{{ user.profile.webSite }}</a>
           </div>
         }
-        @if (user.profile?.freeText) {
+        @if (user.profile.freeText) {
           <div class="user-subtitle">
-            {{ user.profile?.freeText }}
+            {{ user.profile.freeText }}
           </div>
         }
       </div>
