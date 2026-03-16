@@ -27,7 +27,7 @@ const currentUserSchema = z.object({
     zipCode: z.string().nullable().catch(null),
     cellPhoneNumber: z.string().nullable().catch(null),
     timeZone: z.string().nullable().catch(null),
-  }).partial().nullable().optional().default({}),
+  }).partial().nullable().optional().transform(p => p ?? {}),
   defaultLanguage: z.string(),
   tempUser: z.boolean()
 });

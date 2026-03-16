@@ -41,7 +41,7 @@ export const userSchema = withGroupId(z.object({
     lastName: z.string().nullable().catch(null),
     webSite: z.string().nullable().catch(null),
     freeText: z.string().nullable().catch(null),
-  }).partial().optional(),
+  }).partial().nullable().optional().transform(p => p ?? {}),
   tempUser: z.boolean(),
   isCurrentUser: z.boolean(),
   ancestorsCurrentUserIsManagerOf: z.array(z.object({
