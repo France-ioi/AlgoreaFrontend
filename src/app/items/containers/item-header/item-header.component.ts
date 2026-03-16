@@ -11,6 +11,4 @@ import { ItemData } from '../../models/item-data';
 export class ItemHeaderComponent {
   @Input() itemData?: ItemData;
 
-  constructor() {}
-
 }

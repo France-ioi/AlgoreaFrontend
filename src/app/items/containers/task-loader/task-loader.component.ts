@@ -21,8 +21,6 @@ export class TaskLoaderComponent implements OnInit, OnDestroy {
   showDelayedLabel = false;
   subscription?: Subscription;
 
-  constructor() { }
-
   ngOnInit(): void {
     if (this.delayedLabel) {
       this.subscription = timer(this.delay*SECONDS).subscribe(() => this.showDelayedLabel = true);

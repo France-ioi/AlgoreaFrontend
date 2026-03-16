@@ -35,8 +35,6 @@ export class CompositionFilterComponent implements OnInit {
     },
   ];
 
-  constructor() { }
-
   ngOnInit(): void {
     if (this.defaultValue) {
       this.selectedTypeFilter = this.typeFilters.findIndex(filter => filter.value === this.defaultValue);

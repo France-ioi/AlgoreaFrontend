@@ -19,8 +19,6 @@ export class ItemEditContentComponent {
 
   activeTab = signal<Tab>('write');
 
-  constructor() {}
-
   onTabChange(tab: Tab): void {
     this.activeTab.set(tab);
   }
