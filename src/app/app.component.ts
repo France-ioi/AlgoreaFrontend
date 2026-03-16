@@ -54,6 +54,19 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
   ]
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private store = inject(Store);
+  private router = inject(Router);
+  private sessionService = inject(UserSessionService);
+  private authService = inject(AuthService);
+  private localeService = inject(LocaleService);
+  private layoutService = inject(LayoutService);
+  private crashReportingService = inject(CrashReportingService);
+  private location = inject(Location);
+  private titleService = inject(Title);
+  private ngZone = inject(NgZone);
+  private renderer = inject(Renderer2);
+  private chunkErrorService = inject(ChunkErrorService);
+  private itemRouter = inject(ItemRouter);
   private config = inject(APPCONFIG);
   @ViewChild(TopBarComponent) topBarComponent?: TopBarComponent;
 
@@ -93,21 +106,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions = new Subscription();
 
-  constructor(
-    private store: Store,
-    private router: Router,
-    private sessionService: UserSessionService,
-    private authService: AuthService,
-    private localeService: LocaleService,
-    private layoutService: LayoutService,
-    private crashReportingService: CrashReportingService,
-    private location: Location,
-    private titleService: Title,
-    private ngZone: NgZone,
-    private renderer: Renderer2,
-    private chunkErrorService: ChunkErrorService,
-    private itemRouter: ItemRouter,
-  ) {
+  constructor() {
     const title = this.localeService.currentLang ? this.config.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? this.config.defaultTitle);
 

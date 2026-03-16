@@ -1,4 +1,4 @@
-import { ErrorHandler, Injectable } from '@angular/core';
+import { ErrorHandler, Injectable, inject } from '@angular/core';
 import * as Sentry from '@sentry/angular';
 import { convertToError } from './error-conversion';
 import { ChunkErrorService } from '../../services/chunk-error.service';
@@ -8,16 +8,14 @@ import { ChunkErrorService } from '../../services/chunk-error.service';
  */
 @Injectable()
 export class AlgErrorHandler extends ErrorHandler {
+  private chunkErrorService = inject(ChunkErrorService);
+
 
   private isDialogOpen = false;
   /**
    * list of errors which have already been reported in this session so that we do not report the same one several times
    */
   private reportedErrors: string[] = [];
-
-  constructor(private chunkErrorService: ChunkErrorService) {
-    super();
-  }
 
   override handleError(err: any): void {
     if (this.isChunkLoadingError(err)) {

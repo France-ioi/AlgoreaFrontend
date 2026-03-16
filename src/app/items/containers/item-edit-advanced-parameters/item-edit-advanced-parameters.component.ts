@@ -101,8 +101,6 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     value: 'None'
   }];
 
-  constructor() { }
-
   ngOnInit(): void {
     this.handleDurationValidators();
   }

@@ -122,9 +122,6 @@ export class ItemChildrenEditListComponent implements OnChanges {
     this.baseColumns().filter(c => ![ 'type', 'title' ].includes(c))
   );
 
-  constructor() {
-  }
-
   ngOnChanges(): void {
     this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
     this.scoreWeightEnabled.set(this.data.some(c => c.scoreWeight !== 1));
