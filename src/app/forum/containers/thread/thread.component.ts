@@ -32,7 +32,6 @@ import { createSelector, Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromWebsocket } from 'src/app/store/websocket';
 import { ThreadId } from 'src/app/forum/models/threads';
-import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { fromObservation } from 'src/app/store/observation';
@@ -105,6 +104,14 @@ const selectThreadInfo = createSelector(
   ]
 })
 export class ThreadComponent implements AfterViewInit, OnDestroy {
+  private store = inject(Store);
+  private userSessionService = inject(UserSessionService);
+  private userService = inject(GetUserService);
+  private getItemByIdService = inject(GetItemByIdService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private updateThreadService = inject(UpdateThreadService);
+  private threadMessageService = inject(ThreadMessageService);
+  private fb = inject(FormBuilder);
   private config = inject(APPCONFIG);
   @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
   @ViewChild('messageToSendEl') messageToSendEl?: ElementRef<HTMLTextAreaElement>;
@@ -310,17 +317,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     }),
   );
 
-  constructor(
-    private store: Store,
-    private userSessionService: UserSessionService,
-    private userService: GetUserService,
-    private getItemByIdService: GetItemByIdService,
-    private actionFeedbackService: ActionFeedbackService,
-    private updateThreadService: UpdateThreadService,
-    private forumWebsocketClient: WebsocketClient,
-    private threadMessageService: ThreadMessageService,
-    private fb: FormBuilder,
-  ) {
+  constructor() {
     // Track page unload to prevent error flashing when leaving the page
     window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
