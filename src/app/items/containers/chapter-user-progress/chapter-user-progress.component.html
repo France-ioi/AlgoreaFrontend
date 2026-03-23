@@ -35,12 +35,12 @@
               >
                 @switch (column.field) {
                   @case ('title') {
-                    @if (itemData && itemData.currentResult?.attemptId; as parentAttemptId) {
+                    @if (itemData().currentResult?.attemptId; as parentAttemptId) {
                       <div>
                         <a
                           class="alg-link"
-                          [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData.item.id }"
-                          [routerLink]="rowData | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]), parentAttemptId } | url"
+                          [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData().item.id }"
+                          [routerLink]="rowData | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]), parentAttemptId } | url"
                         >
                           {{ rowData.title }}
                         </a>
