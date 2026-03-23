@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { APPCONFIG } from 'src/app/config';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
@@ -45,9 +45,13 @@ export class GetParticipantProgressService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
-  get(id: string): Observable<ParticipantProgress> {
+  get(id: string, options?: { watchedGroupId?: string }): Observable<ParticipantProgress> {
+    let params = new HttpParams();
+    if (options?.watchedGroupId) {
+      params = params.set('watched_group_id', options.watchedGroupId);
+    }
     return this.http
-      .get<unknown>(`${this.config.apiUrl}/items/${id}/participant-progress`)
+      .get<unknown>(`${this.config.apiUrl}/items/${id}/participant-progress`, { params })
       .pipe(
         decodeSnakeCase(participantProgressSchema)
       );

@@ -1,9 +1,8 @@
-import { Component, computed, Input, OnChanges, OnDestroy, inject } from '@angular/core';
+import { Component, computed, OnDestroy, inject, input } from '@angular/core';
 import { GetParticipantProgressService } from '../../data-access/get-participant-progress.service';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { FetchState } from 'src/app/utils/state';
 import { ItemType } from 'src/app/items/models/item-type';
 import { ItemData } from '../../models/item-data';
@@ -30,7 +29,7 @@ import {
   CdkRowDef,
   CdkTable
 } from '@angular/cdk/table';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 interface RowData {
   id: string,
@@ -73,16 +72,15 @@ interface RowData {
     CdkNoDataRow,
   ]
 })
-export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
+export class ChapterUserProgressComponent implements OnDestroy {
   private getParticipantProgressService = inject(GetParticipantProgressService);
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
-  private readonly item$ = new ReplaySubject<Item>(1);
   private readonly refresh$ = new Subject<void>();
-  state$: Observable<FetchState<RowData[]>> = this.item$.pipe(
-    switchMap(item =>
-      this.getParticipantProgressService.get(item.id).pipe(map(participantProgress => ([
+  state$: Observable<FetchState<RowData[]>> = toObservable(this.itemData).pipe(
+    switchMap(({ item, route }) =>
+      this.getParticipantProgressService.get(item.id, { watchedGroupId: route.observedGroup?.id }).pipe(map(participantProgress => ([
         {
           id: item.id,
           type: item.type,
@@ -96,18 +94,18 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
           currentUserPermissions: item.permissions,
           noScore: item.noScore,
         },
-        ...(participantProgress.children || []).map(itemData => ({
-          id: itemData.itemId,
-          type: itemData.type,
-          title: itemData.string.title || '',
-          latestActivityAt: itemData.latestActivityAt,
-          hintsRequested: itemData.hintsRequested,
-          timeSpent: itemData.timeSpent,
-          submissions: itemData.submissions,
-          score: itemData.score,
-          validated: itemData.validated,
-          currentUserPermissions: itemData.currentUserPermissions,
-          noScore: itemData.noScore,
+        ...(participantProgress.children || []).map(child => ({
+          id: child.itemId,
+          type: child.type,
+          title: child.string.title || '',
+          latestActivityAt: child.latestActivityAt,
+          hintsRequested: child.hintsRequested,
+          timeSpent: child.timeSpent,
+          submissions: child.submissions,
+          score: child.score,
+          validated: child.validated,
+          currentUserPermissions: child.currentUserPermissions,
+          noScore: child.noScore,
         })),
       ])))
     ),
@@ -146,14 +144,7 @@ export class ChapterUserProgressComponent implements OnChanges, OnDestroy {
   columns = toSignal(this.columns$, { initialValue: [] });
   displayedColumns = computed(() => this.columns().map(column => column.field));
 
-  ngOnChanges(): void {
-    if (this.itemData) {
-      this.item$.next(this.itemData.item);
-    }
-  }
-
   ngOnDestroy(): void {
-    this.item$.complete();
     this.refresh$.complete();
   }
 
