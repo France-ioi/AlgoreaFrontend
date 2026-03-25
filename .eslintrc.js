@@ -21,7 +21,6 @@ module.exports = {
       { type: [ 'element', 'attribute' ], prefix: 'alg', style: 'kebab-case' },
     ],
     '@angular-eslint/no-output-native': 'off',
-    '@angular-eslint/prefer-inject': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
@@ -109,7 +108,7 @@ module.exports = {
       ]
     }],
     'jasmine/no-focused-tests': ['error'],
-    'deprecation/deprecation': ['off'],
+    'deprecation/deprecation': ['error'],
     '@ngrx/prefer-effect-callback-in-block-statement': 'off',
     '@typescript-eslint/unbound-method': ['error', {
       'ignoreStatic': true
