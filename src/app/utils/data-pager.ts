@@ -62,8 +62,7 @@ export class DataPager<T> {
                 const hasMore = state.data.length > this.options.pageSize;
                 const list = hasMore ? state.data.slice(0, this.options.pageSize) : state.data;
                 return readyState({ list, hasMore });
-              }
-              else if (state.isError) return errorState(state.error);
+              } else if (state.isError) return errorState(state.error);
               else return fetchingState();
             }
 
