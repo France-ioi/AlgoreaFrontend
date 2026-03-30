@@ -6,6 +6,7 @@ import { CommunityThreadsComponent } from '../community-threads/community-thread
 import { CommunityActivityFeedComponent } from '../community-activity-feed/community-activity-feed.component';
 import { communityPageActions } from '../../store';
 import { CommunityVisitService } from '../../community-visit.service';
+import { APPCONFIG } from '../../../config';
 
 @Component({
   selector: 'alg-community-page',
@@ -21,6 +22,7 @@ export class CommunityPageComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private currentContent = inject(CurrentContentService);
   private communityVisitService = inject(CommunityVisitService);
+  enableForum = inject(APPCONFIG).featureFlags.enableForum;
 
   ngOnInit(): void {
     this.currentContent.replace({ type: 'community' });
