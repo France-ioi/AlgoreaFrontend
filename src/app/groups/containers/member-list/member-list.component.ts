@@ -233,7 +233,7 @@ export class MemberListComponent implements OnChanges, OnDestroy {
           return this.getGroupMembersService.getGroupMembers(
             route.id,
             this.currentSort,
-            membersLimit,
+            pageSize,
             (latestRow as Member|undefined)?.id,
           ).pipe(
             map(members => members.map(member => ({
