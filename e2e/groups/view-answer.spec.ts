@@ -121,7 +121,7 @@ const itemLogsJson = [
 
 test('View answer in logs for current user', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.route(`${apiUrl}/items/log?limit=20`, async route => {
+  await page.route(`${apiUrl}/items/log?limit=21`, async route => {
     await route.fulfill({ json: currentUserLogsJson });
   });
   await page.goto('/groups/users/670968966872011405');
@@ -134,7 +134,7 @@ test('View answer in logs for current user', async ({ page }) => {
 
 test('View answer in logs for other user', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.route(`${apiUrl}/items/log?limit=20&watched_group_id=752024252804317630`, async route => {
+  await page.route(`${apiUrl}/items/log?limit=21&watched_group_id=752024252804317630`, async route => {
     await route.fulfill({ json: otherUserJson });
   });
   await page.goto('/groups/users/752024252804317630');
@@ -147,7 +147,7 @@ test('View answer in logs for other user', async ({ page }) => {
 
 test('View answer in logs for a group', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.route(`${apiUrl}/items/log?limit=20&watched_group_id=672913018859223173`, async route => {
+  await page.route(`${apiUrl}/items/log?limit=21&watched_group_id=672913018859223173`, async route => {
     await route.fulfill({ json: groupLogsJson });
   });
   await page.goto('/groups/by-id/672913018859223173;p=52767158366271444/history');
@@ -160,7 +160,7 @@ test('View answer in logs for a group', async ({ page }) => {
 
 test('View answer in logs for an item', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.route(`${apiUrl}/items/4702/log?limit=20`, async route => {
+  await page.route(`${apiUrl}/items/4702/log?limit=21`, async route => {
     await route.fulfill({ json: itemLogsJson });
   });
   await page.goto('/a/home;pa=0/progress/history');

@@ -49,7 +49,7 @@ test.afterEach(async ({ page }) => {
   await initAsUsualUser(page);
   await Promise.all([
     page.goto(`/groups/by-id/${ groupId };p=/members`),
-    page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=25`),
+    page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=26`),
   ]);
   await expect.soft(page.locator('li').filter({ hasText: 'Users' })).toBeVisible();
   await expect.soft(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
@@ -84,7 +84,7 @@ test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, mineP
     await initAsUsualUser(page);
     await Promise.all([
       page.goto(`/groups/by-id/${ groupId };p=/members`),
-      page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=25`),
+      page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=26`),
     ]);
     await expect.soft(page.locator('alg-member-list').getByRole('link', { name: demoUserLogin })).toBeVisible();
   });

@@ -90,7 +90,7 @@ export class UserPage {
   }
 
   async waitForLogsResponse(groupId?: string): Promise<void> {
-    await this.page.waitForResponse(`${apiUrl}/items/log?limit=20${ groupId ? `&watched_group_id=${ groupId}` : '' }`);
+    await this.page.waitForResponse(`${apiUrl}/items/log?limit=21${ groupId ? `&watched_group_id=${ groupId}` : '' }`);
   }
 
   async checksIsModifyPasswordBtnVisible(): Promise<void> {
