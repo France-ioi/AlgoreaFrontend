@@ -35,12 +35,19 @@ describe('DataPager', () => {
       expect(states[1]!.data).toEqual([ 1, 2, 3 ]);
     });
 
-    it('should report canLoadMore true when page is full', () => {
-      const { pager } = createPager(() => of([ 1, 2, 3 ]));
+    it('should report canLoadMore true when server has more data', () => {
+      const { pager } = createPager(() => of([ 1, 2, 3, 4 ]));
       let canLoadMore: boolean | undefined;
       pager.canLoadMore$.subscribe(v => canLoadMore = v);
       pager.load();
       expect(canLoadMore).toBeTrue();
+    });
+
+    it('should not include the probe item in the list', () => {
+      const { pager } = createPager(() => of([ 1, 2, 3, 4 ]));
+      const states = collectStates(pager.list$);
+      pager.load();
+      expect(states[states.length - 1]!.data).toEqual([ 1, 2, 3 ]);
     });
 
     it('should report canLoadMore false when page is not full', () => {
@@ -83,7 +90,7 @@ describe('DataPager', () => {
       collectStates(pager.list$);
       pager.load();
       pager.load();
-      expect(fetchSpy).toHaveBeenCalledWith(3, 3);
+      expect(fetchSpy).toHaveBeenCalledWith(4, 3);
     });
 
     it('should keep old data and call onLoadMoreError on load-more failure', () => {
@@ -328,7 +335,7 @@ describe('DataPager', () => {
       pager.load();
       pager.setPageSize(10);
       pager.reset();
-      expect(fetchSpy.calls.mostRecent().args[0]).toBe(10);
+      expect(fetchSpy.calls.mostRecent().args[0]).toBe(11);
     });
 
     it('should use the new maxPageSize for refresh', () => {
