@@ -44,12 +44,14 @@ export class DataPager<T> {
           const targetCount = Math.max(prev.data?.list.length ?? 0, this.options.pageSize);
           const batchSize = Math.min(targetCount, this.options.maxPageSize ?? targetCount);
 
-          return this.fetchPages(batchSize, targetCount).pipe(
+          return this.fetchPages(batchSize, targetCount + 1).pipe(
             mapToFetchState(),
             map(state => {
               if (state.isReady) {
-                const newItems = state.data.length < targetCount ? [] : state.data.slice(-this.options.pageSize);
-                return readyState({ list: state.data, newItems });
+                const hasMore = state.data.length > targetCount;
+                const items = hasMore ? state.data.slice(0, targetCount) : state.data;
+                const newItems = hasMore ? items.slice(-this.options.pageSize) : [];
+                return readyState({ list: items, newItems });
               }
               if (state.isError) return errorState(state.error);
               return fetchingState(prev.data);
