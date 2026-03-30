@@ -2,15 +2,6 @@ import { map, Observable, of, ReplaySubject, shareReplay, switchMap, switchScan 
 import { errorState, fetchingState, FetchState, readyState } from '../utils/state';
 import { mapStateData, mapToFetchState } from './operators/state';
 
-function canLoadMorePagedData<T>(list: T[], limit: number): boolean {
-  /**
-   * If list length is same as limit, it means we can still fetch.
-   * For the edge case when the list length is same as limit but there's no more items, it will be
-   * solved by itself at next call because the list will then be empty.
-   */
-  return list.length === limit;
-}
-
 interface PagerOptions<T> {
   fetch: (pageSize: number, lastElement?: T) => Observable<T[]>,
   pageSize: number,
@@ -24,7 +15,7 @@ interface PagerOptions<T> {
 
 interface PagedData<T> {
   list: T[],
-  newItems: T[],
+  hasMore: boolean,
 }
 
 type TriggerAction = { type: 'loadMore' } | { type: 'reset' } | { type: 'refresh' };
@@ -44,12 +35,14 @@ export class DataPager<T> {
           const targetCount = Math.max(prev.data?.list.length ?? 0, this.options.pageSize);
           const batchSize = Math.min(targetCount, this.options.maxPageSize ?? targetCount);
 
-          return this.fetchPages(batchSize, targetCount).pipe(
+          // Fetch one extra to reliably detect whether more data exists
+          return this.fetchPages(batchSize, targetCount + 1).pipe(
             mapToFetchState(),
             map(state => {
               if (state.isReady) {
-                const newItems = state.data.length < targetCount ? [] : state.data.slice(-this.options.pageSize);
-                return readyState({ list: state.data, newItems });
+                const hasMore = state.data.length > targetCount;
+                const items = hasMore ? state.data.slice(0, targetCount) : state.data;
+                return readyState({ list: items, hasMore });
               }
               if (state.isError) return errorState(state.error);
               return fetchingState(prev.data);
@@ -58,24 +51,32 @@ export class DataPager<T> {
         }
 
         const latestElement = isReset ? undefined : prev.data?.list[prev.data.list.length - 1];
+        // Fetch one extra to reliably detect whether more data exists
+        const fetchSize = this.options.pageSize + 1;
 
-        return this.options.fetch(this.options.pageSize, latestElement).pipe(
+        return this.options.fetch(fetchSize, latestElement).pipe(
           mapToFetchState(),
           map(state => {
-            // First fetch (reset or initial load)
             if (prev.data === undefined) {
-              if (state.isReady) return readyState({ list: state.data, newItems: state.data });
-              else if (state.isError) return errorState(state.error);
+              if (state.isReady) {
+                const hasMore = state.data.length > this.options.pageSize;
+                const list = hasMore ? state.data.slice(0, this.options.pageSize) : state.data;
+                return readyState({ list, hasMore });
+              } else if (state.isError) return errorState(state.error);
               else return fetchingState();
             }
 
-            // Load more
             if (state.isFetching) return fetchingState(prev.data);
             else if (state.isError) {
               this.options.onLoadMoreError(state.error);
               return readyState(prev.data);
             } else {
-              return readyState({ list: [ ...prev.data.list, ...state.data ], newItems: state.data });
+              const hasMore = state.data.length > this.options.pageSize;
+              const items = hasMore ? state.data.slice(0, this.options.pageSize) : state.data;
+              return readyState({
+                list: [ ...prev.data.list, ...items ],
+                hasMore,
+              });
             }
           })
         );
@@ -85,7 +86,7 @@ export class DataPager<T> {
   );
   list$ = this.state$.pipe(mapStateData(pagedData => pagedData.list));
   canLoadMore$ = this.state$.pipe(
-    map(state => state.data === undefined || canLoadMorePagedData(state.data.newItems, this.options.pageSize)),
+    map(state => state.data === undefined || state.data.hasMore),
   );
 
   constructor(private options: PagerOptions<T>) {}
