@@ -21,7 +21,7 @@ import { Answer } from './item-task.service';
 import { TaskToken, TaskTokenService } from '../data-access/task-token.service';
 
 const taskChannelIdPrefix = 'task-';
-const loadTaskTimeout = 15 * SECONDS;
+const loadTaskTimeout = 20 * SECONDS;
 
 export interface ItemTaskConfig {
   route: FullItemRoute,
