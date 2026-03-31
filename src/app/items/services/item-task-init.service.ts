@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
 import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
@@ -21,7 +21,14 @@ import { Answer } from './item-task.service';
 import { TaskToken, TaskTokenService } from '../data-access/task-token.service';
 
 const taskChannelIdPrefix = 'task-';
-const loadTaskTimeout = 20 * SECONDS;
+export const LOAD_TASK_TIMEOUT = new InjectionToken<number>('loadTaskTimeout', {
+  factory: (): number => 20 * SECONDS,
+});
+
+type TaskProxyFactory = (iframe: HTMLIFrameElement) => Observable<Task>;
+export const TASK_PROXY_FROM_IFRAME = new InjectionToken<TaskProxyFactory>('taskProxyFromIframe', {
+  factory: (): TaskProxyFactory => taskProxyFromIframe,
+});
 
 export interface ItemTaskConfig {
   route: FullItemRoute,
@@ -37,6 +44,8 @@ export class ItemTaskInitService implements OnDestroy {
   private taskTokenService = inject(TaskTokenService);
 
   private config = inject(APPCONFIG);
+  private loadTaskTimeout = inject(LOAD_TASK_TIMEOUT);
+  private taskProxyFromIframe = inject(TASK_PROXY_FROM_IFRAME);
   private destroyed$ = new Subject<void>();
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
@@ -54,8 +63,7 @@ export class ItemTaskInitService implements OnDestroy {
   // called yet.
   readonly task$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    switchMap(({ iframe, bindPlatform }) => taskProxyFromIframe(iframe).pipe(tap(task => bindPlatform(task)))),
+    switchMap(config => this.taskProxyFromIframe(config.iframe).pipe(tap(task => config.bindPlatform(task)))),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
@@ -102,7 +110,8 @@ export class ItemTaskInitService implements OnDestroy {
 
   readonly initError$ = this.configFromIframe$.pipe(switchMap(({ iframe }) => fromEvent(iframe, 'load'))).pipe(
     switchMap(() => this.loadedTask$),
-    timeout({ first: loadTaskTimeout }), // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
+    // after the iframe has loaded, if no connection to jschannel is made, consider the task broken
+    timeout({ first: this.loadTaskTimeout }),
     catchError(timeoutError => of(timeoutError)),
     filter(error => error instanceof TimeoutError),
   ) as Observable<TimeoutError>;
