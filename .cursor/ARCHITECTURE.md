@@ -24,7 +24,7 @@ src/app/
 ├── items/               # Items feature module (activities, skills, tasks)
 ├── groups/              # Groups feature module (users, teams, classes)
 ├── forum/               # Forum feature module (discussions, threads)
-├── community/           # Community feature module (gated by enableCommunity flag)
+├── community/           # Community feature module (gated by community flag)
 └── lti/                 # LTI integration module
 ```
 
@@ -153,7 +153,7 @@ The SLS (serverless) API is separate from the main backend API:
 | Path | Module | Description |
 |------|--------|-------------|
 | `/` | Home redirect | Redirects to default activity |
-| `/community/*` | Community | Community section (requires `enableCommunity` flag) |
+| `/community/*` | Community | Community section (requires `community` flag not `'disabled'`) |
 | `/a/:idOrAlias` | Items | Activity content |
 | `/s/:idOrAlias` | Items | Skill content |
 | `/groups/*` | Groups | Group management |
@@ -182,7 +182,7 @@ interface AppConfig {
   languages: Language[];       // Supported languages
   featureFlags: {
     enableForum: boolean;        // default false
-    enableCommunity: boolean;    // default false — gates /community route
+    community: 'disabled' | 'notInNav' | 'enabled'; // default 'disabled' — gates /community route and nav tab
     enableNotifications: boolean;
     // …
   };

@@ -28,7 +28,7 @@ window.appConfig = {
 
   theme: 'default',
   featureFlags: {
-    enableCommunity: true,
+    community: 'enabled',
     enableNotifications: true,
     enableForum: true,
     hideTaskTabs: [],

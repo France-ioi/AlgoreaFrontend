@@ -19,7 +19,7 @@ export const communityPollEffect = createEffect(
     getThreadsService = inject(GetThreadsService),
     communityVisitService = inject(CommunityVisitService),
     userSessionService = inject(UserSessionService),
-  ) => (config.featureFlags.enableCommunity ? userSessionService.userProfile$.pipe(
+  ) => (config.featureFlags.community === 'enabled' ? userSessionService.userProfile$.pipe(
     switchMap(profile => {
       if (profile.tempUser) return EMPTY;
       return store.select(fromCommunity.selectHasUnreadThreads).pipe(
