@@ -43,7 +43,7 @@ const configSchema = z.object({
 
   featureFlags: z.object({
     enableForum: z.boolean().default(false),
-    enableCommunity: z.boolean().default(false),
+    community: z.enum([ 'disabled', 'notInNav', 'enabled' ]).default('disabled'),
     enableNotifications: z.boolean().default(false),
 
     hideTaskTabs: z.array(z.string()).default([]),

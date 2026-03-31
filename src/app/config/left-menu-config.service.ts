@@ -29,7 +29,7 @@ export class LeftMenuConfigService {
       );
     })
   );
-  communityTabEnabled$ = of(this.config.featureFlags.enableCommunity);
+  communityTabEnabled$ = of(this.config.featureFlags.community === 'enabled');
 
   showTabBar$ = combineLatest([ this.skillsTabEnabled$, this.groupsTabEnabled$, this.communityTabEnabled$ ]).pipe(
     map(([ skillsTabEnabled, groupsTabEnabled, communityTabEnabled ]) => skillsTabEnabled || groupsTabEnabled || communityTabEnabled)
