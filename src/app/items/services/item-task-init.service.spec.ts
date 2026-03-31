@@ -1,12 +1,11 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { EMPTY, merge, of, Subject, throwError, TimeoutError } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { EMPTY, merge, of, Subject, TimeoutError } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { ItemTaskInitService, LOAD_TASK_TIMEOUT, TASK_PROXY_FROM_IFRAME } from './item-task-init.service';
 import { TaskTokenService } from '../data-access/task-token.service';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { Task } from '../api/task-proxy';
-import { mapToFetchState } from 'src/app/utils/operators/state';
-import { FetchState } from 'src/app/utils/state';
+import { errorState, fetchingState, FetchState, readyState } from 'src/app/utils/state';
 
 const testTimeout = 200;
 const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
@@ -139,8 +138,10 @@ describe('ItemTaskInitService – timeout scenarios', () => {
 
   it('should transition state$ from error back to ready when task loads after timeout', fakeAsync(() => {
     const mockTask = createMockTask();
-    const error$ = service.initError$.pipe(switchMap(error => throwError(() => error)));
-    const state$ = merge(service.loadedTask$, error$).pipe(mapToFetchState());
+    const state$ = merge(
+      service.loadedTask$.pipe(map(task => readyState(task))),
+      service.initError$.pipe(map(e => errorState(e))),
+    ).pipe(startWith(fetchingState()));
 
     const states: FetchState<Task>[] = [];
     state$.subscribe(s => states.push(s));
@@ -150,8 +151,8 @@ describe('ItemTaskInitService – timeout scenarios', () => {
 
     tick(testTimeout + 1);
 
-    const errorState = states[states.length - 1];
-    expect(errorState?.isError).withContext('state$ should be in error after timeout').toBeTrue();
+    const errState = states[states.length - 1];
+    expect(errState?.isError).withContext('state$ should be in error after timeout').toBeTrue();
 
     taskProxy$.next(mockTask);
     taskProxy$.complete();

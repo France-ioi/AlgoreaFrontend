@@ -30,6 +30,7 @@ import {
 import { HOURS, SECONDS } from 'src/app/utils/duration';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
+import { errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { capitalize } from 'src/app/utils/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
@@ -107,7 +108,12 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
 
   private dialogService = inject(Dialog);
 
-  state$ = merge(this.taskService.loadedTask$, this.taskService.error$).pipe(mapToFetchState());
+  state$ = merge(
+    this.taskService.loadedTask$.pipe(map(task => readyState(task))),
+    this.taskService.initError$.pipe(map(e => errorState(e))),
+    this.taskService.urlError$.pipe(map(e => errorState(e))),
+    this.taskService.unknownError$.pipe(map(e => errorState(e))),
+  ).pipe(startWith(fetchingState()));
   @Output() loadingComplete = this.state$.pipe(map(s => !s.isFetching), distinctUntilChanged());
   initError$ = this.taskService.initError$;
   urlError$ = this.taskService.urlError$;
