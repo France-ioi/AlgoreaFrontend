@@ -66,10 +66,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.error-button {
-  &:first-child {
-    margin-right: 1rem;
-  }
+  gap: 1rem;
 }
