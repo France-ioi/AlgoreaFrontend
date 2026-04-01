@@ -12,7 +12,7 @@ import { ResultFetchingService } from '../../services/result-fetching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { TestBed } from '@angular/core/testing';
 import { provideEffects } from '@ngrx/effects';
-import { configEffects } from 'src/app/store/config';
+import { configEffects } from 'src/app/store/config/effects';
 
 const testScheduler = new TestScheduler((actual, expected) => {
   expect(actual).toEqual(expected);
