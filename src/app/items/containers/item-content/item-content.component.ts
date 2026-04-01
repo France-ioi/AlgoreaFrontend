@@ -88,6 +88,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   @Output() fullFrameTask = new EventEmitter<boolean>();
 
   isTaskLoaded = signal(false); // whether the task has finished loading, i.e. is ready or in error
+  showTaskDisplay = signal(true);
   isCurrentUserTemp = toSignal(this.userSessionService.userProfile$.pipe(map(user => user.tempUser)));
   hasPrerequisites: boolean|undefined = undefined; // undefined while not known
 
@@ -107,6 +108,12 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onScoreChange(score: number): void {
     this.scoreChange.emit(score);
+  }
+
+  onTaskRetry(): void {
+    this.isTaskLoaded.set(false);
+    this.showTaskDisplay.set(false);
+    setTimeout(() => this.showTaskDisplay.set(true));
   }
 
   onTaskLoadChange(loadingComplete: boolean): void {

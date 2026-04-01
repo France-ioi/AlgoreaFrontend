@@ -122,7 +122,7 @@
   }
   @else { <!-- url set -->
 
-    @if (taskConfig) {
+    @if (taskConfig && showTaskDisplay()) {
       <alg-item-display
         class="alg-flex-1"
         [ngClass]="{ 'alg-opacity-0': !isTaskLoaded() }"
@@ -137,7 +137,7 @@
         (tabsChange)="taskTabsChange.emit($event)"
         (scoreChange)="onScoreChange($event)"
         (skipSave)="skipSave.emit()"
-        (refresh)="refresh.emit()"
+        (refresh)="onTaskRetry()"
         (editorUrl)="editorUrl.emit($event)"
         (disablePlatformProgress)="disablePlatformProgress.emit($event)"
         (fullFrame)="fullFrameTask.emit($event)"
