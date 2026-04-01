@@ -10,6 +10,17 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 
 - files should not be longer than 300 lines.
 
+## Comments
+- Do NOT add obvious, narrating comments (e.g., `// increment counter`, `// return result`).
+- DO add comments when a non-trivial choice has been made and the reasoning is not self-evident from the code. Examples:
+  - Why a particular algorithm, data structure, or approach was chosen over alternatives
+  - Why a value is hardcoded or why a specific threshold/constant was picked
+  - Workarounds for framework quirks, browser bugs, or API limitations
+  - Non-obvious performance considerations or trade-offs
+  - Business logic constraints that aren't apparent from the code alone
+  - Why something is intentionally left out (e.g., `// No need to unsubscribe: completed by takeUntilDestroyed`)
+- When refactoring or rewriting code, **preserve all existing explanatory comments**. Move them to the appropriate new location if the code they describe has moved. Only remove a comment if the code change makes the comment factually obsolete.
+
 ## TypeScript Best Practices
 
 - Use strict type checking
