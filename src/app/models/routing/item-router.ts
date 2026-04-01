@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
-import { itemRouteWith, RawItemRoute, selectObservedGroupRouteAsItemRouteParameter } from './item-route';
+import { itemRouteWith, RawItemRoute } from './item-route';
+import { selectObservedGroupRouteAsItemRouteParameter } from './item-route-observation-selector';
 import { APPCONFIG, AppConfig } from 'src/app/config';
 import { itemRouteAsUrlCommand } from './item-route-serialization';
 import { Store } from '@ngrx/store';

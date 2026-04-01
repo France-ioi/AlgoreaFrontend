@@ -14,24 +14,32 @@ import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule, NgScrollbarOptions } from 'ngx
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';
-import { fromForum, forumEffects } from './app/forum/store';
+import { fromForum } from './app/forum/store';
+import { forumEffects } from './app/forum/store/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { NavigationActionTiming, provideRouterStore } from '@ngrx/router-store';
 import { fromRouter, RouterSerializer } from './app/store/router';
-import { fromGroupContent, groupStoreEffects } from './app/groups/store';
-import { fromWebsocket, websocketEffects } from './app/store/websocket';
-import { fromItemContent as fromItem, itemStoreEffects } from './app/items/store';
-import { analyticsTrackingEffects, fromSelectedContent, selectedContentEffects } from './app/store/navigation';
+import { fromGroupContent } from './app/groups/store';
+import { groupStoreEffects } from './app/groups/store/effects';
+import { fromWebsocket } from './app/store/websocket';
+import { websocketEffects } from './app/store/websocket/effects';
+import { fromItemContent as fromItem } from './app/items/store';
+import { itemStoreEffects } from './app/items/store/effects';
+import { fromSelectedContent } from './app/store/navigation';
+import { analyticsTrackingEffects, selectedContentEffects } from './app/store/navigation/effects';
 import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset.interceptors';
 import { fromTimeOffset } from './app/store/time-offset';
+import { fromNotification } from './app/store/notification';
 import {
-  fromNotification, notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
-} from './app/store/notification';
-import { fromCommunity, communityEffects, communityWsSubscriptionEffects } from './app/community/store';
+  notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
+} from './app/store/notification/effects';
+import { fromCommunity } from './app/community/store';
+import { communityEffects, communityWsSubscriptionEffects } from './app/community/store/effects';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
-import { fromConfig, configEffects } from './app/store/config';
+import { fromConfig } from './app/store/config';
+import { configEffects } from './app/store/config/effects';
 import { environment } from './environments/environment';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 

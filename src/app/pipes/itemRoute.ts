@@ -5,8 +5,8 @@ import {
   RawItemRoute,
   itemRoute,
   itemRouteWith,
-  selectObservedGroupRouteAsItemRouteParameter
 } from '../models/routing/item-route';
+import { selectObservedGroupRouteAsItemRouteParameter } from '../models/routing/item-route-observation-selector';
 import { Store } from '@ngrx/store';
 
 /**

@@ -10,7 +10,7 @@ import { errorState, fetchingState } from 'src/app/utils/state';
 import { itemRouteErrorHandlingActions } from './item-content.actions';
 import { TestBed } from '@angular/core/testing';
 import { provideEffects } from '@ngrx/effects';
-import { configEffects } from 'src/app/store/config';
+import { configEffects } from 'src/app/store/config/effects';
 
 describe('routeParamParsingEffect', () => {
   const mockError = new Error('mock service error');

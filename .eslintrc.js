@@ -96,6 +96,7 @@ module.exports = {
             '**/store/*',
             '!@ngrx/store/testing',
             '!**/utils/store/**',
+            '!**/store/effects',
             '!**/store/config',
             '!**/store/notification',
             '!**/store/websocket',
@@ -104,7 +105,7 @@ module.exports = {
             '!**/store/router',
             '!**/store/navigation'
           ],
-          message: 'Only store indexes can be imported'
+          message: 'Only store indexes and effects barrels can be imported'
         },
       ]
     }],
