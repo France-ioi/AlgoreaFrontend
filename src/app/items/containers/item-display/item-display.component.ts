@@ -167,7 +167,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
         const shouldDisplayError = !next && !this.actionFeedbackService.hasFeedback;
         const shouldDisplaySuccess = !previous && next;
         if (shouldDisplayError) {
-          const message = $localize`Your current progress could not have been saved. Are you connected to the internet?`;
+          const message = $localize`Your current progress could not be saved. Are you connected to the internet?`;
           this.actionFeedbackService.error(message, { life: 24*HOURS });
         }
         if (shouldDisplaySuccess) {
