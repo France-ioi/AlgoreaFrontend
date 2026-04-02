@@ -48,6 +48,8 @@
           [treeIndex]="tabToTreeIndex(activeTab.index)"
           (selectElement)="onSelectElement($event)"
         />
+      } @else if (isCommunityTab(activeTab.index)) {
+        <alg-community-stats class="alg-flex-1" />
       }
     }
   </ng-container>

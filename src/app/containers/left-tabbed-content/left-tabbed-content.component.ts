@@ -29,6 +29,7 @@ import { ErrorComponent } from '../../ui-components/error/error.component';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { LetDirective } from '@ngrx/component';
 import { AsyncPipe } from '@angular/common';
+import { CommunityStatsComponent } from '../../community/containers/community-stats/community-stats.component';
 
 const activitiesTabIdx = 0;
 const skillsTabIdx = 1;
@@ -52,6 +53,7 @@ const minQueryLength = 3;
     NgScrollbar,
     LetDirective,
     AsyncPipe,
+    CommunityStatsComponent,
   ],
 })
 export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
@@ -144,6 +146,10 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
 
   isTreeTab(tabIndex: number): boolean {
     return [ activitiesTabIdx, skillsTabIdx, groupsTabIdx ].includes(tabIndex);
+  }
+
+  isCommunityTab(tabIndex: number): boolean {
+    return tabIndex === communityTabIdx;
   }
 
   onSelectElement(id: string | undefined): void {
