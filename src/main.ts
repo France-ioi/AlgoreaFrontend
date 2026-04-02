@@ -1,4 +1,4 @@
-import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode } from '@angular/core';
+import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { AppComponent } from './app/app.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -56,7 +56,7 @@ if (environment.production) {
 /* eslint-disable no-console */ /* console call authorized here (?) */
 bootstrapApplication(AppComponent, {
   providers: [
-    {
+    provideZoneChangeDetection(), {
       provide: ErrorHandler,
       useClass: AlgErrorHandler,
     },
