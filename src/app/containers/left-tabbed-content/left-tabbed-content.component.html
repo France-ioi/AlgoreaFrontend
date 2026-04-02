@@ -49,7 +49,13 @@
           (selectElement)="onSelectElement($event)"
         />
       } @else if (isCommunityTab(activeTab.index)) {
-        <alg-community-stats class="alg-flex-1" />
+        <div class="alg-flex-1 scroll-wrapper">
+          <div class="scroll-container">
+            <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
+              <alg-community-stats />
+            </ng-scrollbar>
+          </div>
+        </div>
       }
     }
   </ng-container>
