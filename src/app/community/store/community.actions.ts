@@ -9,13 +9,6 @@ export const communityPollActions = createActionGroup({
   },
 });
 
-export const communityPageActions = createActionGroup({
-  source: 'Community Page',
-  events: {
-    pageVisited: emptyProps(),
-  },
-});
-
 export const communityActivityFeedActions = createActionGroup({
   source: 'Community Activity Feed',
   events: {

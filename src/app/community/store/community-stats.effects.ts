@@ -1,20 +1,31 @@
 import { inject } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { createEffect } from '@ngrx/effects';
+import { EMPTY, distinctUntilChanged, map, switchMap, timer } from 'rxjs';
 import { GetCommunityStatsService } from '../data-access/get-community-stats.service';
-import { communityPageActions, communityStatsApiActions } from './community.actions';
+import { communityStatsApiActions } from './community.actions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
+import { SECONDS } from 'src/app/utils/duration';
+import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
+
+const REFRESH_INTERVAL = 60*SECONDS;
 
 export const communityStatsFetchEffect = createEffect(
   (
-    actions$ = inject(Actions),
+    store = inject(Store),
     getCommunityStatsService = inject(GetCommunityStatsService),
-  ) => actions$.pipe(
-    ofType(communityPageActions.pageVisited),
-    switchMap(() => getCommunityStatsService.get().pipe(
-      mapToFetchState(),
+  ) => store.select(fromCurrentContent.selectRoute).pipe(
+    map(route => route === 'community'),
+    distinctUntilChanged(),
+    switchMap(isCommunityPage => (isCommunityPage
+      ? timer(0, REFRESH_INTERVAL).pipe(
+        switchMap(() => getCommunityStatsService.get().pipe(
+          mapToFetchState(),
+        )),
+        map(fetchState => communityStatsApiActions.fetchStateChanged({ fetchState })),
+      )
+      : EMPTY
     )),
-    map(fetchState => communityStatsApiActions.fetchStateChanged({ fetchState })),
   ),
   { functional: true },
 );

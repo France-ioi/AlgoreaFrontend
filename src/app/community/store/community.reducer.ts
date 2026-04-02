@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { State, initialState } from './community.state';
-import { communityActivityFeedActions, communityPageActions, communityPollActions, communityStatsApiActions } from './community.actions';
+import { communityActivityFeedActions, communityPollActions, communityStatsApiActions } from './community.actions';
+import { contentPageActions } from 'src/app/store/navigation/current-content/current-content.actions';
 
 export const reducer = createReducer(
   initialState,
@@ -11,8 +12,8 @@ export const reducer = createReducer(
   ),
 
   on(
-    communityPageActions.pageVisited,
-    (state): State => ({ ...state, hasUnreadThreads: false })
+    contentPageActions.changeContent,
+    (state, { route }): State => (route === 'community' ? { ...state, hasUnreadThreads: false } : state)
   ),
 
   on(
