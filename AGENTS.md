@@ -2,7 +2,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 # Project Overview
 
-Algorea Frontend is an educational platform built with Angular 20 and ngrx. The project supports internationalization via Crowdin.
+Algorea Frontend is an educational platform built with Angular 21 and ngrx. The project supports internationalization via Crowdin.
 
 The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 

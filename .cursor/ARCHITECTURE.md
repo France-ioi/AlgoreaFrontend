@@ -2,7 +2,7 @@
 
 ## Overview
 
-Algorea Frontend is an Angular 20 educational platform that provides features for managing learning activities, skills, groups, and user progress. It uses ngrx for state management and communicates with a backend API.
+Algorea Frontend is an Angular 21 educational platform that provides features for managing learning activities, skills, groups, and user progress. It uses ngrx for state management and communicates with a backend API.
 
 ## Project Structure
 
