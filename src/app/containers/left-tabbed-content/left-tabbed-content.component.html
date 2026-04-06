@@ -48,6 +48,14 @@
           [treeIndex]="tabToTreeIndex(activeTab.index)"
           (selectElement)="onSelectElement($event)"
         />
+      } @else if (isCommunityTab(activeTab.index)) {
+        <div class="alg-flex-1 scroll-wrapper">
+          <div class="scroll-container">
+            <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
+              <alg-community-stats />
+            </ng-scrollbar>
+          </div>
+        </div>
       }
     }
   </ng-container>

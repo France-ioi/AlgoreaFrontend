@@ -7,6 +7,7 @@ import { ContentRoute } from 'src/app/models/routing/content-route';
 interface Selectors<T extends RootState> {
   selectBreadcrumbs: MemoizedSelector<T, State['breadcrumbs']>,
   selectTitle: MemoizedSelector<T, State['title']>,
+  selectRoute: MemoizedSelector<T, State['route']>,
   /**
    * Return the current content route or null if the current route is not a content route.
    */
@@ -25,6 +26,11 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     state => state.title
   );
 
+  const selectRoute = createSelector(
+    selectState,
+    state => state.route
+  );
+
   const selectContentRoute = createSelector(
     selectState,
     ({ route }) => (!isString(route) ? route : null)
@@ -33,6 +39,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   return {
     selectBreadcrumbs,
     selectTitle,
+    selectRoute,
     selectContentRoute
   };
 }

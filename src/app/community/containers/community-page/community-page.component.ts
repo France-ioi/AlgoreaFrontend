@@ -4,7 +4,6 @@ import { CurrentContentService } from '../../../services/current-content.service
 import { fromCurrentContent } from '../../../store/navigation/current-content/current-content.store';
 import { CommunityThreadsComponent } from '../community-threads/community-threads.component';
 import { CommunityActivityFeedComponent } from '../community-activity-feed/community-activity-feed.component';
-import { communityPageActions } from '../../store';
 import { CommunityVisitService } from '../../community-visit.service';
 import { APPCONFIG } from '../../../config';
 
@@ -26,13 +25,10 @@ export class CommunityPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentContent.replace({ type: 'community' });
-    /* eslint-disable @ngrx/avoid-dispatching-multiple-actions-sequentially */
     this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
       route: 'community',
       title: $localize`Community`,
     }));
-    this.store.dispatch(communityPageActions.pageVisited());
-    /* eslint-enable @ngrx/avoid-dispatching-multiple-actions-sequentially */
     this.communityVisitService.markVisited();
   }
 

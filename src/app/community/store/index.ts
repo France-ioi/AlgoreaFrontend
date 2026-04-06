@@ -1,2 +1,2 @@
 export { fromCommunity } from './community.store';
-export { communityPollActions, communityPageActions, communityActivityFeedActions } from './community.actions';
+export { communityPollActions, communityActivityFeedActions, communityStatsApiActions } from './community.actions';

@@ -35,7 +35,7 @@ import {
   notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
 } from './app/store/notification/effects';
 import { fromCommunity } from './app/community/store';
-import { communityEffects, communityWsSubscriptionEffects } from './app/community/store/effects';
+import { communityEffects, communityWsSubscriptionEffects, communityStatsEffects } from './app/community/store/effects';
 import { initErrorTracking } from './app/utils/error-handling/setup-error-tracking';
 import { fromCurrentContent } from './app/store/navigation/current-content/current-content.store';
 import { fromConfig } from './app/store/config';
@@ -114,6 +114,7 @@ bootstrapApplication(AppComponent, {
       notificationThreadCleanupEffects,
       communityEffects,
       communityWsSubscriptionEffects,
+      communityStatsEffects,
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
