@@ -27,7 +27,7 @@ export class CompactNumberPipe implements PipeTransform {
   ],
   styleUrl: './community-stats.component.scss',
   template: `
-    <h2 class="pulse-title" i18n>Platform Pulse</h2>
+    <h2 class="pulse-title" i18n>Community Pulse</h2>
 
     @if (statsState$ | async; as statsState) {
       @if (statsState.isFetching) {
