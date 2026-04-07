@@ -5,6 +5,7 @@ import { ItemTaskService } from '../../services/item-task.service';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
+import { TaskSessionTrackerService } from '../../services/task-session-tracker.service';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { PublishResultsService } from '../../data-access/publish-result.service';
@@ -69,6 +70,7 @@ describe('ItemDisplayComponent – retry button', () => {
             { provide: ItemTaskInitService, useValue: {} },
             { provide: ItemTaskAnswerService, useValue: {} },
             { provide: ItemTaskViewsService, useValue: {} },
+            { provide: TaskSessionTrackerService, useValue: { init: jasmine.createSpy(), ngOnDestroy: jasmine.createSpy() } },
           ],
         },
       })

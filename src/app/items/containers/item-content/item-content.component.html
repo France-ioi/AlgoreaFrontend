@@ -130,6 +130,7 @@
         [editingPermission]="itemData().item.permissions"
         [url]="url"
         [attemptId]="itemData().currentResult ? itemData().currentResult?.attemptId : undefined"
+        [resultStartedAt]="itemData().currentResult?.startedAt ?? null"
         [view]="taskView"
         [taskConfig]="taskConfig"
         [savingAnswer]="savingAnswer"

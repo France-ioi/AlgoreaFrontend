@@ -35,6 +35,7 @@ import { capitalize } from 'src/app/utils/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
+import { TaskSessionTrackerService } from '../../services/task-session-tracker.service';
 import { FullItemRoute, itemRoute } from 'src/app/models/routing/item-route';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -69,7 +70,7 @@ const heightSyncInterval = 0.2*SECONDS;
   selector: 'alg-item-display',
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
-  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService ],
+  providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService, TaskSessionTrackerService ],
   imports: [
     NgClass,
     FullHeightContentDirective,
@@ -91,11 +92,13 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
   private activityNavTreeService = inject(ActivityNavTreeService);
   private breadcrumbsService = inject(GetBreadcrumbsFromRootsService);
   private ltiDataSource = inject(LTIDataSource);
+  private sessionTracker = inject(TaskSessionTrackerService);
 
   route = input.required<FullItemRoute>();
   url = input.required<string>();
   @Input() editingPermission: ItemPermWithEdit = { canEdit: ItemEditPerm.None };
   @Input() attemptId?: string;
+  @Input() resultStartedAt: Date | null = null;
   @Input() view?: TaskTab['view'];
   @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: undefined };
   @Input() savingAnswer = false;
@@ -252,6 +255,9 @@ export class ItemDisplayComponent implements AfterViewChecked, OnChanges, OnDest
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.taskConfig || changes.attemptId) this.taskService.configure(this.route(), this.url(), this.attemptId, this.taskConfig);
+    if (changes.attemptId && this.attemptId !== undefined && !this.taskConfig.readOnly) {
+      this.sessionTracker.init(this.attemptId, this.resultStartedAt);
+    }
     if (changes.view) this.taskService.showView(this.view ?? 'task');
     if (
       changes.route &&
