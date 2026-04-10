@@ -143,6 +143,9 @@
           @if (currentTab?.tag ==='alg-extra-time') {
             <alg-item-extra-time [itemData]="itemData"></alg-item-extra-time>
           }
+          @if (currentTab?.tag === 'alg-task-stats') {
+            <alg-item-task-stats [itemData]="itemData"></alg-item-task-stats>
+          }
           @if (currentTab?.tag === 'alg-forum') {
             @if ((userProfile$ | async)?.tempUser || !showItemThreadWidget) {
               <alg-error

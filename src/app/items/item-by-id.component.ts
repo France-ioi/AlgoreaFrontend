@@ -63,6 +63,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
 import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
+import { ItemTaskStatsComponent } from './containers/item-task-stats/item-task-stats.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoginWallComponent } from './containers/login-wall/login-wall.component';
@@ -103,6 +104,7 @@ const selectState = createSelector(
     ItemDependenciesComponent,
     ItemEditWrapperComponent,
     ItemExtraTimeComponent,
+    ItemTaskStatsComponent,
     ItemForumComponent,
     RouterLinkActive,
     AsyncPipe,

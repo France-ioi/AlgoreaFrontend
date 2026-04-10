@@ -27,6 +27,7 @@ const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'depende
 const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' ], tag: 'alg-extra-time' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum' };
+const taskStatsTab = { title: $localize`Task Stats`, routerLink: [ 'task-stats' ], tag: 'alg-task-stats' };
 
 const solutionTabView = 'solution'; // 'view' name used by tasks for the solution tab
 
@@ -95,6 +96,7 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
         this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
         this.isCurrentTab(forumTab) || (!userProfile.tempUser && this.config.featureFlags.enableForum) ? forumTab : null,
+        this.isCurrentTab(taskStatsTab) && isTask && (hasEditionPerm || state.data.item.permissions.isOwner) ? taskStatsTab : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))

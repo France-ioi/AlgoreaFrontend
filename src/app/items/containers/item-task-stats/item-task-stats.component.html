@@ -1,0 +1,73 @@
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load task statistics"
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (state.isReady && state.data; as stats) {
+    <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Task Statistics</h2>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span class="summary-label" i18n>Users</span>
+        <span class="summary-value">{{ stats.userCount }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label" i18n>Median time spent</span>
+        <span class="summary-value">{{ formatDuration(stats.medianTimeSpent) }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label" i18n>Median time to validate</span>
+        <span class="summary-value">{{ formatDuration(stats.medianTimeToValidate) }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label" i18n>Median dropout time (low score)</span>
+        <span class="summary-value">{{ formatDuration(stats.medianDropoutTimeLowScore) }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label" i18n>Average score</span>
+        <span class="summary-value">{{ formatScore(stats.avgScore) }}</span>
+      </div>
+    </div>
+
+    @if (stats.scoreDistribution.length > 0) {
+      <h3 class="section-title" i18n>Score distribution</h3>
+
+      <div class="table-container">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th class="score-col" i18n>Score</th>
+              <th class="pct-col" i18n>% users above</th>
+              @for (key of timeBucketKeys; track key) {
+                <th class="time-col">{{ formatTimeBucketLabel(key) }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of stats.scoreDistribution; track trackByScore($index, entry)) {
+              <tr>
+                <td class="score-col">{{ entry.score }}</td>
+                <td class="pct-col">{{ entry.pctUsersAbove }}%</td>
+                @for (key of timeBucketKeys; track key) {
+                  <td class="time-col">{{ getTimeValue(entry, key) }}%</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-caption" i18n>
+        Each cell shows the percentage of all users who reached at least the given score within the given time.
+      </p>
+    }
+  }
+}
