@@ -1,0 +1,105 @@
+<div class="chart-container">
+  <svg
+    [attr.viewBox]="'0 0 ' + svgWidth + ' ' + svgHeight"
+    class="chart"
+    role="img"
+    aria-label="Score distribution over time chart"
+    i18n-aria-label
+  >
+    @for (tick of yTicks; track tick) {
+      <line class="gridline"
+        [attr.x1]="margin.left" [attr.y1]="yPos(tick)"
+        [attr.x2]="svgWidth - margin.right" [attr.y2]="yPos(tick)"
+      />
+    }
+
+    @for (area of areas(); track area.bucket) {
+      <path [attr.d]="area.pathD" [attr.fill]="area.color" />
+    }
+
+    <line class="axis"
+      [attr.x1]="margin.left" [attr.y1]="margin.top"
+      [attr.x2]="margin.left" [attr.y2]="svgHeight - margin.bottom"
+    />
+    <line class="axis"
+      [attr.x1]="margin.left" [attr.y1]="svgHeight - margin.bottom"
+      [attr.x2]="svgWidth - margin.right" [attr.y2]="svgHeight - margin.bottom"
+    />
+
+    @for (tick of xTicks; track tick) {
+      <text class="tick-label"
+        [attr.x]="xPos(tick)" [attr.y]="svgHeight - margin.bottom + 14"
+        text-anchor="middle"
+        font-size="10"
+      >{{ tick }}m</text>
+    }
+    <text class="axis-label"
+      [attr.x]="margin.left + plotW / 2" [attr.y]="svgHeight - 4"
+      text-anchor="middle"
+      font-size="11"
+      i18n
+    >Time (minutes)</text>
+
+    @for (tick of yTicks; track tick) {
+      <text class="tick-label"
+        [attr.x]="margin.left - 6" [attr.y]="yPos(tick) + 3"
+        text-anchor="end"
+        font-size="10"
+      >{{ tick }}%</text>
+    }
+    <text class="axis-label"
+      [attr.x]="14" [attr.y]="margin.top + plotH / 2"
+      text-anchor="middle"
+      font-size="11"
+      [attr.transform]="'rotate(-90,' + 14 + ',' + (margin.top + plotH / 2) + ')'"
+      i18n
+    >% of users</text>
+
+    @if (tooltip(); as tip) {
+      <line class="hover-line"
+        [attr.x1]="tip.x" [attr.x2]="tip.x"
+        [attr.y1]="margin.top" [attr.y2]="svgHeight - margin.bottom"
+      />
+      @for (b of tip.buckets; track b.bucket) {
+        <circle class="hover-dot"
+          [attr.cx]="tip.x" [attr.cy]="b.yTop"
+          r="3"
+          [attr.fill]="b.color"
+        />
+      }
+    }
+
+    <rect class="hover-zone"
+      [attr.x]="margin.left" [attr.y]="margin.top"
+      [attr.width]="plotW" [attr.height]="plotH"
+      fill="transparent"
+      (mousemove)="onMouseMove($event)"
+      (mouseleave)="onMouseLeave()"
+    />
+  </svg>
+
+  @if (tooltip(); as tip) {
+    <div class="tooltip"
+      [style.left.%]="(tip.x / svgWidth) * 100"
+      [class.right-aligned]="tip.x > svgWidth / 2"
+    >
+      <h4 class="tooltip-title" i18n>After {{ tip.time }} min</h4>
+      @for (b of tip.buckets; track b.bucket) {
+        <div class="tooltip-row">
+          <span class="tooltip-swatch" [style.background-color]="b.color"></span>
+          <span class="tooltip-label">{{ b.label }}</span>
+          <span class="tooltip-value">{{ b.pct.toFixed(1) }}%</span>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<div class="legend">
+  @for (area of areas(); track area.bucket) {
+    <div class="legend-item">
+      <span class="legend-swatch" [style.background-color]="area.color"></span>
+      <span class="legend-text"><span i18n>Score</span> {{ area.label }}</span>
+    </div>
+  }
+</div>

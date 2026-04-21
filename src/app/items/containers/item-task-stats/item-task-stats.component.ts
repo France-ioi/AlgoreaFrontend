@@ -5,12 +5,12 @@ import { share } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { ItemData } from '../../models/item-data';
 import { PermissionsTokenService } from '../../data-access/permissions-token.service';
-import { GetTaskStatsService, ScoreDistributionEntry } from '../../data-access/get-task-stats.service';
+import { GetTaskStatsService, TaskStats } from '../../data-access/get-task-stats.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
+import { ScoreOverTimeChartComponent } from './score-over-time-chart.component';
 import { Duration } from 'src/app/utils/duration';
-
-const TIME_BUCKET_KEYS = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60 ];
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-item-task-stats',
@@ -21,6 +21,8 @@ const TIME_BUCKET_KEYS = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20
     AsyncPipe,
     LoadingComponent,
     ErrorComponent,
+    ScoreOverTimeChartComponent,
+    TooltipDirective,
   ],
 })
 export class ItemTaskStatsComponent implements OnChanges, OnDestroy {
@@ -31,8 +33,6 @@ export class ItemTaskStatsComponent implements OnChanges, OnDestroy {
 
   private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
-
-  readonly timeBucketKeys = TIME_BUCKET_KEYS;
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.permissionsTokenService.generate(itemId).pipe(
@@ -67,16 +67,13 @@ export class ItemTaskStatsComponent implements OnChanges, OnDestroy {
     return score.toFixed(1);
   }
 
-  trackByScore(_index: number, entry: ScoreDistributionEntry): number {
-    return entry.score;
+  validationRate(stats: TaskStats): number | null {
+    const perfect = stats.scoreDistribution.find(e => e.score === 100);
+    return perfect ? perfect.pctUsersAbove : null;
   }
 
-  getTimeValue(entry: ScoreDistributionEntry, key: number): number {
-    return entry.pctByTime[key.toString()] ?? 0;
-  }
-
-  formatTimeBucketLabel(minutes: number): string {
-    if (minutes < 60) return `${minutes}m`;
-    return `${minutes / 60}h`;
+  formatPercent(value: number | null): string {
+    if (value === null) return '—';
+    return `${Math.round(value)}%`;
   }
 }

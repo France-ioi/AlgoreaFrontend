@@ -1,0 +1,129 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: block;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: functions.toRem(700);
+}
+
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.gridline {
+  stroke: var(--light-border-color, #e0e0e0);
+  stroke-width: 0.5;
+}
+
+.axis {
+  stroke: var(--alg-secondary-color, #666);
+  stroke-width: 1;
+}
+
+.tick-label,
+.axis-label {
+  fill: var(--alg-secondary-color, #666);
+}
+
+.hover-line {
+  stroke: var(--alg-secondary-color, #666);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  pointer-events: none;
+}
+
+.hover-dot {
+  pointer-events: none;
+  stroke: white;
+  stroke-width: 1;
+}
+
+.hover-zone {
+  cursor: crosshair;
+}
+
+.tooltip {
+  position: absolute;
+  top: functions.toRem(8);
+  background-color: var(--alg-bg-color, #fff);
+  border: functions.toRem(1) solid var(--light-border-color, #e0e0e0);
+  border-radius: functions.toRem(4);
+  padding: functions.toRem(8) functions.toRem(10);
+  box-shadow: 0 functions.toRem(2) functions.toRem(8) rgba(0, 0, 0, 0.12);
+  font-size: functions.toRem(12);
+  pointer-events: none;
+  // Default: tooltip appears to the right of the hovered point.
+  transform: translateX(functions.toRem(12));
+  min-width: functions.toRem(150);
+  z-index: 1;
+
+  &.right-aligned {
+    // Flip to the left of the hovered point when we're past the chart midpoint, so it doesn't overflow.
+    transform: translateX(calc(-100% - #{functions.toRem(12)}));
+  }
+}
+
+.tooltip-title {
+  margin: 0 0 functions.toRem(6) 0;
+  font-size: functions.toRem(12);
+  font-weight: 600;
+  color: var(--alg-text-color, #222);
+}
+
+.tooltip-row {
+  display: grid;
+  grid-template-columns: functions.toRem(12) 1fr auto;
+  gap: functions.toRem(6);
+  align-items: center;
+  line-height: 1.5;
+}
+
+.tooltip-swatch {
+  display: inline-block;
+  width: functions.toRem(10);
+  height: functions.toRem(10);
+  border-radius: functions.toRem(2);
+}
+
+.tooltip-label {
+  color: var(--alg-secondary-color, #666);
+}
+
+.tooltip-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--alg-text-color, #222);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: functions.toRem(8) functions.toRem(16);
+  margin-top: functions.toRem(12);
+  justify-content: center;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(6);
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: functions.toRem(12);
+  height: functions.toRem(12);
+  border-radius: functions.toRem(2);
+  flex-shrink: 0;
+}
+
+.legend-text {
+  font-size: functions.toRem(12);
+  color: var(--alg-secondary-color, #666);
+  white-space: nowrap;
+}
