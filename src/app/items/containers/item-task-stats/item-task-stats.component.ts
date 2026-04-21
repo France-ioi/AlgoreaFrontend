@@ -2,6 +2,7 @@ import { Component, inject, Input, OnChanges, OnDestroy, ChangeDetectionStrategy
 import { AsyncPipe } from '@angular/common';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { share } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { ItemData } from '../../models/item-data';
 import { PermissionsTokenService } from '../../data-access/permissions-token.service';
@@ -11,6 +12,9 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ScoreOverTimeChartComponent } from './score-over-time-chart.component';
 import { Duration } from 'src/app/utils/duration';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { IsAChapterPipe, IsASkillPipe } from '../../models/item-type';
+import { AllowsEditingAllItemPipe } from '../../models/item-edit-permission';
+import { fromObservation } from 'src/app/store/observation';
 
 @Component({
   selector: 'alg-item-task-stats',
@@ -23,13 +27,19 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     ErrorComponent,
     ScoreOverTimeChartComponent,
     TooltipDirective,
+    IsAChapterPipe,
+    IsASkillPipe,
+    AllowsEditingAllItemPipe,
   ],
 })
 export class ItemTaskStatsComponent implements OnChanges, OnDestroy {
   private permissionsTokenService = inject(PermissionsTokenService);
   private getTaskStatsService = inject(GetTaskStatsService);
+  private store = inject(Store);
 
   @Input() itemData?: ItemData;
+
+  isObserving = this.store.selectSignal(fromObservation.selectIsObserving);
 
   private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
