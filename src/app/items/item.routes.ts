@@ -63,6 +63,10 @@ const routes: Routes = [
         children: [],
       },
       {
+        path: 'task-stats',
+        children: [],
+      },
+      {
         path: '**',
         children: [],
       },
