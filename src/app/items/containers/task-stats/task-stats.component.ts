@@ -2,7 +2,7 @@ import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { Subject, switchMap } from 'rxjs';
-import { distinctUntilChanged, map, share } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { ItemData } from '../../models/item-data';
 import { PermissionsTokenService } from '../../data-access/permissions-token.service';
@@ -43,7 +43,6 @@ export class TaskStatsComponent {
       switchMap(token => this.getTaskStatsService.get(token)),
     )),
     mapToFetchState({ resetter: this.refresh$ }),
-    share(),
   );
 
   refresh(): void {

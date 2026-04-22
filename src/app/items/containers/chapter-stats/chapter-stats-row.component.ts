@@ -3,7 +3,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Subject, switchMap } from 'rxjs';
-import { distinctUntilChanged, filter, share } from 'rxjs/operators';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -64,7 +64,6 @@ export class ChapterStatsRowComponent {
       ),
     )),
     mapToFetchState({ resetter: this.refresh$ }),
-    share(),
   );
 
   refresh(): void {
