@@ -36,8 +36,8 @@ export class ChapterStatsComponent {
   readonly itemData = input.required<ItemData>();
 
   readonly columns = taskStatDescriptors;
-  // Stable array reference so child rows don't see a "changed" parentPath input on every
-  // change-detection pass (which would otherwise re-trigger their fetch pipeline).
+  // computed() memoizes the array so the reference is stable across change-detection passes
+  // and only changes when itemData changes; this avoids needless OnPush input churn on child rows.
   readonly parentPath = computed(() => [ ...this.itemData().route.path, this.itemData().item.id ]);
   readonly parentAttemptId = computed(() => this.itemData().currentResult?.attemptId);
 

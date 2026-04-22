@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
+// Kept at 1 so that stat collection does not put too high pressure on the backends.
 const MAX_CONCURRENT = 1;
 
 /**
