@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { generateAvatarData, AVATAR_SIZE } from './avatar-data';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { generateAvatar, AVATAR_SIZE } from './avatar';
+import { AvatarCacheService } from './avatar-cache.service';
 
 const DEFAULT_SIZE = 32;
 
@@ -81,10 +82,21 @@ export class UserAvatarComponent {
   size = input<number>(DEFAULT_SIZE);
   ariaLabel = input<string>(UserAvatarComponent.defaultAriaLabel);
 
+  // The cache is required: any feature using this component must provide `AvatarCacheService` so
+  // we never silently leak through an unbounded cache.
+  private readonly avatarCache = inject(AvatarCacheService);
+
   protected readonly boxSize = AVATAR_SIZE;
   protected readonly viewBox = `0 0 ${AVATAR_SIZE} ${AVATAR_SIZE}`;
 
-  protected data = computed(() => generateAvatarData(this.seed()));
+  protected data = computed(() => {
+    const seed = this.seed();
+    const cached = this.avatarCache.get(seed);
+    if (cached) return cached;
+    const avatar = generateAvatar(seed);
+    this.avatarCache.set(seed, avatar);
+    return avatar;
+  });
 
   protected wrapperTransform = computed(() => {
     const d = this.data();

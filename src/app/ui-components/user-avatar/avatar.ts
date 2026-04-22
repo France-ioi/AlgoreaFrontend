@@ -30,7 +30,7 @@ const PALETTE = [
   '#14B8A6', // teal (mid, complementary to surrounding red/slate-on-wrap)
 ];
 
-export interface AvatarData {
+export interface Avatar {
   wrapperColor: string,
   faceColor: string,
   backgroundColor: string,
@@ -47,12 +47,11 @@ export interface AvatarData {
   faceTranslateY: number,
 }
 
-const dataCache = new Map<string, AvatarData>();
-
-export function generateAvatarData(seed: string): AvatarData {
-  const cached = dataCache.get(seed);
-  if (cached) return cached;
-
+/**
+ * Pure: callers that render the same seed many times should memoize results via a bounded cache
+ * (see `AvatarCacheService`) so the work is only done once per visible seed.
+ */
+export function generateAvatar(seed: string): Avatar {
   const num = hashCode(seed);
   const wrapperColor = pickColor(num);
   const preTranslateX = getUnit(num, 10, 1);
@@ -62,7 +61,7 @@ export function generateAvatarData(seed: string): AvatarData {
   const preTranslateY = getUnit(num, 10, 2);
   const wrapperTranslateY = preTranslateY < 5 ? preTranslateY + AVATAR_SIZE / 9 : preTranslateY;
 
-  const data: AvatarData = {
+  const data: Avatar = {
     wrapperColor,
     faceColor: getContrast(wrapperColor),
     backgroundColor: pickColor(num + 13),
@@ -78,7 +77,6 @@ export function generateAvatarData(seed: string): AvatarData {
     faceTranslateX: wrapperTranslateX > AVATAR_SIZE / 6 ? wrapperTranslateX / 2 : getUnit(num, 8, 1),
     faceTranslateY: wrapperTranslateY > AVATAR_SIZE / 6 ? wrapperTranslateY / 2 : getUnit(num, 7, 2),
   };
-  dataCache.set(seed, data);
   return data;
 }
 
