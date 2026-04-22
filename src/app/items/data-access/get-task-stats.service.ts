@@ -16,7 +16,7 @@ const taskStatsSchema = z.object({
   userCount: z.number(),
   medianTimeSpent: z.number().nullable(),
   medianTimeToValidate: z.number().nullable(),
-  medianDropoutTimeLowScore: z.number().nullable(),
+  bounceRate: z.number().nullable(),
   avgScore: z.number().nullable(),
   scoreDistribution: z.array(scoreDistributionEntrySchema),
 });

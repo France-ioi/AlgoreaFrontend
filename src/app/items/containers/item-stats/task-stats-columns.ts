@@ -21,7 +21,7 @@ export function validationRate(stats: TaskStats): number | null {
   return perfect ? perfect.pctUsersAbove : null;
 }
 
-export type TaskStatsColumnKey = 'users' | 'validation' | 'avgScore' | 'medTime' | 'medValidation' | 'medDropout';
+export type TaskStatsColumnKey = 'users' | 'validation' | 'avgScore' | 'medTime' | 'medValidation' | 'bounceRate';
 
 export interface TaskStatsColumn {
   key: TaskStatsColumnKey,
@@ -68,10 +68,10 @@ export const taskStatsColumns: TaskStatsColumn[] = [
     value: s => formatDuration(s.medianTimeToValidate),
   },
   {
-    key: 'medDropout',
-    shortLabel: $localize`Med. dropout`,
-    fullLabel: $localize`Median dropout time (low score)`,
-    tooltip: $localize`Median time spent before leaving the task, among users who scored less than 10 on it.`,
-    value: s => formatDuration(s.medianDropoutTimeLowScore),
+    key: 'bounceRate',
+    shortLabel: $localize`Bounce`,
+    fullLabel: $localize`Bounce rate`,
+    tooltip: $localize`Percentage of users who opened the task and left without engaging with it.`,
+    value: s => formatPercent(s.bounceRate),
   },
 ];
