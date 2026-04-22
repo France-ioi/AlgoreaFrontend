@@ -57,6 +57,25 @@ describe('AvatarCacheService', () => {
       expect(service.get('seed-1')).toBe(second);
     });
 
+    // Indirect "size stays constant on overwrite" assertion: fill the cache to capacity, then
+    // overwrite an existing seed instead of inserting a new one. If the overwrite consumed a slot
+    // (a real bug we have hit in similar LRUs), the next genuine insert would evict more than one
+    // entry. We assert that exactly the oldest non-overwritten seed is evicted, which proves the
+    // overwrite did not burn a slot.
+    it('should not consume a slot when overwriting an existing seed', () => {
+      for (let i = 0; i < MAX_CACHE_ENTRIES; i++) {
+        service.set(`seed-${i}`, fakeAvatar(`a${i}`));
+      }
+
+      service.set('seed-5', fakeAvatar('overwrite'));
+      service.set(`seed-${MAX_CACHE_ENTRIES}`, fakeAvatar('overflow'));
+
+      expect(service.get('seed-0')).toBeUndefined();
+      expect(service.get('seed-1')).toBeDefined();
+      expect(service.get('seed-5')?.wrapperColor).toBe('#overwrite');
+      expect(service.get(`seed-${MAX_CACHE_ENTRIES}`)).toBeDefined();
+    });
+
     it(`should evict the oldest entry once the cache exceeds ${MAX_CACHE_ENTRIES} entries`, () => {
       for (let i = 0; i < MAX_CACHE_ENTRIES; i++) {
         service.set(`seed-${i}`, fakeAvatar(`a${i}`));
@@ -83,6 +102,24 @@ describe('AvatarCacheService', () => {
       expect(service.get('seed-0')).toBeDefined();
       // seed-1 was the oldest after promoting seed-0, so it must have been evicted instead.
       expect(service.get('seed-1')).toBeUndefined();
+    });
+
+    // Re-setting a previously-evicted key must behave like a brand-new insertion: the key gets the
+    // most-recent slot and survives the next eviction, while the now-oldest *other* key is evicted.
+    // Guards against a subtle bug where eviction metadata could "remember" a key as old.
+    it('should treat a re-set of an evicted seed as a fresh insertion', () => {
+      for (let i = 0; i < MAX_CACHE_ENTRIES; i++) {
+        service.set(`seed-${i}`, fakeAvatar(`a${i}`));
+      }
+      service.set(`seed-${MAX_CACHE_ENTRIES}`, fakeAvatar('overflow'));
+      expect(service.get('seed-0')).toBeUndefined();
+
+      service.set('seed-0', fakeAvatar('reborn'));
+      service.set(`seed-${MAX_CACHE_ENTRIES + 1}`, fakeAvatar('overflow-2'));
+
+      expect(service.get('seed-0')?.wrapperColor).toBe('#reborn');
+      expect(service.get('seed-1')).toBeUndefined();
+      expect(service.get(`seed-${MAX_CACHE_ENTRIES + 1}`)).toBeDefined();
     });
   });
 

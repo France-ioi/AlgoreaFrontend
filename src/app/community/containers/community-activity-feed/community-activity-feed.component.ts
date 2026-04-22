@@ -123,7 +123,7 @@ export class CommunityActivityFeedComponent {
 
   private subscribeItemResolutions(itemIds: string[]): void {
     for (const iid of itemIds) {
-      this.cache.resolveItem(iid).subscribe(title => {
+      this.cache.resolveItem(iid).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(title => {
         this.itemTitles.update(m => new Map(m).set(iid, title));
       });
     }

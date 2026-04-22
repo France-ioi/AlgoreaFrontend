@@ -15,7 +15,7 @@ export const AVATAR_SIZE = 36;
 // hues where the luminance gap shrinks.
 // Kept as plain hex (no CSS variables) so contrast can be computed locally and outputs stay
 // deterministic across themes.
-const PALETTE = [
+export const PALETTE = [
   '#405059', // slate (dark)
   '#EAB308', // amber (light)
   '#4F46E5', // indigo (dark)
@@ -97,7 +97,7 @@ function hashCode(name: string): number {
 }
 
 function getDigit(num: number, n: number): number {
-  return Math.floor((num / Math.pow(10, n)) % 10);
+  return Math.floor((num / 10 ** n) % 10);
 }
 
 /**
@@ -125,7 +125,7 @@ function pickColor(num: number): string {
  * `PALETTE` above has been chosen so this heuristic always yields a face/eyes/mouth color with
  * ≥ 3:1 contrast against the wrapper (the WCAG AA minimum for non-text UI components).
  */
-function getContrast(hex: string): string {
+export function getContrast(hex: string): string {
   const h = hex.startsWith('#') ? hex.slice(1) : hex;
   const r = parseInt(h.substring(0, 2), 16);
   const g = parseInt(h.substring(2, 4), 16);
