@@ -50,16 +50,7 @@
                 }
               </td>
               <td class="alg-table-td">
-                @if (entry.userName === undefined) {
-                  <span class="alg-skeleton" aria-label="Loading user name" i18n-aria-label>&nbsp;</span>
-                } @else if (entry.userName === null) {
-                  <span class="unknown" i18n>Unknown user</span>
-                } @else {
-                  <a
-                    class="alg-link"
-                    [routerLink]="{ id: entry.participantId, isUser: true } | groupLink"
-                  >{{ entry.userName }}</a>
-                }
+                <alg-user-avatar [seed]="entry.participantId" />
               </td>
               <td class="alg-table-td"><alg-relative-time [value]="entry.date"></alg-relative-time></td>
             </tr>
