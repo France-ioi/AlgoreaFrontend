@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -39,6 +39,10 @@ export class ChapterStatsComponent {
   readonly parentAttemptId = computed(() => this.itemData().currentResult?.attemptId);
 
   private readonly refresh$ = new Subject<void>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.refresh$.complete());
+  }
 
   private readonly params$ = toObservable(this.itemData).pipe(
     map(itemData => (itemData.currentResult

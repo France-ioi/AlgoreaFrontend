@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -51,6 +51,10 @@ export class ChapterStatsRowComponent {
   });
 
   private readonly refresh$ = new Subject<void>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.refresh$.complete());
+  }
 
   // distinctUntilChanged: defensive guard so identical consecutive emissions don't cancel
   // the in-flight loader.enqueue(...) via switchMap (which would re-queue the row and could

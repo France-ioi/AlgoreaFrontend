@@ -1,4 +1,4 @@
-import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { Subject, switchMap } from 'rxjs';
@@ -35,6 +35,10 @@ export class TaskStatsComponent {
   readonly metrics = taskStatDescriptors;
 
   private readonly refresh$ = new Subject<void>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.refresh$.complete());
+  }
 
   state$ = toObservable(this.itemData).pipe(
     map(itemData => itemData.item.id),
