@@ -5,7 +5,6 @@ import { RouterLink } from '@angular/router';
 import { Subject, switchMap } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ItemChildren } from 'src/app/data-access/get-item-children.service';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -26,7 +25,6 @@ type RowMode = 'cannot-edit' | 'not-a-task' | 'fetch';
   imports: [
     AsyncPipe,
     RouterLink,
-    LoadingComponent,
     ButtonComponent,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,

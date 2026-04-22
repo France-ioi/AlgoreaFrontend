@@ -21,9 +21,11 @@
   @case ('fetch') {
     @if (state$ | async; as state) {
       @if (state.isFetching) {
-        <td class="alg-table-td message-cell" [attr.colspan]="columns().length">
-          <alg-loading size="small"></alg-loading>
-        </td>
+        @for (col of columns(); track col.key) {
+          <td class="alg-table-td stat-cell">
+            <span class="alg-skeleton" aria-hidden="true">&nbsp;</span>
+          </td>
+        }
       }
       @if (state.isError) {
         <td class="alg-table-td message-cell error-cell" [attr.colspan]="columns().length">

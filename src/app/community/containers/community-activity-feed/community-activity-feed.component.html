@@ -39,7 +39,7 @@
             <tr class="alg-table-body-tr" [class.is-live]="entry.isLive">
               <td class="alg-table-td">
                 @if (entry.itemTitle === undefined) {
-                  <span class="skeleton" aria-label="Loading task name" i18n-aria-label>&nbsp;</span>
+                  <span class="alg-skeleton" aria-label="Loading task name" i18n-aria-label>&nbsp;</span>
                 } @else if (entry.itemTitle) {
                   <a
                     class="alg-link"
@@ -51,7 +51,7 @@
               </td>
               <td class="alg-table-td">
                 @if (entry.userName === undefined) {
-                  <span class="skeleton" aria-label="Loading user name" i18n-aria-label>&nbsp;</span>
+                  <span class="alg-skeleton" aria-label="Loading user name" i18n-aria-label>&nbsp;</span>
                 } @else if (entry.userName === null) {
                   <span class="unknown" i18n>Unknown user</span>
                 } @else {

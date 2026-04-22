@@ -18,6 +18,12 @@
 .stat-cell {
   text-align: right;
   font-variant-numeric: tabular-nums;
+
+  // Numeric values are short (typically 1–6 chars), so the placeholder is narrower
+  // than the global default of 100px to better match the actual content width.
+  .alg-skeleton {
+    width: functions.toRem(48);
+  }
 }
 
 .message-cell {
