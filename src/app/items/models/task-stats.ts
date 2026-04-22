@@ -71,7 +71,8 @@ export const taskStatDescriptors: TaskStatDescriptor[] = [
     key: 'bounceRate',
     shortLabel: $localize`Bounce`,
     fullLabel: $localize`Bounce rate`,
-    tooltip: $localize`Percentage of users who opened the task and left without engaging with it.`,
+    tooltip: $localize`Share of visits longer than 3s that ended with a score of 0 in less time than it usually takes to make progress\
+ on this task. A high value points to an engagement or clarity issue, not difficulty.`,
     value: s => formatPercent(s.bounceRate),
   },
 ];
