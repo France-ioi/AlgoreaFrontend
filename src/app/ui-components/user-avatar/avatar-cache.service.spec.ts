@@ -86,6 +86,30 @@ describe('AvatarCacheService', () => {
     });
   });
 
+  describe('getOrCreate', () => {
+    it('should invoke the factory and cache its result on a miss', () => {
+      const built = fakeAvatar('aaa');
+      const factory = jasmine.createSpy('factory').and.returnValue(built);
+
+      const result = service.getOrCreate('seed-1', factory);
+
+      expect(result).toBe(built);
+      expect(factory).toHaveBeenCalledTimes(1);
+      expect(service.get('seed-1')).toBe(built);
+    });
+
+    it('should return the cached avatar without invoking the factory on a hit', () => {
+      const cached = fakeAvatar('aaa');
+      service.set('seed-1', cached);
+      const factory = jasmine.createSpy('factory').and.returnValue(fakeAvatar('bbb'));
+
+      const result = service.getOrCreate('seed-1', factory);
+
+      expect(result).toBe(cached);
+      expect(factory).not.toHaveBeenCalled();
+    });
+  });
+
   describe('ngOnDestroy', () => {
     it('should clear all cached entries', () => {
       service.set('seed-1', fakeAvatar('aaa'));

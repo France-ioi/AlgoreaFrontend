@@ -115,11 +115,7 @@ export class UserAvatarComponent {
 
   protected data = computed(() => {
     const seed = this.seed();
-    const cached = this.avatarCache.get(seed);
-    if (cached) return cached;
-    const avatar = generateAvatar(seed);
-    this.avatarCache.set(seed, avatar);
-    return avatar;
+    return this.avatarCache.getOrCreate(seed, () => generateAvatar(seed));
   });
 
   protected wrapperTransform = computed(() => {

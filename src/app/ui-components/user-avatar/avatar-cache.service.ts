@@ -35,6 +35,19 @@ export class AvatarCacheService implements OnDestroy {
     }
   }
 
+  /**
+   * Returns the cached avatar for `seed`, or builds it via `factory`, stores it, and returns it.
+   * Encapsulating the miss-then-write inside the service keeps callers (signal `computed()`s in
+   * particular) free of side effects.
+   */
+  getOrCreate(seed: string, factory: () => Avatar): Avatar {
+    const cached = this.get(seed);
+    if (cached) return cached;
+    const avatar = factory();
+    this.set(seed, avatar);
+    return avatar;
+  }
+
   ngOnDestroy(): void {
     this.cache.clear();
   }
