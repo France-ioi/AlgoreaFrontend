@@ -15,18 +15,18 @@
     <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Task Statistics (beta)</h2>
 
     <div class="summary-grid">
-      @for (col of columns; track col.key) {
+      @for (metric of metrics; track metric.key) {
         <div class="summary-card">
           <span class="summary-label-row">
-            <span class="summary-label">{{ col.fullLabel }}</span>
+            <span class="summary-label">{{ metric.fullLabel }}</span>
             <i
               class="ph-duotone ph-info summary-info-icon"
-              [algTooltip]="col.tooltip"
+              [algTooltip]="metric.tooltip"
               tooltipPosition="top"
               aria-hidden="true"
             ></i>
           </span>
-          <span class="summary-value">{{ col.value(stats) }}</span>
+          <span class="summary-value">{{ metric.value(stats) }}</span>
         </div>
       }
     </div>

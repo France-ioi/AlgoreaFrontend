@@ -1,5 +1,5 @@
 import { Duration } from 'src/app/utils/duration';
-import { TaskStats } from '../../data-access/get-task-stats.service';
+import { TaskStats } from '../data-access/get-task-stats.service';
 
 export function formatDuration(ms: number | null): string {
   if (ms === null) return '—';
@@ -21,17 +21,17 @@ export function validationRate(stats: TaskStats): number | null {
   return perfect ? perfect.pctUsersAbove : null;
 }
 
-export type TaskStatsColumnKey = 'users' | 'validation' | 'avgScore' | 'medTime' | 'medValidation' | 'bounceRate';
+export type TaskStatKey = 'users' | 'validation' | 'avgScore' | 'medTime' | 'medValidation' | 'bounceRate';
 
-export interface TaskStatsColumn {
-  key: TaskStatsColumnKey,
+export interface TaskStatDescriptor {
+  key: TaskStatKey,
   shortLabel: string,
   fullLabel: string,
   tooltip: string,
   value: (stats: TaskStats) => string,
 }
 
-export const taskStatsColumns: TaskStatsColumn[] = [
+export const taskStatDescriptors: TaskStatDescriptor[] = [
   {
     key: 'users',
     shortLabel: $localize`Users`,

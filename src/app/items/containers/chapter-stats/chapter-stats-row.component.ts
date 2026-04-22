@@ -14,7 +14,7 @@ import { allowsEditingAll } from '../../models/item-edit-permission';
 import { PermissionsTokenService } from '../../data-access/permissions-token.service';
 import { GetTaskStatsService } from '../../data-access/get-task-stats.service';
 import { TaskStatsLoaderService } from '../../data-access/task-stats-loader.service';
-import { TaskStatsColumn } from '../item-stats/task-stats-columns';
+import { TaskStatDescriptor } from '../../models/task-stats';
 
 type RowMode = 'cannot-edit' | 'not-a-task' | 'fetch';
 
@@ -39,7 +39,7 @@ export class ChapterStatsRowComponent {
   private loader = inject(TaskStatsLoaderService);
 
   readonly child = input.required<ItemChildren[number]>();
-  readonly columns = input.required<TaskStatsColumn[]>();
+  readonly columns = input.required<TaskStatDescriptor[]>();
   readonly parentPath = input.required<string[]>();
   readonly parentAttemptId = input<string>();
 

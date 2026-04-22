@@ -12,7 +12,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { ItemData } from '../../models/item-data';
-import { taskStatsColumns } from '../item-stats/task-stats-columns';
+import { taskStatDescriptors } from '../../models/task-stats';
 import { ChapterStatsRowComponent } from './chapter-stats-row.component';
 
 @Component({
@@ -35,7 +35,7 @@ export class ChapterStatsComponent {
 
   readonly itemData = input.required<ItemData>();
 
-  readonly columns = taskStatsColumns;
+  readonly columns = taskStatDescriptors;
   // Stable array reference so child rows don't see a "changed" parentPath input on every
   // change-detection pass (which would otherwise re-trigger their fetch pipeline).
   readonly parentPath = computed(() => [ ...this.itemData().route.path, this.itemData().item.id ]);

@@ -11,7 +11,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ScoreOverTimeChartComponent } from './score-over-time-chart.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
-import { taskStatsColumns } from '../item-stats/task-stats-columns';
+import { taskStatDescriptors } from '../../models/task-stats';
 
 @Component({
   selector: 'alg-task-stats',
@@ -32,7 +32,7 @@ export class TaskStatsComponent {
 
   readonly itemData = input.required<ItemData>();
 
-  readonly columns = taskStatsColumns;
+  readonly metrics = taskStatDescriptors;
 
   private readonly refresh$ = new Subject<void>();
 
