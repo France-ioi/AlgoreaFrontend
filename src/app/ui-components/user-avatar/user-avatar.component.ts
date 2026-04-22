@@ -6,6 +6,18 @@ import { AvatarCacheService } from './avatar-cache.service';
 // internal coordinate system / viewBox) - the SVG scales to fit whichever pixel size is requested.
 const DEFAULT_SIZE = 32;
 
+/**
+ * Renders a deterministic SVG avatar for a given `seed` string.
+ *
+ * DI contract: this component requires `AvatarCacheService` to be provided by an ancestor
+ * injector (typically the feature page that hosts many avatars, e.g. `CommunityPageComponent`).
+ * The cache is intentionally NOT `providedIn: 'root'` so its memory is bounded by the lifetime
+ * of the feature that uses it.
+ *
+ * If you drop `<alg-user-avatar>` into a new feature, add `AvatarCacheService` to that
+ * feature's component-level `providers`. Failure to do so will throw a clear error at
+ * construction time (see `inject(...)` below) rather than a generic `NullInjectorError`.
+ */
 @Component({
   selector: 'alg-user-avatar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,8 +97,18 @@ export class UserAvatarComponent {
   ariaLabel = input<string>(UserAvatarComponent.defaultAriaLabel);
 
   // The cache is required: any feature using this component must provide `AvatarCacheService` so
-  // we never silently leak through an unbounded cache.
-  private readonly avatarCache = inject(AvatarCacheService);
+  // we never silently leak through an unbounded cache. We resolve it as `optional` only so we can
+  // surface a developer-friendly error instead of Angular's generic `NullInjectorError`.
+  private readonly avatarCache = inject(AvatarCacheService, { optional: true })
+    ?? this.throwMissingCache();
+
+  private throwMissingCache(): never {
+    throw new Error(
+      '[alg-user-avatar] AvatarCacheService is not provided. '
+      + 'Add `AvatarCacheService` to the `providers` of the feature component that hosts '
+      + '<alg-user-avatar> (see UserAvatarComponent docs for details).'
+    );
+  }
 
   protected readonly boxSize = AVATAR_SIZE;
   protected readonly viewBox = `0 0 ${AVATAR_SIZE} ${AVATAR_SIZE}`;
