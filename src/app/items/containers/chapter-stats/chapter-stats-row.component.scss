@@ -1,0 +1,34 @@
+@use 'src/assets/scss/functions';
+
+.title-cell {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.item-subtitle {
+  font-size: functions.toRem(12);
+  color: var(--alg-secondary-color);
+  margin-top: functions.toRem(2);
+}
+
+.stat-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+
+  // Numeric values are short (typically 1–6 chars), so the placeholder is narrower
+  // than the global default of 100px to better match the actual content width.
+  .alg-skeleton {
+    width: functions.toRem(48);
+  }
+}
+
+.message-cell {
+  text-align: center;
+  font-style: italic;
+}
+
+.error-cell .error-content {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(8);
+}

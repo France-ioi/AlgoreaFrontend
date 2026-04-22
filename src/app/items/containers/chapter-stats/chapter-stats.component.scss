@@ -1,0 +1,37 @@
+@use 'src/assets/scss/functions';
+
+.stats-table {
+  // Fixed layout so the title column (auto width) takes all the remaining space
+  // after the stat columns get their explicit widths, instead of being squeezed.
+  table-layout: fixed;
+
+  .stat-col {
+    text-align: right;
+    width: functions.toRem(110);
+  }
+
+  .alg-table-td {
+    // Override the fixed 56px height from table-v2 so rows grow vertically when
+    // the title wraps to multiple lines.
+    height: auto;
+    min-height: functions.toRem(56);
+    padding-top: functions.toRem(10);
+    padding-bottom: functions.toRem(10);
+    vertical-align: middle;
+  }
+
+  .header-label {
+    display: inline-flex;
+    align-items: center;
+    gap: functions.toRem(4);
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .header-info-icon {
+    font-size: functions.toRem(13);
+    color: var(--alg-secondary-color);
+    cursor: help;
+    line-height: 1;
+  }
+}

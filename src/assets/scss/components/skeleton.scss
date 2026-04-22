@@ -1,0 +1,38 @@
+@use 'src/assets/scss/functions';
+
+.alg-skeleton {
+  display: inline-block;
+  // Default placeholder size for a single line of text. Override `width` per usage
+  // when the surrounding cell has a different natural size (e.g. numeric cells).
+  width: functions.toRem(100);
+  height: functions.toRem(14);
+  vertical-align: middle;
+  border-radius: functions.toRem(4);
+  // Light, low-contrast neutral greys: keeps the shimmer subtle so it doesn't
+  // visually compete with the surrounding content while data is loading.
+  background-color: #eee;
+  background-image: linear-gradient(
+    90deg,
+    #eee 25%,
+    #f6f6f6 50%,
+    #eee 75%
+  );
+  background-size: 200% 100%;
+  animation: alg-skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes alg-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alg-skeleton {
+    animation: none;
+  }
+}

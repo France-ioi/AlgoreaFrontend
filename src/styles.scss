@@ -31,6 +31,7 @@
 @include meta.load-css('assets/scss/components/top-bar-scrollbar');
 @include meta.load-css('assets/scss/components/common-confirm-dialog');
 @include meta.load-css('assets/scss/components/tag');
+@include meta.load-css('assets/scss/components/skeleton');
 
 // New Design
 @include meta.load-css('assets/scss/text-colors');
