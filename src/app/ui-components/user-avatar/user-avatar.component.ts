@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { generateAvatar, AVATAR_SIZE } from './avatar';
 import { AvatarCacheService } from './avatar-cache.service';
 
+// Rendered pixel size when no `size` input is provided. Independent of `AVATAR_SIZE` (the SVG's
+// internal coordinate system / viewBox) - the SVG scales to fit whichever pixel size is requested.
 const DEFAULT_SIZE = 32;
 
 @Component({
