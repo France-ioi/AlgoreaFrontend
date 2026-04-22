@@ -29,8 +29,10 @@
       }
       @if (state.isError) {
         <td class="alg-table-td message-cell error-cell" [attr.colspan]="columns().length">
-          <span i18n>Unable to load stats.</span>
-          <button alg-button class="retry-btn size-s stroke" type="button" (click)="refresh()" i18n>Retry</button>
+          <span class="error-content">
+            <span i18n>Unable to load stats.</span>
+            <button alg-button class="size-s stroke" type="button" (click)="refresh()" i18n>Retry</button>
+          </span>
         </td>
       }
       @if (state.isReady && state.data; as stats) {

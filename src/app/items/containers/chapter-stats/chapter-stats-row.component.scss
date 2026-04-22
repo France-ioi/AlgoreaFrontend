@@ -1,9 +1,5 @@
 @use 'src/assets/scss/functions';
 
-:host {
-  display: table-row;
-}
-
 .title-cell {
   white-space: normal;
   word-break: break-word;
@@ -31,8 +27,8 @@
   font-style: italic;
 }
 
-.error-cell {
-  .retry-btn {
-    margin-left: functions.toRem(8);
-  }
+.error-cell .error-content {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(8);
 }
