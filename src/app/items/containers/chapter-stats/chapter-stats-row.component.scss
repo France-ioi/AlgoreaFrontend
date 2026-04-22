@@ -1,0 +1,32 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: table-row;
+}
+
+.title-cell {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.item-subtitle {
+  font-size: functions.toRem(12);
+  color: var(--alg-secondary-color);
+  margin-top: functions.toRem(2);
+}
+
+.stat-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.message-cell {
+  text-align: center;
+  font-style: italic;
+}
+
+.error-cell {
+  .retry-btn {
+    margin-left: functions.toRem(8);
+  }
+}

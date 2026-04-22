@@ -1,0 +1,41 @@
+<td class="alg-table-td title-cell">
+  <a
+    class="alg-link item-title"
+    [routerLink]="child() | itemRoute: { path: parentPath() } | with: { parentAttemptId: parentAttemptId() } | url"
+  >{{ child().string.title }}</a>
+  @if (child().string.subtitle) {
+    <div class="item-subtitle">{{ child().string.subtitle }}</div>
+  }
+</td>
+@switch (mode()) {
+  @case ('cannot-edit') {
+    <td class="alg-table-td message-cell" [attr.colspan]="columns().length" i18n>
+      You're not allowed to view the stats for this content.
+    </td>
+  }
+  @case ('not-a-task') {
+    <td class="alg-table-td message-cell" [attr.colspan]="columns().length" i18n>
+      Open this chapter to view its sub-content stats.
+    </td>
+  }
+  @case ('fetch') {
+    @if (state$ | async; as state) {
+      @if (state.isFetching) {
+        <td class="alg-table-td message-cell" [attr.colspan]="columns().length">
+          <alg-loading size="small"></alg-loading>
+        </td>
+      }
+      @if (state.isError) {
+        <td class="alg-table-td message-cell error-cell" [attr.colspan]="columns().length">
+          <span i18n>Unable to load stats.</span>
+          <button alg-button class="retry-btn size-s stroke" type="button" (click)="refresh()" i18n>Retry</button>
+        </td>
+      }
+      @if (state.isReady && state.data; as stats) {
+        @for (col of columns(); track col.key) {
+          <td class="alg-table-td stat-cell">{{ col.value(stats) }}</td>
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+@if (state$ | async; as state) {
+  @if (state.isFetching) {
+    <alg-loading size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load task statistics"
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (state.isReady && state.data; as stats) {
+    <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Task Statistics (beta)</h2>
+
+    <div class="summary-grid">
+      @for (col of columns; track col.key) {
+        <div class="summary-card">
+          <span class="summary-label-row">
+            <span class="summary-label">{{ col.fullLabel }}</span>
+            <i
+              class="ph-duotone ph-info summary-info-icon"
+              [algTooltip]="col.tooltip"
+              tooltipPosition="top"
+              aria-hidden="true"
+            ></i>
+          </span>
+          <span class="summary-value">{{ col.value(stats) }}</span>
+        </div>
+      }
+    </div>
+
+    @if (stats.scoreDistribution.length > 0) {
+      <h3 class="section-title" i18n>Score distribution over time spent</h3>
+
+      <alg-score-over-time-chart [entries]="stats.scoreDistribution"></alg-score-over-time-chart>
+
+      <p class="chart-caption" i18n>
+        Each area shows the percentage of all users who reached at least the given score within the given time.
+      </p>
+    }
+  }
+}

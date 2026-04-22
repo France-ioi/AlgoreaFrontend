@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntil
 import { TabService } from 'src/app/services/tab.service';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { APPCONFIG } from 'src/app/config';
-import { isATask } from 'src/app/items/models/item-type';
+import { isAChapter, isATask } from 'src/app/items/models/item-type';
 import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
 import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/items/models/item-view-permission';
 import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
@@ -27,7 +27,8 @@ const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'depende
 const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' ], tag: 'alg-extra-time' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum' };
-const taskStatsTab = { title: $localize`Task Stats`, routerLink: [ 'task-stats' ], tag: 'alg-task-stats' };
+const taskStatsTab = { title: $localize`Task Stats`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats' };
+const chapterStatsTab = { title: $localize`Chapter stats`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats' };
 
 const solutionTabView = 'solution'; // 'view' name used by tasks for the solution tab
 
@@ -78,6 +79,7 @@ export class ItemTabs implements OnDestroy {
       const canViewSolution = state.isReady ? canCurrentUserViewSolution(state.data.item, state.data.currentResult) : false;
       const canWatchResults = state.isReady ? allowsWatchingResults(state.data.item.permissions) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
+      const isChapter = state.isReady ? isAChapter(state.data.item) : undefined;
       const canViewStats = isObserving ? canWatchResults : canViewContent;
       const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewStats;
       const canSetExtraTime = state.isReady ? isTimeLimitedActivity(state.data.item) && canCurrentUserSetExtraTime(state.data.item) : false;
@@ -96,7 +98,8 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
         this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
         this.isCurrentTab(forumTab) || (!userProfile.tempUser && this.config.featureFlags.enableForum) ? forumTab : null,
-        this.isCurrentTab(taskStatsTab) || (isTask && hasEditionPerm && !isObserving) ? taskStatsTab : null,
+        (this.isCurrentTab(taskStatsTab) && isTask) || (isTask && hasEditionPerm && !isObserving) ? taskStatsTab : null,
+        (this.isCurrentTab(chapterStatsTab) && isChapter) || (isChapter && hasEditionPerm && !isObserving) ? chapterStatsTab : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))

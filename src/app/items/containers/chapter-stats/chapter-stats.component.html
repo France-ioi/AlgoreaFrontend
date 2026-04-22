@@ -1,0 +1,61 @@
+@if (state$ | async; as state) {
+  <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Chapter Statistics (beta)</h2>
+
+  @if (state.isFetching) {
+    <alg-loading size="medium"></alg-loading>
+  }
+  @if (state.isError) {
+    <alg-error
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load chapter statistics"
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+    ></alg-error>
+  }
+  @if (state.isReady && state.data; as children) {
+    @if (children.length === 0) {
+      <alg-empty-content
+        icon="ph-duotone ph-folder-simple-minus"
+        i18n-message message="This chapter has no child."
+      ></alg-empty-content>
+    } @else {
+      <div class="alg-table-page-wrapper">
+        <div class="alg-table-horizontal-scroll">
+          <table class="alg-table-v2 stats-table">
+            <thead>
+              <tr class="alg-table-header-tr">
+                <th class="alg-table-th title-col" i18n>Content</th>
+                @for (col of columns; track col.key) {
+                  <th class="alg-table-th stat-col">
+                    <span class="header-label">
+                      <span>{{ col.shortLabel }}</span>
+                      <i
+                        class="ph-duotone ph-info header-info-icon"
+                        [algTooltip]="col.tooltip"
+                        tooltipPosition="top"
+                        aria-hidden="true"
+                      ></i>
+                    </span>
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (child of children; track child.id) {
+                <tr
+                  class="alg-table-body-tr"
+                  alg-chapter-stats-row
+                  [child]="child"
+                  [columns]="columns"
+                  [parentPath]="parentPath()"
+                  [parentAttemptId]="parentAttemptId()"
+                ></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+}
