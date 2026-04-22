@@ -80,7 +80,12 @@ export function generateAvatar(seed: string): Avatar {
   return data;
 }
 
-/** djb2-style 32-bit string hash, returned as a non-negative integer. */
+/**
+ * Java `String.hashCode`-style 32-bit string hash (`hash * 31 + char`), returned as an unsigned
+ * 32-bit integer. The final `>>> 0` (rather than `Math.abs`) avoids the `-2 ** 31` corner case
+ * where `Math.abs` would still return a negative number, which would then propagate negative
+ * results through the downstream `% range` calls.
+ */
 function hashCode(name: string): number {
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
@@ -88,7 +93,7 @@ function hashCode(name: string): number {
     hash = ((hash << 5) - hash) + char;
     hash = hash | 0;
   }
-  return Math.abs(hash);
+  return hash >>> 0;
 }
 
 function getDigit(num: number, n: number): number {
@@ -106,17 +111,19 @@ function getUnit(num: number, range: number, index = 0): number {
   return value;
 }
 
-function getBoolean(num: number, ratio: number): boolean {
-  return getDigit(num, ratio) % 2 === 0;
+function getBoolean(num: number, digitIndex: number): boolean {
+  return getDigit(num, digitIndex) % 2 === 0;
 }
 
 function pickColor(num: number): string {
-  return PALETTE[num % PALETTE.length] ?? PALETTE[0]!;
+  return PALETTE[num % PALETTE.length] as string;
 }
 
 /**
  * YIQ-based contrast: returns a black or white hex that reads cleanly on top of the input color.
- * Threshold (128) is the conventional WCAG-friendly boundary.
+ * Threshold (128) is the conventional YIQ boundary, not a guaranteed WCAG AA ratio; the curated
+ * `PALETTE` above has been chosen so this heuristic always yields a face/eyes/mouth color with
+ * ≥ 3:1 contrast against the wrapper (the WCAG AA minimum for non-text UI components).
  */
 function getContrast(hex: string): string {
   const h = hex.startsWith('#') ? hex.slice(1) : hex;

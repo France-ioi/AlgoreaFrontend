@@ -69,7 +69,7 @@ const DEFAULT_SIZE = 32;
     svg {
       display: block;
       border-radius: 50%;
-      // Required for the wrapper rect to be visually clipped to the circle
+      /* Required for the wrapper rect to be visually clipped to the circle */
       overflow: hidden;
     }
   `,
