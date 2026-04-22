@@ -3,9 +3,6 @@
     class="alg-link item-title"
     [routerLink]="child() | itemRoute: { path: parentPath() } | with: { parentAttemptId: parentAttemptId() } | url"
   >{{ child().string.title }}</a>
-  @if (child().string.subtitle) {
-    <div class="item-subtitle">{{ child().string.subtitle }}</div>
-  }
 </td>
 @switch (mode()) {
   @case ('cannot-edit') {
