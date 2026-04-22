@@ -1,4 +1,6 @@
 @if (state$ | async; as state) {
+  <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Task Statistics (beta)</h2>
+
   @if (state.isFetching) {
     <alg-loading size="medium"></alg-loading>
   }
@@ -12,8 +14,6 @@
     ></alg-error>
   }
   @if (state.isReady && state.data; as stats) {
-    <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Task Statistics (beta)</h2>
-
     <div class="summary-grid">
       @for (metric of metrics; track metric.key) {
         <div class="summary-card">
