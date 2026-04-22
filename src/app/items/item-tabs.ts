@@ -27,8 +27,8 @@ const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'depende
 const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' ], tag: 'alg-extra-time' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum' };
-const taskStatsTab = { title: $localize`Task Stats`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats' };
-const chapterStatsTab = { title: $localize`Chapter stats`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats' };
+// Task and chapter stats share the same route and component (alg-item-stats); only the tab title differs by item type.
+const itemStatsTab = { routerLink: [ 'item-stats' ], tag: 'alg-item-stats' };
 
 const solutionTabView = 'solution'; // 'view' name used by tasks for the solution tab
 
@@ -98,8 +98,9 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
         this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
         this.isCurrentTab(forumTab) || (!userProfile.tempUser && this.config.featureFlags.enableForum) ? forumTab : null,
-        (this.isCurrentTab(taskStatsTab) && isTask) || (isTask && hasEditionPerm && !isObserving) ? taskStatsTab : null,
-        (this.isCurrentTab(chapterStatsTab) && isChapter) || (isChapter && hasEditionPerm && !isObserving) ? chapterStatsTab : null,
+        this.isCurrentTab(itemStatsTab)|| ((isTask || isChapter) && hasEditionPerm && !isObserving)
+          ? { ...itemStatsTab, title: isTask ? $localize`Task stats` : $localize`Chapter stats` }
+          : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag))
