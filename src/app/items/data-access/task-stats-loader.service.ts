@@ -8,7 +8,7 @@ const MAX_CONCURRENT = 1;
  * at most MAX_CONCURRENT inner observables are subscribed at the same time.
  *
  * Used by the chapter-stats rows to avoid firing dozens of HTTP requests in
- * parallel (which Firefox handles poorly).
+ * parallel.
  *
  * Cancellation: when the consumer of `enqueue(...)` unsubscribes,
  * - if the work has not started yet, it is removed from the queue (no slot
