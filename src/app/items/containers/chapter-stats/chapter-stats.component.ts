@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
-import { combineLatest, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GetItemChildrenService } from 'src/app/data-access/get-item-children.service';
-import { fromObservation } from 'src/app/store/observation';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
@@ -30,7 +28,6 @@ import { ChapterStatsRowComponent } from './chapter-stats-row.component';
   ],
 })
 export class ChapterStatsComponent {
-  private store = inject(Store);
   private getItemChildrenService = inject(GetItemChildrenService);
 
   readonly itemData = input.required<ItemData>();
@@ -51,12 +48,8 @@ export class ChapterStatsComponent {
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
   );
 
-  readonly state$ = combineLatest([
-    this.params$,
-    this.store.select(fromObservation.selectObservedGroupId),
-  ]).pipe(
-    switchMap(([{ id, attemptId }, observedGroupId ]) =>
-      this.getItemChildrenService.get(id, attemptId, { watchedGroupId: observedGroupId ?? undefined })),
+  readonly state$ = this.params$.pipe(
+    switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
