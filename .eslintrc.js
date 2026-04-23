@@ -10,7 +10,7 @@ module.exports = {
     'plugin:@angular-eslint/recommended',
     'plugin:@ngrx/all',
   ],
-  plugins: ['rxjs', 'jasmine', 'deprecation', '@stylistic/ts'],
+  plugins: ['rxjs-x', 'jasmine', '@stylistic/ts'],
   rules: {
     '@angular-eslint/directive-selector': [
       'error',
@@ -33,12 +33,12 @@ module.exports = {
     ],
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
     '@typescript-eslint/prefer-for-of': ['error'],
-    'rxjs/no-async-subscribe': 'error',
-    'rxjs/no-ignored-observable': 'error',
-    'rxjs/no-nested-subscribe': 'error',
-    'rxjs/no-unbound-methods': 'error',
-    'rxjs/throw-error': 'error',
-    'rxjs/suffix-subjects': 'off',
+    'rxjs-x/no-async-subscribe': 'error',
+    'rxjs-x/no-ignored-observable': 'error',
+    'rxjs-x/no-nested-subscribe': 'error',
+    'rxjs-x/no-unbound-methods': 'error',
+    'rxjs-x/throw-error': 'error',
+    'rxjs-x/suffix-subjects': 'off',
     '@stylistic/ts/semi': ['error'],
     'max-len': [
       'error',
@@ -116,7 +116,6 @@ module.exports = {
       allow: ['HttpErrorResponse'],
     }],
     'jasmine/no-focused-tests': ['error'],
-    'deprecation/deprecation': ['off'],
     '@ngrx/prefer-effect-callback-in-block-statement': 'off',
     '@typescript-eslint/unbound-method': ['error', {
       'ignoreStatic': true
