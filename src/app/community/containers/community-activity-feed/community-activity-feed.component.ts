@@ -14,7 +14,7 @@ import { fetchList } from '../../../utils/fetch-list';
 import { LoadingComponent } from '../../../ui-components/loading/loading.component';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
-import { GroupLinkPipe } from '../../../pipes/groupLink';
+import { UserAvatarComponent } from '../../../ui-components/user-avatar/user-avatar.component';
 import { ItemRoutePipe } from '../../../pipes/itemRoute';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
 
@@ -31,7 +31,7 @@ const MAX_DISPLAY = 20;
     LoadingComponent,
     ErrorComponent,
     RelativeTimeComponent,
-    GroupLinkPipe,
+    UserAvatarComponent,
     ItemRoutePipe,
     RouteUrlPipe,
   ],
@@ -50,7 +50,6 @@ export class CommunityActivityFeedComponent {
   private taskValidations = fetchList(() => this.taskValidationService.getLatest());
   taskValidationsState = this.taskValidations.state;
 
-  private userNames = signal(new Map<string, string | null>());
   private itemTitles = signal(new Map<string, string | null>());
   private liveEntries = signal<RawTaskValidation[]>([]);
   private liveAnswerIds = signal(new Set<string>());
@@ -69,7 +68,6 @@ export class CommunityActivityFeedComponent {
     return merged.slice(0, MAX_DISPLAY).map(v => ({
       ...v,
       date: new Date(v.time),
-      userName: this.userNames().get(v.participantId),
       itemTitle: this.itemTitles().get(v.itemId),
       isLive: this.liveAnswerIds().has(v.answerId),
     }));
@@ -114,24 +112,18 @@ export class CommunityActivityFeedComponent {
 
     this.liveEntries.update(entries => [ entry, ...entries ].slice(0, MAX_DISPLAY));
     this.liveAnswerIds.update(ids => new Set(ids).add(entry.answerId));
-    this.subscribeResolutions([ entry.participantId ], [ entry.itemId ]);
+    this.subscribeItemResolutions([ entry.itemId ]);
   }
 
   private resolveEntries(taskValidations: RawTaskValidation[]): void {
-    const uniqueParticipantIds = [ ...new Set(taskValidations.map(v => v.participantId)) ];
     const uniqueItemIds = [ ...new Set(taskValidations.map(v => v.itemId)) ];
-    this.cache.prefetch(uniqueParticipantIds, uniqueItemIds);
-    this.subscribeResolutions(uniqueParticipantIds, uniqueItemIds);
+    this.cache.prefetchItems(uniqueItemIds);
+    this.subscribeItemResolutions(uniqueItemIds);
   }
 
-  private subscribeResolutions(participantIds: string[], itemIds: string[]): void {
-    for (const pid of participantIds) {
-      this.cache.resolveUser(pid).subscribe(name => {
-        this.userNames.update(m => new Map(m).set(pid, name));
-      });
-    }
+  private subscribeItemResolutions(itemIds: string[]): void {
     for (const iid of itemIds) {
-      this.cache.resolveItem(iid).subscribe(title => {
+      this.cache.resolveItem(iid).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(title => {
         this.itemTitles.update(m => new Map(m).set(iid, title));
       });
     }

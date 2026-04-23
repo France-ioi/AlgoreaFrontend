@@ -6,6 +6,7 @@ import { CommunityThreadsComponent } from '../community-threads/community-thread
 import { CommunityActivityFeedComponent } from '../community-activity-feed/community-activity-feed.component';
 import { CommunityVisitService } from '../../community-visit.service';
 import { APPCONFIG } from '../../../config';
+import { AvatarCacheService } from '../../../ui-components/user-avatar/avatar-cache.service';
 
 @Component({
   selector: 'alg-community-page',
@@ -16,6 +17,8 @@ import { APPCONFIG } from '../../../config';
     CommunityThreadsComponent,
     CommunityActivityFeedComponent,
   ],
+  // Scoped to this page so the avatar cache is released when the user leaves the community area.
+  providers: [ AvatarCacheService ],
 })
 export class CommunityPageComponent implements OnInit, OnDestroy {
   private store = inject(Store);
