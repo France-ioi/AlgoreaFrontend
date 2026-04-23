@@ -160,7 +160,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
     mapStateData<NavTreeData, NavigationNeighbors|undefined>(navData => {
       if (!navData.selectedElementId) return undefined;
       const l1Idx = navData.elements.findIndex(
-        e => e.route.id === navData.selectedElementId || e.children?.find(c => c.route.id === navData.selectedElementId)
+        e => e.route.id === navData.selectedElementId || (e.children?.some(c => c.route.id === navData.selectedElementId) ?? false)
       );
       if (l1Idx < 0) return undefined;
       const inL1 = navData.elements[l1Idx]?.route.id === navData.selectedElementId; // otherwise, in L2

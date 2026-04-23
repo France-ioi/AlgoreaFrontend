@@ -521,9 +521,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       const maxTeamSizeControl = itemForm.get('entry_max_team_size');
       if (!maxTeamSizeControl) return null;
 
-      isParticipationAsTeamOnly
-        ? maxTeamSizeControl.setErrors(Validators.min(1)(maxTeamSizeControl))
-        : maxTeamSizeControl.setErrors(null);
+      if (isParticipationAsTeamOnly) maxTeamSizeControl.setErrors(Validators.min(1)(maxTeamSizeControl));
+      else maxTeamSizeControl.setErrors(null);
       return null;
     };
   }

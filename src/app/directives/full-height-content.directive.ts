@@ -47,7 +47,8 @@ export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnC
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.algFullHeightContent && !changes.algFullHeightContent.firstChange) {
-      this.algFullHeightContent ? this.setHeight() : this.unsetHeight();
+      if (this.algFullHeightContent) this.setHeight();
+      else this.unsetHeight();
     }
   }
 

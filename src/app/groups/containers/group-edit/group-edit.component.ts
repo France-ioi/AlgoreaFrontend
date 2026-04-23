@@ -184,7 +184,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     );
 
     const defaultParams$ = combineLatest([ rootActivityId$, rootSkillId$ ]).pipe(
-      map(([ rootActivityId, rootSkillId ]) => (<GroupChanges>{
+      map(([ rootActivityId, rootSkillId ]): GroupChanges => ({
         name,
         description: description === '' ? null : description,
         root_activity_id: rootActivityId,

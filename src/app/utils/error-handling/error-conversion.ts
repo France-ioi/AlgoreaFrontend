@@ -9,9 +9,18 @@ class HTTPError extends Error {
 
 class UnknownError extends Error {
   constructor(err: unknown) {
-    super(typeof err === 'object' ? JSON.stringify(err) : String(err));
+    super(stringifyUnknown(err));
     this.name = 'UnknownError';
   }
+}
+
+function stringifyUnknown(err: unknown): string {
+  if (typeof err === 'object' && err !== null) return JSON.stringify(err);
+  if (typeof err === 'string') return err;
+  if (err === undefined) return 'undefined';
+  if (err === null) return 'null';
+  // err is now `number | bigint | boolean | symbol | function`; all have a safe `toString`.
+  return (err as { toString(): string }).toString();
 }
 
 /**

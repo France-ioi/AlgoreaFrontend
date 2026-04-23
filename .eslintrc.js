@@ -109,6 +109,12 @@ module.exports = {
         },
       ]
     }],
+    // Re-throwing the `unknown` caught in RxJS `catchError` is idiomatic, and Angular's
+    // `HttpErrorResponse` is the conventional thrown value even though it does not extend `Error`.
+    '@typescript-eslint/only-throw-error': ['error', {
+      allowThrowingUnknown: true,
+      allow: ['HttpErrorResponse'],
+    }],
     'jasmine/no-focused-tests': ['error'],
     'deprecation/deprecation': ['off'],
     '@ngrx/prefer-effect-callback-in-block-statement': 'off',
