@@ -44,7 +44,7 @@ module.exports = {
       'error',
       { 'code': 140 },
     ],
-    '@typescript-eslint/member-delimiter-style': ['error', {
+    '@stylistic/ts/member-delimiter-style': ['error', {
       "multiline": { "delimiter": "comma", "requireLast": true },
       "singleline": { "delimiter": "comma", "requireLast": false },
       "multilineDetection": "last-member"
