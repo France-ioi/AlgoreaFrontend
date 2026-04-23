@@ -5,7 +5,7 @@ const angular = require('@angular-eslint/eslint-plugin');
 const ngrx = require('@ngrx/eslint-plugin');
 const rxjsX = require('eslint-plugin-rxjs-x');
 const jasmine = require('eslint-plugin-jasmine');
-const stylisticTs = require('@stylistic/eslint-plugin-ts');
+const stylistic = require('@stylistic/eslint-plugin');
 
 module.exports = tseslint.config(
   {
@@ -29,7 +29,7 @@ module.exports = tseslint.config(
       '@ngrx': ngrx,
       'rxjs-x': rxjsX,
       jasmine,
-      '@stylistic/ts': stylisticTs,
+      '@stylistic': stylistic,
     },
     rules: {
       ...angular.configs.recommended.rules,
@@ -58,9 +58,9 @@ module.exports = tseslint.config(
       'rxjs-x/no-unbound-methods': 'error',
       'rxjs-x/throw-error': 'error',
       'rxjs-x/suffix-subjects': 'off',
-      '@stylistic/ts/semi': ['error'],
+      '@stylistic/semi': ['error'],
       'max-len': ['error', { code: 140 }],
-      '@stylistic/ts/member-delimiter-style': ['error', {
+      '@stylistic/member-delimiter-style': ['error', {
         multiline: { delimiter: 'comma', requireLast: true },
         singleline: { delimiter: 'comma', requireLast: false },
         multilineDetection: 'last-member',
