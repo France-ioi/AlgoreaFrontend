@@ -43,7 +43,7 @@
     "rxjs": "~7.8.1",
     "ts-cacheable": "^1.0.10",
     "tslib": "^2.3.1",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "zod": "^4.1.13",
     "zone.js": "~0.15.1"
   },
@@ -88,7 +88,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-packagr": "^21.2.1",
-    "nodemon": "^2.0.7",
+    "nodemon": "^3.1.14",
     "purgecss": "^5.0.0",
     "release-it": "^17.0.1",
     "ts-node": "~7.0.0",
