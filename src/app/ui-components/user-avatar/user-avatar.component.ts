@@ -89,8 +89,7 @@ const DEFAULT_SIZE = 32;
   `,
 })
 export class UserAvatarComponent {
-  // `$localize` is typed as `any` in Angular's d.ts, hence the explicit cast to keep strict typing happy.
-  private static readonly defaultAriaLabel = $localize`User avatar` as string;
+  private static readonly defaultAriaLabel = $localize`User avatar`;
 
   seed = input.required<string>();
   size = input<number>(DEFAULT_SIZE);
