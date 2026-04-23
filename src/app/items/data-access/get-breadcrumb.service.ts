@@ -49,16 +49,15 @@ export class GetBreadcrumbService {
           const last = ensureDefined(items[items.length - 1]);
 
           // all but last are ensured to have attempt_id, treat the last one separetely
-          return items.slice(0,-1).map((item, idx) => ({
+          return items.slice(0,-1).map((item, idx): BreadcrumbItem => ({
             itemId: item.itemId,
             title: item.title,
             route: {
               id: item.itemId,
               path: items.slice(0,idx).map(it => it.itemId),
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               attemptId: item.attemptId!, // the service ensures the attempt for all but last is given
               contentType: typeCategoryOfItem(item),
-            } as FullItemRoute,
+            },
             attemptCnt: item.attemptNumber ? +item.attemptNumber : undefined,
           })).concat([{
             itemId: last.itemId,

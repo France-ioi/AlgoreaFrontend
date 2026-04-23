@@ -88,7 +88,6 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   ];
 
   groupForm = this.formBuilder.group({
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     name: [ '', [ Validators.required, Validators.minLength(3) ] ],
     description: [ '', [] ],
     requireLockMembershipApprovalUntilEnabled: [ false, [] ],
@@ -184,7 +183,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     );
 
     const defaultParams$ = combineLatest([ rootActivityId$, rootSkillId$ ]).pipe(
-      map(([ rootActivityId, rootSkillId ]) => (<GroupChanges>{
+      map(([ rootActivityId, rootSkillId ]): GroupChanges => ({
         name,
         description: description === '' ? null : description,
         root_activity_id: rootActivityId,
@@ -270,10 +269,8 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
       const currentDate = new Date();
       this.minLockMembershipApprovalUntilDate = initialRequireLockMembershipApprovalUntil && initialRequireLockMembershipApprovalUntil
         < currentDate ? initialRequireLockMembershipApprovalUntil : currentDate;
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       requireLockMembershipApprovalUntilControl.addValidators(Validators.required);
     } else {
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       requireLockMembershipApprovalUntilControl.removeValidators(Validators.required);
     }
     requireLockMembershipApprovalUntilControl.updateValueAndValidity();

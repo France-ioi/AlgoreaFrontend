@@ -5,7 +5,8 @@ export const proxy = (): RequestHandler => (req, res, next): void => {
   if (res.headersSent) return next();
 
   const url = new URL(req.url, 'https://dev.algorea.org/');
-  const hasBody = Object.values(req.body).length > 0;
+  // Express 5 leaves req.body as undefined when no body parser matched the content-type (Express 4 defaulted to {}).
+  const hasBody = req.body && Object.values(req.body).length > 0;
   const body = hasBody ? JSON.stringify(req.body) : null;
   const forwardResponse = (
     data: any,

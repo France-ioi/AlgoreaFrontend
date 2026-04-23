@@ -6,7 +6,6 @@ interface AnswerBackLinkSelectors<T> {
   selectAnswerBackLink: MemoizedSelector<T, AnswerBackLink | null>,
 }
 
-// eslint-disable-next-line @ngrx/prefix-selectors-with-select
 export const getAnswerBackLinkSelectors = <T extends RootState>(
   selectAnswerBackLinkState: Selector<T, State>
 ): AnswerBackLinkSelectors<T> => {

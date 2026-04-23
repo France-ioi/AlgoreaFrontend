@@ -7,7 +7,7 @@ export type ItemType = z.infer<typeof itemTypeSchema>;
 export const itemTypeEnum = itemTypeSchema.enum;
 
 // activity is just a subset of type just including chapter and task
-const activityTypeSchema = itemTypeSchema.extract([ 'Chapter', 'Task' ]);
+export const activityTypeSchema = itemTypeSchema.extract([ 'Chapter', 'Task' ]);
 export type ActivityType = z.infer<typeof activityTypeSchema>;
 
 // another higher level of item typing: chapters and tasks are activities, skill are skills

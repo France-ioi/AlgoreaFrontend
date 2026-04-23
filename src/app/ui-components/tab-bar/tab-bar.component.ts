@@ -52,7 +52,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     this.subscriptions.add(
       merge(
         this.resizeEvent.asObservable(),
-        fromEvent(this.scrollbarRef.viewport.nativeElement, 'scroll'),
+        fromEvent(this.scrollbarRef.nativeElement, 'scroll'),
         this.tabs$,
       ).pipe(
         debounceTime(50),

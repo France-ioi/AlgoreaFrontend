@@ -167,7 +167,7 @@ export class ItemTaskInitService implements OnDestroy {
   private checkUrl(url: string): string {
     try {
       new URL(url);
-    } catch (error) {
+    } catch {
       throw new Error($localize`Maformed url: "${url}"`);
     }
 

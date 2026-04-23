@@ -4,7 +4,7 @@ import { Observable, map, of, switchMap } from 'rxjs';
 import { APPCONFIG } from '../config';
 import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { Thread, threadSchema, threadTokenSchema } from '../forum/models/threads';
 
 @Injectable({

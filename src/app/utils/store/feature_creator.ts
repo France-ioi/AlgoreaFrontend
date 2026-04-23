@@ -55,7 +55,6 @@ export function createFeatureAlt<
     actionGroups,
   } = featureConfig;
 
-  // eslint-disable-next-line @ngrx/prefix-selectors-with-select
   const featureSelector = {
     [`select${capitalize(name)}State`]: createFeatureSelector<FeatureState>(name),
   } as FeatureSelector<FeatureName, FeatureState>;
