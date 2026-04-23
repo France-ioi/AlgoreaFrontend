@@ -39,7 +39,7 @@
     "jschannel": "^1.0.2",
     "jwt-decode": "^4.0.0",
     "ngx-mask": "^21.0.1",
-    "ngx-scrollbar": "^15.1.2",
+    "ngx-scrollbar": "^19.1.4",
     "rxjs": "~7.8.1",
     "ts-cacheable": "^1.0.10",
     "tslib": "^2.3.1",

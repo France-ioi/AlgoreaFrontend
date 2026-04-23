@@ -10,7 +10,7 @@ import { WithCredentialsInterceptor } from './app/interceptors/with_credentials.
 import { AuthenticationInterceptor } from './app/interceptors/authentication.interceptor';
 import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
 import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { NG_SCROLLBAR_OPTIONS, NgScrollbarModule, NgScrollbarOptions } from 'ngx-scrollbar';
+import { NgScrollbarOptions, provideScrollbarOptions } from 'ngx-scrollbar';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideState, provideStore } from '@ngrx/store';
@@ -63,15 +63,11 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       BrowserModule,
       LetDirective,
-      NgScrollbarModule,
       FormsModule,
       LayoutModule,
       ReactiveFormsModule,
     ),
-    {
-      provide: NG_SCROLLBAR_OPTIONS,
-      useValue: DEFAULT_SCROLLBAR_OPTIONS,
-    },
+    provideScrollbarOptions(DEFAULT_SCROLLBAR_OPTIONS),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TimeoutInterceptor,

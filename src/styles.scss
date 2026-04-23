@@ -72,6 +72,15 @@ html {
   font-size: 16px;
 }
 
+// ngx-scrollbar v19 changed the default thumb color to DodgerBlue (#1e90ff).
+// Override it back to the neutral translucent dark used by v15 so the custom
+// scrollbars blend with the page like before.
+:root {
+  --scrollbar-thumb-color: rgba(0, 0, 0, 0.18);
+  --scrollbar-thumb-hover-color: rgba(0, 0, 0, 0.3);
+  --scrollbar-thumb-active-color: rgba(0, 0, 0, 0.45);
+}
+
 body {
   background-color: var(--alg-light-bg-color);
   font-family: var(--font-family);
