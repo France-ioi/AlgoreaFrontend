@@ -22,3 +22,5 @@ not op_mob > 0
 not android > 0
 not opera > 0
 not samsung > 0
+# Chrome 109 is the last version supporting Windows 7/8, kept by `> 0.5%` but unsupported by Angular
+not chrome 109
