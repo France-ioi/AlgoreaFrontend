@@ -3,7 +3,7 @@ const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const angular = require('@angular-eslint/eslint-plugin');
 const ngrx = require('@ngrx/eslint-plugin');
-const rxjsX = require('eslint-plugin-rxjs-x');
+const rxjsX = require('eslint-plugin-rxjs-x').default;
 const jasmine = require('eslint-plugin-jasmine');
 const stylistic = require('@stylistic/eslint-plugin');
 
@@ -53,7 +53,7 @@ module.exports = tseslint.config(
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
       '@typescript-eslint/prefer-for-of': ['error'],
       'rxjs-x/no-async-subscribe': 'error',
-      'rxjs-x/no-ignored-observable': 'error',
+      'rxjs-x/no-floating-observables': 'error',
       'rxjs-x/no-nested-subscribe': 'error',
       'rxjs-x/no-unbound-methods': 'error',
       'rxjs-x/throw-error': 'error',
