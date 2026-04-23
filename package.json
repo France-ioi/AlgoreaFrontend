@@ -89,7 +89,7 @@
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-packagr": "^21.2.1",
     "nodemon": "^3.1.14",
-    "purgecss": "^5.0.0",
+    "purgecss": "^8.0.0",
     "release-it": "^17.0.1",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
