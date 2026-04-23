@@ -118,7 +118,6 @@ export class ItemEditAdvancedParametersComponent implements OnInit {
     const durationEnabledValue = this.parentForm?.get('duration_enabled')?.value as boolean;
     const enableValidation = requiresExplicitEntryValue && durationEnabledValue;
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     this.parentForm?.get('duration')?.setValidators(enableValidation ? Validators.required : null);
     this.parentForm?.get('duration')?.updateValueAndValidity();
   }

@@ -55,7 +55,6 @@ export class GetBreadcrumbService {
             route: {
               id: item.itemId,
               path: items.slice(0,idx).map(it => it.itemId),
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               attemptId: item.attemptId!, // the service ensures the attempt for all but last is given
               contentType: typeCategoryOfItem(item),
             },

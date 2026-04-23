@@ -29,7 +29,6 @@ interface CurrentThreadSelectors<T> {
   selectFollowStatus: MemoizedSelector<T, FetchState<boolean>>,
 }
 
-// eslint-disable-next-line @ngrx/prefix-selectors-with-select
 export const getCurrentThreadSelectors = <T>(selectForumState: Selector<T, State>): CurrentThreadSelectors<T> => {
 
   const selectCurrentThread = createSelector(
