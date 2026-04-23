@@ -1,6 +1,6 @@
-import * as express from 'express';
+import express from 'express';
 import { json as bodyParserJson } from 'body-parser';
-import * as cors from 'cors';
+import cors from 'cors';
 import * as handlers from './handlers';
 import { errorHandler } from './handlers/error';
 import { auth, operation, proxy } from './middlewares';
