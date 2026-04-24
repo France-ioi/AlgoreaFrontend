@@ -3,6 +3,14 @@
 :host {
   display: flex;
   flex-direction: column;
+
+  // ngx-scrollbar v19 defaults: 7px-thick track with a translucent grey
+  // background. Override the CSS custom properties (which cascade through
+  // view-encapsulation boundaries) so every nested ng-scrollbar in the left
+  // panel renders as a thin, transparent track with just a light grey thumb,
+  // matching the look we had before the v19 upgrade.
+  --scrollbar-track-color: transparent;
+  --scrollbar-track-thickness: #{functions.toRem(5)};
 }
 
 .divider {
