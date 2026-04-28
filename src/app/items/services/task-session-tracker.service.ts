@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { EMPTY, Subscription } from 'rxjs';
 import { catchError, switchMap, take } from 'rxjs/operators';
@@ -68,7 +69,7 @@ export class TaskSessionTrackerService implements OnDestroy {
     if (this.active && this.token) {
       this.taskSessionHttp.stop(this.token).pipe(
         catchError(err => {
-          reportAnError(err);
+          if (!(err instanceof HttpErrorResponse)) reportAnError(err);
           return EMPTY;
         }),
       ).subscribe();
@@ -79,7 +80,7 @@ export class TaskSessionTrackerService implements OnDestroy {
     if (!this.token || !this.attemptId) return;
     this.taskSessionHttp.start(this.token, this.attemptId, this.resultStartedAt ?? undefined).pipe(
       catchError(err => {
-        reportAnError(err);
+        if (!(err instanceof HttpErrorResponse)) reportAnError(err);
         return EMPTY;
       }),
     ).subscribe();
@@ -89,7 +90,7 @@ export class TaskSessionTrackerService implements OnDestroy {
     if (!this.token || !this.attemptId) return;
     this.taskSessionHttp.continue(this.token, this.attemptId).pipe(
       catchError(err => {
-        reportAnError(err);
+        if (!(err instanceof HttpErrorResponse)) reportAnError(err);
         return EMPTY;
       }),
     ).subscribe();
