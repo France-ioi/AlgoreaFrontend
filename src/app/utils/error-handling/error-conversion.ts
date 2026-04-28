@@ -29,5 +29,5 @@ function stringifyUnknown(err: unknown): string {
 export function convertToError(error: unknown): Error {
   if (error instanceof Error) return error;
   if (error instanceof HttpErrorResponse) return new HTTPError(error);
-  throw new UnknownError(error);
+  return new UnknownError(error);
 }
