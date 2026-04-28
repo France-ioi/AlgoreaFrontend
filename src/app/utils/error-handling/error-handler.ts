@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, inject } from '@angular/core';
 import * as Sentry from '@sentry/angular';
 import { convertToError } from './error-conversion';
@@ -22,6 +23,9 @@ export class AlgErrorHandler extends ErrorHandler {
       this.chunkErrorService.emitError();
       return;
     }
+    // HTTP errors are network/backend issues, not local frontend bugs: do not capture or show
+    // the crash dialog. They are also dropped by Sentry's beforeSend as a safety net.
+    if (err instanceof HttpErrorResponse) return;
     const error = convertToError(err);
     const eventId = Sentry.captureException(error);
 

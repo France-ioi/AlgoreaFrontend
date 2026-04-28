@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import * as Sentry from '@sentry/angular';
 import { environment } from 'src/environments/environment';
 import { version } from 'src/version';
@@ -15,6 +16,16 @@ export function initErrorTracking(): void {
     integrations: [],
     profilesSampleRate: 0, // disable profiling
     tracesSampleRate: 0,
+    // Network/backend failures are not local frontend bugs: filter them out as a safety net
+    // for any path that bypasses the per-call-site filtering (e.g. a missing catchError that
+    // lets an HttpErrorResponse reach the global ErrorHandler).
+    beforeSend(event, hint) {
+      const ex = hint?.originalException;
+      if (ex instanceof HttpErrorResponse) return null;
+      // AlgErrorHandler wraps via convertToError, producing an Error with name 'HttpErrorResponse'
+      if (ex instanceof Error && ex.name === 'HttpErrorResponse') return null;
+      return event;
+    },
     ignoreErrors: [
       'Cannot redefine property: googletag',
       "Cannot read properties of undefined (reading 'sendMessage')", // a chrome extension error
