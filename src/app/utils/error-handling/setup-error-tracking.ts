@@ -1,8 +1,22 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import * as Sentry from '@sentry/angular';
+import type { ErrorEvent, EventHint } from '@sentry/angular';
 import { environment } from 'src/environments/environment';
 import { version } from 'src/version';
 import { getSentryDsnConfig } from 'src/app/config/crash-reporting';
+import { HTTPError } from './error-conversion';
+
+/**
+ * Drop network/backend failures from Sentry as a safety net for any path that bypasses the
+ * per-call-site filtering (raw `HttpErrorResponse`) or that captures a value already wrapped
+ * by `convertToError` (`HTTPError`).
+ */
+export function dropHttpErrors(event: ErrorEvent, hint: EventHint): ErrorEvent | null {
+  const ex = hint.originalException;
+  if (ex instanceof HttpErrorResponse) return null;
+  if (ex instanceof HTTPError) return null;
+  return event;
+}
 
 export function initErrorTracking(): void {
 
@@ -16,16 +30,7 @@ export function initErrorTracking(): void {
     integrations: [],
     profilesSampleRate: 0, // disable profiling
     tracesSampleRate: 0,
-    // Network/backend failures are not local frontend bugs: filter them out as a safety net
-    // for any path that bypasses the per-call-site filtering (e.g. a missing catchError that
-    // lets an HttpErrorResponse reach the global ErrorHandler).
-    beforeSend(event, hint) {
-      const ex = hint?.originalException;
-      if (ex instanceof HttpErrorResponse) return null;
-      // AlgErrorHandler wraps via convertToError, producing an Error with name 'HttpErrorResponse'
-      if (ex instanceof Error && ex.name === 'HttpErrorResponse') return null;
-      return event;
-    },
+    beforeSend: dropHttpErrors,
     ignoreErrors: [
       'Cannot redefine property: googletag',
       "Cannot read properties of undefined (reading 'sendMessage')", // a chrome extension error

@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
   constructor(resp: HttpErrorResponse) {
     super(resp.message);
     this.name = resp.name;
   }
 }
 
-class UnknownError extends Error {
+export class UnknownError extends Error {
   constructor(err: unknown) {
     super(stringifyUnknown(err));
     this.name = 'UnknownError';

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, inject } from '@angular/core';
-import * as Sentry from '@sentry/angular';
 import { convertToError } from './error-conversion';
+import { sentryReporter } from './error-reporting';
 import { ChunkErrorService } from '../../services/chunk-error.service';
 
 /**
@@ -27,12 +27,12 @@ export class AlgErrorHandler extends ErrorHandler {
     // the crash dialog. They are also dropped by Sentry's beforeSend as a safety net.
     if (err instanceof HttpErrorResponse) return;
     const error = convertToError(err);
-    const eventId = Sentry.captureException(error);
+    const eventId = sentryReporter.captureException(error);
 
     if (!this.isDialogOpen && !this.reportedErrors.includes(error.toString())) {
       this.isDialogOpen = true;
       this.reportedErrors.push(error.toString());
-      Sentry.showReportDialog({ eventId, onClose: () => this.isDialogOpen = false });
+      sentryReporter.showReportDialog({ eventId, onClose: () => this.isDialogOpen = false });
     }
   }
 
