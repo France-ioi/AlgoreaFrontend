@@ -26,14 +26,11 @@ export class AuthHttpService {
   private apiUrl = new URL(this.config.apiUrl, location.origin /* act as base when the url is relative, ignored otherwise */);
   private cookieParams = this.config.authType === 'cookies' ? {
     use_cookie: '1',
+    // The backend always sets `SameSite=Strict` on the session cookie when `use_cookie=1`.
+    // Browsers refuse to store `Secure` cookies over plain HTTP — except for `localhost`, which they treat as a secure context —
+    // so we only set `cookie_secure=1` when the API is served over HTTPS or from `localhost`.
     cookie_secure: this.apiUrl.protocol === 'https:' || this.apiUrl.hostname === 'localhost' ? '1' : '0',
-    cookie_same_site: '1',
     /**
-     * NOTE on cookie_same_site and the cookie attribute "SameSite":
-     * Safari and Firefox both disable third-party cookies by default, and Chrome will in 2021 (but postponed for 2023)
-     * Since third-party cookies will be removed in a near future, we chose not to enable this type of authentication,
-     * making the 'same-site' policy always true.
-     *
      * NOTE on cookie party:
      * A cookie party is determined by its "Domain" attribute, which defaults to the hostname.
      * As defined by the MDN glossary, the domain represents an "authority", an organization to which belongs the cookie.
