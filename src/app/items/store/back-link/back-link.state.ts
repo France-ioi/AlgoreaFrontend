@@ -1,10 +1,10 @@
-export interface AnswerBackLink {
+export interface BackLink {
   url: string,
   label: string,
 }
 
 export interface State {
-  backLink: AnswerBackLink | null,
+  backLink: BackLink | null,
 }
 
 export const initialState: State = {

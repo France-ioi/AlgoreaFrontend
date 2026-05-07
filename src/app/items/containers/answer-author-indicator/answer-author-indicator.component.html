@@ -48,10 +48,11 @@
                   View your current answer
                 </a>
               }
-              @if (answerBackLink(); as backLink) {
+              @if (backLink(); as backLink) {
                 <button
                   class="size-xs"
                   alg-button
+                  type="button"
                   (click)="onBackLinkClick(backLink.url)"
                 >{{ backLink.label }}</button>
               }

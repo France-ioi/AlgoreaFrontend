@@ -1,15 +1,15 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { AnswerBackLink } from './answer-back-link.state';
+import { BackLink } from './back-link.state';
 
 export const sourcePageActions = createActionGroup({
   source: 'Source page',
   events: {
-    registerAnswerBackLink: props<{ backLink: AnswerBackLink }>(),
+    registerBackLink: props<{ backLink: BackLink }>(),
   },
 });
 
-export const answerBackLinkActions = createActionGroup({
-  source: 'Answer back link',
+export const backLinkActions = createActionGroup({
+  source: 'Back link',
   events: {
     clear: emptyProps(),
   },

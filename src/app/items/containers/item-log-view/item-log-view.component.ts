@@ -1,4 +1,4 @@
-import { Component, computed, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, computed, DestroyRef, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
@@ -27,6 +27,7 @@ import { itemRouteWith } from 'src/app/models/routing/item-route';
 import { UrlTree } from '@angular/router';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { BackLinkBarComponent } from 'src/app/ui-components/back-link-bar/back-link-bar.component';
 import { fromItemContent } from 'src/app/items/store';
 import {
   CdkCell,
@@ -69,6 +70,7 @@ const logsLimit = 20;
     RelativeTimeComponent,
     LogActivityTypeIconPipe,
     ButtonComponent,
+    BackLinkBarComponent,
     CdkTable,
     CdkColumnDef,
     CdkHeaderCell,
@@ -90,10 +92,32 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   private router = inject(Router);
   private itemRouter = inject(ItemRouter);
 
+  constructor() {
+    // Clear the back-link state when leaving the destination page via any
+    // mechanism (back-link button, browser back, in-page tab change). The
+    // store-level effect only clears on item changes; this catches the case
+    // where the user navigates *away* without changing the active item.
+    inject(DestroyRef).onDestroy(() => {
+      this.store.dispatch(fromItemContent.backLinkActions.clear());
+    });
+  }
+
   @Input() itemData?: ItemData;
 
   observedGroupId$ = this.store.select(fromObservation.selectObservedGroupId);
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
+
+  readonly backLink = this.store.selectSignal(fromItemContent.selectBackLink);
+  readonly observedGroupInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
+
+  readonly backLinkHeading = computed(() => {
+    const backLink = this.backLink();
+    const obs = this.observedGroupInfo();
+    if (!backLink || !obs) return null;
+    return isUser(obs.route)
+      ? $localize`You are now on the history page of user ${obs.name}.`
+      : $localize`You are now on the history page of group ${obs.name}.`;
+  });
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> => this.getRows(pageSize, latestRow),
@@ -176,12 +200,16 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   onViewAnswer(): void {
-    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
       backLink: {
         url: this.router.url,
         label: $localize`Back to the history page`,
       },
     }));
+  }
+
+  onBackLinkClick(url: string): void {
+    void this.router.navigateByUrl(url);
   }
 
   getObserveLink(user: { id: string }): UrlTree | undefined {

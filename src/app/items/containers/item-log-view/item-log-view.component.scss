@@ -5,6 +5,10 @@
   flex-direction: column;
 }
 
+.back-link-bar {
+  margin-bottom: functions.toRem(13);
+}
+
 .operation-buttons {
   display: flex;
   justify-content: space-between;

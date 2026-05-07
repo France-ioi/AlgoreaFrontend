@@ -1,4 +1,4 @@
-import { Component, input, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
+import { Component, DestroyRef, input, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
@@ -49,6 +49,16 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   private getUserService = inject(GetUserService);
   private userSessionService = inject(UserSessionService);
 
+  constructor() {
+    // Clear the back-link state when leaving the destination page via any
+    // mechanism (back-link button, browser back, in-page tab change). The
+    // store-level effect only clears on item changes; this catches the case
+    // where the user navigates *away* without changing the active item.
+    inject(DestroyRef).onDestroy(() => {
+      this.store.dispatch(fromItemContent.backLinkActions.clear());
+    });
+  }
+
   answer = input.required<Answer>();
   @Input() itemData?: ItemData;
 
@@ -66,7 +76,7 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
     map(userProfile => userProfile.groupId),
   );
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
-  readonly answerBackLink = this.store.selectSignal(fromItemContent.selectAnswerBackLink);
+  readonly backLink = this.store.selectSignal(fromItemContent.selectBackLink);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.answer) this.answer$.next(this.answer());
@@ -77,7 +87,6 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   }
 
   onBackLinkClick(url: string): void {
-    this.store.dispatch(fromItemContent.answerBackLinkActions.clear());
     void this.router.navigateByUrl(url);
   }
 }

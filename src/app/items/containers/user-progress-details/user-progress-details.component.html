@@ -76,6 +76,17 @@
         </div>
       }
     }
+    @if (progressData) {
+      <div class="button-section">
+        <a
+          alg-button
+          icon="ph ph-clock-counter-clockwise"
+          [routerLink]="progressData.colItem.fullRoute | with: { observedGroup: progressData.rowGroup } | url: ['progress', 'history']"
+          (click)="onViewHistory()"
+          i18n
+        >History</a>
+      </div>
+    }
   } @else {
     <span class="not-started" i18n="In progress matrix, explanation when cell is empty">Not started</span>
   }

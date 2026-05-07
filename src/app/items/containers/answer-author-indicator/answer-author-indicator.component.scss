@@ -2,13 +2,12 @@
 
 .container {
   display: flex;
-  flex-wrap: nowrap;
   flex-direction: column;
   justify-content: center;
   color: var(--alg-secondary-color);
   background-color: var(--alg-light-bg-color);
   border-radius: var(--border-radius);
-  height: functions.toRem(48);
+  min-height: functions.toRem(48);
 }
 
 .content, .content-text {

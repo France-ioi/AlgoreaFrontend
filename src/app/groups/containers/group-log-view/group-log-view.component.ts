@@ -146,7 +146,7 @@ export class GroupLogViewComponent implements OnChanges {
   }
 
   onViewAnswer(): void {
-    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
       backLink: {
         url: this.router.url,
         label: $localize`Back to the history page`,

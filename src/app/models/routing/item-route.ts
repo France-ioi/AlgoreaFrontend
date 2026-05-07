@@ -27,6 +27,16 @@ export interface ItemRoute extends ContentRoute {
 export type FullItemRoute = ItemRoute & (Required<Pick<ItemRoute, 'attemptId'>> | Required<Pick<ItemRoute, 'parentAttemptId'>>);
 export type RawItemRoute = Omit<ItemRoute, 'path'> & Partial<Pick<ItemRoute, 'path'>>;
 
+/**
+ * Minimal identity of an item view: the item id together with the observed-group id (if any).
+ * Two views with the same `ItemContentIdentifier` show the same content; views differing on either
+ * field show different content (different item, or same item from a different observation context).
+ */
+export interface ItemContentIdentifier {
+  id: ItemId,
+  observedGroupId?: GroupId,
+}
+
 // TYPE ASSERT FUNCTIONS
 export function isItemRoute(route: ContentRoute): route is ItemRoute {
   return ([ 'activity', 'skill' ].includes(route.contentType));
