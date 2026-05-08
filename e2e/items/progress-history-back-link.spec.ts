@@ -64,9 +64,12 @@ test('History button shows a back-link bar that returns to the progress grid', a
 
   await test.step('back-link bar shows the correct heading and label', async () => {
     await expect.soft(backLinkBar).toBeVisible();
-    // Heading reflects the user we are now observing (history page context).
+    // Heading reflects the user we are now observing (history page context). The bar itself
+    // appears as soon as the back-link is registered, but the heading text only fills in once
+    // the destination's observation info has been fetched — that fetch can be slow under load
+    // (observed in Firefox CI), so give this specific assertion a longer timeout.
     await expect.soft(backLinkBar.locator('.description'))
-      .toHaveText(/^You are now on the history page of user .+\.$/);
+      .toHaveText(/^You are now on the history page of user .+\.$/, { timeout: 15_000 });
     // Button label uses the previous group-page name set by the source-page initializer,
     // NOT the row's user name. This guards against regressing the bug where rowGroup.name
     // was used (label would have shown the user's login instead of the group's).

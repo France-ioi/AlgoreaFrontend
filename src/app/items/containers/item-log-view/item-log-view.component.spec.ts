@@ -58,18 +58,13 @@ describe('ItemLogViewComponent.backLinkHeading', () => {
     component = fixture.componentInstance;
   });
 
-  it('returns null when backLink is null', () => {
-    store.overrideSelector(fromItemContent.selectBackLink, null);
-    store.overrideSelector(fromObservation.selectObservedGroupInfo, userObsInfo);
-    store.refreshState();
-    expect(component.backLinkHeading()).toBeNull();
-  });
-
-  it('returns null when observedGroupInfo is null', () => {
+  it('returns an empty string when observedGroupInfo is null', () => {
+    // The bar must be rendered as soon as backLink is set (so the user can return); the heading
+    // stays empty until observation info arrives, instead of hiding the whole bar.
     store.overrideSelector(fromItemContent.selectBackLink, { url: '/source', label: 'Back' });
     store.overrideSelector(fromObservation.selectObservedGroupInfo, null);
     store.refreshState();
-    expect(component.backLinkHeading()).toBeNull();
+    expect(component.backLinkHeading()).toBe('');
   });
 
   it('uses the user phrasing when the observed group is a user', () => {

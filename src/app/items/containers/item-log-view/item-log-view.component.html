@@ -1,13 +1,11 @@
 @if (backLink(); as backLink) {
-  @if (backLinkHeading(); as heading) {
-    <alg-back-link-bar
-      class="back-link-bar"
-      [heading]="heading"
-      [backLinkLabel]="backLink.label"
-      [backLinkUrl]="backLink.url"
-      (backLinkClick)="onBackLinkClick($event)"
-    ></alg-back-link-bar>
-  }
+  <alg-back-link-bar
+    class="back-link-bar"
+    [heading]="backLinkHeading()"
+    [backLinkLabel]="backLink.label"
+    [backLinkUrl]="backLink.url"
+    (backLinkClick)="onBackLinkClick($event)"
+  ></alg-back-link-bar>
 }
 
 @if (isObserving$ | async) {

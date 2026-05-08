@@ -110,10 +110,11 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   readonly backLink = this.store.selectSignal(fromItemContent.selectBackLink);
   readonly observedGroupInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
 
+  // Empty when observation is still loading: we render the back-link bar as soon as `backLink` is
+  // set (so the user can return) and let the heading appear once observation info arrives.
   readonly backLinkHeading = computed(() => {
-    const backLink = this.backLink();
     const obs = this.observedGroupInfo();
-    if (!backLink || !obs) return null;
+    if (!obs) return '';
     return isUser(obs.route)
       ? $localize`You are now on the history page of user ${obs.name}.`
       : $localize`You are now on the history page of group ${obs.name}.`;
