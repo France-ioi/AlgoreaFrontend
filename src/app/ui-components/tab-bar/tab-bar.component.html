@@ -16,7 +16,7 @@
     appearance="native"
     >
     <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs">
-      @for (tab of tabs; track tab) {
+      @for (tab of tabs; track tab.id) {
         <li class="tabs-item" [ngClass]="tab.styleClass">
           <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
         </li>
