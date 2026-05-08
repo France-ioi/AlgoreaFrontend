@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject, input, output, signal, viewChildren } from '@angular/core';
+import { Component, forwardRef, inject, input, output, signal, viewChildren } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -11,8 +11,7 @@ import {
   ItemStringsControlComponent,
   StringsValue
 } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
-import { map } from 'rxjs/operators';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -63,19 +62,23 @@ export class ItemAllStringsFormComponent {
       }),
     ]),
   });
-  formValue = toSignal(
-    this.form.controls.allStrings.valueChanges.pipe(
-      map(() => this.form.controls.allStrings.getRawValue()),
-    ), { initialValue: [] }
-  );
   availableLanguagesToCreate = signal<string[] | undefined>(undefined);
 
-  emitValueEffect = effect(() => {
-    const formValue = this.formValue();
-    if (formValue.length > 0) {
-      this.onChange(formValue);
-    }
-  });
+  // Propagate the inner form value to the parent CVA synchronously (rather
+  // than via an effect()) so that the parent control is marked dirty during
+  // the same change-detection turn as the user interaction. Going through an
+  // effect would defer the markAsDirty to the post-CD effect-flush phase,
+  // causing `itemForm.dirty` to flip between the main check and dev-mode
+  // checkNoChanges (NG0100 ExpressionChangedAfterItHasBeenChecked on the
+  // wrapper's `@if (itemForm.dirty)`).
+  private valueChangesSub = this.form.controls.allStrings.valueChanges
+    .pipe(takeUntilDestroyed())
+    .subscribe(() => {
+      const value = this.form.controls.allStrings.getRawValue();
+      if (value.length > 0) {
+        this.onChange(value);
+      }
+    });
 
   get allStrings(): FormArray<FormControl<StringsValue>> {
     return this.form.controls.allStrings;
