@@ -1,3 +1,13 @@
+@if (backLink(); as backLink) {
+  <alg-back-link-bar
+    class="back-link-bar"
+    [heading]="backLinkHeading()"
+    [backLinkLabel]="backLink.label"
+    [backLinkUrl]="backLink.url"
+    (backLinkClick)="onBackLinkClick($event)"
+  ></alg-back-link-bar>
+}
+
 @if (isObserving$ | async) {
   <p i18n>In this tab, you will find a list of all the past activity for this content. For exercises, you may view previous submissions.</p>
 } @else {

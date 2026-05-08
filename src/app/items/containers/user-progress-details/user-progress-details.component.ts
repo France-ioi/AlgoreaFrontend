@@ -17,6 +17,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
+import { fromObservation } from 'src/app/store/observation';
 
 export interface ProgressData {
   progress: Progress,
@@ -24,6 +25,10 @@ export interface ProgressData {
     type: ItemType,
     fullRoute: FullItemRoute,
     permissions: ItemPermWithWatch,
+  },
+  rowGroup: {
+    id: string,
+    isUser: boolean,
   },
 }
 
@@ -60,6 +65,7 @@ export class UserProgressDetailsComponent implements OnChanges {
   progress?: ProgressData['progress'];
 
   currentUser$ = this.userSessionService.userProfile$;
+  private readonly observedGroupInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.progressData && !changes.progressData.firstChange) {
@@ -68,10 +74,22 @@ export class UserProgressDetailsComponent implements OnChanges {
   }
 
   onViewAnswer(): void {
-    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
       backLink: {
         url: this.router.url,
         label: $localize`Go back to the stats grid`,
+      },
+    }));
+  }
+
+  onViewHistory(): void {
+    if (!this.progressData) return;
+    const observedGroup = this.observedGroupInfo();
+    if (!observedGroup) return;
+    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
+      backLink: {
+        url: this.router.url,
+        label: $localize`Return to ${observedGroup.name} group stats`,
       },
     }));
   }

@@ -1,7 +1,7 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
-import { FullItemRoute, ItemRoute } from 'src/app/models/routing/item-route';
+import { FullItemRoute, ItemContentIdentifier, ItemRoute } from 'src/app/models/routing/item-route';
 import { Breadcumbs, Item, Results, State, initialState } from './item-content.state';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
@@ -9,6 +9,7 @@ import equal from 'fast-deep-equal/es6';
 import { Result } from '../../models/attempts';
 import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
 import { fromConfig } from 'src/app/store/config';
+import { GroupId } from 'src/app/models/ids';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -40,6 +41,18 @@ interface UserContentSelectors<T extends RootState> {
    * `null` if there is no active item
    */
   selectActiveContentObservedGroup: MemoizedSelector<T, ItemRoute['observedGroup']|null>,
+  /**
+   * If the active content is an item and observation is enabled: the observed-group id.
+   * `null` otherwise (no active item OR no observation).
+   */
+  selectActiveContentObservedGroupId: MemoizedSelector<T, GroupId|null>,
+  /**
+   * If the active content is an item: the pair (item id, observed-group id) that uniquely
+   * identifies the content being viewed. `null` if there is no active item.
+   * The output reference is stable across URL changes that do not affect either id, so consumers
+   * can rely on `Store.select` to emit only on actual value changes.
+   */
+  selectActiveContentIdentifier: MemoizedSelector<T, ItemContentIdentifier|null>,
   selectActiveContentItemState: MemoizedSelector<T, State['itemState']>,
   selectActiveContentBreadcrumbsState: MemoizedSelector<T, State['breadcrumbsState']>,
   selectActiveContentResultsState: MemoizedSelector<T, State['resultsState']>,
@@ -120,6 +133,21 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     route => (route ? route.observedGroup : null)
   );
 
+  const selectActiveContentObservedGroupId = createSelector(
+    selectActiveContentObservedGroup,
+    observedGroup => (observedGroup ? observedGroup.id : null)
+  );
+
+  // Composed from primitive-returning selectors so ngrx's createSelector preserves the output
+  // reference whenever both ids are unchanged (avoiding spurious re-emissions on intra-content
+  // URL changes such as query params, fragments, or in-page tab switches).
+  const selectActiveContentIdentifier = createSelector(
+    selectActiveContentId,
+    selectActiveContentObservedGroupId,
+    (id, observedGroupId): ItemContentIdentifier|null =>
+      (id === null ? null : { id, observedGroupId: observedGroupId ?? undefined })
+  );
+
   const selectActiveContentItemState = createSelector(
     selectState,
     selectActiveContentRoute,
@@ -198,6 +226,8 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentPage,
     selectActiveContentId,
     selectActiveContentObservedGroup,
+    selectActiveContentObservedGroupId,
+    selectActiveContentIdentifier,
     selectActiveContentItemState,
     selectActiveContentBreadcrumbsState,
     selectActiveContentResultsState,

@@ -268,6 +268,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
         ),
         permissions: col.permissions,
       },
+      rowGroup: {
+        id: row.id,
+        isUser: this.currentFilter === 'Users',
+      },
     };
     this.progressDataDialog = {
       item: {

@@ -1,0 +1,33 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: block;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--alg-secondary-color);
+  background-color: var(--alg-light-bg-color);
+  border-radius: var(--border-radius);
+  // `min-height` (rather than `height`) + wrapping content so long observed-group
+  // names don't overflow horizontally on narrow viewports.
+  min-height: functions.toRem(48);
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: functions.toRem(8);
+  padding: functions.toRem(8) functions.toRem(16);
+}
+
+.description {
+  font-size: functions.toRem(14);
+  // Safety net in case wrapping is disabled in a future container override.
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -67,7 +67,7 @@ export class ThreadMessageComponent {
       default:
         backLabel = $localize`Back to the previous content`;
     }
-    this.store.dispatch(fromItemContent.sourcePageActions.registerAnswerBackLink({
+    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
       backLink: {
         url: this.router.url,
         label: backLabel,
