@@ -30,7 +30,10 @@
         <div
           class="content-container"
           [ngClass]="{
-            'no-top-padding': itemData.item.type === 'Task' && !!currentTab?.isTaskTab,
+            'no-top-padding':
+              (itemData.item.type === 'Task' && !!currentTab?.isTaskTab)
+              || currentTab?.tag === 'alg-content'
+              || currentTab?.tag === 'alg-children-edit',
             'side-padding': itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed,
             'right-padding': itemData.item.type === 'Task' && !currentTab?.isTaskTab && !fullFrameContentDisplayed
           }"

@@ -15,7 +15,7 @@ import { ItemUnlockAccessComponent } from '../../containers/item-unlock-access/i
 import { ParentSkillsComponent } from '../../containers/parent-skills/parent-skills.component';
 import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.component';
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
-import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
+import { DescriptionIframeComponent } from 'src/app/ui-components/description-iframe/description-iframe.component';
 import { NgClass } from '@angular/common';
 import { LoginWallComponent } from '../login-wall/login-wall.component';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
@@ -32,7 +32,7 @@ import { ResultIsActivePipe } from '../../models/attempts';
   templateUrl: './item-content.component.html',
   styleUrls: [ './item-content.component.scss' ],
   imports: [
-    HasHTMLDirective,
+    DescriptionIframeComponent,
     SwitchComponent,
     ItemChildrenEditFormComponent,
     ChapterChildrenComponent,
@@ -70,7 +70,7 @@ export class ItemContentComponent implements PendingChangesComponent {
    */
   description = computed(() => {
     const description = this.item().string.description;
-    return (!isATask(this.item()) && description /* not null, undefined or empty */) ? description : null;
+    return (!isATask(this.item()) && description && description.trim() !== '') ? description : null;
   });
 
   @Input() taskView?: TaskTab['view'];

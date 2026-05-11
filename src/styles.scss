@@ -98,13 +98,6 @@ button, input, textarea {
   margin-bottom: -2rem;
 }
 
-.html-container {
-  a {
-    @extend .alg-link;
-    @extend .base-color;
-  }
-}
-
 .grid-card-image-default-bg {
   background-image: url("/images/chapter-default.jpg");
 }

@@ -281,6 +281,18 @@ The WebSocket connection is managed at the root store level:
 - Auto-follow when posting a message to a thread
 - Thread tokens (not identity tokens) required for follow operations
 
+## Item descriptions (sandboxed iframe rendering)
+
+Stored item descriptions (`item.string.description`) and the editor Parameters **Preview** tab render HTML through `alg-description-iframe` instead of `[innerHTML]` on the host page.
+
+- **Where**: `ItemContentComponent` (chapter/skill descriptions) and `PreviewHtmlComponent` (preview panel).
+- **Mechanism**: A sandboxed `<iframe>` with `srcdoc` composed of a small HTML shell, injected base CSS (`description-iframe.styles.ts`), and the author HTML. Plain-text descriptions (no HTML element nodes, same rule as `algHasHTML`) are escaped and wrapped in `<p>` so they pick up the same reading-width typography as paragraphs in authored HTML. On the item page, the Content tab uses `no-top-padding` on `.content-container` (flush under the tab bar, like task tabs); default vertical offset is `--description-content-padding-top` on the iframe `body` (authors may set it to `0` in description CSS). `sandbox="allow-scripts"` is used **without** `allow-same-origin`, so the document keeps an opaque origin: scripts can run, but the iframe cannot access parent cookies, storage, or the parent DOM.
+- **Sanitization**: `DomSanitizer.bypassSecurityTrustHtml` is applied only to the iframe `srcdoc`, never to bindings in the Angular app shell.
+- **Base CSS**: A bundled subset of `--alg-*` tokens (aligned with `src/variables.scss`) and typography rules approximate former `.html-container` styling so plain markup stays on-brand; authors can override via their own CSS inside the description. The iframe uses the parent content width; default prose uses `--description-reading-max-width` (57.5rem / 920px) on `p`, headings, lists, `blockquote`, and `pre`. Tables stay full width of the iframe. Layout spacing under the block is handled on `alg-description-iframe` (`:host`), not via legacy `.description` classes on the parent page.
+- **Theming**: The iframe is opaque-origin so parent stylesheets cannot reach inside; theme overrides from `src/assets/scss/themes/*.scss` (`thymio`, `probabl`, `coursera-pt`) are inlined into `descriptionBaseCss` and matched via `data-theme` set on the inner `<html>`. Custom web fonts referenced by themes (Poppins, Geist, Source Sans Pro) are not loaded inside the iframe and fall back to the next available family; if the design needs the exact face inside descriptions, declare `@font-face` (or a `<link>` to the CDN) inside `descriptionBaseCss`. Keep this list in sync when a new theme is added.
+- **Hygiene**: `referrerpolicy="no-referrer"` and `loading="lazy"` on the iframe; fixed min/max height with scrolling inside the iframe for v1.
+- **Deferred**: A `postMessage` protocol (dynamic height, navigation requests, visible-child queries) is intentionally out of scope; the component is structured so a listener gated by `event.source === iframe.contentWindow` can be added later.
+
 ## Testing
 
 - **Unit tests**: Jasmine + Karma (`ng test`)

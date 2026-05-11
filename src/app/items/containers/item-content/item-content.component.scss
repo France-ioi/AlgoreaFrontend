@@ -24,13 +24,6 @@
   margin-left: 1rem;
 }
 
-.description, .html-container {
-  margin: 0 0 var(--alg-space-size-4) 0;
-  font-weight: 300;
-  line-height: functions.toRem(24);
-  max-width: functions.toRem(920);
-}
-
 .task-loader {
   position: absolute;
   top: 0;

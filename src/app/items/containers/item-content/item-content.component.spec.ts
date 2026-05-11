@@ -7,6 +7,7 @@ import { itemRoute, FullItemRoute } from 'src/app/models/routing/item-route';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { EMPTY } from 'rxjs';
 import { ItemViewPerm } from '../../models/item-view-permission';
@@ -25,6 +26,7 @@ class MockItemDisplayComponent {
   url = input.required<string>();
   @Input() editingPermission: unknown;
   @Input() attemptId?: string;
+  @Input() resultStartedAt: Date | null = null;
   @Input() view?: string;
   @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: undefined };
   @Input() savingAnswer = false;
@@ -188,5 +190,49 @@ describe('ItemContentComponent – task retry', () => {
     component.refresh.subscribe(() => refreshEmitted = true);
     component.onTaskRetry();
     expect(refreshEmitted).toBeFalse();
+  });
+});
+
+describe('ItemContentComponent – description', () => {
+  let fixture: ComponentFixture<ItemContentComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ ItemContentComponent ],
+      providers: [
+        provideRouter([]),
+        provideMockStore(),
+        {
+          provide: UserSessionService,
+          useValue: { userProfile$: EMPTY, isCurrentUserTemp: () => false },
+        },
+      ],
+    })
+      .overrideComponent(ItemContentComponent, {
+        remove: { imports: [ ItemDisplayComponent ] },
+        add: { imports: [ MockItemDisplayComponent ] },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(ItemContentComponent);
+  });
+
+  it('should render the description inside alg-description-iframe for non-task items', () => {
+    const chapterItem: Item = {
+      ...mockItem,
+      type: 'Chapter',
+      url: null,
+      string: {
+        ...mockItem.string,
+        description: '<span data-author-test="1">chapter description</span>',
+      },
+    };
+    fixture.componentRef.setInput('itemData', { ...mockItemData, item: chapterItem });
+    fixture.detectChanges();
+
+    const iframeDe = fixture.debugElement.query(By.css('[data-testid=item-description] iframe'));
+    expect(iframeDe).not.toBeNull();
+    const iframeNative = iframeDe.nativeElement as HTMLIFrameElement;
+    expect(iframeNative.srcdoc).toContain('data-author-test="1"');
   });
 });

@@ -1,9 +1,11 @@
-import { expect, Page } from '@playwright/test';
+import { expect, FrameLocator, Page } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class ItemContentPage {
   titleLocator = this.page.getByTestId('item-title');
   descriptionLocator = this.page.getByTestId('item-description');
+  // Item descriptions render inside a sandboxed iframe; text matchers must cross the frame boundary.
+  descriptionFrameLocator: FrameLocator = this.page.locator('[data-testid=item-description] iframe').contentFrame();
   chapterChildrenLocator = this.page.locator('alg-chapter-children');
   switchEditLocator = this.page.getByTestId('edit-switch');
   subSkillsLocator = this.page.locator('alg-sub-skills');
@@ -27,7 +29,8 @@ export class ItemContentPage {
   }
 
   async checksIsDescriptionVisible(description: string): Promise<void> {
-    await expect.soft(this.descriptionLocator.filter({ hasText: description })).toBeVisible();
+    await expect.soft(this.descriptionLocator).toBeVisible();
+    await expect.soft(this.descriptionFrameLocator.getByText(description)).toBeVisible();
   }
 
   async checksIsDescriptionSectionNotVisible(): Promise<void> {
