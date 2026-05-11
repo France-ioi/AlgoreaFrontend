@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject, input } from '@angular/core';
+import { Component, forwardRef, inject, input } from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder, NG_VALIDATORS,
@@ -7,8 +7,7 @@ import {
 } from '@angular/forms';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { ItemEditContentComponent } from 'src/app/items/containers/item-edit-content/item-edit-content.component';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface StringsValue {
   languageTag: string,
@@ -52,16 +51,15 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
     imageUrl: [ '' ],
   });
 
-  formValue = toSignal(
-    this.form.valueChanges.pipe(map(() => this.form.getRawValue()))
-  );
-
-  emitValueEffect = effect(() => {
-    const formValue = this.formValue();
-    if (formValue) {
-      this.onChange(formValue);
-    }
-  });
+  // Propagate the inner form value to the parent CVA synchronously so that
+  // the parent control is marked dirty within the same change-detection turn
+  // as the user input. Going through an effect() would defer the dirty
+  // propagation to the post-CD effect-flush phase, causing
+  // ExpressionChangedAfterItHasBeenChecked (NG0100) on bindings up the tree
+  // that depend on the parent form's `dirty` state.
+  private valueChangesSub = this.form.valueChanges
+    .pipe(takeUntilDestroyed())
+    .subscribe(() => this.onChange(this.form.getRawValue()));
 
   writeValue(value: StringsValue | null): void {
     if (value) {

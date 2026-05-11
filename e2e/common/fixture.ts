@@ -6,6 +6,7 @@ import { mergeTests } from '@playwright/test';
 import { ShowOverflow } from 'e2e/common/pages/show-overflow';
 import { LeftMenu } from 'e2e/common/pages/left-menu';
 import { Duration } from 'e2e/common/pages/duration';
+import { consoleGuard } from 'e2e/common/console-guard';
 
 interface CommonFixtures {
   lostChangesConfirmationModal: LostChangesConfirmationModal,
@@ -15,7 +16,7 @@ interface CommonFixtures {
   duration: Duration,
 }
 
-export const test = mergeTests(groupFixtures, itemFixtures).extend<CommonFixtures>({
+export const test = mergeTests(groupFixtures, itemFixtures, consoleGuard).extend<CommonFixtures>({
   lostChangesConfirmationModal: async ({ page }, use) => {
     await use(new LostChangesConfirmationModal(page));
   },

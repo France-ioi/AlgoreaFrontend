@@ -32,11 +32,11 @@
         }
       } @else {
         <p class="breadcrumbs-title" i18n>This content can be found in...</p>
-        @for (breadcrumbs of state.data; track breadcrumbs) {
+        @for (breadcrumbs of state.data; track $index) {
           <div class="breadcrumbs-container">
             <i class="ph-duotone ph-link breadcrumbs-prefix-icon"></i>
             <ul class="breadcrumbs">
-              @for (item of breadcrumbs; track item) {
+              @for (item of breadcrumbs; track item.id) {
                 <li class="breadcrumbs-item">
                   <a class="breadcrumbs-item-link alg-link" [routerLink]="item | itemRoute: { path: item.path } | url">{{ item.title }}</a>
                 </li>

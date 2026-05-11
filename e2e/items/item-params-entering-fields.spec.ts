@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 import { apiUrl } from '../helpers/e2e_http';
-import { convertDateToString } from 'src/app/utils/input-date';
 
 test('checks entering date fields in item permissions', async ({ page }) => {
   await initAsTesterUser(page);
@@ -36,8 +35,14 @@ test('checks entering date fields in item permissions', async ({ page }) => {
 
   await test.step('checks entering date fields validation', async () => {
     await enteringTimeMaxInputDateLocator.fill('01/01/2024 22:22');
+    // The component captures `new Date()` at init for the min-allowed value,
+    // and the rendered text formats it down to the minute. Asserting on the
+    // exact rendered minute would race against any minute boundary crossed
+    // between page load and this expectation; matching the message shape
+    // (with a date in the dd/MM/yyyy HH:mm format) is enough to validate the
+    // intent of this step (a past-date error must appear).
     await expect.soft(
-      enteringTimeMaxContainerLocator.getByText(`The date must be greater than: ${ convertDateToString(new Date()) }`)
+      enteringTimeMaxContainerLocator.getByText(/The date must be greater than: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}/)
     ).toBeVisible();
     await enteringTimeMinInputDateLocator.fill('33/33/3033 22:22');
     await expect.soft(enteringTimeMinContainerLocator.getByText('Invalid date')).toBeVisible();

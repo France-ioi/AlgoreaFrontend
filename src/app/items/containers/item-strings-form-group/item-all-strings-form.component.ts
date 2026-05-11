@@ -1,18 +1,18 @@
-import { Component, effect, forwardRef, inject, input, output, signal, viewChildren } from '@angular/core';
+import { Component, DestroyRef, forwardRef, inject, input, output, signal, viewChildren } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
   FormControl, NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors
+  ValidationErrors,
+  Validator
 } from '@angular/forms';
 import {
   ItemStringsControlComponent,
   StringsValue
 } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
-import { map } from 'rxjs/operators';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -42,7 +42,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     },
   ]
 })
-export class ItemAllStringsFormComponent {
+export class ItemAllStringsFormComponent implements Validator {
   allStringControls = viewChildren(ItemStringsControlComponent);
   defaultLanguageEvent = output<string>();
   defaultLanguageTag = input<string>();
@@ -51,6 +51,16 @@ export class ItemAllStringsFormComponent {
   fetchingOtherLanguages = input(false);
 
   private fb = inject(FormBuilder);
+  private pendingRevalidationTimer: ReturnType<typeof setTimeout> | undefined;
+
+  // Cleanup must be registered once at construction. Angular Forms calls
+  // `registerOnValidatorChange` more than once (notably during teardown via
+  // cleanUpValidators with a noop), and registering `destroyRef.onDestroy`
+  // inside it would throw NG0911 on the destruction-time call because the
+  // view is already being destroyed.
+  private timerCleanup = inject(DestroyRef).onDestroy(() => {
+    if (this.pendingRevalidationTimer !== undefined) clearTimeout(this.pendingRevalidationTimer);
+  });
 
   form = this.fb.group({
     allStrings: this.fb.nonNullable.array([
@@ -63,19 +73,23 @@ export class ItemAllStringsFormComponent {
       }),
     ]),
   });
-  formValue = toSignal(
-    this.form.controls.allStrings.valueChanges.pipe(
-      map(() => this.form.controls.allStrings.getRawValue()),
-    ), { initialValue: [] }
-  );
   availableLanguagesToCreate = signal<string[] | undefined>(undefined);
 
-  emitValueEffect = effect(() => {
-    const formValue = this.formValue();
-    if (formValue.length > 0) {
-      this.onChange(formValue);
-    }
-  });
+  // Propagate the inner form value to the parent CVA synchronously (rather
+  // than via an effect()) so that the parent control is marked dirty during
+  // the same change-detection turn as the user interaction. Going through an
+  // effect would defer the markAsDirty to the post-CD effect-flush phase,
+  // causing `itemForm.dirty` to flip between the main check and dev-mode
+  // checkNoChanges (NG0100 ExpressionChangedAfterItHasBeenChecked on the
+  // wrapper's `@if (itemForm.dirty)`).
+  private valueChangesSub = this.form.controls.allStrings.valueChanges
+    .pipe(takeUntilDestroyed())
+    .subscribe(() => {
+      const value = this.form.controls.allStrings.getRawValue();
+      if (value.length > 0) {
+        this.onChange(value);
+      }
+    });
 
   get allStrings(): FormArray<FormControl<StringsValue>> {
     return this.form.controls.allStrings;
@@ -106,12 +120,32 @@ export class ItemAllStringsFormComponent {
   }
 
   private onChange: (value: StringsValue[] | null) => void = () => {};
+  private onValidatorChange: () => void = () => {};
 
   registerOnChange(fn: (value: StringsValue[] | null) => void): void {
     this.onChange = fn;
   }
 
   registerOnTouched(_fn: (value: StringsValue[] | null) => void): void {
+  }
+
+  registerOnValidatorChange(fn: () => void): void {
+    this.onValidatorChange = fn;
+  }
+
+  // After adding/removing a language card, the per-language `<alg-item-strings-control>`
+  // child component (CVA + Validator) only mounts/unmounts on the next CD, so the new
+  // FormControl<StringsValue>'s validators wire up after this method returns. We schedule
+  // a re-validation via the macrotask queue so it runs after CD has wired/torn-down those
+  // validators; otherwise the parent FormControl<StringsValue[]>'s `validate()` would have
+  // run too early (against an unvalidated array) and the parent would stay valid even when
+  // the inner form is invalid (e.g., a freshly added language with no title).
+  private scheduleRevalidation(): void {
+    if (this.pendingRevalidationTimer !== undefined) clearTimeout(this.pendingRevalidationTimer);
+    this.pendingRevalidationTimer = setTimeout(() => {
+      this.pendingRevalidationTimer = undefined;
+      this.onValidatorChange();
+    });
   }
 
   onSetDefaultLanguage(languageTag: string): void {
@@ -130,6 +164,7 @@ export class ItemAllStringsFormComponent {
       }),
       { emitEvent: value !== undefined },
     );
+    this.scheduleRevalidation();
   }
 
   onAddStringsControl(value?: Partial<StringsValue>): void {
@@ -139,6 +174,7 @@ export class ItemAllStringsFormComponent {
 
   removeStringsControl(idx: number, options: { emitEvent: boolean } = { emitEvent: true }): void {
     this.form.controls.allStrings.removeAt(idx, options);
+    this.scheduleRevalidation();
   }
 
   onRemoveStringsControl(idx: number): void {
