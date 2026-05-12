@@ -332,6 +332,8 @@ When `ItemContentComponent.onDescriptionNavigate` receives a `{ url }` payload:
 
 `PreviewHtmlComponent` deliberately does **not** route — the preview tab is for editing a (possibly unsaved) item. It instead surfaces every `navigationRequested` event as an info toast describing the intended target, so editors can validate that their `data-item-id` / `data-child` / `data-url` anchors are wired correctly.
 
+The description editor (`ItemEditContentComponent`) exposes a third **Help** tab next to *Write* / *Preview*. It hosts `alg-item-edit-content-help`, a static, fully-i18n component that documents what authors can put in a description (HTML/CSS/JS in the sandbox, allowed link patterns, dropped schemes) and the `postMessage` protocol for scripted navigation/scrolling/height. Keep its examples in sync when extending the v2 messaging protocol.
+
 #### Why vanilla over penpal
 
 Both messages are notifications, not RPC; the helper is ~30 lines and adds no new runtime dep (zod is already bundled). A future surface that genuinely needs request/response semantics could layer one on top without breaking this protocol. Tasks (which need RPC: `grade`, `getAnswer`, `validate`) keep using `jschannel` via [task-proxy.ts](../src/app/items/api/task-proxy.ts).

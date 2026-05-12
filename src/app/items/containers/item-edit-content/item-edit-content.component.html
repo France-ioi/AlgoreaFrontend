@@ -11,11 +11,23 @@
     (click)="onTabChange('preview')"
     i18n
   >Preview</button>
+  <button
+    class="alg-nav-tab-item cursor-pointer"
+    [class.active]="activeTab() === 'help'"
+    (click)="onTabChange('help')"
+    i18n
+  >Help</button>
 </div>
-@if (activeTab() === 'write') {
-  <alg-textarea [parentForm]="parentForm" inputName="description" data-testid="edit-item-description"></alg-textarea>
-} @else {
-  @if (parentForm) {
-    <alg-preview-html [textContent]="parentForm.value.description"></alg-preview-html>
+@switch (activeTab()) {
+  @case ('write') {
+    <alg-textarea [parentForm]="parentForm" inputName="description" data-testid="edit-item-description"></alg-textarea>
+  }
+  @case ('preview') {
+    @if (parentForm) {
+      <alg-preview-html [textContent]="parentForm.value.description"></alg-preview-html>
+    }
+  }
+  @case ('help') {
+    <alg-item-edit-content-help data-testid="edit-item-description-help"></alg-item-edit-content-help>
   }
 }

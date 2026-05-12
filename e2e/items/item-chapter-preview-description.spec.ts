@@ -30,6 +30,18 @@ test('checks html description preview', async ({ page }) => {
   await expect.soft(previewFrame.locator('strong')).toHaveText('Some content');
 });
 
+test('opens the description help tab and shows guidance about links', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('/a/3244687538937221949;p=;a=0/parameters');
+  const tabsLocator = page.getByTestId('edit-item-description-tabs');
+  await expect.soft(tabsLocator).toBeVisible();
+  await tabsLocator.getByRole('button', { name: 'Help' }).click();
+  const helpLocator = page.getByTestId('edit-item-description-help');
+  await expect.soft(helpLocator).toBeVisible();
+  await expect.soft(helpLocator.getByRole('heading', { name: 'Creating links' })).toBeVisible();
+  await expect.soft(helpLocator).toContainText('data-item-id');
+});
+
 test('checks no preview description', async ({ page }) => {
   await initAsTesterUser(page);
   await page.goto('/a/3244687538937221949;p=;a=0/parameters');
