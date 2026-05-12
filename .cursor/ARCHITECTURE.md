@@ -290,8 +290,51 @@ Stored item descriptions (`item.string.description`) and the editor Parameters *
 - **Sanitization**: `DomSanitizer.bypassSecurityTrustHtml` is applied only to the iframe `srcdoc`, never to bindings in the Angular app shell.
 - **Base CSS**: A bundled subset of `--alg-*` tokens (aligned with `src/variables.scss`) and typography rules approximate former `.html-container` styling so plain markup stays on-brand; authors can override via their own CSS inside the description. The iframe uses the parent content width; default prose uses `--description-reading-max-width` (57.5rem / 920px) on `p`, headings, lists, `blockquote`, and `pre`. Tables stay full width of the iframe. Layout spacing under the block is handled on `alg-description-iframe` (`:host`), not via legacy `.description` classes on the parent page.
 - **Theming**: The iframe is opaque-origin so parent stylesheets cannot reach inside; theme overrides from `src/assets/scss/themes/*.scss` (`thymio`, `probabl`, `coursera-pt`) are inlined into `descriptionBaseCss` and matched via `data-theme` set on the inner `<html>`. Custom web fonts referenced by themes (Poppins, Geist, Source Sans Pro) are not loaded inside the iframe and fall back to the next available family; if the design needs the exact face inside descriptions, declare `@font-face` (or a `<link>` to the CDN) inside `descriptionBaseCss`. Keep this list in sync when a new theme is added.
-- **Hygiene**: `referrerpolicy="no-referrer"` and `loading="lazy"` on the iframe; fixed min/max height with scrolling inside the iframe for v1.
-- **Deferred**: A `postMessage` protocol (dynamic height, navigation requests, visible-child queries) is intentionally out of scope; the component is structured so a listener gated by `event.source === iframe.contentWindow` can be added later.
+- **Hygiene**: `referrerpolicy="no-referrer"` and `loading="lazy"` on the iframe. Height is no longer fixed (see v2 messaging-protocol below); the iframe never scrolls — the parent grows it.
+
+### v2 messaging protocol (iframe → parent)
+
+Lightweight `postMessage` channel between the sandboxed description iframe and `alg-description-iframe`. Three fire-and-forget messages, validated parent-side with zod schemas in [src/app/ui-components/description-iframe/description-iframe.messages.ts](../src/app/ui-components/description-iframe/description-iframe.messages.ts):
+
+- `{ type: 'alg.updateDisplay', data: { height: number } }` — sent on every content size change. Parent grows the iframe height accordingly. Combined with `html, body { overflow: hidden }` in the base CSS, the iframe is never scrollable from the inside.
+- `{ type: 'alg.navigate', data: { itemId, child? } | { url } }` — request a navigation. `union` of the two variants; consumers narrow with `'url' in req` / `'itemId' in req`. The `url` variant only accepts absolute `http(s)` URLs (validated parent-side via `new URL(...)` + protocol allowlist) — relative paths, `javascript:`, `data:`, `mailto:`, `tel:`, etc. are silently dropped. This is defense in depth: the runtime helper already filters `javascript:` hrefs, but an author with script access could `parent.postMessage(...)` directly. Internal navigation must go through `data-item-id` instead of relative URLs.
+- `{ type: 'alg.scrollIntoView', data: { offset: number } }` — sent when an in-page hash anchor is clicked inside the iframe. The offset is the target element's Y position from the top of the iframe document (CSS px). Parent walks up from the iframe to the nearest scrollable ancestor (`overflow-y: auto|scroll`) and scrolls it so the target lands at the top, falling back to `window.scrollTo` if no scrollable ancestor is found. **Why we can't just let the browser handle the hash**: in `srcdoc` iframes, fragment navigation actually navigates to `about:srcdoc#name` (a blank document), wiping the description body — and even if it didn't, `overflow: hidden` would prevent any in-frame scroll from being visible. The helper resolves targets by `id` first, then by the legacy `name` attribute (`<a name="…">`).
+
+#### Source filter (no `event.origin`)
+
+The iframe runs `sandbox="allow-scripts"` (no `allow-same-origin`), so the document has an opaque origin and `event.origin` is the literal string `"null"`. The parent listener compares `event.source === iframeRef.nativeElement.contentWindow` instead — the only reliable filter under opaque origin. Any inbound message failing this check or zod validation is silently dropped.
+
+#### Auto-injected runtime helper (no `import` for authors)
+
+A vanilla-JS helper ([description-iframe.runtime.ts](../src/app/ui-components/description-iframe/description-iframe.runtime.ts)) is inlined as a `<script>` in every srcdoc. It:
+
+- Uses `ResizeObserver` (with `requestAnimationFrame` debounce) to emit `alg.updateDisplay` whenever the document height changes — handles late image loads automatically.
+- Intercepts clicks on **every** `<a>` anchor and turns them into `alg.navigate` messages — without this, browsers (notably Firefox) navigate the iframe document itself because the sandbox blocks `_blank` / top-frame navigation, replacing the description and trapping the user inside it. Classification:
+  - `<a data-item-id="123">…</a>` → `{ itemId: '123' }`
+  - `<a data-item-id="123" data-child>…</a>` → `{ itemId: '123', child: true }` (resolves to a child of the currently-displayed item)
+  - `<a data-url="https://…">…</a>` → `{ url }` from the data attribute
+  - `<a href="https://…">…</a>` (or any non-hash, non-`javascript:` href) → `{ url: href }` — same external-URL flow as `data-url`. Note that the schema only accepts http(s) URLs, so `<a href="/internal">`, `<a href="mailto:…">`, etc. will be silently dropped parent-side — author-friendly errors aren't surfaced today; use `data-item-id` for internal navigation.
+  - `<a href="#section">…</a>` → `alg.scrollIntoView` (parent scrolls — see message description above; in-page browser scroll cannot work inside the sandboxed `srcdoc` iframe)
+  - `<a href="javascript:…">…</a>` → swallowed (never escalated to the parent surface)
+- Authors who want a fully custom flow can still call `parent.postMessage(...)` themselves without importing anything.
+
+Modifier-key behavior on intercepted anchors is intentionally swallowed: item navigations always replace the current page and `{ url }` always opens in a new tab. Author-controlled HTML is treated as potentially hostile — we never let it replace the parent page through this channel.
+
+#### External-URL handling: heads-up toast + delayed auto-open
+
+When `ItemContentComponent.onDescriptionNavigate` receives a `{ url }` payload:
+
+1. An info toast is shown via `MessageService` ("Navigating to an external link" + the URL itself, default 5s lifetime).
+2. The URL auto-opens in a new tab after **900 ms**, deliberately inside the browser's ~1s "transient user activation" window so popup blockers stand down. If a future browser tightens that window, the click handler on the toast remains as a user-gesture fallback.
+3. Both paths converge through a `merge(clicked$, timer(900)).pipe(take(1))` so the tab is opened at most once.
+
+#### Preview surface
+
+`PreviewHtmlComponent` deliberately does **not** route — the preview tab is for editing a (possibly unsaved) item. It instead surfaces every `navigationRequested` event as an info toast describing the intended target, so editors can validate that their `data-item-id` / `data-child` / `data-url` anchors are wired correctly.
+
+#### Why vanilla over penpal
+
+Both messages are notifications, not RPC; the helper is ~30 lines and adds no new runtime dep (zod is already bundled). A future surface that genuinely needs request/response semantics could layer one on top without breaking this protocol. Tasks (which need RPC: `grade`, `getAnswer`, `validate`) keep using `jschannel` via [task-proxy.ts](../src/app/items/api/task-proxy.ts).
 
 ## Testing
 

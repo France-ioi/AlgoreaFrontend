@@ -60,6 +60,11 @@ export const descriptionBaseCss = `
   box-sizing: border-box;
 }
 
+/* Parent owns the height (driven by alg.updateDisplay messages); the iframe itself never scrolls. */
+html, body {
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   padding: var(--description-content-padding-top) 0 0;

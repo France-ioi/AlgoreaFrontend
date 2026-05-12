@@ -1,6 +1,9 @@
 <div class="wrapper">
   @if (textContent.trim() !== '') {
-    <alg-description-iframe [content]="textContent"></alg-description-iframe>
+    <alg-description-iframe
+      [content]="textContent"
+      (navigationRequested)="onPreviewNavigate($event)"
+    ></alg-description-iframe>
   } @else {
     <div class="alg-full-centered-container alg-text-secondary-color alg-flex-1" i18n>
       Nothing to preview

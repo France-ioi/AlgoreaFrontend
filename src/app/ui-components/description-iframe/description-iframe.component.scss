@@ -8,6 +8,10 @@
 iframe {
   width: 100%;
   border: 0;
-  min-height: functions.toRem(200);
-  max-height: functions.toRem(480);
+  /* Floor that prevents a "layout pop" before the first `alg.updateDisplay` lands and the
+   * inline `[style.height]` is set. Once the message arrives, the inline height applies on top
+   * (and overrides this when taller); for content shorter than the floor, the floor still wins.
+   * Consumers can override the default via the `[minHeight]` input (rem), which sets the CSS
+   * variable inline on this iframe element. */
+  min-height: var(--alg-description-iframe-min-height, #{functions.toRem(200)});
 }

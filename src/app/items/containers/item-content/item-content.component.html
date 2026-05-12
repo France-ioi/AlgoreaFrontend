@@ -2,6 +2,7 @@
   <alg-description-iframe
     data-testid="item-description"
     [content]="description"
+    (navigationRequested)="onDescriptionNavigate($event)"
   ></alg-description-iframe>
 }
 
