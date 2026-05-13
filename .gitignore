@@ -71,3 +71,9 @@ Thumbs.db
 .cursor/features/*
 .cursor/plans/*
 .cursor/rules/local.mdc
+
+# bmad artifacts
+.cursor/commands/bmad-*
+.claude/commands/bmad-*
+_bmad/
+_bmad-output/
