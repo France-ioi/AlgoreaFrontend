@@ -1,0 +1,135 @@
+<div class="help">
+  <p class="intro" i18n>
+    The description is rendered inside a <strong>sandboxed iframe</strong>. You can use HTML, CSS and JavaScript freely,
+    but author code cannot reach the rest of the application: it has no access to the parent page, cookies, local
+    storage, or the user's session.
+  </p>
+
+  <section>
+    <h3 class="alg-h3 alg-text-normal section-title" i18n>What is allowed</h3>
+    <ul>
+      <li i18n>
+        <strong>HTML</strong>: most tags including headings, paragraphs, lists, tables, images, blockquotes, code blocks…
+      </li>
+      <li i18n>
+        <strong>CSS</strong>: inline <code>style</code> attributes and <code>&lt;style&gt;</code> blocks. Author styles
+        override the default Algorea typography because they are loaded after the base stylesheet.
+      </li>
+      <li i18n>
+        <strong>JavaScript</strong>: inline <code>&lt;script&gt;</code> blocks run inside the sandbox. Use them for
+        interactive content (animations, small widgets, hint reveals…).
+      </li>
+      <li i18n>
+        <strong>Images</strong>: any reachable HTTPS URL, or inline <code>data:</code> URIs.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3 class="alg-h3 alg-text-normal section-title" i18n>What is not allowed</h3>
+    <ul>
+      <li i18n>
+        Reading or writing parent-page state (DOM, cookies, <code>localStorage</code>, the user's session…). The
+        sandbox has an opaque origin, so any such access throws.
+      </li>
+      <li i18n>
+        Replacing the application page. <code>window.top</code> navigation is blocked by the sandbox; clicks on links
+        with a regular <code>href</code> are routed through the parent instead (see below).
+      </li>
+      <li i18n>
+        <code>javascript:</code>, <code>data:</code>, <code>file:</code>, <code>blob:</code>, <code>mailto:</code>,
+        <code>tel:</code>, <code>ftp:</code>… as link targets. They are silently dropped — only <code>http(s)</code>
+        external URLs are accepted.
+      </li>
+      <li i18n>
+        Loading custom fonts from the parent CSS. If you need a specific font face, declare an
+        <code>&#64;font-face</code> rule inside your description.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h3 class="alg-h3 alg-text-normal section-title" i18n>Creating links</h3>
+    <p i18n>
+      Because the iframe cannot navigate the application by itself, every link must tell the parent what to do. Use one
+      of the following anchor patterns (label text inside the examples is illustrative — replace it with your own).
+    </p>
+
+    <h4 class="alg-text-normal sub-title" i18n>Navigate to another item (by ID)</h4>
+    <pre><code>&lt;a data-item-id="1234567890"&gt;link label&lt;/a&gt;</code></pre>
+    <p i18n>
+      Add <code>data-child</code> to navigate as a <strong>child</strong> of the currently displayed item (useful for
+      drill-down inside a chapter):
+    </p>
+    <pre><code>&lt;a data-item-id="1234567890" data-child&gt;link label&lt;/a&gt;</code></pre>
+
+    <h4 class="alg-text-normal sub-title" i18n>Navigate to an external URL</h4>
+    <p i18n>
+      Either use a regular <code>href</code> or the explicit <code>data-url</code> attribute. External links always open
+      in a new tab.
+    </p>
+    <pre><code>&lt;a href="https://example.com"&gt;link label&lt;/a&gt;
+&lt;a data-url="https://example.com"&gt;link label&lt;/a&gt;</code></pre>
+    <p class="callout" i18n>
+      Only absolute <code>http(s)</code> URLs are accepted. Relative paths (e.g. <code>/groups/42</code>) cannot be used
+      to navigate inside the application — use <code>data-item-id</code> instead.
+    </p>
+
+    <h4 class="alg-text-normal sub-title" i18n>Jump to a section inside the description</h4>
+    <p i18n>
+      Hash anchors work as expected — the parent scrolls to the target. Targets are resolved by <code>id</code> first,
+      then by the legacy <code>name</code> attribute.
+    </p>
+    <pre><code>&lt;a href="#summary"&gt;link label&lt;/a&gt;
+&hellip;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;</code></pre>
+  </section>
+
+  <details class="advanced">
+    <summary class="advanced-summary" i18n>Advanced: scripted navigation and custom height</summary>
+    <div class="advanced-body">
+      <p i18n>
+        Author scripts can reach the parent through three <code>postMessage</code> events. They are the same channel the
+        anchor handlers use, so use them when you need scripted behavior (e.g. opening an item from a button click).
+      </p>
+
+      <h4 class="alg-text-normal sub-title" i18n>Trigger a navigation from a script</h4>
+      <pre><code>parent.postMessage(&#123;
+  type: 'alg.navigate',
+  data: &#123; itemId: '1234567890', child: true &#125;,
+&#125;, '*');
+
+parent.postMessage(&#123;
+  type: 'alg.navigate',
+  data: &#123; url: 'https://example.com' &#125;,
+&#125;, '*');</code></pre>
+
+      <h4 class="alg-text-normal sub-title" i18n>Scroll the parent to a position inside the iframe</h4>
+      <p i18n>
+        The iframe itself never scrolls (the parent owns the height), so use this message instead of
+        <code>window.scrollTo</code> when you want to move the user to a specific Y offset (in CSS pixels, measured from
+        the top of the iframe document).
+      </p>
+      <pre><code>parent.postMessage(&#123;
+  type: 'alg.scrollIntoView',
+  data: &#123; offset: 0 &#125;,
+&#125;, '*');</code></pre>
+
+      <h4 class="alg-text-normal sub-title" i18n>Override the rendered height</h4>
+      <p i18n>
+        The iframe height is measured automatically with a <code>ResizeObserver</code>, so you usually do not need to do
+        anything. Send this message only if you need to force a specific height in CSS pixels (e.g. while a heavy widget
+        loads).
+      </p>
+      <pre><code>parent.postMessage(&#123;
+  type: 'alg.updateDisplay',
+  data: &#123; height: 600 &#125;,
+&#125;, '*');</code></pre>
+
+      <p class="callout" i18n>
+        Messages with an unknown <code>type</code>, an invalid payload, or a non-<code>http(s)</code> URL are silently
+        dropped — there is no error feedback in the iframe.
+      </p>
+    </div>
+  </details>
+</div>

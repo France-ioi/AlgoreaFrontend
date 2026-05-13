@@ -1,16 +1,9 @@
 @if (description(); as description) {
-  <ng-container
-    *algHasHTML="description; else textContent"
-    >
-    <div
-      class="html-container"
-      data-testid="item-description"
-      [innerHTML]="description"
-    ></div>
-  </ng-container>
-  <ng-template #textContent>
-    <p class="description alg-text-base" data-testid="item-description">{{ description }}</p>
-  </ng-template>
+  <alg-description-iframe
+    data-testid="item-description"
+    [content]="description"
+    (navigationRequested)="onDescriptionNavigate($event)"
+  ></alg-description-iframe>
 }
 
 @let item = itemData().item;

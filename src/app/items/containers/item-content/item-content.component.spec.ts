@@ -4,10 +4,13 @@ import { ItemContentComponent } from './item-content.component';
 import { ItemData } from '../../models/item-data';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
 import { itemRoute, FullItemRoute } from 'src/app/models/routing/item-route';
+import { ItemRouter } from 'src/app/models/routing/item-router';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { TaskConfig } from '../../services/item-task.service';
 import { provideRouter } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
 import { UserSessionService } from 'src/app/services/user-session.service';
+import { MessageService, MessageV2 } from 'src/app/services/message.service';
 import { EMPTY } from 'rxjs';
 import { ItemViewPerm } from '../../models/item-view-permission';
 import { ItemGrantViewPerm } from '../../models/item-grant-view-permission';
@@ -25,6 +28,7 @@ class MockItemDisplayComponent {
   url = input.required<string>();
   @Input() editingPermission: unknown;
   @Input() attemptId?: string;
+  @Input() resultStartedAt: Date | null = null;
   @Input() view?: string;
   @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: undefined };
   @Input() savingAnswer = false;
@@ -97,6 +101,7 @@ describe('ItemContentComponent – task retry', () => {
       imports: [ ItemContentComponent ],
       providers: [
         provideRouter([]),
+        provideMockStore(),
         {
           provide: UserSessionService,
           useValue: { userProfile$: EMPTY, isCurrentUserTemp: () => false },
@@ -188,5 +193,147 @@ describe('ItemContentComponent – task retry', () => {
     component.refresh.subscribe(() => refreshEmitted = true);
     component.onTaskRetry();
     expect(refreshEmitted).toBeFalse();
+  });
+});
+
+describe('ItemContentComponent – description', () => {
+  let fixture: ComponentFixture<ItemContentComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ ItemContentComponent ],
+      providers: [
+        provideRouter([]),
+        provideMockStore(),
+        {
+          provide: UserSessionService,
+          useValue: { userProfile$: EMPTY, isCurrentUserTemp: () => false },
+        },
+      ],
+    })
+      .overrideComponent(ItemContentComponent, {
+        remove: { imports: [ ItemDisplayComponent ] },
+        add: { imports: [ MockItemDisplayComponent ] },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(ItemContentComponent);
+  });
+
+  it('should render the description inside alg-description-iframe for non-task items', () => {
+    const chapterItem: Item = {
+      ...mockItem,
+      type: 'Chapter',
+      url: null,
+      string: {
+        ...mockItem.string,
+        description: '<span data-author-test="1">chapter description</span>',
+      },
+    };
+    fixture.componentRef.setInput('itemData', { ...mockItemData, item: chapterItem });
+    fixture.detectChanges();
+
+    const iframeDe = fixture.debugElement.query(By.css('[data-testid=item-description] iframe'));
+    expect(iframeDe).not.toBeNull();
+    const iframeNative = iframeDe.nativeElement as HTMLIFrameElement;
+    expect(iframeNative.srcdoc).toContain('data-author-test="1"');
+  });
+});
+
+describe('ItemContentComponent – description navigation', () => {
+  let fixture: ComponentFixture<ItemContentComponent>;
+  let component: ItemContentComponent;
+  let itemRouterSpy: jasmine.SpyObj<ItemRouter>;
+  let messageServiceSpy: jasmine.SpyObj<MessageService>;
+  let windowOpenSpy: jasmine.Spy;
+
+  const route: FullItemRoute = itemRoute('activity', '10', { attemptId: 'a', path: [ '1', '2' ] });
+  const chapterData: ItemData = {
+    ...mockItemData,
+    route,
+    item: { ...mockItem, type: 'Chapter', url: null, string: { ...mockItem.string, description: '<p>x</p>' } },
+  };
+
+  beforeEach(async () => {
+    itemRouterSpy = jasmine.createSpyObj<ItemRouter>('ItemRouter', [ 'navigateTo' ]);
+    messageServiceSpy = jasmine.createSpyObj<MessageService>('MessageService', [ 'add' ]);
+    // `openNewTab` ultimately delegates to `window.open`; spying there avoids ES-module rewrite issues.
+    windowOpenSpy = spyOn(window, 'open').and.returnValue(null);
+
+    await TestBed.configureTestingModule({
+      imports: [ ItemContentComponent ],
+      providers: [
+        provideRouter([]),
+        provideMockStore(),
+        { provide: UserSessionService, useValue: { userProfile$: EMPTY, isCurrentUserTemp: () => false } },
+        { provide: ItemRouter, useValue: itemRouterSpy },
+        { provide: MessageService, useValue: messageServiceSpy },
+      ],
+    })
+      .overrideComponent(ItemContentComponent, {
+        remove: { imports: [ ItemDisplayComponent ] },
+        add: { imports: [ MockItemDisplayComponent ] },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(ItemContentComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('itemData', chapterData);
+    fixture.detectChanges();
+  });
+
+  it('should route to the requested item with the parent path appended when child is true', () => {
+    component.onDescriptionNavigate({ itemId: '99', child: true });
+
+    expect(itemRouterSpy.navigateTo).toHaveBeenCalledTimes(1);
+    const [ targetRoute, opts ] = itemRouterSpy.navigateTo.calls.mostRecent().args;
+    expect(targetRoute).toEqual(itemRoute('activity', '99', { path: [ '1', '2', '10' ] }));
+    expect(opts).toEqual({ useCurrentObservation: true });
+  });
+
+  it('should route to the requested item without a path when child is false', () => {
+    component.onDescriptionNavigate({ itemId: '99', child: false });
+
+    expect(itemRouterSpy.navigateTo).toHaveBeenCalledTimes(1);
+    const [ targetRoute, opts ] = itemRouterSpy.navigateTo.calls.mostRecent().args;
+    expect(targetRoute).toEqual(itemRoute('activity', '99'));
+    expect((targetRoute as { path?: unknown }).path).toBeUndefined();
+    expect(opts).toEqual({ useCurrentObservation: true });
+  });
+
+  it('should show an info toast and auto-open the URL in a new tab after the delay', fakeAsync(() => {
+    component.onDescriptionNavigate({ url: 'https://example.com/x' });
+
+    expect(messageServiceSpy.add).toHaveBeenCalledTimes(1);
+    const msg = messageServiceSpy.add.calls.mostRecent().args[0];
+    expect(msg.severity).toBe('info');
+    expect(msg.detail).toBe('https://example.com/x');
+    expect(msg.life).toBeUndefined();
+    expect(typeof msg.onClick).toBe('function');
+
+    expect(windowOpenSpy).not.toHaveBeenCalled();
+    tick(899);
+    expect(windowOpenSpy).not.toHaveBeenCalled();
+    tick(1);
+    expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+    expect(windowOpenSpy.calls.mostRecent().args[0]).toBe('https://example.com/x');
+    expect(windowOpenSpy.calls.mostRecent().args[1]).toBe('_blank');
+  }));
+
+  it('should open the URL immediately if the toast is clicked, and only once', fakeAsync(() => {
+    component.onDescriptionNavigate({ url: 'https://example.com/y' });
+    const msg: MessageV2 = messageServiceSpy.add.calls.mostRecent().args[0];
+
+    msg.onClick!();
+    expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+    expect(windowOpenSpy.calls.mostRecent().args[0]).toBe('https://example.com/y');
+
+    tick(2000); // auto-open path must NOT fire a second time after the click already opened the tab
+    expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should not navigate via ItemRouter for url payloads', () => {
+    component.onDescriptionNavigate({ url: 'https://example.com/z' });
+    expect(itemRouterSpy.navigateTo).not.toHaveBeenCalled();
   });
 });

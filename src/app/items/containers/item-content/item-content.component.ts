@@ -1,4 +1,15 @@
-import { Component, EventEmitter, Input, Output, ViewChild, computed, input, signal, inject } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -15,24 +26,36 @@ import { ItemUnlockAccessComponent } from '../../containers/item-unlock-access/i
 import { ParentSkillsComponent } from '../../containers/parent-skills/parent-skills.component';
 import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.component';
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
-import { HasHTMLDirective } from 'src/app/directives/has-html.directive';
-import { NgClass } from '@angular/common';
+import { DescriptionIframeComponent } from 'src/app/ui-components/description-iframe/description-iframe.component';
+import { DescriptionIframeNavigationRequest } from 'src/app/ui-components/description-iframe/description-iframe.messages';
+import { Location, NgClass } from '@angular/common';
 import { LoginWallComponent } from '../login-wall/login-wall.component';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
 import { FormsModule } from '@angular/forms';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { map } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Subject, map, merge, take, timer } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ResultIsActivePipe } from '../../models/attempts';
+import { ItemRouter } from 'src/app/models/routing/item-router';
+import { itemRoute } from 'src/app/models/routing/item-route';
+import { MessageService } from 'src/app/services/message.service';
+import { openNewTab } from 'src/app/utils/url';
+
+/**
+ * Auto-open delay (ms) for `alg.navigate`-`{ url }` requests originating from the description iframe.
+ * Tuned to stay inside the browser's ~1s "transient user activation" window so popup blockers stand
+ * down. The toast remains clickable as a user-gesture fallback if the window has already been consumed.
+ */
+const EXTERNAL_URL_AUTO_OPEN_DELAY_MS = 900;
 
 @Component({
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
   styleUrls: [ './item-content.component.scss' ],
   imports: [
-    HasHTMLDirective,
+    DescriptionIframeComponent,
     SwitchComponent,
     ItemChildrenEditFormComponent,
     ChapterChildrenComponent,
@@ -58,6 +81,10 @@ export class ItemContentComponent implements PendingChangesComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private userSessionService = inject(UserSessionService);
+  private itemRouter = inject(ItemRouter);
+  private messageService = inject(MessageService);
+  private location = inject(Location);
+  private destroyRef = inject(DestroyRef);
 
   @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;
   @ViewChild(ItemChildrenEditFormComponent) itemChildrenEditFormComponent?: ItemChildrenEditFormComponent;
@@ -70,7 +97,7 @@ export class ItemContentComponent implements PendingChangesComponent {
    */
   description = computed(() => {
     const description = this.item().string.description;
-    return (!isATask(this.item()) && description /* not null, undefined or empty */) ? description : null;
+    return (!isATask(this.item()) && description && description.trim() !== '') ? description : null;
   });
 
   @Input() taskView?: TaskTab['view'];
@@ -122,5 +149,34 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onPrerequisiteNotify(hasPrerequisites: boolean): void {
     this.hasPrerequisites = hasPrerequisites;
+  }
+
+  onDescriptionNavigate(req: DescriptionIframeNavigationRequest): void {
+    if ('url' in req) {
+      this.openExternalUrlWithToast(req.url);
+      return;
+    }
+    if (req.child) {
+      const route = this.itemData().route;
+      const path = [ ...route.path, route.id ];
+      this.itemRouter.navigateTo(itemRoute('activity', req.itemId, { path }), { useCurrentObservation: true });
+      return;
+    }
+    // Path-less RawItemRoute: ItemByIdComponent resolves the path post-navigation
+    // (same pattern as RedirectToIdComponent).
+    this.itemRouter.navigateTo(itemRoute('activity', req.itemId), { useCurrentObservation: true });
+  }
+
+  private openExternalUrlWithToast(url: string): void {
+    const clicked$ = new Subject<void>();
+    this.messageService.add({
+      severity: 'info',
+      summary: $localize`:@@externalLinkToastTitle:Navigating to an external link`,
+      detail: url,
+      onClick: () => clicked$.next(),
+    });
+    merge(clicked$, timer(EXTERNAL_URL_AUTO_OPEN_DELAY_MS))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => openNewTab(url, this.location));
   }
 }

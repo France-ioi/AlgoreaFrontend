@@ -1,0 +1,14 @@
+<!--
+  Security: keep `sandbox="allow-scripts"` exact. Do NOT add `allow-same-origin`; the `srcdoc`
+  bypass in description-iframe.component.ts is only safe because this iframe has an opaque origin.
+-->
+<iframe
+  #iframe
+  [srcdoc]="srcdoc()"
+  sandbox="allow-scripts"
+  referrerpolicy="no-referrer"
+  loading="lazy"
+  [title]="resolvedTitle()"
+  [style.--alg-description-iframe-min-height]="iframeMinHeightVar()"
+  [style.height]="iframeHeightStyle()"
+></iframe>

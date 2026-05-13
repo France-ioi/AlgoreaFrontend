@@ -3,14 +3,15 @@ import { UntypedFormGroup } from '@angular/forms';
 import { PossiblyInvisibleChildData } from '../../containers/item-children-edit/item-children-edit.component';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { PreviewHtmlComponent } from 'src/app/containers/preview-html/preview-html.component';
+import { ItemEditContentHelpComponent } from './item-edit-content-help/item-edit-content-help.component';
 
-type Tab = 'write' | 'preview';
+type Tab = 'write' | 'preview' | 'help';
 
 @Component({
   selector: 'alg-item-edit-content',
   templateUrl: './item-edit-content.component.html',
   styleUrls: [ './item-edit-content.component.scss' ],
-  imports: [ TextareaComponent, PreviewHtmlComponent ]
+  imports: [ TextareaComponent, PreviewHtmlComponent, ItemEditContentHelpComponent ]
 })
 export class ItemEditContentComponent {
   @Input() parentForm?: UntypedFormGroup;
