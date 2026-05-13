@@ -24,9 +24,12 @@ async function openHistoryFromCellModal(page: Page): Promise<void> {
   // The View answer section (above the History button) appears asynchronously when
   // currentUser$ resolves; waiting for it ensures the History link's position is stable
   // before we click it (otherwise Firefox can lose the click during the layout shift).
+  // The 15s timeout is generous on purpose: under Firefox CI load, currentUser$ has been
+  // observed taking >5s to emit; the default 30s expect timeout would still pass but we
+  // surface a clearer failure boundary here.
   await expect(
     page.locator('alg-user-progress-details').getByRole('link', { name: 'View answer' })
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   // Scope to alg-user-progress-details to avoid matching the chapter tabs' "History" link.
   const historyLink = page.locator('alg-user-progress-details').getByRole('link', { name: 'History' });
   await expect(historyLink).toBeVisible();
@@ -34,10 +37,24 @@ async function openHistoryFromCellModal(page: Page): Promise<void> {
   // link from the DOM (Firefox in particular). Trigger the click via the native `el.click()`
   // to bypass Playwright's actionability/stability retries; routerLink's handler still fires.
   await historyLink.evaluate((el: HTMLAnchorElement) => el.click());
+  // Wait only for the URL transition, NOT for the `historyLogUrl` activity-log response.
+  // Rationale: the back-link bar is rendered as soon as `backLink()` is non-null in the
+  // destination's `alg-item-log-view`. Earlier attempts that also gated on `waitForResponse`
+  // pushed the subsequent polling start later, after the destination had mounted; on Firefox
+  // CI this consistently missed the bar's visibility window (the bar can appear and be
+  // cleared again before polling resumes). Returning as soon as the URL changes lets the
+  // caller start polling for the bar as early as possible.
   await expect(page).toHaveURL(new RegExp(`/a/${colItemId};.*og=${observedUserId}.*/progress/history`));
 }
 
 test('History button shows a back-link bar that returns to the progress grid', async ({ page }) => {
+  // Walks through 4 dev-backend round-trips: chapter progress grid → cell modal → user
+  // progress fetch → history page mount → activity-log fetch. Under Firefox CI load this
+  // cumulative wall time can exceed the 30s default test budget even though no individual
+  // assertion is hung. `slow()` triples both the test and expect timeouts (90s) so the
+  // back-link bar visibility check at the end actually gets to run.
+  test.slow();
+
   await initAsTesterUser(page);
 
   // Mock only the volatile activity-log endpoint (matches the convention used in
@@ -59,10 +76,15 @@ test('History button shows a back-link bar that returns to the progress grid', a
     await openHistoryFromCellModal(page);
   });
 
-  const backLinkBar = page.locator('alg-item-log-view alg-back-link-bar');
+  const itemLogView = page.locator('alg-item-log-view');
+  const backLinkBar = itemLogView.locator('alg-back-link-bar');
   const backLinkButton = backLinkBar.locator('button');
 
   await test.step('back-link bar shows the correct heading and label', async () => {
+    // Assert the host view first so a slow destination-page mount produces a clearer
+    // failure message ("alg-item-log-view not visible") instead of being mis-attributed
+    // to the back-link state never being registered.
+    await expect.soft(itemLogView).toBeVisible();
     await expect.soft(backLinkBar).toBeVisible();
     // Heading reflects the user we are now observing (history page context). The bar itself
     // appears as soon as the back-link is registered, but the heading text only fills in once
@@ -87,6 +109,10 @@ test('History button shows a back-link bar that returns to the progress grid', a
 });
 
 test('back-link bar is cleared when navigating away from the history page', async ({ page }) => {
+  // See sibling test for rationale: the chapter-grid → modal → history-page round-trip
+  // can outlast the 30s test budget on Firefox CI. `slow()` extends it to 90s.
+  test.slow();
+
   await initAsTesterUser(page);
   await page.route(historyLogUrl, route => route.fulfill({ json: [] }));
 
