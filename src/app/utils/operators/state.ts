@@ -36,9 +36,16 @@ export function mapToFetchState<T, U = undefined>(
  * the next input emission (or a `resetter` emission) re-runs `fetchFn` and recovers automatically.
  *
  * Mirrors `mapToFetchState`'s `previousData` carry-over: a fetching state preserves the last
- * `Ready.data` until either a new ready or an error overrides it. Note that `previousData` is
- * also carried across distinct input emissions; if a component must avoid showing stale data for
- * a different entity, gate inputs upstream (e.g., `distinctUntilChanged` on a stable identifier).
+ * `Ready.data` until either a new ready or an error overrides it.
+ *
+ * Caveat — `previousData` is also carried across distinct input emissions. When the input changes
+ * to a different entity, the intermediate fetching state will display the *previous* input's data
+ * (a brief stale-data flash). If a component must avoid this, gate inputs upstream (e.g.,
+ * `distinctUntilChanged` on a stable identifier) or compare entity ids before rendering.
+ *
+ * The `resetter` observable is expected to never error: an error on it propagates to the outer
+ * subscription and tears down the pipeline (same failure mode this operator fixes for the fetch
+ * path). Wrap with `catchError` upstream if it might fail.
  */
 export function switchMapToFetchState<I, T, U = undefined>(
   fetchFn: (input: I) => Observable<T>,
