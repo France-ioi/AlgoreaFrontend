@@ -61,15 +61,14 @@ export class TopRightMenuComponent {
 
   userLogin$ = this.sessionService.session$.pipe(map(session => session?.login), distinctUntilChanged());
 
-  private invalidateToken(): void {
-    const authStatus = this.authService.status$.value;
-    if (authStatus.authenticated) this.authService.invalidToken(authStatus);
-  }
-
   private getDevelopmentMenuItems(): MenuItem[] {
     if (environment.production) return [];
     return [
-      { label: 'Invalidate token', icon: 'ph ph-arrow-clockwise', command: (): void => this.invalidateToken() },
+      {
+        label: 'Invalidate token',
+        icon: 'ph ph-arrow-clockwise',
+        command: (): void => this.authService.simulateTokenExpiration(),
+      },
     ];
   }
 

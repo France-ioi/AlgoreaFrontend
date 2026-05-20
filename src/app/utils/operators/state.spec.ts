@@ -1,9 +1,9 @@
 /* eslint-disable no-multi-spaces */
-import { OperatorFunction, pipe } from 'rxjs';
+import { Observable, OperatorFunction, pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { errorState, fetchingState, FetchState, readyState } from '../../utils/state';
-import { mapErrorToState, mapStateData, mapToFetchState, readyData } from './state';
+import { mapErrorToState, mapStateData, mapToFetchState, readyData, switchMapToFetchState } from './state';
 
 const stateToLetter = (): OperatorFunction<FetchState<string>, string> => pipe(
   map(state => {
@@ -282,6 +282,130 @@ describe('mapErrorToState', () => {
         stateToLetter(),
       )).toBe(expected);
 
+    });
+  });
+
+});
+
+
+describe('switchMapToFetchState', () => {
+
+  let testScheduler: TestScheduler;
+
+  beforeEach(() => {
+    testScheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  // Extended encoding for case 7 (three-input test): readyState('3') -> 'c', fetchingState('3') -> 'i'.
+  const stateToLetterExtended = (): OperatorFunction<FetchState<string>, string> => pipe(
+    map(state => {
+      if (state.isReady && state.data === '1') return 'a';
+      if (state.isReady && state.data === '2') return 'b';
+      if (state.isReady && state.data === '3') return 'c';
+      if (state.isFetching && !state.data) return 'f';
+      if (state.isFetching && state.data === '1') return 'g';
+      if (state.isFetching && state.data === '2') return 'h';
+      if (state.isFetching && state.data === '3') return 'i';
+      if (state.isError) return 'x';
+      throw new Error('encoding error');
+    })
+  );
+
+  const fetchFromMap = (
+    spec: Record<string, string>,
+    cold: typeof TestScheduler.prototype.createColdObservable,
+  ): (input: string) => Observable<string> => (input: string): Observable<string> => cold(spec[input]!, { x: input });
+
+  it('should emit fetching then ready for a single input', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const inputs =  cold('-x|', { x: '1' });
+      const expected =     '-fa|';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-x|' }, cold)),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should carry previousData into the fetching state of the next input', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const inputs =  cold('-x---y|', { x: '1', y: '2' });
+      const expected =     '-fa--gb|';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-x|', '2': '-x|' }, cold)),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should expose a fetch error as an error state and stay subscribed to inputs', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const inputs =  cold('-x|', { x: '1' });
+      const expected =     '-f(x|)';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-#' }, cold)),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should recover on the next input after a previous fetch errored (regression)', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const inputs =  cold('-x---y|', { x: '1', y: '2' });
+      const expected =     '-fx--fb|';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-#', '2': '-x|' }, cold)),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should re-fire the fetch when the resetter emits after a ready', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      // The resetter is subscribed when the input arrives (frame 1), not at outer subscription
+      // time. Its marble offsets are therefore relative to frame 1.
+      const inputs =  cold('-x------|', { x: '1' });
+      const resetter = cold('----0--|'); // '0' at outer frame 5, '|' at outer frame 8.
+      const expected =     '-fa--ga-|';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-x|' }, cold), { resetter }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should re-fire the fetch when the resetter emits after an error', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const inputs =  cold('-x------|', { x: '1' });
+      const resetter = cold('----0--|');
+      const expected =     '-fx--fx-|';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-#' }, cold), { resetter }),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
+  it('should clear previousData on error so the next fetching state has undefined data', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      // Frame 1: f (initial fetching). Frame 2: a (ready '1'). Frame 3: g (fetching with prev '1').
+      // Frame 4: x (error clears prev). Frame 5: f (fetching with prev=undefined, the assertion).
+      // Frame 6: c (ready '3'). Frame 7: completion.
+      const inputs =  cold('-x-y-z|', { x: '1', y: '2', z: '3' });
+      const expected =     '-fagxfc|';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({ '1': '-x|', '2': '-#', '3': '-x|' }, cold)),
+        stateToLetterExtended(),
+      )).toBe(expected);
     });
   });
 

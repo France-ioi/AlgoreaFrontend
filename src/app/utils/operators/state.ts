@@ -30,6 +30,43 @@ export function mapToFetchState<T, U = undefined>(
 }
 
 /**
+ * Variant of `mapToFetchState` for input-driven pipelines. Given a stream of inputs and a fetch
+ * function, emits a `FetchState<T>` per input. Because `catchError` lives inside the per-input
+ * `switchMap`, an error from `fetchFn(input)` does NOT complete the outer inputs subscription:
+ * the next input emission (or a `resetter` emission) re-runs `fetchFn` and recovers automatically.
+ *
+ * Mirrors `mapToFetchState`'s `previousData` carry-over: a fetching state preserves the last
+ * `Ready.data` until either a new ready or an error overrides it. Note that `previousData` is
+ * also carried across distinct input emissions; if a component must avoid showing stale data for
+ * a different entity, gate inputs upstream (e.g., `distinctUntilChanged` on a stable identifier).
+ */
+export function switchMapToFetchState<I, T, U = undefined>(
+  fetchFn: (input: I) => Observable<T>,
+  config?: { resetter?: Observable<unknown>, identifier?: U },
+): OperatorFunction<I, FetchState<T, U>> {
+  let previousData: T|undefined;
+  const resetter = config?.resetter ? config?.resetter : EMPTY;
+  return pipe(
+    switchMap((input: I) =>
+      resetter.pipe(
+        startWith(noop),
+        switchMap(() => fetchFn(input).pipe(
+          map(data => readyState(data, config?.identifier)),
+          catchError(err => of(errorState(err, config?.identifier))),
+          // Outer `map` below rewrites this with `previousData`, mirror `mapToFetchState`.
+          startWith(fetchingState(undefined, config?.identifier)),
+        )),
+      ),
+    ),
+    map(state => {
+      if (state.isReady) previousData = state.data;
+      if (state.isError) previousData = undefined;
+      return state.isFetching ? fetchingState(previousData, config?.identifier) : state;
+    }),
+  );
+}
+
+/**
  * Rx operator which only keeps data of ready states (i.e., which removes non-ready states and maps ready state to their data)
  */
 export function readyData<T, U = undefined>(): OperatorFunction<FetchState<T, U>,T> {
