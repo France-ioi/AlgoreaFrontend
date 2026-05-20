@@ -129,6 +129,11 @@ Component -> Action -> Effect -> API Service -> Effect -> Action -> Reducer -> S
 - Response validation with Zod schemas
 - Snake_case to camelCase conversion via `decodeSnakeCase` operator
 - API URL configured via `APPCONFIG` injection token
+- Transient HTTP failures (status 0, 5xx, RxJS `TimeoutError`) can be retried with bounded
+  exponential backoff via the `retryOnTransientError()` operator
+  (`src/app/utils/operators/retry-on-transient-error.ts`). Applied per-service (not globally) to
+  avoid retrying non-idempotent mutations. Must be piped above schema parsing so contract failures
+  are not retried.
 
 ### Interceptors
 

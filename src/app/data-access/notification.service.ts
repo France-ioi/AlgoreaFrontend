@@ -7,6 +7,7 @@ import { IdentityTokenService } from '../services/auth/identity-token.service';
 import { decodeSnakeCase } from '../utils/operators/decode';
 import { Notification, notificationSchema } from '../models/notification';
 import { reportAnError } from '../utils/error-handling/error-reporting';
+import { retryOnTransientError } from '../utils/operators/retry-on-transient-error';
 import { assertSuccess, SimpleActionResponse } from './action-response';
 
 const notificationsResponseSchema = z.object({
@@ -30,6 +31,11 @@ export class NotificationHttpService {
         `${this.config.slsApiUrl}/notifications`,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         { headers: { Authorization: `Bearer ${token}` } }
+      ).pipe(
+        // Retry transient HTTP failures (network/5xx/timeouts) before parsing, so the bell
+        // self-heals after brief outages. Must stay above the schema parsing: a schema failure
+        // signals a backend contract change, not a transient issue, and must not be retried.
+        retryOnTransientError(),
       )),
       decodeSnakeCase(notificationsResponseSchema),
       map(response => response.notifications.flatMap(entry => {
