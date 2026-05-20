@@ -8,10 +8,10 @@
 iframe {
   width: 100%;
   border: 0;
-  /* Floor that prevents a "layout pop" before the first `alg.updateDisplay` lands and the
-   * inline `[style.height]` is set. Once the message arrives, the inline height applies on top
-   * (and overrides this when taller); for content shorter than the floor, the floor still wins.
-   * Consumers can override the default via the `[minHeight]` input (rem), which sets the CSS
-   * variable inline on this iframe element. */
+  /* Loading-placeholder floor only: prevents a "layout pop" while the runtime helper is starting
+   * up and the first `alg.updateDisplay` hasn't been received. Once the message arrives, the
+   * component sets the custom property to `0` inline so the iframe can also shrink below the
+   * floor — otherwise a short description (e.g. one line of plain text) would stay inflated.
+   * Consumers can override the default via the `[minHeight]` input (rem). */
   min-height: var(--alg-description-iframe-min-height, #{functions.toRem(200)});
 }

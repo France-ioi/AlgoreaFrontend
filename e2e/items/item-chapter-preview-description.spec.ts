@@ -16,6 +16,69 @@ test('checks simple text description preview', async ({ page }) => {
   await expect.soft(previewFrame.getByText('Some content')).toBeVisible();
 });
 
+// Auto-height regression: the runtime helper inside the iframe must report the document height
+// to the parent (`alg.updateDisplay`) for plain-text descriptions too, not only for authored HTML.
+// Plain text is wrapped in `<p>` on the parent side, so the iframe DOM is not empty — but a bug
+// where the runtime never fires, or where `documentElement` collapses to the SCSS floor, would
+// leave the iframe stuck at the 200px min-height.
+test('auto-resizes the iframe for a plain-text description (no HTML elements)', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('/a/3244687538937221949;p=;a=0/parameters');
+  const editItemDescriptionLocator = page.getByTestId('edit-item-description');
+  await expect.soft(editItemDescriptionLocator).toBeVisible();
+
+  // Many lines (no markup) so the laid-out content clearly exceeds the 200px SCSS floor.
+  const lines = Array.from({ length: 30 }, (_, i) => `Plain line number ${i + 1}.`);
+  await editItemDescriptionLocator.getByRole('textbox').fill(lines.join('\n'));
+
+  const tabsLocator = page.getByTestId('edit-item-description-tabs');
+  await tabsLocator.getByRole('button', { name: 'Preview' }).click();
+
+  const iframeLocator = page.locator('alg-preview-html iframe');
+  await expect.soft(iframeLocator).toBeVisible();
+
+  // The runtime helper posts `alg.updateDisplay`; the parent reads it and writes an inline
+  // `style.height` on the iframe element. Poll until that lands (the cross-frame postMessage
+  // round-trip is unavoidably async) and assert the reported height tracks the real content.
+  await expect.poll(async () => {
+    const h = await iframeLocator.evaluate(el => (el as HTMLIFrameElement).style.height);
+    return /^\d+(?:\.\d+)?px$/.test(h) ? parseFloat(h) : 0;
+  }, { timeout: 5_000 }).toBeGreaterThan(200);
+});
+
+// Regression for "short plain-text descriptions stay inflated to 200px". The 200px SCSS floor is
+// only meant to act as a loading placeholder while the runtime helper is starting up; once the
+// real height is reported (~one line ≈ 24px), the floor must be dropped so the iframe collapses
+// to its content. Otherwise the box stays full-height and visually adds dead space between the
+// description and the chapter children.
+test('collapses the iframe to fit a short plain-text description (drops the loading floor)', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('/a/3244687538937221949;p=;a=0/parameters');
+  const editItemDescriptionLocator = page.getByTestId('edit-item-description');
+  await expect.soft(editItemDescriptionLocator).toBeVisible();
+
+  await editItemDescriptionLocator.getByRole('textbox').fill('A short one-liner.');
+
+  const tabsLocator = page.getByTestId('edit-item-description-tabs');
+  await tabsLocator.getByRole('button', { name: 'Preview' }).click();
+
+  const iframeLocator = page.locator('alg-preview-html iframe');
+  await expect.soft(iframeLocator).toBeVisible();
+
+  // Poll the actual painted size of the iframe. We expect it to settle clearly below the
+  // loading-placeholder floor (200px) — well above 0 (sanity), well below 100px (a single line
+  // of body text plus rounding stays comfortably under that bound).
+  await expect.poll(async () => {
+    const box = await iframeLocator.boundingBox();
+    return box ? Math.round(box.height) : -1;
+  }, { timeout: 5_000 }).toBeLessThan(100);
+
+  await expect.poll(async () => {
+    const box = await iframeLocator.boundingBox();
+    return box ? Math.round(box.height) : -1;
+  }).toBeGreaterThan(0);
+});
+
 test('checks html description preview', async ({ page }) => {
   await initAsTesterUser(page);
   await page.goto('/a/3244687538937221949;p=;a=0/parameters');

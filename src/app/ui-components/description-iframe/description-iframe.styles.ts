@@ -35,8 +35,6 @@ export const descriptionBaseCss = `
   --border-radius: .5rem;
   /* Default reading measure (920px); authors may override in description CSS. */
   --description-reading-max-width: 57.5rem;
-  /* Replaces former outer content top padding when Content is flush under tabs; set to 0 in description CSS to remove. */
-  --description-content-padding-top: var(--alg-space-size-4);
 }
 
 /* Theme overrides — keep in sync with src/assets/scss/themes/*.scss. */
@@ -67,7 +65,7 @@ html, body {
 
 body {
   margin: 0;
-  padding: var(--description-content-padding-top) 0 0;
+  padding: 0;
   font-family: var(--font-family);
   color: var(--alg-light-text-color);
   font-size: 1rem;

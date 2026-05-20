@@ -68,10 +68,11 @@ export class DescriptionIframeComponent {
 
   content = input<string | null | undefined>();
   /**
-   * Optional floor (rem) for the iframe height. Drives the `--alg-description-iframe-min-height`
-   * CSS custom property so it overrides the SCSS default (200px) before the first
-   * `alg.updateDisplay` lands. Once the message arrives, the inline `[style.height]` applies on
-   * top of this floor.
+   * Optional placeholder height (rem) used **only** while the runtime helper is booting and the
+   * first `alg.updateDisplay` hasn't landed yet. Drives the `--alg-description-iframe-min-height`
+   * CSS custom property and overrides the SCSS default (200px). Once the runtime reports back,
+   * the floor is dropped (set to `0`) so the iframe can also collapse below it for short content
+   * — otherwise a one-line description would stay inflated to the loading placeholder height.
    */
   minHeight = input<number | undefined>();
   title = input<string | undefined>();
@@ -95,6 +96,11 @@ export class DescriptionIframeComponent {
   });
 
   readonly iframeMinHeightVar = computed((): string | null => {
+    // Floor is purely a loading placeholder: once the runtime helper reports a real height we
+    // drop it (set the var to `0`) so short content collapses tightly. Without this, the SCSS
+    // fallback `min-height: 200px` would shadow the inline `style.height: 24px` for a one-line
+    // description and leave the iframe inflated.
+    if (this.contentHeightPx() !== null) return '0';
     const m = this.minHeight();
     return m !== undefined ? `${m}rem` : null;
   });
