@@ -409,4 +409,16 @@ describe('switchMapToFetchState', () => {
     });
   });
 
+  it('should convert an error from the upstream inputs source into an error state', () => {
+    testScheduler.run(({ cold, expectObservable }) => {
+      const inputs =  cold('-#');
+      const expected =     '-(x|)';
+
+      expectObservable(inputs.pipe(
+        switchMapToFetchState(fetchFromMap({}, cold)),
+        stateToLetter(),
+      )).toBe(expected);
+    });
+  });
+
 });
