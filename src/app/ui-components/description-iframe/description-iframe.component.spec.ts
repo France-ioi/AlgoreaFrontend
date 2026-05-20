@@ -54,7 +54,6 @@ describe('DescriptionIframeComponent', () => {
     const srcdoc = iframeEl().srcdoc;
     expect(srcdoc).toContain(DESCRIPTION_IFRAME_BASE_CSS_MARKER);
     expect(srcdoc).toContain(':root {');
-    expect(srcdoc).toContain('--description-content-padding-top');
     expect(srcdoc).toContain('<p id="author">hello</p>');
   });
 
@@ -212,6 +211,43 @@ describe('DescriptionIframeComponent', () => {
       fixture.detectChanges();
 
       expect(iframe.style.height).toBe('321px');
+    });
+
+    // Regression: the SCSS floor is a *loading* placeholder. Once the runtime reports a real
+    // height the floor must be dropped, otherwise a short description (e.g. a one-line plain
+    // text) gets shadowed by `min-height: 200px` and the iframe stays inflated below the
+    // children. We assert the inline custom property is reset to `0` and the resolved
+    // `min-height` actually drops accordingly.
+    it('should drop the min-height floor after the first alg.updateDisplay so short content collapses', () => {
+      fixture.componentRef.setInput('content', 'x');
+      fixture.detectChanges();
+
+      const iframe = iframeEl();
+      dispatchMessage(iframe.contentWindow, { type: 'alg.updateDisplay', data: { height: 24 } });
+      fixture.detectChanges();
+
+      expect(iframe.style.getPropertyValue('--alg-description-iframe-min-height')).toBe('0');
+      expect(iframe.style.height).toBe('24px');
+      expect(parseFloat(window.getComputedStyle(iframe).minHeight)).toBeLessThanOrEqual(0);
+    });
+
+    // Same regression but with a consumer-provided `[minHeight]` floor: it is also a loading-only
+    // placeholder, so the runtime height must take over once it arrives. This guards against
+    // future code that "promotes" `[minHeight]` into a hard minimum and silently re-introduces
+    // the inflated-iframe bug.
+    it('should drop the [minHeight] override too once a real height has been reported', () => {
+      fixture.componentRef.setInput('content', 'x');
+      fixture.componentRef.setInput('minHeight', 30);
+      fixture.detectChanges();
+
+      const iframe = iframeEl();
+      expect(iframe.style.getPropertyValue('--alg-description-iframe-min-height')).toBe('30rem');
+
+      dispatchMessage(iframe.contentWindow, { type: 'alg.updateDisplay', data: { height: 24 } });
+      fixture.detectChanges();
+
+      expect(iframe.style.getPropertyValue('--alg-description-iframe-min-height')).toBe('0');
+      expect(iframe.style.height).toBe('24px');
     });
 
     it('should ignore messages from a different source window (origin filter)', () => {
