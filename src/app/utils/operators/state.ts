@@ -30,6 +30,53 @@ export function mapToFetchState<T, U = undefined>(
 }
 
 /**
+ * Variant of `mapToFetchState` for input-driven pipelines. Given a stream of inputs and a fetch
+ * function, emits a `FetchState<T>` per input. Because `catchError` lives inside the per-input
+ * `switchMap`, an error from `fetchFn(input)` does NOT complete the outer inputs subscription:
+ * the next input emission (or a `resetter` emission) re-runs `fetchFn` and recovers automatically.
+ *
+ * Mirrors `mapToFetchState`'s "never fails" contract: errors from the inputs source or the
+ * `resetter` are also converted to an error state (rather than propagating to the subscriber),
+ * though they do terminate the outer subscription (unlike `fetchFn` errors).
+ *
+ * Mirrors `mapToFetchState`'s `previousData` carry-over: a fetching state preserves the last
+ * `Ready.data` until either a new ready or an error overrides it.
+ *
+ * Caveat — `previousData` is also carried across distinct input emissions. When the input changes
+ * to a different entity, the intermediate fetching state will display the *previous* input's data
+ * (a brief stale-data flash). If a component must avoid this, gate inputs upstream (e.g.,
+ * `distinctUntilChanged` on a stable identifier) or compare entity ids before rendering.
+ */
+export function switchMapToFetchState<I, T, U = undefined>(
+  fetchFn: (input: I) => Observable<T>,
+  config?: { resetter?: Observable<unknown>, identifier?: U },
+): OperatorFunction<I, FetchState<T, U>> {
+  let previousData: T|undefined;
+  const resetter = config?.resetter ? config?.resetter : EMPTY;
+  return pipe(
+    switchMap((input: I) =>
+      resetter.pipe(
+        startWith(noop),
+        switchMap(() => fetchFn(input).pipe(
+          map(data => readyState(data, config?.identifier)),
+          catchError(err => of(errorState(err, config?.identifier))),
+          // Outer `map` below rewrites this with `previousData`, mirror `mapToFetchState`.
+          startWith(fetchingState(undefined, config?.identifier)),
+        )),
+      ),
+    ),
+    // Defends against an erroring inputs source or resetter (e.g., a synchronous store-selector
+    // throw upstream) so the subscriber sees an error state rather than the raw exception.
+    catchError(err => of(errorState(err, config?.identifier))),
+    map(state => {
+      if (state.isReady) previousData = state.data;
+      if (state.isError) previousData = undefined;
+      return state.isFetching ? fetchingState(previousData, config?.identifier) : state;
+    }),
+  );
+}
+
+/**
  * Rx operator which only keeps data of ready states (i.e., which removes non-ready states and maps ready state to their data)
  */
 export function readyData<T, U = undefined>(): OperatorFunction<FetchState<T, U>,T> {

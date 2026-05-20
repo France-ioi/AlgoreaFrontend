@@ -106,7 +106,17 @@ type FetchState<T> = Ready<T> | Fetching<T> | FetchError;
 - `readyState(data)` - success state, `isReady: true`, `data: T`
 - `errorState(error)` - error state, `isError: true`
 
-Use `mapToFetchState()` operator in effects to handle the full fetch lifecycle.
+Two operators wrap async work into `FetchState<T>` (both in `src/app/utils/operators/state.ts`):
+
+- `mapToFetchState()` — applied at the END of a one-shot pipeline (typical effect: an HTTP service
+  that emits once and completes). On error, the upstream completes; recovery requires a `resetter`.
+- `switchMapToFetchState(fetchFn, config?)` — applied to an INPUTS observable (e.g.,
+  `combineLatest` of subjects + ngrx selectors). `catchError` lives inside the per-input
+  `switchMap`, so the outer subscription stays alive across errors and a new input emission (or
+  a `resetter` emission) re-runs `fetchFn` automatically.
+
+Use `mapToFetchState` for one-shot effects. Use `switchMapToFetchState` when a component pipeline
+can re-emit and must auto-retry after a previous failure (e.g., `ChapterChildrenComponent`).
 
 ## Data Flow
 

@@ -3,8 +3,8 @@ import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../models/item-data';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { mapToFetchState } from 'src/app/utils/operators/state';
+import { distinctUntilChanged, map } from 'rxjs/operators';
+import { switchMapToFetchState } from 'src/app/utils/operators/state';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { ItemChildWithAdditions } from '../item-children-list/item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -53,26 +53,29 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
     this.params$.pipe(distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId)),
     this.store.select(fromObservation.selectObservedGroupId),
   ]).pipe(
-    switchMap(([{ id, attemptId }, observedGroupId ]) =>
-      this.getItemChildrenService.get(id, attemptId, { watchedGroupId: observedGroupId ?? undefined })),
-    map<ItemChildren, ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
-      const res = bestAttemptFromResults(child.results);
-      return {
-        ...child,
-        isLocked: !canCurrentUserViewContent(child),
-        result: res === null ? undefined : {
-          attemptId: res.attemptId,
-          validated: res.validated,
-          score: res.scoreComputed,
-        },
-      };
-    })),
-    map(children => ({
-      children,
-      missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
-        .every(item => item.result && item.result.validated)),
-    })),
-    mapToFetchState({ resetter: this.refresh$ }),
+    switchMapToFetchState(
+      ([{ id, attemptId }, observedGroupId ]) =>
+        this.getItemChildrenService.get(id, attemptId, { watchedGroupId: observedGroupId ?? undefined }).pipe(
+          map<ItemChildren, ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
+            const res = bestAttemptFromResults(child.results);
+            return {
+              ...child,
+              isLocked: !canCurrentUserViewContent(child),
+              result: res === null ? undefined : {
+                attemptId: res.attemptId,
+                validated: res.validated,
+                score: res.scoreComputed,
+              },
+            };
+          })),
+          map(children => ({
+            children,
+            missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
+              .every(item => item.result && item.result.validated)),
+          })),
+        ),
+      { resetter: this.refresh$ },
+    ),
   );
   leftMenuShown = toSignal(this.layoutService.leftMenu$.pipe(map(({ shown }) => shown)), { initialValue: true });
 

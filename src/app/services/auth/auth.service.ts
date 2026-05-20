@@ -16,6 +16,7 @@ import {
 } from './auth-info';
 import { LocaleService } from '../../services/localeService';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
@@ -105,11 +106,25 @@ export class AuthService implements OnDestroy {
     else this.status$.next(result.auth);
   });
 
+  constructor() {
+    // Dev-only hook so e2e tests can reproduce the wake-from-sleep cascade via `page.evaluate`.
+    // The `typeof window` guard defends against non-browser contexts (e.g. SSR); in Karma `window`
+    // is defined, so unit tests still register and tear down the hook on each TestBed re-creation.
+    if (!environment.production && typeof window !== 'undefined') {
+      (window as unknown as { algoreaSimulateTokenExpiration?: () => void })
+        .algoreaSimulateTokenExpiration = (): void => this.simulateTokenExpiration();
+    }
+  }
+
   ngOnDestroy(): void {
     this.status$.complete();
     this.failure$.complete();
     this.authSubscription.unsubscribe();
     this.autoRefreshSubscription.unsubscribe();
+    // Clear the dev-only hook so TestBed re-creations don't leak a closure over a destroyed instance.
+    if (!environment.production && typeof window !== 'undefined') {
+      delete (window as { algoreaSimulateTokenExpiration?: () => void }).algoreaSimulateTokenExpiration;
+    }
   }
 
   /**
@@ -134,6 +149,18 @@ export class AuthService implements OnDestroy {
 
     this.status$.next(notAuthenticated());
     if (this.config.authType === 'tokens') clearTokenFromStorage();
+  }
+
+  /**
+   * Dev/test-only entry point that simulates a server-side token expiration: the current auth is
+   * invalidated and the same recovery path used by the HTTP interceptor (creating a temp user) is
+   * taken. No-op in production builds and when no user is authenticated. Reused by the
+   * "Invalidate token" dev menu and by Playwright via `window.algoreaSimulateTokenExpiration`.
+   */
+  simulateTokenExpiration(): void {
+    if (environment.production) return;
+    const auth = this.status$.value;
+    if (auth.authenticated) this.invalidToken(auth);
   }
 
   /**
