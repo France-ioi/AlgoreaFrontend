@@ -63,7 +63,13 @@ test('checks edit parameters - image url', async ({ page, createItem, itemConten
   const thumbnailUrlLocator = page.locator('div').filter({ hasText: /^Thumbnail url$/ });
   const imageUrlInputLocator = thumbnailUrlLocator.locator('input');
 
-  await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
+  // Set up the response listener BEFORE the navigation so we never miss the response: on a slow
+  // runner, the heading assertion that follows can otherwise burn most of the test budget waiting
+  // for data to arrive.
+  await Promise.all([
+    page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
+    itemContentPage.waitForItemResponse(createItem.itemId),
+  ]);
   await expect.soft(page.getByRole('heading', { name: 'Display' })).toBeVisible();
 
   await test.step('Fill image url', async () => {

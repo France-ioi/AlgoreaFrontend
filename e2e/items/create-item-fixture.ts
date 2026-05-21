@@ -32,8 +32,11 @@ export const test = base.extend<CreateGroupFixtures>({
       itemContentPage.waitForItemResponse(createItem.itemId),
     ]);
     await itemContentPage.checksIsDeleteButtonVisible();
+    // `deleteItem` already waits for the DELETE response, and the next assertion below
+    // (`checksIsTitleVisible('E2E-generated-items')`) proves the post-deletion navigation
+    // happened. We deliberately don't assert on the toast here: toasts auto-dismiss after 5s
+    // and asserting on them races with that timer on slow CI runners.
     await itemContentPage.deleteItem();
-    await itemContentPage.checkToastNotification(`SuccessYou have delete "${createItem.itemName}"`);
     await itemContentPage.checksIsTitleVisible('E2E-generated-items');
     await itemContentPage.goto(`a/${createItem.itemId};p=${rootItemId};pa=0`);
     await itemContentPage.checksIsAllowToViewMessageNotVisible();

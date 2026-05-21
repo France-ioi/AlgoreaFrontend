@@ -2,9 +2,19 @@ import { test, expect } from 'e2e/common/fixture';
 import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
+// URL of the API call that populates the per-member rows of `alg-item-extra-time-for-descendants`.
+// Used as an explicit `waitForResponse` target so the row visibility assertions have actual data
+// to anchor on (otherwise on a slow CI runner the rows can take >5s to appear and eat into the
+// 30s test budget — observed on CircleCI #55800 shard 2).
+const membersAdditionalTimesUrl = `${apiUrl}/items/1480462971860767879/groups/672913018859223173/members/additional-times`;
+const groupAdditionalTimesUrl = `${apiUrl}/items/1480462971860767879/groups/672913018859223173/additional-times`;
+
 test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
+  await Promise.all([
+    page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time'),
+    page.waitForResponse(membersAdditionalTimesUrl),
+  ]);
   const targetRow = page.locator('alg-item-extra-time-for-descendants')
     .locator('table')
     .locator('tr')
@@ -42,7 +52,10 @@ test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page,
 
 test('checks failure to update item extra time', async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
+  await Promise.all([
+    page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time'),
+    page.waitForResponse(membersAdditionalTimesUrl),
+  ]);
   const itemExtraTimeForDescendantsLocator = page.locator('alg-item-extra-time-for-descendants');
   const targetRow = itemExtraTimeForDescendantsLocator
     .locator('table')
@@ -67,7 +80,10 @@ test('checks failure to update item extra time', async ({ page, toast }) => {
 
 test('checks update item extra time for group', { tag: '@no-parallelism' }, async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
+  await Promise.all([
+    page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time'),
+    page.waitForResponse(groupAdditionalTimesUrl),
+  ]);
   const targetRow = page.getByTestId('extra-time-for-group');
   const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   const totalAdditionalTimeLocator = targetRow.getByTestId('total-additional-time');
@@ -97,7 +113,10 @@ test('checks update item extra time for group', { tag: '@no-parallelism' }, asyn
 
 test('checks failure to update item extra time for group', async ({ page, toast }) => {
   await initAsUsualUser(page);
-  await page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time');
+  await Promise.all([
+    page.goto('a/1480462971860767879;p=4702,7528142386663912287,944619266928306927;a=0;og=672913018859223173/extra-time'),
+    page.waitForResponse(groupAdditionalTimesUrl),
+  ]);
   const targetRow = page.getByTestId('extra-time-for-group');
   await expect.soft(targetRow).toBeVisible();
   const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
