@@ -19,7 +19,13 @@ test('checks item edit strings', async ({ page, createItem, itemContentPage }) =
   const itemStringsDescriptionLocator = itemStringsSectionLocator.getByTestId('item-strings-description');
   const translateBtnLocator = page.locator('alg-item-all-strings-form').getByRole('button', { name: 'Translate to fr' });
 
-  await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
+  // Set up the response listener BEFORE the navigation so we never miss the response: on a slow
+  // runner, the heading assertion that follows can otherwise burn most of the test budget waiting
+  // for data to arrive (this exact failure mode was observed on CircleCI #55800).
+  await Promise.all([
+    page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
+    itemContentPage.waitForItemResponse(createItem.itemId),
+  ]);
 
   await expect.soft(page.getByRole('heading', { name: 'Information (en)' })).toBeVisible();
 

@@ -12,12 +12,17 @@ test.afterEach(({ deleteItem }) => {
 
 test('check item children edit score weight', async ({ page, createItem, itemChildrenEditListComponent, itemContentPage }) => {
   if (!createItem) throw new Error('The item is not created');
-  await page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0/edit-children`);
+  // Set up the response listener BEFORE the navigation so we never miss the response if the API
+  // happens to answer faster than the next microtask (the previous "await goto then await
+  // waitForResponse" sequence had a small race window).
+  await Promise.all([
+    page.goto(`/a/${createItem.itemId};p=${rootItemId};pa=0/edit-children`),
+    itemContentPage.waitForItemResponse(createItem.itemId),
+  ]);
   const firstRowLocator = page.locator('alg-item-children-edit-list').getByRole('table').getByRole('row').filter({ hasText: 'Item #1' });
   const editInputLocator = firstRowLocator.getByTestId('edit-score-weight').getByRole('textbox');
 
   await test.step('checks the children list are visible', async () => {
-    await itemContentPage.waitForItemResponse(createItem.itemId);
     await itemContentPage.checksIsAddContentVisible();
     await itemContentPage.addChildItem('Item #1');
     await expect.soft(firstRowLocator).toBeVisible();

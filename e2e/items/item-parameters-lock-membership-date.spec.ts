@@ -10,9 +10,13 @@ test.afterEach(({ deleteItem }) => {});
 
 test('checks lock membership date saving', async ({ page, createItem, itemContentPage, duration }) => {
   if (!createItem) throw new Error('The item is not created');
+  // The previous shape (`await Promise.all([await goto(...), await waitForItemResponse(...)])`)
+  // serialized the two awaits before constructing the array, so the response listener was only
+  // attached AFTER navigation completed — defeating the point of `Promise.all`. Spawn both
+  // promises concurrently instead, so the listener is wired up before the response can land.
   await Promise.all([
-    await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
-    await itemContentPage.waitForItemResponse(createItem.itemId),
+    page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
+    itemContentPage.waitForItemResponse(createItem.itemId),
   ]);
 
   await expect.soft(page.getByRole('heading', { name: 'Participation' })).toBeVisible();

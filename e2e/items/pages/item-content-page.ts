@@ -176,8 +176,11 @@ export class ItemContentPage {
     const toastLocator = this.page.locator('alg-toast-messages');
     const successfulLocator = toastLocator.getByText(message);
     await expect.soft(successfulLocator).toBeVisible();
-    await expect.soft(toastLocator.getByRole('button')).toBeVisible();
-    await toastLocator.getByRole('button').click();
+    // Best-effort cleanup: try to close the toast so the next assertion sees a clean state.
+    // Toasts auto-dismiss after 5s (DISPLAY_DURATION in MessageService), so on a slow CI runner
+    // the close button may already be gone by the time we try to click it; don't fail the test
+    // on that — the next `not.toBeVisible()` assertion is the real post-condition.
+    await toastLocator.getByRole('button').click({ timeout: 1000 }).catch(() => undefined);
     await expect.soft(successfulLocator).not.toBeVisible();
   }
 
@@ -217,9 +220,15 @@ export class ItemContentPage {
   async createChildItem(name: string, type = 'Chapter'): Promise<string | undefined> {
     await this.addChildItem(name, type);
     await this.isSaveBtnVisible();
+    // Set up the response listener BEFORE the click so we never miss the response if the API
+    // happens to answer faster than the next microtask.
+    const responsePromise = this.page.waitForResponse(`${apiUrl}/items`);
     await this.saveChanges();
-    const response = await this.page.waitForResponse(`${apiUrl}/items`);
-    await this.checkToastNotification('Changes successfully saved.');
+    const response = await responsePromise;
+    // No toast assertion here — this is a fixture path. The successful API response is the proof
+    // of save; toasts auto-dismiss after 5s and asserting on them races with that timer on slow
+    // CI runners (see also `checkToastNotification`). Tests that explicitly cover the toast UX
+    // do their own assertion via `saveChangesAndCheckNotification`.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jsonResponse: { data: { id: string | undefined } | undefined } = await response.json();
     return jsonResponse.data?.id;
@@ -234,7 +243,13 @@ export class ItemContentPage {
     await expect.soft(this.page.getByText('Are you sure you want to delete this content?')).toBeVisible();
     const confirmBtnLocator = this.page.getByRole('button', { name: 'Yes' });
     await expect.soft(confirmBtnLocator).toBeVisible();
+    // Set up the response listener BEFORE the click so we never miss the response if the API
+    // happens to answer faster than the next microtask.
+    const responsePromise = this.page.waitForResponse(response =>
+      response.request().method() === 'DELETE' && /\/items\/\d+(?:\?.*)?$/.test(response.url())
+    );
     await confirmBtnLocator.click();
+    await responsePromise;
   }
 
   async checksIsAllowToViewMessageNotVisible(): Promise<void> {
