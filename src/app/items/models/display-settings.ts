@@ -12,32 +12,36 @@ export const displaySettingsSchema = z.object({
   promptToJoinGroupByCode: z.boolean().default(false),
 });
 
-type DisplaySettings = z.output<typeof displaySettingsSchema>;
-type DisplaySettingsInput = z.input<typeof displaySettingsSchema>;
+export type DisplaySettings = z.output<typeof displaySettingsSchema>;
 
 /** Snake_case PUT payload for `display_settings`; partial because non-default keys only are sent. */
 export type DisplaySettingsChanges = Partial<SnakeCaseKeys<DisplaySettings>>;
+
+const DEFAULT_SNAKE_DISPLAY_SETTINGS = camelToSnakeKeys(displaySettingsSchema.parse({}));
 
 /**
  * Build the `display_settings` PUT payload from camelCase item settings.
  * Validates against `displaySettingsSchema`, converts keys to snake_case, and by default
  * omits keys equal to schema defaults so the backend stores only non-default values.
+ * Assumes the backend replaces `display_settings` as a whole (not merge/PATCH); an empty
+ * object after omitting defaults is intentional when the user clears all stored overrides.
  */
 export function buildDisplaySettingsBody(
-  settingsCamel: DisplaySettingsInput,
-  options: { omitDefaults: boolean } = { omitDefaults: true },
+  settingsCamel: z.input<typeof displaySettingsSchema>,
+  options: { omitDefaults?: boolean } = {},
 ): DisplaySettingsChanges {
   const parsed = displaySettingsSchema.parse(settingsCamel);
   const snake = camelToSnakeKeys(parsed);
+  const omitDefaults = options.omitDefaults ?? true;
 
-  if (!options.omitDefaults) {
+  if (!omitDefaults) {
     return snake;
   }
 
-  const defaultSnake = camelToSnakeKeys(displaySettingsSchema.parse({}));
   const result: Record<string, unknown> = {};
   for (const [ key, value ] of Object.entries(snake)) {
-    if (key in defaultSnake && defaultSnake[key as keyof DisplaySettingsChanges] === value) {
+    if (key in DEFAULT_SNAKE_DISPLAY_SETTINGS
+      && DEFAULT_SNAKE_DISPLAY_SETTINGS[key as keyof DisplaySettingsChanges] === value) {
       continue;
     }
     result[key] = value;

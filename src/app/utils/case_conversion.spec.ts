@@ -80,4 +80,10 @@ describe('camelToSnakeKeys', () => {
     });
   });
 
+  it('should convert keys with a leading capital letter', () => {
+    expect(camelToSnakeKeys({ TitleBarVisible: true })).toEqual({
+      title_bar_visible: true,
+    });
+  });
+
 });

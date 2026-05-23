@@ -19,7 +19,7 @@ const itemSchema = z.object({
   bestScore: z.number(),
   permissions: itemCorePermSchema.and(itemCanRequestHelpSchema),
   type: itemTypeSchema,
-  displaySettings: displaySettingsSchema,
+  displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
   textId: z.string().nullable(),
   validationType: itemValidationTypeSchema,
   noScore: z.boolean(),

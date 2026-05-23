@@ -69,4 +69,17 @@ describe('buildDisplaySettingsBody', () => {
       children_layout: 'Grid',
     });
   });
+
+  it('should produce an empty body when reverting the only non-default setting to its default value', () => {
+    const initial = {
+      ...displaySettingsSchema.parse({}),
+      titleBarVisible: false,
+    };
+
+    // Backend replaces display_settings as a whole; clearing the sole override yields {}.
+    expect(buildDisplaySettingsBody({
+      ...initial,
+      titleBarVisible: true,
+    })).toEqual({});
+  });
 });

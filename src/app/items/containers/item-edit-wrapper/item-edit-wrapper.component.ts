@@ -14,7 +14,7 @@ import { ItemChanges, UpdateItemService } from '../../data-access/update-item.se
 import { ItemStringChanges, UpdateItemStringService } from '../../data-access/update-item-string.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { buildDisplaySettingsBody } from 'src/app/items/models/display-settings';
+import { buildDisplaySettingsBody, DisplaySettings } from 'src/app/items/models/display-settings';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { Duration } from 'src/app/utils/duration';
 import { concat, forkJoin, Observable, of, throwError, toArray } from 'rxjs';
@@ -244,7 +244,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid' | 'Hide';
-    const initialDisplaySettings = this.initialFormData.displaySettings;
+    const initialDisplaySettings: DisplaySettings = this.initialFormData.displaySettings;
     const hasDisplaySettingsChanges =
       titleBarVisible !== initialDisplaySettings.titleBarVisible
       || promptToJoinGroupByCode !== initialDisplaySettings.promptToJoinGroupByCode

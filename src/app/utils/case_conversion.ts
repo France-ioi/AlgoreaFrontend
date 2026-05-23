@@ -4,7 +4,7 @@ function snakeToCamel(s: string): string {
 }
 
 function camelToSnake(s: string): string {
-  return s.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  return s.replace(/[A-Z]/g, (letter, index) => (index === 0 ? letter.toLowerCase() : `_${letter.toLowerCase()}`));
 }
 
 function isObject(o: unknown): boolean {
@@ -63,7 +63,11 @@ export function snakeToCamelKeys<T>(input: T): CamelCaseKeysDeep<T> {
 }
 
 /**
- * Convert data from camelCase keys to snake_case
+ * Convert data from camelCase keys to snake_case.
+ *
+ * Only supports plain JSON-style values: objects (plain property bags), arrays,
+ * and primitives. Class instances, Date, Map, Set, and similar types are not
+ * handled correctly (e.g. a Date is treated as an empty object).
  */
 export function camelToSnakeKeys<T>(input: T): SnakeCaseKeysDeep<T> {
   if (isObject(input)) {
