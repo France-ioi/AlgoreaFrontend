@@ -42,6 +42,7 @@ const frItemResponse = {
     'fr'
   ],
   'best_score': 0,
+  'display_settings': {},
   'string': {
     'language_tag': 'fr',
     'title': 'Title (fr)',

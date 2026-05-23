@@ -23,7 +23,7 @@
         i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
       ></alg-error>
     }
-    @if (itemData && itemData.item.childrenLayout === 'Grid') {
+    @if (itemData && itemData.item.displaySettings.childrenLayout === 'Grid') {
       @if (data.children.length > 0) {
         <div
           class="grid-container"
@@ -77,14 +77,14 @@
           }
         </div>
       }
-    } @else if (itemData && itemData.item.childrenLayout === 'List') {
+    } @else if (itemData && itemData.item.displaySettings.childrenLayout === 'List') {
       @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
         <alg-item-children-list
           [children]="data.children"
           [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
         ></alg-item-children-list>
       }
-    } @else if (itemData && itemData.item.childrenLayout === 'Hide') {
+    } @else if (itemData && itemData.item.displaySettings.childrenLayout === 'Hide') {
       @if (!leftMenuShown()) {
         <div class="hidden-children-hint">
           <i class="hidden-children-hint-icon ph ph-sidebar-simple"></i>

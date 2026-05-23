@@ -6,6 +6,7 @@ import { APPCONFIG } from 'src/app/config';
 import { map } from 'rxjs/operators';
 import { requestTimeout } from 'src/app/interceptors/interceptor_common';
 import { SECONDS } from 'src/app/utils/duration';
+import { DisplaySettingsChanges } from '../models/display-settings';
 
 export interface ItemChanges {
   children?: {
@@ -22,11 +23,8 @@ export interface ItemChanges {
   uses_api?: boolean,
   validation_type?: 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual',
   no_score?: boolean,
-  title_bar_visible?: boolean,
-  full_screen?: 'forceYes' | 'forceNo' | 'default',
-  children_layout?: 'List' | 'Grid' | 'Hide',
+  display_settings?: DisplaySettingsChanges,
   default_language_tag?: string,
-  prompt_to_join_group_by_code?: boolean,
   allows_multiple_attempts?: boolean,
   requires_explicit_entry?: boolean,
   duration?: string | null,

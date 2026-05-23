@@ -33,6 +33,7 @@ export const item4102: NullableValues<definitions['itemResponse']> = {
     'fr'
   ],
   best_score: 39.5997,
+  display_settings: {},
   string: {
     language_tag: 'fr',
     title: 'Parcours officieux',

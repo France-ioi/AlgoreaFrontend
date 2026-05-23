@@ -6,6 +6,7 @@ import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.comp
 import { itemRoute, FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
+import { displaySettingsSchema } from 'src/app/items/models/display-settings';
 import { TaskConfig } from '../../services/item-task.service';
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -59,13 +60,10 @@ const mockItem: Item = {
     canRequestHelp: false,
   },
   type: 'Task',
-  promptToJoinGroupByCode: false,
+  displaySettings: displaySettingsSchema.parse({}),
   textId: null,
   validationType: 'None',
   noScore: false,
-  titleBarVisible: true,
-  fullScreen: 'default',
-  childrenLayout: 'List',
   allowsMultipleAttempts: false,
   duration: null,
   enteringTimeMin: new Date(),
