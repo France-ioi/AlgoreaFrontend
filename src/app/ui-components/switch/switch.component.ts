@@ -4,7 +4,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
 /**
  * To use inside form, just set the formControlName
  * ```
- * <alg-switch formControlName="full_screen"></alg-switch>
+ * <alg-switch formControlName="prompt_to_join_group_by_code"></alg-switch>
  * ```
  * Otherwise you can use the 'change' output and the 'checked' input for regular uses
  * ```

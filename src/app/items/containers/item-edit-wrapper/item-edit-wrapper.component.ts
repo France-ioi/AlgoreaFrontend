@@ -92,9 +92,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     uses_api: [ false ],
     validation_type: [ '' ],
     no_score: [ false ],
-    title_bar_visible: [ false ],
     prompt_to_join_group_by_code: [ false ],
-    full_screen: [ '' ],
     children_layout: [ '' ],
     default_language_tag: [ '' ],
     allows_multiple_attempts: [ false ],
@@ -198,9 +196,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       usesApi: this.itemForm.get('uses_api'),
       validationType: this.itemForm.get('validation_type'),
       noScore: this.itemForm.get('no_score'),
-      titleBarVisible: this.itemForm.get('title_bar_visible'),
       promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
-      fullScreen: this.itemForm.get('full_screen'),
       childrenLayout: this.itemForm.get('children_layout'),
       ...(this.enableParticipation ? {
         allowsMultipleAttempts: this.itemForm.get('allows_multiple_attempts'),
@@ -240,22 +236,16 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     const noScore = formControls.noScore?.value as boolean;
     if (noScore !== this.initialFormData.noScore) itemFormValues.no_score = noScore;
 
-    const titleBarVisible = formControls.titleBarVisible?.value as boolean;
     const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
-    const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
     const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid' | 'Hide';
     const initialDisplaySettings: DisplaySettings = this.initialFormData.displaySettings;
     const hasDisplaySettingsChanges =
-      titleBarVisible !== initialDisplaySettings.titleBarVisible
-      || promptToJoinGroupByCode !== initialDisplaySettings.promptToJoinGroupByCode
-      || fullScreen !== initialDisplaySettings.fullScreen
+      promptToJoinGroupByCode !== initialDisplaySettings.promptToJoinGroupByCode
       || childrenLayout !== initialDisplaySettings.childrenLayout;
 
     if (hasDisplaySettingsChanges) {
       itemFormValues.display_settings = buildDisplaySettingsBody({
         ...initialDisplaySettings,
-        titleBarVisible,
-        fullScreen,
         childrenLayout,
         promptToJoinGroupByCode,
       });
@@ -500,9 +490,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       uses_api: item.usesApi || false,
       validation_type: item.validationType,
       no_score: item.noScore,
-      title_bar_visible: item.displaySettings.titleBarVisible,
       prompt_to_join_group_by_code: item.displaySettings.promptToJoinGroupByCode,
-      full_screen: item.displaySettings.fullScreen,
       children_layout: item.displaySettings.childrenLayout,
       default_language_tag: item.defaultLanguageTag,
       ...(this.enableParticipation ? {

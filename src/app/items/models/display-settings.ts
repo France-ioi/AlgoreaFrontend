@@ -1,13 +1,8 @@
 import { z } from 'zod';
 import { camelToSnakeKeys, SnakeCaseKeys } from 'src/app/utils/case_conversion';
-import { itemChildrenLayoutSchema, itemFullScreenSchema } from './item-properties';
+import { itemChildrenLayoutSchema } from './item-properties';
 
 export const displaySettingsSchema = z.object({
-  titleBarVisible: z.boolean().default(true),
-  displayDetailsInParent: z.boolean().default(false),
-  fullScreen: itemFullScreenSchema.default('default'),
-  fixedRanks: z.boolean().default(false),
-  showUserInfos: z.boolean().default(false),
   childrenLayout: itemChildrenLayoutSchema.default('List'),
   promptToJoinGroupByCode: z.boolean().default(false),
 });

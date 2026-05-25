@@ -60,11 +60,11 @@ describe('camelToSnakeKeys', () => {
 
   it('should convert an object', () => {
     expect(camelToSnakeKeys({
-      titleBarVisible: true,
+      childrenLayout: 'Grid',
       already_snake: 3,
       severalUnderScores: 4,
     })).toEqual({
-      title_bar_visible: true,
+      children_layout: 'Grid',
       already_snake: 3,
       several_under_scores: 4,
     });
@@ -81,8 +81,8 @@ describe('camelToSnakeKeys', () => {
   });
 
   it('should convert keys with a leading capital letter', () => {
-    expect(camelToSnakeKeys({ TitleBarVisible: true })).toEqual({
-      title_bar_visible: true,
+    expect(camelToSnakeKeys({ ChildrenLayout: 'Grid' })).toEqual({
+      children_layout: 'Grid',
     });
   });
 

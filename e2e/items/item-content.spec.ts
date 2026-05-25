@@ -5,7 +5,6 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 const chapterResponse = {
   'id': '4702',
   'type': 'Chapter',
-  'display_details_in_parent': false,
   'validation_type': 'All',
   'requires_explicit_entry': true,
   'allows_multiple_attempts': false,
@@ -25,12 +24,9 @@ const chapterResponse = {
   'entry_frozen_teams': true,
   'entry_max_team_size': 0,
   'prompt_to_join_group_by_code': false,
-  'title_bar_visible': true,
   'text_id': null,
   'read_only': false,
-  'full_screen': 'default',
   'children_layout': 'List',
-  'show_user_infos': false,
   'entering_time_min': '1000-01-01T00:00:00Z',
   'entering_time_max': '9999-12-31T23:59:59Z',
   'supported_language_tags': [
@@ -50,7 +46,6 @@ const chapterResponse = {
 const taskResponse = {
   'id': '6379723280369399253',
   'type': 'Task',
-  'display_details_in_parent': false,
   'validation_type': 'All',
   'requires_explicit_entry': false,
   'allows_multiple_attempts': true,
@@ -70,12 +65,9 @@ const taskResponse = {
   'entry_frozen_teams': false,
   'entry_max_team_size': 0,
   'prompt_to_join_group_by_code': false,
-  'title_bar_visible': true,
   'text_id': null,
   'read_only': false,
-  'full_screen': 'default',
   'children_layout': 'List',
-  'show_user_infos': false,
   'entering_time_min': '1000-01-01T00:00:00Z',
   'entering_time_max': '9999-12-31T23:59:59Z',
   'supported_language_tags': [
@@ -100,7 +92,6 @@ const taskResponse = {
 const skillResponse = {
   'id': '568547986401741399',
   'type': 'Skill',
-  'display_details_in_parent': false,
   'validation_type': 'All',
   'requires_explicit_entry': false,
   'allows_multiple_attempts': false,
@@ -120,12 +111,9 @@ const skillResponse = {
   'entry_frozen_teams': false,
   'entry_max_team_size': 0,
   'prompt_to_join_group_by_code': false,
-  'title_bar_visible': true,
   'text_id': null,
   'read_only': false,
-  'full_screen': 'default',
   'children_layout': 'List',
-  'show_user_infos': false,
   'entering_time_min': '1000-01-01T00:00:00Z',
   'entering_time_max': '9999-12-31T23:59:59Z',
   'supported_language_tags': [
