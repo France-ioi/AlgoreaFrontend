@@ -2,11 +2,33 @@ import { test, expect } from '@playwright/test';
 import { initAsUsualUser, initAsTesterUser } from '../helpers/e2e_auth';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
+const observedGroupId = '4462192261130512818';
+const chapterItemId = '7523720120450464843';
+const targetUserGroupId = '752024252804317630';
+const userProgressUrl = `${apiUrl}/groups/${observedGroupId}/user-progress?parent_item_ids=${chapterItemId}&limit=51`;
+
 test('checks user progress tooltip', async ({ page }) => {
   await initAsTesterUser(page);
+
+  // Ensure the chapter-overview row for `usr_5p020x2thuyu` always reports a non-null
+  // `latest_activity_at`. The dev backend's value for this row drifts across runs and has been
+  // observed null under Firefox CI load — in that case the "last activity:" label is not
+  // rendered (see `user-progress-details.component.html`) and the assertion on it times out.
+  // We pass everything else through unchanged so the rest of the grid keeps real data.
+  await page.route(userProgressUrl, async route => {
+    const response = await route.fetch();
+    const data = (await response.json()) as Array<Record<string, unknown>>;
+    const patched = data.map(entry =>
+      entry.group_id === targetUserGroupId && entry.item_id === chapterItemId && entry.latest_activity_at === null
+        ? { ...entry, latest_activity_at: new Date().toISOString() }
+        : entry
+    );
+    await route.fulfill({ response, json: patched });
+  });
+
   await Promise.all([
     page.goto('/a/7523720120450464843;p=7528142386663912287;a=0;og=4462192261130512818/progress/chapter'),
-    page.waitForResponse(`${apiUrl}/groups/4462192261130512818/user-progress?parent_item_ids=7523720120450464843&limit=51`),
+    page.waitForResponse(userProgressUrl),
   ]);
 
   await test.step('checks group progress grid is visible', async () => {

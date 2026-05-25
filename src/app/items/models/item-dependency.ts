@@ -15,7 +15,6 @@ export const itemDependencySchema = z.object({
   defaultLanguageTag: z.string(),
   dependencyGrantContentView: z.boolean(),
   dependencyRequiredScore: z.number(),
-  displayDetailsInParent: z.boolean(),
   duration: durationSchema.nullable(),
   entryParticipantType: participantTypeSchema,
   noScore: z.boolean(),
