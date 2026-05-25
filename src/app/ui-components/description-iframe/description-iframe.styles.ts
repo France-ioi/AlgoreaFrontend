@@ -166,4 +166,13 @@ th, td {
   border: .0625rem solid var(--alg-border-color);
   text-align: left;
 }
+
+/*
+ * Opt-in utility class: lift the default reading-width cap on any element. !important is used so
+ * the class wins even when an author re-declares max-width inline or in their own stylesheet
+ * (which is loaded after this base CSS).
+ */
+.full-width {
+  max-width: 100% !important;
+}
 `;
