@@ -57,6 +57,16 @@ describe('DescriptionIframeComponent', () => {
     expect(srcdoc).toContain('<p id="author">hello</p>');
   });
 
+  // Guard the `.full-width` opt-in utility class advertised in the editor help panel:
+  // dropping it would silently break every description that relies on it.
+  it('should expose the .full-width opt-in utility class in the base CSS', () => {
+    fixture.componentRef.setInput('content', 'x');
+    fixture.detectChanges();
+
+    const srcdoc = iframeEl().srcdoc;
+    expect(srcdoc).toMatch(/\.full-width\s*\{[^}]*max-width:\s*100%\s*!important/);
+  });
+
   it('should mirror document lang and data-theme on the inner html element', () => {
     document.body.setAttribute('data-theme', 'thymio');
     fixture = TestBed.createComponent(DescriptionIframeComponent);

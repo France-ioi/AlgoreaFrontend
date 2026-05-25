@@ -3,6 +3,25 @@
 .field {
   display: flex;
   align-items: center;
+
+  /*
+   * Description's content area can be tall (Preview / Help tabs), so vertically centering the
+   * "Description" label would push it off-screen. Top-align the label only for that row; the
+   * other single-line rows (title, subtitle) keep their centered alignment.
+   */
+  &:has(.item-edit-content) {
+    align-items: flex-start;
+
+    /*
+     * Push the label down so it sits next to the tab content (Write / Preview / Help), not next
+     * to the tab strip above it. Accounts for: .field-value margin-top (6px) + .item-edit-content
+     * margin-top (10px) + tab strip (~37px = 24px text line + 10px padding-bottom + 3px border)
+     * + tab strip margin-bottom (--alg-space-size-4).
+     */
+    .field-name {
+      padding-top: calc(#{functions.toRem(53)} + var(--alg-space-size-4));
+    }
+  }
 }
 
 .field-name {

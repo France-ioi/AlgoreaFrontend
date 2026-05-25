@@ -49,6 +49,26 @@
   </section>
 
   <section>
+    <h3 class="alg-h3 alg-text-normal section-title" i18n>Using the full available width</h3>
+    <p i18n>
+      To keep long lines readable, paragraphs, headings, lists, quotes and code blocks are capped at a default
+      reading width (about 920px). Tables and images already use the full width.
+    </p>
+    <p i18n>
+      To opt a specific element out of the cap, add the <code>full-width</code> class on it:
+    </p>
+    <pre><code>&lt;p class="full-width"&gt;This paragraph spans the whole iframe width.&lt;/p&gt;
+&lt;pre class="full-width"&gt;&lt;code&gt;// wide code block&lt;/code&gt;&lt;/pre&gt;</code></pre>
+    <p i18n>
+      To lift the cap on the whole description at once, override the CSS variable in a <code>&lt;style&gt;</code>
+      block (your styles are loaded after the defaults, so they win):
+    </p>
+    <pre><code>&lt;style&gt;
+  :root &#123; --description-reading-max-width: 100%; &#125;
+&lt;/style&gt;</code></pre>
+  </section>
+
+  <section>
     <h3 class="alg-h3 alg-text-normal section-title" i18n>Creating links</h3>
     <p i18n>
       Because the iframe cannot navigate the application by itself, every link must tell the parent what to do. Use one

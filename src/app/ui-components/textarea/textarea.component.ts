@@ -20,4 +20,6 @@ export class TextareaComponent {
 
   @Input() icon = '';
   @Input() placeholder = '';
+  /** When true, the user can drag the bottom edge to enlarge the textarea vertically. */
+  @Input() resizable = false;
 }
