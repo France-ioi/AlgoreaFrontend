@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RelativeTimeComponent } from './relative-time.component';
 import { Component, signal } from '@angular/core';
 import { MINUTES } from 'src/app/utils/duration';
@@ -48,15 +48,25 @@ describe('RelativeTimeComponent', () => {
     expect(textContent(fixture)).toBe('Just now');
   });
 
-  it('should auto-update from "Just now" to "1 minute ago"', fakeAsync(() => {
-    host.value.set(new Date());
-    fixture.detectChanges();
-    expect(textContent(fixture)).toBe('Just now');
+  // We use jasmine.clock() (not fakeAsync + tick) on purpose: zone.js 0.16's fakeAsync does NOT
+  // patch Date.now() by default, but formatRelativeTime computes the delta with `Date.now()`.
+  // jasmine.clock().mockDate() + .tick() patches Date AND setInterval together, so the component
+  // sees both fake time and fake interval firings.
+  it('should auto-update from "Just now" to "1 minute ago"', () => {
+    jasmine.clock().install();
+    try {
+      const baseDate = new Date();
+      jasmine.clock().mockDate(baseDate);
 
-    tick(MINUTES + 1);
-    fixture.detectChanges();
-    expect(textContent(fixture)).toBe('1 minute ago');
+      host.value.set(baseDate);
+      fixture.detectChanges();
+      expect(textContent(fixture)).toBe('Just now');
 
-    fixture.destroy();
-  }));
+      jasmine.clock().tick(MINUTES + 1);
+      fixture.detectChanges();
+      expect(textContent(fixture)).toBe('1 minute ago');
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });
