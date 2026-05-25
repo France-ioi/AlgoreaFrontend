@@ -19,7 +19,13 @@ async function gotoSourceProgressGrid(page: Page): Promise<void> {
 }
 
 async function openHistoryFromCellModal(page: Page): Promise<void> {
-  await page.locator('alg-group-progress-grid table tr:nth-child(2) td:nth-child(3) alg-score-ring').click({ force: true });
+  // Click the `<td>` directly: it is the element that owns the `[cdkMenuTriggerFor]`
+  // directive (`group-progress-grid.component.html`). Earlier versions of this test
+  // clicked the inner `<alg-score-ring>` and relied on event bubbling — on Firefox CI
+  // that race-d the CDK overlay open and occasionally produced "modal never opened"
+  // failures (the click reached the SVG but the menu trigger handler had not yet
+  // registered its listener).
+  await page.locator('alg-group-progress-grid table tr:nth-child(2) td:nth-child(3)').click({ force: true });
   await expect(page.getByText('time spent:')).toBeVisible();
   // The View answer section (above the History button) appears asynchronously when
   // currentUser$ resolves; waiting for it ensures the History link's position is stable
