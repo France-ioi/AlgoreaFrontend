@@ -38,12 +38,12 @@
         @switch (node.type) {
           @case ('chapter') {
             <div
-              id="nav-{{ node.data.route.id }}"
               class="tree-nav-wrapper chapter"
               [ngClass]="{
                 'selected': node.partialSelected,
                 'locked': node.data.locked
               }"
+              [attr.data-selected]="node.partialSelected ? 'true' : null"
               (click)="selectNode(node)"
             >
               <div class="tree-nav-left">
@@ -99,12 +99,12 @@
           }
           @case ('skill-folder') {
             <div
-              id="nav-{{ node.data.route.id }}"
               class="tree-nav-wrapper chapter"
               [ngClass]="{
                 'selected': node.partialSelected,
                 'locked': node.data.locked
               }"
+              [attr.data-selected]="node.partialSelected ? 'true' : null"
               (click)="selectNode(node)"
             >
               <div class="tree-nav-left">
@@ -156,12 +156,12 @@
           }
           @case ('skill-leaf') {
             <div
-              id="nav-{{ node.data.route.id }}"
               class="tree-nav-wrapper"
               [ngClass]="{
                 'selected': node.partialSelected,
                 'locked': node.data.locked
               }"
+              [attr.data-selected]="node.partialSelected ? 'true' : null"
               (click)="selectNode(node)"
               >
               <div class="tree-nav-left">
@@ -205,12 +205,12 @@
           }
           @case ('group') {
             <div
-              id="nav-{{ node.data.route.id }}"
               class="tree-nav-wrapper"
               [ngClass]="{
                 'selected': node.data && node.partialSelected,
                 'locked': node.data.locked
               }"
+              [attr.data-selected]="node.partialSelected ? 'true' : null"
               (click)="selectNode(node)"
               >
               <div class="tree-nav-left">
@@ -259,12 +259,12 @@
           }
           @case ('task') {
             <div
-              id="nav-{{ node.data.route.id }}"
               class="tree-nav-wrapper"
               [ngClass]="{
                 'selected': node.partialSelected,
                 'locked': node.data.locked
               }"
+              [attr.data-selected]="node.partialSelected ? 'true' : null"
               (click)="selectNode(node)"
               >
               <div class="tree-nav-left">

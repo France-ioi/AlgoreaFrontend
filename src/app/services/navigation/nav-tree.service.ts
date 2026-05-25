@@ -1,7 +1,6 @@
 import { combineLatest, defer, merge, Observable, of, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan, debounceTime } from 'rxjs/operators';
 import { arraysEqual } from 'src/app/utils/array';
-import { ensureDefined } from 'src/app/utils/assert';
 import { isDefined } from 'src/app/utils/null-undefined-predicates';
 import { FetchState, readyState } from 'src/app/utils/state';
 import { ContentInfo, RoutedContentInfo } from 'src/app/models/content/content-info';
@@ -9,16 +8,7 @@ import { mapStateData, mapToFetchState } from 'src/app/utils/operators/state';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { EntityPathRoute } from 'src/app/models/routing/entity-route';
-
-export interface NeighborInfo {
-  navigateTo: () => void,
-}
-
-export interface NavigationNeighbors {
-  parent: NeighborInfo|null,
-  previous: NeighborInfo|null,
-  next: NeighborInfo|null,
-}
+import { computeNavigationNeighbors, NavigationNeighbors } from './nav-tree-navigation';
 
 interface FetchInfo {
   path: EntityPathRoute['path'], /* path to the fetched elements */
@@ -138,7 +128,7 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
           if (!content) return readyState(data.withNoSelection()); // no selected element -> only l1 shown
           if (l2FetchState?.data) data = data.withChildren(content.route, l2FetchState.data.elements);
           data = data.withUpdatedElement(content.route, el => this.addDetailsToTreeElement(el, content));
-          data = data.withSelection(content.route.id);
+          data = data.withSelection(content.route);
           return readyState(data);
         })
       )
@@ -157,25 +147,9 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    */
   navigationNeighborsRestrictedToDescendantOfElementId: string | null = null;
   navigationNeighbors$ = this.state$.pipe(
-    mapStateData<NavTreeData, NavigationNeighbors|undefined>(navData => {
-      if (!navData.selectedElementId) return undefined;
-      const l1Idx = navData.elements.findIndex(
-        e => e.route.id === navData.selectedElementId || (e.children?.some(c => c.route.id === navData.selectedElementId) ?? false)
-      );
-      if (l1Idx < 0) return undefined;
-      const inL1 = navData.elements[l1Idx]?.route.id === navData.selectedElementId; // otherwise, in L2
-      const l2Idx = inL1 ? -1 : ensureDefined(navData.elements[l1Idx]?.children).findIndex(e => e.route.id === navData.selectedElementId);
-      const parent = inL1 ? navData.parent : navData.elements[l1Idx];
-      const prev = inL1 ? navData.elements[l1Idx-1] : navData.elements[l1Idx]?.children?.[l2Idx-1];
-      const next = inL1 ? navData.elements[l1Idx+1] : navData.elements[l1Idx]?.children?.[l2Idx+1];
-      return {
-        parent: (parent && parent.route.id !== this.navigationNeighborsRestrictedToDescendantOfElementId)
-          ? { navigateTo: (): void => parent.navigateTo() }
-          : null,
-        previous: prev ? { navigateTo: (): void => prev.navigateTo() } : null,
-        next: next ? { navigateTo: (): void => next.navigateTo() } : null,
-      };
-    }),
+    mapStateData<NavTreeData, NavigationNeighbors|undefined>(
+      navData => computeNavigationNeighbors(navData, this.navigationNeighborsRestrictedToDescendantOfElementId),
+    ),
   );
 
   constructor(private currentContent: CurrentContentService) {}

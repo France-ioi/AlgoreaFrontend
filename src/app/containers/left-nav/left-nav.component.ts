@@ -1,6 +1,6 @@
 import { Component, inject, input, Output, ViewChild } from '@angular/core';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
-import { isNotUndefined } from '../../utils/null-undefined-predicates';
+import { equalOptionalFactory, isNotUndefined } from '../../utils/null-undefined-predicates';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
 import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.service';
 import { readyData } from 'src/app/utils/operators/state';
@@ -14,6 +14,7 @@ import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { NavTreeData } from 'src/app/models/left-nav-loading/nav-tree-data';
+import { areSameElements, EntityPathRoute } from 'src/app/models/routing/entity-route';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -47,8 +48,8 @@ export class LeftNavComponent {
     filter(isNotUndefined),
     switchMap(service => service.state$),
     readyData<NavTreeData>(),
-    map(navTreeData => navTreeData.selectedElementId),
-    distinctUntilChanged(),
+    map((navTreeData): EntityPathRoute | undefined => navTreeData.selectedElementRoute),
+    distinctUntilChanged(equalOptionalFactory(areSameElements)),
   );
 
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
