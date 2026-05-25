@@ -1,5 +1,6 @@
 import { Component, effect, input, Input, signal } from '@angular/core';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
+import { areSameElements } from '../../models/routing/entity-route';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { SkillProgressComponent } from '../../ui-components/skill-progress/skill-progress.component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
@@ -27,6 +28,16 @@ interface TreeNode<T> {
   partialSelected: boolean,
   inL1: boolean,
 }
+
+/**
+ * Stable CSS selector for the currently-selected node in the tree rendered by `LeftNavTreeComponent`.
+ *
+ * Exposed as a constant (rather than a hard-coded magic string in consumers like `left-tabbed-content`) so that
+ * the source of truth lives next to the template that owns the attribute. The duplicate-id case (same item id at
+ * two paths) makes querying by `#nav-{id}` unsafe, so consumers rely on this attribute to find the unique
+ * `.selected` node and scroll it into view.
+ */
+export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true"]';
 
 @Component({
   selector: 'alg-left-nav-tree',
@@ -67,7 +78,7 @@ export class LeftNavTreeComponent {
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
-      const isSelected = !!data.selectedElementId && data.selectedElementId === e.route.id;
+      const isSelected = !!data.selectedElementRoute && areSameElements(e.route, data.selectedElementRoute);
       const pathToChildren = data.pathToElements.concat([ e.route.id ]);
       return {
         data: e,
@@ -77,7 +88,7 @@ export class LeftNavTreeComponent {
         hasChildren: e.hasChildren,
         expanded: !!e.children,
         children: e.children ?
-          this.mapItemToNodes(new NavTreeData(e.children, pathToChildren, undefined, data.selectedElementId)) :
+          this.mapItemToNodes(new NavTreeData(e.children, pathToChildren, undefined, data.selectedElementRoute)) :
           undefined,
         partialSelected: isSelected,
         inL1: false,
@@ -87,7 +98,8 @@ export class LeftNavTreeComponent {
 
   toggleFolder(node: TreeNode<NavTreeElement>): void {
     // if this is the "selected" node of the menu, expand/collapse it... otherwise just select it
-    if (node.data.route.id === this.data().selectedElementId) {
+    const selectedRoute = this.data().selectedElementRoute;
+    if (selectedRoute && areSameElements(node.data.route, selectedRoute)) {
       this.nodes.update(nodes =>
         nodes.map(n => (n == node ? { ...n, expanded: !n.expanded } : n))
       );

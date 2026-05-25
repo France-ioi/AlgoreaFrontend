@@ -12,7 +12,7 @@ test('home page loaded', async ({ page }) => {
   });
 
   await test.step('check left menu', async () => {
-    await expect(page.locator('#nav-1471479157476024035')).toContainText('ALGOREA SERIOUS GAME');
+    await expect(page.locator('alg-left-nav-tree').getByText('ALGOREA SERIOUS GAME')).toBeVisible();
   });
 });
 

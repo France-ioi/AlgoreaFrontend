@@ -36,14 +36,16 @@ export class NavTreeData {
     public readonly elements: NavTreeElement[], // level 1 elements (which may have children)
     public readonly pathToElements: EntityPathRoute['path'], // path from root to the elements (so including the parent if any)
     public readonly parent?: NavTreeElement, // level 0 element
-    public readonly selectedElementId?: EntityPathRoute['id'], // the selected element is among elements
+    // The full route (id + path) of the selected element. Storing the path matters because the same id can legitimately appear
+    // at two different paths (e.g. an item shown both as a sibling and as a child of the same chapter): id alone would match both.
+    public readonly selectedElementRoute?: EntityPathRoute,
   ) {}
 
   /**
    * Return this with selected element changed
    */
-  withSelection(id: EntityPathRoute['id']): NavTreeData {
-    return new NavTreeData(this.elements, this.pathToElements, this.parent, id);
+  withSelection(route: EntityPathRoute): NavTreeData {
+    return new NavTreeData(this.elements, this.pathToElements, this.parent, route);
   }
 
   /**
@@ -62,7 +64,7 @@ export class NavTreeData {
         return { ...l1e, children: l1e.children?.map(l2e => (l2e.route.id === route.id ? update(l2e) : l2e)) };
       } else return l1e;
     });
-    return new NavTreeData(elements, this.pathToElements, this.parent, this.selectedElementId);
+    return new NavTreeData(elements, this.pathToElements, this.parent, this.selectedElementRoute);
   }
 
   /**
@@ -76,7 +78,7 @@ export class NavTreeData {
     else throw new Error('unexpected: children parent not among tree elements');
 
     const elements = this.elements.map(e => (e.route.id === id ? { ...e, children: children } : e));
-    return new NavTreeData(elements, this.pathToElements, this.parent, this.selectedElementId);
+    return new NavTreeData(elements, this.pathToElements, this.parent, this.selectedElementRoute);
   }
 
   /**
@@ -84,7 +86,7 @@ export class NavTreeData {
    * If no element is selected, return this unchanged.
    */
   withNoSelection(): NavTreeData {
-    if (!this.selectedElementId) return this;
+    if (!this.selectedElementRoute) return this;
     return new NavTreeData(this.elements, this.pathToElements, this.parent);
   }
 

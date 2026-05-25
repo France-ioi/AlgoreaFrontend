@@ -24,3 +24,17 @@ export function equalNullishFactory<T>(fct: (v1: T, v2: T) => boolean): (v1: T|n
     return fct(v1, v2);
   };
 }
+
+/**
+ * Factory for building an T|undefined comparator by wrapping a T comparator.
+ *
+ * Prefer this over `equalNullishFactory` when the values cannot be null: the narrower return type lets TypeScript infer
+ * the right element type for operators like `distinctUntilChanged` without widening the stream to also include `null`.
+ */
+export function equalOptionalFactory<T>(fct: (v1: T, v2: T) => boolean): (v1: T|undefined, v2: T|undefined) => boolean {
+  return (v1: T|undefined, v2: T|undefined) => {
+    if (v1 === v2) return true;
+    if (v1 === undefined || v2 === undefined) return false;
+    return fct(v1, v2);
+  };
+}
