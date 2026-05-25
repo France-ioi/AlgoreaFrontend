@@ -21,6 +21,11 @@
     padding-top: 1rem;
   }
 
+  /* Opt-in (via the [resizable] input): let the user drag the bottom edge to enlarge vertically. */
+  &.resizable {
+    resize: vertical;
+  }
+
   &:focus, &:active {
     outline: functions.toRem(2) solid var(--alg-primary-color);
     box-shadow: none;

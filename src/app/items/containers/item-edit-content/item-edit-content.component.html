@@ -20,7 +20,7 @@
 </div>
 @switch (activeTab()) {
   @case ('write') {
-    <alg-textarea [parentForm]="parentForm" inputName="description" data-testid="edit-item-description"></alg-textarea>
+    <alg-textarea [parentForm]="parentForm" inputName="description" [resizable]="true" data-testid="edit-item-description"></alg-textarea>
   }
   @case ('preview') {
     @if (parentForm) {
