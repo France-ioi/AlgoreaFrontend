@@ -8,7 +8,6 @@ const secondTestImageUrl = 'https://www.ryadel.com/wp-content/uploads/2017/10/an
 
 const frItemResponse = {
   'type': 'Chapter',
-  'display_details_in_parent': false,
   'validation_type': 'All',
   'requires_explicit_entry': false,
   'allows_multiple_attempts': false,
@@ -29,12 +28,9 @@ const frItemResponse = {
   'entry_frozen_teams': false,
   'entry_max_team_size': 0,
   'prompt_to_join_group_by_code': false,
-  'title_bar_visible': true,
   'text_id': null,
   'read_only': false,
-  'full_screen': 'default',
   'children_layout': 'List',
-  'show_user_infos': false,
   'entering_time_min': '1000-01-01T00:00:00Z',
   'entering_time_max': '9999-12-31T23:59:59Z',
   'supported_language_tags': [

@@ -60,28 +60,10 @@
     @if (item.type !== 'Skill') {
       <div>
         <h2 class="alg-h2 alg-text-normal title" i18n>Display</h2>
-        <div class="form-item-view alg-display-none">
-          <span class="form-item-label">
-            <ng-container i18n>Display header</ng-container>&nbsp;
-            <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
-          </span>
-          <div class="form-item-control">
-            <alg-switch formControlName="title_bar_visible"></alg-switch>
-          </div>
-        </div>
         <div class="form-item-view">
           <span class="form-item-label" i18n>Display group code header</span>
           <div class="form-item-control">
             <alg-switch formControlName="prompt_to_join_group_by_code"></alg-switch>
-          </div>
-        </div>
-        <div class="form-item-view alg-display-none">
-          <span class="form-item-label">
-            <ng-container i18n>Full screen</ng-container>&nbsp;
-            <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
-          </span>
-          <div class="form-item-control">
-            <alg-selection formControlName="full_screen" [items]="fullScreenOptions"></alg-selection>
           </div>
         </div>
         @if (item.type !== 'Task') {
