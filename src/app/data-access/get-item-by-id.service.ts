@@ -7,12 +7,8 @@ import { durationSchema } from 'src/app/utils/decoders';
 import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { itemStringSchema, withDescription } from '../items/models/item-string';
 import { itemTypeSchema } from '../items/models/item-type';
-import {
-  itemChildrenLayoutSchema,
-  itemEntryMinAdmittedMembersRatioSchema,
-  itemFullScreenSchema,
-  itemValidationTypeSchema
-} from '../items/models/item-properties';
+import { displaySettingsSchema } from '../items/models/display-settings';
+import { itemEntryMinAdmittedMembersRatioSchema, itemValidationTypeSchema } from '../items/models/item-properties';
 import { participantTypeSchema } from '../groups/models/group-types';
 import { APPCONFIG } from '../config';
 
@@ -23,13 +19,10 @@ const itemSchema = z.object({
   bestScore: z.number(),
   permissions: itemCorePermSchema.and(itemCanRequestHelpSchema),
   type: itemTypeSchema,
-  promptToJoinGroupByCode: z.boolean(),
+  displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
   textId: z.string().nullable(),
   validationType: itemValidationTypeSchema,
   noScore: z.boolean(),
-  titleBarVisible: z.boolean(),
-  fullScreen: itemFullScreenSchema,
-  childrenLayout: itemChildrenLayoutSchema,
   allowsMultipleAttempts: z.boolean(),
   duration: durationSchema.nullable(),
   enteringTimeMin: z.coerce.date(),

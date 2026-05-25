@@ -1,6 +1,6 @@
-import { snakeToCamelKeys } from './case_conversion';
+import { camelToSnakeKeys, snakeToCamelKeys } from './case_conversion';
 
-describe('mapToState', () => {
+describe('snakeToCamelKeys', () => {
 
   it('should not change a string', () => {
     expect(snakeToCamelKeys('test_val')).toEqual('test_val');
@@ -40,6 +40,50 @@ describe('mapToState', () => {
 
   it('should convert elements of an array', () => {
     expect(snakeToCamelKeys([{ demo_snake: 1 }, { regular_one: 'all_good' }])).toEqual([{ demoSnake: 1 }, { regularOne: 'all_good' }]);
+  });
+
+});
+
+describe('camelToSnakeKeys', () => {
+
+  it('should not change a string', () => {
+    expect(camelToSnakeKeys('testVal')).toEqual('testVal');
+  });
+
+  it('should not change a number', () => {
+    expect(camelToSnakeKeys(2)).toEqual(2);
+  });
+
+  it('should not change a simple array', () => {
+    expect(camelToSnakeKeys([ 1, 2, 5 ])).toEqual([ 1, 2, 5 ]);
+  });
+
+  it('should convert an object', () => {
+    expect(camelToSnakeKeys({
+      titleBarVisible: true,
+      already_snake: 3,
+      severalUnderScores: 4,
+    })).toEqual({
+      title_bar_visible: true,
+      already_snake: 3,
+      several_under_scores: 4,
+    });
+  });
+
+  it('should convert nested objects and array elements', () => {
+    expect(camelToSnakeKeys({
+      displaySettings: { childrenLayout: 'Grid' },
+      itemsList: [ { itemId: '1' } ],
+    })).toEqual({
+      display_settings: { children_layout: 'Grid' },
+      items_list: [ { item_id: '1' } ],
+    });
+  });
+
+  it('should convert keys with a leading capital letter', () => {
+    expect(camelToSnakeKeys({ TitleBarVisible: true })).toEqual({
+      title_bar_visible: true,
+    });
   });
 
 });

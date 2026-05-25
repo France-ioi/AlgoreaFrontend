@@ -37,6 +37,7 @@ const chapterResponse = {
     'fr'
   ],
   'best_score': 8.13343,
+  'display_settings': {},
   'string': {
     'language_tag': 'fr',
     'title': 'Parcours officiels (Mocked)',
@@ -81,6 +82,7 @@ const taskResponse = {
     'en'
   ],
   'best_score': 50,
+  'display_settings': {},
   'string': {
     'language_tag': 'en',
     'title': 'Blockly Basic Task',
@@ -130,6 +132,7 @@ const skillResponse = {
     'en'
   ],
   'best_score': 0,
+  'display_settings': {},
   'string': {
     'language_tag': 'en',
     'title': 'Skill only for demouser',

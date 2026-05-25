@@ -14,6 +14,7 @@ import { ItemChanges, UpdateItemService } from '../../data-access/update-item.se
 import { ItemStringChanges, UpdateItemStringService } from '../../data-access/update-item-string.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
+import { buildDisplaySettingsBody, DisplaySettings } from 'src/app/items/models/display-settings';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { Duration } from 'src/app/utils/duration';
 import { concat, forkJoin, Observable, of, throwError, toArray } from 'rxjs';
@@ -240,17 +241,25 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     if (noScore !== this.initialFormData.noScore) itemFormValues.no_score = noScore;
 
     const titleBarVisible = formControls.titleBarVisible?.value as boolean;
-    if (titleBarVisible !== this.initialFormData.titleBarVisible) itemFormValues.title_bar_visible = titleBarVisible;
-
     const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
-    if (promptToJoinGroupByCode !== this.initialFormData.promptToJoinGroupByCode)
-      itemFormValues.prompt_to_join_group_by_code = promptToJoinGroupByCode;
-
     const fullScreen = formControls.fullScreen?.value as 'forceYes' | 'forceNo' | 'default';
-    if (fullScreen !== this.initialFormData.fullScreen) itemFormValues.full_screen = fullScreen;
-
     const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid' | 'Hide';
-    if (childrenLayout !== this.initialFormData.childrenLayout) itemFormValues.children_layout = childrenLayout;
+    const initialDisplaySettings: DisplaySettings = this.initialFormData.displaySettings;
+    const hasDisplaySettingsChanges =
+      titleBarVisible !== initialDisplaySettings.titleBarVisible
+      || promptToJoinGroupByCode !== initialDisplaySettings.promptToJoinGroupByCode
+      || fullScreen !== initialDisplaySettings.fullScreen
+      || childrenLayout !== initialDisplaySettings.childrenLayout;
+
+    if (hasDisplaySettingsChanges) {
+      itemFormValues.display_settings = buildDisplaySettingsBody({
+        ...initialDisplaySettings,
+        titleBarVisible,
+        fullScreen,
+        childrenLayout,
+        promptToJoinGroupByCode,
+      });
+    }
 
     const defaultLanguageTag = this.itemForm.controls.default_language_tag.getRawValue();
     if (defaultLanguageTag !== this.initialFormData.defaultLanguageTag) itemFormValues.default_language_tag = defaultLanguageTag;
@@ -491,10 +500,10 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       uses_api: item.usesApi || false,
       validation_type: item.validationType,
       no_score: item.noScore,
-      title_bar_visible: item.titleBarVisible || false,
-      prompt_to_join_group_by_code: item.promptToJoinGroupByCode || false,
-      full_screen: item.fullScreen,
-      children_layout: item.childrenLayout,
+      title_bar_visible: item.displaySettings.titleBarVisible,
+      prompt_to_join_group_by_code: item.displaySettings.promptToJoinGroupByCode,
+      full_screen: item.displaySettings.fullScreen,
+      children_layout: item.displaySettings.childrenLayout,
       default_language_tag: item.defaultLanguageTag,
       ...(this.enableParticipation ? {
         allows_multiple_attempts: item.allowsMultipleAttempts,

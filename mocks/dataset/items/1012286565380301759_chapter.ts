@@ -31,6 +31,7 @@ export const item1012286565380301759: NullableValues<definitions['itemResponse']
   entering_time_max: '9999-12-31T23:59:59Z',
   supported_language_tags: [ 'fr' ],
   best_score: 70,
+  display_settings: {},
   string: {
     language_tag: 'fr',
     title: 'Tas de sable',

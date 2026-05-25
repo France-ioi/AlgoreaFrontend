@@ -154,7 +154,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   showAccessCodeField$ = this.state$.pipe(
     mapStateData(data =>
-      data.item.promptToJoinGroupByCode && !canCurrentUserViewContent(data.item) && !this.userSessionService.isCurrentUserTemp()
+      data.item.displaySettings.promptToJoinGroupByCode
+        && !canCurrentUserViewContent(data.item) && !this.userSessionService.isCurrentUserTemp()
     ),
     map(state => state.isReady && state.data),
   );

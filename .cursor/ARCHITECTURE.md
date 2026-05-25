@@ -52,6 +52,8 @@ Items represent learning content and can be:
 
 Items are accessed via routes like `/a/:idOrAlias` (activities) or `/s/:idOrAlias` (skills).
 
+Display-related per-item settings live in `Item.displaySettings` (camelCase object decoded from `display_settings`, with Zod defaults in `displaySettingsSchema`). Write via `display_settings` on `ItemChanges` using `buildDisplaySettingsBody()`.
+
 ### Groups
 Groups represent organizational units:
 - **Users**: Individual learners
