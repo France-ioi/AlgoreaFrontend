@@ -85,12 +85,14 @@ export class UserProgressDetailsComponent implements OnChanges {
   onViewHistory(): void {
     if (!this.progressData) return;
     const observedGroup = this.observedGroupInfo();
-    if (!observedGroup) return;
-    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
-      backLink: {
-        url: this.router.url,
-        label: $localize`Return to ${observedGroup.name} group stats`,
-      },
-    }));
+    // Always register, even when observation info hasn't resolved yet: the History link's
+    // routerLink navigates regardless of this dispatch, so silently skipping registration
+    // when `observedGroup` is null (a real race on slower runtimes — e.g. Firefox CI) leaves
+    // the destination's back-link bar permanently hidden. Falling back to a generic label
+    // keeps the back-link functional; the descriptive variant is used whenever info is ready.
+    const label = observedGroup
+      ? $localize`Return to ${observedGroup.name} group stats`
+      : $localize`Return to group stats`;
+    this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({ backLink: { url: this.router.url, label } }));
   }
 }

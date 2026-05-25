@@ -76,7 +76,7 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
     expect(dispatchSpy).not.toHaveBeenCalled();
   });
 
-  it('does not dispatch when observedGroupInfo is null', () => {
+  it('dispatches with a generic fallback label when observedGroupInfo is null', () => {
     component.progressData = fakeProgressData;
     store.overrideSelector(fromObservation.selectObservedGroupInfo, null);
     store.refreshState();
@@ -84,7 +84,14 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
 
     component.onViewHistory();
 
-    expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalledOnceWith(
+      fromItemContent.sourcePageActions.registerBackLink({
+        backLink: {
+          url: '/source-url',
+          label: 'Return to group stats',
+        },
+      })
+    );
   });
 
   it('dispatches registerBackLink with router.url and the observed group name', () => {
