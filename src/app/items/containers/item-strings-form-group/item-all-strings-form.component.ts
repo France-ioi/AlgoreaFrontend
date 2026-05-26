@@ -114,7 +114,14 @@ export class ItemAllStringsFormComponent implements Validator {
   }
 
   validate(): ValidationErrors | null {
-    return (this.form.invalid || this.allStringControls().some(c => c.form.invalid))
+    // We read the inner `FormArray.invalid` (rather than the wrapping `FormGroup.invalid`) because
+    // when this validator runs it has been triggered from the array's own `valueChanges`, and the
+    // parent group's `updateValueAndValidity()` propagation hasn't finished yet — so the group
+    // status would still reflect the pre-change value. We also poll the live
+    // `ItemStringsControl` children, which is required for the brief window after a translation
+    // has been added but before its CVA validator has registered on the new FormControl (covered
+    // by `scheduleRevalidation()` afterwards).
+    return (this.form.controls.allStrings.invalid || this.allStringControls().some(c => c.form.invalid))
       ? { allStringsForm: true }
       : null;
   }

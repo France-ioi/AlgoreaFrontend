@@ -1,0 +1,88 @@
+<div [formGroup]="form">
+  <h2 class="alg-h2 alg-text-normal title" i18n>Participation</h2>
+
+  <div class="form-item-view alg-display-none">
+    <span class="form-item-label">
+      <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
+      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+    </span>
+    <div class="form-item-control">
+      <alg-switch formControlName="allowsMultipleAttempts"></alg-switch>
+    </div>
+  </div>
+
+  <div class="form-item-view" data-testid="form-item-view">
+    <span class="form-item-label" i18n>Start participation manually</span>
+    <div class="form-item-control">
+      <alg-switch formControlName="requiresExplicitEntry"></alg-switch>
+    </div>
+  </div>
+
+  @if (form.controls.requiresExplicitEntry.value) {
+    <div class="form-item-view form-item-duration" data-testid="form-item-view">
+      <span class="form-item-label">
+        <ng-container i18n>Duration</ng-container>&nbsp;
+      </span>
+      <div class="form-item-control another-input">
+        <alg-switch class="first-child" formControlName="durationEnabled"></alg-switch>
+        <div class="input-wrapper-duration alg-flex-1">
+          @if (form.controls.durationEnabled.value) {
+            <alg-duration
+              class="alg-duration"
+              formControlName="duration"
+              name="duration"
+              [parentForm]="form"
+              layout="HMS"
+              [limitToTimeMax]="true"
+            ></alg-duration>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-item-view form-item-datepicker" data-testid="entering-time-min-container">
+      <span class="form-item-label" i18n>First allowed entering time</span>
+      <div class="form-item-control another-input">
+        <alg-switch
+          class="first-child"
+          formControlName="enteringTimeMinEnabled"
+          (change)="onEnteringTimeMinEnabledChange($event)"
+        ></alg-switch>
+        @if (form.controls.enteringTimeMinEnabled.value) {
+          <div>
+            <alg-input-date formControlName="enteringTimeMin"></alg-input-date>
+            @if (form.controls.enteringTimeMin.valid) {
+              <p class="alg-text-small date-note" i18n>
+                The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-item-view form-item-datepicker" data-testid="entering-time-max-container">
+      <span class="form-item-label" i18n>Latest allowed entering time</span>
+      <div class="form-item-control another-input">
+        <alg-switch
+          class="first-child"
+          formControlName="enteringTimeMaxEnabled"
+          (change)="onEnteringTimeMaxEnabledChange($event)"
+        ></alg-switch>
+        @if (form.controls.enteringTimeMaxEnabled.value) {
+          <div>
+            <alg-input-date
+              formControlName="enteringTimeMax"
+              [minDate]="minEnteringTimeMaxDate()"
+            ></alg-input-date>
+            @if (form.controls.enteringTimeMax.valid) {
+              <p class="alg-text-small date-note" i18n>
+                The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

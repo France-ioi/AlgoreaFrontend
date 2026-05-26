@@ -106,4 +106,25 @@ test('checks edit parameters - image url', async ({ page, createItem, itemConten
     await expect.soft(imageUrlInputLocator).toHaveValue(secondTestImageUrl);
   });
 
+  await test.step('Clearing the image url sends image_url: null and persists across reload', async () => {
+    // Wait for the actual PUT to the strings endpoint to confirm the request was issued with the
+    // expected payload (previously the wrapper silently skipped the PUT when the field became
+    // empty, leaving the stored URL in place).
+    const clearRequest = page.waitForRequest(req =>
+      req.method() === 'PUT'
+      && req.url().startsWith(`${apiUrl}/items/${createItem.itemId}/strings/`)
+      && req.postData()?.includes('"image_url":null') === true);
+
+    await imageUrlInputLocator.fill('');
+    await Promise.all([
+      clearRequest,
+      itemContentPage.saveChangesAndCheckNotification(),
+    ]);
+
+    await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
+    await expect.soft(thumbnailUrlLocator).toBeVisible();
+    await expect.soft(imageUrlInputLocator).toBeVisible();
+    await expect.soft(imageUrlInputLocator).toHaveValue('');
+  });
+
 });

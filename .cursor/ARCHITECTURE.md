@@ -54,6 +54,32 @@ Items are accessed via routes like `/a/:idOrAlias` (activities) or `/s/:idOrAlia
 
 Display-related per-item settings live in `Item.displaySettings` (camelCase object decoded from `display_settings`, with Zod defaults in `displaySettingsSchema`). Write via `display_settings` on `ItemChanges` using `buildDisplaySettingsBody()`.
 
+### Item parameters form (editor "Parameters" tab)
+
+The editor's Parameters tab is structured as a wrapper + a self-contained typed CVA form, with the per-section parameters domain extracted to a dedicated model.
+
+```
+alg-item-edit-wrapper                  (orchestrator: itemForm + imageUrlForm + save/cancel)
+└── alg-item-all-strings-form          (CVA: per-language strings, see strings folder)
+└── alg-item-parameters-form           (CVA + Validator: aggregates parameter sections)
+    ├── alg-item-parameters-global         (presentational: url / uses_api / text_id)
+    ├── alg-item-parameters-score          (presentational: validation_type / no_score)
+    ├── alg-item-parameters-display        (presentational: prompt_to_join_group_by_code / children_layout, hosts the wrapper-owned image-url input)
+    ├── alg-item-parameters-participation  (CVA + Validator: explicit entry / duration / entering-time min-max)
+    └── alg-item-parameters-team           (CVA + Validator: team participant type / frozen teams / max team size)
+```
+
+- **Domain model** (`src/app/items/models/item-parameters.ts`): `ItemParametersValue` is the flat camelCase value the wrapper consumes. `sectionsForItemType()` decides which sections an item type renders (and `buildItemParametersChanges()` diffs accordingly). The "no constraint" sentinels for `entering_time_min/max` (`1000-01-01` / `9999-12-31`) and the `display_settings` body shaping live here so the form and the diff agree.
+- **Strings changes** (`src/app/items/models/item-strings-changes.ts`): per-language string diff. `image_url` lives on the default-language item string (not on the item), so the wrapper owns it via a separate `imageUrlForm` and threads it into `buildItemAllStringsChanges()` only for the default-language record.
+- **CVA boundary**: `alg-item-parameters-form` flattens its inner `{ global, score, display, participation, team }` group into `ItemParametersValue` on `valueChanges` and unflattens on `writeValue`, so the wrapper sees a single flat control. Each leaf CVA (`participation`, `team`) returns `null` from `validate()` when its inner form is disabled, since Angular reports `valid === false` for `DISABLED` controls and would otherwise wedge the wrapper's `itemForm.invalid` check on every save.
+- **Change detection**: the three stateless section components (`global`, `score`, `display`) declare `OnPush`. The parent form (`alg-item-parameters-form`) and the two CVA sections (`participation`, `team`) keep Default CD; only the participation section needs it — `alg-input-date`'s ngx-mask binding uses a deferred `setTimeout` in `writeValue`, which lands outside any input/event that would re-mark an `OnPush` ancestor, so the initial value would never paint into the input. Default CD on the others avoids scattering `markForCheck()` calls across the tree.
+- **Save ordering** (`ItemEditWrapperComponent.save()`): requests are split into three sequential phases driven by the item ↔ item-strings dependency on the backend (`default_language_tag` must point at an existing `items_strings` row):
+  1. **Creates** — `PUT /items/{id}/strings/{tag}` for languages added in this edit session.
+  2. **Item update** — `PUT /items/{id}` (which may carry the new `default_language_tag`).
+  3. **Updates + deletes (parallel)** — `PUT /items/{id}/strings/{tag}` for existing translations that changed, and `DELETE /items/{id}/strings/{tag}` for languages removed from the form. Running deletes after the item update lets the user demote-then-delete the previous default language in a single save.
+
+  `ItemAllStringsFormComponent.validate()` deliberately reads `this.form.controls.allStrings.invalid` (the inner `FormArray`) rather than `this.form.invalid` (the wrapping `FormGroup`): the wrapper's CVA validator runs from inside the array's `valueChanges`, before the parent group's `updateValueAndValidity()` has propagated, so the group status reports the pre-change value. The validator additionally polls the live `ItemStringsControl` children to cover the brief window between adding a translation and `scheduleRevalidation()` firing its registered validator.
+
 ### Groups
 Groups represent organizational units:
 - **Users**: Individual learners

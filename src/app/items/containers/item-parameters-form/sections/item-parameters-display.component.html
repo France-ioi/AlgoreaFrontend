@@ -1,0 +1,39 @@
+<div [formGroup]="form()">
+  <h2 class="alg-h2 alg-text-normal title" i18n>Display</h2>
+
+  <div class="form-item-view">
+    <span class="form-item-label" i18n>Display group code header</span>
+    <div class="form-item-control">
+      <alg-switch formControlName="promptToJoinGroupByCode"></alg-switch>
+    </div>
+  </div>
+
+  @if (showChildrenLayout()) {
+    <div class="form-item-view">
+      <span class="form-item-label">
+        <ng-container i18n>Children layout</ng-container>
+      </span>
+      <div class="form-item-control">
+        <alg-selection formControlName="childrenLayout" [items]="childrenLayoutOptions"></alg-selection>
+      </div>
+    </div>
+  }
+</div>
+
+@if (showImageUrl() && imageUrlForm(); as imageUrlFormValue) {
+  <div class="form-item-view" [formGroup]="imageUrlFormValue">
+    <span class="form-item-label">
+      <ng-container i18n>Thumbnail url</ng-container>
+    </span>
+    <div class="form-item-control">
+      <alg-input [parentForm]="imageUrlFormValue" name="imageUrl"></alg-input>
+      @if (imageUrlValue(); as imageUrlVal) {
+        @if (imageUrlVal.trim().length > 0 && !imageUrlVal.startsWith('https://')) {
+          <span class="alg-warning-message" i18n>
+            The url should start with "https://" so that it is visible on any browser.
+          </span>
+        }
+      }
+    </div>
+  </div>
+}

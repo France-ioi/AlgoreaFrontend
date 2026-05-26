@@ -1,7 +1,7 @@
 @if (itemData) {
   @if (itemData.item.permissions | allowsEditingAll) {
     <form [formGroup]="itemForm">
-      @let defaultLanguageTagValue = itemForm.controls.default_language_tag.getRawValue();
+      @let defaultLanguageTagValue = itemForm.controls.defaultLanguageTag.getRawValue();
       <alg-item-all-strings-form
         [defaultLanguageTag]="defaultLanguageTagValue"
         [supportedLanguages]="supportedLanguages()"
@@ -10,19 +10,19 @@
         formControlName="allStrings"
         (defaultLanguageEvent)="onDefaultLanguageChange($event)"
       ></alg-item-all-strings-form>
-      <alg-item-edit-advanced-parameters
-        [parentForm]="itemForm"
+      <alg-item-parameters-form
+        formControlName="parameters"
         [itemData]="itemData"
+        [imageUrlForm]="imageUrlForm"
+        [textIdError]="textIdError()"
         (confirmRemoval)="onConfirmRemoval()"
-      >
-      </alg-item-edit-advanced-parameters>
+      ></alg-item-parameters-form>
     </form>
 
-    @if (itemForm.dirty) {
+    @if (itemForm.dirty || imageUrlForm.dirty) {
       <alg-floating-save [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
     }
   } @else {
     <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
   }
 }
-
