@@ -1,29 +1,34 @@
 import { Component, inject, Input, OnChanges, OnDestroy, OnInit, signal, SimpleChanges } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
-  AbstractControl,
   ValidationErrors,
-  ValidatorFn,
   Validators,
   FormsModule,
   ReactiveFormsModule,
   FormBuilder,
 } from '@angular/forms';
 import { CurrentContentService } from 'src/app/services/current-content.service';
-import { ItemChanges, UpdateItemService } from '../../data-access/update-item.service';
-import { ItemStringChanges, UpdateItemStringService } from '../../data-access/update-item-string.service';
+import { UpdateItemService } from '../../data-access/update-item.service';
+import { UpdateItemStringService } from '../../data-access/update-item-string.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { buildDisplaySettingsBody, DisplaySettings } from 'src/app/items/models/display-settings';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
-import { Duration } from 'src/app/utils/duration';
-import { concat, forkJoin, Observable, of, throwError, toArray } from 'rxjs';
+import { concat, distinctUntilChanged, forkJoin, map, Observable, of, throwError, toArray } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { AllowsEditingAllItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
-import { ItemEditAdvancedParametersComponent } from '../item-edit-advanced-parameters/item-edit-advanced-parameters.component';
+import { ItemParametersFormComponent } from '../item-parameters-form/item-parameters-form.component';
+import {
+  buildItemParametersChanges,
+  ItemParametersValue,
+  itemToParametersValue,
+  sectionsForItemType,
+} from 'src/app/items/models/item-parameters';
+import { ItemChanges } from '../../data-access/update-item.service';
+import { buildItemAllStringsChanges } from 'src/app/items/models/item-strings-changes';
 
 import { fromItemContent } from '../../store';
 import { Store } from '@ngrx/store';
@@ -34,9 +39,6 @@ import { APPCONFIG } from 'src/app/config';
 import { catchError } from 'rxjs/operators';
 import { errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { DeleteItemStringService } from 'src/app/items/data-access/delete-item-string.service';
-
-export const DEFAULT_ENTERING_TIME_MIN = '1000-01-01T00:00:00Z';
-export const DEFAULT_ENTERING_TIME_MAX = '9999-12-31T23:59:59Z';
 
 interface ServerValidationError extends HttpErrorResponse {
   error: {
@@ -50,11 +52,6 @@ function isServerValidationErrors(e: HttpErrorResponse): e is ServerValidationEr
     && 'errors' in errorBody && errorBody.errors !== null && typeof errorBody.errors === 'object';
 }
 
-enum UpdateOrDeleteStringsRequestType {
-  Update = 'update',
-  Delete = 'delete',
-}
-
 @Component({
   selector: 'alg-item-edit-wrapper',
   templateUrl: './item-edit-wrapper.component.html',
@@ -62,7 +59,7 @@ enum UpdateOrDeleteStringsRequestType {
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    ItemEditAdvancedParametersComponent,
+    ItemParametersFormComponent,
     FloatingSaveComponent,
     AllowsEditingAllItemPipe,
     ErrorComponent,
@@ -70,15 +67,14 @@ enum UpdateOrDeleteStringsRequestType {
   ]
 })
 export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
+  @Input() itemData?: ItemData;
+
   private store = inject(Store);
   private currentContentService = inject(CurrentContentService);
   private updateItemService = inject(UpdateItemService);
   private updateItemStringService = inject(UpdateItemStringService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private pendingChangesService = inject(PendingChangesService);
-
-  @Input() itemData?: ItemData;
-
   private config = inject(APPCONFIG);
   private getItemByIdService = inject(GetItemByIdService);
   private formBuilder = inject(FormBuilder);
@@ -86,42 +82,41 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   itemForm = this.formBuilder.nonNullable.group({
     allStrings: this.formBuilder.nonNullable.control<StringsValue[]>([], [ Validators.required, Validators.minLength(1) ]),
-    image_url: [ '', Validators.maxLength(2000) ],
-    url: [ '', Validators.maxLength(2000) ],
-    text_id: [ '', Validators.maxLength(200) ],
-    uses_api: [ false ],
-    validation_type: [ '' ],
-    no_score: [ false ],
-    prompt_to_join_group_by_code: [ false ],
-    children_layout: [ '' ],
-    default_language_tag: [ '' ],
-    allows_multiple_attempts: [ false ],
-    requires_explicit_entry: [ false ],
-    duration_enabled: [ false ],
-    duration: this.formBuilder.control<Duration | null>(null),
-    entering_time_min_enabled: [ false ],
-    entering_time_min: this.formBuilder.control<Date | null>(null),
-    entering_time_max_enabled: [ false ],
-    entering_time_max: this.formBuilder.control<Date | null>(null),
-    entry_participant_type: [ false ],
-    entry_frozen_teams: [ false ],
-    entry_max_team_size: [ 0 ],
-    entry_min_admitted_members_ratio: [ '' ],
-  }, {
-    validators: [ this.maxTeamSizeValidator() ],
+    defaultLanguageTag: this.formBuilder.nonNullable.control(''),
+    parameters: this.formBuilder.control<ItemParametersValue | null>(null),
   });
-  initialFormData?: Item & {durationEnabled?: boolean, enteringTimeMinEnabled?: boolean, enteringTimeMaxEnabled?: boolean};
+
+  /**
+   * `imageUrl` is rendered inside the parameters Display section but, server-side, lives on the
+   * default-language item string — so it's owned here (next to the strings form). A small
+   * single-control group keeps the `alg-input` API (which expects a parent FormGroup) happy.
+   */
+  imageUrlForm = this.formBuilder.nonNullable.group({
+    imageUrl: [ '', Validators.maxLength(2000) ],
+  });
+
+  initialItem?: Item;
+  initialParameters?: ItemParametersValue;
 
   supportedLanguages = signal(this.config.languages.map(lv => lv.tag));
   fetchingOtherLanguages = signal(false);
   initialLanguageValues = signal<StringsValue[]>([]);
 
-  get enableParticipation(): boolean {
-    return this.initialFormData?.type !== 'Skill';
-  }
+  textIdError = signal<string | null>(null);
 
-  get enableTeam(): boolean {
-    return this.initialFormData?.type !== 'Skill';
+  constructor() {
+    // Clear the server-side text_id error as soon as the user edits the field, matching the
+    // behaviour of Angular's built-in validators. Without this, a stale 4xx error would linger
+    // until the next save attempt or until the form is reset.
+    // Teardown is wired via `takeUntilDestroyed()`; the returned Subscription is intentionally
+    // dropped (constructor body is an injection context, so `takeUntilDestroyed()` still works).
+    this.itemForm.controls.parameters.valueChanges
+      .pipe(
+        map(v => v?.textId ?? null),
+        distinctUntilChanged(),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.textIdError.set(null));
   }
 
   ngOnInit(): void {
@@ -129,29 +124,17 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.itemData
-      && (changes.itemData?.previousValue as ItemData | undefined)?.item.id !== (changes.itemData?.currentValue as ItemData).item.id) {
-      this.itemForm.disable();
-      this.initialFormData = {
-        ...this.itemData.item,
-        durationEnabled: this.itemData.item.duration !== null,
-        enteringTimeMinEnabled: this.itemData.item.enteringTimeMin.getTime() !== new Date(DEFAULT_ENTERING_TIME_MIN).getTime(),
-        enteringTimeMaxEnabled: this.itemData.item.enteringTimeMax.getTime() !== new Date(DEFAULT_ENTERING_TIME_MAX).getTime(),
-      };
-      this.resetForm();
+    const prevId = (changes.itemData?.previousValue as ItemData | undefined)?.item.id;
+    const currId = (changes.itemData?.currentValue as ItemData | undefined)?.item.id;
+    if (!this.itemData || prevId === currId) return;
 
-      this.initialLanguageValues.set([
-        {
-          languageTag: this.itemData.item.string.languageTag || '',
-          title: this.itemData.item.string.title || '',
-          description: this.itemData.item.string.description || '',
-          subtitle: this.itemData.item.string.subtitle || '',
-          imageUrl: this.itemData.item.string.imageUrl || '',
-        }
-      ]);
-      this.resetStringsForm();
-      this.fetchOtherLanguages(this.itemData.item);
-    }
+    this.setFormsDisabled(true);
+    this.initialItem = this.itemData.item;
+    this.initialParameters = itemToParametersValue(this.itemData.item);
+    this.resetForm();
+    this.initialLanguageValues.set([ toStringsValue(this.itemData.item) ]);
+    this.resetStringsForm();
+    this.fetchOtherLanguages(this.itemData.item);
   }
 
   ngOnDestroy(): void {
@@ -159,276 +142,135 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   isDirty(): boolean {
-    return this.itemForm.dirty;
+    return this.itemForm.dirty || this.imageUrlForm.dirty;
+  }
+
+  private setFormsDisabled(disabled: boolean): void {
+    if (disabled) {
+      this.itemForm.disable();
+      this.imageUrlForm.disable();
+    } else {
+      this.itemForm.enable();
+      this.imageUrlForm.enable();
+    }
   }
 
   private fetchOtherLanguages(mainItem: Item): void {
     if (this.fetchingOtherLanguages()) return;
     const languagesForFetch = this.supportedLanguages().filter(langTag => langTag !== mainItem.string.languageTag);
-    if (languagesForFetch.length > 0) {
-      this.fetchingOtherLanguages.set(true);
-      forkJoin(languagesForFetch.map(langTag =>
-        this.getItemByIdService.get(mainItem.id, { languageTag: langTag }).pipe(
-          catchError((error: unknown) =>
-            (errorIsHTTPNotFound(error) ? of(undefined) : throwError(() => error))
-          ),
-        )
-      )).subscribe({
-        next: result => this.updateAllStringsFormValue(result.filter(isNotUndefined)),
-        error: () => {
-          this.fetchingOtherLanguages.set(false);
-          this.itemForm.enable();
-        },
-        complete: () => {
-          this.fetchingOtherLanguages.set(false);
-          this.itemForm.enable();
-        },
-      });
-    } else {
-      this.itemForm.enable();
-    }
-  }
-
-  private getItemChanges(): ItemChanges | undefined {
-    const formControls: {[key: string]: AbstractControl | null} = {
-      url: this.itemForm.get('url'),
-      textId: this.itemForm.get('text_id'),
-      usesApi: this.itemForm.get('uses_api'),
-      validationType: this.itemForm.get('validation_type'),
-      noScore: this.itemForm.get('no_score'),
-      promptToJoinGroupByCode: this.itemForm.get('prompt_to_join_group_by_code'),
-      childrenLayout: this.itemForm.get('children_layout'),
-      ...(this.enableParticipation ? {
-        allowsMultipleAttempts: this.itemForm.get('allows_multiple_attempts'),
-        requiresExplicitEntry: this.itemForm.get('requires_explicit_entry'),
-        durationEnabled: this.itemForm.get('duration_enabled'),
-        duration: this.itemForm.get('duration'),
-        enteringTimeMinEnabled: this.itemForm.get('entering_time_min_enabled'),
-        enteringTimeMin: this.itemForm.get('entering_time_min'),
-        enteringTimeMaxEnabled: this.itemForm.get('entering_time_max_enabled'),
-        enteringTimeMax: this.itemForm.get('entering_time_max'),
-      } : {}),
-      ...(this.enableTeam ? {
-        entryParticipantType: this.itemForm.get('entry_participant_type'),
-        entryFrozenTeams: this.itemForm.get('entry_frozen_teams'),
-        entryMaxTeamSize: this.itemForm.get('entry_max_team_size'),
-        entryMinAdmittedMembersRatio: this.itemForm.get('entry_min_admitted_members_ratio'),
-      } : {}),
+    if (languagesForFetch.length === 0) return this.setFormsDisabled(false);
+    this.fetchingOtherLanguages.set(true);
+    const onSettled = (): void => {
+      this.fetchingOtherLanguages.set(false);
+      this.setFormsDisabled(false);
     };
-
-    if (Object.values(formControls).includes(null) || !this.initialFormData) return undefined;
-
-    const itemFormValues: ItemChanges = {};
-
-    const url = formControls.url?.value !== '' ? formControls.url?.value as string : null;
-    if (isNotUndefined(this.initialFormData.url) && url !== this.initialFormData.url) itemFormValues.url = url;
-
-    const usesApi = formControls.usesApi?.value as boolean;
-    if (isNotUndefined(this.initialFormData.usesApi) && usesApi !== this.initialFormData.usesApi) itemFormValues.uses_api = usesApi;
-
-    const textIdValue = ((formControls.textId?.value as string | null) || '').trim();
-    const textId = textIdValue !== '' ? textIdValue : null;
-    if (textId !== this.initialFormData.textId) itemFormValues.text_id = textId;
-
-    const validationType = formControls.validationType?.value as 'None' | 'All' | 'AllButOne' | 'Categories' | 'One' | 'Manual';
-    if (validationType !== this.initialFormData.validationType) itemFormValues.validation_type = validationType;
-
-    const noScore = formControls.noScore?.value as boolean;
-    if (noScore !== this.initialFormData.noScore) itemFormValues.no_score = noScore;
-
-    const promptToJoinGroupByCode = formControls.promptToJoinGroupByCode?.value as boolean;
-    const childrenLayout = formControls.childrenLayout?.value as 'List' | 'Grid' | 'Hide';
-    const initialDisplaySettings: DisplaySettings = this.initialFormData.displaySettings;
-    const hasDisplaySettingsChanges =
-      promptToJoinGroupByCode !== initialDisplaySettings.promptToJoinGroupByCode
-      || childrenLayout !== initialDisplaySettings.childrenLayout;
-
-    if (hasDisplaySettingsChanges) {
-      itemFormValues.display_settings = buildDisplaySettingsBody({
-        ...initialDisplaySettings,
-        childrenLayout,
-        promptToJoinGroupByCode,
-      });
-    }
-
-    const defaultLanguageTag = this.itemForm.controls.default_language_tag.getRawValue();
-    if (defaultLanguageTag !== this.initialFormData.defaultLanguageTag) itemFormValues.default_language_tag = defaultLanguageTag;
-
-    if (this.enableParticipation) {
-      const allowsMultipleAttempts = formControls.allowsMultipleAttempts?.value as boolean;
-      if (allowsMultipleAttempts !== this.initialFormData.allowsMultipleAttempts) {
-        itemFormValues.allows_multiple_attempts = allowsMultipleAttempts;
-      }
-
-      const requiresExplicitEntry = formControls.requiresExplicitEntry?.value as boolean;
-      const hasRequiresExplicitEntryChanges = requiresExplicitEntry !== this.initialFormData.requiresExplicitEntry;
-
-      if (hasRequiresExplicitEntryChanges) {
-        itemFormValues.requires_explicit_entry = requiresExplicitEntry;
-      }
-
-      const durationEnabled = formControls.durationEnabled?.value as boolean;
-      const duration = formControls.duration?.value as Duration | null;
-      const hasDurationEnabledChanges = durationEnabled !== this.initialFormData.durationEnabled;
-      const hasDurationChanges = duration?.getMs() !== this.initialFormData?.duration?.getMs();
-
-      if (hasDurationChanges || hasDurationEnabledChanges || hasRequiresExplicitEntryChanges) {
-        itemFormValues.duration = durationEnabled && requiresExplicitEntry ? duration?.toString() : null;
-      }
-
-      const enteringTimeMinEnabled = formControls.enteringTimeMinEnabled?.value as boolean;
-      const hasEnteringTimeMinEnabledChanges = enteringTimeMinEnabled !== this.initialFormData.enteringTimeMinEnabled;
-      const enteringTimeMin = formControls.enteringTimeMin?.value as Date | null;
-      const hasEnteringTimeMinChanges = enteringTimeMin && enteringTimeMin.getTime()
-        !== this.initialFormData.enteringTimeMin.getTime();
-
-      if (hasEnteringTimeMinChanges || hasEnteringTimeMinEnabledChanges) {
-        itemFormValues.entering_time_min = enteringTimeMinEnabled && enteringTimeMin
-          ? enteringTimeMin
-          : new Date(DEFAULT_ENTERING_TIME_MIN);
-      }
-
-      const enteringTimeMaxEnabled = formControls.enteringTimeMaxEnabled?.value as boolean;
-      const hasEnteringTimeMaxEnabledChanges = enteringTimeMaxEnabled !== this.initialFormData.enteringTimeMaxEnabled;
-      const enteringTimeMax = formControls.enteringTimeMax?.value as Date | null;
-      const hasEnteringTimeMaxChanges = enteringTimeMax && enteringTimeMax.getTime()
-        !== this.initialFormData.enteringTimeMax.getTime();
-
-      if (hasEnteringTimeMaxChanges || hasEnteringTimeMaxEnabledChanges) {
-        itemFormValues.entering_time_max = enteringTimeMaxEnabled && enteringTimeMax
-          ? enteringTimeMax
-          : new Date(DEFAULT_ENTERING_TIME_MAX);
-      }
-    }
-
-    if (this.enableTeam) {
-      const entryParticipantType = (formControls.entryParticipantType?.value as boolean | undefined) ? 'Team' : 'User';
-      const hasEntryParticipantTypeChanges = entryParticipantType !== this.initialFormData.entryParticipantType;
-      if (hasEntryParticipantTypeChanges) {
-        itemFormValues.entry_participant_type = entryParticipantType;
-      }
-
-      const entryFrozenTeams = formControls.entryFrozenTeams?.value as boolean | undefined;
-      const hasEntryFrozenTeamsChanges = entryFrozenTeams !== this.initialFormData.entryFrozenTeams;
-      if (hasEntryFrozenTeamsChanges) {
-        itemFormValues.entry_frozen_teams = entryFrozenTeams;
-      }
-
-      const entryMaxTeamSize = formControls.entryMaxTeamSize?.value as number | undefined;
-      const hasEntryMaxTeamSizeChanges = entryMaxTeamSize !== this.initialFormData.entryMaxTeamSize;
-      if (hasEntryMaxTeamSizeChanges) {
-        itemFormValues.entry_max_team_size = entryMaxTeamSize;
-      }
-
-      const entryMinAdmittedMembersRatio = formControls.entryMinAdmittedMembersRatio?.value as 'None' | 'All' | 'One' | 'Half' | undefined;
-      const hasEntryMinAdmittedMembersRatioChanges = entryMinAdmittedMembersRatio !== this.initialFormData.entryMinAdmittedMembersRatio;
-      if (hasEntryMinAdmittedMembersRatioChanges) {
-        itemFormValues.entry_min_admitted_members_ratio = entryMinAdmittedMembersRatio;
-      }
-    }
-
-    return itemFormValues;
+    forkJoin(languagesForFetch.map(langTag => this.getItemByIdService.get(mainItem.id, { languageTag: langTag }).pipe(
+      catchError((error: unknown) => (errorIsHTTPNotFound(error) ? of(undefined) : throwError(() => error))),
+    ))).subscribe({
+      next: result => this.updateAllStringsFormValue(result.filter(isNotUndefined)),
+      error: onSettled,
+      complete: onSettled,
+    });
   }
 
-  private updateItem(): Observable<void> {
-    if (!this.initialFormData) return throwError(() => new Error('Invalid initial data'));
-    const changes = this.getItemChanges();
-    if (!changes) return throwError(() => new Error('Invalid form'));
+  private buildItemChanges(): ItemChanges | null {
+    if (!this.initialItem || !this.initialParameters) return null;
+    const currentParameters = this.itemForm.controls.parameters.getRawValue();
+    if (!currentParameters) return null;
+
+    const changes = buildItemParametersChanges(
+      currentParameters,
+      this.initialParameters,
+      sectionsForItemType(this.initialItem.type),
+      this.initialItem.displaySettings,
+    );
+    const defaultLanguageTag = this.itemForm.controls.defaultLanguageTag.getRawValue();
+    if (defaultLanguageTag !== this.initialItem.defaultLanguageTag) changes.default_language_tag = defaultLanguageTag;
+    return changes;
+  }
+
+  private updateItem(changes: ItemChanges): Observable<void> {
+    if (!this.initialItem) return throwError(() => new Error('Invalid initial data'));
     if (!Object.keys(changes).length) return of(undefined);
-    return this.updateItemService.updateItem(this.initialFormData.id, changes);
+    return this.updateItemService.updateItem(this.initialItem.id, changes);
   }
 
-  private getItemAllStringsChanges(): ({ changes: ItemStringChanges, languageTag: string })[] {
-    if (!this.initialFormData) throw new Error('Unexpected: Missed initial data');
-    const { string } = this.initialFormData;
-    const defaultLanguageTag = this.itemForm.controls.default_language_tag.getRawValue();
-    const allStringsValue = this.itemForm.controls.allStrings.getRawValue();
-    const imageUrlValue = this.itemForm.controls.image_url.getRawValue();
-    const defaultLangIdx = this.initialLanguageValues().findIndex(l => l.languageTag === defaultLanguageTag);
-    return allStringsValue.map((v, idx) =>
-      this.getItemStringChanges(
-        v,
-        {
-          initialValue: this.initialLanguageValues().find(iv => iv.languageTag === v.languageTag),
-          ...(idx === defaultLangIdx && imageUrlValue !== null && imageUrlValue !== string.imageUrl
-            ? { imageUrlValue } : {}),
-        },
-      )
-    ).filter(({ changes }) => Object.keys(changes).length > 0);
-  }
-
-  private getItemStringChanges(
-    value: StringsValue,
-    { initialValue, imageUrlValue }: { initialValue?: StringsValue, imageUrlValue?: string }
-  ): ({ changes: ItemStringChanges, languageTag: string }) {
-    const changes: ItemStringChanges = {
-      ...(imageUrlValue ? { image_url: imageUrlValue } : {}),
-    };
-
-    if (value.title !== initialValue?.title) changes.title = value.title.trim();
-    if (value.subtitle !== initialValue?.subtitle) changes.subtitle = value.subtitle;
-    if (value.description !== initialValue?.description) changes.description = value.description;
-
-    return { changes, languageTag: value.languageTag };
-  }
-
-  prepareUpdateOrDeleteStringsRequests() : { type: UpdateOrDeleteStringsRequestType, request$: Observable<void> }[] | undefined {
+  private buildStringsRequests(): { creates: Observable<void>[], updates: Observable<void>[], deletes: Observable<void>[] } {
     const id = this.itemData?.item.id;
-    if (!id) throw new Error('Missing ID form');
+    if (!id || !this.initialItem) throw new Error('Missing ID form');
 
-    const stringsChanges = this.getItemAllStringsChanges();
+    const stringsChanges = buildItemAllStringsChanges(
+      this.itemForm.controls.allStrings.getRawValue(),
+      this.initialLanguageValues(),
+      this.itemForm.controls.defaultLanguageTag.getRawValue(),
+      this.initialItem,
+      this.imageUrlForm.controls.imageUrl.getRawValue(),
+    );
+    const initialLanguageTags = this.initialLanguageValues().map(v => v.languageTag);
     const stringLanguageTagsValue = this.itemForm.getRawValue().allStrings.map(v => v.languageTag);
     const stringsToRemove = this.initialLanguageValues().filter(v => !stringLanguageTagsValue.includes(v.languageTag));
 
-    return stringsChanges.length === 0 && stringsToRemove.length === 0 ? undefined : [
-      ...(stringsChanges.length > 0 ? stringsChanges.map(({ changes, languageTag }) =>
-        ({ type: UpdateOrDeleteStringsRequestType.Update, request$: this.updateItemStringService.updateItem(id, changes, languageTag) })
-      ) : []),
-      ...(stringsToRemove.length > 0 ? stringsToRemove.map(v =>
-        ({ type: UpdateOrDeleteStringsRequestType.Delete, request$: this.deleteItemStringService.delete(id, v.languageTag) })) : []),
-    ];
+    const creates: Observable<void>[] = [];
+    const updates: Observable<void>[] = [];
+    for (const { changes, languageTag } of stringsChanges) {
+      const request = this.updateItemStringService.updateItem(id, changes, languageTag);
+      if (initialLanguageTags.includes(languageTag)) updates.push(request);
+      else creates.push(request);
+    }
+
+    return {
+      creates,
+      updates,
+      deletes: stringsToRemove.map(v => this.deleteItemStringService.delete(id, v.languageTag)),
+    };
   }
 
   save(): void {
-    if (!this.initialFormData) return;
-
+    if (!this.initialItem) return;
     if (this.itemForm.invalid) {
       this.actionFeedbackService.error($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
-
-    const createUpdateOrDeleteStringsRequestsData = this.prepareUpdateOrDeleteStringsRequests();
-    const deleteStringsRequests$ = createUpdateOrDeleteStringsRequestsData?.filter(d =>
-      d.type === UpdateOrDeleteStringsRequestType.Update
-    ).map(d => d.request$);
-    const updateStringsRequests$ = createUpdateOrDeleteStringsRequestsData?.filter(d =>
-      d.type === UpdateOrDeleteStringsRequestType.Delete
-    ).map(d => d.request$);
-
+    const itemChanges = this.buildItemChanges();
+    if (itemChanges === null) return;
+    const { creates, updates, deletes } = this.buildStringsRequests();
+    const trailingRequests = [ ...updates, ...deletes ];
+    // Skip the network round-trip and the "saved" toast when nothing actually changed; the Save
+    // button is gated by `dirty` so this is mostly a defensive guard.
+    if (!Object.keys(itemChanges).length && creates.length === 0 && trailingRequests.length === 0) return;
+    // Order matters and is driven by the item ↔ item-strings dependency:
+    // 1. Create new item-strings first, so `default_language_tag` on the item can safely point at
+    //    a freshly-added language.
+    // 2. Update the item record (which may change `default_language_tag`).
+    // 3. Run remaining updates and deletes in parallel — running deletes AFTER the item update
+    //    also lets the user demote-then-delete the previous default language in a single save.
     const requests$ = [
-      ...(deleteStringsRequests$ && deleteStringsRequests$.length > 0 ? [ forkJoin(deleteStringsRequests$) ] : []),
-      this.updateItem(),
-      ...(updateStringsRequests$ && updateStringsRequests$.length > 0 ? [ forkJoin(updateStringsRequests$) ] : []),
+      ...(creates.length > 0 ? [ forkJoin(creates) ] : []),
+      this.updateItem(itemChanges),
+      ...(trailingRequests.length > 0 ? [ forkJoin(trailingRequests) ] : []),
     ];
 
-    this.itemForm.disable();
+    this.setFormsDisabled(true);
     concat(...requests$).pipe(toArray()).subscribe({
-      next: _status => {
-        this.itemForm.enable();
+      next: () => {
+        this.setFormsDisabled(false);
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.store.dispatch(fromItemContent.itemByIdPageActions.refresh()); // which will re-enable the form
         this.currentContentService.forceNavMenuReload();
       },
-      error: (err: unknown) => {
-        this.itemForm.enable();
-        if (err instanceof HttpErrorResponse && isServerValidationErrors(err)) {
-          this.itemForm.setErrors(err.error.errors);
-          return;
-        }
-        this.actionFeedbackService.unexpectedError();
-        if (!(err instanceof HttpErrorResponse)) throw err;
-      }
+      error: (err: unknown) => this.onSaveError(err),
     });
+  }
+
+  private onSaveError(err: unknown): void {
+    this.setFormsDisabled(false);
+    if (err instanceof HttpErrorResponse && isServerValidationErrors(err)) {
+      this.itemForm.setErrors(err.error.errors);
+      this.textIdError.set(extractTextIdError(err.error.errors));
+      return;
+    }
+    this.actionFeedbackService.unexpectedError();
+    if (!(err instanceof HttpErrorResponse)) throw err;
   }
 
   onCancel(): void {
@@ -444,25 +286,16 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   private updateAllStringsFormValue(items: Item[]): void {
     const [ mainLanguageStringsValue ] = this.itemForm.controls.allStrings.getRawValue();
     if (!mainLanguageStringsValue) throw new Error('Unexpected: Missed mainLanguageStringsValue');
-
-    const values: StringsValue[] = items.map(o => ({
-      title: o.string.title || '',
-      subtitle: o.string.subtitle || '',
-      description: o.string.description || '',
-      languageTag: o.string.languageTag,
-      imageUrl: o.string.imageUrl || '',
-    }));
+    const values = items.map(toStringsValue);
     const isDirty = this.itemForm.controls.allStrings.dirty;
-
     this.initialLanguageValues.update(initialValues => ([ ...initialValues, ...values ]));
-
-    if (isDirty) {
-      this.itemForm.controls.allStrings.setValue([ mainLanguageStringsValue, ...values ]);
-      this.resetImageUrl();
-      this.itemForm.controls.allStrings.markAsDirty();
-    } else {
+    if (!isDirty) {
       this.resetStringsForm();
+      return;
     }
+    this.itemForm.controls.allStrings.setValue([ mainLanguageStringsValue, ...values ]);
+    this.resetImageUrl();
+    this.itemForm.controls.allStrings.markAsDirty();
   }
 
   private resetStringsForm(): void {
@@ -471,61 +304,36 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   private resetImageUrl(): void {
-    if (!this.initialFormData) throw new Error('Unexpected: Missed initial form data');
-    const { defaultLanguageTag } = this.initialFormData;
-    const imageUrl = this.initialLanguageValues().find(l => l.languageTag === defaultLanguageTag)?.imageUrl;
-    this.itemForm.controls.image_url.reset(imageUrl || '');
+    if (!this.initialItem) throw new Error('Unexpected: Missed initial form data');
+    const imageUrl = this.initialLanguageValues().find(l => l.languageTag === this.initialItem!.defaultLanguageTag)?.imageUrl;
+    this.imageUrlForm.reset({ imageUrl: imageUrl || '' });
   }
 
   private resetForm(): void {
-    if (!this.initialFormData) {
-      return;
-    }
-
-    const item = this.initialFormData;
-
-    this.itemForm.reset({
-      url: item.url || '',
-      text_id: item.textId || '',
-      uses_api: item.usesApi || false,
-      validation_type: item.validationType,
-      no_score: item.noScore,
-      prompt_to_join_group_by_code: item.displaySettings.promptToJoinGroupByCode,
-      children_layout: item.displaySettings.childrenLayout,
-      default_language_tag: item.defaultLanguageTag,
-      ...(this.enableParticipation ? {
-        allows_multiple_attempts: item.allowsMultipleAttempts,
-        requires_explicit_entry: item.requiresExplicitEntry,
-        duration_enabled: item.durationEnabled,
-        duration: item.duration,
-        entering_time_min_enabled: item.enteringTimeMinEnabled,
-        entering_time_min: item.enteringTimeMin,
-        entering_time_max_enabled: item.enteringTimeMaxEnabled,
-        entering_time_max: item.enteringTimeMax,
-      } : {}),
-      ...(this.enableTeam ? {
-        entry_participant_type: item.entryParticipantType === 'Team',
-        entry_frozen_teams: item.entryFrozenTeams,
-        entry_max_team_size: item.entryMaxTeamSize,
-        entry_min_admitted_members_ratio: item.entryMinAdmittedMembersRatio,
-      } : {}),
-    });
-  }
-
-  private maxTeamSizeValidator(): ValidatorFn {
-    return (itemForm): null => {
-      const isParticipationAsTeamOnly = itemForm.get('entry_participant_type')?.value as boolean;
-      const maxTeamSizeControl = itemForm.get('entry_max_team_size');
-      if (!maxTeamSizeControl) return null;
-
-      if (isParticipationAsTeamOnly) maxTeamSizeControl.setErrors(Validators.min(1)(maxTeamSizeControl));
-      else maxTeamSizeControl.setErrors(null);
-      return null;
-    };
+    if (!this.initialItem || !this.initialParameters) return;
+    this.itemForm.reset({ defaultLanguageTag: this.initialItem.defaultLanguageTag, parameters: this.initialParameters });
+    this.textIdError.set(null);
   }
 
   onDefaultLanguageChange(languageTag: string): void {
-    this.itemForm.controls.default_language_tag.setValue(languageTag);
-    this.itemForm.controls.default_language_tag.markAsDirty();
+    this.itemForm.controls.defaultLanguageTag.setValue(languageTag);
+    this.itemForm.controls.defaultLanguageTag.markAsDirty();
   }
+}
+
+function extractTextIdError(errors: ValidationErrors): string | null {
+  const raw: unknown = errors.text_id;
+  if (Array.isArray(raw)) return raw.join(' ');
+  if (typeof raw === 'string') return raw;
+  return null;
+}
+
+function toStringsValue(item: Pick<Item, 'string'>): StringsValue {
+  return {
+    languageTag: item.string.languageTag || '',
+    title: item.string.title || '',
+    subtitle: item.string.subtitle || '',
+    description: item.string.description || '',
+    imageUrl: item.string.imageUrl || '',
+  };
 }

@@ -33,37 +33,10 @@
         flex: 1;
       }
     }
-
-    .date-pickers {
-      display: flex;
-      align-items: center;
-      font-size: 1.2rem;
-
-      .date-label {
-        margin-left: 1rem;
-        margin-right: 1rem;
-      }
-    }
   }
 }
 
-.form-item-duration {
-  margin: functions.toRem(16) 0;
-}
-
-.input-wrapper-duration {
-  height: functions.toRem(78);
-}
-
-.form-item-datepicker {
-  margin: functions.toRem(16) 0;
-  height: functions.toRem(62);
-}
-
-.delete-button {
-  padding: 1rem 0;
-}
-
-.date-note {
-  margin: var(--alg-space-size-6) 0 0 0;
+.alg-warning-message {
+  display: block;
+  margin-top: var(--alg-space-size-6);
 }

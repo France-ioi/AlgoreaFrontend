@@ -1,0 +1,19 @@
+@use 'src/assets/scss/functions';
+@use 'section-shared';
+
+.form-item-duration {
+  margin: functions.toRem(16) 0;
+}
+
+.input-wrapper-duration {
+  height: functions.toRem(78);
+}
+
+.form-item-datepicker {
+  margin: functions.toRem(16) 0;
+  height: functions.toRem(62);
+}
+
+.date-note {
+  margin: var(--alg-space-size-6) 0 0 0;
+}

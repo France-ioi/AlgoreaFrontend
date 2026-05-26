@@ -39,10 +39,10 @@ test('checks update item extra time', { tag: '@no-parallelism' }, async ({ page,
   const totalAdditionalTimeLocator = targetRow.getByTestId('total-additional-time');
   const currentTotalAdditionalTimeValue = await totalAdditionalTimeLocator.innerText();
   const saveBtnLocator = targetRow.getByTestId('item-extra-time-save-btn');
-  const value = String(Math.floor(Math.random() * 10) + 1);
 
   await expect.soft(targetRow).toBeVisible();
   const currentInputValue = await inputLocator.inputValue();
+  const value = await pickDifferentExtraTimeValue(inputLocator);
 
   await test.step('save the new value', async () => {
     await expect.soft(inputLocator).toBeVisible();
@@ -103,8 +103,8 @@ test('checks update item extra time for group', { tag: '@no-parallelism' }, asyn
   const inputLocator = targetRow.locator('alg-input-number').getByRole('textbox');
   const totalAdditionalTimeLocator = targetRow.getByTestId('total-additional-time');
   const saveBtnLocator = targetRow.getByTestId('item-extra-time-save-btn');
-  const value = String(Math.floor(Math.random() * 10) + 1);
   await expect.soft(targetRow).toBeVisible();
+  const value = await pickDifferentExtraTimeValue(inputLocator);
 
   await test.step('save the new value', async () => {
     await expect.soft(inputLocator).toBeVisible();

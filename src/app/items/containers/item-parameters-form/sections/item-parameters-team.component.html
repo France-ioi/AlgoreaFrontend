@@ -1,0 +1,43 @@
+<div [formGroup]="form" data-testid="edit-team-section" class="alg-display-none">
+  <h2 class="alg-h2 alg-text-normal title" i18n>Team</h2>
+
+  <div class="form-item-view">
+    <span class="form-item-label">
+      <ng-container i18n>Participation as a team (only)</ng-container>&nbsp;
+      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+    </span>
+    <div class="form-item-control">
+      <alg-switch formControlName="entryParticipantTypeIsTeam"></alg-switch>
+    </div>
+  </div>
+
+  @if (form.controls.entryParticipantTypeIsTeam.value) {
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Freeze team on entry</span>
+      <div class="form-item-control">
+        <alg-switch formControlName="entryFrozenTeams"></alg-switch>
+      </div>
+    </div>
+
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Maximum team size</span>
+      <div class="form-item-control">
+        <alg-input-number formControlName="entryMaxTeamSize"></alg-input-number>
+        <alg-input-error [control]="form.controls.entryMaxTeamSize"></alg-input-error>
+      </div>
+    </div>
+
+    <div class="form-item-view">
+      <span class="form-item-label" i18n>Minimum admitted members</span>
+      <div class="form-item-control">
+        <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="entryMinAdmittedMembersRatio">
+          @for (option of minAdmittedMembersRatioOptions; track $index) {
+            <alg-select-option [value]="option">
+              {{ option.label }}
+            </alg-select-option>
+          }
+        </alg-select>
+      </div>
+    </div>
+  }
+</div>

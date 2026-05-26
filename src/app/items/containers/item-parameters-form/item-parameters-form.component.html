@@ -1,0 +1,31 @@
+@let secs = sections();
+
+<form [formGroup]="form">
+  @if (secs.global) {
+    <alg-item-parameters-global
+      [form]="form.controls.global"
+      [textIdError]="textIdError()"
+    ></alg-item-parameters-global>
+  }
+  @if (secs.score) {
+    <alg-item-parameters-score [form]="form.controls.score"></alg-item-parameters-score>
+  }
+  @if (secs.display.enabled) {
+    <alg-item-parameters-display
+      [form]="form.controls.display"
+      [imageUrlForm]="imageUrlForm()"
+      [showChildrenLayout]="secs.display.showChildrenLayout"
+      [showImageUrl]="secs.display.showImageUrl"
+    ></alg-item-parameters-display>
+  }
+  @if (secs.participation) {
+    <alg-item-parameters-participation [formControl]="form.controls.participation"></alg-item-parameters-participation>
+  }
+  @if (secs.team) {
+    <alg-item-parameters-team [formControl]="form.controls.team"></alg-item-parameters-team>
+  }
+</form>
+
+<div class="delete-button">
+  <alg-item-remove-button [itemData]="itemData()" (confirmRemoval)="confirmRemoval.emit()"></alg-item-remove-button>
+</div>

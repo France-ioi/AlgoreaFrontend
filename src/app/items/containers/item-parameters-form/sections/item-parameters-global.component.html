@@ -1,0 +1,31 @@
+<div [formGroup]="form()">
+  <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
+
+  <div class="form-item-view">
+    <span class="form-item-label" i18n>Url</span>
+    <div class="form-item-control">
+      <alg-input [parentForm]="form()" name="url"></alg-input>
+    </div>
+  </div>
+
+  <div class="form-item-view">
+    <span class="form-item-label" i18n>Uses API</span>
+    <div class="form-item-control">
+      <alg-switch formControlName="usesApi"></alg-switch>
+    </div>
+  </div>
+
+  <div class="form-item-view">
+    <span class="form-item-label">TextID</span>
+    <div class="form-item-control">
+      <alg-input [parentForm]="form()" name="textId"></alg-input>
+      @if (textIdError(); as err) {
+        @if (err.includes('text_id must be unique')) {
+          <small class="alg-validation-error" i18n>
+            This value is already used by another content. The text id must be unique across the platform.
+          </small>
+        }
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div [formGroup]="form()">
+  <h2 class="alg-h2 alg-text-normal title" i18n>Score & Validation</h2>
+
+  <div class="form-item-view">
+    <span class="form-item-label" i18n>Validation criteria</span>
+    <div class="form-item-control">
+      <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="validationType">
+        @for (option of validationCriteriaOptions; track $index) {
+          <alg-select-option [value]="option">
+            {{ option.label }}
+          </alg-select-option>
+        }
+      </alg-select>
+    </div>
+  </div>
+
+  <div class="form-item-view">
+    <span class="form-item-label" i18n>Disable score</span>
+    <div class="form-item-control">
+      <alg-switch formControlName="noScore"></alg-switch>
+    </div>
+  </div>
+</div>
