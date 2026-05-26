@@ -112,6 +112,16 @@ export function sectionsForItemType(type: ItemType): ItemParametersSections {
   };
 }
 
+/**
+ * Trim a free-form string field and collapse empty/whitespace-only input to `null`, matching
+ * the backend convention for nullable string columns (`url`, `text_id`). Applying this to both
+ * sides of the diff means a save that only added/removed whitespace is correctly a no-op.
+ */
+function trimToNullable(value: string): string | null {
+  const trimmed = value.trim();
+  return trimmed !== '' ? trimmed : null;
+}
+
 /** Whether the saved `enteringTimeMin` is the "no constraint" sentinel. */
 function isDefaultEnteringTimeMin(date: Date): boolean {
   return date.getTime() === new Date(DEFAULT_ENTERING_TIME_MIN).getTime();
@@ -170,15 +180,14 @@ export function buildItemParametersChanges(
   const changes: ItemChanges = {};
 
   if (sections.global) {
-    const url = current.url !== '' ? current.url : null;
-    const initialUrl = initial.url !== '' ? initial.url : null;
+    const url = trimToNullable(current.url);
+    const initialUrl = trimToNullable(initial.url);
     if (url !== initialUrl) changes.url = url;
 
     if (current.usesApi !== initial.usesApi) changes.uses_api = current.usesApi;
 
-    const textIdValue = current.textId.trim();
-    const textId = textIdValue !== '' ? textIdValue : null;
-    const initialTextId = initial.textId.trim() !== '' ? initial.textId.trim() : null;
+    const textId = trimToNullable(current.textId);
+    const initialTextId = trimToNullable(initial.textId);
     if (textId !== initialTextId) changes.text_id = textId;
   }
 

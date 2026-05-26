@@ -83,6 +83,20 @@ describe('buildItemParametersChanges', () => {
       .toEqual({ url: null });
   });
 
+  it('trims url and treats whitespace-only as null', () => {
+    const initial = makeValue({ url: 'https://example.test' });
+    const current = makeValue({ url: '   ' });
+    expect(buildItemParametersChanges(current, initial, sectionsForItemType('Task'), initialDisplaySettings))
+      .toEqual({ url: null });
+  });
+
+  it('treats a whitespace-only edit to a previously-null url as a no-op', () => {
+    const initial = makeValue({ url: '' });
+    const current = makeValue({ url: '   ' });
+    expect(buildItemParametersChanges(current, initial, sectionsForItemType('Task'), initialDisplaySettings))
+      .toEqual({});
+  });
+
   it('trims text_id and treats whitespace-only as null', () => {
     const initial = makeValue({ textId: 'old' });
     const current = makeValue({ textId: '   ' });
