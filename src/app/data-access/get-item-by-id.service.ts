@@ -38,6 +38,7 @@ const itemSchema = z.object({
     permissions: itemCorePermSchema.optional(),
   }).optional(),
   defaultLanguageTag: z.string(),
+  supportedLanguageTags: z.array(z.string()),
 });
 
 export type Item = z.infer<typeof itemSchema>;
