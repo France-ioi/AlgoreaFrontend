@@ -13,7 +13,8 @@ import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 
 export type Answer =
-  Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'|'participantId'> & Partial<Pick<GetAnswerType, 'createdAt'>>;
+  Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'|'participantId'|'type'>
+  & Partial<Pick<GetAnswerType, 'createdAt'>>;
 
 export interface TaskConfig {
   readOnly: boolean,
@@ -33,7 +34,10 @@ export class ItemTaskService implements OnDestroy {
   readonly destroyed$ = new Subject<void>();
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(takeUntil(this.destroyed$), shareReplay(1));
   readonly initError$ = this.initService.initError$.pipe(takeUntil(this.destroyed$), shareReplay(1));
-  readonly urlError$ = this.initService.urlError$.pipe(takeUntil(this.destroyed$), shareReplay(1));
+  readonly urlError$ = merge(
+    this.initService.urlError$,
+    this.initService.apiVersionError$,
+  ).pipe(takeUntil(this.destroyed$), shareReplay(1));
   readonly hintError$ = new Subject<void>();
 
   readonly error$ = merge(

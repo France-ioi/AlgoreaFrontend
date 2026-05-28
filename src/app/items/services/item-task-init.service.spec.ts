@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { EMPTY, merge, of, Subject, TimeoutError } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ItemTaskInitService, LOAD_TASK_TIMEOUT, TASK_PROXY_FROM_IFRAME } from './item-task-init.service';
+import { ItemTaskInitService, IncompatibleTaskApiVersionError, LOAD_TASK_TIMEOUT, TASK_PROXY_FROM_IFRAME } from './item-task-init.service';
 import { TaskTokenService } from '../data-access/task-token.service';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { Task } from '../api/task-proxy';
@@ -160,5 +160,73 @@ describe('ItemTaskInitService – timeout scenarios', () => {
 
     const finalState = states[states.length - 1];
     expect(finalState?.isReady).withContext('state$ should transition to ready after late task load').toBeTrue();
+  }));
+});
+
+describe('ItemTaskInitService – API version negotiation', () => {
+  let service: ItemTaskInitService;
+  let iframe: HTMLIFrameElement;
+  let taskProxy$: Subject<Task>;
+
+  beforeEach(() => {
+    taskProxy$ = new Subject<Task>();
+
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskInitService,
+        { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
+        { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
+        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+      ],
+    });
+
+    service = TestBed.inject(ItemTaskInitService);
+    iframe = document.createElement('iframe');
+
+    service.configure(route, 'http://example.com/task', '0', null, undefined, false);
+    service.initTask(iframe, () => {});
+  });
+
+  afterEach(() => {
+    service.ngOnDestroy();
+  });
+
+  it('should negotiate api version 2 and set it on the task', fakeAsync(() => {
+    const mockTask = createMockTask();
+    mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 2, minApiVersion: 1 }));
+    let loadedTask: Task | undefined;
+
+    service.loadedTask$.subscribe(task => loadedTask = task);
+
+    iframe.dispatchEvent(new Event('load'));
+    tick(0);
+    taskProxy$.next(mockTask);
+    taskProxy$.complete();
+    tick(0);
+
+    expect(loadedTask).withContext('loadedTask$ should have emitted').toBe(mockTask);
+    expect(mockTask.apiVersion).withContext('task.apiVersion should be negotiated to 2').toBe(2);
+  }));
+
+  it('should emit apiVersionError$ when the task API range is incompatible', fakeAsync(() => {
+    const mockTask = createMockTask();
+    mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 99, minApiVersion: 99 }));
+    let apiVersionError: IncompatibleTaskApiVersionError | undefined;
+    let loadedTaskEmitted = false;
+
+    service.apiVersionError$.subscribe(err => apiVersionError = err);
+    service.loadedTask$.subscribe({
+      next: () => loadedTaskEmitted = true,
+      error: () => {},
+    });
+
+    iframe.dispatchEvent(new Event('load'));
+    tick(0);
+    taskProxy$.next(mockTask);
+    taskProxy$.complete();
+    tick(0);
+
+    expect(apiVersionError).withContext('apiVersionError$ should have emitted').toBeInstanceOf(IncompatibleTaskApiVersionError);
+    expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted successfully').toBeFalse();
   }));
 });

@@ -75,6 +75,8 @@ export const taskMetadataSchema = z.object({
   editorUrl: z.string(),
   usesRandomSeed: z.boolean(),
   usesTokens: z.boolean(),
+  apiVersion: z.number().int().positive(),
+  minApiVersion: z.number().int().positive(),
 }).partial();
 export type TaskMetaData = z.infer<typeof taskMetadataSchema>;
 export type TaskResources = unknown;
