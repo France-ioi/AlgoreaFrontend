@@ -31,6 +31,14 @@
   color: var(--alg-form-item-label);
 }
 
+.hint-icon {
+  margin-left: functions.toRem(4);
+  color: var(--alg-form-item-label, #666);
+  cursor: help;
+  font-size: functions.toRem(14);
+  vertical-align: middle;
+}
+
 .field-value {
   float: left;
   width: 70%;

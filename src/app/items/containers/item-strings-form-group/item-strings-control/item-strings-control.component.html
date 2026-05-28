@@ -2,6 +2,13 @@
   <div class="field" data-testid="item-strings-title">
     <div class="field-name">
       <label i18n>Title</label>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="The main title shown to learners. Choose a clear, descriptive name."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
     </div>
     <div class="field-value">
       <alg-input [parentForm]="form" name="title"></alg-input>
@@ -10,6 +17,13 @@
   <div class="field" data-testid="item-strings-subtitle">
     <div class="field-name">
       <label i18n>Subtitle</label>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Optional text displayed under the title in lists and on the content page."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
     </div>
     <div class="field-value">
       <alg-input [parentForm]="form" name="subtitle"></alg-input>
@@ -19,6 +33,13 @@
     <div class="field" data-testid="item-strings-description">
       <div class="field-name">
         <label i18n>Description</label>
+        <i
+          class="ph-duotone ph-info hint-icon"
+          i18n-algTooltip
+          algTooltip="Rich-text content shown to learners below the title and subtitle."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
       </div>
       <div class="field-value">
         <alg-item-edit-content

@@ -4,6 +4,7 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
 import { SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
 import { SelectOption } from 'src/app/ui-components/select/select-option/selected-option.service';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { ItemValidationType } from 'src/app/items/models/item-parameters';
 
 export type ItemParametersScoreForm = FormGroup<{
@@ -21,6 +22,7 @@ export type ItemParametersScoreForm = FormGroup<{
     SelectComponent,
     SelectOptionComponent,
     SwitchComponent,
+    TooltipDirective,
   ],
 })
 export class ItemParametersScoreComponent {

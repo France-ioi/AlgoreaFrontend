@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 export type ItemParametersGlobalForm = FormGroup<{
   url: FormControl<string>,
@@ -20,6 +21,7 @@ export type ItemParametersGlobalForm = FormGroup<{
     ReactiveFormsModule,
     InputComponent,
     SwitchComponent,
+    TooltipDirective,
   ],
 })
 export class ItemParametersGlobalComponent {
