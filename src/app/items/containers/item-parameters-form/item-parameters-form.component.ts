@@ -6,7 +6,6 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  UntypedFormGroup,
   ValidationErrors,
   Validator,
   Validators,
@@ -65,7 +64,6 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
   private fb = inject(FormBuilder);
 
   itemData = input.required<ItemData>();
-  imageUrlForm = input<UntypedFormGroup>();
   /**
    * Server-side text_id error (e.g. "text_id must be unique"). The wrapper plucks it from the
    * outer itemForm errors on HTTP 4xx and threads it down to the Global section here.
@@ -95,6 +93,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
     display: this.fb.nonNullable.group({
       promptToJoinGroupByCode: [ false ],
       childrenLayout: this.fb.nonNullable.control<ItemChildrenLayout>('List'),
+      thumbnailUrl: [ '', Validators.maxLength(2000) ],
     }),
     participation: this.fb.nonNullable.control<ItemParametersParticipationValue>({
       allowsMultipleAttempts: false,
@@ -171,7 +170,11 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
     return {
       global: { url: v.url, usesApi: v.usesApi, textId: v.textId },
       score: { validationType: v.validationType, noScore: v.noScore },
-      display: { promptToJoinGroupByCode: v.promptToJoinGroupByCode, childrenLayout: v.childrenLayout },
+      display: {
+        promptToJoinGroupByCode: v.promptToJoinGroupByCode,
+        childrenLayout: v.childrenLayout,
+        thumbnailUrl: v.thumbnailUrl,
+      },
       participation: {
         allowsMultipleAttempts: v.allowsMultipleAttempts,
         requiresExplicitEntry: v.requiresExplicitEntry,

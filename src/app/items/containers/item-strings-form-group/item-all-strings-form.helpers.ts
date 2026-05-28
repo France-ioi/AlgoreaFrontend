@@ -16,7 +16,6 @@ const STRINGS_VALUE_KEYS = [
   'title',
   'subtitle',
   'description',
-  'imageUrl',
 ] as const satisfies readonly (keyof StringsValue)[];
 
 export function stringsValueEqual(a: StringsValue, b: StringsValue): boolean {
@@ -37,7 +36,6 @@ export function emptyStringsValue(overrides: Partial<StringsValue> = {}): String
     title: '',
     subtitle: '',
     description: '',
-    imageUrl: '',
     ...overrides,
   };
 }
@@ -75,7 +73,6 @@ export function itemToStringsValue(item: Pick<Item, 'string'>): StringsValue {
     title: item.string.title || '',
     subtitle: item.string.subtitle || '',
     description: item.string.description || '',
-    imageUrl: item.string.imageUrl || '',
   };
 }
 

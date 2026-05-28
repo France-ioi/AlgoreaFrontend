@@ -88,18 +88,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     parameters: this.formBuilder.control<ItemParametersValue | null>(null),
   });
 
-  /**
-   * `imageUrl` is rendered inside the parameters Display section but, server-side, lives on the
-   * default-language item string — so it's owned here (next to the strings form). A small
-   * single-control group keeps the `alg-input` API (which expects a parent FormGroup) happy.
-   */
-  imageUrlForm = this.formBuilder.nonNullable.group({
-    imageUrl: [ '', Validators.maxLength(2000) ],
-  });
-
   initialItem?: Item;
   initialParameters?: ItemParametersValue;
-  private persistedImageUrl = '';
 
   supportedLanguages = signal(this.config.languages.map(lv => lv.tag));
   initialLanguageValues = signal<StringsValue[]>([]);
@@ -145,7 +135,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   isDirty(): boolean {
-    return this.itemForm.dirty || this.imageUrlForm.dirty;
+    return this.itemForm.dirty;
   }
 
   onLanguageValueLoaded(value: StringsValue): void {
@@ -155,7 +145,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   save(): void {
     if (!this.initialItem) return;
-    if (this.itemForm.invalid || this.imageUrlForm.invalid) {
+    if (this.itemForm.invalid) {
       this.actionFeedbackService.error($localize`You need to solve all the errors displayed in the form to save changes.`);
       return;
     }
@@ -168,9 +158,6 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       itemId: id,
       initialItem: this.initialItem,
       getAllStrings: () => this.itemForm.controls.allStrings.getRawValue(),
-      getDefaultLanguageTag: () => this.itemForm.controls.defaultLanguageTag.getRawValue(),
-      getImageUrl: () => this.imageUrlForm.controls.imageUrl.getRawValue(),
-      persistedImageUrl: this.persistedImageUrl,
       initialLanguageValues: this.initialLanguageValues(),
       serverSupportedLanguageTags: this.itemData?.item.supportedLanguageTags ?? [],
       itemChanges,
@@ -235,13 +222,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   }
 
   private setFormsDisabled(disabled: boolean): void {
-    if (disabled) {
-      this.itemForm.disable();
-      this.imageUrlForm.disable();
-    } else {
-      this.itemForm.enable();
-      this.imageUrlForm.enable();
-    }
+    if (disabled) this.itemForm.disable();
+    else this.itemForm.enable();
   }
 
   private applyFullItemSnapshot(item: Item): void {
@@ -264,18 +246,16 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     this.initialItem = snapshot.initialItem;
     this.initialParameters = snapshot.initialParameters;
     this.initialLanguageValues.set(snapshot.initialLanguageValues);
-    this.persistedImageUrl = snapshot.persistedImageUrl;
   }
 
   private resetAllFormValues(): void {
     if (!this.initialItem || !this.initialParameters) return;
     resetItemEditForms(
-      { itemForm: this.itemForm, imageUrlForm: this.imageUrlForm },
+      { itemForm: this.itemForm },
       {
         initialItem: this.initialItem,
         initialParameters: this.initialParameters,
         initialLanguageValues: this.initialLanguageValues(),
-        persistedImageUrl: this.persistedImageUrl,
       },
     );
     this.textIdError.set(null);
@@ -283,16 +263,14 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   private syncFormStateAfterSave(): void {
     syncFormStateAfterSave(
-      { itemForm: this.itemForm, imageUrlForm: this.imageUrlForm },
+      { itemForm: this.itemForm },
       this.itemData?.item.supportedLanguageTags ?? [],
       values => this.initialLanguageValues.set(values),
     );
-    this.persistedImageUrl = this.imageUrlForm.controls.imageUrl.getRawValue();
   }
 
   private markFormsPristine(): void {
     this.itemForm.markAsPristine();
-    this.imageUrlForm.markAsPristine();
   }
 }
 

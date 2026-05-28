@@ -5,6 +5,7 @@ describe('displaySettingsSchema', () => {
     expect(displaySettingsSchema.parse({})).toEqual({
       childrenLayout: 'List',
       promptToJoinGroupByCode: false,
+      thumbnailUrl: null,
     });
   });
 
@@ -12,6 +13,7 @@ describe('displaySettingsSchema', () => {
     expect(displaySettingsSchema.parse({ customBackendKey: 'drop-me', childrenLayout: 'Grid' })).toEqual({
       childrenLayout: 'Grid',
       promptToJoinGroupByCode: false,
+      thumbnailUrl: null,
     });
   });
 });
@@ -24,6 +26,7 @@ describe('buildDisplaySettingsBody', () => {
     )).toEqual({
       children_layout: 'Grid',
       prompt_to_join_group_by_code: false,
+      thumbnail_url: null,
     });
   });
 
@@ -52,6 +55,14 @@ describe('buildDisplaySettingsBody', () => {
     })).toEqual({
       prompt_to_join_group_by_code: true,
       children_layout: 'Grid',
+    });
+  });
+
+  it('should keep a non-null thumbnail_url in the body', () => {
+    expect(buildDisplaySettingsBody({
+      thumbnailUrl: 'https://example.test/thumb.png',
+    })).toEqual({
+      thumbnail_url: 'https://example.test/thumb.png',
     });
   });
 

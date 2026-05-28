@@ -9,6 +9,7 @@ const ITEM_PARAMETERS_KEYS = [
   'noScore',
   'promptToJoinGroupByCode',
   'childrenLayout',
+  'thumbnailUrl',
   'allowsMultipleAttempts',
   'requiresExplicitEntry',
   'durationEnabled',

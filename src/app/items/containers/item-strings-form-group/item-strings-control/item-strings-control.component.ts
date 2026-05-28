@@ -21,7 +21,6 @@ export interface StringsValue {
   title: string,
   subtitle: string,
   description: string,
-  imageUrl: string,
 }
 
 @Component({
@@ -61,7 +60,6 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
     title: [ '', stringsTitleValidators ],
     subtitle: [ '', stringsSubtitleValidators ],
     description: [ '' ],
-    imageUrl: [ '' ],
   });
 
   // Propagate the inner form value to the parent CVA synchronously so that

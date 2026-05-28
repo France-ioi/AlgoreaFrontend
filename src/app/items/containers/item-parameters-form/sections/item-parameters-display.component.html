@@ -34,29 +34,29 @@
       </div>
     </div>
   }
-</div>
 
-@if (showImageUrl() && imageUrlForm(); as imageUrlFormValue) {
-  <div class="form-item-view" [formGroup]="imageUrlFormValue">
-    <span class="form-item-label">
-      <ng-container i18n>Thumbnail url</ng-container>
-      <i
-        class="ph-duotone ph-info hint-icon"
-        i18n-algTooltip
-        algTooltip="Image shown when this item appears in a Grid layout within its parent chapter."
-        tooltipPosition="top"
-        aria-hidden="true"
-      ></i>
-    </span>
-    <div class="form-item-control">
-      <alg-input [parentForm]="imageUrlFormValue" name="imageUrl"></alg-input>
-      @if (imageUrlValue(); as imageUrlVal) {
-        @if (imageUrlVal.trim().length > 0 && !imageUrlVal.startsWith('https://')) {
-          <span class="alg-warning-message" i18n>
-            The url should start with "https://" so that it is visible on any browser.
-          </span>
+  @if (showThumbnailUrl()) {
+    <div class="form-item-view">
+      <span class="form-item-label">
+        <ng-container i18n>Thumbnail url</ng-container>
+        <i
+          class="ph-duotone ph-info hint-icon"
+          i18n-algTooltip
+          algTooltip="Image shown when this item appears in a Grid layout within its parent chapter."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
+      </span>
+      <div class="form-item-control">
+        <alg-input [parentForm]="form()" name="thumbnailUrl"></alg-input>
+        @if (thumbnailUrlValue(); as thumbnailUrlVal) {
+          @if (thumbnailUrlVal.trim().length > 0 && !thumbnailUrlVal.startsWith('https://')) {
+            <span class="alg-warning-message" i18n>
+              The url should start with "https://" so that it is visible on any browser.
+            </span>
+          }
         }
-      }
+      </div>
     </div>
-  </div>
-}
+  }
+</div>

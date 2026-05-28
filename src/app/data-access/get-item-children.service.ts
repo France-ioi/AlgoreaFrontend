@@ -11,6 +11,7 @@ import { itemChildCategorySchema } from '../items/models/item-properties';
 import { itemPermPropagationsSchema } from '../items/models/item-perm-propagation';
 import { itemTypeSchema } from '../items/models/item-type';
 import { itemStringSchema } from '../items/models/item-string';
+import { displaySettingsSchema } from '../items/models/display-settings';
 
 const baseItemChildSchema = z.object({
   id: z.string(),
@@ -36,6 +37,7 @@ const itemChildSchema = baseItemChildSchema.and(z.object({
     validated: z.boolean(),
   })),
   noScore: z.boolean(),
+  displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
   watchedGroup: itemViewPermSchema.and(z.object({ allValidated: z.boolean().optional(), avgScore: z.number().optional() })).optional(),
 }));
 

@@ -1,3 +1,4 @@
+import { DisplaySettings } from 'src/app/items/models/display-settings';
 import { ItemChildCategory } from 'src/app/items/models/item-properties';
 import { ItemType } from 'src/app/items/models/item-type';
 
@@ -6,8 +7,8 @@ export interface ItemChildWithAdditions {
   string: {
     title: string | null,
     subtitle?: string | null,
-    imageUrl: string | null,
   },
+  displaySettings: DisplaySettings,
   category: ItemChildCategory,
   type: ItemType,
   watchedGroup?: {

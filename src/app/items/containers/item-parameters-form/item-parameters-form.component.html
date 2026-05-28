@@ -13,9 +13,8 @@
   @if (secs.display.enabled) {
     <alg-item-parameters-display
       [form]="form.controls.display"
-      [imageUrlForm]="imageUrlForm()"
       [showChildrenLayout]="secs.display.showChildrenLayout"
-      [showImageUrl]="secs.display.showImageUrl"
+      [showThumbnailUrl]="secs.display.showThumbnailUrl"
     ></alg-item-parameters-display>
   }
   @if (secs.participation) {

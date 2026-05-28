@@ -130,7 +130,6 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
     it('stays pristine after loading a single-language item', async () => {
       await loadItem(buildItem());
       expect(component.itemForm.dirty).toBeFalse();
-      expect(component.imageUrlForm.dirty).toBeFalse();
       expect(component.isDirty()).toBeFalse();
     });
   });
@@ -181,7 +180,6 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
         title: 'Changed title',
         subtitle: 'Sub',
         description: 'Desc',
-        imageUrl: '',
       });
       fixture.detectChanges();
       await fixture.whenStable();
