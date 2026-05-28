@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
 import {
   AllStringsFormValue,
   applyLocalCommitToFormValue,
@@ -22,7 +21,7 @@ export function buildStringsSaveRequests(
   allStrings: AllStringsFormValue,
   initialLanguageValues: StringsValue[],
   defaultLanguageTag: string,
-  initialItem: Pick<Item, 'string'>,
+  persistedImageUrl: string,
   imageUrlValue: string | null,
   serverSupportedLanguageTags: string[],
   updateItemStringService: UpdateItemStringService,
@@ -32,7 +31,7 @@ export function buildStringsSaveRequests(
     allStrings.strings,
     initialLanguageValues,
     defaultLanguageTag,
-    initialItem,
+    persistedImageUrl,
     imageUrlValue,
   );
   const initialLanguageTags = initialLanguageValues.map(v => v.languageTag);

@@ -29,6 +29,14 @@ export interface ItemEditFormSnapshot {
   initialItem: Item,
   initialParameters: ItemParametersValue,
   initialLanguageValues: StringsValue[],
+  /** Last-saved default-language thumbnail URL (owned by `imageUrlForm`, not per-tab strings). */
+  persistedImageUrl: string,
+}
+
+export function persistedImageUrlFromItem(item: Item): string {
+  return item.string.languageTag === item.defaultLanguageTag
+    ? (item.string.imageUrl ?? '')
+    : '';
 }
 
 export function createItemEditSnapshot(item: Item): ItemEditFormSnapshot {
@@ -36,6 +44,7 @@ export function createItemEditSnapshot(item: Item): ItemEditFormSnapshot {
     initialItem: item,
     initialParameters: itemToParametersValue(item),
     initialLanguageValues: [ itemToStringsValue(item) ],
+    persistedImageUrl: persistedImageUrlFromItem(item),
   };
 }
 
@@ -58,9 +67,7 @@ export function resetImageUrlForm(
   imageUrlForm: ItemEditForms['imageUrlForm'],
   snapshot: ItemEditFormSnapshot,
 ): void {
-  const imageUrl = snapshot.initialLanguageValues
-    .find(l => l.languageTag === snapshot.initialItem.defaultLanguageTag)?.imageUrl;
-  imageUrlForm.reset({ imageUrl: imageUrl || '' }, { emitEvent: false });
+  imageUrlForm.reset({ imageUrl: snapshot.persistedImageUrl }, { emitEvent: false });
 }
 
 export function syncFormStateAfterSave(

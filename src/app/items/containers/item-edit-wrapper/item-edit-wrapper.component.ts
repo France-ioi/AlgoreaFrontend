@@ -99,6 +99,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   initialItem?: Item;
   initialParameters?: ItemParametersValue;
+  private persistedImageUrl = '';
 
   supportedLanguages = signal(this.config.languages.map(lv => lv.tag));
   initialLanguageValues = signal<StringsValue[]>([]);
@@ -169,6 +170,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       getAllStrings: () => this.itemForm.controls.allStrings.getRawValue(),
       getDefaultLanguageTag: () => this.itemForm.controls.defaultLanguageTag.getRawValue(),
       getImageUrl: () => this.imageUrlForm.controls.imageUrl.getRawValue(),
+      persistedImageUrl: this.persistedImageUrl,
       initialLanguageValues: this.initialLanguageValues(),
       serverSupportedLanguageTags: this.itemData?.item.supportedLanguageTags ?? [],
       itemChanges,
@@ -244,22 +246,25 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   private applyFullItemSnapshot(item: Item): void {
     const snapshot = createItemEditSnapshot(item);
-    this.initialItem = snapshot.initialItem;
-    this.initialParameters = snapshot.initialParameters;
-    this.initialLanguageValues.set(snapshot.initialLanguageValues);
+    this.applyEditSnapshot(snapshot);
     this.resetAllFormValues();
     this.markFormsPristine();
   }
 
   private resyncServerBaseline(item: Item): void {
     const snapshot = createItemEditSnapshot(item);
-    this.initialItem = snapshot.initialItem;
-    this.initialParameters = snapshot.initialParameters;
-    this.initialLanguageValues.set(snapshot.initialLanguageValues);
+    this.applyEditSnapshot(snapshot);
     if (!this.isDirty()) {
       this.resetAllFormValues();
       this.markFormsPristine();
     }
+  }
+
+  private applyEditSnapshot(snapshot: ReturnType<typeof createItemEditSnapshot>): void {
+    this.initialItem = snapshot.initialItem;
+    this.initialParameters = snapshot.initialParameters;
+    this.initialLanguageValues.set(snapshot.initialLanguageValues);
+    this.persistedImageUrl = snapshot.persistedImageUrl;
   }
 
   private resetAllFormValues(): void {
@@ -270,6 +275,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         initialItem: this.initialItem,
         initialParameters: this.initialParameters,
         initialLanguageValues: this.initialLanguageValues(),
+        persistedImageUrl: this.persistedImageUrl,
       },
     );
     this.textIdError.set(null);
@@ -281,6 +287,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
       this.itemData?.item.supportedLanguageTags ?? [],
       values => this.initialLanguageValues.set(values),
     );
+    this.persistedImageUrl = this.imageUrlForm.controls.imageUrl.getRawValue();
   }
 
   private markFormsPristine(): void {

@@ -30,6 +30,8 @@ test('lazy-loads a translation only when its tab is opened', async ({ page, crea
   await test.step('Open tabs and add French without fetching it yet', async () => {
     await page.getByRole('button', { name: 'Translate' }).click();
     await page.getByTestId('lang-tab-add-fr').click();
+    await page.getByTestId('lang-panel-fr').getByTestId('item-strings-title')
+      .locator('alg-input').getByRole('textbox').fill('Titre fr');
     await itemContentPage.saveChangesAndCheckNotification();
   });
 
