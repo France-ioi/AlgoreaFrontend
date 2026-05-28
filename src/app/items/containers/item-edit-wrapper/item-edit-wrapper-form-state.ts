@@ -19,24 +19,12 @@ export interface ItemEditForms {
     markAsPristine(): void,
     controls: { allStrings: ItemEditAllStringsControl },
   },
-  imageUrlForm: {
-    reset(value: unknown, options?: { emitEvent?: boolean }): void,
-    markAsPristine(): void,
-  },
 }
 
 export interface ItemEditFormSnapshot {
   initialItem: Item,
   initialParameters: ItemParametersValue,
   initialLanguageValues: StringsValue[],
-  /** Last-saved default-language thumbnail URL (owned by `imageUrlForm`, not per-tab strings). */
-  persistedImageUrl: string,
-}
-
-export function persistedImageUrlFromItem(item: Item): string {
-  return item.string.languageTag === item.defaultLanguageTag
-    ? (item.string.imageUrl ?? '')
-    : '';
 }
 
 export function createItemEditSnapshot(item: Item): ItemEditFormSnapshot {
@@ -44,7 +32,6 @@ export function createItemEditSnapshot(item: Item): ItemEditFormSnapshot {
     initialItem: item,
     initialParameters: itemToParametersValue(item),
     initialLanguageValues: [ itemToStringsValue(item) ],
-    persistedImageUrl: persistedImageUrlFromItem(item),
   };
 }
 
@@ -60,14 +47,6 @@ export function resetItemEditForms(
       pendingDeletions: [],
     },
   }, { emitEvent: false });
-  resetImageUrlForm(forms.imageUrlForm, snapshot);
-}
-
-export function resetImageUrlForm(
-  imageUrlForm: ItemEditForms['imageUrlForm'],
-  snapshot: ItemEditFormSnapshot,
-): void {
-  imageUrlForm.reset({ imageUrl: snapshot.persistedImageUrl }, { emitEvent: false });
 }
 
 export function syncFormStateAfterSave(
@@ -85,5 +64,4 @@ export function syncFormStateAfterSave(
   }
   setInitialLanguageValues(allStringsControl.getRawValue().strings);
   forms.itemForm.markAsPristine();
-  forms.imageUrlForm.markAsPristine();
 }

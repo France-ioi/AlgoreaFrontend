@@ -1,7 +1,7 @@
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { Duration } from 'src/app/utils/duration';
 import { ItemChanges } from '../data-access/update-item.service';
-import { buildDisplaySettingsBody } from './display-settings';
+import { buildDisplaySettingsBody, DisplaySettings } from './display-settings';
 import { ItemType } from './item-type';
 import { z } from 'zod';
 import { itemChildrenLayoutSchema, itemEntryMinAdmittedMembersRatioSchema, itemValidationTypeSchema } from './item-properties';
@@ -31,6 +31,7 @@ export interface ItemParametersScoreValue {
 export interface ItemParametersDisplayValue {
   promptToJoinGroupByCode: boolean,
   childrenLayout: ItemChildrenLayout,
+  thumbnailUrl: string,
 }
 
 export interface ItemParametersParticipationValue {
@@ -83,7 +84,7 @@ export const sliceKeysAreDisjoint: [
  * both `@if`-rendering in the form template and the diff in `buildItemParametersChanges`.
  *
  * `display` is a nested object because the section has sub-options (`childrenLayout`,
- * `imageUrl`) whose visibility depends on the item type too — keeping them grouped here lets
+ * `thumbnailUrl`) whose visibility depends on the item type too — keeping them grouped here lets
  * the template read `secs.display.*` instead of duplicating the item-type literals inline.
  */
 export interface ItemParametersSections {
@@ -92,7 +93,7 @@ export interface ItemParametersSections {
   display: {
     enabled: boolean,
     showChildrenLayout: boolean,
-    showImageUrl: boolean,
+    showThumbnailUrl: boolean,
   },
   participation: boolean,
   team: boolean,
@@ -105,7 +106,7 @@ export function sectionsForItemType(type: ItemType): ItemParametersSections {
     display: {
       enabled: type !== 'Skill',
       showChildrenLayout: type !== 'Task',
-      showImageUrl: type === 'Task' || type === 'Chapter',
+      showThumbnailUrl: type === 'Task' || type === 'Chapter',
     },
     participation: type !== 'Skill',
     team: type !== 'Skill',
@@ -140,6 +141,7 @@ export function itemToParametersValue(item: Item): ItemParametersValue {
     noScore: item.noScore,
     promptToJoinGroupByCode: item.displaySettings.promptToJoinGroupByCode,
     childrenLayout: item.displaySettings.childrenLayout,
+    thumbnailUrl: item.displaySettings.thumbnailUrl ?? '',
     allowsMultipleAttempts: item.allowsMultipleAttempts,
     requiresExplicitEntry: item.requiresExplicitEntry,
     durationEnabled: item.duration !== null,
@@ -175,7 +177,7 @@ export function buildItemParametersChanges(
   current: ItemParametersValue,
   initial: ItemParametersValue,
   sections: ItemParametersSections,
-  initialDisplaySettings: { childrenLayout: ItemChildrenLayout, promptToJoinGroupByCode: boolean },
+  initialDisplaySettings: Pick<DisplaySettings, 'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl'>,
 ): ItemChanges {
   const changes: ItemChanges = {};
 
@@ -197,13 +199,17 @@ export function buildItemParametersChanges(
   }
 
   if (sections.display.enabled) {
+    const thumbnailUrl = trimToNullable(current.thumbnailUrl);
+    const initialThumbnailUrl = trimToNullable(initial.thumbnailUrl);
     const hasDisplaySettingsChanges = current.promptToJoinGroupByCode !== initial.promptToJoinGroupByCode
-      || current.childrenLayout !== initial.childrenLayout;
+      || current.childrenLayout !== initial.childrenLayout
+      || thumbnailUrl !== initialThumbnailUrl;
     if (hasDisplaySettingsChanges) {
       changes.display_settings = buildDisplaySettingsBody({
         ...initialDisplaySettings,
         childrenLayout: current.childrenLayout,
         promptToJoinGroupByCode: current.promptToJoinGroupByCode,
+        thumbnailUrl,
       });
     }
   }

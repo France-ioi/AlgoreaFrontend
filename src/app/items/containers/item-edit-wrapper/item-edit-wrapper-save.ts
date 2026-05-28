@@ -20,9 +20,6 @@ export function buildStringsSaveRequests(
   itemId: string,
   allStrings: AllStringsFormValue,
   initialLanguageValues: StringsValue[],
-  defaultLanguageTag: string,
-  persistedImageUrl: string,
-  imageUrlValue: string | null,
   serverSupportedLanguageTags: string[],
   updateItemStringService: UpdateItemStringService,
   deleteItemStringService: DeleteItemStringService,
@@ -30,9 +27,6 @@ export function buildStringsSaveRequests(
   const stringsChanges = buildItemAllStringsChanges(
     allStrings.strings,
     initialLanguageValues,
-    defaultLanguageTag,
-    persistedImageUrl,
-    imageUrlValue,
   );
   const initialLanguageTags = initialLanguageValues.map(v => v.languageTag);
   const languageTagsToRemove = collectStringsToRemove(

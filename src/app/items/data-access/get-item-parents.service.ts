@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
 import { itemStringSchema } from 'src/app/items/models/item-string';
+import { displaySettingsSchema } from '../models/display-settings';
 import { itemChildCategorySchema } from 'src/app/items/models/item-properties';
 import { itemTypeSchema } from 'src/app/items/models/item-type';
 
@@ -17,6 +18,7 @@ const itemParentsSchema = z.array(
     category: itemChildCategorySchema,
     type: itemTypeSchema,
     permissions: itemCorePermSchema,
+    displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
     result: z.object({
       attemptId: z.string(),
       latestActivityAt: z.coerce.date(),

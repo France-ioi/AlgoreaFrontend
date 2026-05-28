@@ -44,10 +44,10 @@
                       </div>
                       <div class="grid-card-lock-bg"></div>
                     }
-                    @if (item.string.imageUrl) {
+                    @if (item.displaySettings.thumbnailUrl) {
                       <div
                         class="grid-card-image"
-                        [style.background-image]="'url(' + item.string.imageUrl + ')'"
+                        [style.background-image]="'url(' + item.displaySettings.thumbnailUrl + ')'"
                       ></div>
                     } @else {
                       <div class="grid-card-image grid-card-image-default-bg"></div>

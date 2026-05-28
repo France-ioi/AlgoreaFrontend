@@ -7,7 +7,7 @@ import {
   sectionsForItemType,
 } from './item-parameters';
 
-const initialDisplaySettings = { childrenLayout: 'List' as const, promptToJoinGroupByCode: false };
+const initialDisplaySettings = { childrenLayout: 'List' as const, promptToJoinGroupByCode: false, thumbnailUrl: null };
 
 function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParametersValue {
   return {
@@ -18,6 +18,7 @@ function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParameters
     noScore: false,
     promptToJoinGroupByCode: false,
     childrenLayout: 'List',
+    thumbnailUrl: '',
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
     durationEnabled: false,
@@ -64,9 +65,9 @@ describe('sectionsForItemType', () => {
   });
 
   it('exposes the display sub-options per item type', () => {
-    expect(sectionsForItemType('Task').display).toEqual({ enabled: true, showChildrenLayout: false, showImageUrl: true });
-    expect(sectionsForItemType('Chapter').display).toEqual({ enabled: true, showChildrenLayout: true, showImageUrl: true });
-    expect(sectionsForItemType('Skill').display).toEqual({ enabled: false, showChildrenLayout: true, showImageUrl: false });
+    expect(sectionsForItemType('Task').display).toEqual({ enabled: true, showChildrenLayout: false, showThumbnailUrl: true });
+    expect(sectionsForItemType('Chapter').display).toEqual({ enabled: true, showChildrenLayout: true, showThumbnailUrl: true });
+    expect(sectionsForItemType('Skill').display).toEqual({ enabled: false, showChildrenLayout: true, showThumbnailUrl: false });
   });
 });
 
@@ -109,6 +110,26 @@ describe('buildItemParametersChanges', () => {
     const current = makeValue({ promptToJoinGroupByCode: true });
     const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
     expect(changes.display_settings).toEqual({ prompt_to_join_group_by_code: true });
+  });
+
+  it('emits display_settings.thumbnail_url when the thumbnail changes', () => {
+    const initial = makeValue();
+    const current = makeValue({ thumbnailUrl: 'https://example.test/thumb.png' });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
+    expect(changes.display_settings).toEqual({ thumbnail_url: 'https://example.test/thumb.png' });
+  });
+
+  it('omits thumbnail_url from the body when the user clears it (null is the schema default)', () => {
+    const initial = makeValue({ thumbnailUrl: 'https://example.test/thumb.png' });
+    const current = makeValue({ thumbnailUrl: '' });
+    const changes = buildItemParametersChanges(
+      current,
+      initial,
+      sectionsForItemType('Chapter'),
+      { ...initialDisplaySettings, thumbnailUrl: 'https://example.test/thumb.png' },
+    );
+    // Backend replaces display_settings as a whole; an empty body clears the stored thumbnail override.
+    expect(changes.display_settings).toEqual({});
   });
 
   it('does not emit display_settings when display values are unchanged', () => {

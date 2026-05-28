@@ -59,18 +59,19 @@ Display-related per-item settings live in `Item.displaySettings` (camelCase obje
 The editor's Parameters tab is structured as a wrapper + a self-contained typed CVA form, with the per-section parameters domain extracted to a dedicated model.
 
 ```
-alg-item-edit-wrapper                  (orchestrator: itemForm + imageUrlForm + save/cancel)
+alg-item-edit-wrapper                  (orchestrator: itemForm + save/cancel)
 └── alg-item-all-strings-form          (CVA: per-language strings, see strings folder)
 └── alg-item-parameters-form           (CVA + Validator: aggregates parameter sections)
     ├── alg-item-parameters-global         (presentational: url / uses_api / text_id)
     ├── alg-item-parameters-score          (presentational: validation_type / no_score)
-    ├── alg-item-parameters-display        (presentational: prompt_to_join_group_by_code / children_layout, hosts the wrapper-owned image-url input)
+    ├── alg-item-parameters-display        (presentational: prompt_to_join_group_by_code / children_layout / thumbnail_url)
     ├── alg-item-parameters-participation  (CVA + Validator: explicit entry / duration / entering-time min-max)
     └── alg-item-parameters-team           (CVA + Validator: team participant type / frozen teams / max team size)
 ```
 
 - **Domain model** (`src/app/items/models/item-parameters.ts`): `ItemParametersValue` is the flat camelCase value the wrapper consumes. `sectionsForItemType()` decides which sections an item type renders (and `buildItemParametersChanges()` diffs accordingly). The "no constraint" sentinels for `entering_time_min/max` (`1000-01-01` / `9999-12-31`) and the `display_settings` body shaping live here so the form and the diff agree.
-- **Strings changes** (`src/app/items/models/item-strings-changes.ts`): per-language string diff. `image_url` lives on the default-language item string (not on the item), so the wrapper owns it via a separate `imageUrlForm` and threads it into `buildItemAllStringsChanges()` only for the default-language record.
+- **Thumbnail URL** (`display_settings.thumbnail_url`): edited in the Display section of `alg-item-parameters-form` and saved via `PUT /items/{id}` (`buildItemParametersChanges()` → `buildDisplaySettingsBody()`). Read in the children grid from each child's `display_settings` on `GET /items/{id}/children`.
+- **Strings changes** (`src/app/items/models/item-strings-changes.ts`): per-language string diff for title/subtitle/description only. Thumbnails are not written to `items_strings.image_url` from the parameters editor (`display_settings.thumbnail_url` only).
 - **CVA boundary**: `alg-item-parameters-form` flattens its inner `{ global, score, display, participation, team }` group into `ItemParametersValue` on `valueChanges` and unflattens on `writeValue`, so the wrapper sees a single flat control. Each leaf CVA (`participation`, `team`) returns `null` from `validate()` when its inner form is disabled, since Angular reports `valid === false` for `DISABLED` controls and would otherwise wedge the wrapper's `itemForm.invalid` check on every save.
 - **Change detection**: the three stateless section components (`global`, `score`, `display`) declare `OnPush`. The parent form (`alg-item-parameters-form`) and the two CVA sections (`participation`, `team`) keep Default CD; only the participation section needs it — `alg-input-date`'s ngx-mask binding uses a deferred `setTimeout` in `writeValue`, which lands outside any input/event that would re-mark an `OnPush` ancestor, so the initial value would never paint into the input. Default CD on the others avoids scattering `markForCheck()` calls across the tree.
 - **Save ordering** (`ItemEditWrapperComponent.save()`): requests are split into three sequential phases driven by the item ↔ item-strings dependency on the backend (`default_language_tag` must point at an existing `items_strings` row):

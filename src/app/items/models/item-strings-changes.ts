@@ -1,22 +1,13 @@
 import { ItemStringChanges } from 'src/app/items/data-access/update-item-string.service';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
 
-/**
- * Diff a single per-language strings value against its initial value.
- *
- * `imageUrl` is sent on the default-language string only (backend stores it on the item string,
- * not on the item) — callers pass `imageUrlValue` only for the default-language record and only
- * when it differs from the persisted value. The caller passes an empty string when the user
- * cleared the field; we forward that as `null` so the backend actually removes the stored value
- * (vs. the previous behaviour, which dropped the property entirely and left the URL in place).
- */
+/** Diff a single per-language strings value against its initial value. */
 export function buildItemStringChanges(
   value: StringsValue,
-  { initialValue, imageUrlValue }: { initialValue?: StringsValue, imageUrlValue?: string },
+  { initialValue }: { initialValue?: StringsValue },
 ): { changes: ItemStringChanges, languageTag: string } {
   const changes: ItemStringChanges = {};
 
-  if (imageUrlValue !== undefined) changes.image_url = imageUrlValue === '' ? null : imageUrlValue;
   if (value.title !== initialValue?.title) changes.title = value.title.trim();
   if (value.subtitle !== initialValue?.subtitle) changes.subtitle = value.subtitle;
   if (value.description !== initialValue?.description) changes.description = value.description;
@@ -28,15 +19,10 @@ export function buildItemStringChanges(
 export function buildItemAllStringsChanges(
   allStringsValue: StringsValue[],
   initialLanguageValues: StringsValue[],
-  defaultLanguageTag: string,
-  persistedImageUrl: string,
-  imageUrlValue: string | null,
 ): { changes: ItemStringChanges, languageTag: string }[] {
-  const imageUrlChanged = imageUrlValue !== null && imageUrlValue !== persistedImageUrl;
   return allStringsValue.map(v =>
     buildItemStringChanges(v, {
       initialValue: initialLanguageValues.find(iv => iv.languageTag === v.languageTag),
-      ...(v.languageTag === defaultLanguageTag && imageUrlChanged ? { imageUrlValue } : {}),
     })
   ).filter(({ changes }) => Object.keys(changes).length > 0);
 }

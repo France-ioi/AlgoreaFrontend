@@ -22,7 +22,6 @@ const defaultStringsValue: StringsValue = {
   title: 'Title',
   subtitle: '',
   description: '',
-  imageUrl: '',
 };
 
 describe('ItemAllStringsFormComponent', () => {
@@ -179,7 +178,6 @@ describe('ItemAllStringsFormComponent', () => {
         title: 'Loaded EN',
         subtitle: '',
         description: '',
-        imageUrl: '',
       },
     } as Item));
 
@@ -264,7 +262,6 @@ describe('ItemAllStringsFormComponent', () => {
         title: 'Loaded fr',
         subtitle: '',
         description: '',
-        imageUrl: '',
       },
     } as Item));
 

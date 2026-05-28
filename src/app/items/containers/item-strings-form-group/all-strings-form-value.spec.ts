@@ -9,7 +9,6 @@ const en: StringsValue = {
   title: 'Title',
   subtitle: '',
   description: '',
-  imageUrl: '',
 };
 
 describe('all-strings-form-value', () => {

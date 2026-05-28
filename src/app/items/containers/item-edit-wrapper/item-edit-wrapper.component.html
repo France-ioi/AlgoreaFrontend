@@ -16,13 +16,12 @@
       <alg-item-parameters-form
         formControlName="parameters"
         [itemData]="itemData"
-        [imageUrlForm]="imageUrlForm"
         [textIdError]="textIdError()"
         (confirmRemoval)="onConfirmRemoval()"
       ></alg-item-parameters-form>
     </form>
 
-    @if (itemForm.dirty || imageUrlForm.dirty) {
+    @if (itemForm.dirty) {
       <alg-floating-save [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
     }
   } @else {
