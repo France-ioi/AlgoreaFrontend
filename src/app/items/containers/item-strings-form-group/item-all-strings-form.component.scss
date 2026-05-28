@@ -1,33 +1,21 @@
 @use 'src/assets/scss/functions';
 
-.item-strings-control {
-  &:not(:first-child) {
-    margin-top: functions.toRem(38);
+.strings-section {
+  margin-bottom: var(--alg-space-size-6);
+}
+
+.strings-section-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--alg-space-size-3);
+  margin-bottom: functions.toRem(20);
+
+  h2 {
+    margin-bottom: 0;
   }
-}
 
-.button-section {
-  display: flex;
-  align-items: center;
-  height: functions.toRem(24);
-  margin-top: var(--alg-space-size-5);
-}
-
-.button {
-  margin-right: var(--alg-space-size-6);
-}
-
-.right-position {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.loading {
-  margin-left: var(--alg-space-size-6);
-}
-
-.delete-note {
-  margin-right: var(--alg-space-size-6);
-  color: var(--alg-message-error-color);
+  button {
+    transform: translateY(functions.toRem(3));
+  }
 }

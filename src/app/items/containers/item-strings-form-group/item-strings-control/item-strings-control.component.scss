@@ -42,3 +42,10 @@
   display: block;
   margin-top: functions.toRem(10);
 }
+
+:host(.pending-deletion) {
+  .field-name,
+  .field-value {
+    opacity: 0.5;
+  }
+}

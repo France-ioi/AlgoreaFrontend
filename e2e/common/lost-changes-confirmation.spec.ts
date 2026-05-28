@@ -12,7 +12,7 @@ test('checks navigation to another tab for item', async ({ page, lostChangesConf
       page.goto(`a/${itemId};p=;a=0/parameters`),
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).toBeVisible();
     const textboxLocator = page.getByRole('textbox').nth(1);
     await expect.soft(textboxLocator).toBeVisible();
     await textboxLocator.fill('Some test');
@@ -20,7 +20,7 @@ test('checks navigation to another tab for item', async ({ page, lostChangesConf
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).toBeVisible();
     await expect.soft(textboxLocator).toHaveValue('Some test');
   });
 
@@ -29,7 +29,7 @@ test('checks navigation to another tab for item', async ({ page, lostChangesConf
       page.goto(`a/${itemId};p=;a=0/parameters`),
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).toBeVisible();
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
     await page.getByRole('link', { name: 'Dependencies' }).click();
@@ -37,7 +37,7 @@ test('checks navigation to another tab for item', async ({ page, lostChangesConf
     await lostChangesConfirmationModal.confirm();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
     await expect.soft(page.getByRole('heading', { name: 'Prerequisites' })).toBeVisible();
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).not.toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).not.toBeVisible();
   });
 });
 
@@ -49,7 +49,7 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
       page.goto(`a/${itemId};p=;a=0/parameters`),
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).toBeVisible();
     const textboxLocator = page.getByRole('textbox').nth(1);
     await expect.soft(textboxLocator).toBeVisible();
     await textboxLocator.fill('Some test');
@@ -57,7 +57,7 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationVisible();
     await lostChangesConfirmationModal.cancel();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).toBeVisible();
     await expect.soft(textboxLocator).toHaveValue('Some test');
   });
 
@@ -66,7 +66,7 @@ test('checks navigation to another module for item', async ({ page, lostChangesC
       page.goto(`a/${itemId};p=;a=0/parameters`),
       page.waitForResponse(`${ apiUrl }/items/${itemId}/attempts?attempt_id=0`),
     ]);
-    await expect.soft(itemEditWrapperLocator.getByText('Item Title')).toBeVisible();
+    await expect.soft(itemEditWrapperLocator.getByTestId('item-strings-title').getByText('Title')).toBeVisible();
     await expect.soft(page.getByRole('textbox').nth(1)).toBeVisible();
     await page.getByRole('textbox').nth(1).fill('Some test');
     await page.locator('alg-left-tab-bar').getByRole('button', { name: 'Groups' }).click();
@@ -103,7 +103,7 @@ test('checks navigation to another tab for group', async ({ page, lostChangesCon
     await lostChangesConfirmationModal.confirm();
     await lostChangesConfirmationModal.checksIsLostChangesConfirmationNotVisible();
     await expect.soft(page.getByRole('heading', { name: 'Presentation' })).toBeVisible();
-    await expect.soft(page.getByText('Item Title')).not.toBeVisible();
+    await expect.soft(page.getByTestId('item-strings-title')).not.toBeVisible();
   });
 });
 

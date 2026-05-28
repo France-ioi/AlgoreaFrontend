@@ -1,6 +1,5 @@
-import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
-import { buildItemAllStringsChanges, buildItemStringChanges } from './item-strings-changes';
+import { buildItemAllStringsChanges, buildItemStringChanges, collectStringsToRemove } from './item-strings-changes';
 
 function makeStrings(overrides: Partial<StringsValue> = {}): StringsValue {
   return {
@@ -10,19 +9,6 @@ function makeStrings(overrides: Partial<StringsValue> = {}): StringsValue {
     description: '',
     imageUrl: '',
     ...overrides,
-  };
-}
-
-function makeItem(stringOverrides: Partial<Item['string']> = {}): Pick<Item, 'string'> {
-  return {
-    string: {
-      languageTag: 'en',
-      title: 'Title',
-      subtitle: null,
-      description: null,
-      imageUrl: null,
-      ...stringOverrides,
-    },
   };
 }
 
@@ -55,30 +41,55 @@ describe('buildItemStringChanges', () => {
 describe('buildItemAllStringsChanges', () => {
   it('skips the image_url field when the value is unchanged (null on backend, empty on form)', () => {
     const initial = makeStrings({ imageUrl: '' });
-    const item = makeItem({ imageUrl: null });
-    const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', item, '');
+    const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', '', '');
     expect(result).toEqual([]);
   });
 
   it('emits image_url: null when the user clears a previously set value', () => {
     const initial = makeStrings({ imageUrl: 'https://old.test/a.png' });
-    const item = makeItem({ imageUrl: 'https://old.test/a.png' });
-    const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', item, '');
+    const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', 'https://old.test/a.png', '');
     expect(result).toEqual([ { languageTag: 'en', changes: { image_url: null } } ]);
   });
 
   it('emits image_url with the new value when the user changes it', () => {
     const initial = makeStrings({ imageUrl: 'https://old.test/a.png' });
-    const item = makeItem({ imageUrl: 'https://old.test/a.png' });
-    const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', item, 'https://new.test/b.png');
+    const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', 'https://old.test/a.png', 'https://new.test/b.png');
     expect(result).toEqual([ { languageTag: 'en', changes: { image_url: 'https://new.test/b.png' } } ]);
+  });
+
+  it('includes pending-deletion server languages even when never loaded into the initial snapshot', () => {
+    const en = makeStrings({ languageTag: 'en' });
+    const outbound = [ en ];
+    const pendingDeletions = new Set([ 'fr' ]);
+    const result = collectStringsToRemove(outbound, [ en ], pendingDeletions, [ 'en', 'fr' ]);
+    expect(result).toEqual([ 'fr' ]);
+  });
+
+  it('does not delete a language that was only added locally and marked pending-deletion', () => {
+    const en = makeStrings({ languageTag: 'en' });
+    const outbound = [ en ];
+    const pendingDeletions = new Set([ 'fr' ]);
+    const result = collectStringsToRemove(outbound, [ en ], pendingDeletions, [ 'en' ]);
+    expect(result).toEqual([]);
   });
 
   it('only carries image_url on the default-language record', () => {
     const en = makeStrings({ languageTag: 'en' });
     const fr = makeStrings({ languageTag: 'fr', title: 'Titre' });
-    const item = makeItem({ imageUrl: null });
-    const result = buildItemAllStringsChanges([ en, fr ], [ en, fr ], 'fr', item, 'https://new.test/img.png');
+    const result = buildItemAllStringsChanges([ en, fr ], [ en, fr ], 'fr', '', 'https://new.test/img.png');
     expect(result).toEqual([ { languageTag: 'fr', changes: { image_url: 'https://new.test/img.png' } } ]);
+  });
+
+  it('carries image_url on the default language even when it is not at the same index in the arrays', () => {
+    const en = makeStrings({ languageTag: 'en' });
+    const fr = makeStrings({ languageTag: 'fr', title: 'Titre' });
+    const result = buildItemAllStringsChanges([ fr, en ], [ en, fr ], 'en', 'https://old.test/a.png', 'https://new.test/b.png');
+    expect(result).toEqual([ { languageTag: 'en', changes: { image_url: 'https://new.test/b.png' } } ]);
+  });
+
+  it('uses the persisted thumbnail baseline, not the currently loaded translation string', () => {
+    const en = makeStrings({ languageTag: 'en' });
+    const result = buildItemAllStringsChanges([ en ], [ en ], 'en', 'https://old.test/a.png', 'https://new.test/b.png');
+    expect(result).toEqual([ { languageTag: 'en', changes: { image_url: 'https://new.test/b.png' } } ]);
   });
 });

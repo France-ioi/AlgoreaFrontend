@@ -4,7 +4,7 @@ import { initAsTesterUser } from '../helpers/e2e_auth';
 test('checks simple text description preview', async ({ page }) => {
   await initAsTesterUser(page);
   await page.goto('/a/3244687538937221949;p=;a=0/parameters');
-  await expect.soft(page.getByText('Description')).toBeVisible();
+  await expect.soft(page.getByTestId('item-strings-description').getByText('Description')).toBeVisible();
   const editItemDescriptionLocator = page.getByTestId('edit-item-description');
   await expect.soft(editItemDescriptionLocator).toBeVisible();
   await editItemDescriptionLocator.getByRole('textbox').fill('Some content');
@@ -82,7 +82,7 @@ test('collapses the iframe to fit a short plain-text description (drops the load
 test('checks html description preview', async ({ page }) => {
   await initAsTesterUser(page);
   await page.goto('/a/3244687538937221949;p=;a=0/parameters');
-  await expect.soft(page.getByText('Description')).toBeVisible();
+  await expect.soft(page.getByTestId('item-strings-description').getByText('Description')).toBeVisible();
   const editItemDescriptionLocator = page.getByTestId('edit-item-description');
   await expect.soft(editItemDescriptionLocator).toBeVisible();
   await editItemDescriptionLocator.getByRole('textbox').fill('<strong>Some content</strong>');
@@ -108,7 +108,7 @@ test('opens the description help tab and shows guidance about links', async ({ p
 test('checks no preview description', async ({ page }) => {
   await initAsTesterUser(page);
   await page.goto('/a/3244687538937221949;p=;a=0/parameters');
-  await expect.soft(page.getByText('Description')).toBeVisible();
+  await expect.soft(page.getByTestId('item-strings-description').getByText('Description')).toBeVisible();
   const editItemDescriptionLocator = page.getByTestId('edit-item-description');
   await expect.soft(editItemDescriptionLocator).toBeVisible();
   await editItemDescriptionLocator.getByRole('textbox').fill('');
@@ -179,7 +179,7 @@ test('does not navigate the iframe away when a plain http href is clicked, and s
 test('runs author scripts in the iframe and blocks access to the parent document', async ({ page }) => {
   await initAsTesterUser(page);
   await page.goto('/a/3244687538937221949;p=;a=0/parameters');
-  await expect.soft(page.getByText('Description')).toBeVisible();
+  await expect.soft(page.getByTestId('item-strings-description').getByText('Description')).toBeVisible();
   const editItemDescriptionLocator = page.getByTestId('edit-item-description');
   await expect.soft(editItemDescriptionLocator).toBeVisible();
 

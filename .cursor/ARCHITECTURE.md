@@ -80,6 +80,8 @@ alg-item-edit-wrapper                  (orchestrator: itemForm + imageUrlForm + 
 
   `ItemAllStringsFormComponent.validate()` deliberately reads `this.form.controls.allStrings.invalid` (the inner `FormArray`) rather than `this.form.invalid` (the wrapping `FormGroup`): the wrapper's CVA validator runs from inside the array's `valueChanges`, before the parent group's `updateValueAndValidity()` has propagated, so the group status reports the pre-change value. The validator additionally polls the live `ItemStringsControl` children to cover the brief window between adding a translation and `scheduleRevalidation()` firing its registered validator.
 
+  **Strings UI states** (`ItemAllStringsFormComponent` + `ItemStringsTabsComponent`): mono-platform shows fields only; a monolingual item on a multilingual platform shows fields plus a “Translate header” CTA; multilingual items (or after the CTA) use a tabbed editor with lazy-loaded non-default languages (`ItemStringsLanguageLoader` + `GetItemByIdService`, `initialLanguageValues` in the wrapper grows append-only via `languageValueLoaded`). The strings CVA value is `AllStringsFormValue` (`{ strings, pendingDeletions }`): outbound `strings` exclude pending-deletion tabs; `pendingDeletions` drives server-side deletes in `buildStringsSaveRequests()`. The tablist exposes keyboard navigation (Arrow/Home/End); trash and “+ add XX” controls sit outside the tablist for correct ARIA structure.
+
 ### Groups
 Groups represent organizational units:
 - **Users**: Individual learners

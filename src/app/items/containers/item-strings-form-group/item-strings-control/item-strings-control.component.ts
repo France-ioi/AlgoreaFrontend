@@ -3,11 +3,17 @@ import {
   ControlValueAccessor,
   FormBuilder, NG_VALIDATORS,
   NG_VALUE_ACCESSOR, ValidationErrors,
-  Validators
 } from '@angular/forms';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { ItemEditContentComponent } from 'src/app/items/containers/item-edit-content/item-edit-content.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { stringsValueEqual } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.helpers';
+import { createCvaEcho } from 'src/app/utils/cva-echo';
+import {
+  stringsLanguageTagValidators,
+  stringsSubtitleValidators,
+  stringsTitleValidators,
+} from 'src/app/items/containers/item-strings-form-group/item-strings-validators';
 
 export interface StringsValue {
   languageTag: string,
@@ -21,6 +27,10 @@ export interface StringsValue {
   selector: 'alg-item-strings-control',
   templateUrl: './item-strings-control.component.html',
   styleUrls: [ './item-strings-control.component.scss' ],
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- Angular host CSS class binding
+    '[class.pending-deletion]': 'pendingDeletion()',
+  },
   imports: [
     InputComponent,
     ItemEditContentComponent,
@@ -40,13 +50,14 @@ export interface StringsValue {
 })
 export class ItemStringsControlComponent implements ControlValueAccessor {
   showDescription = input(false);
+  pendingDeletion = input(false);
 
   private fb = inject(FormBuilder);
 
   form = this.fb.nonNullable.group({
-    languageTag: [ '', [ Validators.required ] ],
-    title: [ '', [ Validators.required, Validators.minLength(3) ] ],
-    subtitle: [ '', Validators.maxLength(200) ],
+    languageTag: [ '', stringsLanguageTagValidators ],
+    title: [ '', stringsTitleValidators ],
+    subtitle: [ '', stringsSubtitleValidators ],
     description: [ '' ],
     imageUrl: [ '' ],
   });
@@ -57,12 +68,17 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
   // propagation to the post-CD effect-flush phase, causing
   // ExpressionChangedAfterItHasBeenChecked (NG0100) on bindings up the tree
   // that depend on the parent form's `dirty` state.
+  private outboundEcho = createCvaEcho(stringsValueEqual);
+
   private valueChangesSub = this.form.valueChanges
     .pipe(takeUntilDestroyed())
-    .subscribe(() => this.onChange(this.form.getRawValue()));
+    .subscribe(() => {
+      this.outboundEcho.emitIfChanged(this.form.getRawValue(), v => this.onChange(v));
+    });
 
   writeValue(value: StringsValue | null): void {
     if (value) {
+      this.outboundEcho.rememberInbound(value);
       this.form.patchValue(value, { emitEvent: false });
     }
   }
@@ -78,5 +94,10 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(_fn: (value: StringsValue | null) => void): void {
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) this.form.disable({ emitEvent: false });
+    else this.form.enable({ emitEvent: false });
   }
 }

@@ -1,4 +1,3 @@
-import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { ItemStringChanges } from 'src/app/items/data-access/update-item-string.service';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
 
@@ -30,18 +29,36 @@ export function buildItemAllStringsChanges(
   allStringsValue: StringsValue[],
   initialLanguageValues: StringsValue[],
   defaultLanguageTag: string,
-  initialItem: Pick<Item, 'string'>,
+  persistedImageUrl: string,
   imageUrlValue: string | null,
 ): { changes: ItemStringChanges, languageTag: string }[] {
-  const defaultLangIdx = initialLanguageValues.findIndex(l => l.languageTag === defaultLanguageTag);
-  // Normalise the backend value: it is `null` when never set, and the form value is `''` in that
-  // case — without this, clearing nothing would still be reported as a change.
-  const initialImageUrl = initialItem.string.imageUrl ?? '';
-  const imageUrlChanged = imageUrlValue !== null && imageUrlValue !== initialImageUrl;
-  return allStringsValue.map((v, idx) =>
+  const imageUrlChanged = imageUrlValue !== null && imageUrlValue !== persistedImageUrl;
+  return allStringsValue.map(v =>
     buildItemStringChanges(v, {
       initialValue: initialLanguageValues.find(iv => iv.languageTag === v.languageTag),
-      ...(idx === defaultLangIdx && imageUrlChanged ? { imageUrlValue } : {}),
+      ...(v.languageTag === defaultLanguageTag && imageUrlChanged ? { imageUrlValue } : {}),
     })
   ).filter(({ changes }) => Object.keys(changes).length > 0);
+}
+
+/** Language tags to delete on save: dropped from outbound and/or marked pending-deletion on the server. */
+export function collectStringsToRemove(
+  outbound: StringsValue[],
+  initialLanguageValues: StringsValue[],
+  pendingDeletions: ReadonlySet<string>,
+  serverSupportedLanguageTags: string[],
+): string[] {
+  const outboundTags = new Set(outbound.map(v => v.languageTag));
+  const toRemove = initialLanguageValues
+    .filter(v => !outboundTags.has(v.languageTag))
+    .map(v => v.languageTag);
+
+  for (const languageTag of pendingDeletions) {
+    if (!serverSupportedLanguageTags.includes(languageTag)) continue;
+    if (outboundTags.has(languageTag)) continue;
+    if (toRemove.includes(languageTag)) continue;
+    toRemove.push(languageTag);
+  }
+
+  return toRemove;
 }

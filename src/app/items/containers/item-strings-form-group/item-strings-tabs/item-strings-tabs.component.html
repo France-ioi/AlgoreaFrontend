@@ -1,0 +1,98 @@
+<div class="strings-tabs">
+  <div class="lang-tab-bar">
+    <div
+      class="lang-tab-strip alg-nav-tab"
+      role="tablist"
+      [attr.aria-label]="tablistAriaLabel"
+      (keydown)="onTablistKeydown($event)"
+    >
+      @for (tag of languageTags(); track tag) {
+        <button
+        #tabButton
+        type="button"
+        class="alg-nav-tab-item cursor-pointer lang-tab-item"
+        role="tab"
+        [id]="tabId(tag)"
+        [attr.tabindex]="activeLanguageTag() === tag ? 0 : -1"
+        [attr.data-testid]="'lang-tab-' + tag"
+        [attr.aria-selected]="activeLanguageTag() === tag"
+        [attr.aria-controls]="panelId(tag)"
+        [attr.aria-invalid]="hasError(tag) ? true : null"
+        [attr.aria-label]="tabAriaLabel(tag)"
+        [class.active]="activeLanguageTag() === tag"
+        [class.pending-deletion]="isPendingDeletion(tag)"
+        [class.has-error]="hasError(tag)"
+        (click)="selectTab(tag)"
+      >
+        @if (hasError(tag)) {
+          <span class="tab-error-icon" aria-hidden="true">!</span>
+        }
+        <span class="lang-tab-label">{{ tabLabel(tag) }}</span>
+        @if (!isDefault(tag)) {
+          <span class="lang-tab-delete-wrap" [attr.data-testid]="'lang-tab-row-' + tag">
+            <span
+              class="lang-tab-delete ph-duotone ph-trash"
+              role="button"
+              tabindex="-1"
+              data-testid="remove-language-btn"
+              [attr.aria-label]="removeTranslationLabelFor(tag)"
+              [attr.title]="removeTranslationLabelFor(tag)"
+              (click)="onDeleteClick($event, tag)"
+            ></span>
+          </span>
+        }
+        </button>
+      }
+    </div>
+
+    @if (missingLanguages().length > 0) {
+      <div class="add-language-tabs" role="group" [attr.aria-label]="translationActionsLabel">
+        @for (languageTag of missingLanguages(); track languageTag) {
+          <button
+            type="button"
+            class="add-language-tab"
+            [attr.data-testid]="'lang-tab-add-' + languageTag"
+            [attr.aria-label]="addLanguageTabAriaLabel(languageTag)"
+            (click)="addLanguage.emit(languageTag)"
+          >{{ addLanguageTabLabel(languageTag) }}</button>
+        }
+      </div>
+    }
+  </div>
+
+  @let activeTag = activeLanguageTag();
+  <div
+    [id]="panelId(activeTag)"
+    class="tab-panel"
+    role="tabpanel"
+    [attr.aria-labelledby]="tabId(activeTag)"
+    [attr.data-testid]="'lang-panel-' + activeTag"
+  >
+    @if (isLoading(activeTag)) {
+      <alg-loading data-testid="lang-tab-loading" class="loading no-padding"></alg-loading>
+    } @else if (hasFetchError(activeTag)) {
+      <div class="fetch-error" data-testid="lang-tab-fetch-error">
+        <p i18n>Could not load this translation.</p>
+        <button type="button" class="size-s" alg-button (click)="retryFetch.emit(activeTag)" i18n>Retry</button>
+      </div>
+    } @else if (activeControl(); as control) {
+      <alg-item-strings-control
+        [formControl]="control"
+        [showDescription]="showDescription()"
+        [pendingDeletion]="isPendingDeletion(activeTag)"
+      ></alg-item-strings-control>
+
+      @if (!isDefault(activeTag) && !isPendingDeletion(activeTag)) {
+        <div class="set-default-section">
+          <button
+            class="size-s button"
+            type="button"
+            data-testid="set-default-language-btn"
+            alg-button
+            (click)="setDefaultLanguage.emit(activeTag)"
+          >{{ setDefaultLanguageLabel(activeTag) }}</button>
+        </div>
+      }
+    }
+  </div>
+</div>

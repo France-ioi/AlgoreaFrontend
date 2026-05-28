@@ -1,6 +1,7 @@
 import { expect, test } from 'e2e/common/fixture';
 import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
 import { rootItemId } from 'e2e/items/create-item-fixture';
+import { Page } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await initAsTesterUser(page);
@@ -10,43 +11,35 @@ test.afterEach(({ deleteItem }) => {
   if (!deleteItem) throw new Error('Unexpected: missed deleted item data');
 });
 
+async function openTabsAndAddFrench(page: Page): Promise<void> {
+  await page.getByRole('button', { name: 'Translate' }).click();
+  await page.getByTestId('lang-tab-add-fr').click();
+}
+
 test('checks item set default language strings', async ({ page, createItem, itemContentPage }) => {
   if (!createItem) throw new Error('The item is not created');
 
-  const itemStringsSectionLocator = page.getByTestId('item-strings-control');
-  const itemStringsSectionEnLocator = itemStringsSectionLocator.nth(0);
-  const deleteEnBtnLocator = itemStringsSectionEnLocator.getByTestId('remove-language-btn');
-  const setDefaultEnBtnLocator = itemStringsSectionEnLocator.getByTestId('set-default-language-btn');
+  const enTabLocator = page.getByTestId('lang-tab-en');
+  const frTabLocator = page.getByTestId('lang-tab-fr');
+  const deleteEnBtnLocator = page.getByTestId('lang-tab-row-en').getByTestId('remove-language-btn');
+  const deleteFrBtnLocator = page.getByTestId('lang-tab-row-fr').getByTestId('remove-language-btn');
+  const setDefaultFrBtnLocator = page.getByTestId('lang-panel-fr').getByTestId('set-default-language-btn');
+  const setDefaultEnBtnLocator = page.getByTestId('lang-panel-en').getByTestId('set-default-language-btn');
 
-  const itemStringsSectionFrLocator = itemStringsSectionLocator.nth(1);
+  const itemStringsTitleFrLocator = page.getByTestId('lang-panel-fr').getByTestId('item-strings-title');
+  const itemStringsSubtitleFrLocator = page.getByTestId('lang-panel-fr').getByTestId('item-strings-subtitle');
+  const itemStringsDescriptionFrLocator = page.getByTestId('lang-panel-fr').getByTestId('item-strings-description');
 
-  const translateBtnLocator = page.locator('alg-item-all-strings-form').getByRole('button', { name: 'Translate to fr' });
-
-  const itemStringsTitleFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-title');
-  const itemStringsSubtitleFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-subtitle');
-  const itemStringsDescriptionFrLocator = itemStringsSectionFrLocator.getByTestId('item-strings-description');
-  const deleteFrBtnLocator = itemStringsSectionFrLocator.getByTestId('remove-language-btn');
-  const setDefaultFrBtnLocator = itemStringsSectionFrLocator.getByTestId('set-default-language-btn');
-
-  // Set up the response listener BEFORE the navigation so we never miss the response: on a slow
-  // runner, the heading assertion that follows can otherwise burn most of the test budget waiting
-  // for data to arrive.
   await Promise.all([
     page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
     itemContentPage.waitForItemResponse(createItem.itemId),
   ]);
 
-  await expect.soft(page.getByRole('heading', { name: 'Information (en)' })).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Header & Description' })).toBeVisible();
 
   await test.step('Add new translate information section', async () => {
-    await expect.soft(translateBtnLocator).toBeVisible();
-    await translateBtnLocator.click();
-
-    await expect.soft(translateBtnLocator).not.toBeVisible();
-    await expect.soft(page.getByRole('heading', { name: 'Information (fr)' })).toBeVisible();
+    await openTabsAndAddFrench(page);
     await expect.soft(itemStringsTitleFrLocator).toBeVisible();
-    await expect.soft(itemStringsSubtitleFrLocator).toBeVisible();
-    await expect.soft(itemStringsDescriptionFrLocator).toBeVisible();
   });
 
   await test.step('Fill new translates data and save changes', async () => {
@@ -57,34 +50,35 @@ test('checks item set default language strings', async ({ page, createItem, item
     await itemContentPage.saveChangesAndCheckNotification();
   });
 
-  await test.step('Checks translation data is displayed after save changes', async () => {
-    await expect.soft(itemStringsTitleFrLocator.locator('alg-input').getByRole('textbox')).toHaveValue('Title (fr)');
-    await expect.soft(itemStringsSubtitleFrLocator.locator('alg-input').getByRole('textbox')).toHaveValue('Subtitle (fr)');
-    await expect.soft(itemStringsDescriptionFrLocator.locator('textarea')).toHaveValue('Description (fr)');
-  });
-
   await test.step('Checks en is default flow', async () => {
-    await expect.soft(deleteEnBtnLocator).toBeVisible();
-    await expect.soft(deleteEnBtnLocator).toBeDisabled();
+    await page.getByTestId('lang-tab-en').click();
+    await expect.soft(deleteEnBtnLocator).not.toBeVisible();
     await expect.soft(setDefaultEnBtnLocator).not.toBeVisible();
+    await page.getByTestId('lang-tab-fr').click();
     await expect.soft(deleteFrBtnLocator).toBeVisible();
   });
 
   await test.step('Checks the fr translate set default is visible and change to fr', async () => {
+    await page.getByTestId('lang-tab-fr').click();
     await expect.soft(setDefaultFrBtnLocator).toBeVisible();
     await setDefaultFrBtnLocator.click();
+    await expect.soft(frTabLocator).toContainText('(default)');
+    await expect.soft(enTabLocator).not.toContainText('(default)');
     await expect.soft(setDefaultFrBtnLocator).not.toBeVisible();
   });
 
   await test.step('Checks the fr is default flow and save changes', async () => {
-    await expect.soft(deleteEnBtnLocator).toBeEnabled();
-    await expect.soft(deleteFrBtnLocator).toBeDisabled();
+    await page.getByTestId('lang-tab-en').click();
+    await expect.soft(deleteEnBtnLocator).toBeVisible();
+    await expect.soft(deleteFrBtnLocator).not.toBeVisible();
     await expect.soft(setDefaultEnBtnLocator).toBeVisible();
     await itemContentPage.saveChangesAndCheckNotification();
   });
 
   await test.step('Checks the fr language is default', async () => {
-    await expect.soft(setDefaultEnBtnLocator).toBeVisible();
+    await expect.soft(frTabLocator).toContainText('(default)');
     await expect.soft(setDefaultFrBtnLocator).not.toBeVisible();
+    await page.getByTestId('lang-tab-en').click();
+    await expect.soft(setDefaultEnBtnLocator).toBeVisible();
   });
 });

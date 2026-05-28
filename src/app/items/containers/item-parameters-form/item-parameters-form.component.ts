@@ -31,6 +31,8 @@ import { ItemParametersScoreComponent } from './sections/item-parameters-score.c
 import { ItemParametersDisplayComponent } from './sections/item-parameters-display.component';
 import { ItemParametersParticipationComponent } from './sections/item-parameters-participation.component';
 import { ItemParametersTeamComponent } from './sections/item-parameters-team.component';
+import { itemParametersValueEqual } from 'src/app/items/models/item-parameters-equality';
+import { createCvaEcho } from 'src/app/utils/cva-echo';
 
 @Component({
   selector: 'alg-item-parameters-form',
@@ -72,6 +74,8 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
   confirmRemoval = output<void>();
 
   readonly sections = computed(() => sectionsForItemType(this.itemData().item.type));
+
+  private outboundEcho = createCvaEcho(itemParametersValueEqual);
 
   /**
    * Inner form is structured by section so each sub-component (CVA or presentational) owns a
@@ -118,11 +122,14 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
     // dropped to keep TS6138 (`unused private member`) and `no-unused-expressions` both happy.
     this.form.valueChanges
       .pipe(takeUntilDestroyed())
-      .subscribe(() => this.onChange(this.flatten()));
+      .subscribe(() => {
+        this.outboundEcho.emitIfChanged(this.flatten(), v => this.onChange(v));
+      });
   }
 
   writeValue(value: ItemParametersValue | null): void {
     if (!value) return;
+    this.outboundEcho.rememberInbound(value);
     this.form.patchValue(this.unflatten(value), { emitEvent: false });
   }
 

@@ -1,35 +1,73 @@
-import { Component, DestroyRef, forwardRef, inject, input, output, signal, viewChildren } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  forwardRef,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
-  FormControl, NG_VALIDATORS,
+  FormControl,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
   ValidationErrors,
-  Validator
+  Validator,
 } from '@angular/forms';
 import {
   ItemStringsControlComponent,
-  StringsValue
+  StringsValue,
 } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
-import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-
+import { APPCONFIG } from 'src/app/config';
+import { ItemStringsTabsComponent } from 'src/app/items/containers/item-strings-form-group/item-strings-tabs/item-strings-tabs.component';
+import {
+  emptyStringsValue,
+  stringsValueValidator,
+} from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.helpers';
+import { applyHostedAllStringsWriteValue } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form-write-value';
+import {
+  AllStringsFormValue,
+  normalizeAllStringsFormValue,
+} from 'src/app/items/containers/item-strings-form-group/all-strings-form-value';
+import { ItemStringsLanguageLoader } from 'src/app/items/containers/item-strings-form-group/item-strings-language-loader';
+import { tabLanguageTagsFromFormArray } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form-array';
+import {
+  addStringsLanguageTab,
+  fetchStringsLanguageIfNeeded,
+  setDefaultStringsLanguage,
+  toggleStringsPendingDeletion,
+} from 'src/app/items/containers/item-strings-form-group/item-all-strings-form-actions';
+import { allStringsFormHasInvalidControl } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form-validation';
+import {
+  createInvalidLanguageTagsComputed,
+  createItemStringsFormStateComputed,
+} from 'src/app/items/containers/item-strings-form-group/item-all-strings-form-state';
+import {
+  buildAllStringsOutboundPayload,
+  createAllStringsFormEcho,
+} from 'src/app/items/containers/item-strings-form-group/item-all-strings-form-outbound';
+import { merge, startWith } from 'rxjs';
 
 @Component({
   selector: 'alg-item-all-strings-form',
   templateUrl: './item-all-strings-form.component.html',
   styleUrls: [ './item-all-strings-form.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ItemStringsControlComponent,
+    ItemStringsTabsComponent,
     ReactiveFormsModule,
     ButtonComponent,
-    LoadingComponent,
-    ButtonIconComponent,
   ],
   providers: [
+    ItemStringsLanguageLoader,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => ItemAllStringsFormComponent),
@@ -40,113 +78,197 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
       useExisting: forwardRef(() => ItemAllStringsFormComponent),
       multi: true,
     },
-  ]
+  ],
 })
 export class ItemAllStringsFormComponent implements Validator {
-  allStringControls = viewChildren(ItemStringsControlComponent);
   defaultLanguageEvent = output<string>();
+  languageValueLoaded = output<StringsValue>();
+
   defaultLanguageTag = input<string>();
   supportedLanguages = input.required<string[]>();
   showDescription = input(false);
-  fetchingOtherLanguages = input(false);
+  itemId = input<string>();
+  itemSupportedLanguageTags = input<string[]>([]);
+  loadedLanguageTags = input<string[]>([]);
 
   private fb = inject(FormBuilder);
+  private config = inject(APPCONFIG);
+  private languageLoader = inject(ItemStringsLanguageLoader);
+  private outboundEcho = createAllStringsFormEcho();
   private pendingRevalidationTimer: ReturnType<typeof setTimeout> | undefined;
+  private suppressOutboundEmit = false;
 
-  // Cleanup must be registered once at construction. Angular Forms calls
-  // `registerOnValidatorChange` more than once (notably during teardown via
-  // cleanUpValidators with a noop), and registering `destroyRef.onDestroy`
-  // inside it would throw NG0911 on the destruction-time call because the
-  // view is already being destroyed.
   private timerCleanup = inject(DestroyRef).onDestroy(() => {
     if (this.pendingRevalidationTimer !== undefined) clearTimeout(this.pendingRevalidationTimer);
+    this.languageLoader.clear();
   });
+
+  readonly loadingLanguages = this.languageLoader.loadingLanguages;
+  readonly failedLanguages = this.languageLoader.failedLanguages;
 
   form = this.fb.group({
     allStrings: this.fb.nonNullable.array([
-      this.fb.nonNullable.control({
-        languageTag: '',
-        title: '',
-        subtitle: '',
-        description: '',
-        imageUrl: '',
-      }),
+      this.fb.nonNullable.control<StringsValue>(emptyStringsValue(), { validators: stringsValueValidator }),
     ]),
   });
-  availableLanguagesToCreate = signal<string[] | undefined>(undefined);
 
-  // Propagate the inner form value to the parent CVA synchronously (rather
-  // than via an effect()) so that the parent control is marked dirty during
-  // the same change-detection turn as the user interaction. Going through an
-  // effect would defer the markAsDirty to the post-CD effect-flush phase,
-  // causing `itemForm.dirty` to flip between the main check and dev-mode
-  // checkNoChanges (NG0100 ExpressionChangedAfterItHasBeenChecked on the
-  // wrapper's `@if (itemForm.dirty)`).
+  forceTabs = signal(false);
+  pendingDeletions = signal<ReadonlySet<string>>(new Set());
+  activeLanguageTag = signal('');
+  stringsControlCount = signal(1);
+  tabLanguageTags = signal<string[]>([]);
+
+  private readonly formArrayRevision = toSignal(
+    merge(
+      this.form.controls.allStrings.valueChanges,
+      this.form.controls.allStrings.statusChanges,
+    ).pipe(startWith(null)),
+    { initialValue: null },
+  );
+
+  private readonly formState = createItemStringsFormStateComputed(this.config.languages.length, {
+    showDescription: this.showDescription,
+    defaultLanguageTag: this.defaultLanguageTag,
+    itemSupportedLanguageTags: this.itemSupportedLanguageTags,
+    stringsControlCount: this.stringsControlCount,
+    forceTabs: this.forceTabs,
+    supportedLanguages: this.supportedLanguages,
+    tabLanguageTags: this.tabLanguageTags,
+  });
+  readonly state = this.formState.state;
+  readonly missingLanguages = this.formState.missingLanguages;
+  readonly sectionHeading = this.formState.sectionHeading;
+  readonly showTranslateCta = this.formState.showTranslateCta;
+  readonly resolvedLanguageTag = this.formState.resolvedLanguageTag;
+  activeStringsControl = computed((): FormControl<StringsValue> | undefined => {
+    const tag = this.activeLanguageTag();
+    if (!tag) return undefined;
+    return this.allStrings.controls.find(c => c.getRawValue().languageTag === tag);
+  });
+
+  readonly invalidLanguageTags = createInvalidLanguageTagsComputed({
+    formArrayRevision: this.formArrayRevision,
+    allStrings: this.allStrings,
+    pendingDeletions: this.pendingDeletions,
+    itemSupportedLanguageTags: this.itemSupportedLanguageTags,
+    loadedLanguageTags: this.loadedLanguageTags,
+  });
+
   private valueChangesSub = this.form.controls.allStrings.valueChanges
     .pipe(takeUntilDestroyed())
     .subscribe(() => {
-      const value = this.form.controls.allStrings.getRawValue();
-      if (value.length > 0) {
-        this.onChange(value);
-      }
+      this.syncFormArrayState();
+      this.emitOutboundValue();
     });
 
   get allStrings(): FormArray<FormControl<StringsValue>> {
     return this.form.controls.allStrings;
   }
 
-  writeValue(values: StringsValue[] | null): void {
-    if (values) {
-      if (values.length < this.form.controls.allStrings.length) {
-        for (let i = this.form.controls.allStrings.length; i > values.length; i--) {
-          this.removeStringsControl(i, { emitEvent: false });
-        }
-      }
+  writeValue(value: AllStringsFormValue | StringsValue[] | null): void {
+    const normalized = normalizeAllStringsFormValue(value);
+    if (!normalized) return;
 
-      values.slice(this.form.controls.allStrings.length).forEach(() => {
-        this.addStringsControl();
-      });
-
-      this.form.reset({ allStrings: values }, { emitEvent: false });
-
-      this.determinateAvailableLanguagesToCreate();
+    this.suppressOutboundEmit = true;
+    try {
+      applyHostedAllStringsWriteValue({
+        fb: this.fb,
+        form: this.form,
+        languageLoader: this.languageLoader,
+        outboundEcho: this.outboundEcho,
+        itemSupportedLanguageTags: this.itemSupportedLanguageTags(),
+        defaultLanguageTag: this.defaultLanguageTag(),
+        resolvedLanguageTag: this.resolvedLanguageTag(),
+        pendingDeletions: this.pendingDeletions,
+        forceTabs: this.forceTabs,
+        activeLanguageTag: this.activeLanguageTag,
+        syncFormArrayState: () => this.syncFormArrayState(),
+        buildOutboundPayload: () => this.buildOutboundPayload(),
+        fetchLanguageIfNeeded: tag => this.fetchLanguageIfNeeded(tag),
+      }, normalized);
+    } finally {
+      this.suppressOutboundEmit = false;
     }
   }
 
   validate(): ValidationErrors | null {
-    // We read the inner `FormArray.invalid` (rather than the wrapping `FormGroup.invalid`) because
-    // when this validator runs it has been triggered from the array's own `valueChanges`, and the
-    // parent group's `updateValueAndValidity()` propagation hasn't finished yet — so the group
-    // status would still reflect the pre-change value. We also poll the live
-    // `ItemStringsControl` children, which is required for the brief window after a translation
-    // has been added but before its CVA validator has registered on the new FormControl (covered
-    // by `scheduleRevalidation()` afterwards).
-    return (this.form.controls.allStrings.invalid || this.allStringControls().some(c => c.form.invalid))
-      ? { allStringsForm: true }
-      : null;
+    return allStringsFormHasInvalidControl(
+      this.allStrings, this.pendingDeletions(), this.itemSupportedLanguageTags(), this.loadedLanguageTags(),
+    ) ? { allStringsForm: true } : null;
   }
 
-  private onChange: (value: StringsValue[] | null) => void = () => {};
+  private onChange: (value: AllStringsFormValue | null) => void = () => {};
   private onValidatorChange: () => void = () => {};
-
-  registerOnChange(fn: (value: StringsValue[] | null) => void): void {
+  registerOnChange(fn: (value: AllStringsFormValue | null) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(_fn: (value: StringsValue[] | null) => void): void {
-  }
-
+  registerOnTouched(_fn: (value: AllStringsFormValue | null) => void): void { /* no-op */ }
   registerOnValidatorChange(fn: () => void): void {
     this.onValidatorChange = fn;
   }
 
-  // After adding/removing a language card, the per-language `<alg-item-strings-control>`
-  // child component (CVA + Validator) only mounts/unmounts on the next CD, so the new
-  // FormControl<StringsValue>'s validators wire up after this method returns. We schedule
-  // a re-validation via the macrotask queue so it runs after CD has wired/torn-down those
-  // validators; otherwise the parent FormControl<StringsValue[]>'s `validate()` would have
-  // run too early (against an unvalidated array) and the parent would stay valid even when
-  // the inner form is invalid (e.g., a freshly added language with no title).
+  onShowTabs(): void {
+    this.forceTabs.set(true);
+    const defaultTag = this.defaultLanguageTag() ?? this.allStrings.at(0)?.getRawValue().languageTag ?? '';
+    this.activeLanguageTag.set(defaultTag);
+    if (defaultTag) {
+      this.fetchLanguageIfNeeded(defaultTag);
+    }
+  }
+
+  onActiveTabChange(tag: string): void {
+    this.activeLanguageTag.set(tag);
+    this.fetchLanguageIfNeeded(tag);
+  }
+
+  onRetryFetch(languageTag: string): void {
+    this.languageLoader.retry(languageTag);
+  }
+
+  onSetDefaultLanguage(languageTag: string): void {
+    this.defaultLanguageEvent.emit(languageTag);
+    setDefaultStringsLanguage(
+      this.allStrings,
+      languageTag,
+      this.activeLanguageTag,
+      () => this.syncFormArrayState(),
+      () => this.emitOutboundValue(),
+    );
+  }
+
+  onTogglePendingDeletion(languageTag: string): void {
+    toggleStringsPendingDeletion({
+      allStrings: this.allStrings,
+      pendingDeletions: this.pendingDeletions,
+      emitOutboundValue: () => this.emitOutboundValue(),
+      scheduleRevalidation: () => this.scheduleRevalidation(),
+    }, languageTag);
+  }
+
+  onAddLanguage(languageTag: string): void {
+    addStringsLanguageTab({
+      fb: this.fb,
+      allStrings: this.allStrings,
+      activeLanguageTag: this.activeLanguageTag,
+      syncFormArrayState: () => this.syncFormArrayState(),
+      emitOutboundValue: () => this.emitOutboundValue(),
+      scheduleRevalidation: () => this.scheduleRevalidation(),
+    }, languageTag);
+  }
+
+  private fetchLanguageIfNeeded(languageTag: string): void {
+    fetchStringsLanguageIfNeeded({
+      itemId: this.itemId(),
+      allStrings: this.allStrings,
+      languageLoader: this.languageLoader,
+      loadedLanguageTags: () => this.loadedLanguageTags(),
+      itemSupportedLanguageTags: () => this.itemSupportedLanguageTags(),
+      onLoaded: value => this.languageValueLoaded.emit(value),
+      scheduleRevalidation: () => this.scheduleRevalidation(),
+    }, languageTag);
+  }
+
   private scheduleRevalidation(): void {
     if (this.pendingRevalidationTimer !== undefined) clearTimeout(this.pendingRevalidationTimer);
     this.pendingRevalidationTimer = setTimeout(() => {
@@ -155,44 +277,24 @@ export class ItemAllStringsFormComponent implements Validator {
     });
   }
 
-  onSetDefaultLanguage(languageTag: string): void {
-    this.defaultLanguageEvent.emit(languageTag);
+  private syncFormArrayState(): void {
+    this.stringsControlCount.set(this.allStrings.length);
+    this.tabLanguageTags.set(tabLanguageTagsFromFormArray(this.allStrings));
   }
 
-  addStringsControl(value?: Partial<StringsValue>): void {
-    this.allStrings.push(
-      this.fb.nonNullable.control({
-        languageTag: '',
-        title: '',
-        subtitle: '',
-        description: '',
-        imageUrl: '',
-        ...value,
-      }),
-      { emitEvent: value !== undefined },
+  private buildOutboundPayload(): AllStringsFormValue {
+    return buildAllStringsOutboundPayload(
+      this.allStrings,
+      this.pendingDeletions(),
+      this.itemSupportedLanguageTags(),
+      this.loadedLanguageTags(),
     );
-    this.scheduleRevalidation();
   }
 
-  onAddStringsControl(value?: Partial<StringsValue>): void {
-    this.addStringsControl(value);
-    this.determinateAvailableLanguagesToCreate();
-  }
-
-  removeStringsControl(idx: number, options: { emitEvent: boolean } = { emitEvent: true }): void {
-    this.form.controls.allStrings.removeAt(idx, options);
-    this.scheduleRevalidation();
-  }
-
-  onRemoveStringsControl(idx: number): void {
-    this.removeStringsControl(idx);
-    this.determinateAvailableLanguagesToCreate();
-  }
-
-  determinateAvailableLanguagesToCreate(): void {
-    const stringValues = this.form.controls.allStrings.getRawValue();
-    this.availableLanguagesToCreate.set(
-      this.supportedLanguages().filter(sl => !stringValues.find(v => v.languageTag === sl))
-    );
+  private emitOutboundValue(): void {
+    if (this.suppressOutboundEmit) return;
+    const value = this.buildOutboundPayload();
+    if (value.strings.length === 0 && value.pendingDeletions.length === 0) return;
+    this.outboundEcho.emitIfChanged(value, v => this.onChange(v));
   }
 }

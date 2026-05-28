@@ -6,49 +6,6 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 const testImageUrl = 'https://cdn.prod.website-files.com/66d16ac0a28e9fc29617fc2e/673b41ccea45ed2c55cf536b_angular-16-banner.jpg';
 const secondTestImageUrl = 'https://www.ryadel.com/wp-content/uploads/2017/10/angular-logo.jpg';
 
-const frItemResponse = {
-  'type': 'Chapter',
-  'validation_type': 'All',
-  'requires_explicit_entry': false,
-  'allows_multiple_attempts': false,
-  'entry_participant_type': 'User',
-  'duration': null,
-  'no_score': false,
-  'default_language_tag': 'en',
-  'permissions': {
-    'can_view': 'solution',
-    'can_grant_view': 'solution_with_grant',
-    'can_watch': 'answer_with_grant',
-    'can_edit': 'all_with_grant',
-    'is_owner': true,
-    'can_request_help': true,
-    'entering_time_intervals': []
-  },
-  'entry_min_admitted_members_ratio': 'None',
-  'entry_frozen_teams': false,
-  'entry_max_team_size': 0,
-  'prompt_to_join_group_by_code': false,
-  'text_id': null,
-  'read_only': false,
-  'children_layout': 'List',
-  'entering_time_min': '1000-01-01T00:00:00Z',
-  'entering_time_max': '9999-12-31T23:59:59Z',
-  'supported_language_tags': [
-    'en',
-    'fr'
-  ],
-  'best_score': 0,
-  'display_settings': {},
-  'string': {
-    'language_tag': 'fr',
-    'title': 'Title (fr)',
-    'image_url': null,
-    'subtitle': 'Subtitle (fr)',
-    'description': 'Description (fr)',
-    'edu_comment': null
-  }
-};
-
 test.beforeEach(async ({ page }) => {
   await initAsTesterUser(page);
 });
@@ -81,14 +38,14 @@ test('checks edit parameters - image url', async ({ page, createItem, itemConten
   });
 
   await test.step('Switch lang to fr and check that the value still displayed', async () => {
-    await page.route(`${apiUrl}/items/${ createItem.itemId }`, async route => {
-      await route.fulfill({ json: { ...frItemResponse, id: createItem.itemId } });
-    });
-
-    await page.reload();
+    await page.getByRole('button', { name: 'Translate' }).click();
+    await page.getByTestId('lang-tab-add-fr').click();
+    await page.getByTestId('lang-panel-fr').getByTestId('item-strings-title')
+      .locator('alg-input').getByRole('textbox').fill('Title (fr)');
+    await page.getByTestId('lang-tab-fr').click();
     await expect.soft(thumbnailUrlLocator).toBeVisible();
-    await expect.soft(imageUrlInputLocator).toBeVisible();
     await expect.soft(imageUrlInputLocator).toHaveValue(testImageUrl);
+    await itemContentPage.saveChangesAndCheckNotification();
   });
 
   await test.step('Fill another image url on fr item as default', async () => {
@@ -98,18 +55,26 @@ test('checks edit parameters - image url', async ({ page, createItem, itemConten
   });
 
   await test.step('Save image url and check saved value on en version', async () => {
-    await itemContentPage.saveChangesAndCheckNotification();
-    await page.unroute(`${apiUrl}/items/${ createItem.itemId }`);
-    await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
+    await page.getByTestId('lang-tab-en').click();
+    const imageUrlPut = page.waitForResponse(resp =>
+      resp.request().method() === 'PUT'
+      && resp.url().includes(`/items/${createItem.itemId}/strings/`)
+      && resp.request().postData()?.includes('"image_url"') === true
+      && resp.ok());
+    await Promise.all([
+      imageUrlPut,
+      itemContentPage.saveChanges(),
+    ]);
+    await expect.soft(imageUrlInputLocator).toHaveValue(secondTestImageUrl);
+    await Promise.all([
+      page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
+      itemContentPage.waitForItemResponse(createItem.itemId),
+    ]);
     await expect.soft(thumbnailUrlLocator).toBeVisible();
-    await expect.soft(imageUrlInputLocator).toBeVisible();
     await expect.soft(imageUrlInputLocator).toHaveValue(secondTestImageUrl);
   });
 
   await test.step('Clearing the image url sends image_url: null and persists across reload', async () => {
-    // Wait for the actual PUT to the strings endpoint to confirm the request was issued with the
-    // expected payload (previously the wrapper silently skipped the PUT when the field became
-    // empty, leaving the stored URL in place).
     const clearRequest = page.waitForRequest(req =>
       req.method() === 'PUT'
       && req.url().startsWith(`${apiUrl}/items/${createItem.itemId}/strings/`)
@@ -121,9 +86,11 @@ test('checks edit parameters - image url', async ({ page, createItem, itemConten
       itemContentPage.saveChangesAndCheckNotification(),
     ]);
 
-    await page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`);
+    await Promise.all([
+      page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
+      itemContentPage.waitForItemResponse(createItem.itemId),
+    ]);
     await expect.soft(thumbnailUrlLocator).toBeVisible();
-    await expect.soft(imageUrlInputLocator).toBeVisible();
     await expect.soft(imageUrlInputLocator).toHaveValue('');
   });
 
