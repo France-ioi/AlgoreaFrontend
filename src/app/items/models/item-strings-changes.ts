@@ -45,3 +45,25 @@ export function buildItemAllStringsChanges(
     })
   ).filter(({ changes }) => Object.keys(changes).length > 0);
 }
+
+/** Language tags to delete on save: dropped from outbound and/or marked pending-deletion on the server. */
+export function collectStringsToRemove(
+  outbound: StringsValue[],
+  initialLanguageValues: StringsValue[],
+  pendingDeletions: ReadonlySet<string>,
+  serverSupportedLanguageTags: string[],
+): string[] {
+  const outboundTags = new Set(outbound.map(v => v.languageTag));
+  const toRemove = initialLanguageValues
+    .filter(v => !outboundTags.has(v.languageTag))
+    .map(v => v.languageTag);
+
+  for (const languageTag of pendingDeletions) {
+    if (!serverSupportedLanguageTags.includes(languageTag)) continue;
+    if (outboundTags.has(languageTag)) continue;
+    if (toRemove.includes(languageTag)) continue;
+    toRemove.push(languageTag);
+  }
+
+  return toRemove;
+}

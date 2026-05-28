@@ -5,10 +5,13 @@
       <alg-item-all-strings-form
         [defaultLanguageTag]="defaultLanguageTagValue"
         [supportedLanguages]="supportedLanguages()"
-        [fetchingOtherLanguages]="fetchingOtherLanguages()"
+        [itemId]="itemData.item.id"
+        [itemSupportedLanguageTags]="itemData.item.supportedLanguageTags"
+        [loadedLanguageTags]="loadedLanguageTags()"
         [showDescription]="itemData.item.type !== 'Task' && itemData.currentResult !== undefined"
         formControlName="allStrings"
         (defaultLanguageEvent)="onDefaultLanguageChange($event)"
+        (languageValueLoaded)="onLanguageValueLoaded($event)"
       ></alg-item-all-strings-form>
       <alg-item-parameters-form
         formControlName="parameters"

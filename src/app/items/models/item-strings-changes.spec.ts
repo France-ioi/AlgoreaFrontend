@@ -1,6 +1,6 @@
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
-import { buildItemAllStringsChanges, buildItemStringChanges } from './item-strings-changes';
+import { buildItemAllStringsChanges, buildItemStringChanges, collectStringsToRemove } from './item-strings-changes';
 
 function makeStrings(overrides: Partial<StringsValue> = {}): StringsValue {
   return {
@@ -72,6 +72,22 @@ describe('buildItemAllStringsChanges', () => {
     const item = makeItem({ imageUrl: 'https://old.test/a.png' });
     const result = buildItemAllStringsChanges([ initial ], [ initial ], 'en', item, 'https://new.test/b.png');
     expect(result).toEqual([ { languageTag: 'en', changes: { image_url: 'https://new.test/b.png' } } ]);
+  });
+
+  it('includes pending-deletion server languages even when never loaded into the initial snapshot', () => {
+    const en = makeStrings({ languageTag: 'en' });
+    const outbound = [ en ];
+    const pendingDeletions = new Set([ 'fr' ]);
+    const result = collectStringsToRemove(outbound, [ en ], pendingDeletions, [ 'en', 'fr' ]);
+    expect(result).toEqual([ 'fr' ]);
+  });
+
+  it('does not delete a language that was only added locally and marked pending-deletion', () => {
+    const en = makeStrings({ languageTag: 'en' });
+    const outbound = [ en ];
+    const pendingDeletions = new Set([ 'fr' ]);
+    const result = collectStringsToRemove(outbound, [ en ], pendingDeletions, [ 'en' ]);
+    expect(result).toEqual([]);
   });
 
   it('only carries image_url on the default-language record', () => {
