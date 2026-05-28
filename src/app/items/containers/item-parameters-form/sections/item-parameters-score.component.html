@@ -2,7 +2,16 @@
   <h2 class="alg-h2 alg-text-normal title" i18n>Score & Validation</h2>
 
   <div class="form-item-view">
-    <span class="form-item-label" i18n>Validation criteria</span>
+    <span class="form-item-label">
+      <ng-container i18n>Validation criteria</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Defines when this chapter counts as validated, based on the progress of its child items."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
     <div class="form-item-control">
       <alg-select buttonStyleClass="width-full select-form-button size-l" formControlName="validationType">
         @for (option of validationCriteriaOptions; track $index) {
@@ -15,7 +24,16 @@
   </div>
 
   <div class="form-item-view">
-    <span class="form-item-label" i18n>Disable score</span>
+    <span class="form-item-label">
+      <ng-container i18n>Disable score</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Hides the score for this content and stops it from contributing to parent scores."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
     <div class="form-item-control">
       <alg-switch formControlName="noScore"></alg-switch>
     </div>

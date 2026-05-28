@@ -5,6 +5,7 @@ import {
   NG_VALUE_ACCESSOR, ValidationErrors,
 } from '@angular/forms';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { ItemEditContentComponent } from 'src/app/items/containers/item-edit-content/item-edit-content.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { stringsValueEqual } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.helpers';
@@ -34,6 +35,7 @@ export interface StringsValue {
   imports: [
     InputComponent,
     ItemEditContentComponent,
+    TooltipDirective,
   ],
   providers: [
     {

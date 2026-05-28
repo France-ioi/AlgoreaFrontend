@@ -1,22 +1,49 @@
 <div [formGroup]="form()">
-  <h2 class="alg-h2 alg-text-normal title" i18n>Global parameters</h2>
+  <h2 class="alg-h2 alg-text-normal title" i18n>Content Configuration</h2>
 
   <div class="form-item-view">
-    <span class="form-item-label" i18n>Url</span>
+    <span class="form-item-label">
+      <ng-container i18n>Url</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="URL of the content that will be shown to learners."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
     <div class="form-item-control">
       <alg-input [parentForm]="form()" name="url"></alg-input>
     </div>
   </div>
 
   <div class="form-item-view">
-    <span class="form-item-label" i18n>Uses API</span>
+    <span class="form-item-label">
+      <ng-container i18n>Uses API</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Lets this content communicate with the platform — for example to submit scores or update how it is displayed."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
     <div class="form-item-control">
       <alg-switch formControlName="usesApi"></alg-switch>
     </div>
   </div>
 
   <div class="form-item-view">
-    <span class="form-item-label">TextID</span>
+    <span class="form-item-label">
+      TextID
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Advanced: a unique identifier used to reference or link this content across the platform."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
     <div class="form-item-control">
       <alg-input [parentForm]="form()" name="textId"></alg-input>
       @if (textIdError(); as err) {

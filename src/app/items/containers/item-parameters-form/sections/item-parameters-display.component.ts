@@ -5,6 +5,7 @@ import { of, startWith, switchMap } from 'rxjs';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { ItemChildrenLayout } from 'src/app/items/models/item-parameters';
 
 export type ItemParametersDisplayForm = FormGroup<{
@@ -25,6 +26,7 @@ export type ItemParametersDisplayForm = FormGroup<{
     InputComponent,
     SelectionComponent,
     SwitchComponent,
+    TooltipDirective,
   ],
 })
 export class ItemParametersDisplayComponent {
