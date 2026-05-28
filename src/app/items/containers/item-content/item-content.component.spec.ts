@@ -75,6 +75,7 @@ const mockItem: Item = {
   url: 'http://example.com/task',
   usesApi: false,
   defaultLanguageTag: 'en',
+  supportedLanguageTags: [ 'en' ],
 };
 
 const mockItemData: ItemData = {

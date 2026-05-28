@@ -12,7 +12,6 @@ import { UpdateItemService } from '../../data-access/update-item.service';
 import { UpdateItemStringService } from '../../data-access/update-item-string.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { concat, distinctUntilChanged, forkJoin, map, Observable, of, throwError, toArray } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -36,8 +35,6 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
 import { ItemAllStringsFormComponent } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.component';
 import { APPCONFIG } from 'src/app/config';
-import { catchError } from 'rxjs/operators';
-import { errorIsHTTPNotFound } from 'src/app/utils/errors';
 import { DeleteItemStringService } from 'src/app/items/data-access/delete-item-string.service';
 
 interface ServerValidationError extends HttpErrorResponse {
@@ -157,17 +154,15 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   private fetchOtherLanguages(mainItem: Item): void {
     if (this.fetchingOtherLanguages()) return;
-    const languagesForFetch = this.supportedLanguages().filter(langTag => langTag !== mainItem.string.languageTag);
+    const languagesForFetch = mainItem.supportedLanguageTags.filter(langTag => langTag !== mainItem.string.languageTag);
     if (languagesForFetch.length === 0) return this.setFormsDisabled(false);
     this.fetchingOtherLanguages.set(true);
     const onSettled = (): void => {
       this.fetchingOtherLanguages.set(false);
       this.setFormsDisabled(false);
     };
-    forkJoin(languagesForFetch.map(langTag => this.getItemByIdService.get(mainItem.id, { languageTag: langTag }).pipe(
-      catchError((error: unknown) => (errorIsHTTPNotFound(error) ? of(undefined) : throwError(() => error))),
-    ))).subscribe({
-      next: result => this.updateAllStringsFormValue(result.filter(isNotUndefined)),
+    forkJoin(languagesForFetch.map(langTag => this.getItemByIdService.get(mainItem.id, { languageTag: langTag }))).subscribe({
+      next: result => this.updateAllStringsFormValue(result),
       error: onSettled,
       complete: onSettled,
     });
