@@ -9,6 +9,7 @@ import { ItemTypeCategory, itemTypeCategoryEnum, itemTypeSchema } from 'src/app/
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
 import { itemCorePermSchema } from 'src/app/items/models/item-permissions';
+import { displaySettingsSchema } from 'src/app/items/models/display-settings';
 import { groupBy } from 'src/app/utils/array';
 import { z } from 'zod';
 import { MINUTES } from '../utils/duration';
@@ -42,6 +43,7 @@ const itemNavigationChildBaseSchema = z.object({
     title: z.string().nullable(),
   }),
   type: itemTypeSchema,
+  displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
 });
 
 const itemNavigationChildSchema = itemNavigationChildBaseSchema.and(z.object({
@@ -62,6 +64,7 @@ const itemNavigationDataSchema = z.object({
     title: z.string().nullable(),
   }),
   type: z.enum([ 'Chapter', 'Task', 'Skill' ]),
+  displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
   children: z.array(itemNavigationChildSchema),
 });
 
