@@ -12,6 +12,7 @@ function buildParameters(overrides: Partial<ItemParametersValue> = {}): ItemPara
     promptToJoinGroupByCode: false,
     childrenLayout: 'List',
     thumbnailUrl: '',
+    disableChildrenPrevNextNav: false,
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
     durationEnabled: false,

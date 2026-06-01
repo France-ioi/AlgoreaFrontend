@@ -146,9 +146,14 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
    * When it is populated with an element id, the neighbor navigation will only be restricted to its descendants _not including self_.
    */
   navigationNeighborsRestrictedToDescendantOfElementId: string | null = null;
+  protected disablePrevNextNavAmongRoots = false;
   navigationNeighbors$ = this.state$.pipe(
     mapStateData<NavTreeData, NavigationNeighbors|undefined>(
-      navData => computeNavigationNeighbors(navData, this.navigationNeighborsRestrictedToDescendantOfElementId),
+      navData => computeNavigationNeighbors(
+        navData,
+        this.navigationNeighborsRestrictedToDescendantOfElementId,
+        this.disablePrevNextNavAmongRoots,
+      ),
     ),
   );
 

@@ -3,14 +3,15 @@
     @if (navigationMode.parent) {
       <div
         class="neighbor-widget-button"
-        [ngClass]="{ 'no-separator': !navigationMode.right}"
-        @buttonAnimation
+        [ngClass]="{ 'no-separator': hideParentSeparator() }"
+        animate.enter="neighbor-enter"
+        animate.leave="neighbor-leave"
       >
         <button
           alg-button
           type="button"
           icon="ph-bold ph-caret-up"
-          [showCaption]="!navigationMode.right"
+          [showCaption]="showBackCaption()"
           [withAnimation]="true"
           class="neighbor-nav"
           (click)="parent.emit()"
@@ -18,29 +19,37 @@
         >Back</button>
       </div>
     }
-    <div class="neighbor-widget-button" [ngClass]="{ 'no-separator': navigationMode.right}">
-      <button
-        alg-button-icon
-        type="button"
-        icon="ph-bold ph-caret-left"
-        class="size-s no-bg nav-arrow"
-        (click)="left.emit()"
-        [disabled]="!navigationMode.left"
-      ></button>
-    </div>
-    <div class="neighbor-widget-button">
-      <button
-        alg-button
-        type="button"
-        icon="ph-bold ph-caret-right"
-        [showCaption]="navigationMode.right"
-        [withAnimation]="true"
-        class="neighbor-nav"
-        data-testid="nav-to-next"
-        (click)="right.emit()"
-        [disabled]="!navigationMode.right"
-        i18n
-      >Next</button>
-    </div>
+    @if (showPrevNextNav()) {
+      <div
+        class="neighbor-widget-prev-next"
+        animate.enter="neighbor-prev-next-enter"
+        animate.leave="neighbor-prev-next-leave"
+      >
+        <div class="neighbor-widget-button" [ngClass]="{ 'no-separator': navigationMode.right}">
+          <button
+            alg-button-icon
+            type="button"
+            icon="ph-bold ph-caret-left"
+            class="size-s no-bg nav-arrow"
+            (click)="left.emit()"
+            [disabled]="!navigationMode.left"
+          ></button>
+        </div>
+        <div class="neighbor-widget-button">
+          <button
+            alg-button
+            type="button"
+            icon="ph-bold ph-caret-right"
+            [showCaption]="navigationMode.right"
+            [withAnimation]="true"
+            class="neighbor-nav"
+            data-testid="nav-to-next"
+            (click)="right.emit()"
+            [disabled]="!navigationMode.right"
+            i18n
+          >Next</button>
+        </div>
+      </div>
+    }
   </div>
 }

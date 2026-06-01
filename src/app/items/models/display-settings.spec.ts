@@ -6,6 +6,7 @@ describe('displaySettingsSchema', () => {
       childrenLayout: 'List',
       promptToJoinGroupByCode: false,
       thumbnailUrl: null,
+      disableChildrenPrevNextNav: false,
     });
   });
 
@@ -14,6 +15,7 @@ describe('displaySettingsSchema', () => {
       childrenLayout: 'Grid',
       promptToJoinGroupByCode: false,
       thumbnailUrl: null,
+      disableChildrenPrevNextNav: false,
     });
   });
 });
@@ -27,6 +29,7 @@ describe('buildDisplaySettingsBody', () => {
       children_layout: 'Grid',
       prompt_to_join_group_by_code: false,
       thumbnail_url: null,
+      disable_children_prev_next_nav: false,
     });
   });
 

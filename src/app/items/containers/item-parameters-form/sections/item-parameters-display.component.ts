@@ -12,6 +12,7 @@ export type ItemParametersDisplayForm = FormGroup<{
   promptToJoinGroupByCode: FormControl<boolean>,
   childrenLayout: FormControl<ItemChildrenLayout>,
   thumbnailUrl: FormControl<string>,
+  disableChildrenPrevNextNav: FormControl<boolean>,
 }>;
 
 @Component({
@@ -31,6 +32,7 @@ export class ItemParametersDisplayComponent {
   form = input.required<ItemParametersDisplayForm>();
   showChildrenLayout = input(false);
   showThumbnailUrl = input(false);
+  showDisableChildrenPrevNextNav = input(false);
 
   readonly childrenLayoutOptions: { label: string, value: ItemChildrenLayout }[] = [
     { label: $localize`List`, value: 'List' },

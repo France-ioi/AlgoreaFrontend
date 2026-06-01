@@ -10,6 +10,7 @@ const ITEM_PARAMETERS_KEYS = [
   'promptToJoinGroupByCode',
   'childrenLayout',
   'thumbnailUrl',
+  'disableChildrenPrevNextNav',
   'allowsMultipleAttempts',
   'requiresExplicitEntry',
   'durationEnabled',
