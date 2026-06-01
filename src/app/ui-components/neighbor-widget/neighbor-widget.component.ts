@@ -3,7 +3,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -11,8 +10,11 @@ import { NgClass } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
-/** Matches neighbor-prev-next-leave duration (0.2s delay + 0.2s animation). */
-const PREV_NEXT_LEAVE_MS = 400;
+interface NavigationMode {
+  parent: boolean,
+  left: boolean,
+  right: boolean,
+}
 
 @Component({
   selector: 'alg-neighbor-widget',
@@ -20,8 +22,8 @@ const PREV_NEXT_LEAVE_MS = 400;
   styleUrls: [ 'neighbor-widget.component.scss' ],
   imports: [ ButtonIconComponent, ButtonComponent, NgClass ]
 })
-export class NeighborWidgetComponent implements OnChanges, OnDestroy {
-  @Input() navigationMode?: {parent: boolean, left: boolean, right: boolean};
+export class NeighborWidgetComponent implements OnChanges {
+  @Input() navigationMode?: NavigationMode;
 
   @Output() parent = new EventEmitter<void>();
   @Output() left = new EventEmitter<void>();
@@ -31,16 +33,16 @@ export class NeighborWidgetComponent implements OnChanges, OnDestroy {
   showBackCaptionDelayed = false;
   hideParentSeparatorDelayed = false;
 
-  private prevNextLeaveTimer?: ReturnType<typeof setTimeout>;
+  private lastAppliedMode?: NavigationMode;
   private prevNextWasVisible = false;
+  private pendingPrevNextLeaveLayout = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['navigationMode']) return;
-    this.syncBackButtonLayout();
-  }
-
-  ngOnDestroy(): void {
-    this.clearPrevNextLeaveTimer();
+    const mode = this.navigationMode;
+    if (!mode || !this.navigationModeChanged(mode)) return;
+    this.syncBackButtonLayout(mode);
+    this.lastAppliedMode = { parent: mode.parent, left: mode.left, right: mode.right };
   }
 
   showPrevNextNav(): boolean {
@@ -55,26 +57,31 @@ export class NeighborWidgetComponent implements OnChanges, OnDestroy {
     return this.hideParentSeparatorDelayed;
   }
 
-  private syncBackButtonLayout(): void {
-    const mode = this.navigationMode;
-    if (!mode) return;
+  onPrevNextPanelAnimationEnd(event: AnimationEvent): void {
+    if (!event.animationName.startsWith('neighbor-prev-next-leave')) return;
+    this.completePrevNextLeaveLayout();
+  }
 
-    const prevNextVisible = this.showPrevNextNav();
+  private navigationModeChanged(mode: NavigationMode): boolean {
+    if (!this.lastAppliedMode) return true;
+    return this.lastAppliedMode.parent !== mode.parent
+      || this.lastAppliedMode.left !== mode.left
+      || this.lastAppliedMode.right !== mode.right;
+  }
+
+  private syncBackButtonLayout(mode: NavigationMode): void {
+    const prevNextVisible = mode.left || mode.right;
 
     if (prevNextVisible) {
-      this.clearPrevNextLeaveTimer();
+      this.pendingPrevNextLeaveLayout = false;
       this.showBackCaptionDelayed = !mode.right;
       this.hideParentSeparatorDelayed = false;
     } else if (this.prevNextWasVisible) {
-      this.clearPrevNextLeaveTimer();
+      this.pendingPrevNextLeaveLayout = true;
       this.showBackCaptionDelayed = false;
       this.hideParentSeparatorDelayed = false;
-      this.prevNextLeaveTimer = setTimeout(() => {
-        this.showBackCaptionDelayed = !mode.right;
-        this.hideParentSeparatorDelayed = true;
-        this.prevNextLeaveTimer = undefined;
-      }, PREV_NEXT_LEAVE_MS);
     } else {
+      this.pendingPrevNextLeaveLayout = false;
       this.showBackCaptionDelayed = !mode.right;
       this.hideParentSeparatorDelayed = true;
     }
@@ -82,10 +89,13 @@ export class NeighborWidgetComponent implements OnChanges, OnDestroy {
     this.prevNextWasVisible = prevNextVisible;
   }
 
-  private clearPrevNextLeaveTimer(): void {
-    if (this.prevNextLeaveTimer) {
-      clearTimeout(this.prevNextLeaveTimer);
-      this.prevNextLeaveTimer = undefined;
-    }
+  private completePrevNextLeaveLayout(): void {
+    if (!this.pendingPrevNextLeaveLayout) return;
+    const mode = this.navigationMode;
+    if (!mode || mode.left || mode.right) return;
+
+    this.pendingPrevNextLeaveLayout = false;
+    this.showBackCaptionDelayed = !mode.right;
+    this.hideParentSeparatorDelayed = true;
   }
 }

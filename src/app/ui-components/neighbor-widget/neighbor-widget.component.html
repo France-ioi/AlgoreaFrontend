@@ -24,6 +24,7 @@
         class="neighbor-widget-prev-next"
         animate.enter="neighbor-prev-next-enter"
         animate.leave="neighbor-prev-next-leave"
+        (animationend)="onPrevNextPanelAnimationEnd($event)"
       >
         <div class="neighbor-widget-button" [ngClass]="{ 'no-separator': navigationMode.right}">
           <button
