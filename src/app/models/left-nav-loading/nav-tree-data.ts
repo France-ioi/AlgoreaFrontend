@@ -15,6 +15,8 @@ export interface NavTreeElement {
 
   // specific uses
   locked?: boolean, // considering 'not set' as false
+  // considering 'not set' as false; set from a parent's display settings: disables prev/next nav among this element's children
+  disableChildrenPrevNextNav?: boolean,
   associatedGroupNames?: string[],
   score?: { bestScore: number, currentScore: number, validated: boolean },
   groupRelation?: { isMember: boolean, managership: GroupManagershipType },

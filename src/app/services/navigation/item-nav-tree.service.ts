@@ -20,6 +20,8 @@ import { EntityPathRoute } from 'src/app/models/routing/entity-route';
 
 abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
+  protected override disablePrevNextNavAmongRoots = true;
+
   constructor(
     private category: ItemTypeCategory,
     currentContent: CurrentContentService,
@@ -130,6 +132,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       hasChildren: child.hasVisibleChildren && canCurrentUserViewContent(child),
       navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame, useCurrentObservation: true }),
       locked: !allowsViewingContent(child.watchedGroup ?? child.permissions),
+      disableChildrenPrevNextNav: child.displaySettings.disableChildrenPrevNextNav,
       score,
     };
   }
@@ -144,6 +147,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
         navigateTo: (preventFullFrame = false): void =>
           this.itemRouter.navigateTo(parentRoute, { preventFullFrame, useCurrentObservation: true }),
         locked: !canCurrentUserViewContent(data),
+        disableChildrenPrevNextNav: data.displaySettings.disableChildrenPrevNextNav,
       },
       elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),
     };

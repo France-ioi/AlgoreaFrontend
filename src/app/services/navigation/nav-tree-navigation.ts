@@ -21,10 +21,14 @@ export interface NavigationNeighbors {
  *
  * `restrictedToDescendantOfElementId` is the LTI restriction: when non-null, the parent neighbor is hidden if its id matches.
  * This check stays id-only on purpose — the restriction targets an entity regardless of its path occurrence.
+ *
+ * `disablePrevNextAmongRoots` disables prev/next when the selection is an L1 sibling with no parent element (root activities/skills).
+ * Otherwise, prev/next is disabled when the parent-of-siblings element has `disableChildrenPrevNextNav` set.
  */
 export function computeNavigationNeighbors(
   navData: NavTreeData,
   restrictedToDescendantOfElementId: string | null,
+  disablePrevNextAmongRoots = false,
 ): NavigationNeighbors | undefined {
   const selectedRoute = navData.selectedElementRoute;
   if (!selectedRoute) return undefined;
@@ -39,11 +43,14 @@ export function computeNavigationNeighbors(
   const parent = inL1 ? navData.parent : l1Element;
   const prev = inL1 ? navData.elements[l1Idx-1] : l1Element.children?.[l2Idx-1];
   const next = inL1 ? navData.elements[l1Idx+1] : l1Element.children?.[l2Idx+1];
+  const prevNextDisabled = inL1
+    ? (navData.parent ? !!navData.parent.disableChildrenPrevNextNav : disablePrevNextAmongRoots)
+    : !!l1Element.disableChildrenPrevNextNav;
   return {
     parent: (parent && parent.route.id !== restrictedToDescendantOfElementId)
       ? { navigateTo: (): void => parent.navigateTo() }
       : null,
-    previous: prev ? { navigateTo: (): void => prev.navigateTo() } : null,
-    next: next ? { navigateTo: (): void => next.navigateTo() } : null,
+    previous: !prevNextDisabled && prev ? { navigateTo: (): void => prev.navigateTo() } : null,
+    next: !prevNextDisabled && next ? { navigateTo: (): void => next.navigateTo() } : null,
   };
 }

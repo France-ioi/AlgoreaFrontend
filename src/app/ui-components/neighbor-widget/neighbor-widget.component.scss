@@ -6,6 +6,84 @@
   height: 100%;
 }
 
+.neighbor-widget-prev-next {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.neighbor-widget-prev-next {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.neighbor-enter {
+  animation: neighbor-button-enter 0.2s 0.2s ease-in-out both;
+}
+
+.neighbor-leave {
+  animation: neighbor-button-leave 0.2s 0.2s ease-in-out both;
+}
+
+.neighbor-prev-next-enter {
+  animation: neighbor-prev-next-enter 0.4s ease-in-out both;
+}
+
+.neighbor-prev-next-leave {
+  animation: neighbor-prev-next-leave 0.4s ease-in-out both;
+}
+
+@keyframes neighbor-prev-next-enter {
+  from {
+    max-width: 0;
+    opacity: 0;
+  }
+
+  to {
+    max-width: 12rem;
+    opacity: 1;
+  }
+}
+
+@keyframes neighbor-prev-next-leave {
+  from {
+    max-width: 12rem;
+    opacity: 1;
+  }
+
+  to {
+    max-width: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes neighbor-button-enter {
+  from {
+    margin-right: -2.6rem;
+    opacity: 0;
+  }
+
+  to {
+    margin-right: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes neighbor-button-leave {
+  from {
+    margin-right: 0;
+    opacity: 1;
+  }
+
+  to {
+    margin-right: -2.6rem;
+    opacity: 0;
+  }
+}
+
 .neighbor-widget-button {
   display: flex;
   align-items: center;

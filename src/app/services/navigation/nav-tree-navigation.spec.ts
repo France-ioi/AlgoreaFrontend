@@ -6,13 +6,19 @@ function route(id: string, path: string[] = []): EntityPathRoute {
   return { contentType: 'activity', id, path };
 }
 
-function el(id: string, path: string[] = [], children?: NavTreeElement[]): NavTreeElement {
+function el(
+  id: string,
+  path: string[] = [],
+  children?: NavTreeElement[],
+  disableChildrenPrevNextNav?: boolean,
+): NavTreeElement {
   return {
     route: route(id, path),
     title: id,
     hasChildren: !!children?.length,
     children,
     navigateTo: (): void => {},
+    disableChildrenPrevNextNav,
   };
 }
 
@@ -145,6 +151,46 @@ describe('computeNavigationNeighbors', () => {
         .withSelection(route('y', [ 'p', 'b' ]));
       const n = computeNavigationNeighbors(data, 'b');
       expect(n!.parent).toBeNull();
+    });
+
+  });
+
+  describe('disableChildrenPrevNextNav and disablePrevNextAmongRoots', () => {
+
+    it('should disable prev/next at root when disablePrevNextAmongRoots is true', () => {
+      const data = new NavTreeData([ el('a'), el('b'), el('c') ], []).withSelection(route('b'));
+      const n = computeNavigationNeighbors(data, null, true);
+      expect(n).toBeDefined();
+      expect(n!.previous).toBeNull();
+      expect(n!.next).toBeNull();
+    });
+
+    it('should keep prev/next at root when disablePrevNextAmongRoots is false', () => {
+      const data = new NavTreeData([ el('a'), el('b'), el('c') ], []).withSelection(route('b'));
+      const n = computeNavigationNeighbors(data, null, false);
+      expect(n!.previous).not.toBeNull();
+      expect(n!.next).not.toBeNull();
+    });
+
+    it('should disable prev/next on L1 when parent has disableChildrenPrevNextNav', () => {
+      const parent = { ...el('p', []), disableChildrenPrevNextNav: true };
+      const data = new NavTreeData([ el('a', [ 'p' ]), el('b', [ 'p' ]), el('c', [ 'p' ]) ], [ 'p' ], parent)
+        .withSelection(route('b', [ 'p' ]));
+      const n = computeNavigationNeighbors(data, null);
+      expect(n!.parent).not.toBeNull();
+      expect(n!.previous).toBeNull();
+      expect(n!.next).toBeNull();
+    });
+
+    it('should disable prev/next on L2 when L1 chapter has disableChildrenPrevNextNav', () => {
+      const children = [ el('x', [ 'p', 'b' ]), el('y', [ 'p', 'b' ]), el('z', [ 'p', 'b' ]) ];
+      const chapter = { ...el('b', [ 'p' ], children), disableChildrenPrevNextNav: true };
+      const data = new NavTreeData([ el('a', [ 'p' ]), chapter ], [ 'p' ])
+        .withSelection(route('y', [ 'p', 'b' ]));
+      const n = computeNavigationNeighbors(data, null);
+      expect(n!.parent).not.toBeNull();
+      expect(n!.previous).toBeNull();
+      expect(n!.next).toBeNull();
     });
 
   });
