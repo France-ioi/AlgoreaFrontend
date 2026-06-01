@@ -1,12 +1,12 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
 } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
@@ -20,41 +20,35 @@ interface NavigationMode {
   selector: 'alg-neighbor-widget',
   templateUrl: './neighbor-widget.component.html',
   styleUrls: [ 'neighbor-widget.component.scss' ],
-  imports: [ ButtonIconComponent, ButtonComponent, NgClass ]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ ButtonIconComponent, ButtonComponent ],
 })
-export class NeighborWidgetComponent implements OnChanges {
-  @Input() navigationMode?: NavigationMode;
+export class NeighborWidgetComponent {
+  navigationMode = input<NavigationMode>();
 
-  @Output() parent = new EventEmitter<void>();
-  @Output() left = new EventEmitter<void>();
-  @Output() right = new EventEmitter<void>();
+  parent = output<void>();
+  left = output<void>();
+  right = output<void>();
 
-  /** Deferred until prev/next leave animation finishes. */
-  showBackCaptionDelayed = false;
-  hideParentSeparatorDelayed = false;
+  showBackCaptionDelayed = signal(false);
+  hideParentSeparatorDelayed = signal(false);
+
+  showPrevNextNav = computed(() => {
+    const mode = this.navigationMode();
+    return !!(mode?.left || mode?.right);
+  });
 
   private lastAppliedMode?: NavigationMode;
   private prevNextWasVisible = false;
   private pendingPrevNextLeaveLayout = false;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['navigationMode']) return;
-    const mode = this.navigationMode;
-    if (!mode || !this.navigationModeChanged(mode)) return;
-    this.syncBackButtonLayout(mode);
-    this.lastAppliedMode = { parent: mode.parent, left: mode.left, right: mode.right };
-  }
-
-  showPrevNextNav(): boolean {
-    return !!(this.navigationMode?.left || this.navigationMode?.right);
-  }
-
-  showBackCaption(): boolean {
-    return this.showBackCaptionDelayed;
-  }
-
-  hideParentSeparator(): boolean {
-    return this.hideParentSeparatorDelayed;
+  constructor() {
+    effect(() => {
+      const mode = this.navigationMode();
+      if (!mode || !this.navigationModeChanged(mode)) return;
+      this.syncBackButtonLayout(mode);
+      this.lastAppliedMode = { parent: mode.parent, left: mode.left, right: mode.right };
+    });
   }
 
   onPrevNextPanelAnimationEnd(event: AnimationEvent): void {
@@ -74,16 +68,16 @@ export class NeighborWidgetComponent implements OnChanges {
 
     if (prevNextVisible) {
       this.pendingPrevNextLeaveLayout = false;
-      this.showBackCaptionDelayed = !mode.right;
-      this.hideParentSeparatorDelayed = false;
+      this.showBackCaptionDelayed.set(!mode.right);
+      this.hideParentSeparatorDelayed.set(false);
     } else if (this.prevNextWasVisible) {
       this.pendingPrevNextLeaveLayout = true;
-      this.showBackCaptionDelayed = false;
-      this.hideParentSeparatorDelayed = false;
+      this.showBackCaptionDelayed.set(false);
+      this.hideParentSeparatorDelayed.set(false);
     } else {
       this.pendingPrevNextLeaveLayout = false;
-      this.showBackCaptionDelayed = !mode.right;
-      this.hideParentSeparatorDelayed = true;
+      this.showBackCaptionDelayed.set(!mode.right);
+      this.hideParentSeparatorDelayed.set(true);
     }
 
     this.prevNextWasVisible = prevNextVisible;
@@ -91,11 +85,11 @@ export class NeighborWidgetComponent implements OnChanges {
 
   private completePrevNextLeaveLayout(): void {
     if (!this.pendingPrevNextLeaveLayout) return;
-    const mode = this.navigationMode;
+    const mode = this.navigationMode();
     if (!mode || mode.left || mode.right) return;
 
     this.pendingPrevNextLeaveLayout = false;
-    this.showBackCaptionDelayed = !mode.right;
-    this.hideParentSeparatorDelayed = true;
+    this.showBackCaptionDelayed.set(!mode.right);
+    this.hideParentSeparatorDelayed.set(true);
   }
 }

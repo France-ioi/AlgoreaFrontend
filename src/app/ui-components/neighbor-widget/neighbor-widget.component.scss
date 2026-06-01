@@ -10,12 +10,6 @@
   display: flex;
   align-items: center;
   height: 100%;
-}
-
-.neighbor-widget-prev-next {
-  display: flex;
-  align-items: center;
-  height: 100%;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -36,6 +30,9 @@
   animation: neighbor-prev-next-leave 0.4s ease-in-out both;
 }
 
+// Upper-bound estimate for the prev + next buttons; longer translated captions may need a larger value.
+$neighbor-prev-next-max-width: functions.toRem(192);
+
 @keyframes neighbor-prev-next-enter {
   from {
     max-width: 0;
@@ -43,14 +40,14 @@
   }
 
   to {
-    max-width: 12rem;
+    max-width: $neighbor-prev-next-max-width;
     opacity: 1;
   }
 }
 
 @keyframes neighbor-prev-next-leave {
   from {
-    max-width: 12rem;
+    max-width: $neighbor-prev-next-max-width;
     opacity: 1;
   }
 
