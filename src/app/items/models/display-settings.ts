@@ -6,6 +6,7 @@ export const displaySettingsSchema = z.object({
   childrenLayout: itemChildrenLayoutSchema.default('List'),
   promptToJoinGroupByCode: z.boolean().default(false),
   thumbnailUrl: z.string().nullable().default(null),
+  disableChildrenPrevNextNav: z.boolean().default(false),
 });
 
 export type DisplaySettings = z.output<typeof displaySettingsSchema>;

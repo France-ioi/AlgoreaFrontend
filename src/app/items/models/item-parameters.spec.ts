@@ -7,7 +7,12 @@ import {
   sectionsForItemType,
 } from './item-parameters';
 
-const initialDisplaySettings = { childrenLayout: 'List' as const, promptToJoinGroupByCode: false, thumbnailUrl: null };
+const initialDisplaySettings = {
+  childrenLayout: 'List' as const,
+  promptToJoinGroupByCode: false,
+  thumbnailUrl: null,
+  disableChildrenPrevNextNav: false,
+};
 
 function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParametersValue {
   return {
@@ -19,6 +24,7 @@ function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParameters
     promptToJoinGroupByCode: false,
     childrenLayout: 'List',
     thumbnailUrl: '',
+    disableChildrenPrevNextNav: false,
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
     durationEnabled: false,
@@ -65,9 +71,24 @@ describe('sectionsForItemType', () => {
   });
 
   it('exposes the display sub-options per item type', () => {
-    expect(sectionsForItemType('Task').display).toEqual({ enabled: true, showChildrenLayout: false, showThumbnailUrl: true });
-    expect(sectionsForItemType('Chapter').display).toEqual({ enabled: true, showChildrenLayout: true, showThumbnailUrl: true });
-    expect(sectionsForItemType('Skill').display).toEqual({ enabled: false, showChildrenLayout: true, showThumbnailUrl: false });
+    expect(sectionsForItemType('Task').display).toEqual({
+      enabled: true,
+      showChildrenLayout: false,
+      showThumbnailUrl: true,
+      showDisableChildrenPrevNextNav: false,
+    });
+    expect(sectionsForItemType('Chapter').display).toEqual({
+      enabled: true,
+      showChildrenLayout: true,
+      showThumbnailUrl: true,
+      showDisableChildrenPrevNextNav: true,
+    });
+    expect(sectionsForItemType('Skill').display).toEqual({
+      enabled: false,
+      showChildrenLayout: true,
+      showThumbnailUrl: false,
+      showDisableChildrenPrevNextNav: false,
+    });
   });
 });
 
@@ -130,6 +151,13 @@ describe('buildItemParametersChanges', () => {
     );
     // Backend replaces display_settings as a whole; an empty body clears the stored thumbnail override.
     expect(changes.display_settings).toEqual({});
+  });
+
+  it('emits disable_children_prev_next_nav when the chapter-only toggle changed', () => {
+    const initial = makeValue();
+    const current = makeValue({ disableChildrenPrevNextNav: true });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
+    expect(changes.display_settings).toEqual({ disable_children_prev_next_nav: true });
   });
 
   it('does not emit display_settings when display values are unchanged', () => {

@@ -35,28 +35,46 @@
     </div>
   }
 
-  @if (showThumbnailUrl()) {
+  @if (showDisableChildrenPrevNextNav()) {
     <div class="form-item-view">
       <span class="form-item-label">
-        <ng-container i18n>Thumbnail url</ng-container>
+        <ng-container i18n>Disable previous/next navigation</ng-container>
         <i
           class="ph-duotone ph-info hint-icon"
           i18n-algTooltip
-          algTooltip="Image shown when this item appears in a Grid layout within its parent chapter."
+          algTooltip="Do not show the previous/next navigation in the top bar for the content of this chapter."
           tooltipPosition="top"
           aria-hidden="true"
         ></i>
       </span>
       <div class="form-item-control">
-        <alg-input [parentForm]="form()" name="thumbnailUrl"></alg-input>
-        @if (thumbnailUrlValue(); as thumbnailUrlVal) {
-          @if (thumbnailUrlVal.trim().length > 0 && !thumbnailUrlVal.startsWith('https://')) {
-            <span class="alg-warning-message" i18n>
-              The url should start with "https://" so that it is visible on any browser.
-            </span>
-          }
-        }
+        <alg-switch formControlName="disableChildrenPrevNextNav"></alg-switch>
       </div>
     </div>
   }
 </div>
+
+@if (showThumbnailUrl()) {
+  <div class="form-item-view">
+    <span class="form-item-label">
+      <ng-container i18n>Thumbnail url</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Image shown when this item appears in a Grid layout within its parent chapter."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
+    <div class="form-item-control">
+      <alg-input [parentForm]="form()" name="thumbnailUrl"></alg-input>
+      @if (thumbnailUrlValue(); as thumbnailUrlVal) {
+        @if (thumbnailUrlVal.trim().length > 0 && !thumbnailUrlVal.startsWith('https://')) {
+          <span class="alg-warning-message" i18n>
+            The url should start with "https://" so that it is visible on any browser.
+          </span>
+        }
+      }
+    </div>
+  </div>
+}

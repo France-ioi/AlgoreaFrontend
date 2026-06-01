@@ -32,6 +32,7 @@ export interface ItemParametersDisplayValue {
   promptToJoinGroupByCode: boolean,
   childrenLayout: ItemChildrenLayout,
   thumbnailUrl: string,
+  disableChildrenPrevNextNav: boolean,
 }
 
 export interface ItemParametersParticipationValue {
@@ -94,6 +95,7 @@ export interface ItemParametersSections {
     enabled: boolean,
     showChildrenLayout: boolean,
     showThumbnailUrl: boolean,
+    showDisableChildrenPrevNextNav: boolean,
   },
   participation: boolean,
   team: boolean,
@@ -107,6 +109,7 @@ export function sectionsForItemType(type: ItemType): ItemParametersSections {
       enabled: type !== 'Skill',
       showChildrenLayout: type !== 'Task',
       showThumbnailUrl: type === 'Task' || type === 'Chapter',
+      showDisableChildrenPrevNextNav: type === 'Chapter',
     },
     participation: type !== 'Skill',
     team: type !== 'Skill',
@@ -142,6 +145,7 @@ export function itemToParametersValue(item: Item): ItemParametersValue {
     promptToJoinGroupByCode: item.displaySettings.promptToJoinGroupByCode,
     childrenLayout: item.displaySettings.childrenLayout,
     thumbnailUrl: item.displaySettings.thumbnailUrl ?? '',
+    disableChildrenPrevNextNav: item.displaySettings.disableChildrenPrevNextNav,
     allowsMultipleAttempts: item.allowsMultipleAttempts,
     requiresExplicitEntry: item.requiresExplicitEntry,
     durationEnabled: item.duration !== null,
@@ -177,7 +181,10 @@ export function buildItemParametersChanges(
   current: ItemParametersValue,
   initial: ItemParametersValue,
   sections: ItemParametersSections,
-  initialDisplaySettings: Pick<DisplaySettings, 'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl'>,
+  initialDisplaySettings: Pick<
+    DisplaySettings,
+    'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl' | 'disableChildrenPrevNextNav'
+  >,
 ): ItemChanges {
   const changes: ItemChanges = {};
 
@@ -203,13 +210,15 @@ export function buildItemParametersChanges(
     const initialThumbnailUrl = trimToNullable(initial.thumbnailUrl);
     const hasDisplaySettingsChanges = current.promptToJoinGroupByCode !== initial.promptToJoinGroupByCode
       || current.childrenLayout !== initial.childrenLayout
-      || thumbnailUrl !== initialThumbnailUrl;
+      || thumbnailUrl !== initialThumbnailUrl
+      || current.disableChildrenPrevNextNav !== initial.disableChildrenPrevNextNav;
     if (hasDisplaySettingsChanges) {
       changes.display_settings = buildDisplaySettingsBody({
         ...initialDisplaySettings,
         childrenLayout: current.childrenLayout,
         promptToJoinGroupByCode: current.promptToJoinGroupByCode,
         thumbnailUrl,
+        disableChildrenPrevNextNav: current.disableChildrenPrevNextNav,
       });
     }
   }

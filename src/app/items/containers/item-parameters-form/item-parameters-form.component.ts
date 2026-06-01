@@ -94,6 +94,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
       promptToJoinGroupByCode: [ false ],
       childrenLayout: this.fb.nonNullable.control<ItemChildrenLayout>('List'),
       thumbnailUrl: [ '', Validators.maxLength(2000) ],
+      disableChildrenPrevNextNav: [ false ],
     }),
     participation: this.fb.nonNullable.control<ItemParametersParticipationValue>({
       allowsMultipleAttempts: false,
@@ -174,6 +175,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
         promptToJoinGroupByCode: v.promptToJoinGroupByCode,
         childrenLayout: v.childrenLayout,
         thumbnailUrl: v.thumbnailUrl,
+        disableChildrenPrevNextNav: v.disableChildrenPrevNextNav,
       },
       participation: {
         allowsMultipleAttempts: v.allowsMultipleAttempts,
