@@ -65,7 +65,7 @@ export class ItemStringsTabsComponent {
   }
 
   addLanguageTabAriaLabel(languageTag: string): string {
-    return $localize`Add ${formatLanguageTagDisplay(languageTag)} translation:languageTag:`;
+    return $localize`Add ${formatLanguageTagDisplay(languageTag)}:languageTag: translation:`;
   }
 
   removeTranslationLabelFor(languageTag: string): string {
