@@ -87,7 +87,10 @@ export class ItemTaskAnswerService implements OnDestroy {
   ]).pipe(
     delayWhen(() => this.initializedTaskState$),
     switchMap(([ initialAnswer, task ]) => (initialAnswer?.answer ?
-      task.reloadAnswer(initialAnswer.answer).pipe(
+      task.reloadAnswer(
+        initialAnswer.answer,
+        initialAnswer.type === 'Submission' ? { idUserAnswer: initialAnswer.id } : undefined,
+      ).pipe(
         map(() => undefined),
         // if the task reports an error while loading the answer, consider it ready anyway (task will show the appropriate error message)
         catchError(() => of(undefined)),

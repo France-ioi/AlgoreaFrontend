@@ -16,7 +16,7 @@ import {
 import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
-import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
+import { Task, negotiateApiVersion, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
 import { Answer } from './item-task.service';
 import { TaskToken, TaskTokenService } from '../data-access/task-token.service';
 
@@ -37,6 +37,13 @@ export interface ItemTaskConfig {
   initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   readOnly: boolean,
   locale?: string,
+}
+
+export class IncompatibleTaskApiVersionError extends Error {
+  constructor() {
+    super($localize`:@@incompatibleTaskApiVersionError:This task requires an unsupported version of the platform API.`);
+    this.name = 'IncompatibleTaskApiVersionError';
+  }
 }
 
 @Injectable()
@@ -96,7 +103,12 @@ export class ItemTaskInitService implements OnDestroy {
 
   // the task (i.e., a client to the task in the iframe) which has been loaded (may fail!)
   readonly loadedTask$ = this.task$.pipe(
-    switchMap(task => task.getMetaData().pipe(map(({ usesTokens }) => ({ usesTokens: usesTokens ?? true, task })))),
+    switchMap(task => task.getMetaData().pipe(map(metadata => {
+      const negotiated = negotiateApiVersion(metadata.minApiVersion, metadata.apiVersion);
+      if (negotiated === null) throw new IncompatibleTaskApiVersionError();
+      task.apiVersion = negotiated;
+      return { usesTokens: metadata.usesTokens ?? true, task };
+    }))),
     switchMap(({ usesTokens, task }) => (usesTokens ? this.taskToken$.pipe(
       switchMap(token => task.updateToken(token)),
       map(() => task)
@@ -118,6 +130,12 @@ export class ItemTaskInitService implements OnDestroy {
   readonly urlError$ = this.iframeSrc$.pipe(
     catchError((urlError: Error) => of(urlError)),
     filter(error => error instanceof Error),
+  );
+  readonly apiVersionError$ = this.configFromIframe$.pipe(
+    switchMap(({ iframe }) => fromEvent(iframe, 'load')),
+    switchMap(() => this.loadedTask$),
+    catchError(err => of(err)),
+    filter((err): err is IncompatibleTaskApiVersionError => err instanceof IncompatibleTaskApiVersionError),
   );
 
   initialized = false;

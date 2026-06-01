@@ -28,6 +28,15 @@ import {
 } from './types';
 import { z } from 'zod';
 
+export const PLATFORM_MIN_API_VERSION = 1;
+export const PLATFORM_MAX_API_VERSION = 2;
+
+export function negotiateApiVersion(taskMin = 1, taskMax = 1): number | null {
+  const min = Math.max(taskMin, PLATFORM_MIN_API_VERSION);
+  const max = Math.min(taskMax, PLATFORM_MAX_API_VERSION);
+  return min <= max ? max : null;
+}
+
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();
   const high = Math.floor(Math.random() * 2000000000).toString();
@@ -78,6 +87,7 @@ export function taskProxyFromIframe(iframe : HTMLIFrameElement): Observable<Task
  */
 export class Task {
   private platformSet = false;
+  apiVersion = 1;
 
   constructor(private chan: RxMessagingChannel) {}
 
@@ -181,11 +191,18 @@ export class Task {
     );
   }
 
-  reloadAnswer(answer: string): Observable<unknown> {
+  reloadAnswer(answer: string, options?: { idUserAnswer?: string }): Observable<unknown> {
+    if (this.apiVersion >= 2) {
+      return this.chan.call({
+        method: 'task.reloadAnswerWithOptions',
+        params: [ answer, options ?? {} ],
+        timeout: 2000,
+      });
+    }
     return this.chan.call({
       method: 'task.reloadAnswer',
       params: answer,
-      timeout: 2000
+      timeout: 2000,
     });
   }
 
