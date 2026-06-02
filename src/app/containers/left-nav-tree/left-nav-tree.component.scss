@@ -70,11 +70,6 @@ $nav-tree-row-hover-color: color-mix(
     background-color: var(--alg-tree-selected-color);
   }
 
-  &.locked {
-    .tree-nav-caption {
-      opacity: .4;
-    }
-  }
 
   &[data-nav-level="l1"] {
     padding-left: functions.toRem(12);

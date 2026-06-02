@@ -72,7 +72,7 @@
             <div
               class="tree-nav-wrapper chapter"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.locked"
+              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -86,14 +86,13 @@
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
                   ></alg-score-ring>
-                }
-                @if (node.data.locked) {
+                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
                   <div
                     class="tree-nav-icon"
                     tooltipPosition="top"
                     i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this chapter."
                   >
-                    <i class="ph ph-lock-key"></i>
+                    <i class="ph ph-lock-simple"></i>
                   </div>
                 }
               </div>
@@ -103,7 +102,7 @@
             <div
               class="tree-nav-wrapper chapter"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.locked"
+              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -117,10 +116,9 @@
                       [currentScore]="node.data.score.currentScore"
                     ></alg-skill-progress>
                   </div>
-                }
-                @if (node.data.locked) {
+                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
                   <div class="tree-nav-icon">
-                    <i class="ph ph-lock-key"></i>
+                    <i class="ph ph-lock-simple"></i>
                   </div>
                 }
               </div>
@@ -130,7 +128,7 @@
             <div
               class="tree-nav-wrapper"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.locked"
+              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -142,14 +140,13 @@
                     [bestScore]="node.data.score.bestScore"
                     [currentScore]="node.data.score.currentScore"
                   ></alg-skill-progress>
-                }
-                @if (node.data.locked) {
+                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
                   <div
                     class="tree-nav-icon"
                     tooltipPosition="top"
                     i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this skill."
                   >
-                    <i class="ph ph-lock-key"></i>
+                    <i class="ph ph-lock-simple"></i>
                   </div>
                 }
               </div>
@@ -159,7 +156,7 @@
             <div
               class="tree-nav-wrapper"
               [class.selected]="node.data && node.partialSelected"
-              [class.locked]="node.data.locked"
+              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -191,7 +188,7 @@
             <div
               class="tree-nav-wrapper"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.locked"
+              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -205,14 +202,13 @@
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
                   ></alg-score-ring>
-                }
-                @if (node.data.locked) {
+                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
                   <div
                     class="tree-nav-icon"
                     tooltipPosition="top"
                     i18n-algTooltip algTooltip="Your current access rights do not allow you to start the activity."
                   >
-                    <i class="ph ph-lock-key"></i>
+                    <i class="ph ph-lock-simple"></i>
                   </div>
                 }
               </div>

@@ -14,7 +14,9 @@ export interface NavTreeElement {
   navigateTo: (preventFullFrame?: boolean) => void,
 
   // specific uses
-  locked?: boolean, // considering 'not set' as false
+  /** User has `info` view permission: title is listed but content is not accessible (shown as locked in the menu). */
+  infoOnly?: boolean,
+  requiresExplicitEntry?: boolean,
   // considering 'not set' as false; set from a parent's display settings: disables prev/next nav among this element's children
   disableChildrenPrevNextNav?: boolean,
   associatedGroupNames?: string[],
