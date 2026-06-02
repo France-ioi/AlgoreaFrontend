@@ -17,6 +17,11 @@ $nav-row-min-height-l0: functions.toRem(48);
   }
 }
 
+:host-context(.nav-level-l0:hover) .back-button-container.with-content-icon {
+  background-color: var(--alg-tree-row-hover-color, #d9e5ff);
+  border-radius: functions.toRem(10);
+}
+
 .back-button-gutter {
   width: functions.toRem(16);
   flex-shrink: 0;

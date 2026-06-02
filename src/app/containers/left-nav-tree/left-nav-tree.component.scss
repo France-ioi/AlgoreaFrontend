@@ -8,14 +8,26 @@ $nav-row-max-lines: 2;
 $nav-row-min-height-l0: functions.toRem(48);
 $nav-row-min-height-l1: functions.toRem(44);
 $nav-row-min-height-l2: functions.toRem(38);
+$nav-tree-row-hover-color: color-mix(
+  in srgb,
+  var(--alg-tree-selected-color, #d4e1ff) 50%,
+  var(--alg-light-bg-color, #e8efff)
+);
 
 .container {
   padding: 0 $nav-tree-inline-padding;
+
+  &.nav-level-l0 {
+    padding: 0;
+  }
 }
 
 // Lower --alg-space-size-N values are larger; use increasing numbers for deeper levels.
 .nav-level-l0 {
-  padding-left: $nav-tree-inline-padding;
+  padding: 0;
+  margin: 0 var(--alg-space-size-6);
+  cursor: pointer;
+  --alg-tree-row-hover-color: #{$nav-tree-row-hover-color};
 }
 
 .buttons-section {
@@ -48,6 +60,10 @@ $nav-row-min-height-l2: functions.toRem(38);
   min-height: $nav-row-min-height-l1;
   padding: $nav-row-v-padding $nav-tree-inline-padding;
   border-radius: functions.toRem(10);
+
+  &:hover:not(.selected) {
+    background-color: $nav-tree-row-hover-color;
+  }
 
   &.selected {
     border-radius: functions.toRem(10);
