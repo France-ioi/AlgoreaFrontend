@@ -45,7 +45,13 @@
         }
       }
     </div>
-    <div class="tree-nav-icon">
+    @let lockTooltip = lockedAccessTooltip(node);
+    <div
+      class="tree-nav-icon"
+      tooltipPosition="top"
+      [algTooltip]="lockTooltip ?? ''"
+      [tooltipDisabled]="!lockTooltip"
+    >
       <i class="ph" [ngClass]="node.icon"></i>
     </div>
     <div class="tree-nav-caption">
@@ -86,14 +92,6 @@
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
                   ></alg-score-ring>
-                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
-                  <div
-                    class="tree-nav-icon"
-                    tooltipPosition="top"
-                    i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this chapter."
-                  >
-                    <i class="ph ph-lock-simple"></i>
-                  </div>
                 }
               </div>
             </div>
@@ -116,10 +114,6 @@
                       [currentScore]="node.data.score.currentScore"
                     ></alg-skill-progress>
                   </div>
-                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
-                  <div class="tree-nav-icon">
-                    <i class="ph ph-lock-simple"></i>
-                  </div>
                 }
               </div>
             </div>
@@ -140,14 +134,6 @@
                     [bestScore]="node.data.score.bestScore"
                     [currentScore]="node.data.score.currentScore"
                   ></alg-skill-progress>
-                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
-                  <div
-                    class="tree-nav-icon"
-                    tooltipPosition="top"
-                    i18n-algTooltip algTooltip="Your current access rights do not allow you to list the content of this skill."
-                  >
-                    <i class="ph ph-lock-simple"></i>
-                  </div>
                 }
               </div>
             </div>
@@ -202,14 +188,6 @@
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
                   ></alg-score-ring>
-                } @else if (node.data.infoOnly && !node.data.requiresExplicitEntry) {
-                  <div
-                    class="tree-nav-icon"
-                    tooltipPosition="top"
-                    i18n-algTooltip algTooltip="Your current access rights do not allow you to start the activity."
-                  >
-                    <i class="ph ph-lock-simple"></i>
-                  </div>
                 }
               </div>
             </div>

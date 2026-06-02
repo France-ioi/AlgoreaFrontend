@@ -80,7 +80,22 @@ export class LeftNavTreeComponent {
   });
 
   iconForElement(e: NavTreeElement): string {
-    return this.iconForType(this.typeForElement(e));
+    const type = this.typeForElement(e);
+    return this.iconForType(type, this.isNavLocked(e));
+  }
+
+  lockedAccessTooltip(node: TreeNode<NavTreeElement>): string | null {
+    if (!this.isNavLocked(node.data)) {
+      return null;
+    }
+    switch (node.type) {
+      case 'chapter':
+        return $localize`Your current access rights do not allow you to list the content of this chapter.`;
+      case 'task':
+        return $localize`Your current access rights do not allow you to start the activity.`;
+      default:
+        return null;
+    }
   }
 
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
@@ -92,7 +107,7 @@ export class LeftNavTreeComponent {
         data: e,
         label: e.title,
         type,
-        icon: this.iconForType(type),
+        icon: this.iconForType(type, this.isNavLocked(e)),
         isExpandable: this.isExpandableType(type, e.hasChildren),
         hasChildren: e.hasChildren,
         expanded: !!e.children,
@@ -141,7 +156,19 @@ export class LeftNavTreeComponent {
     }
   }
 
-  private iconForType(type: string): string {
+  private isNavLocked(e: NavTreeElement): boolean {
+    return !!e.infoOnly && !e.requiresExplicitEntry;
+  }
+
+  private iconForType(type: string, locked = false): string {
+    if (locked) {
+      switch (type) {
+        case 'chapter':
+          return 'ph-folder-simple-lock';
+        case 'task':
+          return 'ph-file-lock';
+      }
+    }
     switch (type) {
       case 'chapter':
       case 'skill-folder':
