@@ -26,6 +26,12 @@ test('next-from-first-child stays inside the chapter when the next id collides w
   // The first child's URL must include 7765874445258315610 in the path (it is its parent).
   await expect(page).toHaveURL(/\/a\/\d+;p=7528142386663912287,944619266928306927,7765874445258315610/);
 
+  // Wait until the left menu reflects the L2 selection (path-aware, not id-only). Without this,
+  // the neighbor widget may still use stale L1 neighbors when "next" is clicked.
+  await expect(
+    page.locator('alg-left-nav-tree [data-selected="true"][data-nav-level="l2"]'),
+  ).toHaveCount(1);
+
   await page.locator('alg-neighbor-widget').getByTestId('nav-to-next').click();
 
   await test.step('next lands on the L2-child occurrence (path includes the chapter)', async () => {
