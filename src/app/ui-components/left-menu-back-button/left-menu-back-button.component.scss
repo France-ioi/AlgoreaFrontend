@@ -1,5 +1,8 @@
 @use 'src/assets/scss/functions';
 
+$nav-row-v-padding: functions.toRem(4);
+$nav-row-min-height-l0: functions.toRem(48);
+
 .back-button-container {
   display: flex;
   justify-content: flex-start;
@@ -7,7 +10,9 @@
   padding: 0 var(--alg-space-size-6);
 
   &.with-content-icon {
-    padding: functions.toRem(11) functions.toRem(4);
+    box-sizing: border-box;
+    min-height: $nav-row-min-height-l0;
+    padding: $nav-row-v-padding functions.toRem(4);
     padding-left: functions.toRem(4);
   }
 }
@@ -48,5 +53,12 @@
     margin-left: var(--alg-space-size-6);
     font-weight: 500;
     color: inherit;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
   }
 }

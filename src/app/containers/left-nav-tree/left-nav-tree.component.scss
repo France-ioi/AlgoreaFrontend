@@ -1,6 +1,13 @@
 @use "src/assets/scss/functions";
 
 $nav-tree-inline-padding: functions.toRem(4);
+$nav-row-v-padding: functions.toRem(4);
+$nav-row-line-height: 1.25;
+$nav-row-max-lines: 2;
+// min-height = vertical padding + 2 lines of text.
+$nav-row-min-height-l0: functions.toRem(48);
+$nav-row-min-height-l1: functions.toRem(44);
+$nav-row-min-height-l2: functions.toRem(38);
 
 .container {
   padding: 0 $nav-tree-inline-padding;
@@ -37,7 +44,9 @@ $nav-tree-inline-padding: functions.toRem(4);
   align-items: center;
   cursor: pointer;
   position: relative;
-  padding: functions.toRem(11) $nav-tree-inline-padding;
+  box-sizing: border-box;
+  min-height: $nav-row-min-height-l1;
+  padding: $nav-row-v-padding $nav-tree-inline-padding;
   border-radius: functions.toRem(10);
 
   &.selected {
@@ -53,10 +62,12 @@ $nav-tree-inline-padding: functions.toRem(4);
 
   &[data-nav-level="l1"] {
     padding-left: functions.toRem(12);
+    min-height: $nav-row-min-height-l1;
   }
 
   &[data-nav-level="l2"] {
     padding-left: functions.toRem(20);
+    min-height: $nav-row-min-height-l2;
   }
 }
 
@@ -106,8 +117,14 @@ $nav-tree-inline-padding: functions.toRem(4);
 .tree-nav-caption {
   margin-left: var(--alg-space-size-6);
   flex: 1;
-  word-break: break-word;
   min-width: 0;
+  line-height: $nav-row-line-height;
+  display: -webkit-box;
+  -webkit-line-clamp: $nav-row-max-lines;
+  line-clamp: $nav-row-max-lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 .tree-nav-wrapper[data-nav-level="l1"] .tree-nav-caption {
