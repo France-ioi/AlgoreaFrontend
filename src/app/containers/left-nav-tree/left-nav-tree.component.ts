@@ -1,5 +1,5 @@
 import { Component, effect, input, Input, signal } from '@angular/core';
-import { ItemTypeCategory } from 'src/app/items/models/item-type';
+import { isAChapter, isASkill, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { areSameElements } from '../../models/routing/entity-route';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { SkillProgressComponent } from '../../ui-components/skill-progress/skill-progress.component';
@@ -148,8 +148,14 @@ export class LeftNavTreeComponent {
   private typeForElement(e: NavTreeElement): string {
     switch (this.elementType) {
       case 'activity':
+        if (e.itemType) {
+          return isAChapter({ type: e.itemType }) ? 'chapter' : 'task';
+        }
         return e.hasChildren ? 'chapter' : 'task';
       case 'skill':
+        if (e.itemType) {
+          return isASkill({ type: e.itemType }) ? 'skill-folder' : 'skill-leaf';
+        }
         return e.hasChildren ? 'skill-folder' : 'skill-leaf';
       case 'group':
         return 'group';

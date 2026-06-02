@@ -135,6 +135,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return {
       route,
       title: child.string.title ?? '',
+      itemType: child.type,
       hasChildren: child.hasVisibleChildren && canCurrentUserViewContent(child),
       navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame, useCurrentObservation: true }),
       infoOnly: this.isInfoOnlyVisibility(perms),
@@ -154,6 +155,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       parent: {
         route: parentRoute,
         title: data.string.title ?? '',
+        itemType: data.type,
         hasChildren: data.children.length > 0,
         navigateTo: (preventFullFrame = false): void =>
           this.itemRouter.navigateTo(parentRoute, { preventFullFrame, useCurrentObservation: true }),

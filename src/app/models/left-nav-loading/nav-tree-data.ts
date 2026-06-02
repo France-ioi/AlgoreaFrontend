@@ -2,6 +2,7 @@ import { arraysEqual } from 'src/app/utils/array';
 import { ensureDefined } from 'src/app/utils/assert';
 import { EntityPathRoute } from '../routing/entity-route';
 import { GroupManagershipType } from 'src/app/groups/models/group-management';
+import { ItemType } from 'src/app/items/models/item-type';
 
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
 
@@ -9,6 +10,7 @@ export interface NavTreeElement {
   // generic
   route: EntityPathRoute,
   title: string,
+  itemType?: ItemType,
   hasChildren: boolean,
   children?: this[],
   navigateTo: (preventFullFrame?: boolean) => void,
