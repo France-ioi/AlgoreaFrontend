@@ -1,12 +1,12 @@
 import { Component, effect, input, Input, signal } from '@angular/core';
-import { ItemTypeCategory } from 'src/app/items/models/item-type';
+import { isAChapter, isASkill, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { areSameElements } from '../../models/routing/entity-route';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { SkillProgressComponent } from '../../ui-components/skill-progress/skill-progress.component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgClass, I18nSelectPipe } from '@angular/common';
+import { NgClass, I18nSelectPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   CdkNestedTreeNode,
@@ -24,6 +24,8 @@ interface TreeNode<T> {
   expanded: boolean,
   label: string,
   type: string,
+  icon: string,
+  isExpandable: boolean,
   hasChildren: boolean,
   partialSelected: boolean,
   inL1: boolean,
@@ -48,6 +50,7 @@ export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true
     RouterLink,
     RouterLinkActive,
     NgClass,
+    NgTemplateOutlet,
     ScoreRingComponent,
     SkillProgressComponent,
     I18nSelectPipe,
@@ -76,15 +79,36 @@ export class LeftNavTreeComponent {
     this.nodes.set(this.mapItemToNodes(this.data()).map(n => ({ ...n, inL1: true })));
   });
 
+  iconForElement(e: NavTreeElement): string {
+    const type = this.typeForElement(e);
+    return this.iconForType(type, this.isNavLocked(e));
+  }
+
+  lockedAccessTooltip(node: TreeNode<NavTreeElement>): string | null {
+    if (!this.isNavLocked(node.data)) {
+      return null;
+    }
+    switch (node.type) {
+      case 'chapter':
+        return $localize`Your current access rights do not allow you to list the content of this chapter.`;
+      case 'task':
+        return $localize`Your current access rights do not allow you to start the activity.`;
+      default:
+        return null;
+    }
+  }
+
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
       const isSelected = !!data.selectedElementRoute && areSameElements(e.route, data.selectedElementRoute);
       const pathToChildren = data.pathToElements.concat([ e.route.id ]);
+      const type = this.typeForElement(e);
       return {
         data: e,
         label: e.title,
-        type: this.typeForElement(e),
-        leaf: e.hasChildren,
+        type,
+        icon: this.iconForType(type, this.isNavLocked(e)),
+        isExpandable: this.isExpandableType(type, e.hasChildren),
         hasChildren: e.hasChildren,
         expanded: !!e.children,
         children: e.children ?
@@ -106,6 +130,11 @@ export class LeftNavTreeComponent {
     } else this.selectNode(node);
   }
 
+  onChevronClick(event: Event, node: TreeNode<NavTreeElement>): void {
+    event.stopPropagation();
+    this.toggleFolder(node);
+  }
+
   navigateToParent(): void {
     const parent = this.data().parent;
     if (!parent) throw new Error('Unexpected: missing parent when navigating to parent');
@@ -119,12 +148,50 @@ export class LeftNavTreeComponent {
   private typeForElement(e: NavTreeElement): string {
     switch (this.elementType) {
       case 'activity':
+        if (e.itemType) {
+          return isAChapter({ type: e.itemType }) ? 'chapter' : 'task';
+        }
         return e.hasChildren ? 'chapter' : 'task';
       case 'skill':
+        if (e.itemType) {
+          return isASkill({ type: e.itemType }) ? 'skill-folder' : 'skill-leaf';
+        }
         return e.hasChildren ? 'skill-folder' : 'skill-leaf';
       case 'group':
         return 'group';
     }
+  }
+
+  private isNavLocked(e: NavTreeElement): boolean {
+    return !!e.infoOnly && !e.requiresExplicitEntry;
+  }
+
+  private iconForType(type: string, locked = false): string {
+    if (locked) {
+      switch (type) {
+        case 'chapter':
+          return 'ph-folder-simple-lock';
+        case 'task':
+          return 'ph-file-lock';
+      }
+    }
+    switch (type) {
+      case 'chapter':
+      case 'skill-folder':
+        return 'ph-folder-simple';
+      case 'task':
+        return 'ph-file-text';
+      case 'skill-leaf':
+        return 'ph-graduation-cap';
+      case 'group':
+        return 'ph-users-three';
+      default:
+        return 'ph-files';
+    }
+  }
+
+  private isExpandableType(type: string, hasChildren: boolean): boolean {
+    return hasChildren && (type === 'chapter' || type === 'skill-folder' || type === 'group');
   }
 
 }

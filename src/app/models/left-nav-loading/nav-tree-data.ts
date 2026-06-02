@@ -2,6 +2,7 @@ import { arraysEqual } from 'src/app/utils/array';
 import { ensureDefined } from 'src/app/utils/assert';
 import { EntityPathRoute } from '../routing/entity-route';
 import { GroupManagershipType } from 'src/app/groups/models/group-management';
+import { ItemType } from 'src/app/items/models/item-type';
 
 export enum GroupManagership { False = 'false', True = 'true', Descendant = 'descendant' }
 
@@ -9,12 +10,15 @@ export interface NavTreeElement {
   // generic
   route: EntityPathRoute,
   title: string,
+  itemType?: ItemType,
   hasChildren: boolean,
   children?: this[],
   navigateTo: (preventFullFrame?: boolean) => void,
 
   // specific uses
-  locked?: boolean, // considering 'not set' as false
+  /** User has `info` view permission: title is listed but content is not accessible (shown as locked in the menu). */
+  infoOnly?: boolean,
+  requiresExplicitEntry?: boolean,
   // considering 'not set' as false; set from a parent's display settings: disables prev/next nav among this element's children
   disableChildrenPrevNextNav?: boolean,
   associatedGroupNames?: string[],

@@ -1,15 +1,69 @@
 @use 'src/assets/scss/functions';
 
+$nav-row-v-padding: functions.toRem(4);
+$nav-row-min-height-l0: functions.toRem(48);
+
 .back-button-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 0 var(--alg-space-size-6);
+
+  &.with-content-icon {
+    box-sizing: border-box;
+    min-height: $nav-row-min-height-l0;
+    padding: $nav-row-v-padding functions.toRem(4);
+    padding-left: functions.toRem(4);
+  }
+}
+
+:host-context(.nav-level-l0:hover) .back-button-container.with-content-icon {
+  background-color: var(--alg-tree-row-hover-color, #d9e5ff);
+  border-radius: functions.toRem(10);
+}
+
+.back-button-gutter {
+  width: functions.toRem(16);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .with-content-icon & {
+    color: var(--alg-primary-color, #007bff);
+    font-size: functions.toRem(16);
+  }
+}
+
+.back-button-content-icon {
+  width: functions.toRem(18);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: functions.toRem(4);
+  color: var(--alg-primary-color, #007bff);
+  font-size: functions.toRem(18);
 }
 
 .back-button-title {
+  margin-top: 0;
+  margin-bottom: 0;
   margin-left: functions.toRem(12);
   color: var(--alg-secondary-color);
   font-size: functions.toRem(16);
   font-weight: 700;
+
+  .with-content-icon & {
+    margin-left: var(--alg-space-size-6);
+    font-weight: 500;
+    color: inherit;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
 }

@@ -12,7 +12,12 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../data-access/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
-import { allowsViewingContent, canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
+import {
+  allowsViewingContent,
+  allowsViewingInfo,
+  canCurrentUserViewContent,
+  ItemPermWithView,
+} from 'src/app/items/models/item-view-permission';
 import { isGroupTypeVisible } from 'src/app/groups/models/group-types';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -112,6 +117,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   private mapChild(child: ItemNavigationChild, parentAttemptId: string, path: string[]): NavTreeElement {
     const currentResult = bestAttemptFromResults(child.results);
     const route = itemRoute(typeCategoryOfItem(child), child.id, { path, attemptId: currentResult?.attemptId, parentAttemptId });
+    const perms = child.watchedGroup ?? child.permissions;
     let score = undefined;
     if (!child.noScore) {
       if (child.watchedGroup && child.watchedGroup.avgScore !== undefined && child.watchedGroup.allValidated !== undefined) score = {
@@ -129,12 +135,18 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return {
       route,
       title: child.string.title ?? '',
+      itemType: child.type,
       hasChildren: child.hasVisibleChildren && canCurrentUserViewContent(child),
       navigateTo: (preventFullFrame = false): void => this.itemRouter.navigateTo(route, { preventFullFrame, useCurrentObservation: true }),
-      locked: !allowsViewingContent(child.watchedGroup ?? child.permissions),
+      infoOnly: this.isInfoOnlyVisibility(perms),
+      requiresExplicitEntry: child.requiresExplicitEntry,
       disableChildrenPrevNextNav: child.displaySettings.disableChildrenPrevNextNav,
       score,
     };
+  }
+
+  private isInfoOnlyVisibility(perms: ItemPermWithView): boolean {
+    return allowsViewingInfo(perms) && !allowsViewingContent(perms);
   }
 
   private mapNavData(data: ItemNavigationData, pathToParent: string[]): { parent: NavTreeElement, elements: NavTreeElement[] } {
@@ -143,10 +155,11 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       parent: {
         route: parentRoute,
         title: data.string.title ?? '',
+        itemType: data.type,
         hasChildren: data.children.length > 0,
         navigateTo: (preventFullFrame = false): void =>
           this.itemRouter.navigateTo(parentRoute, { preventFullFrame, useCurrentObservation: true }),
-        locked: !canCurrentUserViewContent(data),
+        infoOnly: this.isInfoOnlyVisibility(data.permissions),
         disableChildrenPrevNextNav: data.displaySettings.disableChildrenPrevNextNav,
       },
       elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),
