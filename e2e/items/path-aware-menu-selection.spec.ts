@@ -37,8 +37,8 @@ test('next-from-first-child stays inside the chapter when the next id collides w
   await test.step('only the L2 occurrence is highlighted in the left menu', async () => {
     const selected = page.locator('alg-left-nav-tree [data-selected="true"]');
     await expect.soft(selected).toHaveCount(1);
-    // L2 nodes in the menu are rendered with a smaller `.children-caption` font; L1 nodes are not.
-    // Asserting on this class confirms the selection is on the sub-child, not on the L1 sibling.
-    await expect.soft(selected.locator('.children-caption')).toBeVisible();
+    // L2 nodes carry `data-nav-level="l2"`; L1 nodes do not. Asserting on this attribute confirms
+    // the selection is on the sub-child, not on the L1 sibling.
+    await expect.soft(selected).toHaveAttribute('data-nav-level', 'l2');
   });
 });

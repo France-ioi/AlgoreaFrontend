@@ -1,7 +1,14 @@
 @use "src/assets/scss/functions";
 
+$nav-tree-inline-padding: functions.toRem(4);
+
 .container {
-  padding: 0 var(--alg-space-size-5);
+  padding: 0 $nav-tree-inline-padding;
+}
+
+// Lower --alg-space-size-N values are larger; use increasing numbers for deeper levels.
+.nav-level-l0 {
+  padding-left: $nav-tree-inline-padding;
 }
 
 .buttons-section {
@@ -17,31 +24,11 @@
 }
 
 .tree-nav-container {
-  padding: 0 var(--alg-space-size-5);
+  padding: 0 var(--alg-space-size-6);
 }
 
 .tree-invisible {
   display: none;
-}
-
-.tree-nested {
-  .tree-node {
-    &:first-child {
-      .tree-nav-dot {
-        &:before {
-          display: none;
-        }
-      }
-    }
-
-    &:last-child {
-      .tree-nav-dot {
-        &:after {
-          display: none;
-        }
-      }
-    }
-  }
 }
 
 .tree-nav-wrapper {
@@ -50,7 +37,7 @@
   align-items: center;
   cursor: pointer;
   position: relative;
-  padding: functions.toRem(11) var(--alg-space-size-5);
+  padding: functions.toRem(11) $nav-tree-inline-padding;
   border-radius: functions.toRem(10);
 
   &.selected {
@@ -64,10 +51,12 @@
     }
   }
 
-  &.chapter {
-    .children-caption {
-      margin-left: functions.toRem(4);
-    }
+  &[data-nav-level="l1"] {
+    padding-left: functions.toRem(12);
+  }
+
+  &[data-nav-level="l2"] {
+    padding-left: functions.toRem(20);
   }
 }
 
@@ -76,10 +65,37 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  min-width: 0;
 }
 
-.tree-nav-icon {
-  color: var(--alg-primary-color);
+.tree-nav-chevron {
+  width: functions.toRem(16);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--alg-primary-color, #007bff);
+  font-size: functions.toRem(16);
+}
+
+.tree-nav-left .tree-nav-icon {
+  width: functions.toRem(18);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: functions.toRem(4);
+  color: var(--alg-primary-color, #007bff);
+  font-size: functions.toRem(18);
+}
+
+.tree-nav-wrapper[data-nav-level="l2"] .tree-nav-left .tree-nav-icon {
+  width: functions.toRem(16);
+  font-size: functions.toRem(16);
+}
+
+.tree-nav-right .tree-nav-icon {
+  color: var(--alg-primary-color, #007bff);
   font-size: functions.toRem(16);
 
   &.fade {
@@ -87,66 +103,27 @@
   }
 }
 
-.tree-sub-nav-icon {
-  margin-left: var(--alg-space-size-6);
-  color: var(--alg-primary-color);
-}
-
-.tree-nav-caption-wrapper {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex: 1;
-}
-
 .tree-nav-caption {
-  margin-left: var(--alg-space-size-5);
+  margin-left: var(--alg-space-size-6);
   flex: 1;
   word-break: break-word;
-
-  &.children-caption {
-    margin-left: functions.toRem(14);
-    font-size: functions.toRem(12);
-  }
+  min-width: 0;
 }
 
-.tree-nav-dot-wrapper {
-  width: functions.toRem(16);
-  display: flex;
-  justify-content: center;
+.tree-nav-wrapper[data-nav-level="l1"] .tree-nav-caption {
+  font-size: functions.toRem(14.4);
 }
 
-.tree-nav-dot {
-  width: functions.toRem(6);
-  height: functions.toRem(6);
-  background-color: var(--alg-tree-line-color);
-  border-radius: 50%;
-
-  &:before {
-    content: '';
-    display: block;
-    margin-left: functions.toRem(calc(5 / 2));
-    width: functions.toRem(1);
-    height: 50%;
-    position: absolute;
-    top: 0;
-    background-color: var(--alg-tree-line-color);
-  }
-
-  &:after {
-    content: '';
-    display: block;
-    margin-left: functions.toRem(calc(5 / 2));
-    width: functions.toRem(1);
-    height: 50%;
-    position: absolute;
-    bottom: 0;
-    background-color: var(--alg-tree-line-color);
-  }
+.tree-nav-wrapper[data-nav-level="l2"] .tree-nav-caption {
+  font-size: functions.toRem(12);
 }
 
 .tree-nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--alg-space-size-3);
   margin-left: var(--alg-space-size-6);
+  flex-shrink: 0;
 }
 
 .tree-nav-skill-progress {
@@ -155,7 +132,7 @@
 
 .empty-message {
   margin-top: var(--alg-space-size-5);
-  padding: 0 var(--alg-space-size-5);
+  padding: 0 $nav-tree-inline-padding;
   text-align: center;
   color: var(--alg-secondary-color);
 }

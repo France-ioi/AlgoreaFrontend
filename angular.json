@@ -59,6 +59,7 @@
               "node_modules/@phosphor-icons/web/src/duotone/style.css",
               "node_modules/@phosphor-icons/web/src/fill/style.css",
               "node_modules/@phosphor-icons/web/src/regular/style.css",
+              "node_modules/@phosphor-icons/web/src/thin/style.css",
               "node_modules/@phosphor-icons/web/src/bold/style.css",
               "src/styles.scss",
               "src/assets/fonts/roboto/stylesheet.css",

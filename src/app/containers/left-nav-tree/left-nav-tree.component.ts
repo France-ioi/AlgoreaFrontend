@@ -6,7 +6,7 @@ import { SkillProgressComponent } from '../../ui-components/skill-progress/skill
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgClass, I18nSelectPipe } from '@angular/common';
+import { NgClass, I18nSelectPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   CdkNestedTreeNode,
@@ -24,6 +24,8 @@ interface TreeNode<T> {
   expanded: boolean,
   label: string,
   type: string,
+  icon: string,
+  isExpandable: boolean,
   hasChildren: boolean,
   partialSelected: boolean,
   inL1: boolean,
@@ -48,6 +50,7 @@ export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true
     RouterLink,
     RouterLinkActive,
     NgClass,
+    NgTemplateOutlet,
     ScoreRingComponent,
     SkillProgressComponent,
     I18nSelectPipe,
@@ -76,15 +79,21 @@ export class LeftNavTreeComponent {
     this.nodes.set(this.mapItemToNodes(this.data()).map(n => ({ ...n, inL1: true })));
   });
 
+  iconForElement(e: NavTreeElement): string {
+    return this.iconForType(this.typeForElement(e));
+  }
+
   private mapItemToNodes(data: NavTreeData): TreeNode<NavTreeElement>[] {
     return data.elements.map(e => {
       const isSelected = !!data.selectedElementRoute && areSameElements(e.route, data.selectedElementRoute);
       const pathToChildren = data.pathToElements.concat([ e.route.id ]);
+      const type = this.typeForElement(e);
       return {
         data: e,
         label: e.title,
-        type: this.typeForElement(e),
-        leaf: e.hasChildren,
+        type,
+        icon: this.iconForType(type),
+        isExpandable: this.isExpandableType(type, e.hasChildren),
         hasChildren: e.hasChildren,
         expanded: !!e.children,
         children: e.children ?
@@ -106,6 +115,11 @@ export class LeftNavTreeComponent {
     } else this.selectNode(node);
   }
 
+  onChevronClick(event: Event, node: TreeNode<NavTreeElement>): void {
+    event.stopPropagation();
+    this.toggleFolder(node);
+  }
+
   navigateToParent(): void {
     const parent = this.data().parent;
     if (!parent) throw new Error('Unexpected: missing parent when navigating to parent');
@@ -125,6 +139,26 @@ export class LeftNavTreeComponent {
       case 'group':
         return 'group';
     }
+  }
+
+  private iconForType(type: string): string {
+    switch (type) {
+      case 'chapter':
+      case 'skill-folder':
+        return 'ph-folder-simple';
+      case 'task':
+        return 'ph-file-text';
+      case 'skill-leaf':
+        return 'ph-graduation-cap';
+      case 'group':
+        return 'ph-users-three';
+      default:
+        return 'ph-files';
+    }
+  }
+
+  private isExpandableType(type: string, hasChildren: boolean): boolean {
+    return hasChildren && (type === 'chapter' || type === 'skill-folder' || type === 'group');
   }
 
 }

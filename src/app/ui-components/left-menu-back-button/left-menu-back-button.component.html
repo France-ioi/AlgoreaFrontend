@@ -1,9 +1,24 @@
-<div class="back-button-container cursor-pointer" (click)="close.emit()">
-  <button
-    class="size-s with-bg back-button"
-    [icon]="icon"
-    alg-button-icon
-  ></button>
+<div
+  class="back-button-container cursor-pointer"
+  [class.with-content-icon]="contentIcon"
+  (click)="close.emit()"
+>
+  <div class="back-button-gutter">
+    @if (contentIcon) {
+      <i class="ph-thin ph-caret-down"></i>
+    } @else {
+      <button
+        class="size-s with-bg back-button"
+        [icon]="icon"
+        alg-button-icon
+      ></button>
+    }
+  </div>
+  @if (contentIcon) {
+    <div class="back-button-content-icon">
+      <i class="ph" [ngClass]="contentIcon"></i>
+    </div>
+  }
   <p class="back-button-title alg-flex-1">
     <ng-content></ng-content>
   </p>
