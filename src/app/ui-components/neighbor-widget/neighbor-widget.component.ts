@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -16,6 +18,9 @@ interface NavigationMode {
   right: boolean,
 }
 
+/** Matches `.neighbor-prev-next-leave` duration (0.4s); fallback if `animationend` does not fire. */
+const PREV_NEXT_LEAVE_MS = 400;
+
 @Component({
   selector: 'alg-neighbor-widget',
   templateUrl: './neighbor-widget.component.html',
@@ -24,6 +29,8 @@ interface NavigationMode {
   imports: [ ButtonIconComponent, ButtonComponent ],
 })
 export class NeighborWidgetComponent {
+  private readonly destroyRef = inject(DestroyRef);
+
   navigationMode = input<NavigationMode>();
 
   parent = output<void>();
@@ -41,18 +48,22 @@ export class NeighborWidgetComponent {
   private lastAppliedMode?: NavigationMode;
   private prevNextWasVisible = false;
   private pendingPrevNextLeaveLayout = false;
+  private prevNextLeaveTimer?: ReturnType<typeof setTimeout>;
 
   constructor() {
+    this.destroyRef.onDestroy(() => this.clearPrevNextLeaveTimer());
+
     effect(() => {
       const mode = this.navigationMode();
       if (!mode || !this.navigationModeChanged(mode)) return;
       this.syncBackButtonLayout(mode);
       this.lastAppliedMode = { parent: mode.parent, left: mode.left, right: mode.right };
-    });
+    }, { allowSignalWrites: true });
   }
 
   onPrevNextPanelAnimationEnd(event: AnimationEvent): void {
     if (!event.animationName.startsWith('neighbor-prev-next-leave')) return;
+    this.clearPrevNextLeaveTimer();
     this.completePrevNextLeaveLayout();
   }
 
@@ -67,6 +78,7 @@ export class NeighborWidgetComponent {
     const prevNextVisible = mode.left || mode.right;
 
     if (prevNextVisible) {
+      this.clearPrevNextLeaveTimer();
       this.pendingPrevNextLeaveLayout = false;
       this.showBackCaptionDelayed.set(!mode.right);
       this.hideParentSeparatorDelayed.set(false);
@@ -74,13 +86,22 @@ export class NeighborWidgetComponent {
       this.pendingPrevNextLeaveLayout = true;
       this.showBackCaptionDelayed.set(false);
       this.hideParentSeparatorDelayed.set(false);
+      this.schedulePrevNextLeaveCompletion();
     } else {
+      this.clearPrevNextLeaveTimer();
       this.pendingPrevNextLeaveLayout = false;
-      this.showBackCaptionDelayed.set(!mode.right);
-      this.hideParentSeparatorDelayed.set(true);
+      this.applyBackOnlyLayout(mode);
     }
 
     this.prevNextWasVisible = prevNextVisible;
+  }
+
+  private schedulePrevNextLeaveCompletion(): void {
+    this.clearPrevNextLeaveTimer();
+    this.prevNextLeaveTimer = setTimeout(() => {
+      this.prevNextLeaveTimer = undefined;
+      this.completePrevNextLeaveLayout();
+    }, PREV_NEXT_LEAVE_MS);
   }
 
   private completePrevNextLeaveLayout(): void {
@@ -89,7 +110,18 @@ export class NeighborWidgetComponent {
     if (!mode || mode.left || mode.right) return;
 
     this.pendingPrevNextLeaveLayout = false;
+    this.applyBackOnlyLayout(mode);
+  }
+
+  private applyBackOnlyLayout(mode: NavigationMode): void {
     this.showBackCaptionDelayed.set(!mode.right);
     this.hideParentSeparatorDelayed.set(true);
+  }
+
+  private clearPrevNextLeaveTimer(): void {
+    if (this.prevNextLeaveTimer) {
+      clearTimeout(this.prevNextLeaveTimer);
+      this.prevNextLeaveTimer = undefined;
+    }
   }
 }
