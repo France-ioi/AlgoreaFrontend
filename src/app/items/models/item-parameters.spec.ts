@@ -12,6 +12,7 @@ const initialDisplaySettings = {
   promptToJoinGroupByCode: false,
   thumbnailUrl: null,
   disableChildrenPrevNextNav: false,
+  leftNavIcon: null,
 };
 
 function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParametersValue {
@@ -25,6 +26,7 @@ function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParameters
     childrenLayout: 'List',
     thumbnailUrl: '',
     disableChildrenPrevNextNav: false,
+    leftNavIcon: '',
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
     durationEnabled: false,
@@ -76,18 +78,21 @@ describe('sectionsForItemType', () => {
       showChildrenLayout: false,
       showThumbnailUrl: true,
       showDisableChildrenPrevNextNav: false,
+      showLeftNavIcon: true,
     });
     expect(sectionsForItemType('Chapter').display).toEqual({
       enabled: true,
       showChildrenLayout: true,
       showThumbnailUrl: true,
       showDisableChildrenPrevNextNav: true,
+      showLeftNavIcon: true,
     });
     expect(sectionsForItemType('Skill').display).toEqual({
       enabled: false,
       showChildrenLayout: true,
       showThumbnailUrl: false,
       showDisableChildrenPrevNextNav: false,
+      showLeftNavIcon: false,
     });
   });
 });
@@ -150,6 +155,25 @@ describe('buildItemParametersChanges', () => {
       { ...initialDisplaySettings, thumbnailUrl: 'https://example.test/thumb.png' },
     );
     // Backend replaces display_settings as a whole; an empty body clears the stored thumbnail override.
+    expect(changes.display_settings).toEqual({});
+  });
+
+  it('emits display_settings.left_nav_icon when the sidebar icon changes', () => {
+    const initial = makeValue();
+    const current = makeValue({ leftNavIcon: 'puzzle-piece' });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Task'), initialDisplaySettings);
+    expect(changes.display_settings).toEqual({ left_nav_icon: 'puzzle-piece' });
+  });
+
+  it('omits left_nav_icon from the body when the user clears a custom icon (null is the schema default)', () => {
+    const initial = makeValue({ leftNavIcon: 'puzzle-piece' });
+    const current = makeValue({ leftNavIcon: '' });
+    const changes = buildItemParametersChanges(
+      current,
+      initial,
+      sectionsForItemType('Task'),
+      { ...initialDisplaySettings, leftNavIcon: 'puzzle-piece' },
+    );
     expect(changes.display_settings).toEqual({});
   });
 

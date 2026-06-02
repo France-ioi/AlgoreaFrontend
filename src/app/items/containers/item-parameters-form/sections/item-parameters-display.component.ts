@@ -7,12 +7,16 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { ItemChildrenLayout } from 'src/app/items/models/item-parameters';
+import { ItemType } from 'src/app/items/models/item-type';
+import { defaultLeftNavIcon } from 'src/app/items/models/left-nav-icons';
+import { ItemLeftNavIconSelectComponent } from './item-left-nav-icon-select.component';
 
 export type ItemParametersDisplayForm = FormGroup<{
   promptToJoinGroupByCode: FormControl<boolean>,
   childrenLayout: FormControl<ItemChildrenLayout>,
   thumbnailUrl: FormControl<string>,
   disableChildrenPrevNextNav: FormControl<boolean>,
+  leftNavIcon: FormControl<string>,
 }>;
 
 @Component({
@@ -26,13 +30,18 @@ export type ItemParametersDisplayForm = FormGroup<{
     SelectionComponent,
     SwitchComponent,
     TooltipDirective,
+    ItemLeftNavIconSelectComponent,
   ],
 })
 export class ItemParametersDisplayComponent {
   form = input.required<ItemParametersDisplayForm>();
+  itemType = input.required<ItemType>();
   showChildrenLayout = input(false);
   showThumbnailUrl = input(false);
   showDisableChildrenPrevNextNav = input(false);
+  showLeftNavIcon = input(false);
+
+  readonly defaultLeftNavIcon = computed(() => defaultLeftNavIcon(this.itemType()));
 
   readonly childrenLayoutOptions: { label: string, value: ItemChildrenLayout }[] = [
     { label: $localize`List`, value: 'List' },

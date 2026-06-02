@@ -35,6 +35,27 @@
     </div>
   }
 
+  @if (showLeftNavIcon()) {
+    <div class="form-item-view">
+      <span class="form-item-label">
+        <ng-container i18n>Sidebar icon</ng-container>
+        <i
+          class="ph-duotone ph-info hint-icon"
+          i18n-algTooltip
+          algTooltip="Icon shown for this item in the left navigation menu."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
+      </span>
+      <div class="form-item-control">
+        <alg-item-left-nav-icon-select
+          formControlName="leftNavIcon"
+          [defaultIcon]="defaultLeftNavIcon()"
+        ></alg-item-left-nav-icon-select>
+      </div>
+    </div>
+  }
+
   @if (showDisableChildrenPrevNextNav()) {
     <div class="form-item-view">
       <span class="form-item-label">

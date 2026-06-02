@@ -7,6 +7,7 @@ describe('displaySettingsSchema', () => {
       promptToJoinGroupByCode: false,
       thumbnailUrl: null,
       disableChildrenPrevNextNav: false,
+      leftNavIcon: null,
     });
   });
 
@@ -16,6 +17,7 @@ describe('displaySettingsSchema', () => {
       promptToJoinGroupByCode: false,
       thumbnailUrl: null,
       disableChildrenPrevNextNav: false,
+      leftNavIcon: null,
     });
   });
 });
@@ -30,6 +32,7 @@ describe('buildDisplaySettingsBody', () => {
       prompt_to_join_group_by_code: false,
       thumbnail_url: null,
       disable_children_prev_next_nav: false,
+      left_nav_icon: null,
     });
   });
 
@@ -66,6 +69,14 @@ describe('buildDisplaySettingsBody', () => {
       thumbnailUrl: 'https://example.test/thumb.png',
     })).toEqual({
       thumbnail_url: 'https://example.test/thumb.png',
+    });
+  });
+
+  it('should keep a non-null left_nav_icon in the body', () => {
+    expect(buildDisplaySettingsBody({
+      leftNavIcon: 'puzzle-piece',
+    })).toEqual({
+      left_nav_icon: 'puzzle-piece',
     });
   });
 

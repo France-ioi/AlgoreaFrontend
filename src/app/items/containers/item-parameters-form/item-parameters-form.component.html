@@ -13,9 +13,11 @@
   @if (secs.display.enabled) {
     <alg-item-parameters-display
       [form]="form.controls.display"
+      [itemType]="itemData().item.type"
       [showChildrenLayout]="secs.display.showChildrenLayout"
       [showThumbnailUrl]="secs.display.showThumbnailUrl"
       [showDisableChildrenPrevNextNav]="secs.display.showDisableChildrenPrevNextNav"
+      [showLeftNavIcon]="secs.display.showLeftNavIcon"
     ></alg-item-parameters-display>
   }
   @if (secs.participation) {

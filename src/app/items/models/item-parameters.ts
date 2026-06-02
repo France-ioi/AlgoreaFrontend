@@ -33,6 +33,7 @@ export interface ItemParametersDisplayValue {
   childrenLayout: ItemChildrenLayout,
   thumbnailUrl: string,
   disableChildrenPrevNextNav: boolean,
+  leftNavIcon: string,
 }
 
 export interface ItemParametersParticipationValue {
@@ -96,6 +97,7 @@ export interface ItemParametersSections {
     showChildrenLayout: boolean,
     showThumbnailUrl: boolean,
     showDisableChildrenPrevNextNav: boolean,
+    showLeftNavIcon: boolean,
   },
   participation: boolean,
   team: boolean,
@@ -110,6 +112,7 @@ export function sectionsForItemType(type: ItemType): ItemParametersSections {
       showChildrenLayout: type !== 'Task',
       showThumbnailUrl: type === 'Task' || type === 'Chapter',
       showDisableChildrenPrevNextNav: type === 'Chapter',
+      showLeftNavIcon: type === 'Task' || type === 'Chapter',
     },
     participation: type !== 'Skill',
     team: type !== 'Skill',
@@ -146,6 +149,7 @@ export function itemToParametersValue(item: Item): ItemParametersValue {
     childrenLayout: item.displaySettings.childrenLayout,
     thumbnailUrl: item.displaySettings.thumbnailUrl ?? '',
     disableChildrenPrevNextNav: item.displaySettings.disableChildrenPrevNextNav,
+    leftNavIcon: item.displaySettings.leftNavIcon ?? '',
     allowsMultipleAttempts: item.allowsMultipleAttempts,
     requiresExplicitEntry: item.requiresExplicitEntry,
     durationEnabled: item.duration !== null,
@@ -183,7 +187,7 @@ export function buildItemParametersChanges(
   sections: ItemParametersSections,
   initialDisplaySettings: Pick<
     DisplaySettings,
-    'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl' | 'disableChildrenPrevNextNav'
+    'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl' | 'disableChildrenPrevNextNav' | 'leftNavIcon'
   >,
 ): ItemChanges {
   const changes: ItemChanges = {};
@@ -208,10 +212,13 @@ export function buildItemParametersChanges(
   if (sections.display.enabled) {
     const thumbnailUrl = trimToNullable(current.thumbnailUrl);
     const initialThumbnailUrl = trimToNullable(initial.thumbnailUrl);
+    const leftNavIcon = trimToNullable(current.leftNavIcon);
+    const initialLeftNavIcon = trimToNullable(initial.leftNavIcon);
     const hasDisplaySettingsChanges = current.promptToJoinGroupByCode !== initial.promptToJoinGroupByCode
       || current.childrenLayout !== initial.childrenLayout
       || thumbnailUrl !== initialThumbnailUrl
-      || current.disableChildrenPrevNextNav !== initial.disableChildrenPrevNextNav;
+      || current.disableChildrenPrevNextNav !== initial.disableChildrenPrevNextNav
+      || leftNavIcon !== initialLeftNavIcon;
     if (hasDisplaySettingsChanges) {
       changes.display_settings = buildDisplaySettingsBody({
         ...initialDisplaySettings,
@@ -219,6 +226,7 @@ export function buildItemParametersChanges(
         promptToJoinGroupByCode: current.promptToJoinGroupByCode,
         thumbnailUrl,
         disableChildrenPrevNextNav: current.disableChildrenPrevNextNav,
+        leftNavIcon,
       });
     }
   }

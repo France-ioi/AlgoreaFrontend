@@ -11,6 +11,7 @@ const ITEM_PARAMETERS_KEYS = [
   'childrenLayout',
   'thumbnailUrl',
   'disableChildrenPrevNextNav',
+  'leftNavIcon',
   'allowsMultipleAttempts',
   'requiresExplicitEntry',
   'durationEnabled',

@@ -7,6 +7,7 @@ export const displaySettingsSchema = z.object({
   promptToJoinGroupByCode: z.boolean().default(false),
   thumbnailUrl: z.string().nullable().default(null),
   disableChildrenPrevNextNav: z.boolean().default(false),
+  leftNavIcon: z.string().nullable().default(null),
 });
 
 export type DisplaySettings = z.output<typeof displaySettingsSchema>;

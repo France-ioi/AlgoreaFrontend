@@ -81,7 +81,7 @@ export class LeftNavTreeComponent {
 
   iconForElement(e: NavTreeElement): string {
     const type = this.typeForElement(e);
-    return this.iconForType(type, this.isNavLocked(e));
+    return this.iconForElementWithType(e, type);
   }
 
   lockedAccessTooltip(node: TreeNode<NavTreeElement>): string | null {
@@ -166,7 +166,11 @@ export class LeftNavTreeComponent {
     return !!e.infoOnly && !e.requiresExplicitEntry;
   }
 
-  private iconForType(type: string, locked = false): string {
+  private iconForElementWithType(e: NavTreeElement, type: string): string {
+    return this.iconForType(type, this.isNavLocked(e), e.leftNavIcon);
+  }
+
+  private iconForType(type: string, locked = false, leftNavIcon?: string): string {
     if (locked) {
       switch (type) {
         case 'chapter':
@@ -174,6 +178,9 @@ export class LeftNavTreeComponent {
         case 'task':
           return 'ph-file-lock';
       }
+    }
+    if (leftNavIcon) {
+      return `ph-${leftNavIcon}`;
     }
     switch (type) {
       case 'chapter':
