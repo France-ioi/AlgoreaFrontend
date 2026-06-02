@@ -1,17 +1,17 @@
-@if (navigationMode) {
+@if (navigationMode(); as mode) {
   <div class="neighbor-widget">
-    @if (navigationMode.parent) {
+    @if (mode.parent) {
       <div
         class="neighbor-widget-button"
-        [ngClass]="{ 'no-separator': hideParentSeparator() }"
+        [class.no-separator]="hideParentSeparatorDelayed()"
         animate.enter="neighbor-enter"
         animate.leave="neighbor-leave"
       >
         <button
           alg-button
           type="button"
-          icon="ph-bold ph-caret-up"
-          [showCaption]="showBackCaption()"
+          icon="ph-bold ph-arrow-bend-up-left"
+          [showCaption]="showBackCaptionDelayed()"
           [withAnimation]="true"
           class="neighbor-nav"
           (click)="parent.emit()"
@@ -24,15 +24,16 @@
         class="neighbor-widget-prev-next"
         animate.enter="neighbor-prev-next-enter"
         animate.leave="neighbor-prev-next-leave"
+        (animationend)="onPrevNextPanelAnimationEnd($event)"
       >
-        <div class="neighbor-widget-button" [ngClass]="{ 'no-separator': navigationMode.right}">
+        <div class="neighbor-widget-button" [class.no-separator]="mode.right">
           <button
             alg-button-icon
             type="button"
             icon="ph-bold ph-caret-left"
             class="size-s no-bg nav-arrow"
             (click)="left.emit()"
-            [disabled]="!navigationMode.left"
+            [disabled]="!mode.left"
           ></button>
         </div>
         <div class="neighbor-widget-button">
@@ -40,12 +41,12 @@
             alg-button
             type="button"
             icon="ph-bold ph-caret-right"
-            [showCaption]="navigationMode.right"
+            [showCaption]="mode.right"
             [withAnimation]="true"
             class="neighbor-nav"
             data-testid="nav-to-next"
             (click)="right.emit()"
-            [disabled]="!navigationMode.right"
+            [disabled]="!mode.right"
             i18n
           >Next</button>
         </div>

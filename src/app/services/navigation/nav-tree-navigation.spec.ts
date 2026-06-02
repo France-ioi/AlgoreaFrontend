@@ -155,9 +155,9 @@ describe('computeNavigationNeighbors', () => {
 
   });
 
-  describe('disableChildrenPrevNextNav and disablePrevNextAmongRoots', () => {
+  describe('disableChildrenPrevNextNav and disablePrevNextNavAmongRoots', () => {
 
-    it('should disable prev/next at root when disablePrevNextAmongRoots is true', () => {
+    it('should disable prev/next at root when disablePrevNextNavAmongRoots is true', () => {
       const data = new NavTreeData([ el('a'), el('b'), el('c') ], []).withSelection(route('b'));
       const n = computeNavigationNeighbors(data, null, true);
       expect(n).toBeDefined();
@@ -165,7 +165,7 @@ describe('computeNavigationNeighbors', () => {
       expect(n!.next).toBeNull();
     });
 
-    it('should keep prev/next at root when disablePrevNextAmongRoots is false', () => {
+    it('should keep prev/next at root when disablePrevNextNavAmongRoots is false', () => {
       const data = new NavTreeData([ el('a'), el('b'), el('c') ], []).withSelection(route('b'));
       const n = computeNavigationNeighbors(data, null, false);
       expect(n!.previous).not.toBeNull();
