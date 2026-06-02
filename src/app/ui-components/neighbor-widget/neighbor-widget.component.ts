@@ -62,7 +62,9 @@ export class NeighborWidgetComponent {
   }
 
   onPrevNextPanelAnimationEnd(event: AnimationEvent): void {
-    if (!event.animationName.startsWith('neighbor-prev-next-leave')) return;
+    // `animationend` bubbles up from child animations (e.g. the button caption trigger), whose
+    // events may not carry an `animationName`. Ignore anything that isn't the panel leave animation.
+    if (!event.animationName?.startsWith('neighbor-prev-next-leave')) return;
     this.clearPrevNextLeaveTimer();
     this.completePrevNextLeaveLayout();
   }
