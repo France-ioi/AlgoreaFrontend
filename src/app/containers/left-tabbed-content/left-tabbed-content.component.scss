@@ -3,6 +3,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 
   // ngx-scrollbar v19 defaults: 7px-thick track with a translucent grey
   // background. Override the CSS custom properties (which cascade through
@@ -14,15 +15,39 @@
 }
 
 .divider {
-  margin: 0 var(--alg-space-size-5) var(--alg-space-size-6) var(--alg-space-size-5);
+  flex-shrink: 0;
+  width: 100%;
+  margin: 0;
   padding: 0;
   height: functions.toRem(1);
   border: none;
-  background: rgb(255, 255, 255);
-  background: -moz-linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
-  background: -webkit-linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(209, 215, 230, 1) 50%, rgba(255, 255, 255, 0) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#ffffff", GradientType=1);
+  background-color: var(--alg-border-color, #d1d7e6);
+}
+
+.v-divider {
+  flex-shrink: 0;
+  align-self: stretch;
+  width: functions.toRem(1);
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: var(--alg-border-color, #d1d7e6);
+}
+
+.body-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.content-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
 }
 
 .scroll-wrapper {

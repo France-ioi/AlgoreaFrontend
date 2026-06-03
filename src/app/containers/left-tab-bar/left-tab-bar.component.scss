@@ -1,29 +1,29 @@
 @use 'src/assets/scss/functions';
 
-.tab-view-container {
-  margin: functions.toRem(16) 0 functions.toRem(24) 0;
-  padding: 0 var(--alg-space-size-3);
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--left-panel-tab-bar-width, 5rem);
+  min-height: 0;
+  overflow-y: auto;
+  --scrollbar-track-color: transparent;
+  --scrollbar-track-thickness: #{functions.toRem(5)};
+}
 
-  &.multi-row {
-    margin: 0 0 functions.toRem(12) 0;
-  }
+.tab-view-container {
+  padding: functions.toRem(16) var(--alg-space-size-3) functions.toRem(16) var(--alg-space-size-3);
 }
 
 .main-menu {
   display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  column-gap: functions.toRem(8);
-
-  &.multi-row {
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
+  flex-direction: column;
+  align-items: center;
+  row-gap: functions.toRem(16);
 }
 
 .main-menu-button {
   display: flex;
-  flex: 1 1 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -32,12 +32,7 @@
   background: none;
   cursor: pointer;
   padding: 0;
-  min-width: 0;
-
-  .multi-row & {
-    flex: 0 0 calc(50% - functions.toRem(4));
-    padding: functions.toRem(8) 0;
-  }
+  width: 100%;
 
   &.active {
     .main-menu-icon-wrapper {
@@ -88,4 +83,5 @@
   color: var(--alg-secondary-color);
   font-size: functions.toRem(13);
   font-weight: 400;
+  text-align: center;
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 export const communityTabIdx = 3;
 
@@ -18,12 +18,4 @@ export class LeftTabBarComponent {
   readonly communityTabIdx = communityTabIdx;
 
   tabSelected = output<number>();
-
-  multiRow = computed(() => {
-    const count = 1
-      + (this.skillsTabEnabled() ? 1 : 0)
-      + (this.groupsTabEnabled() ? 1 : 0)
-      + (this.communityTabEnabled() ? 1 : 0);
-    return count > 3;
-  });
 }
