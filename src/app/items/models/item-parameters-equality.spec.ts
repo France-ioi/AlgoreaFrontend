@@ -13,6 +13,7 @@ function buildParameters(overrides: Partial<ItemParametersValue> = {}): ItemPara
     childrenLayout: 'List',
     thumbnailUrl: '',
     disableChildrenPrevNextNav: false,
+    leftNavIcon: '',
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
     durationEnabled: false,

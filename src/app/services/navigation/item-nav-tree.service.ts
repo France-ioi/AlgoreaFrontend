@@ -141,6 +141,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
       infoOnly: this.isInfoOnlyVisibility(perms),
       requiresExplicitEntry: child.requiresExplicitEntry,
       disableChildrenPrevNextNav: child.displaySettings.disableChildrenPrevNextNav,
+      leftNavIcon: child.displaySettings.leftNavIcon ?? undefined,
       score,
     };
   }
@@ -161,6 +162,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
           this.itemRouter.navigateTo(parentRoute, { preventFullFrame, useCurrentObservation: true }),
         infoOnly: this.isInfoOnlyVisibility(data.permissions),
         disableChildrenPrevNextNav: data.displaySettings.disableChildrenPrevNextNav,
+        leftNavIcon: data.displaySettings.leftNavIcon ?? undefined,
       },
       elements: data.children.map(c => this.mapChild(c, data.attemptId, [ ...pathToParent, data.id ])),
     };

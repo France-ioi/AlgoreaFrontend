@@ -1,0 +1,41 @@
+@use 'src/assets/scss/functions';
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(functions.toRem(40), 1fr));
+  gap: functions.toRem(8);
+  max-width: functions.toRem(520);
+}
+
+.icon-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: functions.toRem(40);
+  height: functions.toRem(40);
+  padding: 0;
+  border: functions.toRem(1) solid var(--alg-border-color, #ccc);
+  border-radius: functions.toRem(4);
+  background: var(--alg-background-color, #fff);
+  color: var(--alg-text-color, #333);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--alg-primary-color, #0066cc);
+  }
+
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #0066cc);
+    outline-offset: functions.toRem(2);
+  }
+
+  &.selected {
+    border-color: var(--alg-primary-color, #0066cc);
+    background: var(--alg-primary-color-light, #e6f0ff);
+    color: var(--alg-primary-color, #0066cc);
+  }
+
+  i {
+    font-size: functions.toRem(20);
+  }
+}

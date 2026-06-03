@@ -21,6 +21,8 @@ export interface NavTreeElement {
   requiresExplicitEntry?: boolean,
   // considering 'not set' as false; set from a parent's display settings: disables prev/next nav among this element's children
   disableChildrenPrevNextNav?: boolean,
+  /** Custom phosphor icon name (without `ph-` prefix) from display settings; falls back to type default when unset. */
+  leftNavIcon?: string,
   associatedGroupNames?: string[],
   score?: { bestScore: number, currentScore: number, validated: boolean },
   groupRelation?: { isMember: boolean, managership: GroupManagershipType },

@@ -95,6 +95,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
       childrenLayout: this.fb.nonNullable.control<ItemChildrenLayout>('List'),
       thumbnailUrl: [ '', Validators.maxLength(2000) ],
       disableChildrenPrevNextNav: [ false ],
+      leftNavIcon: [ '' ],
     }),
     participation: this.fb.nonNullable.control<ItemParametersParticipationValue>({
       allowsMultipleAttempts: false,
@@ -176,6 +177,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
         childrenLayout: v.childrenLayout,
         thumbnailUrl: v.thumbnailUrl,
         disableChildrenPrevNextNav: v.disableChildrenPrevNextNav,
+        leftNavIcon: v.leftNavIcon,
       },
       participation: {
         allowsMultipleAttempts: v.allowsMultipleAttempts,
