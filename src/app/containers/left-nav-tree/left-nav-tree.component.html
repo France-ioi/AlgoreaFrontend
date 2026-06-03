@@ -37,7 +37,7 @@
         @if (node.inL1) {
           <i
             class="ph-thin"
-            [ngClass]="node.expanded ? 'ph-caret-down' : 'ph-caret-right'"
+            [class]="node.expanded ? 'ph-caret-down' : 'ph-caret-right'"
             (click)="node.type === 'chapter' ? onChevronClick($event, node) : null"
           ></i>
         } @else {
@@ -52,7 +52,7 @@
       [algTooltip]="lockTooltip ?? ''"
       [tooltipDisabled]="!lockTooltip"
     >
-      <i class="ph" [ngClass]="node.icon"></i>
+      <i [class]="'ph ' + node.icon"></i>
     </div>
     <div class="tree-nav-caption">
       {{ node.label }}
@@ -78,7 +78,6 @@
             <div
               class="tree-nav-wrapper chapter"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -100,7 +99,6 @@
             <div
               class="tree-nav-wrapper chapter"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -122,7 +120,6 @@
             <div
               class="tree-nav-wrapper"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -142,7 +139,6 @@
             <div
               class="tree-nav-wrapper"
               [class.selected]="node.data && node.partialSelected"
-              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
@@ -174,7 +170,6 @@
             <div
               class="tree-nav-wrapper"
               [class.selected]="node.partialSelected"
-              [class.locked]="node.data.infoOnly && !node.data.requiresExplicitEntry"
               [attr.data-selected]="node.partialSelected ? 'true' : null"
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"

@@ -1,0 +1,9 @@
+@use 'src/assets/scss/functions';
+
+$nav-row-v-padding: functions.toRem(4);
+$nav-row-min-height-l0: functions.toRem(48);
+$nav-tree-row-hover-color: color-mix(
+  in srgb,
+  var(--alg-tree-selected-color, #d4e1ff) 50%,
+  var(--alg-light-bg-color, #e8efff)
+);

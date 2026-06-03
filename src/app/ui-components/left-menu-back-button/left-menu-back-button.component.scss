@@ -1,7 +1,5 @@
 @use 'src/assets/scss/functions';
-
-$nav-row-v-padding: functions.toRem(4);
-$nav-row-min-height-l0: functions.toRem(48);
+@use 'src/assets/scss/left-nav-row' as nav-row;
 
 .back-button-container {
   display: flex;
@@ -11,14 +9,14 @@ $nav-row-min-height-l0: functions.toRem(48);
 
   &.with-content-icon {
     box-sizing: border-box;
-    min-height: $nav-row-min-height-l0;
-    padding: $nav-row-v-padding functions.toRem(4);
+    min-height: nav-row.$nav-row-min-height-l0;
+    padding: nav-row.$nav-row-v-padding functions.toRem(4);
     padding-left: functions.toRem(4);
   }
 }
 
 :host-context(.nav-level-l0:hover) .back-button-container.with-content-icon {
-  background-color: var(--alg-tree-row-hover-color, #d9e5ff);
+  background-color: var(--alg-tree-row-hover-color, #{nav-row.$nav-tree-row-hover-color});
   border-radius: functions.toRem(10);
 }
 

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +20,6 @@ interface IconChoice {
   templateUrl: './item-left-nav-icon-select.component.html',
   styleUrls: [ './item-left-nav-icon-select.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ NgClass ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -32,6 +30,7 @@ interface IconChoice {
 })
 export class ItemLeftNavIconSelectComponent implements ControlValueAccessor {
   defaultIcon = input.required<string>();
+  labelId = input.required<string>();
 
   value = signal('');
 

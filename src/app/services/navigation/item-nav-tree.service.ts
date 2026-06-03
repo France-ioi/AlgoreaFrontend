@@ -100,6 +100,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     return {
       ...treeElement,
       title: details.title ?? '',
+      leftNavIcon: details.leftNavIcon ?? treeElement.leftNavIcon,
       navigateTo: (preventFullFrame = false): void =>
         this.itemRouter.navigateTo(contentInfo.route, { preventFullFrame, useCurrentObservation: true }),
       score: details.bestScore !== undefined && details.currentScore !== undefined && details.validated !== undefined ? {
