@@ -6,9 +6,11 @@ import { ItemLeftNavIconSelectComponent } from './item-left-nav-icon-select.comp
 
 @Component({
   template: `
+    <span id="sidebar-icon-label">Sidebar icon</span>
     <alg-item-left-nav-icon-select
       [formControl]="control"
       [defaultIcon]="'file-text'"
+      labelId="sidebar-icon-label"
     ></alg-item-left-nav-icon-select>
   `,
   imports: [ ReactiveFormsModule, ItemLeftNavIconSelectComponent ],
@@ -39,5 +41,13 @@ describe('ItemLeftNavIconSelectComponent', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.control.value).toBe('puzzle-piece');
     expect(puzzleBtn.getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('should expose only the selected choice in the tab order', () => {
+    const buttons = fixture.debugElement.queryAll(By.css('[role="radio"]'))
+      .map(btn => btn.nativeElement as HTMLButtonElement);
+    const tabbable = buttons.filter(btn => btn.getAttribute('tabindex') === '0');
+    expect(tabbable.length).toBe(1);
+    expect(tabbable[0]?.getAttribute('aria-checked')).toBe('true');
   });
 });

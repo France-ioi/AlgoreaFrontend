@@ -1,18 +1,12 @@
-@use "src/assets/scss/functions";
+@use 'src/assets/scss/functions';
+@use 'src/assets/scss/left-nav-row' as nav-row;
 
 $nav-tree-inline-padding: functions.toRem(4);
-$nav-row-v-padding: functions.toRem(4);
 $nav-row-line-height: 1.25;
 $nav-row-max-lines: 2;
 // min-height = vertical padding + 2 lines of text.
-$nav-row-min-height-l0: functions.toRem(48);
 $nav-row-min-height-l1: functions.toRem(44);
 $nav-row-min-height-l2: functions.toRem(38);
-$nav-tree-row-hover-color: color-mix(
-  in srgb,
-  var(--alg-tree-selected-color, #d4e1ff) 50%,
-  var(--alg-light-bg-color, #e8efff)
-);
 
 .container {
   padding: 0 $nav-tree-inline-padding;
@@ -27,7 +21,7 @@ $nav-tree-row-hover-color: color-mix(
   padding: 0;
   margin: 0 var(--alg-space-size-6);
   cursor: pointer;
-  --alg-tree-row-hover-color: #{$nav-tree-row-hover-color};
+  --alg-tree-row-hover-color: #{nav-row.$nav-tree-row-hover-color};
 }
 
 .buttons-section {
@@ -58,11 +52,11 @@ $nav-tree-row-hover-color: color-mix(
   position: relative;
   box-sizing: border-box;
   min-height: $nav-row-min-height-l1;
-  padding: $nav-row-v-padding $nav-tree-inline-padding;
+  padding: nav-row.$nav-row-v-padding $nav-tree-inline-padding;
   border-radius: functions.toRem(10);
 
   &:hover:not(.selected) {
-    background-color: $nav-tree-row-hover-color;
+    background-color: nav-row.$nav-tree-row-hover-color;
   }
 
   &.selected {

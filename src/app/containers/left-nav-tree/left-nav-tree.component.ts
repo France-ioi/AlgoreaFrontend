@@ -6,7 +6,7 @@ import { SkillProgressComponent } from '../../ui-components/skill-progress/skill
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
-import { NgClass, I18nSelectPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet, I18nSelectPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   CdkNestedTreeNode,
@@ -16,6 +16,7 @@ import {
   CdkTreeNodeOutlet,
   NestedTreeControl
 } from '@angular/cdk/tree';
+import { isLeftNavIconOption } from 'src/app/items/models/left-nav-icons';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 interface TreeNode<T> {
@@ -49,7 +50,6 @@ export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true
     LeftMenuBackButtonComponent,
     RouterLink,
     RouterLinkActive,
-    NgClass,
     NgTemplateOutlet,
     ScoreRingComponent,
     SkillProgressComponent,
@@ -107,7 +107,7 @@ export class LeftNavTreeComponent {
         data: e,
         label: e.title,
         type,
-        icon: this.iconForType(type, this.isNavLocked(e)),
+        icon: this.iconForElementWithType(e, type),
         isExpandable: this.isExpandableType(type, e.hasChildren),
         hasChildren: e.hasChildren,
         expanded: !!e.children,
@@ -179,7 +179,7 @@ export class LeftNavTreeComponent {
           return 'ph-file-lock';
       }
     }
-    if (leftNavIcon) {
+    if (leftNavIcon && isLeftNavIconOption(leftNavIcon)) {
       return `ph-${leftNavIcon}`;
     }
     switch (type) {

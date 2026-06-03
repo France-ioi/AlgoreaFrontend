@@ -1,4 +1,4 @@
-<div class="icon-grid" role="radiogroup" i18n-aria-label aria-label="Sidebar icon">
+<div class="icon-grid" role="radiogroup" [attr.aria-labelledby]="labelId()">
   @for (choice of choices(); track choice.value; let idx = $index) {
     <button
       type="button"
@@ -7,11 +7,12 @@
       role="radio"
       [attr.aria-checked]="isSelected(choice.value)"
       [attr.aria-label]="choice.ariaLabel"
+      [attr.tabindex]="isSelected(choice.value) ? 0 : -1"
       [id]="choiceId(idx)"
       (click)="select(choice.value)"
       (keydown)="onKeydown($event, idx)"
     >
-      <i class="ph" [ngClass]="choice.iconClass"></i>
+      <i [class]="'ph ' + choice.iconClass"></i>
     </button>
   }
 </div>

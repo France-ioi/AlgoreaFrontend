@@ -37,7 +37,7 @@
 
   @if (showLeftNavIcon()) {
     <div class="form-item-view">
-      <span class="form-item-label">
+      <span id="sidebar-icon-label" class="form-item-label">
         <ng-container i18n>Sidebar icon</ng-container>
         <i
           class="ph-duotone ph-info hint-icon"
@@ -51,6 +51,7 @@
         <alg-item-left-nav-icon-select
           formControlName="leftNavIcon"
           [defaultIcon]="defaultLeftNavIcon()"
+          labelId="sidebar-icon-label"
         ></alg-item-left-nav-icon-select>
       </div>
     </div>

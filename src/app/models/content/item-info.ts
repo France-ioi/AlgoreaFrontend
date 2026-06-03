@@ -19,6 +19,8 @@ export interface ItemDetails {
   bestScore?: number,
   currentScore?: number,
   validated?: boolean,
+  /** From display settings; used to refresh the left-menu icon for the currently displayed item. */
+  leftNavIcon?: string,
 }
 
 export function isItemInfo(info: ContentInfo|null): info is ItemInfo {

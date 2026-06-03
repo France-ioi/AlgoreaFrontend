@@ -260,6 +260,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
             (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.currentResult?.score),
           validated: data.item.noScore ? undefined :
             (data.item.watchedGroup ? data.item.watchedGroup.averageScore === 100 : data.currentResult?.validated),
+          leftNavIcon: data.item.displaySettings.leftNavIcon ?? undefined,
         },
       }));
     }),
