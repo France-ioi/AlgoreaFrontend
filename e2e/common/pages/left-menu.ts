@@ -180,10 +180,12 @@ export class LeftMenu {
     await expect.soft(this.leftNavTreeLocator.getByText(name)).toBeVisible();
   }
 
+  async checksIsTabBarNotVisible(): Promise<void> {
+    await expect.soft(this.tabBarLocator).not.toBeVisible();
+  }
+
   async checksIsTabsNotVisible(): Promise<void> {
-    await this.checksIsTabNotVisible('Content');
-    await this.checksIsTabNotVisible('Skills');
-    await this.checksIsTabNotVisible('Groups');
+    await this.checksIsTabBarNotVisible();
   }
 
   async openSearch(): Promise<void> {
@@ -197,7 +199,6 @@ export class LeftMenu {
   async closeSearchWithX(): Promise<void> {
     await this.searchPanelLocator.getByRole('button', { name: 'Close search' }).click();
     await this.checksSearchPanelNotVisible();
-    await this.waitsForCompactTreeLayout();
   }
 
   async checksSearchPanelNotVisible(): Promise<void> {
