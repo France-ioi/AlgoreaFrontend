@@ -4,6 +4,12 @@
 
 Algorea Frontend is an Angular 21 educational platform that provides features for managing learning activities, skills, groups, and user progress. It uses ngrx for state management and communicates with a backend API.
 
+## Development toolchain
+
+- **Node.js**: ≥ 24.16.0 — enforced via `engines` in `package.json`, pinned in `mise.toml`, CI uses `cimg/node:24.16.0`
+- **Package manager**: npm (`package-lock.json`)
+- **Local setup**: run `mise install` then `npm install` (see `README.md`)
+
 ## Project Structure
 
 ```

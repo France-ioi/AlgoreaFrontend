@@ -17,6 +17,9 @@
     "release": "release-it"
   },
   "private": true,
+  "engines": {
+    "node": ">=24.16.0"
+  },
   "dependencies": {
     "@angular/animations": "^21.2.10",
     "@angular/cdk": "^21.2.8",
@@ -67,7 +70,7 @@
     "@types/jasmine": "^6.0.0",
     "@types/jasminewd2": "~2.0.13",
     "@types/jschannel": "^1.0.6",
-    "@types/node": "^22.19.17",
+    "@types/node": "^24.13.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "auto-changelog": "^2.4.0",
