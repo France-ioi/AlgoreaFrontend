@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100%;
 
-  &.treeExpandable {
+  &.tree-expandable {
     flex-shrink: 0;
     width: var(--left-panel-width);
     min-width: var(--left-panel-width);
@@ -17,7 +17,7 @@
 }
 
 @media screen and (max-width: 599.98px) {
-  :host.treeExpandable {
+  :host(.tree-expandable) {
     width: 100%;
     min-width: 0;
   }

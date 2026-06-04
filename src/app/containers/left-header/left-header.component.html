@@ -1,17 +1,21 @@
 @if (!compactMode()) {
+  <ng-template #collapseButton>
+    <button
+      class="left-menu"
+      alg-button-icon
+      type="button"
+      icon="ph ph-list"
+      data-cy="left-menu-btn"
+      (click)="hideLeftMenu()"
+    ></button>
+  </ng-template>
+
   <div class="container" [class.expandable-layout]="hideTree()">
     <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
       @if (hideTree()) {
         <div class="header-row">
           <div class="header-tab-column">
-            <button
-              class="left-menu"
-              alg-button-icon
-              type="button"
-              icon="ph ph-list"
-              data-cy="left-menu-btn"
-              (click)="hideLeftMenu()"
-            ></button>
+            <ng-container *ngTemplateOutlet="collapseButton" />
           </div>
           <div class="header-content-column" [class.content-masked]="treeHidden()">
             <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
@@ -37,14 +41,7 @@
               {{ title }}
             }
           </a>
-          <button
-            class="left-menu"
-            alg-button-icon
-            type="button"
-            icon="ph ph-list"
-            data-cy="left-menu-btn"
-            (click)="hideLeftMenu()"
-          ></button>
+          <ng-container *ngTemplateOutlet="collapseButton" />
         </div>
         @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
           <alg-top-right-controls

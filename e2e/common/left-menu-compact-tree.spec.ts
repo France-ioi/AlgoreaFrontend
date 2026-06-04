@@ -1,11 +1,14 @@
 import { expect, test } from 'e2e/common/fixture';
 import { mockConfig } from 'e2e/assets/mock-config';
 import { initAsTesterUser } from 'e2e/helpers/e2e_auth';
+import { neighborNextButton, neighborWidgetLocator } from 'e2e/helpers/neighbor-widget';
 
 const hiddenTreeItemId = '6390082892422125257';
+const nextCompactTreeItemId = '7143408445463448320';
 const parentItemId = '6621899821435600308';
 const pathToHiddenItem = '4702,7528142386663912287,6621899821435600308';
 const hiddenItemUrl = `/a/${hiddenTreeItemId};p=${pathToHiddenItem};a=0`;
+const hiddenItemUrlWithParentAttempt = `${hiddenItemUrl};pa=0`;
 const parentItemUrl = `/a/${parentItemId};p=4702,7528142386663912287;a=0`;
 
 const hiddenTreeChildTitle = /hidden left menu content/;
@@ -34,7 +37,7 @@ test.describe('left menu compact tree', () => {
     await expect(page).toHaveURL(new RegExp(`/a/${parentItemId}`));
     await leftMenu.checksIsFullTreeMode();
 
-    await leftMenu.navigateToHiddenTreeChild(hiddenTreeChildTitle);
+    await leftMenu.navigateToHiddenTreeChild(hiddenTreeChildTitle, hiddenTreeItemId);
     await expect(page).toHaveURL(new RegExp(`/a/${hiddenTreeItemId}`));
     await leftMenu.checksIsCompactTreeMode();
   });
@@ -55,6 +58,26 @@ test.describe('left menu compact tree', () => {
 
     await test.step('closing search recollapses the left menu to tab-bar width', async () => {
       await leftMenu.closeSearchWithX();
+      await leftMenu.checksIsCompactTreeMode();
+    });
+  });
+
+  test('navigating to next compact sibling via top-right neighbor keeps compact left menu width', async ({ page, leftMenu }) => {
+    await page.goto(hiddenItemUrlWithParentAttempt);
+    await expect(page).toHaveURL(new RegExp(`/a/${hiddenTreeItemId}`));
+
+    await test.step('first compact chapter shows compact left menu', async () => {
+      await leftMenu.checksIsCompactTreeMode();
+    });
+
+    await test.step('next neighbor navigates to the other compact chapter', async () => {
+      const widget = neighborWidgetLocator(page);
+      await expect(neighborNextButton(widget)).toBeVisible();
+      await neighborNextButton(widget).click();
+      await expect(page).toHaveURL(new RegExp(`/a/${nextCompactTreeItemId}`));
+    });
+
+    await test.step('second compact chapter still shows compact left menu', async () => {
       await leftMenu.checksIsCompactTreeMode();
     });
   });

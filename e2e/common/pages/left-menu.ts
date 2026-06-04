@@ -54,7 +54,7 @@ export class LeftMenu {
   }
 
   async waitsForCompactTreeLayout(): Promise<void> {
-    await expect(this.leftPanelLocator).toHaveClass(/treeCompact/);
+    await expect(this.leftPanelLocator).toHaveClass(/tree-compact/);
     await expect.poll(async () => {
       const [ menuWidth, tabBarWidth, fullWidth ] = await Promise.all([
         this.getLeftMenuWidth(),
@@ -66,7 +66,7 @@ export class LeftMenu {
   }
 
   async waitsForFullTreeLayout(): Promise<void> {
-    await expect(this.leftPanelLocator).not.toHaveClass(/treeCompact/);
+    await expect(this.leftPanelLocator).not.toHaveClass(/tree-compact/);
     await expect.poll(async () => {
       const [ menuWidth, fullWidth ] = await Promise.all([
         this.getLeftMenuWidth(),
@@ -123,7 +123,7 @@ export class LeftMenu {
   }
 
   async checksIsFullTreeMode(): Promise<void> {
-    await expect.soft(this.leftPanelLocator).not.toHaveClass(/treeCompact/);
+    await expect.soft(this.leftPanelLocator).not.toHaveClass(/tree-compact/);
     await this.checksIsLeftNavTreeVisible();
     await this.checksLeftMenuIsFullWidth();
     await this.checksRightContentOffsetMatchesLeftMenu();
@@ -131,7 +131,7 @@ export class LeftMenu {
 
   async checksLeftMenuIsExpandedForSearch(): Promise<void> {
     await this.checksLeftMenuShellIsVisible();
-    await expect.soft(this.leftPanelLocator).not.toHaveClass(/treeCompact/);
+    await expect.soft(this.leftPanelLocator).not.toHaveClass(/tree-compact/);
     await this.checksLeftMenuIsFullWidth();
     await this.checksRightContentOffsetMatchesLeftMenu();
     await expect.soft(this.searchPanelLocator).toBeVisible();
@@ -147,13 +147,17 @@ export class LeftMenu {
     await this.checksRightContentIsFullWidth();
   }
 
-  async navigateToHiddenTreeChild(title: string | RegExp): Promise<void> {
+  async navigateToHiddenTreeChild(title: string | RegExp, itemId?: string): Promise<void> {
+    if (itemId) {
+      await this.page.locator(`a.item-link[href*="/a/${itemId}"]`).click();
+      return;
+    }
     const navLink = this.leftNavTreeLocator.locator('a').filter({ hasText: title });
     if (await navLink.count()) {
       await navLink.first().click();
       return;
     }
-    await this.page.getByRole('link', { name: title }).click();
+    await this.page.getByRole('link', { name: title, exact: typeof title === 'string' }).click();
   }
 
   async checksIsLeftMenuVisible(): Promise<void> {

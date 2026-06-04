@@ -42,5 +42,5 @@ window.appConfig = {
     'officiels/algorea-serious-game/chapter': { id: '1471479157476024035', path: [ '4702' ] },
   },
 
-  hideLeftMenuTreeOnItemIds: [ '6390082892422125257' ],
+  hideLeftMenuTreeOnItemIds: [ '6390082892422125257', '7143408445463448320' ],
 };

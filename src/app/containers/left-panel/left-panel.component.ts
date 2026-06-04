@@ -10,9 +10,9 @@ import { LayoutService } from '../../services/layout.service';
   styleUrls: [ './left-panel.component.scss' ],
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    '[class.treeCompact]': 'compactHeader()',
+    '[class.tree-compact]': 'compactHeader()',
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    '[class.treeExpandable]': 'hideTree()',
+    '[class.tree-expandable]': 'hideTree()',
   },
   imports: [ LeftHeaderComponent, LeftTabbedContentComponent ],
 })
