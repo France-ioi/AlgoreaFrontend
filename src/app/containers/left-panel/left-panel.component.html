@@ -1,5 +1,6 @@
-<alg-left-header></alg-left-header>
-<alg-left-tabbed-content class="alg-flex-1" [searchQuery]="searchQuery" (closeSearch)="searchQuery = ''"></alg-left-tabbed-content>
-@if (menuSearchEnabled) {
-  <alg-left-menu-search [(query)]="searchQuery"></alg-left-menu-search>
-}
+<alg-left-header [hideTree]="hideTree()" [treeHidden]="compactHeader()"></alg-left-header>
+<alg-left-tabbed-content
+  class="alg-flex-1"
+  [hideTree]="hideTree()"
+  (searchActiveChange)="searchActive.set($event)"
+></alg-left-tabbed-content>

@@ -67,6 +67,9 @@ const configSchema = z.object({
     path: z.array(z.string()).optional(),
   })).default({}),
 
+  // item ids on which the left navigation tree is hidden (only the tab bar is shown)
+  hideLeftMenuTreeOnItemIds: z.array(z.string()).default([]),
+
 });
 
 export type AppConfig = z.infer<typeof configSchema>;

@@ -1,19 +1,25 @@
-import { Component, inject } from '@angular/core';
-import { APPCONFIG } from 'src/app/config';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { LeftTabbedContentComponent } from '../left-tabbed-content/left-tabbed-content.component';
-import { LeftMenuSearchComponent } from '../../ui-components/left-menu-search/left-menu-search.component';
 import { LeftHeaderComponent } from '../left-header/left-header.component';
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   selector: 'alg-left-panel',
   templateUrl: './left-panel.component.html',
   styleUrls: [ './left-panel.component.scss' ],
-  imports: [ LeftHeaderComponent, LeftTabbedContentComponent, LeftMenuSearchComponent ]
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    '[class.tree-compact]': 'compactHeader()',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    '[class.tree-expandable]': 'hideTree()',
+  },
+  imports: [ LeftHeaderComponent, LeftTabbedContentComponent ],
 })
 export class LeftPanelComponent {
-  private config = inject(APPCONFIG);
+  private layoutService = inject(LayoutService);
 
-  menuSearchEnabled = !!this.config.searchApiUrl;
-
-  searchQuery = '';
+  hideTree = toSignal(this.layoutService.hideLeftMenuTree$, { initialValue: false });
+  searchActive = signal(false);
+  compactHeader = computed(() => this.hideTree() && !this.searchActive());
 }

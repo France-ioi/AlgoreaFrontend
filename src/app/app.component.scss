@@ -20,16 +20,37 @@
   top: 0;
   bottom: 0;
   background-color: var(--alg-light-bg-color);
+  overflow: hidden;
+  transition: width var(--left-menu-animation);
 
   &.collapsed {
     left: calc(0rem - var(--left-panel-width));
   }
 
   &.animated {
-    transition: left var(--left-menu-animation);
-    -webkit-transition: left var(--left-menu-animation);
-    -moz-transition: left var(--left-menu-animation);
-    -o-transition: left var(--left-menu-animation);
+    transition: left var(--left-menu-animation), width var(--left-menu-animation);
+    -webkit-transition: left var(--left-menu-animation), width var(--left-menu-animation);
+    -moz-transition: left var(--left-menu-animation), width var(--left-menu-animation);
+    -o-transition: left var(--left-menu-animation), width var(--left-menu-animation);
+  }
+}
+
+.container:has(alg-left-panel.tree-compact) {
+  .left-menu {
+    width: var(--left-panel-tab-bar-width);
+
+    &.collapsed {
+      // Slide by full inner width so nothing peeks out (inner panel stays at --left-panel-width).
+      left: calc(0rem - var(--left-panel-width));
+    }
+  }
+
+  .right-container {
+    margin-left: var(--left-panel-tab-bar-width);
+
+    &.collapsed {
+      margin-left: 0;
+    }
   }
 }
 
@@ -60,6 +81,7 @@
   box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
   -webkit-box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
   -moz-box-shadow: 0 functions.toRem(7) functions.toRem(10) 0 rgba(0,0,0,0.1);
+  transition: margin-left var(--left-menu-animation);
 
   &.animated {
     transition: margin-left var(--left-menu-animation);

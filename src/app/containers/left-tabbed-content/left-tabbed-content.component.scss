@@ -54,6 +54,17 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
+
+  &.content-column-expandable {
+    flex: 1 0 calc(var(--left-panel-width) - var(--left-panel-tab-bar-width));
+    width: calc(var(--left-panel-width) - var(--left-panel-tab-bar-width));
+    min-width: calc(var(--left-panel-width) - var(--left-panel-tab-bar-width));
+  }
+}
+
+.content-masked {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .scroll-wrapper {

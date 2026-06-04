@@ -1,7 +1,19 @@
-<alg-input
-  class="transparent search-placeholder"
-  inputIcon="ph-duotone ph-magnifying-glass"
-  i18n-placeholder placeholder="Search ?"
-  name="search"
-  [parentForm]="form"
-></alg-input>
+<div class="search-header">
+  <alg-input
+    class="transparent search-placeholder alg-flex-1"
+    inputIcon="ph-duotone ph-magnifying-glass"
+    i18n-placeholder placeholder="Search ?"
+    name="search"
+    [parentForm]="form"
+    [subtleFocus]="true"
+  ></alg-input>
+  <button
+    type="button"
+    class="secondary size-s close-button"
+    icon="ph ph-x"
+    alg-button-icon
+    aria-label="Close search"
+    i18n-aria-label
+    (click)="close.emit()"
+  ></button>
+</div>

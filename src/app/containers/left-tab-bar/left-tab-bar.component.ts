@@ -14,8 +14,11 @@ export class LeftTabBarComponent {
   groupsTabEnabled = input(false);
   communityTabEnabled = input(false);
   hasUnreadCommunityThreads = input(false);
+  searchEnabled = input(false);
+  searchActive = input(false);
 
   readonly communityTabIdx = communityTabIdx;
 
   tabSelected = output<number>();
+  searchSelected = output<void>();
 }

@@ -30,6 +30,7 @@ export class InputComponent {
   @Input() inputIcon = '';
   @Input() buttonIcon?: string; // a phosphor-icon identifier for the input button
   @Input() hasClearButton = false;
+  @Input() subtleFocus = false;
 
   @Input() tooltipText = '';
   @Input() tooltipEvent: 'hover' | 'focus' = 'hover';
