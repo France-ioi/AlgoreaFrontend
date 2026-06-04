@@ -42,6 +42,11 @@ const disabledSkillAndGroupTabsConfig = (showToUserIds?: string[]) => ({
   },
 });
 
+const hiddenTabBarConfig = (showToUserIds?: string[]) => ({
+  searchApiUrl: '',
+  ...disabledSkillAndGroupTabsConfig(showToUserIds),
+});
+
 test('checks the skills tab in the left menu is not shown', async ({ page, leftMenu }) => {
   await page.route('*/**/assets/config.js', async route => {
     await route.fulfill({
@@ -82,14 +87,14 @@ test('checks the tab bar in the left menu is not shown', async ({ page, leftMenu
     await route.fulfill({
       status: 200,
       contentType: 'text/javascript',
-      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledSkillAndGroupTabsConfig())) }`,
+      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, hiddenTabBarConfig())) }`,
     });
   });
 
   await page.goto('/a/home;pa=0');
   await leftMenu.checksIsLeftMenuVisible();
   await leftMenu.checksIsLeftNavTreeVisible();
-  await leftMenu.checksIsTabsNotVisible();
+  await leftMenu.checksIsTabBarNotVisible();
 });
 
 test(
@@ -100,14 +105,14 @@ test(
     await route.fulfill({
       status: 200,
       contentType: 'text/javascript',
-      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledSkillAndGroupTabsConfig())) }`,
+      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, hiddenTabBarConfig())) }`,
     });
   });
   await initAsTesterUser(page);
   await page.goto('/groups/users/4038740586962046790/personal-data');
   await leftMenu.checksIsLeftMenuVisible();
   await leftMenu.checksIsLeftNavTreeVisible();
-  await leftMenu.checksIsTabsNotVisible();
+  await leftMenu.checksIsTabBarNotVisible();
   await leftMenu.checksIsLeftNavTreeItemVisible('Parcours officiels');
   await leftMenu.checksIsLeftNavTreeItemVisible('Task #1 (via group: !634)');
 });
@@ -139,7 +144,10 @@ test(
     await page.goto('/a/home;pa=0');
     await leftMenu.checksIsLeftMenuVisible();
     await leftMenu.checksIsLeftNavTreeVisible();
-    await leftMenu.checksIsTabsNotVisible();
+    await leftMenu.checksIsTabVisible('Content');
+    await leftMenu.checksIsTabNotVisible('Skills');
+    await leftMenu.checksIsTabNotVisible('Groups');
+    await leftMenu.checksIsTabVisible('Search');
   });
 });
 

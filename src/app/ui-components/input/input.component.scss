@@ -78,4 +78,13 @@
   &.has-input-icon {
     padding-left: functions.toRem(40);
   }
+
+  &.subtle-focus-input {
+    &:focus,
+    &:focus-visible {
+      outline: functions.toRem(1) solid var(--alg-primary-color, #0066cc);
+      outline-offset: 0;
+      box-shadow: none;
+    }
+  }
 }

@@ -30,9 +30,16 @@ export class LeftMenuConfigService {
     })
   );
   communityTabEnabled$ = of(this.config.featureFlags.community === 'enabled');
+  searchEnabled$ = of(!!this.config.searchApiUrl);
 
-  showTabBar$ = combineLatest([ this.skillsTabEnabled$, this.groupsTabEnabled$, this.communityTabEnabled$ ]).pipe(
-    map(([ skillsTabEnabled, groupsTabEnabled, communityTabEnabled ]) => skillsTabEnabled || groupsTabEnabled || communityTabEnabled)
+  showTabBar$ = combineLatest([
+    this.skillsTabEnabled$,
+    this.groupsTabEnabled$,
+    this.communityTabEnabled$,
+    this.searchEnabled$,
+  ]).pipe(
+    map(([ skillsTabEnabled, groupsTabEnabled, communityTabEnabled, searchEnabled ]) =>
+      skillsTabEnabled || groupsTabEnabled || communityTabEnabled || searchEnabled),
   );
 
 }

@@ -36,6 +36,7 @@ test('checks path suggestion for search result in left menu', async ({ page, sho
   await page.goto('a/home;pa=0');
 
   await test.step('search for content', async () => {
+    await page.locator('[data-cy="main-menu-search-btn"]').click();
     const leftMenuSearchLocator = page.locator('alg-left-menu-search');
     await expect.soft(leftMenuSearchLocator).toBeVisible();
     await leftMenuSearchLocator.getByRole('textbox').fill('Task');

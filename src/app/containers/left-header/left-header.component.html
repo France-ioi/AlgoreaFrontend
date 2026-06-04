@@ -1,27 +1,60 @@
-@if (!compactMode) {
-  <div class="container">
+@if (!compactMode()) {
+  <ng-template #collapseButton>
+    <div class="collapse-sidebar-btn-wrapper">
+      <button
+        class="sidebar-toggle-btn"
+        alg-button-icon
+        type="button"
+        icon="ph ph-caret-double-left"
+        aria-label="Close sidebar"
+        i18n-aria-label
+        algTooltip="Close sidebar"
+        i18n-algTooltip
+        tooltipPosition="right"
+        data-cy="left-menu-btn"
+        (click)="hideLeftMenu()"
+      ></button>
+    </div>
+  </ng-template>
+
+  <div class="container" [class.expandable-layout]="hideTree()">
     <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
-      <div class="left-section alg-flex-1" [ngClass]="{ 'for-mobile': isNarrowScreen }">
-        <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
-          @if (leftHeaderLogoUrl) {
-            <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">
-          } @else {
-            {{ title }}
-          }
-        </a>
-        <button
-          class="left-menu"
-          alg-button-icon
-          type="button"
-          icon="ph ph-list"
-          data-cy="left-menu-btn"
-          (click)="hideLeftMenu()"
-        ></button>
-      </div>
-      @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
-        <alg-top-right-controls
-          topRightMenuStyleClass="for-mobile"
-        ></alg-top-right-controls>
+      @if (hideTree()) {
+        <div class="header-row">
+          <div class="header-tab-column">
+            <ng-container *ngTemplateOutlet="collapseButton" />
+          </div>
+          <div class="header-content-column" [class.content-masked]="treeHidden()">
+            <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
+              @if (leftHeaderLogoUrl) {
+                <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">
+              } @else {
+                {{ title }}
+              }
+            </a>
+            @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
+              <alg-top-right-controls
+                topRightMenuStyleClass="for-mobile"
+              ></alg-top-right-controls>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="left-section alg-flex-1" [ngClass]="{ 'for-mobile': isNarrowScreen }">
+          <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
+            @if (leftHeaderLogoUrl) {
+              <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">
+            } @else {
+              {{ title }}
+            }
+          </a>
+          <ng-container *ngTemplateOutlet="collapseButton" />
+        </div>
+        @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
+          <alg-top-right-controls
+            topRightMenuStyleClass="for-mobile"
+          ></alg-top-right-controls>
+        }
       }
     </ng-container>
   </div>

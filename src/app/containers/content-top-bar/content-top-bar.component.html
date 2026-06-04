@@ -3,9 +3,15 @@
     @if (showLeftMenuOpener) {
       <div class="margin-right">
         <button
+          class="sidebar-toggle-btn"
           alg-button-icon
           type="button"
-          icon="ph ph-list"
+          icon="ph ph-sidebar"
+          aria-label="Open sidebar"
+          i18n-aria-label
+          algTooltip="Open sidebar"
+          i18n-algTooltip
+          tooltipPosition="right"
           (click)="showLeftMenu()"
         ></button>
       </div>

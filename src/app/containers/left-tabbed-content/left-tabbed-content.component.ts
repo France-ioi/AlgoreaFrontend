@@ -1,8 +1,9 @@
 import {
-  ChangeDetectionStrategy, Component, inject, Injector, Input, OnChanges, OnDestroy, output, SimpleChanges, ViewChild
+  ChangeDetectionStrategy, Component, inject, Injector, input, OnDestroy, output, signal, ViewChild
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { of, ReplaySubject, Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { isDefined } from '../../utils/null-undefined-predicates';
 import { ContentInfo } from '../../models/content/content-info';
@@ -24,8 +25,8 @@ import { LeftMenuConfigService } from '../../config/left-menu-config.service';
 import { LeftTabBarComponent } from '../left-tab-bar/left-tab-bar.component';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { SELECTED_NAV_NODE_SELECTOR } from '../left-nav-tree/left-nav-tree.component';
-import { LeftMenuBackButtonComponent } from '../../ui-components/left-menu-back-button/left-menu-back-button.component';
 import { LeftSearchResultComponent } from '../left-search-result/left-search-result.component';
+import { LeftMenuSearchComponent } from '../../ui-components/left-menu-search/left-menu-search.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -48,7 +49,7 @@ const minQueryLength = 3;
   imports: [
     LeftTabBarComponent,
     LeftNavComponent,
-    LeftMenuBackButtonComponent,
+    LeftMenuSearchComponent,
     LeftSearchResultComponent,
     LoadingComponent,
     ErrorComponent,
@@ -58,7 +59,7 @@ const minQueryLength = 3;
     CommunityStatsComponent,
   ],
 })
-export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
+export class LeftTabbedContentComponent implements OnDestroy {
   private store = inject(Store);
   private currentContent = inject(CurrentContentService);
   private injector = inject(Injector);
@@ -70,13 +71,18 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
 
   @ViewChild(LeftNavComponent, { static: false }) leftNavRef?: LeftNavComponent;
 
-  @Input() searchQuery = '';
-  private searchQuery$ = new ReplaySubject<string>(1);
+  hideTree = input(false);
+  searchActiveChange = output<boolean>();
+
+  searchActive = signal(false);
+  searchQuery = signal('');
+
+  searchEnabled = !!this.config.searchApiUrl;
   private retrySearch$ = new Subject<void>();
 
   searchService = this.config.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
 
-  searchResultState$ = this.searchQuery$.pipe(
+  searchResultState$ = toObservable(this.searchQuery).pipe(
     debounceTime(300),
     repeatLatestWhen(this.retrySearch$),
     switchMap(q => (q && q.length >= minQueryLength
@@ -107,7 +113,6 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
     map(idx => ({ index: idx })),
   );
 
-  closeSearch = output();
   selectElement = output<EntityPathRoute | undefined>();
 
   private selectedActivityRoute = this.store.selectSignal(fromSelectedContent.selectActivity);
@@ -117,11 +122,25 @@ export class LeftTabbedContentComponent implements OnChanges, OnDestroy {
   private selectedElement$ = new Subject<void>();
   private scrollSubscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(() => this.scrollToContent());
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.searchQuery) this.searchQuery$.next(this.searchQuery);
+  toggleSearch(): void {
+    if (this.searchActive()) {
+      this.closeSearch();
+      return;
+    }
+    this.searchActive.set(true);
+    this.searchActiveChange.emit(true);
+  }
+
+  closeSearch(): void {
+    this.searchActive.set(false);
+    this.searchQuery.set('');
+    this.searchActiveChange.emit(false);
   }
 
   onSelectionChangedByIdx(e: number): void {
+    if (this.searchActive()) {
+      this.closeSearch();
+    }
     if (e === activitiesTabIdx) {
       const route = this.selectedActivityRoute();
       if (route) this.itemRouter.navigateTo(route, { useCurrentObservation: true });
