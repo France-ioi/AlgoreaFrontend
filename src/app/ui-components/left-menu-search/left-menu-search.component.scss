@@ -3,6 +3,16 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: var(--alg-space-size-6) var(--alg-space-size-5);
-  border-top: functions.toRem(1) solid var(--alg-border-color);
+  flex-shrink: 0;
+  padding: var(--alg-space-size-5) var(--alg-space-size-5) var(--alg-space-size-6);
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: var(--alg-space-size-4);
+}
+
+.close-button {
+  flex-shrink: 0;
 }

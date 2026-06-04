@@ -5,7 +5,7 @@
       #input
       [type]="inputType"
       [placeholder]="placeholder"
-      [ngClass]="{ 'has-button': buttonIcon, 'has-input-icon': inputIcon }"
+      [ngClass]="{ 'has-button': buttonIcon, 'has-input-icon': inputIcon, 'subtle-focus-input': subtleFocus }"
       [formControlName]="name"
       (focus)="focus.emit($event)"
       (blur)="blur.emit($event)"

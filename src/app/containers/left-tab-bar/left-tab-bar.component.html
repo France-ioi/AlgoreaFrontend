@@ -2,7 +2,7 @@
   <div class="main-menu">
     <button
       class="main-menu-button"
-      [class.active]="activeTabIndex() === 0"
+      [class.active]="!searchActive() && activeTabIndex() === 0"
       (click)="tabSelected.emit(0)"
     >
       <div class="main-menu-icon-wrapper">
@@ -13,7 +13,7 @@
     @if (skillsTabEnabled()) {
       <button
         class="main-menu-button"
-        [class.active]="activeTabIndex() === 1"
+        [class.active]="!searchActive() && activeTabIndex() === 1"
         (click)="tabSelected.emit(1)"
       >
         <div class="main-menu-icon-wrapper">
@@ -25,7 +25,7 @@
     @if (groupsTabEnabled()) {
       <button
         class="main-menu-button"
-        [class.active]="activeTabIndex() === 2"
+        [class.active]="!searchActive() && activeTabIndex() === 2"
         data-cy="main-menu-group-btn"
         (click)="tabSelected.emit(2)"
       >
@@ -38,7 +38,7 @@
     @if (communityTabEnabled()) {
       <button
         class="main-menu-button"
-        [class.active]="activeTabIndex() === communityTabIdx"
+        [class.active]="!searchActive() && activeTabIndex() === communityTabIdx"
         data-cy="main-menu-community-btn"
         aria-label="Community"
         i18n-aria-label
@@ -49,6 +49,21 @@
           <span class="notification-dot" [class.visible]="hasUnreadCommunityThreads()" aria-hidden="true"></span>
         </div>
         <span class="main-menu-title" i18n="|Tab name">Community</span>
+      </button>
+    }
+    @if (searchEnabled()) {
+      <button
+        class="main-menu-button"
+        [class.active]="searchActive()"
+        data-cy="main-menu-search-btn"
+        aria-label="Search"
+        i18n-aria-label
+        (click)="searchSelected.emit()"
+      >
+        <div class="main-menu-icon-wrapper">
+          <i class="ph ph-magnifying-glass main-menu-icon"></i>
+        </div>
+        <span class="main-menu-title" i18n="|Tab name">Search</span>
       </button>
     }
   </div>

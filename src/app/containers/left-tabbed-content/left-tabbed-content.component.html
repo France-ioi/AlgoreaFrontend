@@ -8,60 +8,59 @@
         [groupsTabEnabled]="!!(groupsTabEnabled$ | async)"
         [communityTabEnabled]="!!(communityTabEnabled$ | async)"
         [hasUnreadCommunityThreads]="!!(hasUnreadCommunityThreads$ | async)"
+        [searchEnabled]="searchEnabled"
+        [searchActive]="searchActive()"
         (tabSelected)="onSelectionChangedByIdx($event)"
+        (searchSelected)="openSearch()"
       />
       <hr class="v-divider" aria-hidden="true">
     }
     <div class="content-column alg-flex-1">
-      <ng-container *ngrxLet="searchResultState$ as searchResultState">
-        @if (searchQuery.length > 0) {
-          @if (searchResultState.isFetching || searchResultState.isError || !searchResultState.data) {
-            <div class="container">
-              <alg-left-menu-back-button (close)="closeSearch.emit()">
-                Searching: "{{ searchQuery }}"
-              </alg-left-menu-back-button>
-            </div>
-            @if (searchResultState.isFetching) {
-              <alg-loading class="alg-flex-1"></alg-loading>
-            }
-            @if (searchResultState.isError) {
-              <alg-error
-                class="alg-flex-1"
-                i18n-message message="Unable to perform the search."
-                icon="ph-duotone ph-warning-circle"
-                [showRefreshButton]="true"
-                buttonCaption="Retry"
-                (refresh)="retrySearch()"
-              ></alg-error>
-            }
-          }
-          @if (searchResultState.isReady) {
+      @if (searchActive()) {
+        <alg-left-menu-search
+          [query]="searchQuery()"
+          (queryChange)="searchQuery.set($event)"
+          (close)="closeSearch()"
+        />
+        <ng-container *ngrxLet="searchResultState$ as searchResultState">
+          @if (searchResultState.isFetching) {
+            <alg-loading class="alg-flex-1"></alg-loading>
+          } @else if (searchResultState.isError) {
+            <alg-error
+              class="alg-flex-1"
+              i18n-message message="Unable to perform the search."
+              icon="ph-duotone ph-warning-circle"
+              [showRefreshButton]="true"
+              buttonCaption="Retry"
+              (refresh)="retrySearch()"
+            ></alg-error>
+          } @else {
             <div class="alg-flex-1 scroll-wrapper">
               <div class="scroll-container">
                 <ng-scrollbar [sensorThrottleTime]="1">
-                  <alg-left-search-result [data]="searchResultState.data" (close)="closeSearch.emit()"></alg-left-search-result>
+                  <alg-left-search-result [data]="searchResultState.data"></alg-left-search-result>
                 </ng-scrollbar>
               </div>
             </div>
           }
-        } @else {
-          @if (isTreeTab(activeTab.index)) {
-            <alg-left-nav
-              class="alg-flex-1"
-              [treeIndex]="tabToTreeIndex(activeTab.index)"
-              (selectElement)="onSelectElement($event)"
-            />
-          } @else if (isCommunityTab(activeTab.index)) {
-            <div class="alg-flex-1 scroll-wrapper">
-              <div class="scroll-container">
-                <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
-                  <alg-community-stats />
-                </ng-scrollbar>
-              </div>
+        </ng-container>
+      } @else {
+        @if (isTreeTab(activeTab.index)) {
+          <alg-left-nav
+            class="alg-flex-1"
+            [treeIndex]="tabToTreeIndex(activeTab.index)"
+            (selectElement)="onSelectElement($event)"
+          />
+        } @else if (isCommunityTab(activeTab.index)) {
+          <div class="alg-flex-1 scroll-wrapper">
+            <div class="scroll-container">
+              <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
+                <alg-community-stats />
+              </ng-scrollbar>
             </div>
-          }
+          </div>
         }
-      </ng-container>
+      }
     </div>
   </div>
 }

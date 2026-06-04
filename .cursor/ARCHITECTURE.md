@@ -31,15 +31,16 @@ src/app/
 ## Left Navigation Component Hierarchy
 
 ```
-alg-left-panel          → outer shell: header + tabbed-content + search input
-└── alg-left-tabbed-content  → tab bar + search results + tree delegation
-    ├── alg-left-tab-bar
+alg-left-panel          → outer shell: header + tabbed-content
+└── alg-left-tabbed-content  → tab bar + search mode + tree delegation
+    ├── alg-left-tab-bar     (includes search tab when searchApiUrl is set)
+    ├── alg-left-menu-search (inline header when search tab is active)
     └── alg-left-nav
 ```
 
-- **`alg-left-panel`**: Outer shell — header, tabbed content area, search input bar
-- **`alg-left-tabbed-content`**: Orchestrator — owns active tab logic, search, tab-to-tree index mapping, scroll-to-element
-- **`alg-left-tab-bar`**: Presentational — renders tab buttons, emits tab selection events
+- **`alg-left-panel`**: Outer shell — header and tabbed content area
+- **`alg-left-tabbed-content`**: Orchestrator — owns active tab logic, search mode (`searchActive` / `searchQuery`), tab-to-tree index mapping, scroll-to-element
+- **`alg-left-tab-bar`**: Presentational — renders tab buttons (including search), emits tab selection and search-open events
 - **`alg-left-nav`**: Tree rendering — receives a `treeIndex` input, renders the corresponding nav tree
 - Tab indices and tree service indices are decoupled via `tabToTreeIndex()` mapping
 

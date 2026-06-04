@@ -1,14 +1,12 @@
 @if (data !== undefined) {
-  <div class="container">
-    <alg-left-menu-back-button (close)="close.emit()">
-      @if (data.length < 10) {
-        <ng-container i18n>
+  <div class="container result-caption">
+    @if (data.length < 10) {
+      <ng-container i18n>
       {data.length, plural, =0 {No result found} =1 {{{ data.length }} result found} other {{{ data.length }} results found}}
     </ng-container>
-      } @else {
-        <span i18n>First {{ data.length }} results</span>
-      }
-    </alg-left-menu-back-button>
+    } @else {
+      <span i18n>First {{ data.length }} results</span>
+    }
   </div>
 }
 
@@ -68,5 +66,4 @@
     </ul>
   </div>
 }
-
 
