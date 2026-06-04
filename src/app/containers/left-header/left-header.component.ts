@@ -8,13 +8,14 @@ import { RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { NgClass, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { APPCONFIG } from 'src/app/config';
 
 @Component({
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
   styleUrls: [ './left-header.component.scss' ],
-  imports: [ LetDirective, NgClass, NgTemplateOutlet, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent ]
+  imports: [ LetDirective, NgClass, NgTemplateOutlet, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent, TooltipDirective ]
 })
 export class LeftHeaderComponent {
   private authService = inject(AuthService);

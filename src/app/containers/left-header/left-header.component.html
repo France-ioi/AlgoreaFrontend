@@ -1,13 +1,20 @@
 @if (!compactMode()) {
   <ng-template #collapseButton>
-    <button
-      class="left-menu"
-      alg-button-icon
-      type="button"
-      icon="ph ph-list"
-      data-cy="left-menu-btn"
-      (click)="hideLeftMenu()"
-    ></button>
+    <div class="collapse-sidebar-btn-wrapper">
+      <button
+        class="sidebar-toggle-btn"
+        alg-button-icon
+        type="button"
+        icon="ph ph-caret-double-left"
+        aria-label="Close sidebar"
+        i18n-aria-label
+        algTooltip="Close sidebar"
+        i18n-algTooltip
+        tooltipPosition="right"
+        data-cy="left-menu-btn"
+        (click)="hideLeftMenu()"
+      ></button>
+    </div>
   </ng-template>
 
   <div class="container" [class.expandable-layout]="hideTree()">

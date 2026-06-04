@@ -20,6 +20,7 @@ import { fromItemContent } from 'src/app/items/store';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { isItemRoute } from 'src/app/models/routing/item-route';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -35,6 +36,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     NeighborWidgetComponent,
     AsyncPipe,
     ButtonIconComponent,
+    TooltipDirective,
   ]
 })
 export class ContentTopBarComponent {

@@ -118,6 +118,24 @@
       background-color: #dbe1f3;
     }
   }
+
+  &.sidebar-toggle-btn {
+    .wrapper {
+      width: functions.toRem(40);
+      height: functions.toRem(40);
+      background-color: rgba(0, 0, 0, 0.04);
+      transition: background-color 0.15s ease;
+    }
+
+    .icon {
+      font-size: functions.toRem(22);
+    }
+
+    &:hover:not(:disabled) .wrapper {
+      background-color: var(--alg-switch-input-bg, #e0e2e6);
+    }
+  }
+
   &.send-button {}
   &.tab-arrow {
     width: functions.toRem(30);

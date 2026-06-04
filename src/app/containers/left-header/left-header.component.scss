@@ -28,6 +28,21 @@
   width: var(--left-panel-tab-bar-width, 5rem);
 }
 
+.collapse-sidebar-btn-wrapper {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.header-tab-column .collapse-sidebar-btn-wrapper {
+  width: 100%;
+  justify-content: center;
+}
+
+.container:not(.expandable-layout) .collapse-sidebar-btn-wrapper {
+  margin-right: calc(-1 * var(--alg-space-size-3) + functions.toRem(8));
+}
+
 .header-content-column {
   display: flex;
   flex: 1;
