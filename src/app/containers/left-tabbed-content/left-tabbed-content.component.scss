@@ -40,6 +40,12 @@
   flex: 1;
   min-height: 0;
   align-items: stretch;
+
+  alg-left-tab-bar {
+    margin: 0;
+    padding: 0;
+    align-self: stretch;
+  }
 }
 
 .content-column {
