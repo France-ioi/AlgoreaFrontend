@@ -119,7 +119,11 @@ export class LeftTabbedContentComponent implements OnDestroy {
   private selectedElement$ = new Subject<void>();
   private scrollSubscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(() => this.scrollToContent());
 
-  openSearch(): void {
+  toggleSearch(): void {
+    if (this.searchActive()) {
+      this.closeSearch();
+      return;
+    }
     this.searchActive.set(true);
   }
 
