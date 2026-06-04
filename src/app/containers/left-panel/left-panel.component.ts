@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LeftTabbedContentComponent } from '../left-tabbed-content/left-tabbed-content.component';
 import { LeftHeaderComponent } from '../left-header/left-header.component';
@@ -14,6 +14,7 @@ import { LayoutService } from '../../services/layout.service';
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '[class.tree-expandable]': 'hideTree()',
   },
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LeftHeaderComponent, LeftTabbedContentComponent ],
 })
 export class LeftPanelComponent {

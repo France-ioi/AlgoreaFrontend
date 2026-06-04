@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
@@ -30,6 +30,7 @@ export interface PermissionsEditDialogParams {
   selector: 'alg-permissions-edit-dialog',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ErrorComponent,
     LoadingComponent,

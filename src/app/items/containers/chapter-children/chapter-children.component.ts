@@ -1,5 +1,5 @@
 import { combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../models/item-data';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
@@ -25,6 +25,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
   styleUrls: [ './chapter-children.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

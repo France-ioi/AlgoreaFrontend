@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { PossiblyInvisibleChildData } from '../../containers/item-children-edit/item-children-edit.component';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
@@ -11,6 +11,7 @@ type Tab = 'write' | 'preview' | 'help';
   selector: 'alg-item-edit-content',
   templateUrl: './item-edit-content.component.html',
   styleUrls: [ './item-edit-content.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ TextareaComponent, PreviewHtmlComponent, ItemEditContentHelpComponent ]
 })
 export class ItemEditContentComponent {

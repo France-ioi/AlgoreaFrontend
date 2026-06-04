@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, output } from '@angular/core';
+import { Component, Output, EventEmitter, Input, output, ChangeDetectionStrategy } from '@angular/core';
 import { PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AllowsGrantingViewItemPipe, AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { NgClass } from '@angular/common';
@@ -9,6 +9,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-propagation-edit-menu',
   templateUrl: 'propagation-edit-menu.component.html',
   styleUrls: [ 'propagation-edit-menu.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     AllowsGrantingViewItemPipe,

@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, inject, signal } from '@angular/core';
+import { Component, computed, forwardRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -33,6 +33,7 @@ import {
     DurationComponent,
     InputDateComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

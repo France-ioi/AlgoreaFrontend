@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 
 
@@ -6,6 +6,7 @@ import { ItemData } from '../../models/item-data';
   selector: 'alg-item-header',
   templateUrl: './item-header.component.html',
   styleUrls: [ './item-header.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 export class ItemHeaderComponent {

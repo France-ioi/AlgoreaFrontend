@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Group } from '../../models/group';
@@ -10,6 +10,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   selector: 'alg-group-leave',
   templateUrl: './group-leave.component.html',
   styleUrls: [ './group-leave.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ButtonComponent ]
 })
 export class GroupLeaveComponent {

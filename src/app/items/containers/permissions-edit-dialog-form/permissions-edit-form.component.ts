@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../models/permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from 'src/app/data-access/group-permissions.service';
@@ -26,6 +26,7 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
   selector: 'alg-permissions-edit-form',
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,

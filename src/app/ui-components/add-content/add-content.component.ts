@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
@@ -35,6 +35,7 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     InputComponent,
     NgClass,

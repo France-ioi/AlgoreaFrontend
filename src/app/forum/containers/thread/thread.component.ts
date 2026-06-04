@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
 import { delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -86,6 +86,7 @@ const selectThreadInfo = createSelector(
   selector: 'alg-thread',
   templateUrl: './thread.component.html',
   styleUrls: [ './thread.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ThreadMessageComponent,
     LetDirective,

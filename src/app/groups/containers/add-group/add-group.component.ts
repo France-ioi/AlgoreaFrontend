@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AddedContent, NewContentType } from 'src/app/ui-components/add-content/add-content.component';
 import { GroupCreationService } from '../../data-access/group-creation.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -15,6 +15,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
   selector: 'alg-add-group',
   templateUrl: 'add-group.component.html',
   styleUrls: [ 'add-group.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ AddContentComponent, SubSectionComponent ]
 })
 export class AddGroupComponent {

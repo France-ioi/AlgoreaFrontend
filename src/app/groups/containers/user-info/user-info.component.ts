@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CanEditPersonalInfoPipe, CanViewPersonalInfoPipe, User } from 'src/app/groups/models/user';
 import { GenerateProfileEditTokenService } from 'src/app/groups/data-access/generate-profile-edit-token.service';
 import { Location } from '@angular/common';
@@ -11,6 +11,7 @@ import { UserGroupsWithGrantsComponent } from '../user-groups-with-grants/user-g
   selector: 'alg-user-info',
   templateUrl: './user-info.component.html',
   styleUrls: [ './user-info.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ButtonComponent,
     UserGroupsWithGrantsComponent,

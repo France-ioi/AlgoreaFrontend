@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { delay, filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSessionService } from '../../services/user-session.service';
@@ -15,6 +15,7 @@ import { APPCONFIG } from 'src/app/config';
   selector: 'alg-top-right-controls',
   templateUrl: './top-right-controls.component.html',
   styleUrls: [ './top-right-controls.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LetDirective, NgClass, TopRightMenuComponent, LanguagePickerComponent, ButtonComponent, NotificationBellComponent ]
 })
 export class TopRightControlsComponent implements OnInit {

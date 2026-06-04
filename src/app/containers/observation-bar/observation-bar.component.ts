@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
 import { NgClass, AsyncPipe } from '@angular/common';
@@ -17,6 +17,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-observation-bar',
   templateUrl: './observation-bar.component.html',
   styleUrls: [ './observation-bar.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NgClass, RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent, TooltipDirective ]
 })
 export class ObservationBarComponent {

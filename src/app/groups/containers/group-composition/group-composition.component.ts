@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -24,6 +24,7 @@ export interface GroupChildData {
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
   styleUrls: [ './group-composition.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MemberListComponent,
     AddSubGroupComponent,

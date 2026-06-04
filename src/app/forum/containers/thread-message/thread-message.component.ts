@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
 import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
@@ -24,6 +24,7 @@ import { fromItemContent } from 'src/app/items/store';
   selector: 'alg-thread-message',
   templateUrl: './thread-message.component.html',
   styleUrls: [ './thread-message.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     NgTemplateOutlet,

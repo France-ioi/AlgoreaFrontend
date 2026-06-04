@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren, inject } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, share } from 'rxjs/operators';
@@ -21,6 +21,7 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
   selector: 'alg-item-unlock-access',
   templateUrl: './item-unlock-access.component.html',
   styleUrls: [ './item-unlock-access.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

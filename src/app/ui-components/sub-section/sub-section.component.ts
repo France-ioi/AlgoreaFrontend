@@ -1,9 +1,10 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'alg-sub-section',
   templateUrl: './sub-section.component.html',
   styleUrls: [ './sub-section.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 export class SubSectionComponent {

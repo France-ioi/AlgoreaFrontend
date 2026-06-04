@@ -44,7 +44,7 @@
       <button
         icon="ph-bold ph-check"
         (click)="dialogRef.close({ confirmed: true })"
-        [disabled]="form?.invalid"
+        [disabled]="$safeNavigationMigration(form?.invalid)"
         alg-button
         i18n
       >Join group</button>

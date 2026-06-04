@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
@@ -85,6 +85,7 @@ const selectState = createSelector(
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
   providers: [ InitialAnswerDataSource, ItemTabs ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     ItemHeaderComponent,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Group } from '../../models/group';
 import { distinctUntilChanged, switchMap, map, filter } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
@@ -17,6 +17,7 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
 export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   AddContentComponent,
   AddedContent,
@@ -13,6 +13,7 @@ import { SearchItemService } from 'src/app/data-access/search-item.service';
   selector: 'alg-add-dependency',
   templateUrl: './add-dependency.component.html',
   styleUrls: [ './add-dependency.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ AddContentComponent ]
 })
 export class AddDependencyComponent implements OnChanges {

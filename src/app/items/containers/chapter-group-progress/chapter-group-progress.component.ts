@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
 import { ItemData } from '../../models/item-data';
@@ -16,6 +16,7 @@ import { fromObservation } from 'src/app/store/observation';
   selector: 'alg-chapter-group-progress',
   templateUrl: './chapter-group-progress.component.html',
   styleUrls: [ './chapter-group-progress.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ChapterGroupProgressComponent implements OnDestroy {

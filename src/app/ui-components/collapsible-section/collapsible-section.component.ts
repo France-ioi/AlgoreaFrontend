@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { SectionHeaderComponent } from '../section-header/section-header.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 
@@ -6,6 +6,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
   selector: 'alg-collapsible-section',
   templateUrl: './collapsible-section.component.html',
   styleUrls: [ './collapsible-section.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NgClass, SectionHeaderComponent, NgTemplateOutlet ]
 })
 export class CollapsibleSectionComponent {

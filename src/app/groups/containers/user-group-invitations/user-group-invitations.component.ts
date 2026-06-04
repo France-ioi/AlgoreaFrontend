@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnDestroy, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
@@ -36,6 +36,7 @@ import { Dialog } from '@angular/cdk/dialog';
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
   styleUrls: [ './user-group-invitations.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

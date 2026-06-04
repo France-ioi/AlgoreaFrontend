@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   ProgressSelectValue,
@@ -34,6 +34,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-item-permissions',
   templateUrl: './item-permissions.component.html',
   styleUrls: [ './item-permissions.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SectionHeaderComponent,
     ProgressSelectComponent,

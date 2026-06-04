@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Group } from '../../models/group';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { ProgressSelectValue, ProgressSelectComponent } from
@@ -32,6 +32,7 @@ export interface ManagerPermissionDialogResult {
   selector: 'alg-manager-permission-dialog',
   templateUrl: './manager-permission-dialog.component.html',
   styleUrls: [ './manager-permission-dialog.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,

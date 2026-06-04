@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import {
@@ -32,6 +32,7 @@ export interface CanEnterValue {
     DatePipe,
     FormErrorComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

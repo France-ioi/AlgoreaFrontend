@@ -1,4 +1,4 @@
-import { Component, DestroyRef, input, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
+import { Component, DestroyRef, input, Input, OnChanges, OnDestroy, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
@@ -27,6 +27,7 @@ import { fromItemContent } from 'src/app/items/store';
   selector: 'alg-answer-author-indicator',
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

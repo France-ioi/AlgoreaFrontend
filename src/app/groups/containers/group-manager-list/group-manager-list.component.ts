@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, of, switchMap } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
@@ -52,6 +52,7 @@ const managersLimit = 25;
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
   styleUrls: [ './group-manager-list.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

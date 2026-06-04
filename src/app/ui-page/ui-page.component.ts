@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
@@ -8,6 +8,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
   selector: 'alg-ui-page',
   templateUrl: './ui-page.component.html',
   styleUrls: [ './ui-page.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ButtonComponent,
     ButtonIconComponent,

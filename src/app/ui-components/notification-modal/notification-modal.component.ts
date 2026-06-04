@@ -1,10 +1,11 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-notification-modal',
   templateUrl: './notification-modal.component.html',
   styleUrls: [ './notification-modal.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ButtonIconComponent ]
 })
 export class NotificationModalComponent {

@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, Input, OnChanges, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, computed, DestroyRef, Input, OnChanges, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
 import { combineLatest, Observable, ReplaySubject } from 'rxjs';
@@ -54,6 +54,7 @@ const logsLimit = 20;
   selector: 'alg-item-log-view',
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

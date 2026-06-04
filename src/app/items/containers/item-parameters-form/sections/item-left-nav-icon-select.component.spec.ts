@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { ItemLeftNavIconSelectComponent } from './item-left-nav-icon-select.comp
       labelId="sidebar-icon-label"
     ></alg-item-left-nav-icon-select>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ReactiveFormsModule, ItemLeftNavIconSelectComponent ],
 })
 class HostComponent {

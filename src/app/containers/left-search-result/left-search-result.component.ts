@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { SearchResponse } from '../../data-access/search.service';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
@@ -13,6 +13,7 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
   selector: 'alg-left-search-result',
   templateUrl: './left-search-result.component.html',
   styleUrls: [ './left-search-result.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MessageInfoComponent,
     RouterLinkActive,

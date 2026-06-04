@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
   selector: 'alg-input-error',
   templateUrl: './form-error.component.html',
   styleUrls: [ './form-error.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ DatePipe ]
 })
 export class FormErrorComponent implements OnChanges {

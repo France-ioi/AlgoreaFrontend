@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -35,6 +35,7 @@ const MAX_SECONDS_VALUE = 59;
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, FormErrorComponent, NgxMaskDirective ]
 })
 export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {

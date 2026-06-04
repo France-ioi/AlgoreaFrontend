@@ -1,4 +1,4 @@
-import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { SwitchComponent } from '../../switch/switch.component';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
@@ -29,6 +29,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NgTemplateOutlet, SwitchComponent, NgClass, FormsModule, TooltipDirective ]
 })
 export class SwitchFieldComponent implements ControlValueAccessor {

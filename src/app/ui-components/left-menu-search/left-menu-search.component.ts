@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
@@ -17,6 +18,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-left-menu-search',
   templateUrl: 'left-menu-search.component.html',
   styleUrls: [ 'left-menu-search.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ InputComponent, ButtonIconComponent ],
 })
 export class LeftMenuSearchComponent {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { SelectedOptionService, SelectOption } from 'src/app/ui-components/select/select-option/selected-option.service';
 
@@ -6,6 +6,7 @@ import { SelectedOptionService, SelectOption } from 'src/app/ui-components/selec
   selector: 'alg-select-option',
   templateUrl: './select-option.component.html',
   styleUrls: [ './select-option.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass
   ]

@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DescriptionIframeComponent } from 'src/app/ui-components/description-iframe/description-iframe.component';
 import { DescriptionIframeNavigationRequest } from 'src/app/ui-components/description-iframe/description-iframe.messages';
 import { MessageService } from 'src/app/services/message.service';
@@ -7,6 +7,7 @@ import { MessageService } from 'src/app/services/message.service';
   selector: 'alg-preview-html',
   templateUrl: './preview-html.component.html',
   styleUrls: [ './preview-html.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ DescriptionIframeComponent ],
 })
 export class PreviewHtmlComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -15,6 +15,7 @@ import { APPCONFIG } from 'src/app/config';
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
   styleUrls: [ './left-header.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LetDirective,
     NgClass,

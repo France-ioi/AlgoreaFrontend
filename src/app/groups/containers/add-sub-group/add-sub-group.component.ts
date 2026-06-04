@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -17,6 +17,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
   selector: 'alg-add-sub-group',
   templateUrl: './add-sub-group.component.html',
   styleUrls: [ './add-sub-group.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddSubGroupComponent {

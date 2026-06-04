@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { APPCONFIG } from 'src/app/config';
 import { groupInfo } from 'src/app/models/content/group-info';
@@ -33,6 +33,7 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
   selector: 'alg-group-by-id',
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     GroupHeaderComponent,
     GroupIndicatorComponent,

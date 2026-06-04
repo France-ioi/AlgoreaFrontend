@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GetBreadcrumbsFromRootsService } from '../../data-access/get-breadcrumbs-from-roots.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState } from '../../utils/operators/state';
@@ -15,6 +15,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
   selector: 'alg-path-suggestion',
   templateUrl: './path-suggestion.component.html',
   styleUrls: [ './path-suggestion.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

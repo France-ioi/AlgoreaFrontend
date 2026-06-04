@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  @let contentViewPropagationError = form.controls.contentViewPropagation.errors?.[0];
+  @let contentViewPropagationError = $safeNavigationMigration(form.controls.contentViewPropagation.errors?.[0]);
   <alg-collapsible-section
     class="header-with-padding-left"
     i18n-header header='Propagation of "content" view permission'
@@ -19,7 +19,7 @@
       </alg-progress-select>
     </ng-template>
   </alg-collapsible-section>
-  @let upperViewLevelsPropagationError = form.controls.upperViewLevelsPropagation.errors?.[0];
+  @let upperViewLevelsPropagationError = $safeNavigationMigration(form.controls.upperViewLevelsPropagation.errors?.[0]);
   <alg-collapsible-section
     class="header-with-padding-left"
     i18n-header header="Propagation of higher view permission"
@@ -41,7 +41,7 @@
       </alg-progress-select>
     </ng-template>
   </alg-collapsible-section>
-  @let grantViewPropagationError = form.controls.grantViewPropagation.errors?.[0];
+  @let grantViewPropagationError = $safeNavigationMigration(form.controls.grantViewPropagation.errors?.[0]);
   <alg-collapsible-section
     class="header-with-padding-left"
     i18n-header header='Propagation of "grant view" permission'
@@ -64,7 +64,7 @@
       </alg-switch-field>
     </ng-template>
   </alg-collapsible-section>
-  @let watchPropagationError = form.controls.watchPropagation.errors?.[0];
+  @let watchPropagationError = $safeNavigationMigration(form.controls.watchPropagation.errors?.[0]);
   <alg-collapsible-section
     class="header-with-padding-left"
     i18n-header header='Propagation of "watch" permission'
@@ -87,7 +87,7 @@
       </alg-switch-field>
     </ng-template>
   </alg-collapsible-section>
-  @let editPropagationError = form.controls.editPropagation.errors?.[0];
+  @let editPropagationError = $safeNavigationMigration(form.controls.editPropagation.errors?.[0]);
   <alg-collapsible-section
     class="header-with-padding-left"
     i18n-header header='Propagation of "edit" permission'

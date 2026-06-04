@@ -1,4 +1,4 @@
-import { Component, computed, input, Input, OnChanges, signal, SimpleChanges, inject } from '@angular/core';
+import { Component, computed, input, Input, OnChanges, signal, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
@@ -42,6 +42,7 @@ const logsLimit = 20;
   selector: 'alg-group-log-view',
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

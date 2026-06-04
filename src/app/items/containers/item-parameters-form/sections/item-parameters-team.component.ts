@@ -1,4 +1,4 @@
-import { Component, forwardRef, inject } from '@angular/core';
+import { Component, forwardRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -29,6 +29,7 @@ import { ItemEntryMinAdmittedMembersRatio, ItemParametersTeamValue } from 'src/a
     SelectOptionComponent,
     SwitchComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

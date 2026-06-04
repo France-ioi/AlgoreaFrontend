@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Group } from '../../models/group';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { ReplaySubject, of, Subject } from 'rxjs';
@@ -16,6 +16,7 @@ import { AsyncPipe } from '@angular/common';
   selector: 'alg-group-access',
   templateUrl: './group-access.component.html',
   styleUrls: [ './group-access.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

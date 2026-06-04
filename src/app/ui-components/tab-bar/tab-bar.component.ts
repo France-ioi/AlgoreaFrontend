@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
@@ -12,6 +12,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LetDirective, NgClass, RouterLink, NgScrollbar, ButtonIconComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {

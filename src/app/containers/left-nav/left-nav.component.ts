@@ -1,4 +1,4 @@
-import { Component, inject, input, Output, ViewChild } from '@angular/core';
+import { Component, inject, input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { equalOptionalFactory, isNotUndefined } from '../../utils/null-undefined-predicates';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -21,6 +21,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

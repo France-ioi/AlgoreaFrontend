@@ -9,6 +9,7 @@ import {
   inject,
   input,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
@@ -54,6 +55,7 @@ const EXTERNAL_URL_AUTO_OPEN_DELAY_MS = 900;
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
   styleUrls: [ './item-content.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DescriptionIframeComponent,
     SwitchComponent,

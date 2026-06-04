@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { readyData } from 'src/app/utils/operators/state';
 import { of, Subscription, combineLatest, switchMap, EMPTY } from 'rxjs';
@@ -41,6 +41,7 @@ import {
   selector: 'alg-group-edit',
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

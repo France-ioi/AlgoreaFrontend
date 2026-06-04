@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Component, EventEmitter, Input, Output, input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, input, ChangeDetectionStrategy } from '@angular/core';
 import { ItemContentComponent } from './item-content.component';
 import { ItemData } from '../../models/item-data';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -22,6 +22,7 @@ import { By } from '@angular/platform-browser';
 
 @Component({
   selector: 'alg-item-display',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class MockItemDisplayComponent {

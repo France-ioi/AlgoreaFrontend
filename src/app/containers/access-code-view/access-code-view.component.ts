@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
 import { ItemData } from 'src/app/items/models/item-data';
@@ -17,6 +17,7 @@ import { EMPTY, Observable, throwError } from 'rxjs';
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, ButtonComponent ]
 })
 export class AccessCodeViewComponent {

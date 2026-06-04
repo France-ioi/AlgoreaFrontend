@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ItemTypeCategory } from 'src/app/items/models/item-type';
 import { ItemChildWithAdditions } from './item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -13,6 +13,7 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
   selector: 'alg-item-children-list',
   templateUrl: './item-children-list.component.html',
   styleUrls: [ './item-children-list.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     RouterLink,

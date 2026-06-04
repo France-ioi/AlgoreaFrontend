@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
@@ -7,6 +7,7 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
   selector: 'alg-fatal-error-modal',
   templateUrl: './fatal-error-modal.component.html',
   styleUrls: [ './fatal-error-modal.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ButtonComponent, NotificationModalComponent ]
 })
 export class FatalErrorModalComponent {

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
@@ -16,6 +16,7 @@ import { AsyncPipe } from '@angular/common';
   selector: 'alg-sub-skills',
   templateUrl: './sub-skills.component.html',
   styleUrls: [ './sub-skills.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe ]
 })
 export class SubSkillsComponent implements OnChanges, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal, inject } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -33,6 +33,7 @@ import { NgxMaskDirective } from 'ngx-mask';
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     FormErrorComponent,

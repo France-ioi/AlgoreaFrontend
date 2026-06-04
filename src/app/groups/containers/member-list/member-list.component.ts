@@ -10,6 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
   inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { defer, Observable, of, ReplaySubject } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -101,6 +102,7 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
   selector: 'alg-member-list',
   templateUrl: './member-list.component.html',
   styleUrls: [ './member-list.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     GroupCompositionFilterComponent,
     ErrorComponent,

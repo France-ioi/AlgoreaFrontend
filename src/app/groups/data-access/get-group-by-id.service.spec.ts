@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { GetGroupByIdService } from './get-group-by-id.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { APPCONFIG } from 'src/app/config';
 
 describe('GetGroupByIdService', () => {
@@ -12,7 +12,7 @@ describe('GetGroupByIdService', () => {
     TestBed.configureTestingModule({
     imports: [],
     providers: [
-      provideHttpClient(withInterceptorsFromDi()),
+      provideHttpClient(withXhr(), withInterceptorsFromDi()),
       provideHttpClientTesting(),
       { provide: APPCONFIG, useValue: { apiUrl: 'http://mock.api' } }
     ]
