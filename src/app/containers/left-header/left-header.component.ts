@@ -15,7 +15,16 @@ import { APPCONFIG } from 'src/app/config';
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
   styleUrls: [ './left-header.component.scss' ],
-  imports: [ LetDirective, NgClass, NgTemplateOutlet, RouterLink, TopRightControlsComponent, AsyncPipe, ButtonIconComponent, TooltipDirective ]
+  imports: [
+    LetDirective,
+    NgClass,
+    NgTemplateOutlet,
+    RouterLink,
+    TopRightControlsComponent,
+    AsyncPipe,
+    ButtonIconComponent,
+    TooltipDirective,
+  ]
 })
 export class LeftHeaderComponent {
   private authService = inject(AuthService);
