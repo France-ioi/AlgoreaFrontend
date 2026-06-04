@@ -41,4 +41,6 @@ window.appConfig = {
     'algorea/adventure': { id: '100575556387408660' },
     'officiels/algorea-serious-game/chapter': { id: '1471479157476024035', path: [ '4702' ] },
   },
+
+  hideLeftMenuTreeOnItemIds: [ '6390082892422125257' ],
 };

@@ -13,9 +13,17 @@
         (tabSelected)="onSelectionChangedByIdx($event)"
         (searchSelected)="toggleSearch()"
       />
-      <hr class="v-divider" aria-hidden="true">
+      <hr
+        class="v-divider"
+        aria-hidden="true"
+        [class.content-masked]="hideTree() && !searchActive()"
+      >
     }
-    <div class="content-column alg-flex-1">
+    <div
+      class="content-column alg-flex-1"
+      [class.content-masked]="hideTree() && !searchActive()"
+      [class.content-column-expandable]="hideTree()"
+    >
       @if (searchActive()) {
         <alg-left-menu-search
           [query]="searchQuery()"
@@ -44,7 +52,7 @@
             </div>
           }
         </ng-container>
-      } @else {
+      } @else if (!hideTree()) {
         @if (isTreeTab(activeTab.index)) {
           <alg-left-nav
             class="alg-flex-1"
@@ -61,6 +69,6 @@
           </div>
         }
       }
-    </div>
+      </div>
   </div>
 }

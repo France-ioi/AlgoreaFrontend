@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { LayoutService } from '../../services/layout.service';
@@ -21,7 +21,9 @@ export class LeftHeaderComponent {
   private layoutService = inject(LayoutService);
   private titleService = inject(Title);
 
-  @Input() compactMode = false;
+  compactMode = input(false);
+  hideTree = input(false);
+  treeHidden = input(false);
 
   title = this.titleService.getTitle();
 

@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, Component, inject, Injector, OnDestroy, output, signal, ViewChild
+  ChangeDetectionStrategy, Component, effect, inject, Injector, input, OnDestroy, output, signal, ViewChild
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -71,8 +71,15 @@ export class LeftTabbedContentComponent implements OnDestroy {
 
   @ViewChild(LeftNavComponent, { static: false }) leftNavRef?: LeftNavComponent;
 
+  hideTree = input(false);
+  searchActiveChange = output<boolean>();
+
   searchActive = signal(false);
   searchQuery = signal('');
+
+  constructor() {
+    effect(() => this.searchActiveChange.emit(this.searchActive()));
+  }
 
   searchEnabled = !!this.config.searchApiUrl;
   private retrySearch$ = new Subject<void>();

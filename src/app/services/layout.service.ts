@@ -27,6 +27,7 @@ export class LayoutService implements OnDestroy {
   private showTopRightControls = new BehaviorSubject(true);
   private canShowLeftMenu = new BehaviorSubject<boolean>(true);
   private canShowBreadcrumbs = new BehaviorSubject<boolean>(true);
+  private hideLeftMenuTree = new BehaviorSubject<boolean>(false);
 
   /* variables to be used by other services and components */
   isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
@@ -38,6 +39,7 @@ export class LayoutService implements OnDestroy {
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
   canShowBreadcrumbs$ = this.canShowBreadcrumbs.asObservable();
+  hideLeftMenuTree$ = this.hideLeftMenuTree.asObservable();
   /**
    * Left menu: expected behavior
    * (note that in the following, a narrow window as the same behavior as mobile)
@@ -91,22 +93,25 @@ export class LayoutService implements OnDestroy {
     this.showTopRightControls.complete();
     this.canShowLeftMenu.complete();
     this.canShowBreadcrumbs.complete();
+    this.hideLeftMenuTree.complete();
   }
 
   /**
    * Configure layout.
    * The layout is considered not initialized (so not using animation) only until the first call.
    */
-  configure({ contentDisplayType, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls }: {
+  configure({ contentDisplayType, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls, hideLeftMenuTree }: {
     contentDisplayType?: ContentDisplayType,
     canShowLeftMenu?: boolean,
     canShowBreadcrumbs?: boolean,
     showTopRightControls?: boolean,
+    hideLeftMenuTree?: boolean,
   }): void {
     if (contentDisplayType !== undefined) this.contentDisplayType$.next(contentDisplayType);
     if (canShowLeftMenu !== undefined) this.canShowLeftMenu.next(canShowLeftMenu);
     if (canShowBreadcrumbs !== undefined) this.canShowBreadcrumbs.next(canShowBreadcrumbs);
     if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
+    if (hideLeftMenuTree !== undefined) this.hideLeftMenuTree.next(hideLeftMenuTree);
   }
 
   toggleLeftMenu(visible: boolean): void {
