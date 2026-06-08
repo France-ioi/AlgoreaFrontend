@@ -1,12 +1,18 @@
-<div class="container" [attr.class]="theme" [ngClass]="styleClass">
+<div
+  class="container"
+  [class.success]="theme() === 'success'"
+  [class.warning]="theme() === 'warning'"
+  [class.danger]="theme() === 'danger'"
+  [class]="styleClass()"
+>
   <div class="left">
-    <i class="icon {{ icon }}"></i>
-    <span class="title">{{ caption }}</span>
+    <i class="icon {{ icon() }}"></i>
+    <span class="title">{{ caption() }}</span>
   </div>
-  @if (contentTemplate) {
+  @if (contentTemplate()) {
     <div class="template">
       <ng-container
-        [ngTemplateOutlet]="contentTemplate"
+        [ngTemplateOutlet]="contentTemplate()!"
         [ngTemplateOutletContext]="{ $implicit: true }"
       ></ng-container>
     </div>

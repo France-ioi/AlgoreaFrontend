@@ -1,36 +1,37 @@
 <div
   class="score-container"
-  [ngStyle]="{ width: (compact ? 14 / 16 : diameter / 16) + 'rem', height: (compact ? 14 / 16 : diameter / 16) + 'rem' }"
+  [style.width.rem]="compact() ? 14 / 16 : diameter() / 16"
+  [style.height.rem]="compact() ? 14 / 16 : diameter() / 16"
 >
-  @if (!isValidated) {
-    <svg class="svg-element" [attr.viewBox]="compact ? '-2 -2 69 69' : '0 0 65 65'">
+  @if (!isValidated()) {
+    <svg class="svg-element" [attr.viewBox]="compact() ? '-2 -2 69 69' : '0 0 65 65'">
       <path
         class="round-path"
         d="M32,2 a30,30 0 0,1 0,60  a30,30 0 1,1 0,-60"
         fill="none"
-        [attr.stroke-width]="compact ? 8 : 4"
+        [attr.stroke-width]="compact() ? 8 : 4"
       />
       <path
         class="best-score-path"
-        [attr.d]="bestScorePath"
+        [attr.d]="bestScorePath()"
         fill="none"
-        [attr.stroke-width]="compact ? 8 : 4"
+        [attr.stroke-width]="compact() ? 8 : 4"
         stroke-linecap="round"
         transform="translate(32,32)"
       />
       <path
         class="current-score-path"
-        [attr.d]="currentScorePath"
+        [attr.d]="currentScorePath()"
         fill="none"
-        [attr.stroke-width]="compact ? 8 : 4"
+        [attr.stroke-width]="compact() ? 8 : 4"
         stroke-linecap="round"
         transform="translate(32,32)"
       />
     </svg>
     <div class="score-data">
-      @if (!compact && currentScore !== undefined) {
-        <span class="score-caption" [ngClass]="{ 'zero-value': currentScore === 0 }">
-          {{ currentScore | number:'1.0-0' }}
+      @if (!compact() && currentScore() !== undefined) {
+        <span class="score-caption" [class.zero-value]="currentScore() === 0">
+          {{ currentScore() | number:'1.0-0' }}
         </span>
       }
     </div>

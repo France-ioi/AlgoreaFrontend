@@ -16,6 +16,7 @@ describe('SubSectionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SubSectionComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('label', 'Test label');
     fixture.detectChanges();
   });
 

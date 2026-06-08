@@ -1,5 +1,4 @@
-import { Component, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, input, output } from '@angular/core';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
@@ -7,20 +6,18 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-code-token',
   templateUrl: './code-token.component.html',
   styleUrls: [ './code-token.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgClass,
     ButtonIconComponent,
     TooltipDirective,
   ]
 })
 export class CodeTokenComponent {
-  @Input() showRefresh = true;
-  @Input() showRemove = false;
-  @Input() code = '...';
+  showRefresh = input(true);
+  showRemove = input(false);
+  code = input('...');
 
-  @Output() refresh = new EventEmitter<void>();
-  @Output() remove = new EventEmitter<void>();
+  refresh = output<void>();
+  remove = output<void>();
 
   refreshCode(): void {
     this.refresh.emit();

@@ -1,22 +1,20 @@
-import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { Component, contentChild, input, TemplateRef } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'alg-section-header',
   templateUrl: './section-header.component.html',
   styleUrls: [ './section-header.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgClass,
     NgTemplateOutlet,
   ]
 })
 export class SectionHeaderComponent {
 
-  @Input() caption = '';
-  @Input() icon = '';
-  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
-  @Input() styleClass: string | string[] | Set<string> | { [klass: string]: boolean } = '';
+  caption = input('');
+  icon = input('');
+  theme = input<'success' | 'warning' | 'danger'>('success');
+  styleClass = input<string | string[] | Set<string> | { [klass: string]: boolean }>('');
 
-  @ContentChild('content') contentTemplate?: TemplateRef<any>;
+  contentTemplate = contentChild<TemplateRef<unknown>>('content');
 }

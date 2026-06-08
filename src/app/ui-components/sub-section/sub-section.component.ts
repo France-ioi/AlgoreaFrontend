@@ -1,18 +1,16 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'alg-sub-section',
   templateUrl: './sub-section.component.html',
   styleUrls: [ './sub-section.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: []
 })
 export class SubSectionComponent {
-  @Input() label?: string;
-  @Input() tooltip?: string;
-  @Input() canClose = false;
+  label = input.required<string>();
+  tooltip = input<string>();
+  canClose = input(false);
 
-  @Output() close = new EventEmitter<any>();
+  close = output<MouseEvent>();
 
   onCloseEvent(e: MouseEvent): void {
     this.close.emit(e);

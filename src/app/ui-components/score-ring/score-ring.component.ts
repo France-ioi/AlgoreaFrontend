@@ -1,31 +1,25 @@
-import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { NgStyle, NgClass, DecimalPipe } from '@angular/common';
+import { Component, computed, input } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-score-ring',
   templateUrl: './score-ring.component.html',
   styleUrls: [ './score-ring.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgStyle,
-    NgClass,
     DecimalPipe,
   ]
 })
-export class ScoreRingComponent implements OnChanges {
-  @Input() diameter = 32;
-  @Input() currentScore: number|null = 0;
-  @Input() bestScore = 0;
-  @Input() isValidated = false;
-  /**@deprecated**/
-  @Input() icon?: string; // a font-awesome icon identifier
-  /**@deprecated**/
-  @Input() scoreFillColor?: string;
-  @Input() compact = false;
+export class ScoreRingComponent {
+  diameter = input(32);
+  currentScore = input<number | null>(0);
+  bestScore = input(0);
+  isValidated = input(false);
+  compact = input(false);
 
-  svgRadius = 30;
-  currentScorePath?: string;
-  bestScorePath?: string;
+  private readonly svgRadius = 30;
+
+  protected readonly currentScorePath = computed(() => this.pathFromScore(this.currentScore() ?? 0));
+  protected readonly bestScorePath = computed(() => this.pathFromScore(this.bestScore()));
 
   private pathFromScore(score: number): string {
     if (score === 0) {
@@ -39,10 +33,5 @@ export class ScoreRingComponent implements OnChanges {
     const w = this.svgRadius * -Math.cos((score / 50) * Math.PI);
 
     return `M0,-30 A30,30 1 ${score > 50 ? 1 : 0},1 ${h},${w}`;
-  }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.currentScorePath = this.pathFromScore(this.currentScore ?? 0);
-    this.bestScorePath = this.pathFromScore(this.bestScore);
   }
 }
