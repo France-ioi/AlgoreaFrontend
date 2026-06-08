@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, Input, ContentChild, Output, EventEmitter, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ScoreRingComponent } from '../score-ring/score-ring.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 
@@ -6,6 +6,7 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
   selector: 'alg-section-paragraph',
   templateUrl: './section-paragraph.component.html',
   styleUrls: [ './section-paragraph.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     ScoreRingComponent,

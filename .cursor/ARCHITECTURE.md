@@ -4,6 +4,12 @@
 
 Algorea Frontend is an Angular 21 educational platform that provides features for managing learning activities, skills, groups, and user progress. It uses ngrx for state management and communicates with a backend API.
 
+## Development toolchain
+
+- **Node.js**: ≥ 24.16.0 — enforced via `engines` in `package.json`, pinned in `mise.toml`, CI uses `cimg/node:24.16.0`
+- **Package manager**: npm (`package-lock.json`)
+- **Local setup**: run `mise install` then `npm install` (see `README.md`)
+
 ## Project Structure
 
 ```
@@ -74,7 +80,7 @@ alg-item-edit-wrapper                  (orchestrator: itemForm + save/cancel)
 - **Thumbnail URL** (`display_settings.thumbnail_url`): edited in the Display section of `alg-item-parameters-form` and saved via `PUT /items/{id}` (`buildItemParametersChanges()` → `buildDisplaySettingsBody()`). Read in the children grid from each child's `display_settings` on `GET /items/{id}/children`.
 - **Strings changes** (`src/app/items/models/item-strings-changes.ts`): per-language string diff for title/subtitle/description only. Thumbnails are not written to `items_strings.image_url` from the parameters editor (`display_settings.thumbnail_url` only).
 - **CVA boundary**: `alg-item-parameters-form` flattens its inner `{ global, score, display, participation, team }` group into `ItemParametersValue` on `valueChanges` and unflattens on `writeValue`, so the wrapper sees a single flat control. Each leaf CVA (`participation`, `team`) returns `null` from `validate()` when its inner form is disabled, since Angular reports `valid === false` for `DISABLED` controls and would otherwise wedge the wrapper's `itemForm.invalid` check on every save.
-- **Change detection**: the three stateless section components (`global`, `score`, `display`) declare `OnPush`. The parent form (`alg-item-parameters-form`) and the two CVA sections (`participation`, `team`) keep Default CD; only the participation section needs it — `alg-input-date`'s ngx-mask binding uses a deferred `setTimeout` in `writeValue`, which lands outside any input/event that would re-mark an `OnPush` ancestor, so the initial value would never paint into the input. Default CD on the others avoids scattering `markForCheck()` calls across the tree.
+- **Change detection**: the three stateless section components (`global`, `score`, `display`) declare `OnPush`. The parent form (`alg-item-parameters-form`) and the two CVA sections (`participation`, `team`) keep Default CD; only the participation section needs it — `alg-input-date`'s mask binding uses a synchronous `writeValue`, which lands outside any input/event that would re-mark an `OnPush` ancestor, so the initial value would never paint into the input. Default CD on the others avoids scattering `markForCheck()` calls across the tree.
 - **Save ordering** (`ItemEditWrapperComponent.save()`): requests are split into three sequential phases driven by the item ↔ item-strings dependency on the backend (`default_language_tag` must point at an existing `items_strings` row):
   1. **Creates** — `PUT /items/{id}/strings/{tag}` for languages added in this edit session.
   2. **Item update** — `PUT /items/{id}` (which may carry the new `default_language_tag`).

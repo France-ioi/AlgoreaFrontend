@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnDestroy, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, startWith, switchMap } from 'rxjs/operators';
 import { GroupMembership, JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
@@ -32,6 +32,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-joined-group-list',
   templateUrl: './joined-group-list.component.html',
   styleUrls: [ './joined-group-list.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ErrorComponent,
     RouterLink,

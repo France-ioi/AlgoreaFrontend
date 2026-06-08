@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NgClass, NgStyle } from '@angular/common';
 
@@ -9,6 +10,7 @@ import { NgClass, NgStyle } from '@angular/common';
   selector: 'alg-skill-progress',
   templateUrl: './skill-progress.component.html',
   styleUrls: [ './skill-progress.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NgClass, NgStyle ]
 })
 export class SkillProgressComponent implements OnChanges {

@@ -9,7 +9,7 @@ import { AlgErrorHandler } from './app/utils/error-handling/error-handler';
 import { WithCredentialsInterceptor } from './app/interceptors/with_credentials.interceptor';
 import { AuthenticationInterceptor } from './app/interceptors/authentication.interceptor';
 import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
-import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { NgScrollbarOptions, provideScrollbarOptions } from 'ngx-scrollbar';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
@@ -41,7 +41,6 @@ import { fromCurrentContent } from './app/store/navigation/current-content/curre
 import { fromConfig } from './app/store/config';
 import { configEffects } from './app/store/config/effects';
 import { environment } from './environments/environment';
-import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 const DEFAULT_SCROLLBAR_OPTIONS: NgScrollbarOptions = {
   visibility: 'hover',
@@ -114,7 +113,6 @@ bootstrapApplication(AppComponent, {
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
     provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
-    provideEnvironmentNgxMask(),
+    provideHttpClient(withXhr(), withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
   ]
 }).catch(err => console.error(err));

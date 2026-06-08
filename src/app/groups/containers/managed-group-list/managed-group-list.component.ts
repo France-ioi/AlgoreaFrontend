@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -23,6 +23,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   selector: 'alg-managed-group-list',
   templateUrl: './managed-group-list.component.html',
   styleUrls: [ './managed-group-list.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ErrorComponent,
     RouterLink,

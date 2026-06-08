@@ -1,10 +1,11 @@
-import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'alg-section-header',
   templateUrl: './section-header.component.html',
   styleUrls: [ './section-header.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     NgTemplateOutlet,

@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { APPCONFIG } from 'src/app/config';
@@ -24,6 +24,7 @@ export interface MenuItem {
   selector: 'alg-top-right-menu',
   templateUrl: './top-right-menu.component.html',
   styleUrls: [ './top-right-menu.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AsyncPipe,
     ButtonIconComponent,

@@ -1,5 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges,
-  Output, EventEmitter, OnInit, ContentChild, TemplateRef, forwardRef } from '@angular/core';
+import {
+  Component, Input, OnChanges, SimpleChanges,
+  Output, EventEmitter, OnInit, ContentChild, TemplateRef, forwardRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ProgressLevelComponent } from '../../progress-level/progress-level.component';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -39,6 +42,7 @@ export interface ProgressSelectValue<T> {
       multi: true,
     }
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ProgressLevelComponent, NgClass, NgTemplateOutlet, TooltipDirective ]
 })
 export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { LocaleService } from 'src/app/services/localeService';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -10,6 +10,7 @@ import { AsyncPipe } from '@angular/common';
   selector: 'alg-platform-settings',
   templateUrl: './platform-settings.component.html',
   styleUrls: [ './platform-settings.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LanguagePickerComponent,
     AsyncPipe,

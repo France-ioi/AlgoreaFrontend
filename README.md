@@ -4,9 +4,14 @@ Current translation status: [![Crowdin](https://badges.crowdin.net/algorea/local
 
 ## Quick start
 
-It is recommended to run this project on a recent node version (continuous integration use 14).
+Requires **Node.js ≥ 24.16** (see `package.json` `engines`). The pinned version is in `mise.toml`; use [mise](https://mise.jdx.dev/) to install it:
 
-Run `npm install` first to use latest packages.
+```bash
+mise install
+npm install
+```
+
+CircleCI uses `cimg/node:24.16.0`.
 
 ## Project (Files & Directories ) Structure
 

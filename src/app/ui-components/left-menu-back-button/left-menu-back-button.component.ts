@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-left-menu-back-button',
   templateUrl: './left-menu-back-button.component.html',
   styleUrls: [ './left-menu-back-button.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ButtonIconComponent ]
 })
 export class LeftMenuBackButtonComponent {

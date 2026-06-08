@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../../models/user';
 import { GroupLinksComponent } from '../group-links/group-links.component';
 
@@ -7,6 +7,7 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
   selector: 'alg-user-indicator',
   templateUrl: './user-indicator.component.html',
   styleUrls: [ './user-indicator.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ GroupLinksComponent ]
 })
 export class UserIndicatorComponent {

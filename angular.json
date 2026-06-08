@@ -218,6 +218,19 @@
                 }
               ],
               "localize": false
+            },
+            "testing": {
+              "aot": false,
+              "assets": [
+                "src/favicon.ico",
+                "src/assets"
+              ],
+              "styles": [
+                "src/styles.scss"
+              ],
+              "polyfills": [
+                "src/polyfills.ts"
+              ]
             }
           }
         },
@@ -257,7 +270,9 @@
           "builder": "@angular/build:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": [ "src/polyfills.ts" ],
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [

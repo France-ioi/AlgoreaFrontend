@@ -1,4 +1,4 @@
-import { Component, input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { mustNotBeUndefined } from 'src/app/utils/assert';
 import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
@@ -8,6 +8,7 @@ import { NgClass } from '@angular/common';
   selector: 'alg-user-progress',
   templateUrl: './user-progress.component.html',
   styleUrls: [ './user-progress.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NgClass, ScoreRingComponent ]
 })
 export class UserProgressComponent implements OnInit, OnChanges {

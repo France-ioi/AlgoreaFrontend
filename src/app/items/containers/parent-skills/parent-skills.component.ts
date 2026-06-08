@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { GetItemParentsService } from '../../data-access/get-item-parents.service';
@@ -14,6 +14,7 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
   selector: 'alg-parent-skills',
   templateUrl: './parent-skills.component.html',
   styleUrls: [ './parent-skills.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
 export class ParentSkillsComponent implements OnChanges, OnDestroy {

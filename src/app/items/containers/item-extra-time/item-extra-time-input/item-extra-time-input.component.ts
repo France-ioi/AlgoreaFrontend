@@ -1,4 +1,4 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { InputNumberComponent } from 'src/app/ui-components/input-number/input-number.component';
@@ -7,6 +7,7 @@ import { InputNumberComponent } from 'src/app/ui-components/input-number/input-n
   selector: 'alg-item-extra-time-input',
   templateUrl: './item-extra-time-input.component.html',
   styleUrls: [ './item-extra-time-input.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ButtonIconComponent,

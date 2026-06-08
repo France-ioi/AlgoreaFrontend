@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, signal, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, signal, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -27,6 +27,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-item-dependencies',
   templateUrl: './item-dependencies.component.html',
   styleUrls: [ './item-dependencies.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

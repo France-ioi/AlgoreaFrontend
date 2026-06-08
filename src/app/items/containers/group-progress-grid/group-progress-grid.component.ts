@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnChanges, OnDestroy, signal, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, signal, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { combineLatestWith, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
@@ -102,6 +102,7 @@ interface ProgressDataDialog {
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
   styleUrls: [ './group-progress-grid.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CompositionFilterComponent,
     ErrorComponent,

@@ -9,7 +9,8 @@ import {
   input,
   output,
   signal,
-  viewChild
+  viewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
@@ -34,6 +35,7 @@ import { SelectedOptionService, SelectOption } from 'src/app/ui-components/selec
     CdkOverlayOrigin,
     CdkConnectedOverlay,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

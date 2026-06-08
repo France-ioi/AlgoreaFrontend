@@ -1,10 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2,
+  inject,
+} from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-floating-save',
   templateUrl: './floating-save.component.html',
   styleUrls: [ './floating-save.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ButtonComponent ]
 })
 export class FloatingSaveComponent implements OnInit, OnDestroy {

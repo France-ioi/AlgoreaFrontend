@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -7,6 +7,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   selector: 'alg-error',
   templateUrl: './error.component.html',
   styleUrls: [ './error.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     RouterLink,

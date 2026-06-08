@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RelativeTimeComponent } from './relative-time.component';
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MINUTES } from 'src/app/utils/duration';
 import { LocaleService } from 'src/app/services/localeService';
 import { By } from '@angular/platform-browser';
 
 @Component({
   template: '<alg-relative-time [value]="value()" />',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ RelativeTimeComponent ],
 })
 class TestHostComponent {

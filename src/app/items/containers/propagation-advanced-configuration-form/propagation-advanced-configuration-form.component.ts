@@ -1,4 +1,4 @@
-import { Component, computed, input, OnChanges, output, inject } from '@angular/core';
+import { Component, computed, input, OnChanges, output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
@@ -17,6 +17,7 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
   selector: 'alg-propagation-advanced-configuration-form',
   templateUrl: './propagation-advanced-configuration-form.component.html',
   styleUrls: [ './propagation-advanced-configuration-form.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     CollapsibleSectionComponent,

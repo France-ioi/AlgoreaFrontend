@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal, inject } from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -15,7 +15,7 @@ import {
 import { FormErrorComponent } from '../form-error/form-error.component';
 import { convertDateToString, convertStringToDate } from 'src/app/utils/input-date';
 import { Subscription } from 'rxjs';
-import { NgxMaskDirective } from 'ngx-mask';
+import { MaskDirective } from '../mask/mask.directive';
 
 @Component({
   selector: 'alg-input-date',
@@ -33,10 +33,11 @@ import { NgxMaskDirective } from 'ngx-mask';
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     FormErrorComponent,
-    NgxMaskDirective,
+    MaskDirective,
   ]
 })
 export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccessor {
@@ -64,13 +65,6 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
     } else {
       this.control = new FormControl();
     }
-
-    // Issue: by default ngx mask marks form as dirty
-    // https://github.com/JsDaddy/ngx-mask/issues/1375#issuecomment-2243252405
-    setTimeout(() => {
-      this.control?.markAsPristine();
-      this.control?.markAsUntouched();
-    });
   }
 
   ngOnDestroy(): void {
@@ -82,10 +76,7 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   writeValue(value: Date | null): void {
-    // Issue due the race condition (probably because of async method in writeValue in ngx-mask)
-    setTimeout(() => {
-      this.input = value ? convertDateToString(value) : '';
-    });
+    this.input = value ? convertDateToString(value) : '';
   }
 
   private onChange: (value: Date | null) => void = () => {};

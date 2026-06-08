@@ -1,10 +1,11 @@
-import { Component, signal, TemplateRef } from '@angular/core';
+import { Component, signal, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'alg-tooltip',
   templateUrl: './tooltip.component.html',
   styleUrls: [ './tooltip.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgTemplateOutlet
   ]

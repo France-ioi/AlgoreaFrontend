@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   ChildDataWithId,
@@ -26,6 +26,7 @@ import { LocaleService } from 'src/app/services/localeService';
   selector: 'alg-item-children-edit-form',
   templateUrl: './item-children-edit-form.component.html',
   styleUrls: [ './item-children-edit-form.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ItemChildrenEditComponent,
     NgClass,

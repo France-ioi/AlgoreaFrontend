@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, inject, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, inject, Input, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, filter, map, of, Subscription, switchMap } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
 import { RouterLink } from '@angular/router';
@@ -18,6 +18,7 @@ import { catchError } from 'rxjs/operators';
   selector: 'alg-thread-container',
   templateUrl: './thread-container.component.html',
   styleUrls: [ './thread-container.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterLink,
     ThreadComponent,

@@ -1,10 +1,9 @@
 <input
   class="alg-input"
   data-testid="input-date"
-  [mask]="mask()"
+  [algMask]="mask()"
   placeholder="dd/mm/yyyy hh:mm"
   [(ngModel)]="input"
-  [dropSpecialCharacters]="false"
   [clearIfNotMatch]="true"
   (ngModelChange)="onInputChange($event)"
   (blur)="onBlur()"

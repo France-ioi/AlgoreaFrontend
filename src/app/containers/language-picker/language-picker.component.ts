@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LocaleService } from '../../services/localeService';
 import { FormsModule } from '@angular/forms';
 import { SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
@@ -8,6 +8,7 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
   selector: 'alg-language-picker',
   templateUrl: './language-picker.component.html',
   styleUrls: [ './language-picker.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, SelectComponent, SelectOptionComponent, SelectOptionComponent ]
 })
 export class LanguagePickerComponent implements OnInit, OnChanges {

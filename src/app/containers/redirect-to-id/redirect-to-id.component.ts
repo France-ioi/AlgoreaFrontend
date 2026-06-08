@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
@@ -11,6 +11,7 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
 @Component({
   selector: 'alg-redirect-to-id',
   templateUrl: './redirect-to-id.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterLink,
     LoadingComponent,

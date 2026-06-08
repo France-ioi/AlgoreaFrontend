@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter, OnInit, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
@@ -49,6 +49,7 @@ export const DEFAULT_SCORE_WEIGHT = 1;
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
   styleUrls: [ './item-children-edit.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemChildrenEditComponent implements OnInit, OnDestroy, OnChanges {

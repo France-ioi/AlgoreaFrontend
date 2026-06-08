@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { myGroupsInfo } from 'src/app/models/content/group-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { JoinedGroupListComponent } from '../joined-group-list/joined-group-list.component';
@@ -16,6 +16,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   selector: 'alg-my-groups',
   templateUrl: './my-groups.component.html',
   styleUrls: [ './my-groups.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     UserGroupInvitationsComponent,
     JoinedGroupListComponent,

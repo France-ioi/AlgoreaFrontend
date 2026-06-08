@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -26,6 +26,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-content-top-bar',
   templateUrl: './content-top-bar.component.html',
   styleUrls: [ './content-top-bar.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ScoreRingComponent,
     LetDirective,

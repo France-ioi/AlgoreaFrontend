@@ -1,4 +1,4 @@
-import { SimpleChanges, inject } from '@angular/core';
+import { SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
@@ -36,6 +36,7 @@ export interface ProgressData {
   selector: 'alg-user-progress-details',
   templateUrl: './user-progress-details.component.html',
   styleUrls: [ './user-progress-details.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ScoreRingComponent,
     NgClass,

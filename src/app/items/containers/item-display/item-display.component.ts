@@ -11,6 +11,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { EMPTY, interval, Observable, merge, of, Subject } from 'rxjs';
 import { Location, NgClass, AsyncPipe } from '@angular/common';
@@ -71,6 +72,7 @@ const heightSyncInterval = 0.2*SECONDS;
   templateUrl: './item-display.component.html',
   styleUrls: [ './item-display.component.scss' ],
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService, TaskSessionTrackerService ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     FullHeightContentDirective,

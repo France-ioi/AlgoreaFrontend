@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { Duration, MINUTES } from 'src/app/utils/duration';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'alg-time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: [ './time-picker.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, NgClass ]
 })
 export class TimePickerComponent implements OnChanges {

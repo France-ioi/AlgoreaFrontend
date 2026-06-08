@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
@@ -7,6 +7,7 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
   selector: 'alg-page-not-found',
   templateUrl: './page-not-found.component.html',
   styleUrls: [ './page-not-found.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FullHeightContentDirective, ErrorComponent ]
 })
 export class PageNotFoundComponent {

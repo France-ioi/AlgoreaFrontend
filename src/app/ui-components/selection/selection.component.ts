@@ -1,5 +1,5 @@
 
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, forwardRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, forwardRef, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ensureDefined } from 'src/app/utils/assert';
 import { NgClass } from '@angular/common';
@@ -26,6 +26,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NgClass, TooltipDirective ],
 })
 export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {

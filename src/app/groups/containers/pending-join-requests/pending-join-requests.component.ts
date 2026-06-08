@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, OnDestroy, inject } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../data-access/request-actions.service';
 import { merge, of, Subject } from 'rxjs';
@@ -21,6 +21,7 @@ const groupColumn = { field: 'group.name', header: $localize`GROUP` };
   selector: 'alg-pending-join-requests',
   templateUrl: './pending-join-requests.component.html',
   styleUrls: [ './pending-join-requests.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {

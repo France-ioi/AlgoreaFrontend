@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SwitchFieldComponent } from 'src/app/ui-components/collapsible-section/switch-field/switch-field.component';
 import { DatePipe } from '@angular/common';
@@ -13,6 +13,7 @@ export type JoinGroupConfirmationDialogResult = { confirmed: true } | undefined;
   selector: 'alg-join-group-confirmation-dialog',
   templateUrl: './join-group-confirmation-dialog.component.html',
   styleUrls: [ './join-group-confirmation-dialog.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SwitchFieldComponent,
     ReactiveFormsModule,

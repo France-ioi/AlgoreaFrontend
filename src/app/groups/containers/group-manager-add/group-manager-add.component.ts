@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { GetUserByLoginService } from 'src/app/data-access/get-user-by-login.service';
@@ -14,6 +14,7 @@ import { Group } from '../../models/group';
   selector: 'alg-group-manager-add',
   templateUrl: './group-manager-add.component.html',
   styleUrls: [ './group-manager-add.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, ButtonComponent ]
 })
 export class GroupManagerAddComponent {

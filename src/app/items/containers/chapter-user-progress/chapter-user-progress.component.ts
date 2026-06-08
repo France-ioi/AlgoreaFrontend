@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, inject, input } from '@angular/core';
+import { Component, computed, OnDestroy, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { GetParticipantProgressService } from '../../data-access/get-participant-progress.service';
 import { Observable, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -46,6 +46,7 @@ interface RowData {
   selector: 'alg-chapter-user-progress',
   templateUrl: './chapter-user-progress.component.html',
   styleUrls: [ './chapter-user-progress.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

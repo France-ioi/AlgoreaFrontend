@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
 
@@ -7,6 +7,7 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
   selector: 'alg-item-task-edit',
   templateUrl: './item-task-edit.component.html',
   styleUrls: [ './item-task-edit.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FullHeightContentDirective ]
 })
 export class ItemTaskEditComponent implements OnChanges {

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
 import { Group } from '../../models/group';
 import { UntypedFormBuilder } from '@angular/forms';
@@ -23,6 +23,7 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TextareaComponent,
     ButtonComponent,

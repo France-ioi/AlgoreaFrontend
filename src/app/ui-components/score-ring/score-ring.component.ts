@@ -1,10 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { NgStyle, NgClass, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'alg-score-ring',
   templateUrl: './score-ring.component.html',
   styleUrls: [ './score-ring.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgStyle,
     NgClass,

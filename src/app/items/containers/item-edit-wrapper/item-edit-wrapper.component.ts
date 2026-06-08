@@ -8,6 +8,7 @@ import {
   OnInit,
   signal,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
@@ -56,6 +57,7 @@ import { runItemEditSave } from './item-edit-wrapper-save-flow';
   selector: 'alg-item-edit-wrapper',
   templateUrl: './item-edit-wrapper.component.html',
   styleUrls: [ './item-edit-wrapper.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, retry, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
@@ -45,6 +45,7 @@ const loginIdParam = 'user_id';
   selector: 'alg-lti',
   templateUrl: './lti.component.html',
   styleUrls: [ './lti.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

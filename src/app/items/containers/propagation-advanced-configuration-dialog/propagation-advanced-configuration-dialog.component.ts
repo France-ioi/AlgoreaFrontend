@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import {
   PropagationAdvancedConfigurationFormComponent
 } from 'src/app/items/containers/propagation-advanced-configuration-form/propagation-advanced-configuration-form.component';
@@ -21,6 +21,7 @@ export interface PropagationAdvancedConfigurationDialogData {
   selector: 'alg-propagation-advanced-configuration-dialog',
   templateUrl: 'propagation-advanced-configuration-dialog.component.html',
   styleUrls: [ 'propagation-advanced-configuration-dialog.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     PropagationAdvancedConfigurationFormComponent,
     ModalComponent,

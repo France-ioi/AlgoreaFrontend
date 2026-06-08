@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
 import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { combineLatest, merge, of, Subscription } from 'rxjs';
@@ -39,6 +39,7 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
   selector: 'alg-root',
   templateUrl: './app.component.html',
   styleUrls: [ './app.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     LeftPanelComponent,

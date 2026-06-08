@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { RequestActionsService } from './request-actions.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('RequestActionsService', () => {
   let service: RequestActionsService;
@@ -10,7 +10,7 @@ describe('RequestActionsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
     imports: [],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
 });
     service = TestBed.inject(RequestActionsService);
   });

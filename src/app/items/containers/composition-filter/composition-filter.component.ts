@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ensureDefined } from 'src/app/utils/assert';
 import { TypeFilter } from '../../models/composition-filter';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
@@ -7,6 +7,7 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
   selector: 'alg-composition-filter',
   templateUrl: './composition-filter.component.html',
   styleUrls: [ './composition-filter.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ SelectionComponent ]
 })
 export class CompositionFilterComponent implements OnInit {

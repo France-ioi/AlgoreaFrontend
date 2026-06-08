@@ -1,7 +1,21 @@
 // @ts-check
 const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
-const angular = require('@angular-eslint/eslint-plugin');
+const angularPlugin = require('@angular-eslint/eslint-plugin');
+const angularRecommendedRules = {
+  '@angular-eslint/contextual-lifecycle': 'error',
+  '@angular-eslint/no-empty-lifecycle-method': 'error',
+  '@angular-eslint/no-input-rename': 'error',
+  '@angular-eslint/no-inputs-metadata-property': 'error',
+  '@angular-eslint/no-output-native': 'error',
+  '@angular-eslint/no-output-on-prefix': 'error',
+  '@angular-eslint/no-output-rename': 'error',
+  '@angular-eslint/no-outputs-metadata-property': 'error',
+  '@angular-eslint/prefer-inject': 'error',
+  '@angular-eslint/prefer-standalone': 'error',
+  '@angular-eslint/use-pipe-transform-interface': 'error',
+  '@angular-eslint/use-lifecycle-interface': 'warn',
+};
 const ngrx = require('@ngrx/eslint-plugin');
 const rxjsX = require('eslint-plugin-rxjs-x').default;
 const jasmine = require('eslint-plugin-jasmine');
@@ -25,14 +39,14 @@ module.exports = tseslint.config(
       },
     },
     plugins: {
-      '@angular-eslint': angular,
+      '@angular-eslint': angularPlugin,
       '@ngrx': ngrx,
       'rxjs-x': rxjsX,
       jasmine,
       '@stylistic': stylistic,
     },
     rules: {
-      ...angular.configs.recommended.rules,
+      ...angularRecommendedRules,
       ...ngrx.configs.all.rules,
       '@angular-eslint/directive-selector': [
         'error',
@@ -145,6 +159,11 @@ module.exports = tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/naming-convention': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
       indent: 'off',
       'array-bracket-spacing': 'off',

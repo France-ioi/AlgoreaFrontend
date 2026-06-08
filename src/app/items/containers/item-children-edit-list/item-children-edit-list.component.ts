@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, inject, Input, OnChanges, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnChanges, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
@@ -44,6 +44,7 @@ import { Dialog } from '@angular/cdk/dialog';
   selector: 'alg-item-children-edit-list',
   templateUrl: './item-children-edit-list.component.html',
   styleUrls: [ './item-children-edit-list.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SwitchComponent,
     FormsModule,

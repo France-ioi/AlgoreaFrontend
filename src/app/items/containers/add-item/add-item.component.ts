@@ -1,4 +1,7 @@
-import { Component, computed, EventEmitter, input, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, computed, EventEmitter, input, Input, OnChanges, Output, SimpleChanges,
+  ViewChild, inject,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   NewContentType,
@@ -15,6 +18,7 @@ import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-secti
   selector: 'alg-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: [ './add-item.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddItemComponent implements OnChanges {

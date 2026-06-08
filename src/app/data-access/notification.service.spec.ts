@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { of } from 'rxjs';
 import { APPCONFIG } from '../config';
 import { IdentityTokenService } from '../services/auth/identity-token.service';
@@ -16,7 +16,7 @@ describe('NotificationHttpService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         { provide: APPCONFIG, useValue: { apiUrl: 'http://mock.api', slsApiUrl } },
         { provide: IdentityTokenService, useValue: { identityToken$: of('mock-token') } },

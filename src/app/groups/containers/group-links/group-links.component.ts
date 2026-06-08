@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { GroupShortInfo } from '../../models/group';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
@@ -10,6 +10,7 @@ const defaultMaxItemsDisplay = 4;
   selector: 'alg-group-links',
   templateUrl: './group-links.component.html',
   styleUrls: [ './group-links.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterLink,
     SlicePipe,
