@@ -12,7 +12,7 @@ import {
 } from '@angular/forms';
 import { Duration, MAX_SECONDS_FORMAT_DURATION, MAX_TIME_FORMAT_DURATION } from 'src/app/utils/duration';
 import { FormErrorComponent } from '../form-error/form-error.component';
-import { NgxMaskDirective } from 'ngx-mask';
+import { MaskDirective } from '../mask/mask.directive';
 
 const MAX_HOURS_VALUE = 23;
 const MAX_MINUTES_VALUE = 59;
@@ -36,7 +36,7 @@ const MAX_SECONDS_VALUE = 59;
     },
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ FormsModule, FormErrorComponent, NgxMaskDirective ]
+  imports: [ FormsModule, FormErrorComponent, MaskDirective ]
 })
 export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
   private injector = inject(Injector);
@@ -82,18 +82,12 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
       ? this.parentForm.get(this.name) ?? undefined
       : this.injector.get(NgControl, null)?.control ?? undefined;
 
-    // Issue due the race condition (probably because of async method in writeValue in ngx-mask) from ngx mask and dirty state on init -
-    // https://github.com/JsDaddy/ngx-mask/issues/1375#issuecomment-2243252405
-    setTimeout(() => {
-      this.showField = {
-        days: this.layout === 'DHM',
-        hours: this.layout === 'DHM' || this.layout === 'HMS',
-        minutes: this.layout === 'DHM' || this.layout === 'HMS',
-        seconds: this.layout === 'HMS',
-      };
-      this.control?.markAsPristine();
-      this.control?.markAsUntouched();
-    });
+    this.showField = {
+      days: this.layout === 'DHM',
+      hours: this.layout === 'DHM' || this.layout === 'HMS',
+      minutes: this.layout === 'DHM' || this.layout === 'HMS',
+      seconds: this.layout === 'HMS',
+    };
   }
 
   ngOnChanges(changes: SimpleChanges): void {

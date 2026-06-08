@@ -8,10 +8,9 @@
         <input
           class="alg-input"
           data-testid="input-date"
-          mask="9||99||999"
+          algMask="9||99||999"
           placeholder="DDD"
           [(ngModel)]="days"
-          [dropSpecialCharacters]="false"
           [clearIfNotMatch]="true"
           (ngModelChange)="handleChange()"
         />
@@ -25,10 +24,9 @@
         <input
           class="alg-input"
           data-testid="input-date"
-          [mask]="showField.days ?  '0||00' : '0||00||000'"
+          [algMask]="showField.days ?  '0||00' : '0||00||000'"
           [placeholder]="showField.days ? 'HH' : 'HHH'"
           [(ngModel)]="hours"
-          [dropSpecialCharacters]="false"
           [clearIfNotMatch]="true"
           (ngModelChange)="handleChange()"
         />
@@ -42,10 +40,9 @@
         <input
           class="alg-input"
           data-testid="input-date"
-          mask="0||00"
+          algMask="0||00"
           placeholder="MM"
           [(ngModel)]="minutes"
-          [dropSpecialCharacters]="false"
           [clearIfNotMatch]="true"
           (ngModelChange)="handleChange()"
         />
@@ -59,10 +56,9 @@
         <input
           class="alg-input"
           data-testid="input-date"
-          mask="0||00"
+          algMask="0||00"
           placeholder="SS"
           [(ngModel)]="seconds"
-          [dropSpecialCharacters]="false"
           [clearIfNotMatch]="true"
           (ngModelChange)="handleChange()"
         />

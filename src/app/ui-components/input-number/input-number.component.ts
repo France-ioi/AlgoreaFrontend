@@ -1,6 +1,6 @@
 import { Component, forwardRef, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgxMaskDirective } from 'ngx-mask';
+import { MaskDirective } from '../mask/mask.directive';
 import { isString } from 'src/app/utils/type-checkers';
 
 @Component({
@@ -17,7 +17,7 @@ import { isString } from 'src/app/utils/type-checkers';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
-    NgxMaskDirective,
+    MaskDirective,
   ]
 })
 export class InputNumberComponent implements ControlValueAccessor {
