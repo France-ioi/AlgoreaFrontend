@@ -62,7 +62,7 @@
     "@angular/localize": "^22.0.0",
     "@eslint/js": "^10.0.1",
     "@ngrx/eslint-plugin": "^21.1.0",
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "^1.60.0",
     "@sentry/cli": "^2.58.5",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/express": "^5.0.6",
