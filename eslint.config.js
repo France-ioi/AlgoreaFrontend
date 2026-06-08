@@ -1,7 +1,12 @@
 // @ts-check
 const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
-const angular = require('@angular-eslint/eslint-plugin');
+const angularPlugin = require('@angular-eslint/eslint-plugin');
+const angular = require('angular-eslint');
+const angularRecommendedRules = Object.assign(
+  {},
+  ...angular.configs.tsRecommended.map((config) => config.rules ?? {}),
+);
 const ngrx = require('@ngrx/eslint-plugin');
 const rxjsX = require('eslint-plugin-rxjs-x').default;
 const jasmine = require('eslint-plugin-jasmine');
@@ -25,14 +30,14 @@ module.exports = tseslint.config(
       },
     },
     plugins: {
-      '@angular-eslint': angular,
+      '@angular-eslint': angularPlugin,
       '@ngrx': ngrx,
       'rxjs-x': rxjsX,
       jasmine,
       '@stylistic': stylistic,
     },
     rules: {
-      ...angular.configs.recommended.rules,
+      ...angularRecommendedRules,
       ...ngrx.configs.all.rules,
       '@angular-eslint/directive-selector': [
         'error',
