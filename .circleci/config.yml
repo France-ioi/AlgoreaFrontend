@@ -125,6 +125,7 @@ jobs:
 
   build-branch-en:
     docker: *node_image
+    resource_class: large
     steps:
       - attach_workspace:
           at: ./
@@ -140,6 +141,7 @@ jobs:
 
   build-master:
     docker: *node_image
+    resource_class: large
     parameters:
       lang:
         type: string
@@ -159,6 +161,7 @@ jobs:
 
   build-version:
     docker: *node_image
+    resource_class: large
     parameters:
       lang:
         type: string
