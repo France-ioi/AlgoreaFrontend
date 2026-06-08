@@ -1,4 +1,7 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren,
+  inject,
+} from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { ReplaySubject, Subject, switchMap } from 'rxjs';
 import { map, share } from 'rxjs/operators';

@@ -1,4 +1,7 @@
-import { Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output,
+  SimpleChanges, inject,
+} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,

@@ -1,4 +1,7 @@
-import { Component, computed, EventEmitter, input, Input, OnChanges, Output, SimpleChanges, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, computed, EventEmitter, input, Input, OnChanges, Output, SimpleChanges,
+  ViewChild, inject,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   NewContentType,

@@ -1,4 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2,
+  inject,
+} from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
