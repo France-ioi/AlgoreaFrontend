@@ -11,4 +11,5 @@ export class LeftMenuBackButtonComponent {
   close = output<void>();
   icon = input('ph ph-arrow-left');
   contentIcon = input<string>();
+  title = input.required<string>();
 }

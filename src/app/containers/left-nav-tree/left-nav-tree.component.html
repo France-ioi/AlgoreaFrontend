@@ -3,7 +3,8 @@
   <div class="container nav-level-l0" (click)="navigateToParent()">
     <alg-left-menu-back-button
       [contentIcon]="iconForElement(parent)"
-    >{{ parent.title }}</alg-left-menu-back-button>
+      [title]="parent.title"
+    ></alg-left-menu-back-button>
   </div>
 } @else if (elementType === 'group') {
   <div class="container buttons-section" data-testid="group-left-menu">

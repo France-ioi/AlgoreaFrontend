@@ -33,7 +33,7 @@ test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ 
     const targetItemLocator = page.locator('cdk-nested-tree-node').getByText(itemName.trim()).first();
     await expect.soft(targetItemLocator).toBeVisible();
     await targetItemLocator.click();
-    await expect.soft(page.locator('alg-left-menu-back-button').getByText(rootItemName)).toBeVisible();
+    await expect.soft(page.locator('alg-left-menu-back-button .back-button-title')).toContainText(rootItemName);
     const parametersTabLocator = page.getByRole('link', { name: 'Parameters' });
     await expect.soft(parametersTabLocator).toBeVisible();
     await parametersTabLocator.click();
