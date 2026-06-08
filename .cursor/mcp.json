@@ -2,7 +2,10 @@
   "mcpServers": {
     "angular-cli": {
       "command": "bash",
-      "args": ["-lc", "npx -y @angular/cli mcp"]
+      "args": [
+        "-lc",
+        "cd /home/dle/Developer/France-IOI/AlgoreaFrontend && mise exec -- ng mcp"
+      ]
     }
   }
 }
