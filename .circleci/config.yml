@@ -188,7 +188,7 @@ jobs:
       - browser-tools/install-browser-tools
       - attach_workspace:
           at: ./
-      - run: npx ng test --code-coverage --karma-config .circleci/karma.conf.js --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - run: npx ng test --code-coverage --karma-config .circleci/karma.conf.js --watch=false --progress=false --browsers=ChromeHeadlessCI
       - run:
           name: CodeCov (tool sending coverage reports (lcov.info) to Codecov.io)
           command: bash <(curl -s https://codecov.io/bash)

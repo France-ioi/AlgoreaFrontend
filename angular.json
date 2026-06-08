@@ -267,17 +267,27 @@
           }
         },
         "test": {
-          "builder": "@angular/build:unit-test",
+          "builder": "@angular/build:karma",
           "options": {
+            "main": "src/test.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "reporters": [
-              "default"
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
             ],
-            "setupFiles": [
-              "src/test.ts"
+            "styles": [
+              "src/styles.scss"
             ],
-            "buildTarget": ":build:testing",
-            "runner": "vitest"
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "."
+              ]
+            }
           }
         },
         "lint": {

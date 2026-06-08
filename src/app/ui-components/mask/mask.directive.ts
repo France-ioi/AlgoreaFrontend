@@ -39,8 +39,17 @@ export class MaskDirective implements ControlValueAccessor {
 
   writeValue(value: unknown): void {
     this.writingValue = true;
-    this.modelValue = this.toModelString(value);
-    this.updateElementValue(this.modelValue, this.getParsedMask());
+    const parsed = this.getParsedMask();
+    const incoming = this.toModelString(value);
+    const formatted = formatMaskValue(incoming, parsed);
+    this.modelValue = formatted;
+    this.updateElementValue(this.modelValue, parsed);
+    // Reactive-form writes may pass raw digits (e.g. from an API); propagate the formatted
+    // model so the control matches what the user sees. Template-mask parents like alg-input-date
+    // already pass formatted strings via convertDateToString, so this is usually a no-op there.
+    if (formatted !== incoming) {
+      this.onChange(formatted);
+    }
     this.writingValue = false;
   }
 

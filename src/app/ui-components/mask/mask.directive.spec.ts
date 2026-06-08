@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaskDirective } from './mask.directive';
 import {
   applyNumericMask,
@@ -51,11 +51,11 @@ describe('mask.utils', () => {
   });
 
   it('counts digits before a cursor index', () => {
-    expect(countDigitsBeforeIndex('12/01/2024 10:30', 5)).toBe(3);
+    expect(countDigitsBeforeIndex('12/01/2024 10:30', 4)).toBe(3);
   });
 
   it('maps digit count back to a cursor index in formatted value', () => {
-    expect(selectionIndexAfterDigits('12/01/2024 10:30', 3)).toBe(5);
+    expect(selectionIndexAfterDigits('12/01/2024 10:30', 3)).toBe(4);
     expect(selectionIndexAfterDigits('12345', 3)).toBe(3);
   });
 });
@@ -76,6 +76,20 @@ class TestHostComponent {
   mask = signal('0||00');
   suffix = signal('');
   clearIfNotMatch = signal(false);
+}
+
+@Component({
+  template: `
+    <input
+      [formControl]="control"
+      [algMask]="mask()"
+    />
+  `,
+  imports: [ReactiveFormsModule, MaskDirective],
+})
+class ReactiveTestHostComponent {
+  control = new FormControl('');
+  mask = signal('99/99/9999 99:99');
 }
 
 describe('MaskDirective', () => {
@@ -180,11 +194,16 @@ describe('MaskDirective', () => {
     expect(input.value).toBe('1');
   });
 
-  it('writes formatted value from the model', () => {
-    host.mask.set('99/99/9999 99:99');
-    host.value = '01/02/2023 08:15';
-    fixture.detectChanges();
+  it('formats raw digits written from a reactive form control', () => {
+    const reactiveFixture = TestBed.createComponent(ReactiveTestHostComponent);
+    reactiveFixture.detectChanges();
+    const reactiveInput = reactiveFixture.nativeElement.querySelector('input') as HTMLInputElement;
+    const reactiveHost = reactiveFixture.componentInstance;
 
-    expect(input.value).toBe('01/02/2023 08:15');
+    reactiveHost.control.setValue('010220230815');
+    reactiveFixture.detectChanges();
+
+    expect(reactiveInput.value).toBe('01/02/2023 08:15');
+    expect(reactiveHost.control.value).toBe('01/02/2023 08:15');
   });
 });
