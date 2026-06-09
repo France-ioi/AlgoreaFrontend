@@ -1,6 +1,6 @@
 <button
   class="size-l success"
-  [disabled]="saving"
+  [disabled]="saving()"
   (click)="onSave()"
   alg-button
   i18n
@@ -8,7 +8,7 @@
 
 <button
   class="size-l secondary button"
-  [disabled]="saving"
+  [disabled]="saving()"
   (click)="onCancel()"
   alg-button
   i18n

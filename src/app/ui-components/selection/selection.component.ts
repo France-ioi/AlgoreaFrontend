@@ -1,8 +1,7 @@
 
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, forwardRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, forwardRef, input, output, signal, untracked } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ensureDefined } from 'src/app/utils/assert';
-import { NgClass } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 /**
@@ -26,30 +25,50 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ NgClass, TooltipDirective ],
+  imports: [ TooltipDirective ],
 })
-export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
-  @Input() items: { label: string, value: T, icon?: string, tooltip?: string }[] = [];
-  @Input() selected = 0;
-  @Input() mode: 'light' | 'dark' | 'basic' = 'light';
+export class SelectionComponent<T> implements ControlValueAccessor {
+  items = input<{ label: string, value: T, icon?: string, tooltip?: string }[]>([]);
+  selected = input(0);
 
-  @Output() change = new EventEmitter<number>();
+  change = output<number>();
+
+  protected readonly selectedIndex = signal(0);
 
   private onChange: (value: T) => void = () => {};
+  private formBound = false;
 
-  ngOnChanges(_simpleChanges: SimpleChanges): void {
-    if (this.items.length === 0) throw Error('Invalid items');
-    if (this.selected < 0 || this.selected >= this.items.length) throw Error('Invalid selected index');
+  constructor() {
+    // Replaces ngOnChanges validation for items / internal selection changes.
+    // Throws in an effect (Angular error handler) rather than at the binding site — same
+    // contract as before when a parent passes invalid items or an out-of-range index.
+    effect(() => {
+      const items = this.items();
+      const index = untracked(() => this.selectedIndex());
+      this.validateSelection(items, index);
+    });
+
+    effect(() => {
+      const selected = this.selected();
+      if (this.formBound) {
+        return;
+      }
+      untracked(() => {
+        this.validateSelection(this.items(), selected);
+        this.selectedIndex.set(selected);
+      });
+    });
   }
 
   writeValue(value: T): void {
-    const index = this.items.findIndex(item => item.value === value);
+    const items = this.items();
+    const index = items.findIndex(item => item.value === value);
     if (index === -1) throw Error('Invalid value set by form');
-    this.selected = index;
+    this.selectedIndex.set(index);
   }
 
   registerOnChange(fn: (value: T) => void): void {
+    this.formBound = true;
     this.onChange = fn;
   }
 
@@ -57,10 +76,19 @@ export class SelectionComponent<T> implements OnChanges, ControlValueAccessor {
   }
 
   itemChanged(index: number): void {
-    if (index < 0 || index >= this.items.length) throw Error('Invalid index');
+    const items = this.items();
+    this.validateSelection(items, index);
 
-    this.selected = index;
-    this.change.emit(this.selected);
-    this.onChange(ensureDefined(this.items[this.selected]).value);
+    this.selectedIndex.set(index);
+    this.change.emit(index);
+    this.onChange(ensureDefined(items[index]).value);
+  }
+
+  private validateSelection(
+    items: { label: string, value: T, icon?: string, tooltip?: string }[],
+    selected: number,
+  ): void {
+    if (items.length === 0) throw Error('Invalid items');
+    if (selected < 0 || selected >= items.length) throw Error('Invalid selected index');
   }
 }

@@ -1,11 +1,10 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input,
-  OnDestroy, ViewChild, inject,
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
+  input, OnDestroy, ViewChild, inject,
 } from '@angular/core';
 import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
-import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -16,7 +15,11 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ LetDirective, NgClass, RouterLink, NgScrollbar, ButtonIconComponent ]
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    '(window:resize)': 'resize()',
+  },
+  imports: [ LetDirective, RouterLink, NgScrollbar, ButtonIconComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   private tabService = inject(TabService);
@@ -24,7 +27,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   private cd = inject(ChangeDetectorRef);
 
   @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
-  @Input() styleClass?: string;
+  styleClass = input<string>();
 
   showPrevButton = false;
   showNextButton = false;
@@ -45,7 +48,6 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   readonly subscriptions = new Subscription();
 
-  @HostListener('window:resize')
   resize(): void {
     this.handleArrows();
   }

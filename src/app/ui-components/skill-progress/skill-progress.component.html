@@ -1,4 +1,4 @@
-<div class="progress-bar-wrapper" [ngClass]="{ 'bold': type === 'bold' }">
-  <div class="progress-best-score" [ngStyle]="{ 'width.%': bestScore }"></div>
-  <div class="progress-current-score" [ngStyle]="{ 'width.%': currentScore }"></div>
+<div class="progress-bar-wrapper" [class.bold]="type() === 'bold'">
+  <div class="progress-best-score" [style.width.%]="clampedBestScore()"></div>
+  <div class="progress-current-score" [style.width.%]="clampedCurrentScore()"></div>
 </div>

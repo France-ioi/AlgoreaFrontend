@@ -81,6 +81,9 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
     if (value) {
       this.outboundEcho.rememberInbound(value);
       this.form.patchValue(value, { emitEvent: false });
+      // Re-emit validity so alg-input-error (statusChanges subscription) refreshes after silent
+      // patches when switching language tabs in item-all-strings-form.
+      this.form.updateValueAndValidity({ emitEvent: true });
     }
   }
 

@@ -1,9 +1,10 @@
 <div class="selection-container">
   <ul class="tabs">
-    @for (item of items; track item; let idx = $index) {
+    @for (item of items(); track item.value; let idx = $index) {
       <li
         class="tabs-item alg-flex-1"
-        [ngClass]="{ active: idx === selected, next: idx === selected + 1 }"
+        [class.active]="idx === selectedIndex()"
+        [class.next]="idx === selectedIndex() + 1"
         (click)="itemChanged(idx)"
         [algTooltip]="item.tooltip ?? ''"
         tooltipPosition="top"
