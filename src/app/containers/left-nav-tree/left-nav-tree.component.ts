@@ -132,6 +132,7 @@ export class LeftNavTreeComponent {
   }
 
   onChevronClick(event: Event, node: TreeNode<NavTreeElement>): void {
+    if (!node.inL1 || !node.isExpandable) return;
     event.stopPropagation();
     this.toggleFolder(node);
   }
