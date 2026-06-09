@@ -39,7 +39,7 @@
           <i
             class="ph-thin"
             [class]="node.expanded ? 'ph-caret-down' : 'ph-caret-right'"
-            (click)="node.type === 'chapter' ? onChevronClick($event, node) : null"
+            (click)="onChevronClick($event, node)"
           ></i>
         } @else {
           <i class="ph-thin ph-caret-right"></i>

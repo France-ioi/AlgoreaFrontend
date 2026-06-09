@@ -29,6 +29,9 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     return groupInfo({ route: e.route });
   }
 
+  // hasChildren on tree elements uses hasVisibleChildren from the API, but GroupInfo (route only)
+  // does not carry that flag, so we cannot skip the l2 fetch here. Selecting a leaf group may
+  // trigger a navigation call that returns no children; that is an acceptable extra request.
   canFetchChildren(content: GroupInfo): boolean {
     return !isUser(content.route);
   }
@@ -69,7 +72,7 @@ export class GroupNavTreeService extends NavTreeService<GroupInfo> {
     return {
       route: route,
       title: child.name,
-      hasChildren: child.type !== 'User',
+      hasChildren: child.hasVisibleChildren,
       navigateTo: (): void => this.groupRouter.navigateTo(route),
       groupRelation: { isMember: isCurrentUserMember(child), managership: child.currentUserManagership }
     };

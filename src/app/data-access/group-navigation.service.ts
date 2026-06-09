@@ -20,6 +20,7 @@ const groupNavigationChildSchema = z.object({
   type: z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'User', 'Session', 'Base' ]),
   currentUserManagership: z.enum([ 'none', 'direct', 'ancestor', 'descendant' ]),
   currentUserMembership: z.enum([ 'none', 'direct', 'descendant' ]),
+  hasVisibleChildren: z.boolean(),
 });
 
 export type GroupNavigationChild = z.infer<typeof groupNavigationChildSchema>;
