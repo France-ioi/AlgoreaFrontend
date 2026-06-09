@@ -1,23 +1,19 @@
-import {
-  ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, inject, input, OnDestroy, OnInit, output, Renderer2 } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 @Component({
   selector: 'alg-floating-save',
   templateUrl: './floating-save.component.html',
   styleUrls: [ './floating-save.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ButtonComponent ]
 })
 export class FloatingSaveComponent implements OnInit, OnDestroy {
   private renderer = inject(Renderer2);
   private el = inject<ElementRef<HTMLDivElement>>(ElementRef);
 
-  @Input() saving = false;
-  @Output() save = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  saving = input(false);
+  save = output<void>();
+  cancel = output<void>();
 
   ngOnInit(): void {
     const deleteButtonWrapperHeight = this.el.nativeElement.clientHeight;

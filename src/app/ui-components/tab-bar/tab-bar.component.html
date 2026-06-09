@@ -15,9 +15,9 @@
     [sensorThrottleTime]="1"
     appearance="native"
     >
-    <ul class="tabs" [ngClass]="styleClass" *ngrxLet="tabs$ as tabs">
+    <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabs">
       @for (tab of tabs; track tab.id) {
-        <li class="tabs-item" [ngClass]="tab.styleClass">
+        <li class="tabs-item" [class]="tab.styleClass">
           <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
         </li>
       }

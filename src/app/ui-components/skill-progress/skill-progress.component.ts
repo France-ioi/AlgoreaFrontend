@@ -1,25 +1,20 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { NgClass, NgStyle } from '@angular/common';
+import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'alg-skill-progress',
   templateUrl: './skill-progress.component.html',
   styleUrls: [ './skill-progress.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ NgClass, NgStyle ]
 })
-export class SkillProgressComponent implements OnChanges {
-  @Input() type: 'thin' | 'bold' | 'thick-horizontal' = 'thin';
-  @Input() currentScore = 0;
-  @Input() bestScore = 0;
+export class SkillProgressComponent {
+  type = input<'thin' | 'bold' | 'thick-horizontal'>('thin');
+  currentScore = input(0);
+  bestScore = input(0);
 
   private readonly rangeMin = 0;
   private readonly rangeMax = 100;
+
+  protected readonly clampedCurrentScore = computed(() => this.validateScore(this.currentScore()));
+  protected readonly clampedBestScore = computed(() => this.validateScore(this.bestScore()));
 
   private validateScore(score: number): number {
     if (score < this.rangeMin) {
@@ -30,10 +25,5 @@ export class SkillProgressComponent implements OnChanges {
     }
 
     return score;
-  }
-
-  ngOnChanges(): void {
-    this.currentScore = this.validateScore(this.currentScore);
-    this.bestScore = this.validateScore(this.bestScore);
   }
 }
