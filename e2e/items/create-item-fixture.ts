@@ -30,6 +30,7 @@ export const test = base.extend<CreateGroupFixtures>({
     await Promise.all([
       itemContentPage.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
       itemContentPage.waitForItemResponse(createItem.itemId),
+      itemContentPage.waitForChildrenResponse(createItem.itemId),
     ]);
     await itemContentPage.checksIsDeleteButtonVisible();
     // `deleteItem` already waits for the DELETE response, and the next assertion below
