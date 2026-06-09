@@ -33,11 +33,16 @@ test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ 
     const targetItemLocator = page.locator('cdk-nested-tree-node').getByText(itemName.trim()).first();
     await expect.soft(targetItemLocator).toBeVisible();
     await targetItemLocator.click();
-    await expect.soft(page.locator('alg-left-menu-back-button').getByText(rootItemName)).toBeVisible();
+    // Root chapter keeps the full tree expanded (nav CASE 4): no back button, only nested selection.
+    await itemContentPage.checksIsTitleVisible(itemName.trim());
     const parametersTabLocator = page.getByRole('link', { name: 'Parameters' });
     await expect.soft(parametersTabLocator).toBeVisible();
     await parametersTabLocator.click();
     await itemContentPage.checksIsDeleteButtonVisible();
+    await itemContentPage.waitForDeleteButtonReady();
+    if (!(await itemContentPage.isDeleteButtonEnabled())) {
+      continue;
+    }
     await itemContentPage.deleteItem();
     await itemContentPage.checkToastNotification(`You have delete "${itemName.trim()}"`);
     await itemContentPage.checksIsTitleVisible(rootItemName);

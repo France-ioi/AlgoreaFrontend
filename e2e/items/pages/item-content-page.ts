@@ -238,6 +238,14 @@ export class ItemContentPage {
     await expect.soft(this.deleteItemBtnLocator).toBeVisible();
   }
 
+  async waitForDeleteButtonReady(): Promise<void> {
+    await expect.poll(async () => !(await this.page.locator('alg-item-remove-button alg-loading').isVisible())).toBe(true);
+  }
+
+  async isDeleteButtonEnabled(): Promise<boolean> {
+    return this.deleteItemBtnLocator.isEnabled();
+  }
+
   async deleteItem(): Promise<void> {
     await this.deleteItemBtnLocator.click();
     await expect.soft(this.page.getByText('Are you sure you want to delete this content?')).toBeVisible();

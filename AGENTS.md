@@ -65,7 +65,8 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 - Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators
 - Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
+- Do not set `changeDetection: ChangeDetectionStrategy.OnPush` — it is the default in Angular 22. Only set `ChangeDetectionStrategy.Eager` when a component must be checked on every change detection cycle (legacy behavior).
+- When modernizing legacy components, follow [.cursor/MODERNIZING-COMPONENTS.md](.cursor/MODERNIZING-COMPONENTS.md) (projection vs inputs, migration order, verification).
 - Prefer inline templates for small components
 - Prefer Reactive forms instead of Template-driven ones
 - Do NOT use `ngClass`, use `class` bindings instead

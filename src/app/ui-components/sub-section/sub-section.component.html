@@ -1,12 +1,12 @@
 <div class="section-container">
   <div>
-    <span class="section-title">{{ label }}</span>
-    @if (tooltip) {
-      <span class="section-help" [title]="tooltip">
+    <span class="section-title">{{ label() }}</span>
+    @if (tooltip()) {
+      <span class="section-help" [title]="tooltip()">
         <i class="ph ph-question"></i>
       </span>
     }
-    @if (canClose) {
+    @if (canClose()) {
       <span class="section-close" (click)="onCloseEvent($event)">
         <i class="ph-bold ph-x"></i>
       </span>
