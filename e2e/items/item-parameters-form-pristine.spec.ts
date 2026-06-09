@@ -89,6 +89,9 @@ test.describe('floating save visibility with pre-populated masked fields', () =>
     await duration.fillM('11');
     await expect.soft(saveBtnLocator).toBeVisible();
     await expect.soft(cancelBtnLocator).toBeVisible();
+
+    await itemContentPage.cancelChanges();
+    await expect.soft(saveBtnLocator).not.toBeVisible();
   });
 
   test('date: no save bar after reload with saved entering time', async ({ page, createItem, itemContentPage }) => {
@@ -125,5 +128,9 @@ test.describe('floating save visibility with pre-populated masked fields', () =>
     await enteringTimeMinInputDateLocator.fill('01/01/2030 11:00');
     await expect.soft(saveBtnLocator).toBeVisible();
     await expect.soft(cancelBtnLocator).toBeVisible();
+
+    // Discard unsaved edits so fixture teardown does not compete with the save bar for page readiness.
+    await itemContentPage.cancelChanges();
+    await expect.soft(saveBtnLocator).not.toBeVisible();
   });
 });

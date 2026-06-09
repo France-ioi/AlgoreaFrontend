@@ -239,7 +239,14 @@ export class ItemContentPage {
   }
 
   async waitForDeleteButtonReady(): Promise<void> {
+    // Wait until the children check finishes (loading spinner gone). The button may still be
+    // disabled afterward if the item cannot be deleted (e.g. non-empty chapter).
     await expect.poll(async () => !(await this.page.locator('alg-item-remove-button alg-loading').isVisible())).toBe(true);
+  }
+
+  async waitForDeleteButtonEnabled(): Promise<void> {
+    await this.waitForDeleteButtonReady();
+    await expect.poll(async () => this.deleteItemBtnLocator.isEnabled()).toBe(true);
   }
 
   async isDeleteButtonEnabled(): Promise<boolean> {
@@ -247,6 +254,7 @@ export class ItemContentPage {
   }
 
   async deleteItem(): Promise<void> {
+    await this.waitForDeleteButtonEnabled();
     await this.deleteItemBtnLocator.click();
     await expect.soft(this.page.getByText('Are you sure you want to delete this content?')).toBeVisible();
     const confirmBtnLocator = this.page.getByRole('button', { name: 'Yes' });
