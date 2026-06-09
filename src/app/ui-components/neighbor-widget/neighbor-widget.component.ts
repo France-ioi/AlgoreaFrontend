@@ -58,7 +58,7 @@ export class NeighborWidgetComponent {
       if (!mode || !this.navigationModeChanged(mode)) return;
       this.syncBackButtonLayout(mode);
       this.lastAppliedMode = { parent: mode.parent, left: mode.left, right: mode.right };
-    }, { allowSignalWrites: true });
+    });
   }
 
   onPrevNextPanelAnimationEnd(event: AnimationEvent): void {
