@@ -1,18 +1,19 @@
-@if (parentForm) {
-  <ng-container [formGroup]="parentForm">
+@if (parentForm()) {
+  <ng-container [formGroup]="parentForm()!">
     <textarea
       class="textarea-element"
-      [formControlName]="inputName"
+      [formControlName]="inputName()"
       rows="5"
-      [placeholder]="placeholder"
-      [ngClass]="{'no-icon': !icon, 'resizable': resizable}"
+      [placeholder]="placeholder()"
+      [class.no-icon]="!icon()"
+      [class.resizable]="resizable()"
       >
     </textarea>
-    @if (icon) {
+    @if (icon()) {
       <span class="placeholder-icon">
         <i class="ph ph-text-t"></i>
       </span>
     }
-    <alg-input-error [form]="parentForm" [inputName]="inputName"></alg-input-error>
+    <alg-input-error [form]="parentForm()!" [inputName]="inputName()"></alg-input-error>
   </ng-container>
 }
