@@ -3,7 +3,7 @@
   data-testid="input-date"
   [algMask]="mask()"
   placeholder="dd/mm/yyyy hh:mm"
-  [(ngModel)]="input"
+  [(ngModel)]="displayValue"
   [clearIfNotMatch]="true"
   (ngModelChange)="onInputChange($event)"
   (blur)="onBlur()"

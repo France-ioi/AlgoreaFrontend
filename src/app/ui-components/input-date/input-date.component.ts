@@ -1,4 +1,4 @@
-import { Component, forwardRef, Injector, Input, OnDestroy, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, forwardRef, Injector, input, OnDestroy, OnInit, signal, inject } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -33,7 +33,6 @@ import { MaskDirective } from '../mask/mask.directive';
       multi: true,
     },
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     FormErrorComponent,
@@ -43,15 +42,15 @@ import { MaskDirective } from '../mask/mask.directive';
 export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccessor {
   private injector = inject(Injector);
 
-  @Input() minDate?: Date;
+  minDate = input<Date>();
 
-  input = '';
+  displayValue = '';
   control?: FormControl<Date | null>;
   subscription?: Subscription;
   mask = signal('99/99/9999 99:99');
 
   ngOnInit(): void {
-    const injectedControl = this.injector.get(NgControl);
+    const injectedControl = this.injector.get(NgControl, null);
     if (injectedControl instanceof FormControlName) {
       this.control = this.injector.get(FormGroupDirective).getControl(injectedControl);
     } else if (injectedControl instanceof NgModel) {
@@ -76,7 +75,7 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   writeValue(value: Date | null): void {
-    this.input = value ? convertDateToString(value) : '';
+    this.displayValue = value ? convertDateToString(value) : '';
   }
 
   private onChange: (value: Date | null) => void = () => {};
@@ -84,8 +83,10 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   validate(control: AbstractControl<Date>): ValidationErrors | null {
     if (control.value !== null && isNaN(+control.value)) {
       return { inputDateInvalid: true };
-    } else if (control.value !== null && this.minDate && control.value < this.minDate) {
-      return { inputDateMinInvalid: { minDate: this.minDate } };
+    }
+    const minDate = this.minDate();
+    if (control.value !== null && minDate && control.value < minDate) {
+      return { inputDateMinInvalid: { minDate } };
     }
     return null;
   }
@@ -104,7 +105,7 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   onBlur(): void {
-    if (this.input.trim() === '') {
+    if (this.displayValue.trim() === '') {
       this.onChange(null);
     }
   }

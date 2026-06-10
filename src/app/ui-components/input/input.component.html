@@ -1,21 +1,23 @@
-@if (parentForm) {
-  <div class="input-wrapper" [formGroup]="parentForm">
+@if (parentForm()) {
+  <div class="input-wrapper" [formGroup]="parentForm()!">
     <input
       class="input-element"
       #input
-      [type]="inputType"
-      [placeholder]="placeholder"
-      [ngClass]="{ 'has-button': buttonIcon, 'has-input-icon': inputIcon, 'subtle-focus-input': subtleFocus }"
-      [formControlName]="name"
+      [type]="inputType()"
+      [placeholder]="placeholder()"
+      [class.has-button]="buttonIcon()"
+      [class.has-input-icon]="inputIcon()"
+      [class.subtle-focus-input]="subtleFocus()"
+      [formControlName]="name()"
       (focus)="focus.emit($event)"
       (blur)="blur.emit($event)"
-      [algTooltip]="tooltipText"
-      [tooltipEvent]="tooltipEvent"
-      [tooltipPosition]="tooltipPosition"
-      [tooltipDisabled]="tooltipDisabled"
+      [algTooltip]="tooltipText()"
+      [tooltipEvent]="tooltipEvent()"
+      [tooltipPosition]="tooltipPosition()"
+      [tooltipDisabled]="tooltipDisabled()"
       tooltipStyleClass="secondary"
     >
-    @if (hasClearButton && input.value) {
+    @if (hasClearButton() && hasValue()) {
       <button
         class="icon-wrapper clear-button"
         type="button"
@@ -25,17 +27,17 @@
         <i class="icon ph ph-x"></i>
       </button>
     }
-    @if (inputIcon) {
+    @if (inputIcon()) {
       <span class="icon-wrapper">
-        <i class="icon {{ inputIcon }}"></i>
+        <i class="icon {{ inputIcon() }}"></i>
       </span>
     }
-    @if (buttonIcon) {
+    @if (buttonIcon()) {
       <span class="input-button" (click)="onButtonClick()">
-        <i class="{{ buttonIcon }}"></i>
+        <i class="{{ buttonIcon() }}"></i>
       </span>
     }
   </div>
 }
 
-<alg-input-error [form]="parentForm" [inputName]="name"></alg-input-error>
+<alg-input-error [form]="parentForm()" [inputName]="name()"></alg-input-error>
