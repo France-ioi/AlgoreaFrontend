@@ -1,11 +1,9 @@
 import {
-  Component, Input, OnChanges, SimpleChanges,
-  Output, EventEmitter, OnInit, ContentChild, TemplateRef, forwardRef,
-  ChangeDetectionStrategy
+  Component, computed, contentChild, forwardRef, input, output, signal, TemplateRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ProgressLevelComponent } from '../../progress-level/progress-level.component';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 export interface ProgressSelectValue<T> {
@@ -42,29 +40,28 @@ export interface ProgressSelectValue<T> {
       multi: true,
     }
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ ProgressLevelComponent, NgClass, NgTemplateOutlet, TooltipDirective ]
+  imports: [ ProgressLevelComponent, NgTemplateOutlet, TooltipDirective ]
 })
-export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlValueAccessor {
+export class ProgressSelectComponent<T> implements ControlValueAccessor {
 
-  @Input() collapsed = false;
+  collapsed = input(false);
+  values = input.required<ProgressSelectValue<T>[]>();
+  theme = input<'success' | 'warning' | 'danger'>('success');
 
-  @Input() values: ProgressSelectValue<T>[] = [];
-  @Input() defaultValue?: T;
-  @Input() value?: T;
-  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
+  protected readonly value = signal<T | undefined>(undefined);
 
-  @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
+  protected readonly selected = computed(() =>
+    Math.max(0, this.values().findIndex(item => item.value === this.value())),
+  );
 
-  @Output() valueChange = new EventEmitter<T>();
+  descriptionTemplate = contentChild<TemplateRef<unknown>>('description');
 
-  selected = 0;
+  valueChange = output<T>();
 
   private onChange: (value: T) => void = () => {};
 
   writeValue(value: T): void {
-    this.value = value;
-    this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
+    this.value.set(value);
   }
 
   registerOnChange(fn: (value: T) => void): void {
@@ -74,16 +71,8 @@ export class ProgressSelectComponent<T> implements OnChanges, OnInit, ControlVal
   registerOnTouched(_fn: (value: T) => void): void {
   }
 
-  ngOnInit(): void {
-    if (this.defaultValue !== undefined) this.value = this.defaultValue;
-  }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.selected = Math.max(0, this.values.findIndex(item => item.value === this.value));
-  }
-
   onSet(value: T): void {
-    this.writeValue(value);
+    this.value.set(value);
     this.onChange(value);
     this.valueChange.emit(value);
   }
