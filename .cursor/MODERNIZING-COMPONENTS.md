@@ -29,7 +29,7 @@ Apply in order for each component:
 
 ### TypeScript
 
-- [ ] `@Input()` → `input()` / `input.required<T>()`
+- [ ] `@Input()` → `input()` / `input.required<T>()` — grep call sites and re-evaluate each legacy optional/default (see §4); do not copy `= ''` / `= []` / `?` blindly
 - [ ] `@Output()` + `EventEmitter` → `output<T>()`
 - [ ] Constructor injection → `inject()` (when touching the file)
 - [ ] `ngOnChanges` / derived fields → `computed()`; remove `OnChanges`, `SimpleChanges`
@@ -81,6 +81,24 @@ Most pre-migration components used `ChangeDetectionStrategy.Eager` (formerly `De
 
 Use `input.required<T>()` when **every real call site always provides a value** and an empty/missing value would be a bug.
 
+### Re-evaluate optional inputs during migration
+
+Legacy `@Input()` had **no compile-time or runtime enforcement** of required inputs. An optional-looking API often reflects that limitation, not a deliberate design choice:
+
+- `@Input() header = ''` — default empty string, not proof that omitting `header` is valid.
+- `@Input() values: T[] = []` — default empty array, not proof that callers may skip `values`.
+- `@Input() foo?: T` — TypeScript optional, but every parent may still pass `foo` anyway.
+
+**While modernizing, treat each former `@Input()` as a candidate for `input.required()`** unless you find a real reason to keep it optional (template fallback, intentional default, or call sites that omit it). Grep call sites; do not assume the old optional/default was correct.
+
+Recent examples from batch 4 (`collapsible-section` family):
+
+| Input | Old API | After grep | Decision |
+|-------|---------|------------|----------|
+| `collapsible-section` `header` / `icon` | `input('')` | All 17 call sites set both | `input.required()` |
+| `progress-select` `values` | `input([])` | All 9 call sites bind `[values]` | `input.required()` |
+| `collapsible-section` `errorMessage` | optional | Several sections omit it | keep optional |
+
 | Use `input.required` | Keep optional `input()` |
 |----------------------|-------------------------|
 | `empty-content` `icon` / `message` | `error` `message` (projection fallback) |
@@ -95,6 +113,10 @@ Before marking required, grep all usages:
 ```bash
 rg 'alg-my-component' src -g '*.html'
 ```
+
+Also check for static attributes on the selector (`header="…"`, `icon="…"`) — i18n markers often use `i18n-header` / `header="…"` instead of `[header]="…"`.
+
+Do **not** skip this step because the legacy input had a default or was typed optional.
 
 ---
 
@@ -256,5 +278,6 @@ Public selector and input/output **names stay the same** — parent templates ne
 3. Mixing **`[attr.class]` and `[class]`** on the same element.
 4. Forgetting **`()`** on every signal in templates after migration.
 5. Making inputs **`required`** without grepping all call sites and updating specs.
-6. Leaving **dead inputs** or **ignored parent attributes** after API cleanup.
-7. Assuming **e2e covers** modernized components — grep `e2e/` first.
+6. **Keeping legacy optional defaults** (`= ''`, `= []`, `?`) without checking call sites — they often existed because `@Input()` could not be required, not because omission is valid.
+7. Leaving **dead inputs** or **ignored parent attributes** after API cleanup.
+8. Assuming **e2e covers** modernized components — grep `e2e/` first.
