@@ -1,31 +1,29 @@
-import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, contentChild, input, signal, TemplateRef } from '@angular/core';
 import { SectionHeaderComponent } from '../section-header/section-header.component';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'alg-collapsible-section',
   templateUrl: './collapsible-section.component.html',
   styleUrls: [ './collapsible-section.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ NgClass, SectionHeaderComponent, NgTemplateOutlet ]
+  imports: [ SectionHeaderComponent, NgTemplateOutlet ]
 })
 export class CollapsibleSectionComponent {
 
-  @Input() header = '';
-  @Input() errorMessage?: string;
-  @Input() icon = '';
+  header = input.required<string>();
+  errorMessage = input<string>();
+  icon = input.required<string>();
+  disabled = input(false);
+  protected readonly collapsed = signal(true);
+  collapsible = input(true);
+  theme = input<'success' | 'warning' | 'danger'>('success');
+  messageStyleClass = input('danger');
 
-  @Input() disabled = false;
-  @Input() collapsed = true;
-  @Input() collapsible = true;
-  @Input() theme: 'success' | 'warning' | 'danger' = 'success';
-  @Input() messageStyleClass = 'danger';
-
-  @ContentChild('content') contentTemplate?: TemplateRef<any>;
+  contentTemplate = contentChild<TemplateRef<unknown>>('content');
 
   onCollapse(): void {
-    if (this.collapsible) {
-      this.collapsed = !this.collapsed;
+    if (this.collapsible()) {
+      this.collapsed.update(c => !c);
     }
   }
 }

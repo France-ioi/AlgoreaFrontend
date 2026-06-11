@@ -1,10 +1,10 @@
-@if (collapsed) {
+@if (collapsed()) {
   <div class="header-content">
-    @if (value) {
-      @if (headerContent) {
+    @if (value()) {
+      @if (headerContent()) {
         <ng-container
-          [ngTemplateOutlet]="headerContent"
-          [ngTemplateOutletContext]="{ $implicit: value }"
+          [ngTemplateOutlet]="headerContent()!"
+          [ngTemplateOutletContext]="{ $implicit: value() }"
         ></ng-container>
       } @else {
         <span i18n>Yes</span>
@@ -15,40 +15,40 @@
   </div>
 }
 
-@if (!collapsed) {
+@if (!collapsed()) {
   <div class="body">
-    @if (descriptionTemplate) {
+    @if (descriptionTemplate()) {
       <div class="item">
         <div class="desc header-comment">
-          <ng-container [ngTemplateOutlet]="descriptionTemplate"></ng-container>
+          <ng-container [ngTemplateOutlet]="descriptionTemplate()!"></ng-container>
         </div>
       </div>
     }
     <div class="item">
       <div class="switch">
-        <alg-switch [(ngModel)]="value" (change)="onSet($event)"></alg-switch>
+        <alg-switch [ngModel]="value()" (ngModelChange)="onSet($event)"></alg-switch>
       </div>
       <div class="desc">
-        <div class="desc-name" [ngClass]="{ active: value }" (click)="onSet(!value)">
-          @if (labelTemplate) {
+        <div class="desc-name" [class.active]="value()" (click)="onSet(!value())">
+          @if (labelTemplate()) {
             <ng-container
-              [ngTemplateOutlet]="labelTemplate"
-              [ngTemplateOutletContext]="{ $implicit: value }"
+              [ngTemplateOutlet]="labelTemplate()!"
+              [ngTemplateOutletContext]="{ $implicit: value() }"
             ></ng-container>
           }
         </div>
         <div>
-          @if (contentTemplate) {
+          @if (contentTemplate()) {
             <ng-container
-              [ngTemplateOutlet]="contentTemplate"
-              [ngTemplateOutletContext]="{ $implicit: value }"
+              [ngTemplateOutlet]="contentTemplate()!"
+              [ngTemplateOutletContext]="{ $implicit: value() }"
             ></ng-container>
           }
         </div>
       </div>
-      @if (disabledTooltip.length) {
+      @if (disabledTooltip().length) {
         <div class="gray-overlay tool"
-          [algTooltip]="disabledTooltip.join('\n') || ''"
+          [algTooltip]="disabledTooltip().join('\n') || ''"
           tooltipPosition="top"
         ></div>
       }

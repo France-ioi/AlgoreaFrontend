@@ -1,28 +1,31 @@
-@if (collapsed) {
+@if (collapsed()) {
   <div class="header-content">
     <div class="header-content-wrapper">
-      <span class="selected-progress-level">{{ values[selected]?.label }}</span>
+      <span class="selected-progress-level">{{ values()[selected()]?.label }}</span>
       <ng-content select="[header-section]"></ng-content>
     </div>
-    <alg-progress-level [valuesLength]="values.length" [value]="selected" [colorTheme]="theme"></alg-progress-level>
+    <alg-progress-level [valuesLength]="values().length" [value]="selected()" [colorTheme]="theme()"></alg-progress-level>
   </div>
 }
 
-@if (!collapsed) {
+@if (!collapsed()) {
   <div class="progress-select-body">
     <div class="progress-select-item">
       <div class="progress-control">
-        @if (values.length > 0) {
-          <span class="progress-branch" [ngClass]="{active: selected >= 0}"></span>
+        @if (values().length > 0) {
+          <span class="progress-branch" [class.active]="selected() >= 0"></span>
         }
       </div>
-      @if (descriptionTemplate) {
+      @if (descriptionTemplate()) {
         <div class="progress-desc header-comment">
-          <ng-container [ngTemplateOutlet]="descriptionTemplate" [ngTemplateOutletContext]="{ $implicit: value }"></ng-container>
+          <ng-container
+            [ngTemplateOutlet]="descriptionTemplate()!"
+            [ngTemplateOutletContext]="{ $implicit: value() }"
+          ></ng-container>
         </div>
       }
     </div>
-    @for (item of values; track idx; let idx = $index) {
+    @for (item of values(); track idx; let idx = $index) {
       <div
         class="progress-select-item"
         [algTooltip]="item.tooltip?.join('\n') || ''"
@@ -31,31 +34,35 @@
       >
         <div
           class="progress-select-clickable-area"
-          [ngClass]="{ disabled: item.disabled, selected: item.selected }"
+          [class.disabled]="item.disabled"
+          [class.selected]="item.selected"
           data-testid="progress-selection"
           (click)="onSet(item.value)"
         >
           <div class="progress-control">
             <span
               class="progress-point"
-              [ngClass]="{active: idx < selected + 1, last: idx + 1 == selected + 1, 'active-light': item.selected}"
+              [class.active]="idx < selected() + 1"
+              [class.last]="idx + 1 == selected() + 1"
+              [class.active-light]="item.selected"
             >
-              @if (idx < selected || item.selected) {
+              @if (idx < selected() || item.selected) {
                 <i class="ph-bold ph-check"></i>
               }
-              @if (idx === selected) {
+              @if (idx === selected()) {
                 <i class="ph-bold ph-check"></i>
               }
             </span>
-            @if (idx + 1 < values.length) {
+            @if (idx + 1 < values().length) {
               <span
                 class="progress-branch"
-                [ngClass]="{ active: idx < selected, disabled: $safeNavigationMigration(values[idx + 1]?.disabled) }"
+                [class.active]="idx < selected()"
+                [class.disabled]="values()[idx + 1]?.disabled"
               ></span>
             }
           </div>
           <div class="progress-desc">
-            <div class="progress-desc-name" [ngClass]="{ active: idx < selected + 1 }" (click)="onSet(item.value)">{{ item.label }}</div>
+            <div class="progress-desc-name" [class.active]="idx < selected() + 1" (click)="onSet(item.value)">{{ item.label }}</div>
             <div class="progress-desc-comment">{{ item.comment }}</div>
           </div>
         </div>

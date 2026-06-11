@@ -1,7 +1,7 @@
-import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, contentChild, forwardRef, input, output, signal, TemplateRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { SwitchComponent } from '../../switch/switch.component';
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 /**
@@ -29,28 +29,26 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
       multi: true,
     }
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ NgTemplateOutlet, SwitchComponent, NgClass, FormsModule, TooltipDirective ]
+  imports: [ NgTemplateOutlet, SwitchComponent, FormsModule, TooltipDirective ]
 })
 export class SwitchFieldComponent implements ControlValueAccessor {
 
-  @Input() value = false;
-  @Input() collapsed = false;
+  collapsed = input(false);
+  disabledTooltip = input<string[]>([]);
 
-  // If this is not empty, the switch will be disabled, and the content of this array will appear as a tooltip
-  @Input() disabledTooltip: string[] = [];
+  protected readonly value = signal(false);
 
-  @ContentChild('description') descriptionTemplate?: TemplateRef<any>;
-  @ContentChild('label') labelTemplate?: TemplateRef<any>;
-  @ContentChild('content') contentTemplate?: TemplateRef<any>;
-  @ContentChild('headerContent') headerContent?: TemplateRef<any>;
+  descriptionTemplate = contentChild<TemplateRef<unknown>>('description');
+  labelTemplate = contentChild<TemplateRef<unknown>>('label');
+  contentTemplate = contentChild<TemplateRef<unknown>>('content');
+  headerContent = contentChild<TemplateRef<unknown>>('headerContent');
 
-  @Output() valueChange = new EventEmitter<boolean>();
+  valueChange = output<boolean>();
 
   private onChange: (value: boolean) => void = () => {};
 
   writeValue(value: boolean): void {
-    this.value = value;
+    this.value.set(value);
   }
 
   registerOnChange(fn: (value: boolean) => void): void {
@@ -61,7 +59,7 @@ export class SwitchFieldComponent implements ControlValueAccessor {
   }
 
   onSet(value: boolean): void {
-    this.writeValue(value);
+    this.value.set(value);
     this.valueChange.emit(value);
     this.onChange(value);
   }
