@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { ActivatedRouteSnapshot, PRIMARY_OUTLET, UrlSerializer } from '@angular/router';
+import { ActivatedRouteSnapshot, PRIMARY_OUTLET, UrlSegment, UrlSerializer } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { BehaviorSubject, Subject, combineLatest, distinctUntilChanged } from 'rxjs';
@@ -17,6 +17,13 @@ export interface FullFrameContent {
 }
 
 export enum ContentDisplayType { Default, Show, ShowFullFrame }
+
+// Top-level route paths displayed without the left navigation tree (compact mode).
+// These are app-structural pages (not instance content), so unlike `hideLeftMenuTreeOnItemIds`
+// they belong in app code rather than in the deployment config. Add a path here (e.g. 'community')
+// to render it without the tree. Matched against the first URL segment so the decision is resolved
+// synchronously from the URL (no first-paint flicker).
+const treelessRoutePaths: string[] = [];
 
 @Injectable({
   providedIn: 'root'
@@ -50,10 +57,9 @@ export class LayoutService implements OnDestroy {
   hideLeftMenuTree$ = this.store.select(fromRouter.selectSegments).pipe(
     // Before the first ROUTER_NAVIGATED the router store has no segments yet. Parse the current
     // URL synchronously so the panel is sized correctly on the very first paint (avoids the
-    // full-width -> compact width transition flashing on direct load of a compact-mode item).
+    // full-width -> compact width transition flashing on direct load of a compact-mode page).
     map(segments => segments ?? this.urlSerializer.parse(this.location.path()).root.children[PRIMARY_OUTLET]?.segments ?? []),
-    map(segments => parseItemUrlSegments(segments, this.config.redirects)?.route.id ?? null),
-    map(id => id !== null && this.config.hideLeftMenuTreeOnItemIds.includes(id)),
+    map(segments => this.isTreelessUrl(segments)),
     distinctUntilChanged(),
   );
   /**
@@ -129,6 +135,16 @@ export class LayoutService implements OnDestroy {
 
   toggleLeftMenu(visible: boolean): void {
     this.manualMenuToggle$.next(visible);
+  }
+
+  /**
+   * Whether the left navigation tree should be hidden (compact mode) for the given URL segments.
+   * Combines app-structural tree-less routes with the instance-configured special item ids.
+   */
+  private isTreelessUrl(segments: UrlSegment[]): boolean {
+    if (segments[0] && treelessRoutePaths.includes(segments[0].path)) return true;
+    const id = parseItemUrlSegments(segments, this.config.redirects)?.route.id ?? null;
+    return id !== null && this.config.hideLeftMenuTreeOnItemIds.includes(id);
   }
 
 }
