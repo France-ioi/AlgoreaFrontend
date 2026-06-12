@@ -1,14 +1,13 @@
 <div class="container alg-flex-1">
   <div class="loading text-center">
-    @if (label) {
-      <div class="alg-text-secondary">{{ label }}</div>
+    @if (label()) {
+      <div class="alg-text-secondary">{{ label() }}</div>
     }
     <alg-loading></alg-loading>
-    @if (delayedLabel) {
-      <div class="sub-label" [style.visibility]="showDelayedLabel ? undefined : 'hidden'">
-        {{ delayedLabel }}
+    @if (delayedLabel()) {
+      <div class="sub-label" [style.visibility]="showDelayedLabel() ? undefined : 'hidden'">
+        {{ delayedLabel() }}
       </div>
     }
   </div>
 </div>
-

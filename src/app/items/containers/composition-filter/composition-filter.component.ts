@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, linkedSignal, output } from '@angular/core';
 import { ensureDefined } from 'src/app/utils/assert';
 import { TypeFilter } from '../../models/composition-filter';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
@@ -7,16 +7,12 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
   selector: 'alg-composition-filter',
   templateUrl: './composition-filter.component.html',
   styleUrls: [ './composition-filter.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ SelectionComponent ]
 })
-export class CompositionFilterComponent implements OnInit {
+export class CompositionFilterComponent {
+  defaultValue = input<TypeFilter>();
 
-  @Input() defaultValue?: TypeFilter;
-
-  @Output() change = new EventEmitter<TypeFilter>();
-
-  selectedTypeFilter = 0;
+  change = output<TypeFilter>();
 
   readonly typeFilters: {icon:string, label:string, value:TypeFilter}[] = [
     {
@@ -36,15 +32,19 @@ export class CompositionFilterComponent implements OnInit {
     },
   ];
 
-  ngOnInit(): void {
-    if (this.defaultValue) {
-      this.selectedTypeFilter = this.typeFilters.findIndex(filter => filter.value === this.defaultValue);
-    }
-  }
+  selectedTypeFilter = linkedSignal({
+    source: this.defaultValue,
+    computation: defaultValue => {
+      if (defaultValue) {
+        const index = this.typeFilters.findIndex(filter => filter.value === defaultValue);
+        return index >= 0 ? index : 0;
+      }
+      return 0;
+    },
+  });
 
   onTypeFilterChanged(index: number): void {
     this.change.emit(ensureDefined(this.typeFilters[index]).value);
-    this.selectedTypeFilter = index;
+    this.selectedTypeFilter.set(index);
   }
-
 }

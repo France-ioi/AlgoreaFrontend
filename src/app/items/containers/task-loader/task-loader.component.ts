@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
+import { Component, effect, input, signal } from '@angular/core';
+import { timer } from 'rxjs';
 import { SECONDS } from 'src/app/utils/duration';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 
@@ -8,28 +8,26 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   selector: 'alg-task-loader',
   templateUrl: './task-loader.component.html',
   styleUrls: [ './task-loader.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LoadingComponent ]
 })
-export class TaskLoaderComponent implements OnInit, OnDestroy {
-
-  @Input() label = '';
+export class TaskLoaderComponent {
+  label = input('');
   /** label displayed after a delay (by default 5s) */
-  @Input() delayedLabel?: string;
+  delayedLabel = input<string>();
   /** delay in seconds after which the delayedLabel is displayed */
-  @Input() delay = 5;
+  delay = input(5);
 
-  showDelayedLabel = false;
-  subscription?: Subscription;
+  showDelayedLabel = signal(false);
 
-  ngOnInit(): void {
-    if (this.delayedLabel) {
-      this.subscription = timer(this.delay*SECONDS).subscribe(() => this.showDelayedLabel = true);
-    }
+  constructor() {
+    effect(onCleanup => {
+      const delayedLabel = this.delayedLabel();
+      this.showDelayedLabel.set(false);
+      if (!delayedLabel) {
+        return;
+      }
+      const sub = timer(this.delay() * SECONDS).subscribe(() => this.showDelayedLabel.set(true));
+      onCleanup(() => sub.unsubscribe());
+    });
   }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
 }
