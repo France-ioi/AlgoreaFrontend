@@ -1,14 +1,15 @@
 <div class="add-content-wrapper">
-  @if (showCreateUI) {
+  @if (showCreateUI()) {
     <alg-input
       class="alg-flex-1 white-bg"
       [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onNewFocus()"
       (blur)="onBlur()"
-      [ngClass]="{ 'input-light': focused === 'searchExisting', 'white-bg': isLight }"
+      [class.input-light]="focused === 'searchExisting'"
+      [class.white-bg]="isLight()"
       name="title"
-      [placeholder]="inputCreatePlaceholder"
+      [placeholder]="inputCreatePlaceholder()"
       i18n-tooltipText tooltipText="Enter at least 3 characters"
       tooltipEvent="focus"
       tooltipPosition="bottom"
@@ -17,17 +18,18 @@
     >
     </alg-input>
   }
-  @if (showCreateUI && showSearchUI) {
+  @if (showCreateUI() && showSearchUI()) {
     <p class="label" i18n>or</p>
   }
-  @if (showSearchUI) {
+  @if (showSearchUI()) {
     <alg-input
       class="alg-flex-1 white-bg"
       [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onExistingFocus()"
       (blur)="onBlur()"
-      [ngClass]="{ 'input-light': focused === 'create', 'white-bg': isLight }"
+      [class.input-light]="focused === 'create'"
+      [class.white-bg]="isLight()"
       name="searchExisting"
       i18n-placeholder placeholder="Search for existing content"
       i18n-tooltipText tooltipText="Enter at least 3 characters"
@@ -40,17 +42,17 @@
   }
 </div>
 
-@if (loading) {
+@if (loading()) {
   <alg-loading class="loading" size="medium"></alg-loading>
 } @else {
   @if (trimmedInputsValue.title.length >= minInputLength) {
     <p class="select-caption" i18n>Select the type of group to create</p>
     <div class="new-content-type">
       <div class="new-content-container">
-        @for (newContent of allowedTypesForNewContent; track newContent) {
+        @for (newContent of allowedTypesForNewContent(); track newContent) {
           <div
             class="content-type-item-container alg-flex-1"
-            [ngClass]="{'selected': newContent === selected}"
+            [class.selected]="newContent === selected"
             (click)="onSelect(newContent)"
           >
             <div class="item-image-wrapper">
@@ -69,21 +71,21 @@
       }
     </div>
   }
-  @if (state) {
-    @if (state.isFetching) {
+  @if (state(); as fetchState) {
+    @if (fetchState.isFetching) {
       <alg-loading class="alg-flex-1"></alg-loading>
     }
-    @if (state.isError) {
+    @if (fetchState.isError) {
       <div class="text-center" i18n>
         An error occurred while searching. If the problem persists, please contact us.
       </div>
     }
-    @if (trimmedInputsValue.searchExisting.length >= minInputLength && state.isReady) {
+    @if (trimmedInputsValue.searchExisting.length >= minInputLength && fetchState.isReady) {
       <div>
         <p class="select-caption" i18n>Select a content among those which already exist</p>
-        @if ((state.data || []).length > 0) {
+        @if ((fetchState.data || []).length > 0) {
           <ul class="add-content-list">
-            @for (item of (state.data || []) | slice : 0 : 10; track item) {
+            @for (item of (fetchState.data || []) | slice : 0 : 10; track item) {
               <li
                 class="add-content-list-item"
                 [algShowOverlay]="op"
@@ -106,9 +108,9 @@
                 <div class="add-content-list-right">
                   <button
                     alg-button
-                    [disabled]="addedIds.includes(item.id || '')"
+                    [disabled]="addedIds().includes(item.id || '')"
                     (click)="addExisting(item)"
-                  >{{ addedIds.includes(item.id || '') ? addedText : selectExistingText }}</button>
+                  >{{ addedIds().includes(item.id || '') ? addedText() : selectExistingText() }}</button>
                 </div>
                 <ng-template #op>
                   <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
@@ -119,7 +121,7 @@
         } @else {
           <span i18n>No records found</span>
         }
-        @if ((state.data || []).length > 10) {
+        @if ((fetchState.data || []).length > 10) {
           <p class="more-items text-center" i18n>
             More than 10 results match your search terms. If you have not found what you are looking for, make your search more specific.
           </p>
