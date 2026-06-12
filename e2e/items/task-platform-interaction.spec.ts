@@ -53,7 +53,7 @@ test.describe('platform-task interaction', () => {
     expect(body.score).toBe(80);
   });
 
-  test('showView asks the platform to switch tabs and reload task views', async () => {
+  test('showView asks the platform to switch tabs and reload task views', async ({ page }) => {
     await testTaskPage.gotoItem();
     await testTaskPage.waitForLoaded();
 
@@ -66,6 +66,10 @@ test.describe('platform-task interaction', () => {
       entry => (entry.params as { solution?: boolean }).solution === true,
     );
     expect(showViewsCall.params).toMatchObject({ solution: true });
+
+    // the selected tab on top of the task must follow the view requested by the task
+    await expect(page).toHaveURL(/task\/solution/);
+    await expect(testTaskPage.activeTab()).toHaveText('Solution');
   });
 
   test('getTaskParams returns platform parameters to the task', async () => {

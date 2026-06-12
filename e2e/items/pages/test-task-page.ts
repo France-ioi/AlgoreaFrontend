@@ -239,6 +239,10 @@ export class TestTaskPage {
   taskIframeLocator() {
     return this.page.locator('alg-item-display iframe.iframe-element');
   }
+
+  activeTab() {
+    return this.page.locator('alg-tab-bar li.alg-tab-bar-active');
+  }
 }
 
 declare global {

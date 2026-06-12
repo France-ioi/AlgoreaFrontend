@@ -72,7 +72,7 @@
                   [savingAnswer]="(savingAnswer$ | async) ?? false"
                   [taskView]="(currentTaskView$ | async) ?? undefined"
                   [editModeEnabled]="currentTab?.tag ==='alg-children-edit'"
-                  (taskViewChange)="setTaskView($event)"
+                  (taskViewChange)="setTaskView($event, itemData.route)"
                   (taskTabsChange)="setTaskTabs($event)"
                   (scoreChange)="onScoreChange($event)"
                   (skipSave)="skipBeforeUnload()"
