@@ -1,10 +1,10 @@
-@if (showLeftMenuOpener) {
+@if (showLeftMenuOpener()) {
   <alg-left-header [compactMode]="true"></alg-left-header>
 }
 <alg-content-top-bar
-  [showBreadcrumbs]="showBreadcrumbs"
-  [showLeftMenuOpener]="showLeftMenuOpener"
+  [showBreadcrumbs]="showBreadcrumbs()"
+  [showLeftMenuOpener]="showLeftMenuOpener()"
 ></alg-content-top-bar>
-@if (showTopRightControls) {
-  <alg-top-right-controls [drawLeftBorder]="!modeBarDisplayed"></alg-top-right-controls>
+@if (showTopRightControls()) {
+  <alg-top-right-controls [drawLeftBorder]="!modeBarDisplayed()"></alg-top-right-controls>
 }

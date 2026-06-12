@@ -1,6 +1,6 @@
 <div class="content-top-bar">
   <div class="left-pane">
-    @if (showLeftMenuOpener) {
+    @if (showLeftMenuOpener()) {
       <div class="margin-right">
         <button
           class="sidebar-toggle-btn"
@@ -36,7 +36,7 @@
       @if (!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) {
         <div class="left-pane-title margin-right">
           @let titleVal = title();
-          @if (!showBreadcrumbs && titleVal) {
+          @if (!showBreadcrumbs() && titleVal) {
             <p class="left-pane-title-text">{{ titleVal }}</p>
           } @else {
             <alg-breadcrumbs class="breadcrumbs"></alg-breadcrumbs>

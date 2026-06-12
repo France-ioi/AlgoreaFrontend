@@ -1,4 +1,4 @@
-import { Component, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -26,7 +26,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-content-top-bar',
   templateUrl: './content-top-bar.component.html',
   styleUrls: [ './content-top-bar.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ScoreRingComponent,
     LetDirective,
@@ -48,8 +47,8 @@ export class ContentTopBarComponent {
   private layoutService = inject(LayoutService);
   private tabService = inject(TabService);
 
-  @Input() showBreadcrumbs = true;
-  @Input() showLeftMenuOpener = false;
+  showBreadcrumbs = input(true);
+  showLeftMenuOpener = input(false);
 
   isItemContentActive = this.store.selectSignal(fromItemContent.selectIsItemContentActive);
   title = this.store.selectSignal(fromCurrentContent.selectTitle);

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 import { RouterLink } from '@angular/router';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
@@ -17,17 +17,15 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-observation-bar',
   templateUrl: './observation-bar.component.html',
   styleUrls: [ './observation-bar.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ NgClass, RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent, TooltipDirective ]
+  imports: [ RouterLink, AsyncPipe, GroupLinkPipe, GroupIsUserPipe, ButtonIconComponent, TooltipDirective ]
 })
 export class ObservationBarComponent {
   private store = inject(Store);
   private itemRouter = inject(ItemRouter);
 
-  @Output() cancel = new EventEmitter<void>();
-  @Input() caption?: string;
-  @Input() onlyIcon = false;
-  @Input() showTooltip = false;
+  caption = input<string>();
+  onlyIcon = input(false);
+  showTooltip = input(false);
 
   observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
   activeContentIsBeingObserved$ = this.store.select(fromObservation.selectActiveContentIsBeingObserved);

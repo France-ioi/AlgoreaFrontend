@@ -1,6 +1,8 @@
-@if (current) {
+@if (current()) {
+  <!-- alg-select CVA reads/writes tag strings via ngModel; (change) emits the full SelectOption. -->
   <alg-select
-    [(ngModel)]="current"
+    [ngModel]="current()"
+    (ngModelChange)="current.set($event)"
     (change)="languageChanged($event)"
   >
     @for (lang of languages; track $index) {
@@ -10,4 +12,3 @@
     }
   </alg-select>
 }
-

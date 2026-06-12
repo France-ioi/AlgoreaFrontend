@@ -14,7 +14,7 @@
 </div>
 
 <ng-template #menu>
-  <div class="menu" [ngClass]="styleClass" cdkMenu>
+  <div class="menu" [class]="styleClass()" cdkMenu>
     @if (isNarrowScreen) {
       <div class="menu-header">
         {{ userLogin }}
