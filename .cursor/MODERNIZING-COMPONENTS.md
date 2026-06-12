@@ -33,6 +33,7 @@ Apply in order for each component:
 - [ ] `@Output()` + `EventEmitter` → `output<T>()`
 - [ ] Constructor injection → `inject()` (when touching the file)
 - [ ] `ngOnChanges` / derived fields → `computed()`; remove `OnChanges`, `SimpleChanges`
+- [ ] `@ViewChild` / `@ViewChildren` → `viewChild()` / `viewChildren()` (signal queries) — reads become calls (`this.iframe()?.nativeElement`); update parents that chain through a public query (`child.addContentComponent()?.reset()`)
 - [ ] `@ContentChild` → `contentChild()` (signal query)
 - [ ] Remove `standalone: true` (default since v20; do not set it)
 - [ ] Remove empty `imports: []`
