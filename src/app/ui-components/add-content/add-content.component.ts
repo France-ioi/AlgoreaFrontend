@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, filter, switchMap, debounceTime } from 'rxjs/operators';
 import { ItemCorePerm } from '../../items/models/item-permissions';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from '../../utils/state';
 import { LoadingComponent } from '../loading/loading.component';
 import { InputComponent } from '../input/input.component';
-import { NgClass, SlicePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 import { PathSuggestionComponent } from '../../containers/path-suggestion/path-suggestion.component';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
@@ -35,10 +36,8 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
   styleUrls: [ './add-content.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     InputComponent,
-    NgClass,
     LoadingComponent,
     SlicePipe,
     PathSuggestionComponent,
@@ -47,25 +46,26 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
     ButtonComponent,
   ]
 })
-export class AddContentComponent<Type> implements OnInit, OnDestroy {
+export class AddContentComponent<Type> implements OnInit {
   private formBuilder = inject(UntypedFormBuilder);
+  private destroyRef = inject(DestroyRef);
 
-  @Input() allowedTypesForNewContent: NewContentType<Type>[] = [];
-  @Input() searchFunction?: (searchValue: string) => Observable<AddedContent<Type>[]>;
-  @Input() loading = false;
-  @Input() addedIds: string[] = [];
-  @Input() selectExistingText: string = $localize`Add`;
-  @Input() addedText: string = $localize`Already added`;
-  @Input() inputCreatePlaceholder = $localize`Enter a title to create a new child`;
-  @Input() showCreateUI = true;
-  @Input() showSearchUI = true;
-  @Input() isLight = false;
+  allowedTypesForNewContent = input<NewContentType<Type>[]>([]);
+  searchFunction = input<(searchValue: string) => Observable<AddedContent<Type>[]>>();
+  loading = input(false);
+  addedIds = input<string[]>([]);
+  selectExistingText = input($localize`Add`);
+  addedText = input($localize`Already added`);
+  inputCreatePlaceholder = input($localize`Enter a title to create a new child`);
+  showCreateUI = input(true);
+  showSearchUI = input(true);
+  isLight = input(false);
 
-  @Output() contentAdded = new EventEmitter<AddedContent<Type>>();
+  contentAdded = output<AddedContent<Type>>();
 
   readonly minInputLength = 3;
 
-  state?: FetchState<AddedContent<Type>[]>;
+  readonly state = signal<FetchState<AddedContent<Type>[]> | undefined>(undefined);
   addContentForm: UntypedFormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
 
@@ -74,42 +74,35 @@ export class AddContentComponent<Type> implements OnInit, OnDestroy {
 
   itemId = signal<string | undefined>(undefined);
 
-  private subscriptions: Subscription[] = [];
-
   ngOnInit(): void {
-    if (!this.searchFunction && this.showSearchUI) throw new Error('The input \'searchFunction\' is required');
-    const searchFunction = this.searchFunction;
+    if (!this.searchFunction() && this.showSearchUI()) throw new Error('The input \'searchFunction\' is required');
+    const searchFunction = this.searchFunction();
 
-    this.subscriptions.push(
-      this.addContentForm.valueChanges.subscribe((changes: typeof defaultFormValues) => {
-        this.trimmedInputsValue = {
-          title: changes.title.trim(),
-          url: changes.url.trim(),
-          searchExisting: changes.searchExisting.trim(),
-        };
-      })
-    );
+    this.addContentForm.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((changes: typeof defaultFormValues) => {
+      this.trimmedInputsValue = {
+        title: changes.title.trim(),
+        url: changes.url.trim(),
+        searchExisting: changes.searchExisting.trim(),
+      };
+    });
 
     if (!searchFunction) {
       return;
     }
 
     const existingTitleControl: Observable<string> | undefined = this.addContentForm.get('searchExisting')?.valueChanges;
-    if (existingTitleControl) this.subscriptions.push(
+    if (existingTitleControl) {
       existingTitleControl.pipe(
         // Removes all diacritics marks
         map(value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim()),
         filter(value => this.checkLength(value)),
         debounceTime(300),
         switchMap(value => searchFunction(value).pipe(mapToFetchState())),
-      ).subscribe(state =>
-        this.state = state
-      )
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe(nextState => this.state.set(nextState));
+    }
   }
 
   onNewFocus(): void {
