@@ -65,7 +65,7 @@ export class AddContentComponent<Type> implements OnInit {
 
   readonly minInputLength = 3;
 
-  state = signal<FetchState<AddedContent<Type>[]> | undefined>(undefined);
+  readonly state = signal<FetchState<AddedContent<Type>[]> | undefined>(undefined);
   addContentForm: UntypedFormGroup = this.formBuilder.group(defaultFormValues);
   trimmedInputsValue = defaultFormValues;
 

@@ -38,6 +38,10 @@
   flex-direction: column;
   align-items: center;
   padding: 1rem;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
   background-color: transparent;
   cursor: pointer;
   min-width: functions.toRem(128);
@@ -56,6 +60,11 @@
 
   &:hover, &.selected {
     border: functions.toRem(2) solid var(--alg-primary-color) ;
+  }
+
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #4a6fa5);
+    outline-offset: functions.toRem(-2);
   }
 }
 

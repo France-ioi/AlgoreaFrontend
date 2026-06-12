@@ -50,17 +50,18 @@
     <div class="new-content-type">
       <div class="new-content-container">
         @for (newContent of allowedTypesForNewContent(); track newContent) {
-          <div
+          <button
+            type="button"
             class="content-type-item-container alg-flex-1"
             [class.selected]="newContent === selected"
             (click)="onSelect(newContent)"
           >
-            <div class="item-image-wrapper">
+            <span class="item-image-wrapper">
               <i class="{{ newContent.icon }}"></i>
-            </div>
-            <div class="item-title">{{ newContent.title }}</div>
-            <div class="item-description">{{ newContent.description }}</div>
-          </div>
+            </span>
+            <span class="item-title">{{ newContent.title }}</span>
+            <span class="item-description">{{ newContent.description }}</span>
+          </button>
         }
       </div>
       @if (selected) {
