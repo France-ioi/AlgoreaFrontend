@@ -1,11 +1,11 @@
 
-@if (!!sanitizedUrl) {
+@if (!!sanitizedUrl()) {
   <div
     class="iframe-container"
     [algFullHeightContent]="true"
   >
     <iframe
-      [src]="sanitizedUrl"
+      [src]="sanitizedUrl()"
       [algFullHeightContent]="true"
       allowfullscreen
     ></iframe>

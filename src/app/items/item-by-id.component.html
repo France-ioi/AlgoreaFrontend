@@ -8,9 +8,7 @@
         @if (showAccessCodeField$ | async) {
           <div class="access-code-view">
             <alg-access-code-view
-              i18n-sectionLabel sectionLabel="Access to activity"
               i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
-              [itemData]="itemData"
               (groupJoined)="reloadItem()"
             ></alg-access-code-view>
           </div>

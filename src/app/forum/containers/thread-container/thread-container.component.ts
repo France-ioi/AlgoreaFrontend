@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, computed, inject, Input, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { combineLatest, filter, map, of, Subscription, switchMap } from 'rxjs';
+import { AfterViewInit, Component, computed, DestroyRef, inject, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { combineLatest, filter, map, of, switchMap } from 'rxjs';
 import { ThreadComponent } from '../thread/thread.component';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
@@ -18,7 +19,6 @@ import { catchError } from 'rxjs/operators';
   selector: 'alg-thread-container',
   templateUrl: './thread-container.component.html',
   styleUrls: [ './thread-container.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterLink,
     ThreadComponent,
@@ -27,15 +27,14 @@ import { catchError } from 'rxjs/operators';
     GroupLinkPipe,
   ]
 })
-export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
+export class ThreadContainerComponent implements AfterViewInit {
 
   private store = inject(Store);
   private userSessionService = inject(UserSessionService);
   private userService = inject(GetUserService);
+  private destroyRef = inject(DestroyRef);
 
-  @ViewChild(ThreadComponent) threadComponent?: ThreadComponent;
-
-  @Input() topCompensation = 0;
+  threadComponent = viewChild(ThreadComponent);
 
   visible$ = this.store.select(fromForum.selectVisible);
   threadHydratedId = this.store.selectSignal(fromForum.selectThreadHydratedId);
@@ -68,17 +67,14 @@ export class ThreadContainerComponent implements AfterViewInit, OnDestroy {
   /** The participant id, for linking to their profile. */
   participantId = computed(() => this.threadHydratedId()?.id.participantId ?? null);
 
-  private subscription?: Subscription;
-
   ngAfterViewInit(): void {
-    this.subscription = this.visible$.pipe(filter(visible => visible)).subscribe(() => {
-      this.threadComponent?.scrollDown();
-      this.threadComponent?.focusOnInput();
+    this.visible$.pipe(
+      filter(visible => visible),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => {
+      this.threadComponent()?.scrollDown();
+      this.threadComponent()?.focusOnInput();
     });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
   }
 
   onClose(): void {
