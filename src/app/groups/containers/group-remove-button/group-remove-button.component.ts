@@ -49,6 +49,7 @@ export class GroupRemoveButtonComponent {
   constructor() {
     this.destroyRef.onDestroy(() => {
       this.refresh$.complete();
+      this.deletionInProgress$.complete();
     });
   }
 
