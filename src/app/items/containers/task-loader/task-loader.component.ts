@@ -20,6 +20,8 @@ export class TaskLoaderComponent {
   showDelayedLabel = signal(false);
 
   constructor() {
+    // effect() restarts the timer when delayedLabel or delay inputs change; a field-initialized
+    // timer().pipe(takeUntilDestroyed()) would only run once at construction time.
     effect(onCleanup => {
       const delayedLabel = this.delayedLabel();
       this.showDelayedLabel.set(false);

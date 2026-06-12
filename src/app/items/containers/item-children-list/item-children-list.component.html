@@ -5,12 +5,12 @@
   >
     @for (item of children(); track item; let i = $index) {
       <li class="data-list-item">
-        @if (routeParams()) {
+        @if (routeParams(); as routeParams) {
           <a
             class="item-link"
             [class.locked]="item.isLocked"
-            [routerLink]="item | itemRoute: { path: routeParams()!.path } |
-              with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: routeParams()!.parentAttemptId }) |
+            [routerLink]="item | itemRoute: { path: routeParams.path } |
+              with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: routeParams.parentAttemptId }) |
               url"
           >
             <div class="left-container">
