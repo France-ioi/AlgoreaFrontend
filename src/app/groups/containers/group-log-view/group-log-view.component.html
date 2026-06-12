@@ -71,7 +71,7 @@
             >
               <a
                 class="alg-link"
-                [ngClass]="{'disabled': !rowData.item}"
+                [class.disabled]="!rowData.item"
                 [routerLink]="rowData.item | itemRoute | url"
                 algShowOverlayHoverTarget
               >

@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, input } from '@angular/core';
 import { Group } from '../../models/group';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { ReplaySubject, of, Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GrantedPermissionsService } from '../../data-access/granted-permissions.service';
@@ -11,12 +11,12 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe } from '@angular/common';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-group-access',
   templateUrl: './group-access.component.html',
   styleUrls: [ './group-access.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -26,15 +26,18 @@ import { AsyncPipe } from '@angular/common';
     GroupLinkPipe,
   ]
 })
-export class GroupAccessComponent implements OnChanges, OnDestroy {
+export class GroupAccessComponent {
   private getItemByIdService = inject(GetItemByIdService);
   private grantedPermissionsService = inject(GrantedPermissionsService);
+  private destroyRef = inject(DestroyRef);
 
-  @Input() group?: Group;
-
-  private readonly group$ = new ReplaySubject<Group>(1);
+  group = input.required<Group>();
 
   private refresh$ = new Subject<void>();
+  private permissionsRefresh$ = new Subject<void>();
+
+  private group$ = toObservable(this.group);
+
   rootActivityState$ = this.group$.pipe(
     switchMap(({ rootActivityId }) => {
       if (!rootActivityId) {
@@ -45,21 +48,16 @@ export class GroupAccessComponent implements OnChanges, OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  private permissionsRefresh$ = new Subject<void>();
   permissionState$ = this.group$.pipe(
     switchMap(group => this.grantedPermissionsService.get(group.id)),
     mapToFetchState({ resetter: this.permissionsRefresh$ }),
   );
 
-  ngOnChanges(): void {
-    if (this.group) {
-      this.group$.next(this.group);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.group$.complete();
-    this.refresh$.complete();
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.refresh$.complete();
+      this.permissionsRefresh$.complete();
+    });
   }
 
   refresh(): void {
