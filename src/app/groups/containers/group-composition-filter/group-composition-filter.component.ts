@@ -79,6 +79,8 @@ export class GroupCompositionFilterComponent implements OnInit {
   onChildrenFilterChanged(checked: boolean): void {
     this.allDescendantsChecked.set(checked);
     this.value.update(current => ({ ...current, directChildren: !checked }));
+    // Re-resolve type index after directChildren changes: some filters only allow direct children,
+    // so allowToCheckAllDescendants must be refreshed from the canonical typeFilters entry.
     this.selectedTypeFilter.set(this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value().type));
     this.value.update(current => ({ ...current, type: ensureDefined(this.typeFilters[this.selectedTypeFilter()]).value }));
     this.allowToCheckAllDescendants.set(!ensureDefined(this.typeFilters[this.selectedTypeFilter()]).directOnly);
