@@ -1,5 +1,5 @@
 import {
-  ChangeDetectorRef, Component, computed, forwardRef, inject, Injector, input, OnInit, output,
+  ChangeDetectorRef, Component, computed, forwardRef, inject, Injector, input, OnInit,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -42,8 +42,6 @@ const MAX_SECONDS_VALUE = 59;
 export class DurationComponent implements OnInit, ControlValueAccessor, Validator {
   private injector = inject(Injector);
   private changeDetectorRef = inject(ChangeDetectorRef);
-
-  change = output<Duration | null>();
 
   name = input('');
   parentForm = input<UntypedFormGroup>();
@@ -126,7 +124,6 @@ export class DurationComponent implements OnInit, ControlValueAccessor, Validato
   }
 
   emitValue(duration: Duration | null): void {
-    this.change.emit(duration);
     this.onChange(duration);
   }
 
