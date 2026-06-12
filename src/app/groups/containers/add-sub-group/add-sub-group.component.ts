@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -6,7 +6,6 @@ import {
   AddedContent,
   NewContentType
 } from 'src/app/ui-components/add-content/add-content.component';
-import { Group } from '../../models/group';
 import { SearchGroupService } from '../../data-access/search-group.service';
 import { AddContentComponent as AddContentComponent_1 } from 'src/app/ui-components/add-content/add-content.component';
 import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-section.component';
@@ -17,24 +16,16 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
   selector: 'alg-add-sub-group',
   templateUrl: './add-sub-group.component.html',
   styleUrls: [ './add-sub-group.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddSubGroupComponent {
   private searchGroupService = inject(SearchGroupService);
 
-  @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<GroupType>;
+  addContentComponent = viewChild<AddContentComponent<GroupType>>('addContentComponent');
 
-  @Input() group?: Group;
-  @Input() loading = false;
+  loading = input(false);
 
-  @Output() addGroup = new EventEmitter<AddedContent<GroupType>>();
-
-  groupsFound: {
-    type: GroupType,
-    title: string,
-    description: string|null,
-  }[] = [];
+  addGroup = output<AddedContent<GroupType>>();
 
   allowedNewGroupTypes: NewContentType<GroupType>[] = [
     {

@@ -2,11 +2,11 @@
   Let users join using a code
 </h2>
 
-@if (processing) {
+@if (processing()) {
   <alg-loading></alg-loading>
 } @else {
   <p class="alg-text-secondary" i18n>Let users access this group using a password you send them.</p>
-  @if (codeInfo) {
+  @if (codeInfo(); as codeInfo) {
     @if (codeInfo.hasCodeNotSet) {
       <p class="alg-text-small" i18n>There is currently no code set.</p>
     }
@@ -38,19 +38,19 @@
         class="size-l"
         icon="ph-bold ph-plus"
         (click)="generateNewCode()"
-        [disabled]="processing"
+        [disabled]="processing()"
         i18n
         alg-button
       >Generate a code</button>
     }
   }
-  @if (group && group.code) {
+  @if (group().code; as code) {
     <div>
       <div class="field">
         <span class="field-name" i18n>Code</span>
         <div class="field-value">
           <alg-code-token
-            [code]="group.code"
+            [code]="code"
             [showRefresh]="true"
             [showRemove]="true"
             (refresh)="generateNewCode()"
@@ -63,10 +63,10 @@
         <div class="field-value">
           <alg-selection
             [items]="codeLifetimeOptions"
-            [selected]="selectedCodeLifetimeOption"
+            [selected]="selectedCodeLifetimeOption()"
             (change)="changeCodeLifetime($event)"
           ></alg-selection>
-          @if (selectedCodeLifetimeOption === customCodeLifetimeOption) {
+          @if (selectedCodeLifetimeOption() === customCodeLifetimeOption) {
             <div class="duration-form-group">
               <alg-duration
                 class="alg-duration"
@@ -86,7 +86,7 @@
                   class="size-l stroke"
                   icon="ph-bold ph-check"
                   (click)="codeLifetimeControlValue && submitCodeLifetime(codeLifetimeControlValue.ms)"
-                  [disabled]="processing || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group.codeLifetime?.ms"
+                  [disabled]="processing() || !codeLifetimeControlValue || !control.dirty || codeLifetimeControlValue.ms === group().codeLifetime?.ms"
                   alg-button-icon
                 ></button>
               </span>
@@ -97,4 +97,3 @@
     </div>
   }
 }
-

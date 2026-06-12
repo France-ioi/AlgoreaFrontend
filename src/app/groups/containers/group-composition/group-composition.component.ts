@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, signal, viewChild } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -24,7 +24,6 @@ export interface GroupChildData {
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
   styleUrls: [ './group-composition.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MemberListComponent,
     AddSubGroupComponent,
@@ -38,40 +37,38 @@ export class GroupCompositionComponent {
   private groupCreationService = inject(GroupCreationService);
   private actionFeedbackService = inject(ActionFeedbackService);
 
-  @ViewChild('addSubGroupComponent') addSubGroupComponent?: AddSubGroupComponent;
+  addSubGroupComponent = viewChild<AddSubGroupComponent>('addSubGroupComponent');
 
-  @Input() groupData?: GroupData;
+  groupData = input.required<GroupData>();
 
-  @Output() groupRefreshRequired = new EventEmitter<void>();
-  @Output() addedGroup = new EventEmitter<void>();
-  @Output() removedGroup = new EventEmitter<void>();
+  groupRefreshRequired = output<void>();
+  addedGroup = output<void>();
+  removedGroup = output<void>();
 
-  @ViewChild('memberList') private memberList?: MemberListComponent;
+  private memberList = viewChild<MemberListComponent>('memberList');
 
-  state: 'addingGroup' | 'ready' = 'ready';
+  state = signal<'addingGroup' | 'ready'>('ready');
 
   refreshGroupInfo(): void {
     this.groupRefreshRequired.emit();
   }
 
   addGroup(group: GroupChildData): void {
-    if (!this.groupData) throw Error('Tried to add a subgroup to an undefined group');
-
-    this.state = 'addingGroup';
+    this.state.set('addingGroup');
 
     forkJoin({
-      parentGroupId: of(this.groupData.group.id),
+      parentGroupId: of(this.groupData().group.id),
       childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type),
     }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe({
       next: _ => {
         this.actionFeedbackService.success($localize`Group successfully added as child group`);
-        this.memberList?.setFilter({ directChildren: true, type: TypeFilter.Groups });
-        this.state = 'ready';
+        this.memberList()?.setFilter({ directChildren: true, type: TypeFilter.Groups });
+        this.state.set('ready');
         this.addedGroup.emit();
-        this.addSubGroupComponent?.addContentComponent?.reset();
+        this.addSubGroupComponent()?.addContentComponent()?.reset();
       },
       error: err => {
-        this.state = 'ready';
+        this.state.set('ready');
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }

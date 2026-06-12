@@ -1,23 +1,21 @@
-@if (groupData) {
-  @let group = groupData.group;
-  @if (group | isCurrentUserManager) {
-    <alg-member-list class="member-list" #memberList [groupData]="groupData" (removedGroup)="removedGroup.emit()"></alg-member-list>
-    @if (group.currentUserCanManage !== 'none') {
-      <alg-add-sub-group
-        [loading]="state === 'addingGroup'"
-        (addGroup)="addGroup($event)"
-        #addSubGroupComponent
-      ></alg-add-sub-group>
-    }
-    @if (group.currentUserCanManage !== 'none') {
-      <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()">
-      </alg-group-join-by-code>
-    }
-    @if (group.currentUserCanManage !== 'none') {
-      <alg-group-invite-users [group]="group" (refreshRequired)="refreshGroupInfo()">
-      </alg-group-invite-users>
-    }
-  } @else {
-    <alg-group-no-permission></alg-group-no-permission>
+@let group = groupData().group;
+@if (group | isCurrentUserManager) {
+  <alg-member-list class="member-list" #memberList [groupData]="groupData()" (removedGroup)="removedGroup.emit()"></alg-member-list>
+  @if (group.currentUserCanManage !== 'none') {
+    <alg-add-sub-group
+      [loading]="state() === 'addingGroup'"
+      (addGroup)="addGroup($event)"
+      #addSubGroupComponent
+    ></alg-add-sub-group>
   }
+  @if (group.currentUserCanManage !== 'none') {
+    <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()">
+    </alg-group-join-by-code>
+  }
+  @if (group.currentUserCanManage !== 'none') {
+    <alg-group-invite-users [group]="group">
+    </alg-group-invite-users>
+  }
+} @else {
+  <alg-group-no-permission></alg-group-no-permission>
 }
