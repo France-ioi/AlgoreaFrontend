@@ -60,7 +60,7 @@ export class AnswerAuthorIndicatorComponent {
   }
 
   answer = input.required<Answer>();
-  itemData = input<ItemData>();
+  itemData = input.required<ItemData>();
 
   readonly answer$ = toObservable(this.answer);
   readonly author$ = this.answer$.pipe(
