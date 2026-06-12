@@ -308,12 +308,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       map(({ display }) => display),
     ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
 
-    this.itemState$.pipe(
-      readyData<ItemData>(),
-      map(data => this.config.hideLeftMenuTreeOnItemIds.includes(data.route.id)),
-      distinctUntilChanged(),
-    ).subscribe(hideLeftMenuTree => this.layoutService.configure({ hideLeftMenuTree })),
-
     this.saveBeforeUnloadError$.pipe(
       filter(isError => isError),
       switchMap(() => this.confirmationModalService.open({
@@ -345,7 +339,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.tabService.setTabs([]);
     this.currentContent.clear();
     this.subscriptions.forEach(s => s.unsubscribe());
-    this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default, hideLeftMenuTree: false });
+    this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });
     this.skipBeforeUnload$.complete();
     this.retryBeforeUnload$.complete();
     this.beforeUnload$.complete();

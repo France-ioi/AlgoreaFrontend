@@ -1,9 +1,14 @@
+import { Location } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, PRIMARY_OUTLET, UrlSegment, UrlSerializer } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { BehaviorSubject, Subject, combineLatest, distinctUntilChanged } from 'rxjs';
 import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
+import { APPCONFIG } from 'src/app/config';
+import { parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
+import { fromRouter } from 'src/app/store/router';
 
 export interface FullFrameContent {
   active: boolean,
@@ -13,11 +18,22 @@ export interface FullFrameContent {
 
 export enum ContentDisplayType { Default, Show, ShowFullFrame }
 
+// Top-level route paths displayed without the left navigation tree (compact mode).
+// These are app-structural pages (not instance content), so unlike `hideLeftMenuTreeOnItemIds`
+// they belong in app code rather than in the deployment config. Add a path here (e.g. 'community')
+// to render it without the tree. Matched against the first URL segment so the decision is resolved
+// synchronously from the URL (no first-paint flicker).
+const treelessRoutePaths: string[] = [];
+
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService implements OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
+  private store = inject(Store);
+  private config = inject(APPCONFIG);
+  private location = inject(Location);
+  private urlSerializer = inject(UrlSerializer);
 
   /* state variables used to make decisions */
   private contentDisplayType$ = new BehaviorSubject<ContentDisplayType>(ContentDisplayType.Default);
@@ -27,7 +43,6 @@ export class LayoutService implements OnDestroy {
   private showTopRightControls = new BehaviorSubject(true);
   private canShowLeftMenu = new BehaviorSubject<boolean>(true);
   private canShowBreadcrumbs = new BehaviorSubject<boolean>(true);
-  private hideLeftMenuTree = new BehaviorSubject<boolean>(false);
 
   /* variables to be used by other services and components */
   isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
@@ -39,7 +54,14 @@ export class LayoutService implements OnDestroy {
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
   canShowBreadcrumbs$ = this.canShowBreadcrumbs.asObservable();
-  hideLeftMenuTree$ = this.hideLeftMenuTree.asObservable();
+  hideLeftMenuTree$ = this.store.select(fromRouter.selectSegments).pipe(
+    // Before the first ROUTER_NAVIGATED the router store has no segments yet. Parse the current
+    // URL synchronously so the panel is sized correctly on the very first paint (avoids the
+    // full-width -> compact width transition flashing on direct load of a compact-mode page).
+    map(segments => segments ?? this.urlSerializer.parse(this.location.path()).root.children[PRIMARY_OUTLET]?.segments ?? []),
+    map(segments => this.isTreelessUrl(segments)),
+    distinctUntilChanged(),
+  );
   /**
    * Left menu: expected behavior
    * (note that in the following, a narrow window as the same behavior as mobile)
@@ -93,29 +115,36 @@ export class LayoutService implements OnDestroy {
     this.showTopRightControls.complete();
     this.canShowLeftMenu.complete();
     this.canShowBreadcrumbs.complete();
-    this.hideLeftMenuTree.complete();
   }
 
   /**
    * Configure layout.
    * The layout is considered not initialized (so not using animation) only until the first call.
    */
-  configure({ contentDisplayType, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls, hideLeftMenuTree }: {
+  configure({ contentDisplayType, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls }: {
     contentDisplayType?: ContentDisplayType,
     canShowLeftMenu?: boolean,
     canShowBreadcrumbs?: boolean,
     showTopRightControls?: boolean,
-    hideLeftMenuTree?: boolean,
   }): void {
     if (contentDisplayType !== undefined) this.contentDisplayType$.next(contentDisplayType);
     if (canShowLeftMenu !== undefined) this.canShowLeftMenu.next(canShowLeftMenu);
     if (canShowBreadcrumbs !== undefined) this.canShowBreadcrumbs.next(canShowBreadcrumbs);
     if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);
-    if (hideLeftMenuTree !== undefined) this.hideLeftMenuTree.next(hideLeftMenuTree);
   }
 
   toggleLeftMenu(visible: boolean): void {
     this.manualMenuToggle$.next(visible);
+  }
+
+  /**
+   * Whether the left navigation tree should be hidden (compact mode) for the given URL segments.
+   * Combines app-structural tree-less routes with the instance-configured special item ids.
+   */
+  private isTreelessUrl(segments: UrlSegment[]): boolean {
+    if (segments[0] && treelessRoutePaths.includes(segments[0].path)) return true;
+    const id = parseItemUrlSegments(segments, this.config.redirects)?.route.id ?? null;
+    return id !== null && this.config.hideLeftMenuTreeOnItemIds.includes(id);
   }
 
 }
