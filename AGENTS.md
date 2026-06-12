@@ -128,6 +128,16 @@ Make sure after each modification that:
 - Set the user token in `.e2e.env` (start from `.e2e.env.sample`)
 - Launch web server (`ng serve`) before running tests
 
+## Testing platform-task interaction
+
+When changing code under `src/app/items/api/` or the `item-task-*` services:
+
+1. Keep [mocks/test-task/](mocks/test-task/) in sync with the Bebras task API (add bindings and control-panel buttons for new methods).
+2. For manual checks, run `npm start` and set a dev task URL to `http://localhost:3000/test-task/index.html`.
+3. Add or update coverage in [e2e/items/task-platform-interaction.spec.ts](e2e/items/task-platform-interaction.spec.ts).
+
+See [mocks/test-task/README.md](mocks/test-task/README.md) for scenario query params and API coverage.
+
 ## Internationalization
 
 - All English strings in templates and code must be internationalized
