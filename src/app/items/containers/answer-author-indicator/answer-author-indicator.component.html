@@ -29,11 +29,11 @@
               </div>
             </div>
             <div class="buttons">
-              @if (!info.isObserving && author.groupId === info.currentUserId && itemData) {
+              @if (!info.isObserving && author.groupId === info.currentUserId) {
                 <a
                   class="size-xs button"
                   alg-button
-                  [routerLink]="itemData.item | itemRoute | url"
+                  [routerLink]="itemData().item | itemRoute | url"
                   [algLoadAnswerAsCurrent]="answer.id"
                   i18n
                 >
@@ -42,7 +42,7 @@
                 <a
                   class="size-xs button"
                   alg-button
-                  [routerLink]="itemData.item | itemRoute | url"
+                  [routerLink]="itemData().item | itemRoute | url"
                   i18n
                 >
                   View your current answer

@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
-import { ItemData } from 'src/app/items/models/item-data';
 import { FormsModule } from '@angular/forms';
 import {
   JoinGroupConfirmationDialogComponent, JoinGroupConfirmationDialogResult
@@ -17,27 +16,25 @@ import { EMPTY, Observable, throwError } from 'rxjs';
   selector: 'alg-access-code-view',
   templateUrl: './access-code-view.component.html',
   styleUrls: [ './access-code-view.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, ButtonComponent ]
 })
 export class AccessCodeViewComponent {
   private joinByCodeService = inject(JoinByCodeService);
   private actionFeedbackService = inject(ActionFeedbackService);
 
-  @Input() sectionLabel = '';
-  @Input() buttonLabel = '';
-  @Input() itemData?: ItemData;
-  @Output() groupJoined = new EventEmitter<void>();
+  buttonLabel = input.required<string>();
+  groupJoined = output<void>();
 
   private dialogService = inject(Dialog);
 
-  code = '';
-  state: 'ready'|'loading' = 'ready';
+  code = signal('');
+  state = signal<'ready'|'loading'>('ready');
 
   checkCodeValidity(): void {
-    this.code = this.code.trim();
-    this.state = 'loading';
-    this.joinByCodeService.checkCodeValidity(this.code).pipe(
+    const trimmedCode = this.code().trim();
+    this.code.set(trimmedCode);
+    this.state.set('loading');
+    this.joinByCodeService.checkCodeValidity(trimmedCode).pipe(
       catchError(() =>
         throwError(() => new Error($localize`Failed to check code validity, please retry. If the problem persists, contact us.`))
       ),
@@ -58,17 +55,17 @@ export class AccessCodeViewComponent {
             disableClose: true,
           },
         ).closed.pipe(
-          switchMap(result => (result?.confirmed ? this.joinGroup(this.code, group) : EMPTY))
+          switchMap(result => (result?.confirmed ? this.joinGroup(trimmedCode, group) : EMPTY))
         );
       }),
     ).subscribe({
       next: () => {
-        this.code = '';
+        this.code.set('');
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.groupJoined.emit();
       },
       error: (error: unknown) => {
-        this.state = 'ready';
+        this.state.set('ready');
         if (error instanceof Error) {
           this.actionFeedbackService.error(error.message);
         } else if (error instanceof HttpErrorResponse) {
@@ -78,7 +75,7 @@ export class AccessCodeViewComponent {
         }
       },
       complete: () => {
-        this.state = 'ready';
+        this.state.set('ready');
       }
     });
   }

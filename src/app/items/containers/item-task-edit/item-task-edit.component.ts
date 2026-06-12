@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, computed, effect, inject, input, output } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { FullHeightContentDirective } from 'src/app/directives/full-height-content.directive';
 
 
@@ -7,22 +7,24 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
   selector: 'alg-item-task-edit',
   templateUrl: './item-task-edit.component.html',
   styleUrls: [ './item-task-edit.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FullHeightContentDirective ]
 })
-export class ItemTaskEditComponent implements OnChanges {
+export class ItemTaskEditComponent {
   private sanitizer = inject(DomSanitizer);
 
-  @Input() editorUrl?: string;
-  @Output() redirectToDefaultTab = new EventEmitter<void>();
+  editorUrl = input<string>();
+  redirectToDefaultTab = output<void>();
 
-  sanitizedUrl?: SafeResourceUrl;
+  sanitizedUrl = computed(() => {
+    const url = this.editorUrl();
+    return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : undefined;
+  });
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.editorUrl) {
-      this.sanitizedUrl = this.editorUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(this.editorUrl) : undefined;
-      if (!this.sanitizedUrl) this.redirectToDefaultTab.emit();
-    }
+  constructor() {
+    // Output emission from an effect is a deliberate exception: redirect when no editor URL is provided.
+    effect(() => {
+      if (!this.editorUrl()) this.redirectToDefaultTab.emit();
+    });
   }
 
 }

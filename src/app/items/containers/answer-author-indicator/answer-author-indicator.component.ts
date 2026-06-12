@@ -1,5 +1,5 @@
-import { Component, DestroyRef, input, Input, OnChanges, OnDestroy, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Component, DestroyRef, input, inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -27,7 +27,6 @@ import { fromItemContent } from 'src/app/items/store';
   selector: 'alg-answer-author-indicator',
   templateUrl: './answer-author-indicator.component.html',
   styleUrls: [ './answer-author-indicator.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -43,7 +42,7 @@ import { fromItemContent } from 'src/app/items/store';
     ButtonComponent,
   ]
 })
-export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
+export class AnswerAuthorIndicatorComponent {
   private store = inject(Store);
   private router = inject(Router);
   private groupRouter = inject(GroupRouter);
@@ -61,9 +60,9 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   }
 
   answer = input.required<Answer>();
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
-  answer$ = new ReplaySubject<Answer>(1);
+  readonly answer$ = toObservable(this.answer);
   readonly author$ = this.answer$.pipe(
     switchMap(answer => this.getUserService.getForId(answer.authorId)),
     mapToFetchState(),
@@ -78,14 +77,6 @@ export class AnswerAuthorIndicatorComponent implements OnChanges, OnDestroy {
   );
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
   readonly backLink = this.store.selectSignal(fromItemContent.selectBackLink);
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.answer) this.answer$.next(this.answer());
-  }
-
-  ngOnDestroy(): void {
-    this.answer$.complete();
-  }
 
   onBackLinkClick(url: string): void {
     void this.router.navigateByUrl(url);

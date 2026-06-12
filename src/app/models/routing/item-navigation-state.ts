@@ -1,6 +1,6 @@
 
 import { AnswerId } from 'src/app/models/ids';
-import { Directive, inject, Input, OnChanges } from '@angular/core';
+import { Directive, effect, inject, input } from '@angular/core';
 import { isString } from 'src/app/utils/type-checkers';
 import { RouterLink } from '@angular/router';
 
@@ -12,14 +12,17 @@ export interface ItemNavigationState {
 /**
  * Set the `loadAnswerIdAsCurrent` property in the router state
  */
-@Directive({ selector: '[algLoadAnswerAsCurrent]', standalone: true })
-export class LoadAnswerAsCurrentDirective implements OnChanges {
-  @Input('algLoadAnswerAsCurrent') answerId?: AnswerId;
+@Directive({ selector: '[algLoadAnswerAsCurrent]' })
+export class LoadAnswerAsCurrentDirective {
+  answerId = input<AnswerId | undefined>(undefined, { alias: 'algLoadAnswerAsCurrent' });
   private routerLink = inject(RouterLink);
 
-  ngOnChanges(): void {
-    const routerLinkState = this.routerLink.state || {};
-    this.routerLink.state = { ...routerLinkState, loadAnswerIdAsCurrent: this.answerId };
+  constructor() {
+    effect(() => {
+      const routerLinkState = this.routerLink.state || {};
+      // Intentionally mutates RouterLink state so navigation carries loadAnswerIdAsCurrent.
+      this.routerLink.state = { ...routerLinkState, loadAnswerIdAsCurrent: this.answerId() };
+    });
   }
 }
 

@@ -2,30 +2,45 @@ import {
   AfterViewChecked,
   Directive,
   ElementRef,
-  HostListener,
-  Input,
   NgZone,
   OnInit,
-  OnChanges,
   Renderer2,
-  SimpleChanges,
+  effect,
   inject,
+  input,
 } from '@angular/core';
 
 @Directive({
   selector: '[algFullHeightContent]',
-  standalone: true,
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    '(window:resize)': 'resize()',
+  },
 })
-export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnChanges {
+export class FullHeightContentDirective implements OnInit, AfterViewChecked {
   private el = inject<ElementRef<HTMLElement>>(ElementRef);
   private renderer = inject(Renderer2);
   private ngZone = inject(NgZone);
 
-  @Input() algFullHeightContent = true;
+  algFullHeightContent = input(true);
 
   mainContainerEl = document.querySelector('#main-container');
 
-  @HostListener('window:resize')
+  private isFirstInputEffect = true;
+
+  constructor() {
+    // ngOnInit handles the initial height; skip the first effect run to preserve that semantic.
+    effect(() => {
+      const enabled = this.algFullHeightContent();
+      if (this.isFirstInputEffect) {
+        this.isFirstInputEffect = false;
+        return;
+      }
+      if (enabled) this.setHeight();
+      else this.unsetHeight();
+    });
+  }
+
   resize(): void {
     this.setHeight();
   }
@@ -34,22 +49,15 @@ export class FullHeightContentDirective implements OnInit, AfterViewChecked, OnC
     if (window.getComputedStyle(this.el.nativeElement).display === 'inline') {
       this.renderer.setStyle(this.el.nativeElement, 'display', 'block');
     }
-    if (this.algFullHeightContent) this.setHeight();
+    if (this.algFullHeightContent()) this.setHeight();
   }
 
   ngAfterViewChecked(): void {
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
-        if (this.algFullHeightContent) this.setHeight();
+        if (this.algFullHeightContent()) this.setHeight();
       });
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.algFullHeightContent && !changes.algFullHeightContent.firstChange) {
-      if (this.algFullHeightContent) this.setHeight();
-      else this.unsetHeight();
-    }
   }
 
   unsetHeight(): void {

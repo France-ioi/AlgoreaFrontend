@@ -5,16 +5,17 @@
     type="text"
     i18n-placeholder placeholder="Group code"
     (keyup)="0"
-    [(ngModel)]="code"
-    [disabled]="state === 'loading'"
+    [ngModel]="code()"
+    (ngModelChange)="code.set($event)"
+    [disabled]="state() === 'loading'"
   >
   <div class="button-section">
     <button
       class="size-l"
       icon="ph-bold ph-check"
-      [disabled]="input.value.trim() === '' || state === 'loading'"
+      [disabled]="input.value.trim() === '' || state() === 'loading'"
       (click)="checkCodeValidity()"
       alg-button
-    >{{ buttonLabel }}</button>
+    >{{ buttonLabel() }}</button>
   </div>
 </div>
