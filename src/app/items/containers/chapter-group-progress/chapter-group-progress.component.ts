@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, input } from '@angular/core';
 import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
 import { ItemData } from '../../models/item-data';
@@ -16,14 +16,14 @@ import { fromObservation } from 'src/app/store/observation';
   selector: 'alg-chapter-group-progress',
   templateUrl: './chapter-group-progress.component.html',
   styleUrls: [ './chapter-group-progress.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
-export class ChapterGroupProgressComponent implements OnDestroy {
+export class ChapterGroupProgressComponent {
   private store = inject(Store);
   private getGroupByIdService = inject(GetGroupByIdService);
+  private destroyRef = inject(DestroyRef);
 
-  @Input() itemData?: ItemData;
+  readonly itemData = input.required<ItemData>();
 
   private refresh$ = new Subject<void>();
   state$ = this.store.select(fromObservation.selectObservedGroupId).pipe(
@@ -32,8 +32,8 @@ export class ChapterGroupProgressComponent implements OnDestroy {
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  ngOnDestroy(): void {
-    this.refresh$.complete();
+  constructor() {
+    this.destroyRef.onDestroy(() => this.refresh$.complete());
   }
 
   refresh(): void {

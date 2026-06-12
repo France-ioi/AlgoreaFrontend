@@ -1,7 +1,7 @@
 @if (state$ | async; as state) {
   @if (state.isReady) {
     <alg-group-progress-grid
-      [itemData]="itemData"
+      [itemData]="itemData()"
       [group]="state.data"
     >
     </alg-group-progress-grid>

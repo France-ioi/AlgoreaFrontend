@@ -1,5 +1,4 @@
-import { SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
-import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -9,10 +8,10 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { NgClass, AsyncPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { ItemType } from 'src/app/items/models/item-type';
 import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
-import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.component';
+import { Progress } from 'src/app/items/containers/group-progress-grid/group-progress-grid.types';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { Store } from '@ngrx/store';
@@ -36,10 +35,8 @@ export interface ProgressData {
   selector: 'alg-user-progress-details',
   templateUrl: './user-progress-details.component.html',
   styleUrls: [ './user-progress-details.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ScoreRingComponent,
-    NgClass,
     RouterLink,
     AsyncPipe,
     ItemRouteWithExtraPipe,
@@ -53,26 +50,19 @@ export interface ProgressData {
     TooltipDirective,
   ]
 })
-export class UserProgressDetailsComponent implements OnChanges {
+export class UserProgressDetailsComponent {
   private userSessionService = inject(UserSessionService);
   private store = inject(Store);
   private router = inject(Router);
 
-  @Input() progressData?: ProgressData;
-  @Input() canEditPermissions?: boolean;
+  readonly progressData = input<ProgressData>();
+  readonly canEditPermissions = input<boolean>();
+  readonly editPermissions = output<void>();
 
-  @Output() editPermissions = new EventEmitter<void>();
-
-  progress?: ProgressData['progress'];
+  readonly progress = computed(() => this.progressData()?.progress);
 
   currentUser$ = this.userSessionService.userProfile$;
   private readonly observedGroupInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.progressData && !changes.progressData.firstChange) {
-      this.progress = this.progressData?.progress;
-    }
-  }
 
   onViewAnswer(): void {
     this.store.dispatch(fromItemContent.sourcePageActions.registerBackLink({
@@ -84,7 +74,8 @@ export class UserProgressDetailsComponent implements OnChanges {
   }
 
   onViewHistory(): void {
-    if (!this.progressData) return;
+    const progressData = this.progressData();
+    if (!progressData) return;
     const observedGroup = this.observedGroupInfo();
     // Always register, even when observation info hasn't resolved yet: the History link's
     // routerLink navigates regardless of this dispatch, so silently skipping registration
