@@ -10,7 +10,7 @@ import { SelectionComponent } from 'src/app/ui-components/selection/selection.co
   imports: [ SelectionComponent ]
 })
 export class CompositionFilterComponent {
-  defaultValue = input<TypeFilter>();
+  defaultValue = input.required<TypeFilter>();
 
   change = output<TypeFilter>();
 
@@ -35,11 +35,8 @@ export class CompositionFilterComponent {
   selectedTypeFilter = linkedSignal({
     source: this.defaultValue,
     computation: defaultValue => {
-      if (defaultValue) {
-        const index = this.typeFilters.findIndex(filter => filter.value === defaultValue);
-        return index >= 0 ? index : 0;
-      }
-      return 0;
+      const index = this.typeFilters.findIndex(filter => filter.value === defaultValue);
+      return index >= 0 ? index : 0;
     },
   });
 
