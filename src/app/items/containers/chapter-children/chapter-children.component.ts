@@ -1,11 +1,13 @@
-import { combineLatest, ReplaySubject, Subject } from 'rxjs';
-import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { combineLatest, Subject } from 'rxjs';
+import { Component, inject, input, DestroyRef } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../models/item-data';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { switchMapToFetchState } from 'src/app/utils/operators/state';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
+import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemChildWithAdditions } from '../item-children-list/item-children';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
@@ -14,18 +16,16 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { LayoutService } from 'src/app/services/layout.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
   styleUrls: [ './chapter-children.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -36,26 +36,42 @@ import { toSignal } from '@angular/core/rxjs-interop';
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
-    NgClass,
     ButtonComponent,
   ]
 })
-export class ChapterChildrenComponent implements OnChanges, OnDestroy {
+export class ChapterChildrenComponent {
   private store = inject(Store);
   private getItemChildrenService = inject(GetItemChildrenService);
 
-  @Input() itemData?: ItemData;
+  readonly itemData = input.required<ItemData>();
 
   layoutService = inject(LayoutService);
 
-  private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
-  private refresh$ = new Subject<void>();
+  private readonly refresh$ = new Subject<void>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.refresh$.complete());
+  }
+
+  private readonly params$ = toObservable(this.itemData).pipe(
+    map(itemData => (itemData.currentResult
+      ? {
+        id: itemData.item.id,
+        attemptId: itemData.currentResult.attemptId,
+        currentResultValidated: itemData.currentResult.validated,
+      }
+      : undefined)),
+    filter(isNotUndefined),
+    distinctUntilChanged((a, b) =>
+      a.id === b.id && a.attemptId === b.attemptId && a.currentResultValidated === b.currentResultValidated),
+  );
+
   readonly state$ = combineLatest([
-    this.params$.pipe(distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId)),
+    this.params$,
     this.store.select(fromObservation.selectObservedGroupId),
   ]).pipe(
     switchMapToFetchState(
-      ([{ id, attemptId }, observedGroupId ]) =>
+      ([{ id, attemptId, currentResultValidated }, observedGroupId ]) =>
         this.getItemChildrenService.get(id, attemptId, { watchedGroupId: observedGroupId ?? undefined }).pipe(
           map<ItemChildren, ItemChildWithAdditions[]>(itemChildren => itemChildren.map(child => {
             const res = bestAttemptFromResults(child.results);
@@ -71,28 +87,15 @@ export class ChapterChildrenComponent implements OnChanges, OnDestroy {
           })),
           map(children => ({
             children,
-            missingValidation: !(this.itemData?.currentResult?.validated || children.filter(item => item.category === 'Validation')
+            missingValidation: !(currentResultValidated || children.filter(item => item.category === 'Validation')
               .every(item => item.result && item.result.validated)),
           })),
         ),
       { resetter: this.refresh$ },
     ),
   );
+
   leftMenuShown = toSignal(this.layoutService.leftMenu$.pipe(map(({ shown }) => shown)), { initialValue: true });
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (this.itemData?.currentResult) {
-      this.params$.next({
-        id: this.itemData.item.id,
-        attemptId: this.itemData.currentResult.attemptId,
-      });
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.params$.complete();
-    this.refresh$.complete();
-  }
 
   refresh(): void {
     this.refresh$.next();
