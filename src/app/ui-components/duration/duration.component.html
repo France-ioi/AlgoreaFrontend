@@ -1,6 +1,6 @@
 <div class="container">
   <div class="elements">
-    @if (showField.days) {
+    @if (showField().days) {
       <div class="element alg-flex-1">
         <p class="label">
           <small i18n>Days</small>
@@ -16,7 +16,7 @@
         />
       </div>
     }
-    @if (showField.hours) {
+    @if (showField().hours) {
       <div class="element alg-flex-1">
         <p class="label">
           <small i18n>Hours</small>
@@ -24,15 +24,15 @@
         <input
           class="alg-input"
           data-testid="input-date"
-          [algMask]="showField.days ?  '0||00' : '0||00||000'"
-          [placeholder]="showField.days ? 'HH' : 'HHH'"
+          [algMask]="showField().days ?  '0||00' : '0||00||000'"
+          [placeholder]="showField().days ? 'HH' : 'HHH'"
           [(ngModel)]="hours"
           [clearIfNotMatch]="true"
           (ngModelChange)="handleChange()"
         />
       </div>
     }
-    @if (showField.minutes) {
+    @if (showField().minutes) {
       <div class="element alg-flex-1">
         <p class="label">
           <small i18n>Minutes</small>
@@ -48,7 +48,7 @@
         />
       </div>
     }
-    @if (showField.seconds) {
+    @if (showField().seconds) {
       <div class="element alg-flex-1">
         <p class="label">
           <small i18n>Seconds</small>
