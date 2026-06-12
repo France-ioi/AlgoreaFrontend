@@ -78,6 +78,7 @@ npm run e2e -- e2e/items/task-platform-interaction.spec.ts
 | `gradeDelay=ms` | Delay `task.gradeAnswer` completion |
 | `failGrade=1` | Make `task.gradeAnswer` fail |
 | `score=N` | Fixed grade score instead of parsing the answer |
+| `solutionOnTokenUpdate=1` | Hide the `solution` view until a token is pushed *after* load (simulates solution access granted on validation). Combine with `usesTokens=1`. |
 
 ## API coverage
 
@@ -94,7 +95,7 @@ npm run e2e -- e2e/items/task-platform-interaction.spec.ts
 Inside the iframe:
 
 - `window.testTaskCalls` — array of `{ method, params, timestamp }`
-- `window.testTaskState` — `{ answer, state, token, shownViews, loaded }`
+- `window.testTaskState` — `{ answer, state, token, shownViews, loaded, solutionGranted }`
 - `window.testTask` — helpers (`setAnswer`, `getCalls`, …)
 
 ## Keeping in sync

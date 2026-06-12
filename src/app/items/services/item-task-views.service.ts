@@ -15,9 +15,13 @@ export class ItemTaskViewsService implements OnDestroy {
   private displaySubject = new ReplaySubject<UpdateDisplayParams>(1);
   readonly display$ = this.displaySubject.asObservable().pipe(takeUntil(this.error$));
   private loadedTask$ = this.initService.loadedTask$.pipe(catchError(() => EMPTY), takeUntil(this.error$));
+  // when a new token has been pushed to the task (e.g. after validation), re-query its views as the task may now expose
+  // additional views (such as the solution). Tasks do not spontaneously re-advertise views on token update.
+  private tokenUpdatedOnTask$ = this.initService.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY), takeUntil(this.error$));
 
   private readonly views = merge(
     this.loadedTask$.pipe(switchMap(task => task.getViews())),
+    this.tokenUpdatedOnTask$.pipe(switchMap(task => task.getViews())),
     this.display$.pipe(map(({ views }) => views), filter(isNotUndefined)),
   ).pipe(
     map(views => this.getAvailableViews(views)),

@@ -159,9 +159,13 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
   await page.route(`${apiUrl}/answers`, route => route.fulfill({
     json: { ...actionSuccess, data: { answer_token: 'mock-answer-token' } },
   }));
-  await page.route(`${apiUrl}/items/save-grade`, route => route.fulfill({
-    json: { ...actionSuccess, data: { validated: false, unlocked_items: [] } },
-  }));
+  await page.route(`${apiUrl}/items/save-grade`, route => {
+    // mirror the backend: a submission validates the item once it reaches the max score
+    const score = (route.request().postDataJSON() as { score?: number } | null)?.score ?? 0;
+    route.fulfill({
+      json: { ...actionSuccess, data: { validated: score >= 100, unlocked_items: [] } },
+    });
+  });
 }
 
 export class TestTaskPage {
@@ -243,6 +247,10 @@ export class TestTaskPage {
   activeTab() {
     return this.page.locator('alg-tab-bar li.alg-tab-bar-active');
   }
+
+  tabByName(name: string) {
+    return this.page.locator('alg-tab-bar li', { hasText: name });
+  }
 }
 
 declare global {
@@ -254,6 +262,7 @@ declare global {
       token: string,
       shownViews: Record<string, boolean>,
       loaded: boolean,
+      solutionGranted: boolean,
     },
     invokePlatform?: (method: string, params: unknown) => Promise<unknown>,
   }

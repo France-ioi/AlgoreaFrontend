@@ -6,7 +6,7 @@ import { TaskTab } from './containers/item-display/item-display.component';
 import { APPCONFIG } from 'src/app/config';
 import { isAChapter, isATask } from 'src/app/items/models/item-type';
 import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
-import { canCurrentUserViewContent, canCurrentUserViewSolution } from 'src/app/items/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { NavigationEnd, Router } from '@angular/router';
@@ -29,8 +29,6 @@ const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters'
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum' };
 // Task and chapter stats share the same route and component (alg-item-stats); only the tab title differs by item type.
 const itemStatsTab = { routerLink: [ 'item-stats' ], tag: 'alg-item-stats' };
-
-const solutionTabView = 'solution'; // 'view' name used by tasks for the solution tab
 
 /**
  * Service for letting item-by-id component know what tabs and active tab to be displayed
@@ -76,7 +74,6 @@ export class ItemTabs implements OnDestroy {
 
       const hasEditionPerm = state.isReady ? allowsEditingAll(state.data.item.permissions) : false;
       const canViewContent = state.isReady ? canCurrentUserViewContent(state.data.item) : false;
-      const canViewSolution = state.isReady ? canCurrentUserViewSolution(state.data.item, state.data.currentResult) : false;
       const canWatchResults = state.isReady ? allowsWatchingResults(state.data.item.permissions) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
       const isChapter = state.isReady ? isAChapter(state.data.item) : undefined;
@@ -85,12 +82,16 @@ export class ItemTabs implements OnDestroy {
       const canSetExtraTime = state.isReady ? isTimeLimitedActivity(state.data.item) && canCurrentUserSetExtraTime(state.data.item) : false;
 
       const shouldHideTab = (v: string): boolean => this.config.featureFlags.hideTaskTabs.includes(v);
-      const filteredTaskTabs = taskTabs.filter(({ view }) => !shouldHideTab(view) && (canViewSolution || view !== solutionTabView));
+      // The solution tab is gated by the task itself (it advertises the 'solution' view based on its token, which the
+      // backend fills according to the user's permissions/validation), so no platform-side solution filtering is needed
+      // here. Only feature-flag-hidden views are dropped, and the result drives both the content-tab fallback and the
+      // displayed task tabs.
+      const visibleTaskTabs = taskTabs.filter(({ view }) => !shouldHideTab(view));
 
       return [
-        filteredTaskTabs.length === 0 && !this.isCurrentTab(childrenEditTab) ? contentTab : null,
-        filteredTaskTabs.length === 0 && this.isCurrentTab(childrenEditTab) ? childrenEditTab : null,
-        ...taskTabs.map(t => ({ title: t.name, routerLink: [ 'task', t.view ], tag: t.view, exactpathMatch: true })),
+        visibleTaskTabs.length === 0 && !this.isCurrentTab(childrenEditTab) ? contentTab : null,
+        visibleTaskTabs.length === 0 && this.isCurrentTab(childrenEditTab) ? childrenEditTab : null,
+        ...visibleTaskTabs.map(t => ({ title: t.name, routerLink: [ 'task', t.view ], tag: t.view, exactpathMatch: true })),
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
         this.isCurrentTab(statsTab) || (canViewStats && !isTask && isObserving) ? statsTab : null,
         this.isCurrentTab(historyTab) || (showProgress && (isObserving || isTask)) ? historyTab : null,
@@ -103,7 +104,7 @@ export class ItemTabs implements OnDestroy {
           : null,
       ]
         .filter(isNotNull)
-        .filter(t => !shouldHideTab(t.tag))
+        .filter(t => !shouldHideTab(t.tag)) // uniform safety net (also lets a feature flag hide a non-task tab by tag)
         .map(t => ({ ...t, command: itemRouteAsUrlCommand(state.data.route, this.config.redirects, t.routerLink) }))
       ;
     }),

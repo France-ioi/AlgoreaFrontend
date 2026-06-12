@@ -14,6 +14,7 @@ import {
   tap,
   timeout,
 } from 'rxjs/operators';
+import { createSelector, Store } from '@ngrx/store';
 import { SECONDS } from 'src/app/utils/duration';
 import { AnswerTokenService } from '../data-access/answer-token.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
@@ -23,8 +24,14 @@ import { Answer } from './item-task.service';
 import { areStateAnswerEqual } from '../models/answers';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
+import { fromItemContent } from '../store';
 
 const answerAndStateSaveInterval = 60*SECONDS;
+
+const selectIsCurrentResultValidated = createSelector(
+  fromItemContent.selectActiveContentCurrentResult,
+  result => !!result?.validated,
+);
 
 /** config of a task which has been started, so which has an attempt id set */
 type RunningItemTaskConfig = ItemTaskConfig & { attemptId: string };
@@ -35,6 +42,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private currentAnswerService = inject(CurrentAnswerService);
   private answerTokenService = inject(AnswerTokenService);
   private gradeService = inject(GradeService);
+  private store = inject(Store);
 
   private destroyed$ = new Subject<void>();
 
@@ -148,6 +156,10 @@ export class ItemTaskAnswerService implements OnDestroy {
   }
 
   submitAnswer(): Observable<void> {
+    // snapshot the validation state *before* grading: a grade triggers `patchScore` which may flip `validated` to true.
+    // We only want to refresh the token (to grant solution access) on the transition to validated, not on every submit.
+    const wasValidated$ = this.store.select(selectIsCurrentResultValidated).pipe(take(1));
+
     // Step 1: get answer from task
     const answer$ = this.loadedTask$.pipe(take(1), switchMap(task => task.getAnswer()), takeUntil(this.destroyed$), shareReplay(1));
 
@@ -179,11 +191,15 @@ export class ItemTaskAnswerService implements OnDestroy {
       takeUntil(this.destroyed$),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent() ])
+    combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent(), wasValidated$ ])
       .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
-      .subscribe(([ grade, saveGradeResult ]) => {
+      .subscribe(([ grade, saveGradeResult, , wasValidated ]) => {
         if (grade.score !== undefined) this.scoreChange.next(grade.score);
         if (saveGradeResult.unlockedItems.length > 0) this.unlockedItems.next(saveGradeResult.unlockedItems);
+        // a newly-validated task grants solution access: regenerate the token so the task can expose the solution view
+        // without a full reload. Use the backend's authoritative `validated` flag, and skip if it was already
+        // validated (the previous token already granted access).
+        if (saveGradeResult.validated && !wasValidated) this.taskInitService.refreshToken();
       });
     return saveGrade$.pipe(map(() => undefined));
   }
