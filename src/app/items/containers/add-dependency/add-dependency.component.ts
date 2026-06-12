@@ -1,10 +1,9 @@
 import {
-  ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, inject,
+  Component, computed, input, output, viewChild, inject,
 } from '@angular/core';
 import {
   AddContentComponent,
   AddedContent,
-  NewContentType
 } from 'src/app/ui-components/add-content/add-content.component';
 import { getAllowedNewItemTypes } from 'src/app/items/models/new-item-types';
 import { ItemType } from 'src/app/items/models/item-type';
@@ -15,27 +14,26 @@ import { SearchItemService } from 'src/app/data-access/search-item.service';
   selector: 'alg-add-dependency',
   templateUrl: './add-dependency.component.html',
   styleUrls: [ './add-dependency.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ AddContentComponent ]
 })
-export class AddDependencyComponent implements OnChanges {
+export class AddDependencyComponent {
   private searchItemService = inject(SearchItemService);
 
-  @ViewChild('addContentComponent') addContentComponent?: AddContentComponent<ItemType>;
-  @Input() allowSkills = false;
-  @Input() addedIds: string[] = [];
-  @Output() contentAdded = new EventEmitter<AddedContent<ItemType>>();
+  /** Kept for API symmetry; not bound at any call site today. */
+  allowSkills = input(false);
+  addedIds = input.required<string[]>();
+  contentAdded = output<AddedContent<ItemType>>();
 
-  allowedNewItemTypes: NewContentType<ItemType>[] = [];
+  addContentComponent = viewChild<AddContentComponent<ItemType>>('addContentComponent');
+
+  allowedNewItemTypes = computed(() =>
+    getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills() })
+  );
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(
-      value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills }).map(item => item.type)
+      value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills() }).map(item => item.type)
     );
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    this.allowedNewItemTypes = getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills });
-  }
 
   onAdd(item: AddedContent<ItemType>): void {
     this.contentAdded.emit(item);

@@ -30,10 +30,10 @@
   @if (state.data) {
     <div class="operation-buttons">
       <div>
-        @if (itemData && itemData.currentResult?.attemptId; as parentAttemptId) {
-          @if (itemData && itemData.item.type === 'Task') {
+        @if (itemData().currentResult?.attemptId; as parentAttemptId) {
+          @if (itemData().item.type === 'Task') {
             <a class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise"
-              [routerLink]="itemData.route | with: {
+              [routerLink]="itemData().route | with: {
                   parentAttemptId,
                   answer: { best: { id: observedGroupId ? observedGroupId : undefined }}
                 } | url"
@@ -73,10 +73,10 @@
                       </div>
                       <div class="item-title">
                         <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                        @if (itemData && rowData.answerId) {
-                          @let path = rowData.item.id === itemData.item.id ? itemData.route.path : undefined;
-                          @let attemptId = rowData.item.id === itemData.item.id ? itemData.route.attemptId : undefined;
-                          @let parentAttemptId = rowData.item.id === itemData.item.id ? itemData.route.parentAttemptId : undefined;
+                        @if (rowData.answerId) {
+                          @let path = rowData.item.id === itemData().item.id ? itemData().route.path : undefined;
+                          @let attemptId = rowData.item.id === itemData().item.id ? itemData().route.attemptId : undefined;
+                          @let parentAttemptId = rowData.item.id === itemData().item.id ? itemData().route.parentAttemptId : undefined;
                           @let route = rowData.item | itemRoute: { path, attemptId, parentAttemptId };
                           @if (!isObserving || !!rowData.canWatchAnswer) {
                             <a
@@ -93,7 +93,7 @@
                     </div>
                   }
                   @case ('item.string.title') {
-                    <a class="alg-link" [ngClass]="{'disabled': !rowData.item}" [routerLink]="rowData.item | itemRoute | url">
+                    <a class="alg-link" [class.disabled]="!rowData.item" [routerLink]="rowData.item | itemRoute | url">
                       {{ rowData.item.string.title }}
                     </a>
                   }
