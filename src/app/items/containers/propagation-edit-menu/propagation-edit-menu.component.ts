@@ -1,7 +1,6 @@
-import { Component, Output, EventEmitter, Input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AllowsGrantingViewItemPipe, AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
-import { NgClass } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
@@ -9,9 +8,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-propagation-edit-menu',
   templateUrl: 'propagation-edit-menu.component.html',
   styleUrls: [ 'propagation-edit-menu.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgClass,
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,
     ButtonComponent,
@@ -20,8 +17,8 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 })
 export class PropagationEditMenuComponent {
   openAdvancedConfigurationDialogEvent = output<void>();
-  @Input() childData?: PossiblyInvisibleChildData;
-  @Output() clickEvent = new EventEmitter<'none' | 'as_info' | 'as_content'>();
+  childData = input.required<PossiblyInvisibleChildData>();
+  clickEvent = output<'none' | 'as_info' | 'as_content'>();
 
   onClick(contentViewPropagation: 'none' | 'as_info' | 'as_content'): void {
     this.clickEvent.emit(contentViewPropagation);
