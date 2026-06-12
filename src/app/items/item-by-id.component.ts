@@ -403,8 +403,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   /**
    * Called when a task request an active tab change
    */
-  setTaskView(view: string): void {
-    this.tabService.setActiveTab(view);
+  setTaskView(view: string, route: RawItemRoute): void {
+    // Navigating updates the URL, which drives the active tab (task tabs use exact, unique `task/<view>` routes).
+    this.itemRouter.navigateTo(route, { page: [ 'task', view ], useCurrentObservation: true });
   }
 
 }
