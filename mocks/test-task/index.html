@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Algorea test task</title>
+  <link rel="stylesheet" href="test-task.css">
+  <script src="jschannel.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Algorea test task</h1>
+    <p id="status" data-testid="test-task-status">Connecting…</p>
+  </header>
+
+  <section class="panel">
+    <h2>Task data</h2>
+    <label>
+      Answer
+      <input id="answer-input" data-testid="answer-input" type="text" value="">
+    </label>
+    <label>
+      State
+      <input id="state-input" data-testid="state-input" type="text" value="">
+    </label>
+    <p>Last token: <span id="last-token" data-testid="last-token">—</span></p>
+    <p>Shown views: <span id="shown-views" data-testid="shown-views">—</span></p>
+  </section>
+
+  <section class="panel">
+    <h2>Platform calls</h2>
+    <div class="controls">
+      <label>
+        Validate mode
+        <select id="validate-mode" data-testid="validate-mode">
+          <option value="done">done (plain submit)</option>
+          <option value="cancel">cancel</option>
+          <option value="next">next</option>
+          <option value="nextImmediate">nextImmediate</option>
+          <option value="top">top</option>
+        </select>
+      </label>
+      <button type="button" id="validate-btn" data-testid="validate-btn">platform.validate</button>
+    </div>
+    <div class="controls">
+      <label>
+        Height
+        <input id="display-height" data-testid="display-height" type="number" value="420">
+      </label>
+      <button type="button" id="update-display-btn" data-testid="update-display-btn">platform.updateDisplay</button>
+      <button type="button" id="update-height-btn" data-testid="update-height-btn">platform.updateHeight</button>
+    </div>
+    <div class="controls">
+      <label>
+        openUrl target
+        <input id="open-url-target" data-testid="open-url-target" type="text" value="4702">
+      </label>
+      <button type="button" id="open-url-btn" data-testid="open-url-btn">platform.openUrl (path)</button>
+    </div>
+    <div class="controls">
+      <label>
+        View
+        <select id="show-view" data-testid="show-view">
+          <option value="task">task</option>
+          <option value="editor">editor</option>
+          <option value="solution">solution</option>
+          <option value="hints">hints</option>
+        </select>
+      </label>
+      <button type="button" id="show-view-btn" data-testid="show-view-btn">platform.showView</button>
+    </div>
+    <div class="controls">
+      <button type="button" id="get-task-params-btn" data-testid="get-task-params-btn">platform.getTaskParams</button>
+      <span id="task-params-result" data-testid="task-params-result"></span>
+    </div>
+    <div class="controls">
+      <button type="button" id="ask-hint-btn" data-testid="ask-hint-btn">platform.askHint</button>
+      <button type="button" id="log-btn" data-testid="log-btn">platform.log</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Platform → task call log</h2>
+    <ol id="call-log" data-testid="call-log"></ol>
+  </section>
+
+  <div id="loaded-marker" data-testid="test-task-loaded" hidden>loaded</div>
+  <script src="test-task.js"></script>
+</body>
+</html>

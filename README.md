@@ -49,6 +49,10 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 If you use the mock server - via `npm start`, copy mocks/environment.dev.ts to mocks/enviromnent.ts and update the dev token value.
 
+### Testing platform-task interaction locally
+
+A local test task (a static page implementing the Bebras task API) is served by the mock server at `http://localhost:3000/test-task/index.html`. Point a dev Task item at this URL to exercise platform↔task communication manually. See [mocks/test-task/README.md](mocks/test-task/README.md) for launch instructions, scenarios, and API coverage.
+
 ## Code Style
 
 Run `npm run lint` to launch the linter checks on the code.
