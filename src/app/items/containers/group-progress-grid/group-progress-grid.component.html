@@ -27,15 +27,15 @@
             (refresh)="fetchRows()"
             i18n
           >
-          This group has no {currentFilter, select, Users {users} Teams {teams} other {sub-groups}}
+          This group has no {currentFilter(), select, Users {users} Teams {teams} other {sub-groups}}
         </alg-error>
         </p>
       }
       <ng-template #menu>
         <div class="menu" cdkMenu (closed)="hideProgressDetail()">
           <alg-user-progress-details
-            [canEditPermissions]="canAccess"
-            [progressData]="progressOverlay"
+            [canEditPermissions]="canAccess()"
+            [progressData]="progressOverlay()"
             (editPermissions)="onAccessPermissions()"
           ></alg-user-progress-details>
         </div>
@@ -48,7 +48,7 @@
             type="button"
             icon="ph ph-file-arrow-down"
             (click)="onCSVExport()"
-            [disabled]="isCSVDataFetching"
+            [disabled]="isCSVDataFetching()"
             i18n
           >Export as CSV</button>
         </div>
@@ -78,11 +78,11 @@
                         tooltipStyleClass="secondary"
                         [tooltipDelay]="100"
                       >
-                        @if (itemData && itemData.currentResult && itemData.currentResult.attemptId; as attemptId) {
+                        @if (itemData().currentResult?.attemptId; as attemptId) {
                           <a
                             class="alg-link cursor-pointer alg-text-bold"
-                            [routerLink]="col | itemRoute: { path: itemData.item.id === col.id ? itemData.route.path : itemData.route.path.concat([ itemData.item.id ]) } |
-                              with: (itemData.item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
+                            [routerLink]="col | itemRoute: { path: itemData().item.id === col.id ? itemData().route.path : itemData().route.path.concat([ itemData().item.id ]) } |
+                              with: (itemData().item.id === col.id ? { attemptId } : { parentAttemptId: attemptId }) |
                               url : [ 'progress', 'chapter' ]"
                           >{{ col.title }}</a>
                         }
@@ -121,7 +121,7 @@
                         [class.active-cell]="activeCell()?.rowId === row.id && activeCell()?.colIndex === colIndex"
                         (click)="showProgressDetail(row, col, colIndex)"
                         [cdkMenuTriggerFor]="menu"
-                        [cdkMenuPosition]="progressDetailMenuPositions()"
+                        [cdkMenuPosition]="progressDetailMenuPositions"
                         data-testid="user-progress-tooltip-target"
                       >
                         @if (rowData.type === 'user') {

@@ -1,26 +1,21 @@
-import { Component, inject, Input, OnChanges, OnDestroy, signal, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { forkJoin, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { combineLatestWith, filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { filter, shareReplay, switchMap } from 'rxjs/operators';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { canCurrentUserGrantGroupAccess } from 'src/app/groups/models/group-management';
 import { Group } from 'src/app/groups/models/group';
 import { GetGroupChildrenService } from 'src/app/groups/data-access/get-group-children.service';
-import { formatUser, UserBaseWithId } from 'src/app/groups/models/user';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
 import { GetGroupProgressService } from 'src/app/data-access/get-group-progress.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { TypeFilter } from '../../models/composition-filter';
 import { GetItemChildrenService } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../models/item-data';
-import { ProgressCSVService } from 'src/app/data-access/progress-csv.service';
-import { downloadFile } from 'src/app/utils/download-file';
-import { ItemType, typeCategoryOfItem } from 'src/app/items/models/item-type';
-import { RawGroupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
 import { ProgressData, UserProgressDetailsComponent } from '../../containers/user-progress-details/user-progress-details.component';
 import { DataPager } from 'src/app/utils/data-pager';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
-import { HttpErrorResponse } from '@angular/common/http';
-import { allowsGivingPermToItem, ItemCorePerm } from 'src/app/items/models/item-permissions';
+import { allowsGivingPermToItem } from 'src/app/items/models/item-permissions';
 import { itemRoute, itemRouteWith } from 'src/app/models/routing/item-route';
 import { selectObservedGroupRouteAsItemRouteParameter } from 'src/app/models/routing/item-route-observation-selector';
 import { Store } from '@ngrx/store';
@@ -41,68 +36,29 @@ import { CompositionFilterComponent } from '../../containers/composition-filter/
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
-import { ConnectedPosition } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { UserLinkWithActionsComponent } from 'src/app/ui-components/user-link-with-actions/user-link-with-actions.component';
 import { UrlTree } from '@angular/router';
+import { typeCategoryOfItem } from 'src/app/items/models/item-type';
+import { RawGroupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
+import { getGroupProgressGridColumns } from './group-progress-grid-columns';
+import { groupProgressDetailMenuPositions } from './group-progress-grid-menu-positions';
+import { getRowsWithProgress } from './group-progress-grid-data';
+import { GroupProgressGridCsvExportService } from './group-progress-grid-csv-export.service';
+import {
+  DataColumn,
+  DataRow,
+  ProgressDataDialog,
+} from './group-progress-grid.types';
 
-export type Progress = {
-  groupId: string,
-  itemId: string,
-  score: number,
-  timeSpent: number,
-  hintsRequested: number,
-  submissions: number,
-  latestActivityAt: Date | null,
-} & ({
-  type: 'user',
-  validated: boolean,
-} | {
-  type: 'group',
-  validationRate: number,
-});
-
-
-interface DataRow {
-  header: string,
-  id: string,
-  user?: UserBaseWithId,
-  data: (Progress|undefined)[],
-}
-interface DataColumn {
-  id: string,
-  requiresExplicitEntry: boolean,
-  title: string|null,
-  type: ItemType,
-  permissions: ItemCorePerm,
-}
-interface DataFetching {
-  groupId: string,
-  itemId: string,
-  filter: TypeFilter,
-  fromId?: string,
-  pageSize: number,
-}
-
-interface ProgressDataDialog {
-  item: {
-    id: string,
-    requiresExplicitEntry: boolean,
-    string: {
-      title: string | null,
-    },
-  },
-  group: RawGroupRoute,
-  groupName: string,
-  sourceGroupName: string,
-}
+export type { Progress } from './group-progress-grid.types';
 
 @Component({
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
   styleUrls: [ './group-progress-grid.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [ GroupProgressGridCsvExportService ],
   imports: [
     CompositionFilterComponent,
     ErrorComponent,
@@ -123,40 +79,42 @@ interface ProgressDataDialog {
     UserLinkWithActionsComponent,
   ]
 })
-export class GroupProgressGridComponent implements OnChanges, OnDestroy {
+export class GroupProgressGridComponent {
   private getItemChildrenService = inject(GetItemChildrenService);
   private getGroupDescendantsService = inject(GetGroupDescendantsService);
   private getGroupUsersProgressService = inject(GetGroupProgressService);
   private getGroupChildrenService = inject(GetGroupChildrenService);
   private actionFeedbackService = inject(ActionFeedbackService);
-  private progressCSVService = inject(ProgressCSVService);
+  private csvExportService = inject(GroupProgressGridCsvExportService);
   private store = inject(Store);
   private observedGroupRouteParam = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
   private itemRouter = inject(ItemRouter);
-
-  @Input() group?: Group;
-  @Input() itemData?: ItemData;
-
   private dialogService = inject(Dialog);
+  private destroyRef = inject(DestroyRef);
+
+  readonly group = input.required<Group>();
+  readonly itemData = input.required<ItemData>();
 
   defaultFilter: TypeFilter = 'Users';
 
-  currentFilter = this.defaultFilter;
+  readonly currentFilter = signal<TypeFilter>(this.defaultFilter);
+  readonly progressOverlay = signal<ProgressData | undefined>(undefined);
+  readonly activeCell = signal<{ rowId: string, colIndex: number } | null>(null);
+  readonly progressDataDialog = signal<ProgressDataDialog | undefined>(undefined);
+  readonly sourceGroup = signal<RawGroupRoute | undefined>(undefined);
+  private readonly isRefreshing = signal(false);
 
-  progressOverlay?: ProgressData;
-  activeCell = signal<{ rowId: string, colIndex: number } | null>(null);
-  progressDataDialog?: ProgressDataDialog;
-  sourceGroup?: RawGroupRoute;
+  readonly canAccess = computed(() =>
+    canCurrentUserGrantGroupAccess(this.group())
+    && allowsGivingPermToItem(this.itemData().item.permissions)
+  );
 
-  isCSVDataFetching = false;
-  canAccess = false;
-  private isRefreshing = signal(false);
+  readonly isCSVDataFetching = this.csvExportService.isFetching;
 
-  private itemData$ = new ReplaySubject<ItemData>(1);
-  private refresh$ = new Subject<void>();
+  private readonly refresh$ = new Subject<void>();
   // columns containing results, including the first "chapter summary" one
-  readonly columns$: Observable<FetchState<DataColumn[]>> = this.itemData$.pipe(
-    switchMap(itemData => this.getColumns(itemData)),
+  readonly columns$: Observable<FetchState<DataColumn[]>> = toObservable(this.itemData).pipe(
+    switchMap(itemData => getGroupProgressGridColumns(this.getItemChildrenService, itemData)),
     mapToFetchState({ resetter: this.refresh$ }),
     shareReplay(1),
   );
@@ -169,14 +127,21 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     pageSize: this.pageSizesForFilter(this.defaultFilter).default,
     maxPageSize: this.pageSizesForFilter(this.defaultFilter).max,
     fetch: (pageSize, latestRow?: DataRow): Observable<DataRow[]> => {
-      if (!this.group || !this.itemData) throw new Error('properties are missing');
-      return this.getRowsWithProgress({
-        groupId: this.group.id,
-        itemId: this.itemData.item.id,
-        filter: this.currentFilter,
-        fromId: latestRow?.id,
-        pageSize,
-      });
+      const group = this.group();
+      const itemData = this.itemData();
+      return getRowsWithProgress(
+        this.getGroupDescendantsService,
+        this.getGroupChildrenService,
+        this.getGroupUsersProgressService,
+        this.columns$.pipe(readyData()),
+        {
+          groupId: group.id,
+          itemId: itemData.item.id,
+          filter: this.currentFilter(),
+          fromId: latestRow?.id,
+          pageSize,
+        },
+      );
     },
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more results, are you connected to the internet?`);
@@ -185,72 +150,41 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   rows$ = this.datapager.list$;
 
-  private refreshSubscription: Subscription = this.rows$.pipe(
-    filter(() => this.isRefreshing()),
-    filter(state => state.isReady || state.isError),
-  ).subscribe(state => {
-    this.isRefreshing.set(false);
-    if (state.isReady) {
-      this.actionFeedbackService.success($localize`Data refreshed successfully`);
-    }
-  });
+  readonly progressDetailMenuPositions = groupProgressDetailMenuPositions;
 
-  progressDetailMenuPositions = signal<ConnectedPosition[]>([
-    {
-      originX: 'center',
-      originY: 'bottom',
-      overlayX: 'center',
-      overlayY: 'top',
-      offsetY: 10,
-      panelClass: [ 'alg-top-center-triangle', 'grey' ],
-    },
-    {
-      originX: 'center',
-      originY: 'top',
-      overlayX: 'center',
-      overlayY: 'bottom',
-      offsetY: -40,
-      panelClass: [ 'alg-bottom-center-triangle', 'grey' ],
-    },
-    {
-      originX: 'start',
-      originY: 'center',
-      overlayX: 'end',
-      overlayY: 'center',
-      offsetX: -10,
-      panelClass: [ 'alg-left-center-triangle', 'grey' ],
-    },
-  ]);
+  constructor() {
+    combineLatest([
+      toObservable(this.group),
+      toObservable(this.itemData),
+    ]).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([ group ]) => {
+        this.fetchRows();
+        this.sourceGroup.set(rawGroupRoute(group));
+      });
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.itemData && this.itemData) this.itemData$.next(this.itemData);
-    if (this.group) {
-      this.fetchRows();
-      this.sourceGroup = rawGroupRoute(this.group);
-    }
-    this.canAccess = !!(this.group && canCurrentUserGrantGroupAccess(this.group)
-      && this.itemData && allowsGivingPermToItem(this.itemData.item.permissions));
-  }
+    this.rows$.pipe(
+      filter(() => this.isRefreshing()),
+      filter(state => state.isReady || state.isError),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(state => {
+      this.isRefreshing.set(false);
+      if (state.isReady) {
+        this.actionFeedbackService.success($localize`Data refreshed successfully`);
+      }
+    });
 
-  ngOnDestroy(): void {
-    this.itemData$.complete();
-    this.refresh$.complete();
-    this.refreshSubscription.unsubscribe();
+    this.destroyRef.onDestroy(() => this.refresh$.complete());
   }
 
   showProgressDetail(row: DataRow, col: DataColumn, colIndex: number): void {
     const progress = row.data[colIndex];
     if (!progress) throw new Error('Unexpected: progress data is missing');
     this.activeCell.set({ rowId: row.id, colIndex });
-    if (!this.itemData) {
-      throw new Error('Unexpected: Missed item data');
-    }
-    if (!this.group) {
-      throw new Error('Unexpected: Missed group');
-    }
-    const attemptId = this.itemData.currentResult?.attemptId;
+    const itemData = this.itemData();
+    const group = this.group();
+    const attemptId = itemData.currentResult?.attemptId;
     if (!attemptId) throw new Error('Unexpected: Children have been loaded, so we are sure this item has an attempt');
-    this.progressOverlay = {
+    this.progressOverlay.set({
       progress,
       colItem: {
         type: col.type,
@@ -258,8 +192,8 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           typeCategoryOfItem(col),
           col.id,
           {
-            path: [ ...this.itemData.route.path, ...(col.id !== this.itemData.route.id ? [ this.itemData.route.id ] : []) ],
-            ...col.id === this.itemData.route.id ? {
+            path: [ ...itemData.route.path, ...(col.id !== itemData.route.id ? [ itemData.route.id ] : []) ],
+            ...col.id === itemData.route.id ? {
               attemptId,
             } : {
               parentAttemptId: attemptId,
@@ -271,10 +205,10 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
       },
       rowGroup: {
         id: row.id,
-        isUser: this.currentFilter === 'Users',
+        isUser: this.currentFilter() === 'Users',
       },
-    };
-    this.progressDataDialog = {
+    });
+    this.progressDataDialog.set({
       item: {
         id: col.id,
         requiresExplicitEntry: col.requiresExplicitEntry,
@@ -282,14 +216,14 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
           title: col.title,
         },
       },
-      group: rawGroupRoute({ id: row.id, isUser: this.currentFilter === 'Users' }),
+      group: rawGroupRoute({ id: row.id, isUser: this.currentFilter() === 'Users' }),
       groupName: row.header,
-      sourceGroupName: this.group.name,
-    };
+      sourceGroupName: group.name,
+    });
   }
 
   hideProgressDetail(): void {
-    this.progressOverlay = undefined;
+    this.progressOverlay.set(undefined);
     this.activeCell.set(null);
   }
 
@@ -299,72 +233,9 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
     this.fetchMoreRows();
   }
 
-  private getProgress({ itemId, groupId, filter, pageSize, fromId }: DataFetching): Observable<Progress[]> {
-    switch (filter) {
-      case 'Users':
-        return this.getGroupUsersProgressService.getUsersProgress(groupId, [ itemId ], { limit: pageSize, fromId }).pipe(
-          map(progress => progress.map(p => ({ ...p, type: 'user' }))),
-        );
-      case 'Teams':
-        return this.getGroupUsersProgressService.getTeamsProgress(groupId, [ itemId ], { limit: pageSize, fromId }).pipe(
-          map(progress => progress.map(p => ({ ...p, type: 'user' }))),
-        );
-      case 'Groups':
-        return this.getGroupUsersProgressService.getGroupsProgress(groupId, [ itemId ], { limit: pageSize, fromId })
-          .pipe(map(groupsProgress => groupsProgress.map(p => ({
-            type: 'group',
-            groupId: p.groupId,
-            itemId: p.itemId,
-            validationRate: p.validationRate,
-            score: p.averageScore,
-            timeSpent: p.avgTimeSpent,
-            hintsRequested: p.avgHintsRequested,
-            submissions: p.avgSubmissions,
-            latestActivityAt: null,
-          }))));
-    }
-  }
-
-  private getRows(
-    { groupId, filter, pageSize, fromId }: Omit<DataFetching, 'itemId'>,
-  ): Observable<{ id: string, value: string, user?: UserBaseWithId }[]> {
-    switch (filter) {
-      case 'Users':
-        return this.getGroupDescendantsService.getUserDescendants(groupId, { limit: pageSize, fromId })
-          .pipe(map(users => users.map(user => ({ id: user.id, value: formatUser(user.user), user: { ...user.user, id: user.id } }))));
-      case 'Teams':
-        return this.getGroupDescendantsService.getTeamDescendants(groupId, { limit: pageSize, fromId })
-          .pipe(map(teams => teams.map(team => ({ id: team.id, value: team.name }))));
-      case 'Groups':
-        return this.getGroupChildrenService.getGroupChildren(groupId, [], [], [ 'Team', 'User' ], { limit: pageSize, fromId })
-          .pipe(map(groups => groups.map(group => ({ id: group.id, value: group.name }))));
-    }
-  }
-
-  private getRowsWithProgress({ itemId, groupId, filter, fromId, pageSize }: DataFetching): Observable<DataRow[]> {
-    return forkJoin({
-      rows: this.getRows({ groupId, filter, pageSize, fromId }),
-      progress: this.getProgress({ itemId, groupId, filter, pageSize, fromId }),
-    }).pipe(
-      combineLatestWith(this.columns$.pipe(readyData())),
-      map(([{ rows, progress }, items ]) =>
-        rows
-          .filter(row => progress.find(progress => progress.groupId === row.id)) // only keep rows with a defined progress
-          .map(row => ({
-            header: row.value,
-            id: row.id,
-            user: row.user,
-            data: items.map(item =>
-              progress.find(progress => progress.itemId === item.id && progress.groupId === row.id)
-            ),
-          })),
-      )
-    );
-  }
-
   onFilterChange(typeFilter: TypeFilter): void {
-    if (typeFilter !== this.currentFilter) {
-      this.currentFilter = typeFilter;
+    if (typeFilter !== this.currentFilter()) {
+      this.currentFilter.set(typeFilter);
       const sizes = this.pageSizesForFilter(typeFilter);
       this.datapager.setPageSize(sizes.default, sizes.max);
       this.fetchRows();
@@ -383,83 +254,33 @@ export class GroupProgressGridComponent implements OnChanges, OnDestroy {
 
   onAccessPermissions(): void {
     this.hideProgressDetail();
-    if (!this.progressDataDialog) throw new Error('Unexpected: progress data dialog');
-    if (!this.itemData) throw new Error('Unexpected: missed item data');
-    if (!this.sourceGroup) throw new Error('Unexpected: missed source group');
+    const progressDataDialog = this.progressDataDialog();
+    if (!progressDataDialog) throw new Error('Unexpected: progress data dialog');
+    const sourceGroup = this.sourceGroup();
+    if (!sourceGroup) throw new Error('Unexpected: missed source group');
     this.dialogService.open<boolean, PermissionsEditDialogParams>(PermissionsEditDialogComponent, {
       data: {
-        currentUserPermissions: this.itemData.item.permissions,
-        item: this.progressDataDialog.item,
-        group: this.progressDataDialog.group,
-        sourceGroup: this.sourceGroup,
-        permReceiverName: this.progressDataDialog.groupName,
-        permGiverName: this.progressDataDialog.sourceGroupName,
+        currentUserPermissions: this.itemData().item.permissions,
+        item: progressDataDialog.item,
+        group: progressDataDialog.group,
+        sourceGroup,
+        permReceiverName: progressDataDialog.groupName,
+        permGiverName: progressDataDialog.sourceGroupName,
       },
       disableClose: true,
     }).closed.subscribe(() => {
-      this.progressDataDialog = undefined;
+      this.progressDataDialog.set(undefined);
     });
   }
 
   getObserveLink(row: DataRow): UrlTree | undefined {
-    if (!row.user || !this.itemData) return undefined;
-    return this.itemRouter.url(itemRouteWith(this.itemData.route, { observedGroup: { id: row.id, isUser: true } }));
-  }
-
-  getCSVDownloadTypeByFilter(): 'group' | 'team' | 'user' {
-    switch (this.currentFilter) {
-      case 'Groups':
-        return 'group';
-      case 'Users':
-        return 'user';
-      case 'Teams':
-        return 'team';
-    }
+    if (!row.user) return undefined;
+    return this.itemRouter.url(itemRouteWith(this.itemData().route, { observedGroup: { id: row.id, isUser: true } }));
   }
 
   onCSVExport(): void {
-    if (!this.group || !this.itemData) {
-      throw new Error('Unexpected: input component params is required');
-    }
-
-    const parentItemId = this.itemData.item.id;
-    const downloadDataType = this.getCSVDownloadTypeByFilter();
-
-    this.isCSVDataFetching = true;
-    this.progressCSVService
-      .getCSVData(this.group.id, downloadDataType, [ parentItemId ])
-      .subscribe({
-        next: data => {
-          this.isCSVDataFetching = false;
-          downloadFile([ data ], `${parentItemId}-${new Date().toDateString()}.csv`, 'text/csv');
-        },
-        error: err => {
-          this.isCSVDataFetching = false;
-          this.actionFeedbackService.unexpectedError();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        },
-      });
-  }
-
-  private getColumns(itemData: ItemData): Observable<DataColumn[]> {
-    if (!itemData.currentResult?.attemptId) throw new Error('unexpected');
-    return this.getItemChildrenService.get(itemData.item.id, itemData.currentResult.attemptId).pipe(
-      map(items => [
-        {
-          id: itemData.item.id,
-          requiresExplicitEntry: itemData.item.requiresExplicitEntry,
-          title: itemData.item.string.title,
-          type: itemData.item.type,
-          permissions: itemData.item.permissions,
-        },
-        ...items.map(item => ({
-          id: item.id,
-          requiresExplicitEntry: !!item.requiresExplicitEntry,
-          title: item.string.title,
-          type: item.type,
-          permissions: item.permissions,
-        }))
-      ]),
-    );
+    const group = this.group();
+    const itemData = this.itemData();
+    this.csvExportService.export(group.id, itemData.item.id, this.currentFilter());
   }
 }
