@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Group } from '../../models/group';
 import { Router } from '@angular/router';
 import { GroupLeaveComponent } from '../group-leave/group-leave.component';
@@ -9,7 +9,6 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
   selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
   styleUrls: [ './group-overview.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     GroupLeaveComponent,
     IsCurrentUserMemberPipe,
@@ -18,13 +17,13 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
 export class GroupOverviewComponent {
   private router = inject(Router);
 
-  @Output() groupRefreshRequired = new EventEmitter<void>();
-  @Output() leftGroup = new EventEmitter<void>();
+  groupRefreshRequired = output<void>();
+  leftGroup = output<void>();
 
-  @Input() group?: Group;
+  group = input.required<Group>();
 
   onLeave(): void {
-    if (this.group?.isPublic) {
+    if (this.group().isPublic) {
       this.groupRefreshRequired.emit();
       return;
     }
