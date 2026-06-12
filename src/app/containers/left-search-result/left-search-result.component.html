@@ -1,16 +1,16 @@
-@if (data !== undefined) {
+@if (data() !== undefined) {
   <div class="container result-caption">
-    @if (data.length < 10) {
+    @if (data()!.length < 10) {
       <ng-container i18n>
-      {data.length, plural, =0 {No result found} =1 {{{ data.length }} result found} other {{{ data.length }} results found}}
+      {data()!.length, plural, =0 {No result found} =1 {{{ data()!.length }} result found} other {{{ data()!.length }} results found}}
     </ng-container>
     } @else {
-      <span i18n>First {{ data.length }} results</span>
+      <span i18n>First {{ data()!.length }} results</span>
     }
   </div>
 }
 
-@if (data === undefined) {
+@if (data() === undefined) {
   <div class="container">
     <alg-message-info class="search" icon="ph-duotone ph-warning-circle" i18n>
       Type at least 3 letters to search content
@@ -18,7 +18,7 @@
   </div>
 }
 
-@if (data !== undefined && data.length === 0) {
+@if (data() !== undefined && data()!.length === 0) {
   <div class="container">
     <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
       No results
@@ -26,7 +26,7 @@
   </div>
 }
 
-@for (item of data; track item) {
+@for (item of data(); track item) {
   <div class="container">
     <ul class="result-list alg-search-result">
       <li
@@ -39,10 +39,8 @@
         <a class="result-list-link" [routerLink]="item | itemRoute | url" routerLinkActive="selected">
           <i
             class="result-list-icon ph-duotone"
-            [ngClass]="{
-            'ph-files': item.type === 'Task',
-            'ph-folders': item.type === 'Chapter'
-          }"
+            [class.ph-files]="item.type === 'Task'"
+            [class.ph-folders]="item.type === 'Chapter'"
           ></i>
           <span class="result-list-link-caption" algShowOverlayHoverTarget>
             @if (item.titleHighlight; as titleHighlight) {
@@ -66,4 +64,3 @@
     </ul>
   </div>
 }
-

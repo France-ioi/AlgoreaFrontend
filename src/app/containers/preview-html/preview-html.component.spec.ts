@@ -23,7 +23,7 @@ describe('PreviewHtmlComponent', () => {
   });
 
   it('should render description iframe when there is HTML content', () => {
-    component.textContent = '<p>preview</p>';
+    fixture.componentRef.setInput('textContent', '<p>preview</p>');
     fixture.detectChanges();
 
     const iframe = fixture.debugElement.query(By.css('alg-description-iframe iframe'));
@@ -32,7 +32,7 @@ describe('PreviewHtmlComponent', () => {
   });
 
   it('should show empty state when there is nothing to preview', () => {
-    component.textContent = '   ';
+    fixture.componentRef.setInput('textContent', '   ');
     fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('alg-description-iframe'))).toBeFalsy();
