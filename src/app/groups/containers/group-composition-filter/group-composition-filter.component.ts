@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, OnInit, output, signal } from '@angular/core';
 import { ensureDefined } from 'src/app/utils/assert';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
@@ -20,19 +20,18 @@ export interface Filter {
   selector: 'alg-group-composition-filter',
   templateUrl: './group-composition-filter.component.html',
   styleUrls: [ './group-composition-filter.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ SelectionComponent, SwitchComponent, FormsModule ]
 })
-export class GroupCompositionFilterComponent implements OnInit{
-  @Input() defaultValue?: Filter;
+export class GroupCompositionFilterComponent implements OnInit {
+  defaultValue = input<Filter>();
 
-  @Output() change = new EventEmitter<Filter>();
+  change = output<Filter>();
 
-  value: Filter = { type: TypeFilter.Users, directChildren: true };
+  value = signal<Filter>({ type: TypeFilter.Users, directChildren: true });
 
-  allowToCheckAllDescendants = false;
-  allDescendantsChecked = false;
-  selectedTypeFilter = 0;
+  allowToCheckAllDescendants = signal(false);
+  allDescendantsChecked = signal(false);
+  selectedTypeFilter = signal(0);
 
   readonly typeFilters: { label: string, value: TypeFilter, directOnly: boolean }[] = [
     {
@@ -57,30 +56,32 @@ export class GroupCompositionFilterComponent implements OnInit{
   ];
 
   ngOnInit(): void {
-    if (this.defaultValue) {
-      this.setFilter(this.defaultValue);
+    const defaultVal = this.defaultValue();
+    if (defaultVal) {
+      this.setFilter(defaultVal);
     }
   }
 
   public setFilter(filter: Filter): void {
-    this.value = filter;
-    this.allDescendantsChecked = !this.value.directChildren;
-    this.selectedTypeFilter = Math.max(0, this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type));
-    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
+    this.value.set(filter);
+    this.allDescendantsChecked.set(!this.value().directChildren);
+    this.selectedTypeFilter.set(Math.max(0, this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value().type)));
+    this.allowToCheckAllDescendants.set(!ensureDefined(this.typeFilters[this.selectedTypeFilter()]).directOnly);
   }
 
   onTypeFilterChanged(index: number): void {
-    this.selectedTypeFilter = index;
-    this.value.type = ensureDefined(this.typeFilters[index]).value;
-    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[index]).directOnly;
-    this.change.emit(this.value);
+    this.selectedTypeFilter.set(index);
+    this.value.update(current => ({ ...current, type: ensureDefined(this.typeFilters[index]).value }));
+    this.allowToCheckAllDescendants.set(!ensureDefined(this.typeFilters[index]).directOnly);
+    this.change.emit({ ...this.value() });
   }
 
   onChildrenFilterChanged(checked: boolean): void {
-    this.value.directChildren = !checked;
-    this.selectedTypeFilter = this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value.type);
-    this.value.type = ensureDefined(this.typeFilters[this.selectedTypeFilter]).value;
-    this.allowToCheckAllDescendants = !ensureDefined(this.typeFilters[this.selectedTypeFilter]).directOnly;
-    this.change.emit(this.value);
+    this.allDescendantsChecked.set(checked);
+    this.value.update(current => ({ ...current, directChildren: !checked }));
+    this.selectedTypeFilter.set(this.typeFilters.findIndex(typeFilter => typeFilter.value === this.value().type));
+    this.value.update(current => ({ ...current, type: ensureDefined(this.typeFilters[this.selectedTypeFilter()]).value }));
+    this.allowToCheckAllDescendants.set(!ensureDefined(this.typeFilters[this.selectedTypeFilter()]).directOnly);
+    this.change.emit({ ...this.value() });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { GrantedPermissions } from '../../data-access/granted-permissions.service';
 import { GroupPermissionCaptionPipe } from 'src/app/pipes/groupPermissionCaption';
 import { DatePipe } from '@angular/common';
@@ -7,12 +7,11 @@ import { DatePipe } from '@angular/common';
   selector: 'alg-group-permissions',
   templateUrl: './group-permissions.component.html',
   styleUrls: [ './group-permissions.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DatePipe,
     GroupPermissionCaptionPipe,
   ]
 })
 export class GroupPermissionsComponent {
-  @Input() permissions?: GrantedPermissions['permissions'];
+  permissions = input.required<GrantedPermissions['permissions']>();
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { GetUserByLoginService } from 'src/app/data-access/get-user-by-login.service';
@@ -14,7 +14,6 @@ import { Group } from '../../models/group';
   selector: 'alg-group-manager-add',
   templateUrl: './group-manager-add.component.html',
   styleUrls: [ './group-manager-add.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, ButtonComponent ]
 })
 export class GroupManagerAddComponent {
@@ -22,38 +21,34 @@ export class GroupManagerAddComponent {
   private groupCreateManagerService = inject(GroupCreateManagerService);
   private actionFeedbackService = inject(ActionFeedbackService);
 
-  @Output() added = new EventEmitter<void>();
+  added = output<void>();
 
-  @Input({ required: true }) group!: Group;
-  @Input() managers?: Manager[];
+  group = input.required<Group>();
+  managers = input.required<Manager[]>();
 
-  state: 'ready' | 'error' | 'loading' = 'ready';
+  state = signal<'ready' | 'error' | 'loading'>('ready');
   login = '';
 
   onClick(): void {
-    if (!this.managers) {
-      throw new Error('Unexpected: Missed managers');
-    }
-
-    if (this.managers.some(manager => manager.login === this.login)) {
+    if (this.managers().some(manager => manager.login === this.login)) {
       this.actionFeedbackService.error($localize`This user is already a manager of this group.`);
       return;
     }
 
-    const groupId = this.group.id;
+    const groupId = this.group().id;
 
-    this.state = 'loading';
+    this.state.set('loading');
     this.getUserByLoginService.get(this.login).pipe(
       switchMap(user => this.groupCreateManagerService.create(groupId, user.groupId)),
     ).subscribe({
       next: () => {
-        this.state = 'ready';
+        this.state.set('ready');
         this.actionFeedbackService.success($localize`Manager added!`);
         this.login = '';
         this.added.emit();
       },
       error: error => {
-        this.state = 'error';
+        this.state.set('error');
 
         if (errorIsHTTPNotFound(error)) {
           this.actionFeedbackService.error($localize`The login you entered does not exist or is not visible to you.`);

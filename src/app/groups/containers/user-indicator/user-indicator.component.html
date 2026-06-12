@@ -1,7 +1,7 @@
-@if (user) {
+@if (user()) {
   <div class="container">
     <div class="content" i18n>
-      You are manager of <alg-group-links class="links" [items]="user.ancestorsCurrentUserIsManagerOf"></alg-group-links>
+      You are manager of <alg-group-links class="links" [items]="user().ancestorsCurrentUserIsManagerOf"></alg-group-links>
       of which this user is member.
     </div>
   </div>

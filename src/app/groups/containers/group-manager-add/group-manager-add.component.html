@@ -5,13 +5,13 @@
     type="text"
     i18n-placeholder="Placeholder of field for searching for user by login" placeholder="Login of a user"
     [(ngModel)]="login"
-    [disabled]="state === 'loading'"
+    [disabled]="state() === 'loading'"
   >
   <div class="button-section">
     <button
       class="size-l"
       icon="ph-bold ph-plus"
-      [disabled]="login === '' || state === 'loading'"
+      [disabled]="login === '' || state() === 'loading'"
       (click)="onClick()"
       alg-button
     >Add</button>
