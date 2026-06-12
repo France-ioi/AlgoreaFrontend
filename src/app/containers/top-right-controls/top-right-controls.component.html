@@ -1,9 +1,14 @@
-<div class="controls-zone" [ngClass]="drawLeftBorder ? 'with-left-border' : 'no-left-border'" *ngrxLet="session$ as session">
+<div
+  class="controls-zone"
+  [class.with-left-border]="drawLeftBorder()"
+  [class.no-left-border]="!drawLeftBorder()"
+  *ngrxLet="session$ as session"
+>
   @if (session && !session.tempUser) {
     @if (enableNotifications) {
       <alg-notification-bell></alg-notification-bell>
     }
-    <alg-top-right-menu [styleClass]="topRightMenuStyleClass"></alg-top-right-menu>
+    <alg-top-right-menu [styleClass]="topRightMenuStyleClass()"></alg-top-right-menu>
   } @else {
     @if (languages.length > 1) {
       <alg-language-picker class="lang-button"></alg-language-picker>

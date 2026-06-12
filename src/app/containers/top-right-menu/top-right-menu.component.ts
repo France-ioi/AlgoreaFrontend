@@ -1,4 +1,4 @@
-import { Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { APPCONFIG } from 'src/app/config';
@@ -6,7 +6,7 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { UserSessionService } from '../../services/user-session.service';
 import { LayoutService } from '../../services/layout.service';
-import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { UrlCommand } from 'src/app/utils/url';
@@ -24,14 +24,12 @@ export interface MenuItem {
   selector: 'alg-top-right-menu',
   templateUrl: './top-right-menu.component.html',
   styleUrls: [ './top-right-menu.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AsyncPipe,
     ButtonIconComponent,
     CdkMenuTrigger,
     CdkMenu,
     CdkMenuItem,
-    NgClass,
     NgTemplateOutlet,
     RouterLink,
   ]
@@ -42,7 +40,7 @@ export class TopRightMenuComponent {
   private groupRouter = inject(GroupRouter);
   private layoutService = inject(LayoutService);
   private config = inject(APPCONFIG);
-  @Input() styleClass?: string;
+  styleClass = input<string>();
 
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
 

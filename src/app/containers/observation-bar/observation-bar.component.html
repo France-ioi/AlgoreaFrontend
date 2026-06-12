@@ -1,10 +1,10 @@
 @if (observedGroup$ | async; as observedGroup) {
-  <div class="wrapper" [ngClass]="{ 'only-icon-mode': onlyIcon }">
+  <div class="wrapper" [class.only-icon-mode]="onlyIcon()">
     <div class="left-section alg-flex-1">
       <i
         class="left-icon alg-secondary-color ph-duotone ph-eye"
         [algTooltip]="observationModeTooltip"
-        [tooltipDisabled]="!showTooltip"
+        [tooltipDisabled]="!showTooltip()"
         tooltipPosition="right"
         tooltipStyleClass="observation-mode"
       ></i>
@@ -17,16 +17,16 @@
           Only the content visible by the group you are observing ({{ observedGroup.name }}) is shown.
         }
       </ng-template>
-      @if (!onlyIcon) {
+      @if (!onlyIcon()) {
         <span class="title text-dots">
-          @if(caption) {
-            <span class="alg-secondary-color">{{ caption }}</span>
+          @if (caption()) {
+            <span class="alg-secondary-color">{{ caption() }}</span>
           } @else if(observedGroup.name) {
             <a
               class="link alg-link hover-underline alg-secondary-color"
               [routerLink]="observedGroup.route | groupLink"
             >
-              {{ caption || observedGroup.name }}
+              {{ caption() || observedGroup.name }}
             </a>
           }
         </span>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, inject, input } from '@angular/core';
 import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
 import { ContentTopBarComponent } from 'src/app/containers/content-top-bar/content-top-bar.component';
 import { LeftHeaderComponent } from 'src/app/containers/left-header/left-header.component';
@@ -8,7 +8,6 @@ import { LeftHeaderComponent } from 'src/app/containers/left-header/left-header.
   selector: 'alg-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: [ './top-bar.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LeftHeaderComponent,
     ContentTopBarComponent,
@@ -18,8 +17,8 @@ import { LeftHeaderComponent } from 'src/app/containers/left-header/left-header.
 export class TopBarComponent {
   elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  @Input() showBreadcrumbs = true;
-  @Input() modeBarDisplayed = false;
-  @Input() showTopRightControls = true;
-  @Input() showLeftMenuOpener = true;
+  showBreadcrumbs = input(true);
+  modeBarDisplayed = input(false);
+  showTopRightControls = input(true);
+  showLeftMenuOpener = input(true);
 }
