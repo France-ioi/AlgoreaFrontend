@@ -1,4 +1,6 @@
-import { Component, forwardRef, Injector, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef, Component, forwardRef, inject, Injector, OnDestroy, OnInit, viewChild,
+} from '@angular/core';
 
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import {
@@ -32,7 +34,6 @@ export interface CanEnterValue {
     DatePipe,
     FormErrorComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -48,9 +49,10 @@ export interface CanEnterValue {
 })
 export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestroy {
   private injector = inject(Injector);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
-  @ViewChild('canEnterFromRef') canEnterFromRef?: InputDateComponent;
-  @ViewChild('canEnterUntilRef') canEnterUntilRef?: InputDateComponent;
+  private readonly canEnterFromRef = viewChild('canEnterFromRef', { read: InputDateComponent });
+  private readonly canEnterUntilRef = viewChild('canEnterUntilRef', { read: InputDateComponent });
 
   canEnterFrom: Date | null = null;
   canEnterUntil: Date | null = null;
@@ -75,12 +77,13 @@ export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestro
     if (value === null) return;
     this.canEnterFrom = value.canEnterFrom;
     this.canEnterUntil = value.canEnterUntil;
+    this.changeDetectorRef.markForCheck();
   }
 
   private onChange: (value: CanEnterValue | null) => void = () => {};
 
   validate(control: AbstractControl<CanEnterValue | null>): ValidationErrors | null {
-    if (this.canEnterFromRef?.control?.invalid || this.canEnterUntilRef?.control?.invalid) return {
+    if (this.canEnterFromRef()?.control?.invalid || this.canEnterUntilRef()?.control?.invalid) return {
       canEnterUntilDateInvalid: true
     };
     return control.value !== null && control.value.canEnterUntil <= control.value.canEnterFrom

@@ -1,6 +1,5 @@
 import {
-  ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Injector, Input, OnChanges, OnInit, Output,
-  SimpleChanges, inject,
+  ChangeDetectorRef, Component, computed, forwardRef, inject, Injector, input, OnInit,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -38,17 +37,15 @@ const MAX_SECONDS_VALUE = 59;
       multi: true,
     },
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule, FormErrorComponent, MaskDirective ]
 })
-export class DurationComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
+export class DurationComponent implements OnInit, ControlValueAccessor, Validator {
   private injector = inject(Injector);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
-  @Output() change = new EventEmitter<Duration | null>();
-
-  @Input() name = '';
-  @Input() parentForm?: UntypedFormGroup;
-  @Input() layout: 'DHM' | 'HMS' = 'HMS';
+  name = input('');
+  parentForm = input<UntypedFormGroup>();
+  layout = input<'DHM' | 'HMS'>('HMS');
   /**
    * Currently, the backend stores duration values with 2 distinct formats:
    * - 'time': uses MySQL 'time' column, has the shape "h:m:s" and is limited to 838:59:59
@@ -58,43 +55,34 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
    *
    * If you are using the 'time' format, set `limitToTimeMax` to true.
    */
-  @Input() limitToTimeMax = false;
+  limitToTimeMax = input(false);
 
   control?: AbstractControl;
 
-  get maxDuration(): number {
-    return this.limitToTimeMax ? MAX_TIME_FORMAT_DURATION : MAX_SECONDS_FORMAT_DURATION;
-  }
+  protected readonly maxDuration = computed(() => (
+    this.limitToTimeMax() ? MAX_TIME_FORMAT_DURATION : MAX_SECONDS_FORMAT_DURATION
+  ));
+
+  protected readonly showField = computed(() => ({
+    days: this.layout() === 'DHM',
+    hours: this.layout() === 'DHM' || this.layout() === 'HMS',
+    minutes: this.layout() === 'DHM' || this.layout() === 'HMS',
+    seconds: this.layout() === 'HMS',
+  }));
 
   days = '0';
   hours = '0';
   minutes = '0';
   seconds = '0';
 
-  showField = {
-    days: false,
-    hours: false,
-    minutes: false,
-    seconds: false,
-  };
-
   ngOnInit(): void {
     // Inject NgControl at init to avoid circular dependency
     // https://stackoverflow.com/questions/39809084/injecting-ngcontrol-in-custom-validator-directive-causes-cyclic-dependency
-    this.control = this.parentForm && this.name
-      ? this.parentForm.get(this.name) ?? undefined
+    const parentForm = this.parentForm();
+    const name = this.name();
+    this.control = parentForm && name
+      ? parentForm.get(name) ?? undefined
       : this.injector.get(NgControl, null)?.control ?? undefined;
-
-    this.showField = {
-      days: this.layout === 'DHM',
-      hours: this.layout === 'DHM' || this.layout === 'HMS',
-      minutes: this.layout === 'DHM' || this.layout === 'HMS',
-      seconds: this.layout === 'HMS',
-    };
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.layout && !changes.layout.firstChange) throw new Error('layout must not change');
   }
 
   private onChange: (duration: Duration | null) => void = () => {};
@@ -103,9 +91,9 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
     const duration = control.value as Duration | null;
     if (!duration) return null;
     if (!duration.isValid()) return { invalidDuration: { invalidDuration: true } };
-    if (duration.ms > this.maxDuration) {
-      const duration = new Duration(this.maxDuration);
-      switch (this.layout) {
+    if (duration.ms > this.maxDuration()) {
+      const duration = new Duration(this.maxDuration());
+      switch (this.layout()) {
         case 'DHM':
           return { max: { max: duration.getDHM().join(':') } };
         case 'HMS':
@@ -117,7 +105,7 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
 
   writeValue(duration: Duration | null): void {
     if (!duration) return;
-    switch (this.layout) {
+    switch (this.layout()) {
       case 'HMS':
         [ this.hours, this.minutes, this.seconds ] = duration.getHMS();
         break;
@@ -125,6 +113,7 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
         [ this.days, this.hours, this.minutes ] = duration.getDHM();
         break;
     }
+    this.changeDetectorRef.markForCheck();
   }
 
   registerOnChange(fn: (duration: Duration | null) => void): void {
@@ -135,12 +124,11 @@ export class DurationComponent implements OnInit, OnChanges, ControlValueAccesso
   }
 
   emitValue(duration: Duration | null): void {
-    this.change.emit(duration);
     this.onChange(duration);
   }
 
   handleChange(): void {
-    switch (this.layout) {
+    switch (this.layout()) {
       case 'DHM':
         return this.emitValue(this.handleDHMChange());
       case 'HMS':
