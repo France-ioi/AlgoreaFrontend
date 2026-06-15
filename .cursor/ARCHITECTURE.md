@@ -393,6 +393,12 @@ Both messages are notifications, not RPC; the helper is ~30 lines and adds no ne
 
 Task API versioning is negotiated at load time via optional `apiVersion` / `minApiVersion` fields returned by `task.getMetaData()`. The platform supports versions 1–2 and picks the highest version in the overlapping range. When the negotiated version is ≥ 2, `Task.reloadAnswer()` dispatches to the v2 wire method `task.reloadAnswerWithOptions`, passing `idUserAnswer` when reloading a submitted answer so the task can fetch submission feedback from its own backend using the signed task token.
 
+#### Device proxy (Web Bluetooth / WebSocket)
+
+Browsers increasingly block iframes from using Web Bluetooth or opening WebSockets to localhost. Tasks that need these APIs call `platform.deviceProxy(category, method, args)` over jschannel; the platform runs the real operation via [bebras-device-proxy](https://github.com/France-ioi/bebras-device-proxy) (`DeviceProxyService` → UMD `device-proxy-platform.js`, lazy-loaded from `/scripts/` on first use). Async device events (BLE notifications, WebSocket messages/close) are pushed back to the task: the module calls `window.task.deviceProxy(...)`, bridged by `DeviceProxyService.connectTask()` onto a new `task.deviceProxy` channel call. `DeviceProxyService.disconnectTask()` (on task teardown) invokes the module's `cleanup()` to close connections, then replaces `window.task` with a no-op stub so late async events from `cleanup()` cannot throw.
+
+**Constraint:** at most one task iframe may use the device proxy at a time. The module holds singleton connection state and a single `window.task` bridge; the app currently mounts one `alg-item-display` per item view. Two simultaneous task iframes (e.g. split comparison) are unsupported.
+
 #### Showing the solution tab right after validation
 
 Whether a task exposes its `solution` view is decided by the task itself, from the `bAccessSolutions` claim in its signed task token (the backend grants it once the user has validated the item). The platform no longer gates the solution tab in [item-tabs.ts](../src/app/items/item-tabs.ts) — the task is the source of truth. To make the tab appear immediately after a validating submission without a full reload:

@@ -9,6 +9,7 @@ import { AskHintService } from '../data-access/ask-hint.service';
 import { Answer as GetAnswerType } from '../data-access/get-answer.service';
 import { Task, TaskPlatform } from '../api/task-proxy';
 import { ItemTaskAnswerService } from './item-task-answer.service';
+import { DeviceProxyService } from './device-proxy.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 
@@ -30,6 +31,7 @@ export class ItemTaskService implements OnDestroy {
   private activityNavTreeService = inject(ActivityNavTreeService);
   private location = inject(Location);
   private askHintService = inject(AskHintService);
+  private deviceProxyService = inject(DeviceProxyService);
 
   readonly destroyed$ = new Subject<void>();
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(takeUntil(this.destroyed$), shareReplay(1));
@@ -79,6 +81,7 @@ export class ItemTaskService implements OnDestroy {
   private attemptId$ = new ReplaySubject(1);
 
   ngOnDestroy(): void {
+    this.deviceProxyService.disconnectTask();
     this.hintError$.complete();
     this.navigateTo.complete();
     this.destroyed$.next();
@@ -128,7 +131,9 @@ export class ItemTaskService implements OnDestroy {
         // eslint-disable-next-line no-console
         console.log(...messages);
       },
+      deviceProxy: (category, method, args) => this.deviceProxyService.handle(category, method, args),
     };
+    this.deviceProxyService.connectTask(task);
     task.bindPlatform(platform);
   }
 

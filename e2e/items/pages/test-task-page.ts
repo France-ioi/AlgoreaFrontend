@@ -230,6 +230,15 @@ export class TestTaskPage {
     await this.taskFrame.getByTestId('get-task-params-btn').click();
   }
 
+  async clickBluetoothRequestDevice(): Promise<void> {
+    await this.taskFrame.getByTestId('bluetooth-request-btn').click();
+  }
+
+  async clickWebSocketConnect(url = 'ws://127.0.0.1:1'): Promise<void> {
+    await this.taskFrame.getByTestId('websocket-url').fill(url);
+    await this.taskFrame.getByTestId('websocket-connect-btn').click();
+  }
+
   async clickUpdateDisplay(height: number): Promise<void> {
     await this.taskFrame.getByTestId('display-height').fill(String(height));
     await this.taskFrame.getByTestId('update-display-btn').click();

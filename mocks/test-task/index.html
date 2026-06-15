@@ -80,11 +80,27 @@
   </section>
 
   <section class="panel">
-    <h2>Platform → task call log</h2>
+    <h2>Device proxy</h2>
+    <div class="controls">
+      <button type="button" id="bluetooth-request-btn" data-testid="bluetooth-request-btn">bluetooth.requestDevice</button>
+      <span id="bluetooth-result" data-testid="bluetooth-result"></span>
+    </div>
+    <div class="controls">
+      <label>
+        WebSocket URL
+        <input id="websocket-url" data-testid="websocket-url" type="text" value="ws://127.0.0.1:1">
+      </label>
+      <button type="button" id="websocket-connect-btn" data-testid="websocket-connect-btn">websocket.connect</button>
+      <span id="websocket-result" data-testid="websocket-result"></span>
+    </div>
+  </section>
+
+  <section class="panel">
     <ol id="call-log" data-testid="call-log"></ol>
   </section>
 
   <div id="loaded-marker" data-testid="test-task-loaded" hidden>loaded</div>
+  <script src="device-proxy-task.js"></script>
   <script src="test-task.js"></script>
 </body>
 </html>

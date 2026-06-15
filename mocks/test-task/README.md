@@ -84,11 +84,11 @@ npm run e2e -- e2e/items/task-platform-interaction.spec.ts
 
 ### Platform → task (logged automatically)
 
-`task.getMetaData`, `task.load`, `task.unload`, `task.getHeight`, `task.updateToken`, `task.getAnswer`, `task.reloadAnswer`, `task.reloadAnswerWithOptions`, `task.getState`, `task.reloadState`, `task.getViews`, `task.showViews`, `task.gradeAnswer`, `task.getResources`
+`task.getMetaData`, `task.load`, `task.unload`, `task.getHeight`, `task.updateToken`, `task.getAnswer`, `task.reloadAnswer`, `task.reloadAnswerWithOptions`, `task.getState`, `task.reloadState`, `task.getViews`, `task.showViews`, `task.gradeAnswer`, `task.getResources`, `task.deviceProxy`
 
 ### Task → platform (buttons in the page)
 
-`platform.validate`, `platform.updateDisplay`, `platform.updateHeight`, `platform.openUrl`, `platform.showView`, `platform.getTaskParams`, `platform.askHint`, `platform.log`
+`platform.validate`, `platform.updateDisplay`, `platform.updateHeight`, `platform.openUrl`, `platform.showView`, `platform.getTaskParams`, `platform.askHint`, `platform.log`, `platform.deviceProxy` (via device proxy buttons)
 
 ## Programmatic access (e2e / debugging)
 

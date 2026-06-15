@@ -139,6 +139,13 @@ export class Task {
       'platform.updateHeight',
       height => platform.updateDisplay({ height: z.number().parse(height) }),
     );
+    this.chan.bind(
+      'platform.deviceProxy',
+      params => {
+        const [ category, method, args ] = (Array.isArray(params) ? params : []) as [string, string, unknown[]];
+        return platform.deviceProxy(category, method, args ?? []);
+      },
+    );
     this.platformSet = true;
   }
 
@@ -262,6 +269,15 @@ export class Task {
       timeout: 2000
     });
   }
+
+  /** Platform→task: single event payload (e.g. a WebSocket close notification). */
+  deviceProxy(category: string, method: string, args: unknown): Observable<unknown> {
+    return this.chan.call({
+      method: 'task.deviceProxy',
+      params: [ category, method, args ],
+      timeout: 10000,
+    }).pipe(map(([ result ]) => result));
+  }
 }
 
 export interface TaskPlatform {
@@ -277,4 +293,6 @@ export interface TaskPlatform {
   openUrl(url: OpenUrlParams): void,
   log(data: TaskLog): void,
   getTaskParams(keyAndDefaultValue: TaskParamsKeyDefault): Observable<TaskParamsValue>,
+  /** Task→platform: argument array for the proxied API method call. */
+  deviceProxy(category: string, method: string, args: unknown[]): Observable<unknown>,
 }
