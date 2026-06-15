@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import {
   ChildDataWithId,
@@ -17,7 +17,6 @@ import { PendingChangesService } from 'src/app/services/pending-changes-service'
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { AllowsEditingChildrenItemPipe } from 'src/app/items/models/item-edit-permission';
 import { FloatingSaveComponent } from 'src/app/ui-components/floating-save/floating-save.component';
-import { NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from '../../store';
 import { LocaleService } from 'src/app/services/localeService';
@@ -26,10 +25,8 @@ import { LocaleService } from 'src/app/services/localeService';
   selector: 'alg-item-children-edit-form',
   templateUrl: './item-children-edit-form.component.html',
   styleUrls: [ './item-children-edit-form.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ItemChildrenEditComponent,
-    NgClass,
     FloatingSaveComponent,
     AllowsEditingChildrenItemPipe,
   ]
@@ -43,16 +40,16 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   private pendingChangesService = inject(PendingChangesService);
   private currentContentService = inject(CurrentContentService);
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
-  @ViewChild('childrenEdit') private childrenEdit?: ItemChildrenEditComponent;
+  childrenEdit = viewChild<ItemChildrenEditComponent>('childrenEdit');
 
-  disabled = false;
-  dirty = false;
+  disabled = signal(false);
+  dirty = signal(false);
   itemChanges: { children?: PossiblyInvisibleChildData[] } = {};
 
   isDirty(): boolean {
-    return this.dirty;
+    return this.dirty();
   }
 
   ngOnInit(): void {
@@ -64,7 +61,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   }
 
   updateItemChanges(children: PossiblyInvisibleChildData[]): void {
-    this.dirty = true;
+    this.dirty.set(true);
     this.itemChanges.children = children;
   }
 
@@ -80,7 +77,6 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
 
     return forkJoin(
       this.itemChanges.children.map(child => {
-        if (!this.itemData) throw new Error('Missed item data');
         if (hasId(child) || !child.isVisible) return of(child);
         // the child doesn't have an id, so we create it
         if (!child.title) throw new Error('Something went wrong, the new child is missing his title');
@@ -89,7 +85,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
           type: child.type,
           url: child.url,
           languageTag,
-          parent: this.itemData.item.id,
+          parent: this.itemData().item.id,
         };
         return this.createItemService
           .create(newChild)
@@ -101,7 +97,6 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   private updateItem(): Observable<void> {
     return this.createChildren().pipe(
       switchMap(children => {
-        if (!this.itemData) throw new Error('Invalid initial data');
         if (!children) throw new Error('Unexpected: Children list are empty');
         const changes: ItemChanges = { children: [] };
         // @TODO: Avoid affecting component vars in Observable Operator
@@ -117,13 +112,13 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
           upper_view_levels_propagation: child.upperViewLevelsPropagation,
           watch_propagation: child.watchPropagation,
         }));
-        return this.updateItemService.updateItem(this.itemData.item.id, changes);
+        return this.updateItemService.updateItem(this.itemData().item.id, changes);
       }),
     );
   }
 
   save(): void {
-    this.disabled = true;
+    this.disabled.set(true);
     this.updateItem().subscribe({
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
@@ -132,7 +127,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
         this.currentContentService.forceNavMenuReload();
       },
       error: err => {
-        this.disabled = false;
+        this.disabled.set(false);
         this.actionFeedbackService.unexpectedError();
         this.currentContentService.forceNavMenuReload();
         if (!(err instanceof HttpErrorResponse)) throw err;
@@ -142,8 +137,8 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
 
   onCancel(): void {
     this.itemChanges = {};
-    this.disabled = false;
-    this.dirty = false;
-    this.childrenEdit?.reset();
+    this.disabled.set(false);
+    this.dirty.set(false);
+    this.childrenEdit()?.reset();
   }
 }

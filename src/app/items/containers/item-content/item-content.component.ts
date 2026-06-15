@@ -122,7 +122,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   hasPrerequisites: boolean|undefined = undefined; // undefined while not known
 
   isDirty(): boolean {
-    return !!this.itemChildrenEditFormComponent?.dirty;
+    return !!this.itemChildrenEditFormComponent?.dirty();
   }
 
   onEditModeEnableChange(editModeEnabled: boolean): void {

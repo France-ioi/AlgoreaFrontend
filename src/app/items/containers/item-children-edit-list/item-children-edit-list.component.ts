@@ -1,4 +1,5 @@
-import { Component, computed, EventEmitter, inject, Input, OnChanges, Output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, linkedSignal, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DEFAULT_SCORE_WEIGHT, PossiblyInvisibleChildData } from '../item-children-edit/item-children-edit.component';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType, ItemTypeCategory } from 'src/app/items/models/item-type';
@@ -14,7 +15,6 @@ import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { PropagationEditMenuComponent } from '../propagation-edit-menu/propagation-edit-menu.component';
 import { AddItemComponent } from '../add-item/add-item.component';
 import { RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
@@ -44,11 +44,9 @@ import { Dialog } from '@angular/cdk/dialog';
   selector: 'alg-item-children-edit-list',
   templateUrl: './item-children-edit-list.component.html',
   styleUrls: [ './item-children-edit-list.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SwitchComponent,
     FormsModule,
-    NgClass,
     RouterLink,
     AddItemComponent,
     PropagationEditMenuComponent,
@@ -73,18 +71,20 @@ import { Dialog } from '@angular/cdk/dialog';
     CdkDrag,
   ]
 })
-export class ItemChildrenEditListComponent implements OnChanges {
-  @Input() itemData?: ItemData;
-  @Input() type: ItemTypeCategory = 'activity';
-  @Input() data: PossiblyInvisibleChildData[] = [];
-  @Output() childrenChanges = new EventEmitter<PossiblyInvisibleChildData[]>();
+export class ItemChildrenEditListComponent {
+  itemData = input.required<ItemData>();
+  type = input<ItemTypeCategory>('activity');
+  data = input.required<PossiblyInvisibleChildData[]>();
+
+  childrenChanges = output<PossiblyInvisibleChildData[]>();
 
   private dialogService = inject(Dialog);
+  private destroyRef = inject(DestroyRef);
 
-  selectedRows: PossiblyInvisibleChildData[] = [];
-  scoreWeightEnabled = signal(false);
-  propagationEditItemIdx?: number;
-  addedItemIds: string[] = [];
+  selectedRows = signal<PossiblyInvisibleChildData[]>([]);
+  scoreWeightEnabled = linkedSignal(() => this.data().some(c => c.scoreWeight !== 1));
+  propagationEditItemIdx = signal<number | undefined>(undefined);
+  addedItemIds = computed(() => this.data().map(item => item.id).filter(isNotUndefined));
 
   propagationEditMenuPositions = signal<ConnectedPosition[]>([
     {
@@ -123,11 +123,6 @@ export class ItemChildrenEditListComponent implements OnChanges {
     this.baseColumns().filter(c => ![ 'type', 'title' ].includes(c))
   );
 
-  ngOnChanges(): void {
-    this.addedItemIds = this.data.map(item => item.id).filter(isNotUndefined);
-    this.scoreWeightEnabled.set(this.data.some(c => c.scoreWeight !== 1));
-  }
-
   addChild(child: AddedContent<ItemType>): void {
     const permissionsForCreatedItem: ItemCorePerm = {
       canView: itemViewPermMax,
@@ -137,7 +132,7 @@ export class ItemChildrenEditListComponent implements OnChanges {
       isOwner: true,
     };
     this.childrenChanges.emit([
-      ...this.data,
+      ...this.data(),
       {
         ...child,
         scoreWeight: DEFAULT_SCORE_WEIGHT,
@@ -149,50 +144,57 @@ export class ItemChildrenEditListComponent implements OnChanges {
   }
 
   onSelect(item: PossiblyInvisibleChildData): void {
-    if (this.selectedRows.includes(item)) {
-      const idx = this.selectedRows.indexOf(item);
-      this.selectedRows = [
-        ...this.selectedRows.slice(0, idx),
-        ...this.selectedRows.slice(idx + 1),
-      ];
-    } else {
-      this.selectedRows = [ ...this.selectedRows, item ];
-    }
+    this.selectedRows.update(rows => {
+      if (rows.includes(item)) {
+        const idx = rows.indexOf(item);
+        return [ ...rows.slice(0, idx), ...rows.slice(idx + 1) ];
+      }
+      return [ ...rows, item ];
+    });
   }
 
   onSelectAll(): void {
-    this.selectedRows = this.selectedRows.length === this.data.length ? [] : this.data;
+    const currentData = this.data();
+    this.selectedRows.update(rows => (rows.length === currentData.length ? [] : currentData));
   }
 
   onRemove(): void {
-    this.childrenChanges.emit(this.data.filter(elm => !this.selectedRows.includes(elm)));
-    this.selectedRows = [];
+    const selected = this.selectedRows();
+    this.childrenChanges.emit(this.data().filter(elm => !selected.includes(elm)));
+    this.selectedRows.set([]);
   }
 
   onEnableScoreWeightChange(event: boolean): void {
     if (!event) {
-      this.childrenChanges.emit(this.data.map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT })));
+      this.childrenChanges.emit(this.data().map(c => ({ ...c, scoreWeight: DEFAULT_SCORE_WEIGHT })));
     }
   }
 
   orderChanged(event: CdkDragDrop<PossiblyInvisibleChildData[]>): void {
-    const previousIndex = this.data.findIndex(d => d === event.item.data);
-    moveItemInArray(this.data, previousIndex, event.currentIndex);
-    this.data = [ ...this.data ];
-    this.childrenChanges.emit(this.data);
+    const reordered = [ ...this.data() ];
+    const previousIndex = reordered.findIndex(d => d === event.item.data);
+    moveItemInArray(reordered, previousIndex, event.currentIndex);
+    this.childrenChanges.emit(reordered);
   }
 
-  onScoreWeightChange(): void {
-    this.childrenChanges.emit(this.data);
+  onScoreWeightChange(rowData: PossiblyInvisibleChildData, scoreWeight: number | null): void {
+    const index = this.data().findIndex(c => c === rowData);
+    if (index === -1) {
+      return;
+    }
+    const weight = scoreWeight ?? DEFAULT_SCORE_WEIGHT;
+    this.childrenChanges.emit(
+      this.data().map((c, i) => (i === index ? { ...c, scoreWeight: weight } : c)),
+    );
   }
 
   openPropagationEditMenu(rowData: PossiblyInvisibleChildData): void {
-    this.propagationEditItemIdx = this.data.indexOf(rowData);
+    this.propagationEditItemIdx.set(this.data().indexOf(rowData));
   }
 
   emitChildPermPropagations(propagations: Partial<ItemPermPropagations>, childIdx: number): void {
     this.childrenChanges.emit(
-      this.data.map((c, index) => {
+      this.data().map((c, index) => {
         if (index === childIdx) {
           return {
             ...c,
@@ -206,13 +208,12 @@ export class ItemChildrenEditListComponent implements OnChanges {
 
   onContentViewPropagationChanged(contentViewPropagation: 'none' | 'as_info' | 'as_content', childIdx: number): void {
     this.emitChildPermPropagations({ contentViewPropagation }, childIdx);
-    this.propagationEditItemIdx = undefined;
+    this.propagationEditItemIdx.set(undefined);
   }
 
   openAdvancedPermPropagationConfigurationDialog(child: PossiblyInvisibleChildData, childIdx: number): void {
     if (!child.permissions) throw new Error('Unexpected: missed permissions');
-    const item = this.itemData?.item;
-    if (!item) throw new Error('Unexpected: missed item');
+    const item = this.itemData().item;
     const title = item.string.title;
     if (!title) throw new Error('Unexpected: missed title');
     const childTitle = child.isVisible ? child.title : undefined;
@@ -235,7 +236,9 @@ export class ItemChildrenEditListComponent implements OnChanges {
           watchPropagation: child.watchPropagation,
         },
       },
-    }).closed.subscribe(result => {
+    }).closed.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(result => {
       if (result) {
         this.emitChildPermPropagations(result, childIdx);
       }
