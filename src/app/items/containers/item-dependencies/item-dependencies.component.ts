@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, signal, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, input, signal, viewChild, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
-import { ReplaySubject, Subject, switchMap } from 'rxjs';
+import { Subject, switchMap } from 'rxjs';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { map, share } from 'rxjs/operators';
 import { ItemData } from '../../models/item-data';
@@ -27,7 +28,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-item-dependencies',
   templateUrl: './item-dependencies.component.html',
   styleUrls: [ './item-dependencies.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -42,19 +42,21 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ButtonIconComponent,
   ]
 })
-export class ItemDependenciesComponent implements OnChanges, OnDestroy {
+export class ItemDependenciesComponent {
   private getItemPrerequisitesService = inject(GetItemPrerequisitesService);
   private addItemPrerequisiteService = inject(AddItemPrerequisiteService);
   private removeItemPrerequisiteService = inject(RemoveItemPrerequisiteService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private getItemDependenciesService = inject(GetItemDependenciesService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
-  @ViewChild('addDependencyComponent') addDependencyComponent?: AddDependencyComponent;
+  addDependencyComponent = viewChild('addDependencyComponent', { read: AddDependencyComponent });
 
-  private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
+
+  private readonly itemId$ = toObservable(this.itemData).pipe(map(itemData => itemData.item.id));
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getItemPrerequisitesService.get(itemId)),
@@ -70,18 +72,11 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   );
   addedIds$ = this.state$.pipe(readyData(), map(data => data.map(dependency => dependency.id)));
 
-  changeInProgress = false;
+  changeInProgress = signal(false);
   itemId = signal<string | undefined>(undefined);
 
-  ngOnChanges(): void {
-    if (this.itemData) {
-      this.itemId$.next(this.itemData.item.id);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.itemId$.complete();
-    this.refresh$.complete();
+  constructor() {
+    this.destroyRef.onDestroy(() => this.refresh$.complete());
   }
 
   refresh(): void {
@@ -92,20 +87,19 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
     if (!item.id) {
       throw new Error('Unexpected: item id is missing');
     }
-    const dependentItemId = this.itemData?.item.id;
-    if (!dependentItemId) {
-      throw new Error('Unexpected: dependent item id is missing');
-    }
-    this.changeInProgress = true;
-    this.addItemPrerequisiteService.create(dependentItemId, item.id).subscribe({
+    const dependentItemId = this.itemData().item.id;
+    this.changeInProgress.set(true);
+    this.addItemPrerequisiteService.create(dependentItemId, item.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
-        this.changeInProgress = false;
+        this.changeInProgress.set(false);
         this.actionFeedbackService.success('The new dependency has been added');
-        this.addDependencyComponent?.addContentComponent?.reset();
+        this.addDependencyComponent()?.addContentComponent()?.reset();
         this.refresh();
       },
       error: err => {
-        this.changeInProgress = false;
+        this.changeInProgress.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }
@@ -113,19 +107,18 @@ export class ItemDependenciesComponent implements OnChanges, OnDestroy {
   }
 
   onRemove(id: string): void {
-    const dependentItemId = this.itemData?.item.id;
-    if (!dependentItemId) {
-      throw new Error('Unexpected: Missed dependent item id');
-    }
-    this.changeInProgress = true;
-    this.removeItemPrerequisiteService.delete(dependentItemId, id).subscribe({
+    const dependentItemId = this.itemData().item.id;
+    this.changeInProgress.set(true);
+    this.removeItemPrerequisiteService.delete(dependentItemId, id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
-        this.changeInProgress = false;
+        this.changeInProgress.set(false);
         this.actionFeedbackService.success('The dependency has been removed');
         this.refresh();
       },
       error: err => {
-        this.changeInProgress = false;
+        this.changeInProgress.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }

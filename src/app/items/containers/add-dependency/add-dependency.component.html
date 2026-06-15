@@ -1,8 +1,8 @@
 <h2 class="alg-h2 alg-text-normal title" i18n>Add a new prerequisite</h2>
 <alg-add-content
-  [allowedTypesForNewContent]="allowedNewItemTypes"
+  [allowedTypesForNewContent]="allowedNewItemTypes()"
   [searchFunction]="searchFunction"
-  [addedIds]="addedIds"
+  [addedIds]="addedIds()"
   [loading]="false"
   [showCreateUI]="false"
   (contentAdded)="onAdd($event)"

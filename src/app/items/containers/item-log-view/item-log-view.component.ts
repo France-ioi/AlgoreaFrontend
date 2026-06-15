@@ -1,10 +1,10 @@
-import { Component, computed, DestroyRef, Input, OnChanges, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, DestroyRef, input, OnInit, inject } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
-import { combineLatest, Observable, ReplaySubject } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { ItemType } from 'src/app/items/models/item-type';
-import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { DataPager } from 'src/app/utils/data-pager';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -17,7 +17,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
@@ -42,7 +42,6 @@ import {
   CdkRowDef,
   CdkTable,
 } from '@angular/cdk/table';
-import { toSignal } from '@angular/core/rxjs-interop';
 interface Column {
   field: string,
   header: string,
@@ -54,14 +53,12 @@ const logsLimit = 20;
   selector: 'alg-item-log-view',
   templateUrl: './item-log-view.component.html',
   styleUrls: [ './item-log-view.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
     LetDirective,
     RouterLink,
     ScoreRingComponent,
-    NgClass,
     AsyncPipe,
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
@@ -85,7 +82,7 @@ const logsLimit = 20;
     CdkNoDataRow,
   ]
 })
-export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
+export class ItemLogViewComponent implements OnInit {
   private store = inject(Store);
   private activityLogService = inject(ActivityLogService);
   private sessionService = inject(UserSessionService);
@@ -103,7 +100,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     });
   }
 
-  @Input() itemData?: ItemData;
+  itemData = input.required<ItemData>();
 
   observedGroupId$ = this.store.select(fromObservation.selectObservedGroupId);
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
@@ -129,7 +126,8 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     },
   });
 
-  private readonly item$ = new ReplaySubject<Item>(1);
+  private readonly item$ = toObservable(this.itemData).pipe(map(itemData => itemData.item));
+
   readonly state$ = combineLatest([
     this.datapager.list$,
     this.sessionService.userProfile$,
@@ -154,18 +152,6 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
     this.resetRows();
   }
 
-  ngOnChanges(): void {
-    if (!this.itemData) {
-      return;
-    }
-
-    this.item$.next(this.itemData.item);
-  }
-
-  ngOnDestroy(): void {
-    this.item$.complete();
-  }
-
   refresh(): void {
     this.resetRows();
   }
@@ -183,7 +169,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
         };
 
         return this.activityLogService.getActivityLog(
-          this.itemData?.item.id ?? '', {
+          this.itemData().item.id, {
             limit: pageSize,
             pagination: paginationParams,
             watchedGroupId: observedGroupId ?? undefined,
@@ -215,8 +201,7 @@ export class ItemLogViewComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   getObserveLink(user: { id: string }): UrlTree | undefined {
-    if (!this.itemData) return undefined;
-    return this.itemRouter.url(itemRouteWith(this.itemData.route, { observedGroup: { id: user.id, isUser: true } }));
+    return this.itemRouter.url(itemRouteWith(this.itemData().route, { observedGroup: { id: user.id, isUser: true } }));
   }
 
   private isSelfCurrentAnswer(log: ActivityLogs[number], profileId: string): boolean {

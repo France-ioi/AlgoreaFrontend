@@ -10,6 +10,55 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
 import { ObservationInfo } from 'src/app/store/observation/models';
+import { ItemData } from '../../models/item-data';
+import { itemRoute } from 'src/app/models/routing/item-route';
+import { Item } from 'src/app/data-access/get-item-by-id.service';
+import { displaySettingsSchema } from 'src/app/items/models/display-settings';
+import { ItemViewPerm } from '../../models/item-view-permission';
+import { ItemGrantViewPerm } from '../../models/item-grant-view-permission';
+import { ItemEditPerm } from '../../models/item-edit-permission';
+import { ItemWatchPerm } from '../../models/item-watch-permission';
+
+const mockItem: Item = {
+  id: '1',
+  requiresExplicitEntry: false,
+  string: { title: 'Test', description: null, imageUrl: null, subtitle: null, languageTag: 'en' },
+  bestScore: 0,
+  permissions: {
+    canView: ItemViewPerm.Content,
+    canGrantView: ItemGrantViewPerm.None,
+    canEdit: ItemEditPerm.None,
+    canWatch: ItemWatchPerm.None,
+    isOwner: false,
+    canRequestHelp: false,
+  },
+  type: 'Task',
+  displaySettings: displaySettingsSchema.parse({}),
+  textId: null,
+  validationType: 'None',
+  noScore: false,
+  allowsMultipleAttempts: false,
+  duration: null,
+  enteringTimeMin: new Date(),
+  enteringTimeMax: new Date(),
+  entryParticipantType: 'User',
+  entryFrozenTeams: false,
+  entryMaxTeamSize: 0,
+  entryMinAdmittedMembersRatio: 'None',
+  url: 'http://example.com/task',
+  usesApi: false,
+  defaultLanguageTag: 'en',
+  supportedLanguageTags: [ 'en' ],
+};
+
+const mockItemData: ItemData = {
+  route: itemRoute('activity', '1', { attemptId: '0', path: [] }),
+  item: mockItem,
+  breadcrumbs: [],
+  currentResult: {
+    attemptId: '0', latestActivityAt: new Date(), score: 0, validated: false, startedAt: new Date(), allowsSubmissionsUntil: new Date(),
+  },
+};
 
 describe('ItemLogViewComponent.backLinkHeading', () => {
   let component: ItemLogViewComponent;
@@ -56,6 +105,7 @@ describe('ItemLogViewComponent.backLinkHeading', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ItemLogViewComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('itemData', mockItemData);
   });
 
   it('returns an empty string when observedGroupInfo is null', () => {

@@ -1,9 +1,9 @@
 <alg-sub-section i18n-label label="Add a content">
   <alg-add-content
     [isLight]="true"
-    [allowedTypesForNewContent]="allowedNewItemTypes"
+    [allowedTypesForNewContent]="allowedNewItemTypes()"
     [searchFunction]="searchFunction"
-    [addedIds]="addedItemIds"
+    [addedIds]="addedItemIds()"
     (contentAdded)="addChild($event)"
     #addContentComponent
   ></alg-add-content>
