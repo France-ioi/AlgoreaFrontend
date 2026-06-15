@@ -67,7 +67,7 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
   });
 
   it('does not dispatch when progressData is missing', () => {
-    component.progressData = undefined;
+    fixture.componentRef.setInput('progressData', undefined);
     store.overrideSelector(fromObservation.selectObservedGroupInfo, observedGroup);
     store.refreshState();
 
@@ -77,7 +77,7 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
   });
 
   it('dispatches with a generic fallback label when observedGroupInfo is null', () => {
-    component.progressData = fakeProgressData;
+    fixture.componentRef.setInput('progressData', fakeProgressData);
     store.overrideSelector(fromObservation.selectObservedGroupInfo, null);
     store.refreshState();
     fixture.detectChanges();
@@ -95,7 +95,7 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
   });
 
   it('dispatches registerBackLink with router.url and the observed group name', () => {
-    component.progressData = fakeProgressData;
+    fixture.componentRef.setInput('progressData', fakeProgressData);
     store.overrideSelector(fromObservation.selectObservedGroupInfo, observedGroup);
     store.refreshState();
     fixture.detectChanges();
