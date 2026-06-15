@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, OnDestroy, inject, input } from '@angular/core';
 import { GetParticipantProgressService } from '../../data-access/get-participant-progress.service';
 import { Observable, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   CdkCell,
@@ -46,11 +46,9 @@ interface RowData {
   selector: 'alg-chapter-user-progress',
   templateUrl: './chapter-user-progress.component.html',
   styleUrls: [ './chapter-user-progress.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
-    NgClass,
     RouterLink,
     ScoreRingComponent,
     AsyncPipe,

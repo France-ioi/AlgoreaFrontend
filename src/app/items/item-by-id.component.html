@@ -16,7 +16,8 @@
         @if (observedGroup$ | async; as observedGroup) {
           <alg-item-permissions
             class="item-permissions"
-            [ngClass]="{ 'with-margin': fullFrameContentDisplayed, 'with-right-margin': !!(withLeftPaddingContentDisplayed$ | async) }"
+            [class.with-margin]="fullFrameContentDisplayed"
+            [class.with-right-margin]="!!(withLeftPaddingContentDisplayed$ | async)"
             [itemData]="itemData"
             [observedGroup]="observedGroup"
             (changed)="reloadItem()"
@@ -27,15 +28,12 @@
         }
         <div
           class="content-container"
-          [ngClass]="{
-            'no-top-padding': itemData.item.type === 'Task' && !!currentTab?.isTaskTab,
-            'side-padding': itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed,
-            'right-padding': itemData.item.type === 'Task' && !currentTab?.isTaskTab && !fullFrameContentDisplayed
-          }"
-          #contentContainer
+          [class.no-top-padding]="itemData.item.type === 'Task' && !!currentTab?.isTaskTab"
+          [class.side-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed"
+          [class.right-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && !fullFrameContentDisplayed"
           *ngrxLet="currentTab$ as currentTab"
           >
-          @if (currentTab?.isTaskTab || itemContentComponent?.isTaskLoaded() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
+          @if (currentTab?.isTaskTab || itemContentComponent()?.isTaskLoaded() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
             @if (answerLoadingError$ | async; as error) {
               <alg-error>
                 @if (!error.fallbackLink) {
@@ -54,7 +52,7 @@
                 @if (taskConfig && taskConfig.readOnly && taskConfig.initialAnswer && currentTab && currentTab?.isTaskTab) {
                   <div
                     class="indicator"
-                    [ngClass]="{ 'no-left-padding': !fullFrameContentDisplayed }"
+                    [class.no-left-padding]="!fullFrameContentDisplayed"
                     >
                       <alg-answer-author-indicator
                         [answer]="taskConfig.initialAnswer"
@@ -84,7 +82,7 @@
           }
           @if (currentTab?.tag ==='alg-task-edit') {
             <alg-item-task-edit
-              [editorUrl]="editorUrl"
+              [editorUrl]="editorUrl()"
               (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
             ></alg-item-task-edit>
           }

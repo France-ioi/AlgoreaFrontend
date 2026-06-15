@@ -1,15 +1,15 @@
 <div
   class="group-situation-data"
-  [ngClass]="state"
-  [class.pointer]="state !== 'not-started'"
+  [class]="state()"
+  [class.pointer]="state() !== 'not-started'"
 >
-  @if (state !== 'success' && state !== 'not-started') {
+  @if (state() !== 'success' && state() !== 'not-started') {
     <alg-score-ring
       [currentScore]="userProgress().score"
       [diameter]="32"
     ></alg-score-ring>
   }
-  @if (state === 'success') {
+  @if (state() === 'success') {
     <span class="situation-check">
       <i class="ph-bold ph-check"></i>
     </span>

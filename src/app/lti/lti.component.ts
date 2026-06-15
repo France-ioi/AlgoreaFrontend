@@ -1,7 +1,8 @@
-import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, EMPTY, forkJoin, Observable } from 'rxjs';
 import { catchError, filter, map, retry, shareReplay, switchMap, withLatestFrom } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
 import { GetItemChildrenService, ItemChildren } from 'src/app/data-access/get-item-children.service';
 import { GetItemPathService } from 'src/app/data-access/get-item-path.service';
@@ -45,14 +46,13 @@ const loginIdParam = 'user_id';
   selector: 'alg-lti',
   templateUrl: './lti.component.html',
   styleUrls: [ './lti.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
     AsyncPipe,
   ]
 })
-export class LTIComponent implements OnDestroy {
+export class LTIComponent {
   private activatedRoute = inject(ActivatedRoute);
   private itemRouter = inject(ItemRouter);
   private router = inject(Router);
@@ -117,24 +117,27 @@ export class LTIComponent implements OnDestroy {
     })
   );
 
-  private subscriptions = [
+  constructor() {
+    this.layoutService.configure({ showTopRightControls: false, canShowLeftMenu: false, canShowBreadcrumbs: false });
+
     combineLatest([
       this.contentId$,
       this.loginId$.pipe(filter(isNotNull)),
-    ]).subscribe(([ contentId, loginId ]) => {
+    ]).pipe(takeUntilDestroyed()).subscribe(([ contentId, loginId ]) => {
       setRedirectToSubPathAtInit(`/lti/${contentId}?${loginIdParam}=${loginId}&${isRedirectionParam}=${boolToQueryParamValue(true)}`);
       this.activityNavTreeService.navigationNeighborsRestrictedToDescendantOfElementId = contentId;
-    }),
+    });
 
     combineLatest([
       this.isLoggedIn$.pipe(catchError(() => EMPTY)), // error is handled elsewhere
       this.isRedirection$,
     ]).pipe(
       filter(([ isLoggedIn, isRedirection ]) => !isLoggedIn && !isRedirection),
-    ).subscribe(() => this.userSession.login()), // will redirect outside the platform
+      takeUntilDestroyed(),
+    ).subscribe(() => this.userSession.login()); // will redirect outside the platform
 
     this.navigationData$
-      .pipe(readyData(), withLatestFrom(this.contentId$, this.fromPath$))
+      .pipe(readyData(), withLatestFrom(this.contentId$, this.fromPath$), takeUntilDestroyed())
       .subscribe(([{ firstChild, path, attemptId }, contentId, fromPath ]) => {
         this.ltiDataSource.data = { contentId, attemptId };
 
@@ -148,15 +151,7 @@ export class LTIComponent implements OnDestroy {
         }
         const route = itemRoute('activity', firstChild.id, { path, parentAttemptId: attemptId });
         this.itemRouter.navigateTo(route, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
-      }),
-  ];
-
-  constructor() {
-    this.layoutService.configure({ showTopRightControls: false, canShowLeftMenu: false, canShowBreadcrumbs: false });
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+      });
   }
 
   private getNavigationData(itemId: string): Observable<{ firstChild: ItemChildren[number], path: string[], attemptId: string }> {

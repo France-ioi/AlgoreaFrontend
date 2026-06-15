@@ -1,6 +1,6 @@
-import { Component, ElementRef, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
-import { combineLatest, of, Subscription, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
+import { combineLatest, of, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   delay,
   distinctUntilChanged,
@@ -54,7 +54,8 @@ import { TabBarComponent } from 'src/app/ui-components/tab-bar/tab-bar.component
 import { ItemPermissionsComponent } from './containers/item-permissions/item-permissions.component';
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { fromForum, isThreadInline } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
@@ -85,9 +86,7 @@ const selectState = createSelector(
   templateUrl: './item-by-id.component.html',
   styleUrls: [ './item-by-id.component.scss' ],
   providers: [ InitialAnswerDataSource, ItemTabs ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgClass,
     ItemHeaderComponent,
     AccessCodeViewComponent,
     ItemPermissionsComponent,
@@ -134,11 +133,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private config = inject(APPCONFIG);
   private confirmationModalService = inject(ConfirmationModalService);
 
-  @ViewChild(ItemContentComponent) itemContentComponent?: ItemContentComponent;
-  @ViewChild(ItemEditWrapperComponent) itemEditWrapperComponent?: ItemEditWrapperComponent;
-  @ViewChild('contentContainer') contentContainer?: ElementRef<HTMLDivElement>;
+  readonly itemContentComponent = viewChild(ItemContentComponent);
+  readonly itemEditWrapperComponent = viewChild(ItemEditWrapperComponent);
 
-  private destroyed$ = new Subject<void>();
+  readonly editorUrl = signal<string | undefined>(undefined);
   private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
 
   private itemState$ = this.store.select(fromItemContent.selectActiveContentData).pipe(
@@ -212,7 +210,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private beforeUnload$ = new Subject<void>();
   private saveBeforeUnload$ = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
     switchMap(() => {
-      const itemDisplay = this.itemContentComponent?.itemDisplayComponent();
+      const itemDisplay = this.itemContentComponent()?.itemDisplayComponent();
       if (!itemDisplay) return of(readyState<void>(undefined));
       return itemDisplay.saveAnswerAndState();
     }),
@@ -234,22 +232,25 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
 
-  private subscriptions: Subscription[] = [
-
-    this.itemChanged$.subscribe(() => {
+  constructor() {
+    this.itemChanged$.pipe(takeUntilDestroyed()).subscribe(() => {
       this.fullFrameContent$.next(false);
-      this.editorUrl = undefined;
+      this.editorUrl.set(undefined);
       this.itemTabs.itemChanged();
-    }),
+    });
 
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
-      .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent()?.saveAnswerAndState() ?? of(undefined)), take(1))
+      .pipe(
+        switchMap(() => this.itemContentComponent()?.itemDisplayComponent()?.saveAnswerAndState() ?? of(undefined)),
+        take(1),
+        takeUntilDestroyed(),
+      )
       .subscribe({
         error: () => { /* Errors cannot be handled before unloading page. */ },
-      }),
+      });
 
     // on datasource state change, update the current content page info
-    this.itemState$.pipe(readyData<ItemData>()).subscribe(data => {
+    this.itemState$.pipe(readyData<ItemData>(), takeUntilDestroyed()).subscribe(data => {
       this.currentContent.replace(itemInfo({
         route: routeWithSelfAttempt(data.route, data.currentResult?.attemptId),
         details: {
@@ -265,11 +266,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
           leftNavIcon: data.item.displaySettings.leftNavIcon ?? undefined,
         },
       }));
-    }),
+    });
 
-    this.breadcrumbService.resultPathStarted$.subscribe(() => this.currentContent.forceNavMenuReload()),
+    this.breadcrumbService.resultPathStarted$.pipe(takeUntilDestroyed()).subscribe(() => this.currentContent.forceNavMenuReload());
 
-    this.store.select(fromItemContent.selectActiveContentBreadcrumbsState).subscribe(state => {
+    this.store.select(fromItemContent.selectActiveContentBreadcrumbsState).pipe(takeUntilDestroyed()).subscribe(state => {
       if (state.isError) this.currentContent.clear();
 
       // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
@@ -286,7 +287,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
       }
       if (state.isReady) this.hasRedirected = false;
-    }),
+    });
 
     combineLatest([ this.itemRoute$, this.itemState$.pipe(startWith(undefined)) ]).pipe(
       map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
@@ -296,9 +297,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         } :
         { route, isTask: undefined }
       ))
-    ).subscribe(({ route, isTask }) => {
+    ).pipe(takeUntilDestroyed()).subscribe(({ route, isTask }) => {
       this.initialAnswerDataSource.setInfo(route, isTask);
-    }),
+    });
 
     combineLatest([ this.itemState$.pipe(readyData<ItemData>()), this.fullFrameContent$ ]).pipe(
       map(([ data, fullFrame ]) => {
@@ -307,7 +308,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       }),
       distinctUntilChanged((x, y) => x.id === y.id && x.display === y.display), // emit once per item for a same display
       map(({ display }) => display),
-    ).subscribe(display => this.layoutService.configure({ contentDisplayType: display })),
+    ).pipe(takeUntilDestroyed()).subscribe(display => this.layoutService.configure({ contentDisplayType: display }));
 
     this.saveBeforeUnloadError$.pipe(
       filter(isError => isError),
@@ -321,16 +322,14 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         rejectButtonStyleClass: 'primary',
         allowToClose: false,
       }, { maxWidth: '34rem', disableClose: true }))
-    ).subscribe(confirmed => {
+    ).pipe(takeUntilDestroyed()).subscribe(confirmed => {
       if (confirmed) {
         this.skipBeforeUnload();
       } else {
         this.retryBeforeUnload();
       }
-    }),
-  ];
-
-  editorUrl?: string;
+    });
+  }
 
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
 
@@ -339,18 +338,15 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   ngOnDestroy(): void {
     this.tabService.setTabs([]);
     this.currentContent.clear();
-    this.subscriptions.forEach(s => s.unsubscribe());
     this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });
     this.skipBeforeUnload$.complete();
     this.retryBeforeUnload$.complete();
     this.beforeUnload$.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
 
   isDirty(): boolean {
-    return !!this.itemContentComponent?.isDirty() || !!this.itemEditWrapperComponent?.isDirty();
+    return !!this.itemContentComponent()?.isDirty() || !!this.itemEditWrapperComponent()?.isDirty();
   }
 
 
@@ -394,7 +390,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   editorUrlChanged(url: string|undefined): void {
     this.itemTabs.editTabEnabledChange(!!url);
-    this.editorUrl = url;
+    this.editorUrl.set(url);
   }
 
   disablePlatformProgressChanged(value: boolean): void {
