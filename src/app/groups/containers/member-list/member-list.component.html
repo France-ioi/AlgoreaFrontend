@@ -15,7 +15,7 @@
           <ng-container cdkColumnDef="checkbox">
             <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef></th>
             <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
-              @let isSelected = !!(selection | findInArray: rowData);
+              @let isSelected = !!(selection() | findInArray: rowData);
               <input type="checkbox" [checked]="isSelected" (change)="onSelect(rowData)" />
             </td>
           </ng-container>
@@ -62,7 +62,7 @@
           }
           <tr
             class="alg-table-header-tr"
-            [ngClass]="{ 'alg-display-none': !state.isReady || state.data.length === 0 }"
+            [class.alg-display-none]="!state.isReady || state.data.length === 0"
             cdk-header-row
             *cdkHeaderRowDef="displayedColumns()"
           ></tr>
@@ -89,7 +89,7 @@
                 id="select-all-checkbox"
                 data-testid="member-list-select-all"
                 (change)="onSelectAll(data)"
-                [checked]="data.length === selection.length"
+                [checked]="data.length === selection().length"
               />
               <span class="alg-table-footer-select-all" i18n>
               Select all
@@ -101,9 +101,9 @@
             type="button"
             icon="ph ph-trash"
             (click)="onRemove()"
-            [disabled]="(removalInProgress$ | async) || !state.isReady || selection.length === 0"
+            [disabled]="(removalInProgress$ | async) || !state.isReady || selection().length === 0"
           >
-            {currentFilter.type, select, users {Remove} other {Remove from group}}
+            {currentFilter().type, select, users {Remove} other {Remove from group}}
           </button>
         </div>
       }

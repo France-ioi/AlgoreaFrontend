@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GetRequestsService, PendingRequest } from '../../data-access/get-requests.service';
 import { Action, parseResults, RequestActionsService } from '../../data-access/request-actions.service';
 import { merge, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { fetchingState, readyState } from 'src/app/utils/state';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { displayResponseToast } from 'src/app/groups/containers/pending-request/pending-request-response-handling';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ensureDefined } from 'src/app/utils/assert';
@@ -17,36 +18,44 @@ interface GridColumn {
 
 const groupColumn = { field: 'group.name', header: $localize`GROUP` };
 
+const baseColumns: GridColumn[] = [
+  { field: 'user.login', header: $localize`USER` },
+  { field: 'at', header: $localize`REQUESTED ON` },
+];
+
 @Component({
   selector: 'alg-pending-join-requests',
   templateUrl: './pending-join-requests.component.html',
   styleUrls: [ './pending-join-requests.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: true,
 })
-export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
+export class PendingJoinRequestsComponent {
   private getRequestsService = inject(GetRequestsService);
   private requestActionService = inject(RequestActionsService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   // if groupId is undefined, pending join requests from all managed group will be used.
-  @Input() groupId?: string;
-  @Input() showSwitch = true;
+  groupId = input<string>();
+  showSwitch = input(true);
 
-  requests: PendingRequest[] = [];
+  requests = signal<PendingRequest[]>([]);
 
-  columns: GridColumn[] = [
-    { field: 'user.login', header: $localize`USER` },
-    { field: 'at', header: $localize`REQUESTED ON` },
-  ];
+  includeSubgroup = signal(false);
+
+  columns = computed(() => {
+    if (!this.showSwitch() || this.includeSubgroup()) {
+      return [ groupColumn, ...baseColumns ];
+    }
+    return baseColumns;
+  });
+
   readonly subgroupSwitchItems = [
     { label: $localize`This group only`, value: false },
     { label: $localize`All subgroups`, value: true }
   ];
-  includeSubgroup = false;
 
-  state: 'fetching' | 'processing' | 'ready' | 'fetchingError' = 'fetching';
-  currentSort: string[] = [];
+  state = signal<'fetching' | 'processing' | 'ready' | 'fetchingError'>('fetching');
+  currentSort = signal<string[]>([]);
 
   private dataFetching = new Subject<{ groupId?: string, includeSubgroup: boolean, sort: string[] }>();
 
@@ -56,34 +65,43 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
         merge(
           of(fetchingState()),
           this.getRequestsService.getGroupPendingRequests(params.groupId, params.includeSubgroup, params.sort)
-            .pipe(map(readyState))
+            .pipe(
+              map(readyState),
+              catchError(err => of(errorState(err))),
+            )
         )
-      )
+      ),
+      takeUntilDestroyed(),
     ).subscribe({
       next: state => {
-        this.state = state.tag;
-        if (state.isReady) {
-          this.requests = state.data;
+        if (state.isError) {
+          this.state.set('fetchingError');
+        } else {
+          this.state.set(state.tag);
+          if (state.isReady) {
+            this.requests.set(state.data);
+          }
         }
       },
-      error: _err => {
-        this.state = 'fetchingError';
-      }
+    });
+
+    toObservable(this.groupId).pipe(
+      takeUntilDestroyed(),
+    ).subscribe(groupId => {
+      this.dataFetching.next({
+        groupId,
+        includeSubgroup: this.includeSubgroup(),
+        sort: this.currentSort(),
+      });
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.dataFetching.complete();
     });
   }
 
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (!this.showSwitch) this.columns = [ groupColumn ].concat(this.columns);
-    this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
-  }
-
-  ngOnDestroy(): void {
-    this.dataFetching.complete();
-  }
-
-
   onProcessRequests(params: { data: PendingRequest[], type: Action }): void {
-    this.state = 'processing';
+    this.state.set('processing');
 
     const requestMap = new Map<string, string[]>();
     params.data.forEach(elm => {
@@ -98,12 +116,16 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
     this.requestActionService.processJoinRequests(requestMap, params.type)
       .subscribe({
         next: result => {
-          this.state = 'ready';
+          this.state.set('ready');
           displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
-          this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
+          this.dataFetching.next({
+            groupId: this.groupId(),
+            includeSubgroup: this.includeSubgroup(),
+            sort: this.currentSort(),
+          });
         },
         error: err => {
-          this.state = 'ready';
+          this.state.set('ready');
           this.actionFeedbackService.unexpectedError();
           if (!(err instanceof HttpErrorResponse)) throw err;
         }
@@ -111,18 +133,23 @@ export class PendingJoinRequestsComponent implements OnChanges, OnDestroy {
   }
 
   onSubgroupSwitch(selectedIdx: number): void {
-    this.includeSubgroup = ensureDefined(this.subgroupSwitchItems[selectedIdx]).value;
+    this.includeSubgroup.set(ensureDefined(this.subgroupSwitchItems[selectedIdx]).value);
 
-    this.columns = this.columns.filter(elm => elm !== groupColumn);
-    if (this.includeSubgroup) this.columns = [ groupColumn ].concat(this.columns);
-
-    this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
+    this.dataFetching.next({
+      groupId: this.groupId(),
+      includeSubgroup: this.includeSubgroup(),
+      sort: this.currentSort(),
+    });
   }
 
   onFetch(sort: string[]): void {
-    if (JSON.stringify(sort) !== JSON.stringify(this.currentSort)) {
-      this.currentSort = sort;
-      this.dataFetching.next({ groupId: this.groupId, includeSubgroup: this.includeSubgroup, sort: this.currentSort });
+    if (JSON.stringify(sort) !== JSON.stringify(this.currentSort())) {
+      this.currentSort.set(sort);
+      this.dataFetching.next({
+        groupId: this.groupId(),
+        includeSubgroup: this.includeSubgroup(),
+        sort: this.currentSort(),
+      });
     }
   }
 }
