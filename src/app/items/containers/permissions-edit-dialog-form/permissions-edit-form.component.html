@@ -2,13 +2,13 @@
   <form [formGroup]="form">
     <div class="container">
       <div class="controls-container">
-        @if (requiresExplicitEntry) {
+        @if (requiresExplicitEntry()) {
           <alg-collapsible-section
             class="header-with-padding-left"
             i18n-header header="Can enter"
             icon="ph-duotone ph-door"
-            [collapsible]="!canEnterWarningMessage"
-            [errorMessage]="canEnterWarningMessage"
+            [collapsible]="!canEnterWarningMessage()"
+            [errorMessage]="canEnterWarningMessage()"
             messageStyleClass="warning message-with-bottom-margin"
           >
             <ng-template #content let-collapsed>
@@ -18,7 +18,7 @@
                 icon="fa fa-door-open"
                 formControlName="canEnterEnabled"
                 [collapsed]="collapsed"
-                [disabledTooltip]="permissionsDialogData.canEnterDisabledTooltip ?? []"
+                [disabledTooltip]="permissionsDialogData().canEnterDisabledTooltip ?? []"
               >
                 <ng-template #label i18n>
                   Whether the users with 'info' view permission are allowed to enter this activity.
@@ -49,7 +49,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canView"
-              [values]="permissionsDialogData.canViewValues"
+              [values]="permissionsDialogData().canViewValues"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
@@ -59,7 +59,7 @@
           icon="fa fa-door-open"
           [(value)]="permissions.can_enter_from"
         >
-          <ng-template #label i18n>{{targetTypeString}} may enter this item (a contest or time-limited chapter)</ng-template>
+          <ng-template #label i18n>{{targetTypeString()}} may enter this item (a contest or time-limited chapter)</ng-template>
         </alg-switch-field>-->
 
         <alg-collapsible-section
@@ -72,7 +72,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canGrantView"
-              [values]="permissionsDialogData.canGrantViewValues"
+              [values]="permissionsDialogData().canGrantViewValues"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
@@ -87,7 +87,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canWatch"
-              [values]="permissionsDialogData.canWatchValues"
+              [values]="permissionsDialogData().canWatchValues"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
@@ -102,7 +102,7 @@
             <alg-progress-select
               [collapsed]="collapsed"
               formControlName="canEdit"
-              [values]="permissionsDialogData.canEditValues"
+              [values]="permissionsDialogData().canEditValues"
             ></alg-progress-select>
           </ng-template>
         </alg-collapsible-section>
@@ -117,11 +117,11 @@
             <alg-switch-field
               [collapsed]="collapsed"
               formControlName="canMakeSessionOfficial"
-              [disabledTooltip]="permissionsDialogData.canMakeSessionOfficialDisabledTooltip ?? []"
+              [disabledTooltip]="permissionsDialogData().canMakeSessionOfficialDisabledTooltip ?? []"
             >
               <ng-template #label>
                 <span i18n>
-                  {{ targetTypeString }} may attach official sessions to this item,
+                  {{ targetTypeString() }} may attach official sessions to this item,
                   that will be visible to everyone in the content tab of the item
                 </span>
               </ng-template>
@@ -139,11 +139,11 @@
             <alg-switch-field
               [collapsed]="collapsed"
               formControlName="isOwner"
-              [disabledTooltip]="permissionsDialogData.isOwnerDisabledTooltip ?? []"
+              [disabledTooltip]="permissionsDialogData().isOwnerDisabledTooltip ?? []"
             >
               <ng-template #label>
                 <span i18n>
-                  {{ targetTypeString }} owns this item. This means they get the maximum access in all categories above, and may also delete this item.
+                  {{ targetTypeString() }} owns this item. This means they get the maximum access in all categories above, and may also delete this item.
                 </span>
               </ng-template>
             </alg-switch-field>
@@ -162,7 +162,7 @@
         <button
           icon="ph-bold ph-check"
           (click)="onAccept()"
-          [disabled]="!form.dirty || form.invalid || form.disabled || acceptButtonDisabled"
+          [disabled]="!form.dirty || form.invalid || form.disabled || acceptButtonDisabled()"
           alg-button
           i18n
         >Proceed</button>

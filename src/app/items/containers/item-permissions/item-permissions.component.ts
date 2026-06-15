@@ -1,4 +1,5 @@
-import { Component, EventEmitter, inject, Input, OnChanges, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import {
   ProgressSelectValue,
@@ -18,7 +19,7 @@ import {
 } from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
-import { I18nSelectPipe, NgClass } from '@angular/common';
+import { I18nSelectPipe } from '@angular/common';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 import { AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
@@ -34,7 +35,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-item-permissions',
   templateUrl: './item-permissions.component.html',
   styleUrls: [ './item-permissions.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SectionHeaderComponent,
     ProgressSelectComponent,
@@ -42,65 +42,67 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     I18nSelectPipe,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
-    NgClass,
     GroupIsUserPipe,
     AllowsGrantingContentViewItemPipe,
     ButtonComponent,
     TooltipDirective,
   ]
 })
-export class ItemPermissionsComponent implements OnChanges {
+export class ItemPermissionsComponent {
   private groupPermissionsService = inject(GroupPermissionsService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private currentContentService = inject(CurrentContentService);
-
-  @Output() changed = new EventEmitter<void>();
-
-  @Input() itemData?: ItemData;
-  @Input() observedGroup?: { route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean };
-
   private dialogService = inject(Dialog);
+  private destroyRef = inject(DestroyRef);
+
+  itemData = input.required<ItemData>();
+  observedGroup = input.required<{ route: RawGroupRoute, name: string, currentUserCanGrantAccess: boolean }>();
+  changed = output<void>();
 
   canViewValues: ProgressSelectValue<string>[] = generateCanViewValues('Groups');
   canGrantViewValues: ProgressSelectValue<string>[] = generateCanGrantViewValues('Groups');
   canWatchValues: ProgressSelectValue<string>[] = generateCanWatchValues('Groups');
   canEditValues: ProgressSelectValue<string>[] = generateCanEditValues('Groups');
-  watchedGroupPermissions?: ItemCorePerm & ItemOwnerPerm & ItemSessionPerm;
-  lockEdit?: 'content' | 'group' | 'contentGroup';
-  collapsed = true;
+  collapsed = signal(true);
+  updateInProcess = signal(false);
   lockEditTooltipCaptions = {
     content: $localize`You are not allowed to give permissions on this content`,
     group: $localize`You are not allowed to give permissions to this group`,
     contentGroup: $localize`You are not allowed to give permissions on this content and to this group`,
   };
-  updateInProcess = false;
 
-  ngOnChanges(): void {
-    this.watchedGroupPermissions = this.itemData?.item?.watchedGroup?.permissions ? {
-      ...this.itemData.item.watchedGroup.permissions,
+  protected readonly watchedGroupPermissions = computed((): (ItemCorePerm & ItemOwnerPerm & ItemSessionPerm) | undefined => {
+    const itemData = this.itemData();
+    return itemData.item?.watchedGroup?.permissions ? {
+      ...itemData.item.watchedGroup.permissions,
       canMakeSessionOfficial: false,
     } : undefined;
+  });
 
-    const currentUserCanGrantAccess = this.observedGroup?.currentUserCanGrantAccess;
-    const currentUserCanGivePermissions = this.itemData && allowsGivingPermToItem(this.itemData.item.permissions);
+  protected readonly lockEdit = computed((): 'content' | 'group' | 'contentGroup' | undefined => {
+    const observedGroup = this.observedGroup();
+    const itemData = this.itemData();
+    const currentUserCanGrantAccess = observedGroup.currentUserCanGrantAccess;
+    const currentUserCanGivePermissions = allowsGivingPermToItem(itemData.item.permissions);
 
-    this.lockEdit = currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'content' :
-      !currentUserCanGrantAccess && currentUserCanGivePermissions ? 'group' :
-        !currentUserCanGrantAccess && !currentUserCanGivePermissions ? 'contentGroup' : undefined;
-  }
+    if (currentUserCanGrantAccess && !currentUserCanGivePermissions) return 'content';
+    if (!currentUserCanGrantAccess && currentUserCanGivePermissions) return 'group';
+    if (!currentUserCanGrantAccess && !currentUserCanGivePermissions) return 'contentGroup';
+    return undefined;
+  });
 
   openPermissionsDialog(): void {
-    if (!this.itemData) throw new Error('Unexpected: missed item data');
-    if (!this.observedGroup) throw new Error('Unexpected: missed observed group');
     this.dialogService.open<boolean, PermissionsEditDialogParams>(PermissionsEditDialogComponent, {
       data: {
-        currentUserPermissions: this.itemData.item.permissions,
-        item: this.itemData.item,
-        group: this.observedGroup.route,
-        permReceiverName: this.observedGroup.name,
+        currentUserPermissions: this.itemData().item.permissions,
+        item: this.itemData().item,
+        group: this.observedGroup().route,
+        permReceiverName: this.observedGroup().name,
       },
       disableClose: true,
-    }).closed.subscribe(changed => {
+    }).closed.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(changed => {
       if (changed) {
         this.changed.emit();
       }
@@ -108,12 +110,10 @@ export class ItemPermissionsComponent implements OnChanges {
   }
 
   grantViewContentAccess(): void {
-    const groupId = this.observedGroup?.route.id;
-    if (!groupId) throw new Error('Unexpected: The group id is not provided');
-    const itemId = this.itemData?.item.id;
-    if (!itemId) throw new Error('Unexpected: The item id is not provided');
+    const groupId = this.observedGroup().route.id;
+    const itemId = this.itemData().item.id;
 
-    this.updateInProcess = true;
+    this.updateInProcess.set(true);
     this.groupPermissionsService.updatePermissions(
       groupId,
       groupId,
@@ -122,13 +122,13 @@ export class ItemPermissionsComponent implements OnChanges {
     )
       .subscribe({
         next: () => {
-          this.updateInProcess = false;
+          this.updateInProcess.set(false);
           this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
           this.changed.emit();
           this.currentContentService.forceNavMenuReload();
         },
         error: err => {
-          this.updateInProcess = false;
+          this.updateInProcess.set(false);
           this.actionFeedbackService.unexpectedError();
           this.currentContentService.forceNavMenuReload();
           if (!(err instanceof HttpErrorResponse)) throw err;

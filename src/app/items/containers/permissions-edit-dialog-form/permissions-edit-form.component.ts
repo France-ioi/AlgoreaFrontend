@@ -1,7 +1,7 @@
 import {
-  ChangeDetectionStrategy, Component, EventEmitter, input, Input, OnChanges, OnDestroy, Output, SimpleChanges,
-  inject,
+  Component, computed, DestroyRef, inject, input, output, signal,
 } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { generateValues, getTargetTypeString, PermissionsDialogData } from '../../models/permissions-texts';
 import { GroupComputedPermissions, GroupPermissions } from 'src/app/data-access/group-permissions.service';
@@ -23,13 +23,19 @@ import { CanEnterComponent, CanEnterValue } from 'src/app/ui-components/collapsi
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 // eslint-disable-next-line max-len
-const canEnterWarningMessage = $localize`As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.`;
+const canEnterWarningText = $localize`As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.`;
+
+const emptyPermissionsDialogData: PermissionsDialogData = {
+  canViewValues: [],
+  canGrantViewValues: [],
+  canEditValues: [],
+  canWatchValues: [],
+};
 
 @Component({
   selector: 'alg-permissions-edit-form',
   templateUrl: 'permissions-edit-form.component.html',
   styleUrls: [ 'permissions-edit-form.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -41,27 +47,22 @@ const canEnterWarningMessage = $localize`As the group or user has currently "can
     ButtonComponent,
   ]
 })
-export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
+export class PermissionsEditFormComponent {
   private fb = inject(UntypedFormBuilder);
+  private destroyRef = inject(DestroyRef);
 
-  @Input() permissions?: GroupPermissions;
-  @Input() computedPermissions?: GroupComputedPermissions;
+  permissions = input<GroupPermissions>();
+  computedPermissions = input<GroupComputedPermissions>();
   giverPermissions = input.required<ItemCorePerm>();
-  @Input() targetType: TypeFilter = 'Users';
-  @Input() acceptButtonDisabled = false;
-  @Input() requiresExplicitEntry = false;
-  @Output() save = new EventEmitter<Partial<GroupPermissions>>();
-  @Output() cancel = new EventEmitter<void>();
+  targetType = input<TypeFilter>('Users');
+  acceptButtonDisabled = input(false);
+  requiresExplicitEntry = input(false);
+  save = output<Partial<GroupPermissions>>();
+  cancel = output<void>();
 
-  targetTypeString = '';
-  canEnterWarningMessage?: string;
-
-  permissionsDialogData: PermissionsDialogData = {
-    canViewValues: [],
-    canGrantViewValues: [],
-    canEditValues: [],
-    canWatchValues: [],
-  };
+  protected readonly targetTypeString = computed(() => getTargetTypeString(this.targetType()));
+  protected readonly canEnterWarningMessage = signal<string | undefined>(undefined);
+  protected readonly permissionsDialogData = signal<PermissionsDialogData>(emptyPermissionsDialogData);
 
   form = this.fb.group({
     canEnterEnabled: [ false ],
@@ -75,54 +76,69 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
   });
 
   private regenerateValues = new Subject<void>();
-  private subscription = merge(
-    this.form.valueChanges,
-    this.regenerateValues.asObservable()
-  ).subscribe(() => {
-    if (this.permissions) {
-      const receiverPermissions = this.form.value as GroupPermissions & { canEnter: CanEnterValue | null };
-      this.permissionsDialogData = generateValues(this.targetType, receiverPermissions, this.giverPermissions());
 
-      if (this.computedPermissions) {
-        this.permissionsDialogData = withComputePermissions(
-          this.permissionsDialogData,
-          this.permissions,
-          receiverPermissions,
-          this.computedPermissions,
-          this.targetType,
+  constructor() {
+    toObservable(computed(() => ({
+      permissions: this.permissions(),
+      giver: this.giverPermissions(),
+    }))).pipe(takeUntilDestroyed()).subscribe(() => this.resetForm());
+
+    toObservable(this.targetType).pipe(takeUntilDestroyed()).subscribe(() => this.regenerateValues.next());
+
+    merge(
+      this.form.valueChanges,
+      this.regenerateValues.asObservable(),
+    ).pipe(takeUntilDestroyed()).subscribe(() => {
+      const permissions = this.permissions();
+      if (permissions) {
+        const receiverPermissions = this.form.value as GroupPermissions & { canEnter: CanEnterValue | null };
+        let dialogData = generateValues(this.targetType(), receiverPermissions, this.giverPermissions());
+
+        const computedPermissions = this.computedPermissions();
+        if (computedPermissions) {
+          dialogData = withComputePermissions(
+            dialogData,
+            permissions,
+            receiverPermissions,
+            computedPermissions,
+            this.targetType(),
+          );
+        }
+
+        this.permissionsDialogData.set(dialogData);
+
+        const { canEnter, canView } = receiverPermissions;
+        this.canEnterWarningMessage.set(
+          canEnter && computedPermissions
+          && (allowsViewingContent(computedPermissions) || allowsViewingContent({ canView }))
+            ? canEnterWarningText
+            : undefined,
         );
       }
+    });
 
-      const { canEnter, canView } = receiverPermissions;
-      this.canEnterWarningMessage = canEnter && this.computedPermissions
-        && (allowsViewingContent(this.computedPermissions) || allowsViewingContent({ canView }))
-        ? canEnterWarningMessage
-        : undefined;
-    }
-  });
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.regenerateValues.complete();
+    this.destroyRef.onDestroy(() => {
+      this.regenerateValues.complete();
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.targetTypeString = getTargetTypeString(this.targetType);
-    if ((changes.permissions || changes.giverPermissions) && this.permissions) {
-      this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions(), this.targetType));
-      this.form.updateValueAndValidity();
-      this.form.reset({
-        ...this.permissions,
-        ...(this.requiresExplicitEntry ? {
-          canEnterEnabled: !isInfinite(this.permissions.canEnterFrom),
-          canEnter: {
-            canEnterFrom: isInfinite(this.permissions.canEnterFrom) ? new Date() : this.permissions.canEnterFrom,
-            canEnterUntil: isInfinite(this.permissions.canEnterUntil) ? new Date(farFutureDateString) : this.permissions.canEnterUntil,
-          },
-        } : {}),
-      }, { emitEvent: false });
-    }
-    if (changes.targetType) this.regenerateValues.next();
+  private resetForm(): void {
+    const permissions = this.permissions();
+    if (!permissions) return;
+
+    this.form.reset({
+      ...permissions,
+      ...(this.requiresExplicitEntry() ? {
+        canEnterEnabled: !isInfinite(permissions.canEnterFrom),
+        canEnter: {
+          canEnterFrom: isInfinite(permissions.canEnterFrom) ? new Date() : permissions.canEnterFrom,
+          canEnterUntil: isInfinite(permissions.canEnterUntil) ? new Date(farFutureDateString) : permissions.canEnterUntil,
+        },
+      } : {}),
+    }, { emitEvent: false });
+    this.form.setValidators(permissionsConstraintsValidator(this.giverPermissions(), this.targetType()));
+    this.form.updateValueAndValidity({ emitEvent: false });
+    this.regenerateValues.next();
   }
 
   onAccept(): void {
@@ -137,7 +153,7 @@ export class PermissionsEditFormComponent implements OnDestroy, OnChanges {
       canEdit: this.form.get('canEdit')?.value as GroupPermissions['canEdit'],
       canMakeSessionOfficial: this.form.get('canMakeSessionOfficial')?.value as GroupPermissions['canMakeSessionOfficial'],
       isOwner: this.form.get('isOwner')?.value as GroupPermissions['isOwner'],
-      ...(this.requiresExplicitEntry ? canEnterEnabled && canEnter ? {
+      ...(this.requiresExplicitEntry() ? canEnterEnabled && canEnter ? {
         canEnterFrom: canEnter.canEnterFrom,
         canEnterUntil: canEnter.canEnterUntil,
       } : {
