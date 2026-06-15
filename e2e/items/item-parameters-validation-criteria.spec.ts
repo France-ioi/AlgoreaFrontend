@@ -17,8 +17,8 @@ test('checks edit parameters - validation criteria', async ({ page, createItem, 
     page.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
     itemContentPage.waitForItemResponse(createItem.itemId),
   ]);
-  // `<alg-item-edit-wrapper>` calls `itemForm.disable()` on first change-detection (in `ngOnChanges`)
-  // and only re-enables it once `fetchOtherLanguages` resolves. While the form is disabled the
+  // `<alg-item-edit-wrapper>` disables the form on initial item load and only re-enables it once
+  // `fetchOtherLanguages` resolves. While the form is disabled the floating save button stays
   // floating save button stays disabled even though the form is dirty, and on a slow CI runner the
   // pending `?language_tag=…` request can keep the form disabled longer than the test budget. Wait
   // for that secondary fetch (best-effort) so the form is guaranteed to be enabled before we

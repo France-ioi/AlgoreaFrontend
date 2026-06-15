@@ -1,30 +1,28 @@
-@if (itemData) {
-  @if (itemData.item.permissions | allowsEditingAll) {
-    <form [formGroup]="itemForm">
-      @let defaultLanguageTagValue = itemForm.controls.defaultLanguageTag.getRawValue();
-      <alg-item-all-strings-form
-        [defaultLanguageTag]="defaultLanguageTagValue"
-        [supportedLanguages]="supportedLanguages()"
-        [itemId]="itemData.item.id"
-        [itemSupportedLanguageTags]="itemData.item.supportedLanguageTags"
-        [loadedLanguageTags]="loadedLanguageTags()"
-        [showDescription]="itemData.item.type !== 'Task' && itemData.currentResult !== undefined"
-        formControlName="allStrings"
-        (defaultLanguageEvent)="onDefaultLanguageChange($event)"
-        (languageValueLoaded)="onLanguageValueLoaded($event)"
-      ></alg-item-all-strings-form>
-      <alg-item-parameters-form
-        formControlName="parameters"
-        [itemData]="itemData"
-        [textIdError]="textIdError()"
-        (confirmRemoval)="onConfirmRemoval()"
-      ></alg-item-parameters-form>
-    </form>
+@if (itemData().item.permissions | allowsEditingAll) {
+  <form [formGroup]="itemForm">
+    @let defaultLanguageTagValue = itemForm.controls.defaultLanguageTag.getRawValue();
+    <alg-item-all-strings-form
+      [defaultLanguageTag]="defaultLanguageTagValue"
+      [supportedLanguages]="supportedLanguages()"
+      [itemId]="itemData().item.id"
+      [itemSupportedLanguageTags]="itemData().item.supportedLanguageTags"
+      [loadedLanguageTags]="loadedLanguageTags()"
+      [showDescription]="itemData().item.type !== 'Task' && itemData().currentResult !== undefined"
+      formControlName="allStrings"
+      (defaultLanguageEvent)="onDefaultLanguageChange($event)"
+      (languageValueLoaded)="onLanguageValueLoaded($event)"
+    ></alg-item-all-strings-form>
+    <alg-item-parameters-form
+      formControlName="parameters"
+      [itemData]="itemData()"
+      [textIdError]="textIdError()"
+      (confirmRemoval)="onConfirmRemoval()"
+    ></alg-item-parameters-form>
+  </form>
 
-    @if (itemForm.dirty) {
-      <alg-floating-save [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
-    }
-  } @else {
-    <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
+  @if (itemForm.dirty) {
+    <alg-floating-save [saving]="itemForm.disabled" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
   }
+} @else {
+  <alg-error i18n-message message="You do not have the permissions to edit this content."></alg-error>
 }
