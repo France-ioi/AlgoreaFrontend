@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, signal, inject } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, startWith, switchMap } from 'rxjs/operators';
 import { GroupMembership, JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
@@ -8,7 +8,7 @@ import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import {
@@ -32,7 +32,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-joined-group-list',
   templateUrl: './joined-group-list.component.html',
   styleUrls: [ './joined-group-list.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ErrorComponent,
     RouterLink,
@@ -52,7 +51,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     CdkHeaderCell,
     CdkHeaderCellDef,
     TableSortHeaderComponent,
-    NgClass,
     TooltipDirective
   ]
 })

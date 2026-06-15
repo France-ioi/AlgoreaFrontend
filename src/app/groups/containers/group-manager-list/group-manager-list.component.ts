@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { Observable, of, switchMap } from 'rxjs';
 import { GetGroupManagersService, Manager } from '../../data-access/get-group-managers.service';
 import { RemoveGroupManagerService } from '../../data-access/remove-group-manager.service';
@@ -45,6 +45,7 @@ import {
 } from '@angular/cdk/table';
 import { FindInArray } from 'src/app/pipes/findInArray';
 import { Dialog } from '@angular/cdk/dialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const managersLimit = 25;
 
@@ -52,7 +53,6 @@ const managersLimit = 25;
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
   styleUrls: [ './group-manager-list.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -86,13 +86,14 @@ export class GroupManagerListComponent {
   private actionFeedbackService = inject(ActionFeedbackService);
   private userService = inject(UserSessionService);
   private confirmationModalService = inject(ConfirmationModalService);
+  private destroyRef = inject(DestroyRef);
 
   group = input.required<Group>();
 
   private dialogService = inject(Dialog);
 
-  selection: Manager[] = [];
-  removalInProgress = false;
+  selection = signal<Manager[]>([]);
+  removalInProgress = signal(false);
 
   readonly datapager = new DataPager({
     fetch: (pageSize, latestManager?: Manager): Observable<Manager[]> => this.getGroupManagersService.getGroupManagers(
@@ -136,27 +137,28 @@ export class GroupManagerListComponent {
   }
 
   onSelectAll(managers: Manager[]): void {
-    if (this.selection.length === managers.length) {
-      this.selection = [];
+    if (this.selection().length === managers.length) {
+      this.selection.set([]);
       return;
     }
-    this.selection = managers;
+    this.selection.set(managers);
   }
 
   onSelect(item: Manager): void {
-    if (this.selection.includes(item)) {
-      const idx = this.selection.indexOf(item);
-      this.selection = [
-        ...this.selection.slice(0, idx),
-        ...this.selection.slice(idx + 1),
-      ];
+    const currentSelection = this.selection();
+    if (currentSelection.includes(item)) {
+      const idx = currentSelection.indexOf(item);
+      this.selection.set([
+        ...currentSelection.slice(0, idx),
+        ...currentSelection.slice(idx + 1),
+      ]);
     } else {
-      this.selection = [ ...this.selection, item ];
+      this.selection.set([ ...currentSelection, item ]);
     }
   }
 
   onRemove(): void {
-    if (this.selection.length === 0) {
+    if (this.selection().length === 0) {
       return;
     }
 
@@ -177,9 +179,9 @@ export class GroupManagerListComponent {
     }
 
     const groupId = this.group().id;
-    const ownManagerId = this.selection.find(manager => manager.id === currentUserId)?.id;
+    const ownManagerId = this.selection().find(manager => manager.id === currentUserId)?.id;
 
-    this.removalInProgress = true;
+    this.removalInProgress.set(true);
 
     const proceedRemoving$: Observable<true | undefined> = ownManagerId ? this.confirmationModalService.open({
       messageIconStyleClass: 'ph-duotone ph-warning-circle alg-validation-error',
@@ -194,26 +196,26 @@ export class GroupManagerListComponent {
       switchMap(() =>
         this.removeGroupManagerService.removeBatch(
           groupId,
-          this.selection.filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
+          this.selection().filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
           ownManagerId,
         )
       )
     ).subscribe({
       next: result => {
         displayGroupManagerRemovalResponseToast(this.actionFeedbackService, result);
-        this.removalInProgress = false;
+        this.removalInProgress.set(false);
 
         if (result.countSuccess > 0) {
-          this.selection = [];
+          this.selection.set([]);
           this.fetchData();
         }
       },
       error: err => {
-        this.removalInProgress = false;
+        this.removalInProgress.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
-      complete: () => this.removalInProgress = false,
+      complete: () => this.removalInProgress.set(false),
     });
   }
 
@@ -224,7 +226,9 @@ export class GroupManagerListComponent {
         manager,
       },
       disableClose: true,
-    }).closed.subscribe(result => {
+    }).closed.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(result => {
       if (result?.updated) {
         this.fetchData();
         this.store.dispatch(fromGroupContent.groupPageActions.refresh());

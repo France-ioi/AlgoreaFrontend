@@ -1,4 +1,4 @@
-@if (state === 'error') {
+@if (state() === 'error') {
   <alg-error
     class="dark"
     icon="ph-duotone ph-warning-circle"
@@ -7,12 +7,12 @@
     (refresh)="fetchData()"
   ></alg-error>
 } @else {
-  @if (state === 'fetching') {
+  @if (state() === 'fetching') {
     <alg-loading></alg-loading>
   } @else {
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
-        <table class="alg-table-v2" cdk-table [dataSource]="data">
+        <table class="alg-table-v2" cdk-table [dataSource]="data()">
           <ng-container cdkColumnDef="name">
             <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Name</th>
             <td class="alg-table-td" cdk-cell *cdkCellDef="let group">
@@ -35,10 +35,8 @@
             <td class="alg-table-td" cdk-cell *cdkCellDef="let group">
               <span
                 class="table-icon"
-                [ngClass]="{
-                  locked: group.canWatchMembers,
-                  unlocked: !group.canWatchMembers
-                }"
+                [class.locked]="group.canWatchMembers"
+                [class.unlocked]="!group.canWatchMembers"
               >
                 @if (!group.canWatchMembers) {
                   <i class="ph-bold ph-x"></i>
@@ -55,10 +53,8 @@
             <td class="alg-table-td" cdk-cell *cdkCellDef="let group">
               <span
                 class="table-icon"
-                [ngClass]="{
-                  locked: group.canGrantGroupAccess,
-                  unlocked: !group.canGrantGroupAccess
-                }"
+                [class.locked]="group.canGrantGroupAccess"
+                [class.unlocked]="!group.canGrantGroupAccess"
               >
                 @if (!group.canGrantGroupAccess) {
                   <i class="ph-bold ph-x"></i>
@@ -70,7 +66,7 @@
             </td>
           </ng-container>
 
-          @if (data.length > 0) {
+          @if (data().length > 0) {
             <tr class="alg-table-header-tr" cdk-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
           }
           <tr class="alg-table-body-tr" cdk-row *cdkRowDef="let row; columns: displayedColumns()"></tr>
@@ -84,4 +80,3 @@
     </div>
   }
 }
-

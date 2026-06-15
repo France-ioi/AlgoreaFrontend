@@ -26,7 +26,7 @@
             <ng-container cdkColumnDef="checkbox">
               <th class="alg-table-th alg-table-selection-col" cdk-header-cell *cdkHeaderCellDef></th>
               <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
-                @let isSelected = !!(selection | findInArray: rowData);
+                @let isSelected = !!(selection() | findInArray: rowData);
                 <input type="checkbox" [checked]="isSelected" (change)="onSelect(rowData)" [disabled]="rowData.canManage === null" />
               </td>
             </ng-container>
@@ -132,7 +132,7 @@
                 class="alg-table-footer-checkbox"
                 id="select-all-checkbox"
                 (change)="onSelectAll(managers)"
-                [checked]="managers.length === selection.length"
+                [checked]="managers.length === selection().length"
               />
               <span class="alg-table-footer-select-all" i18n>
                 Select all
@@ -144,7 +144,7 @@
             type="button"
             icon="ph-duotone ph-trash"
             (click)="onRemove()"
-            [disabled]="removalInProgress || !state.isReady || selection.length === 0"
+            [disabled]="removalInProgress() || !state.isReady || selection().length === 0"
             alg-button-icon
             data-testid="remove-group-managers"
           ></button>

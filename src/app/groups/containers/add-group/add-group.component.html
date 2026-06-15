@@ -3,7 +3,7 @@
     [isLight]="true"
     [allowedTypesForNewContent]="allowedNewGroupTypes"
     (contentAdded)="addChild($event)"
-    [loading]="state === 'addingGroup'"
+    [loading]="state() === 'addingGroup'"
     [showSearchUI]="false"
     i18n-inputCreatePlaceholder inputCreatePlaceholder="Enter a title to create a new group"
   ></alg-add-content>

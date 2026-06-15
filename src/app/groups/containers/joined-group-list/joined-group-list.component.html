@@ -115,7 +115,7 @@
         </ng-container>
         <tr
           class="alg-table-header-tr"
-          [ngClass]="{ 'alg-display-none': !state.isReady || state.data.length === 0 }"
+          [class.alg-display-none]="!state.isReady || state.data.length === 0"
           cdk-header-row
           *cdkHeaderRowDef="displayedColumns()"
         ></tr>
