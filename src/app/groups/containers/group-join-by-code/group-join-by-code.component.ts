@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
 import { Duration } from 'src/app/utils/duration';
 import { Group } from '../../models/group';
-import { codeInfo, CodeInfo } from '../../models/group-code';
+import { codeInfo } from '../../models/group-code';
 import { GroupActionsService } from '../../data-access/group-actions.service';
 import { CodeActionsService } from '../../data-access/code-actions.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -24,7 +24,6 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
   styleUrls: [ './group-join-by-code.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CodeTokenComponent,
     SelectionComponent,
@@ -39,18 +38,17 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     TooltipDirective,
   ]
 })
-
-export class GroupJoinByCodeComponent implements OnChanges {
+export class GroupJoinByCodeComponent {
   private groupActionsService = inject(GroupActionsService);
   private codeActionsService = inject(CodeActionsService);
   private actionFeedbackService = inject(ActionFeedbackService);
 
-  @Input() group?: Group;
-  @Output() refreshRequired = new EventEmitter<void>();
+  group = input.required<Group>();
+  refreshRequired = output<void>();
 
-  codeInfo?: CodeInfo;
+  codeInfo = computed(() => codeInfo(this.group()));
   codeLifetimeControlValue?: Duration;
-  processing = false;
+  processing = signal(false);
 
   codeLifetimeOptions = [
     {
@@ -71,35 +69,36 @@ export class GroupJoinByCodeComponent implements OnChanges {
     },
   ];
   customCodeLifetimeOption = this.codeLifetimeOptions.findIndex(({ value }) => value === 'custom');
-  selectedCodeLifetimeOption = 0;
+  selectedCodeLifetimeOption = signal(0);
   durationTooltip = $localize`:@@expireDuration:This code will expire after the given duration ` +
     $localize`:@@resetCurrentExpiration:(reset current expiration)`;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.group && !this.group) this.codeInfo = undefined;
-    if (changes.group && this.group) {
-      this.codeInfo = codeInfo(this.group);
+  // Only reset the user-editable duration controls when the server-side lifetime actually changed,
+  // so unrelated group refreshes don't clobber in-progress edits.
+  // `null` is included because CodeLifetime.valueInSeconds returns number | null.
+  private previousCodeLifetimeSeconds: number | null | undefined;
 
-      const codeLifetimeHasChanged = (changes.group.previousValue as Group | undefined)?.codeLifetime?.valueInSeconds !==
-        (changes.group.currentValue as Group | undefined)?.codeLifetime?.valueInSeconds;
-
-      if (codeLifetimeHasChanged) {
-        this.codeLifetimeControlValue = this.group.codeLifetime?.asDuration;
-        this.selectedCodeLifetimeOption = this.getSelectedCodeLifetimeOption(this.group.codeLifetime);
+  constructor() {
+    effect(() => {
+      const group = this.group();
+      const seconds = group.codeLifetime?.valueInSeconds;
+      if (seconds !== this.previousCodeLifetimeSeconds) {
+        this.previousCodeLifetimeSeconds = seconds;
+        this.codeLifetimeControlValue = group.codeLifetime?.asDuration;
+        this.selectedCodeLifetimeOption.set(this.getSelectedCodeLifetimeOption(group.codeLifetime));
       }
-    }
+    });
   }
 
   /* events */
 
   generateNewCode(): void {
-    if (!this.group) return;
-
     // disable UI
-    this.processing = true;
+    this.processing.set(true);
 
-    const groupId = this.group.id;
-    const expiresAt = this.group.codeExpiresAt;
+    const group = this.group();
+    const groupId = group.id;
+    const expiresAt = group.codeExpiresAt;
     // call code refresh service, then group refresh data
     this.codeActionsService.createNewCode(groupId)
       .pipe(
@@ -111,11 +110,11 @@ export class GroupJoinByCodeComponent implements OnChanges {
       .subscribe({
         next: () => {
           this.actionFeedbackService.success($localize`A new code has been generated`);
-          this.processing = false;
+          this.processing.set(false);
           this.refreshRequired.emit();
         },
         error: err => {
-          this.processing = false;
+          this.processing.set(false);
           this.actionFeedbackService.unexpectedError();
           if (!(err instanceof HttpErrorResponse)) throw err;
         },
@@ -123,26 +122,27 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   submitCodeLifetime(ms: number): void {
-    if (!this.group || !this.codeInfo) throw new Error('cannot submit new code lifetime when group is undefined');
-    if (this.codeInfo.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
+    const info = this.codeInfo();
+    if (info.hasCodeNotSet) throw new Error('cannot submit code lifetime when no code is set');
+    const group = this.group();
     const newCodeLifetime = new CodeLifetime(ms);
-    if (this.group.codeLifetime?.valueInSeconds === newCodeLifetime.valueInSeconds) return;
+    if (group.codeLifetime?.valueInSeconds === newCodeLifetime.valueInSeconds) return;
 
     // disable UI
-    this.processing = true;
+    this.processing.set(true);
 
     // call code refresh service, then group refresh data
-    this.groupActionsService.updateGroup(this.group.id, {
+    this.groupActionsService.updateGroup(group.id, {
       code_lifetime: newCodeLifetime.valueInSeconds,
       code_expires_at: null,
     }).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`The validity has been changed`);
-        this.processing = false;
+        this.processing.set(false);
         this.refreshRequired.emit();
       },
       error: err => {
-        this.processing = false;
+        this.processing.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
@@ -150,13 +150,12 @@ export class GroupJoinByCodeComponent implements OnChanges {
   }
 
   removeCode(): void {
-    if (!this.group) throw new Error('cannot remove code when group is undefined');
-
     // disable UI
-    this.processing = true;
+    this.processing.set(true);
 
-    const groupId = this.group.id;
-    const expiresAt = this.group.codeExpiresAt;
+    const group = this.group();
+    const groupId = group.id;
+    const expiresAt = group.codeExpiresAt;
     // call code refresh service, then group refresh data
     this.codeActionsService.removeCode(groupId)
       .pipe(
@@ -168,11 +167,11 @@ export class GroupJoinByCodeComponent implements OnChanges {
       .subscribe({
         next: () => {
           this.actionFeedbackService.success($localize`Users will not be able to join with the former code.`);
-          this.processing = false;
+          this.processing.set(false);
           this.refreshRequired.emit();
         },
         error: err => {
-          this.processing = false;
+          this.processing.set(false);
           this.actionFeedbackService.unexpectedError();
           if (!(err instanceof HttpErrorResponse)) throw err;
         },
@@ -184,7 +183,7 @@ export class GroupJoinByCodeComponent implements OnChanges {
     if (optionValue === 'infinite') this.submitCodeLifetime(CodeLifetime.infiniteValue);
     if (optionValue === 'usable_once') this.submitCodeLifetime(CodeLifetime.usableOnceValue);
 
-    this.selectedCodeLifetimeOption = selected;
+    this.selectedCodeLifetimeOption.set(selected);
   }
 
   private getSelectedCodeLifetimeOption(codeLifetime?: CodeLifetime): number {

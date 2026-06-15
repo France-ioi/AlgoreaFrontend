@@ -7,7 +7,7 @@
     [allowedTypesForNewContent]="allowedNewGroupTypes"
     [searchFunction]="searchFunction"
     (contentAdded)="addChild($event)"
-    [loading]="loading"
+    [loading]="loading()"
     #addContentComponent
   ></alg-add-content>
 </alg-sub-section>

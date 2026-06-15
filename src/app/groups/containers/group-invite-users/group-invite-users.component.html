@@ -7,7 +7,7 @@
     i18n-placeholder placeholder="login_1, login_2..."
   ></alg-textarea>
 
-  @if (state === 'too_many') {
+  @if (state() === 'too_many') {
     <div class="too-many-message">
       <alg-message-info class="danger">
         <ng-container i18n>You cannot invite more than 100 users at once</ng-container>
@@ -19,21 +19,19 @@
     <button
       class="size-l"
       (click)="onInviteClicked()"
-      [disabled]="state !== 'ready'"
+      [disabled]="state() !== 'ready'"
       alg-button
       i18n
     >Invite</button>
   </div>
 
-  @for (message of messages; track $index) {
+  @for (message of messages(); track $index) {
     <div class="message-container">
       <alg-message-info
         class="message"
-        [ngClass]="{
-          'info': message.type === 'info',
-          'success': message.type === 'success',
-          'danger': message.type === 'error'
-        }"
+        [class.info]="message.type === 'info'"
+        [class.success]="message.type === 'success'"
+        [class.danger]="message.type === 'error'"
         [icon]="message.icon"
         [closable]="true"
         (closeEvent)="onCloseMessage(message)"

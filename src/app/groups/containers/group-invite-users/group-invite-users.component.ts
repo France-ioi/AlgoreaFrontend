@@ -1,11 +1,10 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
 import { Group } from '../../models/group';
 import { UntypedFormBuilder } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NgClass } from '@angular/common';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
@@ -23,45 +22,39 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
   styleUrls: [ './group-invite-users.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TextareaComponent,
     ButtonComponent,
     MessageInfoComponent,
-    NgClass,
   ]
 })
-export class GroupInviteUsersComponent implements OnInit, OnDestroy {
+export class GroupInviteUsersComponent {
   private createGroupInvitationsService = inject(CreateGroupInvitationsService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private formBuilder = inject(UntypedFormBuilder);
 
-  @Input() group?: Group;
-  @Output() refreshRequired = new EventEmitter<void>();
+  group = input.required<Group>();
 
   inviteForm = this.formBuilder.group({ logins: '' });
-  state: GroupInviteState = 'empty';
+  state = signal<GroupInviteState>('empty');
 
-  messages: Message[] = [];
-  subscription?: Subscription;
+  messages = signal<Message[]>([]);
 
-  ngOnInit(): void {
-    this.subscription = this.inviteForm.get('logins')?.valueChanges.subscribe((change: string) => this.loginListChanged(change));
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+  constructor() {
+    this.inviteForm.get('logins')?.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((change: string) => this.loginListChanged(change));
   }
 
   setState(newState: GroupInviteState): void {
-    if (this.state === newState) return;
-    if (this.state === 'loading') this.inviteForm.enable(); // enable the form only if the previous state was disabled
+    if (this.state() === newState) return;
+    if (this.state() === 'loading') this.inviteForm.enable(); // enable the form only if the previous state was disabled
     if (newState === 'loading') this.inviteForm.disable();
-    this.state = newState;
+    this.state.set(newState);
   }
 
   loginListChanged(newValue: string): void {
-    if (this.state === 'loading') return;
+    if (this.state() === 'loading') return;
     this.setState('ready');
 
     const logins = newValue.split(',').filter(login => login.length > 0);
@@ -80,8 +73,10 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     const notFoundUsers: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.NotFound).map(e => e[0]);
     const invalidInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Error).map(e => e[0]);
 
+    const newMessages: Message[] = [];
+
     if (successInvites.length > 0)
-      this.messages.push({
+      newMessages.push({
         type: 'success',
         summary: $localize`${successInvites.length} user(s) invited successfully: `,
         detail: `${successInvites.join(', ')}`,
@@ -89,7 +84,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
       });
 
     if (alreadyInvited.length > 0)
-      this.messages.push({
+      newMessages.push({
         type: 'info',
         summary: $localize`${alreadyInvited.length} user(s) have already been invited: `,
         detail: `${alreadyInvited.join(', ')}`,
@@ -97,7 +92,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
       });
 
     if (notFoundUsers.length > 0)
-      this.messages.push({
+      newMessages.push({
         type: 'error',
         summary: $localize`${notFoundUsers.length} user login(s) not found: `,
         detail: `${notFoundUsers.join(', ')}`,
@@ -105,20 +100,22 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
       });
 
     if (invalidInvites.length > 0)
-      this.messages.push({
+      newMessages.push({
         type: 'error',
         summary: $localize`${invalidInvites.length} user login(s) could not be invited: `,
         detail: `${invalidInvites.join(', ')}`,
         icon: 'ph-duotone ph-x-circle',
       });
+
+    this.messages.update(messages => [ ...messages, ...newMessages ]);
   }
 
   /* events */
   onInviteClicked(): void {
-    if (!this.group || this.state !== 'ready') return;
+    if (this.state() !== 'ready') return;
 
     // clear the messages
-    this.messages = [];
+    this.messages.set([]);
 
     // remove empty logins and duplicates
     const control = this.inviteForm.get('logins');
@@ -133,7 +130,7 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
     // disable UI
     this.setState('loading');
 
-    this.createGroupInvitationsService.createInvitations(this.group.id, logins).subscribe({
+    this.createGroupInvitationsService.createInvitations(this.group().id, logins).subscribe({
       next: res => {
         this.displayResponse(res);
 
@@ -151,6 +148,6 @@ export class GroupInviteUsersComponent implements OnInit, OnDestroy {
   }
 
   onCloseMessage(message: Message): void {
-    this.messages = this.messages.filter(m => m !== message);
+    this.messages.update(messages => messages.filter(m => m !== message));
   }
 }
