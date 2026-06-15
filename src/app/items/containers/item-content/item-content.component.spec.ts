@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Component, EventEmitter, Input, Output, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ItemContentComponent } from './item-content.component';
 import { ItemData } from '../../models/item-data';
 import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
@@ -22,27 +22,26 @@ import { By } from '@angular/platform-browser';
 
 @Component({
   selector: 'alg-item-display',
-  changeDetection: ChangeDetectionStrategy.Eager,
   template: '',
 })
 class MockItemDisplayComponent {
   route = input.required<FullItemRoute>();
   url = input.required<string>();
-  @Input() editingPermission: unknown;
-  @Input() attemptId?: string;
-  @Input() resultStartedAt: Date | null = null;
-  @Input() view?: string;
-  @Input() taskConfig: TaskConfig = { readOnly: false, initialAnswer: undefined };
-  @Input() savingAnswer = false;
-  @Output() viewChange = new EventEmitter<string>();
-  @Output() tabsChange = new EventEmitter<TaskTab[]>();
-  @Output() scoreChange = new EventEmitter<number>();
-  @Output() skipSave = new EventEmitter<void>();
-  @Output() refresh = new EventEmitter<void>();
-  @Output() editorUrl = new EventEmitter<string | undefined>();
-  @Output() disablePlatformProgress = new EventEmitter<boolean>();
-  @Output() fullFrame = new EventEmitter<boolean>();
-  @Output() loadingComplete = new EventEmitter<boolean>();
+  editingPermission = input<unknown>({ canEdit: ItemEditPerm.None });
+  attemptId = input<string | undefined>();
+  resultStartedAt = input<Date | null>(null);
+  view = input<string | undefined>();
+  taskConfig = input<TaskConfig>({ readOnly: false, initialAnswer: undefined });
+  savingAnswer = input(false);
+  viewChange = output<string>();
+  tabsChange = output<TaskTab[]>();
+  scoreChange = output<number>();
+  skipSave = output<void>();
+  refresh = output<void>();
+  editorUrl = output<string | undefined>();
+  disablePlatformProgress = output<boolean>();
+  fullFrame = output<boolean>();
+  loadingComplete = output<boolean>();
 }
 
 const mockRoute = itemRoute('activity', '1', { attemptId: '0', path: [] });
@@ -117,7 +116,7 @@ describe('ItemContentComponent – task retry', () => {
     fixture = TestBed.createComponent(ItemContentComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('itemData', mockItemData);
-    component.taskConfig = { readOnly: false, initialAnswer: null };
+    fixture.componentRef.setInput('taskConfig', { readOnly: false, initialAnswer: null });
     fixture.detectChanges();
   });
 

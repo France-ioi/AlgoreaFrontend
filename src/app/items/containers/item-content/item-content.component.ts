@@ -1,15 +1,13 @@
 import {
   Component,
   DestroyRef,
-  EventEmitter,
-  Input,
-  Output,
-  ViewChild,
   computed,
   inject,
   input,
+  linkedSignal,
+  output,
   signal,
-  ChangeDetectionStrategy
+  viewChild,
 } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
@@ -29,7 +27,7 @@ import { SubSkillsComponent } from '../../containers/sub-skills/sub-skills.compo
 import { ChapterChildrenComponent } from '../../containers/chapter-children/chapter-children.component';
 import { DescriptionIframeComponent } from 'src/app/ui-components/description-iframe/description-iframe.component';
 import { DescriptionIframeNavigationRequest } from 'src/app/ui-components/description-iframe/description-iframe.messages';
-import { Location, NgClass } from '@angular/common';
+import { Location } from '@angular/common';
 import { LoginWallComponent } from '../login-wall/login-wall.component';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
@@ -55,7 +53,6 @@ const EXTERNAL_URL_AUTO_OPEN_DELAY_MS = 900;
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
   styleUrls: [ './item-content.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DescriptionIframeComponent,
     SwitchComponent,
@@ -65,7 +62,6 @@ const EXTERNAL_URL_AUTO_OPEN_DELAY_MS = 900;
     ParentSkillsComponent,
     ItemDisplayComponent,
     ExplicitEntryComponent,
-    NgClass,
     LoginWallComponent,
     ItemUnlockAccessComponent,
     TaskLoaderComponent,
@@ -88,11 +84,26 @@ export class ItemContentComponent implements PendingChangesComponent {
   private location = inject(Location);
   private destroyRef = inject(DestroyRef);
 
-  @ViewChild(ItemDisplayComponent) itemDisplayComponent?: ItemDisplayComponent;
-  @ViewChild(ItemChildrenEditFormComponent) itemChildrenEditFormComponent?: ItemChildrenEditFormComponent;
-  @ViewChild(SwitchComponent) switchComponent?: SwitchComponent;
+  readonly itemDisplayComponent = viewChild(ItemDisplayComponent);
+  private itemChildrenEditFormComponent = viewChild(ItemChildrenEditFormComponent);
+  private switchComponent = viewChild(SwitchComponent);
 
   itemData = input.required<ItemData>();
+  taskView = input<TaskTab['view']>();
+  taskConfig = input<TaskConfig | null>(null);
+  savingAnswer = input(false);
+  editModeEnabled = input(false);
+  editMode = linkedSignal(() => this.editModeEnabled());
+
+  taskTabsChange = output<TaskTab[]>();
+  taskViewChange = output<TaskTab['view']>();
+  scoreChange = output<number>();
+  skipSave = output<void>();
+  refresh = output<void>();
+  editorUrl = output<string | undefined>();
+  disablePlatformProgress = output<boolean>();
+  fullFrameTask = output<boolean>();
+
   private item = computed(() => this.itemData().item);
   /**
    * Item description, only if it should be shown
@@ -102,27 +113,13 @@ export class ItemContentComponent implements PendingChangesComponent {
     return (!isATask(this.item()) && description && description.trim() !== '') ? description : null;
   });
 
-  @Input() taskView?: TaskTab['view'];
-  @Input() taskConfig: TaskConfig|null = null;
-  @Input() savingAnswer = false;
-  @Input() editModeEnabled = false;
-
-  @Output() taskTabsChange = new EventEmitter<TaskTab[]>();
-  @Output() taskViewChange = new EventEmitter<TaskTab['view']>();
-  @Output() scoreChange = new EventEmitter<number>();
-  @Output() skipSave = new EventEmitter<void>();
-  @Output() refresh = new EventEmitter<void>();
-  @Output() editorUrl = new EventEmitter<string|undefined>();
-  @Output() disablePlatformProgress = new EventEmitter<boolean>();
-  @Output() fullFrameTask = new EventEmitter<boolean>();
-
   isTaskLoaded = signal(false); // whether the task has finished loading, i.e. is ready or in error
   showTaskDisplay = signal(true);
   isCurrentUserTemp = toSignal(this.userSessionService.userProfile$.pipe(map(user => user.tempUser)));
-  hasPrerequisites: boolean|undefined = undefined; // undefined while not known
+  hasPrerequisites = signal<boolean | undefined>(undefined); // undefined while not known
 
   isDirty(): boolean {
-    return !!this.itemChildrenEditFormComponent?.dirty();
+    return !!this.itemChildrenEditFormComponent()?.dirty();
   }
 
   onEditModeEnableChange(editModeEnabled: boolean): void {
@@ -130,7 +127,8 @@ export class ItemContentComponent implements PendingChangesComponent {
       relativeTo: this.route,
     }).then(redirected => {
       if (!editModeEnabled && !redirected) {
-        this.switchComponent?.writeValue(true);
+        this.editMode.set(true);
+        this.switchComponent()?.writeValue(true);
       }
     });
   }
@@ -142,6 +140,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   onTaskRetry(): void {
     this.isTaskLoaded.set(false);
     this.showTaskDisplay.set(false);
+    // Destroy/recreate ItemDisplayComponent to fully reset the task iframe and service state.
     setTimeout(() => this.showTaskDisplay.set(true));
   }
 
@@ -150,7 +149,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   }
 
   onPrerequisiteNotify(hasPrerequisites: boolean): void {
-    this.hasPrerequisites = hasPrerequisites;
+    this.hasPrerequisites.set(hasPrerequisites);
   }
 
   onDescriptionNavigate(req: DescriptionIframeNavigationRequest): void {

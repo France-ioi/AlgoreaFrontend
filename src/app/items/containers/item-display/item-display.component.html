@@ -1,11 +1,11 @@
 @if (state$ | async; as state) {
   <div
     class="item-display alg-flex-1"
-    [ngClass]="{ 'full-frame': fullFrame$ | async }"
+    [class.full-frame]="fullFrame$ | async"
   >
-    @if ((state.isError || (metadataError$ | async)) && !showTaskAnyway) {
+    @if ((state.isError || (metadataError$ | async)) && !showTaskAnyway()) {
       <div class="error-container alg-flex-1" [algFullHeightContent]="true">
-        @if (editingPermission | allowsEditingAll) {
+        @if (editingPermission() | allowsEditingAll) {
           @if (initError$ | async) {
             <alg-error
               i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
@@ -40,11 +40,11 @@
           ></alg-error>
         }
         <div class="error-buttons">
-          @if (editingPermission | allowsEditingAll) {
+          @if (editingPermission() | allowsEditingAll) {
             <button
               alg-button
               class="size-l error-button"
-              (click)="showTaskAnyway = true"
+              (click)="showTaskAnyway.set(true)"
               i18n
             >Show task anyway (for debugging)</button>
           }
@@ -58,7 +58,7 @@
       </div>
     }
     <div class="iframe-container alg-flex-1">
-      @if (savingAnswer) {
+      @if (savingAnswer()) {
         <div class="saving-answer">
           <p class="saving-answer-message">
             <span i18n>Saving answer...</span>
@@ -70,8 +70,8 @@
       @if (iframeSrc$ | async; as iframeSrc) {
         <iframe
           class="iframe-element"
-          [class.alg-flex-1]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway)"
-          [style.height]="(state.isReady || showTaskAnyway) ? (iframeHeight$ | async) : undefined"
+          [class.alg-flex-1]="!!(metadata$ | async)?.autoHeight && (state.isReady || showTaskAnyway())"
+          [style.height]="(state.isReady || showTaskAnyway()) ? (iframeHeight$ | async) : undefined"
           [src]="iframeSrc"
           #iframe
           allowfullscreen
