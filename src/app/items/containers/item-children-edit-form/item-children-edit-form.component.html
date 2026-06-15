@@ -1,17 +1,15 @@
-@if (itemData(); as itemDataValue) {
-  @if (itemDataValue.item.permissions | allowsEditingChildren) {
-    <alg-item-children-edit
-      #childrenEdit
-      (childrenChanges)="updateItemChanges($event)"
-      [itemData]="itemDataValue"
-      [class.disabled]="disabled()"
-    ></alg-item-children-edit>
-    @if (dirty()) {
-      <alg-floating-save [saving]="disabled()" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
-    }
-  } @else {
-    <p class="validation-text" i18n>
-      You do not have the permissions to edit this content.
-    </p>
+@if (itemData().item.permissions | allowsEditingChildren) {
+  <alg-item-children-edit
+    #childrenEdit
+    (childrenChanges)="updateItemChanges($event)"
+    [itemData]="itemData()"
+    [class.disabled]="disabled()"
+  ></alg-item-children-edit>
+  @if (dirty()) {
+    <alg-floating-save [saving]="disabled()" (save)="save()" (cancel)="onCancel()"></alg-floating-save>
   }
+} @else {
+  <p class="validation-text" i18n>
+    You do not have the permissions to edit this content.
+  </p>
 }
