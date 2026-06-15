@@ -3,7 +3,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { GetItemChildrenService, isVisibleItemChild } from '../../../data-access/get-item-children.service';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, share, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, share, switchMap } from 'rxjs/operators';
 import { isASkill, ItemType, ItemTypeCategory, itemTypeCategoryEnum as c } from 'src/app/items/models/item-type';
 import { bestAttemptFromResults } from 'src/app/items/models/attempts';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -70,6 +70,9 @@ export class ItemChildrenEditComponent {
       ? { id: itemData.item.id, attemptId: itemData.currentResult.attemptId }
       : undefined)),
     filter(isNotUndefined),
+    // Avoid re-fetching (which would reset pending local edits) when `itemData` re-emits a new
+    // object reference without an actual change of item/attempt, e.g. on a cancelled navigation.
+    distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
   );
 
   readonly state$: Observable<FetchState<PossiblyInvisibleChildData[]>> = this.params$.pipe(
