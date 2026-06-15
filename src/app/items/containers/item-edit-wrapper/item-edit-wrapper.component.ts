@@ -2,14 +2,12 @@ import {
   Component,
   computed,
   inject,
-  Input,
-  OnChanges,
+  input,
   OnDestroy,
   OnInit,
   signal,
-  SimpleChanges,
-  ChangeDetectionStrategy
 } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import {
   ValidationErrors,
@@ -24,7 +22,6 @@ import { UpdateItemStringService } from '../../data-access/update-item-string.se
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { distinctUntilChanged, map, Observable, of, throwError } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
@@ -57,7 +54,6 @@ import { runItemEditSave } from './item-edit-wrapper-save-flow';
   selector: 'alg-item-edit-wrapper',
   templateUrl: './item-edit-wrapper.component.html',
   styleUrls: [ './item-edit-wrapper.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -68,8 +64,8 @@ import { runItemEditSave } from './item-edit-wrapper-save-flow';
     ItemAllStringsFormComponent,
   ]
 })
-export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, PendingChangesComponent {
-  @Input() itemData?: ItemData;
+export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChangesComponent {
+  readonly itemData = input.required<ItemData>();
 
   private store = inject(Store);
   private currentContentService = inject(CurrentContentService);
@@ -99,6 +95,8 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
 
   textIdError = signal<string | null>(null);
 
+  private previousItemData?: ItemData;
+
   constructor() {
     this.itemForm.controls.parameters.valueChanges
       .pipe(
@@ -107,29 +105,26 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
         takeUntilDestroyed(),
       )
       .subscribe(() => this.textIdError.set(null));
+
+    // Full snapshot on item change, partial resync on server-baseline change of the same item,
+    // preserving in-progress user edits (same semantics as the former ngOnChanges).
+    toObservable(this.itemData).pipe(takeUntilDestroyed()).subscribe(itemData => {
+      const prevItem = this.previousItemData?.item;
+      const currItem = itemData.item;
+      const idChanged = prevItem?.id !== currItem.id;
+
+      if (idChanged) {
+        this.applyFullItemSnapshot(currItem);
+      } else if (shouldResyncStringsBaseline(prevItem, currItem)) {
+        this.resyncServerBaseline(currItem);
+      }
+
+      this.previousItemData = itemData;
+    });
   }
 
   ngOnInit(): void {
     this.pendingChangesService.set(this);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.itemData) return;
-    const itemChange = changes.itemData;
-    if (!itemChange) return;
-
-    const prevItem = (itemChange.previousValue as ItemData | undefined)?.item;
-    const currItem = (itemChange.currentValue as ItemData).item;
-    const idChanged = prevItem?.id !== currItem.id;
-
-    if (idChanged) {
-      this.applyFullItemSnapshot(currItem);
-      return;
-    }
-
-    if (shouldResyncStringsBaseline(prevItem, currItem)) {
-      this.resyncServerBaseline(currItem);
-    }
   }
 
   ngOnDestroy(): void {
@@ -153,15 +148,14 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
     }
     const itemChanges = this.buildItemChanges();
     if (itemChanges === null) return;
-    const id = this.itemData?.item.id;
-    if (!id) throw new Error('Missing ID form');
+    const id = this.itemData().item.id;
 
     runItemEditSave({
       itemId: id,
       initialItem: this.initialItem,
       getAllStrings: () => this.itemForm.controls.allStrings.getRawValue(),
       initialLanguageValues: this.initialLanguageValues(),
-      serverSupportedLanguageTags: this.itemData?.item.supportedLanguageTags ?? [],
+      serverSupportedLanguageTags: this.itemData().item.supportedLanguageTags,
       itemChanges,
       updateItem: changes => this.updateItem(changes),
       updateItemStringService: this.updateItemStringService,
@@ -266,7 +260,7 @@ export class ItemEditWrapperComponent implements OnInit, OnChanges, OnDestroy, P
   private syncFormStateAfterSave(): void {
     syncFormStateAfterSave(
       { itemForm: this.itemForm },
-      this.itemData?.item.supportedLanguageTags ?? [],
+      this.itemData().item.supportedLanguageTags,
       values => this.initialLanguageValues.set(values),
     );
   }

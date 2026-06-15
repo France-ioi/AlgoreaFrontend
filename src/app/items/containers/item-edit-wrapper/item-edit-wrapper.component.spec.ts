@@ -186,5 +186,35 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
       expect(component.itemForm.dirty).toBeTrue();
       expect(component.isDirty()).toBeTrue();
     });
+
+    it('preserves user edits on partial server baseline resync', async () => {
+      const initialItem = buildItem();
+      await loadItem(initialItem);
+      await new Promise(resolve => setTimeout(resolve, 0));
+      fixture.detectChanges();
+      const stringsForm = fixture.debugElement.query(By.directive(ItemAllStringsFormComponent))
+        .componentInstance as ItemAllStringsFormComponent;
+      stringsForm.allStrings.at(0).patchValue({
+        languageTag: 'en',
+        title: 'Changed title',
+        subtitle: 'Sub',
+        description: 'Desc',
+      });
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const serverRefreshedItem = buildItem({
+        string: {
+          ...initialItem.string,
+          description: 'Server updated description',
+        },
+      });
+      fixture.componentRef.setInput('itemData', buildItemData(serverRefreshedItem));
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(stringsForm.allStrings.at(0).getRawValue().title).toBe('Changed title');
+      expect(component.itemForm.dirty).toBeTrue();
+    });
   });
 });
