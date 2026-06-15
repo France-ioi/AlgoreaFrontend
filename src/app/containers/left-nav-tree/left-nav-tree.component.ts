@@ -1,4 +1,4 @@
-import { Component, effect, input, Input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, input, signal } from '@angular/core';
 import { isAChapter, isASkill, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { areSameElements } from '../../models/routing/entity-route';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
@@ -46,7 +46,6 @@ export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true
   selector: 'alg-left-nav-tree',
   templateUrl: './left-nav-tree.component.html',
   styleUrls: [ './left-nav-tree.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LeftMenuBackButtonComponent,
     RouterLink,
@@ -66,7 +65,7 @@ export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true
 })
 export class LeftNavTreeComponent {
   data = input.required<NavTreeData>();
-  @Input() elementType: ItemTypeCategory | 'group' = 'activity';
+  elementType = input<ItemTypeCategory | 'group'>('activity');
 
   nodes = signal<TreeNode<NavTreeElement>[]>([]);
   treeControl = new NestedTreeControl<TreeNode<NavTreeElement>>(node => node.children);
@@ -148,7 +147,7 @@ export class LeftNavTreeComponent {
   }
 
   private typeForElement(e: NavTreeElement): string {
-    switch (this.elementType) {
+    switch (this.elementType()) {
       case 'activity':
         if (e.itemType) {
           return isAChapter({ type: e.itemType }) ? 'chapter' : 'task';

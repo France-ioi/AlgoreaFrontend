@@ -1,69 +1,64 @@
-@if (data !== undefined) {
+@if (data(); as searchResults) {
   <div class="container result-caption">
-    @if (data.length < 10) {
-      <ng-container i18n>
-      {data.length, plural, =0 {No result found} =1 {{{ data.length }} result found} other {{{ data.length }} results found}}
-    </ng-container>
+    @if (searchResults.length < 10) {
+      <span i18n>
+        {searchResults.length, plural, =0 {No result found} =1 {{{ searchResults.length }} result found} other {{{ searchResults.length }} results found}}
+      </span>
     } @else {
-      <span i18n>First {{ data.length }} results</span>
+      <span i18n>First {{ searchResults.length }} results</span>
     }
   </div>
-}
 
-@if (data === undefined) {
+  @if (searchResults.length === 0) {
+    <div class="container">
+      <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
+        No results
+      </alg-message-info>
+    </div>
+  }
+
+  @for (item of searchResults; track item) {
+    <div class="container">
+      <ul class="result-list alg-search-result">
+        <li
+          class="result-list-item"
+          [algShowOverlay]="op"
+          (overlayOpenEvent)="itemId.set(item.id)"
+          (overlayCloseEvent)="itemId.set(undefined)"
+          #overlay="algShowOverlay"
+        >
+          <a class="result-list-link" [routerLink]="item | itemRoute | url" routerLinkActive="selected">
+            <i
+              class="result-list-icon ph-duotone"
+              [class.ph-files]="item.type === 'Task'"
+              [class.ph-folders]="item.type === 'Chapter'"
+            ></i>
+            <span class="result-list-link-caption" algShowOverlayHoverTarget>
+              @if (item.titleHighlight; as titleHighlight) {
+                <span [innerHTML]="titleHighlight"></span>
+              } @else {
+                {{ item.title }}
+              }
+            </span>
+          </a>
+          @if (item.highlights.length > 0) {
+            <div class="result-list-description-wrapper">
+              @for (highlight of item.highlights; track highlight) {
+                <p class="result-list-description" [innerHTML]="highlight"></p>
+              }
+            </div>
+          }
+          <ng-template #op>
+            <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+          </ng-template>
+        </li>
+      </ul>
+    </div>
+  }
+} @else {
   <div class="container">
     <alg-message-info class="search" icon="ph-duotone ph-warning-circle" i18n>
       Type at least 3 letters to search content
     </alg-message-info>
   </div>
 }
-
-@if (data !== undefined && data.length === 0) {
-  <div class="container">
-    <alg-message-info icon="ph-duotone ph-warning-circle" i18n>
-      No results
-    </alg-message-info>
-  </div>
-}
-
-@for (item of data; track item) {
-  <div class="container">
-    <ul class="result-list alg-search-result">
-      <li
-        class="result-list-item"
-        [algShowOverlay]="op"
-        (overlayOpenEvent)="itemId.set(item.id)"
-        (overlayCloseEvent)="itemId.set(undefined)"
-        #overlay="algShowOverlay"
-      >
-        <a class="result-list-link" [routerLink]="item | itemRoute | url" routerLinkActive="selected">
-          <i
-            class="result-list-icon ph-duotone"
-            [ngClass]="{
-            'ph-files': item.type === 'Task',
-            'ph-folders': item.type === 'Chapter'
-          }"
-          ></i>
-          <span class="result-list-link-caption" algShowOverlayHoverTarget>
-            @if (item.titleHighlight; as titleHighlight) {
-              <span [innerHTML]="titleHighlight"></span>
-            } @else {
-              {{ item.title }}
-            }
-          </span>
-        </a>
-        @if (item.highlights.length > 0) {
-          <div class="result-list-description-wrapper">
-            @for (highlight of item.highlights; track highlight) {
-              <p class="result-list-description" [innerHTML]="highlight"></p>
-            }
-          </div>
-        }
-        <ng-template #op>
-          <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
-        </ng-template>
-      </li>
-    </ul>
-  </div>
-}
-

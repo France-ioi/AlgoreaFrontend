@@ -6,7 +6,7 @@
       [title]="parent.title"
     ></alg-left-menu-back-button>
   </div>
-} @else if (elementType === 'group') {
+} @else if (elementType() === 'group') {
   <div class="container buttons-section" data-testid="group-left-menu">
     <a
       class="size-l stroke left-menu alg-flex-1"
@@ -106,7 +106,7 @@
             >
               <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
               <div class="tree-nav-right">
-                @if (elementType === 'skill' && node.data.score) {
+                @if (elementType() === 'skill' && node.data.score) {
                   <div class="tree-nav-skill-progress">
                     <alg-skill-progress
                       [bestScore]="node.data.score.bestScore"
@@ -127,7 +127,7 @@
             >
               <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
               <div class="tree-nav-right">
-                @if (elementType === 'skill' && node.data.score) {
+                @if (elementType() === 'skill' && node.data.score) {
                   <alg-skill-progress
                     [bestScore]="node.data.score.bestScore"
                     [currentScore]="node.data.score.currentScore"
@@ -198,7 +198,7 @@
   </div>
 } @else {
   <div class="empty-message">
-    {elementType, select,
+    {elementType(), select,
       group {You are not a member or manager of any group}
       other {There is no content to display}
     }

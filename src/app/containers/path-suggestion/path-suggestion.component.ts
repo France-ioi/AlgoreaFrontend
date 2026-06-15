@@ -1,11 +1,11 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output,
-  inject,
+  AfterViewInit, Component, ElementRef, inject, input, OnDestroy, output,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { GetBreadcrumbsFromRootsService } from '../../data-access/get-breadcrumbs-from-roots.service';
-import { ReplaySubject, Subject, switchMap } from 'rxjs';
+import { Subject, switchMap } from 'rxjs';
 import { mapToFetchState } from '../../utils/operators/state';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
@@ -18,7 +18,6 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
   selector: 'alg-path-suggestion',
   templateUrl: './path-suggestion.component.html',
   styleUrls: [ './path-suggestion.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -28,18 +27,18 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
     RouteUrlPipe,
   ]
 })
-export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class PathSuggestionComponent implements AfterViewInit, OnDestroy {
   private getBreadcrumbsFromRootsService = inject(GetBreadcrumbsFromRootsService);
   private elementRef = inject<ElementRef<HTMLDivElement>>(ElementRef);
 
-  @Output() resize = new EventEmitter<void>();
-  @Input() itemId?: string;
+  itemId = input<string>();
+  resize = output<void>();
 
   resizeObserver = new ResizeObserver(() =>
     this.resize.emit()
   );
 
-  private readonly itemId$ = new ReplaySubject<string>(1);
+  private readonly itemId$ = toObservable(this.itemId).pipe(filter((id): id is string => !!id));
   private readonly refresh$ = new Subject<void>();
 
   state$ = this.itemId$.pipe(
@@ -53,14 +52,7 @@ export class PathSuggestionComponent implements AfterViewInit, OnDestroy, OnChan
     this.resizeObserver.observe(this.elementRef.nativeElement);
   }
 
-  ngOnChanges(): void {
-    if (this.itemId) {
-      this.itemId$.next(this.itemId);
-    }
-  }
-
   ngOnDestroy(): void {
-    this.itemId$.complete();
     this.refresh$.complete();
     this.resizeObserver.unobserve(this.elementRef.nativeElement);
   }
