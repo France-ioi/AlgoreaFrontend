@@ -23,17 +23,17 @@
         i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
       ></alg-error>
     }
-    @if (itemData && itemData.item.displaySettings.childrenLayout === 'Grid') {
+    @if (itemData().item.displaySettings.childrenLayout === 'Grid') {
       @if (data.children.length > 0) {
         <div
           class="grid-container"
-          [ngClass]="{ 'left-menu-shown': leftMenuShown() }"
+          [class.left-menu-shown]="leftMenuShown()"
         >
           @for (item of data.children; track item; let i = $index) {
             <div class="grid-item">
-              @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+              @if (itemData().currentResult?.attemptId; as attemptId) {
                 <a class="grid-card"
-                  [routerLink]="item | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]) } |
+                  [routerLink]="item | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]) } |
                     with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: attemptId }) |
                     url"
                 >
@@ -77,14 +77,14 @@
           }
         </div>
       }
-    } @else if (itemData && itemData.item.displaySettings.childrenLayout === 'List') {
-      @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+    } @else if (itemData().item.displaySettings.childrenLayout === 'List') {
+      @if (itemData().currentResult?.attemptId; as attemptId) {
         <alg-item-children-list
           [children]="data.children"
-          [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path.concat([ itemData.item.id ]) }"
+          [routeParams]="{ parentAttemptId: attemptId, path: itemData().route.path.concat([ itemData().item.id ]) }"
         ></alg-item-children-list>
       }
-    } @else if (itemData && itemData.item.displaySettings.childrenLayout === 'Hide') {
+    } @else if (itemData().item.displaySettings.childrenLayout === 'Hide') {
       @if (!leftMenuShown()) {
         <div class="hidden-children-hint">
           <i class="hidden-children-hint-icon ph ph-sidebar-simple"></i>

@@ -1,10 +1,12 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Component, DestroyRef, inject, input } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { GetItemParentsService } from '../../data-access/get-item-parents.service';
 import { ItemData } from '../../models/item-data';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
+import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -14,18 +16,28 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
   selector: 'alg-parent-skills',
   templateUrl: './parent-skills.component.html',
   styleUrls: [ './parent-skills.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
-export class ParentSkillsComponent implements OnChanges, OnDestroy {
+export class ParentSkillsComponent {
   private getItemParentsService = inject(GetItemParentsService);
 
-  @Input() itemData?: ItemData;
+  readonly itemData = input.required<ItemData>();
 
-  private readonly params$ = new ReplaySubject<{ id: string, attemptId: string }>(1);
-  private refresh$ = new Subject<void>();
-  readonly state$ = this.params$.pipe(
+  private readonly refresh$ = new Subject<void>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.refresh$.complete());
+  }
+
+  private readonly params$ = toObservable(this.itemData).pipe(
+    map(itemData => (itemData.currentResult
+      ? { id: itemData.item.id, attemptId: itemData.currentResult.attemptId }
+      : undefined)),
+    filter(isNotUndefined),
     distinctUntilChanged((a, b) => a.id === b.id && a.attemptId === b.attemptId),
+  );
+
+  readonly state$ = this.params$.pipe(
     switchMap(({ id, attemptId }) => this.getItemParentsService.get(id, attemptId)),
     map(parents => parents.map(parent => ({
       ...parent,
@@ -38,20 +50,6 @@ export class ParentSkillsComponent implements OnChanges, OnDestroy {
     }))),
     mapToFetchState({ resetter: this.refresh$ }),
   );
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (this.itemData?.currentResult) {
-      this.params$.next({
-        id: this.itemData.item.id,
-        attemptId: this.itemData.currentResult.attemptId,
-      });
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.params$.complete();
-    this.refresh$.complete();
-  }
 
   refresh(): void {
     this.refresh$.next();

@@ -1,9 +1,7 @@
-import {
-  ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, QueryList, signal, ViewChildren,
-  inject,
-} from '@angular/core';
+import { Component, DestroyRef, inject, input, signal } from '@angular/core';
+import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
-import { ReplaySubject, Subject, switchMap } from 'rxjs';
+import { Subject, switchMap } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
@@ -18,13 +16,11 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { AsyncPipe } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
-import { outputFromObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-item-unlock-access',
   templateUrl: './item-unlock-access.component.html',
   styleUrls: [ './item-unlock-access.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -38,15 +34,20 @@ import { outputFromObservable } from '@angular/core/rxjs-interop';
     ShowOverlayHoverTargetDirective,
   ]
 })
-export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
+export class ItemUnlockAccessComponent {
   private getItemPrerequisitesService = inject(GetItemPrerequisitesService);
 
-  @Input() itemData?: ItemData;
+  readonly itemData = input.required<ItemData>();
 
-  @ViewChildren('contentRef') contentRef?: QueryList<ElementRef<HTMLElement>>;
-
-  private readonly itemId$ = new ReplaySubject<string>(1);
   private readonly refresh$ = new Subject<void>();
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.refresh$.complete());
+  }
+
+  private readonly itemId$ = toObservable(this.itemData).pipe(
+    map(itemData => itemData.item.id),
+  );
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getItemPrerequisitesService.get(itemId)),
@@ -64,17 +65,6 @@ export class ItemUnlockAccessComponent implements OnChanges, OnDestroy {
   ));
 
   itemId = signal<string | undefined>(undefined);
-
-  ngOnChanges(): void {
-    if (this.itemData) {
-      this.itemId$.next(this.itemData.item.id);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.itemId$.complete();
-    this.refresh$.complete();
-  }
 
   refresh(): void {
     this.refresh$.next();

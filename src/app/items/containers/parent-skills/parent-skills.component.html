@@ -14,12 +14,12 @@
     ></alg-error>
   }
   @if (state.isReady && state.data; as parents) {
-    @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+    @if (itemData().currentResult?.attemptId; as attemptId) {
       <alg-item-children-list
         type="skill"
         i18n-emptyMessage emptyMessage="This skill does not have parent skills."
         [children]="parents"
-        [routeParams]="{ parentAttemptId: attemptId, path: itemData.route.path | slice :0 : -1 }"
+        [routeParams]="{ parentAttemptId: attemptId, path: itemData().route.path | slice :0 : -1 }"
       ></alg-item-children-list>
     }
   }
