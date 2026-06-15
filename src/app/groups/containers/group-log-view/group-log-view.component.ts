@@ -1,4 +1,4 @@
-import { Component, computed, input, Input, OnChanges, signal, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
@@ -14,7 +14,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { NgClass, AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { UserSessionService } from '../../../services/user-session.service';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
@@ -42,12 +42,10 @@ const logsLimit = 20;
   selector: 'alg-group-log-view',
   templateUrl: './group-log-view.component.html',
   styleUrls: [ './group-log-view.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
     ScoreRingComponent,
-    NgClass,
     RouterLink,
     PathSuggestionComponent,
     AsyncPipe,
@@ -74,14 +72,15 @@ const logsLimit = 20;
     CdkNoDataRow,
   ]
 })
-export class GroupLogViewComponent implements OnChanges {
+export class GroupLogViewComponent {
   private activityLogService = inject(ActivityLogService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private sessionService = inject(UserSessionService);
   private store = inject(Store);
   private router = inject(Router);
 
-  @Input() groupId?: string;
+  /** Undefined means "my own log" (see user.component). Must not change after init — DataPager's fetch closure captures it. */
+  groupId = input<string>();
   showUserColumn = input(true);
 
   itemId = signal<string | undefined>(undefined);
@@ -102,14 +101,20 @@ export class GroupLogViewComponent implements OnChanges {
 
   readonly state$ = this.datapager.list$;
 
+  private groupIdAtInit: string | undefined | null = null;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('groupId' in changes && !changes.groupId?.isFirstChange()) {
-      throw new Error('Unexpected: groupId should not change');
-    }
-    if ('groupId' in changes && changes.groupId?.isFirstChange()) {
-      this.resetRows();
-    }
+  constructor() {
+    effect(() => {
+      const groupId = this.groupId();
+      if (this.groupIdAtInit === null) {
+        this.groupIdAtInit = groupId;
+        this.resetRows();
+        return;
+      }
+      if (groupId !== this.groupIdAtInit) {
+        throw new Error('Unexpected: groupId should not change');
+      }
+    });
   }
 
   refresh(): void {
@@ -126,7 +131,7 @@ export class GroupLogViewComponent implements OnChanges {
     };
 
     return this.activityLogService.getAllActivityLog({
-      watchedGroupId: this.groupId,
+      watchedGroupId: this.groupId(),
       limit: pageSize,
       pagination: paginationParams,
     }).pipe(

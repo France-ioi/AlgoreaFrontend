@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
 import { Group } from '../../models/group';
 import { distinctUntilChanged, switchMap, map, filter } from 'rxjs/operators';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { GetGroupChildrenService, GroupChild } from '../../data-access/get-group-children.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { GroupDeleteService } from '../../data-access/group-delete.service';
@@ -12,44 +12,45 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { AsyncPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
   styleUrls: [ './group-remove-button.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
-export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
+export class GroupRemoveButtonComponent {
   private actionFeedbackService = inject(ActionFeedbackService);
   private confirmationModalService = inject(ConfirmationModalService);
   private getGroupChildrenService = inject(GetGroupChildrenService);
   private groupDeleteService = inject(GroupDeleteService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
-  @Input() group?: Group;
+  group = input.required<Group>();
 
-  @Output() groupDeleted = new EventEmitter<void>();
+  groupDeleted = output<void>();
 
   deletionInProgress$ = new Subject<boolean>();
 
-  private readonly id$ = new ReplaySubject<string>(1);
   private refresh$ = new Subject<void>();
-  readonly state$ = this.id$.pipe(
+
+  private id$ = toObservable(this.group).pipe(
+    map(g => g.id),
     distinctUntilChanged(),
+  );
+
+  readonly state$ = this.id$.pipe(
     switchMap(id => this.hasGroupChildren$(id)),
     mapToFetchState({ resetter: this.refresh$ }),
   );
 
-  ngOnChanges(): void {
-    if (this.group) {
-      this.id$.next(this.group.id);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.id$.complete();
-    this.refresh$.complete();
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.refresh$.complete();
+      this.deletionInProgress$.complete();
+    });
   }
 
   hasGroupChildren$(groupId: string): Observable<boolean> {
@@ -59,9 +60,8 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
   }
 
   onDeleteGroup(): void {
-    if (!this.group) throw new Error('Unexpected: Missed group');
-    const id = this.group.id;
-    const groupName = this.group.name;
+    const id = this.group().id;
+    const groupName = this.group().name;
 
     this.deletionInProgress$.next(true);
     this.confirmationModalService.open({
@@ -74,7 +74,8 @@ export class GroupRemoveButtonComponent implements OnChanges, OnDestroy {
       rejectButtonIcon: 'ph-bold ph-x',
     }).pipe(
       filter(accepted => !!accepted),
-      switchMap(() => this.groupDeleteService.delete(id))
+      switchMap(() => this.groupDeleteService.delete(id)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`You have deleted "${groupName}"`);

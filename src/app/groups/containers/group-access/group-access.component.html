@@ -1,5 +1,5 @@
-@if (group?.currentUserCanGrantGroupAccess) {
-  <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Activity associated to {{ group?.name }}</h2>
+@if (group().currentUserCanGrantGroupAccess) {
+  <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Activity associated to {{ group().name }}</h2>
   @if (rootActivityState$ | async; as rootActivityState) {
     @if (rootActivityState.isFetching) {
       <div class="spinner">
@@ -53,7 +53,7 @@
               <strong>
                 {{ grantedPermission.item.title }}.
               </strong>
-              @if (grantedPermission.sourceGroup.id !== group?.id && grantedPermission.group.id !== group?.id) {
+              @if (grantedPermission.sourceGroup.id !== group().id && grantedPermission.group.id !== group().id) {
                 <span i18n>Given by</span>
                 <a
                   class="alg-link"
