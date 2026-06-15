@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
 import { catchError, filter, retry, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -18,7 +18,6 @@ export interface LanguageMismatchModalParams {
   selector: 'alg-language-mismatch-modal',
   templateUrl: './language-mismatch-modal.component.html',
   styleUrls: [ './language-mismatch-modal.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NotificationModalComponent,
     LoadingComponent,
@@ -35,7 +34,7 @@ export class LanguageMismatchModalComponent implements OnDestroy {
 
   readonly currentLanguage = this.localeService.currentLang?.tag;
 
-  updating = false;
+  protected readonly updating = signal(false);
 
   private updateTempUserLanguage = this.sessionService.userProfile$.pipe(
     filter(profile => profile.tempUser && profile.defaultLanguage !== this.currentLanguage),
@@ -50,7 +49,7 @@ export class LanguageMismatchModalComponent implements OnDestroy {
     this.sessionService.updateCurrentUser({ default_language: language })
       .pipe(mapPending())
       .subscribe(updating => {
-        this.updating = updating;
+        this.updating.set(updating);
         if (!updating) {
           this.dialogRef.close();
         }

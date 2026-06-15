@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Group } from '../../models/group';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { ProgressSelectValue, ProgressSelectComponent } from
@@ -14,7 +14,7 @@ import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-s
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import { Observable, of } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, finalize } from 'rxjs/operators';
 import { groupManagershipLevelEnum as l } from '../../models/group-management';
 import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
@@ -32,7 +32,6 @@ export interface ManagerPermissionDialogResult {
   selector: 'alg-manager-permission-dialog',
   templateUrl: './manager-permission-dialog.component.html',
   styleUrls: [ './manager-permission-dialog.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -72,8 +71,16 @@ export class ManagerPermissionDialogComponent implements OnInit {
     },
   ];
 
-  userCaption?: string;
-  isUpdating = false;
+  protected readonly userCaption = computed(() => {
+    const manager = this.params().manager;
+    return manager.login ? formatUser({
+      login: manager.login,
+      firstName: manager.firstName,
+      lastName: manager.lastName,
+    }) : manager.name;
+  });
+
+  protected readonly isUpdating = signal(false);
 
   form = this.fb.group({
     canManage: [ 'none' ],
@@ -89,12 +96,6 @@ export class ManagerPermissionDialogComponent implements OnInit {
       canGrantGroupAccess: manager.canGrantGroupAccess,
       canWatchMembers: manager.canWatchMembers,
     }, { emitEvent: false });
-
-    this.userCaption = manager.login ? formatUser({
-      login: manager.login,
-      firstName: manager.firstName,
-      lastName: manager.lastName,
-    }) : manager.name;
   }
 
   onClose(): void {
@@ -130,9 +131,10 @@ export class ManagerPermissionDialogComponent implements OnInit {
       canWatchMembers: this.form.get('canWatchMembers')?.value as GroupManagerPermissionChanges['canWatchMembers'],
     };
 
-    this.isUpdating = true;
+    this.isUpdating.set(true);
     proceedSaving$.pipe(
       switchMap(() => this.updateGroupManagersService.update(group.id, manager.id, managerPermissions)),
+      finalize(() => this.isUpdating.set(false)),
     ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`New permissions successfully saved.`);
@@ -141,7 +143,6 @@ export class ManagerPermissionDialogComponent implements OnInit {
       error: () => {
         this.actionFeedbackService.error($localize`Failed to save permissions.`);
       },
-      complete: () => this.isUpdating = false,
     });
   }
 }

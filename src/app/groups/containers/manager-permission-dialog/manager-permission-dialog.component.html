@@ -1,4 +1,4 @@
-<alg-modal i18n-modalTitle modalTitle="{{ params().group.name }}: manager access given to {{ userCaption }}" (closeEvent)="onClose()">
+<alg-modal i18n-modalTitle modalTitle="{{ params().group.name }}: manager access given to {{ userCaption() }}" (closeEvent)="onClose()">
   <div class="dialog-container">
     <div class="dialog-content">
       <p class="dialog-description" i18n>
@@ -61,7 +61,7 @@
 
   <footer>
     <div class="footer">
-      @if (isUpdating) {
+      @if (isUpdating()) {
         <alg-loading></alg-loading>
       } @else {
         <button

@@ -1,4 +1,4 @@
-import { Component, effect, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { filter, map, takeUntil } from 'rxjs/operators';
 import { UserSessionService } from '../../services/user-session.service';
 import { LocaleService } from '../../services/localeService';
@@ -12,8 +12,6 @@ import {
   selector: 'alg-language-mismatch',
   templateUrl: './language-mismatch.component.html',
   styleUrls: [ './language-mismatch.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: true,
 })
 export class LanguageMismatchComponent {
   private localeService = inject(LocaleService);

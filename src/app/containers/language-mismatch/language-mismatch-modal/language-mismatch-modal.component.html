@@ -2,7 +2,7 @@
   @if (currentLanguage) {
     @let languageMismatch = params();
 
-    @if (updating) {
+    @if (updating()) {
       <div class="spinner-overlay">
         <alg-loading></alg-loading>
       </div>
