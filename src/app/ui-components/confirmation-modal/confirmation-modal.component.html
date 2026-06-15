@@ -4,7 +4,7 @@
       <button class="secondary" alg-button-icon icon="ph ph-x" (click)="dialogRef.close()"></button>
     </div>
   }
-  <div class="body" [ngClass]="{ 'without-close-padding': !data().allowToClose }">
+  <div class="body" [class.without-close-padding]="!data().allowToClose">
     @if (data().title; as title) {
       <div class="title alg-h4">{{ title }}</div>
     }

@@ -1,6 +1,5 @@
-import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-import { NgClass } from '@angular/common';
 
 export interface SortEvent {
   field: string,
@@ -11,8 +10,7 @@ export interface SortEvent {
   selector: 'th[alg-table-sort-header]',
   templateUrl: './table-sort-header.component.html',
   styleUrls: [ './table-sort-header.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ ButtonIconComponent, NgClass ]
+  imports: [ ButtonIconComponent ]
 })
 export class TableSortHeaderComponent {
   sortField = input.required<string>({ alias: 'alg-table-sort-header' });

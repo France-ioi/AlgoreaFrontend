@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskDirective } from '../mask/mask.directive';
 import { isString } from 'src/app/utils/type-checkers';
@@ -14,7 +14,6 @@ import { isString } from 'src/app/utils/type-checkers';
       multi: true,
     },
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     FormsModule,
     MaskDirective,

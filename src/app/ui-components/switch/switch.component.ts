@@ -1,4 +1,4 @@
-import { Component, forwardRef, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, forwardRef, output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 /**
@@ -22,7 +22,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
       multi: true,
     }
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ FormsModule ]
 })
 export class SwitchComponent implements ControlValueAccessor {

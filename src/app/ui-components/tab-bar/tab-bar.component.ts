@@ -1,6 +1,6 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
-  input, OnDestroy, ViewChild, inject,
+  AfterViewInit, Component, ElementRef,
+  input, OnDestroy, inject, signal, viewChild,
 } from '@angular/core';
 import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
@@ -14,7 +14,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
   styleUrls: [ './tab-bar.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '(window:resize)': 'resize()',
@@ -24,13 +23,12 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   private tabService = inject(TabService);
   private elementRef = inject<ElementRef<HTMLDivElement>>(ElementRef);
-  private cd = inject(ChangeDetectorRef);
 
-  @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
+  scrollbarRef = viewChild(NgScrollbar);
   styleClass = input<string>();
 
-  showPrevButton = false;
-  showNextButton = false;
+  showPrevButton = signal(false);
+  showNextButton = signal(false);
 
   tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
     map(([ tabs, active ]) => tabs.map(tab => ({
@@ -53,12 +51,13 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    if (!this.scrollbarRef) return;
+    const scrollbar = this.scrollbarRef();
+    if (!scrollbar) return;
     this.resizeObserver.observe(this.elementRef.nativeElement);
     this.subscriptions.add(
       merge(
         this.resizeEvent.asObservable(),
-        fromEvent(this.scrollbarRef.nativeElement, 'scroll'),
+        fromEvent(scrollbar.nativeElement, 'scroll'),
         this.tabs$,
       ).pipe(
         debounceTime(50),
@@ -79,31 +78,33 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   }
 
   handleArrows(): void {
-    if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = this.scrollbarRef.nativeElement.scrollLeft;
-    const scrollWidth = this.scrollbarRef.nativeElement.scrollWidth;
-    const clientWidth = this.scrollbarRef.nativeElement.clientWidth;
+    const scrollbar = this.scrollbarRef();
+    if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
+    const scrollLeft = scrollbar.nativeElement.scrollLeft;
+    const scrollWidth = scrollbar.nativeElement.scrollWidth;
+    const clientWidth = scrollbar.nativeElement.clientWidth;
     const gap = 5;
-    this.showPrevButton = clientWidth !== Math.round(scrollWidth) && scrollLeft > gap;
-    this.showNextButton = clientWidth !== Math.round(scrollWidth)
-      && (scrollLeft + clientWidth) < (Math.round(scrollWidth) - gap);
-    this.cd.detectChanges();
+    this.showPrevButton.set(clientWidth !== Math.round(scrollWidth) && scrollLeft > gap);
+    this.showNextButton.set(clientWidth !== Math.round(scrollWidth)
+      && (scrollLeft + clientWidth) < (Math.round(scrollWidth) - gap));
   }
 
   onPrev(): void {
-    if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = this.scrollbarRef.nativeElement.scrollLeft;
-    const clientWidth = this.scrollbarRef.nativeElement.clientWidth;
-    void this.scrollbarRef.scrollTo({
+    const scrollbar = this.scrollbarRef();
+    if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
+    const scrollLeft = scrollbar.nativeElement.scrollLeft;
+    const clientWidth = scrollbar.nativeElement.clientWidth;
+    void scrollbar.scrollTo({
       left: scrollLeft - (clientWidth / 2),
     });
   }
 
   onNext(): void {
-    if (!this.scrollbarRef) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = this.scrollbarRef.nativeElement.scrollLeft;
-    const clientWidth = this.scrollbarRef.nativeElement.clientWidth;
-    void this.scrollbarRef.scrollTo({
+    const scrollbar = this.scrollbarRef();
+    if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
+    const scrollLeft = scrollbar.nativeElement.scrollLeft;
+    const clientWidth = scrollbar.nativeElement.clientWidth;
+    void scrollbar.scrollTo({
       left: scrollLeft + (clientWidth / 2),
     });
   }

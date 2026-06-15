@@ -1,11 +1,10 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 
 @Component({
   selector: 'alg-modal',
   templateUrl: './modal.component.html',
   styleUrls: [ './modal.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ButtonIconComponent,
   ]
