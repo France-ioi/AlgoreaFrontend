@@ -1,3 +1,5 @@
+import { deployUrlAssetPath } from 'src/app/utils/deploy-url';
+
 export interface DeviceProxyPlatformApi {
   deviceProxy(
     category: string,
@@ -11,7 +13,7 @@ export interface DeviceProxyPlatformApi {
 
 declare global {
   interface Window {
-    // UMD global from scripts/device-proxy-platform.js (lazy-loaded)
+    // UMD global from assets/scripts/device-proxy-platform.js (lazy-loaded)
     // eslint-disable-next-line @typescript-eslint/naming-convention
     DeviceProxyPlatform?: DeviceProxyPlatformApi,
     task?: {
@@ -26,7 +28,9 @@ declare global {
   }
 }
 
-const DEVICE_PROXY_SCRIPT_PATH = 'scripts/device-proxy-platform.js';
+function deviceProxyScriptPath(): string {
+  return deployUrlAssetPath('scripts/device-proxy-platform.js');
+}
 
 let loadPromise: Promise<void> | null = null;
 
@@ -37,7 +41,7 @@ export function ensureDeviceProxyPlatformLoaded(): Promise<void> {
 
   loadPromise = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = DEVICE_PROXY_SCRIPT_PATH;
+    script.src = deviceProxyScriptPath();
     script.async = true;
     script.onload = (): void => {
       if (window.DeviceProxyPlatform) resolve();

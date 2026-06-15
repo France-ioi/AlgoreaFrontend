@@ -57,7 +57,7 @@
               {
                 "glob": "device-proxy-platform.js",
                 "input": "node_modules/bebras-device-proxy/dist/",
-                "output": "/scripts/"
+                "output": "/assets/scripts/"
               }
             ],
             "styles": [
@@ -286,7 +286,7 @@
               {
                 "glob": "device-proxy-platform.js",
                 "input": "node_modules/bebras-device-proxy/dist/",
-                "output": "/scripts/"
+                "output": "/assets/scripts/"
               }
             ],
             "styles": [
