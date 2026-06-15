@@ -33,15 +33,6 @@ export function allowsViewingContent(p: ItemPermWithView): boolean {
   return [ P.Content, P.ContentWithDescendants, P.Solution ].includes(p.canView);
 }
 
-/**
- * Permission required for viewing content + children (under propagation conditions) + view item solution
- * Note that users are also allowed to view solution if they have validated the item
- * (more info in devdoc)
- */
-export function allowsViewingSolution(p: ItemPermWithView): boolean {
-  return p.canView === P.Solution;
-}
-
 // ********************************************
 // Shortcut/helper functions on items directly
 // ********************************************
@@ -52,10 +43,6 @@ export function canCurrentUserViewInfo(i: ItemWithViewPerm): boolean {
 
 export function canCurrentUserViewContent(i: ItemWithViewPerm): boolean {
   return allowsViewingContent(i.permissions);
-}
-
-export function canCurrentUserViewSolution(i: ItemWithViewPerm, result?: { validated: boolean }): boolean {
-  return allowsViewingSolution(i.permissions) || (canCurrentUserViewContent(i) && !!result?.validated);
 }
 
 // ********************************************

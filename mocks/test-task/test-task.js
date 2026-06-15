@@ -12,6 +12,9 @@
     gradeDelay: Number(params.get('gradeDelay') || '0'),
     failGrade: params.get('failGrade') === '1',
     fixedScore: params.get('score'),
+    // when set, the 'solution' view is hidden until the task receives a token update *after* being loaded
+    // (simulates a task whose token grants solution access only once the item has been validated)
+    solutionOnTokenUpdate: params.get('solutionOnTokenUpdate') === '1',
   };
 
   var calls = [];
@@ -21,6 +24,8 @@
     token: '',
     shownViews: {},
     loaded: false,
+    // solution is granted up-front unless the scenario defers it to a post-load token update
+    solutionGranted: !config.solutionOnTokenUpdate,
   };
 
   var statusEl = document.getElementById('status');
@@ -29,16 +34,22 @@
   var stateInput = document.getElementById('state-input');
   var lastTokenEl = document.getElementById('last-token');
   var shownViewsEl = document.getElementById('shown-views');
+  var solutionGrantedEl = document.getElementById('solution-granted');
   var loadedMarker = document.getElementById('loaded-marker');
 
-  var views = {
+  var baseViews = {
     task: { includes: ['editor'] },
     editor: {},
-    solution: {},
     hints: {},
     grader: {},
     metadata: {},
   };
+
+  function getCurrentViews() {
+    var currentViews = Object.assign({}, baseViews);
+    if (state.solutionGranted) currentViews.solution = {};
+    return currentViews;
+  }
 
   function logCall(method, callParams) {
     var entry = { method: method, params: callParams, timestamp: Date.now() };
@@ -58,6 +69,7 @@
       token: state.token,
       shownViews: state.shownViews,
       loaded: state.loaded,
+      solutionGranted: state.solutionGranted,
     };
   }
 
@@ -66,6 +78,7 @@
     stateInput.value = state.taskState;
     lastTokenEl.textContent = state.token || '—';
     shownViewsEl.textContent = Object.keys(state.shownViews).length ? JSON.stringify(state.shownViews) : '—';
+    if (solutionGrantedEl) solutionGrantedEl.textContent = state.solutionGranted ? 'yes' : 'no';
   }
 
   function parseGradeScore(answer) {
@@ -136,6 +149,9 @@
   chan.bind('task.updateToken', function (trans, token) {
     logCall('task.updateToken', token);
     state.token = String(token);
+    // a token received after the task is loaded (i.e. not the initial load token) may grant new permissions,
+    // such as access to the solution once the item has been validated
+    if (config.solutionOnTokenUpdate && state.loaded) state.solutionGranted = true;
     syncInputsFromState();
     return delayedComplete(trans, true, 0);
   });
@@ -179,7 +195,7 @@
 
   chan.bind('task.getViews', function () {
     logCall('task.getViews', []);
-    return views;
+    return getCurrentViews();
   });
 
   chan.bind('task.showViews', function (trans, shown) {
@@ -350,5 +366,6 @@
     window.testTaskState = getPublicState();
   });
 
+  syncInputsFromState();
   statusEl.textContent = 'Waiting for platform…';
 })();

@@ -1,5 +1,5 @@
 import { Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
-import { EMPTY, fromEvent, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
+import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
   delayWhen,
@@ -7,11 +7,15 @@ import {
   filter,
   map,
   pairwise,
+  retry,
   shareReplay,
+  skip,
   switchMap,
+  take,
   takeUntil,
   tap,
   timeout,
+  withLatestFrom,
 } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
@@ -56,6 +60,9 @@ export class ItemTaskInitService implements OnDestroy {
   private destroyed$ = new Subject<void>();
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
+  // forces `taskToken$` to re-generate a token even when the generation strategy is unchanged (e.g. after a validating
+  // grade, so that the new token grants solution access)
+  private refreshToken$ = new Subject<void>();
 
   readonly config$ = this.configFromItem$.asObservable();
   readonly iframe$ = this.configFromIframe$.pipe(map(config => config.iframe));
@@ -75,8 +82,8 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1),
   );
 
-  // task token generation (possibly after some delay) (may fail!)
-  readonly taskToken$: Observable<TaskToken> = this.config$.pipe(
+  // generation strategy, recomputed on config changes only
+  private tokenStrategy$ = this.config$.pipe(
     // build strategy separately from switchMap to prevent cancellation of the request
     map(({ readOnly, initialAnswer, attemptId, route }) => {
       if (readOnly) {
@@ -92,17 +99,33 @@ export class ItemTaskInitService implements OnDestroy {
       return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
     }),
     distinctUntilChanged((prev, cur) => prev.strategy === cur.strategy),
-    switchMap(s => {
-      if (s.strategy === 'answerToken') return this.taskTokenService.generateForAnswer(s.answerId);
-      if (s.strategy === 'regularToken') return this.taskTokenService.generate(s.itemId, s.attemptId);
-      return EMPTY; // s.strategy === 'wait'
+  );
+
+  // task token generation (possibly after some delay) (may fail!)
+  // re-emits a freshly generated token whenever the strategy changes or `refreshToken()` is called. Each emission is
+  // tagged with whether it was triggered by a refresh (vs a strategy change) so that ONLY refresh-triggered generations
+  // swallow errors — using which source emitted (not a sticky combineLatest flag), so a strategy change after a refresh
+  // still propagates its errors.
+  readonly taskToken$: Observable<TaskToken> = merge(
+    this.tokenStrategy$.pipe(map(strategy => ({ strategy, isRefresh: false }))),
+    this.refreshToken$.pipe(withLatestFrom(this.tokenStrategy$), map(([ , strategy ]) => ({ strategy, isRefresh: true }))),
+  ).pipe(
+    switchMap(({ strategy: s, isRefresh }) => {
+      let generate$: Observable<TaskToken> = EMPTY; // s.strategy === 'wait'
+      if (s.strategy === 'answerToken') generate$ = this.taskTokenService.generateForAnswer(s.answerId);
+      if (s.strategy === 'regularToken') generate$ = this.taskTokenService.generate(s.itemId, s.attemptId);
+      // A refresh failure must NOT error `taskToken$`: it is a shared stream also consumed by `submitAnswer()`
+      // (answer-token + save-grade), so erroring it would break every later submission. Keep the previous token
+      // instead. Initial-load / strategy-change generation keeps propagating errors (handled by load timeout / consumers).
+      return isRefresh ? generate$.pipe(retry(2), catchError(() => EMPTY)) : generate$;
     }),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
 
-  // the task (i.e., a client to the task in the iframe) which has been loaded (may fail!)
-  readonly loadedTask$ = this.task$.pipe(
+  // the loaded task together with whether it consumes task tokens (kept internally so `tokenUpdatedOnTask$` can gate on
+  // it without re-fetching the metadata). May fail!
+  private loadedTaskWithTokenUse$ = this.task$.pipe(
     switchMap(task => task.getMetaData().pipe(map(metadata => {
       const negotiated = negotiateApiVersion(metadata.minApiVersion, metadata.apiVersion);
       if (negotiated === null) throw new IncompatibleTaskApiVersionError();
@@ -110,12 +133,36 @@ export class ItemTaskInitService implements OnDestroy {
       return { usesTokens: metadata.usesTokens ?? true, task };
     }))),
     switchMap(({ usesTokens, task }) => (usesTokens ? this.taskToken$.pipe(
+      take(1), // only the first token is used to load the task; later tokens are pushed via `tokenUpdatedOnTask$`
       switchMap(token => task.updateToken(token)),
-      map(() => task)
-    ): of(task))),
-    switchMap(task => task.load(
+      map(() => ({ usesTokens, task })),
+    ): of({ usesTokens, task }))),
+    switchMap(({ usesTokens, task }) => task.load(
       { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true }
-    ).pipe(map(() => task))),
+    ).pipe(map(() => ({ usesTokens, task })))),
+    takeUntil(this.destroyed$),
+    shareReplay(1),
+  );
+
+  // the task (i.e., a client to the task in the iframe) which has been loaded (may fail!)
+  // no shareReplay here: the source is already multicast+replayed; this is just a pure projection of it
+  readonly loadedTask$ = this.loadedTaskWithTokenUse$.pipe(map(({ task }) => task));
+
+  // pushes tokens generated after the initial load to the task (e.g. after a refresh), so the task can re-evaluate what
+  // it is allowed to show (such as the solution view). Emits the task each time a new token has been applied.
+  // No-op for token-less tasks: they ignore tokens and pushing one could error their (unimplemented) `updateToken`.
+  readonly tokenUpdatedOnTask$: Observable<Task> = this.loadedTaskWithTokenUse$.pipe(
+    // INVARIANT: `refreshToken()` is only ever called after the task is loaded (its single caller, submitAnswer(),
+    // structurally requires a loaded task). This lets `skip(1)` reliably drop the load-time token replayed by
+    // `taskToken$` (shareReplay(1)). If a future caller refreshes *before* load completes, that token would be the
+    // value replayed here and `skip(1)` would silently discard the refresh — keep the invariant or revisit this.
+    switchMap(({ usesTokens, task }) => (usesTokens ? this.taskToken$.pipe(
+      skip(1), // skip the token already applied during load (token-less tasks never reach this branch)
+      switchMap(token => task.updateToken(token).pipe(
+        map(() => task),
+        catchError(() => EMPTY), // a single failed push must not kill future view re-queries
+      )),
+    ) : EMPTY)),
     takeUntil(this.destroyed$),
     shareReplay(1),
   );
@@ -152,6 +199,8 @@ export class ItemTaskInitService implements OnDestroy {
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
   tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY)).subscribe();
+  // keep the token pushed to the task even if no other consumer subscribes to `tokenUpdatedOnTask$`
+  tokenPushSubscription = this.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY)).subscribe();
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
@@ -160,8 +209,21 @@ export class ItemTaskInitService implements OnDestroy {
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
     this.guardSubscription.unsubscribe();
     this.tokenSubscription.unsubscribe();
+    this.tokenPushSubscription.unsubscribe();
+    this.refreshToken$.complete();
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  /**
+   * Request a fresh task token to be generated and pushed to the loaded task.
+   * Useful after an event that changes the user's permissions on the task (e.g. validating it grants solution access).
+   *
+   * MUST be called only after the task has been loaded (see the `skip(1)` invariant on `tokenUpdatedOnTask$`): a refresh
+   * triggered before load completes would be swallowed and silently lost.
+   */
+  refreshToken(): void {
+    this.refreshToken$.next();
   }
 
   configure(

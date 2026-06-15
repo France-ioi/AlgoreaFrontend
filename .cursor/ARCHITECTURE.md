@@ -393,6 +393,14 @@ Both messages are notifications, not RPC; the helper is ~30 lines and adds no ne
 
 Task API versioning is negotiated at load time via optional `apiVersion` / `minApiVersion` fields returned by `task.getMetaData()`. The platform supports versions 1–2 and picks the highest version in the overlapping range. When the negotiated version is ≥ 2, `Task.reloadAnswer()` dispatches to the v2 wire method `task.reloadAnswerWithOptions`, passing `idUserAnswer` when reloading a submitted answer so the task can fetch submission feedback from its own backend using the signed task token.
 
+#### Showing the solution tab right after validation
+
+Whether a task exposes its `solution` view is decided by the task itself, from the `bAccessSolutions` claim in its signed task token (the backend grants it once the user has validated the item). The platform no longer gates the solution tab in [item-tabs.ts](../src/app/items/item-tabs.ts) — the task is the source of truth. To make the tab appear immediately after a validating submission without a full reload:
+
+- [ItemTaskInitService](../src/app/items/services/item-task-init.service.ts) generates the task token via a `combineLatest` of the generation strategy and a `refreshToken$` subject, so `refreshToken()` re-generates a fresh token even when the strategy is unchanged. Only the **first** token is used for `task.load()` (`take(1)`); later tokens are pushed to the loaded task via `task.updateToken()` and surfaced on `tokenUpdatedOnTask$`. A refresh-path generation failure is swallowed (`retry`/`catchError`) so it never errors the shared `taskToken$` (also consumed by `submitAnswer()`); token-less tasks (`usesTokens: false`) are never pushed a token.
+- [ItemTaskAnswerService](../src/app/items/services/item-task-answer.service.ts) calls `refreshToken()` after a grade is saved when the backend's `save-grade` response reports `validated: true` and the result was not already validated (snapshotted before `patchScore` flips `validated`).
+- [ItemTaskViewsService](../src/app/items/services/item-task-views.service.ts) re-calls `task.getViews()` on each `tokenUpdatedOnTask$` emission, because tasks (e.g. codecast) refetch their content on `task.updateToken` but do not spontaneously re-advertise views. The refreshed view list flows through `tabsChange` → `ItemTabs.setTaskTabs`, and the tab bar recomputes.
+
 #### Test task for platform-task integration
 
 [mocks/test-task/](../mocks/test-task/) is a static jschannel task page used to exercise platform↔task flows without relying on external task content. It is served by the dev mock server (`http://localhost:3000/test-task/`) and never included in Angular production builds. E2E tests intercept the same files via Playwright (`e2e/items/task-platform-interaction.spec.ts`). Update it whenever the task API surface changes.
