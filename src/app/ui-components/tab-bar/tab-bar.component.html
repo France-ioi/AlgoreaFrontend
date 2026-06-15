@@ -1,5 +1,5 @@
 <div class="container">
-  @if (showPrevButton) {
+  @if (showPrevButton()) {
     <button
       class="size-s primary no-bg tab-arrow tab-prev prev-button"
       type="button"
@@ -23,7 +23,7 @@
       }
     </ul>
   </ng-scrollbar>
-  @if (showNextButton) {
+  @if (showNextButton()) {
     <button
       class="size-s primary no-bg tab-arrow tab-next next-button"
       type="button"
