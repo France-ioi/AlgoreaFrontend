@@ -1,12 +1,12 @@
 @if (state$ | async; as state) {
-  @if (itemData) {
+  @if (itemData(); as itemDataValue) {
     @if (state.isReady) {
-      @if (itemData.item.type === 'Skill') {
+      @if (itemDataValue.item.type === 'Skill') {
         <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Sub-skills</h2>
         <alg-item-children-edit-list
           type="skill"
-          [data]="skills"
-          [itemData]="itemData"
+          [data]="skills()"
+          [itemData]="itemDataValue"
           (childrenChanges)="onDataChange($event, 'skill')"
         ></alg-item-children-edit-list>
 
@@ -14,14 +14,14 @@
           Activities to learn or reinforce this skill
         </h2>
         <alg-item-children-edit-list
-          [data]="activities"
-          [itemData]="itemData"
+          [data]="activities()"
+          [itemData]="itemDataValue"
           (childrenChanges)="onDataChange($event)"
         ></alg-item-children-edit-list>
       } @else {
         <alg-item-children-edit-list
-          [data]="activities"
-          [itemData]="itemData"
+          [data]="activities()"
+          [itemData]="itemDataValue"
           (childrenChanges)="onDataChange($event)"
         ></alg-item-children-edit-list>
       }
@@ -39,4 +39,3 @@
     }
   }
 }
-

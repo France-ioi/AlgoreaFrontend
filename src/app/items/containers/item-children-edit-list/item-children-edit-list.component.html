@@ -10,15 +10,15 @@
     </div>
   </div>
 
-  @if (data.length > 0) {
+  @if (data().length > 0) {
     <div class="alg-table-horizontal-scroll">
       <table
         class="alg-table-v2 editable"
         cdk-table
-        [dataSource]="data"
+        [dataSource]="data()"
         cdkDropList
         (cdkDropListDropped)="orderChanged($event)"
-        [cdkDropListData]="data"
+        [cdkDropListData]="data()"
         [multiTemplateDataRows]="true"
       >
         <ng-container cdkColumnDef="reorder">
@@ -31,7 +31,7 @@
         <ng-container cdkColumnDef="checkbox">
           <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef></th>
           <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
-            @let isSelected = !!(selectedRows | findInArray: rowData);
+            @let isSelected = !!(selectedRows() | findInArray: rowData);
             <input type="checkbox" [checked]="isSelected" (change)="onSelect(rowData)" />
           </td>
         </ng-container>
@@ -43,8 +43,8 @@
               data-testid="edit-score-weight"
               [style.width.rem]="3"
               inputStyleClass="size-s"
-              [(ngModel)]="rowData.scoreWeight"
-              (keyup)="onScoreWeightChange()"
+              [ngModel]="rowData.scoreWeight"
+              (ngModelChange)="onScoreWeightChange(rowData, $event)"
               [min]="0"
               [max]="100"
             ></alg-input-number>
@@ -61,11 +61,11 @@
         <ng-container cdkColumnDef="title">
           <th class="alg-table-th alg-flex-1" cdk-header-cell *cdkHeaderCellDef></th>
           <td class="alg-table-td alg-flex-1" cdk-cell *cdkCellDef="let rowData">
-            @if (itemData && itemData.currentResult?.attemptId; as attemptId) {
+            @if (itemData().currentResult?.attemptId; as attemptId) {
               <a
                 class="main alg-link"
-                [ngClass]="{'disabled': !rowData.id}"
-                [routerLink]="rowData | itemRoute: { path: itemData.route.path.concat([ itemData.item.id ]) } |
+                [class.disabled]="!rowData.id"
+                [routerLink]="rowData | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]) } |
                 with: (rowData.result?.attemptId ? { attemptId : rowData.result.attemptId } : { parentAttemptId: attemptId }) |
                 url: ['edit-children']"
               >
@@ -130,7 +130,7 @@
             class="alg-table-footer-checkbox"
             id="select-all-checkbox"
             (change)="onSelectAll()"
-            [checked]="data.length === selectedRows.length"
+            [checked]="data().length === selectedRows().length"
           />
           <span class="alg-table-footer-select-all" i18n>
             Select all
@@ -142,7 +142,7 @@
         type="button"
         icon="ph-duotone ph-trash"
         (click)="onRemove()"
-        [disabled]="selectedRows.length === 0"
+        [disabled]="selectedRows().length === 0"
         alg-button-icon
       ></button>
     </div>
@@ -157,21 +157,21 @@
 
 <div class="add-item-container">
   <alg-add-item
-    [type]="type"
-    [addedItemIds]="addedItemIds"
+    [type]="type()"
+    [addedItemIds]="addedItemIds()"
     (contentAdded)="addChild($event)"
   ></alg-add-item>
 </div>
 
 <ng-template #menu>
-  @if (propagationEditItemIdx !== undefined) {
-    @let childData = data[propagationEditItemIdx];
+  @if (propagationEditItemIdx() !== undefined) {
+    @let childData = data()[propagationEditItemIdx()!];
     @if (childData) {
       <div class="menu" cdkMenu>
         <alg-propagation-edit-menu
           [childData]="childData"
-          (clickEvent)="onContentViewPropagationChanged($event, propagationEditItemIdx)"
-          (openAdvancedConfigurationDialogEvent)="openAdvancedPermPropagationConfigurationDialog(childData, propagationEditItemIdx)"
+          (clickEvent)="onContentViewPropagationChanged($event, propagationEditItemIdx()!)"
+          (openAdvancedConfigurationDialogEvent)="openAdvancedPermPropagationConfigurationDialog(childData, propagationEditItemIdx()!)"
         ></alg-propagation-edit-menu>
       </div>
     }
