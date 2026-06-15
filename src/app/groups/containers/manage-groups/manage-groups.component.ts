@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { delay } from 'rxjs/operators';
 import { AsyncPipe } from '@angular/common';
@@ -15,7 +15,6 @@ import { managedGroupsPage } from 'src/app/models/routing/group-route';
   selector: 'alg-manage-groups',
   templateUrl: './manage-groups.component.html',
   styleUrls: [ './manage-groups.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AsyncPipe,
     AddGroupComponent,

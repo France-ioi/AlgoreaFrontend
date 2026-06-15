@@ -1,8 +1,7 @@
-import { Component, OnInit, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-import { NgClass } from '@angular/common';
 import { GroupManagershipLevel, groupManagershipLevelEnum as l } from '../../models/group-management';
 import {
   CdkCell,
@@ -23,11 +22,9 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
   selector: 'alg-managed-group-list',
   templateUrl: './managed-group-list.component.html',
   styleUrls: [ './managed-group-list.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ErrorComponent,
     RouterLink,
-    NgClass,
     CdkTable,
     CdkRow,
     CdkRowDef,
@@ -45,9 +42,9 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 export class ManagedGroupListComponent implements OnInit {
   private managedGroupService = inject(ManagedGroupsService);
 
-  state: 'error' | 'ready' | 'fetching' = 'fetching';
+  state = signal<'error' | 'ready' | 'fetching'>('fetching');
 
-  data: Group[] = [];
+  data = signal<Group[]>([]);
 
   displayedColumns = signal([ 'name', 'type', 'canManage', 'canWatchMembers', 'canGrantGroupAccess' ]);
 
@@ -56,13 +53,13 @@ export class ManagedGroupListComponent implements OnInit {
   }
 
   fetchData(): void {
-    this.state = 'fetching';
+    this.state.set('fetching');
     this.managedGroupService.getManagedGroups().subscribe({
       next: data => {
-        this.state = 'ready';
-        this.data = data;
+        this.state.set('ready');
+        this.data.set(data);
       },
-      error: _err => this.state = 'error',
+      error: _err => this.state.set('error'),
     });
   }
 

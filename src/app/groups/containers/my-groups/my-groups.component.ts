@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { myGroupsInfo } from 'src/app/models/content/group-info';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { JoinedGroupListComponent } from '../joined-group-list/joined-group-list.component';
@@ -16,7 +16,6 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   selector: 'alg-my-groups',
   templateUrl: './my-groups.component.html',
   styleUrls: [ './my-groups.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     UserGroupInvitationsComponent,
     JoinedGroupListComponent,
@@ -30,7 +29,7 @@ export class MyGroupsComponent implements OnDestroy, OnInit {
   private currentContent = inject(CurrentContentService);
   private sessionService = inject(UserSessionService);
 
-  @ViewChild('joinedGroupList') joinedGroupList?: JoinedGroupListComponent;
+  joinedGroupList = viewChild('joinedGroupList', { read: JoinedGroupListComponent });
 
   currentUser$ = this.sessionService.userProfile$.pipe(delay(0));
 
@@ -47,7 +46,7 @@ export class MyGroupsComponent implements OnDestroy, OnInit {
   }
 
   onGroupJoined(): void {
-    this.joinedGroupList?.refresh();
+    this.joinedGroupList()?.refresh();
     this.currentContent.forceNavMenuReload();
   }
 

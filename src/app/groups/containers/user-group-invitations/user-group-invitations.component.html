@@ -43,7 +43,7 @@
                   type="button"
                   icon="ph-bold ph-check"
                   (click)="openJoinGroupConfirmationDialog(rowData)"
-                  [disabled]="processing"
+                  [disabled]="processing()"
                 ></button>
                 <button
                   class="stroke size-l"
@@ -52,7 +52,7 @@
                   type="button"
                   icon="ph-bold ph-x"
                   (click)="onReject(rowData)"
-                  [disabled]="processing"
+                  [disabled]="processing()"
                 ></button>
               </div>
             </td>

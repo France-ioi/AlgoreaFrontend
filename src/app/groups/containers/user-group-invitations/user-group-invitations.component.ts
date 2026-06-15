@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnDestroy, Output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, output, signal } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
@@ -36,7 +36,6 @@ import { Dialog } from '@angular/cdk/dialog';
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
   styleUrls: [ './user-group-invitations.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -64,11 +63,11 @@ export class UserGroupInvitationsComponent implements OnDestroy {
   private currentContentService = inject(CurrentContentService);
   private processGroupInvitationService = inject(ProcessGroupInvitationService);
 
-  @Output() groupJoined = new EventEmitter<void>();
+  groupJoined = output<void>();
 
   private dialogService = inject(Dialog);
 
-  processing = false;
+  processing = signal(false);
 
   private sortSubject = new BehaviorSubject<string[]>([]);
   state$ = this.sortSubject.pipe(
@@ -112,7 +111,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
       switchMap(response => (response?.confirmed ? this.accept(groupInvitation.group.id, data.params) : EMPTY))
     ).subscribe({
       next: result => {
-        this.processing = false;
+        this.processing.set(false);
         if (!result.changed) {
           this.actionFeedbackService.error($localize`Unable to accept invitation to group "${ groupInvitation.group.name }"`);
           return;
@@ -122,7 +121,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
         this.groupJoined.emit();
       },
       error: err => {
-        this.processing = false;
+        this.processing.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
@@ -130,15 +129,15 @@ export class UserGroupInvitationsComponent implements OnDestroy {
   }
 
   accept(groupId: string, params: GroupApprovals): Observable<{ changed: boolean }> {
-    this.processing = true;
+    this.processing.set(true);
     return this.processGroupInvitationService.accept(groupId, mapGroupApprovalParamsToValues(params));
   }
 
   onReject(groupInvitation: GroupInvitation): void {
-    this.processing = true;
+    this.processing.set(true);
     this.processGroupInvitationService.reject(groupInvitation.group.id).subscribe({
       next: result => {
-        this.processing = false;
+        this.processing.set(false);
         if (!result.changed) {
           this.actionFeedbackService.error($localize`Unable to reject invitation to group "${ groupInvitation.group.name }"`);
           return;
@@ -148,7 +147,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
         this.currentContentService.forceNavMenuReload();
       },
       error: err => {
-        this.processing = false;
+        this.processing.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       },
