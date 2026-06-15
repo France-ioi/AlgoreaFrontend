@@ -31,18 +31,13 @@ const logsResponseJSON = [
   },
 ];
 
-test('checks path suggestion for search result in left menu', async ({ page, showOverflow }) => {
+test('checks path suggestion for search result in left menu', async ({ page, showOverflow, leftMenu }) => {
   await initAsTesterUser(page);
   await page.goto('a/home;pa=0');
 
   await test.step('search for content', async () => {
-    await page.locator('[data-cy="main-menu-search-btn"]').click();
-    const leftMenuSearchLocator = page.locator('alg-left-menu-search');
-    await expect.soft(leftMenuSearchLocator).toBeVisible();
-    await leftMenuSearchLocator.getByRole('textbox').fill('Task');
-    const leftMenuLoadingLocator = page.locator('alg-left-tabbed-content').locator('alg-loading');
-    await expect.soft(leftMenuLoadingLocator).toBeVisible();
-    await expect.soft(leftMenuLoadingLocator).not.toBeVisible();
+    await leftMenu.openSearch();
+    await leftMenu.searchFor('Task');
   });
 
   await test.step('checks overflow is visible on hover', async () => {

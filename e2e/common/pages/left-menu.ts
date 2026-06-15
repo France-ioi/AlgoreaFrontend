@@ -222,9 +222,8 @@ export class LeftMenu {
 
   async searchFor(query: string): Promise<void> {
     await this.searchPanelLocator.getByRole('textbox').fill(query);
-    const loadingLocator = this.leftPanelLocator.locator('alg-left-tabbed-content alg-loading');
-    await expect(loadingLocator).toBeVisible();
-    await expect(loadingLocator).not.toBeVisible();
+    // Wait for results rather than the transient loading indicator, which can finish before Playwright observes it.
+    await this.checksHasSearchResults();
   }
 
   async checksHasSearchResults(): Promise<void> {
