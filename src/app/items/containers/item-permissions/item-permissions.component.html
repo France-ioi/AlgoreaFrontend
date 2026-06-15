@@ -1,167 +1,167 @@
-@if (observedGroup) {
-  @if (itemData) {
-    <div class="header" (click)="collapsed = !collapsed">
-      <i class="header-icon ph-duotone ph-lock-open"></i>
-      <div class="header-title">
-        @if (watchedGroupPermissions) {
-          <ng-container label-section i18n>
-            «{{ observedGroup.name }}»
-            {(watchedGroupPermissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
-            access this
-            {itemData.item.type, select, Skill {skill} other {activity}}
-          </ng-container>
-        } @else {
-          <ng-container i18n>
-            You cannot watch other users progress on this {itemData.item.type, select, Skill {skill} other {activity}}
-          </ng-container>
-        }
-      </div>
-      <i class="header-arrow-icon ph" [ngClass]="{ 'ph-caret-down': collapsed, 'ph-caret-up': !collapsed }"></i>
-    </div>
+<div class="header" (click)="collapsed.set(!collapsed())">
+  <i class="header-icon ph-duotone ph-lock-open"></i>
+  <div class="header-title">
+    @if (watchedGroupPermissions(); as permissions) {
+      <ng-container label-section i18n>
+        «{{ observedGroup().name }}»
+        {(permissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
+        access this
+        {itemData().item.type, select, Skill {skill} other {activity}}
+      </ng-container>
+    } @else {
+      <ng-container i18n>
+        You cannot watch other users progress on this {itemData().item.type, select, Skill {skill} other {activity}}
+      </ng-container>
+    }
+  </div>
+  <i
+    class="header-arrow-icon ph"
+    [class.ph-caret-down]="collapsed()"
+    [class.ph-caret-up]="!collapsed()"
+  ></i>
+</div>
 
-    @if (!collapsed) {
-      <div class="content">
-        @if (watchedGroupPermissions) {
-          @if (!(watchedGroupPermissions | allowsViewingInfo)) {
-            <div class="no-access" i18n>
-              This {(observedGroup.route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
-            </div>
-          }
-          @if ((watchedGroupPermissions | allowsViewingInfo) && !(watchedGroupPermissions | allowsViewingContent)) {
-            <div class="no-access" i18n>
-              This {(observedGroup.route | isUser).toString(), select, true {user} other {group}}
-              can view the title, subtitle and description of this {itemData.item.type, select, Skill {skill} other {activity}}
-              but may not be able to {itemData.item.type, select, Task {view its content} other {view what it contains}}.
-            </div>
-          }
-        } @else {
-          <div class="no-access" i18n>
-            You cannot watch other users' activity on this content
-          </div>
-        }
-        @if (watchedGroupPermissions) {
-          @if (watchedGroupPermissions.isOwner) {
-            <div class="permission-indicator-section">
-              <alg-section-header
-                i18n-caption caption="Is owner"
-                icon="ph-duotone ph-user"
-                theme="warning"
-              >
-                <ng-template #content>
-                  <span class="alg-text-small alg-text-secondary" i18n>Yes</span>
-                </ng-template>
-              </alg-section-header>
-            </div>
-          } @else {
-            <div class="permission-indicator-section">
-              <alg-section-header
-                i18n-caption caption="Can view"
-                icon="ph-duotone ph-eyeglasses"
-                theme="warning"
-              >
-                <ng-template #content>
-                  <alg-progress-select
-                    [collapsed]="true"
-                    [(ngModel)]="watchedGroupPermissions.canView"
-                    [values]="canViewValues"
-                    theme="warning"
-                  >
-                    @if (observedGroup.currentUserCanGrantAccess && (itemData.item.permissions | allowsGrantingContentView) && !(watchedGroupPermissions | allowsViewingInfo)) {
-                      <span header-section>
-                        <button
-                          class="size-s stroke accent-dark grant-access-button"
-                          type="button"
-                          icon="ph ph-plus"
-                          (click)="grantViewContentAccess()"
-                          [disabled]="updateInProcess"
-                          alg-button
-                          i18n
-                        >Grant content access</button>
-                      </span>
-                    }
-                  </alg-progress-select>
-                </ng-template>
-              </alg-section-header>
-            </div>
-            @if (watchedGroupPermissions | allowsViewingInfo) {
-              <div class="permission-indicator-section">
-                <alg-section-header
-                  i18n-caption caption="Can grant view"
-                  icon="ph-duotone ph-key"
-                  theme="warning"
-                >
-                  <ng-template #content>
-                    <alg-progress-select
-                      [collapsed]="true"
-                      [(ngModel)]="watchedGroupPermissions.canGrantView"
-                      [values]="canGrantViewValues"
-                      theme="warning"
-                    ></alg-progress-select>
-                  </ng-template>
-                </alg-section-header>
-              </div>
-            }
-            @if (watchedGroupPermissions | allowsViewingContent) {
-              <div class="permission-indicator-section">
-                <alg-section-header
-                  i18n-caption caption="Can watch"
-                  icon="ph-duotone ph-binoculars"
-                  theme="warning"
-                >
-                  <ng-template #content>
-                    <alg-progress-select
-                      [collapsed]="true"
-                      [(ngModel)]="watchedGroupPermissions.canWatch"
-                      [values]="canWatchValues"
-                      theme="warning"
-                    ></alg-progress-select>
-                  </ng-template>
-                </alg-section-header>
-              </div>
-              <div class="permission-indicator-section">
-                <alg-section-header
-                  i18n-caption caption="Can edit"
-                  icon="ph-duotone ph-pencil"
-                  theme="warning"
-                >
-                  <ng-template #content>
-                    <alg-progress-select
-                      [collapsed]="true"
-                      [(ngModel)]="watchedGroupPermissions.canEdit"
-                      [values]="canEditValues"
-                      theme="warning"
-                    ></alg-progress-select>
-                  </ng-template>
-                </alg-section-header>
-              </div>
-            }
-          }
-        }
-      </div>
-      <div class="footer">
-        @if (!(observedGroup.route | isUser)) {
-          <div class="footer-caption" i18n>
-            Note that some members or sub-groups of this group may have obtained additional access rights on this {itemData.item.type, select, Skill {skill} other {activity}}.
-          </div>
-        }
-        @if (itemData.item.permissions) {
-          <span
-            class="give-access-button"
-            [algTooltip]="lockEdit | i18nSelect : lockEditTooltipCaptions"
-            tooltipPosition="bottom"
-            [tooltipDisabled]="!lockEdit"
-          >
-            <button
-              alg-button
-              type="button"
-              class="only-caption accent-dark"
-              [disabled]="lockEdit"
-              (click)="openPermissionsDialog()"
-              i18n
-            >Edit permissions</button>
-          </span>
-        }
+@if (!collapsed()) {
+  <div class="content">
+    @if (watchedGroupPermissions(); as permissions) {
+      @if (!(permissions | allowsViewingInfo)) {
+        <div class="no-access" i18n>
+          This {(observedGroup().route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
+        </div>
+      }
+      @if ((permissions | allowsViewingInfo) && !(permissions | allowsViewingContent)) {
+        <div class="no-access" i18n>
+          This {(observedGroup().route | isUser).toString(), select, true {user} other {group}}
+          can view the title, subtitle and description of this {itemData().item.type, select, Skill {skill} other {activity}}
+          but may not be able to {itemData().item.type, select, Task {view its content} other {view what it contains}}.
+        </div>
+      }
+    } @else {
+      <div class="no-access" i18n>
+        You cannot watch other users' activity on this content
       </div>
     }
-  }
+    @if (watchedGroupPermissions(); as permissions) {
+      @if (permissions.isOwner) {
+        <div class="permission-indicator-section">
+          <alg-section-header
+            i18n-caption caption="Is owner"
+            icon="ph-duotone ph-user"
+            theme="warning"
+          >
+            <ng-template #content>
+              <span class="alg-text-small alg-text-secondary" i18n>Yes</span>
+            </ng-template>
+          </alg-section-header>
+        </div>
+      } @else {
+        <div class="permission-indicator-section">
+          <alg-section-header
+            i18n-caption caption="Can view"
+            icon="ph-duotone ph-eyeglasses"
+            theme="warning"
+          >
+            <ng-template #content>
+              <alg-progress-select
+                [collapsed]="true"
+                [ngModel]="permissions.canView"
+                [values]="canViewValues"
+                theme="warning"
+              >
+                @if (observedGroup().currentUserCanGrantAccess && (itemData().item.permissions | allowsGrantingContentView) && !(permissions | allowsViewingInfo)) {
+                  <span header-section>
+                    <button
+                      class="size-s stroke accent-dark grant-access-button"
+                      type="button"
+                      icon="ph ph-plus"
+                      (click)="grantViewContentAccess()"
+                      [disabled]="updateInProcess()"
+                      alg-button
+                      i18n
+                    >Grant content access</button>
+                  </span>
+                }
+              </alg-progress-select>
+            </ng-template>
+          </alg-section-header>
+        </div>
+        @if (permissions | allowsViewingInfo) {
+          <div class="permission-indicator-section">
+            <alg-section-header
+              i18n-caption caption="Can grant view"
+              icon="ph-duotone ph-key"
+              theme="warning"
+            >
+              <ng-template #content>
+                <alg-progress-select
+                  [collapsed]="true"
+                  [ngModel]="permissions.canGrantView"
+                  [values]="canGrantViewValues"
+                  theme="warning"
+                ></alg-progress-select>
+              </ng-template>
+            </alg-section-header>
+          </div>
+        }
+        @if (permissions | allowsViewingContent) {
+          <div class="permission-indicator-section">
+            <alg-section-header
+              i18n-caption caption="Can watch"
+              icon="ph-duotone ph-binoculars"
+              theme="warning"
+            >
+              <ng-template #content>
+                <alg-progress-select
+                  [collapsed]="true"
+                  [ngModel]="permissions.canWatch"
+                  [values]="canWatchValues"
+                  theme="warning"
+                ></alg-progress-select>
+              </ng-template>
+            </alg-section-header>
+          </div>
+          <div class="permission-indicator-section">
+            <alg-section-header
+              i18n-caption caption="Can edit"
+              icon="ph-duotone ph-pencil"
+              theme="warning"
+            >
+              <ng-template #content>
+                <alg-progress-select
+                  [collapsed]="true"
+                  [ngModel]="permissions.canEdit"
+                  [values]="canEditValues"
+                  theme="warning"
+                ></alg-progress-select>
+              </ng-template>
+            </alg-section-header>
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="footer">
+    @if (!(observedGroup().route | isUser)) {
+      <div class="footer-caption" i18n>
+        Note that some members or sub-groups of this group may have obtained additional access rights on this {itemData().item.type, select, Skill {skill} other {activity}}.
+      </div>
+    }
+    @if (itemData().item.permissions) {
+      <span
+        class="give-access-button"
+        [algTooltip]="lockEdit() | i18nSelect : lockEditTooltipCaptions"
+        tooltipPosition="bottom"
+        [tooltipDisabled]="!lockEdit()"
+      >
+        <button
+          alg-button
+          type="button"
+          class="only-caption accent-dark"
+          [disabled]="lockEdit()"
+          (click)="openPermissionsDialog()"
+          i18n
+        >Edit permissions</button>
+      </span>
+    }
+  </div>
 }
