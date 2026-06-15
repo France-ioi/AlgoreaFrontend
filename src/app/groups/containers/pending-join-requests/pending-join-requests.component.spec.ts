@@ -61,18 +61,17 @@ describe('PendingJoinRequestsComponent', () => {
     serviceResponder$ = new Subject<Map<string,any>[]>();
     fixture = TestBed.createComponent(PendingJoinRequestsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
     requestActionsService = TestBed.inject(RequestActionsService);
     getRequestsService = TestBed.inject(GetRequestsService);
     actionFeedbackService = TestBed.inject(ActionFeedbackService);
-    component.groupId = '99';
     spyOn(actionFeedbackService, 'success').and.callThrough();
     spyOn(actionFeedbackService, 'partial').and.callThrough();
     spyOn(actionFeedbackService, 'error').and.callThrough();
     spyOn(actionFeedbackService, 'unexpectedError').and.callThrough();
     spyOn(getRequestsService, 'getGroupPendingRequests').and.callThrough();
     spyOn(requestActionsService, 'processJoinRequests').and.callThrough();
-    component.ngOnChanges({});
+    fixture.componentRef.setInput('groupId', '99');
+    fixture.detectChanges();
   });
 
   afterEach(() => {
@@ -81,9 +80,9 @@ describe('PendingJoinRequestsComponent', () => {
 
   it('should load requests at init', () => {
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledWith('99', false, []);
-    expect(component.requests).toEqual(MOCK_RESPONSE);
-    expect(component.currentSort).toEqual([]);
-    expect(component.state).toEqual('ready');
+    expect(component.requests()).toEqual(MOCK_RESPONSE);
+    expect(component.currentSort()).toEqual([]);
+    expect(component.state()).toEqual('ready');
   });
 
   it('should, when sorting is changed, call the service with the appropriate attributes,', () => {
@@ -108,7 +107,7 @@ describe('PendingJoinRequestsComponent', () => {
     // step 1: select one and 'accept'
     component.onProcessRequests({ type: Action.Accept, data: [ MOCK_RESPONSE_2 ] });
 
-    expect(component.state).toEqual('processing');
+    expect(component.state()).toEqual('processing');
     expect(requestActionsService.processJoinRequests).toHaveBeenCalledWith(new Map([ [ '50', [ '12' ] ] ]), Action.Accept);
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
@@ -116,7 +115,7 @@ describe('PendingJoinRequestsComponent', () => {
     serviceResponder$.next([ new Map([ [ '12', 'success' ] ]) ]);
     serviceResponder$.complete();
 
-    expect(component.state).toEqual('ready');
+    expect(component.state()).toEqual('ready');
     expect(actionFeedbackService.success).toHaveBeenCalledTimes(1);
     expect(actionFeedbackService.success).toHaveBeenCalledWith('1 request(s) have been accepted');
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(2);
@@ -127,7 +126,7 @@ describe('PendingJoinRequestsComponent', () => {
     // step 1: select one and 'reject'
     component.onProcessRequests({ type: Action.Reject, data: [ MOCK_RESPONSE_2 ] });
 
-    expect(component.state).toEqual('processing');
+    expect(component.state()).toEqual('processing');
     expect(requestActionsService.processJoinRequests).toHaveBeenCalledWith(new Map([ [ '50', [ '12' ] ] ]), Action.Reject);
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(1); // the initial one
 
@@ -135,7 +134,7 @@ describe('PendingJoinRequestsComponent', () => {
     serviceResponder$.next([ new Map([ [ '12', 'success' ] ]) ]);
     serviceResponder$.complete();
 
-    expect(component.state).toEqual('ready');
+    expect(component.state()).toEqual('ready');
     expect(actionFeedbackService.success).toHaveBeenCalledTimes(1);
     expect(actionFeedbackService.success).toHaveBeenCalledWith('1 request(s) have been declined');
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(2);
@@ -160,7 +159,7 @@ describe('PendingJoinRequestsComponent', () => {
     ]);
     serviceResponder$.complete();
 
-    expect(component.state).toEqual('ready');
+    expect(component.state()).toEqual('ready');
     expect(actionFeedbackService.partial).toHaveBeenCalledTimes(1);
     expect(actionFeedbackService.partial).toHaveBeenCalledWith('2 request(s) have been accepted, 1 could not be executed');
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(2);
@@ -175,7 +174,7 @@ describe('PendingJoinRequestsComponent', () => {
     ]);
     serviceResponder$.complete();
 
-    expect(component.state).toEqual('ready');
+    expect(component.state()).toEqual('ready');
     expect(actionFeedbackService.error).toHaveBeenCalledTimes(1);
     expect(actionFeedbackService.error).toHaveBeenCalledWith('Unable to accept the selected request(s).');
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(2);
@@ -190,7 +189,7 @@ describe('PendingJoinRequestsComponent', () => {
     ]);
     serviceResponder$.complete();
 
-    expect(component.state).toEqual('ready');
+    expect(component.state()).toEqual('ready');
     expect(actionFeedbackService.error).toHaveBeenCalledTimes(1);
     expect(actionFeedbackService.error).toHaveBeenCalledWith('Unable to reject the selected request(s).');
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(2);
@@ -202,7 +201,7 @@ describe('PendingJoinRequestsComponent', () => {
     serviceResponder$.error(new HttpErrorResponse({}));
     serviceResponder$.complete();
 
-    expect(component.state).toEqual('ready');
+    expect(component.state()).toEqual('ready');
     expect(actionFeedbackService.unexpectedError).toHaveBeenCalledTimes(1);
     expect(getRequestsService.getGroupPendingRequests).toHaveBeenCalledTimes(1); // service error does not reload content
   });
