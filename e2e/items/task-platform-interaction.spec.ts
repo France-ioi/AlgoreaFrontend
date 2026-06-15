@@ -133,4 +133,36 @@ test.describe('platform-task interaction', () => {
     await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('42');
     await expect(testTaskPage.taskFrame.getByTestId('state-input')).toHaveValue('saved-state');
   });
+
+  test.describe('device proxy', () => {
+    test.skip(({ browserName }) => browserName !== 'chromium', 'device proxy: chromium only');
+
+    test('bluetooth requestDevice round-trips through platform.deviceProxy', async () => {
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+
+      await testTaskPage.clickBluetoothRequestDevice();
+
+      await testTaskPage.waitForPlatformCall('platform.deviceProxy');
+      await expect(testTaskPage.taskFrame.getByTestId('bluetooth-result')).not.toHaveText('pending…', { timeout: 15000 });
+      const result = await testTaskPage.taskFrame.getByTestId('bluetooth-result').textContent();
+      expect(result).toMatch(/^(ok:|error:)/);
+    });
+
+    test('websocket connect routes close/error events back to the task', async () => {
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+
+      await testTaskPage.clickWebSocketConnect();
+
+      await testTaskPage.waitForPlatformCall('platform.deviceProxy');
+      await testTaskPage.waitForCall('task.deviceProxy', entry => {
+        const params = entry.params as [string, string, unknown];
+        return params[0] === 'websocket' && params[1] === 'event';
+      });
+      await expect(testTaskPage.taskFrame.getByTestId('websocket-result')).not.toHaveText('pending…', { timeout: 15000 });
+      const result = await testTaskPage.taskFrame.getByTestId('websocket-result').textContent();
+      expect(result).toMatch(/^(close:|error)/);
+    });
+  });
 });

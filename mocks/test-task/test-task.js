@@ -112,6 +112,41 @@
     },
   });
 
+  window.platform = {
+    deviceProxy: function (category, method, args, success, error) {
+      var params = [category, method, args];
+      logCall('_outgoing.platform.deviceProxy', params);
+      chan.call({
+        method: 'platform.deviceProxy',
+        params: params,
+        timeout: 10000,
+        success: function (result) {
+          logPlatformCall('platform.deviceProxy', params, 'ok', result);
+          success(result);
+        },
+        error: function (err, message) {
+          var detail = formatError(err, message);
+          logPlatformCall('platform.deviceProxy', params, 'error', detail);
+          error({ message: detail });
+        },
+      });
+    },
+  };
+
+  chan.bind('task.deviceProxy', function (trans, callParams) {
+    var category = Array.isArray(callParams) ? callParams[0] : '';
+    var method = Array.isArray(callParams) ? callParams[1] : '';
+    var args = Array.isArray(callParams) ? callParams[2] : undefined;
+    logCall('task.deviceProxy', [category, method, args]);
+    DeviceProxyTask.deviceProxy(
+      category,
+      method,
+      args,
+      function (result) { trans.complete(result); },
+      function (err) { trans.error('device_proxy_error', err.message || String(err)); },
+    );
+  });
+
   chan.bind('task.getMetaData', function () {
     logCall('task.getMetaData', []);
     return {
@@ -354,6 +389,36 @@
 
   document.getElementById('log-btn').addEventListener('click', function () {
     platformCall('platform.log', ['test-task log message']);
+  });
+
+  document.getElementById('bluetooth-request-btn').addEventListener('click', function () {
+    var resultEl = document.getElementById('bluetooth-result');
+    resultEl.textContent = 'pending…';
+    DeviceProxyTask.bluetooth.requestDevice({ filters: [{ services: ['battery_service'] }] })
+      .then(function (device) {
+        resultEl.textContent = 'ok: ' + (device.name || device.id);
+      })
+      .catch(function (error) {
+        resultEl.textContent = 'error: ' + error.message;
+      });
+  });
+
+  document.getElementById('websocket-connect-btn').addEventListener('click', function () {
+    var url = document.getElementById('websocket-url').value;
+    var resultEl = document.getElementById('websocket-result');
+    resultEl.textContent = 'pending…';
+    var ws = new DeviceProxyTask.websocket.WebSocket(url);
+    var settled = false;
+    function finish(text) {
+      if (settled) return;
+      settled = true;
+      resultEl.textContent = text;
+    }
+    ws.addEventListener('open', function () { finish('open'); });
+    ws.addEventListener('error', function () { finish('error'); });
+    ws.addEventListener('close', function (event) {
+      finish('close: ' + event.code + ' ' + (event.reason || ''));
+    });
   });
 
   answerInput.addEventListener('input', function () {

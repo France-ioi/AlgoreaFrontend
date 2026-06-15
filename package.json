@@ -30,6 +30,7 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/platform-browser-dynamic": "^22.0.0",
     "@angular/router": "^22.0.0",
+    "bebras-device-proxy": "github:France-ioi/bebras-device-proxy#051aa47",
     "@ngrx/component": "^21.1.0",
     "@ngrx/effects": "^21.1.0",
     "@ngrx/operators": "^21.1.0",

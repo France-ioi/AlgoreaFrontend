@@ -53,6 +53,11 @@
                 "glob": "config.js",
                 "input": "src/assets/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "device-proxy-platform.js",
+                "input": "node_modules/bebras-device-proxy/dist/",
+                "output": "/scripts/"
               }
             ],
             "styles": [
@@ -277,7 +282,12 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "device-proxy-platform.js",
+                "input": "node_modules/bebras-device-proxy/dist/",
+                "output": "/scripts/"
+              }
             ],
             "styles": [
               "src/styles.scss"
