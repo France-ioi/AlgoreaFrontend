@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, forwardRef, inject, input, output } from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -47,7 +47,6 @@ import { createCvaEcho } from 'src/app/utils/cva-echo';
     ItemParametersTeamComponent,
     ItemRemoveButtonComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
