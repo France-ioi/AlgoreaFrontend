@@ -1,4 +1,5 @@
-import { Component, computed, input, OnChanges, output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, output, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CollapsibleSectionComponent } from 'src/app/ui-components/collapsible-section/collapsible-section.component';
 import { ProgressSelectComponent } from 'src/app/ui-components/collapsible-section/progress-select/progress-select.component';
@@ -17,7 +18,6 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
   selector: 'alg-propagation-advanced-configuration-form',
   templateUrl: './propagation-advanced-configuration-form.component.html',
   styleUrls: [ './propagation-advanced-configuration-form.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     CollapsibleSectionComponent,
@@ -26,7 +26,7 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
     ButtonComponent,
   ]
 })
-export class PropagationAdvancedConfigurationFormComponent implements OnChanges {
+export class PropagationAdvancedConfigurationFormComponent {
   private fb = inject(FormBuilder);
 
   closeEvent = output<ItemPermPropagations | undefined>();
@@ -49,7 +49,19 @@ export class PropagationAdvancedConfigurationFormComponent implements OnChanges 
     editPropagation: this.fb.nonNullable.control<ItemPermPropagations['editPropagation']>(false),
   });
 
-  ngOnChanges(): void {
+  constructor() {
+    toObservable(computed(() => ({
+      p: this.itemPropagations(),
+      g: this.giverPermissions(),
+    }))).pipe(takeUntilDestroyed()).subscribe(() => this.resetForm());
+  }
+
+  onSubmit(): void {
+    if (!this.form.dirty || this.form.invalid) return;
+    this.closeEvent.emit(this.form.getRawValue());
+  }
+
+  private resetForm(): void {
     const {
       contentViewPropagation,
       upperViewLevelsPropagation,
@@ -66,10 +78,5 @@ export class PropagationAdvancedConfigurationFormComponent implements OnChanges 
       ...(watchPropagation ? { watchPropagation } : {}),
       ...(editPropagation ? { editPropagation } : {}),
     });
-  }
-
-  onSubmit(): void {
-    if (!this.form.dirty || this.form.invalid) return;
-    this.closeEvent.emit(this.form.getRawValue());
   }
 }

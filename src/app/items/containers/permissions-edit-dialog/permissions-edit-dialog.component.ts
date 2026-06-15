@@ -1,5 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { ItemCorePerm } from 'src/app/items/models/item-permissions';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
 import { ReplaySubject, switchMap } from 'rxjs';
@@ -16,6 +15,7 @@ import { AsyncPipe } from '@angular/common';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
+import { ItemCorePerm } from 'src/app/items/models/item-permissions';
 
 export interface PermissionsEditDialogParams {
   currentUserPermissions: ItemCorePerm,
@@ -30,7 +30,6 @@ export interface PermissionsEditDialogParams {
   selector: 'alg-permissions-edit-dialog',
   templateUrl: './permissions-edit-dialog.component.html',
   styleUrls: [ './permissions-edit-dialog.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ErrorComponent,
     LoadingComponent,
@@ -57,9 +56,8 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
     shareReplay(1),
   );
 
-  permissions?: Omit<GroupPermissions,'canEnterFrom'|'canEnterUntil'>;
-  updateInProcess = false;
-  targetType: TypeFilter = 'Users';
+  protected readonly updateInProcess = signal(false);
+  targetType = computed((): TypeFilter => (isUser(this.params().group) ? 'Users' : 'Groups'));
 
   ngOnDestroy(): void {
     this.params$.complete();
@@ -75,7 +73,6 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
       throw new Error('Unexpected: Source group must not be a user');
     }
 
-    this.targetType = isUser(this.params().group) ? 'Users' : 'Groups';
     this.params$.next({
       sourceGroupId: this.params().sourceGroup?.id ?? this.params().group.id,
       groupId: this.params().group.id,
@@ -93,7 +90,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
       throw new Error('Unexpected: A user group must be provided with source group');
     }
 
-    this.updateInProcess = true;
+    this.updateInProcess.set(true);
     this.groupPermissionsService.updatePermissions(
       this.params().sourceGroup?.id ?? this.params().group.id,
       this.params().group.id,
@@ -102,13 +99,13 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
     )
       .subscribe({
         next: () => {
-          this.updateInProcess = false;
+          this.updateInProcess.set(false);
           this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
           this.currentContentService.forceNavMenuReload();
           this.closeDialog(true);
         },
         error: err => {
-          this.updateInProcess = false;
+          this.updateInProcess.set(false);
           this.actionFeedbackService.unexpectedError();
           this.currentContentService.forceNavMenuReload();
           if (!(err instanceof HttpErrorResponse)) throw err;

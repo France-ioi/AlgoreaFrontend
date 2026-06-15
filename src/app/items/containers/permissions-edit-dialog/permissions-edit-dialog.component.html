@@ -31,11 +31,11 @@
             <alg-permissions-edit-form
               (save)="onPermissionsDialogSave($event)"
               (cancel)="closeDialog()"
-              [targetType]="targetType"
+              [targetType]="targetType()"
               [permissions]="state.data.granted"
               [computedPermissions]="state.data.computed"
               [giverPermissions]="params().currentUserPermissions"
-              [acceptButtonDisabled]="updateInProcess"
+              [acceptButtonDisabled]="updateInProcess()"
               [requiresExplicitEntry]="params().item.requiresExplicitEntry"
             ></alg-permissions-edit-form>
           </div>

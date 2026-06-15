@@ -1,9 +1,8 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
 import { UnlockedItems } from 'src/app/items/data-access/grade.service';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
@@ -12,13 +11,11 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
   selector: 'alg-unlocked-items-modal',
   templateUrl: './unlocked-items-modal.component.html',
   styleUrls: [ './unlocked-items-modal.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ButtonComponent,
     ItemRoutePipe,
     RouteUrlPipe,
     RouterLink,
-    NgClass,
     NotificationModalComponent,
   ]
 })

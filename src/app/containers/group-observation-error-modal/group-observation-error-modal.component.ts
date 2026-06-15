@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 
@@ -6,7 +6,6 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
   selector: 'alg-group-observation-error-modal',
   templateUrl: './group-observation-error-modal.component.html',
   styleUrls: [ './group-observation-error-modal.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ NotificationModalComponent ]
 })
 export class GroupObservationErrorModalComponent {

@@ -8,11 +8,12 @@
   <div class="unlocked-items">
     @for (item of items(); track $index) {
       <div class="unlocked-item">
-        <span class="alg-primary-color ph" [ngClass]="{
-          'ph-files': item.type === 'Task',
-          'ph-folder': item.type === 'Chapter',
-          'ph-graduation-cap': item.type === 'Skill'
-        }"></span>
+        <span
+          class="alg-primary-color ph"
+          [class.ph-files]="item.type === 'Task'"
+          [class.ph-folder]="item.type === 'Chapter'"
+          [class.ph-graduation-cap]="item.type === 'Skill'"
+        ></span>
         <a
           class="alg-link unlocked-item-title"
           [routerLink]="{
