@@ -1,4 +1,4 @@
-import { Component, forwardRef, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, forwardRef, inject, input } from '@angular/core';
 import {
   ControlValueAccessor,
   FormBuilder, NG_VALIDATORS,
@@ -36,7 +36,6 @@ export interface StringsValue {
     ItemEditContentComponent,
     TooltipDirective,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
