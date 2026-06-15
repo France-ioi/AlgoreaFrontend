@@ -212,8 +212,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private beforeUnload$ = new Subject<void>();
   private saveBeforeUnload$ = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
     switchMap(() => {
-      if (!this.itemContentComponent?.itemDisplayComponent) return of(readyState<void>(undefined));
-      return this.itemContentComponent.itemDisplayComponent.saveAnswerAndState();
+      const itemDisplay = this.itemContentComponent?.itemDisplayComponent();
+      if (!itemDisplay) return of(readyState<void>(undefined));
+      return itemDisplay.saveAnswerAndState();
     }),
     takeUntil(this.skipBeforeUnload$),
     mergeWith(this.skipBeforeUnload$.pipe(map(() => readyState<void>(undefined)))),
@@ -242,7 +243,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     }),
 
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
-      .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent?.saveAnswerAndState() ?? of(undefined)), take(1))
+      .pipe(switchMap(() => this.itemContentComponent?.itemDisplayComponent()?.saveAnswerAndState() ?? of(undefined)), take(1))
       .subscribe({
         error: () => { /* Errors cannot be handled before unloading page. */ },
       }),

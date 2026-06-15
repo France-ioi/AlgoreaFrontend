@@ -18,10 +18,10 @@
 }
 
 @else if (!canViewContent) {
-  @if (isCurrentUserTemp() && hasPrerequisites === false) {
+  @if (isCurrentUserTemp() && hasPrerequisites() === false) {
     <alg-login-wall class="alg-flex-1"></alg-login-wall>
   } @else {
-    @if (hasPrerequisites !== undefined) {
+    @if (hasPrerequisites() !== undefined) {
       <div class="no-access-message alg-flex-1">
         <span class="no-access-message-icon-container">
           <i class="ph-duotone no-access-message-icon ph-lock-key"></i>
@@ -29,7 +29,7 @@
         </span>
         @if (item | isAChapter) {
           <span class="no-access-message-text alg-text-secondary">
-            @if (hasPrerequisites) {
+            @if (hasPrerequisites()) {
               <ng-container i18n>This chapter is locked.<br>Fulfill one of the prerequisites below to access its content.</ng-container>
             } @else {
               <ng-container i18n>Your current access rights do not allow you<br>to list the content of this chapter.</ng-container>
@@ -38,7 +38,7 @@
         }
         @else if (item | isASkill) {
           <span class="no-access-message-text alg-text-secondary">
-            @if (hasPrerequisites) {
+            @if (hasPrerequisites()) {
               <ng-container i18n>This skill is locked.<br>Fulfill one of the prerequisites below to access its content.</ng-container>
             } @else {
               <ng-container i18n>Your current access rights do not allow you<br>to list the content of this skill.</ng-container>
@@ -47,7 +47,7 @@
         }
         @else { <!-- task -->
           <span class="no-access-message-text alg-text-secondary">
-            @if (hasPrerequisites) {
+            @if (hasPrerequisites()) {
               <ng-container i18n>This activity is locked.<br>Fulfill one of the prerequisites below to access its content.</ng-container>
             } @else {
               <ng-container i18n>Your current access rights do not allow you<br>to start the activity.</ng-container>
@@ -66,20 +66,21 @@
     <!-- waiting for the results to load, do not show anything -->
   }
   @else {
-    @if ((perms | allowsEditingChildren) || editModeEnabled) {
+    @if ((perms | allowsEditingChildren) || editMode()) {
       <div class="edit">
         <span class="edit-label">
           <span class="alg-base-text-color" i18n>Edit content</span>
           <alg-switch
             class="edit-switch"
             data-testid="edit-switch"
-            [(ngModel)]="editModeEnabled"
+            [ngModel]="editMode()"
+            (ngModelChange)="editMode.set($event)"
             (change)="onEditModeEnableChange($event)"
           ></alg-switch>
         </span>
       </div>
     }
-    @if (editModeEnabled) {
+    @if (editMode()) {
       <alg-item-children-edit-form
         [itemData]="itemData()"
       ></alg-item-children-edit-form>
@@ -115,18 +116,18 @@
   }
   @else { <!-- url set -->
 
-    @if (taskConfig && showTaskDisplay()) {
+    @if (taskConfig() && showTaskDisplay()) {
       <alg-item-display
         class="alg-flex-1"
-        [ngClass]="{ 'alg-opacity-0': !isTaskLoaded() }"
+        [class.alg-opacity-0]="!isTaskLoaded()"
         [route]="itemData().route"
         [editingPermission]="itemData().item.permissions"
         [url]="url"
         [attemptId]="itemData().currentResult ? $safeNavigationMigration(itemData().currentResult?.attemptId) : undefined"
         [resultStartedAt]="itemData().currentResult?.startedAt ?? null"
-        [view]="taskView"
-        [taskConfig]="taskConfig"
-        [savingAnswer]="savingAnswer"
+        [view]="taskView()"
+        [taskConfig]="taskConfig()!"
+        [savingAnswer]="savingAnswer()"
         (viewChange)="taskViewChange.emit($event)"
         (tabsChange)="taskTabsChange.emit($event)"
         (scoreChange)="onScoreChange($event)"
