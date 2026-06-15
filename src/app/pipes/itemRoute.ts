@@ -14,8 +14,7 @@ import { Store } from '@ngrx/store';
  */
 @Pipe({
   name: 'itemRoute',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class ItemRoutePipe implements PipeTransform {
 
@@ -33,8 +32,7 @@ export class ItemRoutePipe implements PipeTransform {
  */
 @Pipe({
   name: 'with',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class ItemRouteWithExtraPipe implements PipeTransform {
   transform<T extends RawItemRoute>(route: T, attrs: Partial<ItemRoute>): T {

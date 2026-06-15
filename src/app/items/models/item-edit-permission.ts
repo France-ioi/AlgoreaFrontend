@@ -41,16 +41,14 @@ export function allowsGrantingEdition(p: ItemPermWithEdit): boolean {
 // ********************************************
 
 @Pipe({
-  name: 'allowsEditingChildren', pure: true,
-  standalone: true
+  name: 'allowsEditingChildren', pure: true
 })
 export class AllowsEditingChildrenItemPipe implements PipeTransform {
   transform = allowsEditingChildren;
 }
 
 @Pipe({
-  name: 'allowsEditingAll', pure: true,
-  standalone: true
+  name: 'allowsEditingAll', pure: true
 })
 export class AllowsEditingAllItemPipe implements PipeTransform {
   transform = allowsEditingAll;

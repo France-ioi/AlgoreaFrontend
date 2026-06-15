@@ -51,16 +51,14 @@ export function canCurrentUserWatchResult(i: ItemWithWatchPerm): boolean {
 // ********************************************
 
 @Pipe({
-  name: 'allowsWatchingResults', pure: true,
-  standalone: true
+  name: 'allowsWatchingResults', pure: true
 })
 export class AllowsWatchingItemResultsPipe implements PipeTransform {
   transform = allowsWatchingResults;
 }
 
 @Pipe({
-  name: 'allowsWatchingAnswers', pure: true,
-  standalone: true
+  name: 'allowsWatchingAnswers', pure: true
 })
 export class AllowsWatchingItemAnswersPipe implements PipeTransform {
   transform = allowsWatchingAnswers;

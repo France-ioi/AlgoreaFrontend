@@ -6,8 +6,7 @@ import { GroupRouter } from '../models/routing/group-router';
 import { UrlTree } from '@angular/router';
 
 @Pipe({
-  name: 'url', pure: true,
-  standalone: true
+  name: 'url', pure: true
 })
 export class RouteUrlPipe implements PipeTransform {
   private itemRouter = inject(ItemRouter);

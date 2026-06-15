@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Duration } from '../utils/duration';
 
 @Pipe({
-  name: 'toMin',
-  standalone: true
+  name: 'toMin'
 })
 export class DurationToMinPipe implements PipeTransform {
   transform(duration: Duration): number {
@@ -12,8 +11,7 @@ export class DurationToMinPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'secToDuration',
-  standalone: true
+  name: 'secToDuration'
 })
 export class SecondsToDurationPipe implements PipeTransform {
   transform(seconds: number): Duration {
@@ -22,8 +20,7 @@ export class SecondsToDurationPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'readable',
-  standalone: true
+  name: 'readable'
 })
 export class DurationToReadablePipe implements PipeTransform {
   transform(duration: Duration): string {
@@ -32,8 +29,7 @@ export class DurationToReadablePipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'asCountdown',
-  standalone: true
+  name: 'asCountdown'
 })
 export class DurationAsCountdownPipe implements PipeTransform {
   transform(duration: Duration): string {

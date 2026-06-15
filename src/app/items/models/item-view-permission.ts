@@ -50,15 +50,13 @@ export function canCurrentUserViewContent(i: ItemWithViewPerm): boolean {
 // ********************************************
 
 @Pipe({
-  name: 'allowsViewingInfo', pure: true,
-  standalone: true
+  name: 'allowsViewingInfo', pure: true
 })
 export class AllowsViewingItemInfoPipe implements PipeTransform {
   transform = allowsViewingInfo;
 }
 @Pipe({
-  name: 'allowsViewingContent', pure: true,
-  standalone: true
+  name: 'allowsViewingContent', pure: true
 })
 export class AllowsViewingItemContentPipe implements PipeTransform {
   transform = allowsViewingContent;

@@ -3,8 +3,7 @@ import { ActivityLogs } from 'src/app/data-access/activity-log.service';
 
 @Pipe({
   name: 'logActivityTypeIcon',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class LogActivityTypeIconPipe implements PipeTransform {
   transform(activity: ActivityLogs[number]['activityType']): string {

@@ -1,14 +1,16 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, inject, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: 'textarea[algAutoResize]',
-  standalone: true,
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- Angular host event binding
+    '(input)': 'onInput($event)',
+  },
 })
 export class AutoResizeDirective implements AfterViewInit {
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
 
-  @HostListener('input', [ '$event' ])
   onInput(event: Event): void {
     if (event.target instanceof HTMLTextAreaElement) {
       this.renderer.setStyle(this.el.nativeElement, 'height', 'auto');

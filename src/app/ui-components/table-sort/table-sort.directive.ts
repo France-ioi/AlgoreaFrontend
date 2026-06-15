@@ -4,7 +4,6 @@ import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table
 
 @Directive({
   selector: '[algTableSort]',
-  standalone: true,
 })
 export class TableSortDirective {
   sortChange = output<SortEvent[]>();

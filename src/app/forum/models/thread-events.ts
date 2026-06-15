@@ -79,15 +79,15 @@ export function mergeEvents(eventLists: ThreadEvent[][]): ThreadEvent[] {
 /**
  * Pipes for type assertion
  */
-@Pipe({ name: 'isMessageEvent', pure: true, standalone: true })
+@Pipe({ name: 'isMessageEvent', pure: true })
 export class IsMessageEventPipe implements PipeTransform {
   transform = isMessageEvent;
 }
-@Pipe({ name: 'isAttemptStartedEvent', pure: true, standalone: true })
+@Pipe({ name: 'isAttemptStartedEvent', pure: true })
 export class IsAttemptStartedEventPipe implements PipeTransform {
   transform = isAttemptStartedEvent;
 }
-@Pipe({ name: 'isSubmissionEvent', pure: true, standalone: true })
+@Pipe({ name: 'isSubmissionEvent', pure: true })
 export class IsSubmissionEventPipe implements PipeTransform {
   transform = isSubmissionEvent;
 }

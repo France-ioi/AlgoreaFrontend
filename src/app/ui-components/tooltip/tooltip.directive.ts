@@ -58,7 +58,6 @@ const positions = new Map<TooltipPosition, ConnectedPosition[]>([
 
 @Directive({
   selector: '[algTooltip]',
-  standalone: true,
 })
 export class TooltipDirective implements AfterViewInit, OnDestroy {
   private overlay = inject(Overlay);
