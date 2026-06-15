@@ -52,32 +52,28 @@ export function isAnActivity(item: ItemWithType): boolean {
 // ********************************************
 
 @Pipe({
-  name: 'isASkill', pure: true,
-  standalone: true
+  name: 'isASkill', pure: true
 })
 export class IsASkillPipe implements PipeTransform {
   transform = isASkill;
 }
 
 @Pipe({
-  name: 'isATask', pure: true,
-  standalone: true
+  name: 'isATask', pure: true
 })
 export class IsATaskPipe implements PipeTransform {
   transform = isATask;
 }
 
 @Pipe({
-  name: 'isAChapter', pure: true,
-  standalone: true
+  name: 'isAChapter', pure: true
 })
 export class IsAChapterPipe implements PipeTransform {
   transform = isAChapter;
 }
 
 @Pipe({
-  name: 'mayHaveChildren', pure: true,
-  standalone: true
+  name: 'mayHaveChildren', pure: true
 })
 export class MayHaveChildrenPipe implements PipeTransform {
   transform = mayHaveChildren;

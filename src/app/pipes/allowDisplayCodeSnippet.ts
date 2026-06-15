@@ -5,8 +5,7 @@ function replaceHTML(text: string): string {
 }
 
 @Pipe({
-  name: 'allowDisplayCodeSnippet', pure: true,
-  standalone: true
+  name: 'allowDisplayCodeSnippet', pure: true
 })
 export class AllowDisplayCodeSnippet implements PipeTransform {
 

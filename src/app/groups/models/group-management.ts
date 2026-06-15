@@ -53,27 +53,27 @@ export function compareManagershipLevel(l1: GroupManagershipLevel, l2: GroupMana
 // Pipes for templates
 // ********************************************
 
-@Pipe({ name: 'isCurrentUserManager', pure: true, standalone: true })
+@Pipe({ name: 'isCurrentUserManager', pure: true })
 export class IsCurrentUserManagerPipe implements PipeTransform {
   transform = isCurrentUserManager;
 }
 
-@Pipe({ name: 'canCurrentUserGrantGroupAccess', pure: true, standalone: true })
+@Pipe({ name: 'canCurrentUserGrantGroupAccess', pure: true })
 export class CanCurrentUserGrantGroupAccessPipe implements PipeTransform {
   transform = canCurrentUserGrantGroupAccess;
 }
 
-@Pipe({ name: 'canCurrentUserWatchMembers', pure: true, standalone: true })
+@Pipe({ name: 'canCurrentUserWatchMembers', pure: true })
 export class CanCurrentUserWatchMembersPipe implements PipeTransform {
   transform = canCurrentUserWatchMembers;
 }
 
-@Pipe({ name: 'canCurrentUserManageMembers', pure: true, standalone: true })
+@Pipe({ name: 'canCurrentUserManageMembers', pure: true })
 export class CanCurrentUserManageMembersPipe implements PipeTransform {
   transform = canCurrentUserManageMembers;
 }
 
-@Pipe({ name: 'canCurrentUserManageMembersAndGroup', pure: true, standalone: true })
+@Pipe({ name: 'canCurrentUserManageMembersAndGroup', pure: true })
 export class CanCurrentUserManageMembersAndGroupPipe implements PipeTransform {
   transform = canCurrentUserManageMembersAndGroup;
 }
@@ -82,7 +82,7 @@ export class CanCurrentUserManageMembersAndGroupPipe implements PipeTransform {
  * Compares two managership levels.
  * @returns A negative number if l1 is less than l2, a positive number if l1 is greater than l2, or zero if they are equal.
  */
-@Pipe({ name: 'compareManagershipLevel', pure: true, standalone: true })
+@Pipe({ name: 'compareManagershipLevel', pure: true })
 export class CompareManagershipLevelPipe implements PipeTransform {
   transform = compareManagershipLevel;
 }

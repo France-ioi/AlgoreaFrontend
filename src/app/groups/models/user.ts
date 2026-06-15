@@ -66,12 +66,12 @@ export function canEditPersonalInfo(user: User): boolean {
     || user.personalInfoAccessApprovalToCurrentUser === RequirePersonalInfoAccessApproval.Edit;
 }
 
-@Pipe({ name: 'canViewPersonalInfo', pure: true, standalone: true })
+@Pipe({ name: 'canViewPersonalInfo', pure: true })
 export class CanViewPersonalInfoPipe implements PipeTransform {
   transform = canViewPersonalInfo;
 }
 
-@Pipe({ name: 'canEditPersonalInfo', pure: true, standalone: true })
+@Pipe({ name: 'canEditPersonalInfo', pure: true })
 export class CanEditPersonalInfoPipe implements PipeTransform {
   transform = canEditPersonalInfo;
 }

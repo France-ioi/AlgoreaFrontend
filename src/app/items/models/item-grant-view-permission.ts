@@ -42,15 +42,13 @@ export function canCurrentUserGrantView(i: ItemWithGrantViewPerm): boolean {
 // ********************************************
 
 @Pipe({
-  name: 'allowsGrantingView', pure: true,
-  standalone: true
+  name: 'allowsGrantingView', pure: true
 })
 export class AllowsGrantingViewItemPipe implements PipeTransform {
   transform = allowsGrantingView;
 }
 @Pipe({
-  name: 'allowsGrantingContentView', pure: true,
-  standalone: true
+  name: 'allowsGrantingContentView', pure: true
 })
 export class AllowsGrantingContentViewItemPipe implements PipeTransform {
   transform = allowsGrantingContentView;

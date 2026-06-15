@@ -17,8 +17,7 @@ const PERMISSION_CAPTIONS = {
 };
 
 @Pipe({
-  name: 'groupPermissionCaption', pure: true,
-  standalone: true
+  name: 'groupPermissionCaption', pure: true
 })
 export class GroupPermissionCaptionPipe implements PipeTransform {
   transform(value: keyof typeof PERMISSION_CAPTIONS): string {

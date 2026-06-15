@@ -13,7 +13,7 @@ export function isCurrentUserMember<T extends { currentUserMembership: GroupMemb
 // Pipes for templates
 // ********************************************
 
-@Pipe({ name: 'isCurrentUserMember', pure: true, standalone: true })
+@Pipe({ name: 'isCurrentUserMember', pure: true })
 export class IsCurrentUserMemberPipe implements PipeTransform {
   transform = isCurrentUserMember;
 }

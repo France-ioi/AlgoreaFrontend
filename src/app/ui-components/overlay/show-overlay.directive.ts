@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   contentChild,
   Directive,
-  HostListener,
   inject,
   input,
   OnDestroy,
@@ -19,8 +18,11 @@ import { TemplatePortal } from '@angular/cdk/portal';
 
 @Directive({
   selector: '[algShowOverlay]',
-  standalone: true,
   exportAs: 'algShowOverlay',
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- Angular host event binding
+    '(mouseleave)': 'onHover($event)',
+  },
 })
 export class ShowOverlayDirective implements OnDestroy, AfterViewInit {
   overlayOpenEvent = output<Event>();
@@ -44,7 +46,7 @@ export class ShowOverlayDirective implements OnDestroy, AfterViewInit {
     panelClass: 'alg-path-suggestion-overlay',
   });
 
-  @HostListener('mouseleave', [ '$event' ]) onHover(event: MouseEvent): void {
+  onHover(event: MouseEvent): void {
     if (canCloseOverlay(event)) {
       this.showOverlaySubject$.next(undefined);
     }

@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { GroupLike, isUser } from '../models/routing/group-route';
 
 @Pipe({
-  name: 'isUser', pure: true,
-  standalone: true
+  name: 'isUser', pure: true
 })
 export class GroupIsUserPipe implements PipeTransform {
 

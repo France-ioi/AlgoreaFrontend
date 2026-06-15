@@ -13,8 +13,7 @@ function formatLogAction (type: ActivityLogs[number]['activityType'], score?: nu
 }
 
 @Pipe({
-  name: 'logActionDisplay',
-  standalone: true
+  name: 'logActionDisplay'
 })
 export class LogActionDisplayPipe implements PipeTransform {
   transform = formatLogAction;

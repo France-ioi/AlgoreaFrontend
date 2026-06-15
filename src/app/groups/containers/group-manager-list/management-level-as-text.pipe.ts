@@ -13,7 +13,7 @@ function managementLevelAsText(level: GroupManagershipLevel): string {
   }
 }
 
-@Pipe({ name: 'managementLevelAsText', pure: true, standalone: true })
+@Pipe({ name: 'managementLevelAsText', pure: true })
 export class ManagementLevelAsTextPipe implements PipeTransform {
   transform = managementLevelAsText;
 }

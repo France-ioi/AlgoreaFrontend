@@ -29,8 +29,7 @@ export function canCurrentUserSetExtraTime(item: Pick<Item, 'permissions'>): boo
 
 @Pipe({
   name: 'isTimeLimitedActivity',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class IsTimeLimitedActivityPipe implements PipeTransform {
   transform = isTimeLimitedActivity;
@@ -38,8 +37,7 @@ export class IsTimeLimitedActivityPipe implements PipeTransform {
 
 @Pipe({
   name: 'canCurrentUserSetExtraTime',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class CanCurrentUserSetExtraTimePipe implements PipeTransform {
   transform = canCurrentUserSetExtraTime;

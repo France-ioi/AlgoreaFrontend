@@ -22,8 +22,7 @@ export function hasAlreadyStated(entryState: EntryState): boolean {
 
 @Pipe({
   name: 'canEnterNow',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class CanEnterNowPipe implements PipeTransform {
   transform = canEnterNow;
@@ -31,8 +30,7 @@ export class CanEnterNowPipe implements PipeTransform {
 
 @Pipe({
   name: 'hasAlreadyStated',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class HasAlreadyStatedPipe implements PipeTransform {
   transform = hasAlreadyStated;

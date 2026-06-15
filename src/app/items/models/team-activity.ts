@@ -13,8 +13,7 @@ export function isTeamActivity(item: { type: ItemType, entryParticipantType: z.i
 // ********************************************
 
 @Pipe({
-  name: 'isTeamActivity', pure: true,
-  standalone: true
+  name: 'isTeamActivity', pure: true
 })
 export class IsTeamActivityPipe implements PipeTransform {
   transform = isTeamActivity;

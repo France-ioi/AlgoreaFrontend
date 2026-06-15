@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'findInArray',
-  pure: true,
-  standalone: true
+  pure: true
 })
 export class FindInArray implements PipeTransform {
 

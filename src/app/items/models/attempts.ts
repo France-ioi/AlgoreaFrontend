@@ -61,8 +61,7 @@ export function implicitResultStart(item: Item): boolean {
  * Returns true if the user can (still) submit on this result.
  */
 @Pipe({
-  name: 'isActive', pure: true,
-  standalone: true
+  name: 'isActive', pure: true
 })
 export class ResultIsActivePipe implements PipeTransform {
 

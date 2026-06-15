@@ -7,8 +7,7 @@ import { GroupRouter } from '../models/routing/group-router';
  * Pipe to format group links from a group object, a user/profile object or a group route object.
  */
 @Pipe({
-  name: 'groupLink', pure: true,
-  standalone: true
+  name: 'groupLink', pure: true
 })
 export class GroupLinkPipe implements PipeTransform {
   private groupRouter = inject(GroupRouter);
