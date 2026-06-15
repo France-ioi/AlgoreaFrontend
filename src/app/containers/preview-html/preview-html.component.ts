@@ -12,7 +12,7 @@ import { MessageService } from 'src/app/services/message.service';
 export class PreviewHtmlComponent {
   private messageService = inject(MessageService);
 
-  textContent = input<string | undefined>('');
+  textContent = input('');
 
   /**
    * Preview is for editing a (possibly unsaved) item — we never actually navigate. Surface the
