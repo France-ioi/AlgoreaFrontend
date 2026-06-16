@@ -2,7 +2,7 @@
 
 ## Overview
 
-Algorea Frontend is an Angular 21 educational platform that provides features for managing learning activities, skills, groups, and user progress. It uses ngrx for state management and communicates with a backend API.
+Algorea Frontend is an Angular 22 educational platform that provides features for managing learning activities, skills, groups, and user progress. It uses ngrx for state management and communicates with a backend API. Change detection is **zoneless** (`provideZonelessChangeDetection` in `src/main.ts`; Zone.js is not loaded).
 
 ## Development toolchain
 

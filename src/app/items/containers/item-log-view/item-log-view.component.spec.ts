@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { EMPTY, of } from 'rxjs';
 import { ItemLogViewComponent } from './item-log-view.component';
@@ -79,8 +79,8 @@ describe('ItemLogViewComponent.backLinkHeading', () => {
     currentUserWatchGroup: true,
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ ItemLogViewComponent ],
       providers: [
         provideMockStore({
@@ -100,7 +100,7 @@ describe('ItemLogViewComponent.backLinkHeading', () => {
     }).compileComponents();
 
     store = TestBed.inject(MockStore) as MockStore<object>;
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ItemLogViewComponent);

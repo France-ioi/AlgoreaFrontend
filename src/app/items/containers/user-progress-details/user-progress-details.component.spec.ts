@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -43,8 +43,8 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
     rowGroup: { id: 'u1', isUser: true },
   };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ UserProgressDetailsComponent ],
       providers: [
         provideMockStore({
@@ -59,7 +59,7 @@ describe('UserProgressDetailsComponent.onViewHistory', () => {
 
     store = TestBed.inject(MockStore) as MockStore<object>;
     dispatchSpy = spyOn(store, 'dispatch');
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserProgressDetailsComponent);

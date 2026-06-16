@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SwitchComponent } from './switch.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -7,13 +7,13 @@ describe('SwitchComponent', () => {
   let component: SwitchComponent;
   let fixture: ComponentFixture<SwitchComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ SwitchComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SwitchComponent);

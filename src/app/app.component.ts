@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, Renderer2, signal, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2, signal, viewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
 import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { combineLatest, merge, of, Subscription } from 'rxjs';
@@ -62,7 +62,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private crashReportingService = inject(CrashReportingService);
   private location = inject(Location);
   private titleService = inject(Title);
-  private ngZone = inject(NgZone);
   private renderer = inject(Renderer2);
   private chunkErrorService = inject(ChunkErrorService);
   private itemRouter = inject(ItemRouter);
@@ -157,21 +156,15 @@ export class AppComponent implements OnInit, OnDestroy {
       ? ((pageNavigatorNeighborWidgetRect.top + pageNavigatorNeighborWidgetRect.height) + scrollEl.scrollTop) - topBarHeight
       : topBarHeight;
     if (scrollEl.scrollTop > gap && !this.scrolled()) {
-      this.ngZone.run(() => {
-        this.scrolled.set(true);
-      });
+      this.scrolled.set(true);
     } else if (scrollEl.scrollTop <= gap && this.scrolled()) {
-      this.ngZone.run(() => {
-        this.scrolled.set(false);
-      });
+      this.scrolled.set(false);
     }
   }
 
   onLoaded(scrollEl: HTMLElement): void {
-    this.ngZone.runOutsideAngular(() => {
-      scrollEl.addEventListener('scroll', () => {
-        this.onScrollContent(scrollEl);
-      });
+    scrollEl.addEventListener('scroll', () => {
+      this.onScrollContent(scrollEl);
     });
   }
 

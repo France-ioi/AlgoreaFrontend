@@ -67,7 +67,7 @@ export class AddContentComponent<Type> implements OnInit {
 
   readonly state = signal<FetchState<AddedContent<Type>[]> | undefined>(undefined);
   addContentForm: UntypedFormGroup = this.formBuilder.group(defaultFormValues);
-  trimmedInputsValue = defaultFormValues;
+  trimmedInputsValue = signal(defaultFormValues);
 
   focused?: 'create' | 'searchExisting';
   selected?: NewContentType<Type>;
@@ -81,11 +81,11 @@ export class AddContentComponent<Type> implements OnInit {
     this.addContentForm.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe((changes: typeof defaultFormValues) => {
-      this.trimmedInputsValue = {
+      this.trimmedInputsValue.set({
         title: changes.title.trim(),
         url: changes.url.trim(),
         searchExisting: changes.searchExisting.trim(),
-      };
+      });
     });
 
     if (!searchFunction) {
@@ -117,8 +117,8 @@ export class AddContentComponent<Type> implements OnInit {
 
   onBlur(): void {
     // Do not un-lighten the input if there is content in the other one
-    if (this.focused === 'searchExisting' && this.trimmedInputsValue.searchExisting) return;
-    if (this.focused === 'create' && this.trimmedInputsValue.title) return;
+    if (this.focused === 'searchExisting' && this.trimmedInputsValue().searchExisting) return;
+    if (this.focused === 'create' && this.trimmedInputsValue().title) return;
     this.focused = undefined;
   }
 
@@ -131,8 +131,8 @@ export class AddContentComponent<Type> implements OnInit {
   }
 
   addNew(type: Type): void {
-    const title = this.trimmedInputsValue.title;
-    const url = this.trimmedInputsValue.url;
+    const title = this.trimmedInputsValue().title;
+    const url = this.trimmedInputsValue().url;
     if (!this.checkLength(title)) return;
     this.contentAdded.emit({
       title,

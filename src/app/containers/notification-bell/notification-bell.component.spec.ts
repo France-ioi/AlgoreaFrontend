@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { of, Subject, throwError } from 'rxjs';
@@ -35,12 +35,12 @@ describe('NotificationBellComponent', () => {
   let actions$: Subject<unknown>;
   let getItemByIdService: jasmine.SpyObj<GetItemByIdService>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     actions$ = new Subject<unknown>();
     getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', ['get']);
     getItemByIdService.get.and.returnValue(of({ string: { title: 'Test Item' } } as Item));
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [ NotificationBellComponent ],
       providers: [
         provideMockStore({
@@ -56,7 +56,7 @@ describe('NotificationBellComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(MockStore) as MockStore<object>;
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NotificationBellComponent);
@@ -131,12 +131,11 @@ describe('NotificationBellComponent', () => {
     expect(component.notificationsState().isFetching).toBeFalse();
   });
 
-  it('should dispatch showThread with fetched title when openThread is called', fakeAsync(() => {
+  it('should dispatch showThread with fetched title when openThread is called', () => {
     const dispatchSpy = spyOn(store, 'dispatch');
     const notification = mockForumNotifications[0]!;
 
     component.openThread(notification);
-    tick();
 
     expect(getItemByIdService.get).toHaveBeenCalledWith(notification.payload.itemId);
     expect(dispatchSpy).toHaveBeenCalledWith(
@@ -145,16 +144,15 @@ describe('NotificationBellComponent', () => {
         item: { route: itemRoute('activity', notification.payload.itemId), title: 'Test Item' },
       })
     );
-  }));
+  });
 
-  it('should dispatch showThread with forbidden message when item fetch is forbidden', fakeAsync(() => {
+  it('should dispatch showThread with forbidden message when item fetch is forbidden', () => {
     const dispatchSpy = spyOn(store, 'dispatch');
     const notification = mockForumNotifications[0]!;
     const forbiddenError = new HttpErrorResponse({ status: 403 });
     getItemByIdService.get.and.returnValue(throwError(() => forbiddenError));
 
     component.openThread(notification);
-    tick();
 
     expect(dispatchSpy).toHaveBeenCalledWith(
       fromForum.notificationActions.showThread({
@@ -162,16 +160,15 @@ describe('NotificationBellComponent', () => {
         item: { route: itemRoute('activity', notification.payload.itemId), title: 'Not visible content' },
       })
     );
-  }));
+  });
 
-  it('should dispatch showThread with error message when item fetch fails', fakeAsync(() => {
+  it('should dispatch showThread with error message when item fetch fails', () => {
     const dispatchSpy = spyOn(store, 'dispatch');
     const notification = mockForumNotifications[0]!;
     const serverError = new HttpErrorResponse({ status: 500 });
     getItemByIdService.get.and.returnValue(throwError(() => serverError));
 
     component.openThread(notification);
-    tick();
 
     expect(dispatchSpy).toHaveBeenCalledWith(
       fromForum.notificationActions.showThread({
@@ -179,5 +176,5 @@ describe('NotificationBellComponent', () => {
         item: { route: itemRoute('activity', notification.payload.itemId), title: 'Error fetching content title' },
       })
     );
-  }));
+  });
 });

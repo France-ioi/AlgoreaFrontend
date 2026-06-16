@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupNoPermissionComponent } from './group-no-permission.component';
 
@@ -6,12 +6,12 @@ describe('GroupNoPermissionComponent', () => {
   let component: GroupNoPermissionComponent;
   let fixture: ComponentFixture<GroupNoPermissionComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ GroupNoPermissionComponent ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupNoPermissionComponent);

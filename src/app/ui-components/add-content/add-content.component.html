@@ -14,7 +14,7 @@
       tooltipEvent="focus"
       tooltipPosition="bottom"
       inputIcon="ph-duotone ph-pen"
-      [tooltipDisabled]="trimmedInputsValue.title.length >= minInputLength"
+      [tooltipDisabled]="trimmedInputsValue().title.length >= minInputLength"
     >
     </alg-input>
   }
@@ -36,7 +36,7 @@
       tooltipEvent="focus"
       tooltipPosition="bottom"
       inputIcon="ph-duotone ph-magnifying-glass"
-      [tooltipDisabled]="trimmedInputsValue.searchExisting.length >= minInputLength"
+      [tooltipDisabled]="trimmedInputsValue().searchExisting.length >= minInputLength"
     >
     </alg-input>
   }
@@ -45,7 +45,7 @@
 @if (loading()) {
   <alg-loading class="loading" size="medium"></alg-loading>
 } @else {
-  @if (trimmedInputsValue.title.length >= minInputLength) {
+  @if (trimmedInputsValue().title.length >= minInputLength) {
     <p class="select-caption" i18n>Select the type of group to create</p>
     <div class="new-content-type">
       <div class="new-content-container">
@@ -81,7 +81,7 @@
         An error occurred while searching. If the problem persists, please contact us.
       </div>
     }
-    @if (trimmedInputsValue.searchExisting.length >= minInputLength && fetchState.isReady) {
+    @if (trimmedInputsValue().searchExisting.length >= minInputLength && fetchState.isReady) {
       <div>
         <p class="select-caption" i18n>Select a content among those which already exist</p>
         @if ((fetchState.data || []).length > 0) {

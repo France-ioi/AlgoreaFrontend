@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LanguagePickerComponent } from './language-picker.component';
 import { LocaleService } from '../../services/localeService';
@@ -7,8 +7,8 @@ describe('LanguagePickerComponent', () => {
   let component: LanguagePickerComponent;
   let fixture: ComponentFixture<LanguagePickerComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ LanguagePickerComponent ],
       providers: [
         {
@@ -21,7 +21,7 @@ describe('LanguagePickerComponent', () => {
         },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LanguagePickerComponent);

@@ -27,10 +27,10 @@ export class GroupManagerAddComponent {
   managers = input.required<Manager[]>();
 
   state = signal<'ready' | 'error' | 'loading'>('ready');
-  login = '';
+  login = signal('');
 
   onClick(): void {
-    if (this.managers().some(manager => manager.login === this.login)) {
+    if (this.managers().some(manager => manager.login === this.login())) {
       this.actionFeedbackService.error($localize`This user is already a manager of this group.`);
       return;
     }
@@ -38,13 +38,13 @@ export class GroupManagerAddComponent {
     const groupId = this.group().id;
 
     this.state.set('loading');
-    this.getUserByLoginService.get(this.login).pipe(
+    this.getUserByLoginService.get(this.login()).pipe(
       switchMap(user => this.groupCreateManagerService.create(groupId, user.groupId)),
     ).subscribe({
       next: () => {
         this.state.set('ready');
         this.actionFeedbackService.success($localize`Manager added!`);
-        this.login = '';
+        this.login.set('');
         this.added.emit();
       },
       error: error => {
