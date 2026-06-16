@@ -64,7 +64,8 @@ const routes: Routes = [
       },
       {
         path: 'forum',
-        children: [],
+        loadComponent: () =>
+          import('./containers/item-forum/item-forum.component').then(m => m.ItemForumComponent),
       },
       {
         path: 'item-stats',

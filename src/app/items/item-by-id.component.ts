@@ -38,7 +38,6 @@ import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
 import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
-import { ItemForumComponent } from './containers/item-forum/item-forum.component';
 import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
 import { ChapterGroupProgressComponent } from './containers/chapter-group-progress/chapter-group-progress.component';
 import { ItemLogViewComponent } from './containers/item-log-view/item-log-view.component';
@@ -99,7 +98,6 @@ const selectState = createSelector(
     ChapterGroupProgressComponent,
     ChapterUserProgressComponent,
     ItemEditWrapperComponent,
-    ItemForumComponent,
     RouterLinkActive,
     RouterOutlet,
     AsyncPipe,
@@ -327,8 +325,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   }
 
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
-
-  showItemThreadWidget = this.config.featureFlags.enableForum;
 
   ngOnDestroy(): void {
     this.tabService.setTabs([]);
