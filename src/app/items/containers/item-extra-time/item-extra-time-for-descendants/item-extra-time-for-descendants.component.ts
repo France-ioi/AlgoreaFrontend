@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, OnDestroy, signal, inject } from '@angular/core';
+import { Component, input, OnDestroy, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, Subject, switchMap } from 'rxjs';
 import { ExtraTimeService } from 'src/app/items/data-access/extra-time.service';
@@ -50,7 +50,6 @@ import {
   ],
   templateUrl: './item-extra-time-for-descendants.component.html',
   styleUrl: './item-extra-time-for-descendants.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
   private extraTimeService = inject(ExtraTimeService);

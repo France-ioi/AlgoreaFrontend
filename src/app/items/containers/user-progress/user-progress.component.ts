@@ -1,35 +1,23 @@
-import { Component, input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { mustNotBeUndefined } from 'src/app/utils/assert';
+import { Component, computed, input } from '@angular/core';
 import { ParticipantProgresses } from 'src/app/data-access/get-group-progress.service';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'alg-user-progress',
   templateUrl: './user-progress.component.html',
   styleUrls: [ './user-progress.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ NgClass, ScoreRingComponent ]
+  imports: [ ScoreRingComponent ]
 })
-export class UserProgressComponent implements OnInit, OnChanges {
+export class UserProgressComponent {
 
   userProgress = input.required<ParticipantProgresses[number]>();
 
-  state: 'success'|'in-progress'|'no-score'|'not-started' = 'no-score';
-
-  ngOnInit(): void {
-    // When the component has no inputs, the hook onChange is not executed.
-    // Therefore, the user progress assertion must be declared also at init.
-    mustNotBeUndefined(this.userProgress(), 'user progress must be defined');
-  }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    mustNotBeUndefined(this.userProgress(), 'user progress must be defined');
-
-    if (this.userProgress().validated || this.userProgress().score === 100) this.state = 'success';
-    else if (this.userProgress().score > 0) this.state = 'in-progress';
-    else if (this.userProgress().score === 0 && this.userProgress().latestActivityAt !== null) this.state = 'no-score';
-    else this.state = 'not-started';
-  }
+  protected readonly state = computed((): 'success' | 'in-progress' | 'no-score' | 'not-started' => {
+    const progress = this.userProgress();
+    if (progress.validated || progress.score === 100) return 'success';
+    if (progress.score > 0) return 'in-progress';
+    if (progress.score === 0 && progress.latestActivityAt !== null) return 'no-score';
+    return 'not-started';
+  });
 
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, OnDestroy, signal, ViewChild, inject } from '@angular/core';
+import { Component, input, OnDestroy, signal, viewChild, inject } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { CanCurrentUserSetExtraTimePipe, IsTimeLimitedActivityPipe } from '../../models/time-limited-activity';
 import { DurationToReadablePipe } from 'src/app/pipes/duration';
@@ -33,7 +33,6 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
   ],
   templateUrl: './item-extra-time.component.html',
   styleUrl: './item-extra-time.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemExtraTimeComponent implements OnDestroy {
   private store = inject(Store);
@@ -41,7 +40,7 @@ export class ItemExtraTimeComponent implements OnDestroy {
   private setExtraTimeService = inject(SetExtraTimeService);
   private actionFeedbackService = inject(ActionFeedbackService);
 
-  @ViewChild(ItemExtraTimeForDescendantsComponent) itemExtraTimeForDescendantsComponent?: ItemExtraTimeForDescendantsComponent;
+  readonly itemExtraTimeForDescendantsComponent = viewChild(ItemExtraTimeForDescendantsComponent);
 
   itemData = input.required<ItemData>();
 
@@ -71,7 +70,7 @@ export class ItemExtraTimeComponent implements OnDestroy {
   }
 
   onExtraTimeSave(additionalTime: number, groupId: string): void {
-    const extraTimeForDescendantsComponent = this.itemExtraTimeForDescendantsComponent;
+    const extraTimeForDescendantsComponent = this.itemExtraTimeForDescendantsComponent();
     if (!extraTimeForDescendantsComponent) throw new Error('Unexpected: extraTimeForDescendantsComponent');
     this.updating.set(true);
     this.setExtraTimeService.set(this.itemData().item.id, groupId, additionalTime).subscribe({

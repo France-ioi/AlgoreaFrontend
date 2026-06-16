@@ -39,7 +39,9 @@
                       <div>
                         <a
                           class="alg-link"
-                          [ngClass]="{ 'disabled font-bold text-black': rowData.id === itemData().item.id }"
+                          [class.disabled]="rowData.id === itemData().item.id"
+                          [class.font-bold]="rowData.id === itemData().item.id"
+                          [class.text-black]="rowData.id === itemData().item.id"
                           [routerLink]="rowData | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]), parentAttemptId } | url"
                         >
                           {{ rowData.title }}
