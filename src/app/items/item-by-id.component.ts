@@ -39,7 +39,6 @@ import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
 import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
 import { ItemForumComponent } from './containers/item-forum/item-forum.component';
-import { ItemDependenciesComponent } from './containers/item-dependencies/item-dependencies.component';
 import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
 import { ChapterGroupProgressComponent } from './containers/chapter-group-progress/chapter-group-progress.component';
 import { ItemLogViewComponent } from './containers/item-log-view/item-log-view.component';
@@ -101,7 +100,6 @@ const selectState = createSelector(
     ItemLogViewComponent,
     ChapterGroupProgressComponent,
     ChapterUserProgressComponent,
-    ItemDependenciesComponent,
     ItemEditWrapperComponent,
     ItemExtraTimeComponent,
     ItemStatsComponent,
