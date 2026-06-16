@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'alg-restricted-content',
@@ -14,6 +14,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </div>
   `,
   styleUrl: './restricted-content.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RestrictedContentComponent {}

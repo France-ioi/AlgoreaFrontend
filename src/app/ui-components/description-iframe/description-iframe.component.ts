@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -48,7 +47,6 @@ function buildDescriptionBodyHtml(raw: string): string {
   selector: 'alg-description-iframe',
   templateUrl: './description-iframe.component.html',
   styleUrls: [ './description-iframe.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DescriptionIframeComponent {
   private readonly document = inject(DOCUMENT);

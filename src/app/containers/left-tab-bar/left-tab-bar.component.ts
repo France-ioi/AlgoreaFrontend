@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 export const communityTabIdx = 3;
 
 @Component({
   selector: 'alg-left-tab-bar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './left-tab-bar.component.html',
   styleUrls: [ './left-tab-bar.component.scss' ],
 })

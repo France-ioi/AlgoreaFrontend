@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, input, output, signal, inject } from '@angular/core';
+import { Component, OnDestroy, input, output, signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { IsTeamActivityPipe } from '../../models/team-activity';
@@ -20,7 +20,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   ],
   templateUrl: './explicit-entry.component.html',
   styleUrl: './explicit-entry.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExplicitEntryComponent implements OnDestroy {
   private itemEntryService = inject(ItemEntryService);

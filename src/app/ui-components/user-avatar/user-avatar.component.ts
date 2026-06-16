@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { generateAvatar, AVATAR_SIZE } from './avatar';
 import { AvatarCacheService } from './avatar-cache.service';
 
@@ -20,7 +20,6 @@ const DEFAULT_SIZE = 32;
  */
 @Component({
   selector: 'alg-user-avatar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <svg
       [attr.width]="size()"

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { RouterLink, UrlTree } from '@angular/router';
 import { TooltipDirective } from '../tooltip/tooltip.directive';
 import { formatUser, UserBaseWithId } from 'src/app/groups/models/user';
@@ -9,7 +9,6 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
   selector: 'alg-user-link-with-actions',
   templateUrl: './user-link-with-actions.component.html',
   styleUrls: [ './user-link-with-actions.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ RouterLink, TooltipDirective ],
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention

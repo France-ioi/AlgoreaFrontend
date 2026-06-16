@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from 'src/app/ui-components/input/input.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
@@ -16,7 +16,6 @@ export type ItemParametersGlobalForm = FormGroup<{
   selector: 'alg-item-parameters-global',
   templateUrl: './item-parameters-global.component.html',
   styleUrls: [ './item-parameters-global.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     InputComponent,

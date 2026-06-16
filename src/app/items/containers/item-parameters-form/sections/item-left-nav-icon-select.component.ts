@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   forwardRef,
@@ -19,7 +18,6 @@ interface IconChoice {
   selector: 'alg-item-left-nav-icon-select',
   templateUrl: './item-left-nav-icon-select.component.html',
   styleUrls: [ './item-left-nav-icon-select.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

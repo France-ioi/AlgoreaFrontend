@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -22,7 +22,6 @@ import { NotificationHttpService } from 'src/app/data-access/notification.servic
   templateUrl: './notification-bell.component.html',
   styleUrl: './notification-bell.component.scss',
   imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimeComponent, ToDatePipe ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationBellComponent implements OnInit, OnDestroy {
   private store = inject(Store);

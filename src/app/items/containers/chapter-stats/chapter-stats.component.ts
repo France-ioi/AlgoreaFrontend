@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input } from '@angular/core';
+import { Component, DestroyRef, computed, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -17,7 +17,6 @@ import { ChapterStatsRowComponent } from './chapter-stats-row.component';
   selector: 'alg-chapter-stats',
   templateUrl: './chapter-stats.component.html',
   styleUrls: [ './chapter-stats.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     LoadingComponent,

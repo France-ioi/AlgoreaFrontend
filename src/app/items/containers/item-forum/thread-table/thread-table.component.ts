@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FetchState } from 'src/app/utils/state';
 import { Threads, Thread } from 'src/app/data-access/get-threads.service';
@@ -23,7 +23,6 @@ type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
   selector: 'alg-thread-table',
   templateUrl: './thread-table.component.html',
   styleUrls: [ './thread-table.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ErrorComponent,
     LoadingComponent,

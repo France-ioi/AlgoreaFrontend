@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -59,7 +58,6 @@ import { merge, startWith } from 'rxjs';
   selector: 'alg-item-all-strings-form',
   templateUrl: './item-all-strings-form.component.html',
   styleUrls: [ './item-all-strings-form.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ItemStringsControlComponent,
     ItemStringsTabsComponent,

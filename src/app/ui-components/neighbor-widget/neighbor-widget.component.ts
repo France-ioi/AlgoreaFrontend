@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -25,7 +24,6 @@ const PREV_NEXT_LEAVE_MS = 400;
   selector: 'alg-neighbor-widget',
   templateUrl: './neighbor-widget.component.html',
   styleUrls: [ 'neighbor-widget.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ ButtonIconComponent, ButtonComponent ],
 })
 export class NeighborWidgetComponent {
