@@ -12,7 +12,7 @@
   }
   @if (state.data) {
     <div class="refresh-button">
-      <button class="stroke size-s" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()">
+      <button class="stroke size-s" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
         Refresh
       </button>
     </div>
@@ -35,18 +35,22 @@
               >
                 @switch (column.field) {
                   @case ('title') {
-                    @if (itemData().currentResult?.attemptId; as parentAttemptId) {
-                      <div>
-                        <a
-                          class="alg-link"
-                          [class.disabled]="rowData.id === itemData().item.id"
-                          [class.font-bold]="rowData.id === itemData().item.id"
-                          [class.text-black]="rowData.id === itemData().item.id"
-                          [routerLink]="rowData | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]), parentAttemptId } | url"
-                        >
-                          {{ rowData.title }}
-                        </a>
-                      </div>
+                    @if (item(); as activeItem) {
+                      @if (currentResult()?.attemptId; as parentAttemptId) {
+                        @if (route(); as activeRoute) {
+                          <div>
+                            <a
+                              class="alg-link"
+                              [class.disabled]="rowData.id === activeItem.id"
+                              [class.font-bold]="rowData.id === activeItem.id"
+                              [class.text-black]="rowData.id === activeItem.id"
+                              [routerLink]="rowData | itemRoute: { path: activeRoute.path.concat([ activeItem.id ]), parentAttemptId } | url"
+                            >
+                              {{ rowData.title }}
+                            </a>
+                          </div>
+                        }
+                      }
                     }
                   }
                   @case ('latestActivityAt') {

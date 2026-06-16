@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { switchMap, filter } from 'rxjs/operators';
 import { GetGroupByIdService } from 'src/app/groups/data-access/get-group-by-id.service';
 import { ItemData } from '../../models/item-data';
@@ -11,19 +11,32 @@ import { GroupProgressGridComponent } from '../group-progress-grid/group-progres
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
+import { fromItemContent } from 'src/app/items/store';
 
 @Component({
-  selector: 'alg-chapter-group-progress',
-  templateUrl: './chapter-group-progress.component.html',
-  styleUrls: [ './chapter-group-progress.component.scss' ],
+  selector: 'alg-item-group-progress',
+  templateUrl: './item-group-progress.component.html',
+  styleUrls: [ './item-group-progress.component.scss' ],
   imports: [ GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
-export class ChapterGroupProgressComponent {
+export class ItemGroupProgressComponent {
   private store = inject(Store);
   private getGroupByIdService = inject(GetGroupByIdService);
   private destroyRef = inject(DestroyRef);
 
-  readonly itemData = input.required<ItemData>();
+  protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
+  protected readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  protected readonly currentResult = this.store.selectSignal(fromItemContent.selectActiveContentCurrentResult);
+
+  protected readonly itemData = computed((): ItemData | undefined => {
+    const item = this.item();
+    const route = this.route();
+    if (!item || !route) {
+      return undefined;
+    }
+    // group-progress-grid only reads route, item, and currentResult — breadcrumbs are unused here.
+    return { route, item, breadcrumbs: [], currentResult: this.currentResult() ?? undefined };
+  });
 
   private refresh$ = new Subject<void>();
   state$ = this.store.select(fromObservation.selectObservedGroupId).pipe(

@@ -1,10 +1,12 @@
 @if (state$ | async; as state) {
   @if (state.isReady) {
-    <alg-group-progress-grid
-      [itemData]="itemData()"
-      [group]="state.data"
-    >
-    </alg-group-progress-grid>
+    @if (itemData(); as data) {
+      <alg-group-progress-grid
+        [itemData]="data"
+        [group]="state.data"
+      >
+      </alg-group-progress-grid>
+    }
   }
   @if (state.isFetching) {
     <alg-loading class="alg-flex-1" size="medium"></alg-loading>
@@ -18,5 +20,4 @@
     ></alg-error>
   }
 }
-
 
