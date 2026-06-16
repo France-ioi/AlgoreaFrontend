@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
 import { ObservationBarComponent } from './observation-bar.component';
@@ -10,8 +10,8 @@ describe('ObservationBarComponent', () => {
   let component: ObservationBarComponent;
   let fixture: ComponentFixture<ObservationBarComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ ObservationBarComponent ],
       providers: [
         provideMockStore({
@@ -24,7 +24,7 @@ describe('ObservationBarComponent', () => {
         { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ObservationBarComponent);

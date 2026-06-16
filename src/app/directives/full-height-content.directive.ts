@@ -2,7 +2,6 @@ import {
   AfterViewChecked,
   Directive,
   ElementRef,
-  NgZone,
   OnInit,
   Renderer2,
   effect,
@@ -20,7 +19,6 @@ import {
 export class FullHeightContentDirective implements OnInit, AfterViewChecked {
   private el = inject<ElementRef<HTMLElement>>(ElementRef);
   private renderer = inject(Renderer2);
-  private ngZone = inject(NgZone);
 
   algFullHeightContent = input(true);
 
@@ -53,10 +51,8 @@ export class FullHeightContentDirective implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.ngZone.runOutsideAngular(() => {
-      setTimeout(() => {
-        if (this.algFullHeightContent()) this.setHeight();
-      });
+    setTimeout(() => {
+      if (this.algFullHeightContent()) this.setHeight();
     });
   }
 

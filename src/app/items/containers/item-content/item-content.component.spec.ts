@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, input, output } from '@angular/core';
 import { ItemContentComponent } from './item-content.component';
 import { ItemData } from '../../models/item-data';
@@ -135,15 +135,15 @@ describe('ItemContentComponent – task retry', () => {
     expect(component.isTaskLoaded()).toBeFalse();
   });
 
-  it('should toggle showTaskDisplay off then back on during retry', fakeAsync(() => {
+  it('should toggle showTaskDisplay off then back on during retry', async () => {
     expect(component.showTaskDisplay()).toBeTrue();
     component.onTaskRetry();
     expect(component.showTaskDisplay()).toBeFalse();
-    tick();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     expect(component.showTaskDisplay()).toBeTrue();
-  }));
+  });
 
-  it('should recreate ItemDisplayComponent on retry', fakeAsync(() => {
+  it('should recreate ItemDisplayComponent on retry', async () => {
     fixture.detectChanges();
 
     const firstInstance = queryComponent(fixture.debugElement);
@@ -154,13 +154,13 @@ describe('ItemContentComponent – task retry', () => {
 
     expect(queryComponent(fixture.debugElement)).toBeUndefined();
 
-    tick();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     const secondInstance = queryComponent(fixture.debugElement);
     expect(secondInstance).toBeTruthy();
     expect(secondInstance).not.toBe(firstInstance);
-  }));
+  });
 
   it('should show the task-loader when isTaskLoaded is false', () => {
     component.isTaskLoaded.set(false);
@@ -176,16 +176,16 @@ describe('ItemContentComponent – task retry', () => {
     expect(taskLoader).toBeFalsy();
   });
 
-  it('should show task-loader after retry even if it was previously loaded', fakeAsync(() => {
+  it('should show task-loader after retry even if it was previously loaded', async () => {
     component.isTaskLoaded.set(true);
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('alg-task-loader'))).toBeFalsy();
 
     component.onTaskRetry();
-    tick();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('alg-task-loader'))).toBeTruthy();
-  }));
+  });
 
   it('should not emit refresh output on task retry', () => {
     let refreshEmitted = false;
@@ -300,36 +300,46 @@ describe('ItemContentComponent – description navigation', () => {
     expect(opts).toEqual({ useCurrentObservation: true });
   });
 
-  it('should show an info toast and auto-open the URL in a new tab after the delay', fakeAsync(() => {
-    component.onDescriptionNavigate({ url: 'https://example.com/x' });
+  it('should show an info toast and auto-open the URL in a new tab after the delay', () => {
+    jasmine.clock().install();
+    try {
+      component.onDescriptionNavigate({ url: 'https://example.com/x' });
 
-    expect(messageServiceSpy.add).toHaveBeenCalledTimes(1);
-    const msg = messageServiceSpy.add.calls.mostRecent().args[0];
-    expect(msg.severity).toBe('info');
-    expect(msg.detail).toBe('https://example.com/x');
-    expect(msg.life).toBeUndefined();
-    expect(typeof msg.onClick).toBe('function');
+      expect(messageServiceSpy.add).toHaveBeenCalledTimes(1);
+      const msg = messageServiceSpy.add.calls.mostRecent().args[0];
+      expect(msg.severity).toBe('info');
+      expect(msg.detail).toBe('https://example.com/x');
+      expect(msg.life).toBeUndefined();
+      expect(typeof msg.onClick).toBe('function');
 
-    expect(windowOpenSpy).not.toHaveBeenCalled();
-    tick(899);
-    expect(windowOpenSpy).not.toHaveBeenCalled();
-    tick(1);
-    expect(windowOpenSpy).toHaveBeenCalledTimes(1);
-    expect(windowOpenSpy.calls.mostRecent().args[0]).toBe('https://example.com/x');
-    expect(windowOpenSpy.calls.mostRecent().args[1]).toBe('_blank');
-  }));
+      expect(windowOpenSpy).not.toHaveBeenCalled();
+      jasmine.clock().tick(899);
+      expect(windowOpenSpy).not.toHaveBeenCalled();
+      jasmine.clock().tick(1);
+      expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+      expect(windowOpenSpy.calls.mostRecent().args[0]).toBe('https://example.com/x');
+      expect(windowOpenSpy.calls.mostRecent().args[1]).toBe('_blank');
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should open the URL immediately if the toast is clicked, and only once', fakeAsync(() => {
-    component.onDescriptionNavigate({ url: 'https://example.com/y' });
-    const msg: MessageV2 = messageServiceSpy.add.calls.mostRecent().args[0];
+  it('should open the URL immediately if the toast is clicked, and only once', () => {
+    jasmine.clock().install();
+    try {
+      component.onDescriptionNavigate({ url: 'https://example.com/y' });
+      const msg: MessageV2 = messageServiceSpy.add.calls.mostRecent().args[0];
 
-    msg.onClick!();
-    expect(windowOpenSpy).toHaveBeenCalledTimes(1);
-    expect(windowOpenSpy.calls.mostRecent().args[0]).toBe('https://example.com/y');
+      msg.onClick!();
+      expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+      expect(windowOpenSpy.calls.mostRecent().args[0]).toBe('https://example.com/y');
 
-    tick(2000); // auto-open path must NOT fire a second time after the click already opened the tab
-    expect(windowOpenSpy).toHaveBeenCalledTimes(1);
-  }));
+      jasmine.clock().tick(2000);
+      expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
   it('should not navigate via ItemRouter for url payloads', () => {
     component.onDescriptionNavigate({ url: 'https://example.com/z' });

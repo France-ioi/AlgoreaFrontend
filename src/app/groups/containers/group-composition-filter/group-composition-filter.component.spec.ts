@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Filter, GroupCompositionFilterComponent, TypeFilter } from './group-composition-filter.component';
 
@@ -6,11 +6,11 @@ describe('GroupCompositionFilterComponent', () => {
   let component: GroupCompositionFilterComponent;
   let fixture: ComponentFixture<GroupCompositionFilterComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ GroupCompositionFilterComponent ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupCompositionFilterComponent);

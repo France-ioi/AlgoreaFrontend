@@ -49,10 +49,7 @@ describe('RelativeTimeComponent', () => {
     expect(textContent(fixture)).toBe('Just now');
   });
 
-  // We use jasmine.clock() (not fakeAsync + tick) on purpose: zone.js 0.16's fakeAsync does NOT
-  // patch Date.now() by default, but formatRelativeTime computes the delta with `Date.now()`.
-  // jasmine.clock().mockDate() + .tick() patches Date AND setInterval together, so the component
-  // sees both fake time and fake interval firings.
+  // jasmine.clock(): patches Date.now() and setInterval together for auto-refresh tests.
   it('should auto-update from "Just now" to "1 minute ago"', () => {
     jasmine.clock().install();
     try {

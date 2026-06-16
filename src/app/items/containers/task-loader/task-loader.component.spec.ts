@@ -16,7 +16,7 @@ describe('TaskLoaderComponent', () => {
     fixture?.destroy();
   });
 
-  // jasmine.clock() (not fakeAsync + tick): zone.js 0.16 fakeAsync does not advance RxJS timer().
+  // jasmine.clock(): advances RxJS timer() and setInterval without Zone.js fakeAsync.
   it('should show delayed label after delay', () => {
     jasmine.clock().install();
     try {

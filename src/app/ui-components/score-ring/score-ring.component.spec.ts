@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ScoreRingComponent } from './score-ring.component';
 
@@ -6,12 +6,12 @@ describe('ScoreRingComponent', () => {
   let component: ScoreRingComponent;
   let fixture: ComponentFixture<ScoreRingComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ ScoreRingComponent ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ScoreRingComponent);

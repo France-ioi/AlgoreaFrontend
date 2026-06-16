@@ -1,4 +1,5 @@
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { config } from 'rxjs';
 import { EMPTY, of, Subject } from 'rxjs';
 import { ItemDisplayComponent } from './item-display.component';
 import { ItemTaskService } from '../../services/item-task.service';
@@ -177,18 +178,30 @@ describe('ItemDisplayComponent – constructor input effects', () => {
     expect(ctx.mockSessionTracker.init).not.toHaveBeenCalled();
   });
 
-  it('should throw when route id changes after initialization', fakeAsync(() => {
+  it('should throw when route id changes after initialization', done => {
     const isolated = createIsolatedItemDisplayFixture();
     const otherRoute = itemRoute('activity', '2', { attemptId: '0', path: [] });
+    const original = config.onUnhandledError;
+    config.onUnhandledError = (err: unknown) => {
+      config.onUnhandledError = original;
+      expect((err as Error).message).toBe('this component does not support changing its route input');
+      done();
+    };
     isolated.componentRef.setInput('route', otherRoute);
-    expect(() => flush()).toThrowError('this component does not support changing its route input');
-  }));
+    isolated.detectChanges();
+  });
 
-  it('should throw when url changes after initialization', fakeAsync(() => {
+  it('should throw when url changes after initialization', done => {
     const isolated = createIsolatedItemDisplayFixture();
+    const original = config.onUnhandledError;
+    config.onUnhandledError = (err: unknown) => {
+      config.onUnhandledError = original;
+      expect((err as Error).message).toBe('this component does not support changing its url input');
+      done();
+    };
     isolated.componentRef.setInput('url', 'http://example.com/other-task');
-    expect(() => flush()).toThrowError('this component does not support changing its url input');
-  }));
+    isolated.detectChanges();
+  });
 });
 
 describe('ItemDisplayComponent – saveAnswerAndState', () => {

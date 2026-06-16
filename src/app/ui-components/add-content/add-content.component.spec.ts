@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
@@ -26,14 +26,14 @@ describe('AddContentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render search results after debounced search updates state', fakeAsync(() => {
+  it('should render search results after debounced search updates state', async () => {
     component.addContentForm.patchValue({ searchExisting: 'abc' });
-    tick(300);
+    await new Promise<void>(resolve => setTimeout(resolve, 300));
     fixture.detectChanges();
 
     expect(component.state()?.isReady).toBeTrue();
     expect(fixture.nativeElement.textContent).toContain('Matching content');
-  }));
+  });
 
   it('should expose content type choices as keyboard-operable buttons', () => {
     fixture.componentRef.setInput('showCreateUI', true);

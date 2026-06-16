@@ -1,4 +1,4 @@
-import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode, provideZoneChangeDetection } from '@angular/core';
+import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode, provideZonelessChangeDetection } from '@angular/core';
 import { AppComponent } from './app/app.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -55,7 +55,7 @@ if (environment.production) {
 /* eslint-disable no-console */ /* console call authorized here (?) */
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(), {
+    provideZonelessChangeDetection(), {
       provide: ErrorHandler,
       useClass: AlgErrorHandler,
     },
@@ -111,7 +111,7 @@ bootstrapApplication(AppComponent, {
       communityWsSubscriptionEffects,
       communityStatsEffects,
     ),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), connectInZone: false }),
     provideAnimations(),
     provideHttpClient(withXhr(), withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
   ]

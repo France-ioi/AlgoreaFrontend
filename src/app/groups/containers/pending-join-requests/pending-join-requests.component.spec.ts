@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -36,8 +36,8 @@ describe('PendingJoinRequestsComponent', () => {
   let actionFeedbackService: ActionFeedbackService;
   let serviceResponder$: Subject<Map<string,any>[]>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ PendingJoinRequestsComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
@@ -55,7 +55,7 @@ describe('PendingJoinRequestsComponent', () => {
         } }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     serviceResponder$ = new Subject<Map<string,any>[]>();

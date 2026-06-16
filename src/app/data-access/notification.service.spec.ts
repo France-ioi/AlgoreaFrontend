@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { of } from 'rxjs';
@@ -34,31 +34,34 @@ describe('NotificationHttpService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should retry getNotifications on a transient 503 and succeed on the second attempt', fakeAsync(() => {
-    let result: Notification[] | undefined;
-    let error: unknown;
-    service.getNotifications().subscribe({
-      next: notifications => {
-        result = notifications;
-      },
-      error: err => {
-        error = err;
-      },
-    });
+  it('should retry getNotifications on a transient 503 and succeed on the second attempt', () => {
+    jasmine.clock().install();
+    try {
+      let result: Notification[] | undefined;
+      let error: unknown;
+      service.getNotifications().subscribe({
+        next: notifications => {
+          result = notifications;
+        },
+        error: err => {
+          error = err;
+        },
+      });
 
-    const firstReq = httpTestingController.expectOne(`${slsApiUrl}/notifications`);
-    expect(firstReq.request.method).toBe('GET');
-    firstReq.flush('', { status: 503, statusText: 'Service Unavailable' });
+      const firstReq = httpTestingController.expectOne(`${slsApiUrl}/notifications`);
+      expect(firstReq.request.method).toBe('GET');
+      firstReq.flush('', { status: 503, statusText: 'Service Unavailable' });
 
-    // Advance past the 200ms first-retry backoff so the retry re-subscribes and the next HTTP
-    // request can be observed by HttpTestingController.
-    tick(200);
+      jasmine.clock().tick(200);
 
-    const secondReq = httpTestingController.expectOne(`${slsApiUrl}/notifications`);
-    expect(secondReq.request.method).toBe('GET');
-    secondReq.flush({ notifications: [] });
+      const secondReq = httpTestingController.expectOne(`${slsApiUrl}/notifications`);
+      expect(secondReq.request.method).toBe('GET');
+      secondReq.flush({ notifications: [] });
 
-    expect(error).toBeUndefined();
-    expect(result).toEqual([]);
-  }));
+      expect(error).toBeUndefined();
+      expect(result).toEqual([]);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });

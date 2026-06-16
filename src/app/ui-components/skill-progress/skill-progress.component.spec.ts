@@ -1,4 +1,4 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SkillProgressComponent } from './skill-progress.component';
 
@@ -6,12 +6,12 @@ describe('SkillProgressComponent', () => {
   let component: SkillProgressComponent;
   let fixture: ComponentFixture<SkillProgressComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [ SkillProgressComponent ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SkillProgressComponent);

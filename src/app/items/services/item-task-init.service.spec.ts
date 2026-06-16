@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { EMPTY, merge, Observable, of, Subject, throwError, TimeoutError } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { TaskToken } from '../data-access/task-token.service';
@@ -46,122 +46,141 @@ describe('ItemTaskInitService – timeout scenarios', () => {
     service.ngOnDestroy();
   });
 
-  it('should emit loadedTask and no initError when task loads quickly', fakeAsync(() => {
-    const mockTask = createMockTask();
-    let initErrorEmitted = false;
-    let loadedTaskEmitted = false;
+  it('should emit loadedTask and no initError when task loads quickly', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      let initErrorEmitted = false;
+      let loadedTaskEmitted = false;
 
-    service.initError$.subscribe(() => initErrorEmitted = true);
-    service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
+      service.initError$.subscribe(() => initErrorEmitted = true);
+      service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
 
-    tick(50);
-    taskProxy$.next(mockTask);
-    taskProxy$.complete();
-    tick(0);
+      jasmine.clock().tick(50);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
 
-    tick(testTimeout + 100);
+      jasmine.clock().tick(testTimeout + 100);
 
-    expect(loadedTaskEmitted).withContext('loadedTask$ should have emitted').toBeTrue();
-    expect(initErrorEmitted).withContext('initError$ should not have emitted').toBeFalse();
-  }));
+      expect(loadedTaskEmitted).withContext('loadedTask$ should have emitted').toBeTrue();
+      expect(initErrorEmitted).withContext('initError$ should not have emitted').toBeFalse();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should show extra delay message then load when task loads slowly but within timeout', fakeAsync(() => {
-    const mockTask = createMockTask();
-    let initErrorEmitted = false;
-    let loadedTaskEmitted = false;
+  it('should show extra delay message then load when task loads slowly but within timeout', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      let initErrorEmitted = false;
+      let loadedTaskEmitted = false;
 
-    service.initError$.subscribe(() => initErrorEmitted = true);
-    service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
+      service.initError$.subscribe(() => initErrorEmitted = true);
+      service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
 
-    // After 75% of timeout, task hasn't loaded yet
-    tick(testTimeout * 0.75);
-    expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted yet').toBeFalse();
-    expect(initErrorEmitted).withContext('initError$ should not have emitted yet').toBeFalse();
+      jasmine.clock().tick(testTimeout * 0.75);
+      expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted yet').toBeFalse();
+      expect(initErrorEmitted).withContext('initError$ should not have emitted yet').toBeFalse();
 
-    // Task loads just before timeout
-    taskProxy$.next(mockTask);
-    taskProxy$.complete();
-    tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
 
-    expect(loadedTaskEmitted).withContext('loadedTask$ should have emitted after slow load').toBeTrue();
+      expect(loadedTaskEmitted).withContext('loadedTask$ should have emitted after slow load').toBeTrue();
 
-    // Wait past timeout to confirm no error fires
-    tick(testTimeout);
-    expect(initErrorEmitted).withContext('initError$ should not have emitted after successful load').toBeFalse();
-  }));
+      jasmine.clock().tick(testTimeout);
+      expect(initErrorEmitted).withContext('initError$ should not have emitted after successful load').toBeFalse();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should emit initError (TimeoutError) when task never calls back', fakeAsync(() => {
-    let initError: unknown = null;
-    let loadedTaskEmitted = false;
+  it('should emit initError (TimeoutError) when task never calls back', () => {
+    jasmine.clock().install();
+    try {
+      let initError: unknown = null;
+      let loadedTaskEmitted = false;
 
-    service.initError$.subscribe(err => initError = err);
-    service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
+      service.initError$.subscribe(err => initError = err);
+      service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
 
-    // Advance past the full timeout
-    tick(testTimeout + 1);
+      jasmine.clock().tick(testTimeout + 1);
 
-    expect(initError).withContext('initError$ should have emitted a TimeoutError').toBeInstanceOf(TimeoutError);
-    expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted').toBeFalse();
-  }));
+      expect(initError).withContext('initError$ should have emitted a TimeoutError').toBeInstanceOf(TimeoutError);
+      expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted').toBeFalse();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should emit initError then still emit loadedTask when task loads just after timeout', fakeAsync(() => {
-    const mockTask = createMockTask();
-    let initError: unknown = null;
-    let loadedTaskEmitted = false;
+  it('should emit initError then still emit loadedTask when task loads just after timeout', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      let initError: unknown = null;
+      let loadedTaskEmitted = false;
 
-    service.initError$.subscribe(err => initError = err);
-    service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
+      service.initError$.subscribe(err => initError = err);
+      service.loadedTask$.subscribe(() => loadedTaskEmitted = true);
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
 
-    // Advance past timeout -> initError fires
-    tick(testTimeout + 1);
-    expect(initError).withContext('initError$ should have emitted a TimeoutError').toBeInstanceOf(TimeoutError);
-    expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted yet').toBeFalse();
+      jasmine.clock().tick(testTimeout + 1);
+      expect(initError).withContext('initError$ should have emitted a TimeoutError').toBeInstanceOf(TimeoutError);
+      expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted yet').toBeFalse();
 
-    // Task finally resolves after the timeout
-    taskProxy$.next(mockTask);
-    taskProxy$.complete();
-    tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
 
-    expect(loadedTaskEmitted).withContext('loadedTask$ should still emit even after timeout').toBeTrue();
-  }));
+      expect(loadedTaskEmitted).withContext('loadedTask$ should still emit even after timeout').toBeTrue();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should transition state$ from error back to ready when task loads after timeout', fakeAsync(() => {
-    const mockTask = createMockTask();
-    const state$ = merge(
-      service.loadedTask$.pipe(map(task => readyState(task))),
-      service.initError$.pipe(map(e => errorState(e))),
-    ).pipe(startWith(fetchingState()));
+  it('should transition state$ from error back to ready when task loads after timeout', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      const state$ = merge(
+        service.loadedTask$.pipe(map(task => readyState(task))),
+        service.initError$.pipe(map(e => errorState(e))),
+      ).pipe(startWith(fetchingState()));
 
-    const states: FetchState<Task>[] = [];
-    state$.subscribe(s => states.push(s));
+      const states: FetchState<Task>[] = [];
+      state$.subscribe(s => states.push(s));
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
 
-    tick(testTimeout + 1);
+      jasmine.clock().tick(testTimeout + 1);
 
-    const errState = states[states.length - 1];
-    expect(errState?.isError).withContext('state$ should be in error after timeout').toBeTrue();
+      const errState = states[states.length - 1];
+      expect(errState?.isError).withContext('state$ should be in error after timeout').toBeTrue();
 
-    taskProxy$.next(mockTask);
-    taskProxy$.complete();
-    tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
 
-    const finalState = states[states.length - 1];
-    expect(finalState?.isReady).withContext('state$ should transition to ready after late task load').toBeTrue();
-  }));
+      const finalState = states[states.length - 1];
+      expect(finalState?.isReady).withContext('state$ should transition to ready after late task load').toBeTrue();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });
 
 describe('ItemTaskInitService – API version negotiation', () => {
@@ -192,44 +211,54 @@ describe('ItemTaskInitService – API version negotiation', () => {
     service.ngOnDestroy();
   });
 
-  it('should negotiate api version 2 and set it on the task', fakeAsync(() => {
-    const mockTask = createMockTask();
-    mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 2, minApiVersion: 1 }));
-    let loadedTask: Task | undefined;
+  it('should negotiate api version 2 and set it on the task', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 2, minApiVersion: 1 }));
+      let loadedTask: Task | undefined;
 
-    service.loadedTask$.subscribe(task => loadedTask = task);
+      service.loadedTask$.subscribe(task => loadedTask = task);
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
-    taskProxy$.next(mockTask);
-    taskProxy$.complete();
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
 
-    expect(loadedTask).withContext('loadedTask$ should have emitted').toBe(mockTask);
-    expect(mockTask.apiVersion).withContext('task.apiVersion should be negotiated to 2').toBe(2);
-  }));
+      expect(loadedTask).withContext('loadedTask$ should have emitted').toBe(mockTask);
+      expect(mockTask.apiVersion).withContext('task.apiVersion should be negotiated to 2').toBe(2);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should emit apiVersionError$ when the task API range is incompatible', fakeAsync(() => {
-    const mockTask = createMockTask();
-    mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 99, minApiVersion: 99 }));
-    let apiVersionError: IncompatibleTaskApiVersionError | undefined;
-    let loadedTaskEmitted = false;
+  it('should emit apiVersionError$ when the task API range is incompatible', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 99, minApiVersion: 99 }));
+      let apiVersionError: IncompatibleTaskApiVersionError | undefined;
+      let loadedTaskEmitted = false;
 
-    service.apiVersionError$.subscribe(err => apiVersionError = err);
-    service.loadedTask$.subscribe({
-      next: () => loadedTaskEmitted = true,
-      error: () => {},
-    });
+      service.apiVersionError$.subscribe(err => apiVersionError = err);
+      service.loadedTask$.subscribe({
+        next: () => loadedTaskEmitted = true,
+        error: () => {},
+      });
 
-    iframe.dispatchEvent(new Event('load'));
-    tick(0);
-    taskProxy$.next(mockTask);
-    taskProxy$.complete();
-    tick(0);
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
 
-    expect(apiVersionError).withContext('apiVersionError$ should have emitted').toBeInstanceOf(IncompatibleTaskApiVersionError);
-    expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted successfully').toBeFalse();
-  }));
+      expect(apiVersionError).withContext('apiVersionError$ should have emitted').toBeInstanceOf(IncompatibleTaskApiVersionError);
+      expect(loadedTaskEmitted).withContext('loadedTask$ should not have emitted successfully').toBeFalse();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });
 
 describe('ItemTaskInitService – token refresh', () => {
@@ -251,10 +280,10 @@ describe('ItemTaskInitService – token refresh', () => {
 
   function loadTask(mockTask: Task): void {
     iframe.dispatchEvent(new Event('load'));
-    tick(0);
+    jasmine.clock().tick(0);
     taskProxy$.next(mockTask);
     taskProxy$.complete();
-    tick(0);
+    jasmine.clock().tick(0);
   }
 
   beforeEach(() => {
@@ -285,72 +314,90 @@ describe('ItemTaskInitService – token refresh', () => {
     service.ngOnDestroy();
   });
 
-  it('should load the task once with the first token and apply it via updateToken', fakeAsync(() => {
-    const mockTask = createTokenMockTask();
-    service.loadedTask$.subscribe();
+  it('should load the task once with the first token and apply it via updateToken', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createTokenMockTask();
+      service.loadedTask$.subscribe();
 
-    loadTask(mockTask);
+      loadTask(mockTask);
 
-    expect(mockTask.load).withContext('task.load should be called once').toHaveBeenCalledTimes(1);
-    expect(mockTask.updateToken).withContext('first token should be applied').toHaveBeenCalledWith('token1');
-  }));
+      expect(mockTask.load).withContext('task.load should be called once').toHaveBeenCalledTimes(1);
+      expect(mockTask.updateToken).withContext('first token should be applied').toHaveBeenCalledWith('token1');
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should push a new token to the task and emit tokenUpdatedOnTask$ without reloading on refreshToken()', fakeAsync(() => {
-    const mockTask = createTokenMockTask();
-    let tokenUpdatedCount = 0;
-    service.loadedTask$.subscribe();
-    service.tokenUpdatedOnTask$.subscribe(() => tokenUpdatedCount++);
+  it('should push a new token to the task and emit tokenUpdatedOnTask$ without reloading on refreshToken()', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createTokenMockTask();
+      let tokenUpdatedCount = 0;
+      service.loadedTask$.subscribe();
+      service.tokenUpdatedOnTask$.subscribe(() => tokenUpdatedCount++);
 
-    loadTask(mockTask);
+      loadTask(mockTask);
 
-    expect(tokenUpdatedCount).withContext('no post-load token push before refresh').toBe(0);
-    const updateTokenCallsAfterLoad = mockTask.updateToken.calls.count();
+      expect(tokenUpdatedCount).withContext('no post-load token push before refresh').toBe(0);
+      const updateTokenCallsAfterLoad = mockTask.updateToken.calls.count();
 
-    service.refreshToken();
-    tick(0);
+      service.refreshToken();
+      jasmine.clock().tick(0);
 
-    expect(mockTask.load).withContext('task.load should NOT be called again').toHaveBeenCalledTimes(1);
-    expect(mockTask.updateToken.calls.count()).withContext('a new token should be pushed').toBe(updateTokenCallsAfterLoad + 1);
-    expect(mockTask.updateToken).withContext('the refreshed token should be applied').toHaveBeenCalledWith('token2');
-    expect(tokenUpdatedCount).withContext('tokenUpdatedOnTask$ should emit once after refresh').toBe(1);
-  }));
+      expect(mockTask.load).withContext('task.load should NOT be called again').toHaveBeenCalledTimes(1);
+      expect(mockTask.updateToken.calls.count()).withContext('a new token should be pushed').toBe(updateTokenCallsAfterLoad + 1);
+      expect(mockTask.updateToken).withContext('the refreshed token should be applied').toHaveBeenCalledWith('token2');
+      expect(tokenUpdatedCount).withContext('tokenUpdatedOnTask$ should emit once after refresh').toBe(1);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should never push a token to a token-less task, even on refreshToken()', fakeAsync(() => {
-    const mockTask = createTokenMockTask(false);
-    let tokenUpdatedCount = 0;
-    service.loadedTask$.subscribe();
-    service.tokenUpdatedOnTask$.subscribe(() => tokenUpdatedCount++);
+  it('should never push a token to a token-less task, even on refreshToken()', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createTokenMockTask(false);
+      let tokenUpdatedCount = 0;
+      service.loadedTask$.subscribe();
+      service.tokenUpdatedOnTask$.subscribe(() => tokenUpdatedCount++);
 
-    loadTask(mockTask);
+      loadTask(mockTask);
 
-    service.refreshToken();
-    tick(0);
+      service.refreshToken();
+      jasmine.clock().tick(0);
 
-    expect(mockTask.updateToken).withContext('token-less task must not receive updateToken').not.toHaveBeenCalled();
-    expect(tokenUpdatedCount).withContext('tokenUpdatedOnTask$ must not emit for a token-less task').toBe(0);
-  }));
+      expect(mockTask.updateToken).withContext('token-less task must not receive updateToken').not.toHaveBeenCalled();
+      expect(tokenUpdatedCount).withContext('tokenUpdatedOnTask$ must not emit for a token-less task').toBe(0);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 
-  it('should keep serving the previous token (not error the shared stream) when a refresh generation fails', fakeAsync(() => {
-    const mockTask = createTokenMockTask();
-    const emittedTokens: TaskToken[] = [];
-    let errored = false;
-    service.loadedTask$.subscribe();
-    service.taskToken$.subscribe({ next: token => emittedTokens.push(token), error: () => errored = true });
+  it('should keep serving the previous token (not error the shared stream) when a refresh generation fails', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createTokenMockTask();
+      const emittedTokens: TaskToken[] = [];
+      let errored = false;
+      service.loadedTask$.subscribe();
+      service.taskToken$.subscribe({ next: token => emittedTokens.push(token), error: () => errored = true });
 
-    loadTask(mockTask);
-    expect(emittedTokens).withContext('initial token should be generated').toEqual([ 'token1' ]);
+      loadTask(mockTask);
+      expect(emittedTokens).withContext('initial token should be generated').toEqual([ 'token1' ]);
 
-    // make the refresh-triggered generation fail
-    generateFn = (): Observable<TaskToken> => throwError(() => new Error('network blip'));
-    service.refreshToken();
-    tick(0);
+      generateFn = (): Observable<TaskToken> => throwError(() => new Error('network blip'));
+      service.refreshToken();
+      jasmine.clock().tick(0);
 
-    expect(errored).withContext('taskToken$ must not error on a failed refresh').toBeFalse();
-    expect(emittedTokens).withContext('no new token emitted; previous one is kept').toEqual([ 'token1' ]);
+      expect(errored).withContext('taskToken$ must not error on a failed refresh').toBeFalse();
+      expect(emittedTokens).withContext('no new token emitted; previous one is kept').toEqual([ 'token1' ]);
 
-    // a later successful submission can still obtain a token
-    let latestToken: TaskToken | undefined;
-    service.taskToken$.subscribe(token => latestToken = token);
-    expect(latestToken).withContext('previous token still available to consumers').toBe('token1');
-  }));
+      let latestToken: TaskToken | undefined;
+      service.taskToken$.subscribe(token => latestToken = token);
+      expect(latestToken).withContext('previous token still available to consumers').toBe('token1');
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
 });
