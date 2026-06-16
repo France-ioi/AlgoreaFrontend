@@ -68,7 +68,8 @@ const routes: Routes = [
       },
       {
         path: 'item-stats',
-        children: [],
+        loadComponent: () =>
+          import('./containers/item-stats/item-stats.component').then(m => m.ItemStatsComponent),
       },
       {
         path: '**',

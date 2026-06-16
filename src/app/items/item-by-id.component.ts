@@ -62,7 +62,6 @@ import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
-import { ItemStatsComponent } from './containers/item-stats/item-stats.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoginWallComponent } from './containers/login-wall/login-wall.component';
@@ -100,7 +99,6 @@ const selectState = createSelector(
     ChapterGroupProgressComponent,
     ChapterUserProgressComponent,
     ItemEditWrapperComponent,
-    ItemStatsComponent,
     ItemForumComponent,
     RouterLinkActive,
     RouterOutlet,
