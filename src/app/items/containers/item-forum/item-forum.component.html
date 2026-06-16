@@ -1,75 +1,84 @@
-@if (singleThreadContext()) {
-  @if (singleThreadInfo().state; as state) {
-    @if (state !== 'none') {
-      <alg-forum-thread-placeholder
-        [state]="state"
-        [isThreadPanelVisible]="!!visibleThreadId()"
-        [isObserving]="isObserving()"
-        (showThread)="showSingleThread()"
-        (refresh)="isObserving() ? refreshObservedGroupThreads() : refreshMyThreads()"
-      />
+@if (!canViewForum()) {
+  <alg-error
+    class="alg-flex-1"
+    i18n-message message="You are not allowed to view this content."
+  ></alg-error>
+} @else if (item(); as activeItem) {
+  @if (route(); as activeRoute) {
+    @if (singleThreadContext()) {
+      @if (singleThreadInfo().state; as state) {
+        @if (state !== 'none') {
+          <alg-forum-thread-placeholder
+            [state]="state"
+            [isThreadPanelVisible]="!!visibleThreadId()"
+            [isObserving]="isObserving()"
+            (showThread)="showSingleThread()"
+            (refresh)="isObserving() ? refreshObservedGroupThreads() : refreshMyThreads()"
+          />
+        }
+      }
+
+      <!-- When NOT observing, still show "Other users' requests" table below -->
+      @if (!isObserving()) {
+        <alg-thread-table
+          class="section-spaced"
+          [state]="othersThreadsState()"
+          [showUserColumn]="true"
+          [showContentColumn]="activeItem.type !== 'Task'"
+          [contextItemRoute]="activeRoute"
+          [visibleThreadId]="visibleThreadId()"
+          threadListType="others"
+          (refresh)="refreshOthersThreads()"
+          (showThread)="showThreadPanel($event.id, $event.item)"
+          (hideThread)="hideThreadPanel()"
+        >
+          <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Other users' requests</h2>
+        </alg-thread-table>
+      }
+    } @else {
+      <!-- Multi-thread mode: existing table layout (chapters, observing a group) -->
+      @if (isObserving()) {
+        <alg-thread-table
+          [state]="observedGroupThreadsState()"
+          [showUserColumn]="!isObservingAUser()"
+          [showContentColumn]="activeItem.type !== 'Task'"
+          [contextItemRoute]="activeRoute"
+          [visibleThreadId]="visibleThreadId()"
+          threadListType="observed"
+          (refresh)="refreshObservedGroupThreads()"
+          (showThread)="showThreadPanel($event.id, $event.item)"
+          (hideThread)="hideThreadPanel()"
+        />
+      } @else {
+        <alg-thread-table
+          [state]="myThreadsState()"
+          [showUserColumn]="false"
+          [showContentColumn]="activeItem.type !== 'Task'"
+          [contextItemRoute]="activeRoute"
+          [visibleThreadId]="visibleThreadId()"
+          threadListType="mine"
+          (refresh)="refreshMyThreads()"
+          (showThread)="showThreadPanel($event.id, $event.item)"
+          (hideThread)="hideThreadPanel()"
+        >
+          <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>My help requests</h2>
+        </alg-thread-table>
+
+        <alg-thread-table
+          class="section-spaced"
+          [state]="othersThreadsState()"
+          [showUserColumn]="true"
+          [showContentColumn]="activeItem.type !== 'Task'"
+          [contextItemRoute]="activeRoute"
+          [visibleThreadId]="visibleThreadId()"
+          threadListType="others"
+          (refresh)="refreshOthersThreads()"
+          (showThread)="showThreadPanel($event.id, $event.item)"
+          (hideThread)="hideThreadPanel()"
+        >
+          <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Other users' requests</h2>
+        </alg-thread-table>
+      }
     }
-  }
-
-  <!-- When NOT observing, still show "Other users' requests" table below -->
-  @if (!isObserving()) {
-    <alg-thread-table
-      class="section-spaced"
-      [state]="othersThreadsState()"
-      [showUserColumn]="true"
-      [showContentColumn]="itemData().item.type !== 'Task'"
-      [contextItemRoute]="itemData().route"
-      [visibleThreadId]="visibleThreadId()"
-      threadListType="others"
-      (refresh)="refreshOthersThreads()"
-      (showThread)="showThreadPanel($event.id, $event.item)"
-      (hideThread)="hideThreadPanel()"
-    >
-      <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Other users' requests</h2>
-    </alg-thread-table>
-  }
-} @else {
-  <!-- Multi-thread mode: existing table layout (chapters, observing a group) -->
-  @if (isObserving()) {
-    <alg-thread-table
-      [state]="observedGroupThreadsState()"
-      [showUserColumn]="!isObservingAUser()"
-      [showContentColumn]="itemData().item.type !== 'Task'"
-      [contextItemRoute]="itemData().route"
-      [visibleThreadId]="visibleThreadId()"
-      threadListType="observed"
-      (refresh)="refreshObservedGroupThreads()"
-      (showThread)="showThreadPanel($event.id, $event.item)"
-      (hideThread)="hideThreadPanel()"
-    />
-  } @else {
-    <alg-thread-table
-      [state]="myThreadsState()"
-      [showUserColumn]="false"
-      [showContentColumn]="itemData().item.type !== 'Task'"
-      [contextItemRoute]="itemData().route"
-      [visibleThreadId]="visibleThreadId()"
-      threadListType="mine"
-      (refresh)="refreshMyThreads()"
-      (showThread)="showThreadPanel($event.id, $event.item)"
-      (hideThread)="hideThreadPanel()"
-    >
-      <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>My help requests</h2>
-    </alg-thread-table>
-
-    <alg-thread-table
-      class="section-spaced"
-      [state]="othersThreadsState()"
-      [showUserColumn]="true"
-      [showContentColumn]="itemData().item.type !== 'Task'"
-      [contextItemRoute]="itemData().route"
-      [visibleThreadId]="visibleThreadId()"
-      threadListType="others"
-      (refresh)="refreshOthersThreads()"
-      (showThread)="showThreadPanel($event.id, $event.item)"
-      (hideThread)="hideThreadPanel()"
-    >
-      <h2 tableTitle class="section-title alg-h2 alg-text-normal" i18n>Other users' requests</h2>
-    </alg-thread-table>
   }
 }

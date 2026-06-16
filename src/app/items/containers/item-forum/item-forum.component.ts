@@ -1,10 +1,10 @@
-import { Component, effect, inject, input, computed } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
 import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { ThreadId } from 'src/app/forum/models/threads';
+import { fromItemContent } from 'src/app/items/store';
 import { fromObservation } from 'src/app/store/observation';
 import { FullItemRoute, RawItemRoute } from 'src/app/models/routing/item-route';
 import { ThreadTableComponent } from './thread-table/thread-table.component';
@@ -13,6 +13,8 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { canThreadExist, canOpenThread } from 'src/app/forum/models/thread-context';
 import { isUser } from 'src/app/models/routing/group-route';
 import { fetchListFromParams } from 'src/app/utils/fetch-list';
+import { APPCONFIG } from 'src/app/config';
+import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 
 interface ThreadContext {
   participantId: string,
@@ -27,23 +29,29 @@ type SingleThreadInfo =
 
 @Component({
   selector: 'alg-item-forum',
+  host: { class: 'alg-flex-1' },
   templateUrl: './item-forum.component.html',
   styleUrls: [ './item-forum.component.scss' ],
   imports: [
     ThreadTableComponent,
     ForumThreadPlaceholderComponent,
+    ErrorComponent,
   ],
 })
 export class ItemForumComponent {
   private store = inject(Store);
   private getThreadService = inject(GetThreadsService);
   private userSessionService = inject(UserSessionService);
+  private config = inject(APPCONFIG);
 
-  itemData = input.required<ItemData>();
+  protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
+  protected readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
 
-  // Derived signals
-  private item = computed(() => this.itemData().item);
   private userProfile = toSignal(this.userSessionService.userProfile$);
+
+  protected readonly canViewForum = computed(() =>
+    !this.userProfile()?.tempUser && this.config.featureFlags.enableForum,
+  );
 
   // Signals from store
   private observationInfo = this.store.selectSignal(fromObservation.selectObservedGroupInfo);
@@ -55,11 +63,23 @@ export class ItemForumComponent {
   visibleThreadId = this.store.selectSignal(fromForum.selectVisibleThreadId);
 
   /** Whether at most one thread can exist in this context (Task + not observing, or Task + observing a user). */
-  singleThreadContext = computed(() => canThreadExist(this.itemData().item, this.observationInfo()));
+  singleThreadContext = computed(() => {
+    if (!this.canViewForum()) {
+      return false;
+    }
+    const item = this.item();
+    return item ? canThreadExist(item, this.observationInfo()) : false;
+  });
 
   // --- Data fetching (using fetchList utility) ---
 
-  private noObservationParams = computed(() => (this.isObserving() ? null : { item: this.item() }));
+  private noObservationParams = computed(() => {
+    if (!this.canViewForum()) {
+      return null;
+    }
+    const item = this.item();
+    return this.isObserving() || !item ? null : { item };
+  });
 
   private myThreads = fetchListFromParams(this.noObservationParams, ({ item }) => this.getThreadService.get(item.id, { isMine: true }));
   myThreadsState = this.myThreads.state;
@@ -72,9 +92,15 @@ export class ItemForumComponent {
   refreshOthersThreads = this.othersThreads.refresh;
 
   private observedGroupParams = computed(() => {
+    if (!this.canViewForum()) {
+      return null;
+    }
+    const item = this.item();
     const observationInfo = this.observationInfo();
-    if (!observationInfo) return null;
-    return { item: this.item(), groupId: observationInfo.route.id };
+    if (!item || !observationInfo) {
+      return null;
+    }
+    return { item, groupId: observationInfo.route.id };
   });
 
   private observedGroupThreads = fetchListFromParams(this.observedGroupParams, ({ item, groupId }) =>
@@ -87,17 +113,26 @@ export class ItemForumComponent {
 
   /** Combined state and context for the single-thread placeholder. */
   singleThreadInfo = computed((): SingleThreadInfo => {
-    if (!this.singleThreadContext()) return { state: 'none' };
+    if (!this.canViewForum()) {
+      return { state: 'none' };
+    }
+    if (!this.singleThreadContext()) {
+      return { state: 'none' };
+    }
 
-    const itemData = this.itemData();
-    const item = itemData.item;
+    const item = this.item();
+    const route = this.route();
+    if (!item || !route) {
+      return { state: 'none' };
+    }
+
     const observationInfo = this.observationInfo();
 
     const userProfile = this.userProfile();
     if (!userProfile) throw new Error('Forum should not be shown for unauthenticated users');
 
     const participantId = observationInfo ? observationInfo.route.id : userProfile.groupId;
-    const context: ThreadContext = { participantId, itemId: item.id, title: item.string.title, route: itemData.route };
+    const context: ThreadContext = { participantId, itemId: item.id, title: item.string.title, route };
     const canOpen = canOpenThread(item, observationInfo);
 
     const threadData = this.isObserving() ? this.observedGroupThreadsState() : this.myThreadsState();
