@@ -51,7 +51,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-color: var(--alg-white-color, #fff);
+    background-color: var(--alg-left-tab-selected-bg-color, var(--alg-white-color, #fff));
     z-index: 0;
   }
 
