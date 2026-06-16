@@ -62,7 +62,6 @@ import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
-import { ItemExtraTimeComponent } from './containers/item-extra-time/item-extra-time.component';
 import { ItemStatsComponent } from './containers/item-stats/item-stats.component';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -101,7 +100,6 @@ const selectState = createSelector(
     ChapterGroupProgressComponent,
     ChapterUserProgressComponent,
     ItemEditWrapperComponent,
-    ItemExtraTimeComponent,
     ItemStatsComponent,
     ItemForumComponent,
     RouterLinkActive,
