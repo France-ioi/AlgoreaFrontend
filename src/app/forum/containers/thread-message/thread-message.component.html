@@ -2,13 +2,12 @@
 
 <div
   class="message-container"
-  [ngClass]="{
-    'left': !userInfo().isCurrentUser && (eventVal | isMessageEvent),
-    'right': userInfo().isCurrentUser && (eventVal | isMessageEvent),
-    'full-width transparent': (eventVal | isSubmissionEvent) || (eventVal | isAttemptStartedEvent),
-    'started': eventVal | isAttemptStartedEvent,
-    'participant': !userInfo().isCurrentUser && userInfo().isThreadParticipant && (eventVal | isMessageEvent),
-  }"
+  [class.left]="!userInfo().isCurrentUser && (eventVal | isMessageEvent)"
+  [class.right]="userInfo().isCurrentUser && (eventVal | isMessageEvent)"
+  [class.full-width]="(eventVal | isSubmissionEvent) || (eventVal | isAttemptStartedEvent)"
+  [class.transparent]="(eventVal | isSubmissionEvent) || (eventVal | isAttemptStartedEvent)"
+  [class.started]="eventVal | isAttemptStartedEvent"
+  [class.participant]="!userInfo().isCurrentUser && userInfo().isThreadParticipant && (eventVal | isMessageEvent)"
   >
   <div class="message">
     @if (eventVal | isMessageEvent) {
@@ -66,7 +65,7 @@
                   @if (itemRoute(); as route) {
                     <a
                       class="alg-link"
-                      [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers() }"
+                      [class.disabled]="!canCurrentUserLoadAnswers()"
                       [routerLink]="route | with: { answer: { id: eventVal.answerId } } | url: ['task', 'editor']"
                       (click)="onNavigateToSolution()"
                       i18n
@@ -84,7 +83,7 @@
                   @if (itemRoute(); as route) {
                     <a
                       class="alg-link"
-                      [ngClass]="{ 'disabled': !canCurrentUserLoadAnswers() }"
+                      [class.disabled]="!canCurrentUserLoadAnswers()"
                       [routerLink]="route | with: { answer: { id: eventVal.answerId } } | url: ['task', 'editor']"
                       (click)="onNavigateToSolution()"
                       i18n

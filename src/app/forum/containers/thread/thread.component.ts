@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, viewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
 import { delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -86,7 +86,6 @@ const selectThreadInfo = createSelector(
   selector: 'alg-thread',
   templateUrl: './thread.component.html',
   styleUrls: [ './thread.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ThreadMessageComponent,
     LetDirective,
@@ -114,8 +113,8 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   private threadMessageService = inject(ThreadMessageService);
   private fb = inject(FormBuilder);
   private config = inject(APPCONFIG);
-  @ViewChild('messagesScroll') messagesScroll?: ElementRef<HTMLDivElement>;
-  @ViewChild('messageToSendEl') messageToSendEl?: ElementRef<HTMLTextAreaElement>;
+  messagesScroll = viewChild<ElementRef<HTMLDivElement>>('messagesScroll');
+  messageToSendEl = viewChild<ElementRef<HTMLTextAreaElement>>('messageToSendEl');
 
   indicatorLayout = input<IndicatorLayout>('default');
 
@@ -347,7 +346,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     );
     this.subscriptions.add(
       this.isThreadStatusOpened$.pipe(delay(0), filter(isThreadStatusOpened => isThreadStatusOpened)).subscribe(() =>
-        this.messageToSendEl?.nativeElement.focus()
+        this.messageToSendEl()?.nativeElement.focus()
       )
     );
   }
@@ -407,11 +406,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   scrollDown(): void {
-    if (!this.messagesScroll) return;
+    const messagesScroll = this.messagesScroll();
+    if (!messagesScroll) return;
 
-    this.messagesScroll.nativeElement.scrollTo(
+    messagesScroll.nativeElement.scrollTo(
       0,
-      this.messagesScroll.nativeElement.scrollHeight - this.messagesScroll.nativeElement.offsetHeight
+      messagesScroll.nativeElement.scrollHeight - messagesScroll.nativeElement.offsetHeight
     );
   }
 
@@ -452,7 +452,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   focusOnInput(): void {
-    this.messageToSendEl?.nativeElement.focus();
+    this.messageToSendEl()?.nativeElement.focus();
   }
 
   onFollowChanged(threadId: ThreadId, follow: boolean): void {

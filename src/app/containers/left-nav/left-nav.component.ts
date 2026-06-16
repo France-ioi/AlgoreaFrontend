@@ -1,4 +1,5 @@
-import { Component, inject, input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, viewChild } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { equalOptionalFactory, isNotUndefined } from '../../utils/null-undefined-predicates';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -21,7 +22,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
   styleUrls: [ './left-nav.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -38,20 +38,20 @@ export class LeftNavComponent {
   private groupNavTreeService = inject(GroupNavTreeService);
   private layoutService = inject(LayoutService);
 
-  @ViewChild(NgScrollbar, { static: false }) scrollbarRef?: NgScrollbar;
+  scrollbarRef = viewChild(NgScrollbar);
 
   treeIndex = input.required<number>();
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
 
-  @Output() selectElement = toObservable(this.treeIndex).pipe(
+  selectElement = outputFromObservable(toObservable(this.treeIndex).pipe(
     map(idx => this.navTreeServices[idx]),
     filter(isNotUndefined),
     switchMap(service => service.state$),
     readyData<NavTreeData>(),
     map((navTreeData): EntityPathRoute | undefined => navTreeData.selectedElementRoute),
     distinctUntilChanged(equalOptionalFactory(areSameElements)),
-  );
+  ));
 
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;

@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, Renderer2, signal, viewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
 import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { combineLatest, merge, of, Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { inject } from '@angular/core';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
-import { Location, NgClass, AsyncPipe } from '@angular/common';
+import { Location, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
@@ -39,9 +39,7 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
   selector: 'alg-root',
   templateUrl: './app.component.html',
   styleUrls: [ './app.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgClass,
     LeftPanelComponent,
     LetDirective,
     TopBarComponent,
@@ -69,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private chunkErrorService = inject(ChunkErrorService);
   private itemRouter = inject(ItemRouter);
   private config = inject(APPCONFIG);
-  @ViewChild(TopBarComponent) topBarComponent?: TopBarComponent;
+  private topBarComponent = viewChild(TopBarComponent);
 
   private dialogService = inject(Dialog);
 
@@ -101,7 +99,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // doesn't flash during quick inline→inline transitions between items.
     switchMap(value => (value ? of(true) : of(false).pipe(delay(300)))),
   );
-  scrolled = false;
+  scrolled = signal(false);
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   groupObservationError$ = this.store.select(fromObservation.selectObservationError);
 
@@ -152,19 +150,19 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onScrollContent(scrollEl: HTMLElement): void {
-    const topBarHeight = Number(this.topBarComponent?.elementRef.nativeElement.clientHeight || 0);
+    const topBarHeight = Number(this.topBarComponent()?.elementRef.nativeElement.clientHeight || 0);
     const pageNavigatorNeighborWidgetRect
       = document.querySelector('#page-navigator-neighbor-widget')?.getBoundingClientRect();
     const gap = pageNavigatorNeighborWidgetRect
       ? ((pageNavigatorNeighborWidgetRect.top + pageNavigatorNeighborWidgetRect.height) + scrollEl.scrollTop) - topBarHeight
       : topBarHeight;
-    if (scrollEl.scrollTop > gap && !this.scrolled) {
+    if (scrollEl.scrollTop > gap && !this.scrolled()) {
       this.ngZone.run(() => {
-        this.scrolled = true;
+        this.scrolled.set(true);
       });
-    } else if (scrollEl.scrollTop <= gap && this.scrolled) {
+    } else if (scrollEl.scrollTop <= gap && this.scrolled()) {
       this.ngZone.run(() => {
-        this.scrolled = false;
+        this.scrolled.set(false);
       });
     }
   }

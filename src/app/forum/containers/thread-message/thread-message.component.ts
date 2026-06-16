@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
 import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
@@ -6,7 +6,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { Router, RouterLink } from '@angular/router';
 import { ScoreRingComponent } from '../../../ui-components/score-ring/score-ring.component';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { BreakLinesPipe } from '../../../pipes/breakLines';
 import { ThreadId } from '../../models/threads';
 import {
@@ -24,9 +24,7 @@ import { fromItemContent } from 'src/app/items/store';
   selector: 'alg-thread-message',
   templateUrl: './thread-message.component.html',
   styleUrls: [ './thread-message.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    NgClass,
     NgTemplateOutlet,
     ScoreRingComponent,
     RouterLink,
