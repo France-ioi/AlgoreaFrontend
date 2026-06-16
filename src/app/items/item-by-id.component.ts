@@ -33,13 +33,10 @@ import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
 import { APPCONFIG } from 'src/app/config';
-import { canCurrentUserViewContent, AllowsViewingItemContentPipe } from 'src/app/items/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
-import { AllowsWatchingItemResultsPipe } from 'src/app/items/models/item-watch-permission';
-import { ChapterUserProgressComponent } from './containers/chapter-user-progress/chapter-user-progress.component';
-import { ChapterGroupProgressComponent } from './containers/chapter-group-progress/chapter-group-progress.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ItemTaskEditComponent } from './containers/item-task-edit/item-task-edit.component';
 import { AnswerAuthorIndicatorComponent } from './containers/answer-author-indicator/answer-author-indicator.component';
@@ -93,14 +90,10 @@ const selectState = createSelector(
     ItemContentComponent,
     ItemTaskEditComponent,
     LoadingComponent,
-    ChapterGroupProgressComponent,
-    ChapterUserProgressComponent,
     ItemEditWrapperComponent,
     RouterLinkActive,
     RouterOutlet,
     AsyncPipe,
-    AllowsViewingItemContentPipe,
-    AllowsWatchingItemResultsPipe,
     ButtonComponent,
     LoginWallComponent,
     RestrictedContentComponent,
@@ -155,7 +148,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
   readonly observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
-  readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
   readonly isThreadInline$ = combineLatest([
     this.store.select(fromForum.selectThreadInlineContext),
     this.userSessionService.userProfile$,

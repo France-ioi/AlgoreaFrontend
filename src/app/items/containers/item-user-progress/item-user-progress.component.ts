@@ -1,11 +1,10 @@
-import { Component, computed, OnDestroy, inject, input } from '@angular/core';
+import { Component, computed, OnDestroy, inject } from '@angular/core';
 import { GetParticipantProgressService } from '../../data-access/get-participant-progress.service';
-import { Observable, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { ItemType } from 'src/app/items/models/item-type';
-import { ItemData } from '../../models/item-data';
 import { ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { DurationToReadablePipe, SecondsToDurationPipe } from 'src/app/pipes/duration';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
@@ -30,6 +29,9 @@ import {
   CdkTable
 } from '@angular/cdk/table';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from 'src/app/items/store';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 interface RowData {
   id: string,
@@ -39,13 +41,16 @@ interface RowData {
   timeSpent: number,
   submissions: number,
   score: number,
+  validated: boolean,
+  hintsRequested: number,
+  noScore: boolean,
   currentUserPermissions: ItemPermWithWatch,
 }
 
 @Component({
-  selector: 'alg-chapter-user-progress',
-  templateUrl: './chapter-user-progress.component.html',
-  styleUrls: [ './chapter-user-progress.component.scss' ],
+  selector: 'alg-item-user-progress',
+  templateUrl: './item-user-progress.component.html',
+  styleUrls: [ './item-user-progress.component.scss' ],
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -71,14 +76,20 @@ interface RowData {
     CdkNoDataRow,
   ]
 })
-export class ChapterUserProgressComponent implements OnDestroy {
+export class ItemUserProgressComponent implements OnDestroy {
+  private store = inject(Store);
   private getParticipantProgressService = inject(GetParticipantProgressService);
 
-  itemData = input.required<ItemData>();
+  protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
+  protected readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  protected readonly currentResult = this.store.selectSignal(fromItemContent.selectActiveContentCurrentResult);
 
   private readonly refresh$ = new Subject<void>();
-  state$: Observable<FetchState<RowData[]>> = toObservable(this.itemData).pipe(
-    switchMap(({ item, route }) =>
+  state$: Observable<FetchState<RowData[]>> = combineLatest([
+    toObservable(this.item).pipe(filter(isNotNull)),
+    toObservable(this.route).pipe(filter(isNotNull)),
+  ]).pipe(
+    switchMap(([ item, route ]) =>
       this.getParticipantProgressService.get(item.id, { watchedGroupId: route.observedGroup?.id }).pipe(map(participantProgress => ([
         {
           id: item.id,

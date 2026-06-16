@@ -1,6 +1,5 @@
 @if (state$ | async; as state) {
   @if (state.isReady && state.data; as itemData) {
-    <ng-container *ngrxLet="isObserving$ as isObserving">
       <ng-container *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed">
         @if (!(fullFrameContent$ | async)) {
           <alg-item-header [itemData]="itemData"></alg-item-header>
@@ -86,33 +85,6 @@
               (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
             ></alg-item-task-edit>
           }
-          @if (currentTab?.tag === 'alg-chapter-progress') {
-            @if ((!isObserving && (itemData.item.permissions | allowsViewingContent)) || (itemData.item.permissions | allowsWatchingResults) ) {
-              @if (isObserving && (observedGroup$ | async)?.route?.contentType !== 'user') {
-                <alg-chapter-group-progress
-                  class="alg-flex-1"
-                  [itemData]="itemData"
-                ></alg-chapter-group-progress>
-              }
-              @else {
-                <alg-chapter-user-progress
-                  class="alg-flex-1"
-                  [itemData]="itemData"
-                ></alg-chapter-user-progress>
-              }
-            } @else {
-              @if (isObserving) {
-                <p class="not-allow-caption" i18n>
-                You are not allowed to view the progress of other users on this content.
-              </p>
-              }
-              @else {
-                <p class="not-allow-caption" i18n>
-                You are not allowed to view this content.
-              </p>
-              }
-            }
-          }
           @if (currentTab?.tag ==='alg-parameters') {
             <alg-item-edit-wrapper [itemData]="itemData"></alg-item-edit-wrapper>
           }
@@ -142,7 +114,6 @@
           </div>
         }
       </ng-container>
-    </ng-container>
   }
   @if (state.isFetching) {
     <alg-loading class="alg-flex-1"></alg-loading>

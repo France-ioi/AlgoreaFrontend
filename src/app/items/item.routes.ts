@@ -44,7 +44,8 @@ const routes: Routes = [
           },
           {
             path: 'chapter',
-            children: [],
+            loadComponent: () =>
+              import('./containers/item-progress/item-progress.component').then(m => m.ItemProgressComponent),
           },
           {
             path: 'chapter-user-progress',

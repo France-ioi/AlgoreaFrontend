@@ -37,7 +37,7 @@ test('checks user progress tooltip', async ({ page }) => {
     await expect.soft(groupProgressGridLocator).toBeVisible();
   });
 
-  const targetRow = page.locator('alg-chapter-group-progress').getByRole('row').filter({
+  const targetRow = page.locator('alg-item-group-progress').getByRole('row').filter({
     has: page.getByText('usr_5p020x2thuyu'),
   });
   const cellLocator = targetRow.getByTestId('user-progress-tooltip-target');
