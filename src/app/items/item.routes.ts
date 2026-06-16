@@ -10,7 +10,9 @@ const routes: Routes = [
     path: ':idOrAlias',
     component: ItemByIdComponent,
     canDeactivate: [ BeforeUnloadGuard, PendingChangesGuard ],
-    // Children below do not use routing but there are defined here so that the router can validate the route exists
+    // Migration in progress (see .cursor/plans/item-tabs-outlet-*): secondary tabs are being moved
+    // from the @if chain in item-by-id to lazy routed components rendered in <router-outlet>.
+    // Routes still defined as `children: []` are validation-only stubs (rendered by the @if chain).
     children: [
       { path: '', pathMatch: 'full', children: [] },
       {

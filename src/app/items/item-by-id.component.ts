@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { combineLatest, of, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   delay,
@@ -107,6 +107,7 @@ const selectState = createSelector(
     ItemStatsComponent,
     ItemForumComponent,
     RouterLinkActive,
+    RouterOutlet,
     AsyncPipe,
     AllowsViewingItemContentPipe,
     AllowsWatchingItemResultsPipe,
