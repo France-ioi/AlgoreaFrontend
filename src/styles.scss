@@ -36,11 +36,6 @@
 @include meta.load-css('assets/scss/text-colors');
 @include meta.load-css('assets/scss/text-sizes');
 
-/* Custom themes */
-@include meta.load-css('assets/scss/themes/coursera-pt');
-@include meta.load-css('assets/scss/themes/probabl');
-@include meta.load-css('assets/scss/themes/thymio');
-
 @media screen and (max-width: 599.98px) {
   :root {
     --alg-space-size-1: 2rem;

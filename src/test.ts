@@ -25,7 +25,6 @@ const mockAppConfig = {
   allowForcedToken: true,
   authType: 'tokens',
   itemPlatformId: 'algorea_backend',
-  theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
     showGroupAccessTab: true,

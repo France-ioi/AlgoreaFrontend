@@ -22,7 +22,6 @@ export const mockConfig: AppConfig = {
 
   itemPlatformId: 'algorea_backend',
 
-  theme: 'default',
   featureFlags: {
     hideTaskTabs: [],
     showGroupAccessTab: true,
