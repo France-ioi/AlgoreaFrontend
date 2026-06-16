@@ -59,7 +59,8 @@ const routes: Routes = [
       },
       {
         path: 'extra-time',
-        children: [],
+        loadComponent: () =>
+          import('./containers/item-extra-time/item-extra-time.component').then(m => m.ItemExtraTimeComponent),
       },
       {
         path: 'forum',
