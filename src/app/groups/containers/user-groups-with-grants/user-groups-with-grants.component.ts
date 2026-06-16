@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
 import { mapStateData, mapToFetchState } from 'src/app/utils/operators/state';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -11,7 +11,6 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
   selector: 'alg-user-groups-with-grants',
   templateUrl: './user-groups-with-grants.component.html',
   styleUrls: [ './user-groups-with-grants.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

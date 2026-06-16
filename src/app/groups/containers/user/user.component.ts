@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
@@ -24,7 +24,6 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
   selector: 'alg-user',
   templateUrl: './user.component.html',
   styleUrls: [ './user.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

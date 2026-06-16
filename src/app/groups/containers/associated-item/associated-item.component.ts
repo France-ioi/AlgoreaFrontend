@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, input, OnDestroy, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, forwardRef, input, OnDestroy, signal, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
@@ -42,7 +42,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
       multi: true,
     }
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,

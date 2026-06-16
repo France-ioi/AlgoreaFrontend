@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { readyData } from 'src/app/utils/operators/state';
 import { of, Subscription, combineLatest, switchMap, EMPTY } from 'rxjs';
@@ -41,7 +41,6 @@ import {
   selector: 'alg-group-edit',
   templateUrl: './group-edit.component.html',
   styleUrls: [ './group-edit.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LoadingComponent,
     ErrorComponent,
@@ -98,7 +97,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     rootSkill: [ '', [] ],
   });
   initialFormData?: Group;
-  minLockMembershipApprovalUntilDate?: Date;
+  minLockMembershipApprovalUntilDate = signal<Date | undefined>(undefined);
 
   state$ = this.store.select(fromGroupContent.selectActiveContentGroupState);
 
@@ -268,8 +267,8 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
     if (enabled) {
       const initialRequireLockMembershipApprovalUntil = this.initialFormData?.requireLockMembershipApprovalUntil;
       const currentDate = new Date();
-      this.minLockMembershipApprovalUntilDate = initialRequireLockMembershipApprovalUntil && initialRequireLockMembershipApprovalUntil
-        < currentDate ? initialRequireLockMembershipApprovalUntil : currentDate;
+      this.minLockMembershipApprovalUntilDate.set(initialRequireLockMembershipApprovalUntil && initialRequireLockMembershipApprovalUntil
+        < currentDate ? initialRequireLockMembershipApprovalUntil : currentDate);
       requireLockMembershipApprovalUntilControl.addValidators(Validators.required);
     } else {
       requireLockMembershipApprovalUntilControl.removeValidators(Validators.required);

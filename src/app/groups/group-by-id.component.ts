@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, viewChild } from '@angular/core';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { APPCONFIG } from 'src/app/config';
 import { groupInfo } from 'src/app/models/content/group-info';
@@ -33,7 +33,6 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
   selector: 'alg-group-by-id',
   templateUrl: './group-by-id.component.html',
   styleUrls: [ './group-by-id.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     GroupHeaderComponent,
     GroupIndicatorComponent,
@@ -65,13 +64,7 @@ export class GroupByIdComponent implements OnDestroy {
 
   hideAccessTab = !this.config.featureFlags.showGroupAccessTab;
 
-  // use of ViewChild required as these elements are shown under some conditions, so may be undefined
-  @ViewChild('overviewTab') overviewTab?: RouterLinkActive;
-  @ViewChild('compositionTab') compositionTab?: RouterLinkActive;
-  @ViewChild('adminTab') adminTab?: RouterLinkActive;
-  @ViewChild('settingsTab') settingsTab?: RouterLinkActive;
-  @ViewChild('accessTab') accessTab?: RouterLinkActive;
-  @ViewChild('groupEdit') groupEdit?: GroupEditComponent;
+  groupEdit = viewChild<GroupEditComponent>('groupEdit');
 
   // on state change, update current content page info (for breadcrumb)
   private groupToCurrentContentSubscription = this.state$.pipe(readyData<GroupData>()).subscribe(({ route }) => {
@@ -119,7 +112,7 @@ export class GroupByIdComponent implements OnDestroy {
   }
 
   isDirty(): boolean {
-    return !!this.groupEdit?.isDirty();
+    return !!this.groupEdit()?.isDirty();
   }
 
   refreshNav(): void {

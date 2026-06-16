@@ -1,4 +1,4 @@
-import { Component, input, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, OnDestroy, inject } from '@angular/core';
 import { GroupData } from '../../models/group-data';
 import { AsyncPipe } from '@angular/common';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
@@ -15,7 +15,6 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
   selector: 'alg-group-header',
   templateUrl: './group-header.component.html',
   styleUrls: [ './group-header.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     AsyncPipe,
     RouterLink,
