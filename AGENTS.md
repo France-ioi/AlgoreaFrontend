@@ -47,7 +47,7 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 - Max line length: 140 characters
 
 ## Styling
-- CSS variables are defined in theme files (`src/assets/scss/themes/`)
+- CSS variables are defined in `src/variables.scss` and can be overridden per customer at deploy time (see `.cursor/ARCHITECTURE.md`)
 - Primary color: `--alg-primary-color` (not `--alg-primary`)
 - Always provide fallback values for CSS variables
 - Use `functions.toRem()` for all pixel values instead of direct `rem` values (e.g., `functions.toRem(16)` not `1rem`)

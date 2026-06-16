@@ -2,12 +2,40 @@
 export const DESCRIPTION_IFRAME_BASE_CSS_MARKER = 'alg-description-iframe-base-css';
 
 /**
+ * CSS variables from `descriptionBaseCss` that may be overridden at deploy time on the parent page.
+ * Snapshotted into the iframe srcdoc so customer branding applies inside the opaque sandbox.
+ */
+export const DESCRIPTION_IFRAME_CSS_VARS = [
+  '--font-family',
+  '--alg-primary-color',
+  '--alg-primary-light-color',
+  '--alg-primary-dark-color',
+  '--alg-secondary-color',
+  '--alg-accent-color',
+  '--alg-accent-dark-color',
+  '--alg-black-color',
+  '--alg-white-color',
+  '--alg-light-color',
+  '--alg-border-color',
+  '--alg-border-light-color',
+  '--alg-light-bg-color',
+  '--alg-light-text-color',
+  '--alg-dark-text-color',
+  '--base-text-color',
+  '--dark-text-color',
+  '--alg-space-size-4',
+  '--alg-space-size-5',
+  '--border-radius',
+  '--description-reading-max-width',
+] as const;
+
+/**
  * Default Algorea tokens and typography for sandboxed item descriptions.
- * Duplicates a subset of `src/variables.scss` and the theme overrides from `src/assets/scss/themes/*.scss`.
+ * Duplicates a subset of `src/variables.scss`.
  * Body copy matches embedded `.html-container` inheritance (≈1rem, dark text), not `.alg-text-base`.
  *
- * The iframe is cross-origin (opaque), so parent stylesheets cannot reach inside; theme overrides must be
- * inlined here. The component sets `data-theme` on the inner `<html>` to mirror the active app theme.
+ * The iframe is cross-origin (opaque), so parent stylesheets cannot reach inside; deploy-time overrides
+ * on the parent `:root` are snapshotted via `buildParentCssVarOverrides()` and appended here.
  */
 export const descriptionBaseCss = `
 /* ${DESCRIPTION_IFRAME_BASE_CSS_MARKER} */
@@ -35,23 +63,6 @@ export const descriptionBaseCss = `
   --border-radius: .5rem;
   /* Default reading measure (920px); authors may override in description CSS. */
   --description-reading-max-width: 57.5rem;
-}
-
-/* Theme overrides — keep in sync with src/assets/scss/themes/*.scss. */
-[data-theme=thymio] {
-  --font-family: "Poppins", sans-serif;
-  --alg-primary-color: #452AB6;
-}
-
-[data-theme=probabl] {
-  --font-family: "Geist", "Roboto", sans-serif;
-  --alg-primary-color: #1E22AA;
-}
-
-[data-theme=coursera-pt] {
-  --font-family: "Source Sans Pro", Arial, sans-serif;
-  --alg-primary-color: #0056D2;
-  --alg-primary-dark-color: #053B89;
 }
 
 *, *::before, *::after {
@@ -176,3 +187,18 @@ th, td {
   max-width: 100% !important;
 }
 `;
+
+export function buildParentCssVarOverrides(doc: Document): string {
+  const view = doc.defaultView;
+  if (!view) return '';
+
+  const computed = view.getComputedStyle(doc.documentElement);
+  const lines = DESCRIPTION_IFRAME_CSS_VARS
+    .map(name => {
+      const value = computed.getPropertyValue(name).trim();
+      return value ? `  ${name}: ${value};` : '';
+    })
+    .filter(Boolean);
+
+  return lines.length > 0 ? `\n:root {\n${lines.join('\n')}\n}\n` : '';
+}

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Renderer2, signal, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { UserSessionService } from './services/user-session.service';
 import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { combineLatest, merge, of, Subscription } from 'rxjs';
@@ -62,7 +62,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private crashReportingService = inject(CrashReportingService);
   private location = inject(Location);
   private titleService = inject(Title);
-  private renderer = inject(Renderer2);
   private chunkErrorService = inject(ChunkErrorService);
   private itemRouter = inject(ItemRouter);
   private config = inject(APPCONFIG);
@@ -112,9 +111,6 @@ export class AppComponent implements OnInit, OnDestroy {
     const redirectTo = urlToRedirectTo({ from: this.location.path() });
     if (redirectTo) void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
 
-    if (this.config.theme !== 'default') {
-      this.renderer.setAttribute(document.body, 'data-theme', `${this.config.theme}`);
-    }
     // eslint-disable-next-line no-console
     console.log(`App version: ${version}`);
 

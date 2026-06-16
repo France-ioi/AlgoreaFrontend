@@ -19,7 +19,7 @@ import {
   iframeMessageSchema,
 } from './description-iframe.messages';
 import { descriptionIframeRuntimeJs } from './description-iframe.runtime';
-import { descriptionBaseCss } from './description-iframe.styles';
+import { descriptionBaseCss, buildParentCssVarOverrides } from './description-iframe.styles';
 
 function escapeHtmlAttributeValue(value: string): string {
   return value
@@ -55,12 +55,12 @@ export class DescriptionIframeComponent {
 
   /**
    * Snapshotted at construct time on purpose:
-   * - `data-theme` is set once at app bootstrap (`app.component.ts`) and never mutates afterward.
+   * - Deploy-time branding overrides are injected on the parent `:root` once at page load.
    * - The active language is fixed for the lifetime of the page (i18n changes trigger a full reload).
    * If either assumption changes, this snapshot must become reactive (or a `Renderer2` watcher).
    */
   private readonly iframeLang = this.document.documentElement.lang || 'en';
-  private readonly iframeTheme = this.document.body.getAttribute('data-theme');
+  private readonly parentThemeCss = buildParentCssVarOverrides(this.document);
 
   readonly fallbackTitle = $localize`:@@descriptionIframeTitle:Description`;
 
@@ -108,17 +108,13 @@ export class DescriptionIframeComponent {
   readonly srcdoc = computed((): SafeHtml => {
     const raw = this.content() ?? '';
     const bodyInner = buildDescriptionBodyHtml(raw);
-    const themeAttr =
-      this.iframeTheme !== null
-        ? ` data-theme="${escapeHtmlAttributeValue(this.iframeTheme)}"`
-        : '';
     const langAttr = escapeHtmlAttributeValue(this.iframeLang);
     const srcdocHtml = `<!doctype html>
-<html lang="${langAttr}"${themeAttr}>
+<html lang="${langAttr}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<style>${descriptionBaseCss}</style>
+<style>${descriptionBaseCss}${this.parentThemeCss}</style>
 <script>${descriptionIframeRuntimeJs}</script>
 </head>
 <body>${bodyInner}</body>

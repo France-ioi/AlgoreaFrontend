@@ -39,8 +39,6 @@ const configSchema = z.object({
 
   itemPlatformId: z.string(),
 
-  theme: z.enum([ 'default', 'coursera-pt', 'probabl', 'thymio' ]).default('default'), // TODO: replace by asset replacement for the domain
-
   featureFlags: z.object({
     enableForum: z.boolean().default(false),
     community: z.enum([ 'disabled', 'notInNav', 'enabled' ]).default('disabled'),

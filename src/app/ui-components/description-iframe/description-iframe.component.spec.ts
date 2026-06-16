@@ -15,7 +15,8 @@ describe('DescriptionIframeComponent', () => {
     }).compileComponents();
 
     document.documentElement.lang = 'fr';
-    document.body.removeAttribute('data-theme');
+    document.documentElement.style.removeProperty('--alg-primary-color');
+    document.documentElement.style.removeProperty('--font-family');
 
     fixture = TestBed.createComponent(DescriptionIframeComponent);
     fixture.detectChanges();
@@ -67,36 +68,24 @@ describe('DescriptionIframeComponent', () => {
     expect(srcdoc).toMatch(/\.full-width\s*\{[^}]*max-width:\s*100%\s*!important/);
   });
 
-  it('should mirror document lang and data-theme on the inner html element', () => {
-    document.body.setAttribute('data-theme', 'thymio');
-    fixture = TestBed.createComponent(DescriptionIframeComponent);
+  it('should mirror document lang on the inner html element', () => {
     fixture.componentRef.setInput('content', 'x');
     fixture.detectChanges();
 
     const srcdoc = iframeEl().srcdoc;
     expect(srcdoc).toContain('lang="fr"');
-    expect(srcdoc).toContain('data-theme="thymio"');
   });
 
-  it('should inline theme overrides so the active theme applies inside the cross-origin iframe', () => {
-    fixture.componentRef.setInput('content', 'x');
-    fixture.detectChanges();
-
-    const srcdoc = iframeEl().srcdoc;
-    expect(srcdoc).toContain('[data-theme=thymio]');
-    expect(srcdoc).toContain('[data-theme=probabl]');
-    expect(srcdoc).toContain('[data-theme=coursera-pt]');
-  });
-
-  it('should omit data-theme on the inner html element when absent on body', () => {
-    document.body.removeAttribute('data-theme');
+  it('should mirror parent :root CSS variables inside the cross-origin iframe', () => {
+    document.documentElement.style.setProperty('--alg-primary-color', '#452AB6');
+    document.documentElement.style.setProperty('--font-family', '"Poppins", sans-serif');
     fixture = TestBed.createComponent(DescriptionIframeComponent);
     fixture.componentRef.setInput('content', 'x');
     fixture.detectChanges();
 
     const srcdoc = iframeEl().srcdoc;
-    // The inlined theme CSS legitimately mentions `[data-theme=...]`; only assert it is not on <html>.
-    expect(srcdoc).not.toMatch(/<html[^>]*data-theme/);
+    expect(srcdoc).toContain('--alg-primary-color: #452AB6');
+    expect(srcdoc).toContain('"Poppins", sans-serif');
   });
 
   it('should produce an empty body for empty content without crashing', () => {

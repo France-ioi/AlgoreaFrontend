@@ -26,7 +26,6 @@ window.appConfig = {
 
   itemPlatformId: 'algorea_backend',
 
-  theme: 'default',
   featureFlags: {
     community: 'enabled',
     enableNotifications: true,
