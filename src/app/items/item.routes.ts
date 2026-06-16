@@ -23,7 +23,8 @@ const routes: Routes = [
       {
         path: 'parameters',
         canDeactivate: [ PendingChangesGuard ],
-        children: [],
+        loadComponent: () =>
+          import('./containers/item-edit-wrapper/item-edit-wrapper.component').then(m => m.ItemEditWrapperComponent),
       },
       {
         path: 'edit',

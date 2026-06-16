@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ItemAllStringsFormComponent } from '../item-strings-form-group/item-all-strings-form.component';
-import { provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { ItemEditWrapperComponent } from './item-edit-wrapper.component';
 import { ItemData } from '../../models/item-data';
+import { fromItemContent } from '../../store';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { ItemEditPerm } from '../../models/item-edit-permission';
 import { ItemViewPerm } from '../../models/item-view-permission';
@@ -81,9 +82,19 @@ function buildItemData(item: Item): ItemData {
   };
 }
 
-function wrapperProviders(appConfig: { apiUrl: string, languages: { tag: string, label: string }[] }): unknown[] {
+function wrapperProviders(
+  appConfig: { apiUrl: string, languages: { tag: string, label: string }[] },
+  seedItem: Item = buildItem(),
+): unknown[] {
+  const seedData = buildItemData(seedItem);
   return [
-    provideMockStore(),
+    provideMockStore({
+      selectors: [
+        { selector: fromItemContent.selectActiveContentItem, value: seedData.item },
+        { selector: fromItemContent.selectActiveContentRoute, value: seedData.route },
+        { selector: fromItemContent.selectActiveContentCurrentResult, value: seedData.currentResult ?? null },
+      ],
+    }),
     { provide: APPCONFIG, useValue: appConfig },
     { provide: CurrentContentService, useValue: { forceNavMenuReload: () => {} } },
     { provide: UpdateItemService, useValue: { updateItem: () => of(undefined) } },
@@ -101,6 +112,7 @@ function wrapperProviders(appConfig: { apiUrl: string, languages: { tag: string,
 describe('ItemEditWrapperComponent – form pristine on load', () => {
   let fixture: ComponentFixture<ItemEditWrapperComponent>;
   let component: ItemEditWrapperComponent;
+  let store: MockStore;
 
   async function setup(appConfig: { apiUrl: string, languages: { tag: string, label: string }[] }): Promise<void> {
     await TestBed.configureTestingModule({
@@ -108,12 +120,17 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
       providers: wrapperProviders(appConfig),
     }).compileComponents();
 
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(ItemEditWrapperComponent);
     component = fixture.componentInstance;
   }
 
   async function loadItem(item: Item): Promise<void> {
-    fixture.componentRef.setInput('itemData', buildItemData(item));
+    const data = buildItemData(item);
+    store.overrideSelector(fromItemContent.selectActiveContentItem, data.item);
+    store.overrideSelector(fromItemContent.selectActiveContentRoute, data.route);
+    store.overrideSelector(fromItemContent.selectActiveContentCurrentResult, data.currentResult ?? null);
+    store.refreshState();
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -209,12 +226,70 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
           description: 'Server updated description',
         },
       });
-      fixture.componentRef.setInput('itemData', buildItemData(serverRefreshedItem));
+      const refreshedData = buildItemData(serverRefreshedItem);
+      store.overrideSelector(fromItemContent.selectActiveContentItem, refreshedData.item);
+      store.overrideSelector(fromItemContent.selectActiveContentRoute, refreshedData.route);
+      store.overrideSelector(fromItemContent.selectActiveContentCurrentResult, refreshedData.currentResult ?? null);
+      store.refreshState();
       fixture.detectChanges();
       await fixture.whenStable();
 
       expect(stringsForm.allStrings.at(0).getRawValue().title).toBe('Changed title');
       expect(component.itemForm.dirty).toBeTrue();
+    });
+
+    it('resets the form when the active item id changes', async () => {
+      await loadItem(buildItem({ id: 'item-1', string: { ...buildItem().string, title: 'First item' } }));
+      await new Promise(resolve => setTimeout(resolve, 0));
+      fixture.detectChanges();
+      const stringsForm = fixture.debugElement.query(By.directive(ItemAllStringsFormComponent))
+        .componentInstance as ItemAllStringsFormComponent;
+      stringsForm.allStrings.at(0).patchValue({
+        languageTag: 'en',
+        title: 'Changed title',
+        subtitle: 'Sub',
+        description: 'Desc',
+      });
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(component.itemForm.dirty).toBeTrue();
+
+      await loadItem(buildItem({ id: 'item-2', string: { ...buildItem().string, title: 'Second item' } }));
+
+      expect(stringsForm.allStrings.at(0).getRawValue().title).toBe('Second item');
+      expect(component.itemForm.dirty).toBeFalse();
+    });
+  });
+
+  describe('showDescription', () => {
+    beforeEach(async () => {
+      await setup({
+        apiUrl: 'http://test',
+        languages: [ { tag: 'en', label: 'English' } ],
+      });
+    });
+
+    it('hides the description editor when there is no current result', async () => {
+      const item = buildItem();
+      const data = buildItemData(item);
+      store.overrideSelector(fromItemContent.selectActiveContentItem, data.item);
+      store.overrideSelector(fromItemContent.selectActiveContentRoute, data.route);
+      store.overrideSelector(fromItemContent.selectActiveContentCurrentResult, null);
+      store.refreshState();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      const stringsForm = fixture.debugElement.query(By.directive(ItemAllStringsFormComponent))
+        .componentInstance as ItemAllStringsFormComponent;
+      expect(stringsForm.showDescription()).toBeFalse();
+    });
+
+    it('shows the description editor for non-Task items with a current result', async () => {
+      await loadItem(buildItem({ type: 'Skill' }));
+
+      const stringsForm = fixture.debugElement.query(By.directive(ItemAllStringsFormComponent))
+        .componentInstance as ItemAllStringsFormComponent;
+      expect(stringsForm.showDescription()).toBeTrue();
     });
   });
 });

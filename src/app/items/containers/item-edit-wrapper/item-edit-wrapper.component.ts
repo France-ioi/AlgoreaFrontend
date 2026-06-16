@@ -2,7 +2,6 @@ import {
   Component,
   computed,
   inject,
-  input,
   OnDestroy,
   OnInit,
   signal,
@@ -21,7 +20,8 @@ import { UpdateItemService } from '../../data-access/update-item.service';
 import { UpdateItemStringService } from '../../data-access/update-item-string.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
-import { distinctUntilChanged, map, Observable, of, throwError } from 'rxjs';
+import { distinctUntilChanged, filter, map, Observable, of, throwError } from 'rxjs';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
@@ -65,9 +65,19 @@ import { runItemEditSave } from './item-edit-wrapper-save-flow';
   ]
 })
 export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChangesComponent {
-  readonly itemData = input.required<ItemData>();
-
   private store = inject(Store);
+
+  protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
+  protected readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  protected readonly currentResult = this.store.selectSignal(fromItemContent.selectActiveContentCurrentResult);
+
+  protected readonly itemData = computed((): ItemData | undefined => {
+    const item = this.item();
+    const route = this.route();
+    if (!item || !route) return undefined;
+    // Child forms only read route, item, and currentResult — breadcrumbs are unused here.
+    return { route, item, breadcrumbs: [], currentResult: this.currentResult() ?? undefined };
+  });
   private currentContentService = inject(CurrentContentService);
   private updateItemService = inject(UpdateItemService);
   private updateItemStringService = inject(UpdateItemStringService);
@@ -108,9 +118,8 @@ export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChang
 
     // Full snapshot on item change, partial resync on server-baseline change of the same item,
     // preserving in-progress user edits (same semantics as the former ngOnChanges).
-    toObservable(this.itemData).pipe(takeUntilDestroyed()).subscribe(itemData => {
+    toObservable(this.item).pipe(filter(isNotNull), takeUntilDestroyed()).subscribe(currItem => {
       const prevItem = this.previousItemData?.item;
-      const currItem = itemData.item;
       const idChanged = prevItem?.id !== currItem.id;
 
       if (idChanged) {
@@ -119,7 +128,10 @@ export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChang
         this.resyncServerBaseline(currItem);
       }
 
-      this.previousItemData = itemData;
+      const assembled = this.itemData();
+      if (assembled) {
+        this.previousItemData = assembled;
+      }
     });
   }
 
@@ -148,14 +160,15 @@ export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChang
     }
     const itemChanges = this.buildItemChanges();
     if (itemChanges === null) return;
-    const id = this.itemData().item.id;
+    const activeItem = this.item();
+    if (!activeItem) return;
 
     runItemEditSave({
-      itemId: id,
+      itemId: activeItem.id,
       initialItem: this.initialItem,
       getAllStrings: () => this.itemForm.controls.allStrings.getRawValue(),
       initialLanguageValues: this.initialLanguageValues(),
-      serverSupportedLanguageTags: this.itemData().item.supportedLanguageTags,
+      serverSupportedLanguageTags: activeItem.supportedLanguageTags,
       itemChanges,
       updateItem: changes => this.updateItem(changes),
       updateItemStringService: this.updateItemStringService,
@@ -258,9 +271,11 @@ export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChang
   }
 
   private syncFormStateAfterSave(): void {
+    const activeItem = this.item();
+    if (!activeItem) return;
     syncFormStateAfterSave(
       { itemForm: this.itemForm },
-      this.itemData().item.supportedLanguageTags,
+      activeItem.supportedLanguageTags,
       values => this.initialLanguageValues.set(values),
     );
   }

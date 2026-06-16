@@ -28,8 +28,8 @@ import { mapStateData, readyData } from 'src/app/utils/operators/state';
 import { RawItemRoute, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/guards/before-unload-guard';
 import { ItemContentComponent } from './containers/item-content/item-content.component';
-import { ItemEditWrapperComponent } from './containers/item-edit-wrapper/item-edit-wrapper.component';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
+import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { TaskConfig } from './services/item-task.service';
 import { APPCONFIG } from 'src/app/config';
@@ -90,7 +90,6 @@ const selectState = createSelector(
     ItemContentComponent,
     ItemTaskEditComponent,
     LoadingComponent,
-    ItemEditWrapperComponent,
     RouterLinkActive,
     RouterOutlet,
     AsyncPipe,
@@ -116,9 +115,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private localeService = inject(LocaleService);
   private config = inject(APPCONFIG);
   private confirmationModalService = inject(ConfirmationModalService);
+  private pendingChangesService = inject(PendingChangesService);
 
   readonly itemContentComponent = viewChild(ItemContentComponent);
-  readonly itemEditWrapperComponent = viewChild(ItemEditWrapperComponent);
 
   readonly editorUrl = signal<string | undefined>(undefined);
   private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
@@ -327,7 +326,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
 
   isDirty(): boolean {
-    return !!this.itemContentComponent()?.isDirty() || !!this.itemEditWrapperComponent()?.isDirty();
+    return !!this.itemContentComponent()?.isDirty() || !!this.pendingChangesService.component?.isDirty();
   }
 
 
