@@ -1,13 +1,22 @@
 @if (leftMenu$ | async; as leftMenu) {
   <div class="container">
-    <div class="left-menu" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated }">
+    <div
+      class="left-menu"
+      [class.collapsed]="!leftMenu.shown"
+      [class.animated]="leftMenu.animated"
+    >
       <alg-left-panel></alg-left-panel>
     </div>
     <ng-container *ngrxLet="{ fullFrameContentDisplayed: fullFrameContentDisplayed$, withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$ } as layout">
       <ng-container *ngrxLet="isObserving$ as isObserving">
-        <div class="right-container" [ngClass]="{ collapsed: !leftMenu.shown, animated: leftMenu.animated, 'thread-collapsed': !(isDiscussionVisible$ | async) || (isThreadInline$ | async) }">
+        <div
+          class="right-container"
+          [class.collapsed]="!leftMenu.shown"
+          [class.animated]="leftMenu.animated"
+          [class.thread-collapsed]="!(isDiscussionVisible$ | async) || (isThreadInline$ | async)"
+        >
           <alg-top-bar
-            [showBreadcrumbs]="!scrolled && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
+            [showBreadcrumbs]="!scrolled() && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
             [modeBarDisplayed]="isObserving"
             [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
             [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
@@ -23,7 +32,8 @@
           >
             <div
               class="main-content"
-              [ngClass]="{ 'with-left-padding': layout.withLeftPaddingContentDisplayed, 'full-frame': layout.fullFrameContentDisplayed }"
+              [class.with-left-padding]="layout.withLeftPaddingContentDisplayed"
+              [class.full-frame]="layout.fullFrameContentDisplayed"
               id="main-container"
             >
               <div class="main-content-bottom-padding alg-flex-1">
@@ -36,7 +46,8 @@
     </ng-container>
     <div
       class="right-thread"
-      [ngClass]="{ 'collapsed': !(isDiscussionVisible$ | async), 'inline-mode': isThreadInline$ | async }"
+      [class.collapsed]="!(isDiscussionVisible$ | async)"
+      [class.inline-mode]="isThreadInline$ | async"
     >
       <alg-thread-container></alg-thread-container>
     </div>

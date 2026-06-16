@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
@@ -11,7 +11,6 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
 @Component({
   selector: 'alg-redirect-to-id',
   templateUrl: './redirect-to-id.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     RouterLink,
     LoadingComponent,
@@ -23,7 +22,7 @@ export class RedirectToIdComponent implements OnDestroy {
   private currentContentService = inject(CurrentContentService);
   private config = inject(APPCONFIG);
 
-  notExisting = false;
+  notExisting = signal(false);
 
   private path$ = this.activatedRoute.paramMap.pipe(
     map(params => {
@@ -37,7 +36,7 @@ export class RedirectToIdComponent implements OnDestroy {
     map(path => this.config.redirects[path]),
   ).subscribe(route => {
     if (route) this.itemRouter.navigateTo(itemRoute('activity', route.id, { path: route.path }), { useCurrentObservation: true });
-    else this.notExisting = true;
+    else this.notExisting.set(true);
   });
 
   constructor() {

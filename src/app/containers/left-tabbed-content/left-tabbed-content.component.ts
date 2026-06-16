@@ -1,6 +1,4 @@
-import {
-  ChangeDetectionStrategy, Component, inject, Injector, input, OnDestroy, output, signal, ViewChild
-} from '@angular/core';
+import { Component, inject, Injector, input, OnDestroy, output, signal, viewChild } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
@@ -45,7 +43,6 @@ const minQueryLength = 3;
   selector: 'alg-left-tabbed-content',
   templateUrl: './left-tabbed-content.component.html',
   styleUrls: [ './left-tabbed-content.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LeftTabBarComponent,
     LeftNavComponent,
@@ -69,7 +66,7 @@ export class LeftTabbedContentComponent implements OnDestroy {
   private leftMenuConfig = inject(LeftMenuConfigService);
   private config = inject(APPCONFIG);
 
-  @ViewChild(LeftNavComponent, { static: false }) leftNavRef?: LeftNavComponent;
+  leftNavRef = viewChild(LeftNavComponent);
 
   hideTree = input(false);
   searchActiveChange = output<boolean>();
@@ -181,7 +178,7 @@ export class LeftTabbedContentComponent implements OnDestroy {
   }
 
   private scrollToContent(): void {
-    const scrollbarDirectiveRef = this.leftNavRef?.scrollbarRef;
+    const scrollbarDirectiveRef = this.leftNavRef()?.scrollbarRef();
     if (!scrollbarDirectiveRef) return;
     const scrollbarElement = scrollbarDirectiveRef.nativeElement;
     // The same item id can legitimately appear at two different paths in the tree (e.g. as a chapter sibling and as that

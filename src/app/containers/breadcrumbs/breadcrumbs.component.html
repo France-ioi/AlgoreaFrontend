@@ -4,13 +4,14 @@
     <ul class="breadcrumb-list"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
       @for (breadcrumb of breadcrumbsVal; track $index; let last = $last, first = $first) {
         @if (!first) {
-          <li class="breadcrumb-item separator" [ngClass]="{ 'active': last }">
+          <li class="breadcrumb-item separator" [class.active]="last">
             <i class="ph ph-caret-right separator-icon"></i>
           </li>
         }
         <li
           class="breadcrumb-item"
-          [ngClass]="{ 'active': last, 'routable': breadcrumb.navigateTo }"
+          [class.active]="last"
+          [class.routable]="breadcrumb.navigateTo"
           (click)="onElementClick(breadcrumb)"
           [algTooltip]="breadcrumb.title"
           tooltipPosition="bottom"

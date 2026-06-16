@@ -40,7 +40,7 @@
           </div>
         </div>
       } @else {
-        <div class="left-section alg-flex-1" [ngClass]="{ 'for-mobile': isNarrowScreen }">
+        <div class="left-section alg-flex-1" [class.for-mobile]="isNarrowScreen">
           <a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
             @if (leftHeaderLogoUrl) {
               <img class="logo" [attr.src]="leftHeaderLogoUrl" [attr.alt]="title">

@@ -4,7 +4,7 @@ Guide for migrating legacy components to modern Angular 22 patterns: signal inpu
 
 Project conventions also live in [AGENTS.md](../AGENTS.md).
 
-**Status:** The legacy `@Input()` / `@Output()` migration across `src/app` feature and container components is **complete** (final batch: `item-content` + `item-display`, batch 21). Remaining `@Input` / `@Output` usages outside that scope (e.g. a few app-shell files) are tracked separately. The layering table in §1 is kept for historical context when planning future refactors.
+**Status:** The legacy component modernization across `src/app` is **complete** (final batch 29: app shell, left menu, breadcrumbs, forum thread). New and touched components should follow current patterns in [AGENTS.md](../AGENTS.md). The layering table in §1 is kept for historical context when planning future refactors.
 
 ---
 
