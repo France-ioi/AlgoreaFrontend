@@ -54,7 +54,8 @@ const routes: Routes = [
       },
       {
         path: 'dependencies',
-        children: [],
+        loadComponent: () =>
+          import('./containers/item-dependencies/item-dependencies.component').then(m => m.ItemDependenciesComponent),
       },
       {
         path: 'extra-time',

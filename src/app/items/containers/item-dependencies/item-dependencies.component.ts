@@ -1,10 +1,12 @@
-import { Component, DestroyRef, input, signal, viewChild, inject } from '@angular/core';
+import { Component, DestroyRef, signal, viewChild, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
-import { Subject, switchMap } from 'rxjs';
+import { filter, Subject, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from 'src/app/items/store';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { map, share } from 'rxjs/operators';
-import { ItemData } from '../../models/item-data';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType } from 'src/app/items/models/item-type';
 import { AddItemPrerequisiteService } from '../../data-access/add-item-prerequisite.service';
@@ -49,14 +51,18 @@ export class ItemDependenciesComponent {
   private actionFeedbackService = inject(ActionFeedbackService);
   private getItemDependenciesService = inject(GetItemDependenciesService);
   private readonly destroyRef = inject(DestroyRef);
+  private store = inject(Store);
 
-  itemData = input.required<ItemData>();
+  protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
 
   addDependencyComponent = viewChild('addDependencyComponent', { read: AddDependencyComponent });
 
   private readonly refresh$ = new Subject<void>();
 
-  private readonly itemId$ = toObservable(this.itemData).pipe(map(itemData => itemData.item.id));
+  private readonly itemId$ = toObservable(this.item).pipe(
+    filter(isNotNull),
+    map(item => item.id),
+  );
 
   state$ = this.itemId$.pipe(
     switchMap(itemId => this.getItemPrerequisitesService.get(itemId)),
@@ -84,10 +90,14 @@ export class ItemDependenciesComponent {
   }
 
   onAdd(item: AddedContent<ItemType>): void {
+    const activeItem = this.item();
+    if (!activeItem) {
+      return;
+    }
     if (!item.id) {
       throw new Error('Unexpected: item id is missing');
     }
-    const dependentItemId = this.itemData().item.id;
+    const dependentItemId = activeItem.id;
     this.changeInProgress.set(true);
     this.addItemPrerequisiteService.create(dependentItemId, item.id).pipe(
       takeUntilDestroyed(this.destroyRef),
@@ -107,7 +117,11 @@ export class ItemDependenciesComponent {
   }
 
   onRemove(id: string): void {
-    const dependentItemId = this.itemData().item.id;
+    const activeItem = this.item();
+    if (!activeItem) {
+      return;
+    }
+    const dependentItemId = activeItem.id;
     this.changeInProgress.set(true);
     this.removeItemPrerequisiteService.delete(dependentItemId, id).pipe(
       takeUntilDestroyed(this.destroyRef),
