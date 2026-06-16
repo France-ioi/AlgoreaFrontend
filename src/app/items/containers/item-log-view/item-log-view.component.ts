@@ -42,6 +42,7 @@ import {
   CdkRowDef,
   CdkTable,
 } from '@angular/cdk/table';
+
 interface Column {
   field: string,
   header: string,
@@ -148,7 +149,7 @@ export class ItemLogViewComponent implements OnInit {
   columns = toSignal(this.columns$, { initialValue: [] });
   displayedColumns = computed(() => this.columns().map(column => column.field));
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.resetRows();
   }
 
@@ -158,7 +159,6 @@ export class ItemLogViewComponent implements OnInit {
 
   getRows(pageSize: number, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> {
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
-
       switchMap(observedGroupId => {
         const paginationParams = latestRow === undefined ? undefined : {
           fromItemId: latestRow.item.id,

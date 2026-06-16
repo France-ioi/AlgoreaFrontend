@@ -39,7 +39,8 @@ const routes: Routes = [
           },
           {
             path: 'history',
-            children: [],
+            loadComponent: () =>
+              import('./containers/item-log-view/item-log-view-page.component').then(m => m.ItemLogViewPageComponent),
           },
           {
             path: 'chapter',
