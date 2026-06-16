@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, input, output, viewChildren } from '@angular/core';
+import { Component, ElementRef, input, output, viewChildren } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   ItemStringsControlComponent,
@@ -12,7 +12,6 @@ import { formatLanguageTagDisplay } from 'src/app/items/containers/item-strings-
   selector: 'alg-item-strings-tabs',
   templateUrl: './item-strings-tabs.component.html',
   styleUrls: [ './item-strings-tabs.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     ItemStringsControlComponent,

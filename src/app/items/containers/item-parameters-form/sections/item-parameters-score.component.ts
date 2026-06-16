@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from 'src/app/ui-components/select/select.component';
 import { SelectOptionComponent } from 'src/app/ui-components/select/select-option/select-option.component';
@@ -16,7 +16,6 @@ export type ItemParametersScoreForm = FormGroup<{
   selector: 'alg-item-parameters-score',
   templateUrl: './item-parameters-score.component.html',
   styleUrls: [ './item-parameters-score.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     SelectComponent,

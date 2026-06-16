@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, computed, input, output, signal } from '@angular/core';
+import { Component, inject, OnDestroy, computed, input, output, signal } from '@angular/core';
 import { Subject, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
@@ -21,7 +21,6 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
   selector: 'alg-item-remove-button',
   templateUrl: './item-remove-button.component.html',
   styleUrls: [ './item-remove-button.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LoadingComponent,
     ErrorComponent,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store, createSelector } from '@ngrx/store';
 import { filter, interval, map, of, Subject, switchMap, take, takeUntil } from 'rxjs';
@@ -37,7 +37,6 @@ const selectAllowsSubmissionsUntil = createSelector(
   imports: [ DurationAsCountdownPipe ],
   templateUrl: './time-limited-content-info.component.html',
   styleUrl: './time-limited-content-info.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimeLimitedContentInfoComponent {
   private store = inject(Store);

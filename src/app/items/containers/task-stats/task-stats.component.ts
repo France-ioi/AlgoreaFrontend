@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { Subject, switchMap } from 'rxjs';
@@ -17,7 +17,6 @@ import { taskStatDescriptors } from '../../models/task-stats';
   selector: 'alg-task-stats',
   templateUrl: './task-stats.component.html',
   styleUrls: [ './task-stats.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     LoadingComponent,

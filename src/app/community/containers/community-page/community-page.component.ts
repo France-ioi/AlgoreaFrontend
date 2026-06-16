@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CurrentContentService } from '../../../services/current-content.service';
 import { fromCurrentContent } from '../../../store/navigation/current-content/current-content.store';
@@ -12,7 +12,6 @@ import { AvatarCacheService } from '../../../ui-components/user-avatar/avatar-ca
   selector: 'alg-community-page',
   templateUrl: './community-page.component.html',
   styleUrls: [ './community-page.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommunityThreadsComponent,
     CommunityActivityFeedComponent,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input } from '@angular/core';
+import { Component, DestroyRef, computed, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -21,7 +21,6 @@ type RowMode = 'cannot-edit' | 'not-a-task' | 'fetch';
   selector: 'tr[alg-chapter-stats-row]',
   templateUrl: './chapter-stats-row.component.html',
   styleUrls: [ './chapter-stats-row.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     RouterLink,

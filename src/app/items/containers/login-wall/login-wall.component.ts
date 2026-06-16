@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { filter, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -9,7 +9,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   selector: 'alg-login-wall',
   templateUrl: './login-wall.component.html',
   styleUrls: [ './login-wall.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ ButtonComponent ],
 })
 export class LoginWallComponent implements OnInit {

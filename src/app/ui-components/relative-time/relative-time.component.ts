@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TooltipDirective, TooltipPosition } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { LocaleService } from 'src/app/services/localeService';
@@ -6,7 +6,6 @@ import { computeRefreshInterval, formatRelativeTime } from 'src/app/utils/format
 
 @Component({
   selector: 'alg-relative-time',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ DatePipe, TooltipDirective ],
   template: `
     <span

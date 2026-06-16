@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Pipe, PipeTransform } from '@angular/core';
+import { Component, inject, Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
 import { fromCommunity } from '../../store';
@@ -18,7 +18,6 @@ export class CompactNumberPipe implements PipeTransform {
 
 @Component({
   selector: 'alg-community-stats',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     LoadingComponent,

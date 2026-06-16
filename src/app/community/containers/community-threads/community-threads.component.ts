@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
@@ -14,7 +14,6 @@ import { RawItemRoute } from '../../../models/routing/item-route';
   selector: 'alg-community-threads',
   templateUrl: './community-threads.component.html',
   styleUrls: [ './community-threads.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ThreadTableComponent,
   ],

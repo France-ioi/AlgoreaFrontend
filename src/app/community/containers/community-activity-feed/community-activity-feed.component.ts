@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
@@ -25,7 +25,6 @@ const MAX_DISPLAY = 20;
   selector: 'alg-community-activity-feed',
   templateUrl: './community-activity-feed.component.html',
   styleUrls: [ './community-activity-feed.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterLink,
     LoadingComponent,

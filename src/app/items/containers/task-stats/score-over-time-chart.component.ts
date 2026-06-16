@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, computed, signal } from '@angular/core';
+import { Component, input, computed, signal } from '@angular/core';
 import { ScoreDistributionEntry } from '../../data-access/get-task-stats.service';
 
 const TIME_BUCKET_KEYS = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60 ];
@@ -77,7 +77,6 @@ function pctsAtTime(t: number, sortedEntries: ScoreDistributionEntry[]): Record<
 
 @Component({
   selector: 'alg-score-over-time-chart',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './score-over-time-chart.component.html',
   styleUrls: [ './score-over-time-chart.component.scss' ],
 })

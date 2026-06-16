@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -22,7 +22,6 @@ import { ChapterStatsComponent } from '../chapter-stats/chapter-stats.component'
  */
 @Component({
   selector: 'alg-item-stats',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ ErrorComponent, TaskStatsComponent, ChapterStatsComponent ],
   template: `
     @if (itemData(); as data) {

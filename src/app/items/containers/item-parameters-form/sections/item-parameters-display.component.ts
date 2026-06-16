@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { startWith, switchMap } from 'rxjs';
@@ -23,7 +23,6 @@ export type ItemParametersDisplayForm = FormGroup<{
   selector: 'alg-item-parameters-display',
   templateUrl: './item-parameters-display.component.html',
   styleUrls: [ './item-parameters-display.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     InputComponent,

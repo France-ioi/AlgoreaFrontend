@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 
 /**
@@ -15,7 +15,6 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   templateUrl: './back-link-bar.component.html',
   styleUrls: [ './back-link-bar.component.scss' ],
   imports: [ ButtonComponent ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackLinkBarComponent {
   heading = input.required<string>();

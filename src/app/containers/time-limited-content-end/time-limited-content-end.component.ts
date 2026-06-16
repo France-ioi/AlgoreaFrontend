@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -46,7 +46,6 @@ const selectActiveContentIsTimeLimitedContentRoot = createSelector(
   ],
   templateUrl: './time-limited-content-end.component.html',
   styleUrl: './time-limited-content-end.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimeLimitedContentEndComponent {
 

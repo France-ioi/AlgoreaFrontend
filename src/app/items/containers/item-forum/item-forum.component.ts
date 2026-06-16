@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, computed } from '@angular/core';
+import { Component, effect, inject, input, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { GetThreadsService } from '../../../data-access/get-threads.service';
@@ -29,7 +29,6 @@ type SingleThreadInfo =
   selector: 'alg-item-forum',
   templateUrl: './item-forum.component.html',
   styleUrls: [ './item-forum.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ThreadTableComponent,
     ForumThreadPlaceholderComponent,
