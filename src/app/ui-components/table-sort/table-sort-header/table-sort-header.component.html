@@ -1,5 +1,5 @@
 <label class="label" [class.cursor-pointer]="sortEnabled()">
-  <ng-content></ng-content>
+  <ng-content />
   @if (sortEnabled()) {
     @let icon = sortOrder() === 1
       ? 'ph-duotone ph-sort-ascending'

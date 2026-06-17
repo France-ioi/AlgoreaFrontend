@@ -1,9 +1,8 @@
 @if (description(); as description) {
-  <alg-description-iframe
-    data-testid="item-description"
+  <alg-description-iframe data-testid="item-description"
     [content]="description"
     (navigationRequested)="onDescriptionNavigate($event)"
-  ></alg-description-iframe>
+   />
 }
 
 @let item = itemData().item;
@@ -14,12 +13,12 @@
 @let userHasToEnterExplicitely = item.requiresExplicitEntry && resultsFetched && (!hasCurentResult || !(itemData().currentResult! | isActive));
 
 @if (userHasToEnterExplicitely) {
-  <alg-explicit-entry [itemData]="itemData()" (itemRefreshRequired)="refresh.emit()"></alg-explicit-entry>
+  <alg-explicit-entry [itemData]="itemData()" (itemRefreshRequired)="refresh.emit()" />
 }
 
 @else if (!canViewContent) {
   @if (isCurrentUserTemp() && hasPrerequisites() === false) {
-    <alg-login-wall class="alg-flex-1"></alg-login-wall>
+    <alg-login-wall class="alg-flex-1" />
   } @else {
     @if (hasPrerequisites() !== undefined) {
       <div class="no-access-message alg-flex-1">
@@ -56,7 +55,7 @@
         }
       </div>
     }
-    <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()" (hasContent)="onPrerequisiteNotify($event)"></alg-item-unlock-access>
+    <alg-item-unlock-access class="alg-flex-1" [itemData]="itemData()" (hasContent)="onPrerequisiteNotify($event)" />
   }
 }
 
@@ -70,31 +69,29 @@
       <div class="edit">
         <span class="edit-label">
           <span class="alg-base-text-color" i18n>Edit content</span>
-          <alg-switch
-            class="edit-switch"
+          <alg-switch class="edit-switch"
             data-testid="edit-switch"
             [ngModel]="editMode()"
             (ngModelChange)="editMode.set($event)"
             (change)="onEditModeEnableChange($event)"
-          ></alg-switch>
+           />
         </span>
       </div>
     }
     @if (editMode()) {
-      <alg-item-children-edit-form
-        [itemData]="itemData()"
-      ></alg-item-children-edit-form>
+      <alg-item-children-edit-form [itemData]="itemData()"
+       />
     }
     @else { <!-- !editModeEnabled -->
       @if (item | isAChapter) {
-        <alg-chapter-children class="alg-flex-1" [itemData]="itemData()"></alg-chapter-children>
+        <alg-chapter-children class="alg-flex-1" [itemData]="itemData()" />
       }
       @else { <!-- skill -->
-        <alg-sub-skills class="alg-flex-1" [itemData]="itemData()"></alg-sub-skills>
+        <alg-sub-skills class="alg-flex-1" [itemData]="itemData()" />
       }
     }
     @if (item | isASkill) {
-      <alg-parent-skills class="alg-flex-1" [itemData]="itemData()"></alg-parent-skills>
+      <alg-parent-skills class="alg-flex-1" [itemData]="itemData()" />
     }
   }
 }
@@ -117,8 +114,7 @@
   @else { <!-- url set -->
 
     @if (taskConfig() && showTaskDisplay()) {
-      <alg-item-display
-        class="alg-flex-1"
+      <alg-item-display class="alg-flex-1"
         [class.alg-opacity-0]="!isTaskLoaded()"
         [route]="itemData().route"
         [editingPermission]="itemData().item.permissions"
@@ -137,14 +133,13 @@
         (disablePlatformProgress)="disablePlatformProgress.emit($event)"
         (fullFrame)="fullFrameTask.emit($event)"
         (loadingComplete)="onTaskLoadChange($event)"
-      ></alg-item-display>
+       />
     }
     @if (!isTaskLoaded()) {
-      <alg-task-loader
-        class="alg-flex-1 task-loader"
+      <alg-task-loader class="alg-flex-1 task-loader"
         i18n-label label="Loading the content"
         i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
-      ></alg-task-loader>
+       />
     }
 
   }

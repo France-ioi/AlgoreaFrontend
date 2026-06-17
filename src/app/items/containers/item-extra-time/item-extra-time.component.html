@@ -3,36 +3,35 @@
   @let observedGroupInfo = observedGroupInfoSignal();
 
   @if (!(item | isTimeLimitedActivity) ) {
-    <alg-error i18n-message message="This content is not time-limited."></alg-error>
+    <alg-error i18n-message message="This content is not time-limited." />
   }
   @else if (!(item | canCurrentUserSetExtraTime)) {
-    <alg-error i18n-message message="You do not have the permissions to set extra time on this activity."></alg-error>
+    <alg-error i18n-message message="You do not have the permissions to set extra time on this activity." />
   }
   @else if (observedGroupInfo === null) {
     <p i18n>This activity has a duration of {{ item.duration | readable }}. To list and add extra-time to some groups or users, start observation on them.</p>
   }
   @else if (observedGroupInfo === undefined || false) { <!-- loading-->
-    <alg-loading></alg-loading>
+    <alg-loading />
   }
   @else if (false) { <!-- error-->
-    <alg-error i18n-message message="Unable to load the extra time given to this group"></alg-error>
+    <alg-error i18n-message message="Unable to load the extra time given to this group" />
   }
   @else {
     @let state = stateSignal();
     @if (state.data === undefined) {
-      <alg-loading></alg-loading>
+      <alg-loading />
     } @else {
       @let data = state.data;
       <div class="description" data-testid="extra-time-for-group" i18n>
         The extra-time given to "{{ observedGroupInfo.name }}" (i.e., including those given to its ancestors) is
         <span class="extra-time-input">
-          <alg-item-extra-time-input
-            inputStyleClass="size-s"
+          <alg-item-extra-time-input inputStyleClass="size-s"
             inputWidth="5rem"
             [initialValue]="data.additionalTime"
             [disabled]="updating()"
             (saveEvent)="onExtraTimeSave($event, observedGroupInfo.route.id)"
-          ></alg-item-extra-time-input>
+           />
         </span>,
         the resulting extra-time (so including its ancestor groups) is
         <span data-testid="total-additional-time">{{ data.totalAdditionalTime }}s</span>.
@@ -41,10 +40,9 @@
     <!-- to be implemented: way to change that number -->
 
     @if (!(observedGroupInfo.route | isUser)) {
-      <alg-item-extra-time-for-descendants
-        [itemId]="item.id"
+      <alg-item-extra-time-for-descendants [itemId]="item.id"
         [groupId]="observedGroupInfo.route.id"
-      ></alg-item-extra-time-for-descendants>
+       />
     }
   }
 }

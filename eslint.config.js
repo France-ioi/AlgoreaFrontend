@@ -2,6 +2,8 @@
 const js = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const angularPlugin = require('@angular-eslint/eslint-plugin');
+const angularTemplatePlugin = require('@angular-eslint/eslint-plugin-template');
+const angularTemplateParser = require('@angular-eslint/template-parser');
 const angularRecommendedRules = {
   '@angular-eslint/contextual-lifecycle': 'error',
   '@angular-eslint/no-empty-lifecycle-method': 'error',
@@ -27,6 +29,7 @@ module.exports = tseslint.config(
   },
   {
     files: ['src/**/*.ts'],
+    processor: angularTemplatePlugin.processors['extract-inline-html'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
@@ -167,6 +170,18 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-floating-promises': 'off',
       indent: 'off',
       'array-bracket-spacing': 'off',
+    },
+  },
+  {
+    files: ['src/**/*.html'],
+    languageOptions: {
+      parser: angularTemplateParser,
+    },
+    plugins: {
+      '@angular-eslint/template': angularTemplatePlugin,
+    },
+    rules: {
+      '@angular-eslint/template/prefer-self-closing-tags': 'error',
     },
   },
 );

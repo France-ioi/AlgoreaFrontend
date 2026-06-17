@@ -7,37 +7,32 @@
       <div class="error-container alg-flex-1" [algFullHeightContent]="true">
         @if (editingPermission() | allowsEditingAll) {
           @if (initError$ | async) {
-            <alg-error
-              i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
+            <alg-error i18n-message message="It usually occurs when task url is invalid. If the task url is valid and the problem persists, please contact us."
               icon="ph-duotone ph-warning-circle"
-            ></alg-error>
+             />
           } @else {
             @if (urlError$ | async; as error) {
-              <alg-error
-                message="{{ error.message }}"
+              <alg-error message="{{ error.message }}"
                 icon="ph-duotone ph-warning-circle"
-              ></alg-error>
+               />
             } @else {
               @if (metadataError$ | async) {
-                <alg-error
-                  i18n-message message="Error while requesting task metadata"
+                <alg-error i18n-message message="Error while requesting task metadata"
                   icon="ph-duotone ph-warning-circle"
-                ></alg-error>
+                 />
               } @else {
                 @if (unknownError$ | async) {
-                  <alg-error
-                    [message]="errorMessage"
+                  <alg-error [message]="errorMessage"
                     icon="ph-duotone ph-warning-circle"
-                  ></alg-error>
+                   />
                 }
               }
             }
           }
         } @else {
-          <alg-error
-            i18n-message message="Unable to load the task"
+          <alg-error i18n-message message="Unable to load the task"
             icon="ph-duotone ph-warning-circle"
-          ></alg-error>
+           />
         }
         <div class="error-buttons">
           @if (editingPermission() | allowsEditingAll) {
@@ -62,7 +57,7 @@
         <div class="saving-answer">
           <p class="saving-answer-message">
             <span i18n>Saving answer...</span>
-            <alg-loading size="medium"></alg-loading>
+            <alg-loading size="medium" />
             <button alg-button type="button" (click)="skipSave.emit()" i18n>Skip</button>
           </p>
         </div>

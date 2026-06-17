@@ -13,12 +13,12 @@
   </ng-content>
 
   <div class="body">
-    <ng-content></ng-content>
+    <ng-content />
   </div>
 
   @if (showFooter()) {
     <div class="footer">
-      <ng-content select="footer"></ng-content>
+      <ng-content select="footer" />
     </div>
   }
 </div>

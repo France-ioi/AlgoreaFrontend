@@ -1,7 +1,7 @@
 @if (state$ | async; as state) {
   @if (state.isFetching) {
     <div class="spinner-container">
-      <alg-loading size="small"></alg-loading>
+      <alg-loading size="small" />
     </div>
   }
   @if (state.isError) {

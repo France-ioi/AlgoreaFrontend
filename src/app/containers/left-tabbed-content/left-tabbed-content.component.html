@@ -29,21 +29,20 @@
         />
         <ng-container *ngrxLet="searchResultState$ as searchResultState">
           @if (searchResultState.isFetching) {
-            <alg-loading class="alg-flex-1"></alg-loading>
+            <alg-loading class="alg-flex-1" />
           } @else if (searchResultState.isError) {
-            <alg-error
-              class="alg-flex-1"
+            <alg-error class="alg-flex-1"
               i18n-message message="Unable to perform the search."
               icon="ph-duotone ph-warning-circle"
               [showRefreshButton]="true"
               buttonCaption="Retry"
               (refresh)="retrySearch()"
-            ></alg-error>
+             />
           } @else {
             <div class="alg-flex-1 scroll-wrapper">
               <div class="scroll-container">
                 <ng-scrollbar [sensorThrottleTime]="1">
-                  <alg-left-search-result [data]="searchResultState.data"></alg-left-search-result>
+                  <alg-left-search-result [data]="searchResultState.data" />
                 </ng-scrollbar>
               </div>
             </div>

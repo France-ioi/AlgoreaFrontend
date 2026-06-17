@@ -13,7 +13,7 @@
       ></i>
     </span>
     <div class="form-item-control">
-      <alg-switch formControlName="promptToJoinGroupByCode"></alg-switch>
+      <alg-switch formControlName="promptToJoinGroupByCode" />
     </div>
   </div>
 
@@ -30,7 +30,7 @@
         ></i>
       </span>
       <div class="form-item-control">
-        <alg-selection formControlName="childrenLayout" [items]="childrenLayoutOptions"></alg-selection>
+        <alg-selection formControlName="childrenLayout" [items]="childrenLayoutOptions" />
       </div>
     </div>
   }
@@ -48,11 +48,10 @@
         ></i>
       </span>
       <div class="form-item-control">
-        <alg-item-left-nav-icon-select
-          formControlName="leftNavIcon"
+        <alg-item-left-nav-icon-select formControlName="leftNavIcon"
           [defaultIcon]="defaultLeftNavIcon()"
           labelId="sidebar-icon-label"
-        ></alg-item-left-nav-icon-select>
+         />
       </div>
     </div>
   }
@@ -70,7 +69,7 @@
         ></i>
       </span>
       <div class="form-item-control">
-        <alg-switch formControlName="disableChildrenPrevNextNav"></alg-switch>
+        <alg-switch formControlName="disableChildrenPrevNextNav" />
       </div>
     </div>
   }
@@ -89,7 +88,7 @@
       ></i>
     </span>
     <div class="form-item-control">
-      <alg-input [parentForm]="form()" name="thumbnailUrl"></alg-input>
+      <alg-input [parentForm]="form()" name="thumbnailUrl" />
       @if (thumbnailUrlValue(); as thumbnailUrlVal) {
         @if (thumbnailUrlVal.trim().length > 0 && !thumbnailUrlVal.startsWith('https://')) {
           <span class="alg-warning-message" i18n>

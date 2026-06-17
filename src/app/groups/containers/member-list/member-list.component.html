@@ -1,13 +1,12 @@
-<alg-group-composition-filter #compositionFilter (change)="onFilterChange($event)" [defaultValue]="defaultFilter"></alg-group-composition-filter>
+<alg-group-composition-filter #compositionFilter (change)="onFilterChange($event)" [defaultValue]="defaultFilter" />
 @if (rows$ | async; as state) {
   @if (state.isError) {
-    <alg-error
-      class="error dark"
+    <alg-error class="error dark"
       i18n-message message="Error while loading the group members"
       icon="ph-duotone ph-warning-circle"
       [showRefreshButton]="true"
       (refresh)="fetchRows()"
-    ></alg-error>
+     />
   } @else {
     <div class="alg-table-page-wrapper member-list-table">
       <div class="alg-table-horizontal-scroll">
@@ -70,7 +69,7 @@
           <tr class="alg-table-body-tr" *cdkNoDataRow>
             <td class="alg-table-td empty-td" [attr.colspan]="displayedColumns().length">
               @if (state.isFetching) {
-                <alg-loading></alg-loading>
+                <alg-loading />
               } @else {
                 <p class="empty-message" i18n>This list is empty. Check below the different ways to add members or sub-groups.</p>
               }

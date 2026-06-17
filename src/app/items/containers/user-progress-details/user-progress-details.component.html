@@ -49,11 +49,10 @@
 
       @if (progress.type === 'user') {
         <span class="score-section">
-          <alg-score-ring
-            [currentScore]="progress.score"
+          <alg-score-ring [currentScore]="progress.score"
             [diameter]="32"
             [isValidated]="progress.validated"
-          ></alg-score-ring>
+           />
         </span>
       }
       @if (progressData(); as progressData) {

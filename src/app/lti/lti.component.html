@@ -1,21 +1,18 @@
 @if ((navigationData$ | async)?.isFetching) {
-  <alg-loading size="large"></alg-loading>
+  <alg-loading size="large" />
 }
 @if (error$ | async; as error) {
   @if (error === 'fetch_error') {
-    <alg-error
-      i18n-message message="Unable to load this task. Either you have a connection issue or this task is not correctly configured. Please retry, if the problem persists, contact us."
-    ></alg-error>
+    <alg-error i18n-message message="Unable to load this task. Either you have a connection issue or this task is not correctly configured. Please retry, if the problem persists, contact us."
+     />
   }
   @if (error === 'no_child') {
-    <alg-error
-      i18n-message message="This task is not correctly configured (chapter with tasks expected)."
-    ></alg-error>
+    <alg-error i18n-message message="This task is not correctly configured (chapter with tasks expected)."
+     />
   }
   @if (error === 'no_item_or_explicit_entry_with_no_result') {
-    <alg-error
-      i18n-message message="This task is not correctly configured (item not found or explicit entry but no result)"
-    ></alg-error>
+    <alg-error i18n-message message="This task is not correctly configured (item not found or explicit entry but no result)"
+     />
   }
   @if (error === 'login_error') {
     <alg-error>

@@ -1,14 +1,13 @@
 @if (state$ | async; as state) {
   @if (state.isFetching) {
-    <alg-loading class="alg-flex-1"></alg-loading>
+    <alg-loading class="alg-flex-1" />
   }
   @if (state.isError) {
-    <alg-error
-      class="alg-flex-1"
+    <alg-error class="alg-flex-1"
       i18n-message message="Error while loading this chapter's children"
       [showRefreshButton]="true"
       (refresh)="refresh()"
-    ></alg-error>
+     />
   }
   @if (state.isReady && state.data; as data) {
     @if (data.missingValidation) {
@@ -17,11 +16,10 @@
       </p>
     }
     @if (data.children.length === 0) {
-      <alg-error
-        class="alg-flex-1"
+      <alg-error class="alg-flex-1"
         icon="ph ph-folder-simple-lock"
         i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
-      ></alg-error>
+       />
     }
     @if (itemData().item.displaySettings.childrenLayout === 'Grid') {
       @if (data.children.length > 0) {
@@ -55,12 +53,11 @@
                   </div>
                   @if (!item.noScore && ((!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined))) {
                     <div class="grid-card-activity-progress">
-                      <alg-score-ring
-                        [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
+                      <alg-score-ring [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
                         [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
                         [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
                         [compact]="true"
-                      ></alg-score-ring>
+                       />
                     </div>
                   }
                   <div class="grid-card-text-section">
@@ -79,10 +76,9 @@
       }
     } @else if (itemData().item.displaySettings.childrenLayout === 'List') {
       @if (itemData().currentResult?.attemptId; as attemptId) {
-        <alg-item-children-list
-          [children]="data.children"
+        <alg-item-children-list [children]="data.children"
           [routeParams]="{ parentAttemptId: attemptId, path: itemData().route.path.concat([ itemData().item.id ]) }"
-        ></alg-item-children-list>
+         />
       }
     } @else if (itemData().item.displaySettings.childrenLayout === 'Hide') {
       @if (!leftMenuShown()) {

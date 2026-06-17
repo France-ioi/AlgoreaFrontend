@@ -21,10 +21,9 @@
         }
         @if (contentTemplate() && collapsed() && collapsible()) {
           <div class="template alg-flex-1">
-            <ng-container
-              [ngTemplateOutlet]="contentTemplate()!"
+            <ng-container [ngTemplateOutlet]="contentTemplate()!"
               [ngTemplateOutletContext]="{ $implicit: true }"
-            ></ng-container>
+             />
           </div>
         }
         @if (collapsible()) {
@@ -42,9 +41,8 @@
   </alg-section-header>
 
   @if (contentTemplate() && (!collapsed() || !collapsible())) {
-    <ng-container
-      [ngTemplateOutlet]="contentTemplate()!"
+    <ng-container [ngTemplateOutlet]="contentTemplate()!"
       [ngTemplateOutletContext]="{ $implicit: false }"
-    ></ng-container>
+     />
   }
 </div>

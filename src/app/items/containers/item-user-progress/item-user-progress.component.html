@@ -1,14 +1,13 @@
 @if (state$ | async; as state) {
   @if (state.isFetching && !state.data) {
-    <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+    <alg-loading class="alg-flex-1" size="medium" />
   }
   @if (state.isError) {
-    <alg-error
-      class="alg-flex-1"
+    <alg-error class="alg-flex-1"
       i18n-message message="Error while loading the user progress"
       [showRefreshButton]="true"
       (refresh)="refresh()"
-    ></alg-error>
+     />
   }
   @if (state.data) {
     <div class="refresh-button">
@@ -77,10 +76,9 @@
                   }
                   @case ('score') {
                     @if (!rowData.noScore && rowData.latestActivityAt) {
-                      <alg-score-ring
-                        [currentScore]="rowData.score"
+                      <alg-score-ring [currentScore]="rowData.score"
                         [isValidated]="rowData.validated"
-                      ></alg-score-ring>
+                       />
                     }
                   }
                   @default {

@@ -10,11 +10,10 @@ import { GroupOverviewComponent } from './group-overview.component';
   imports: [ GroupOverviewComponent ],
   template: `
     @if (group(); as group) {
-      <alg-group-overview
-        [group]="group"
+      <alg-group-overview [group]="group"
         (groupRefreshRequired)="onGroupRefreshRequired()"
         (leftGroup)="onLeftGroup()"
-      ></alg-group-overview>
+       />
     }
   `,
 })

@@ -8,23 +8,21 @@
   @let isLastMessageByCurrentUser = isLastMessageByCurrentUser$ | async;
   @if (!isWsOpen) {
     <div class="ws-error">
-      <alg-error
-        i18n-message message="Connection with the forum lost. Check your connection, or reload the app if it does not recover automatically."
+      <alg-error i18n-message message="Connection with the forum lost. Check your connection, or reload the app if it does not recover automatically."
         icon="ph-duotone ph-wifi-slash"
-      ></alg-error>
+       />
     </div>
   } @else {
     @let currentState = state();
     @if (currentState.isError) {
       <div class="widget-error">
-        <alg-error
-          i18n-message message="Unable to load the thread messages."
+        <alg-error i18n-message message="Unable to load the thread messages."
           icon="ph-duotone ph-warning-circle"
-        ></alg-error>
+         />
       </div>
     } @else if (currentState.isFetching && !currentState.data) {
       <div class="widget-loading">
-        <alg-loading></alg-loading>
+        <alg-loading />
         <div class="loading-text" i18n>Loading...</div>
       </div>
     } @else {
@@ -34,12 +32,11 @@
           @if (!isMine && threadIdForIndicator && threadStatus?.data?.open) {
             @if (participantUser$ | async; as participantUser) {
               @if (participantUser.name) {
-                <alg-thread-top-indicator
-                  [followStatus]="followStatus!"
+                <alg-thread-top-indicator [followStatus]="followStatus!"
                   [isThreadOpen]="!!threadStatus?.data?.open"
                   [layout]="indicatorLayout()"
                   (followChanged)="onFollowChanged(threadIdForIndicator, $event)"
-                ></alg-thread-top-indicator>
+                 />
               }
             }
           }
@@ -53,14 +50,13 @@
             } @else {
               @if (threadMetadata.id) {
                 @for (event of currentState.data; track event.time) {
-                  <alg-thread-message
-                    class="thread-message"
+                  <alg-thread-message class="thread-message"
                     [threadId]="threadMetadata.id"
                     [event]="event"
                     [userCache]="threadMetadata.userCache ?? []"
                     [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
                     [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
-                  ></alg-thread-message>
+                   />
                 }
                 @if (currentState.isFetching && currentState.data) {
                   @if (isLoadingActivities() && !hasActivitiesData() && hasMessagesData()) {
@@ -125,13 +121,12 @@
                     <div class="thread-assignment">
                       <span class="thread-assignment-label" i18n>Assigned to:</span>
                       @if (assignmentItems$ | async; as assignmentItems) {
-                        <alg-selection
-                          class="small"
+                        <alg-selection class="small"
                           [class.on-colored-bg]="indicatorLayout() === 'default'"
                           [items]="assignmentItems"
                           [selected]="(threadAssignmentIndex$ | async) ?? 1"
                           (change)="changeAssignment($event, threadId)"
-                        ></alg-selection>
+                         />
                       }
                     </div>
                   } @else {

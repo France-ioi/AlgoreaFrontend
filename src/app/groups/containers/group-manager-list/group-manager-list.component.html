@@ -1,14 +1,13 @@
 @if (state$ | async; as state) {
   @if (state.isFetching && !state.data) {
-    <alg-loading class="alg-flex-1"></alg-loading>
+    <alg-loading class="alg-flex-1" />
   }
   @if (state.isError) {
-    <alg-error
-      class="alg-flex-1"
+    <alg-error class="alg-flex-1"
       i18n-message message="Error while loading the group managers"
       [showRefreshButton]="true"
       (refresh)="fetchData()"
-    ></alg-error>
+     />
   }
   @if (state.data; as data) {
     @let managers = data.allManagers;
@@ -169,11 +168,10 @@
       </div>
     }
     @if (group() | canCurrentUserManageMembersAndGroup) {
-      <alg-group-manager-add
-        [group]="group()"
+      <alg-group-manager-add [group]="group()"
         [managers]="currentGroupManagers"
         (added)="onAdded()"
-      ></alg-group-manager-add>
+       />
     }
   }
 }

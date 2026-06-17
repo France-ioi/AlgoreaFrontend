@@ -1,6 +1,5 @@
 <h2 class="alg-h2 alg-text-normal title" i18n>Add a new prerequisite</h2>
-<alg-add-content
-  [allowedTypesForNewContent]="allowedNewItemTypes()"
+<alg-add-content [allowedTypesForNewContent]="allowedNewItemTypes()"
   [searchFunction]="searchFunction"
   [addedIds]="addedIds()"
   [loading]="false"
@@ -8,4 +7,4 @@
   (contentAdded)="onAdd($event)"
   i18n-inputCreatePlaceholder inputCreatePlaceholder="Enter a title to create a new dependency"
   #addContentComponent
-></alg-add-content>
+ />

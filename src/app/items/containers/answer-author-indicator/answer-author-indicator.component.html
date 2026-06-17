@@ -3,20 +3,19 @@
     @if (author$ | async; as author) {
       <div class="container">
         @if (author.isFetching && !author.data) {
-          <alg-loading class="no-padding" size="small"></alg-loading>
+          <alg-loading class="no-padding" size="small" />
         }
         @if (author.isError) {
-          <alg-error i18n-message message="Error while fetching author info"></alg-error>
+          <alg-error i18n-message message="Error while fetching author info" />
         }
         @if (author.isReady && author.data; as author) {
           <div class="content">
             <div class="content-left">
               @if (answer.score || answer.score === 0) {
-                <alg-score-ring
-                  class="score-ring"
+                <alg-score-ring class="score-ring"
                   [currentScore]="answer.score"
                   [diameter]="32"
-                ></alg-score-ring>
+                 />
               }
               <div class="description" i18n>
                 Submitted by

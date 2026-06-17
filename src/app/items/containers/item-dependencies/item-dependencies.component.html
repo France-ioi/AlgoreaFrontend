@@ -4,16 +4,15 @@
     @if (state$ | async; as state) {
       <div>
         @if (state.isFetching || changeInProgress()) {
-          <alg-loading class="loading" size="medium"></alg-loading>
+          <alg-loading class="loading" size="medium" />
         }
         @if (state.isError) {
-          <alg-error
-            icon="ph-duotone ph-warning-circle"
+          <alg-error icon="ph-duotone ph-warning-circle"
             i18n-message message="Unable to load the prerequisites"
             i18n-buttonCaption buttonCaption="Retry to load prerequisites"
             [showRefreshButton]="true"
             (refresh)="refresh()"
-          ></alg-error>
+           />
         }
         @if (!state.isFetching && !changeInProgress() && state.data) {
           @if (state.data.length > 0) {
@@ -46,7 +45,7 @@
                     alg-button-icon
                   ></button>
                   <ng-template #op>
-                    <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+                    <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()" />
                   </ng-template>
                 </li>
               }
@@ -71,28 +70,26 @@
   }
   @if (addedIds$ | async; as addedIds) {
     @if (['all','all_with_grant'].includes(activeItem.permissions.canEdit)) {
-      <alg-add-dependency
-        class="add-dependency"
+      <alg-add-dependency class="add-dependency"
         (contentAdded)="onAdd($event)"
         [addedIds]="addedIds"
         #addDependencyComponent
-      ></alg-add-dependency>
+       />
     }
   }
   <h2 class="alg-h2 alg-text-normal depending-content-title" i18n>Content depending on this one</h2>
   @if (dependenciesState$ | async; as state) {
     <div>
       @if (state.isFetching || changeInProgress()) {
-        <alg-loading size="medium"></alg-loading>
+        <alg-loading size="medium" />
       }
       @if (state.isError) {
-        <alg-error
-          icon="ph-duotone ph-warning-circle"
+        <alg-error icon="ph-duotone ph-warning-circle"
           i18n-message message="Unable to load the dependencies"
           i18n-buttonCaption buttonCaption="Retry to load dependencies"
           [showRefreshButton]="true"
           (refresh)="refresh()"
-        ></alg-error>
+         />
       }
       @if (!state.isFetching && !changeInProgress() && state.data) {
         @if (state.data.length > 0) {
@@ -113,7 +110,7 @@
                   {{ item.string.title }}
                 </a>
                 <ng-template #op>
-                  <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+                  <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()" />
                 </ng-template>
               </li>
             }

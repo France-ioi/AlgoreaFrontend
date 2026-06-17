@@ -12,8 +12,7 @@
     <ng-container formArrayName="allStrings">
       @switch (state()) {
         @case ('tabs') {
-          <alg-item-strings-tabs
-            [languageTags]="tabLanguageTags()"
+          <alg-item-strings-tabs [languageTags]="tabLanguageTags()"
             [defaultLanguageTag]="resolvedLanguageTag()"
             [activeLanguageTag]="activeLanguageTag()"
             [pendingDeletions]="pendingDeletions()"
@@ -28,14 +27,13 @@
             (togglePendingDeletion)="onTogglePendingDeletion($event)"
             (addLanguage)="onAddLanguage($event)"
             (retryFetch)="onRetryFetch($event)"
-          ></alg-item-strings-tabs>
+           />
         }
         @default {
           <div class="tab-panel" [attr.data-testid]="'lang-panel-' + resolvedLanguageTag()">
-            <alg-item-strings-control
-              [formControl]="allStrings.at(0)"
+            <alg-item-strings-control [formControl]="allStrings.at(0)"
               [showDescription]="showDescription()"
-            ></alg-item-strings-control>
+             />
           </div>
         }
       }

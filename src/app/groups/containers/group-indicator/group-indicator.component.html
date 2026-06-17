@@ -8,7 +8,7 @@
       }
       @case ('descendant') {
         <div class="content" i18n>
-          As a member of <alg-group-links class="links" [items]="group().descendantsCurrentUserIsMemberOf"></alg-group-links>
+          As a member of <alg-group-links class="links" [items]="group().descendantsCurrentUserIsMemberOf" />
           you are a member of this group.
         </div>
       }
@@ -32,7 +32,7 @@
           <i class="icon ph-duotone ph-crown"></i>
           <ng-container i18n>
             As a manager of
-            <alg-group-links class="links" [items]="group().ancestorsCurrentUserIsManagerOf"></alg-group-links>,
+            <alg-group-links class="links" [items]="group().ancestorsCurrentUserIsManagerOf" />,
             you can manage this group.
           </ng-container>
         </div>
@@ -42,7 +42,7 @@
           <i class="icon ph-duotone ph-crown"></i>
           <ng-container i18n>
             As a manager of
-            <alg-group-links class="links" [items]="group().descendantsCurrentUserIsManagerOf"></alg-group-links>,
+            <alg-group-links class="links" [items]="group().descendantsCurrentUserIsManagerOf" />,
             you can view this group.
           </ng-container>
         </div>

@@ -1,8 +1,7 @@
 @if (!canViewForum()) {
-  <alg-error
-    class="alg-flex-1"
+  <alg-error class="alg-flex-1"
     i18n-message message="You are not allowed to view this content."
-  ></alg-error>
+   />
 } @else if (item(); as activeItem) {
   @if (route(); as activeRoute) {
     @if (singleThreadContext()) {

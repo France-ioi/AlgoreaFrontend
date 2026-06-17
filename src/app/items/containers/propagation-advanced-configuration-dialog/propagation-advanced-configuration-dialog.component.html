@@ -17,10 +17,9 @@
         permissions on the content.
       </ng-container>
     </p>
-    <alg-propagation-advanced-configuration-form
-      [giverPermissions]="data().permissions"
+    <alg-propagation-advanced-configuration-form [giverPermissions]="data().permissions"
       [itemPropagations]="data().itemPropagations"
       (closeEvent)="dialogRef.close($event)"
-    ></alg-propagation-advanced-configuration-form>
+     />
   </div>
 </alg-modal>

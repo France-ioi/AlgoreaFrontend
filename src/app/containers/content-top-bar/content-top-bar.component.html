@@ -19,12 +19,11 @@
     @if (isItemContentActive()) {
       <div class="margin-right score-section">
         @if (score(); as scoreVal) {
-          <alg-score-ring
-            [bestScore]="scoreVal.best"
+          <alg-score-ring [bestScore]="scoreVal.best"
             [currentScore]="scoreVal.current"
             [isValidated]="scoreVal.validated"
             [diameter]="32"
-          ></alg-score-ring>
+           />
         }
       </div>
     }
@@ -39,24 +38,22 @@
           @if (!showBreadcrumbs() && titleVal) {
             <p class="left-pane-title-text">{{ titleVal }}</p>
           } @else {
-            <alg-breadcrumbs class="breadcrumbs"></alg-breadcrumbs>
+            <alg-breadcrumbs class="breadcrumbs" />
           }
         </div>
       }
       @if (behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed) {
-        <alg-tab-bar
-          class="tab-bar"
+        <alg-tab-bar class="tab-bar"
           styleClass="for-header"
-        ></alg-tab-bar>
+         />
       }
     </ng-container>
   </div>
   <div class="right-pane">
-    <alg-time-limited-content-info></alg-time-limited-content-info>
-    <alg-observation-bar></alg-observation-bar>
+    <alg-time-limited-content-info />
+    <alg-observation-bar />
     @if (navigationNeighbors$ | async; as navigationNeighbors) {
-      <alg-neighbor-widget
-        class="neighbor-widget margin-left"
+      <alg-neighbor-widget class="neighbor-widget margin-left"
         [navigationMode]="{
           parent: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.parent,
           left: !!navigationNeighbors?.isReady && !!navigationNeighbors?.data?.previous,
@@ -65,7 +62,7 @@
         (parent)="navigationNeighbors?.data?.parent?.navigateTo()"
         (left)="navigationNeighbors?.data?.previous?.navigateTo()"
         (right)="navigationNeighbors?.data?.next?.navigateTo()"
-      ></alg-neighbor-widget>
+       />
     }
   </div>
 </div>

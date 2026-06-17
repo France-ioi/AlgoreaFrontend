@@ -32,7 +32,7 @@
                 </ng-template>
                 @if (this.form.get('canEnterEnabled')?.value) {
                   <ng-template #content>
-                    <alg-can-enter formControlName="canEnter"></alg-can-enter>
+                    <alg-can-enter formControlName="canEnter" />
                   </ng-template>
                 }
               </alg-switch-field>
@@ -46,11 +46,10 @@
           [errorMessage]="$safeNavigationMigration(form.errors?.canView?.[0])"
         >
           <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
+            <alg-progress-select [collapsed]="collapsed"
               formControlName="canView"
               [values]="permissionsDialogData().canViewValues"
-            ></alg-progress-select>
+             />
           </ng-template>
         </alg-collapsible-section>
 
@@ -69,11 +68,10 @@
           [errorMessage]="$safeNavigationMigration(form.errors?.canGrantView?.[0])"
         >
           <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
+            <alg-progress-select [collapsed]="collapsed"
               formControlName="canGrantView"
               [values]="permissionsDialogData().canGrantViewValues"
-            ></alg-progress-select>
+             />
           </ng-template>
         </alg-collapsible-section>
 
@@ -84,11 +82,10 @@
           [errorMessage]="$safeNavigationMigration(form.errors?.canWatch?.[0])"
         >
           <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
+            <alg-progress-select [collapsed]="collapsed"
               formControlName="canWatch"
               [values]="permissionsDialogData().canWatchValues"
-            ></alg-progress-select>
+             />
           </ng-template>
         </alg-collapsible-section>
 
@@ -99,11 +96,10 @@
           [errorMessage]="$safeNavigationMigration(form.errors?.canEdit?.[0])"
         >
           <ng-template #content let-collapsed>
-            <alg-progress-select
-              [collapsed]="collapsed"
+            <alg-progress-select [collapsed]="collapsed"
               formControlName="canEdit"
               [values]="permissionsDialogData().canEditValues"
-            ></alg-progress-select>
+             />
           </ng-template>
         </alg-collapsible-section>
 

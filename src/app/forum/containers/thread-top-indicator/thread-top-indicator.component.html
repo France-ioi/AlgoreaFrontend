@@ -2,12 +2,11 @@
   <div class="user-indicator">
     @if (isThreadOpen()) {
       <div class="follow-toggle">
-        <alg-switch
-          class="small-switch"
+        <alg-switch class="small-switch"
           [ngModel]="followStatus().data ?? false"
           [class.disabled]="!followStatus().isReady"
           (change)="onFollowChange($event)"
-        ></alg-switch>
+         />
         @if (followStatus().data) {
           <span class="follow-label" i18n>You currently follow this thread</span>
         } @else {

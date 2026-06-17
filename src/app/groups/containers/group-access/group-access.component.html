@@ -3,17 +3,16 @@
   @if (rootActivityState$ | async; as rootActivityState) {
     @if (rootActivityState.isFetching) {
       <div class="spinner">
-        <alg-loading size="medium"></alg-loading>
+        <alg-loading size="medium" />
       </div>
     }
     @if (rootActivityState.isError) {
-      <alg-error
-        icon="ph-duotone ph-warning-circle"
+      <alg-error icon="ph-duotone ph-warning-circle"
         i18n-message message="Error while loading the root activity."
         [showRefreshButton]="true"
         refreshButtonType="refresh"
         (refresh)="refresh()"
-      ></alg-error>
+       />
     }
     @if (rootActivityState.isReady) {
       @if (rootActivityState.data) {
@@ -32,17 +31,16 @@
   @if (permissionState$ | async; as permissionState) {
     @if (permissionState.isFetching) {
       <div class="spinner">
-        <alg-loading size="medium"></alg-loading>
+        <alg-loading size="medium" />
       </div>
     }
     @if (permissionState.isError) {
-      <alg-error
-        icon="ph-duotone ph-warning-circle"
+      <alg-error icon="ph-duotone ph-warning-circle"
         i18n-message message="Error while loading permissions."
         [showRefreshButton]="true"
         refreshButtonType="refresh"
         (refresh)="refreshPermissions()"
-      ></alg-error>
+       />
     }
     @if (permissionState.isReady) {
       @if (permissionState.data.length > 1) {
@@ -65,7 +63,7 @@
                 <span i18n>Given by this group</span>
               }
             </div>
-            <alg-group-permissions [permissions]="grantedPermission.permissions"></alg-group-permissions>
+            <alg-group-permissions [permissions]="grantedPermission.permissions" />
           </div>
         }
       } @else {
@@ -74,9 +72,8 @@
     }
   }
 } @else {
-  <alg-error
-    icon="ph-duotone ph-prohibit"
+  <alg-error icon="ph-duotone ph-prohibit"
     i18n-message message="You are not allowed to manage permissions of this group."
-  ></alg-error>
+   />
 }
 

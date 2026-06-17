@@ -29,11 +29,11 @@
               [routerLink]="menuItem.routerLink"
               cdkMenuItem
             >
-              <ng-template [ngTemplateOutlet]="content"></ng-template>
+              <ng-template [ngTemplateOutlet]="content" />
             </a>
           } @else if (menuItem.command) {
             <button class="menu-item-button" type="button" (click)="menuItem.command()">
-              <ng-template [ngTemplateOutlet]="content"></ng-template>
+              <ng-template [ngTemplateOutlet]="content" />
             </button>
           }
           <ng-template #content>

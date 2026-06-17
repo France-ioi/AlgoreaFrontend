@@ -3,7 +3,7 @@
 </h2>
 
 @if (processing()) {
-  <alg-loading></alg-loading>
+  <alg-loading />
 } @else {
   <p class="alg-text-secondary" i18n>Let users access this group using a password you send them.</p>
   @if (codeInfo(); as codeInfo) {
@@ -49,33 +49,30 @@
       <div class="field">
         <span class="field-name" i18n>Code</span>
         <div class="field-value">
-          <alg-code-token
-            [code]="code"
+          <alg-code-token [code]="code"
             [showRefresh]="true"
             [showRemove]="true"
             (refresh)="generateNewCode()"
             (remove)="removeCode()"
-          ></alg-code-token>
+           />
         </div>
       </div>
       <div class="field align-top">
         <span class="field-name field-validity" i18n>Validity</span>
         <div class="field-value">
-          <alg-selection
-            [items]="codeLifetimeOptions"
+          <alg-selection [items]="codeLifetimeOptions"
             [selected]="selectedCodeLifetimeOption()"
             (change)="changeCodeLifetime($event)"
-          ></alg-selection>
+           />
           @if (selectedCodeLifetimeOption() === customCodeLifetimeOption) {
             <div class="duration-form-group">
-              <alg-duration
-                class="alg-duration"
+              <alg-duration class="alg-duration"
                 ngDefaultControl
                 layout="DHM"
                 [(ngModel)]="codeLifetimeControlValue"
                 #control="ngModel"
                 required
-              ></alg-duration>
+               />
               <span
                 class="button-section"
                 [algTooltip]="durationTooltip"

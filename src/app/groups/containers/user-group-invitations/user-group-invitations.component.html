@@ -1,13 +1,12 @@
 <h2 class="alg-h2 alg-text-normal alg-base-title-space" i18n>Pending invitations</h2>
 @if (state$ | async; as state) {
   @if (state.isFetching) {
-    <alg-loading></alg-loading>
+    <alg-loading />
   } @else if (state.isError) {
-    <alg-error
-      class="dark"
+    <alg-error class="dark"
       icon="ph-duotone ph-warning-circle"
       i18n-message message="Error while loading the group invitations."
-    ></alg-error>
+     />
   } @else if (state.isReady) {
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">

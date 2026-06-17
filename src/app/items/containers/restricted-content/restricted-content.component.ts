@@ -10,7 +10,7 @@ import { Component } from '@angular/core';
       <h1 class="restricted-content-title alg-h1" i18n>Restricted Content</h1>
     </div>
     <div class="restricted-content-body">
-      <ng-content></ng-content>
+      <ng-content />
     </div>
   `,
   styleUrl: './restricted-content.component.scss',

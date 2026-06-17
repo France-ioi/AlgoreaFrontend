@@ -1,5 +1,5 @@
 @if ((group() | isCurrentUserManager) || (group() | isCurrentUserMember)) {
-  <alg-group-manager-list [group]="group()"></alg-group-manager-list>
+  <alg-group-manager-list [group]="group()" />
 } @else {
   <div class="error validation-text" i18n>You are not allowed to see this page.</div>
 }

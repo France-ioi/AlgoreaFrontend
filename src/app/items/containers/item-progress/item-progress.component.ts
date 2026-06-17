@@ -23,9 +23,9 @@ import { ItemUserProgressComponent } from '../item-user-progress/item-user-progr
           </p>
         }
       } @else if (isObserving() && observedGroup()?.route?.contentType !== 'user') {
-        <alg-item-group-progress class="alg-flex-1"></alg-item-group-progress>
+        <alg-item-group-progress class="alg-flex-1" />
       } @else {
-        <alg-item-user-progress class="alg-flex-1"></alg-item-user-progress>
+        <alg-item-user-progress class="alg-flex-1" />
       }
     }
   `,

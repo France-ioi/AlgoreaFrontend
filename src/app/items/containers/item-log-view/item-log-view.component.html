@@ -1,11 +1,10 @@
 @if (backLink(); as backLink) {
-  <alg-back-link-bar
-    class="back-link-bar"
+  <alg-back-link-bar class="back-link-bar"
     [heading]="backLinkHeading()"
     [backLinkLabel]="backLink.label"
     [backLinkUrl]="backLink.url"
     (backLinkClick)="onBackLinkClick($event)"
-  ></alg-back-link-bar>
+   />
 }
 
 @if (isObserving$ | async) {
@@ -16,16 +15,15 @@
 
 @if (state$ | async; as state) {
   @if (state.isFetching && !state.data) {
-    <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+    <alg-loading class="alg-flex-1" size="medium" />
   }
   @if (state.isError) {
-    <alg-error
-      class="alg-flex-1"
+    <alg-error class="alg-flex-1"
       icon="ph-duotone ph-warning-circle"
       i18n-message message="Unable to load the recent activity"
       [showRefreshButton]="true"
       (refresh)="refresh()"
-    ></alg-error>
+     />
   }
   @if (state.data) {
     <div class="operation-buttons">
@@ -64,9 +62,8 @@
                     <div class="item-title-section">
                       <div class="item-title-section-left">
                         @if (rowData.score) {
-                          <alg-score-ring
-                            [currentScore]="rowData.score"
-                          ></alg-score-ring>
+                          <alg-score-ring [currentScore]="rowData.score"
+                           />
                         } @else {
                           <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
                         }
@@ -99,16 +96,15 @@
                   }
                   @case ('item.user') {
                     @if (rowData.user; as user) {
-                      <alg-user-link-with-actions
-                        [user]="user"
+                      <alg-user-link-with-actions [user]="user"
                         [observeLink]="getObserveLink(user)"
-                      ></alg-user-link-with-actions>
+                       />
                     } @else {
                       {{ rowData.participant.name }}
                     }
                   }
                   @case ('at') {
-                    <alg-relative-time [value]="rowData.at"></alg-relative-time>
+                    <alg-relative-time [value]="rowData.at" />
                   }
                   @default {
                     {{ rowData[column.field] }}

@@ -15,7 +15,7 @@
         @if (!userInfo().isCurrentUser) {
           <span class="name">{{ userInfo().name }}</span>
         }
-        <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
+        <div class="date"><ng-container *ngTemplateOutlet="sentAt" /></div>
       </div>
     }
     <div class="bubble">
@@ -31,11 +31,10 @@
         }
         <div class="classical-event">
           @if ((eventVal | isSubmissionEvent) && eventVal.score !== undefined) {
-            <alg-score-ring
-              class="score-ring"
+            <alg-score-ring class="score-ring"
               [currentScore]="eventVal.score"
               [diameter]="32"
-            ></alg-score-ring>
+             />
           }
           <div>
             <div>
@@ -94,7 +93,7 @@
                 }
               }
             </div>
-            <div class="date"><ng-container *ngTemplateOutlet="sentAt"></ng-container></div>
+            <div class="date"><ng-container *ngTemplateOutlet="sentAt" /></div>
           </div>
         </div>
         @if (eventVal | isSubmissionEvent) {

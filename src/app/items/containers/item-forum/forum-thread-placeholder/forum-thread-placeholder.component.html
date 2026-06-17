@@ -1,15 +1,14 @@
 @switch (state()) {
   @case ('fetching') {
-    <alg-loading size="medium"></alg-loading>
+    <alg-loading size="medium" />
   }
   @case ('error') {
-    <alg-error
-      icon="ph-duotone ph-warning-circle"
+    <alg-error icon="ph-duotone ph-warning-circle"
       i18n-message message="Unable to load the thread information."
       i18n-buttonCaption buttonCaption="Retry"
       [showRefreshButton]="true"
       (refresh)="refresh.emit()"
-    ></alg-error>
+     />
   }
   @case ('not-started-can-start') {
     <i class="placeholder-icon active ph-duotone ph-chats-circle"></i>

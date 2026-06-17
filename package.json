@@ -12,7 +12,7 @@
     "copyGeo": "xcopy \"projects\\core\\src\\lib\\geometry.scss\" \"dist\\core\\\"",
     "injectDeployUrlForAssets": "find src -regex \".*\\.html\" -exec sed -i -E 's@(href|src)=\"images/(.*)\"@\\1=\"'$npm_config_url'images/\\2\"@g' {} + && find src -regex \".*\\.scss\" -exec sed -i -E 's@url\\(\"/images/(.*)\"\\)@url\\(\"'$npm_config_url'images/\\1\")@g' {} + && find src/index.html -exec sed -i -E 's@(href|src)=\"((.*).(woff2|ttf|webmanifest|js))\"@\\1=\"'$npm_config_url'\\2\"@g' {} + && find src/assets/site.webmanifest -exec sed -i -E 's@\"src\":\"images/([^\"]*)\"@\"src\":\"'$npm_config_url'images/\\1\"@g' {} +",
     "test": "ng test",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.{ts,html}\"",
     "e2e": "npx playwright test",
     "release": "release-it"
   },

@@ -9,7 +9,7 @@ import { GroupManagersComponent } from './group-managers.component';
   imports: [ GroupManagersComponent ],
   template: `
     @if (group(); as group) {
-      <alg-group-managers [group]="group"></alg-group-managers>
+      <alg-group-managers [group]="group" />
     }
   `,
 })

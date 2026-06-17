@@ -1,26 +1,24 @@
 @if (state$ | async; as state) {
   @if (state.isFetching) {
-    <alg-loading class="alg-flex-1"></alg-loading>
+    <alg-loading class="alg-flex-1" />
   }
   @if (state.isError) {
-    <alg-error
-      class="dark alg-flex-1"
+    <alg-error class="dark alg-flex-1"
       i18n-message message="Error while loading the user info"
       icon="ph-duotone ph-warning-circle"
       [showRefreshButton]="true"
       refreshButtonType="refresh"
       (refresh)="refresh()"
-    ></alg-error>
+     />
   }
   @if (state.isReady) {
     @if (userRoute$ | async; as route) {
-      <alg-user-header [user]="state.data" [route]="route" ></alg-user-header>
+      <alg-user-header [user]="state.data" [route]="route"  />
     }
     @if (!state.data.isCurrentUser && state.data.ancestorsCurrentUserIsManagerOf.length > 0) {
-      <alg-user-indicator
-        class="user-indicator"
+      <alg-user-indicator class="user-indicator"
         [user]="state.data"
-      ></alg-user-indicator>
+       />
     }
     @if (state.data.isCurrentUser || !state.data.isCurrentUser && state.data.personalInfoAccessApprovalToCurrentUser !== 'none' || (activeRoute$ | async) === 'personal-data' || (activeRoute$ | async) === 'settings') {
       <nav class="alg-nav-tab">
@@ -60,19 +58,18 @@
     }
     @if (activeRoute$ | async; as activeRoute) {
       @if (activeRoute === 'progress') {
-        <alg-group-log-view
-          [groupId]="!state.data.isCurrentUser ? state.data.groupId : undefined"
+        <alg-group-log-view [groupId]="!state.data.isCurrentUser ? state.data.groupId : undefined"
           [showUserColumn]="false"
-        ></alg-group-log-view>
+         />
       }
       @if (activeRoute === 'personal-data') {
-        <alg-user-info [user]="state.data" (hasChanged)="refresh()"></alg-user-info>
+        <alg-user-info [user]="state.data" (hasChanged)="refresh()" />
       }
       @if (activeRoute === 'settings') {
         @if (state.data.isCurrentUser) {
-          <alg-platform-settings></alg-platform-settings>
+          <alg-platform-settings />
         } @else {
-          <alg-error class="alg-flex-1" i18n-message message="You cannot access this page for this user"></alg-error>
+          <alg-error class="alg-flex-1" i18n-message message="You cannot access this page for this user" />
         }
       }
     }
