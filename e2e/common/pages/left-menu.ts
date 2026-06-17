@@ -165,11 +165,11 @@ export class LeftMenu {
   }
 
   async checksIsTabVisible(name: string): Promise<void> {
-    await expect.soft(this.tabBarLocator.getByRole('button').getByText(name)).toBeVisible();
+    await expect.soft(this.tabBarLocator.getByRole('tab').getByText(name)).toBeVisible();
   }
 
   async checksIsTabNotVisible(name: string): Promise<void> {
-    await expect.soft(this.tabBarLocator.getByRole('button').getByText(name)).not.toBeVisible();
+    await expect.soft(this.tabBarLocator.getByRole('tab').getByText(name)).not.toBeVisible();
   }
 
   async checksIsLeftNavTreeVisible(): Promise<void> {
@@ -210,13 +210,13 @@ export class LeftMenu {
       await this.searchTabButtonLocator.click();
       return;
     }
-    await this.tabBarLocator.getByRole('button', { name }).click();
+    await this.tabBarLocator.getByRole('tab', { name }).click();
   }
 
   async checksTabIsActive(name: 'Content' | 'Skills' | 'Groups' | 'Search'): Promise<void> {
     const tabButton = name === 'Search'
       ? this.searchTabButtonLocator
-      : this.tabBarLocator.getByRole('button', { name });
+      : this.tabBarLocator.getByRole('tab', { name });
     await expect(tabButton).toHaveClass(/active/);
   }
 

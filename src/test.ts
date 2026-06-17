@@ -34,6 +34,12 @@ const mockAppConfig = {
     'algorea/adventure': { id: '100575556387408660' },
     'officiels/algorea-serious-game/chapter': { id: '1471479157476024035', path: [ '4702' ] },
   },
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all' },
+    { type: 'skills', showTo: 'all' },
+    { type: 'groups', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ],
 };
 
 (window as any).appConfig = mockAppConfig;

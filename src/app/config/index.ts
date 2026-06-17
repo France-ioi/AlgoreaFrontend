@@ -1,6 +1,13 @@
 import { InjectionToken } from '@angular/core';
 import { z } from 'zod';
 
+const userSet = z.union([
+  z.enum([ 'all', 'tempUsers', 'nonTempUsers' ]),
+  z.array(z.string()), // user's groupIds
+]);
+
+export type UserSet = z.infer<typeof userSet>;
+
 const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend
 
@@ -46,17 +53,6 @@ const configSchema = z.object({
 
     hideTaskTabs: z.array(z.string()).default([]),
     showGroupAccessTab: z.boolean().default(false),
-
-    leftMenu: z.object({
-      groups: z.union([
-        z.object({ hide: z.literal(true), showToUserIds: z.array(z.string()).default([]) }),
-        z.object({ hide: z.literal(false) })
-      ]).default({ hide: false }),
-      skills: z.union([
-        z.object({ hide: z.literal(true), showToUserIds: z.array(z.string()).default([]) }),
-        z.object({ hide: z.literal(false) })
-      ]).default({ hide: false }),
-    }).default({ groups: { hide: false }, skills: { hide: false } }),
   }),
 
   /* paths to be matched must not have a trailing slash */
@@ -68,9 +64,27 @@ const configSchema = z.object({
   // item ids on which the left navigation tree is hidden (only the tab bar is shown)
   hideLeftMenuTreeOnItemIds: z.array(z.string()).default([]),
 
+  leftMenuTabs: z.array(z.intersection(
+    z.object({ showTo: userSet.default('all') }),
+    z.union([
+      z.object({ type: z.literal('activities') }),
+      z.object({ type: z.literal('skills') }),
+      z.object({ type: z.literal('groups') }),
+      z.object({ type: z.literal('community') }),
+      z.object({ type: z.literal('search') }),
+    ]),
+  )).default([
+    { type: 'activities', showTo: 'all' },
+    { type: 'skills', showTo: 'all' },
+    { type: 'groups', showTo: 'all' },
+    { type: 'community', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ]),
+
 });
 
 export type AppConfig = z.infer<typeof configSchema>;
+export type LeftMenuTabType = AppConfig['leftMenuTabs'][number]['type'];
 
 let cachedConfig: AppConfig | null = null;
 

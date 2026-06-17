@@ -3,14 +3,11 @@
   <div class="body-row">
     @if (showTabs$ | async) {
       <alg-left-tab-bar
-        [activeTabIndex]="activeTab.index"
-        [skillsTabEnabled]="!!(skillsTabEnabled$ | async)"
-        [groupsTabEnabled]="!!(groupsTabEnabled$ | async)"
-        [communityTabEnabled]="!!(communityTabEnabled$ | async)"
+        [tabs]="(visibleTabs$ | async) ?? []"
+        [activeTab]="activeTab"
         [hasUnreadCommunityThreads]="!!(hasUnreadCommunityThreads$ | async)"
-        [searchEnabled]="searchEnabled"
         [searchActive]="searchActive()"
-        (tabSelected)="onSelectionChangedByIdx($event)"
+        (tabSelected)="onSelectionChangedByType($event)"
         (searchSelected)="toggleSearch()"
       />
       <hr
@@ -53,13 +50,13 @@
           }
         </ng-container>
       } @else if (!hideTree()) {
-        @if (isTreeTab(activeTab.index)) {
+        @if (isTreeTab(activeTab)) {
           <alg-left-nav
             class="alg-flex-1"
-            [treeIndex]="tabToTreeIndex(activeTab.index)"
+            [treeIndex]="tabToTreeIndex(activeTab)"
             (selectElement)="onSelectElement($event)"
           />
-        } @else if (isCommunityTab(activeTab.index)) {
+        } @else if (isCommunityTab(activeTab)) {
           <div class="alg-flex-1 scroll-wrapper">
             <div class="scroll-container">
               <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">

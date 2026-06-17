@@ -42,4 +42,12 @@ window.appConfig = {
   },
 
   hideLeftMenuTreeOnItemIds: [ '6390082892422125257', '7143408445463448320' ],
+
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all' },
+    { type: 'skills', showTo: 'all' },
+    { type: 'groups', showTo: 'all' },
+    { type: 'community', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ],
 };

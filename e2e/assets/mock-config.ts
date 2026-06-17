@@ -25,10 +25,6 @@ export const mockConfig: AppConfig = {
   featureFlags: {
     hideTaskTabs: [],
     showGroupAccessTab: true,
-    leftMenu: {
-      groups: { hide: false },
-      skills: { hide: false },
-    },
   },
 
   redirects: { /* paths to be matched must not have a trailing slash */
@@ -38,4 +34,11 @@ export const mockConfig: AppConfig = {
   },
 
   hideLeftMenuTreeOnItemIds: [ '6390082892422125257', '7143408445463448320' ],
+
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all' },
+    { type: 'skills', showTo: 'all' },
+    { type: 'groups', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ],
 };

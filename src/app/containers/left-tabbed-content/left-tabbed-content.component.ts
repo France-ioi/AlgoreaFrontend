@@ -11,7 +11,7 @@ import { CurrentContentService } from '../../services/current-content.service';
 import { mapToFetchState } from '../../utils/operators/state';
 import { SearchService } from '../../data-access/search.service';
 import { repeatLatestWhen } from '../../utils/operators/repeatLatestWhen';
-import { APPCONFIG } from '../../config';
+import { APPCONFIG, LeftMenuTabType } from '../../config';
 import { readyState } from '../../utils/state';
 import { Store } from '@ngrx/store';
 import { ItemRouter } from '../../models/routing/item-router';
@@ -32,12 +32,10 @@ import { LetDirective } from '@ngrx/component';
 import { AsyncPipe } from '@angular/common';
 import { CommunityStatsComponent } from '../../community/containers/community-stats/community-stats.component';
 
-const activitiesTabIdx = 0;
-const skillsTabIdx = 1;
-const groupsTabIdx = 2;
-const communityTabIdx = 3;
-
 const minQueryLength = 3;
+
+// Fixed tree indices for alg-left-nav; decoupled from visible tab order in leftMenuTabs.
+const TREE_TAB_TYPES: LeftMenuTabType[] = [ 'activities', 'skills', 'groups' ];
 
 @Component({
   selector: 'alg-left-tabbed-content',
@@ -74,7 +72,6 @@ export class LeftTabbedContentComponent implements OnDestroy {
   searchActive = signal(false);
   searchQuery = signal('');
 
-  searchEnabled = !!this.config.searchApiUrl;
   private retrySearch$ = new Subject<void>();
 
   searchService = this.config.searchApiUrl ? this.injector.get<SearchService>(SearchService) : undefined;
@@ -89,25 +86,18 @@ export class LeftTabbedContentComponent implements OnDestroy {
 
   hasUnreadCommunityThreads$ = this.store.select(fromCommunity.selectHasUnreadThreads);
 
-  skillsTabEnabled$ = this.leftMenuConfig.skillsTabEnabled$;
-  groupsTabEnabled$ = this.leftMenuConfig.groupsTabEnabled$;
-  communityTabEnabled$ = this.leftMenuConfig.communityTabEnabled$;
+  visibleTabs$ = this.leftMenuConfig.visibleTabs$;
   showTabs$ = this.leftMenuConfig.showTabBar$;
 
   activeTab$ = this.currentContent.content$.pipe(
     distinctUntilChanged((x, y) => x?.type === y?.type && x?.route?.id === y?.route?.id),
-    map(content => contentToTabIndex(content)),
+    map(content => contentToTabType(content)),
     filter(isDefined),
-    withLatestFrom(this.skillsTabEnabled$, this.groupsTabEnabled$, this.communityTabEnabled$),
-    filter(([ idx, skillsTabEnabled, groupsTabEnabled, communityTabEnabled ]) =>
-      idx === activitiesTabIdx
-      || (idx === skillsTabIdx && skillsTabEnabled)
-      || (idx === groupsTabIdx && groupsTabEnabled)
-      || (idx === communityTabIdx && communityTabEnabled)),
-    map(([ idx ]) => idx),
-    startWith(0),
+    withLatestFrom(this.visibleTabs$),
+    filter(([ tabType, visibleTabs ]) => visibleTabs.includes(tabType)),
+    map(([ tabType ]) => tabType),
+    startWith('activities' as LeftMenuTabType),
     distinctUntilChanged(),
-    map(idx => ({ index: idx })),
   );
 
   selectElement = output<EntityPathRoute | undefined>();
@@ -134,23 +124,26 @@ export class LeftTabbedContentComponent implements OnDestroy {
     this.searchActiveChange.emit(false);
   }
 
-  onSelectionChangedByIdx(e: number): void {
+  onSelectionChangedByType(tabType: LeftMenuTabType): void {
     if (this.searchActive()) {
       this.closeSearch();
     }
-    if (e === activitiesTabIdx) {
+    if (tabType === 'activities') {
       const route = this.selectedActivityRoute();
       if (route) this.itemRouter.navigateTo(route, { useCurrentObservation: true });
     }
-    if (e === skillsTabIdx) {
+    if (tabType === 'skills') {
       const route = this.selectedSkillRoute();
       if (route) this.itemRouter.navigateTo(route, { useCurrentObservation: true });
     }
-    if (e === groupsTabIdx) {
+    if (tabType === 'groups') {
       this.groupRouter.navigateTo(this.selectedGroupRoute());
     }
-    if (e === communityTabIdx) {
+    if (tabType === 'community') {
       void this.router.navigate([ '/community' ]);
+    }
+    if (tabType === 'search') {
+      this.toggleSearch();
     }
   }
 
@@ -158,16 +151,16 @@ export class LeftTabbedContentComponent implements OnDestroy {
     this.retrySearch$.next();
   }
 
-  tabToTreeIndex(tabIndex: number): number {
-    return tabIndex;
+  tabToTreeIndex(tabType: LeftMenuTabType): number {
+    return TREE_TAB_TYPES.indexOf(tabType);
   }
 
-  isTreeTab(tabIndex: number): boolean {
-    return [ activitiesTabIdx, skillsTabIdx, groupsTabIdx ].includes(tabIndex);
+  isTreeTab(tabType: LeftMenuTabType): boolean {
+    return TREE_TAB_TYPES.includes(tabType);
   }
 
-  isCommunityTab(tabIndex: number): boolean {
-    return tabIndex === communityTabIdx;
+  isCommunityTab(tabType: LeftMenuTabType): boolean {
+    return tabType === 'community';
   }
 
   onSelectElement(route: EntityPathRoute | undefined): void {
@@ -204,12 +197,12 @@ export class LeftTabbedContentComponent implements OnDestroy {
   }
 }
 
-function contentToTabIndex(content: ContentInfo | null): number | undefined {
+function contentToTabType(content: ContentInfo | null): LeftMenuTabType | undefined {
   if (content === null) return undefined;
-  if (content.type === 'community') return communityTabIdx;
-  if (isGroupInfo(content) || isMyGroupsInfo(content) || isUserInfo(content)) return groupsTabIdx;
+  if (content.type === 'community') return 'community';
+  if (isGroupInfo(content) || isMyGroupsInfo(content) || isUserInfo(content)) return 'groups';
   if (isItemInfo(content)) {
-    return isActivityInfo(content) ? activitiesTabIdx : skillsTabIdx;
+    return isActivityInfo(content) ? 'activities' : 'skills';
   }
   return undefined;
 }

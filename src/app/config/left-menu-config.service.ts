@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { APPCONFIG } from '.'; // Adjusted path
+import { map, Observable } from 'rxjs';
+import { APPCONFIG, LeftMenuTabType } from '.';
 import { UserSessionService } from '../services/user-session.service';
-import { combineLatest, map, of, switchMap } from 'rxjs';
+import { isUserInSet } from './user-set';
 
 @Injectable({
   providedIn: 'root'
@@ -10,36 +11,27 @@ export class LeftMenuConfigService {
   private userSession = inject(UserSessionService);
   private config = inject(APPCONFIG);
 
-  skillsTabEnabled$ = of({ hasDefault: !!this.config.defaultSkillId, visibilityConfig: this.config.featureFlags.leftMenu.skills }).pipe(
-    switchMap(({ hasDefault, visibilityConfig }) => {
-      if (!hasDefault) return of(false);
-      if (!visibilityConfig.hide) return of(true);
-      if (visibilityConfig.showToUserIds.length === 0) return of(false);
-      return this.userSession.userProfile$.pipe(
-        map(({ groupId }) => visibilityConfig.showToUserIds.includes(groupId))
-      );
-    })
-  );
-  groupsTabEnabled$ = of(this.config.featureFlags.leftMenu.groups).pipe(
-    switchMap(groupsConfig => {
-      if (!groupsConfig.hide) return of(true);
-      if (groupsConfig.showToUserIds.length === 0) return of(false);
-      return this.userSession.userProfile$.pipe(
-        map(({ groupId }) => groupsConfig.showToUserIds.includes(groupId))
-      );
-    })
-  );
-  communityTabEnabled$ = of(this.config.featureFlags.community === 'enabled');
-  searchEnabled$ = of(!!this.config.searchApiUrl);
-
-  showTabBar$ = combineLatest([
-    this.skillsTabEnabled$,
-    this.groupsTabEnabled$,
-    this.communityTabEnabled$,
-    this.searchEnabled$,
-  ]).pipe(
-    map(([ skillsTabEnabled, groupsTabEnabled, communityTabEnabled, searchEnabled ]) =>
-      skillsTabEnabled || groupsTabEnabled || communityTabEnabled || searchEnabled),
+  visibleTabs$: Observable<LeftMenuTabType[]> = this.userSession.session$.pipe(
+    map(session => this.config.leftMenuTabs
+      .filter(tab => (session === undefined ? tab.showTo === 'all' : isUserInSet(session, tab.showTo)))
+      .filter(tab => this.isTabTypeAvailable(tab.type))
+      .map(tab => tab.type)),
   );
 
+  showTabBar$ = this.visibleTabs$.pipe(
+    map(tabs => tabs.some(tab => tab !== 'activities')),
+  );
+
+  private isTabTypeAvailable(type: LeftMenuTabType): boolean {
+    switch (type) {
+      case 'skills':
+        return !!this.config.defaultSkillId;
+      case 'search':
+        return !!this.config.searchApiUrl;
+      case 'community':
+        return this.config.featureFlags.community === 'enabled';
+      default:
+        return true;
+    }
+  }
 }
