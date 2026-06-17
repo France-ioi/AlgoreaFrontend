@@ -16,6 +16,7 @@ import { fromRouter } from 'src/app/store/router';
 import { GroupInState, State, UserInState } from './group-content.state';
 import { fetchingState, FetchState, mapStateData } from 'src/app/utils/state';
 import { formatUser } from 'src/app/groups/models/user';
+import { Group } from 'src/app/groups/models/group';
 import { RootState } from 'src/app/utils/store/root_state';
 import { selectIdParameter } from 'src/app/models/routing/content-route-selectors';
 import { groupGroupTypeCategory, userGroupTypeCategory } from '../../models/group-types';
@@ -39,6 +40,10 @@ interface UserContentSelectors<T extends RootState> {
   selectActiveContentRouteOrPage: MemoizedSelector<T, RawGroupRoute|GroupPage|null>,
 
   selectActiveContentGroupState: MemoizedSelector<T, GroupInState>,
+  /**
+   * The active group if there is one and it has been fetched
+   */
+  selectActiveContentGroup: MemoizedSelector<T, Group|null>,
   selectActiveContentUserState: MemoizedSelector<T, UserInState>,
   /**
    * The breadcrumbs state, IF a full route is known for the active content
@@ -123,6 +128,11 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
       groupState as GroupInState : fetchingState())
   );
 
+  const selectActiveContentGroup = createSelector(
+    selectActiveContentGroupState,
+    state => state.data ?? null
+  );
+
   const selectActiveContentUserState = createSelector(
     selectState,
     selectActiveContentRoute,
@@ -177,6 +187,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentFullRoute,
     selectActiveContentRouteOrPage,
     selectActiveContentGroupState,
+    selectActiveContentGroup,
     selectActiveContentUserState,
     selectActiveContentBreadcrumbsState,
 

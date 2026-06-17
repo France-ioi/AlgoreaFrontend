@@ -42,28 +42,35 @@ const routes: Routes = [
     children: [ /* if you change routes here, update `isGroupPage` as well! */
       {
         path: '',
-        children: [],
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./containers/group-overview/group-overview-page.component').then(m => m.GroupOverviewPageComponent),
       },
       {
         path: 'history',
-        children: [],
+        loadComponent: () =>
+          import('./containers/group-log-view/group-log-view-page.component').then(m => m.GroupLogViewPageComponent),
       },
       {
         path: 'members',
-        children: [],
+        loadComponent: () =>
+          import('./containers/group-composition/group-composition-page.component').then(m => m.GroupCompositionPageComponent),
       },
       {
         path: 'managers',
-        children: [],
+        loadComponent: () =>
+          import('./containers/group-managers/group-managers-page.component').then(m => m.GroupManagersPageComponent),
       },
       {
         path: 'settings',
         canDeactivate: [ PendingChangesGuard ],
-        children: [],
+        loadComponent: () =>
+          import('./containers/group-edit/group-edit.component').then(m => m.GroupEditComponent),
       },
       {
         path: 'access',
-        children: [],
+        loadComponent: () =>
+          import('./containers/group-access/group-access-page.component').then(m => m.GroupAccessPageComponent),
       },
     ],
   },

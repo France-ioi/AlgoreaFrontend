@@ -1,5 +1,5 @@
-import { Component, inject, OnDestroy, viewChild } from '@angular/core';
-import { RouterLinkActive, RouterLink } from '@angular/router';
+import { Component, computed, inject, OnDestroy } from '@angular/core';
+import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { APPCONFIG } from 'src/app/config';
 import { groupInfo } from 'src/app/models/content/group-info';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
@@ -10,24 +10,19 @@ import {
   IsCurrentUserManagerPipe,
   CanCurrentUserManageMembersAndGroupPipe
 } from './models/group-management';
-import { GroupEditComponent } from './containers/group-edit/group-edit.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
-import { GroupAccessComponent } from './containers/group-access/group-access.component';
-import { GroupManagersComponent } from './containers/group-managers/group-managers.component';
-import { GroupCompositionComponent } from './containers/group-composition/group-composition.component';
-import { GroupOverviewComponent } from './containers/group-overview/group-overview.component';
 import { GroupIndicatorComponent } from './containers/group-indicator/group-indicator.component';
 import { GroupHeaderComponent } from './containers/group-header/group-header.component';
-import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { fromGroupContent } from './store';
 import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
 import { GroupData, selectGroupData } from './models/group-data';
 import { readyData } from '../utils/operators/state';
-import { GroupLogViewComponent } from 'src/app/groups/containers/group-log-view/group-log-view.component';
 import { IsCurrentUserMemberPipe } from './models/group-membership';
+import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
+import { PendingChangesService } from 'src/app/services/pending-changes-service';
 
 @Component({
   selector: 'alg-group-by-id',
@@ -38,33 +33,33 @@ import { IsCurrentUserMemberPipe } from './models/group-membership';
     GroupIndicatorComponent,
     RouterLinkActive,
     RouterLink,
-    GroupOverviewComponent,
-    GroupCompositionComponent,
-    GroupManagersComponent,
-    GroupAccessComponent,
-    GroupEditComponent,
+    RouterOutlet,
     LoadingComponent,
     ErrorComponent,
-    AsyncPipe,
-    GroupLogViewComponent,
     IsCurrentUserManagerPipe,
     IsCurrentUserMemberPipe,
     CanCurrentUserGrantGroupAccessPipe,
     CanCurrentUserManageMembersAndGroupPipe,
   ]
 })
-export class GroupByIdComponent implements OnDestroy {
+export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
   private store = inject(Store);
   private currentContent = inject(CurrentContentService);
   private groupRouter = inject(GroupRouter);
-  private currentContentService = inject(CurrentContentService);
   private config = inject(APPCONFIG);
+  private pendingChangesService = inject(PendingChangesService);
 
-  state$ = this.store.select(selectGroupData);
+  // Signal for the template; observable kept for the breadcrumb side-effect subscription below.
+  protected readonly groupDataState = this.store.selectSignal(selectGroupData);
+
+  protected readonly groupData = computed(() => {
+    const state = this.groupDataState();
+    return state.isReady ? state.data : undefined;
+  });
 
   hideAccessTab = !this.config.featureFlags.showGroupAccessTab;
 
-  groupEdit = viewChild<GroupEditComponent>('groupEdit');
+  private state$ = this.store.select(selectGroupData);
 
   // on state change, update current content page info (for breadcrumb)
   private groupToCurrentContentSubscription = this.state$.pipe(readyData<GroupData>()).subscribe(({ route }) => {
@@ -112,16 +107,12 @@ export class GroupByIdComponent implements OnDestroy {
   }
 
   isDirty(): boolean {
-    return !!this.groupEdit()?.isDirty();
-  }
-
-  refreshNav(): void {
-    this.currentContentService.forceNavMenuReload();
+    return !!this.pendingChangesService.component?.isDirty();
   }
 
   onGroupRefreshRequired(): void {
     this.store.dispatch(fromGroupContent.groupPageActions.refresh());
-    this.refreshNav();
+    this.currentContent.forceNavMenuReload();
   }
 
 }
