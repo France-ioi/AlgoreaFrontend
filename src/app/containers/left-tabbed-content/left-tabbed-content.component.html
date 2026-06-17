@@ -1,16 +1,13 @@
-@if (activeTab$ | async; as activeTab) {
+@if (activeTabView$ | async; as activeTabView) {
   <hr class="divider">
   <div class="body-row">
     @if (showTabs$ | async) {
       <alg-left-tab-bar
-        [activeTabIndex]="activeTab.index"
-        [skillsTabEnabled]="!!(skillsTabEnabled$ | async)"
-        [groupsTabEnabled]="!!(groupsTabEnabled$ | async)"
-        [communityTabEnabled]="!!(communityTabEnabled$ | async)"
+        [tabs]="(visibleTabs$ | async) ?? []"
+        [activeTab]="activeTabView.id"
         [hasUnreadCommunityThreads]="!!(hasUnreadCommunityThreads$ | async)"
-        [searchEnabled]="searchEnabled"
         [searchActive]="searchActive()"
-        (tabSelected)="onSelectionChangedByIdx($event)"
+        (tabSelected)="onTabSelected($event)"
         (searchSelected)="toggleSearch()"
       />
       <hr
@@ -53,13 +50,13 @@
           }
         </ng-container>
       } @else if (!hideTree()) {
-        @if (isTreeTab(activeTab.index)) {
+        @if (isTreeTab(activeTabView.type)) {
           <alg-left-nav
             class="alg-flex-1"
-            [treeIndex]="tabToTreeIndex(activeTab.index)"
+            [treeIndex]="tabToTreeIndex(activeTabView.type)"
             (selectElement)="onSelectElement($event)"
           />
-        } @else if (isCommunityTab(activeTab.index)) {
+        } @else if (isCommunityTab(activeTabView.type)) {
           <div class="alg-flex-1 scroll-wrapper">
             <div class="scroll-container">
               <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">

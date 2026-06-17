@@ -14,7 +14,6 @@ const mockAppConfig = {
   searchApiUrl: 'https://jyz57q4k3ytekopv6tvg5bdxaq0vlgso.lambda-url.eu-west-3.on.aws',
   oauthClientId: '43',
   defaultActivityId: '4702',
-  defaultSkillId: '3000',
   allUsersGroupId: '3',
   languages: [
     { tag: 'fr', path: '/fr/' },
@@ -34,6 +33,12 @@ const mockAppConfig = {
     'algorea/adventure': { id: '100575556387408660' },
     'officiels/algorea-serious-game/chapter': { id: '1471479157476024035', path: [ '4702' ] },
   },
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: { id: '4702', path: [] } },
+    { type: 'skills', showTo: 'all', content: { id: '3000', path: [] } },
+    { type: 'groups', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ],
 };
 
 (window as any).appConfig = mockAppConfig;

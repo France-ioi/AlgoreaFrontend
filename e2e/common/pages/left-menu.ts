@@ -2,6 +2,8 @@ import { Page, expect } from '@playwright/test';
 
 const layoutTolerancePx = 10;
 
+type StandardTabName = 'Content' | 'Skills' | 'Groups' | 'Search';
+
 export class LeftMenu {
   private leftMenuShellLocator = this.page.locator('alg-root .container > div.left-menu');
   private leftPanelLocator = this.page.locator('alg-left-panel');
@@ -165,11 +167,11 @@ export class LeftMenu {
   }
 
   async checksIsTabVisible(name: string): Promise<void> {
-    await expect.soft(this.tabBarLocator.getByRole('button').getByText(name)).toBeVisible();
+    await expect.soft(this.tabBarLocator.getByRole('tab').getByText(name)).toBeVisible();
   }
 
   async checksIsTabNotVisible(name: string): Promise<void> {
-    await expect.soft(this.tabBarLocator.getByRole('button').getByText(name)).not.toBeVisible();
+    await expect.soft(this.tabBarLocator.getByRole('tab').getByText(name)).not.toBeVisible();
   }
 
   async checksIsLeftNavTreeVisible(): Promise<void> {
@@ -205,18 +207,22 @@ export class LeftMenu {
     await expect(this.searchPanelLocator).not.toBeVisible();
   }
 
-  async clickTab(name: 'Content' | 'Skills' | 'Groups' | 'Search'): Promise<void> {
+  async clickTab(name: StandardTabName): Promise<void>;
+  async clickTab(caption: string): Promise<void>;
+  async clickTab(name: StandardTabName | string): Promise<void> {
     if (name === 'Search') {
       await this.searchTabButtonLocator.click();
       return;
     }
-    await this.tabBarLocator.getByRole('button', { name }).click();
+    await this.tabBarLocator.getByRole('tab', { name }).click();
   }
 
-  async checksTabIsActive(name: 'Content' | 'Skills' | 'Groups' | 'Search'): Promise<void> {
+  async checksTabIsActive(name: StandardTabName): Promise<void>;
+  async checksTabIsActive(caption: string): Promise<void>;
+  async checksTabIsActive(name: StandardTabName | string): Promise<void> {
     const tabButton = name === 'Search'
       ? this.searchTabButtonLocator
-      : this.tabBarLocator.getByRole('button', { name });
+      : this.tabBarLocator.getByRole('tab', { name });
     await expect(tabButton).toHaveClass(/active/);
   }
 

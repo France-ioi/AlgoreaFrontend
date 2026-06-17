@@ -5,46 +5,57 @@ import { initAsTesterUser, initAsUsualUser } from 'e2e/helpers/e2e_auth';
 const deepMerge = (o1: unknown, o2: unknown): unknown =>
   JSON.parse(JSON.stringify({ ...JSON.parse(JSON.stringify(o1)), ...JSON.parse(JSON.stringify(o2)) }));
 
-const disabledGroupsTabConfig = (showToUserIds?: string[]) => ({
-  featureFlags: {
-    leftMenu: {
-      groups: {
-        hide: true,
-        showToUserIds: showToUserIds || [],
-      },
-    },
-  },
+const tabContent = { id: '4702', path: [] as string[] };
+const skillTabContent = { id: '3000', path: [] as string[] };
+
+const withoutSkillsTabConfig = () => ({
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'groups', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ],
 });
 
-const disabledSkillsTabConfig = (showToUserIds?: string[]) => ({
-  featureFlags: {
-    leftMenu: {
-      skills: {
-        hide: true,
-        showToUserIds: showToUserIds || [],
-      },
-    },
-  },
+const withoutGroupsTabConfig = () => ({
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: 'all', content: skillTabContent },
+    { type: 'search', showTo: 'all' },
+  ],
 });
 
-const disabledSkillAndGroupTabsConfig = (showToUserIds?: string[]) => ({
-  featureFlags: {
-    leftMenu: {
-      skills: {
-        hide: true,
-        showToUserIds: showToUserIds || [],
-      },
-      groups: {
-        hide: true,
-        showToUserIds: showToUserIds || [],
-      },
-    },
-  },
+const tabsForSpecificUsersConfig = (groupIds: string[]) => ({
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: groupIds, content: skillTabContent },
+    { type: 'groups', showTo: groupIds },
+    { type: 'search', showTo: 'all' },
+  ],
 });
 
-const hiddenTabBarConfig = (showToUserIds?: string[]) => ({
+const skillsForSpecificUsersConfig = (groupIds: string[]) => ({
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: groupIds, content: skillTabContent },
+    { type: 'groups', showTo: 'all' },
+    { type: 'search', showTo: 'all' },
+  ],
+});
+
+const groupsForSpecificUsersConfig = (groupIds: string[]) => ({
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: 'all', content: skillTabContent },
+    { type: 'groups', showTo: groupIds },
+    { type: 'search', showTo: 'all' },
+  ],
+});
+
+const hiddenTabBarConfig = () => ({
   searchApiUrl: '',
-  ...disabledSkillAndGroupTabsConfig(showToUserIds),
+  leftMenuTabs: [
+    { type: 'activities', showTo: 'all', content: tabContent },
+  ],
 });
 
 test('checks the skills tab in the left menu is not shown', async ({ page, leftMenu }) => {
@@ -52,7 +63,7 @@ test('checks the skills tab in the left menu is not shown', async ({ page, leftM
     await route.fulfill({
       status: 200,
       contentType: 'text/javascript',
-      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledSkillsTabConfig())) }`,
+      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, withoutSkillsTabConfig())) }`,
     });
   });
 
@@ -70,7 +81,7 @@ test('checks the groups tab in the left menu is not shown', async ({ page, leftM
     await route.fulfill({
       status: 200,
       contentType: 'text/javascript',
-      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledGroupsTabConfig())) }`,
+      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, withoutGroupsTabConfig())) }`,
     });
   });
 
@@ -125,7 +136,7 @@ test(
     await route.fulfill({
       status: 200,
       contentType: 'text/javascript',
-      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledSkillAndGroupTabsConfig([ '4038740586962046790' ]))) }`,
+      body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, tabsForSpecificUsersConfig([ '4038740586962046790' ]))) }`,
     });
   });
 
@@ -159,7 +170,7 @@ test(
       await route.fulfill({
         status: 200,
         contentType: 'text/javascript',
-        body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledSkillsTabConfig([ '4038740586962046790' ]))) }`,
+        body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, skillsForSpecificUsersConfig([ '4038740586962046790' ]))) }`,
       });
     });
 
@@ -192,7 +203,7 @@ test(
       await route.fulfill({
         status: 200,
         contentType: 'text/javascript',
-        body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, disabledGroupsTabConfig([ '4038740586962046790' ]))) }`,
+        body: `window.appConfig=${ JSON.stringify(deepMerge(mockConfig, groupsForSpecificUsersConfig([ '4038740586962046790' ]))) }`,
       });
     });
 

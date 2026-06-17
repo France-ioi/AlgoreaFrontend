@@ -31,7 +31,7 @@ test('checks my group pages', async ({ page, minePage, manageGroupsPage }) => {
 test('checks "Join" page as temp user', async ({ page, minePage }) => {
   await test.step('checks "Groups" tab in left menu as temp user', async () => {
     await minePage.goto();
-    await expect.soft(page.getByRole('button', { name: 'Groups' })).toBeVisible();
+    await expect.soft(page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' })).toBeVisible();
   });
 
   await test.step('checks non auth message', async () => {
@@ -44,7 +44,7 @@ test('checks "Join" page as temp user', async ({ page, minePage }) => {
 test('checks "Manage" page as temp user', async ({ page, manageGroupsPage }) => {
   await test.step('checks "Groups" tab in left menu as temp user', async () => {
     await manageGroupsPage.goto();
-    await expect.soft(page.getByRole('button', { name: 'Groups' })).toBeVisible();
+    await expect.soft(page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' })).toBeVisible();
   });
 
   await test.step('checks non auth message', async () => {

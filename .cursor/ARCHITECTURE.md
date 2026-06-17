@@ -39,16 +39,16 @@ src/app/
 ```
 alg-left-panel          → outer shell: header + tabbed-content
 └── alg-left-tabbed-content  → tab bar + search mode + tree delegation
-    ├── alg-left-tab-bar     (includes search tab when searchApiUrl is set)
+    ├── alg-left-tab-bar     (tabs driven by config.leftMenuTabs + per-user showTo)
     ├── alg-left-menu-search (inline header when search tab is active)
     └── alg-left-nav
 ```
 
 - **`alg-left-panel`**: Outer shell — header and tabbed content area
 - **`alg-left-tabbed-content`**: Orchestrator — owns active tab logic, search mode (`searchActive` / `searchQuery`), tab-to-tree index mapping, scroll-to-element
-- **`alg-left-tab-bar`**: Presentational — renders tab buttons (including search), emits tab selection and search-open events
+- **`alg-left-tab-bar`**: Presentational — renders tab buttons from `LeftMenuConfigService.visibleTabs$`, emits tab selection and search-open events
 - **`alg-left-nav`**: Tree rendering — receives a `treeIndex` input, renders the corresponding nav tree
-- Tab indices and tree service indices are decoupled via `tabToTreeIndex()` mapping
+- Tab visibility and order come from root config `leftMenuTabs` (each entry has a `type`, `showTo` user set, optional `caption: { default, …lang tags }` and optional `icon` Phosphor class string, and for `activities`/`skills` tabs a mandatory `content: { id, path }`). Several `activities` or `skills` tabs are allowed; tab identity is the index in the visible list (`LeftMenuTabView.id`). `LeftMenuConfigService` filters tabs per session, resolves caption/icon defaults, and cross-checks (`searchApiUrl`, `featureFlags.community`). Exactly one tab is active at a time: for item content, the active tab is the visible activities/skills tab whose `content` is an ancestor of the current route with the longest matching `path`; otherwise the first tab matching the content category. Clicking an activities/skills tab navigates to that tab's `content` when it is already active, unless the user is viewing another section and their last selected activity/skill is the same or a descendant of that content — then that selection is restored. `tabToTreeIndex()` maps a `LeftMenuTabType` to the fixed `0/1/2` tree index expected by `alg-left-nav`, independent of which tabs are visible
 
 ## Core Concepts
 
@@ -229,9 +229,13 @@ interface AppConfig {
   apiUrl: string;              // Backend API URL
   oauthServerUrl: string;      // OAuth server URL
   oauthClientId: string;       // OAuth client ID
-  defaultActivityId: string;   // Home activity ID
-  defaultSkillId?: string;     // Root skill ID
+  defaultActivityId: string;   // Home activity ID (used for "/" redirect)
   allUsersGroupId: string;     // All-users group ID
+  leftMenuTabs: Array<
+    | { type: 'activities'; showTo: UserSet; content: { id: string; path: string[] }; caption?: { default: string; [lang: string]: string }; icon?: string }
+    | { type: 'skills'; showTo: UserSet; content: { id: string; path: string[] }; caption?: { default: string; [lang: string]: string }; icon?: string }
+    | { type: 'groups' | 'community' | 'search'; showTo: UserSet; caption?: { default: string; [lang: string]: string }; icon?: string }
+  >;
   languages: Language[];       // Supported languages
   featureFlags: {
     enableForum: boolean;        // default false
