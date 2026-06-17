@@ -163,7 +163,7 @@ test('View answer in logs for an item', async ({ page }) => {
   await page.route(`${apiUrl}/items/4702/log?limit=21`, async route => {
     await route.fulfill({ json: itemLogsJson });
   });
-  await page.goto('/a/home;pa=0/progress/history');
+  await page.goto('/a/home;pa=0/history');
   await expect.soft(page.locator('h1').getByText('Parcours officiels')).toBeVisible();
   await expect.soft(page.getByRole('link', { name: 'View answer' })).toBeVisible();
   await page.getByRole('link', { name: 'View answer' }).click();

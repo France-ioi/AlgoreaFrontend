@@ -27,7 +27,7 @@ test('checks user progress tooltip', async ({ page }) => {
   });
 
   await Promise.all([
-    page.goto('/a/7523720120450464843;p=7528142386663912287;a=0;og=4462192261130512818/progress/chapter'),
+    page.goto('/a/7523720120450464843;p=7528142386663912287;a=0;og=4462192261130512818/progress'),
     page.waitForResponse(userProgressUrl),
   ]);
 
@@ -58,7 +58,7 @@ test('checks user progress tooltip', async ({ page }) => {
   await test.step('checks user progress tooltip not started is visible', async () => {
     await initAsUsualUser(page);
     await Promise.all([
-      page.goto('/a/504065524219241180;p=694914435881177216,5,4700,4707,4702,4102,1980584647557587953,39530140456452546;a=0;og=123456/progress/chapter'),
+      page.goto('/a/504065524219241180;p=694914435881177216,5,4700,4707,4702,4102,1980584647557587953,39530140456452546;a=0;og=123456/progress'),
       page.waitForResponse(`${apiUrl}/groups/123456/user-progress?parent_item_ids=504065524219241180&limit=51`),
     ]);
     await expect.soft(page.getByRole('heading', { name: 'Echauffement' })).toBeVisible();
@@ -72,7 +72,7 @@ test('checks user progress tooltip', async ({ page }) => {
 
 test('checks group progress tooltip', async ({ page }) => {
   await initAsUsualUser(page);
-  await page.goto('a/899800937596940136;p=;pa=0;og=140728183860941974/progress/chapter');
+  await page.goto('a/899800937596940136;p=;pa=0;og=140728183860941974/progress');
 
   await test.step('checks group progress grid is visible', async () => {
     await expect.soft(page.getByRole('heading', { name: '4LA 1ère année UE Informatique' })).toBeVisible();

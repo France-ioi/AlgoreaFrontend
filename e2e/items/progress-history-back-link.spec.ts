@@ -6,7 +6,7 @@ const observedGroupId = '4462192261130512818';
 const observedUserId = '752024252804317630';
 const colItemId = '6379723280369399253';
 
-const sourceUrl = `/a/7523720120450464843;p=7528142386663912287;a=0;og=${observedGroupId}/progress/chapter`;
+const sourceUrl = `/a/7523720120450464843;p=7528142386663912287;a=0;og=${observedGroupId}/progress`;
 const userProgressUrl = `${apiUrl}/groups/${observedGroupId}/user-progress?parent_item_ids=7523720120450464843&limit=51`;
 const historyLogUrl = `${apiUrl}/items/${colItemId}/log?limit=21&watched_group_id=${observedUserId}`;
 
@@ -50,7 +50,7 @@ async function openHistoryFromCellModal(page: Page): Promise<void> {
   // CI this consistently missed the bar's visibility window (the bar can appear and be
   // cleared again before polling resumes). Returning as soon as the URL changes lets the
   // caller start polling for the bar as early as possible.
-  await expect(page).toHaveURL(new RegExp(`/a/${colItemId};.*og=${observedUserId}.*/progress/history`));
+  await expect(page).toHaveURL(new RegExp(`/a/${colItemId};.*og=${observedUserId}.*/history`));
 }
 
 test('History button shows a back-link bar that returns to the progress grid', async ({ page }) => {

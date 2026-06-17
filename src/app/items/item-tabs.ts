@@ -21,8 +21,8 @@ import { itemRouteAsUrlCommand } from '../models/routing/item-route-serializatio
 const contentTab = { title: $localize`Content`, routerLink: [], tag: 'alg-content', exactpathMatch: true };
 const childrenEditTab = { title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit' };
 const editTab = { title: $localize`Edit`, routerLink: [ 'edit' ], tag: 'alg-task-edit' };
-const statsTab = { title: $localize`Stats`, routerLink: [ 'progress', 'chapter' ], tag: 'alg-item-progress' };
-const historyTab = { title: $localize`History`, routerLink: [ 'progress', 'history' ], tag: 'alg-log' };
+const statsTab = { title: $localize`Stats`, routerLink: [ 'progress' ], tag: 'alg-item-progress' };
+const historyTab = { title: $localize`History`, routerLink: [ 'history' ], tag: 'alg-log' };
 const dependenciesTab = { title: $localize`Dependencies`, routerLink: [ 'dependencies' ], tag: 'alg-dependencies' };
 const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' ], tag: 'alg-extra-time' };
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters' };
