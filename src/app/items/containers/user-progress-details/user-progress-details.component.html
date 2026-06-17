@@ -82,7 +82,7 @@
           <a
             alg-button
             icon="ph ph-clock-counter-clockwise"
-            [routerLink]="progressData.colItem.fullRoute | with: { observedGroup: progressData.rowGroup } | url: ['progress', 'history']"
+            [routerLink]="progressData.colItem.fullRoute | with: { observedGroup: progressData.rowGroup } | url: ['history']"
             (click)="onViewHistory()"
             i18n
           >History</a>

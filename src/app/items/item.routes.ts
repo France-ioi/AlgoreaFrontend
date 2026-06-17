@@ -31,29 +31,14 @@ const routes: Routes = [
         children: []
       },
       {
+        path: 'history',
+        loadComponent: () =>
+          import('./containers/item-log-view/item-log-view-page.component').then(m => m.ItemLogViewPageComponent),
+      },
+      {
         path: 'progress',
-        children: [
-          {
-            path: '',
-            redirectTo: 'history',
-            pathMatch: 'full',
-          },
-          {
-            path: 'history',
-            loadComponent: () =>
-              import('./containers/item-log-view/item-log-view-page.component').then(m => m.ItemLogViewPageComponent),
-          },
-          {
-            path: 'chapter',
-            loadComponent: () =>
-              import('./containers/item-progress/item-progress.component').then(m => m.ItemProgressComponent),
-          },
-          {
-            path: 'chapter-user-progress',
-            redirectTo: 'chapter',
-            pathMatch: 'full',
-          }
-        ]
+        loadComponent: () =>
+          import('./containers/item-progress/item-progress.component').then(m => m.ItemProgressComponent),
       },
       {
         path: 'dependencies',
