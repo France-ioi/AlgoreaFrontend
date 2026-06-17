@@ -1,19 +1,5 @@
-import { Component, computed, input, output } from '@angular/core';
-import { LeftMenuTabType } from '../../config';
-
-interface LeftMenuTabView {
-  type: LeftMenuTabType,
-  icon: string,
-  dataCy?: string,
-}
-
-const TAB_VIEWS: Record<LeftMenuTabType, Omit<LeftMenuTabView, 'type'>> = {
-  activities: { icon: 'ph ph-presentation' },
-  skills: { icon: 'ph ph-graduation-cap' },
-  groups: { icon: 'ph ph-users', dataCy: 'main-menu-group-btn' },
-  community: { icon: 'ph ph-users-three', dataCy: 'main-menu-community-btn' },
-  search: { icon: 'ph ph-magnifying-glass', dataCy: 'main-menu-search-btn' },
-};
+import { Component, input, output } from '@angular/core';
+import { LeftMenuTabView } from '../../config/left-menu-config.service';
 
 @Component({
   selector: 'alg-left-tab-bar',
@@ -21,21 +7,19 @@ const TAB_VIEWS: Record<LeftMenuTabType, Omit<LeftMenuTabView, 'type'>> = {
   styleUrls: [ './left-tab-bar.component.scss' ],
 })
 export class LeftTabBarComponent {
-  tabs = input<LeftMenuTabType[]>([]);
-  activeTab = input<LeftMenuTabType | null>(null);
+  tabs = input<LeftMenuTabView[]>([]);
+  activeTab = input<number | null>(null);
   hasUnreadCommunityThreads = input(false);
   searchActive = input(false);
 
-  tabSelected = output<LeftMenuTabType>();
+  tabSelected = output<number>();
   searchSelected = output<void>();
-
-  tabViews = computed(() => this.tabs().map(type => ({ type, ...TAB_VIEWS[type] })));
 
   isTabActive(tab: LeftMenuTabView): boolean {
     if (tab.type === 'search') {
       return this.searchActive();
     }
-    return !this.searchActive() && this.activeTab() === tab.type;
+    return !this.searchActive() && this.activeTab() === tab.id;
   }
 
   onTabClick(tab: LeftMenuTabView): void {
@@ -43,6 +27,6 @@ export class LeftTabBarComponent {
       this.searchSelected.emit();
       return;
     }
-    this.tabSelected.emit(tab.type);
+    this.tabSelected.emit(tab.id);
   }
 }

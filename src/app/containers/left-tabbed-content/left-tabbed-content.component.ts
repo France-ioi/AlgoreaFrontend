@@ -1,11 +1,9 @@
 import { Component, inject, Injector, input, OnDestroy, output, signal, viewChild } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { isDefined } from '../../utils/null-undefined-predicates';
-import { ContentInfo } from '../../models/content/content-info';
-import { isGroupInfo, isMyGroupsInfo, isUserInfo } from '../../models/content/group-info';
 import { isActivityInfo, isItemInfo } from '../../models/content/item-info';
 import { CurrentContentService } from '../../services/current-content.service';
 import { mapToFetchState } from '../../utils/operators/state';
@@ -17,13 +15,10 @@ import { Store } from '@ngrx/store';
 import { ItemRouter } from '../../models/routing/item-router';
 import { GroupRouter } from '../../models/routing/group-router';
 import { EntityPathRoute } from '../../models/routing/entity-route';
-import { ItemRoute } from '../../models/routing/item-route';
-import { getItemTabContent, resolveItemTabNavigationRoute, resolveSelectedRouteForTab } from '../../config/left-menu-tab-navigation';
+import { resolveActiveTabId, resolveItemTabNavigationRoute } from '../../config/left-menu-tab-navigation';
 import { fromSelectedContent } from '../../store/navigation';
-import { changedContentActions } from '../../store/navigation/selected-content/selected-content.actions';
-import { fromItemContent } from '../../items/store';
 import { fromCommunity } from '../../community/store';
-import { LeftMenuConfigService } from '../../config/left-menu-config.service';
+import { LeftMenuConfigService, LeftMenuTabView } from '../../config/left-menu-config.service';
 import { LeftTabBarComponent } from '../left-tab-bar/left-tab-bar.component';
 import { LeftNavComponent } from '../left-nav/left-nav.component';
 import { SELECTED_NAV_NODE_SELECTOR } from '../left-nav-tree/left-nav-tree.component';
@@ -93,15 +88,21 @@ export class LeftTabbedContentComponent implements OnDestroy {
   visibleTabs$ = this.leftMenuConfig.visibleTabs$;
   showTabs$ = this.leftMenuConfig.showTabBar$;
 
-  activeTab$ = this.currentContentService.content$.pipe(
-    distinctUntilChanged((x, y) => x?.type === y?.type && x?.route?.id === y?.route?.id),
-    map(content => contentToTabType(content)),
+  activeTabView$ = combineLatest([
+    this.currentContentService.content$.pipe(
+      distinctUntilChanged((x, y) => x?.type === y?.type && x?.route?.id === y?.route?.id),
+    ),
+    this.visibleTabs$,
+  ]).pipe(
+    map(([ content, tabs ]) => {
+      const id = resolveActiveTabId(content, tabs);
+      return tabs.find(tab => tab.id === id);
+    }),
     filter(isDefined),
-    withLatestFrom(this.visibleTabs$),
-    filter(([ tabType, visibleTabs ]) => visibleTabs.includes(tabType)),
-    map(([ tabType ]) => tabType),
-    startWith('activities' as LeftMenuTabType),
-    distinctUntilChanged(),
+    // Tab `id` is the index in the current filtered visible list, not a stable config key.
+    // Comparing ids is enough here because content changes drive emissions; membership changes
+    // also re-emit via combineLatest on visibleTabs$.
+    distinctUntilChanged((a, b) => a.id === b.id),
   );
 
   selectElement = output<EntityPathRoute | undefined>();
@@ -109,7 +110,7 @@ export class LeftTabbedContentComponent implements OnDestroy {
   private selectedActivityRoute = this.store.selectSignal(fromSelectedContent.selectActivity);
   private selectedSkillRoute = this.store.selectSignal(fromSelectedContent.selectSkill);
   private selectedGroupRoute = this.store.selectSignal(fromSelectedContent.selectGroup);
-  private activeItemRoute = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  private visibleTabsSig = toSignal(this.visibleTabs$, { initialValue: [] as LeftMenuTabView[] });
   private currentContentSig = toSignal(this.currentContentService.content$, { initialValue: null });
 
   private selectedElement$ = new Subject<void>();
@@ -130,47 +131,44 @@ export class LeftTabbedContentComponent implements OnDestroy {
     this.searchActiveChange.emit(false);
   }
 
-  onSelectionChangedByType(tabType: LeftMenuTabType): void {
+  onTabSelected(tabId: number): void {
     if (this.searchActive()) {
       this.closeSearch();
     }
-    if (tabType === 'activities' || tabType === 'skills') {
-      this.navigateToItemTab(tabType);
+    const tab = this.visibleTabsSig().find(t => t.id === tabId);
+    if (!tab) return;
+
+    if (tab.type === 'activities' || tab.type === 'skills') {
+      this.navigateToItemTab(tab.type, tab);
       return;
     }
-    if (tabType === 'groups') {
+    if (tab.type === 'groups') {
       this.groupRouter.navigateTo(this.selectedGroupRoute());
     }
-    if (tabType === 'community') {
+    if (tab.type === 'community') {
       void this.router.navigate([ '/community' ]);
     }
-    if (tabType === 'search') {
+    if (tab.type === 'search') {
       this.toggleSearch();
     }
   }
 
-  private navigateToItemTab(tabType: 'activities' | 'skills'): void {
-    const tabContent = getItemTabContent(this.config.leftMenuTabs, tabType);
-    if (!tabContent) return;
+  private navigateToItemTab(tabType: 'activities' | 'skills', tab: LeftMenuTabView): void {
+    if (!tab.content) return;
 
-    const activeRoute = this.activeItemRoute();
-    const activeTabType = itemRouteToTabType(activeRoute);
-    if (activeRoute && activeTabType && activeTabType !== tabType) {
-      this.store.dispatch(changedContentActions.changeItemRoute({ route: activeRoute }));
-    }
-
-    const selectedRoute = resolveSelectedRouteForTab(
-      tabType,
-      this.selectedActivityRoute(),
-      this.selectedSkillRoute(),
-      activeRoute,
-    );
-    const currentTabType = activeTabType ?? contentToTabType(this.currentContentSig());
+    const activeTabId = resolveActiveTabId(this.currentContentSig(), this.visibleTabsSig());
+    const isActiveTab = activeTabId === tab.id;
+    const selectedRoute = tabType === 'activities' ? this.selectedActivityRoute() : this.selectedSkillRoute();
+    const content = this.currentContentSig();
+    const viewingItemOfSameCategory = tabType === 'activities'
+      ? isItemInfo(content) && isActivityInfo(content)
+      : isItemInfo(content) && !isActivityInfo(content);
     const route = resolveItemTabNavigationRoute(
       tabType,
-      tabContent,
-      currentTabType,
+      tab.content,
+      isActiveTab,
       selectedRoute,
+      viewingItemOfSameCategory,
     );
     this.itemRouter.navigateTo(route, { useCurrentObservation: true });
   }
@@ -223,19 +221,4 @@ export class LeftTabbedContentComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.scrollSubscription.unsubscribe();
   }
-}
-
-function contentToTabType(content: ContentInfo | null): LeftMenuTabType | undefined {
-  if (content === null) return undefined;
-  if (content.type === 'community') return 'community';
-  if (isGroupInfo(content) || isMyGroupsInfo(content) || isUserInfo(content)) return 'groups';
-  if (isItemInfo(content)) {
-    return isActivityInfo(content) ? 'activities' : 'skills';
-  }
-  return undefined;
-}
-
-function itemRouteToTabType(route: ItemRoute | null): 'activities' | 'skills' | undefined {
-  if (route === null) return undefined;
-  return route.contentType === 'activity' ? 'activities' : 'skills';
 }

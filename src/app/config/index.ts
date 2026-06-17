@@ -10,6 +10,8 @@ export type UserSet = z.infer<typeof userSet>;
 
 const tabContent = z.object({ id: z.string(), path: z.array(z.string()).default([]) });
 
+const tabCaption = z.object({ default: z.string() }).catchall(z.string());
+
 const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend
 
@@ -65,7 +67,11 @@ const configSchema = z.object({
   hideLeftMenuTreeOnItemIds: z.array(z.string()).default([]),
 
   leftMenuTabs: z.array(z.intersection(
-    z.object({ showTo: userSet.default('all') }),
+    z.object({
+      showTo: userSet.default('all'),
+      caption: tabCaption.optional(),
+      icon: z.string().optional(),
+    }),
     z.union([
       z.object({ type: z.literal('activities'), content: tabContent }),
       z.object({ type: z.literal('skills'), content: tabContent }),

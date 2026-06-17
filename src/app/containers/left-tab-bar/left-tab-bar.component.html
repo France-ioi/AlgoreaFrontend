@@ -1,6 +1,6 @@
 <div class="tab-view-container">
   <div class="main-menu" role="tablist">
-    @for (tab of tabViews(); track tab.type) {
+    @for (tab of tabs(); track tab.id) {
       @if (tab.type === 'community') {
         <button
           class="main-menu-button"
@@ -8,15 +8,17 @@
           [class.active]="isTabActive(tab)"
           [attr.data-cy]="tab.dataCy"
           [attr.aria-selected]="isTabActive(tab)"
-          aria-label="Community"
-          i18n-aria-label
           (click)="onTabClick(tab)"
         >
           <div class="main-menu-icon-wrapper">
             <i class="main-menu-icon" [class]="tab.icon"></i>
             <span class="notification-dot" [class.visible]="hasUnreadCommunityThreads()" aria-hidden="true"></span>
           </div>
-          <span class="main-menu-title" i18n="|Tab name">Community</span>
+          @if (tab.caption) {
+            <span class="main-menu-title">{{ tab.caption }}</span>
+          } @else {
+            <span class="main-menu-title" i18n="|Tab name">Community</span>
+          }
         </button>
       } @else if (tab.type === 'search') {
         <button
@@ -25,14 +27,16 @@
           [class.active]="isTabActive(tab)"
           [attr.data-cy]="tab.dataCy"
           [attr.aria-selected]="isTabActive(tab)"
-          aria-label="Search"
-          i18n-aria-label
           (click)="onTabClick(tab)"
         >
           <div class="main-menu-icon-wrapper">
             <i class="main-menu-icon" [class]="tab.icon"></i>
           </div>
-          <span class="main-menu-title" i18n="|Tab name">Search</span>
+          @if (tab.caption) {
+            <span class="main-menu-title">{{ tab.caption }}</span>
+          } @else {
+            <span class="main-menu-title" i18n="|Tab name">Search</span>
+          }
         </button>
       } @else {
         <button
@@ -46,15 +50,19 @@
           <div class="main-menu-icon-wrapper">
             <i class="main-menu-icon" [class]="tab.icon"></i>
           </div>
-          @switch (tab.type) {
-            @case ('activities') {
-              <span class="main-menu-title" i18n="|Tab name">Content</span>
-            }
-            @case ('skills') {
-              <span class="main-menu-title" i18n="|Tab name">Skills</span>
-            }
-            @case ('groups') {
-              <span class="main-menu-title" i18n="|Tab name">Groups</span>
+          @if (tab.caption) {
+            <span class="main-menu-title">{{ tab.caption }}</span>
+          } @else {
+            @switch (tab.type) {
+              @case ('activities') {
+                <span class="main-menu-title" i18n="|Tab name">Content</span>
+              }
+              @case ('skills') {
+                <span class="main-menu-title" i18n="|Tab name">Skills</span>
+              }
+              @case ('groups') {
+                <span class="main-menu-title" i18n="|Tab name">Groups</span>
+              }
             }
           }
         </button>

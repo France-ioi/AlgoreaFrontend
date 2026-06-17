@@ -44,6 +44,7 @@ window.appConfig = {
 
   leftMenuTabs: [
     { type: 'activities', showTo: 'all', content: { id: '4702', path: [] } },
+    { type: 'activities', showTo: 'all', content: { id: '7528142386663912287', path: [ '4702' ] }, caption: { default: 'Devs' }, icon: 'ph ph-code' },
     { type: 'skills', showTo: 'all', content: { id: '3000', path: [] } },
     { type: 'groups', showTo: 'all' },
     { type: 'community', showTo: 'all' },

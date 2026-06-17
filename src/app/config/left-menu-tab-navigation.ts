@@ -1,40 +1,55 @@
-import { AppConfig, LeftMenuTabType } from '.';
 import { defaultAttemptId } from '../items/models/attempts';
+import { ContentInfo } from '../models/content/content-info';
+import { isGroupInfo, isMyGroupsInfo, isUserInfo } from '../models/content/group-info';
+import { isActivityInfo, isItemInfo } from '../models/content/item-info';
 import { isSameOrDescendantOf } from '../models/routing/entity-route';
 import { ItemRoute, itemRoute } from '../models/routing/item-route';
+import { LeftMenuTabView } from './left-menu-config.service';
+import { LeftMenuTabType } from '.';
 
-export function getItemTabContent(
-  tabs: AppConfig['leftMenuTabs'],
-  tabType: 'activities' | 'skills',
-): { id: string, path: string[] } | undefined {
-  const tab = tabs.find(t => t.type === tabType);
-  if (!tab || !('content' in tab)) return undefined;
-  return tab.content;
+type ItemTabWithContent = LeftMenuTabView & { content: { id: string, path: string[] } };
+
+function isMatchingItemTab(
+  tab: LeftMenuTabView,
+  contentTabType: 'activities' | 'skills',
+  route: { id: string, path: string[] },
+): tab is ItemTabWithContent {
+  return tab.type === contentTabType
+    && tab.content !== undefined
+    && isSameOrDescendantOf(tab.content, route);
 }
 
-export function resolveSelectedRouteForTab(
-  tabType: 'activities' | 'skills',
-  storedActivity: ItemRoute | null,
-  storedSkill: ItemRoute | null | undefined,
-  activeRoute: ItemRoute | null,
-): ItemRoute | null | undefined {
-  const activeTabType = itemRouteToTabType(activeRoute);
-  if (tabType === 'activities') {
-    return storedActivity ?? (activeTabType === 'activities' ? activeRoute : null);
+export function resolveActiveTabId(
+  content: ContentInfo | null,
+  visibleTabs: LeftMenuTabView[],
+): number | undefined {
+  if (visibleTabs.length === 0) return undefined;
+
+  const contentTabType = contentToTabType(content);
+  if (!contentTabType) {
+    return visibleTabs[0]?.id;
   }
-  return storedSkill ?? (activeTabType === 'skills' ? activeRoute : null);
-}
 
-function itemRouteToTabType(route: ItemRoute | null): 'activities' | 'skills' | undefined {
-  if (route === null) return undefined;
-  return route.contentType === 'activity' ? 'activities' : 'skills';
+  if ((contentTabType === 'activities' || contentTabType === 'skills') && isItemInfo(content)) {
+    const matchingTabs = visibleTabs.filter(tab => isMatchingItemTab(tab, contentTabType, content.route));
+
+    if (matchingTabs.length > 0) {
+      const bestMatch = matchingTabs.reduce((best, tab) =>
+        (tab.content.path.length > best.content.path.length ? tab : best),
+      );
+      return bestMatch.id;
+    }
+  }
+
+  return visibleTabs.find(t => t.type === contentTabType)?.id;
 }
 
 export function resolveItemTabNavigationRoute(
   tabType: 'activities' | 'skills',
   tabContent: { id: string, path: string[] },
-  currentTabType: LeftMenuTabType | undefined,
+  isActiveTab: boolean,
   selectedRoute: ItemRoute | null | undefined,
+  viewingItemOfSameCategory: boolean,
 ): ItemRoute {
   const contentType = tabType === 'activities' ? 'activity' : 'skill';
   const tabContentRoute = itemRoute(contentType, tabContent.id, {
@@ -42,13 +57,27 @@ export function resolveItemTabNavigationRoute(
     parentAttemptId: defaultAttemptId,
   });
 
-  if (currentTabType === tabType) {
+  if (isActiveTab) {
     return tabContentRoute;
   }
 
-  if (selectedRoute && isSameOrDescendantOf(tabContent, selectedRoute)) {
+  if (
+    !viewingItemOfSameCategory
+    && selectedRoute
+    && isSameOrDescendantOf(tabContent, selectedRoute)
+  ) {
     return selectedRoute;
   }
 
   return tabContentRoute;
+}
+
+function contentToTabType(content: ContentInfo | null): LeftMenuTabType | undefined {
+  if (content === null) return undefined;
+  if (content.type === 'community') return 'community';
+  if (isGroupInfo(content) || isMyGroupsInfo(content) || isUserInfo(content)) return 'groups';
+  if (isItemInfo(content)) {
+    return isActivityInfo(content) ? 'activities' : 'skills';
+  }
+  return undefined;
 }

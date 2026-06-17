@@ -2,6 +2,8 @@ import { Page, expect } from '@playwright/test';
 
 const layoutTolerancePx = 10;
 
+type StandardTabName = 'Content' | 'Skills' | 'Groups' | 'Search';
+
 export class LeftMenu {
   private leftMenuShellLocator = this.page.locator('alg-root .container > div.left-menu');
   private leftPanelLocator = this.page.locator('alg-left-panel');
@@ -205,7 +207,9 @@ export class LeftMenu {
     await expect(this.searchPanelLocator).not.toBeVisible();
   }
 
-  async clickTab(name: 'Content' | 'Skills' | 'Groups' | 'Search'): Promise<void> {
+  async clickTab(name: StandardTabName): Promise<void>;
+  async clickTab(caption: string): Promise<void>;
+  async clickTab(name: StandardTabName | string): Promise<void> {
     if (name === 'Search') {
       await this.searchTabButtonLocator.click();
       return;
@@ -213,7 +217,9 @@ export class LeftMenu {
     await this.tabBarLocator.getByRole('tab', { name }).click();
   }
 
-  async checksTabIsActive(name: 'Content' | 'Skills' | 'Groups' | 'Search'): Promise<void> {
+  async checksTabIsActive(name: StandardTabName): Promise<void>;
+  async checksTabIsActive(caption: string): Promise<void>;
+  async checksTabIsActive(name: StandardTabName | string): Promise<void> {
     const tabButton = name === 'Search'
       ? this.searchTabButtonLocator
       : this.tabBarLocator.getByRole('tab', { name });
