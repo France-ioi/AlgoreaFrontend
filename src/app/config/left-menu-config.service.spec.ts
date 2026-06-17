@@ -19,7 +19,6 @@ const baseConfig = (overrides: Partial<AppConfig> = {}): AppConfig => ({
   oauthServerUrl: 'http://oauth',
   oauthClientId: '1',
   defaultActivityId: '1',
-  defaultSkillId: 'skill-1',
   allUsersGroupId: '1',
   itemPlatformId: 'test',
   searchApiUrl: 'http://search',
@@ -31,8 +30,8 @@ const baseConfig = (overrides: Partial<AppConfig> = {}): AppConfig => ({
     showGroupAccessTab: false,
   },
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
-    { type: 'skills', showTo: 'all' },
+    { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
+    { type: 'skills', showTo: 'all', content: { id: 'skill-1', path: [] } },
     { type: 'groups', showTo: [ 'group-1' ] },
     { type: 'community', showTo: 'all' },
     { type: 'search', showTo: 'all' },
@@ -73,8 +72,15 @@ describe('LeftMenuConfigService', () => {
     expect(otherTabs).not.toContain('groups');
   });
 
-  it('omits skills when defaultSkillId is missing', async () => {
-    setup(baseConfig({ defaultSkillId: undefined }));
+  it('omits skills when no skills tab is configured', async () => {
+    setup(baseConfig({
+      leftMenuTabs: [
+        { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
+        { type: 'groups', showTo: [ 'group-1' ] },
+        { type: 'community', showTo: 'all' },
+        { type: 'search', showTo: 'all' },
+      ],
+    }));
     session$.next(profile());
     const tabs = await firstValueFrom(service.visibleTabs$);
     expect(tabs).not.toContain('skills');
@@ -105,7 +111,7 @@ describe('LeftMenuConfigService', () => {
   it('showTabBar$ is false when only activities is visible', async () => {
     setup(baseConfig({
       leftMenuTabs: [
-        { type: 'activities', showTo: 'all' },
+        { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
       ],
     }));
     session$.next(profile());
@@ -116,7 +122,7 @@ describe('LeftMenuConfigService', () => {
   it('showTabBar$ is true when a non-activities tab is visible', async () => {
     setup(baseConfig({
       leftMenuTabs: [
-        { type: 'activities', showTo: 'all' },
+        { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
         { type: 'search', showTo: 'all' },
       ],
     }));

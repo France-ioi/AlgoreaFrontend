@@ -24,8 +24,6 @@ export class LeftMenuConfigService {
 
   private isTabTypeAvailable(type: LeftMenuTabType): boolean {
     switch (type) {
-      case 'skills':
-        return !!this.config.defaultSkillId;
       case 'search':
         return !!this.config.searchApiUrl;
       case 'community':

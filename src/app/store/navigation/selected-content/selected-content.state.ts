@@ -9,7 +9,7 @@ export interface State {
 }
 
 export const initialState: State = {
-  activity: null, // Will be set by an effect
-  skill: null, // Will be set by an effect
+  activity: null,
+  skill: null,
   group: myGroupsPage,
 };

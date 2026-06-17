@@ -5,9 +5,12 @@ import { initAsTesterUser, initAsUsualUser } from 'e2e/helpers/e2e_auth';
 const deepMerge = (o1: unknown, o2: unknown): unknown =>
   JSON.parse(JSON.stringify({ ...JSON.parse(JSON.stringify(o1)), ...JSON.parse(JSON.stringify(o2)) }));
 
+const tabContent = { id: '4702', path: [] as string[] };
+const skillTabContent = { id: '3000', path: [] as string[] };
+
 const withoutSkillsTabConfig = () => ({
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
+    { type: 'activities', showTo: 'all', content: tabContent },
     { type: 'groups', showTo: 'all' },
     { type: 'search', showTo: 'all' },
   ],
@@ -15,16 +18,16 @@ const withoutSkillsTabConfig = () => ({
 
 const withoutGroupsTabConfig = () => ({
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
-    { type: 'skills', showTo: 'all' },
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: 'all', content: skillTabContent },
     { type: 'search', showTo: 'all' },
   ],
 });
 
 const tabsForSpecificUsersConfig = (groupIds: string[]) => ({
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
-    { type: 'skills', showTo: groupIds },
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: groupIds, content: skillTabContent },
     { type: 'groups', showTo: groupIds },
     { type: 'search', showTo: 'all' },
   ],
@@ -32,8 +35,8 @@ const tabsForSpecificUsersConfig = (groupIds: string[]) => ({
 
 const skillsForSpecificUsersConfig = (groupIds: string[]) => ({
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
-    { type: 'skills', showTo: groupIds },
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: groupIds, content: skillTabContent },
     { type: 'groups', showTo: 'all' },
     { type: 'search', showTo: 'all' },
   ],
@@ -41,8 +44,8 @@ const skillsForSpecificUsersConfig = (groupIds: string[]) => ({
 
 const groupsForSpecificUsersConfig = (groupIds: string[]) => ({
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
-    { type: 'skills', showTo: 'all' },
+    { type: 'activities', showTo: 'all', content: tabContent },
+    { type: 'skills', showTo: 'all', content: skillTabContent },
     { type: 'groups', showTo: groupIds },
     { type: 'search', showTo: 'all' },
   ],
@@ -51,7 +54,7 @@ const groupsForSpecificUsersConfig = (groupIds: string[]) => ({
 const hiddenTabBarConfig = () => ({
   searchApiUrl: '',
   leftMenuTabs: [
-    { type: 'activities', showTo: 'all' },
+    { type: 'activities', showTo: 'all', content: tabContent },
   ],
 });
 

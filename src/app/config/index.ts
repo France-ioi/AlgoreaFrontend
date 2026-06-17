@@ -8,6 +8,8 @@ const userSet = z.union([
 
 export type UserSet = z.infer<typeof userSet>;
 
+const tabContent = z.object({ id: z.string(), path: z.array(z.string()).default([]) });
+
 const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend
 
@@ -19,11 +21,9 @@ const configSchema = z.object({
   oauthServerUrl: z.string(), // full url (not including the trailing slash) of the oauth server
   oauthClientId: z.string(),
 
-  // the id of the activity/skill to be loaded by default on its tab
-  // for the activity, it is also the "home" content, so what is displayed when arriving on "/"
+  // the id of the activity to be loaded by default on "/"
   // this item MUST be on one of all users' root and be implicitely startable
   defaultActivityId: z.string(),
-  defaultSkillId: z.string().optional(), // if not given, skills are disabled
 
   // groupId of the all-users group used by the backend (used while the backend cannot provide us with it)
   allUsersGroupId: z.string(),
@@ -67,19 +67,13 @@ const configSchema = z.object({
   leftMenuTabs: z.array(z.intersection(
     z.object({ showTo: userSet.default('all') }),
     z.union([
-      z.object({ type: z.literal('activities') }),
-      z.object({ type: z.literal('skills') }),
+      z.object({ type: z.literal('activities'), content: tabContent }),
+      z.object({ type: z.literal('skills'), content: tabContent }),
       z.object({ type: z.literal('groups') }),
       z.object({ type: z.literal('community') }),
       z.object({ type: z.literal('search') }),
     ]),
-  )).default([
-    { type: 'activities', showTo: 'all' },
-    { type: 'skills', showTo: 'all' },
-    { type: 'groups', showTo: 'all' },
-    { type: 'community', showTo: 'all' },
-    { type: 'search', showTo: 'all' },
-  ]),
+  )),
 
 });
 

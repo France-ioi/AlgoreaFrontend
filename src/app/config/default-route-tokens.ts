@@ -10,10 +10,3 @@ export const DEFAULT_ACTIVITY_ROUTE = new InjectionToken('app.defaultActivityRou
     return itemRoute('activity', config.defaultActivityId, { path: [], parentAttemptId: defaultAttemptId });
   }
 });
-export const DEFAULT_SKILL_ROUTE = new InjectionToken('app.defaultSkillRoute', {
-  providedIn: 'root',
-  factory: (): FullItemRoute|undefined => {
-    const config = inject(APPCONFIG);
-    return config.defaultSkillId ? itemRoute('skill', config.defaultSkillId, { path: [], parentAttemptId: defaultAttemptId }) : undefined;
-  }
-});
