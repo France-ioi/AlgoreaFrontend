@@ -61,4 +61,36 @@ describe('LeftTabBarComponent', () => {
     expect(searchSelectedSpy).toHaveBeenCalled();
     expect(tabSelectedSpy).not.toHaveBeenCalled();
   });
+
+  it('ignores a second click on the same tab within the dedupe window', () => {
+    let now = 0;
+    spyOn(Date, 'now').and.callFake(() => now);
+    const emitSpy = spyOn(component.tabSelected, 'emit');
+    const activitiesTab = tabs[0]!;
+    component.onTabClick(activitiesTab);
+    now += 200;
+    component.onTabClick(activitiesTab);
+    expect(emitSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('emits again after the dedupe window elapsed', () => {
+    let now = 0;
+    spyOn(Date, 'now').and.callFake(() => now);
+    const emitSpy = spyOn(component.tabSelected, 'emit');
+    const activitiesTab = tabs[0]!;
+    component.onTabClick(activitiesTab);
+    now += 400;
+    component.onTabClick(activitiesTab);
+    expect(emitSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('still emits when two different tabs are clicked in quick succession', () => {
+    let now = 0;
+    spyOn(Date, 'now').and.callFake(() => now);
+    const emitSpy = spyOn(component.tabSelected, 'emit');
+    component.onTabClick(tabs[0]!);
+    now += 100;
+    component.onTabClick(tabs[1]!);
+    expect(emitSpy).toHaveBeenCalledTimes(2);
+  });
 });
