@@ -3,17 +3,16 @@
 <p i18n>The resulting additional time of all descendants of this group:</p>
 
 @if (state.isError) {
-  <alg-error
-    class="alg-flex-1"
+  <alg-error class="alg-flex-1"
     icon="ph-duotone ph-warning-circle"
     i18n-message message="Unable to extra time information"
     i18n-buttonCaption buttonCaption="Retry"
     [showRefreshButton]="true"
     (refresh)="refresh()"
-  ></alg-error>
+   />
 }
 @else if (state.data === undefined) {
-  <alg-loading></alg-loading>
+  <alg-loading />
 }
 @else { <!-- state ready or fetching-->
   @let data = state.data;
@@ -27,11 +26,10 @@
         <ng-container cdkColumnDef="additionalTime">
           <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef i18n>Participant-specific</th>
           <td class="alg-table-td" cdk-cell *cdkCellDef="let descendantExtraTime">
-            <alg-item-extra-time-input
-              [initialValue]="descendantExtraTime.additionalTime"
+            <alg-item-extra-time-input [initialValue]="descendantExtraTime.additionalTime"
               [disabled]="updating()"
               (saveEvent)="onExtraTimeSave($event, descendantExtraTime.groupId)"
-            ></alg-item-extra-time-input>
+             />
           </td>
         </ng-container>
         <ng-container cdkColumnDef="totalAdditionalTime">

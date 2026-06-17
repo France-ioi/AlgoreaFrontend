@@ -2,11 +2,10 @@
   <div class="score-weight-container">
     <div class="score-weight">
       <span class="score-weight-label alg-base-text-color" i18n>Enable score weight</span>
-      <alg-switch
-        data-testid="enable-score-weight"
+      <alg-switch data-testid="enable-score-weight"
         [(ngModel)]="scoreWeightEnabled"
         (ngModelChange)="onEnableScoreWeightChange($event)"
-      ></alg-switch>
+       />
     </div>
   </div>
 
@@ -39,15 +38,14 @@
         <ng-container cdkColumnDef="editScore">
           <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef></th>
           <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
-            <alg-input-number
-              data-testid="edit-score-weight"
+            <alg-input-number data-testid="edit-score-weight"
               [style.width.rem]="3"
               inputStyleClass="size-s"
               [ngModel]="rowData.scoreWeight"
               (ngModelChange)="onScoreWeightChange(rowData, $event)"
               [min]="0"
               [max]="100"
-            ></alg-input-number>
+             />
           </td>
         </ng-container>
 
@@ -147,20 +145,18 @@
       ></button>
     </div>
   } @else {
-    <alg-empty-content
-      class="empty-content"
+    <alg-empty-content class="empty-content"
       icon="ph-duotone ph-folder-simple-minus"
       i18n-message message="No children for this chapter."
-    ></alg-empty-content>
+     />
   }
 </div>
 
 <div class="add-item-container">
-  <alg-add-item
-    [type]="type()"
+  <alg-add-item [type]="type()"
     [addedItemIds]="addedItemIds()"
     (contentAdded)="addChild($event)"
-  ></alg-add-item>
+   />
 </div>
 
 <ng-template #menu>
@@ -168,11 +164,10 @@
     @let childData = data()[propagationEditItemIdx()!];
     @if (childData) {
       <div class="menu" cdkMenu>
-        <alg-propagation-edit-menu
-          [childData]="childData"
+        <alg-propagation-edit-menu [childData]="childData"
           (clickEvent)="onContentViewPropagationChanged($event, propagationEditItemIdx()!)"
           (openAdvancedConfigurationDialogEvent)="openAdvancedPermPropagationConfigurationDialog(childData, propagationEditItemIdx()!)"
-        ></alg-propagation-edit-menu>
+         />
       </div>
     }
   }

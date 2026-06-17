@@ -1,7 +1,7 @@
 @if (state$ | async; as state) {
   <div class="container">
     @if (state.isFetching || (deletionInProgress$ | async)) {
-      <alg-loading size="small"></alg-loading>
+      <alg-loading size="small" />
     }
     <div class="button-block">
       <button
@@ -13,13 +13,12 @@
         i18n
       >Delete this group</button>
       @if (state.isError) {
-        <alg-error
-          class="error"
+        <alg-error class="error"
           i18n-message message="Error while loading the group info"
           [showRefreshButton]="true"
           refreshButtonType="refresh"
           (refresh)="refresh()"
-        ></alg-error>
+         />
       }
     </div>
     @if (state.isReady && state.data) {

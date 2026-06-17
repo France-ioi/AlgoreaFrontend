@@ -2,10 +2,9 @@
   <div class="header-content">
     @if (value()) {
       @if (headerContent()) {
-        <ng-container
-          [ngTemplateOutlet]="headerContent()!"
+        <ng-container [ngTemplateOutlet]="headerContent()!"
           [ngTemplateOutletContext]="{ $implicit: value() }"
-        ></ng-container>
+         />
       } @else {
         <span i18n>Yes</span>
       }
@@ -20,29 +19,27 @@
     @if (descriptionTemplate()) {
       <div class="item">
         <div class="desc header-comment">
-          <ng-container [ngTemplateOutlet]="descriptionTemplate()!"></ng-container>
+          <ng-container [ngTemplateOutlet]="descriptionTemplate()!" />
         </div>
       </div>
     }
     <div class="item">
       <div class="switch">
-        <alg-switch [ngModel]="value()" (ngModelChange)="onSet($event)"></alg-switch>
+        <alg-switch [ngModel]="value()" (ngModelChange)="onSet($event)" />
       </div>
       <div class="desc">
         <div class="desc-name" [class.active]="value()" (click)="onSet(!value())">
           @if (labelTemplate()) {
-            <ng-container
-              [ngTemplateOutlet]="labelTemplate()!"
+            <ng-container [ngTemplateOutlet]="labelTemplate()!"
               [ngTemplateOutletContext]="{ $implicit: value() }"
-            ></ng-container>
+             />
           }
         </div>
         <div>
           @if (contentTemplate()) {
-            <ng-container
-              [ngTemplateOutlet]="contentTemplate()!"
+            <ng-container [ngTemplateOutlet]="contentTemplate()!"
               [ngTemplateOutletContext]="{ $implicit: value() }"
-            ></ng-container>
+             />
           }
         </div>
       </div>

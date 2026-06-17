@@ -1,23 +1,22 @@
 @let currentState = state();
 
 @if (currentState?.isFetching && !currentState?.data) {
-  <alg-loading class="alg-flex-1" size="medium"></alg-loading>
+  <alg-loading class="alg-flex-1" size="medium" />
 }
 @if (currentState?.isError) {
-  <alg-error
-    class="alg-flex-1"
+  <alg-error class="alg-flex-1"
     icon="ph-duotone ph-warning-circle"
     i18n-message message="Unable to load the threads"
     i18n-buttonCaption buttonCaption="Retry"
     [showRefreshButton]="true"
     (refresh)="onRefresh()"
-  ></alg-error>
+   />
 }
 @if (filteredData(); as data) {
   <div class="table-header">
-    <ng-content select="[tableTitle]"></ng-content>
+    <ng-content select="[tableTitle]" />
     <div class="table-actions">
-      <alg-selection class="small" [items]="filterOptions" (change)="onFilterChanged($event)"></alg-selection>
+      <alg-selection class="small" [items]="filterOptions" (change)="onFilterChanged($event)" />
       <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="onRefresh()" i18n>
         Refresh
       </button>
@@ -75,7 +74,7 @@
                 <td class="alg-table-td">{{ threadStatusLabel(thread) }}</td>
               }
               <td class="alg-table-td">{{ thread.messageCount }}</td>
-              <td class="alg-table-td"><alg-relative-time [value]="thread.latestUpdateAt"></alg-relative-time></td>
+              <td class="alg-table-td"><alg-relative-time [value]="thread.latestUpdateAt" /></td>
             </tr>
           } @empty {
             <tr class="alg-table-body-tr">

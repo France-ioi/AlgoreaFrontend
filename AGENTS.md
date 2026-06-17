@@ -92,6 +92,7 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 
 ## Templates
 
+- Use self-closing tags for empty Angular components and structural elements (e.g. `<alg-foo [input]="value" />`); keep open/close tags when the element has projected or inner content.
 - Keep templates simple and avoid complex logic
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
 - Use the async pipe to handle observables
@@ -118,7 +119,7 @@ The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
 ## Linting and tests
 
 Make sure after each modification that:
-- the linting (`ng lint`) pass
+- the linting (`npm run lint`) pass — includes `@angular-eslint/template/prefer-self-closing-tags` for template HTML
 - the unit tests pass (`ng test`)
 - the e2e tests pass (`npm run test:e2e`)
 

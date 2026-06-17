@@ -2,9 +2,9 @@
   <div class="header-content">
     <div class="header-content-wrapper">
       <span class="selected-progress-level">{{ values()[selected()]?.label }}</span>
-      <ng-content select="[header-section]"></ng-content>
+      <ng-content select="[header-section]" />
     </div>
-    <alg-progress-level [valuesLength]="values().length" [value]="selected()" [colorTheme]="theme()"></alg-progress-level>
+    <alg-progress-level [valuesLength]="values().length" [value]="selected()" [colorTheme]="theme()" />
   </div>
 }
 
@@ -18,10 +18,9 @@
       </div>
       @if (descriptionTemplate()) {
         <div class="progress-desc header-comment">
-          <ng-container
-            [ngTemplateOutlet]="descriptionTemplate()!"
+          <ng-container [ngTemplateOutlet]="descriptionTemplate()!"
             [ngTemplateOutletContext]="{ $implicit: value() }"
-          ></ng-container>
+           />
         </div>
       }
     </div>

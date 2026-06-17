@@ -11,7 +11,7 @@ import { GroupLogViewComponent } from './group-log-view.component';
   template: `
     @if (group(); as group) {
       @if (group.currentUserCanWatchMembers) {
-        <alg-group-log-view [groupId]="group.id"></alg-group-log-view>
+        <alg-group-log-view [groupId]="group.id" />
       } @else {
         <alg-error>
           <ng-container i18n>

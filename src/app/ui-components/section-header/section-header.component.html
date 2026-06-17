@@ -11,10 +11,9 @@
   </div>
   @if (contentTemplate()) {
     <div class="template">
-      <ng-container
-        [ngTemplateOutlet]="contentTemplate()!"
+      <ng-container [ngTemplateOutlet]="contentTemplate()!"
         [ngTemplateOutletContext]="{ $implicit: true }"
-      ></ng-container>
+       />
     </div>
   }
 </div>

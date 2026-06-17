@@ -1,33 +1,30 @@
 @if (navTreeServices[treeIndex()]!.state$ | async; as state) {
   @if (state.isFetching && !state.data) {
-    <alg-loading class="alg-flex-1"></alg-loading>
+    <alg-loading class="alg-flex-1" />
   }
   @if (state.isError) {
-    <alg-error
-      class="alg-flex-1"
+    <alg-error class="alg-flex-1"
       i18n-message message="Unable to load the list."
       icon="ph-duotone ph-warning-circle"
       [showRefreshButton]="true"
       buttonCaption="Retry"
       (refresh)="retryError(treeIndex())"
-    ></alg-error>
+     />
   }
   @if (state.isReady && (isObserving$ | async) && [0, 1].includes(treeIndex())) {
     <div class="watching-warning">
-      <alg-observation-bar
-        [caption]="!!(isNarrowScreen$ | async) ? undefined : observationModeCaption"
+      <alg-observation-bar [caption]="!!(isNarrowScreen$ | async) ? undefined : observationModeCaption"
         [showTooltip]="true"
-      ></alg-observation-bar>
+       />
     </div>
   }
   @if (state.data) {
     <div class="alg-flex-1 scroll-wrapper">
       <div class="scroll-container">
         <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
-          <alg-left-nav-tree
-            [data]="state.data"
+          <alg-left-nav-tree [data]="state.data"
             [elementType]="$any(['activity', 'skill', 'group'][treeIndex()])"
-          ></alg-left-nav-tree>
+           />
         </ng-scrollbar>
       </div>
     </div>

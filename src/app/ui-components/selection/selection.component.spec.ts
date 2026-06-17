@@ -65,7 +65,7 @@ describe('SelectionComponent', () => {
 
   it('should reflect formControl value after detectChanges and not reset to selected input default', () => {
     @Component({
-      template: '<alg-selection [items]="items" [formControl]="control"></alg-selection>',
+      template: '<alg-selection [items]="items" [formControl]="control" />',
       imports: [ SelectionComponent, ReactiveFormsModule ],
     })
     class HostComponent {

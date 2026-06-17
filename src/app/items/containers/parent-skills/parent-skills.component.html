@@ -3,24 +3,22 @@
     Parent skills
   </div>
   @if (state.isFetching) {
-    <alg-loading></alg-loading>
+    <alg-loading />
   }
   @if (state.isError) {
-    <alg-error
-      class="dark"
+    <alg-error class="dark"
       i18n-message message="Error while loading the skill parents"
       [showRefreshButton]="true"
       (refresh)="refresh()"
-    ></alg-error>
+     />
   }
   @if (state.isReady && state.data; as parents) {
     @if (itemData().currentResult?.attemptId; as attemptId) {
-      <alg-item-children-list
-        type="skill"
+      <alg-item-children-list type="skill"
         i18n-emptyMessage emptyMessage="This skill does not have parent skills."
         [children]="parents"
         [routeParams]="{ parentAttemptId: attemptId, path: itemData().route.path | slice :0 : -1 }"
-      ></alg-item-children-list>
+       />
     }
   }
 }

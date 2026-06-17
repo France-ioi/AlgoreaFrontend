@@ -1,14 +1,13 @@
 @if (state() === 'error') {
-  <alg-error
-    class="dark"
+  <alg-error class="dark"
     icon="ph-duotone ph-warning-circle"
     i18n-message message="Error while loading the group you manage"
     [showRefreshButton]="true"
     (refresh)="fetchData()"
-  ></alg-error>
+   />
 } @else {
   @if (state() === 'fetching') {
-    <alg-loading></alg-loading>
+    <alg-loading />
   } @else {
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">

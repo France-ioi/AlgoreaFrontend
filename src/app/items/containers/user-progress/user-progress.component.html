@@ -4,10 +4,9 @@
   [class.pointer]="state() !== 'not-started'"
 >
   @if (state() !== 'success' && state() !== 'not-started') {
-    <alg-score-ring
-      [currentScore]="userProgress().score"
+    <alg-score-ring [currentScore]="userProgress().score"
       [diameter]="32"
-    ></alg-score-ring>
+     />
   }
   @if (state() === 'success') {
     <span class="situation-check">

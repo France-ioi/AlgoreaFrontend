@@ -11,7 +11,7 @@
       ></i>
     </div>
     <div class="field-value">
-      <alg-input [parentForm]="form" name="title"></alg-input>
+      <alg-input [parentForm]="form" name="title" />
     </div>
   </div>
   <div class="field" data-testid="item-strings-subtitle">
@@ -26,7 +26,7 @@
       ></i>
     </div>
     <div class="field-value">
-      <alg-input [parentForm]="form" name="subtitle"></alg-input>
+      <alg-input [parentForm]="form" name="subtitle" />
     </div>
   </div>
   @if (showDescription()) {
@@ -42,11 +42,9 @@
         ></i>
       </div>
       <div class="field-value">
-        <alg-item-edit-content
-          class="item-edit-content"
+        <alg-item-edit-content class="item-edit-content"
           [parentForm]="form"
-        >
-        </alg-item-edit-content>
+         />
       </div>
     </div>
   }

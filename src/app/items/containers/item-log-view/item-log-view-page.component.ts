@@ -23,7 +23,7 @@ import { ItemLogViewComponent } from './item-log-view.component';
         </p>
       }
     } @else if (itemData(); as data) {
-      <alg-item-log-view [itemData]="data"></alg-item-log-view>
+      <alg-item-log-view [itemData]="data" />
     }
   `,
 })

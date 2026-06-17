@@ -1,13 +1,12 @@
 @if (state$ | async; as state) {
   @if (state.isError) {
-    <alg-error
-      class="dark"
+    <alg-error class="dark"
       icon="ph-duotone ph-warning-circle"
       i18n-message message="Error while loading the group you joined"
       [showRefreshButton]="true"
       refreshButtonType="refresh"
       (refresh)="refresh()"
-    ></alg-error>
+     />
   }
   @if (!state.isError) {
     <div class="alg-table-page-wrapper">

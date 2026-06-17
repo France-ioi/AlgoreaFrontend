@@ -9,17 +9,16 @@
 </h2>
 
 @if (taskValidationsState().isFetching) {
-  <alg-loading class="alg-flex-1"></alg-loading>
+  <alg-loading class="alg-flex-1" />
 }
 @if (taskValidationsState().isError) {
-  <alg-error
-    class="alg-flex-1"
+  <alg-error class="alg-flex-1"
     icon="ph-duotone ph-warning-circle"
     i18n-message message="Unable to load the activity feed"
     i18n-buttonCaption buttonCaption="Retry"
     [showRefreshButton]="true"
     (refresh)="onRefresh()"
-  ></alg-error>
+   />
 }
 @if (taskValidationsState().isReady) {
   <div class="alg-table-page-wrapper">
@@ -52,7 +51,7 @@
               <td class="alg-table-td">
                 <alg-user-avatar [seed]="entry.participantId" />
               </td>
-              <td class="alg-table-td"><alg-relative-time [value]="entry.date"></alg-relative-time></td>
+              <td class="alg-table-td"><alg-relative-time [value]="entry.date" /></td>
             </tr>
           } @empty {
             <tr class="alg-table-body-tr">

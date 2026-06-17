@@ -9,7 +9,7 @@ import { GroupAccessComponent } from './group-access.component';
   imports: [ GroupAccessComponent ],
   template: `
     @if (group(); as group) {
-      <alg-group-access [group]="group"></alg-group-access>
+      <alg-group-access [group]="group" />
     }
   `,
 })

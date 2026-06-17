@@ -1,17 +1,15 @@
 @let state = groupDataState();
 @if (groupData(); as data) {
   @let group = data.group;
-  <alg-group-header [groupData]="data"></alg-group-header>
+  <alg-group-header [groupData]="data" />
 <!--    <alg-pending-join-requests
     *ngIf="(group | isCurrentUserManager) && group.currentUserCanManage !== 'none'"
     [groupId]="group.id"
   ></alg-pending-join-requests>-->
   @if ((group | isCurrentUserManager) || (group | isCurrentUserMember) || group.currentUserHasPendingInvitation) {
-    <alg-group-indicator
-      class="group-indicator"
+    <alg-group-indicator class="group-indicator"
       [group]="group"
-      >
-    </alg-group-indicator>
+       />
   }
   <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
   <div [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
@@ -78,10 +76,10 @@
         </a>
     </div>
   </div>
-  <router-outlet></router-outlet>
+  <router-outlet />
 }
 @if (state.isFetching && !state.data) {
-  <alg-loading class="alg-flex-1"></alg-loading>
+  <alg-loading class="alg-flex-1" />
 }
 @if (state.isError) {
   <alg-error

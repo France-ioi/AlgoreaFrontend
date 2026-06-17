@@ -6,5 +6,5 @@
 }
 @if (group() | isCurrentUserMember) {
   <h2 class="alg-h2" i18n>Leave the group?</h2>
-  <alg-group-leave [group]="group()" (leave)="onLeave()"></alg-group-leave>
+  <alg-group-leave [group]="group()" (leave)="onLeave()" />
 }

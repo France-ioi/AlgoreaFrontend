@@ -1,12 +1,11 @@
 <alg-modal i18n-modalTitle modalTitle="Permission editor" [showFooter]="false" (closeEvent)="closeDialog()">
   @if ((params().group | isUser) && !params().sourceGroup) {
-    <alg-error
-      i18n-message message="User permissions cannot be changed via this page for the moment"
-    ></alg-error>
+    <alg-error i18n-message message="User permissions cannot be changed via this page for the moment"
+     />
   } @else {
     @if (state$ | async; as state) {
       @if (state.isFetching) {
-        <alg-loading></alg-loading>
+        <alg-loading />
       }
       @if (state.isError) {
         <alg-error>
@@ -28,8 +27,7 @@
                 </p>
               }
             }
-            <alg-permissions-edit-form
-              (save)="onPermissionsDialogSave($event)"
+            <alg-permissions-edit-form (save)="onPermissionsDialogSave($event)"
               (cancel)="closeDialog()"
               [targetType]="targetType()"
               [permissions]="state.data.granted"
@@ -37,7 +35,7 @@
               [giverPermissions]="params().currentUserPermissions"
               [acceptButtonDisabled]="updateInProcess()"
               [requiresExplicitEntry]="params().item.requiresExplicitEntry"
-            ></alg-permissions-edit-form>
+             />
           </div>
         </div>
       }

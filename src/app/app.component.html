@@ -5,7 +5,7 @@
       [class.collapsed]="!leftMenu.shown"
       [class.animated]="leftMenu.animated"
     >
-      <alg-left-panel></alg-left-panel>
+      <alg-left-panel />
     </div>
     <ng-container *ngrxLet="{ fullFrameContentDisplayed: fullFrameContentDisplayed$, withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$ } as layout">
       <ng-container *ngrxLet="isObserving$ as isObserving">
@@ -15,12 +15,11 @@
           [class.animated]="leftMenu.animated"
           [class.thread-collapsed]="!(isDiscussionVisible$ | async) || (isThreadInline$ | async)"
         >
-          <alg-top-bar
-            [showBreadcrumbs]="!scrolled() && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
+          <alg-top-bar [showBreadcrumbs]="!scrolled() && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
             [modeBarDisplayed]="isObserving"
             [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
             [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
-          ></alg-top-bar>
+           />
           <div
             id="main-content-wrapper"
             data-testid="main-content-wrapper"
@@ -37,7 +36,7 @@
               id="main-container"
             >
               <div class="main-content-bottom-padding alg-flex-1">
-                <router-outlet></router-outlet>
+                <router-outlet />
               </div>
             </div>
           </div>
@@ -49,9 +48,9 @@
       [class.collapsed]="!(isDiscussionVisible$ | async)"
       [class.inline-mode]="isThreadInline$ | async"
     >
-      <alg-thread-container></alg-thread-container>
+      <alg-thread-container />
     </div>
   </div>
 }
-<alg-toast-messages></alg-toast-messages>
-<alg-language-mismatch></alg-language-mismatch>
+<alg-toast-messages />
+<alg-language-mismatch />

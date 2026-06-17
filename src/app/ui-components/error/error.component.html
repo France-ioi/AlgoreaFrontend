@@ -8,7 +8,7 @@
     <span class="message" [class.no-margin-top]="!icon()">
       {{ message() }}
       @if (!message()) {
-        <ng-content></ng-content>
+        <ng-content />
       }
     </span>
   </div>

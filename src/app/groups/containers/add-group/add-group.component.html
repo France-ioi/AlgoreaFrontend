@@ -1,10 +1,9 @@
 <alg-sub-section i18n-label label="Create a new group">
-  <alg-add-content
-    [isLight]="true"
+  <alg-add-content [isLight]="true"
     [allowedTypesForNewContent]="allowedNewGroupTypes"
     (contentAdded)="addChild($event)"
     [loading]="state() === 'addingGroup'"
     [showSearchUI]="false"
     i18n-inputCreatePlaceholder inputCreatePlaceholder="Enter a title to create a new group"
-  ></alg-add-content>
+   />
 </alg-sub-section>

@@ -1,7 +1,6 @@
 <div class="add-content-wrapper">
   @if (showCreateUI()) {
-    <alg-input
-      class="alg-flex-1 white-bg"
+    <alg-input class="alg-flex-1 white-bg"
       [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onNewFocus()"
@@ -15,15 +14,13 @@
       tooltipPosition="bottom"
       inputIcon="ph-duotone ph-pen"
       [tooltipDisabled]="trimmedInputsValue().title.length >= minInputLength"
-    >
-    </alg-input>
+     />
   }
   @if (showCreateUI() && showSearchUI()) {
     <p class="label" i18n>or</p>
   }
   @if (showSearchUI()) {
-    <alg-input
-      class="alg-flex-1 white-bg"
+    <alg-input class="alg-flex-1 white-bg"
       [parentForm]="addContentForm"
       [hasClearButton]="true"
       (focus)="onExistingFocus()"
@@ -37,13 +34,12 @@
       tooltipPosition="bottom"
       inputIcon="ph-duotone ph-magnifying-glass"
       [tooltipDisabled]="trimmedInputsValue().searchExisting.length >= minInputLength"
-    >
-    </alg-input>
+     />
   }
 </div>
 
 @if (loading()) {
-  <alg-loading class="loading" size="medium"></alg-loading>
+  <alg-loading class="loading" size="medium" />
 } @else {
   @if (trimmedInputsValue().title.length >= minInputLength) {
     <p class="select-caption" i18n>Select the type of group to create</p>
@@ -66,7 +62,7 @@
       </div>
       @if (selected) {
         <div class="input-group">
-          <alg-input class="input-group-control white-bg" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm"></alg-input>
+          <alg-input class="input-group-control white-bg" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm" />
           <button class="size-l" alg-button (click)="addNew(selected.type)">Add Task</button>
         </div>
       }
@@ -74,7 +70,7 @@
   }
   @if (state(); as fetchState) {
     @if (fetchState.isFetching) {
-      <alg-loading class="alg-flex-1"></alg-loading>
+      <alg-loading class="alg-flex-1" />
     }
     @if (fetchState.isError) {
       <div class="text-center" i18n>
@@ -114,7 +110,7 @@
                   >{{ addedIds().includes(item.id || '') ? addedText() : selectExistingText() }}</button>
                 </div>
                 <ng-template #op>
-                  <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()"></alg-path-suggestion>
+                  <alg-path-suggestion [itemId]="itemId()" (resize)="overlay.updatePosition()" />
                 </ng-template>
               </li>
             }

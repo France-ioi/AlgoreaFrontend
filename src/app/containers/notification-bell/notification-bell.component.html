@@ -15,14 +15,13 @@
     </div>
     @switch (state.tag) {
       @case ('fetching') {
-        <alg-loading class="panel-loading"></alg-loading>
+        <alg-loading class="panel-loading" />
       }
       @case ('error') {
-        <alg-error
-          class="panel-error"
+        <alg-error class="panel-error"
           i18n-message message="Error loading notifications"
           icon="ph-duotone ph-warning-circle"
-        ></alg-error>
+         />
       }
       @case ('ready') {
         @let data = state.data;

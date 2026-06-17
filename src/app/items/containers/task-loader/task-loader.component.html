@@ -3,7 +3,7 @@
     @if (label()) {
       <div class="alg-text-secondary">{{ label() }}</div>
     }
-    <alg-loading></alg-loading>
+    <alg-loading />
     @if (delayedLabel()) {
       <div class="sub-label" [style.visibility]="showDelayedLabel() ? undefined : 'hidden'">
         {{ delayedLabel() }}

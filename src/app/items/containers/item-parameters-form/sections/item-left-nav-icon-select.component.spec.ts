@@ -7,11 +7,10 @@ import { ItemLeftNavIconSelectComponent } from './item-left-nav-icon-select.comp
 @Component({
   template: `
     <span id="sidebar-icon-label">Sidebar icon</span>
-    <alg-item-left-nav-icon-select
-      [formControl]="control"
+    <alg-item-left-nav-icon-select [formControl]="control"
       [defaultIcon]="'file-text'"
       labelId="sidebar-icon-label"
-    ></alg-item-left-nav-icon-select>
+     />
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ ReactiveFormsModule, ItemLeftNavIconSelectComponent ],

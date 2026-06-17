@@ -69,18 +69,17 @@
     [attr.data-testid]="'lang-panel-' + activeTag"
   >
     @if (isLoading(activeTag)) {
-      <alg-loading data-testid="lang-tab-loading" class="loading no-padding"></alg-loading>
+      <alg-loading data-testid="lang-tab-loading" class="loading no-padding" />
     } @else if (hasFetchError(activeTag)) {
       <div class="fetch-error" data-testid="lang-tab-fetch-error">
         <p i18n>Could not load this translation.</p>
         <button type="button" class="size-s" alg-button (click)="retryFetch.emit(activeTag)" i18n>Retry</button>
       </div>
     } @else if (activeControl(); as control) {
-      <alg-item-strings-control
-        [formControl]="control"
+      <alg-item-strings-control [formControl]="control"
         [showDescription]="showDescription()"
         [pendingDeletion]="isPendingDeletion(activeTag)"
-      ></alg-item-strings-control>
+       />
 
       @if (!isDefault(activeTag) && !isPendingDeletion(activeTag)) {
         <div class="set-default-section">

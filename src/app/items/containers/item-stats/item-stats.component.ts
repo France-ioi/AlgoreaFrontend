@@ -27,24 +27,21 @@ import { ChapterStatsComponent } from '../chapter-stats/chapter-stats.component'
   template: `
     @if (itemData(); as data) {
       @if (isObserving()) {
-        <alg-error
-          icon="ph ph-prohibit"
+        <alg-error icon="ph ph-prohibit"
           i18n-message message="Statistics are not available while observing a group or user. Stop observation to view them."
-        ></alg-error>
+         />
       } @else if (!(data.item.permissions | allowsEditingAll)) {
-        <alg-error
-          icon="ph ph-prohibit"
+        <alg-error icon="ph ph-prohibit"
           i18n-message message="You are not allowed to view statistics for this content."
-        ></alg-error>
+         />
       } @else if (data.item | isAChapter) {
-        <alg-chapter-stats [itemData]="data"></alg-chapter-stats>
+        <alg-chapter-stats [itemData]="data" />
       } @else if (data.item | isATask) {
-        <alg-task-stats [itemData]="data"></alg-task-stats>
+        <alg-task-stats [itemData]="data" />
       } @else {
-        <alg-error
-          icon="ph ph-prohibit"
+        <alg-error icon="ph ph-prohibit"
           i18n-message message="Statistics are not available for this content type."
-        ></alg-error>
+         />
       }
     }
   `,

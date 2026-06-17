@@ -73,12 +73,12 @@
         @else {
           <a class="alg-link alg-flex-1" [routerLink]="existingItem | itemRoute | url">{{ existingItem.name }}</a>
         }
-        <ng-container *ngTemplateOutlet="removeButton"></ng-container>
+        <ng-container *ngTemplateOutlet="removeButton" />
       </div>
 
     } <!-- if (existingItemStateVal.isReady) -->
     @if (existingItemStateVal.isFetching) {
-      <alg-loading size="medium"></alg-loading>
+      <alg-loading size="medium" />
     }
     @if (existingItemStateVal.isError) {
       <alg-error
@@ -97,18 +97,17 @@
   @case ('no-item') {
     @if (isSkill()) { <p class="note" i18n>There are currently no skills associated with this group.</p> }
     @else { <p class="note" i18n>There are currently no activities associated with this group.</p> }
-    <alg-add-content
-      [allowedTypesForNewContent]="allowedNewItemTypes()"
+    <alg-add-content [allowedTypesForNewContent]="allowedNewItemTypes()"
       [searchFunction]="searchFunction"
       (contentAdded)="setAssociatedItem($event)"
       i18n-selectExistingText selectExistingText="Select"
-    ></alg-add-content>
+     />
   }
 
   @case ('new-item') {
     <div class="item">
       <span class="alg-text-normal alg-flex-1">{{ $any(associatedItemVal).name }}</span>
-      <ng-container *ngTemplateOutlet="removeButton"></ng-container>
+      <ng-container *ngTemplateOutlet="removeButton" />
     </div>
   }
 

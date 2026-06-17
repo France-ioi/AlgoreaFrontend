@@ -2,25 +2,23 @@
   @if (state.isReady && state.data; as itemData) {
       <ng-container *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed">
         @if (!(fullFrameContent$ | async)) {
-          <alg-item-header [itemData]="itemData"></alg-item-header>
+          <alg-item-header [itemData]="itemData" />
         }
         @if (showAccessCodeField$ | async) {
           <div class="access-code-view">
-            <alg-access-code-view
-              i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
+            <alg-access-code-view i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
               (groupJoined)="reloadItem()"
-            ></alg-access-code-view>
+             />
           </div>
         }
         @if (observedGroup$ | async; as observedGroup) {
-          <alg-item-permissions
-            class="item-permissions"
+          <alg-item-permissions class="item-permissions"
             [class.with-margin]="fullFrameContentDisplayed"
             [class.with-right-margin]="!!(withLeftPaddingContentDisplayed$ | async)"
             [itemData]="itemData"
             [observedGroup]="observedGroup"
             (changed)="reloadItem()"
-          ></alg-item-permissions>
+           />
         }
         @if (!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed) {
           <alg-tab-bar class="tab-bar" />
@@ -53,14 +51,12 @@
                     class="indicator"
                     [class.no-left-padding]="!fullFrameContentDisplayed"
                     >
-                      <alg-answer-author-indicator
-                        [answer]="taskConfig.initialAnswer"
+                      <alg-answer-author-indicator [answer]="taskConfig.initialAnswer"
                         [itemData]="itemData"
-                      ></alg-answer-author-indicator>
+                       />
                   </div>
                 }
-                <alg-item-content
-                  class="alg-flex-1"
+                <alg-item-content class="alg-flex-1"
                   [style.display]="currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit' || currentTab?.isTaskTab ? 'flex' : 'none'"
                   [itemData]="itemData"
                   [taskConfig]="taskConfig"
@@ -75,26 +71,25 @@
                   (editorUrl)="editorUrlChanged($event)"
                   (disablePlatformProgress)="disablePlatformProgressChanged($event)"
                   (fullFrameTask)="fullFrameContent$.next($event)"
-                ></alg-item-content>
+                 />
               </ng-container>
             }
           }
           @if (currentTab?.tag ==='alg-task-edit') {
-            <alg-item-task-edit
-              [editorUrl]="editorUrl()"
+            <alg-item-task-edit [editorUrl]="editorUrl()"
               (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
-            ></alg-item-task-edit>
+             />
           }
           @if ((savingAnswer$ | async) ?? false) {
             <div class="save-answer-loader">
               <p class="save-answer-loader-message">
                 <span i18n>Saving answer before loading submission...</span>
-                <alg-loading size="medium"></alg-loading>
+                <alg-loading size="medium" />
                 <button alg-button type="button" (click)="skipBeforeUnload()" i18n>Skip</button>
               </p>
             </div>
           }
-          <router-outlet></router-outlet>
+          <router-outlet />
         </div>
         @if (isThreadInline$ | async) {
           <div class="inline-thread-panel">
@@ -107,23 +102,22 @@
                 (click)="closeThread()"
               ></button>
             </div>
-            <alg-thread class="inline-thread" indicatorLayout="inline"></alg-thread>
+            <alg-thread class="inline-thread" indicatorLayout="inline" />
           </div>
         }
       </ng-container>
   }
   @if (state.isFetching) {
-    <alg-loading class="alg-flex-1"></alg-loading>
+    <alg-loading class="alg-flex-1" />
   }
   @if (state.isError) {
     @if (state.error && ($any(state.error).status === 403 || $any(state.error).status === 404 || $any(state.error).name === 'NoSuchAliasError')) {
       <alg-restricted-content>
         @if ((userProfile$ | async)?.tempUser) {
-          <alg-login-wall
-            i18n-description
+          <alg-login-wall i18n-description
             description="This content may be restricted or no longer available to guest viewers. Create a free account to unlock content and track your progress."
             [showNavButtons]="true"
-          ></alg-login-wall>
+           />
         } @else {
           <p class="alg-error-message" i18n>
             This content does not exist or you are not allowed to view it.

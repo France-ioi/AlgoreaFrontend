@@ -11,12 +11,11 @@ import { GroupCompositionComponent } from './group-composition.component';
   imports: [ GroupCompositionComponent ],
   template: `
     @if (groupData(); as groupData) {
-      <alg-group-composition
-        [groupData]="groupData"
+      <alg-group-composition [groupData]="groupData"
         (groupRefreshRequired)="onGroupRefreshRequired()"
         (addedGroup)="onNavRefreshRequired()"
         (removedGroup)="onNavRefreshRequired()"
-      ></alg-group-composition>
+       />
     }
   `,
 })

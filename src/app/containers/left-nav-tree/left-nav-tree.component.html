@@ -1,10 +1,9 @@
 @let parent = data().parent;
 @if (parent) {
   <div class="container nav-level-l0" (click)="navigateToParent()">
-    <alg-left-menu-back-button
-      [contentIcon]="iconForElement(parent)"
+    <alg-left-menu-back-button [contentIcon]="iconForElement(parent)"
       [title]="parent.title"
-    ></alg-left-menu-back-button>
+     />
   </div>
 } @else if (elementType() === 'group') {
   <div class="container buttons-section" data-testid="group-left-menu">
@@ -83,15 +82,14 @@
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
             >
-              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
+              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }" />
               <div class="tree-nav-right">
                 @if (node.data.score) {
-                  <alg-score-ring
-                    [currentScore]="node.data.score.currentScore"
+                  <alg-score-ring [currentScore]="node.data.score.currentScore"
                     [bestScore]="node.data.score.bestScore"
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
-                  ></alg-score-ring>
+                   />
                 }
               </div>
             </div>
@@ -104,14 +102,13 @@
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
             >
-              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
+              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }" />
               <div class="tree-nav-right">
                 @if (elementType() === 'skill' && node.data.score) {
                   <div class="tree-nav-skill-progress">
-                    <alg-skill-progress
-                      [bestScore]="node.data.score.bestScore"
+                    <alg-skill-progress [bestScore]="node.data.score.bestScore"
                       [currentScore]="node.data.score.currentScore"
-                    ></alg-skill-progress>
+                     />
                   </div>
                 }
               </div>
@@ -125,13 +122,12 @@
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
             >
-              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
+              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }" />
               <div class="tree-nav-right">
                 @if (elementType() === 'skill' && node.data.score) {
-                  <alg-skill-progress
-                    [bestScore]="node.data.score.bestScore"
+                  <alg-skill-progress [bestScore]="node.data.score.bestScore"
                     [currentScore]="node.data.score.currentScore"
-                  ></alg-skill-progress>
+                   />
                 }
               </div>
             </div>
@@ -144,15 +140,14 @@
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
             >
-              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
+              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }" />
               <div class="tree-nav-right">
                 @if (node.data.score) {
-                  <alg-score-ring
-                    [currentScore]="node.data.score.currentScore"
+                  <alg-score-ring [currentScore]="node.data.score.currentScore"
                     [bestScore]="node.data.score.bestScore"
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
-                  ></alg-score-ring>
+                   />
                 }
                 @if (node.data.groupRelation.managership !== 'none') {
                   <div
@@ -175,15 +170,14 @@
               [attr.data-nav-level]="node.inL1 ? 'l1' : 'l2'"
               (click)="selectNode(node)"
             >
-              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }"></ng-container>
+              <ng-container *ngTemplateOutlet="navLeft; context: { $implicit: node }" />
               <div class="tree-nav-right">
                 @if (node.data.score) {
-                  <alg-score-ring
-                    [currentScore]="node.data.score.currentScore"
+                  <alg-score-ring [currentScore]="node.data.score.currentScore"
                     [bestScore]="node.data.score.bestScore"
                     [isValidated]="node.data.score.validated"
                     [compact]="true"
-                  ></alg-score-ring>
+                   />
                 }
               </div>
             </div>
@@ -191,7 +185,7 @@
         }
 
         <div class="tree-nested" [class.tree-invisible]="!node.expanded">
-          <ng-container cdkTreeNodeOutlet></ng-container>
+          <ng-container cdkTreeNodeOutlet />
         </div>
       </cdk-nested-tree-node>
     </cdk-tree>

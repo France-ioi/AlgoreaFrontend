@@ -13,7 +13,7 @@
       ></i>
     </span>
     <div class="form-item-control">
-      <alg-input [parentForm]="form()" name="url"></alg-input>
+      <alg-input [parentForm]="form()" name="url" />
     </div>
   </div>
 
@@ -29,7 +29,7 @@
       ></i>
     </span>
     <div class="form-item-control">
-      <alg-switch formControlName="usesApi"></alg-switch>
+      <alg-switch formControlName="usesApi" />
     </div>
   </div>
 
@@ -45,7 +45,7 @@
       ></i>
     </span>
     <div class="form-item-control">
-      <alg-input [parentForm]="form()" name="textId"></alg-input>
+      <alg-input [parentForm]="form()" name="textId" />
       @if (textIdError(); as err) {
         @if (err.includes('text_id must be unique')) {
           <small class="alg-validation-error" i18n>
