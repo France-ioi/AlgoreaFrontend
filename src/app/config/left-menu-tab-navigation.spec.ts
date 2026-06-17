@@ -1,4 +1,5 @@
 import { defaultAttemptId } from '../items/models/attempts';
+import { userInfo } from '../models/content/group-info';
 import { itemInfo } from '../models/content/item-info';
 import { itemRoute } from '../models/routing/item-route';
 import { LeftMenuTabView } from './left-menu-config.service';
@@ -53,6 +54,13 @@ describe('resolveActiveTabId', () => {
 
   it('returns the first visible tab when content is null', () => {
     expect(resolveActiveTabId(null, visibleTabs)).toBe(0);
+  });
+
+  it('falls back to the activities tab when group content has no matching tab', () => {
+    const tabs: LeftMenuTabView[] = [
+      { id: 0, type: 'activities', icon: 'ph ph-presentation', content: tabContent },
+    ];
+    expect(resolveActiveTabId(userInfo({}), tabs)).toBe(0);
   });
 });
 

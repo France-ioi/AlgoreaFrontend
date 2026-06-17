@@ -157,12 +157,12 @@ export class LeftTabbedContentComponent implements OnDestroy {
     if (!tab.content) return;
 
     const activeTabId = resolveActiveTabId(this.currentContentSig(), this.visibleTabsSig());
-    const isActiveTab = activeTabId === tab.id;
     const selectedRoute = tabType === 'activities' ? this.selectedActivityRoute() : this.selectedSkillRoute();
     const content = this.currentContentSig();
     const viewingItemOfSameCategory = tabType === 'activities'
       ? isItemInfo(content) && isActivityInfo(content)
       : isItemInfo(content) && !isActivityInfo(content);
+    const isActiveTab = activeTabId === tab.id && viewingItemOfSameCategory;
     const route = resolveItemTabNavigationRoute(
       tabType,
       tab.content,

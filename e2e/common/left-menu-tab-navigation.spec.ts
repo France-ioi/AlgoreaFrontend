@@ -56,6 +56,7 @@ test.describe('left menu item tab navigation', () => {
 
     await leftMenu.clickTab('Content');
     await expect(page).toHaveURL(activityRootUrl);
+    await expect(page.getByRole('heading', { name: 'Parcours officiels' })).toBeVisible();
 
     await leftMenu.clickTab('Skills');
     await expect(page).toHaveURL(skillDescendantUrl);

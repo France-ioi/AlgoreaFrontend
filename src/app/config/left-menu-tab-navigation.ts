@@ -41,7 +41,12 @@ export function resolveActiveTabId(
     }
   }
 
-  return visibleTabs.find(t => t.type === contentTabType)?.id;
+  const matchingTabId = visibleTabs.find(t => t.type === contentTabType)?.id;
+  if (matchingTabId !== undefined) {
+    return matchingTabId;
+  }
+
+  return visibleTabs.find(t => t.type === 'activities')?.id ?? visibleTabs[0]?.id;
 }
 
 export function resolveItemTabNavigationRoute(
