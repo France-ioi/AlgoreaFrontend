@@ -20,6 +20,7 @@ import {
 import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
+import equal from 'fast-deep-equal/es6';
 import { Task, negotiateApiVersion, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
 import { Answer } from './item-task.service';
 import { TaskToken, TaskTokenService } from '../data-access/task-token.service';
@@ -191,7 +192,7 @@ export class ItemTaskInitService implements OnDestroy {
   guardSubscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
     if (prev.readOnly !== cur.readOnly) throw new Error(`cannot change task config (readonly prev:${prev.readOnly} cur:${cur.readOnly})`);
     if (prev.locale !== cur.locale) throw new Error(`cannot change task config (locale prev:${prev.locale} cur:${cur.locale})`);
-    if (prev.route !== cur.route) {
+    if (!equal(prev.route, cur.route)) {
       throw new Error(`cannot change task config (route prev:${JSON.stringify(prev.route)} cur:${JSON.stringify(cur.route)})`);
     }
     if (prev.url !== cur.url) throw new Error(`cannot change task config (url prev:${prev.url} cur:${cur.url})`);
