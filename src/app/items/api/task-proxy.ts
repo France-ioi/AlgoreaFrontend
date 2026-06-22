@@ -227,7 +227,7 @@ export class Task {
     return this.chan.call({
       method: 'task.reloadState',
       params: state,
-      timeout: 2000
+      timeout: 3000
     });
   }
 
