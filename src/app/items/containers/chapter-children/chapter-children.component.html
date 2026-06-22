@@ -15,7 +15,7 @@
         To validate this chapter, solve at least all tasks with Validation type
       </p>
     }
-    @if (data.children.length === 0) {
+    @if (data.children.length === 0 && itemData().item.displaySettings.childrenLayout !== 'Hide') {
       <alg-error class="alg-flex-1"
         icon="ph ph-folder-simple-lock"
         i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
