@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EMPTY, merge, Observable, of, Subject, throwError, TimeoutError } from 'rxjs';
+import { EMPTY, merge, Observable, config, of, Subject, throwError, TimeoutError } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { TaskToken } from '../data-access/task-token.service';
 import { ItemTaskInitService, IncompatibleTaskApiVersionError, LOAD_TASK_TIMEOUT, TASK_PROXY_FROM_IFRAME } from './item-task-init.service';
@@ -17,6 +17,55 @@ function createMockTask(): jasmine.SpyObj<Task> {
   task.load.and.returnValue(of(undefined));
   return task;
 }
+
+describe('ItemTaskInitService – config guard', () => {
+  let service: ItemTaskInitService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskInitService,
+        { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
+        { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => EMPTY },
+        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+      ],
+    });
+
+    service = TestBed.inject(ItemTaskInitService);
+  });
+
+  afterEach(() => {
+    service.ngOnDestroy();
+  });
+
+  it('should allow re-configure with a new route object when route content is unchanged', () => {
+    let unhandled: unknown;
+    const original = config.onUnhandledError;
+    config.onUnhandledError = (err: unknown) => {
+      unhandled = err;
+    };
+    try {
+      service.configure(route, 'http://example.com/task', undefined, undefined, undefined, false);
+      const routeClone = itemRoute('activity', '1', { attemptId: '0', path: [] });
+      service.configure(routeClone, 'http://example.com/task', '0', null, undefined, false);
+      expect(unhandled).toBeUndefined();
+    } finally {
+      config.onUnhandledError = original;
+    }
+  });
+
+  it('should throw when route content changes', done => {
+    const original = config.onUnhandledError;
+    config.onUnhandledError = (err: unknown) => {
+      config.onUnhandledError = original;
+      expect((err as Error).message).toMatch(/cannot change task config \(route/);
+      done();
+    };
+    service.configure(route, 'http://example.com/task', '0', null, undefined, false);
+    const otherRoute = itemRoute('activity', '2', { attemptId: '0', path: [] });
+    service.configure(otherRoute, 'http://example.com/task', '0', null, undefined, false);
+  });
+});
 
 describe('ItemTaskInitService – timeout scenarios', () => {
   let service: ItemTaskInitService;
