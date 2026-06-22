@@ -16,6 +16,7 @@ export type ItemParametersDisplayForm = FormGroup<{
   childrenLayout: FormControl<ItemChildrenLayout>,
   thumbnailUrl: FormControl<string>,
   disableChildrenPrevNextNav: FormControl<boolean>,
+  hideHeader: FormControl<boolean>,
   leftNavIcon: FormControl<string>,
 }>;
 

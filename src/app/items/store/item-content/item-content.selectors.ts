@@ -61,6 +61,8 @@ interface UserContentSelectors<T extends RootState> {
    * The active item if we there is one and it has been fetched
    */
   selectActiveContentItem: MemoizedSelector<T, Item|null>,
+  /** Whether the active item hides its title header (tabs move to the top bar). */
+  selectActiveContentHideHeader: MemoizedSelector<T, boolean>,
   /**
    * The breadcrumbs of the active item if there is one and it has been fetched
    */
@@ -175,6 +177,11 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     state => state.data ?? null
   );
 
+  const selectActiveContentHideHeader = createSelector(
+    selectActiveContentItem,
+    item => item?.displaySettings.hideHeader ?? false,
+  );
+
   const selectActiveContentBreadcrumbs = createSelector(
     selectActiveContentBreadcrumbsState,
     state => state.data ?? null
@@ -232,6 +239,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentBreadcrumbsState,
     selectActiveContentResultsState,
     selectActiveContentItem,
+    selectActiveContentHideHeader,
     selectActiveContentBreadcrumbs,
     selectActiveContentResults,
     selectActiveContentCurrentResult,

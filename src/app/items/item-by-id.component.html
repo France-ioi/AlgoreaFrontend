@@ -1,7 +1,7 @@
 @if (state$ | async; as state) {
   @if (state.isReady && state.data; as itemData) {
       <ng-container *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed">
-        @if (!(fullFrameContent$ | async)) {
+        @if (!(fullFrameContent$ | async) && !itemData.item.displaySettings.hideHeader) {
           <alg-item-header [itemData]="itemData" />
         }
         @if (showAccessCodeField$ | async) {
@@ -20,7 +20,8 @@
             (changed)="reloadItem()"
            />
         }
-        @if (!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed) {
+        <!-- Tab bar in item content: mirror of content-top-bar tab bar; keep conditions mutually exclusive. -->
+        @if (!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed && !itemData.item.displaySettings.hideHeader) {
           <alg-tab-bar class="tab-bar" />
         }
         <div

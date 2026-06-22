@@ -12,6 +12,7 @@ const initialDisplaySettings = {
   promptToJoinGroupByCode: false,
   thumbnailUrl: null,
   disableChildrenPrevNextNav: false,
+  hideHeader: false,
   leftNavIcon: null,
 };
 
@@ -26,6 +27,7 @@ function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParameters
     childrenLayout: 'List',
     thumbnailUrl: '',
     disableChildrenPrevNextNav: false,
+    hideHeader: false,
     leftNavIcon: '',
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
@@ -182,6 +184,25 @@ describe('buildItemParametersChanges', () => {
     const current = makeValue({ disableChildrenPrevNextNav: true });
     const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
     expect(changes.display_settings).toEqual({ disable_children_prev_next_nav: true });
+  });
+
+  it('emits hide_header when the hide header toggle changed', () => {
+    const initial = makeValue();
+    const current = makeValue({ hideHeader: true });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
+    expect(changes.display_settings).toEqual({ hide_header: true });
+  });
+
+  it('omits hide_header from the body when the user clears hide header (false is the schema default)', () => {
+    const initial = makeValue({ hideHeader: true });
+    const current = makeValue({ hideHeader: false });
+    const changes = buildItemParametersChanges(
+      current,
+      initial,
+      sectionsForItemType('Chapter'),
+      { ...initialDisplaySettings, hideHeader: true },
+    );
+    expect(changes.display_settings).toEqual({});
   });
 
   it('does not emit display_settings when display values are unchanged', () => {

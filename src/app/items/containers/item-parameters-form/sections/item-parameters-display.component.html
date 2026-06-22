@@ -99,3 +99,21 @@
     </div>
   </div>
 }
+
+<div [formGroup]="form()">
+  <div class="form-item-view">
+    <span class="form-item-label">
+      <ng-container i18n>Hide header</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Hide the item title header; the tabs are then shown in the top bar."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
+    <div class="form-item-control">
+      <alg-switch formControlName="hideHeader" />
+    </div>
+  </div>
+</div>

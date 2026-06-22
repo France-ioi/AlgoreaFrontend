@@ -69,6 +69,7 @@ export class ContentTopBarComponent {
   readonly fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   readonly isNarrowScreen$ = this.layoutService.isNarrowScreen$;
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
+  readonly hideHeader$ = this.store.select(fromItemContent.selectActiveContentHideHeader);
 
   showLeftMenu(): void {
     this.layoutService.toggleLeftMenu(true);

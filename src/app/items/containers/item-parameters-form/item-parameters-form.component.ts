@@ -95,6 +95,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
       childrenLayout: this.fb.nonNullable.control<ItemChildrenLayout>('List'),
       thumbnailUrl: [ '', Validators.maxLength(2000) ],
       disableChildrenPrevNextNav: [ false ],
+      hideHeader: [ false ],
       leftNavIcon: [ '' ],
     }),
     participation: this.fb.nonNullable.control<ItemParametersParticipationValue>({
@@ -177,6 +178,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
         childrenLayout: v.childrenLayout,
         thumbnailUrl: v.thumbnailUrl,
         disableChildrenPrevNextNav: v.disableChildrenPrevNextNav,
+        hideHeader: v.hideHeader,
         leftNavIcon: v.leftNavIcon,
       },
       participation: {
