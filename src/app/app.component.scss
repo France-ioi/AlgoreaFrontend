@@ -126,7 +126,7 @@
   height: 0;
   padding: 0;
 
-  &:not(.with-left-padding):not(.full-frame) {
+  &:not(.full-frame) {
     padding: 0 var(--alg-space-size-2);
   }
 
@@ -137,8 +137,6 @@
   }
 
   &.with-left-padding {
-    padding: 0 0 0 var(--alg-space-size-2);
-
     .main-content-bottom-padding {
       padding-bottom: 0;
     }

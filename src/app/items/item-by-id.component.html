@@ -27,7 +27,6 @@
           class="content-container"
           [class.no-top-padding]="itemData.item.type === 'Task' && !!currentTab?.isTaskTab"
           [class.side-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed"
-          [class.right-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && !fullFrameContentDisplayed"
           *ngrxLet="currentTab$ as currentTab"
           >
           @if (currentTab?.isTaskTab || itemContentComponent()?.isTaskLoaded() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
