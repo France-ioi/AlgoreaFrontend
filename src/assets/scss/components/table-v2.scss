@@ -73,7 +73,8 @@
 }
 
 .alg-table-horizontal-scroll {
-  overflow-x: scroll;
+  overflow-x: auto;
+  min-width: 0;
 }
 
 .alg-table-load-more {
