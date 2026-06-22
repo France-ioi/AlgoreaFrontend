@@ -10,7 +10,8 @@
   border-radius: functions.toRem(8);
   background-color: var(--alg-primary-light-color);
   min-height: functions.toRem(40);
-  overflow-x: scroll;
+  overflow-x: auto;
+  min-width: 0;
 }
 
 .content {

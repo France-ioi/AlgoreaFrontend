@@ -104,7 +104,7 @@ button, input, textarea {
   border-radius: .5rem;
   background-color: rgba(0, 0, 0, .05);
   text-align: left;
-  overflow: scroll;
+  overflow: auto;
 
   .alg-code {
     white-space: unset;
