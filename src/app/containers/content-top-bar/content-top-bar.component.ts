@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActivityNavTreeService, SkillNavTreeService } from '../../services/navigation/item-nav-tree.service';
@@ -15,7 +15,7 @@ import { TabService } from '../../services/tab.service';
 import { TimeLimitedContentInfoComponent } from '../time-limited-content-info/time-limited-content-info.component';
 import { ObservationBarComponent } from '../observation-bar/observation-bar.component';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
-import { selectActiveItemDisplayedScore } from 'src/app/items/models/scores';
+import { selectActiveItemDisplayedScore, selectActiveItemNoScore } from 'src/app/items/models/scores';
 import { fromItemContent } from 'src/app/items/store';
 import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { isItemRoute } from 'src/app/models/routing/item-route';
@@ -53,6 +53,10 @@ export class ContentTopBarComponent {
   isItemContentActive = this.store.selectSignal(fromItemContent.selectIsItemContentActive);
   title = this.store.selectSignal(fromCurrentContent.selectTitle);
   score = this.store.selectSignal(selectActiveItemDisplayedScore);
+  activeItemNoScore = this.store.selectSignal(selectActiveItemNoScore);
+  isItemMetadataLoading = computed(() => this.isItemContentActive() && this.activeItemNoScore() === undefined);
+  displayScoreSection = computed(() => this.activeItemNoScore() === false);
+  isTitleSectionReady = computed(() => !this.isItemMetadataLoading());
 
   navigationNeighbors$ = this.store.select(fromCurrentContent.selectContentRoute).pipe(
     switchMap(contentRoute => {

@@ -16,7 +16,7 @@
         ></button>
       </div>
     }
-    @if (isItemContentActive()) {
+    @if (displayScoreSection()) {
       <div class="margin-right score-section">
         @if (score(); as scoreVal) {
           <alg-score-ring [bestScore]="scoreVal.best"
@@ -33,7 +33,7 @@
       isNarrowScreen: isNarrowScreen$,
       hideHeader: hideHeader$,
     } as behaviourInfo">
-      @if (!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) {
+      @if ((!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) && isTitleSectionReady()) {
         <div class="left-pane-title margin-right">
           @let titleVal = title();
           @if (!showBreadcrumbs() && titleVal) {

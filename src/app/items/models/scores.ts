@@ -21,6 +21,11 @@ const selectActiveItemObservedGroupScore = createSelector(
   })
 );
 
+export const selectActiveItemNoScore = createSelector(
+  fromItemContent.selectActiveContentItem,
+  (item): boolean | undefined => item?.noScore,
+);
+
 export const selectActiveItemDisplayedScore = createSelector(
   fromObservation.selectIsObserving,
   selectActiveItemCurrentUserScore,
