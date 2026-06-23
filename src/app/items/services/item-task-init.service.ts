@@ -1,4 +1,5 @@
-import { Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
+import { DestroyRef, Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
@@ -12,7 +13,6 @@ import {
   skip,
   switchMap,
   take,
-  takeUntil,
   tap,
   timeout,
   withLatestFrom,
@@ -58,7 +58,7 @@ export class ItemTaskInitService implements OnDestroy {
   private config = inject(APPCONFIG);
   private loadTaskTimeout = inject(LOAD_TASK_TIMEOUT);
   private taskProxyFromIframe = inject(TASK_PROXY_FROM_IFRAME);
-  private destroyed$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
   // forces `taskToken$` to re-generate a token even when the generation strategy is unchanged (e.g. after a validating
@@ -79,7 +79,7 @@ export class ItemTaskInitService implements OnDestroy {
   readonly task$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
     switchMap(config => this.taskProxyFromIframe(config.iframe).pipe(tap(task => config.bindPlatform(task)))),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -120,7 +120,7 @@ export class ItemTaskInitService implements OnDestroy {
       // instead. Initial-load / strategy-change generation keeps propagating errors (handled by load timeout / consumers).
       return isRefresh ? generate$.pipe(retry(2), catchError(() => EMPTY)) : generate$;
     }),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -141,7 +141,7 @@ export class ItemTaskInitService implements OnDestroy {
     switchMap(({ usesTokens, task }) => task.load(
       { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true }
     ).pipe(map(() => ({ usesTokens, task })))),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -164,7 +164,7 @@ export class ItemTaskInitService implements OnDestroy {
         catchError(() => EMPTY), // a single failed push must not kill future view re-queries
       )),
     ) : EMPTY)),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -212,8 +212,6 @@ export class ItemTaskInitService implements OnDestroy {
     this.tokenSubscription.unsubscribe();
     this.tokenPushSubscription.unsubscribe();
     this.refreshToken$.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   /**

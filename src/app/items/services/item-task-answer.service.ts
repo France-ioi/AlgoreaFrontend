@@ -1,4 +1,5 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, EMPTY, forkJoin, interval, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
@@ -43,8 +44,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private answerTokenService = inject(AnswerTokenService);
   private gradeService = inject(GradeService);
   private store = inject(Store);
-
-  private destroyed$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   private errorSubject = new Subject<unknown>();
   readonly error$ = this.errorSubject.asObservable();
@@ -74,7 +74,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       return of(initialAnswer);
     }),
     retry(3),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
@@ -86,7 +86,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     switchMap(([ initialAnswer, task, { readOnly }]) =>
       (initialAnswer?.state && !readOnly ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
     ),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
   private initializedTaskAnswer$ = combineLatest([
@@ -105,7 +105,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       ) :
       of(undefined)
     )),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -122,7 +122,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private autoSaveCurrentState$ = this.canStartSaveInterval$.pipe( // wait for the task answer+state to have been initialized
     switchMap(() => interval(answerAndStateSaveInterval)),
     switchMap(() => this.saveTaskStateAnswerAsCurrent()),
-    takeUntil(this.destroyed$), // make sure the repetition ends when the service gets destroyed
+    takeUntilDestroyed(this.destroyRef), // make sure the repetition ends when the service gets destroyed
     shareReplay(1), // do not save several times in parallel if there are more subscribers
   );
   autoSaveResult$ = this.autoSaveCurrentState$.pipe(
@@ -151,8 +151,6 @@ export class ItemTaskAnswerService implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.errorSubject.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   submitAnswer(): Observable<void> {
@@ -161,13 +159,18 @@ export class ItemTaskAnswerService implements OnDestroy {
     const wasValidated$ = this.store.select(selectIsCurrentResultValidated).pipe(take(1));
 
     // Step 1: get answer from task
-    const answer$ = this.loadedTask$.pipe(take(1), switchMap(task => task.getAnswer()), takeUntil(this.destroyed$), shareReplay(1));
+    const answer$ = this.loadedTask$.pipe(
+      take(1),
+      switchMap(task => task.getAnswer()),
+      takeUntilDestroyed(this.destroyRef),
+      shareReplay(1),
+    );
 
     // Step 2: generate answer token with backend
     const answerToken$ = combineLatest([ this.taskToken$, answer$ ]).pipe(
       take(1),
       switchMap(([ taskToken, answer ]) => this.answerTokenService.generate(answer, taskToken)),
-      takeUntil(this.destroyed$),
+      takeUntilDestroyed(this.destroyRef),
       shareReplay(1),
     );
 
@@ -175,7 +178,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     const grade$ = combineLatest([ this.loadedTask$, answer$, answerToken$ ]).pipe(
       take(1),
       switchMap(([ task, answer, answerToken ]) => task.gradeAnswer(answer, answerToken)),
-      takeUntil(this.destroyed$),
+      takeUntilDestroyed(this.destroyRef),
       shareReplay(1),
     );
 
@@ -188,7 +191,7 @@ export class ItemTaskAnswerService implements OnDestroy {
         grade.score,
         grade.scoreToken ?? undefined,
       )),
-      takeUntil(this.destroyed$),
+      takeUntilDestroyed(this.destroyRef),
       shareReplay(1),
     );
     combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent(), wasValidated$ ])

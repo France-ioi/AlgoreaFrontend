@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   Component,
   computed,
+  DestroyRef,
   ElementRef,
   inject,
   input,
@@ -10,7 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { EMPTY, merge, of, Subject } from 'rxjs';
+import { EMPTY, merge, of } from 'rxjs';
 import { Location, AsyncPipe } from '@angular/common';
 import {
   catchError,
@@ -20,7 +21,6 @@ import {
   shareReplay,
   startWith,
   switchMap,
-  takeUntil,
 } from 'rxjs/operators';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { errorState, fetchingState, readyState } from 'src/app/utils/state';
@@ -82,6 +82,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   private ltiDataSource = inject(LTIDataSource);
   private sessionTracker = inject(TaskSessionTrackerService);
   private dialogService = inject(Dialog);
+  private destroyRef = inject(DestroyRef);
 
   route = input.required<FullItemRoute>();
   url = input.required<string>();
@@ -113,11 +114,9 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
     catchError(() => EMPTY),
   );
 
-  private destroyed$ = new Subject<void>();
-
   private metadata = this.taskService.task$.pipe(
     switchMap(task => task.getMetaData()),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
   metadataError$ = this.metadata.pipe(ignoreElements(), catchError(err => of(err)));
@@ -216,8 +215,6 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   ngOnDestroy(): void {
     if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   saveAnswerAndState(): ReturnType<ItemTaskService['saveAnswerAndState']> {

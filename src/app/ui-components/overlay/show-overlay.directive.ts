@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   contentChild,
+  DestroyRef,
   Directive,
   inject,
   input,
@@ -10,8 +11,9 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
-import { BehaviorSubject, fromEvent, merge, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, shareReplay, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, shareReplay } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { canCloseOverlay } from 'src/app/utils/overlay';
 import { Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -31,7 +33,6 @@ export class ShowOverlayDirective implements OnDestroy, AfterViewInit {
 
   overlayHoverTarget = contentChild.required(ShowOverlayHoverTargetDirective);
 
-  readonly destroyed$ = new Subject<void>();
   private readonly showOverlaySubject$ = new BehaviorSubject<Event|undefined>(undefined);
   private showOverlay$ = merge(
     this.showOverlaySubject$.pipe(debounceTime(750)),
@@ -40,6 +41,7 @@ export class ShowOverlayDirective implements OnDestroy, AfterViewInit {
 
   private overlay = inject(Overlay);
   private viewContainerRef = inject(ViewContainerRef);
+  private destroyRef = inject(DestroyRef);
 
   private overlayRef = this.overlay.create({
     scrollStrategy: this.overlay.scrollStrategies.reposition(),
@@ -84,7 +86,7 @@ export class ShowOverlayDirective implements OnDestroy, AfterViewInit {
       ])
     );
 
-    this.showOverlay$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    this.showOverlay$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
       if (event) {
         this.attachOverlay();
         this.overlayOpenEvent.emit(event);
@@ -94,19 +96,17 @@ export class ShowOverlayDirective implements OnDestroy, AfterViewInit {
       }
     });
 
-    fromEvent(this.overlayHoverTarget().nativeElement, 'mouseenter').pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    fromEvent(this.overlayHoverTarget().nativeElement, 'mouseenter').pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
       this.showOverlaySubject$.next(event);
     });
 
-    fromEvent(this.overlayRef.hostElement, 'mouseleave').pipe(takeUntil(this.destroyed$)).subscribe(() =>
+    fromEvent(this.overlayRef.hostElement, 'mouseleave').pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() =>
       this.showOverlaySubject$.next(undefined)
     );
   }
 
   ngOnDestroy(): void {
     this.showOverlaySubject$.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.detachOverlay();
   }
 
