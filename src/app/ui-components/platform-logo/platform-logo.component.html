@@ -1,0 +1,7 @@
+<a class="link" [class.platform-name]="!leftHeaderLogoUrl" routerLink="/">
+  @if (leftHeaderLogoUrl) {
+    <img class="logo" [src]="leftHeaderLogoUrl" [alt]="title">
+  } @else {
+    {{ title }}
+  }
+</a>

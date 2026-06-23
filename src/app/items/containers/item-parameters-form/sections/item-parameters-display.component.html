@@ -116,4 +116,20 @@
       <alg-switch formControlName="hideHeader" />
     </div>
   </div>
+
+  <div class="form-item-view">
+    <span class="form-item-label">
+      <ng-container i18n>Show platform logo in top bar</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="When the left menu is hidden, show the platform name or logo in the top bar instead of the score and breadcrumbs."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
+    <div class="form-item-control">
+      <alg-switch formControlName="showPlatformInsteadOfScore" />
+    </div>
+  </div>
 </div>

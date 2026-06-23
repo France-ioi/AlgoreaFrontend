@@ -17,6 +17,7 @@ export type ItemParametersDisplayForm = FormGroup<{
   thumbnailUrl: FormControl<string>,
   disableChildrenPrevNextNav: FormControl<boolean>,
   hideHeader: FormControl<boolean>,
+  showPlatformInsteadOfScore: FormControl<boolean>,
   leftNavIcon: FormControl<string>,
 }>;
 

@@ -13,6 +13,7 @@ const initialDisplaySettings = {
   thumbnailUrl: null,
   disableChildrenPrevNextNav: false,
   hideHeader: false,
+  showPlatformInsteadOfScore: false,
   leftNavIcon: null,
 };
 
@@ -28,6 +29,7 @@ function makeValue(overrides: Partial<ItemParametersValue> = {}): ItemParameters
     thumbnailUrl: '',
     disableChildrenPrevNextNav: false,
     hideHeader: false,
+    showPlatformInsteadOfScore: false,
     leftNavIcon: '',
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,
@@ -201,6 +203,25 @@ describe('buildItemParametersChanges', () => {
       initial,
       sectionsForItemType('Chapter'),
       { ...initialDisplaySettings, hideHeader: true },
+    );
+    expect(changes.display_settings).toEqual({});
+  });
+
+  it('emits show_platform_instead_of_score when the platform logo toggle changed', () => {
+    const initial = makeValue();
+    const current = makeValue({ showPlatformInsteadOfScore: true });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
+    expect(changes.display_settings).toEqual({ show_platform_instead_of_score: true });
+  });
+
+  it('omits show_platform_instead_of_score from the body when the user clears it (false is the schema default)', () => {
+    const initial = makeValue({ showPlatformInsteadOfScore: true });
+    const current = makeValue({ showPlatformInsteadOfScore: false });
+    const changes = buildItemParametersChanges(
+      current,
+      initial,
+      sectionsForItemType('Chapter'),
+      { ...initialDisplaySettings, showPlatformInsteadOfScore: true },
     );
     expect(changes.display_settings).toEqual({});
   });

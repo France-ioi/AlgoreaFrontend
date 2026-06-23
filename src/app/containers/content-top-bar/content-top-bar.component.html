@@ -16,7 +16,7 @@
         ></button>
       </div>
     }
-    @if (displayScoreSection()) {
+    @if (displayScoreSection() && !showPlatformLogo()) {
       <div class="margin-right score-section">
         @if (score(); as scoreVal) {
           <alg-score-ring [bestScore]="scoreVal.best"
@@ -35,11 +35,15 @@
     } as behaviourInfo">
       @if ((!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) && isTitleSectionReady()) {
         <div class="left-pane-title margin-right">
-          @let titleVal = title();
-          @if (!showBreadcrumbs() && titleVal) {
-            <p class="left-pane-title-text">{{ titleVal }}</p>
+          @if (showPlatformLogo()) {
+            <alg-platform-logo />
           } @else {
-            <alg-breadcrumbs class="breadcrumbs" />
+            @let titleVal = title();
+            @if (!showBreadcrumbs() && titleVal) {
+              <p class="left-pane-title-text">{{ titleVal }}</p>
+            } @else {
+              <alg-breadcrumbs class="breadcrumbs" />
+            }
           }
         </div>
       }

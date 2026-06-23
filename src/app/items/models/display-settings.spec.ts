@@ -8,6 +8,7 @@ describe('displaySettingsSchema', () => {
       thumbnailUrl: null,
       disableChildrenPrevNextNav: false,
       hideHeader: false,
+      showPlatformInsteadOfScore: false,
       leftNavIcon: null,
     });
   });
@@ -19,6 +20,7 @@ describe('displaySettingsSchema', () => {
       thumbnailUrl: null,
       disableChildrenPrevNextNav: false,
       hideHeader: false,
+      showPlatformInsteadOfScore: false,
       leftNavIcon: null,
     });
   });
@@ -35,6 +37,7 @@ describe('buildDisplaySettingsBody', () => {
       thumbnail_url: null,
       disable_children_prev_next_nav: false,
       hide_header: false,
+      show_platform_instead_of_score: false,
       left_nav_icon: null,
     });
   });

@@ -12,6 +12,7 @@ const ITEM_PARAMETERS_KEYS = [
   'thumbnailUrl',
   'disableChildrenPrevNextNav',
   'hideHeader',
+  'showPlatformInsteadOfScore',
   'leftNavIcon',
   'allowsMultipleAttempts',
   'requiresExplicitEntry',

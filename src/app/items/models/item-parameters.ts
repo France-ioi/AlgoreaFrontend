@@ -34,6 +34,7 @@ export interface ItemParametersDisplayValue {
   thumbnailUrl: string,
   disableChildrenPrevNextNav: boolean,
   hideHeader: boolean,
+  showPlatformInsteadOfScore: boolean,
   leftNavIcon: string,
 }
 
@@ -151,6 +152,7 @@ export function itemToParametersValue(item: Item): ItemParametersValue {
     thumbnailUrl: item.displaySettings.thumbnailUrl ?? '',
     disableChildrenPrevNextNav: item.displaySettings.disableChildrenPrevNextNav,
     hideHeader: item.displaySettings.hideHeader,
+    showPlatformInsteadOfScore: item.displaySettings.showPlatformInsteadOfScore,
     leftNavIcon: item.displaySettings.leftNavIcon ?? '',
     allowsMultipleAttempts: item.allowsMultipleAttempts,
     requiresExplicitEntry: item.requiresExplicitEntry,
@@ -189,7 +191,13 @@ export function buildItemParametersChanges(
   sections: ItemParametersSections,
   initialDisplaySettings: Pick<
     DisplaySettings,
-    'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl' | 'disableChildrenPrevNextNav' | 'hideHeader' | 'leftNavIcon'
+    | 'childrenLayout'
+    | 'promptToJoinGroupByCode'
+    | 'thumbnailUrl'
+    | 'disableChildrenPrevNextNav'
+    | 'hideHeader'
+    | 'showPlatformInsteadOfScore'
+    | 'leftNavIcon'
   >,
 ): ItemChanges {
   const changes: ItemChanges = {};
@@ -221,6 +229,7 @@ export function buildItemParametersChanges(
       || thumbnailUrl !== initialThumbnailUrl
       || current.disableChildrenPrevNextNav !== initial.disableChildrenPrevNextNav
       || current.hideHeader !== initial.hideHeader
+      || current.showPlatformInsteadOfScore !== initial.showPlatformInsteadOfScore
       || leftNavIcon !== initialLeftNavIcon;
     if (hasDisplaySettingsChanges) {
       changes.display_settings = buildDisplaySettingsBody({
@@ -230,6 +239,7 @@ export function buildItemParametersChanges(
         thumbnailUrl,
         disableChildrenPrevNextNav: current.disableChildrenPrevNextNav,
         hideHeader: current.hideHeader,
+        showPlatformInsteadOfScore: current.showPlatformInsteadOfScore,
         leftNavIcon,
       });
     }
