@@ -6,10 +6,10 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { LetDirective } from '@ngrx/component';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { AlgErrorHandler } from './app/utils/error-handling/error-handler';
-import { WithCredentialsInterceptor } from './app/interceptors/with_credentials.interceptor';
-import { AuthenticationInterceptor } from './app/interceptors/authentication.interceptor';
-import { TimeoutInterceptor } from './app/interceptors/timeout.interceptor';
-import { HTTP_INTERCEPTORS, withInterceptorsFromDi, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
+import { withCredentialsInterceptor } from './app/interceptors/with_credentials.interceptor';
+import { authenticationInterceptor } from './app/interceptors/authentication.interceptor';
+import { timeoutInterceptor } from './app/interceptors/timeout.interceptor';
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { NgScrollbarOptions, provideScrollbarOptions } from 'ngx-scrollbar';
 import routes from './app/app.routes';
 import { provideRouter } from '@angular/router';
@@ -67,21 +67,6 @@ bootstrapApplication(AppComponent, {
       ReactiveFormsModule,
     ),
     provideScrollbarOptions(DEFAULT_SCROLLBAR_OPTIONS),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TimeoutInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: WithCredentialsInterceptor,
-      multi: true,
-    },
     provideRouter(routes),
     provideStore(),
     provideRouterStore({ serializer: RouterSerializer, navigationActionTiming: NavigationActionTiming.PostActivation }),
@@ -113,6 +98,11 @@ bootstrapApplication(AppComponent, {
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode(), connectInZone: false }),
     provideAnimations(),
-    provideHttpClient(withXhr(), withInterceptorsFromDi(), withInterceptors([ timeOffsetComputationInterceptor ])),
+    provideHttpClient(withXhr(), withInterceptors([
+      timeoutInterceptor,
+      authenticationInterceptor,
+      withCredentialsInterceptor,
+      timeOffsetComputationInterceptor,
+    ])),
   ]
 }).catch(err => console.error(err));
