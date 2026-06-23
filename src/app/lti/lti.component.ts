@@ -45,7 +45,7 @@ const loginIdParam = 'user_id';
 @Component({
   selector: 'alg-lti',
   templateUrl: './lti.component.html',
-  styleUrls: [ './lti.component.scss' ],
+  styleUrl: './lti.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

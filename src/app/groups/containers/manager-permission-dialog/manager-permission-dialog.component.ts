@@ -31,7 +31,7 @@ export interface ManagerPermissionDialogResult {
 @Component({
   selector: 'alg-manager-permission-dialog',
   templateUrl: './manager-permission-dialog.component.html',
-  styleUrls: [ './manager-permission-dialog.component.scss' ],
+  styleUrl: './manager-permission-dialog.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

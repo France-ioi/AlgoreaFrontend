@@ -15,7 +15,7 @@ export type ItemParametersScoreForm = FormGroup<{
 @Component({
   selector: 'alg-item-parameters-score',
   templateUrl: './item-parameters-score.component.html',
-  styleUrls: [ './item-parameters-score.component.scss' ],
+  styleUrl: './item-parameters-score.component.scss',
   imports: [
     ReactiveFormsModule,
     SelectComponent,

@@ -8,7 +8,7 @@ import { rawGroupRoute } from 'src/app/models/routing/group-route';
 @Component({
   selector: 'alg-user-link-with-actions',
   templateUrl: './user-link-with-actions.component.html',
-  styleUrls: [ './user-link-with-actions.component.scss' ],
+  styleUrl: './user-link-with-actions.component.scss',
   imports: [ RouterLink, TooltipDirective ],
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention

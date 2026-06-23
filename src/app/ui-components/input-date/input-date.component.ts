@@ -20,7 +20,7 @@ import { MaskDirective } from '../mask/mask.directive';
 @Component({
   selector: 'alg-input-date',
   templateUrl: './input-date.component.html',
-  styleUrls: [ './input-date.component.scss' ],
+  styleUrl: './input-date.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

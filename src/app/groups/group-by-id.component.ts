@@ -28,7 +28,7 @@ import { PendingChangesService } from 'src/app/services/pending-changes-service'
 @Component({
   selector: 'alg-group-by-id',
   templateUrl: './group-by-id.component.html',
-  styleUrls: [ './group-by-id.component.scss' ],
+  styleUrl: './group-by-id.component.scss',
   imports: [
     GroupHeaderComponent,
     GroupIndicatorComponent,

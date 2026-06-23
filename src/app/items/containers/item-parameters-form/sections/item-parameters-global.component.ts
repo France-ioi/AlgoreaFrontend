@@ -15,7 +15,7 @@ export type ItemParametersGlobalForm = FormGroup<{
 @Component({
   selector: 'alg-item-parameters-global',
   templateUrl: './item-parameters-global.component.html',
-  styleUrls: [ './item-parameters-global.component.scss' ],
+  styleUrl: './item-parameters-global.component.scss',
   imports: [
     ReactiveFormsModule,
     InputComponent,

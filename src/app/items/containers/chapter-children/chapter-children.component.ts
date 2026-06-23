@@ -25,7 +25,7 @@ import { LayoutService } from 'src/app/services/layout.service';
 @Component({
   selector: 'alg-chapter-children',
   templateUrl: './chapter-children.component.html',
-  styleUrls: [ './chapter-children.component.scss' ],
+  styleUrl: './chapter-children.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

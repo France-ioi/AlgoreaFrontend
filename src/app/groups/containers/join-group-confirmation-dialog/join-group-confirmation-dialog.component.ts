@@ -12,7 +12,7 @@ export type JoinGroupConfirmationDialogResult = { confirmed: true } | undefined;
 @Component({
   selector: 'alg-join-group-confirmation-dialog',
   templateUrl: './join-group-confirmation-dialog.component.html',
-  styleUrls: [ './join-group-confirmation-dialog.component.scss' ],
+  styleUrl: './join-group-confirmation-dialog.component.scss',
   imports: [
     SwitchFieldComponent,
     ReactiveFormsModule,

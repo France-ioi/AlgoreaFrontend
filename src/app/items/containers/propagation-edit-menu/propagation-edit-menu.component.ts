@@ -7,7 +7,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-propagation-edit-menu',
   templateUrl: 'propagation-edit-menu.component.html',
-  styleUrls: [ 'propagation-edit-menu.component.scss' ],
+  styleUrl: 'propagation-edit-menu.component.scss',
   imports: [
     AllowsGrantingViewItemPipe,
     AllowsGrantingContentViewItemPipe,

@@ -15,7 +15,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other';
 @Component({
   selector: 'alg-add-sub-group',
   templateUrl: './add-sub-group.component.html',
-  styleUrls: [ './add-sub-group.component.scss' ],
+  styleUrl: './add-sub-group.component.scss',
   imports: [ SubSectionComponent, AddContentComponent_1 ]
 })
 export class AddSubGroupComponent {

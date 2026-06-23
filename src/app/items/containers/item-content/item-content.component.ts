@@ -52,7 +52,7 @@ const EXTERNAL_URL_AUTO_OPEN_DELAY_MS = 900;
 @Component({
   selector: 'alg-item-content',
   templateUrl: './item-content.component.html',
-  styleUrls: [ './item-content.component.scss' ],
+  styleUrl: './item-content.component.scss',
   imports: [
     DescriptionIframeComponent,
     SwitchComponent,

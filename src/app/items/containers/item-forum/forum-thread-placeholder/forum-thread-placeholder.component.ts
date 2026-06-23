@@ -8,7 +8,7 @@ export type SingleThreadState = 'fetching' | 'error' | 'not-started-can-start' |
 @Component({
   selector: 'alg-forum-thread-placeholder',
   templateUrl: './forum-thread-placeholder.component.html',
-  styleUrls: [ './forum-thread-placeholder.component.scss' ],
+  styleUrl: './forum-thread-placeholder.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

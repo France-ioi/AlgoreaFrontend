@@ -16,7 +16,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'alg-group-access',
   templateUrl: './group-access.component.html',
-  styleUrls: [ './group-access.component.scss' ],
+  styleUrl: './group-access.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

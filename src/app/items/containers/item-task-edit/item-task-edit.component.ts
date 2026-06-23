@@ -6,7 +6,7 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
 @Component({
   selector: 'alg-item-task-edit',
   templateUrl: './item-task-edit.component.html',
-  styleUrls: [ './item-task-edit.component.scss' ],
+  styleUrl: './item-task-edit.component.scss',
   imports: [ FullHeightContentDirective ]
 })
 export class ItemTaskEditComponent {

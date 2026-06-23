@@ -36,7 +36,7 @@ import { createCvaEcho } from 'src/app/utils/cva-echo';
 @Component({
   selector: 'alg-item-parameters-form',
   templateUrl: './item-parameters-form.component.html',
-  styleUrls: [ './item-parameters-form.component.scss' ],
+  styleUrl: './item-parameters-form.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

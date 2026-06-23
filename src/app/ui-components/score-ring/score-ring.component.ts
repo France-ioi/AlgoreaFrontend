@@ -4,7 +4,7 @@ import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'alg-score-ring',
   templateUrl: './score-ring.component.html',
-  styleUrls: [ './score-ring.component.scss' ],
+  styleUrl: './score-ring.component.scss',
   imports: [
     DecimalPipe,
   ]

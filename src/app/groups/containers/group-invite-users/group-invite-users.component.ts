@@ -21,7 +21,7 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
 @Component({
   selector: 'alg-group-invite-users',
   templateUrl: './group-invite-users.component.html',
-  styleUrls: [ './group-invite-users.component.scss' ],
+  styleUrl: './group-invite-users.component.scss',
   imports: [
     TextareaComponent,
     ButtonComponent,

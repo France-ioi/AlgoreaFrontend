@@ -5,7 +5,7 @@ import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.
 @Component({
   selector: 'alg-user-progress',
   templateUrl: './user-progress.component.html',
-  styleUrls: [ './user-progress.component.scss' ],
+  styleUrl: './user-progress.component.scss',
   imports: [ ScoreRingComponent ]
 })
 export class UserProgressComponent {

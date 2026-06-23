@@ -45,7 +45,7 @@ export const SELECTED_NAV_NODE_SELECTOR = '.tree-nav-wrapper[data-selected="true
 @Component({
   selector: 'alg-left-nav-tree',
   templateUrl: './left-nav-tree.component.html',
-  styleUrls: [ './left-nav-tree.component.scss' ],
+  styleUrl: './left-nav-tree.component.scss',
   imports: [
     LeftMenuBackButtonComponent,
     RouterLink,

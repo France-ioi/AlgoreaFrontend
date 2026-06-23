@@ -11,7 +11,7 @@ import { formatLanguageTagDisplay } from 'src/app/items/containers/item-strings-
 @Component({
   selector: 'alg-item-strings-tabs',
   templateUrl: './item-strings-tabs.component.html',
-  styleUrls: [ './item-strings-tabs.component.scss' ],
+  styleUrl: './item-strings-tabs.component.scss',
   imports: [
     ReactiveFormsModule,
     ItemStringsControlComponent,

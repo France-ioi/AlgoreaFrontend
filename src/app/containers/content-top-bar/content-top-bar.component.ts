@@ -26,7 +26,7 @@ import { PlatformLogoComponent } from 'src/app/ui-components/platform-logo/platf
 @Component({
   selector: 'alg-content-top-bar',
   templateUrl: './content-top-bar.component.html',
-  styleUrls: [ './content-top-bar.component.scss' ],
+  styleUrl: './content-top-bar.component.scss',
   imports: [
     ScoreRingComponent,
     LetDirective,

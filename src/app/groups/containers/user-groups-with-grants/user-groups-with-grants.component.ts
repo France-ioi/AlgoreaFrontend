@@ -10,7 +10,7 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
 @Component({
   selector: 'alg-user-groups-with-grants',
   templateUrl: './user-groups-with-grants.component.html',
-  styleUrls: [ './user-groups-with-grants.component.scss' ],
+  styleUrl: './user-groups-with-grants.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

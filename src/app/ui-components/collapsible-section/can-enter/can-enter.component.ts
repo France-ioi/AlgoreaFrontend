@@ -27,7 +27,7 @@ export interface CanEnterValue {
 @Component({
   selector: 'alg-can-enter',
   templateUrl: './can-enter.component.html',
-  styleUrls: [ './can-enter.component.scss' ],
+  styleUrl: './can-enter.component.scss',
   imports: [
     InputDateComponent,
     FormsModule,

@@ -6,7 +6,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-toast-messages',
   templateUrl: './toast-messages.component.html',
-  styleUrls: [ './toast-messages.component.scss' ],
+  styleUrl: './toast-messages.component.scss',
   imports: [
     ButtonIconComponent,
   ]

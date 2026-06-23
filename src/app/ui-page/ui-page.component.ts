@@ -7,7 +7,7 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 @Component({
   selector: 'alg-ui-page',
   templateUrl: './ui-page.component.html',
-  styleUrls: [ './ui-page.component.scss' ],
+  styleUrl: './ui-page.component.scss',
   imports: [
     ButtonComponent,
     ButtonIconComponent,

@@ -38,7 +38,7 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
 @Component({
   selector: 'alg-root',
   templateUrl: './app.component.html',
-  styleUrls: [ './app.component.scss' ],
+  styleUrl: './app.component.scss',
   imports: [
     LeftPanelComponent,
     LetDirective,

@@ -29,7 +29,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-item-dependencies',
   templateUrl: './item-dependencies.component.html',
-  styleUrls: [ './item-dependencies.component.scss' ],
+  styleUrl: './item-dependencies.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

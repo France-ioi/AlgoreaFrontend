@@ -9,7 +9,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 @Component({
   selector: 'alg-group-leave',
   templateUrl: './group-leave.component.html',
-  styleUrls: [ './group-leave.component.scss' ],
+  styleUrl: './group-leave.component.scss',
   imports: [ ButtonComponent ]
 })
 export class GroupLeaveComponent {

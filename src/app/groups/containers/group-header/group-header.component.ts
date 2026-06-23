@@ -14,7 +14,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-group-header',
   templateUrl: './group-header.component.html',
-  styleUrls: [ './group-header.component.scss' ],
+  styleUrl: './group-header.component.scss',
   imports: [
     AsyncPipe,
     RouterLink,

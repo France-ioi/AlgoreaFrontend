@@ -8,7 +8,7 @@ import { IsCurrentUserMemberPipe } from '../../models/group-membership';
 @Component({
   selector: 'alg-group-overview',
   templateUrl: './group-overview.component.html',
-  styleUrls: [ './group-overview.component.scss' ],
+  styleUrl: './group-overview.component.scss',
   imports: [
     GroupLeaveComponent,
     IsCurrentUserMemberPipe,

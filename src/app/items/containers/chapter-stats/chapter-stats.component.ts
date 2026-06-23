@@ -16,7 +16,7 @@ import { ChapterStatsRowComponent } from './chapter-stats-row.component';
 @Component({
   selector: 'alg-chapter-stats',
   templateUrl: './chapter-stats.component.html',
-  styleUrls: [ './chapter-stats.component.scss' ],
+  styleUrl: './chapter-stats.component.scss',
   imports: [
     AsyncPipe,
     LoadingComponent,

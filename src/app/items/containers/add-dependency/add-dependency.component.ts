@@ -13,7 +13,7 @@ import { SearchItemService } from 'src/app/data-access/search-item.service';
 @Component({
   selector: 'alg-add-dependency',
   templateUrl: './add-dependency.component.html',
-  styleUrls: [ './add-dependency.component.scss' ],
+  styleUrl: './add-dependency.component.scss',
   imports: [ AddContentComponent ]
 })
 export class AddDependencyComponent {

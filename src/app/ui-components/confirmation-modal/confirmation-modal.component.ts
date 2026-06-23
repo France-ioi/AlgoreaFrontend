@@ -7,7 +7,7 @@ import { ConfirmationModalData } from 'src/app/services/confirmation-modal.servi
 @Component({
   selector: 'alg-confirmation-modal',
   templateUrl: './confirmation-modal.component.html',
-  styleUrls: [ './confirmation-modal.component.scss' ],
+  styleUrl: './confirmation-modal.component.scss',
   imports: [
     ButtonIconComponent,
     ButtonComponent,

@@ -6,7 +6,7 @@ import { GroupLinksComponent } from '../group-links/group-links.component';
 @Component({
   selector: 'alg-user-indicator',
   templateUrl: './user-indicator.component.html',
-  styleUrls: [ './user-indicator.component.scss' ],
+  styleUrl: './user-indicator.component.scss',
   imports: [ GroupLinksComponent ]
 })
 export class UserIndicatorComponent {

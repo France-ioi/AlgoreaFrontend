@@ -13,7 +13,7 @@ import { APPCONFIG } from 'src/app/config';
 @Component({
   selector: 'alg-top-right-controls',
   templateUrl: './top-right-controls.component.html',
-  styleUrls: [ './top-right-controls.component.scss' ],
+  styleUrl: './top-right-controls.component.scss',
   imports: [ LetDirective, TopRightMenuComponent, LanguagePickerComponent, ButtonComponent, NotificationBellComponent ]
 })
 export class TopRightControlsComponent implements OnInit {

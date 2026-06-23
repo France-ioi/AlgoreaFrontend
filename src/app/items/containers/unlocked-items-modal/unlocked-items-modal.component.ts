@@ -10,7 +10,7 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
 @Component({
   selector: 'alg-unlocked-items-modal',
   templateUrl: './unlocked-items-modal.component.html',
-  styleUrls: [ './unlocked-items-modal.component.scss' ],
+  styleUrl: './unlocked-items-modal.component.scss',
   imports: [
     ButtonComponent,
     ItemRoutePipe,

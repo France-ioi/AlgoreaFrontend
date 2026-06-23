@@ -39,7 +39,7 @@ const TREE_TAB_TYPES: LeftMenuTabType[] = [ 'activities', 'skills', 'groups' ];
 @Component({
   selector: 'alg-left-tabbed-content',
   templateUrl: './left-tabbed-content.component.html',
-  styleUrls: [ './left-tabbed-content.component.scss' ],
+  styleUrl: './left-tabbed-content.component.scss',
   imports: [
     LeftTabBarComponent,
     LeftNavComponent,

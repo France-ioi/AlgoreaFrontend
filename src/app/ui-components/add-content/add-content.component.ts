@@ -35,7 +35,7 @@ const defaultFormValues = { title: '', url: '', searchExisting: '' };
 @Component({
   selector: 'alg-add-content',
   templateUrl: './add-content.component.html',
-  styleUrls: [ './add-content.component.scss' ],
+  styleUrl: './add-content.component.scss',
   imports: [
     InputComponent,
     LoadingComponent,

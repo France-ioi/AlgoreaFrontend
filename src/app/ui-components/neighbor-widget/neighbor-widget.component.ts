@@ -23,7 +23,7 @@ const PREV_NEXT_LEAVE_MS = 400;
 @Component({
   selector: 'alg-neighbor-widget',
   templateUrl: './neighbor-widget.component.html',
-  styleUrls: [ 'neighbor-widget.component.scss' ],
+  styleUrl: 'neighbor-widget.component.scss',
   imports: [ ButtonIconComponent, ButtonComponent ],
 })
 export class NeighborWidgetComponent {

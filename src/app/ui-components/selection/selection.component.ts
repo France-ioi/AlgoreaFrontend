@@ -17,7 +17,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-selection',
   templateUrl: './selection.component.html',
-  styleUrls: [ './selection.component.scss' ],
+  styleUrl: './selection.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

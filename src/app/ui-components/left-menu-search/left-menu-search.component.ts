@@ -16,7 +16,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-left-menu-search',
   templateUrl: 'left-menu-search.component.html',
-  styleUrls: [ 'left-menu-search.component.scss' ],
+  styleUrl: 'left-menu-search.component.scss',
   imports: [ InputComponent, ButtonIconComponent ],
 })
 export class LeftMenuSearchComponent {

@@ -4,7 +4,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-message-info',
   templateUrl: './message-info.component.html',
-  styleUrls: [ 'message-info.component.scss' ],
+  styleUrl: 'message-info.component.scss',
   imports: [ ButtonIconComponent ]
 })
 export class MessageInfoComponent {

@@ -78,7 +78,7 @@ function pctsAtTime(t: number, sortedEntries: ScoreDistributionEntry[]): Record<
 @Component({
   selector: 'alg-score-over-time-chart',
   templateUrl: './score-over-time-chart.component.html',
-  styleUrls: [ './score-over-time-chart.component.scss' ],
+  styleUrl: './score-over-time-chart.component.scss',
 })
 export class ScoreOverTimeChartComponent {
   readonly entries = input.required<ScoreDistributionEntry[]>();

@@ -24,7 +24,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
 @Component({
   selector: 'alg-user',
   templateUrl: './user.component.html',
-  styleUrls: [ './user.component.scss' ],
+  styleUrl: './user.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

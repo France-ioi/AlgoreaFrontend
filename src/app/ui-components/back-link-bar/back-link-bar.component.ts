@@ -13,7 +13,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 @Component({
   selector: 'alg-back-link-bar',
   templateUrl: './back-link-bar.component.html',
-  styleUrls: [ './back-link-bar.component.scss' ],
+  styleUrl: './back-link-bar.component.scss',
   imports: [ ButtonComponent ],
 })
 export class BackLinkBarComponent {

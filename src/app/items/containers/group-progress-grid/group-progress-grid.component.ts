@@ -57,7 +57,7 @@ export type { Progress } from './group-progress-grid.types';
 @Component({
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
-  styleUrls: [ './group-progress-grid.component.scss' ],
+  styleUrl: './group-progress-grid.component.scss',
   providers: [ GroupProgressGridCsvExportService ],
   imports: [
     CompositionFilterComponent,

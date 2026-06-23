@@ -14,7 +14,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-tab-bar',
   templateUrl: './tab-bar.component.html',
-  styleUrls: [ './tab-bar.component.scss' ],
+  styleUrl: './tab-bar.component.scss',
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '(window:resize)': 'resize()',

@@ -6,7 +6,7 @@ import { APPCONFIG } from 'src/app/config';
 @Component({
   selector: 'alg-platform-logo',
   templateUrl: './platform-logo.component.html',
-  styleUrls: [ './platform-logo.component.scss' ],
+  styleUrl: './platform-logo.component.scss',
   imports: [ RouterLink ],
 })
 export class PlatformLogoComponent {

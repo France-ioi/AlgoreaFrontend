@@ -7,7 +7,7 @@ import { SelectComponent } from 'src/app/ui-components/select/select.component';
 @Component({
   selector: 'alg-language-picker',
   templateUrl: './language-picker.component.html',
-  styleUrls: [ './language-picker.component.scss' ],
+  styleUrl: './language-picker.component.scss',
   imports: [ FormsModule, SelectComponent, SelectOptionComponent ]
 })
 export class LanguagePickerComponent {

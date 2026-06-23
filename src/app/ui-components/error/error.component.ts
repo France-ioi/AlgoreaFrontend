@@ -5,7 +5,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 @Component({
   selector: 'alg-error',
   templateUrl: './error.component.html',
-  styleUrls: [ './error.component.scss' ],
+  styleUrl: './error.component.scss',
   imports: [
     RouterLink,
     ButtonComponent,

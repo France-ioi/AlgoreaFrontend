@@ -23,7 +23,7 @@ export interface MenuItem {
 @Component({
   selector: 'alg-top-right-menu',
   templateUrl: './top-right-menu.component.html',
-  styleUrls: [ './top-right-menu.component.scss' ],
+  styleUrl: './top-right-menu.component.scss',
   imports: [
     AsyncPipe,
     ButtonIconComponent,

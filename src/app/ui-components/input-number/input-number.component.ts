@@ -6,7 +6,7 @@ import { isString } from 'src/app/utils/type-checkers';
 @Component({
   selector: 'alg-input-number',
   templateUrl: './input-number.component.html',
-  styleUrls: [ './input-number.component.scss' ],
+  styleUrl: './input-number.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

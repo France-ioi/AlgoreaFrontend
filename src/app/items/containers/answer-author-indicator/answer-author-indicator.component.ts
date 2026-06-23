@@ -26,7 +26,7 @@ import { fromItemContent } from 'src/app/items/store';
 @Component({
   selector: 'alg-answer-author-indicator',
   templateUrl: './answer-author-indicator.component.html',
-  styleUrls: [ './answer-author-indicator.component.scss' ],
+  styleUrl: './answer-author-indicator.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

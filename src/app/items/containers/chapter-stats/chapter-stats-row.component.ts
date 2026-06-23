@@ -20,7 +20,7 @@ type RowMode = 'cannot-edit' | 'not-a-task' | 'fetch';
 @Component({
   selector: 'tr[alg-chapter-stats-row]',
   templateUrl: './chapter-stats-row.component.html',
-  styleUrls: [ './chapter-stats-row.component.scss' ],
+  styleUrl: './chapter-stats-row.component.scss',
   imports: [
     AsyncPipe,
     RouterLink,

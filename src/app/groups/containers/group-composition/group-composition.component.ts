@@ -23,7 +23,7 @@ export interface GroupChildData {
 @Component({
   selector: 'alg-group-composition',
   templateUrl: './group-composition.component.html',
-  styleUrls: [ './group-composition.component.scss' ],
+  styleUrl: './group-composition.component.scss',
   imports: [
     MemberListComponent,
     AddSubGroupComponent,

@@ -6,7 +6,7 @@ import { MessageService } from 'src/app/services/message.service';
 @Component({
   selector: 'alg-preview-html',
   templateUrl: './preview-html.component.html',
-  styleUrls: [ './preview-html.component.scss' ],
+  styleUrl: './preview-html.component.scss',
   imports: [ DescriptionIframeComponent ],
 })
 export class PreviewHtmlComponent {

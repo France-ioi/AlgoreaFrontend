@@ -15,6 +15,7 @@ const angularRecommendedRules = {
   '@angular-eslint/no-outputs-metadata-property': 'error',
   '@angular-eslint/prefer-inject': 'error',
   '@angular-eslint/prefer-standalone': 'error',
+  '@angular-eslint/consistent-component-styles': 'error',
   '@angular-eslint/use-pipe-transform-interface': 'error',
   '@angular-eslint/use-lifecycle-interface': 'warn',
 };

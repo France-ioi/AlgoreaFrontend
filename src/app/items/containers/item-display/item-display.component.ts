@@ -58,7 +58,7 @@ export interface TaskTab {
 @Component({
   selector: 'alg-item-display',
   templateUrl: './item-display.component.html',
-  styleUrls: [ './item-display.component.scss' ],
+  styleUrl: './item-display.component.scss',
   providers: [ ItemTaskService, ItemTaskInitService, ItemTaskAnswerService, ItemTaskViewsService, TaskSessionTrackerService ],
   imports: [
     FullHeightContentDirective,

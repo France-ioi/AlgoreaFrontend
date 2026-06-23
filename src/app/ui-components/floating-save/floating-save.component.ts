@@ -4,7 +4,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 @Component({
   selector: 'alg-floating-save',
   templateUrl: './floating-save.component.html',
-  styleUrls: [ './floating-save.component.scss' ],
+  styleUrl: './floating-save.component.scss',
   imports: [ ButtonComponent ]
 })
 export class FloatingSaveComponent implements OnInit, OnDestroy {

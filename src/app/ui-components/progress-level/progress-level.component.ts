@@ -3,7 +3,7 @@ import { Component, computed, input } from '@angular/core';
 @Component({
   selector: 'alg-progress-level',
   templateUrl: './progress-level.component.html',
-  styleUrls: [ './progress-level.component.scss' ],
+  styleUrl: './progress-level.component.scss',
 })
 export class ProgressLevelComponent {
   value = input(0);

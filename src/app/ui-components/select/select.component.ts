@@ -28,7 +28,7 @@ import { SelectedOptionService, SelectOption } from 'src/app/ui-components/selec
 @Component({
   selector: 'alg-select',
   templateUrl: './select.component.html',
-  styleUrls: [ './select.component.scss' ],
+  styleUrl: './select.component.scss',
   imports: [
     ButtonComponent,
     CdkOverlayOrigin,

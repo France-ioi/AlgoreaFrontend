@@ -16,7 +16,7 @@ import { taskStatDescriptors } from '../../models/task-stats';
 @Component({
   selector: 'alg-task-stats',
   templateUrl: './task-stats.component.html',
-  styleUrls: [ './task-stats.component.scss' ],
+  styleUrl: './task-stats.component.scss',
   imports: [
     AsyncPipe,
     LoadingComponent,

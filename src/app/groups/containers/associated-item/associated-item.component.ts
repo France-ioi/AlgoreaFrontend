@@ -34,7 +34,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-associated-item',
   templateUrl: './associated-item.component.html',
-  styleUrls: [ './associated-item.component.scss' ],
+  styleUrl: './associated-item.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

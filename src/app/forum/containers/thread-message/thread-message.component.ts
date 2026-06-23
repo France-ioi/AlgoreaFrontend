@@ -23,7 +23,7 @@ import { fromItemContent } from 'src/app/items/store';
 @Component({
   selector: 'alg-thread-message',
   templateUrl: './thread-message.component.html',
-  styleUrls: [ './thread-message.component.scss' ],
+  styleUrl: './thread-message.component.scss',
   imports: [
     NgTemplateOutlet,
     ScoreRingComponent,

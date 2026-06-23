@@ -21,7 +21,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'alg-left-nav',
   templateUrl: './left-nav.component.html',
-  styleUrls: [ './left-nav.component.scss' ],
+  styleUrl: './left-nav.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

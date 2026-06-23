@@ -3,7 +3,7 @@ import { Component, computed, input } from '@angular/core';
 @Component({
   selector: 'alg-skill-progress',
   templateUrl: './skill-progress.component.html',
-  styleUrls: [ './skill-progress.component.scss' ],
+  styleUrl: './skill-progress.component.scss',
 })
 export class SkillProgressComponent {
   type = input<'thin' | 'bold' | 'thick-horizontal'>('thin');

@@ -4,7 +4,7 @@ import { style, trigger, transition, animate } from '@angular/animations';
 @Component({
   selector: 'button[alg-button], a[alg-button]',
   templateUrl: './button.component.html',
-  styleUrls: [ './button.component.scss' ],
+  styleUrl: './button.component.scss',
   animations: [
     trigger('captionAnimation', [
       transition(':enter', [

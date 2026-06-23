@@ -16,7 +16,7 @@ const selectBreadcrumbsDefaultOnTitle = createSelector(
 @Component({
   selector: 'alg-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
-  styleUrls: [ './breadcrumbs.component.scss' ],
+  styleUrl: './breadcrumbs.component.scss',
   imports: [
     TooltipDirective,
   ],

@@ -34,7 +34,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-item-permissions',
   templateUrl: './item-permissions.component.html',
-  styleUrls: [ './item-permissions.component.scss' ],
+  styleUrl: './item-permissions.component.scss',
   imports: [
     SectionHeaderComponent,
     ProgressSelectComponent,

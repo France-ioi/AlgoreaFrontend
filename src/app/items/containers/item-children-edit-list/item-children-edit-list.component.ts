@@ -43,7 +43,7 @@ import { Dialog } from '@angular/cdk/dialog';
 @Component({
   selector: 'alg-item-children-edit-list',
   templateUrl: './item-children-edit-list.component.html',
-  styleUrls: [ './item-children-edit-list.component.scss' ],
+  styleUrl: './item-children-edit-list.component.scss',
   imports: [
     SwitchComponent,
     FormsModule,

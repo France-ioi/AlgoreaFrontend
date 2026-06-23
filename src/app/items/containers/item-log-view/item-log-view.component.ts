@@ -53,7 +53,7 @@ const logsLimit = 20;
 @Component({
   selector: 'alg-item-log-view',
   templateUrl: './item-log-view.component.html',
-  styleUrls: [ './item-log-view.component.scss' ],
+  styleUrl: './item-log-view.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

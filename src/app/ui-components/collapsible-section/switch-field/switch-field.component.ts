@@ -21,7 +21,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-switch-field',
   templateUrl: './switch-field.component.html',
-  styleUrls: [ './switch-field.component.scss' ],
+  styleUrl: './switch-field.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
