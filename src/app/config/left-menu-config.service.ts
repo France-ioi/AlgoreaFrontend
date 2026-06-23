@@ -73,7 +73,7 @@ export class LeftMenuConfigService {
   );
 
   showTabBar$ = this.visibleTabs$.pipe(
-    map(tabs => tabs.some(tab => tab.type !== 'activities')),
+    map(tabs => tabs.length > 1),
   );
 
   private isTabTypeAvailable(type: LeftMenuTabType): boolean {

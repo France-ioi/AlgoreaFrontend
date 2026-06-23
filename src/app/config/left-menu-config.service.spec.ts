@@ -111,7 +111,7 @@ describe('LeftMenuConfigService', () => {
     expect(tabs.map(t => t.type)).not.toContain('community');
   });
 
-  it('showTabBar$ is false when only activities is visible', async () => {
+  it('showTabBar$ is false when only one tab is visible', async () => {
     setup(baseConfig({
       leftMenuTabs: [
         { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
@@ -122,11 +122,24 @@ describe('LeftMenuConfigService', () => {
     expect(showTabBar).toBeFalse();
   });
 
-  it('showTabBar$ is true when a non-activities tab is visible', async () => {
+  it('showTabBar$ is true when more than one tab is visible', async () => {
     setup(baseConfig({
       leftMenuTabs: [
         { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
         { type: 'search', showTo: 'all' },
+      ],
+    }));
+    session$.next(profile());
+    const showTabBar = await firstValueFrom(service.showTabBar$);
+    expect(showTabBar).toBeTrue();
+  });
+
+  it('showTabBar$ is true when multiple activities tabs are visible', async () => {
+    setup(baseConfig({
+      searchApiUrl: undefined,
+      leftMenuTabs: [
+        { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
+        { type: 'activities', showTo: 'all', content: { id: '2', path: [ '1' ] } },
       ],
     }));
     session$.next(profile());
