@@ -4,7 +4,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-notification-modal',
   templateUrl: './notification-modal.component.html',
-  styleUrls: [ './notification-modal.component.scss' ],
+  styleUrl: './notification-modal.component.scss',
   imports: [ ButtonIconComponent ]
 })
 export class NotificationModalComponent {

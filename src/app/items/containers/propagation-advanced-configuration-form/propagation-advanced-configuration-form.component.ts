@@ -17,7 +17,7 @@ import { propagationsConstraintsValidator } from 'src/app/items/models/propagati
 @Component({
   selector: 'alg-propagation-advanced-configuration-form',
   templateUrl: './propagation-advanced-configuration-form.component.html',
-  styleUrls: [ './propagation-advanced-configuration-form.component.scss' ],
+  styleUrl: './propagation-advanced-configuration-form.component.scss',
   imports: [
     ReactiveFormsModule,
     CollapsibleSectionComponent,

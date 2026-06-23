@@ -14,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
 @Component({
   selector: 'alg-switch',
   templateUrl: './switch.component.html',
-  styleUrls: [ './switch.component.scss' ],
+  styleUrl: './switch.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

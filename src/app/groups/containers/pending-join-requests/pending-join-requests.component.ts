@@ -26,7 +26,7 @@ const baseColumns: GridColumn[] = [
 @Component({
   selector: 'alg-pending-join-requests',
   templateUrl: './pending-join-requests.component.html',
-  styleUrls: [ './pending-join-requests.component.scss' ],
+  styleUrl: './pending-join-requests.component.scss',
 })
 export class PendingJoinRequestsComponent {
   private getRequestsService = inject(GetRequestsService);

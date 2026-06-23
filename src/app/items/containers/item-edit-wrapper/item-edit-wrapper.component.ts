@@ -53,7 +53,7 @@ import { runItemEditSave } from './item-edit-wrapper-save-flow';
 @Component({
   selector: 'alg-item-edit-wrapper',
   templateUrl: './item-edit-wrapper.component.html',
-  styleUrls: [ './item-edit-wrapper.component.scss' ],
+  styleUrl: './item-edit-wrapper.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

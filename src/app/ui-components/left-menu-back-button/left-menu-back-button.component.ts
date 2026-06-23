@@ -4,7 +4,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-left-menu-back-button',
   templateUrl: './left-menu-back-button.component.html',
-  styleUrls: [ './left-menu-back-button.component.scss' ],
+  styleUrl: './left-menu-back-button.component.scss',
   imports: [ ButtonIconComponent ]
 })
 export class LeftMenuBackButtonComponent {

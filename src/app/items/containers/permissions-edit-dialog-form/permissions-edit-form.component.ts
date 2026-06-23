@@ -35,7 +35,7 @@ const emptyPermissionsDialogData: PermissionsDialogData = {
 @Component({
   selector: 'alg-permissions-edit-form',
   templateUrl: 'permissions-edit-form.component.html',
-  styleUrls: [ 'permissions-edit-form.component.scss' ],
+  styleUrl: 'permissions-edit-form.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

@@ -15,7 +15,7 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
 @Component({
   selector: 'alg-parent-skills',
   templateUrl: './parent-skills.component.html',
-  styleUrls: [ './parent-skills.component.scss' ],
+  styleUrl: './parent-skills.component.scss',
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe, SlicePipe ]
 })
 export class ParentSkillsComponent {

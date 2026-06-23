@@ -24,7 +24,7 @@ const MAX_SECONDS_VALUE = 59;
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'alg-duration[ngModel], alg-duration[formControl], alg-duration[formControlName]',
   templateUrl: './duration.component.html',
-  styleUrls: [ './duration.component.scss' ],
+  styleUrl: './duration.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

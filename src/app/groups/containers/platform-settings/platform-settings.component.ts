@@ -9,7 +9,7 @@ import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'alg-platform-settings',
   templateUrl: './platform-settings.component.html',
-  styleUrls: [ './platform-settings.component.scss' ],
+  styleUrl: './platform-settings.component.scss',
   imports: [
     LanguagePickerComponent,
     AsyncPipe,

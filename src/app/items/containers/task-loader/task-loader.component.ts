@@ -7,7 +7,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 @Component({
   selector: 'alg-task-loader',
   templateUrl: './task-loader.component.html',
-  styleUrls: [ './task-loader.component.scss' ],
+  styleUrl: './task-loader.component.scss',
   imports: [ LoadingComponent ]
 })
 export class TaskLoaderComponent {

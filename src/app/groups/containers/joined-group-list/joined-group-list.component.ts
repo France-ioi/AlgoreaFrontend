@@ -31,7 +31,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-joined-group-list',
   templateUrl: './joined-group-list.component.html',
-  styleUrls: [ './joined-group-list.component.scss' ],
+  styleUrl: './joined-group-list.component.scss',
   imports: [
     ErrorComponent,
     RouterLink,

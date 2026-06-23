@@ -20,7 +20,7 @@ export interface PropagationAdvancedConfigurationDialogData {
 @Component({
   selector: 'alg-propagation-advanced-configuration-dialog',
   templateUrl: 'propagation-advanced-configuration-dialog.component.html',
-  styleUrls: [ 'propagation-advanced-configuration-dialog.component.scss' ],
+  styleUrl: 'propagation-advanced-configuration-dialog.component.scss',
   imports: [
     PropagationAdvancedConfigurationFormComponent,
     ModalComponent,

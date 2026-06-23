@@ -9,7 +9,7 @@ const defaultMaxItemsDisplay = 4;
 @Component({
   selector: 'alg-group-links',
   templateUrl: './group-links.component.html',
-  styleUrls: [ './group-links.component.scss' ],
+  styleUrl: './group-links.component.scss',
   imports: [
     RouterLink,
     SlicePipe,

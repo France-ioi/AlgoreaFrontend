@@ -8,7 +8,7 @@ export type IndicatorLayout = 'default' | 'inline';
 @Component({
   selector: 'alg-thread-top-indicator',
   templateUrl: './thread-top-indicator.component.html',
-  styleUrls: [ './thread-top-indicator.component.scss' ],
+  styleUrl: './thread-top-indicator.component.scss',
   imports: [
     SwitchComponent,
     FormsModule,

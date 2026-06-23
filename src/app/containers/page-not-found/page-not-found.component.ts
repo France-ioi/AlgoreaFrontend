@@ -6,7 +6,7 @@ import { FullHeightContentDirective } from 'src/app/directives/full-height-conte
 @Component({
   selector: 'alg-page-not-found',
   templateUrl: './page-not-found.component.html',
-  styleUrls: [ './page-not-found.component.scss' ],
+  styleUrl: './page-not-found.component.scss',
   imports: [ FullHeightContentDirective, ErrorComponent ]
 })
 export class PageNotFoundComponent {

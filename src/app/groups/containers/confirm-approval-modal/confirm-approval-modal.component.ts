@@ -8,7 +8,7 @@ export type ConfirmApprovalModalResult = 'empty' | 'reinvite' | undefined;
 @Component({
   selector: 'alg-confirm-approval-modal',
   templateUrl: './confirm-approval-modal.component.html',
-  styleUrls: [ './confirm-approval-modal.component.scss' ],
+  styleUrl: './confirm-approval-modal.component.scss',
   imports: [
     NotificationModalComponent,
     ButtonComponent,

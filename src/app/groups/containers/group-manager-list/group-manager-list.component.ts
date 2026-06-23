@@ -52,7 +52,7 @@ const managersLimit = 25;
 @Component({
   selector: 'alg-group-manager-list',
   templateUrl: './group-manager-list.component.html',
-  styleUrls: [ './group-manager-list.component.scss' ],
+  styleUrl: './group-manager-list.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

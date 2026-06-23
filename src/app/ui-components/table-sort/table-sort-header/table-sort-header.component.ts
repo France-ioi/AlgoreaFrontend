@@ -9,7 +9,7 @@ export interface SortEvent {
 @Component({
   selector: 'th[alg-table-sort-header]',
   templateUrl: './table-sort-header.component.html',
-  styleUrls: [ './table-sort-header.component.scss' ],
+  styleUrl: './table-sort-header.component.scss',
   imports: [ ButtonIconComponent ]
 })
 export class TableSortHeaderComponent {

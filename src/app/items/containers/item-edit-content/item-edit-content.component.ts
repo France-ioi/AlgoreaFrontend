@@ -9,7 +9,7 @@ type Tab = 'write' | 'preview' | 'help';
 @Component({
   selector: 'alg-item-edit-content',
   templateUrl: './item-edit-content.component.html',
-  styleUrls: [ './item-edit-content.component.scss' ],
+  styleUrl: './item-edit-content.component.scss',
   imports: [ TextareaComponent, PreviewHtmlComponent, ItemEditContentHelpComponent ]
 })
 export class ItemEditContentComponent {

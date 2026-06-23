@@ -6,7 +6,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-input',
   templateUrl: './input.component.html',
-  styleUrls: [ './input.component.scss' ],
+  styleUrl: './input.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

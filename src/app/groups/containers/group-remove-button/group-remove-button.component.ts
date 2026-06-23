@@ -17,7 +17,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'alg-group-remove-button',
   templateUrl: './group-remove-button.component.html',
-  styleUrls: [ './group-remove-button.component.scss' ],
+  styleUrl: './group-remove-button.component.scss',
   imports: [ LoadingComponent, ErrorComponent, AsyncPipe, ButtonComponent ]
 })
 export class GroupRemoveButtonComponent {

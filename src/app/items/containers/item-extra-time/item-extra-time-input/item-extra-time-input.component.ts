@@ -6,7 +6,7 @@ import { InputNumberComponent } from 'src/app/ui-components/input-number/input-n
 @Component({
   selector: 'alg-item-extra-time-input',
   templateUrl: './item-extra-time-input.component.html',
-  styleUrls: [ './item-extra-time-input.component.scss' ],
+  styleUrl: './item-extra-time-input.component.scss',
   imports: [
     FormsModule,
     ButtonIconComponent,

@@ -6,7 +6,7 @@ import { EMPTY, merge, startWith } from 'rxjs';
 @Component({
   selector: 'alg-input-error',
   templateUrl: './form-error.component.html',
-  styleUrls: [ './form-error.component.scss' ],
+  styleUrl: './form-error.component.scss',
   imports: [ DatePipe ]
 })
 export class FormErrorComponent {

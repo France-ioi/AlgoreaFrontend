@@ -42,7 +42,7 @@ import {
   selector: 'alg-group-edit',
   host: { class: 'alg-flex-1' },
   templateUrl: './group-edit.component.html',
-  styleUrls: [ './group-edit.component.scss' ],
+  styleUrl: './group-edit.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

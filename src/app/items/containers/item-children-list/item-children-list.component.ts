@@ -11,7 +11,7 @@ import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty
 @Component({
   selector: 'alg-item-children-list',
   templateUrl: './item-children-list.component.html',
-  styleUrls: [ './item-children-list.component.scss' ],
+  styleUrl: './item-children-list.component.scss',
   imports: [
     RouterLink,
     ScoreRingComponent,

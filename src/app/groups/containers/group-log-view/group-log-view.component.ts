@@ -41,7 +41,7 @@ const logsLimit = 20;
 @Component({
   selector: 'alg-group-log-view',
   templateUrl: './group-log-view.component.html',
-  styleUrls: [ './group-log-view.component.scss' ],
+  styleUrl: './group-log-view.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

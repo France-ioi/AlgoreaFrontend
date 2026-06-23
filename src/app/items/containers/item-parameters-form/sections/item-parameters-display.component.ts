@@ -24,7 +24,7 @@ export type ItemParametersDisplayForm = FormGroup<{
 @Component({
   selector: 'alg-item-parameters-display',
   templateUrl: './item-parameters-display.component.html',
-  styleUrls: [ './item-parameters-display.component.scss' ],
+  styleUrl: './item-parameters-display.component.scss',
   imports: [
     ReactiveFormsModule,
     InputComponent,

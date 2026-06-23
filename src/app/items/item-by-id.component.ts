@@ -76,7 +76,7 @@ const selectState = createSelector(
 @Component({
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
-  styleUrls: [ './item-by-id.component.scss' ],
+  styleUrl: './item-by-id.component.scss',
   providers: [ InitialAnswerDataSource, ItemTabs ],
   imports: [
     ItemHeaderComponent,

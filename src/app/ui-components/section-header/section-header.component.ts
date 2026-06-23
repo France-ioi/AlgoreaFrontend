@@ -4,7 +4,7 @@ import { NgTemplateOutlet } from '@angular/common';
 @Component({
   selector: 'alg-section-header',
   templateUrl: './section-header.component.html',
-  styleUrls: [ './section-header.component.scss' ],
+  styleUrl: './section-header.component.scss',
   imports: [
     NgTemplateOutlet,
   ]

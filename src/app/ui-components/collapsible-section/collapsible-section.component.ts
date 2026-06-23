@@ -5,7 +5,7 @@ import { NgTemplateOutlet } from '@angular/common';
 @Component({
   selector: 'alg-collapsible-section',
   templateUrl: './collapsible-section.component.html',
-  styleUrls: [ './collapsible-section.component.scss' ],
+  styleUrl: './collapsible-section.component.scss',
   imports: [ SectionHeaderComponent, NgTemplateOutlet ]
 })
 export class CollapsibleSectionComponent {

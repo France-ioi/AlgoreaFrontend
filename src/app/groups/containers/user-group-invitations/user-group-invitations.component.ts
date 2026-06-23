@@ -35,7 +35,7 @@ import { Dialog } from '@angular/cdk/dialog';
 @Component({
   selector: 'alg-user-group-invitations',
   templateUrl: './user-group-invitations.component.html',
-  styleUrls: [ './user-group-invitations.component.scss' ],
+  styleUrl: './user-group-invitations.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

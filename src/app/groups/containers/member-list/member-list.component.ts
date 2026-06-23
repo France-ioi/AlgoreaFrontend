@@ -56,7 +56,7 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
 @Component({
   selector: 'alg-member-list',
   templateUrl: './member-list.component.html',
-  styleUrls: [ './member-list.component.scss' ],
+  styleUrl: './member-list.component.scss',
   providers: [ MemberListRemovalService ],
   imports: [
     GroupCompositionFilterComponent,

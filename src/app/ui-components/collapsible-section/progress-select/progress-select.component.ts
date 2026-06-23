@@ -32,7 +32,7 @@ export interface ProgressSelectValue<T> {
 @Component({
   selector: 'alg-progress-select',
   templateUrl: './progress-select.component.html',
-  styleUrls: [ './progress-select.component.scss' ],
+  styleUrl: './progress-select.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

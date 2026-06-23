@@ -22,7 +22,7 @@ type ThreadFilter = 'assigned_to_me' | 'all_open' | 'any_status';
 @Component({
   selector: 'alg-thread-table',
   templateUrl: './thread-table.component.html',
-  styleUrls: [ './thread-table.component.scss' ],
+  styleUrl: './thread-table.component.scss',
   imports: [
     ErrorComponent,
     LoadingComponent,

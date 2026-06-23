@@ -5,7 +5,7 @@ import { FormErrorComponent } from '../form-error/form-error.component';
 @Component({
   selector: 'alg-textarea',
   templateUrl: './textarea.component.html',
-  styleUrls: [ './textarea.component.scss' ],
+  styleUrl: './textarea.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

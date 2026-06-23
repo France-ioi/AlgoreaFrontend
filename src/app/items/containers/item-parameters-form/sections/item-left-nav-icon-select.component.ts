@@ -17,7 +17,7 @@ interface IconChoice {
 @Component({
   selector: 'alg-item-left-nav-icon-select',
   templateUrl: './item-left-nav-icon-select.component.html',
-  styleUrls: [ './item-left-nav-icon-select.component.scss' ],
+  styleUrl: './item-left-nav-icon-select.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

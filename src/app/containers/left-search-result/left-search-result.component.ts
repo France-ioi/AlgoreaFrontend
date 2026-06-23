@@ -11,7 +11,7 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
 @Component({
   selector: 'alg-left-search-result',
   templateUrl: './left-search-result.component.html',
-  styleUrls: [ './left-search-result.component.scss' ],
+  styleUrl: './left-search-result.component.scss',
   imports: [
     MessageInfoComponent,
     RouterLinkActive,

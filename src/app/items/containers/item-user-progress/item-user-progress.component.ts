@@ -50,7 +50,7 @@ interface RowData {
 @Component({
   selector: 'alg-item-user-progress',
   templateUrl: './item-user-progress.component.html',
-  styleUrls: [ './item-user-progress.component.scss' ],
+  styleUrl: './item-user-progress.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

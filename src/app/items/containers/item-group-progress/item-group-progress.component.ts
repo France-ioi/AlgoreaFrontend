@@ -16,7 +16,7 @@ import { fromItemContent } from 'src/app/items/store';
 @Component({
   selector: 'alg-item-group-progress',
   templateUrl: './item-group-progress.component.html',
-  styleUrls: [ './item-group-progress.component.scss' ],
+  styleUrl: './item-group-progress.component.scss',
   imports: [ GroupProgressGridComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemGroupProgressComponent {

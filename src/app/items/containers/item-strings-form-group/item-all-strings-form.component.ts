@@ -57,7 +57,7 @@ import { merge, startWith } from 'rxjs';
 @Component({
   selector: 'alg-item-all-strings-form',
   templateUrl: './item-all-strings-form.component.html',
-  styleUrls: [ './item-all-strings-form.component.scss' ],
+  styleUrl: './item-all-strings-form.component.scss',
   imports: [
     ItemStringsControlComponent,
     ItemStringsTabsComponent,

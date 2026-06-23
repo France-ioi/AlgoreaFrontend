@@ -34,7 +34,7 @@ export interface ProgressData {
 @Component({
   selector: 'alg-user-progress-details',
   templateUrl: './user-progress-details.component.html',
-  styleUrls: [ './user-progress-details.component.scss' ],
+  styleUrl: './user-progress-details.component.scss',
   imports: [
     ScoreRingComponent,
     RouterLink,

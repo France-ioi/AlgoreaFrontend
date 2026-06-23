@@ -13,7 +13,7 @@ import { Group } from '../../models/group';
 @Component({
   selector: 'alg-group-manager-add',
   templateUrl: './group-manager-add.component.html',
-  styleUrls: [ './group-manager-add.component.scss' ],
+  styleUrl: './group-manager-add.component.scss',
   imports: [ FormsModule, ButtonComponent ]
 })
 export class GroupManagerAddComponent {

@@ -24,7 +24,7 @@ import {
 @Component({
   selector: 'alg-item-parameters-participation',
   templateUrl: './item-parameters-participation.component.html',
-  styleUrls: [ './item-parameters-participation.component.scss' ],
+  styleUrl: './item-parameters-participation.component.scss',
   imports: [
     FormsModule,
     ReactiveFormsModule,

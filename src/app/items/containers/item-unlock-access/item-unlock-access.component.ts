@@ -20,7 +20,7 @@ import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/s
 @Component({
   selector: 'alg-item-unlock-access',
   templateUrl: './item-unlock-access.component.html',
-  styleUrls: [ './item-unlock-access.component.scss' ],
+  styleUrl: './item-unlock-access.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

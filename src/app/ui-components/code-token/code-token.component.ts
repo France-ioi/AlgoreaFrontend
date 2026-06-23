@@ -5,7 +5,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-code-token',
   templateUrl: './code-token.component.html',
-  styleUrls: [ './code-token.component.scss' ],
+  styleUrl: './code-token.component.scss',
   imports: [
     ButtonIconComponent,
     TooltipDirective,

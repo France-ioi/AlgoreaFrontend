@@ -4,7 +4,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 @Component({
   selector: 'alg-modal',
   templateUrl: './modal.component.html',
-  styleUrls: [ './modal.component.scss' ],
+  styleUrl: './modal.component.scss',
   imports: [
     ButtonIconComponent,
   ]

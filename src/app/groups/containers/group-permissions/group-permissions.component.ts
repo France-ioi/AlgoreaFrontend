@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 @Component({
   selector: 'alg-group-permissions',
   templateUrl: './group-permissions.component.html',
-  styleUrls: [ './group-permissions.component.scss' ],
+  styleUrl: './group-permissions.component.scss',
   imports: [
     DatePipe,
     GroupPermissionCaptionPipe,

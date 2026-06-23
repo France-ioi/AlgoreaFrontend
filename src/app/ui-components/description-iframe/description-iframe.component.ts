@@ -33,7 +33,7 @@ function escapeHtmlAttributeValue(value: string): string {
 @Component({
   selector: 'alg-description-iframe',
   templateUrl: './description-iframe.component.html',
-  styleUrls: [ './description-iframe.component.scss' ],
+  styleUrl: './description-iframe.component.scss',
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention -- Angular host CSS class binding
     '[class.edge-to-edge]': 'edgeToEdge()',

@@ -10,7 +10,7 @@ import { UserGroupsWithGrantsComponent } from '../user-groups-with-grants/user-g
 @Component({
   selector: 'alg-user-info',
   templateUrl: './user-info.component.html',
-  styleUrls: [ './user-info.component.scss' ],
+  styleUrl: './user-info.component.scss',
   imports: [
     ButtonComponent,
     UserGroupsWithGrantsComponent,

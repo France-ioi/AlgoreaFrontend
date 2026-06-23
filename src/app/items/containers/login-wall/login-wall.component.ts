@@ -8,7 +8,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 @Component({
   selector: 'alg-login-wall',
   templateUrl: './login-wall.component.html',
-  styleUrls: [ './login-wall.component.scss' ],
+  styleUrl: './login-wall.component.scss',
   imports: [ ButtonComponent ],
 })
 export class LoginWallComponent implements OnInit {

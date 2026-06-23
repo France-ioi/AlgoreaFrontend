@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'alg-language-mismatch',
   templateUrl: './language-mismatch.component.html',
-  styleUrls: [ './language-mismatch.component.scss' ],
+  styleUrl: './language-mismatch.component.scss',
 })
 export class LanguageMismatchComponent {
   private localeService = inject(LocaleService);

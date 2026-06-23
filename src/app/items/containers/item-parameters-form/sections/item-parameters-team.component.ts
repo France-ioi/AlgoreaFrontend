@@ -20,7 +20,7 @@ import { ItemEntryMinAdmittedMembersRatio, ItemParametersTeamValue } from 'src/a
 @Component({
   selector: 'alg-item-parameters-team',
   templateUrl: './item-parameters-team.component.html',
-  styleUrls: [ './item-parameters-team.component.scss' ],
+  styleUrl: './item-parameters-team.component.scss',
   imports: [
     ReactiveFormsModule,
     FormErrorComponent,

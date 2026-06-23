@@ -14,7 +14,7 @@ import { managedGroupsPage } from 'src/app/models/routing/group-route';
 @Component({
   selector: 'alg-manage-groups',
   templateUrl: './manage-groups.component.html',
-  styleUrls: [ './manage-groups.component.scss' ],
+  styleUrl: './manage-groups.component.scss',
   imports: [
     AsyncPipe,
     AddGroupComponent,

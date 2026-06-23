@@ -14,7 +14,7 @@ type GroupType = 'Class'|'Team'|'Club'|'Friends'|'Other'|'Session';
 @Component({
   selector: 'alg-add-group',
   templateUrl: 'add-group.component.html',
-  styleUrls: [ 'add-group.component.scss' ],
+  styleUrl: 'add-group.component.scss',
   imports: [ AddContentComponent, SubSectionComponent ]
 })
 export class AddGroupComponent {

@@ -85,7 +85,7 @@ const selectThreadInfo = createSelector(
 @Component({
   selector: 'alg-thread',
   templateUrl: './thread.component.html',
-  styleUrls: [ './thread.component.scss' ],
+  styleUrl: './thread.component.scss',
   imports: [
     ThreadMessageComponent,
     LetDirective,

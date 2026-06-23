@@ -7,7 +7,7 @@ import { LeftHeaderComponent } from 'src/app/containers/left-header/left-header.
 @Component({
   selector: 'alg-top-bar',
   templateUrl: './top-bar.component.html',
-  styleUrls: [ './top-bar.component.scss' ],
+  styleUrl: './top-bar.component.scss',
   imports: [
     LeftHeaderComponent,
     ContentTopBarComponent,

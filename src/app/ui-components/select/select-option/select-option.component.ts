@@ -4,7 +4,7 @@ import { SelectedOptionService, SelectOption } from 'src/app/ui-components/selec
 @Component({
   selector: 'alg-select-option',
   templateUrl: './select-option.component.html',
-  styleUrls: [ './select-option.component.scss' ],
+  styleUrl: './select-option.component.scss',
 })
 export class SelectOptionComponent {
   value = input.required<SelectOption>();

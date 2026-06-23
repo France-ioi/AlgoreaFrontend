@@ -23,7 +23,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
 @Component({
   selector: 'alg-group-join-by-code',
   templateUrl: './group-join-by-code.component.html',
-  styleUrls: [ './group-join-by-code.component.scss' ],
+  styleUrl: './group-join-by-code.component.scss',
   imports: [
     CodeTokenComponent,
     SelectionComponent,

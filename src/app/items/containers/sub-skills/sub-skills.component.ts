@@ -17,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'alg-sub-skills',
   templateUrl: './sub-skills.component.html',
-  styleUrls: [ './sub-skills.component.scss' ],
+  styleUrl: './sub-skills.component.scss',
   imports: [ LoadingComponent, ErrorComponent, ItemChildrenListComponent, AsyncPipe ]
 })
 export class SubSkillsComponent {

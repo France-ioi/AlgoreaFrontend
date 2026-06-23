@@ -24,7 +24,7 @@ import { LocaleService } from 'src/app/services/localeService';
 @Component({
   selector: 'alg-item-children-edit-form',
   templateUrl: './item-children-edit-form.component.html',
-  styleUrls: [ './item-children-edit-form.component.scss' ],
+  styleUrl: './item-children-edit-form.component.scss',
   imports: [
     ItemChildrenEditComponent,
     FloatingSaveComponent,

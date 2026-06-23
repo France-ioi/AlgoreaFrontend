@@ -6,7 +6,7 @@ const tabClickDedupeMs = 400;
 @Component({
   selector: 'alg-left-tab-bar',
   templateUrl: './left-tab-bar.component.html',
-  styleUrls: [ './left-tab-bar.component.scss' ],
+  styleUrl: './left-tab-bar.component.scss',
 })
 export class LeftTabBarComponent {
   tabs = input<LeftMenuTabView[]>([]);

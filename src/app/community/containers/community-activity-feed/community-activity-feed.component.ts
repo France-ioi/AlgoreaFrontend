@@ -24,7 +24,7 @@ const MAX_DISPLAY = 20;
 @Component({
   selector: 'alg-community-activity-feed',
   templateUrl: './community-activity-feed.component.html',
-  styleUrls: [ './community-activity-feed.component.scss' ],
+  styleUrl: './community-activity-feed.component.scss',
   imports: [
     RouterLink,
     LoadingComponent,

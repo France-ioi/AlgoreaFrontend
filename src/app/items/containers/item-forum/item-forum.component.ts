@@ -31,7 +31,7 @@ type SingleThreadInfo =
   selector: 'alg-item-forum',
   host: { class: 'alg-flex-1' },
   templateUrl: './item-forum.component.html',
-  styleUrls: [ './item-forum.component.scss' ],
+  styleUrl: './item-forum.component.scss',
   imports: [
     ThreadTableComponent,
     ForumThreadPlaceholderComponent,

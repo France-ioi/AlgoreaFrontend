@@ -29,7 +29,7 @@ export interface PermissionsEditDialogParams {
 @Component({
   selector: 'alg-permissions-edit-dialog',
   templateUrl: './permissions-edit-dialog.component.html',
-  styleUrls: [ './permissions-edit-dialog.component.scss' ],
+  styleUrl: './permissions-edit-dialog.component.scss',
   imports: [
     ErrorComponent,
     LoadingComponent,

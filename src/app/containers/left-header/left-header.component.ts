@@ -12,7 +12,7 @@ import { PlatformLogoComponent } from 'src/app/ui-components/platform-logo/platf
 @Component({
   selector: 'alg-left-header',
   templateUrl: './left-header.component.html',
-  styleUrls: [ './left-header.component.scss' ],
+  styleUrl: './left-header.component.scss',
   imports: [
     LetDirective,
     NgTemplateOutlet,

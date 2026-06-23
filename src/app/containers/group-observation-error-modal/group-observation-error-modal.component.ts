@@ -5,7 +5,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 @Component({
   selector: 'alg-group-observation-error-modal',
   templateUrl: './group-observation-error-modal.component.html',
-  styleUrls: [ './group-observation-error-modal.component.scss' ],
+  styleUrl: './group-observation-error-modal.component.scss',
   imports: [ NotificationModalComponent ]
 })
 export class GroupObservationErrorModalComponent {

@@ -50,7 +50,7 @@ export const DEFAULT_SCORE_WEIGHT = 1;
 @Component({
   selector: 'alg-item-children-edit',
   templateUrl: './item-children-edit.component.html',
-  styleUrls: [ './item-children-edit.component.scss' ],
+  styleUrl: './item-children-edit.component.scss',
   imports: [ ItemChildrenEditListComponent, LoadingComponent, ErrorComponent, AsyncPipe ]
 })
 export class ItemChildrenEditComponent {

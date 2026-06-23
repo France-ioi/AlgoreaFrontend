@@ -6,7 +6,7 @@ import { NotificationModalComponent } from 'src/app/ui-components/notification-m
 @Component({
   selector: 'alg-fatal-error-modal',
   templateUrl: './fatal-error-modal.component.html',
-  styleUrls: [ './fatal-error-modal.component.scss' ],
+  styleUrl: './fatal-error-modal.component.scss',
   imports: [ ButtonComponent, NotificationModalComponent ]
 })
 export class FatalErrorModalComponent {

@@ -21,7 +21,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 @Component({
   selector: 'alg-managed-group-list',
   templateUrl: './managed-group-list.component.html',
-  styleUrls: [ './managed-group-list.component.scss' ],
+  styleUrl: './managed-group-list.component.scss',
   imports: [
     ErrorComponent,
     RouterLink,

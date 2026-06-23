@@ -11,7 +11,7 @@ import { AvatarCacheService } from '../../../ui-components/user-avatar/avatar-ca
 @Component({
   selector: 'alg-community-page',
   templateUrl: './community-page.component.html',
-  styleUrls: [ './community-page.component.scss' ],
+  styleUrl: './community-page.component.scss',
   imports: [
     CommunityThreadsComponent,
     CommunityActivityFeedComponent,

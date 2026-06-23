@@ -15,7 +15,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
 @Component({
   selector: 'alg-my-groups',
   templateUrl: './my-groups.component.html',
-  styleUrls: [ './my-groups.component.scss' ],
+  styleUrl: './my-groups.component.scss',
   imports: [
     UserGroupInvitationsComponent,
     JoinedGroupListComponent,

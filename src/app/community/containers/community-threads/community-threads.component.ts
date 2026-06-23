@@ -13,7 +13,7 @@ import { RawItemRoute } from '../../../models/routing/item-route';
 @Component({
   selector: 'alg-community-threads',
   templateUrl: './community-threads.component.html',
-  styleUrls: [ './community-threads.component.scss' ],
+  styleUrl: './community-threads.component.scss',
   imports: [
     ThreadTableComponent,
   ],

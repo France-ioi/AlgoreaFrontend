@@ -14,7 +14,7 @@ import { SubSectionComponent } from 'src/app/ui-components/sub-section/sub-secti
 @Component({
   selector: 'alg-add-item',
   templateUrl: './add-item.component.html',
-  styleUrls: [ './add-item.component.scss' ],
+  styleUrl: './add-item.component.scss',
   imports: [ SubSectionComponent, AddContentComponent ]
 })
 export class AddItemComponent {

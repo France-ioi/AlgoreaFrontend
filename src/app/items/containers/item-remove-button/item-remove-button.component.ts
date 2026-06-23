@@ -20,7 +20,7 @@ import { ConfirmationModalService } from 'src/app/services/confirmation-modal.se
 @Component({
   selector: 'alg-item-remove-button',
   templateUrl: './item-remove-button.component.html',
-  styleUrls: [ './item-remove-button.component.scss' ],
+  styleUrl: './item-remove-button.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

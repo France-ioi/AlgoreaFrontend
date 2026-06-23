@@ -17,7 +17,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 @Component({
   selector: 'alg-path-suggestion',
   templateUrl: './path-suggestion.component.html',
-  styleUrls: [ './path-suggestion.component.scss' ],
+  styleUrl: './path-suggestion.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

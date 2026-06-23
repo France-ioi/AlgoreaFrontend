@@ -6,7 +6,7 @@ import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 @Component({
   selector: 'alg-user-header',
   templateUrl: './user-header.component.html',
-  styleUrls: [ './user-header.component.scss' ],
+  styleUrl: './user-header.component.scss',
   imports: [
     UserCaptionPipe,
   ]

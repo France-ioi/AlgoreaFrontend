@@ -18,7 +18,7 @@ import { catchError } from 'rxjs/operators';
 @Component({
   selector: 'alg-thread-container',
   templateUrl: './thread-container.component.html',
-  styleUrls: [ './thread-container.component.scss' ],
+  styleUrl: './thread-container.component.scss',
   imports: [
     RouterLink,
     ThreadComponent,

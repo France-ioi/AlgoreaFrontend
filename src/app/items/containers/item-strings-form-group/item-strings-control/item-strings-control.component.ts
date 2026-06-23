@@ -26,7 +26,7 @@ export interface StringsValue {
 @Component({
   selector: 'alg-item-strings-control',
   templateUrl: './item-strings-control.component.html',
-  styleUrls: [ './item-strings-control.component.scss' ],
+  styleUrl: './item-strings-control.component.scss',
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention -- Angular host CSS class binding
     '[class.pending-deletion]': 'pendingDeletion()',

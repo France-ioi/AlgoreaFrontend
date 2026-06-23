@@ -7,7 +7,7 @@ import { LayoutService } from '../../services/layout.service';
 @Component({
   selector: 'alg-left-panel',
   templateUrl: './left-panel.component.html',
-  styleUrls: [ './left-panel.component.scss' ],
+  styleUrl: './left-panel.component.scss',
   host: {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '[class.tree-compact]': 'compactHeader()',
