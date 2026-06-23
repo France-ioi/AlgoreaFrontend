@@ -1,10 +1,10 @@
-import { Component, OnDestroy, input, output, signal, inject } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { IsTeamActivityPipe } from '../../models/team-activity';
 import { ItemEntryService } from '../../data-access/item-entry.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { Subscription, switchMap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { CanEnterNowPipe, HasAlreadyStatedPipe } from '../../models/item-entry';
 import { ItemRoute } from 'src/app/models/routing/item-route';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -21,9 +21,10 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
   templateUrl: './explicit-entry.component.html',
   styleUrl: './explicit-entry.component.scss',
 })
-export class ExplicitEntryComponent implements OnDestroy {
+export class ExplicitEntryComponent {
   private itemEntryService = inject(ItemEntryService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   itemData = input.required<ItemData>();
   itemRefreshRequired = output();
@@ -36,15 +37,11 @@ export class ExplicitEntryComponent implements OnDestroy {
 
   enterActivityInProgress = signal(false);
 
-  private subscription?: Subscription;
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
   enterActivity(route: ItemRoute): void {
     this.enterActivityInProgress.set(true);
-    this.subscription = this.itemEntryService.enter(route).subscribe({
+    this.itemEntryService.enter(route).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: resp => {
         const message = resp.duration !== null ?
           $localize`You have entered this activity. You have ${resp.duration.toReadable()} left.`:

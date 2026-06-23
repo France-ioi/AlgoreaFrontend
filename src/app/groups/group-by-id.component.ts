@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnDestroy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { APPCONFIG } from 'src/app/config';
 import { groupInfo } from 'src/app/models/content/group-info';
@@ -62,11 +63,16 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
   private state$ = this.store.select(selectGroupData);
 
   // on state change, update current content page info (for breadcrumb)
-  private groupToCurrentContentSubscription = this.state$.pipe(readyData<GroupData>()).subscribe(({ route }) => {
+  private groupToCurrentContentSubscription = this.state$.pipe(
+    readyData<GroupData>(),
+    takeUntilDestroyed(),
+  ).subscribe(({ route }) => {
     this.currentContent.replace(groupInfo({ route }));
   });
 
-  private initialCurrentContentSubscription = this.store.select(fromGroupContent.selectActiveContentFullRoute).subscribe(route => {
+  private initialCurrentContentSubscription = this.store.select(fromGroupContent.selectActiveContentFullRoute).pipe(
+    takeUntilDestroyed(),
+  ).subscribe(route => {
     if (route) {
       // just publish to current content the new route we are navigating to (without knowing any info)
       this.currentContent.replace(groupInfo({
@@ -77,7 +83,9 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
     }
   });
 
-  private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbsState).subscribe(state => {
+  private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbsState).pipe(
+    takeUntilDestroyed(),
+  ).subscribe(state => {
     if (state === null) return; // state is null when there is no path
     if (state.isError) this.currentContent.clear();
 
@@ -101,9 +109,6 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
 
   ngOnDestroy(): void {
     this.currentContent.clear();
-    this.groupToCurrentContentSubscription.unsubscribe();
-    this.breadcrumbsErrorSubscription.unsubscribe();
-    this.initialCurrentContentSubscription.unsubscribe();
   }
 
   isDirty(): boolean {

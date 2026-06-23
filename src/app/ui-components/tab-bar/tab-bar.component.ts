@@ -1,8 +1,9 @@
 import {
-  AfterViewInit, Component, ElementRef,
+  AfterViewInit, Component, DestroyRef, ElementRef,
   input, OnDestroy, inject, signal, viewChild,
 } from '@angular/core';
-import { combineLatest, map, Subscription, Subject, merge, fromEvent } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { combineLatest, map, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
 import { RouterLink } from '@angular/router';
@@ -23,6 +24,7 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   private tabService = inject(TabService);
   private elementRef = inject<ElementRef<HTMLDivElement>>(ElementRef);
+  private destroyRef = inject(DestroyRef);
 
   scrollbarRef = viewChild(NgScrollbar);
   styleClass = input<string>();
@@ -44,8 +46,6 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     this.resizeEvent.next()
   );
 
-  readonly subscriptions = new Subscription();
-
   resize(): void {
     this.handleArrows();
   }
@@ -54,21 +54,17 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     const scrollbar = this.scrollbarRef();
     if (!scrollbar) return;
     this.resizeObserver.observe(this.elementRef.nativeElement);
-    this.subscriptions.add(
-      merge(
-        this.resizeEvent.asObservable(),
-        fromEvent(scrollbar.nativeElement, 'scroll'),
-        this.tabs$,
-      ).pipe(
-        debounceTime(50),
-      ).subscribe(() =>
-        this.handleArrows()
-      )
-    );
+    merge(
+      this.resizeEvent.asObservable(),
+      fromEvent(scrollbar.nativeElement, 'scroll'),
+      this.tabs$,
+    ).pipe(
+      debounceTime(50),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.handleArrows());
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     this.resizeObserver.unobserve(this.elementRef.nativeElement);
     this.resizeEvent.complete();
   }

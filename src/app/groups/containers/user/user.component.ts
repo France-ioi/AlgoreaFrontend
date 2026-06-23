@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { combineLatest, Observable } from 'rxjs';
 import { NavigationEnd, Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { map, startWith, filter, distinctUntilChanged } from 'rxjs/operators';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -42,6 +43,7 @@ export class UserComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private currentContent = inject(CurrentContentService);
   private groupRouter = inject(GroupRouter);
+  private destroyRef = inject(DestroyRef);
 
   userRoute$ = this.store.select(fromGroupContent.selectActiveContentRoute).pipe(filter(isNotNull));
   state$ = this.store.select(fromGroupContent.selectActiveContentUserState);
@@ -56,37 +58,35 @@ export class UserComponent implements OnInit, OnDestroy {
     map(url => this.getCurrentRoute(url)),
   );
 
-  private subscription?: Subscription;
-
   ngOnInit(): void {
-    this.subscription = combineLatest([
+    combineLatest([
       this.userRoute$,
       this.activeRoute$.pipe(map(p => this.pageTitle(p))),
       this.state$,
       this.store.select(fromGroupContent.selectActiveContentBreadcrumbsState),
-    ])
-      .subscribe(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => {
-        this.currentContent.replace(userInfo({
-          route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
-        }));
-        this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
-          route: 'user-by-id',
-          title: state.isReady ? formatUser(state.data) : undefined,
-          breadcrumbs: state.isReady ? [
-            ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({
-              title: b.name,
-              navigateTo: (): void => this.groupRouter.navigateTo(b.route)
-            })),
-            { title: formatUser(state.data), navigateTo: (): void => this.groupRouter.navigateTo(currentUserRoute) },
-            { title: currentPageTitle }
-          ] : undefined
-        }));
-      });
+    ]).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(([ currentUserRoute, currentPageTitle, state, breadcrumbs ]) => {
+      this.currentContent.replace(userInfo({
+        route: isGroupRoute(currentUserRoute) ? currentUserRoute : undefined,
+      }));
+      this.store.dispatch(fromCurrentContent.contentPageActions.changeContent({
+        route: 'user-by-id',
+        title: state.isReady ? formatUser(state.data) : undefined,
+        breadcrumbs: state.isReady ? [
+          ...(breadcrumbs?.data?.slice(0,-1) ?? []).map(b => ({
+            title: b.name,
+            navigateTo: (): void => this.groupRouter.navigateTo(b.route)
+          })),
+          { title: formatUser(state.data), navigateTo: (): void => this.groupRouter.navigateTo(currentUserRoute) },
+          { title: currentPageTitle }
+        ] : undefined
+      }));
+    });
   }
 
   ngOnDestroy(): void {
     this.currentContent.clear();
-    this.subscription?.unsubscribe();
   }
 
   refresh(): void {

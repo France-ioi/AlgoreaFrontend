@@ -1,5 +1,6 @@
 
 import { inject, Injectable, OnDestroy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs';
 import { TabService } from 'src/app/services/tab.service';
 import { TaskTab } from './containers/item-display/item-display.component';
@@ -111,7 +112,9 @@ export class ItemTabs implements OnDestroy {
     distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y)),
   );
 
-  private tabUpdateSubscription = this.tabs$.subscribe(tabs => this.tabService.setTabs(tabs));
+  private tabUpdateSubscription = this.tabs$.pipe(
+    takeUntilDestroyed(),
+  ).subscribe(tabs => this.tabService.setTabs(tabs));
 
   private config = inject(APPCONFIG);
 
@@ -137,7 +140,6 @@ export class ItemTabs implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.tabUpdateSubscription.unsubscribe();
     this.taskTabs$.complete();
     this.editTabEnabled$.complete();
     this.disablePlatformProgressOnTasks$.complete();

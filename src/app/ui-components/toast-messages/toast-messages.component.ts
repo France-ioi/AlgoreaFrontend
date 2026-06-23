@@ -1,8 +1,7 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MessageV2, MessageService } from 'src/app/services/message.service';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alg-toast-messages',
@@ -12,21 +11,16 @@ import { Subscription } from 'rxjs';
     ButtonIconComponent,
   ]
 })
-export class ToastMessagesComponent implements OnInit, OnDestroy {
+export class ToastMessagesComponent {
   private toastService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   messages = toSignal(this.toastService.messages$);
 
-  private subscription?: Subscription;
-
-  ngOnInit(): void {
-    this.subscription = this.toastService.messageCloseEvent$.subscribe(m => {
-      this.toastService.dismiss(m);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+  constructor() {
+    this.toastService.messageCloseEvent$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(m => this.toastService.dismiss(m));
   }
 
   onClose(message: MessageV2): void {

@@ -1,8 +1,9 @@
-import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, filter, map, of, Subscription } from 'rxjs';
+import { catchError, filter, map, of } from 'rxjs';
 import { fromNotification, notificationApiActions, notificationWebsocketActions } from '../../store/notification';
 import { fromForum } from '../../forum/store';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -23,13 +24,13 @@ import { NotificationHttpService } from 'src/app/data-access/notification.servic
   styleUrl: './notification-bell.component.scss',
   imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimeComponent, ToDatePipe ],
 })
-export class NotificationBellComponent implements OnInit, OnDestroy {
+export class NotificationBellComponent {
   private store = inject(Store);
   private actions$ = inject(Actions);
   private messageService = inject(MessageService);
   private getItemByIdService = inject(GetItemByIdService);
   private notificationService = inject(NotificationHttpService);
-  private subscription?: Subscription;
+  private destroyRef = inject(DestroyRef);
 
   private rawState = this.store.selectSignal(fromNotification.selectNotificationsState);
 
@@ -46,10 +47,11 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     }
   });
 
-  ngOnInit(): void {
-    this.subscription = this.actions$.pipe(
+  constructor() {
+    this.actions$.pipe(
       ofType(notificationWebsocketActions.notificationReceived),
       filter(({ notification }) => isForumNewMessageNotification(notification)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(({ notification }) => {
       if (isForumNewMessageNotification(notification)) {
         this.messageService.add({
@@ -60,10 +62,6 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
         });
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
   }
 
   openThread(notification: ForumNewMessageNotification): void {
