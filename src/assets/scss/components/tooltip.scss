@@ -122,3 +122,21 @@
     }
   }
 }
+
+// Overlay panes must not capture pointer events — otherwise the tooltip triggers mouseleave/mouseenter flicker at element borders (especially Firefox).
+// Specificity must beat CDK's `.cdk-overlay-pane { pointer-events: auto }`.
+.cdk-overlay-pane.alg-tooltip-top,
+.cdk-overlay-pane.alg-tooltip-bottom,
+.cdk-overlay-pane.alg-tooltip-left,
+.cdk-overlay-pane.alg-tooltip-right {
+  pointer-events: none;
+}
+
+// Counteract the global `.cdk-overlay-connected-position-bounding-box { margin-bottom: -2rem }` for tooltips only.
+.cdk-overlay-connected-position-bounding-box:has(> .cdk-overlay-pane.alg-tooltip-top),
+.cdk-overlay-connected-position-bounding-box:has(> .cdk-overlay-pane.alg-tooltip-bottom),
+.cdk-overlay-connected-position-bounding-box:has(> .cdk-overlay-pane.alg-tooltip-left),
+.cdk-overlay-connected-position-bounding-box:has(> .cdk-overlay-pane.alg-tooltip-right) {
+  margin-bottom: 0;
+  pointer-events: none;
+}

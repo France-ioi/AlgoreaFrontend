@@ -9,8 +9,8 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ConnectedPosition, Overlay } from '@angular/cdk/overlay';
-import { BehaviorSubject, merge, Subject, combineLatest, EMPTY, fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, fromEvent, merge, Observable, of, Subject, timer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipComponent } from './tooltip.component';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -48,6 +48,8 @@ const rightPosition: ConnectedPosition = {
   overlayY: 'center',
   panelClass: 'alg-tooltip-right',
 };
+
+const tooltipHideDelayMs = 100;
 
 const positions = new Map<TooltipPosition, ConnectedPosition[]>([
   [ 'top', [ topPosition, bottomPosition ] ],
@@ -100,12 +102,12 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
     );
 
     this.tooltipEvent$.pipe(
-      switchMap(event =>
-        merge(
-          fromEvent(this.elementRef.nativeElement, event === 'hover' ? 'mouseenter' : 'focus'),
-          fromEvent(this.elementRef.nativeElement, event === 'hover' ? 'mouseleave' : 'blur').pipe(map(() => undefined)),
-        )
-      ),
+      switchMap(event => (event === 'hover'
+        ? this.hoverShowEvents$()
+        : merge(
+          fromEvent(this.elementRef.nativeElement, 'focus'),
+          fromEvent(this.elementRef.nativeElement, 'blur').pipe(map(() => undefined)),
+        ))),
       takeUntil(this.destroyed$),
     ).subscribe(event => {
       this.showOverlaySubject$.next(event);
@@ -127,6 +129,24 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
     this.detachOverlay();
   }
 
+  private hoverShowEvents$(): Observable<Event | undefined> {
+    const host = this.elementRef.nativeElement;
+    const mouseEnter$ = fromEvent<MouseEvent>(host, 'mouseenter');
+    const mouseLeave$ = fromEvent<MouseEvent>(host, 'mouseleave');
+
+    return mouseEnter$.pipe(
+      switchMap(enterEvent => merge(
+        of(enterEvent),
+        mouseLeave$.pipe(
+          take(1),
+          switchMap(() => timer(tooltipHideDelayMs)),
+          map(() => undefined),
+          takeUntil(mouseEnter$),
+        ),
+      )),
+    );
+  }
+
   private attachOverlay(): void {
     const tooltipContent = this.tooltipContent();
     if (typeof tooltipContent === 'string' && tooltipContent.trim() === '') return;
@@ -142,7 +162,16 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
       }
 
       tooltipRef.instance.styleClass.set(this.tooltipStyleClass());
+      this.makeOverlayNonInteractive();
     }
+  }
+
+  private makeOverlayNonInteractive(): void {
+    // Inline styles beat CDK's `.cdk-overlay-pane { pointer-events: auto }`, which otherwise wins over global CSS.
+    // hostElement is the connected-position bounding box; reset its global negative margin so it does not overlap the trigger.
+    this.overlayRef.hostElement.style.pointerEvents = 'none';
+    this.overlayRef.hostElement.style.marginBottom = '0';
+    this.overlayRef.overlayElement.style.pointerEvents = 'none';
   }
 
   private detachOverlay(): void {
