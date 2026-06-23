@@ -1,4 +1,5 @@
-import { Component, forwardRef, Injector, input, OnDestroy, OnInit, signal, inject } from '@angular/core';
+import { Component, DestroyRef, forwardRef, Injector, input, OnDestroy, OnInit, signal, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -14,7 +15,6 @@ import {
 } from '@angular/forms';
 import { FormErrorComponent } from '../form-error/form-error.component';
 import { convertDateToString, convertStringToDate } from 'src/app/utils/input-date';
-import { Subscription } from 'rxjs';
 import { MaskDirective } from '../mask/mask.directive';
 
 @Component({
@@ -41,12 +41,12 @@ import { MaskDirective } from '../mask/mask.directive';
 })
 export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccessor {
   private injector = inject(Injector);
+  private destroyRef = inject(DestroyRef);
 
   minDate = input<Date>();
 
   displayValue = '';
   control?: FormControl<Date | null>;
-  subscription?: Subscription;
   mask = signal('99/99/9999 99:99');
 
   ngOnInit(): void {
@@ -56,7 +56,9 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
     } else if (injectedControl instanceof NgModel) {
       this.control = injectedControl.control;
 
-      this.subscription = injectedControl.control.valueChanges.subscribe(value => {
+      injectedControl.control.valueChanges.pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe(value => {
         if (injectedControl.model !== value || injectedControl.viewModel !== value) {
           injectedControl.viewToModelUpdate(value);
         }
@@ -67,7 +69,6 @@ export class InputDateComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
     setTimeout(() => {
       this.control?.clearValidators();
       this.control?.updateValueAndValidity();

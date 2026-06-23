@@ -1,5 +1,5 @@
-import { Component, inject, Injector, input, OnDestroy, output, signal, viewChild } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, Injector, input, output, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
@@ -53,7 +53,7 @@ const TREE_TAB_TYPES: LeftMenuTabType[] = [ 'activities', 'skills', 'groups' ];
     CommunityStatsComponent,
   ],
 })
-export class LeftTabbedContentComponent implements OnDestroy {
+export class LeftTabbedContentComponent {
   private store = inject(Store);
   private currentContentService = inject(CurrentContentService);
   private injector = inject(Injector);
@@ -114,7 +114,13 @@ export class LeftTabbedContentComponent implements OnDestroy {
   private currentContentSig = toSignal(this.currentContentService.content$, { initialValue: null });
 
   private selectedElement$ = new Subject<void>();
-  private scrollSubscription = this.selectedElement$.pipe(debounceTime(250)).subscribe(() => this.scrollToContent());
+
+  constructor() {
+    this.selectedElement$.pipe(
+      debounceTime(250),
+      takeUntilDestroyed(),
+    ).subscribe(() => this.scrollToContent());
+  }
 
   toggleSearch(): void {
     if (this.searchActive()) {
@@ -216,9 +222,5 @@ export class LeftTabbedContentComponent implements OnDestroy {
     if (overflowsBottom || aboveTop) {
       void scrollbarDirectiveRef.scrollToElement(SELECTED_NAV_NODE_SELECTOR);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.scrollSubscription.unsubscribe();
   }
 }

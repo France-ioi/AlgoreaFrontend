@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, viewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, OnDestroy, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
-import { delay, combineLatest, of, switchMap, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { delay, combineLatest, of, switchMap, Observable, BehaviorSubject } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -27,7 +28,6 @@ import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { AsyncPipe } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
-import { inject } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromWebsocket } from 'src/app/store/websocket';
@@ -113,6 +113,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   private threadMessageService = inject(ThreadMessageService);
   private fb = inject(FormBuilder);
   private config = inject(APPCONFIG);
+  private destroyRef = inject(DestroyRef);
   messagesScroll = viewChild<ElementRef<HTMLDivElement>>('messagesScroll');
   messageToSendEl = viewChild<ElementRef<HTMLTextAreaElement>>('messageToSendEl');
 
@@ -123,7 +124,6 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   });
   disableControls$ = new BehaviorSubject<boolean>(false);
 
-  readonly subscriptions = new Subscription();
   private readonly isPageUnloading = signal(false);
 
   // Select individual event sources
@@ -323,36 +323,35 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.subscriptions.add(
-      this.state$.pipe(
-        readyData(),
-        filter(events => events.length > 0),
-        delay(0),
-      ).subscribe(() => this.scrollDown())
-    );
+    this.state$.pipe(
+      readyData(),
+      filter(events => events.length > 0),
+      delay(0),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.scrollDown());
 
-    this.subscriptions.add(
-      combineLatest([
-        this.threadStatus$.pipe(delay(0)),
-        this.disableControls$,
-      ]).subscribe(([ status, disableControls ]) => {
-        if (status?.data && (status.data.open || status.data.canOpen) && !disableControls) {
-          this.form.get('messageToSend')?.enable();
-          this.focusOnInput();
-        } else {
-          this.form.get('messageToSend')?.disable();
-        }
-      })
-    );
-    this.subscriptions.add(
-      this.isThreadStatusOpened$.pipe(delay(0), filter(isThreadStatusOpened => isThreadStatusOpened)).subscribe(() =>
-        this.messageToSendEl()?.nativeElement.focus()
-      )
-    );
+    combineLatest([
+      this.threadStatus$.pipe(delay(0)),
+      this.disableControls$,
+    ]).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(([ status, disableControls ]) => {
+      if (status?.data && (status.data.open || status.data.canOpen) && !disableControls) {
+        this.form.get('messageToSend')?.enable();
+        this.focusOnInput();
+      } else {
+        this.form.get('messageToSend')?.disable();
+      }
+    });
+
+    this.isThreadStatusOpened$.pipe(
+      delay(0),
+      filter(isThreadStatusOpened => isThreadStatusOpened),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.messageToSendEl()?.nativeElement.focus());
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 

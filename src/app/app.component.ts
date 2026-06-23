@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSessionService } from './services/user-session.service';
 import { delay, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { combineLatest, merge, of, Subscription } from 'rxjs';
+import { combineLatest, merge, of } from 'rxjs';
 import { AuthService } from './services/auth/auth.service';
 import { Router, RouterOutlet } from '@angular/router';
 import { LocaleService } from './services/localeService';
 import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { APPCONFIG } from './config';
-import { inject } from '@angular/core';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
 import { version } from 'src/version';
 import { CrashReportingService } from './services/crash-reporting.service';
@@ -52,8 +52,9 @@ import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toa
     ToastMessagesComponent,
   ]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   private store = inject(Store);
+  private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private sessionService = inject(UserSessionService);
   private authService = inject(AuthService);
@@ -101,8 +102,6 @@ export class AppComponent implements OnInit, OnDestroy {
   isObserving$ = this.store.select(fromObservation.selectIsObserving);
   groupObservationError$ = this.store.select(fromObservation.selectObservationError);
 
-  private readonly subscriptions = new Subscription();
-
   constructor() {
     const title = this.localeService.currentLang ? this.config.languageSpecificTitles[this.localeService.currentLang.tag] : undefined;
     this.titleService.setTitle(title ?? this.config.defaultTitle);
@@ -119,29 +118,26 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // if user changes, navigate back to the root
-    this.subscriptions.add(
-      this.sessionService.userChanged$.pipe(
-        switchMap(() => this.router.navigateByUrl('/')),
-      ).subscribe(),
-    );
-    this.subscriptions.add(
-      this.fatalError$.pipe(take(1)).subscribe(error =>
-        this.dialogService.open(FatalErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined })
-      ),
-    );
-    this.subscriptions.add(
-      this.groupObservationError$.pipe(
-        filter(isNotNullOrUndefined),
-        take(1),
-        switchMap(error =>
-          this.dialogService.open(GroupObservationErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined }).closed
-        ),
-      ).subscribe(() => this.onCloseObservationErrorDialog()),
-    );
-  }
+    this.sessionService.userChanged$.pipe(
+      switchMap(() => this.router.navigateByUrl('/')),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.fatalError$.pipe(
+      take(1),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(error =>
+      this.dialogService.open(FatalErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined })
+    );
+
+    this.groupObservationError$.pipe(
+      filter(isNotNullOrUndefined),
+      take(1),
+      switchMap(error =>
+        this.dialogService.open(GroupObservationErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined }).closed
+      ),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.onCloseObservationErrorDialog());
   }
 
   onScrollContent(scrollEl: HTMLElement): void {

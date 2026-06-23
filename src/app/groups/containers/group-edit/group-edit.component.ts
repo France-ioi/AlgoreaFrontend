@@ -1,7 +1,8 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { readyData } from 'src/app/utils/operators/state';
-import { of, Subscription, combineLatest, switchMap, EMPTY } from 'rxjs';
+import { of, combineLatest, switchMap, EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CreateItemService } from 'src/app/data-access/create-item.service';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
@@ -102,11 +103,12 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
 
   state$ = this.store.select(fromGroupContent.selectActiveContentGroupState);
 
-  subscription?: Subscription;
-
   constructor() {
-    this.subscription = this.state$
-      .pipe(readyData<Group, { id: string }>())
+    this.state$
+      .pipe(
+        readyData<Group, { id: string }>(),
+        takeUntilDestroyed(),
+      )
       .subscribe(item => {
         this.initialFormData = item;
         this.resetFormWith(item);
@@ -121,7 +123,6 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
     this.pendingChangesService.clear();
   }
 
