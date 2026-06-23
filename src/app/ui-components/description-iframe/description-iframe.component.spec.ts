@@ -68,6 +68,22 @@ describe('DescriptionIframeComponent', () => {
     expect(srcdoc).toMatch(/\.full-width\s*\{[^}]*max-width:\s*100%\s*!important/);
   });
 
+  it('should add edge-to-edge host class when the author marks the HTML', () => {
+    fixture.componentRef.setInput('content', '<div data-alg-layout="edge-to-edge"><p>Hi</p></div>');
+    fixture.detectChanges();
+
+    const host = fixture.debugElement.nativeElement as HTMLElement;
+    expect(host.classList.contains('edge-to-edge')).toBeTrue();
+  });
+
+  it('should not add edge-to-edge host class by default', () => {
+    fixture.componentRef.setInput('content', '<p>Hi</p>');
+    fixture.detectChanges();
+
+    const host = fixture.debugElement.nativeElement as HTMLElement;
+    expect(host.classList.contains('edge-to-edge')).toBeFalse();
+  });
+
   it('should mirror document lang on the inner html element', () => {
     fixture.componentRef.setInput('content', 'x');
     fixture.detectChanges();

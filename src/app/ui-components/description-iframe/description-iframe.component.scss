@@ -5,6 +5,14 @@
   margin: 0 0 var(--alg-space-size-4) 0;
 }
 
+/* Author opt-in via `data-alg-layout="edge-to-edge"` — cancels ancestor insets set on the host chain. */
+:host(.edge-to-edge) {
+  margin-top: calc(-1 * var(--alg-description-page-inset-top, 0px));
+  margin-right: calc(-1 * var(--alg-description-page-inset, var(--alg-space-size-2)));
+  margin-bottom: calc(-1 * var(--alg-description-page-inset-bottom, var(--alg-space-size-4)));
+  margin-left: calc(-1 * var(--alg-description-page-inset, var(--alg-space-size-2)));
+}
+
 iframe {
   width: 100%;
   border: 0;

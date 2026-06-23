@@ -51,11 +51,32 @@
   <section>
     <h3 class="alg-h3 alg-text-normal section-title" i18n>Using the full available width</h3>
     <p i18n>
-      To keep long lines readable, paragraphs, headings, lists, quotes and code blocks are capped at a default
-      reading width (about 920px). Tables and images already use the full width.
+      Descriptions sit inside a sandboxed iframe that is inset from the page edges by default (the same horizontal
+      padding as the rest of the content area). Inside the iframe, paragraphs, headings, lists, quotes and code blocks
+      are further capped at a default reading width (about 920px). Tables and images already use the full iframe
+      width.
     </p>
+    <h4 class="alg-text-normal sub-title" i18n>Edge-to-edge on the page</h4>
     <p i18n>
-      To opt a specific element out of the cap, add the <code>full-width</code> class on it:
+      To cancel the outer page inset and span the full white content panel, wrap the description (or put the marker on
+      any root element) with <code>data-alg-layout="edge-to-edge"</code>. This removes the default horizontal padding
+      of the content area, the top padding under the header (or tab bar when the header is hidden), and the spacing
+      below the description block:
+    </p>
+    <pre><code>&lt;div data-alg-layout="edge-to-edge"&gt;
+  &lt;style&gt;…&lt;/style&gt;
+  &lt;h2&gt;Full-bleed banner&lt;/h2&gt;
+  …
+&lt;/div&gt;</code></pre>
+    <p i18n>
+      The shorthand boolean attribute <code>data-alg-edge-to-edge</code> on any element has the same effect. Without
+      either marker, the default padded layout is kept. Insets cancelled by the breakout depend on the surrounding
+      panel (the content page uses <code>--alg-space-size-2</code> horizontally and <code>--alg-space-size-4</code>
+      vertically; the Parameters preview panel uses <code>--alg-space-size-5</code> on every side).
+    </p>
+    <h4 class="alg-text-normal sub-title" i18n>Full width inside the iframe</h4>
+    <p i18n>
+      To opt a specific element out of the reading-width cap, add the <code>full-width</code> class on it:
     </p>
     <pre><code>&lt;p class="full-width"&gt;This paragraph spans the whole iframe width.&lt;/p&gt;
 &lt;pre class="full-width"&gt;&lt;code&gt;// wide code block&lt;/code&gt;&lt;/pre&gt;</code></pre>
@@ -64,7 +85,7 @@
       block (your styles are loaded after the defaults, so they win):
     </p>
     <pre><code>&lt;style&gt;
-  :root &#123; --description-reading-max-width: 100%; &#125;
+  :root &#123; --description-reading-max-width: none; &#125;
 &lt;/style&gt;</code></pre>
   </section>
 

@@ -13,11 +13,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { fromEvent } from 'rxjs';
-import { containsHtmlElement } from 'src/app/utils/html';
 import {
   DescriptionIframeNavigationRequest,
   iframeMessageSchema,
 } from './description-iframe.messages';
+import { parseDescriptionContent } from './description-iframe.content';
 import { descriptionIframeRuntimeJs } from './description-iframe.runtime';
 import { descriptionBaseCss, buildParentCssVarOverrides } from './description-iframe.styles';
 
@@ -30,23 +30,14 @@ function escapeHtmlAttributeValue(value: string): string {
     .replace(/>/g, '&gt;');
 }
 
-function escapePlainDescriptionText(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-function buildDescriptionBodyHtml(raw: string): string {
-  if (raw.trim() === '') return '';
-  if (containsHtmlElement(raw)) return raw;
-  return `<p>${escapePlainDescriptionText(raw)}</p>`;
-}
-
 @Component({
   selector: 'alg-description-iframe',
   templateUrl: './description-iframe.component.html',
   styleUrls: [ './description-iframe.component.scss' ],
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- Angular host CSS class binding
+    '[class.edge-to-edge]': 'edgeToEdge()',
+  },
 })
 export class DescriptionIframeComponent {
   private readonly document = inject(DOCUMENT);
@@ -105,9 +96,13 @@ export class DescriptionIframeComponent {
 
   readonly resolvedTitle = computed((): string => this.title() ?? this.fallbackTitle);
 
+  private readonly parsedContent = computed(() => parseDescriptionContent(this.content() ?? ''));
+
+  /** When true, negative host margins cancel ancestor padding (author opt-in). */
+  readonly edgeToEdge = computed((): boolean => this.parsedContent().edgeToEdge);
+
   readonly srcdoc = computed((): SafeHtml => {
-    const raw = this.content() ?? '';
-    const bodyInner = buildDescriptionBodyHtml(raw);
+    const bodyInner = this.parsedContent().bodyHtml;
     const langAttr = escapeHtmlAttributeValue(this.iframeLang);
     const srcdocHtml = `<!doctype html>
 <html lang="${langAttr}">
