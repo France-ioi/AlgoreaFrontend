@@ -96,6 +96,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
       thumbnailUrl: [ '', Validators.maxLength(2000) ],
       disableChildrenPrevNextNav: [ false ],
       hideHeader: [ false ],
+      showPlatformInsteadOfScore: [ false ],
       leftNavIcon: [ '' ],
     }),
     participation: this.fb.nonNullable.control<ItemParametersParticipationValue>({
@@ -179,6 +180,7 @@ export class ItemParametersFormComponent implements ControlValueAccessor, Valida
         thumbnailUrl: v.thumbnailUrl,
         disableChildrenPrevNextNav: v.disableChildrenPrevNextNav,
         hideHeader: v.hideHeader,
+        showPlatformInsteadOfScore: v.showPlatformInsteadOfScore,
         leftNavIcon: v.leftNavIcon,
       },
       participation: {

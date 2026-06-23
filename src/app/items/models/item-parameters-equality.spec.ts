@@ -14,6 +14,7 @@ function buildParameters(overrides: Partial<ItemParametersValue> = {}): ItemPara
     thumbnailUrl: '',
     disableChildrenPrevNextNav: false,
     hideHeader: false,
+    showPlatformInsteadOfScore: false,
     leftNavIcon: '',
     allowsMultipleAttempts: false,
     requiresExplicitEntry: false,

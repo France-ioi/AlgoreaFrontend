@@ -8,6 +8,7 @@ export const displaySettingsSchema = z.object({
   thumbnailUrl: z.string().nullable().default(null),
   disableChildrenPrevNextNav: z.boolean().default(false),
   hideHeader: z.boolean().default(false),
+  showPlatformInsteadOfScore: z.boolean().default(false),
   leftNavIcon: z.string().nullable().default(null),
 });
 

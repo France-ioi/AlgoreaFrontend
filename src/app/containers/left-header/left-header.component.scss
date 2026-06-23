@@ -65,31 +65,5 @@
   &.for-mobile {
     justify-content: flex-end;
     flex-direction: row-reverse;
-
-    .link {
-      margin-left: functions.toRem(14);
-    }
-
-    .logo {
-      max-height: functions.toRem(32);
-    }
   }
-}
-
-.link {
-  display: inline-flex;
-  align-items: center;
-  margin-right: functions.toRem(14);
-}
-
-.platform-name {
-  color: var(--alg-primary-color);
-  text-transform: uppercase;
-  text-decoration: none;
-  font-size: functions.toRem(16);
-}
-
-.logo {
-  max-width: 80%;
-  max-height: functions.toRem(38);
 }

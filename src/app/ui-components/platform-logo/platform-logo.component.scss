@@ -1,0 +1,27 @@
+@use 'src/assets/scss/functions';
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  margin-right: functions.toRem(14);
+}
+
+.platform-name {
+  color: var(--alg-primary-color, #0F61FF);
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: functions.toRem(16);
+}
+
+.logo {
+  max-width: 80%;
+  max-height: functions.toRem(38);
+}
+
+:host.for-mobile {
+  margin-left: functions.toRem(14);
+
+  .logo {
+    max-height: functions.toRem(32);
+  }
+}

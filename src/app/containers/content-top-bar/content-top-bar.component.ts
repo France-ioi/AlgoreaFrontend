@@ -21,6 +21,7 @@ import { isGroupRoute } from 'src/app/models/routing/group-route';
 import { isItemRoute } from 'src/app/models/routing/item-route';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { PlatformLogoComponent } from 'src/app/ui-components/platform-logo/platform-logo.component';
 
 @Component({
   selector: 'alg-content-top-bar',
@@ -37,6 +38,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     AsyncPipe,
     ButtonIconComponent,
     TooltipDirective,
+    PlatformLogoComponent,
   ]
 })
 export class ContentTopBarComponent {
@@ -56,6 +58,8 @@ export class ContentTopBarComponent {
   activeItemNoScore = this.store.selectSignal(selectActiveItemNoScore);
   isItemMetadataLoading = computed(() => this.isItemContentActive() && this.activeItemNoScore() === undefined);
   displayScoreSection = computed(() => this.activeItemNoScore() === false);
+  activeItemShowPlatform = this.store.selectSignal(fromItemContent.selectActiveContentShowPlatformInsteadOfScore);
+  showPlatformLogo = computed(() => this.showLeftMenuOpener() && this.activeItemShowPlatform());
   isTitleSectionReady = computed(() => !this.isItemMetadataLoading());
 
   navigationNeighbors$ = this.store.select(fromCurrentContent.selectContentRoute).pipe(

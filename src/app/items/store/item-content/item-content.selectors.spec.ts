@@ -8,7 +8,7 @@ import { selectors } from './item-content.selectors';
 
 const testSelectors = selectors<{ itemContent: State }>(state => state.itemContent);
 
-function makeItem(hideHeader: boolean): Item {
+function makeItem(displayOverrides: { hideHeader?: boolean, showPlatformInsteadOfScore?: boolean } = {}): Item {
   return {
     id: '1',
     requiresExplicitEntry: false,
@@ -23,7 +23,7 @@ function makeItem(hideHeader: boolean): Item {
       canRequestHelp: false,
     },
     type: 'Chapter',
-    displaySettings: displaySettingsSchema.parse({ hideHeader }),
+    displaySettings: displaySettingsSchema.parse(displayOverrides),
     textId: null,
     validationType: 'None',
     noScore: false,
@@ -44,14 +44,32 @@ function makeItem(hideHeader: boolean): Item {
 
 describe('selectActiveContentHideHeader', () => {
   it('returns true when the active item has hideHeader enabled', () => {
-    expect(testSelectors.selectActiveContentHideHeader.projector(makeItem(true))).toBe(true);
+    expect(testSelectors.selectActiveContentHideHeader.projector(makeItem({ hideHeader: true }))).toBe(true);
   });
 
   it('returns false when the active item has hideHeader disabled', () => {
-    expect(testSelectors.selectActiveContentHideHeader.projector(makeItem(false))).toBe(false);
+    expect(testSelectors.selectActiveContentHideHeader.projector(makeItem({ hideHeader: false }))).toBe(false);
   });
 
   it('returns false when there is no active item', () => {
     expect(testSelectors.selectActiveContentHideHeader.projector(null)).toBe(false);
+  });
+});
+
+describe('selectActiveContentShowPlatformInsteadOfScore', () => {
+  it('returns true when the active item has showPlatformInsteadOfScore enabled', () => {
+    expect(testSelectors.selectActiveContentShowPlatformInsteadOfScore.projector(
+      makeItem({ showPlatformInsteadOfScore: true }),
+    )).toBe(true);
+  });
+
+  it('returns false when the active item has showPlatformInsteadOfScore disabled', () => {
+    expect(testSelectors.selectActiveContentShowPlatformInsteadOfScore.projector(
+      makeItem({ showPlatformInsteadOfScore: false }),
+    )).toBe(false);
+  });
+
+  it('returns false when there is no active item', () => {
+    expect(testSelectors.selectActiveContentShowPlatformInsteadOfScore.projector(null)).toBe(false);
   });
 });
