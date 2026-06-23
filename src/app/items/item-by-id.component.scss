@@ -54,15 +54,19 @@
 
 .content-container {
   padding-top: var(--alg-space-size-4);
+  --alg-description-page-inset-top: var(--alg-space-size-4);
+  --alg-description-page-inset-bottom: var(--alg-space-size-4);
   flex: 1;
   display: flex;
   flex-direction: column;
   &.no-top-padding {
     padding-top: 0;
+    --alg-description-page-inset-top: 0px;
   }
   &.side-padding {
     padding-right: var(--alg-space-size-2);
     padding-left: var(--alg-space-size-2);
+    --alg-description-page-inset: calc(var(--alg-description-page-inset, 0px) + var(--alg-space-size-2));
   }
 }
 

@@ -4,6 +4,9 @@
   display: flex;
   flex-direction: column;
   padding: var(--alg-space-size-5);
+  --alg-description-page-inset: var(--alg-space-size-5);
+  --alg-description-page-inset-top: var(--alg-space-size-5);
+  --alg-description-page-inset-bottom: var(--alg-space-size-5);
   min-height: functions.toRem(97);
   border: functions.toRem(1) solid var(--alg-light-color);
   border-radius: var(--border-radius);

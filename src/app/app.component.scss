@@ -128,9 +128,11 @@
 
   &:not(.full-frame) {
     padding: 0 var(--alg-space-size-2);
+    --alg-description-page-inset: var(--alg-space-size-2);
   }
 
   &.full-frame {
+    --alg-description-page-inset: 0px;
     .main-content-bottom-padding {
       padding-bottom: 0;
     }

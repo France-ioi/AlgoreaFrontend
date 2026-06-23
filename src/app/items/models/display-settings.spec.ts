@@ -7,6 +7,7 @@ describe('displaySettingsSchema', () => {
       promptToJoinGroupByCode: false,
       thumbnailUrl: null,
       disableChildrenPrevNextNav: false,
+      hideHeader: false,
       leftNavIcon: null,
     });
   });
@@ -17,6 +18,7 @@ describe('displaySettingsSchema', () => {
       promptToJoinGroupByCode: false,
       thumbnailUrl: null,
       disableChildrenPrevNextNav: false,
+      hideHeader: false,
       leftNavIcon: null,
     });
   });
@@ -32,6 +34,7 @@ describe('buildDisplaySettingsBody', () => {
       prompt_to_join_group_by_code: false,
       thumbnail_url: null,
       disable_children_prev_next_nav: false,
+      hide_header: false,
       left_nav_icon: null,
     });
   });

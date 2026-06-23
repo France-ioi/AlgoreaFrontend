@@ -31,6 +31,7 @@
       fullFrameContentDisplayed: fullFrameContentDisplayed$,
       shouldDisplayTabBar: shouldDisplayTabBar$,
       isNarrowScreen: isNarrowScreen$,
+      hideHeader: hideHeader$,
     } as behaviourInfo">
       @if (!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) {
         <div class="left-pane-title margin-right">
@@ -42,7 +43,8 @@
           }
         </div>
       }
-      @if (behaviourInfo.shouldDisplayTabBar && behaviourInfo.fullFrameContentDisplayed) {
+      <!-- Tab bar in top bar: mirror of item-by-id tab bar; keep conditions mutually exclusive. -->
+      @if (behaviourInfo.shouldDisplayTabBar && (behaviourInfo.fullFrameContentDisplayed || behaviourInfo.hideHeader)) {
         <alg-tab-bar class="tab-bar"
           styleClass="for-header"
          />

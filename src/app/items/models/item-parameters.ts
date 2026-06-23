@@ -33,6 +33,7 @@ export interface ItemParametersDisplayValue {
   childrenLayout: ItemChildrenLayout,
   thumbnailUrl: string,
   disableChildrenPrevNextNav: boolean,
+  hideHeader: boolean,
   leftNavIcon: string,
 }
 
@@ -149,6 +150,7 @@ export function itemToParametersValue(item: Item): ItemParametersValue {
     childrenLayout: item.displaySettings.childrenLayout,
     thumbnailUrl: item.displaySettings.thumbnailUrl ?? '',
     disableChildrenPrevNextNav: item.displaySettings.disableChildrenPrevNextNav,
+    hideHeader: item.displaySettings.hideHeader,
     leftNavIcon: item.displaySettings.leftNavIcon ?? '',
     allowsMultipleAttempts: item.allowsMultipleAttempts,
     requiresExplicitEntry: item.requiresExplicitEntry,
@@ -187,7 +189,7 @@ export function buildItemParametersChanges(
   sections: ItemParametersSections,
   initialDisplaySettings: Pick<
     DisplaySettings,
-    'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl' | 'disableChildrenPrevNextNav' | 'leftNavIcon'
+    'childrenLayout' | 'promptToJoinGroupByCode' | 'thumbnailUrl' | 'disableChildrenPrevNextNav' | 'hideHeader' | 'leftNavIcon'
   >,
 ): ItemChanges {
   const changes: ItemChanges = {};
@@ -218,6 +220,7 @@ export function buildItemParametersChanges(
       || current.childrenLayout !== initial.childrenLayout
       || thumbnailUrl !== initialThumbnailUrl
       || current.disableChildrenPrevNextNav !== initial.disableChildrenPrevNextNav
+      || current.hideHeader !== initial.hideHeader
       || leftNavIcon !== initialLeftNavIcon;
     if (hasDisplaySettingsChanges) {
       changes.display_settings = buildDisplaySettingsBody({
@@ -226,6 +229,7 @@ export function buildItemParametersChanges(
         promptToJoinGroupByCode: current.promptToJoinGroupByCode,
         thumbnailUrl,
         disableChildrenPrevNextNav: current.disableChildrenPrevNextNav,
+        hideHeader: current.hideHeader,
         leftNavIcon,
       });
     }
