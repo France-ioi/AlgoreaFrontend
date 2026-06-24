@@ -8,7 +8,6 @@ import { isActivityInfo, isItemInfo, itemInfo, ItemInfo } from 'src/app/models/c
 import { itemRoute, isItemRoute, isFullItemRoute, isRouteWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { mayHaveChildren } from 'src/app/items/models/item-type';
 import { ItemRouter } from 'src/app/models/routing/item-router';
-import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '../../data-access/item-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
@@ -27,14 +26,14 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
 
   protected override disablePrevNextNavAmongRoots = true;
 
-  constructor(
-    private category: ItemTypeCategory,
-    currentContent: CurrentContentService,
-    private itemNavService: ItemNavigationService,
-    private itemRouter: ItemRouter,
-    private store: Store,
-  ) {
-    super(currentContent);
+  protected abstract readonly category: ItemTypeCategory;
+
+  private readonly itemNavService = inject(ItemNavigationService);
+  private readonly itemRouter = inject(ItemRouter);
+  private readonly store = inject(Store);
+
+  constructor() {
+    super();
     /* reload the item menus when observed group changes */
     this.store.select(fromObservation.selectObservedGroupId).pipe(
       skip(1),
@@ -175,14 +174,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   providedIn: 'root'
 })
 export class ActivityNavTreeService extends ItemNavTreeService {
-  constructor() {
-    const currentContent = inject(CurrentContentService);
-    const itemNavService = inject(ItemNavigationService);
-    const itemRouter = inject(ItemRouter);
-    const store = inject<Store>(Store);
-
-    super('activity', currentContent, itemNavService, itemRouter, store);
-  }
+  protected override readonly category = c.activity;
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {
     return isItemInfo(content) && isActivityInfo(content);
@@ -193,14 +185,7 @@ export class ActivityNavTreeService extends ItemNavTreeService {
   providedIn: 'root'
 })
 export class SkillNavTreeService extends ItemNavTreeService {
-  constructor() {
-    const currentContent = inject(CurrentContentService);
-    const itemNavService = inject(ItemNavigationService);
-    const itemRouter = inject(ItemRouter);
-    const store = inject<Store>(Store);
-
-    super('skill', currentContent, itemNavService, itemRouter, store);
-  }
+  protected override readonly category = c.skill;
 
   isOfContentType(content: ContentInfo|null): content is ItemInfo {
     return isItemInfo(content) && !isActivityInfo(content);

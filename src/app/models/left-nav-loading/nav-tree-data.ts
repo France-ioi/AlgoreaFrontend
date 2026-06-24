@@ -40,14 +40,24 @@ export interface NavTreeElement {
  */
 export class NavTreeData {
 
+  readonly elements: NavTreeElement[]; // level 1 elements (which may have children)
+  readonly pathToElements: EntityPathRoute['path']; // path from root to the elements (so including the parent if any)
+  readonly parent?: NavTreeElement; // level 0 element
+  // The full route (id + path) of the selected element. Storing the path matters because the same id can legitimately appear
+  // at two different paths (e.g. an item shown both as a sibling and as a child of the same chapter): id alone would match both.
+  readonly selectedElementRoute?: EntityPathRoute;
+
   constructor(
-    public readonly elements: NavTreeElement[], // level 1 elements (which may have children)
-    public readonly pathToElements: EntityPathRoute['path'], // path from root to the elements (so including the parent if any)
-    public readonly parent?: NavTreeElement, // level 0 element
-    // The full route (id + path) of the selected element. Storing the path matters because the same id can legitimately appear
-    // at two different paths (e.g. an item shown both as a sibling and as a child of the same chapter): id alone would match both.
-    public readonly selectedElementRoute?: EntityPathRoute,
-  ) {}
+    elements: NavTreeElement[],
+    pathToElements: EntityPathRoute['path'],
+    parent?: NavTreeElement,
+    selectedElementRoute?: EntityPathRoute,
+  ) {
+    this.elements = elements;
+    this.pathToElements = pathToElements;
+    this.parent = parent;
+    this.selectedElementRoute = selectedElementRoute;
+  }
 
   /**
    * Return this with selected element changed

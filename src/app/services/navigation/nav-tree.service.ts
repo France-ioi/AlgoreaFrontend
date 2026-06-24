@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { combineLatest, defer, merge, Observable, of, Subject } from 'rxjs';
 import { delay, distinctUntilChanged, map, switchMap, shareReplay, scan, debounceTime } from 'rxjs/operators';
 import { arraysEqual } from 'src/app/utils/array';
@@ -16,6 +17,8 @@ interface FetchInfo {
 }
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
+
+  protected readonly currentContent = inject(CurrentContentService);
 
   private reloadTrigger = new Subject<void>();
   private reload$ = merge(
@@ -156,8 +159,6 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       ),
     ),
   );
-
-  constructor(private currentContent: CurrentContentService) {}
 
   /**
    * Return whether the given content info has the type expected in the nav tree
