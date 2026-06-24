@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   ComponentRef,
+  DestroyRef,
   Directive,
   ElementRef,
   inject,
@@ -9,11 +10,11 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ConnectedPosition, Overlay } from '@angular/cdk/overlay';
-import { BehaviorSubject, combineLatest, EMPTY, fromEvent, merge, Observable, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, fromEvent, merge, Observable, of, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, shareReplay, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipComponent } from './tooltip.component';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 export type TooltipPosition = 'top' | 'bottom' | 'right' | 'left';
 
@@ -64,6 +65,7 @@ const positions = new Map<TooltipPosition, ConnectedPosition[]>([
 export class TooltipDirective implements AfterViewInit, OnDestroy {
   private overlay = inject(Overlay);
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private destroyRef = inject(DestroyRef);
 
   tooltipContent = input.required<string | TemplateRef<HTMLElement>>({ alias: 'algTooltip' });
   tooltipDelay = input<number>();
@@ -78,7 +80,6 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
     scrollStrategy: this.overlay.scrollStrategies.close(),
   });
 
-  readonly destroyed$ = new Subject<void>();
   private readonly showOverlaySubject$ = new BehaviorSubject<Event|undefined>(undefined);
   private showOverlay$ = combineLatest([
     toObservable(this.tooltipDisabled),
@@ -108,12 +109,12 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
           fromEvent(this.elementRef.nativeElement, 'focus'),
           fromEvent(this.elementRef.nativeElement, 'blur').pipe(map(() => undefined)),
         ))),
-      takeUntil(this.destroyed$),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(event => {
       this.showOverlaySubject$.next(event);
     });
 
-    this.showOverlay$.pipe(takeUntil(this.destroyed$)).subscribe(event => {
+    this.showOverlay$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
       if (event) {
         this.attachOverlay();
       } else {
@@ -124,8 +125,6 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.showOverlaySubject$.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.detachOverlay();
   }
 

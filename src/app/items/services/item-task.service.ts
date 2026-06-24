@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animationFrames, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
-import { catchError, map, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
@@ -32,14 +33,17 @@ export class ItemTaskService implements OnDestroy {
   private location = inject(Location);
   private askHintService = inject(AskHintService);
   private deviceProxyService = inject(DeviceProxyService);
+  private destroyRef = inject(DestroyRef);
 
-  readonly destroyed$ = new Subject<void>();
-  readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(takeUntil(this.destroyed$), shareReplay(1));
-  readonly initError$ = this.initService.initError$.pipe(takeUntil(this.destroyed$), shareReplay(1));
+  readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(
+    takeUntilDestroyed(this.destroyRef),
+    shareReplay(1),
+  );
+  readonly initError$ = this.initService.initError$.pipe(takeUntilDestroyed(this.destroyRef), shareReplay(1));
   readonly urlError$ = merge(
     this.initService.urlError$,
     this.initService.apiVersionError$,
-  ).pipe(takeUntil(this.destroyed$), shareReplay(1));
+  ).pipe(takeUntilDestroyed(this.destroyRef), shareReplay(1));
   readonly hintError$ = new Subject<void>();
 
   readonly error$ = merge(
@@ -73,7 +77,7 @@ export class ItemTaskService implements OnDestroy {
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
     map(neighborsState => (neighborsState.isReady ? (neighborsState.data?.next ?? neighborsState.data?.parent)?.navigateTo : undefined)),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -84,8 +88,6 @@ export class ItemTaskService implements OnDestroy {
     this.deviceProxyService.disconnectTask();
     this.hintError$.complete();
     this.navigateTo.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   configure(route: FullItemRoute, url: string, attemptId: string | undefined, options: TaskConfig): void {
@@ -124,7 +126,7 @@ export class ItemTaskService implements OnDestroy {
         take(1),
         switchMap(taskToken => task.updateToken(taskToken)),
         map(() => undefined),
-        takeUntil(this.destroyed$),
+        takeUntilDestroyed(this.destroyRef),
         shareReplay(1),
       ),
       log: (messages: string[]) => {

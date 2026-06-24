@@ -1,4 +1,5 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   catchError,
   combineLatest,
@@ -11,9 +12,7 @@ import {
   of,
   ReplaySubject,
   shareReplay,
-  Subject,
   switchMap,
-  takeUntil
 } from 'rxjs';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
@@ -40,7 +39,7 @@ export class InitialAnswerDataSource implements OnDestroy {
   private answerService = inject(AnswerService);
 
   private readonly itemInfo$ = new ReplaySubject<{ route: FullItemRoute, isTask: boolean|undefined }>();
-  private readonly destroyed$ = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly answer$ = combineLatest([ this.itemInfo$, this.store.select(fromObservation.selectIsObserving) ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
@@ -71,7 +70,7 @@ export class InitialAnswerDataSource implements OnDestroy {
       }
       return of(undefined); // "Wait" and "NotApplicable" cases - undefined -> not defined yet
     }),
-    takeUntil(this.destroyed$),
+    takeUntilDestroyed(this.destroyRef),
     shareReplay(1),
   );
 
@@ -87,8 +86,6 @@ export class InitialAnswerDataSource implements OnDestroy {
 
   ngOnDestroy(): void {
     this.itemInfo$.complete();
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 
   private getAnswerAndSaveAsCurrent(itemId: string, attemptId: string, answerId: string): Observable<Answer> {
