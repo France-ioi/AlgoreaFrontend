@@ -5,7 +5,6 @@ import { ContentInfo } from 'src/app/models/content/content-info';
 import { groupInfo, GroupInfo, isGroupInfo } from 'src/app/models/content/group-info';
 import { groupRoute, isGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
-import { CurrentContentService } from 'src/app/services/current-content.service';
 import { GroupNavigationService, GroupNavigationChild, GroupNavigationData } from '../../data-access/group-navigation.service';
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
@@ -18,11 +17,6 @@ import { isCurrentUserMember } from 'src/app/groups/models/group-membership';
 export class GroupNavTreeService extends NavTreeService<GroupInfo> {
   private groupNavigationService = inject(GroupNavigationService);
   private groupRouter = inject(GroupRouter);
-
-  constructor() {
-    const currentContent = inject(CurrentContentService);
-    super(currentContent);
-  }
 
   contentInfoFromNavTreeParent(e: NavTreeElement): GroupInfo {
     if (!isGroupRoute(e.route)) throw new Error('expect group nav tree to use group routes');

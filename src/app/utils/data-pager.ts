@@ -21,6 +21,7 @@ interface PagedData<T> {
 type TriggerAction = { type: 'loadMore' } | { type: 'reset' } | { type: 'refresh' };
 
 export class DataPager<T> {
+  private options: PagerOptions<T>;
   private trigger$ = new ReplaySubject<TriggerAction>(1);
 
   private state$ = this.trigger$.pipe(
@@ -89,7 +90,9 @@ export class DataPager<T> {
     map(state => state.data === undefined || state.data.hasMore),
   );
 
-  constructor(private options: PagerOptions<T>) {}
+  constructor(options: PagerOptions<T>) {
+    this.options = options;
+  }
 
   setPageSize(pageSize: number, maxPageSize?: number): void {
     this.options = { ...this.options, pageSize, maxPageSize };
