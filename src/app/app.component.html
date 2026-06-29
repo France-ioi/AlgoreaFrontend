@@ -7,7 +7,13 @@
     >
       <alg-left-panel />
     </div>
-    <ng-container *ngrxLet="{ fullFrameContentDisplayed: fullFrameContentDisplayed$, withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$ } as layout">
+    <ng-container *ngrxLet="{
+      fullFrameContentDisplayed: fullFrameContentDisplayed$,
+      withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$,
+      canShowLeftMenu: canShowLeftMenu$,
+      hideLeftMenuTree: hideLeftMenuTree$,
+      searchActive: searchActive$
+    } as layout">
       <ng-container *ngrxLet="isObserving$ as isObserving">
         <div
           class="right-container"
@@ -17,7 +23,8 @@
         >
           <alg-top-bar [showBreadcrumbs]="!scrolled() && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
             [modeBarDisplayed]="isObserving"
-            [showLeftMenuOpener]="!!(canShowLeftMenu$ | async) && !leftMenu.shown"
+            [showLeftMenuOpener]="!!layout.canShowLeftMenu && !leftMenu.shown"
+            [canDisplayPlatformLogo]="canDisplayPlatformLogo(layout, leftMenu.shown)"
             [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
            />
           <div

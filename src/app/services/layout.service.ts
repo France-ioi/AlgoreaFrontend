@@ -43,6 +43,7 @@ export class LayoutService implements OnDestroy {
   private showTopRightControls = new BehaviorSubject(true);
   private canShowLeftMenu = new BehaviorSubject<boolean>(true);
   private canShowBreadcrumbs = new BehaviorSubject<boolean>(true);
+  private searchActive = new BehaviorSubject<boolean>(false);
 
   /* variables to be used by other services and components */
   isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
@@ -54,6 +55,7 @@ export class LayoutService implements OnDestroy {
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
   canShowBreadcrumbs$ = this.canShowBreadcrumbs.asObservable();
+  searchActive$ = this.searchActive.asObservable().pipe(distinctUntilChanged());
   hideLeftMenuTree$ = this.store.select(fromRouter.selectSegments).pipe(
     // Before the first ROUTER_NAVIGATED the router store has no segments yet. Parse the current
     // URL synchronously so the panel is sized correctly on the very first paint (avoids the
@@ -115,6 +117,7 @@ export class LayoutService implements OnDestroy {
     this.showTopRightControls.complete();
     this.canShowLeftMenu.complete();
     this.canShowBreadcrumbs.complete();
+    this.searchActive.complete();
   }
 
   /**
@@ -135,6 +138,10 @@ export class LayoutService implements OnDestroy {
 
   toggleLeftMenu(visible: boolean): void {
     this.manualMenuToggle$.next(visible);
+  }
+
+  setLeftMenuSearchActive(active: boolean): void {
+    this.searchActive.next(active);
   }
 
   /**

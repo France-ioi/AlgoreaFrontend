@@ -21,4 +21,5 @@ export class TopBarComponent {
   modeBarDisplayed = input(false);
   showTopRightControls = input(true);
   showLeftMenuOpener = input(true);
+  canDisplayPlatformLogo = input(false);
 }

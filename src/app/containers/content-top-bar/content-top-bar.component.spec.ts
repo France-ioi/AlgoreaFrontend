@@ -44,6 +44,7 @@ class StubNeighborWidgetComponent {
 
 interface SetupOptions {
   showLeftMenuOpener: boolean,
+  canDisplayPlatformLogo: boolean,
   showPlatform: boolean,
 }
 
@@ -112,34 +113,42 @@ describe('ContentTopBarComponent', () => {
 
     const fixture = TestBed.createComponent(ContentTopBarComponent);
     fixture.componentRef.setInput('showLeftMenuOpener', options.showLeftMenuOpener);
+    fixture.componentRef.setInput('canDisplayPlatformLogo', options.canDisplayPlatformLogo);
     fixture.detectChanges();
     return fixture;
   }
 
   describe('showPlatformLogo', () => {
-    it('is true only when the menu opener is shown and the setting is enabled', async () => {
-      const enabledFixture = await createFixture({ showLeftMenuOpener: true, showPlatform: true });
+    it('is true only when the logo can be displayed here and the setting is enabled', async () => {
+      const enabledFixture = await createFixture({ showLeftMenuOpener: false, canDisplayPlatformLogo: true, showPlatform: true });
       expect(enabledFixture.componentInstance.showPlatformLogo()).toBeTrue();
 
-      const disabledSettingFixture = await createFixture({ showLeftMenuOpener: true, showPlatform: false });
+      const disabledSettingFixture = await createFixture({
+        showLeftMenuOpener: false, canDisplayPlatformLogo: true, showPlatform: false,
+      });
       expect(disabledSettingFixture.componentInstance.showPlatformLogo()).toBeFalse();
 
-      const hiddenMenuFixture = await createFixture({ showLeftMenuOpener: false, showPlatform: true });
-      expect(hiddenMenuFixture.componentInstance.showPlatformLogo()).toBeFalse();
+      const hiddenSlotFixture = await createFixture({ showLeftMenuOpener: false, canDisplayPlatformLogo: false, showPlatform: true });
+      expect(hiddenSlotFixture.componentInstance.showPlatformLogo()).toBeFalse();
 
-      const bothOffFixture = await createFixture({ showLeftMenuOpener: false, showPlatform: false });
+      const bothOffFixture = await createFixture({ showLeftMenuOpener: false, canDisplayPlatformLogo: false, showPlatform: false });
       expect(bothOffFixture.componentInstance.showPlatformLogo()).toBeFalse();
+    });
+
+    it('does not key off the menu opener (decoupled from showLeftMenuOpener)', async () => {
+      const fixture = await createFixture({ showLeftMenuOpener: true, canDisplayPlatformLogo: false, showPlatform: true });
+      expect(fixture.componentInstance.showPlatformLogo()).toBeFalse();
     });
   });
 
   describe('score section visibility', () => {
     it('hides the score section when the platform logo is shown', async () => {
-      const fixture = await createFixture({ showLeftMenuOpener: true, showPlatform: true });
+      const fixture = await createFixture({ showLeftMenuOpener: false, canDisplayPlatformLogo: true, showPlatform: true });
       expect(fixture.debugElement.query(By.css('.score-section'))).toBeNull();
     });
 
     it('shows the score section when the platform logo is not shown', async () => {
-      const fixture = await createFixture({ showLeftMenuOpener: false, showPlatform: false });
+      const fixture = await createFixture({ showLeftMenuOpener: false, canDisplayPlatformLogo: false, showPlatform: false });
       expect(fixture.debugElement.query(By.css('.score-section'))).not.toBeNull();
     });
   });
