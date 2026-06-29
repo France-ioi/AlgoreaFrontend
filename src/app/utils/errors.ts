@@ -9,26 +9,36 @@ export function tagError<T extends object>(error: T, tag: string): T & WithError
   return Object.assign(error, { errorTag: tag });
 }
 
-export function errorHasTag(error: any, tag: string): boolean {
-  return (error as WithErrorTag).errorTag === tag;
+/**
+ * Duck-typed guard for HTTP errors: matches any non-null object exposing a numeric `status`.
+ * We intentionally avoid `instanceof HttpErrorResponse` because some errors reaching these helpers
+ * are plain objects (e.g. serialized errors) rather than actual HttpErrorResponse instances.
+ */
+export function isHttpErrorResponse(error: unknown): error is HttpErrorResponse {
+  return typeof error === 'object' && error !== null && 'status' in error
+    && typeof error.status === 'number';
 }
 
-export function errorIsHTTPUnauthenticated(error: any): boolean {
-  return 'status' in error && (error as HttpErrorResponse).status === 401;
+export function errorHasTag(error: unknown, tag: string): boolean {
+  return typeof error === 'object' && error !== null && 'errorTag' in error && error.errorTag === tag;
 }
 
-export function errorIsHTTPForbidden(error: any): boolean {
-  return 'status' in error && (error as HttpErrorResponse).status === 403;
+export function errorIsHTTPUnauthenticated(error: unknown): boolean {
+  return isHttpErrorResponse(error) && error.status === 401;
 }
 
-export function errorIsHTTPNotFound(error: any): boolean {
-  return 'status' in error && (error as HttpErrorResponse).status === 404;
+export function errorIsHTTPForbidden(error: unknown): boolean {
+  return isHttpErrorResponse(error) && error.status === 403;
 }
 
-export function errorIsBadRequest(error: any): boolean {
-  return 'status' in error && (error as HttpErrorResponse).status === 400;
+export function errorIsHTTPNotFound(error: unknown): boolean {
+  return isHttpErrorResponse(error) && error.status === 404;
 }
 
-export function errorIsHTTPInternalServer(error: any): boolean {
-  return 'status' in error && (error as HttpErrorResponse).status === 500;
+export function errorIsBadRequest(error: unknown): boolean {
+  return isHttpErrorResponse(error) && error.status === 400;
+}
+
+export function errorIsHTTPInternalServer(error: unknown): boolean {
+  return isHttpErrorResponse(error) && error.status === 500;
 }
