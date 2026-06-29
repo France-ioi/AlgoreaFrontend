@@ -84,10 +84,10 @@
 @if (state.isError) {
   <alg-error
     class="alg-flex-1"
-    [showRefreshButton]="$any(state.error).status !== 403"
+    [showRefreshButton]="!(state.error | isHttpForbidden)"
     (refresh)="onGroupRefreshRequired()"
   >
-    @if ($any(state.error).status === 403) {
+    @if (state.error | isHttpForbidden) {
       <ng-container i18n>
         You are not allowed to view this group page.
       </ng-container>

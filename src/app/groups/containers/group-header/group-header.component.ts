@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { IsHttpForbiddenPipe, IsHttpNotFoundPipe } from 'src/app/utils/error-handling/http-error.pipes';
 
 @Component({
   selector: 'alg-group-header',
@@ -21,6 +22,8 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
     ItemRoutePipe,
     RouteUrlPipe,
     ButtonIconComponent,
+    IsHttpForbiddenPipe,
+    IsHttpNotFoundPipe,
   ]
 })
 export class GroupHeaderComponent implements OnDestroy {

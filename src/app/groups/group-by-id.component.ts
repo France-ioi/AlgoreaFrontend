@@ -22,6 +22,7 @@ import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils
 import { GroupData, selectGroupData } from './models/group-data';
 import { readyData } from '../utils/operators/state';
 import { IsCurrentUserMemberPipe } from './models/group-membership';
+import { IsHttpForbiddenPipe } from '../utils/error-handling/http-error.pipes';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 
@@ -41,6 +42,7 @@ import { PendingChangesService } from 'src/app/services/pending-changes-service'
     IsCurrentUserMemberPipe,
     CanCurrentUserGrantGroupAccessPipe,
     CanCurrentUserManageMembersAndGroupPipe,
+    IsHttpForbiddenPipe,
   ]
 })
 export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {

@@ -6,10 +6,12 @@ import { defaultAttemptId } from '../models/attempts';
 import { loadAnswerAsCurrentFromNavigationState } from 'src/app/models/routing/item-navigation-state';
 import { ItemRouteError } from 'src/app/models/routing/item-route-serialization';
 
+export const NO_SUCH_ALIAS_ERROR_NAME = 'NoSuchAliasError';
+
 class NoSuchAliasError extends Error {
   constructor() {
     super('The given alias could not be resolved to an item id');
-    this.name = 'NoSuchAliasError';
+    this.name = NO_SUCH_ALIAS_ERROR_NAME;
   }
 }
 

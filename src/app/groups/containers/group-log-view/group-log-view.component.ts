@@ -19,6 +19,7 @@ import { UserSessionService } from '../../../services/user-session.service';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
+import { IsHttpForbiddenPipe } from 'src/app/utils/error-handling/http-error.pipes';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
@@ -70,6 +71,7 @@ const logsLimit = 20;
     CdkRow,
     CdkRowDef,
     CdkNoDataRow,
+    IsHttpForbiddenPipe,
   ]
 })
 export class GroupLogViewComponent {
