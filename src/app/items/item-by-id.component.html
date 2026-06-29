@@ -111,7 +111,7 @@
     <alg-loading class="alg-flex-1" />
   }
   @if (state.isError) {
-    @if (state.error && ($any(state.error).status === 403 || $any(state.error).status === 404 || $any(state.error).name === 'NoSuchAliasError')) {
+    @if (isItemUnavailableError(state.error)) {
       <alg-restricted-content>
         @if ((userProfile$ | async)?.tempUser) {
           <alg-login-wall i18n-description

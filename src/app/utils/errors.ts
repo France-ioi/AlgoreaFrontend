@@ -23,6 +23,10 @@ export function errorHasTag(error: unknown, tag: string): boolean {
   return typeof error === 'object' && error !== null && 'errorTag' in error && error.errorTag === tag;
 }
 
+export function errorHasName(error: unknown, name: string): boolean {
+  return typeof error === 'object' && error !== null && 'name' in error && error.name === name;
+}
+
 export function errorIsHTTPUnauthenticated(error: unknown): boolean {
   return isHttpErrorResponse(error) && error.status === 401;
 }

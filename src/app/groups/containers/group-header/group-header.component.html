@@ -8,7 +8,7 @@
             @if (state.isFetching) {
               <span i18n>loading...</span>
             } @else if (state.isError) {
-              @if ($any(state.error).status === 403 || $any(state.error).status === 404) {
+              @if ((state.error | isHttpForbidden) || (state.error | isHttpNotFound)) {
                 <span i18n>not visible to you</span>
               } @else {
                 <div class="error-container">

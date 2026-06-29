@@ -5,12 +5,12 @@
   @if (state.isError) {
     <alg-error
       class="alg-flex-1"
-      [class.dark]="$any(state).error.status !== 403"
-      [icon]="$any(state).error.status !== 403 ? 'ph-duotone ph-warning-circle' : undefined"
-      [showRefreshButton]="$any(state).error.status !== 403"
+      [class.dark]="!(state.error | isHttpForbidden)"
+      [icon]="!(state.error | isHttpForbidden) ? 'ph-duotone ph-warning-circle' : undefined"
+      [showRefreshButton]="!(state.error | isHttpForbidden)"
       (refresh)="refresh()"
     >
-      @if ($any(state).error.status === 403) {
+      @if (state.error | isHttpForbidden) {
         <span i18n>
           You are not allowed to see activities of this user.
         </span>

@@ -19,6 +19,7 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
 import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
 import { ItemData } from './models/item-data';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
+import { isItemUnavailableError } from './utils/item-unavailable-error';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { isATask } from 'src/app/items/models/item-type';
 import { itemInfo } from 'src/app/models/content/item-info';
@@ -329,6 +330,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     return !!this.itemContentComponent()?.isDirty() || !!this.pendingChangesService.component?.isDirty();
   }
 
+
+  protected isItemUnavailableError(error: unknown): boolean {
+    return isItemUnavailableError(error);
+  }
 
   reloadItem(): void {
     this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());

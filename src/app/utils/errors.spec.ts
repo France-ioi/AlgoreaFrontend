@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+  errorHasName,
   errorHasTag,
   errorIsBadRequest,
   errorIsHTTPForbidden,
@@ -82,6 +83,29 @@ describe('errors utils', () => {
       expect(errorHasTag('some string', 'my-tag')).toBe(false);
       expect(errorHasTag(42, 'my-tag')).toBe(false);
       expect(errorHasTag({}, 'my-tag')).toBe(false);
+    });
+  });
+
+  describe('errorHasName', () => {
+    it('should match an error whose name equals the given name', () => {
+      const error = new Error('boom');
+      error.name = 'NoSuchAliasError';
+      expect(errorHasName(error, 'NoSuchAliasError')).toBe(true);
+      expect(errorHasName({ name: 'NoSuchAliasError' }, 'NoSuchAliasError')).toBe(true);
+    });
+
+    it('should return false for a non-matching name', () => {
+      expect(errorHasName(new Error('boom'), 'NoSuchAliasError')).toBe(false);
+      expect(errorHasName({ name: 'OtherError' }, 'NoSuchAliasError')).toBe(false);
+      expect(errorHasName({ name: 123 }, 'NoSuchAliasError')).toBe(false);
+    });
+
+    it('should return false (without throwing) for edge inputs', () => {
+      expect(errorHasName(null, 'NoSuchAliasError')).toBe(false);
+      expect(errorHasName(undefined, 'NoSuchAliasError')).toBe(false);
+      expect(errorHasName('some string', 'NoSuchAliasError')).toBe(false);
+      expect(errorHasName(42, 'NoSuchAliasError')).toBe(false);
+      expect(errorHasName({}, 'NoSuchAliasError')).toBe(false);
     });
   });
 });

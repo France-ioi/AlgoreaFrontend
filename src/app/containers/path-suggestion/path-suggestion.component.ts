@@ -13,6 +13,7 @@ import { AsyncPipe } from '@angular/common';
 import { mapBreadcrumbsWithPath } from 'src/app/models/content/content-breadcrumbs';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
+import { IsHttpForbiddenPipe } from 'src/app/utils/error-handling/http-error.pipes';
 
 @Component({
   selector: 'alg-path-suggestion',
@@ -25,6 +26,7 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
     AsyncPipe,
     ItemRoutePipe,
     RouteUrlPipe,
+    IsHttpForbiddenPipe,
   ]
 })
 export class PathSuggestionComponent implements AfterViewInit, OnDestroy {
