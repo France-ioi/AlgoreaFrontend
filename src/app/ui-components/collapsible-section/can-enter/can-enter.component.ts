@@ -1,5 +1,5 @@
 import {
-  ChangeDetectorRef, Component, forwardRef, inject, Injector, OnDestroy, OnInit, viewChild,
+  Component, forwardRef, inject, Injector, OnDestroy, OnInit, signal, viewChild,
 } from '@angular/core';
 
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
@@ -49,35 +49,33 @@ export interface CanEnterValue {
 })
 export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestroy {
   private injector = inject(Injector);
-  private changeDetectorRef = inject(ChangeDetectorRef);
 
   private readonly canEnterFromRef = viewChild('canEnterFromRef', { read: InputDateComponent });
   private readonly canEnterUntilRef = viewChild('canEnterUntilRef', { read: InputDateComponent });
 
-  canEnterFrom: Date | null = null;
-  canEnterUntil: Date | null = null;
-  currentDate = new Date();
-  control?: FormControl<CanEnterValue | null>;
+  canEnterFrom = signal<Date | null>(null);
+  canEnterUntil = signal<Date | null>(null);
+  currentDate = signal(new Date());
+  control = signal<FormControl<CanEnterValue | null> | undefined>(undefined);
 
   ngOnInit(): void {
     const injectedControl = this.injector.get(NgControl);
     if (injectedControl instanceof FormControlName) {
-      this.control = this.injector.get(FormGroupDirective).getControl(injectedControl);
+      this.control.set(this.injector.get(FormGroupDirective).getControl(injectedControl));
     }
   }
 
   ngOnDestroy(): void {
     setTimeout(() => {
-      this.control?.clearValidators();
-      this.control?.updateValueAndValidity();
+      this.control()?.clearValidators();
+      this.control()?.updateValueAndValidity();
     });
   }
 
   writeValue(value: CanEnterValue | null): void {
     if (value === null) return;
-    this.canEnterFrom = value.canEnterFrom;
-    this.canEnterUntil = value.canEnterUntil;
-    this.changeDetectorRef.markForCheck();
+    this.canEnterFrom.set(value.canEnterFrom);
+    this.canEnterUntil.set(value.canEnterUntil);
   }
 
   private onChange: (value: CanEnterValue | null) => void = () => {};
@@ -97,16 +95,26 @@ export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestro
   registerOnTouched(_fn: (value: CanEnterValue | null) => void): void {
   }
 
-  onDateChange(): void {
-    if (this.canEnterFrom === null) {
-      this.canEnterFrom = new Date();
+  onCanEnterFromChange(value: Date | null): void {
+    this.canEnterFrom.set(value);
+    this.emitDateChange();
+  }
+
+  onCanEnterUntilChange(value: Date | null): void {
+    this.canEnterUntil.set(value);
+    this.emitDateChange();
+  }
+
+  private emitDateChange(): void {
+    if (this.canEnterFrom() === null) {
+      this.canEnterFrom.set(new Date());
     }
-    if (this.canEnterUntil === null) {
-      this.canEnterUntil = new Date(farFutureDateString);
+    if (this.canEnterUntil() === null) {
+      this.canEnterUntil.set(new Date(farFutureDateString));
     }
     this.onChange({
-      canEnterFrom: this.canEnterFrom,
-      canEnterUntil: this.canEnterUntil,
+      canEnterFrom: this.canEnterFrom()!,
+      canEnterUntil: this.canEnterUntil()!,
     });
   }
 }
