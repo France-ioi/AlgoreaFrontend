@@ -18,6 +18,15 @@ export type NewItem = {
   languageTag: string,
 } & ({ parent: string } | { asRootOfGroupId: string });
 
+interface CreateItemRequestBody {
+  title: string,
+  url?: string,
+  type: ItemType,
+  language_tag: string,
+  parent?: { item_id: string },
+  as_root_of_group_id?: string,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +35,7 @@ export class CreateItemService {
   private config = inject(APPCONFIG);
 
   create(newItem: NewItem): Observable<string> {
-    const body: {[k: string]: any} = {
+    const body: CreateItemRequestBody = {
       title: newItem.title,
       url: newItem.url,
       type: newItem.type,

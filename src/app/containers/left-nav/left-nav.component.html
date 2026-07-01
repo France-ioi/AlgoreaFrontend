@@ -23,7 +23,7 @@
       <div class="scroll-container">
         <ng-scrollbar [sensorThrottleTime]="1" orientation="vertical">
           <alg-left-nav-tree [data]="state.data"
-            [elementType]="$any(['activity', 'skill', 'group'][treeIndex()])"
+            [elementType]="navTreeElementTypes[treeIndex()]!"
            />
         </ng-scrollbar>
       </div>

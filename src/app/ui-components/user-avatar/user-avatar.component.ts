@@ -94,7 +94,7 @@ export class UserAvatarComponent {
   size = input<number>(DEFAULT_SIZE);
   ariaLabel = input<string>(UserAvatarComponent.defaultAriaLabel);
 
-  // The cache is required: any feature using this component must provide `AvatarCacheService` so
+  // The cache is required: every feature using this component must provide `AvatarCacheService` so
   // we never silently leak through an unbounded cache. We resolve it as `optional` only so we can
   // surface a developer-friendly error instead of Angular's generic `NullInjectorError`.
   private readonly avatarCache = inject(AvatarCacheService, { optional: true })

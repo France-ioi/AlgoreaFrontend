@@ -23,6 +23,8 @@ import { IsHttpForbiddenPipe } from 'src/app/utils/error-handling/http-error.pip
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
+import { ItemRoute } from 'src/app/models/routing/item-route';
+import { AnswerId } from 'src/app/models/ids';
 import {
   CdkCell,
   CdkCellDef,
@@ -160,5 +162,9 @@ export class GroupLogViewComponent {
         label: $localize`Back to the history page`,
       },
     }));
+  }
+
+  answerRouteExtras(answerId: AnswerId): Partial<ItemRoute> {
+    return { answer: { id: answerId } };
   }
 }

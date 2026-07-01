@@ -12,8 +12,11 @@ import { ResultFetchingService } from '../../services/result-fetching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import equal from 'fast-deep-equal/es6';
 
-const refreshTriggers = (actions$: Actions<any>, userSessionService$: UserSessionService): Observable<unknown> => merge(
-  actions$.pipe(ofType(itemByIdPageActions.refresh)),
+const refreshTriggers = (
+  refreshActions$: Observable<unknown>,
+  userSessionService$: UserSessionService,
+): Observable<unknown> => merge(
+  refreshActions$,
   userSessionService$.userChanged$,
   userSessionService$.userProfile$.pipe(map(user => user.defaultLanguage), distinctUntilChanged(), skip(1)),
 ).pipe(
@@ -33,7 +36,7 @@ export const itemFetchingEffect = createEffect(
     distinctUntilChanged((prev, cur) => prev.id === cur.id && prev.observedGroup?.id === cur.observedGroup?.id),
     switchMap(route => getItemByIdService.get(route.id, route.observedGroup ? { watchedGroupId: route.observedGroup.id } : {}).pipe(
       mapToFetchState({
-        resetter: refreshTriggers(actions$, userSessionService$),
+        resetter: refreshTriggers(actions$.pipe(ofType(itemByIdPageActions.refresh)), userSessionService$),
         identifier: { id: route.id, observedGroup: route.observedGroup },
       })
     )),
@@ -53,7 +56,7 @@ export const breadcrumbsFetchingEffect = createEffect(
     distinctUntilChanged((x, y) => equal(x, y)),
     switchMap(route => breadcrumbsService.get(route).pipe(
       mapToFetchState({
-        resetter: refreshTriggers(actions$, userSessionService$),
+        resetter: refreshTriggers(actions$.pipe(ofType(itemByIdPageActions.refresh)), userSessionService$),
         identifier: route,
       })
     )),
@@ -75,7 +78,7 @@ export const resultsFetchingEffect = createEffect(
     ),
     switchMap(({ route, item }) => resultFetchingService.fetchResults(route, item).pipe(
       mapToFetchState({
-        resetter: refreshTriggers(actions$, userSessionService$),
+        resetter: refreshTriggers(actions$.pipe(ofType(itemByIdPageActions.refresh)), userSessionService$),
         identifier: route
       }),
     )),

@@ -2,7 +2,7 @@ import { ItemFound } from 'src/app/data-access/search-item.service';
 import { ActivityType, isASkill, ItemType } from 'src/app/items/models/item-type';
 
 type AssociatedItemId = string;
-export const noAssociatedItem = { tag: 'no-item' };
+export const noAssociatedItem = { tag: 'no-item' } as const;
 
 export type NoAssociatedItem = typeof noAssociatedItem;
 
