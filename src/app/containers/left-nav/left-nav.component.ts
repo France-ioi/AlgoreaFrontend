@@ -17,6 +17,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { NavTreeData } from 'src/app/models/left-nav-loading/nav-tree-data';
 import { areSameElements, EntityPathRoute } from 'src/app/models/routing/entity-route';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { ItemTypeCategory } from 'src/app/items/models/item-type';
 
 @Component({
   selector: 'alg-left-nav',
@@ -43,6 +44,8 @@ export class LeftNavComponent {
   treeIndex = input.required<number>();
 
   readonly navTreeServices = [ this.activityNavTreeService, this.skillNavTreeService, this.groupNavTreeService ];
+
+  readonly navTreeElementTypes = [ 'activity', 'skill', 'group' ] as const satisfies readonly (ItemTypeCategory | 'group')[];
 
   selectElement = outputFromObservable(toObservable(this.treeIndex).pipe(
     map(idx => this.navTreeServices[idx]),

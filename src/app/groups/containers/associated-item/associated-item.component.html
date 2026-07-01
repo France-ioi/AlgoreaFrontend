@@ -106,7 +106,7 @@
 
   @case ('new-item') {
     <div class="item">
-      <span class="alg-text-normal alg-flex-1">{{ $any(associatedItemVal).name }}</span>
+      <span class="alg-text-normal alg-flex-1">{{ associatedItemVal.name }}</span>
       <ng-container *ngTemplateOutlet="removeButton" />
     </div>
   }

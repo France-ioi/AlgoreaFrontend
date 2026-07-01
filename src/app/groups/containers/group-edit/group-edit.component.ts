@@ -219,7 +219,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         this.refreshNav();
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
       },
-      error: (err: any) => {
+      error: (err: unknown) => {
         this.groupForm.enable();
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
