@@ -18,7 +18,7 @@ export class AlgErrorHandler extends ErrorHandler {
    */
   private reportedErrors: string[] = [];
 
-  override handleError(err: any): void {
+  override handleError(err: unknown): void {
     if (this.isChunkLoadingError(err)) {
       this.chunkErrorService.emitError();
       return;
@@ -36,7 +36,7 @@ export class AlgErrorHandler extends ErrorHandler {
     }
   }
 
-  isChunkLoadingError(err: any): boolean {
+  isChunkLoadingError(err: unknown): boolean {
     const chunkErrormessages = [
       'Loading chunk [a-z_\\d]+ failed', // older ?
       'Failed to fetch dynamically imported module', // chrome

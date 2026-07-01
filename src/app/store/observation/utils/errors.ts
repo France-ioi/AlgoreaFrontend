@@ -4,6 +4,6 @@ const cannotWatchErrorTag = 'observationForbiddenError';
 
 export const cannotWatchError = tagError(new Error('cannot watch'), cannotWatchErrorTag);
 
-export function isForbiddenObservationError(error: any): boolean {
+export function isForbiddenObservationError(error: unknown): boolean {
   return errorIsHTTPForbidden(error) || errorHasTag(error, cannotWatchErrorTag);
 }

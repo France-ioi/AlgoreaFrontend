@@ -1,5 +1,6 @@
 import { FeatureConfig, MemoizedSelector, Selector, createActionGroup, createFeatureSelector } from '@ngrx/store';
 import { capitalize } from '../case_conversion';
+import { RootState } from './root_state';
 
 /**
  * Types from @ngrx/store/src/feature_creator.ts, so that we can create an alternative to createFeature
@@ -12,7 +13,7 @@ FeatureSelector<FeatureName, FeatureState>;
 
 type FeatureSelector<FeatureName extends string, FeatureState> = {
   [K in FeatureName as `select${Capitalize<K>}State`]: MemoizedSelector<
-    Record<string, any>,
+    RootState,
     FeatureState,
     (featureState: FeatureState) => FeatureState
   >;
@@ -20,8 +21,9 @@ type FeatureSelector<FeatureName extends string, FeatureState> = {
 
 export type SelectorsDictionary = Record<
   string,
-  | Selector<Record<string, any>, unknown>
-  | ((...args: any[]) => Selector<Record<string, any>, unknown>)
+  | Selector<RootState, unknown>
+  // Mirrors @ngrx/store: extra-selector factories take heterogeneous args (e.g. route param names).
+  | ((...args: any[]) => Selector<RootState, unknown>)
 >;
 
 type ExtraSelectorsFactory<
