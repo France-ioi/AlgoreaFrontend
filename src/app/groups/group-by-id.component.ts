@@ -1,5 +1,4 @@
-import { Component, computed, inject, OnDestroy } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, effect, inject, OnDestroy } from '@angular/core';
 import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
 import { APPCONFIG } from 'src/app/config';
 import { groupInfo } from 'src/app/models/content/group-info';
@@ -19,8 +18,7 @@ import { Store } from '@ngrx/store';
 import { fromGroupContent } from './store';
 import { breadcrumbServiceTag } from '../items/data-access/get-breadcrumb.service';
 import { errorHasTag, errorIsHTTPForbidden, errorIsHTTPNotFound } from '../utils/errors';
-import { GroupData, selectGroupData } from './models/group-data';
-import { readyData } from '../utils/operators/state';
+import { selectGroupData } from './models/group-data';
 import { IsCurrentUserMemberPipe } from './models/group-membership';
 import { IsHttpForbiddenPipe } from '../utils/error-handling/http-error.pipes';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
@@ -52,7 +50,6 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
   private config = inject(APPCONFIG);
   private pendingChangesService = inject(PendingChangesService);
 
-  // Signal for the template; observable kept for the breadcrumb side-effect subscription below.
   protected readonly groupDataState = this.store.selectSignal(selectGroupData);
 
   protected readonly groupData = computed(() => {
@@ -62,52 +59,26 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
 
   hideAccessTab = !this.config.featureFlags.showGroupAccessTab;
 
-  private state$ = this.store.select(selectGroupData);
-
-  // on state change, update current content page info (for breadcrumb)
-  private groupToCurrentContentSubscription = this.state$.pipe(
-    readyData<GroupData>(),
-    takeUntilDestroyed(),
-  ).subscribe(({ route }) => {
-    this.currentContent.replace(groupInfo({ route }));
-  });
-
-  private initialCurrentContentSubscription = this.store.select(fromGroupContent.selectActiveContentFullRoute).pipe(
-    takeUntilDestroyed(),
-  ).subscribe(route => {
-    if (route) {
-      // just publish to current content the new route we are navigating to (without knowing any info)
-      this.currentContent.replace(groupInfo({
-        route,
-      }));
-    } else {
-      this.currentContent.clear();
-    }
-  });
-
-  private breadcrumbsErrorSubscription = this.store.select(fromGroupContent.selectActiveContentBreadcrumbsState).pipe(
-    takeUntilDestroyed(),
-  ).subscribe(state => {
-    if (state === null) return; // state is null when there is no path
-    if (state.isError) this.currentContent.clear();
-
-    // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
-    if (
-      state.isError &&
-      errorHasTag(state.error, breadcrumbServiceTag) &&
-      (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
-    ) {
-      if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
-      this.hasRedirected = true;
-      const id = state.identifier?.id;
-      if (!id) throw new Error('Unexpected: group id should exist');
-      this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: false }), { navExtras: { replaceUrl: true } });
-    }
-    if (state.isReady) this.hasRedirected = false;
-  });
-
-
+  private readonly activeContentFullRoute = this.store.selectSignal(fromGroupContent.selectActiveContentFullRoute);
+  private readonly breadcrumbsState = this.store.selectSignal(fromGroupContent.selectActiveContentBreadcrumbsState);
   private hasRedirected = false;
+
+  constructor() {
+    // Field-initializer subscriptions ran synchronously; effects defer to the first CD flush.
+    this.applyGroupToCurrentContentSync();
+    this.applyActiveRouteToCurrentContentSync();
+    this.applyBreadcrumbsErrorHandling();
+
+    effect(() => {
+      this.applyGroupToCurrentContentSync();
+    });
+    effect(() => {
+      this.applyActiveRouteToCurrentContentSync();
+    });
+    effect(() => {
+      this.applyBreadcrumbsErrorHandling();
+    });
+  }
 
   ngOnDestroy(): void {
     this.currentContent.clear();
@@ -120,6 +91,40 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
   onGroupRefreshRequired(): void {
     this.store.dispatch(fromGroupContent.groupPageActions.refresh());
     this.currentContent.forceNavMenuReload();
+  }
+
+  private applyGroupToCurrentContentSync(): void {
+    const state = this.groupDataState();
+    if (!state.isReady) return;
+    this.currentContent.replace(groupInfo({ route: state.data.route }));
+  }
+
+  private applyActiveRouteToCurrentContentSync(): void {
+    const route = this.activeContentFullRoute();
+    if (route) {
+      this.currentContent.replace(groupInfo({ route }));
+    } else {
+      this.currentContent.clear();
+    }
+  }
+
+  private applyBreadcrumbsErrorHandling(): void {
+    const state = this.breadcrumbsState();
+    if (state === null) return;
+    if (state.isError) this.currentContent.clear();
+
+    if (
+      state.isError &&
+      errorHasTag(state.error, breadcrumbServiceTag) &&
+      (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
+    ) {
+      if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
+      this.hasRedirected = true;
+      const id = state.identifier?.id;
+      if (!id) throw new Error('Unexpected: group id should exist');
+      this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: false }), { navExtras: { replaceUrl: true } });
+    }
+    if (state.isReady) this.hasRedirected = false;
   }
 
 }
