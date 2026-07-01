@@ -8,7 +8,7 @@ import { catchError, map, startWith } from 'rxjs/operators';
  * - When an error is received, the action is finished.
  */
 export function mapPending() {
-  return (source: Observable<any>): Observable<boolean> => source.pipe(
+  return (source: Observable<unknown>): Observable<boolean> => source.pipe(
     map(() => false),
     startWith(true),
     catchError(() => of(false)),
