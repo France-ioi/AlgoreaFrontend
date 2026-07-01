@@ -1,4 +1,4 @@
-import { Component, inject, Injector, input, output, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, Injector, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { combineLatest, of, Subject } from 'rxjs';
@@ -62,6 +62,7 @@ export class LeftTabbedContentComponent {
   private router = inject(Router);
   private leftMenuConfig = inject(LeftMenuConfigService);
   private config = inject(APPCONFIG);
+  private destroyRef = inject(DestroyRef);
 
   leftNavRef = viewChild(LeftNavComponent);
 
@@ -120,6 +121,12 @@ export class LeftTabbedContentComponent {
       debounceTime(250),
       takeUntilDestroyed(),
     ).subscribe(() => this.scrollToContent());
+
+    // Reset the shared search state on teardown so it can't stay stuck active in LayoutService
+    // if this component is ever destroyed while search is open.
+    this.destroyRef.onDestroy(() => {
+      if (this.searchActive()) this.searchActiveChange.emit(false);
+    });
   }
 
   toggleSearch(): void {

@@ -51,6 +51,14 @@ export class ContentTopBarComponent {
 
   showBreadcrumbs = input(true);
   showLeftMenuOpener = input(false);
+  /**
+   * Whether the platform logo is not currently shown in the left menu, so this top bar may show it
+   * instead. The left menu shows the logo by default; it doesn't when collapsed, in compact mode
+   * (tree hidden) without search active, or absent entirely (e.g. LTI). The logo is actually
+   * rendered only when this is true AND the active item requests the platform display (see
+   * `showPlatformLogo`).
+   */
+  canDisplayPlatformLogo = input(false);
 
   isItemContentActive = this.store.selectSignal(fromItemContent.selectIsItemContentActive);
   title = this.store.selectSignal(fromCurrentContent.selectTitle);
@@ -59,7 +67,7 @@ export class ContentTopBarComponent {
   isItemMetadataLoading = computed(() => this.isItemContentActive() && this.activeItemNoScore() === undefined);
   displayScoreSection = computed(() => this.activeItemNoScore() === false);
   activeItemShowPlatform = this.store.selectSignal(fromItemContent.selectActiveContentShowPlatformInsteadOfScore);
-  showPlatformLogo = computed(() => this.showLeftMenuOpener() && this.activeItemShowPlatform());
+  showPlatformLogo = computed(() => this.canDisplayPlatformLogo() && this.activeItemShowPlatform());
   isTitleSectionReady = computed(() => !this.isItemMetadataLoading());
 
   navigationNeighbors$ = this.store.select(fromCurrentContent.selectContentRoute).pipe(

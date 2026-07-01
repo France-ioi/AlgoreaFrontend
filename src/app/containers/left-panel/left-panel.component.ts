@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LeftTabbedContentComponent } from '../left-tabbed-content/left-tabbed-content.component';
 import { LeftHeaderComponent } from '../left-header/left-header.component';
@@ -20,6 +20,10 @@ export class LeftPanelComponent {
   private layoutService = inject(LayoutService);
 
   hideTree = toSignal(this.layoutService.hideLeftMenuTree$, { initialValue: false });
-  searchActive = signal(false);
+  searchActive = toSignal(this.layoutService.searchActive$, { initialValue: false });
   compactHeader = computed(() => this.hideTree() && !this.searchActive());
+
+  onSearchActiveChange(active: boolean): void {
+    this.layoutService.setLeftMenuSearchActive(active);
+  }
 }

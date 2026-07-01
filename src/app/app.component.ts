@@ -25,6 +25,7 @@ import { fromForum, isThreadInline } from 'src/app/forum/store';
 import { fromObservation } from './store/observation';
 import { fromItemContent } from './items/store';
 import { isNotNull, isNotNullOrUndefined } from './utils/null-undefined-predicates';
+import { canDisplayPlatformLogoInTopBar } from './utils/platform-logo-display';
 import { ItemRouter } from './models/routing/item-router';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { routeWithNoObservation } from './models/routing/item-route';
@@ -84,6 +85,8 @@ export class AppComponent implements OnInit {
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
   canShowLeftMenu$ = this.layoutService.canShowLeftMenu$;
+  hideLeftMenuTree$ = this.layoutService.hideLeftMenuTree$;
+  searchActive$ = this.layoutService.searchActive$;
   canShowBreadcrumbs$ = this.layoutService.canShowBreadcrumbs$;
   showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
   isNarrowScreen$ = this.layoutService.isNarrowScreen$;
@@ -157,6 +160,17 @@ export class AppComponent implements OnInit {
   onLoaded(scrollEl: HTMLElement): void {
     scrollEl.addEventListener('scroll', () => {
       this.onScrollContent(scrollEl);
+    });
+  }
+
+  canDisplayPlatformLogo(
+    layout: { hideLeftMenuTree?: boolean | null, searchActive?: boolean | null },
+    leftMenuShown: boolean,
+  ): boolean {
+    return canDisplayPlatformLogoInTopBar({
+      leftMenuShown,
+      hideLeftMenuTree: !!layout.hideLeftMenuTree,
+      searchActive: !!layout.searchActive,
     });
   }
 
