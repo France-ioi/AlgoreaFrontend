@@ -1,5 +1,6 @@
-import { Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, effect, inject, OnDestroy, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { combineLatest, of, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
 import {
   delay,
@@ -7,7 +8,6 @@ import {
   filter,
   map,
   shareReplay,
-  startWith,
   switchMap,
   take,
   catchError,
@@ -104,7 +104,6 @@ const selectState = createSelector(
 export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, PendingChangesComponent {
   private store = inject(Store);
   private itemRouter = inject(ItemRouter);
-  private activatedRoute = inject(ActivatedRoute);
   private currentContent = inject(CurrentContentService);
   private initialAnswerDataSource = inject(InitialAnswerDataSource);
   private itemTabs = inject(ItemTabs);
@@ -122,10 +121,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
 
   readonly editorUrl = signal<string | undefined>(undefined);
   private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
-
-  private itemState$ = this.store.select(fromItemContent.selectActiveContentData).pipe(
-    filter(isNotNull),
-  );
 
   /**
    * The general state, either the route error handling state, or if not routing error, the item data
@@ -147,6 +142,16 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   currentTaskView$ = this.itemTabs.currentTaskView$;
 
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
+
+  private itemDataState = this.store.selectSignal(fromItemContent.selectActiveContentData);
+  private activeContentRoute = toSignal(this.itemRoute$);
+  private breadcrumbsState = this.store.selectSignal(fromItemContent.selectActiveContentBreadcrumbsState);
+  private fullFrameContentSig = toSignal(this.fullFrameContent$, { initialValue: false });
+  private lastTrackedRouteId: string | undefined;
+  private lastTrackedRouteIdInitialized = false;
+  private hadPopulatedItemState = false;
+  private lastLayoutConfig: { id: string, display: ContentDisplayType } | undefined;
+
   readonly observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
   readonly isThreadInline$ = combineLatest([
     this.store.select(fromForum.selectThreadInlineContext),
@@ -206,20 +211,32 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(state => state.isFetching));
   readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(state => state.isError));
 
-  private itemChanged$ = this.itemState$.pipe(
-    distinctUntilChanged((a, b) => a.data?.route.id === b.data?.route.id),
-    map(() => {}),
-  );
-
   userProfile$ = this.userSessionService.userProfile$;
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
 
   constructor() {
-    this.itemChanged$.pipe(takeUntilDestroyed()).subscribe(() => {
-      this.fullFrameContent$.next(false);
-      this.editorUrl.set(undefined);
-      this.itemTabs.itemChanged();
+    // Field-initializer subscriptions ran synchronously; effects defer to the first CD flush.
+    this.applyResetOnItemChange();
+    this.applyItemToCurrentContentSync();
+    this.applyBreadcrumbsErrorHandling();
+    this.applyInitialAnswerInfoSync();
+    this.applyLayoutDisplaySync();
+
+    effect(() => {
+      this.applyResetOnItemChange();
+    });
+    effect(() => {
+      this.applyItemToCurrentContentSync();
+    });
+    effect(() => {
+      this.applyBreadcrumbsErrorHandling();
+    });
+    effect(() => {
+      this.applyInitialAnswerInfoSync();
+    });
+    effect(() => {
+      this.applyLayoutDisplaySync();
     });
 
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
@@ -232,66 +249,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
         error: () => { /* Errors cannot be handled before unloading page. */ },
       });
 
-    // on datasource state change, update the current content page info
-    this.itemState$.pipe(readyData<ItemData>(), takeUntilDestroyed()).subscribe(data => {
-      this.currentContent.replace(itemInfo({
-        route: routeWithSelfAttempt(data.route, data.currentResult?.attemptId),
-        details: {
-          title: data.item.string.title,
-          type: data.item.type,
-          permissions: data.item.permissions,
-          attemptId: data.currentResult?.attemptId,
-          bestScore: data.item.noScore ? undefined : (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.item.bestScore),
-          currentScore: data.item.noScore ? undefined :
-            (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.currentResult?.score),
-          validated: data.item.noScore ? undefined :
-            (data.item.watchedGroup ? data.item.watchedGroup.averageScore === 100 : data.currentResult?.validated),
-          leftNavIcon: data.item.displaySettings.leftNavIcon ?? undefined,
-        },
-      }));
-    });
-
     this.breadcrumbService.resultPathStarted$.pipe(takeUntilDestroyed()).subscribe(() => this.currentContent.forceNavMenuReload());
-
-    this.store.select(fromItemContent.selectActiveContentBreadcrumbsState).pipe(takeUntilDestroyed()).subscribe(state => {
-      if (state.isError) this.currentContent.clear();
-
-      // If path is incorrect, redirect to same page without path to trigger the solve missing path at next navigation
-      if (
-        state.isError &&
-        errorHasTag(state.error, breadcrumbServiceTag) &&
-        (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
-      ) {
-        if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
-        this.hasRedirected = true;
-        const route = state.identifier;
-        if (!route) throw new Error('unexpected: the active breadcrumbs state should always have an identifier');
-        const routeWithoutPath = { ...route, path: undefined };
-        this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
-      }
-      if (state.isReady) this.hasRedirected = false;
-    });
-
-    combineLatest([ this.itemRoute$, this.itemState$.pipe(startWith(undefined)) ]).pipe(
-      map(([ route, itemState ]) => (itemState && route.id === itemState.data?.item.id ?
-        {
-          route: routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId),
-          isTask: isATask(itemState.data.item),
-        } :
-        { route, isTask: undefined }
-      ))
-    ).pipe(takeUntilDestroyed()).subscribe(({ route, isTask }) => {
-      this.initialAnswerDataSource.setInfo(route, isTask);
-    });
-
-    combineLatest([ this.itemState$.pipe(readyData<ItemData>()), this.fullFrameContent$ ]).pipe(
-      map(([ data, fullFrame ]) => {
-        if (fullFrame) return { id: data.route.id, display: ContentDisplayType.ShowFullFrame };
-        return { id: data.route.id, display: isATask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default };
-      }),
-      distinctUntilChanged((x, y) => x.id === y.id && x.display === y.display), // emit once per item for a same display
-      map(({ display }) => display),
-    ).pipe(takeUntilDestroyed()).subscribe(display => this.layoutService.configure({ contentDisplayType: display }));
 
     this.saveBeforeUnloadError$.pipe(
       filter(isError => isError),
@@ -388,6 +346,105 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   setTaskView(view: string, route: RawItemRoute): void {
     // Navigating updates the URL, which drives the active tab (task tabs use exact, unique `task/<view>` routes).
     this.itemRouter.navigateTo(route, { page: [ 'task', view ], useCurrentObservation: true });
+  }
+
+  private applyResetOnItemChange(): void {
+    const state = this.itemDataState();
+    if (state === null) return;
+
+    const itemId = state.data?.route.id;
+    if (!this.lastTrackedRouteIdInitialized) {
+      this.lastTrackedRouteIdInitialized = true;
+      this.lastTrackedRouteId = itemId;
+      this.performItemChangeReset();
+      return;
+    }
+    if (itemId === this.lastTrackedRouteId) return;
+    this.lastTrackedRouteId = itemId;
+    this.performItemChangeReset();
+  }
+
+  // Intentionally writes fullFrameContent$/editorUrl consumed by syncLayoutDisplay and the template.
+  private performItemChangeReset(): void {
+    this.fullFrameContent$.next(false);
+    this.editorUrl.set(undefined);
+    this.itemTabs.itemChanged();
+  }
+
+  private applyItemToCurrentContentSync(): void {
+    const state = this.itemDataState();
+    if (!state?.isReady) return;
+    const data = state.data;
+    this.currentContent.replace(itemInfo({
+      route: routeWithSelfAttempt(data.route, data.currentResult?.attemptId),
+      details: {
+        title: data.item.string.title,
+        type: data.item.type,
+        permissions: data.item.permissions,
+        attemptId: data.currentResult?.attemptId,
+        bestScore: data.item.noScore ? undefined : (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.item.bestScore),
+        currentScore: data.item.noScore ? undefined :
+          (data.item.watchedGroup ? data.item.watchedGroup.averageScore : data.currentResult?.score),
+        validated: data.item.noScore ? undefined :
+          (data.item.watchedGroup ? data.item.watchedGroup.averageScore === 100 : data.currentResult?.validated),
+        leftNavIcon: data.item.displaySettings.leftNavIcon ?? undefined,
+      },
+    }));
+  }
+
+  private applyBreadcrumbsErrorHandling(): void {
+    const state = this.breadcrumbsState();
+    if (state.isError) this.currentContent.clear();
+
+    if (
+      state.isError &&
+      errorHasTag(state.error, breadcrumbServiceTag) &&
+      (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
+    ) {
+      if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
+      this.hasRedirected = true;
+      const route = state.identifier;
+      if (!route) throw new Error('unexpected: the active breadcrumbs state should always have an identifier');
+      const routeWithoutPath = { ...route, path: undefined };
+      this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
+    }
+    if (state.isReady) this.hasRedirected = false;
+  }
+
+  private applyInitialAnswerInfoSync(): void {
+    const route = this.activeContentRoute();
+    const itemState = this.itemDataState();
+    if (!route) return;
+
+    if (itemState === null) {
+      if (this.hadPopulatedItemState) return;
+      this.initialAnswerDataSource.setInfo(route, undefined);
+      return;
+    }
+
+    this.hadPopulatedItemState = true;
+    if (route.id === itemState.data?.item.id) {
+      this.initialAnswerDataSource.setInfo(
+        routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId),
+        isATask(itemState.data.item),
+      );
+    } else {
+      this.initialAnswerDataSource.setInfo(route, undefined);
+    }
+  }
+
+  private applyLayoutDisplaySync(): void {
+    const state = this.itemDataState();
+    if (!state?.isReady) return;
+    const data = state.data;
+    const fullFrame = this.fullFrameContentSig();
+    const display = fullFrame
+      ? ContentDisplayType.ShowFullFrame
+      : (isATask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default);
+    const id = data.route.id;
+    if (this.lastLayoutConfig?.id === id && this.lastLayoutConfig?.display === display) return;
+    this.lastLayoutConfig = { id, display };
+    this.layoutService.configure({ contentDisplayType: display });
   }
 
 }
