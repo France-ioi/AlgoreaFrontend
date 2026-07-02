@@ -2,6 +2,7 @@
 
 .alg-table-v2 {
   width: 100%;
+  // Table horizontal-scroll minimum — not the app narrow-layout breakpoint (see breakpoints.scss).
   min-width: 599.98px;
   border-spacing: 0;
 

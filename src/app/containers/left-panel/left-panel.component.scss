@@ -1,3 +1,5 @@
+@use 'src/assets/scss/breakpoints' as bp;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -16,7 +18,7 @@
   height: 100%;
 }
 
-@media screen and (max-width: 599.98px) {
+@media screen and (max-width: bp.$narrow-screen-max-width) {
   :host(.tree-expandable) {
     width: 100%;
     min-width: 0;

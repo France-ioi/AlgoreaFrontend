@@ -6,19 +6,22 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 
 import { APPCONFIG, AppConfig } from '../config';
+import { narrowScreenMediaQuery } from '../utils/layout-breakpoints';
 import { LayoutService } from './layout.service';
 
 describe('LayoutService', () => {
   let service: LayoutService;
+  let observeSpy: jasmine.Spy;
 
   beforeEach(() => {
+    observeSpy = jasmine.createSpy('observe').and.returnValue(of({ matches: false, breakpoints: {} }));
     TestBed.configureTestingModule({
       providers: [
         LayoutService,
         provideMockStore(),
         {
           provide: BreakpointObserver,
-          useValue: { observe: (): ReturnType<BreakpointObserver['observe']> => of({ matches: false, breakpoints: {} }) },
+          useValue: { observe: observeSpy },
         },
         { provide: APPCONFIG, useValue: { redirects: [], hideLeftMenuTreeOnItemIds: [] } as unknown as AppConfig },
         { provide: Location, useValue: { path: (): string => '' } },
@@ -26,6 +29,10 @@ describe('LayoutService', () => {
       ],
     });
     service = TestBed.inject(LayoutService);
+  });
+
+  it('observes the narrow-screen media query for isNarrowScreen$', () => {
+    expect(observeSpy).toHaveBeenCalledWith(narrowScreenMediaQuery);
   });
 
   it('emits search active changes through searchActive$', () => {

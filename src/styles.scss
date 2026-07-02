@@ -1,3 +1,4 @@
+@use 'assets/scss/breakpoints' as bp;
 @use "sass:meta";
 @use 'assets/scss/helpers';
 @use 'src/geometry';
@@ -36,7 +37,7 @@
 @include meta.load-css('assets/scss/text-colors');
 @include meta.load-css('assets/scss/text-sizes');
 
-@media screen and (max-width: 599.98px) {
+@media screen and (max-width: bp.$narrow-screen-max-width) {
   :root {
     --alg-space-size-1: 2rem;
     --alg-space-size-2: 1.5rem;
@@ -131,7 +132,7 @@ button, input, textarea {
 .top-bar-overlay-panel {
     width: 450px;
 
-    @media screen and (max-width: 599.98px) {
+    @media screen and (max-width: bp.$narrow-screen-max-width) {
       width: 100% !important;
     }
 }
