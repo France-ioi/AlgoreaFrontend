@@ -26,10 +26,6 @@
           </div>
           <div class="header-content-column" [class.content-masked]="treeHidden()">
             <alg-platform-logo [class.for-mobile]="isNarrowScreen" />
-            @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
-              <alg-top-right-controls topRightMenuStyleClass="for-mobile"
-               />
-            }
           </div>
         </div>
       } @else {
@@ -37,10 +33,6 @@
           <alg-platform-logo [class.for-mobile]="isNarrowScreen" />
           <ng-container *ngTemplateOutlet="collapseButton" />
         </div>
-        @if (!!(showTopRightControls$ | async) && isNarrowScreen) {
-          <alg-top-right-controls topRightMenuStyleClass="for-mobile"
-           />
-        }
       }
     </ng-container>
   </div>

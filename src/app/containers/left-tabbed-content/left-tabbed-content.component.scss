@@ -40,12 +40,27 @@
   flex: 1;
   min-height: 0;
   align-items: stretch;
+}
 
-  alg-left-tab-bar {
-    margin: 0;
-    padding: 0;
-    align-self: stretch;
-  }
+.tab-rail {
+  display: flex;
+  flex-direction: column;
+  width: var(--left-panel-tab-bar-width, 5rem);
+  align-self: stretch;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tab-rail-tabs {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  --scrollbar-track-color: transparent;
+  --scrollbar-track-thickness: #{functions.toRem(5)};
+}
+
+.tab-rail-controls {
+  flex-shrink: 0;
 }
 
 .content-column {

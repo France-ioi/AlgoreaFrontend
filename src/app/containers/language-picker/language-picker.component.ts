@@ -14,6 +14,7 @@ export class LanguagePickerComponent {
   private localeService = inject(LocaleService);
 
   defaultLang = input<string>();
+  openAbove = input(false);
   redirectOnChange = input(true);
   changeLang = output<string>();
 

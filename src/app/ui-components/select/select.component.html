@@ -2,7 +2,7 @@
   type="button"
   class="{{ buttonStyleClass() }}"
   alg-button
-  icon="ph ph-caret-down"
+  [icon]="openAbove() ? 'ph ph-caret-up' : 'ph ph-caret-down'"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
   (click)="isOpen.set(!isOpen())"
@@ -23,6 +23,7 @@
 >
   <div
     class="dropdown"
+    [class.open-above]="openAbove()"
     [style.width.px]="el.nativeElement.getBoundingClientRect().width"
   >
     <ng-content />
