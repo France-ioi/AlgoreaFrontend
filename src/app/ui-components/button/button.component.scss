@@ -220,6 +220,39 @@
   }
 }
 
+// Upper-bound for button captions; longer translated strings may need a larger value.
+$caption-max-width: functions.toRem(192);
+
+.caption-enter {
+  animation: caption-enter 200ms ease-in-out both;
+}
+
+.caption-leave {
+  animation: caption-leave 100ms ease-in-out both;
+}
+
+@keyframes caption-enter {
+  from {
+    max-width: 0;
+    opacity: 0;
+  }
+
+  to {
+    max-width: $caption-max-width;
+    opacity: 1;
+  }
+}
+
+@keyframes caption-leave {
+  from {
+    max-width: $caption-max-width;
+  }
+
+  to {
+    max-width: 0;
+  }
+}
+
 .container {
   display: flex;
   justify-content: center;

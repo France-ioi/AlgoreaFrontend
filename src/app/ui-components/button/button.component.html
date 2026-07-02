@@ -1,5 +1,9 @@
 @if (showCaption()) {
-  <span class="content" @captionAnimation [@.disabled]="!withAnimation()">
+  <span
+    class="content"
+    [animate.enter]="withAnimation() ? 'caption-enter' : null"
+    [animate.leave]="withAnimation() ? 'caption-leave' : null"
+  >
     <ng-content />
   </span>
 }
