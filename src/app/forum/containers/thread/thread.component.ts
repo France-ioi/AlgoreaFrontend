@@ -1,81 +1,46 @@
 import { AfterViewInit, Component, DestroyRef, ElementRef, inject, OnDestroy, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { mapToFetchState, readyData } from '../../../utils/operators/state';
+import { readyData } from '../../../utils/operators/state';
 import { delay, combineLatest, of, switchMap, Observable, BehaviorSubject } from 'rxjs';
 import {
-  debounceTime,
   distinctUntilChanged,
   filter,
   map,
-  share,
   startWith,
-  take,
 } from 'rxjs/operators';
 import { UserSessionService } from '../../../services/user-session.service';
 import { UserResolutionCacheService } from 'src/app/groups/data-access/user-resolution-cache.service';
 import { formatUser } from 'src/app/groups/models/user';
 import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
 import { ActionFeedbackService } from '../../../services/action-feedback.service';
-import { FetchState, fetchingState, readyState } from '../../../utils/state';
-import { errorIsHTTPForbidden } from '../../../utils/errors';
+import { FetchState } from '../../../utils/state';
 import { UpdateThreadService } from '../../../data-access/update-thread.service';
 import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { AsyncPipe } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
-import { createSelector, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { fromForum } from 'src/app/forum/store';
 import { fromWebsocket } from 'src/app/store/websocket';
 import { ThreadId } from 'src/app/forum/models/threads';
-import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
-import { fromItemContent } from 'src/app/items/store';
-import { fromGroupContent } from 'src/app/groups/store';
-import equal from 'fast-deep-equal/es6';
 import { ThreadMessageService } from 'src/app/data-access/thread-message.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { isMessageEvent } from '../../models/thread-events';
-import { v4 as uuidv4 } from 'uuid';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { IndicatorLayout, ThreadTopIndicatorComponent } from '../thread-top-indicator/thread-top-indicator.component';
 import { fromForum as forumActions } from '../../store';
-import { mergeEvents, ThreadEvent } from '../../models/thread-events';
 import { computed, input, signal } from '@angular/core';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
-
-const selectThreadAssignmentIndex = createSelector(
-  fromForum.selectInfo,
-  info => {
-    if (!info.data) return 0;
-    return info.data.status === 'waiting_for_participant' ? 0 : 1;
-  }
-);
-
-const selectThreadRawStatus = createSelector(
-  fromForum.selectInfo,
-  info => info.data?.status ?? null,
-);
-
-function truncateLabel(text: string, maxLength: number): string {
-  return text.length > maxLength ? `${ text.slice(0, maxLength) }…` : text;
-}
-
-const selectThreadInfo = createSelector(
-  fromItemContent.selectActiveContentItem,
-  fromGroupContent.selectObservationInfoForFetchedContent,
-  fromForum.selectThreadStatus,
-  (item, observationInfo, threadStatus) => ({
-    threadStatus,
-    itemInfo: threadStatus?.id.itemId === item?.id ? item : null,
-    groupInfo: observationInfo && threadStatus?.id.participantId === observationInfo.data?.route.id ? observationInfo.data : null,
-  })
-);
+import { selectThreadAssignmentIndex, selectThreadRawStatus, truncateLabel } from './thread.selectors';
+import { buildThreadStatus$, mergeThreadEventsState } from './thread-view-model';
+import { changeAssignment, changeThreadStatus, sendThreadMessage, ThreadActionsDeps } from './thread-actions';
 
 @Component({
   selector: 'alg-thread',
@@ -127,44 +92,12 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   private readonly wsEvents = this.store.selectSignal(fromForum.selectWsEvents);
 
   // Merge events with granular loading states
-  readonly state = computed(() => {
-    const log = this.logEvents();
-    const sls = this.slsEvents();
-    const ws = this.wsEvents();
-    const identifier = log.identifier ?? sls.identifier;
-
-    // Don't show errors if page is unloading (prevents flash on refresh)
-    if (this.isPageUnloading()) {
-      const logData = log.data ?? [];
-      const slsData = sls.data ?? [];
-      const mergedData = mergeEvents([ logData, slsData, ws ]);
-      return readyState(mergedData, identifier);
-    }
-
-    // Return error if either source has an error
-    if (log.isError) return log;
-    if (sls.isError) return sls;
-
-    // Check if both are loading (initial load)
-    const bothFetching = log.isFetching && sls.isFetching;
-    const bothHaveNoData = log.data === undefined && sls.data === undefined;
-
-    if (bothFetching && bothHaveNoData) {
-      return fetchingState<ThreadEvent[], ThreadId>(undefined, identifier);
-    }
-
-    // At least one has data - merge what we have
-    const logData = log.data ?? [];
-    const slsData = sls.data ?? [];
-    const mergedData = mergeEvents([ logData, slsData, ws ]);
-
-    // If either is still fetching, mark as fetching but with data
-    if (log.isFetching || sls.isFetching) {
-      return fetchingState(mergedData, identifier);
-    }
-
-    return readyState(mergedData, identifier);
-  });
+  readonly state = computed(() => mergeThreadEventsState(
+    this.logEvents(),
+    this.slsEvents(),
+    this.wsEvents(),
+    this.isPageUnloading(),
+  ));
 
   // Observable version for backwards compatibility
   private readonly state$ = this.store.select(fromForum.selectMergedThreadEvents);
@@ -215,44 +148,11 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   readonly threadStatus$ : Observable<undefined | FetchState<
   { open: true, canClose: boolean } |
   { open: false, canOpen: boolean }
-  >> = combineLatest([
-      this.store.select(selectThreadInfo),
-      this.isCurrentUserThreadParticipant$,
-    ]).pipe(
-      debounceTime(0), // to prevent race condition (service call immediately aborted)
-      distinctUntilChanged(([ prev ], [ cur ]) => equal(prev.threadStatus, cur.threadStatus)),
-      switchMap(([{ threadStatus, itemInfo, groupInfo }, isCurrentUserParticipant ]) => {
-        if (!threadStatus || !threadStatus?.visible) return of(undefined);
-        const { id, open } = threadStatus;
-        if (open) return of(readyState({ open: true as const, canClose: isCurrentUserParticipant }));
-        // if we have the info, decided without more fetching
-        if (isCurrentUserParticipant && itemInfo) {
-          return of(readyState({ open: false as const, canOpen: itemInfo.permissions.canRequestHelp }));
-        }
-        if (groupInfo) {
-          return of(readyState({ open: false as const, canOpen: groupInfo.currentUserWatchGroup }));
-        }
-        // if we do not have the info ready, we have to fetch
-        return this.getItemByIdService.get(id.itemId, isCurrentUserParticipant ? {} : { watchedGroupId: id.participantId }).pipe(
-          mapToFetchState(),
-          map(state => {
-            switch (state.tag) {
-              case 'ready':
-                if (isCurrentUserParticipant) return readyState({ open: false as const, canOpen: state.data.permissions.canRequestHelp });
-                return readyState({ open: false as const, canOpen: true });
-              case 'fetching':
-                return fetchingState(); // fetching with no data
-              case 'error':
-                // 403 on that service means that they cannot watch the participant
-                if (!isCurrentUserParticipant && errorIsHTTPForbidden(state.error)) {
-                  return readyState({ open: false as const, canOpen: false });
-                }
-                return state;
-            }
-          })
-        );
-      }),
-    );
+  >> = buildThreadStatus$({
+      store: this.store,
+      getItemByIdService: this.getItemByIdService,
+      isCurrentUserThreadParticipant$: this.isCurrentUserThreadParticipant$,
+    });
   threadToken = this.store.selectSignal(fromForum.selectThreadToken);
   readonly followStatus$ = this.store.select(fromForum.selectFollowStatus);
 
@@ -326,6 +226,16 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     this.isPageUnloading.set(true);
   };
 
+  private threadActionsDeps(): ThreadActionsDeps {
+    return {
+      store: this.store,
+      threadMessageService: this.threadMessageService,
+      updateThreadService: this.updateThreadService,
+      actionFeedbackService: this.actionFeedbackService,
+      config: this.config,
+    };
+  }
+
   clearMessageToSendControl(): void {
     this.form.reset({
       messageToSend: '',
@@ -333,41 +243,15 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   }
 
   sendMessage(threadId: ThreadId, isThreadOpened: boolean, isParticipant: boolean): void {
-    const messageToSend = this.form.value.messageToSend?.trim();
-    if (!messageToSend) return;
-    this.disableControls$.next(true);
-
-    const token = this.threadToken();
-    if (!token) throw new Error('unexpected: the thread token is empty');
-
-    const uuid = uuidv4(); // used to track a message if we need to (future use)
-    const prerequisite = isThreadOpened
-      ? of(undefined)
-      : this.changeThreadStatus({ open: true, threadId, isParticipant, messageCountIncrement: 1 }).pipe(
-        switchMap(() => this.store.select(fromForum.selectThreadStatusOpen)),
-        filter(open => open),
-        take(1),
-        map(() => undefined)
-      );
-    prerequisite.pipe(
-      switchMap(() => this.store.select(fromForum.selectThreadToken)),
-      filter(isNotUndefined),
-      take(1),
-      switchMap(token =>
-        this.threadMessageService.create(threadId.itemId, threadId.participantId, { text: messageToSend, uuid }, { authToken: token })
-      ),
-      switchMap(() => this.updateThreadService.update(threadId.itemId, threadId.participantId, { messageCountIncrement: 1 })),
-    ).subscribe({
-      next: () => {
-        this.clearMessageToSendControl();
-        this.disableControls$.next(false);
-        // Auto-follow when sending a message (if not already following)
-        this.store.dispatch(forumActions.threadPanelActions.autoFollowTriggered({ threadId }));
-      },
-      error: err => {
-        this.disableControls$.next(false);
-        if (!(err instanceof HttpErrorResponse)) throw err;
-      }
+    sendThreadMessage({
+      ...this.threadActionsDeps(),
+      messageToSend: this.form.value.messageToSend ?? '',
+      threadId,
+      isThreadOpened,
+      isParticipant,
+      threadToken: this.threadToken(),
+      setControlsDisabled: disabled => this.disableControls$.next(disabled),
+      clearMessageToSend: () => this.clearMessageToSendControl(),
     });
   }
 
@@ -384,37 +268,11 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
   changeThreadStatus(
     params: { open: boolean, threadId: ThreadId, isParticipant: boolean, messageCountIncrement?: number }
   ): Observable<void> {
-    const payload = !params.open
-      ? { status: 'closed' as const }
-      : params.isParticipant
-        ? {
-          status: 'waiting_for_participant' as const,
-          helperGroupId: this.config.allUsersGroupId,
-          ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {}),
-        }
-        : {
-          status: 'waiting_for_trainer' as const,
-          helperGroupId: this.config.allUsersGroupId,
-          ...(params.messageCountIncrement !== undefined ? { messageCountIncrement: params.messageCountIncrement } : {}),
-        };
-    const update$ = this.updateThreadService.update(
-      params.threadId.itemId, params.threadId.participantId, payload,
-    ).pipe(share());
-    update$.subscribe({
-      next: () => this.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
-      error: () => this.actionFeedbackService.unexpectedError(),
-    });
-    return update$;
+    return changeThreadStatus({ ...this.threadActionsDeps(), params });
   }
 
   changeAssignment(index: number, threadId: ThreadId): void {
-    const payload = index === 0
-      ? { status: 'waiting_for_participant' as const, helperGroupId: this.config.allUsersGroupId }
-      : { status: 'waiting_for_trainer' as const, helperGroupId: this.config.allUsersGroupId };
-    this.updateThreadService.update(threadId.itemId, threadId.participantId, payload).subscribe({
-      next: () => this.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
-      error: () => this.actionFeedbackService.unexpectedError(),
-    });
+    changeAssignment({ ...this.threadActionsDeps(), index, threadId });
   }
 
   focusOnInput(): void {
