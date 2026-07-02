@@ -41,7 +41,7 @@
             }
           }
           @let showTopIndicator = !isMine && threadIdForIndicator && threadStatus?.data?.open && (participantUser$ | async)?.name;
-          <div class="widget-scroll" [class.with-top-indicator]="showTopIndicator" #messagesScroll *ngrxLet="{ id: threadId$ | async, userCache: userCache$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
+          <div class="widget-scroll" [class.with-top-indicator]="showTopIndicator" #messagesScroll *ngrxLet="{ id: threadId$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
             @if (isCurrentUserThreadParticipant && threadStatus?.isReady && currentState.data?.length === 0) {
               <div class="no-messages" i18n>
               In this panel, you can request help from other users about the content you are on.
@@ -53,7 +53,6 @@
                   <alg-thread-message class="thread-message"
                     [threadId]="threadMetadata.id"
                     [event]="event"
-                    [userCache]="threadMetadata.userCache ?? []"
                     [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
                     [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
                    />

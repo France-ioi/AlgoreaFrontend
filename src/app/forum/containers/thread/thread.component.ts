@@ -4,21 +4,17 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { mapToFetchState, readyData } from '../../../utils/operators/state';
 import { delay, combineLatest, of, switchMap, Observable, BehaviorSubject } from 'rxjs';
 import {
-  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
-  mergeScan,
-  scan,
   share,
   startWith,
   take,
 } from 'rxjs/operators';
 import { UserSessionService } from '../../../services/user-session.service';
+import { UserResolutionCacheService } from 'src/app/groups/data-access/user-resolution-cache.service';
 import { formatUser } from 'src/app/groups/models/user';
-import { GetUserService } from 'src/app/groups/data-access/get-user.service';
-import { UserInfo } from '../thread-message/thread-user-info';
 import { GetItemByIdService } from '../../../data-access/get-item-by-id.service';
 import { ActionFeedbackService } from '../../../services/action-feedback.service';
 import { FetchState, fetchingState, readyState } from '../../../utils/state';
@@ -34,7 +30,6 @@ import { fromWebsocket } from 'src/app/store/websocket';
 import { ThreadId } from 'src/app/forum/models/threads';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemRoutePipe } from 'src/app/pipes/itemRoute';
-import { fromObservation } from 'src/app/store/observation';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
@@ -106,7 +101,7 @@ const selectThreadInfo = createSelector(
 export class ThreadComponent implements AfterViewInit, OnDestroy {
   private store = inject(Store);
   private userSessionService = inject(UserSessionService);
-  private userService = inject(GetUserService);
+  private userCache = inject(UserResolutionCacheService);
   private getItemByIdService = inject(GetItemByIdService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private updateThreadService = inject(UpdateThreadService);
@@ -193,48 +188,21 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
     })
   );
 
-  private distinctUsersInThread = this.state$.pipe(
-    map(state => state.data ?? []), // if there is no data, consider there is no events
-    map(events => events.filter(isMessageEvent).map(e => e.authorId)),
-    scan((acc: string[], val) => [ ...new Set([ ...acc, ...val ]) ].sort() , []),
-    startWith([]),
-    distinctUntilChanged((prev, cur) => JSON.stringify(prev) === JSON.stringify(cur))
-  );
-  readonly userCache$ = combineLatest([
-    this.store.select(fromForum.selectThreadId).pipe(filter(isNotNull)),
-    this.distinctUsersInThread,
-    this.userSessionService.userProfile$,
-    this.store.select(fromObservation.selectObservedGroupInfo),
-  ]).pipe(
-    map(([ threadId, users, currentUser, observedGroup ]) =>
-      [ threadId.participantId, ...users.filter(id => threadId.participantId !== id) ].map(id => ({
-        id,
-        isCurrentUser: id === currentUser.groupId,
-        isThreadParticipant: id === observedGroup?.route.id || (!observedGroup && id === currentUser.groupId),
-        name: id === currentUser.groupId ? formatUser(currentUser) : id === observedGroup?.route.id ? observedGroup.name : undefined,
-      })),
-    ),
-    mergeScan((acc: UserInfo[], users) => combineLatest(users.map(u => {
-      if (u.name !== undefined) return of(u);
-      const lookup = acc.find(user => user.id === u.id);
-      if (lookup?.name !== undefined) return of(lookup);
-      return this.userService.getForId(u.id).pipe(
-        map(user => ({ ...u, name: formatUser(user) })),
-        startWith(u),
-        catchError(() => of(u)),
-      );
-    })), [] /* scan seed */, 1 /* no concurrency */),
+  threadId$ = this.store.select(fromForum.selectThreadId);
+  readonly participantUser$ = this.threadId$.pipe(
+    map(t => t?.participantId ?? null),
+    distinctUntilChanged(),
+    switchMap(id => (id === null
+      ? of(undefined)
+      : this.userCache.resolveUser(id).pipe(
+        map(u => ({ id, name: u ? formatUser(u) : undefined })),
+        startWith({ id, name: undefined as string | undefined }),
+      ))),
   );
   isMine$ = combineLatest([
-    this.store.select(fromForum.selectThreadId).pipe(filter(isNotNull)),
+    this.threadId$.pipe(filter(isNotNull)),
     this.userSessionService.userProfile$,
   ]).pipe(map(([ threadId, userProfile ]) => threadId.participantId === userProfile.groupId));
-  readonly participantUser$ = combineLatest([
-    this.userCache$,
-    this.store.select(fromForum.selectThreadId),
-  ]).pipe(
-    map(([ users, threadId ]) => users.find(u => u.id === threadId?.participantId)),
-  );
   // for future: others should be able to load as well using the answer stored in msg data
   readonly canCurrentUserLoadAnswers$ = this.store.select(fromForum.selectCanCurrentUserLoadThreadAnswers);
   private readonly isThreadStatusOpened$ = this.store.select(fromForum.selectThreadStatusOpen);
@@ -285,7 +253,6 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
         );
       }),
     );
-  threadId$ = this.store.select(fromForum.selectThreadId);
   threadToken = this.store.selectSignal(fromForum.selectThreadToken);
   readonly followStatus$ = this.store.select(fromForum.selectFollowStatus);
 
