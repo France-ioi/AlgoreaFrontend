@@ -42,7 +42,11 @@ export function sendThreadMessage(ctx: SendThreadMessageContext): void {
   const prerequisite = ctx.isThreadOpened
     ? of(undefined)
     : changeThreadStatus({
-      ...ctx,
+      store: ctx.store,
+      threadMessageService: ctx.threadMessageService,
+      updateThreadService: ctx.updateThreadService,
+      actionFeedbackService: ctx.actionFeedbackService,
+      config: ctx.config,
       params: {
         open: true,
         threadId: ctx.threadId,

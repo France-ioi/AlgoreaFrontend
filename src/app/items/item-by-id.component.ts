@@ -1,18 +1,13 @@
 import { Component, effect, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { combineLatest, of, EMPTY, fromEvent, merge, Observable, Subject, BehaviorSubject } from 'rxjs';
+import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
 import {
   delay,
   distinctUntilChanged,
   filter,
   map,
-  shareReplay,
   switchMap,
-  take,
-  catchError,
-  mergeWith,
-  takeUntil,
 } from 'rxjs/operators';
 import { FetchState, readyState } from 'src/app/utils/state';
 import { CurrentContentService } from 'src/app/services/current-content.service';
@@ -25,15 +20,13 @@ import { isATask } from 'src/app/items/models/item-type';
 import { itemInfo } from 'src/app/models/content/item-info';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { ContentDisplayType, LayoutService } from 'src/app/services/layout.service';
-import { mapStateData, readyData } from 'src/app/utils/operators/state';
+import { mapStateData } from 'src/app/utils/operators/state';
 import { RawItemRoute, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
 import { BeforeUnloadComponent } from 'src/app/guards/before-unload-guard';
 import { ItemContentComponent } from './containers/item-content/item-content.component';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { TaskTab } from './containers/item-display/item-display.component';
-import { TaskConfig } from './services/item-task.service';
-import { APPCONFIG } from 'src/app/config';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
@@ -54,22 +47,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { fromForum, isThreadInline } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
-import { LocaleService } from '../services/localeService';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from './store';
 import { ItemBreadcrumbsWithFailoverService } from './services/item-breadcrumbs-with-failover.service';
-import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { LoginWallComponent } from './containers/login-wall/login-wall.component';
 import { RestrictedContentComponent } from './containers/restricted-content/restricted-content.component';
-import { createSelector } from '@ngrx/store';
-import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
-
-const selectState = createSelector(
-  fromItemContent.selectActiveContentRouteErrorHandlingState,
-  fromItemContent.selectActiveContentData,
-  (routeErrorHandlingState, itemData) => (routeErrorHandlingState === null ? itemData : routeErrorHandlingState)
-);
+import { ItemTaskFlowService, selectState } from './item-task-flow.service';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -78,7 +62,7 @@ const selectState = createSelector(
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrl: './item-by-id.component.scss',
-  providers: [ InitialAnswerDataSource, ItemTabs ],
+  providers: [ InitialAnswerDataSource, ItemTabs, ItemTaskFlowService ],
   imports: [
     ItemHeaderComponent,
     AccessCodeViewComponent,
@@ -105,22 +89,18 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private store = inject(Store);
   private itemRouter = inject(ItemRouter);
   private currentContent = inject(CurrentContentService);
-  private initialAnswerDataSource = inject(InitialAnswerDataSource);
   private itemTabs = inject(ItemTabs);
+  private taskFlow = inject(ItemTaskFlowService);
   private userSessionService = inject(UserSessionService);
   private breadcrumbService = inject(ItemBreadcrumbsWithFailoverService);
   private layoutService = inject(LayoutService);
   private currentContentService = inject(CurrentContentService);
   private tabService = inject(TabService);
-  private localeService = inject(LocaleService);
-  private config = inject(APPCONFIG);
-  private confirmationModalService = inject(ConfirmationModalService);
   private pendingChangesService = inject(PendingChangesService);
 
   readonly itemContentComponent = viewChild(ItemContentComponent);
 
   readonly editorUrl = signal<string | undefined>(undefined);
-  private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
 
   /**
    * The general state, either the route error handling state, or if not routing error, the item data
@@ -144,12 +124,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly fullFrameContent$ = new BehaviorSubject<boolean>(false); // feeded by task change (below) and task api (item-content comp)
 
   private itemDataState = this.store.selectSignal(fromItemContent.selectActiveContentData);
-  private activeContentRoute = toSignal(this.itemRoute$);
   private breadcrumbsState = this.store.selectSignal(fromItemContent.selectActiveContentBreadcrumbsState);
   private fullFrameContentSig = toSignal(this.fullFrameContent$, { initialValue: false });
   private lastTrackedRouteId: string | undefined;
   private lastTrackedRouteIdInitialized = false;
-  private hadPopulatedItemState = false;
   private lastLayoutConfig: { id: string, display: ContentDisplayType } | undefined;
 
   readonly observedGroup$ = this.store.select(fromObservation.selectObservedGroupInfo);
@@ -165,62 +143,23 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   );
   readonly shouldDisplayTabBar$ = this.tabService.shouldDisplayTabBar$;
 
-  readonly answerLoadingError$ = this.initialAnswerDataSource.error$.pipe(
-    switchMap(answerErr => this.itemRoute$.pipe(
-      map((route, idx) => (idx === 0 && answerErr !== undefined ? {
-        isForbidden: errorIsHTTPForbidden(answerErr.error),
-        fallbackLink: route.answer ? itemRouteAsUrlCommand({ ...route, answer: undefined }, this.config.redirects) : undefined,
-      } : undefined /* reset error if we navigate */)))
-    ),
-  );
-
-  readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(readyData()).pipe(
-    map(data => ({ isTask: isATask(data.item), route: data.route })),
-    distinctUntilChanged((x, y) => JSON.stringify(x.route) === JSON.stringify(y.route)),
-    switchMap(({ isTask, route }) => {
-      if (!isTask) return of(null); // config for non-task's is null
-      const userLocale = this.localeService.currentLang?.tag;
-      if (!userLocale) throw new Error('unexpected: locale not defined');
-      return this.initialAnswerDataSource.answer$.pipe(
-        catchError(() => EMPTY), // error is handled by initialAnswerDataSource.error$
-        map(initialAnswer => ({
-          readOnly: !!route.answer,
-          initialAnswer,
-          locale: userLocale, // should use task locale if there is a way for the user to select it
-        }))
-      );
-    }),
-  );
-
-  // Any value emitted in skipBeforeUnload$ resumes navigation WITHOUT cancelling the save request.
-  private skipBeforeUnload$ = new Subject<void>();
-  private retryBeforeUnload$ = new Subject<void>();
-  private beforeUnload$ = new Subject<void>();
-  private saveBeforeUnload$ = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
-    switchMap(() => {
-      const itemDisplay = this.itemContentComponent()?.itemDisplayComponent();
-      if (!itemDisplay) return of(readyState<void>(undefined));
-      return itemDisplay.saveAnswerAndState();
-    }),
-    takeUntil(this.skipBeforeUnload$),
-    mergeWith(this.skipBeforeUnload$.pipe(map(() => readyState<void>(undefined)))),
-    shareReplay(1),
-  );
-  // When navigating elsewhere but the current answer is unsaved, navigation is blocked until the save is performed.
-  // savingAnswer$ indicates the loading state while blocking navigation because of the save request.
-  readonly savingAnswer$ = this.saveBeforeUnload$.pipe(map(state => state.isFetching));
-  readonly saveBeforeUnloadError$ = this.saveBeforeUnload$.pipe(map(state => state.isError));
+  readonly answerLoadingError$ = this.taskFlow.answerLoadingError$;
+  readonly taskConfig$ = this.taskFlow.taskConfig$;
+  readonly savingAnswer$ = this.taskFlow.savingAnswer$;
 
   userProfile$ = this.userSessionService.userProfile$;
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
 
   constructor() {
+    this.taskFlow.registerSaveHandler(() =>
+      this.itemContentComponent()?.itemDisplayComponent()?.saveAnswerAndState() ?? of(readyState<void>(undefined))
+    );
+
     // Field-initializer subscriptions ran synchronously; effects defer to the first CD flush.
     this.applyResetOnItemChange();
     this.applyItemToCurrentContentSync();
     this.applyBreadcrumbsErrorHandling();
-    this.applyInitialAnswerInfoSync();
     this.applyLayoutDisplaySync();
 
     effect(() => {
@@ -233,43 +172,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.applyBreadcrumbsErrorHandling();
     });
     effect(() => {
-      this.applyInitialAnswerInfoSync();
-    });
-    effect(() => {
       this.applyLayoutDisplaySync();
     });
 
-    fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
-      .pipe(
-        switchMap(() => this.itemContentComponent()?.itemDisplayComponent()?.saveAnswerAndState() ?? of(undefined)),
-        take(1),
-        takeUntilDestroyed(),
-      )
-      .subscribe({
-        error: () => { /* Errors cannot be handled before unloading page. */ },
-      });
-
     this.breadcrumbService.resultPathStarted$.pipe(takeUntilDestroyed()).subscribe(() => this.currentContent.forceNavMenuReload());
-
-    this.saveBeforeUnloadError$.pipe(
-      filter(isError => isError),
-      switchMap(() => this.confirmationModalService.open({
-        title: $localize`Leave unsaved task`,
-        message: $localize`You do not appear to be connected to the Internet, if you leave this task you may loose your progress.
-          Are you sure you want to continue?`,
-        acceptButtonCaption: $localize`Loose progress and leave the task`,
-        acceptButtonStyleClass: 'danger',
-        rejectButtonCaption: $localize`Retry`,
-        rejectButtonStyleClass: 'primary',
-        allowToClose: false,
-      }, { maxWidth: '34rem', disableClose: true }))
-    ).pipe(takeUntilDestroyed()).subscribe(confirmed => {
-      if (confirmed) {
-        this.skipBeforeUnload();
-      } else {
-        this.retryBeforeUnload();
-      }
-    });
   }
 
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
@@ -278,16 +184,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.tabService.setTabs([]);
     this.currentContent.clear();
     this.layoutService.configure({ contentDisplayType: ContentDisplayType.Default });
-    this.skipBeforeUnload$.complete();
-    this.retryBeforeUnload$.complete();
-    this.beforeUnload$.complete();
   }
-
 
   isDirty(): boolean {
     return !!this.itemContentComponent()?.isDirty() || !!this.pendingChangesService.component?.isDirty();
   }
-
 
   protected isItemUnavailableError(error: unknown): boolean {
     return isItemUnavailableError(error);
@@ -303,20 +204,15 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   }
 
   beforeUnload(): Observable<boolean> {
-    this.beforeUnload$.next();
-    return this.saveBeforeUnload$.pipe(
-      map(state => state.isReady),
-      filter(done => done),
-      take(1),
-    );
+    return this.taskFlow.beforeUnload();
   }
 
   retryBeforeUnload(): void {
-    this.retryBeforeUnload$.next();
+    this.taskFlow.retryBeforeUnload();
   }
 
   skipBeforeUnload(): void {
-    this.skipBeforeUnload$.next();
+    this.taskFlow.skipBeforeUnload();
   }
 
   closeThread(): void {
@@ -340,12 +236,8 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemTabs.disablePlatformProgressChanged(value);
   }
 
-  /**
-   * Called when a task request an active tab change
-   */
   setTaskView(view: string, route: RawItemRoute): void {
-    // Navigating updates the URL, which drives the active tab (task tabs use exact, unique `task/<view>` routes).
-    this.itemRouter.navigateTo(route, { page: [ 'task', view ], useCurrentObservation: true });
+    this.taskFlow.setTaskView(view, route);
   }
 
   private applyResetOnItemChange(): void {
@@ -409,28 +301,6 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
       this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
     }
     if (state.isReady) this.hasRedirected = false;
-  }
-
-  private applyInitialAnswerInfoSync(): void {
-    const route = this.activeContentRoute();
-    const itemState = this.itemDataState();
-    if (!route) return;
-
-    if (itemState === null) {
-      if (this.hadPopulatedItemState) return;
-      this.initialAnswerDataSource.setInfo(route, undefined);
-      return;
-    }
-
-    this.hadPopulatedItemState = true;
-    if (route.id === itemState.data?.item.id) {
-      this.initialAnswerDataSource.setInfo(
-        routeWithSelfAttempt(itemState.data.route, itemState.data.currentResult?.attemptId),
-        isATask(itemState.data.item),
-      );
-    } else {
-      this.initialAnswerDataSource.setInfo(route, undefined);
-    }
   }
 
   private applyLayoutDisplaySync(): void {
