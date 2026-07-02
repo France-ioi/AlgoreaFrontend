@@ -15,6 +15,7 @@ import { debounceTime, distinctUntilChanged, filter, map, shareReplay, switchMap
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipComponent } from './tooltip.component';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { deviceSupportsHover } from 'src/app/utils/device-supports-hover';
 
 export type TooltipPosition = 'top' | 'bottom' | 'right' | 'left';
 
@@ -129,6 +130,10 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
   }
 
   private hoverShowEvents$(): Observable<Event | undefined> {
+    // On touch/non-hover devices a tap fires `mouseenter` but no reliable `mouseleave`,
+    // leaving the tooltip stranded on screen. Suppress hover tooltips there entirely.
+    if (!deviceSupportsHover()) return EMPTY;
+
     const host = this.elementRef.nativeElement;
     const mouseEnter$ = fromEvent<MouseEvent>(host, 'mouseenter');
     const mouseLeave$ = fromEvent<MouseEvent>(host, 'mouseleave');

@@ -4,6 +4,7 @@ import { TooltipDirective } from '../tooltip/tooltip.directive';
 import { formatUser, UserBaseWithId } from 'src/app/groups/models/user';
 import { GroupRouter } from 'src/app/models/routing/group-router';
 import { rawGroupRoute } from 'src/app/models/routing/group-route';
+import { deviceSupportsHover } from 'src/app/utils/device-supports-hover';
 
 @Component({
   selector: 'alg-user-link-with-actions',
@@ -30,7 +31,7 @@ export class UserLinkWithActionsComponent {
   profileLink = computed(() => this.groupRouter.url(rawGroupRoute({ id: this.user().id, isUser: true })));
 
   onHostClick(event: Event): void {
-    if (window.matchMedia('(hover: hover)').matches) return;
+    if (deviceSupportsHover()) return;
     event.stopPropagation();
     this.showActions.update(v => !v);
   }
