@@ -1,4 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { RawItemRoute } from 'src/app/models/routing/item-route';
 import { UserInfo } from './thread-user-info';
 import { AllowDisplayCodeSnippet } from '../../../pipes/allowDisplayCodeSnippet';
@@ -19,6 +22,9 @@ import {
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
+import { UserResolutionCacheService } from 'src/app/groups/data-access/user-resolution-cache.service';
+import { UserSessionService } from 'src/app/services/user-session.service';
+import { formatUser } from 'src/app/groups/models/user';
 
 @Component({
   selector: 'alg-thread-message',
@@ -42,18 +48,39 @@ export class ThreadMessageComponent {
   private store = inject(Store);
   private router = inject(Router);
   private activeContentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
+  private userCache = inject(UserResolutionCacheService);
+  private userSession = inject(UserSessionService);
+  private currentUserGroupId = toSignal(this.userSession.userProfile$.pipe(map(p => p.groupId)), { initialValue: undefined });
 
   threadId = input.required<ThreadId>();
   event = input.required<ThreadEvent>();
-  userCache = input<UserInfo[]>([]);
   canCurrentUserLoadAnswers = input<boolean>(false);
   itemRoute = input<RawItemRoute>();
 
-  userInfo = computed<UserInfo>(() => {
+  private subjectId = computed(() => {
     const event = this.event();
-    const id = isMessageEvent(event) ? event.authorId : this.threadId().participantId;
-    const userInfo = this.userCache().find(user => user.id === id);
-    return userInfo ?? { id, isCurrentUser: false, isThreadParticipant: this.threadId().participantId === id };
+    return isMessageEvent(event) ? event.authorId : this.threadId().participantId;
+  });
+
+  private resolvedName = toSignal(
+    toObservable(this.subjectId).pipe(
+      switchMap(id => {
+        const currentId = this.currentUserGroupId();
+        if (id === currentId) return of(undefined);
+        return this.userCache.resolveUser(id).pipe(map(u => (u ? formatUser(u) : undefined)));
+      }),
+    ),
+    { initialValue: undefined },
+  );
+
+  userInfo = computed<UserInfo>(() => {
+    const id = this.subjectId();
+    return {
+      id,
+      isCurrentUser: id === this.currentUserGroupId(),
+      isThreadParticipant: id === this.threadId().participantId,
+      name: this.resolvedName(),
+    };
   });
 
   onNavigateToSolution(): void {
@@ -74,4 +101,3 @@ export class ThreadMessageComponent {
     }));
   }
 }
-
