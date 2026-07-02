@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, Injector, input, output, signal, viewChi
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { combineLatest, of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { debounceTime, delay, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { isDefined } from '../../utils/null-undefined-predicates';
 import { isActivityInfo, isItemInfo } from '../../models/content/item-info';
 import { CurrentContentService } from '../../services/current-content.service';
@@ -28,8 +28,9 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { LetDirective } from '@ngrx/component';
-import { AsyncPipe } from '@angular/common';
 import { CommunityStatsComponent } from '../../community/containers/community-stats/community-stats.component';
+import { LayoutService } from '../../services/layout.service';
+import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
 
 const minQueryLength = 3;
 
@@ -49,12 +50,13 @@ const TREE_TAB_TYPES: LeftMenuTabType[] = [ 'activities', 'skills', 'groups' ];
     ErrorComponent,
     NgScrollbar,
     LetDirective,
-    AsyncPipe,
     CommunityStatsComponent,
+    TopRightControlsComponent,
   ],
 })
 export class LeftTabbedContentComponent {
   private store = inject(Store);
+  private layoutService = inject(LayoutService);
   private currentContentService = inject(CurrentContentService);
   private injector = inject(Injector);
   private itemRouter = inject(ItemRouter);
@@ -88,6 +90,22 @@ export class LeftTabbedContentComponent {
 
   visibleTabs$ = this.leftMenuConfig.visibleTabs$;
   showTabs$ = this.leftMenuConfig.showTabBar$;
+  isNarrowScreen$ = this.layoutService.isNarrowScreen$;
+  // Defer to the next tick to avoid ExpressionChangedAfterItHasBeenChecked (same pattern as left-header).
+  showTopRightControls$ = this.layoutService.showTopRightControls$.pipe(delay(0));
+
+  railVm$ = combineLatest({
+    showTabs: this.showTabs$,
+    isNarrowScreen: this.isNarrowScreen$,
+    showTopRightControls: this.showTopRightControls$,
+    visibleTabs: this.visibleTabs$,
+    hasUnreadCommunityThreads: this.hasUnreadCommunityThreads$,
+  }).pipe(
+    map(({ hasUnreadCommunityThreads, ...railVm }) => ({
+      ...railVm,
+      hasUnreadCommunityThreads: !!hasUnreadCommunityThreads,
+    })),
+  );
 
   activeTabView$ = combineLatest([
     this.currentContentService.content$.pipe(

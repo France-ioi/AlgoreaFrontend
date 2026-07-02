@@ -1,6 +1,7 @@
 @use '../variables';
 @use 'src/geometry.scss';
 @use 'src/assets/scss/functions';
+@use 'src/assets/scss/breakpoints' as bp;
 
 .container {
   position: absolute;
@@ -102,7 +103,7 @@
     border-bottom-right-radius: 0;
   }
 
-  @media screen and (max-width: 599.98px) {
+  @media screen and (max-width: bp.$narrow-screen-max-width) {
     margin-left: 0;
     margin-right: 0;
   }
@@ -151,7 +152,7 @@
   padding-bottom: var(--alg-space-size-1);
 }
 
-@media screen and (max-width: 599.98px) {
+@media screen and (max-width: bp.$narrow-screen-max-width) {
   .left-menu {
     width: 100%;
     z-index: 999;

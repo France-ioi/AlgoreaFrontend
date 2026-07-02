@@ -13,6 +13,12 @@
   --main-menu-item-gap: #{functions.toRem(16)};
 }
 
+// Scroll lives on `.tab-rail-tabs` in left-tabbed-content so bottom rail controls stay pinned.
+:host-context(.tab-rail-tabs) {
+  flex-shrink: 1;
+  overflow: visible;
+}
+
 .tab-view-container {
   width: 100%;
   box-sizing: border-box;

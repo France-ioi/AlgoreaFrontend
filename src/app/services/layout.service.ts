@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, PRIMARY_OUTLET, UrlSegment, UrlSerializer } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -9,6 +9,7 @@ import { debounceTime, map, scan, startWith, switchMap } from 'rxjs/operators';
 import { APPCONFIG } from 'src/app/config';
 import { parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
 import { fromRouter } from 'src/app/store/router';
+import { narrowScreenMediaQuery } from '../utils/layout-breakpoints';
 
 export interface FullFrameContent {
   active: boolean,
@@ -46,7 +47,7 @@ export class LayoutService implements OnDestroy {
   private searchActive = new BehaviorSubject<boolean>(false);
 
   /* variables to be used by other services and components */
-  isNarrowScreen$ = this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
+  isNarrowScreen$ = this.breakpointObserver.observe(narrowScreenMediaQuery).pipe(
     map(results => results.matches),
     distinctUntilChanged(),
   );

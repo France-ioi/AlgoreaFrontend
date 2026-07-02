@@ -2,6 +2,7 @@
   class="controls-zone"
   [class.with-left-border]="drawLeftBorder()"
   [class.no-left-border]="!drawLeftBorder()"
+  [class.rail]="layout() === 'rail'"
   *ngrxLet="session$ as session"
 >
   @if (session && !session.tempUser) {
@@ -11,15 +12,27 @@
     <alg-top-right-menu [styleClass]="topRightMenuStyleClass()" />
   } @else {
     @if (languages.length > 1) {
-      <alg-language-picker class="lang-button" />
+      <alg-language-picker class="lang-button" [openAbove]="layout() === 'rail'" />
     }
-    <button
-      class="large-icon sign-in-button"
-      icon="ph-fill ph-user-circle"
-      (click)="login()"
-      alg-button
-      [disabled]="isLoginButtonClicked()"
-      i18n
-    >Sign in</button>
+    @if (layout() === 'rail') {
+      <button
+        alg-button-icon
+        type="button"
+        icon="ph-duotone ph-user-circle"
+        aria-label="Sign in"
+        i18n-aria-label
+        (click)="login()"
+        [disabled]="isLoginButtonClicked()"
+      ></button>
+    } @else {
+      <button
+        class="large-icon sign-in-button"
+        icon="ph-fill ph-user-circle"
+        (click)="login()"
+        alg-button
+        [disabled]="isLoginButtonClicked()"
+        i18n
+      >Sign in</button>
+    }
   }
 </div>

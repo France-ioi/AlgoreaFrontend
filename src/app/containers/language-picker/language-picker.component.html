@@ -2,6 +2,7 @@
   <!-- alg-select CVA reads/writes tag strings via ngModel; (change) emits the full SelectOption. -->
   <alg-select
     [ngModel]="current()"
+    [openAbove]="openAbove()"
     (ngModelChange)="current.set($event)"
     (change)="languageChanged($event)"
   >

@@ -29,4 +29,16 @@
     border-width: 0 .5rem .5rem .5rem;
     border-color: transparent transparent var(--alg-primary-color)
   }
+
+  &.open-above {
+    margin-top: 0;
+    margin-bottom: functions.toRem(10);
+
+    &:before {
+      top: auto;
+      bottom: -.5rem;
+      border-width: .5rem .5rem 0 .5rem;
+      border-color: var(--alg-primary-color) transparent transparent transparent;
+    }
+  }
 }

@@ -8,13 +8,21 @@ import { NotificationBellComponent } from '../notification-bell/notification-bel
 import { TopRightMenuComponent } from '../top-right-menu/top-right-menu.component';
 import { LetDirective } from '@ngrx/component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { APPCONFIG } from 'src/app/config';
 
 @Component({
   selector: 'alg-top-right-controls',
   templateUrl: './top-right-controls.component.html',
   styleUrl: './top-right-controls.component.scss',
-  imports: [ LetDirective, TopRightMenuComponent, LanguagePickerComponent, ButtonComponent, NotificationBellComponent ]
+  imports: [
+    LetDirective,
+    TopRightMenuComponent,
+    LanguagePickerComponent,
+    ButtonComponent,
+    ButtonIconComponent,
+    NotificationBellComponent,
+  ],
 })
 export class TopRightControlsComponent implements OnInit {
   private sessionService = inject(UserSessionService);
@@ -23,6 +31,7 @@ export class TopRightControlsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   drawLeftBorder = input(true);
+  layout = input<'bar' | 'rail'>('bar');
   topRightMenuStyleClass = input<string>();
   session$ = this.sessionService.session$.pipe(delay(0));
   readonly languages = this.localeService.languages;

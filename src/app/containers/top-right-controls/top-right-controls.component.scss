@@ -1,4 +1,4 @@
-@use "../../../variables";
+@use 'src/assets/scss/functions';
 
 .controls-zone {
   display: flex;
@@ -6,14 +6,25 @@
 }
 
 .no-left-border {
-  padding-left: 1rem;
+  padding-left: functions.toRem(16);
 }
 
 .with-left-border {
-  padding-left: 1rem;
-  border-bottom-left-radius: 1rem;
+  padding-left: functions.toRem(16);
+  border-bottom-left-radius: functions.toRem(16);
 }
 
 .lang-button {
-  margin-right: 1rem;
+  margin-right: functions.toRem(16);
+}
+
+.controls-zone.rail {
+  flex-direction: column;
+  align-items: center;
+  gap: functions.toRem(8);
+  padding: functions.toRem(8) 0;
+
+  .lang-button {
+    margin-right: 0;
+  }
 }

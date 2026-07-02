@@ -51,21 +51,37 @@ export class SelectComponent implements ControlValueAccessor {
     this.options().find(o => o.value().value === this.selectedValue())?.value()
   );
   buttonStyleClass = input('select-button stroke size-s');
+  openAbove = input(false);
   isOpen = signal<boolean>(false);
-  positions = signal<ConnectedPosition[]>([
-    {
-      originX: 'center',
-      originY: 'bottom',
-      overlayX: 'center',
-      overlayY: 'top',
-    },
-    {
-      originX: 'center',
-      originY: 'top',
-      overlayX: 'center',
-      overlayY: 'bottom',
-    },
-  ]);
+  positions = computed<ConnectedPosition[]>(() => (this.openAbove()
+    ? [
+      {
+        originX: 'center',
+        originY: 'top',
+        overlayX: 'center',
+        overlayY: 'bottom',
+      },
+      {
+        originX: 'center',
+        originY: 'bottom',
+        overlayX: 'center',
+        overlayY: 'top',
+      },
+    ]
+    : [
+      {
+        originX: 'center',
+        originY: 'bottom',
+        overlayX: 'center',
+        overlayY: 'top',
+      },
+      {
+        originX: 'center',
+        originY: 'top',
+        overlayX: 'center',
+        overlayY: 'bottom',
+      },
+    ]));
   private options = contentChildren(SelectOptionComponent);
   el = inject<ElementRef<HTMLElement>>(ElementRef);
   overlay = inject(Overlay);
