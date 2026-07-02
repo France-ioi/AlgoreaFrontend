@@ -1,9 +1,8 @@
 @use 'src/assets/scss/functions';
 
 .link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  margin-right: functions.toRem(14);
 }
 
 .platform-name {
