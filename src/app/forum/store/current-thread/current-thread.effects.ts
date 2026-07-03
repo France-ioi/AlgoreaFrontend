@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { fromForum } from '..';
 import { areSameThreads } from '../../models/threads';
 import { APPCONFIG } from 'src/app/config';
+import { reportAnError } from 'src/app/utils/error-handling/error-reporting';
 
 export const fetchStateChangeGuardEffect = createEffect(
   (
@@ -15,9 +16,15 @@ export const fetchStateChangeGuardEffect = createEffect(
   ) => (config.featureFlags.enableForum ? actions$.pipe(
     ofType(fetchThreadInfoActions.fetchStateChanged),
     withLatestFrom(store$.select(fromForum.selectThreadId)),
+    // report instead of throw: throwing here would kill the effect stream permanently
     tap(([{ fetchState } , id ]) => {
-      if (id === null) throw new Error('unexpected: no state id while changing thread info');
-      if (fetchState.data && !areSameThreads(id, fetchState.data)) throw new Error('unexpected: fetch state thread <> state id');
+      if (id === null) {
+        reportAnError(new Error('unexpected: no state id while changing thread info'));
+        return;
+      }
+      if (fetchState.data && !areSameThreads(id, fetchState.data)) {
+        reportAnError(new Error('unexpected: fetch state thread <> state id'));
+      }
     }),
   ) : EMPTY),
   { functional: true, dispatch: false }
