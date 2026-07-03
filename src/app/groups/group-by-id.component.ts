@@ -64,11 +64,6 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
   private hasRedirected = false;
 
   constructor() {
-    // Field-initializer subscriptions ran synchronously; effects defer to the first CD flush.
-    this.applyGroupToCurrentContentSync();
-    this.applyActiveRouteToCurrentContentSync();
-    this.applyBreadcrumbsErrorHandling();
-
     effect(() => {
       this.applyGroupToCurrentContentSync();
     });
