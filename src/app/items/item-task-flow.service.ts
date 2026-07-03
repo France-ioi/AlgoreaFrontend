@@ -97,8 +97,6 @@ export class ItemTaskFlowService implements OnDestroy {
   );
 
   constructor() {
-    this.applyInitialAnswerInfoSync();
-
     effect(() => {
       this.applyInitialAnswerInfoSync();
     });

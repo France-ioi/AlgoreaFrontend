@@ -39,12 +39,6 @@ export class ItemContentSyncService {
   private lastLayoutConfig: { id: string, display: ContentDisplayType } | undefined;
 
   constructor() {
-    // Field-initializer subscriptions ran synchronously; effects defer to the first CD flush.
-    this.applyResetOnItemChange();
-    this.applyItemToCurrentContentSync();
-    this.applyBreadcrumbsErrorHandling();
-    this.applyLayoutDisplaySync();
-
     effect(() => {
       this.applyResetOnItemChange();
     });
