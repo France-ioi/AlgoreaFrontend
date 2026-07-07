@@ -41,6 +41,11 @@
         You cannot watch other users' activity on this content
       </div>
     }
+    @if (hasPath() === false) {
+      <alg-message-info class="no-path-warning plain" icon="ph-duotone ph-warning" [live]="true">
+        <span i18n="@@groupNoPathToContentWarning">This group has not been explicitly given access to reach this content. Whatever permission you grant to this group on this content, users will need view access from a root down to this content to actually view it.</span>
+      </alg-message-info>
+    }
     @if (watchedGroupPermissions(); as permissions) {
       @if (permissions.isOwner) {
         <div class="permission-indicator-section">

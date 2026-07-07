@@ -27,6 +27,11 @@
                 </p>
               }
             }
+            @if ((hasPath$ | async) === false) {
+              <alg-message-info class="no-path-warning warning" icon="ph-duotone ph-warning" [live]="true">
+                <span i18n="@@groupNoPathToContentWarning">This group has not been explicitly given access to reach this content. Whatever permission you grant to this group on this content, users will need view access from a root down to this content to actually view it.</span>
+              </alg-message-info>
+            }
             <alg-permissions-edit-form (save)="onPermissionsDialogSave($event)"
               (cancel)="closeDialog()"
               [targetType]="targetType()"

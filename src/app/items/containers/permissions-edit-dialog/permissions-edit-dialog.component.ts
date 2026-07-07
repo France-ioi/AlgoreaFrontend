@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
-import { ReplaySubject, switchMap } from 'rxjs';
+import { catchError, of, ReplaySubject, switchMap } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -16,6 +16,7 @@ import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ModalComponent } from 'src/app/ui-components/modal/modal.component';
 import { ItemCorePerm } from 'src/app/items/models/item-permissions';
+import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 
 export interface PermissionsEditDialogParams {
   currentUserPermissions: ItemCorePerm,
@@ -37,6 +38,7 @@ export interface PermissionsEditDialogParams {
     AsyncPipe,
     GroupIsUserPipe,
     ModalComponent,
+    MessageInfoComponent,
   ]
 })
 export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
@@ -53,6 +55,12 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
       this.groupPermissionsService.getPermissions(params.sourceGroupId, params.groupId, params.itemId)
     ),
     mapToFetchState(),
+    shareReplay(1),
+  );
+
+  protected hasPath$ = this.params$.pipe(
+    switchMap(({ groupId, itemId }) =>
+      this.groupPermissionsService.getHasPath(groupId, itemId).pipe(catchError(() => of(null)))),
     shareReplay(1),
   );
 

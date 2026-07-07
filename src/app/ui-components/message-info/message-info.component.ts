@@ -11,4 +11,5 @@ export class MessageInfoComponent {
   closeEvent = output<void>();
   icon = input('ph-duotone ph-lock-key');
   closable = input(false);
+  live = input(false);
 }
