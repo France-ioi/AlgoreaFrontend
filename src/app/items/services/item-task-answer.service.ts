@@ -5,6 +5,7 @@ import {
   catchError,
   defaultIfEmpty,
   delayWhen,
+  exhaustMap,
   filter,
   map,
   retry,
@@ -27,7 +28,7 @@ import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { fromItemContent } from '../store';
 
-const answerAndStateSaveInterval = 60*SECONDS;
+export const answerAndStateSaveInterval = 60*SECONDS;
 
 const selectIsCurrentResultValidated = createSelector(
   fromItemContent.selectActiveContentCurrentResult,
@@ -121,7 +122,9 @@ export class ItemTaskAnswerService implements OnDestroy {
 
   private autoSaveCurrentState$ = this.canStartSaveInterval$.pipe( // wait for the task answer+state to have been initialized
     switchMap(() => interval(answerAndStateSaveInterval)),
-    switchMap(() => this.saveTaskStateAnswerAsCurrent()),
+    // exhaustMap: ignore interval ticks while a save is in flight (switchMap would cancel it).
+    // Each save reads the latest task state/answer, so dropped ticks lose nothing.
+    exhaustMap(() => this.saveTaskStateAnswerAsCurrent()),
     takeUntilDestroyed(this.destroyRef), // make sure the repetition ends when the service gets destroyed
     shareReplay(1), // do not save several times in parallel if there are more subscribers
   );

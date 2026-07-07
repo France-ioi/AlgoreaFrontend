@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { Observable, of, timer } from 'rxjs';
 import { provideMockStore } from '@ngrx/store/testing';
-import { ItemTaskAnswerService } from './item-task-answer.service';
+import { answerAndStateSaveInterval, ItemTaskAnswerService } from './item-task-answer.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { AnswerTokenService } from '../data-access/answer-token.service';
@@ -9,6 +9,7 @@ import { GradeService } from '../data-access/grade.service';
 import { Task } from '../api/task-proxy';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { fromItemContent } from '../store';
+import { SECONDS } from 'src/app/utils/duration';
 
 const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
 
@@ -86,5 +87,81 @@ describe('ItemTaskAnswerService – refresh token on validation', () => {
     service.submitAnswer().subscribe();
 
     expect(refreshToken).not.toHaveBeenCalled();
+  });
+});
+
+describe('ItemTaskAnswerService – auto-save interval', () => {
+  afterEach(() => {
+    TestBed.inject(ItemTaskAnswerService).ngOnDestroy();
+  });
+
+  it('does not cancel an in-flight auto-save when the next interval tick fires', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      let updateCancelled = false;
+      let updateCompleteCount = 0;
+      const update = jasmine.createSpy('update').and.callFake((): Observable<void> => new Observable(subscriber => {
+        let completed = false;
+        const timerSub = timer(90 * SECONDS).subscribe({
+          next: () => {
+            completed = true;
+            updateCompleteCount += 1;
+            subscriber.next(undefined);
+            subscriber.complete();
+          },
+          error: err => subscriber.error(err),
+        });
+        return () => {
+          if (!completed) updateCancelled = true;
+          timerSub.unsubscribe();
+        };
+      }));
+
+      TestBed.configureTestingModule({
+        providers: [
+          ItemTaskAnswerService,
+          provideMockStore({
+            selectors: [
+              { selector: fromItemContent.selectActiveContentCurrentResult, value: { validated: false } },
+            ],
+          }),
+          {
+            provide: ItemTaskInitService,
+            useValue: {
+              loadedTask$: of(mockTask),
+              config$: of({ route, url: 'http://example.com/task', attemptId: '0', initialAnswer: null, readOnly: false }),
+              taskToken$: of('task-token'),
+              refreshToken: jasmine.createSpy('refreshToken'),
+            },
+          },
+          { provide: CurrentAnswerService, useValue: { update } },
+          { provide: AnswerTokenService, useValue: { generate: (): ReturnType<AnswerTokenService['generate']> => of('answer-token') } },
+          {
+            provide: GradeService,
+            useValue: { save: (): ReturnType<GradeService['save']> => of({ validated: false, unlockedItems: [] }) },
+          },
+        ],
+      });
+
+      TestBed.inject(ItemTaskAnswerService);
+
+      jasmine.clock().tick(answerAndStateSaveInterval);
+      expect(update).toHaveBeenCalledTimes(1);
+      expect(updateCompleteCount).toBe(0);
+      expect(updateCancelled).toBe(false);
+
+      jasmine.clock().tick(answerAndStateSaveInterval);
+      expect(update).toHaveBeenCalledTimes(1);
+      expect(updateCompleteCount).toBe(0);
+      expect(updateCancelled).toBe(false);
+
+      jasmine.clock().tick(30 * SECONDS);
+      expect(update).toHaveBeenCalledTimes(1);
+      expect(updateCompleteCount).toBe(1);
+      expect(updateCancelled).toBe(false);
+    } finally {
+      jasmine.clock().uninstall();
+    }
   });
 });

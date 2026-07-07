@@ -5,6 +5,7 @@ import { EMPTY, fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
+  exhaustMap,
   filter,
   map,
   mergeWith,
@@ -58,7 +59,10 @@ export class ItemTaskFlowService implements OnDestroy {
   private retryBeforeUnload$ = new Subject<void>();
   private beforeUnload$ = new Subject<void>();
   private saveBeforeUnload$ = merge(this.beforeUnload$, this.retryBeforeUnload$).pipe(
-    switchMap(() => this.saveHandler()),
+    // exhaustMap: ignore re-triggers (retry/navigation) while a save is in flight.
+    // Each save reads the latest task state/answer, so dropped triggers lose nothing.
+    // saveHandler() must emit error FetchState (via mapToFetchState), never throw — a raw error would kill this stream.
+    exhaustMap(() => this.saveHandler()),
     takeUntil(this.skipBeforeUnload$),
     mergeWith(this.skipBeforeUnload$.pipe(map(() => readyState<void>(undefined)))),
     shareReplay(1),
