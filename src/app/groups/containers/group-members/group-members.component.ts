@@ -10,7 +10,6 @@ import { IsCurrentUserManagerPipe } from '../../models/group-management';
 @Component({
   selector: 'alg-group-members',
   templateUrl: './group-members.component.html',
-  styleUrl: './group-members.component.scss',
   imports: [
     MemberListComponent,
     GroupJoinByCodeComponent,
