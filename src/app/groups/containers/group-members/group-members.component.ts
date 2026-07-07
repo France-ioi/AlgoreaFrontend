@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { GroupData } from '../../models/group-data';
 import { MemberListComponent } from '../member-list/member-list.component';
 import { GroupNoPermissionComponent } from '../group-no-permission/group-no-permission.component';
-import { GroupInviteUsersComponent } from '../group-invite-users/group-invite-users.component';
+import { GroupInvitationsComponent } from '../group-invitations/group-invitations.component';
 import { GroupJoinByCodeComponent } from '../group-join-by-code/group-join-by-code.component';
 
 import { IsCurrentUserManagerPipe } from '../../models/group-management';
@@ -13,7 +13,7 @@ import { IsCurrentUserManagerPipe } from '../../models/group-management';
   imports: [
     MemberListComponent,
     GroupJoinByCodeComponent,
-    GroupInviteUsersComponent,
+    GroupInvitationsComponent,
     GroupNoPermissionComponent,
     IsCurrentUserManagerPipe,
   ]
