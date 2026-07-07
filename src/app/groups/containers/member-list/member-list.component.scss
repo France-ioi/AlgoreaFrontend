@@ -5,6 +5,17 @@
   flex-direction: column;
 }
 
+.switch-control {
+  margin-top: functions.toRem(40);
+  display: flex;
+  align-items: center;
+}
+
+.switch-control-caption {
+  margin: 0 0 0 var(--alg-space-size-5);
+  color: var(--alg-switch-control-caption-color);
+}
+
 .member-list-table {
   margin-top: functions.toRem(20);
 }

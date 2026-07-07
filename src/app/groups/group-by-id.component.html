@@ -12,7 +12,7 @@
        />
   }
   <!-- tabs -- if only the first tab is visible, do not show the tab bar -->
-  <div [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !compositionTab.isActive && !settingsTab.isActive">
+  <div [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !historyTab.isActive && !adminTab.isActive && !accessTab?.isActive && !membersTab?.isActive && !subGroupsTab?.isActive && !settingsTab.isActive">
     <div class="alg-nav-tab" data-testid="alg-nav-tab">
       <a
         class="alg-nav-tab-item"
@@ -35,14 +35,24 @@
           History
         </a>
       <a
-        [hidden]="!(group | isCurrentUserManager) && !compositionTab?.isActive"
+        [hidden]="!(group | isCurrentUserManager) && !membersTab?.isActive"
         class="alg-nav-tab-item"
         [routerLink]="'./members'"
-        routerLinkActive #compositionTab="routerLinkActive"
-        [class.active]="compositionTab.isActive"
+        routerLinkActive #membersTab="routerLinkActive"
+        [class.active]="membersTab.isActive"
         i18n
       >
-          Composition
+          Members
+        </a>
+      <a
+        [hidden]="!(group | isCurrentUserManager) && !subGroupsTab?.isActive"
+        class="alg-nav-tab-item"
+        [routerLink]="'./sub-groups'"
+        routerLinkActive #subGroupsTab="routerLinkActive"
+        [class.active]="subGroupsTab.isActive"
+        i18n
+      >
+          Sub-Groups
         </a>
       <a
         [hidden]="!(group | isCurrentUserManager) && !(group | isCurrentUserMember) && !adminTab?.isActive"

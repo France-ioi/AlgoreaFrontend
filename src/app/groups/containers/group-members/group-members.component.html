@@ -1,12 +1,6 @@
 @let group = groupData().group;
 @if (group | isCurrentUserManager) {
-  <alg-member-list class="member-list" #memberList [groupData]="groupData()" (removedGroup)="removedGroup.emit()" />
-  @if (group.currentUserCanManage !== 'none') {
-    <alg-add-sub-group [loading]="state() === 'addingGroup'"
-      (addGroup)="addGroup($event)"
-      #addSubGroupComponent
-     />
-  }
+  <alg-member-list class="member-list" variant="users" [groupData]="groupData()" (removedGroup)="removedGroup.emit()" />
   @if (group.currentUserCanManage !== 'none') {
     <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" />
   }

@@ -1,4 +1,11 @@
-<alg-group-composition-filter #compositionFilter (change)="onFilterChange($event)" [defaultValue]="defaultFilter" />
+@if (variant() === 'users') {
+  <div class="switch-control">
+    <alg-switch [ngModel]="allDescendants()"
+      (ngModelChange)="onAllDescendantsChange($event)"
+     />
+    <p class="switch-control-caption" i18n>All descendants</p>
+  </div>
+}
 @if (rows$ | async; as state) {
   @if (state.isError) {
     <alg-error class="error dark"
@@ -102,7 +109,7 @@
             (click)="onRemove()"
             [disabled]="(removalInProgress$ | async) || !state.isReady || selection().length === 0"
           >
-            {currentFilter().type, select, users {Remove} other {Remove from group}}
+            {variant(), select, users {Remove} other {Remove from group}}
           </button>
         </div>
       }

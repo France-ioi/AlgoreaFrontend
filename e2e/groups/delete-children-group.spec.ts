@@ -44,7 +44,7 @@ test('delete subgroup when children are not empty', async ({ page, groupMembersP
 
   await test.step('checks the group with children to be visible', async () => {
     await groupMembersPage.checksIsHeaderVisible(groupName);
-    await groupMembersPage.goToTab('Sub-groups');
+    await groupMembersPage.goToTab('Sub-Groups');
     await groupMembersPage.checksIsGroupWithCheckboxVisible('With children');
   });
 
@@ -66,7 +66,7 @@ test('delete subgroup when children are empty', async ({ page, groupMembersPage 
 
   await test.step('checks the group with children to be visible', async () => {
     await groupMembersPage.checksIsHeaderVisible(groupName);
-    await groupMembersPage.goToTab('Sub-groups');
+    await groupMembersPage.goToTab('Sub-Groups');
     await groupMembersPage.checksIsGroupWithCheckboxVisible('With no children');
   });
 
@@ -94,7 +94,7 @@ test('delete multiple subgroups when children are empty and non empty', async ({
 
   await test.step('checks the groups with no children and with children to be visible', async () => {
     await groupMembersPage.checksIsHeaderVisible(groupName);
-    await groupMembersPage.goToTab('Sub-groups');
+    await groupMembersPage.goToTab('Sub-Groups');
     await groupMembersPage.checksIsGroupWithCheckboxVisible('With children');
     await groupMembersPage.checksIsGroupWithCheckboxVisible('With no children');
   });
@@ -116,7 +116,7 @@ test('checks reject confirmations for empty group', async ({ page, groupMembersP
 
   await test.step('checks the group with children to be visible', async () => {
     await groupMembersPage.checksIsHeaderVisible(groupName);
-    await groupMembersPage.goToTab('Sub-groups');
+    await groupMembersPage.goToTab('Sub-Groups');
     await groupMembersPage.checksIsGroupWithCheckboxVisible('With no children');
   });
 

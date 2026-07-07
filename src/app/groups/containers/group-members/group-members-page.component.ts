@@ -3,23 +3,22 @@ import { Store } from '@ngrx/store';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { selectGroupData } from '../../models/group-data';
 import { fromGroupContent } from '../../store';
-import { GroupCompositionComponent } from './group-composition.component';
+import { GroupMembersComponent } from './group-members.component';
 
 @Component({
-  selector: 'alg-group-composition-page',
+  selector: 'alg-group-members-page',
   host: { class: 'alg-flex-1' },
-  imports: [ GroupCompositionComponent ],
+  imports: [ GroupMembersComponent ],
   template: `
     @if (groupData(); as groupData) {
-      <alg-group-composition [groupData]="groupData"
+      <alg-group-members [groupData]="groupData"
         (groupRefreshRequired)="onGroupRefreshRequired()"
-        (addedGroup)="onNavRefreshRequired()"
         (removedGroup)="onNavRefreshRequired()"
        />
     }
   `,
 })
-export class GroupCompositionPageComponent {
+export class GroupMembersPageComponent {
   private store = inject(Store);
   private currentContentService = inject(CurrentContentService);
 
