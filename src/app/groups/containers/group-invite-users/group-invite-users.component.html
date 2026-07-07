@@ -32,6 +32,7 @@
         [class.success]="message.type === 'success'"
         [class.danger]="message.type === 'error'"
         [icon]="message.icon"
+        [live]="true"
         [closable]="true"
         (closeEvent)="onCloseMessage(message)"
       >

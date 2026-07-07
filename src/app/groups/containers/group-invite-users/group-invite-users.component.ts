@@ -70,6 +70,7 @@ export class GroupInviteUsersComponent {
 
     const successInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Success).map(e => e[0]);
     const alreadyInvited: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.AlreadyInvited).map(e => e[0]);
+    const alreadyMembers: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.AlreadyMember).map(e => e[0]);
     const notFoundUsers: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.NotFound).map(e => e[0]);
     const invalidInvites: string[] = Array.from(response.entries()).filter(e => e[1] === InvitationResult.Error).map(e => e[0]);
 
@@ -88,6 +89,14 @@ export class GroupInviteUsersComponent {
         type: 'info',
         summary: $localize`${alreadyInvited.length} user(s) have already been invited: `,
         detail: `${alreadyInvited.join(', ')}`,
+        icon: 'ph-duotone ph-info',
+      });
+
+    if (alreadyMembers.length > 0)
+      newMessages.push({
+        type: 'info',
+        summary: $localize`${alreadyMembers.length} user(s) are already members of the group: `,
+        detail: `${alreadyMembers.join(', ')}`,
         icon: 'ph-duotone ph-info',
       });
 
