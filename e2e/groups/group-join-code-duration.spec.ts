@@ -13,7 +13,7 @@ test('checks join by code duration saving', async ({ page, createGroup, duration
   if (!createGroup) throw new Error('The group is not created');
   await page.goto(`/groups/by-id/${ createGroup?.groupId };p=/members`);
   await expect.soft(page.getByRole('heading', { name: createGroup.groupName })).toBeVisible();
-  await expect.soft(page.getByRole('heading', { name: 'Let users join using a code' })).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Join by code' })).toBeVisible();
   const generateCodeBtnLocator = page.getByRole('button', { name: 'Generate a code ' });
   await expect.soft(generateCodeBtnLocator).toBeVisible();
   await generateCodeBtnLocator.click();

@@ -9,7 +9,7 @@ const demoUserLogin = 'usr_5p020x2thuyu';
 const sendGroupInvitation = async (page: Page) => {
   await page.goto(`/groups/by-id/${ groupId };p=/members`);
   await expect.soft(page.getByRole('heading', { name: groupName })).toBeVisible();
-  await expect.soft(page.getByRole('heading', { name: 'Invite users' })).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Invitations' })).toBeVisible();
   await expect.soft(page.getByRole('textbox', { name: 'login_1, login_2...' })).toBeVisible();
   await page.getByRole('textbox', { name: 'login_1, login_2...' }).fill(demoUserLogin);
   await page.getByRole('button', { name: 'Invite' }).click();
