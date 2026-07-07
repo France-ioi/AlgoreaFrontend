@@ -51,7 +51,12 @@ export class PropagationAdvancedConfigurationDialogComponent {
     const targetSectionLocator = this.collapsibleSectionLocator.filter({ has: this.page.getByText(name) });
     const switchLocation = targetSectionLocator.locator('alg-switch-field');
     await expect.soft(switchLocation).toBeVisible();
-    await switchLocation.hover({ force: true });
+    const overlayLocator = targetSectionLocator.locator('.gray-overlay.tool');
+    const hoverTarget = (await overlayLocator.count()) > 0
+      ? overlayLocator
+      : switchLocation.locator('alg-switch');
+    await hoverTarget.scrollIntoViewIfNeeded();
+    await hoverTarget.hover({ force: true });
   }
 
   async checkIsValidationTooltipVisible(message: string): Promise<void> {

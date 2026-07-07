@@ -41,6 +41,39 @@ export class ItemContentPage {
     await this.page.waitForResponse(`${apiUrl}/items/${itemId}`);
   }
 
+  async waitForNavigationResponse(itemId: string, paramsString = 'attempt_id=0'): Promise<void> {
+    await this.page.waitForResponse(`${apiUrl}/items/${itemId}/navigation?${ paramsString }`);
+  }
+
+  /** Waits for the primary GET /items/{id} response after a left-nav selection (not sub-resources). */
+  async waitForPrimaryItemResponse(): Promise<void> {
+    await this.page.waitForResponse(response =>
+      response.request().method() === 'GET' &&
+      /\/items\/\d+(\?.*)?$/.test(response.url()) &&
+      !response.url().includes('/navigation') &&
+      !response.url().includes('/children') &&
+      !response.url().includes('/breadcrumbs') &&
+      !response.url().includes('/attempts') &&
+      response.ok()
+    );
+  }
+
+  async clickNavItemAndWaitForTitle(title: string): Promise<void> {
+    const targetItemLocator = this.page.locator('cdk-nested-tree-node').getByText(title).first();
+    await expect(targetItemLocator).toBeVisible();
+    await Promise.all([
+      targetItemLocator.click(),
+      this.waitForPrimaryItemResponse(),
+    ]);
+    await expect(this.titleLocator).toHaveText(title);
+  }
+
+  async openParametersTab(): Promise<void> {
+    const parametersTabLocator = this.page.getByRole('link', { name: 'Parameters' });
+    await expect(parametersTabLocator).toBeVisible();
+    await parametersTabLocator.click();
+  }
+
   async waitForBreadcrumbsResponse(itemId: string, paramsString = 'attempt_id=0'): Promise<void> {
     await this.page.waitForResponse(`${apiUrl}/items/${itemId}/breadcrumbs?${ paramsString }`);
   }

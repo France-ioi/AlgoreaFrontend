@@ -7,15 +7,18 @@ import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 
 const rootItemId = '1751831682141956756';
 const rootItemName = 'E2E-generated-items';
+// Avoid a growing backlog from failed runs blowing the test budget on a single CI attempt.
+const maxDeletionsPerRun = 5;
 
 test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ page, itemContentPage }) => {
+  test.slow();
   await initAsTesterUser(page);
   await Promise.all([
     itemContentPage.goto(`a/${rootItemId};a=0`),
     itemContentPage.waitForItemResponse(rootItemId),
-    page.waitForResponse(`${apiUrl}/items/${rootItemId}/navigation?attempt_id=0`)
+    itemContentPage.waitForNavigationResponse(rootItemId),
   ]);
-  await itemContentPage.checksIsTitleVisible(rootItemName);
+  await expect(page.getByTestId('item-title')).toHaveText(rootItemName);
   const leftNavRootItem = page.locator('cdk-nested-tree-node').filter({ has: page.getByText(rootItemName) });
   const regExpItem = /E2E_Item_\d{13}/;
 
@@ -27,24 +30,24 @@ test('checks old e2e items and remove it', { tag: '@no-parallelism' }, async ({ 
       if (!createdAtResult) throw new Error('Unexpected: Missed createdAtResult');
       const [ createdAt ] = createdAtResult;
       return Date.now() - Number(createdAt) > HOURS;
-    });
+    })
+    .slice(0, maxDeletionsPerRun);
 
   for (const itemName of itemNamesForRemove) {
-    const targetItemLocator = page.locator('cdk-nested-tree-node').getByText(itemName.trim()).first();
-    await expect.soft(targetItemLocator).toBeVisible();
-    await targetItemLocator.click();
+    const trimmedName = itemName.trim();
     // Root chapter keeps the full tree expanded (nav CASE 4): no back button, only nested selection.
-    await itemContentPage.checksIsTitleVisible(itemName.trim());
-    const parametersTabLocator = page.getByRole('link', { name: 'Parameters' });
-    await expect.soft(parametersTabLocator).toBeVisible();
-    await parametersTabLocator.click();
+    await itemContentPage.clickNavItemAndWaitForTitle(trimmedName);
+    await itemContentPage.openParametersTab();
     await itemContentPage.checksIsDeleteButtonVisible();
     await itemContentPage.waitForDeleteButtonReady();
     if (!(await itemContentPage.isDeleteButtonEnabled())) {
       continue;
     }
     await itemContentPage.deleteItem();
-    await itemContentPage.checkToastNotification(`You have delete "${itemName.trim()}"`);
-    await itemContentPage.checksIsTitleVisible(rootItemName);
+    await itemContentPage.checkToastNotification(`You have delete "${trimmedName}"`);
+    await Promise.all([
+      expect(page.getByTestId('item-title')).toHaveText(rootItemName),
+      itemContentPage.waitForNavigationResponse(rootItemId),
+    ]);
   }
 });
