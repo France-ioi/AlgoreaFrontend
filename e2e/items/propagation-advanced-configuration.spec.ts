@@ -193,6 +193,9 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
       'You needs "Can grant view" to be at least "Solution and grant"',
     );
+    await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
+      'Propagation of "grant view" permission',
+    );
 
     await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
       'Propagation of "watch" permission',
@@ -200,6 +203,9 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
     await propagationAdvancedConfigurationDialogComponent.hoverOnSwitchValue('Propagation of "watch" permission');
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
       'You needs "Can watch" to be at least "Answer and grant"',
+    );
+    await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
+      'Propagation of "watch" permission',
     );
 
     await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
