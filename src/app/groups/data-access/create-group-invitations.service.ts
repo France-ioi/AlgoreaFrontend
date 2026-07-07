@@ -10,6 +10,7 @@ export enum InvitationResult {
   Success,
   Error,
   AlreadyInvited,
+  AlreadyMember,
   NotFound,
 }
 
@@ -42,8 +43,10 @@ export class CreateGroupInvitationsService {
                   case 'not_found':
                     return [ key, InvitationResult.NotFound ];
                   case 'cycle':
-                  case 'invalid':
                     return [ key, InvitationResult.Error ];
+                  // API `invalid`: user is already a member of this group
+                  case 'invalid':
+                    return [ key, InvitationResult.AlreadyMember ];
                   default:
                     throw new Error(`Invitation of user ${key} returned an unexpected result (${JSON.stringify(value)})`);
                 }
