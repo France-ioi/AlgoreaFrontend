@@ -32,12 +32,20 @@ export type GroupPermissionsInfo = z.infer<typeof groupPermissionsInfoSchema>;
 export type GroupPermissions = GroupPermissionsInfo['granted'];
 export type GroupComputedPermissions = GroupPermissionsInfo['computed'];
 
+const hasPathSchema = z.object({ hasPath: z.boolean() });
+
 @Injectable({
   providedIn: 'root'
 })
 export class GroupPermissionsService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
+
+  getHasPath(groupId: string, itemId: string): Observable<boolean> {
+    return this.http
+      .get<unknown>(`${this.config.apiUrl}/groups/${groupId}/permissions/${itemId}/has-path`)
+      .pipe(decodeSnakeCase(hasPathSchema), map(r => r.hasPath));
+  }
 
   getPermissions(sourceGroupId: string, groupId: string, itemId: string): Observable<GroupPermissionsInfo> {
     return this.http

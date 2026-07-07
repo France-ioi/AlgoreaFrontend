@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import {
   ProgressSelectValue,
@@ -30,6 +30,8 @@ import { CurrentContentService } from 'src/app/services/current-content.service'
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
+import { catchError, filter, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'alg-item-permissions',
@@ -46,6 +48,7 @@ import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directiv
     AllowsGrantingContentViewItemPipe,
     ButtonComponent,
     TooltipDirective,
+    MessageInfoComponent,
   ]
 })
 export class ItemPermissionsComponent {
@@ -78,6 +81,18 @@ export class ItemPermissionsComponent {
       canMakeSessionOfficial: false,
     } : undefined;
   });
+
+  private hasPath$ = toObservable(computed(() => ({
+    groupId: this.observedGroup().route.id,
+    itemId: this.itemData().item.id,
+    expanded: !this.collapsed(),
+  }))).pipe(
+    filter(({ expanded }) => expanded),
+    switchMap(({ groupId, itemId }) => this.groupPermissionsService.getHasPath(groupId, itemId).pipe(
+      catchError(() => of(null)),
+    )),
+  );
+  protected hasPath = toSignal(this.hasPath$, { initialValue: null });
 
   protected readonly lockEdit = computed((): 'content' | 'group' | 'contentGroup' | undefined => {
     const observedGroup = this.observedGroup();

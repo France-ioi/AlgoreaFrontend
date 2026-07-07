@@ -52,6 +52,32 @@
       color: var(--alg-message-error-color);
     }
   }
+
+  &.warning {
+    .container {
+      color: var(--toast-warning-text, #92400E);
+      background-color: var(--toast-warning-bg, #FFF7E6);
+    }
+
+    .message-icon {
+      color: var(--toast-warning-icon, #F59E0B);
+    }
+
+    .message-text {
+      color: inherit;
+    }
+  }
+
+  &.plain {
+    .container {
+      background-color: transparent;
+      padding: 0;
+    }
+
+    .message-icon {
+      color: var(--toast-warning-icon, #F59E0B);
+    }
+  }
 }
 
 .container {
