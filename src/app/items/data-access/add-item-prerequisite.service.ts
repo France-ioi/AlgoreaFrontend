@@ -12,10 +12,11 @@ export class AddItemPrerequisiteService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
-  create(dependentItemId: string, prerequisiteItemId: string): Observable<void> {
+  create(dependentItemId: string, prerequisiteItemId: string, score: number): Observable<void> {
     return this.http
       .post<SimpleActionResponse>(`${this.config.apiUrl}/items/${ dependentItemId }/prerequisites/${ prerequisiteItemId }`, {
         grant_content_view: true,
+        score,
       })
       .pipe(map(assertSuccess));
   }

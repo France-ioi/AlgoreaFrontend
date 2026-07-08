@@ -5,6 +5,9 @@
       #input
       [type]="inputType()"
       [placeholder]="placeholder()"
+      [attr.aria-label]="ariaLabel() || null"
+      [attr.aria-describedby]="ariaDescribedby() || null"
+      [attr.step]="inputStep() || null"
       [class.has-button]="buttonIcon()"
       [class.has-input-icon]="inputIcon()"
       [class.subtle-focus-input]="subtleFocus()"

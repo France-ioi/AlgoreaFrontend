@@ -1,12 +1,12 @@
 import { Component, DestroyRef, signal, viewChild, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GetItemPrerequisitesService } from '../../data-access/get-item-prerequisites.service';
-import { filter, Subject, switchMap } from 'rxjs';
+import { EMPTY, filter, Subject, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
-import { map, share } from 'rxjs/operators';
+import { finalize, map, share } from 'rxjs/operators';
 import { AddedContent } from 'src/app/ui-components/add-content/add-content.component';
 import { ItemType } from 'src/app/items/models/item-type';
 import { AddItemPrerequisiteService } from '../../data-access/add-item-prerequisite.service';
@@ -25,6 +25,11 @@ import { AsyncPipe } from '@angular/common';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { Dialog } from '@angular/cdk/dialog';
+import {
+  AddPrerequisiteDialogComponent,
+  AddPrerequisiteDialogData,
+} from '../add-prerequisite-dialog/add-prerequisite-dialog.component';
 
 @Component({
   selector: 'alg-item-dependencies',
@@ -51,6 +56,7 @@ export class ItemDependenciesComponent {
   private actionFeedbackService = inject(ActionFeedbackService);
   private getItemDependenciesService = inject(GetItemDependenciesService);
   private readonly destroyRef = inject(DestroyRef);
+  private dialogService = inject(Dialog);
   private store = inject(Store);
 
   protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
@@ -98,18 +104,31 @@ export class ItemDependenciesComponent {
       throw new Error('Unexpected: item id is missing');
     }
     const dependentItemId = activeItem.id;
-    this.changeInProgress.set(true);
-    this.addItemPrerequisiteService.create(dependentItemId, item.id).pipe(
+    const prerequisiteItemId = item.id;
+    this.dialogService.open<number, AddPrerequisiteDialogData>(AddPrerequisiteDialogComponent, {
+      data: {
+        prerequisiteTitle: item.title,
+        dependentTitle: activeItem.string.title ?? activeItem.id,
+      },
+      disableClose: true,
+    }).closed.pipe(
+      switchMap(score => {
+        if (score === undefined) {
+          return EMPTY;
+        }
+        this.changeInProgress.set(true);
+        return this.addItemPrerequisiteService.create(dependentItemId, prerequisiteItemId, score).pipe(
+          finalize(() => this.changeInProgress.set(false)),
+        );
+      }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
-        this.changeInProgress.set(false);
         this.actionFeedbackService.success('The new dependency has been added');
         this.addDependencyComponent()?.addContentComponent()?.reset();
         this.refresh();
       },
       error: err => {
-        this.changeInProgress.set(false);
         this.actionFeedbackService.unexpectedError();
         if (!(err instanceof HttpErrorResponse)) throw err;
       }
