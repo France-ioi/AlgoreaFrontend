@@ -26,7 +26,6 @@ const baseConfig = (overrides: Partial<AppConfig> = {}): AppConfig => ({
   featureFlags: {
     enableForum: false,
     enableNotifications: false,
-    community: 'enabled',
     hideTaskTabs: [],
     showGroupAccessTab: false,
   },
@@ -96,15 +95,14 @@ describe('LeftMenuConfigService', () => {
     expect(tabs.map(t => t.type)).not.toContain('search');
   });
 
-  it('omits community when featureFlags.community is not enabled', async () => {
+  it('omits community when community tab is not in leftMenuTabs', async () => {
     setup(baseConfig({
-      featureFlags: {
-        enableForum: false,
-        enableNotifications: false,
-        community: 'disabled',
-        hideTaskTabs: [],
-        showGroupAccessTab: false,
-      },
+      leftMenuTabs: [
+        { type: 'activities', showTo: 'all', content: { id: '1', path: [] } },
+        { type: 'skills', showTo: 'all', content: { id: 'skill-1', path: [] } },
+        { type: 'groups', showTo: [ 'group-1' ] },
+        { type: 'search', showTo: 'all' },
+      ],
     }));
     session$.next(profile());
     const tabs = await firstValueFrom(service.visibleTabs$);

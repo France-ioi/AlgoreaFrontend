@@ -26,7 +26,6 @@ window.appConfig = {
   itemPlatformId: 'algorea_backend',
 
   featureFlags: {
-    community: 'enabled',
     enableNotifications: true,
     enableForum: true,
     hideTaskTabs: [],

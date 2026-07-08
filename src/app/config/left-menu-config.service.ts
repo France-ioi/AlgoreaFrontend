@@ -80,8 +80,6 @@ export class LeftMenuConfigService {
     switch (type) {
       case 'search':
         return !!this.config.searchApiUrl;
-      case 'community':
-        return this.config.featureFlags.community === 'enabled';
       default:
         return true;
     }
