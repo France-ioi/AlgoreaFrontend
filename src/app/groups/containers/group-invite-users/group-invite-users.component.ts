@@ -1,13 +1,13 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
 import { Group } from '../../models/group';
-import { UntypedFormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
+import { AutoResizeDirective } from 'src/app/directives/auto-resize.directive';
 
 interface Message {
   type: 'success' | 'info' | 'error',
@@ -23,9 +23,10 @@ type GroupInviteState = 'empty'|'too_many'|'loading'|'ready';
   templateUrl: './group-invite-users.component.html',
   styleUrl: './group-invite-users.component.scss',
   imports: [
-    TextareaComponent,
+    ReactiveFormsModule,
     ButtonComponent,
     MessageInfoComponent,
+    AutoResizeDirective,
   ]
 })
 export class GroupInviteUsersComponent {
@@ -40,6 +41,8 @@ export class GroupInviteUsersComponent {
   state = signal<GroupInviteState>('empty');
 
   messages = signal<Message[]>([]);
+
+  private loginsInput = viewChild<ElementRef<HTMLTextAreaElement>>('loginsInput');
 
   constructor() {
     this.inviteForm.get('logins')?.valueChanges
@@ -148,8 +151,8 @@ export class GroupInviteUsersComponent {
           this.invitationsChanged.emit();
         }
 
-        // Clear the textarea
         control.setValue('');
+        this.resetLoginsInputHeight();
 
         this.setState('empty');
       },
@@ -163,5 +166,11 @@ export class GroupInviteUsersComponent {
 
   onCloseMessage(message: Message): void {
     this.messages.update(messages => messages.filter(m => m !== message));
+  }
+
+  private resetLoginsInputHeight(): void {
+    const textarea = this.loginsInput()?.nativeElement;
+    if (!textarea) return;
+    textarea.style.height = 'auto';
   }
 }

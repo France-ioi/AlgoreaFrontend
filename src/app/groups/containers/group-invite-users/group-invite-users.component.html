@@ -1,43 +1,43 @@
-<span class="alg-text-secondary" i18n>Add users name list, separated by commas.</span>
-<div class="invite-users">
-  <alg-textarea [parentForm]="inviteForm"
-    inputName="logins"
-    i18n-placeholder placeholder="login_1, login_2..."
-   />
+<form class="invite-row" [formGroup]="inviteForm" (ngSubmit)="onInviteClicked()">
+  <textarea
+    class="logins-input"
+    formControlName="logins"
+    [rows]="1"
+    algAutoResize
+    i18n-placeholder
+    placeholder="logins of users to invite, separated by commas (e.g., login1, login2, ...)"
+    #loginsInput
+  ></textarea>
+  <button
+    class="size-l invite-button"
+    type="submit"
+    [disabled]="state() !== 'ready'"
+    alg-button
+    i18n
+  >Invite</button>
+</form>
 
-  @if (state() === 'too_many') {
-    <div class="too-many-message">
-      <alg-message-info class="danger">
-        <ng-container i18n>You cannot invite more than 100 users at once</ng-container>
-      </alg-message-info>
-    </div>
-  }
-
-  <div class="button">
-    <button
-      class="size-l"
-      (click)="onInviteClicked()"
-      [disabled]="state() !== 'ready'"
-      alg-button
-      i18n
-    >Invite</button>
+@if (state() === 'too_many') {
+  <div class="too-many-message">
+    <alg-message-info class="danger">
+      <ng-container i18n>You cannot invite more than 100 users at once</ng-container>
+    </alg-message-info>
   </div>
+}
 
-  @for (message of messages(); track $index) {
-    <div class="message-container">
-      <alg-message-info
-        class="message"
-        [class.info]="message.type === 'info'"
-        [class.success]="message.type === 'success'"
-        [class.danger]="message.type === 'error'"
-        [icon]="message.icon"
-        [live]="true"
-        [closable]="true"
-        (closeEvent)="onCloseMessage(message)"
-      >
-        <strong>{{ message.summary }}</strong> {{ message.detail }}
-      </alg-message-info>
-    </div>
-  }
-
-</div>
+@for (message of messages(); track $index) {
+  <div class="message-container">
+    <alg-message-info
+      class="message"
+      [class.info]="message.type === 'info'"
+      [class.success]="message.type === 'success'"
+      [class.danger]="message.type === 'error'"
+      [icon]="message.icon"
+      [live]="true"
+      [closable]="true"
+      (closeEvent)="onCloseMessage(message)"
+    >
+      <strong>{{ message.summary }}</strong> {{ message.detail }}
+    </alg-message-info>
+  </div>
+}

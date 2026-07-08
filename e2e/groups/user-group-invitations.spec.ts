@@ -10,8 +10,8 @@ const sendGroupInvitation = async (page: Page) => {
   await page.goto(`/groups/by-id/${ groupId };p=/members`);
   await expect.soft(page.getByRole('heading', { name: groupName })).toBeVisible();
   await expect.soft(page.getByRole('heading', { name: 'Invitations' })).toBeVisible();
-  await expect.soft(page.getByRole('textbox', { name: 'login_1, login_2...' })).toBeVisible();
-  await page.getByRole('textbox', { name: 'login_1, login_2...' }).fill(demoUserLogin);
+  await expect.soft(page.getByRole('textbox', { name: 'logins of users to invite, separated by commas (e.g., login1, login2, ...)' })).toBeVisible();
+  await page.getByRole('textbox', { name: 'logins of users to invite, separated by commas (e.g., login1, login2, ...)' }).fill(demoUserLogin);
   await page.getByRole('button', { name: 'Invite' }).click();
   await expect.soft(page.locator('alg-message-info').getByText(`user(s) invited successfully: ${ demoUserLogin }`)).toBeVisible();
 };
