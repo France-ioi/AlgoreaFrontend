@@ -26,6 +26,7 @@ const REJECTIONS_WINDOW_WEEKS = 4;
 @Component({
   selector: 'alg-group-invitation-list',
   templateUrl: './group-invitation-list.component.html',
+  styleUrl: './group-invitation-list.component.scss',
   imports: [
     LoadingComponent,
     ErrorComponent,

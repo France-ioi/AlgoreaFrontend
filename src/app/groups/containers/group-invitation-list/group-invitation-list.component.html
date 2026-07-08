@@ -36,7 +36,11 @@
                     {{ row.joiningUser | userCaption }}
                   </a>
                 </td>
-                <td class="alg-table-td">{{ invitationStatus(row.action) }}</td>
+                <td class="alg-table-td">
+                  <span class="alg-tag status-tag" [class.danger]="!isPending(row.action)">
+                    {{ invitationStatus(row.action) }}
+                  </span>
+                </td>
                 <td class="alg-table-td"><alg-relative-time [value]="row.at" /></td>
                 <td class="alg-table-td" style="width: 1%; white-space: nowrap; text-align: right; padding-left: 0">
                   @if (isPending(row.action)) {
