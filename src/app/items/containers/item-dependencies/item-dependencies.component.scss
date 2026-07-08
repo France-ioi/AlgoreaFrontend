@@ -2,32 +2,45 @@
 
 .explanation {
   margin: 0;
-  color: var(--alg-secondary-color);
+  color: var(--alg-secondary-color, #666);
 }
 
 .note-caption {
-  margin: var(--alg-space-size-5) 0;
-  color: var(--alg-secondary-color);
+  margin: var(--alg-space-size-5, 1rem) 0;
+  color: var(--alg-secondary-color, #666);
   font-size: functions.toRem(14);
   text-align: center;
 }
 
 .list {
   list-style-type: none;
-  margin: var(--alg-space-size-5) 0 0 0;
+  margin: var(--alg-space-size-5, 1rem) 0 0 0;
   padding: 0;
 }
 
 .list-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--alg-space-size-3, 0.75rem);
   height: functions.toRem(48);
-  border-bottom: .1rem solid var(--light-border-color);
+  border-bottom: .1rem solid var(--light-border-color, #e0e0e0);
+
+  > .alg-link {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .list-item-link {
   line-height: functions.toRem(32);
+}
+
+.required-score {
+  flex-shrink: 0;
+  width: functions.toRem(148);
+  text-align: right;
+  color: var(--alg-secondary-color, #666);
+  font-size: functions.toRem(14);
 }
 
 .add-dependency {

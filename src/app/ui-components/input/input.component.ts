@@ -25,6 +25,10 @@ export class InputComponent {
   hasClearButton = input(false);
   subtleFocus = input(false);
 
+  ariaLabel = input<string>();
+  ariaDescribedby = input<string>();
+  inputStep = input<string>();
+
   tooltipText = input('');
   tooltipEvent = input<'hover' | 'focus'>('hover');
   tooltipPosition = input<'left' | 'right' | 'top' | 'bottom'>('right');

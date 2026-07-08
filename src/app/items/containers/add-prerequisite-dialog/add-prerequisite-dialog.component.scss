@@ -1,0 +1,31 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  width: functions.toRem(540);
+  max-width: 100%;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+}
+
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-description {
+  margin-top: 0;
+}
+
+.score-input-field {
+  width: functions.toRem(96);
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.button {
+  margin-right: var(--alg-space-size-6, .5rem);
+}

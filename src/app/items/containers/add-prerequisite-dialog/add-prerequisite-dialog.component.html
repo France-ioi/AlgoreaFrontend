@@ -1,0 +1,46 @@
+<alg-modal
+  i18n-modalTitle
+  modalTitle="Add a prerequisite"
+  [showFooter]="true"
+  (closeEvent)="onCancel()"
+>
+  <div class="dialog-container">
+    <p class="dialog-description" id="prerequisite-score-description" i18n>
+      From what score on "{{ data.prerequisiteTitle }}" should the users get view access on "{{ data.dependentTitle }}"?
+    </p>
+    <form [formGroup]="form">
+      <div class="score-input-field">
+        <alg-input
+          inputType="number"
+          inputStep="1"
+          name="score"
+          [parentForm]="form"
+          ariaLabel="Required score (0 to 100)"
+          i18n-ariaLabel
+          ariaDescribedby="prerequisite-score-description"
+        />
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    <div class="footer">
+      <button
+        class="stroke button"
+        type="button"
+        icon="ph-bold ph-x"
+        (click)="onCancel()"
+        alg-button
+        i18n
+      >Cancel</button>
+      <button
+        type="button"
+        icon="ph-bold ph-check"
+        (click)="onAdd()"
+        [disabled]="form.invalid"
+        alg-button
+        i18n
+      >Add prerequisite</button>
+    </div>
+  </footer>
+</alg-modal>
