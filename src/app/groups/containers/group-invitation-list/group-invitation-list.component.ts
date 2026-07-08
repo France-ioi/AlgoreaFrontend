@@ -1,4 +1,5 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { httpResource } from '@angular/common/http';
 import { Group } from '../../models/group';
@@ -10,9 +11,12 @@ import {
   parseGroupPendingRequests,
 } from '../../models/group-pending-request';
 import { APPCONFIG } from 'src/app/config';
+import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
+import { WithdrawInvitationsService } from '../../data-access/withdraw-invitations.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
+import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
 import { GroupLinkPipe } from 'src/app/pipes/groupLink';
 
@@ -26,6 +30,7 @@ const REJECTIONS_WINDOW_WEEKS = 4;
     LoadingComponent,
     ErrorComponent,
     RelativeTimeComponent,
+    ButtonIconComponent,
     UserCaptionPipe,
     RouterLink,
     GroupLinkPipe,
@@ -33,6 +38,11 @@ const REJECTIONS_WINDOW_WEEKS = 4;
 })
 export class GroupInvitationListComponent {
   private config = inject(APPCONFIG);
+  private withdrawInvitationsService = inject(WithdrawInvitationsService);
+  private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
+
+  protected withdrawingId = signal<string | null>(null);
 
   group = input.required<Group>();
   refreshTrigger = input(0);
@@ -62,5 +72,34 @@ export class GroupInvitationListComponent {
       case invitationActions.invitation_refused:
         return $localize`Rejected`;
     }
+  }
+
+  protected isPending(action: InvitationAction): boolean {
+    return action === invitationActions.invitation_created;
+  }
+
+  protected onWithdraw(row: GroupPendingRequest): void {
+    if (this.withdrawingId() !== null) return;
+
+    this.withdrawingId.set(row.joiningUser.groupId);
+
+    this.withdrawInvitationsService.withdraw(this.group().id, [ row.joiningUser.groupId ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: result => {
+          const status = result.get(row.joiningUser.groupId);
+          if (status === 'success' || status === 'unchanged') {
+            this.actionFeedbackService.success($localize`The invitation has been withdrawn.`);
+          } else {
+            this.actionFeedbackService.error($localize`The invitation could not be withdrawn.`);
+          }
+          this.requestsResource.reload();
+          this.withdrawingId.set(null);
+        },
+        error: () => {
+          this.actionFeedbackService.unexpectedError();
+          this.withdrawingId.set(null);
+        },
+      });
   }
 }

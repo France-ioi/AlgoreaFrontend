@@ -25,6 +25,7 @@
               <th class="alg-table-th" i18n>User</th>
               <th class="alg-table-th" i18n>Status</th>
               <th class="alg-table-th" i18n>When</th>
+              <th class="alg-table-th" style="width: 1%; white-space: nowrap; text-align: right; padding-left: 0" i18n-aria-label aria-label="Actions"></th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +38,21 @@
                 </td>
                 <td class="alg-table-td">{{ invitationStatus(row.action) }}</td>
                 <td class="alg-table-td"><alg-relative-time [value]="row.at" /></td>
+                <td class="alg-table-td" style="width: 1%; white-space: nowrap; text-align: right; padding-left: 0">
+                  @if (isPending(row.action)) {
+                    <button
+                      class="size-s"
+                      type="button"
+                      icon="ph-duotone ph-trash"
+                      aria-label="Withdraw invitation"
+                      i18n-aria-label
+                      data-testid="withdraw-invitation"
+                      [disabled]="withdrawingId() === row.joiningUser.groupId"
+                      (click)="onWithdraw(row)"
+                      alg-button-icon
+                    ></button>
+                  }
+                </td>
               </tr>
             }
           </tbody>
