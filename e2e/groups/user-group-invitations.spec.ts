@@ -6,14 +6,47 @@ const groupName = 'E2EGroupInvitationProcess';
 const groupId = '4433009959583369709';
 const demoUserLogin = 'usr_5p020x2thuyu';
 
+const loginsInputLocator = (page: Page) => page.getByRole('textbox', {
+  name: 'logins of users to invite, separated by commas (e.g., login1, login2, ...)',
+});
+
 const sendGroupInvitation = async (page: Page) => {
   await page.goto(`/groups/by-id/${ groupId };p=/members`);
   await expect.soft(page.getByRole('heading', { name: groupName })).toBeVisible();
-  await expect.soft(page.getByRole('heading', { name: 'Invite users' })).toBeVisible();
-  await expect.soft(page.getByRole('textbox', { name: 'login_1, login_2...' })).toBeVisible();
-  await page.getByRole('textbox', { name: 'login_1, login_2...' }).fill(demoUserLogin);
-  await page.getByRole('button', { name: 'Invite' }).click();
+  await expect.soft(page.getByRole('heading', { name: 'Invitations' })).toBeVisible();
+  await expect.soft(loginsInputLocator(page)).toBeVisible();
+  await loginsInputLocator(page).fill(demoUserLogin);
+  await Promise.all([
+    page.getByRole('button', { name: 'Invite' }).click(),
+    page.waitForResponse(`${apiUrl}/groups/${ groupId }/invitations`),
+  ]);
   await expect.soft(page.locator('alg-message-info').getByText(`user(s) invited successfully: ${ demoUserLogin }`)).toBeVisible();
+};
+
+const checkMembersPageIsVisible = async (page: Page) => {
+  await expect.soft(page.locator('.alg-nav-tab').getByRole('link', { name: 'Members' })).toBeVisible();
+  await expect.soft(page.locator('alg-member-list')).toBeVisible();
+};
+
+const expectInvitationAcceptedToast = async (page: Page) => {
+  await expect.soft(page.locator('alg-toast-messages', {
+    hasText: `The ${ groupName } group has been accepted`,
+  })).toBeVisible();
+};
+
+const waitForInvitationAction = (page: Page, action: 'accept' | 'reject') =>
+  page.waitForResponse(response =>
+    response.request().method() === 'POST'
+    && response.url().includes(`/current-user/group-invitations/${ groupId }/${ action }`)
+  );
+
+const isDemoUserJoinedToGroup = async (page: Page): Promise<boolean> =>
+  page.locator('alg-joined-group-list', { hasText: groupName }).getByRole('row', { name: groupName }).isVisible();
+
+const expectInvitationDeclinedToast = async (page: Page) => {
+  await expect.soft(page.locator('alg-toast-messages', {
+    hasText: `The ${ groupName } group has been declined`,
+  })).toBeVisible();
 };
 
 const rejectGroupInvitation = async (page: Page) => {
@@ -25,8 +58,11 @@ const rejectGroupInvitation = async (page: Page) => {
   await expect.soft(page.getByRole('heading', { name: 'Pending invitations' })).toBeVisible();
   await expect.soft(page.getByRole('cell', { name: groupName })).toBeVisible();
   await expect.soft(page.getByRole('row', { name: groupName }).getByTestId('reject-group')).toBeVisible();
-  await page.getByRole('row', { name: groupName }).getByTestId('reject-group').click();
-  await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
+  await Promise.all([
+    page.getByRole('row', { name: groupName }).getByTestId('reject-group').click(),
+    waitForInvitationAction(page, 'reject'),
+  ]);
+  await expectInvitationDeclinedToast(page);
 };
 
 test.beforeEach(async ({ page, minePage }) => {
@@ -40,7 +76,7 @@ test.beforeEach(async ({ page, minePage }) => {
   await minePage.checkJoinedGroupsSectionIsVisible();
   if (await minePage.isUserInvitedToGroup(groupName)) {
     await rejectGroupInvitation(page);
-  } else if (await minePage.isUserJoinedToGroup(groupName)) {
+  } else if (await isDemoUserJoinedToGroup(page)) {
     await minePage.leaveGroup(groupName);
   }
 });
@@ -51,7 +87,7 @@ test.afterEach(async ({ page }) => {
     page.goto(`/groups/by-id/${ groupId };p=/members`),
     page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=26`),
   ]);
-  await expect.soft(page.locator('li').filter({ hasText: 'Users' })).toBeVisible();
+  await checkMembersPageIsVisible(page);
   await expect.soft(page.locator('alg-member-list')).not.toContainText(demoUserLogin);
 });
 
@@ -73,8 +109,11 @@ test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, mineP
       await page.getByRole('row', { name: groupName }).getByTestId('accept-group').click();
       await expect.soft(page.getByText('Joining a new group')).toBeVisible();
       await expect.soft(page.getByRole('button', { name: 'Join group' })).toBeVisible();
-      await page.getByRole('button', { name: 'Join group' }).click();
-      await expect.soft(page.getByText(`SuccessThe ${ groupName } group has`)).toBeVisible();
+      await Promise.all([
+        page.getByRole('button', { name: 'Join group' }).click(),
+        waitForInvitationAction(page, 'accept'),
+      ]);
+      await expectInvitationAcceptedToast(page);
     } else {
       throw new Error('Failed to accept group invitation');
     }
@@ -86,6 +125,7 @@ test('Accept group invitation', { tag: '@no-parallelism' }, async ({ page, mineP
       page.goto(`/groups/by-id/${ groupId };p=/members`),
       page.waitForResponse(`${apiUrl}/groups/${ groupId }/members?limit=26`),
     ]);
+    await checkMembersPageIsVisible(page);
     await expect.soft(page.locator('alg-member-list').getByRole('link', { name: demoUserLogin })).toBeVisible();
   });
 
@@ -106,7 +146,7 @@ test('Reject group invitation', { tag: '@no-parallelism' }, async ({ page }) => 
     await sendGroupInvitation(page);
   });
 
-  await test.step('Accept a group', async () => {
+  await test.step('Reject invitation', async () => {
     await initAsDemoUser(page);
     await rejectGroupInvitation(page);
   });

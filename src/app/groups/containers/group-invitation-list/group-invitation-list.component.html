@@ -1,0 +1,67 @@
+<div aria-live="polite">
+  @if (requestsResource.isLoading()) {
+    <alg-loading />
+  } @else if (requestsResource.error()) {
+    <div role="alert">
+      <alg-error class="dark"
+        icon="ph-duotone ph-warning-circle"
+        i18n-message message="Error while loading the invitations."
+        i18n-buttonCaption buttonCaption="Retry"
+        [showRefreshButton]="true"
+        (refresh)="onRefresh()"
+       />
+    </div>
+  } @else if (invitations().length === 0) {
+    <p i18n>There is no pending invitation nor recently rejected ones.</p>
+  } @else {
+    <div class="alg-table-page-wrapper">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2"
+          aria-label="Pending and recently rejected invitations"
+          i18n-aria-label
+        >
+          <thead>
+            <tr class="alg-table-header-tr">
+              <th class="alg-table-th" i18n>User</th>
+              <th class="alg-table-th" i18n>Status</th>
+              <th class="alg-table-th" i18n>When</th>
+              <th class="alg-table-th" style="width: 1%; white-space: nowrap; text-align: right; padding-left: 0" i18n-aria-label aria-label="Actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of invitations(); track row.memberId + row.at.getTime()) {
+              <tr class="alg-table-body-tr">
+                <td class="alg-table-td">
+                  <a class="alg-link" [routerLink]="row.joiningUser | groupLink">
+                    {{ row.joiningUser | userCaption }}
+                  </a>
+                </td>
+                <td class="alg-table-td">
+                  <span class="alg-tag status-tag" [class.danger]="!isPending(row.action)">
+                    {{ invitationStatus(row.action) }}
+                  </span>
+                </td>
+                <td class="alg-table-td"><alg-relative-time [value]="row.at" /></td>
+                <td class="alg-table-td" style="width: 1%; white-space: nowrap; text-align: right; padding-left: 0">
+                  @if (isPending(row.action)) {
+                    <button
+                      class="size-s"
+                      type="button"
+                      icon="ph-duotone ph-trash"
+                      aria-label="Withdraw invitation"
+                      i18n-aria-label
+                      data-testid="withdraw-invitation"
+                      [disabled]="withdrawingId() === row.joiningUser.groupId"
+                      (click)="onWithdraw(row)"
+                      alg-button-icon
+                    ></button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

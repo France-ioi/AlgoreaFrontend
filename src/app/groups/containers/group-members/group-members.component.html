@@ -1,0 +1,12 @@
+@let group = groupData().group;
+@if (group | isCurrentUserManager) {
+  <alg-member-list variant="users" [groupData]="groupData()" (removedGroup)="removedGroup.emit()" />
+  @if (group.currentUserCanManage !== 'none') {
+    <alg-group-invitations [group]="group" />
+  }
+  @if (group.currentUserCanManage !== 'none') {
+    <alg-group-join-by-code [group]="group" (refreshRequired)="refreshGroupInfo()" />
+  }
+} @else {
+  <alg-group-no-permission />
+}

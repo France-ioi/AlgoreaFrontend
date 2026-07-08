@@ -1,12 +1,51 @@
 @use 'src/assets/scss/functions';
 
-.invite-users, .button {
-  margin-top: var(--alg-space-size-6);
+:host {
+  display: block;
+  margin-top: var(--alg-space-size-5);
+}
+
+.invite-row {
+  display: flex;
+  align-items: flex-end;
+  gap: functions.toRem(8);
+  min-width: 0;
+}
+
+.logins-input {
+  flex: 1;
+  min-width: 0;
+  min-height: functions.toRem(40);
+  padding: functions.toRem(8) functions.toRem(16);
+  background-color: var(--alg-light-color);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: functions.toRem(16);
+  color: var(--alg-secondary-color);
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  &:focus,
+  &:active {
+    outline: functions.toRem(2) solid var(--alg-primary-color);
+    box-shadow: none;
+  }
+
+  &::placeholder {
+    color: var(--alg-secondary-color);
+    font-size: functions.toRem(16);
+    font-style: italic;
+    opacity: .5;
+  }
+}
+
+.invite-button {
+  flex-shrink: 0;
 }
 
 .too-many-message {
-  margin-top: var(--alg-space-size-6);
-  margin-bottom: var(--alg-space-size-5);
+  margin-top: var(--alg-space-size-5);
 }
 
 .message-container {

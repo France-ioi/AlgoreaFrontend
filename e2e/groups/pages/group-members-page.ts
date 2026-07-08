@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class GroupMembersPage {
-  private tabsLocator = this.page.locator('alg-selection');
+  private navTabLocator = this.page.locator('.alg-nav-tab');
   private memberListLocator = this.page.locator('alg-member-list');
   private confirmationModalLocator = this.page.locator('alg-confirmation-modal');
   private approveConfirmationBtnLocator = this.confirmationModalLocator.getByRole('button', { name: 'Yes' });
@@ -16,8 +16,9 @@ export class GroupMembersPage {
   }
 
   async goToTab(tab: string): Promise<void> {
-    await expect.soft(this.tabsLocator.getByText(tab)).toBeVisible();
-    await this.tabsLocator.getByText(tab).click();
+    const tabLink = this.navTabLocator.getByRole('link', { name: tab });
+    await expect.soft(tabLink).toBeVisible();
+    await tabLink.click();
   }
 
   async checksIsGroupWithCheckboxVisible(groupName: string): Promise<void> {

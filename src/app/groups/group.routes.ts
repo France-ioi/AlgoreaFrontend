@@ -54,7 +54,12 @@ const routes: Routes = [
       {
         path: 'members',
         loadComponent: () =>
-          import('./containers/group-composition/group-composition-page.component').then(m => m.GroupCompositionPageComponent),
+          import('./containers/group-members/group-members-page.component').then(m => m.GroupMembersPageComponent),
+      },
+      {
+        path: 'sub-groups',
+        loadComponent: () =>
+          import('./containers/group-sub-groups/group-sub-groups-page.component').then(m => m.GroupSubGroupsPageComponent),
       },
       {
         path: 'managers',

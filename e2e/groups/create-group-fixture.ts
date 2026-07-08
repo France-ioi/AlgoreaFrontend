@@ -17,7 +17,7 @@ export const test = base.extend<CreateGroupFixtures>({
     const groupName = `E2E_Group_${ Date.now() }`;
     await page.goto(`groups/by-id/${rootGroupId};p=/members`);
     await groupMembersPage.checksIsHeaderVisible(rootGroupName);
-    await groupMembersPage.goToTab('Sub-groups');
+    await groupMembersPage.goToTab('Sub-Groups');
     await groupMembersPage.checksIsAddSubGroupsSectionVisible();
     const groupId = await groupMembersPage.createChild(groupName);
     if (groupId) await use({ groupName, groupId });

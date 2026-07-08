@@ -6,9 +6,9 @@ import {
   input,
   output,
   signal,
-  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GetGroupDescendantsService } from 'src/app/data-access/get-group-descendants.service';
@@ -17,7 +17,6 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { GetGroupChildrenService, GroupChild } from '../../data-access/get-group-children.service';
 import { GetGroupMembersService, GroupMembers } from '../../data-access/get-group-members.service';
 import { GroupData } from '../../models/group-data';
-import { Filter, GroupCompositionFilterComponent, TypeFilter } from '../group-composition-filter/group-composition-filter.component';
 import { FetchState } from 'src/app/utils/state';
 import { DataPager } from 'src/app/utils/data-pager';
 import { UserCaptionPipe } from 'src/app/pipes/userCaption';
@@ -43,6 +42,7 @@ import { TableSortDirective } from 'src/app/ui-components/table-sort/table-sort.
 import { SortEvent, TableSortHeaderComponent } from 'src/app/ui-components/table-sort/table-sort-header/table-sort-header.component';
 import { FindInArray } from 'src/app/pipes/findInArray';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
+import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { Column, getColumns } from './member-list-columns';
 import { MemberListRemovalService } from './member-list-removal.service';
 
@@ -50,7 +50,7 @@ type Member = GroupMembers[number];
 
 const membersLimit = 25;
 
-type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: string, parentGroups: string, members: string }) &
+type Row = (Member|GroupChild|{ login: string, parentGroups: string }) &
 { route: RawGroupRoute };
 
 @Component({
@@ -59,7 +59,8 @@ type Row = (Member|GroupChild|{ login: string, parentGroups: string }|{ name: st
   styleUrl: './member-list.component.scss',
   providers: [ MemberListRemovalService ],
   imports: [
-    GroupCompositionFilterComponent,
+    SwitchComponent,
+    FormsModule,
     ErrorComponent,
     RouterLink,
     AsyncPipe,
@@ -93,12 +94,13 @@ export class MemberListComponent {
   private destroyRef = inject(DestroyRef);
 
   groupData = input.required<GroupData>();
+  variant = input<'users' | 'groups'>('users');
   removedGroup = output<void>();
 
-  defaultFilter: Filter = { type: TypeFilter.Users, directChildren: true };
+  allDescendants = signal(false);
+  protected readonly directChildren = computed(() => !this.allDescendants());
 
   currentSort = signal<string[]>([]);
-  currentFilter = signal<Filter>(this.defaultFilter);
   selection = signal<(Member | GroupChild)[]>([]);
 
   datapager = new DataPager({
@@ -109,8 +111,6 @@ export class MemberListComponent {
     },
   });
   rows$: Observable<FetchState<Row[]>> = this.datapager.list$;
-
-  private compositionFilter = viewChild<GroupCompositionFilterComponent>('compositionFilter');
 
   removalInProgress$ = new ReplaySubject<boolean>();
 
@@ -131,9 +131,9 @@ export class MemberListComponent {
     toObservable(this.groupData).pipe(
       takeUntilDestroyed(),
     ).subscribe(groupData => {
-      this.currentFilter.set({ ...this.defaultFilter });
+      this.allDescendants.set(false);
       this.currentUserCanManage.set(groupData.group.currentUserCanManage !== 'none');
-      this.columns.set(getColumns(this.currentFilter()));
+      this.columns.set(getColumns(this.variant(), this.directChildren()));
       this.currentSort.set([]);
       this.fetchRows();
     });
@@ -151,72 +151,57 @@ export class MemberListComponent {
     this.datapager.load();
   }
 
+  onAllDescendantsChange(checked: boolean): void {
+    if (checked === this.allDescendants()) {
+      return;
+    }
+    this.allDescendants.set(checked);
+    this.columns.set(getColumns(this.variant(), this.directChildren()));
+    this.currentSort.set([]);
+    this.fetchRows();
+  }
+
   getRows(pageSize: number, latestRow?: Row): Observable<Row[]> {
     const groupData = this.groupData();
     const route = groupData.route;
-    const currentFilter = this.currentFilter();
     const currentSort = this.currentSort();
 
-    switch (currentFilter.type) {
-      case TypeFilter.Groups:
-        return this.getGroupChildrenService.getGroupChildren(
-          route.id,
-          currentSort,
-          [],
-          [ 'Team', 'Session', 'User' ],
-        ).pipe(map(children => children.map(child => ({
-          ...child,
-          route: groupRoute(child, [ ...route.path, route.id ]),
-        }))));
-      case TypeFilter.Sessions:
-        return this.getGroupChildrenService.getGroupChildren(route.id, currentSort, [ 'Session' ])
-          .pipe(map(children => children.map(child => ({
-            ...child,
-            route: groupRoute(child, [ ...route.path, route.id ]),
-          }))));
-      case TypeFilter.Teams:
-        if (!currentFilter.directChildren) {
-          return this.getGroupDescendantsService.getTeamDescendants(route.id, { sort: currentSort })
-            .pipe(map(descendantTeams => descendantTeams.map(descendantTeam => ({
-              id: descendantTeam.id,
-              name: descendantTeam.name,
-              parentGroups: descendantTeam.parents.map(parent => parent.name).join(', '),
-              members: descendantTeam.members.map(member => member.login).join(', '),
-              route: rawGroupRoute({ id: descendantTeam.id, isUser: false }),
-            }))));
-        } else {
-          return this.getGroupChildrenService.getGroupChildren(route.id, currentSort, [ 'Team' ])
-            .pipe(map(children => children.map(child => ({
-              ...child,
-              route: groupRoute(child, [ ...route.path, route.id ]),
-            }))));
-        }
-      case TypeFilter.Users:
-        if (currentFilter.directChildren) {
-          return this.getGroupMembersService.getGroupMembers(
-            route.id,
-            currentSort,
-            pageSize,
-            (latestRow as Member|undefined)?.id,
-          ).pipe(
-            map(members => members.map(member => ({
-              ...member,
-              route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
-            }))));
-        } else {
-          return this.getGroupDescendantsService.getUserDescendants(route.id, {
-            sort: currentSort,
-            limit: pageSize,
-            fromId: (latestRow as Member|undefined)?.id,
-          }).pipe(map(descendantUsers => descendantUsers.map(descendantUser => ({
-            id: descendantUser.id,
-            login: descendantUser.user.login,
-            user: descendantUser.user,
-            parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
-            route: rawGroupRoute({ id: descendantUser.id, isUser: true }),
-          }))));
-        }
+    if (this.variant() === 'groups') {
+      return this.getGroupChildrenService.getGroupChildren(
+        route.id,
+        currentSort,
+        [],
+        [ 'Team', 'Session', 'User' ],
+      ).pipe(map(children => children.map(child => ({
+        ...child,
+        route: groupRoute(child, [ ...route.path, route.id ]),
+      }))));
     }
+
+    if (this.directChildren()) {
+      return this.getGroupMembersService.getGroupMembers(
+        route.id,
+        currentSort,
+        pageSize,
+        (latestRow as Member|undefined)?.id,
+      ).pipe(
+        map(members => members.map(member => ({
+          ...member,
+          route: groupRoute({ id: member.id, isUser: true }, [ ...route.path, route.id ]),
+        }))));
+    }
+
+    return this.getGroupDescendantsService.getUserDescendants(route.id, {
+      sort: currentSort,
+      limit: pageSize,
+      fromId: (latestRow as Member|undefined)?.id,
+    }).pipe(map(descendantUsers => descendantUsers.map(descendantUser => ({
+      id: descendantUser.id,
+      login: descendantUser.user.login,
+      user: descendantUser.user,
+      parentGroups: descendantUser.parents.map(parent => parent.name).join(', '),
+      route: rawGroupRoute({ id: descendantUser.id, isUser: true }),
+    }))));
   }
 
   onSortChange(events: SortEvent[]): void {
@@ -226,20 +211,6 @@ export class MemberListComponent {
       this.currentSort.set(sortMeta);
       this.fetchRows();
     }
-  }
-
-  onFilterChange(filter: Filter): void {
-    if (filter !== this.currentFilter()) {
-      this.currentFilter.set({ ...filter });
-      this.columns.set(getColumns(filter));
-      this.currentSort.set([]);
-      this.fetchRows();
-    }
-  }
-
-  setFilter(filter: Filter): void {
-    this.compositionFilter()?.setFilter(filter);
-    this.onFilterChange(filter);
   }
 
   onSelectAll(rows: Row[]): void {
@@ -271,7 +242,7 @@ export class MemberListComponent {
     const currentSelection = this.selection();
     if (currentSelection.length === 0) throw new Error('Unexpected: Missed group data or selected models');
     const groupId = this.groupData().group.id;
-    if (this.currentFilter().type === TypeFilter.Users) {
+    if (this.variant() === 'users') {
       this.memberListRemovalService.removeUsers(
         groupId,
         currentSelection as Member[],

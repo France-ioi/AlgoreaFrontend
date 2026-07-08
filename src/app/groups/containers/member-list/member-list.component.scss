@@ -5,8 +5,15 @@
   flex-direction: column;
 }
 
-.member-list-table {
-  margin-top: functions.toRem(20);
+.switch-control {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--alg-space-size-5, 1rem);
+}
+
+.switch-control-caption {
+  margin: 0 0 0 var(--alg-space-size-5);
+  color: var(--alg-switch-control-caption-color);
 }
 
 .alg-table-footer-checkbox {
