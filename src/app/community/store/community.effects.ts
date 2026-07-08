@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { createEffect } from '@ngrx/effects';
 import { EMPTY, catchError, map, of, switchMap, timer } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
+import { isCommunityConfigured } from 'src/app/config/community-config';
 import { GetThreadsService } from 'src/app/data-access/get-threads.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { CommunityVisitService } from '../community-visit.service';
@@ -19,7 +20,7 @@ export const communityPollEffect = createEffect(
     getThreadsService = inject(GetThreadsService),
     communityVisitService = inject(CommunityVisitService),
     userSessionService = inject(UserSessionService),
-  ) => (config.featureFlags.community === 'enabled' ? userSessionService.userProfile$.pipe(
+  ) => (isCommunityConfigured(config) ? userSessionService.userProfile$.pipe(
     switchMap(profile => {
       if (profile.tempUser) return EMPTY;
       return store.select(fromCommunity.selectHasUnreadThreads).pipe(
