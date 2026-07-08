@@ -1,0 +1,47 @@
+<div aria-live="polite">
+  @if (requestsResource.isLoading()) {
+    <alg-loading />
+  } @else if (requestsResource.error()) {
+    <div role="alert">
+      <alg-error class="dark"
+        icon="ph-duotone ph-warning-circle"
+        i18n-message message="Error while loading the invitations."
+        i18n-buttonCaption buttonCaption="Retry"
+        [showRefreshButton]="true"
+        (refresh)="onRefresh()"
+       />
+    </div>
+  } @else if (invitations().length === 0) {
+    <p i18n>There is no pending invitation nor recently rejected ones.</p>
+  } @else {
+    <div class="alg-table-page-wrapper">
+      <div class="alg-table-horizontal-scroll">
+        <table class="alg-table-v2"
+          aria-label="Pending and recently rejected invitations"
+          i18n-aria-label
+        >
+          <thead>
+            <tr class="alg-table-header-tr">
+              <th class="alg-table-th" i18n>User</th>
+              <th class="alg-table-th" i18n>Status</th>
+              <th class="alg-table-th" i18n>When</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of invitations(); track row.memberId + row.at.getTime()) {
+              <tr class="alg-table-body-tr">
+                <td class="alg-table-td">
+                  <a class="alg-link" [routerLink]="row.joiningUser | groupLink">
+                    {{ row.joiningUser | userCaption }}
+                  </a>
+                </td>
+                <td class="alg-table-td">{{ invitationStatus(row.action) }}</td>
+                <td class="alg-table-td"><alg-relative-time [value]="row.at" /></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

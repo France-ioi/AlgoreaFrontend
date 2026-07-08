@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
 import { Group } from '../../models/group';
@@ -34,6 +34,7 @@ export class GroupInviteUsersComponent {
   private formBuilder = inject(UntypedFormBuilder);
 
   group = input.required<Group>();
+  invitationsChanged = output<void>();
 
   inviteForm = this.formBuilder.group({ logins: '' });
   state = signal<GroupInviteState>('empty');
@@ -142,6 +143,10 @@ export class GroupInviteUsersComponent {
     this.createGroupInvitationsService.createInvitations(this.group().id, logins).subscribe({
       next: res => {
         this.displayResponse(res);
+
+        if (Array.from(res.values()).some(result => result === InvitationResult.Success)) {
+          this.invitationsChanged.emit();
+        }
 
         // Clear the textarea
         control.setValue('');
