@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { allowsViewingContent } from 'src/app/items/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { canCurrentUserWatchResult } from 'src/app/items/models/item-watch-permission';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from 'src/app/items/store';
@@ -43,6 +43,6 @@ export class ItemProgressComponent {
     if (!item) {
       return false;
     }
-    return (!this.isObserving() && allowsViewingContent(item.permissions)) || canCurrentUserWatchResult(item);
+    return (!this.isObserving() && canCurrentUserViewContent(item)) || canCurrentUserWatchResult(item);
   });
 }

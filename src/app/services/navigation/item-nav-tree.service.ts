@@ -12,9 +12,8 @@ import { ItemNavigationChild, ItemNavigationData, ItemNavigationService } from '
 import { NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
 import { NavTreeService } from './nav-tree.service';
 import {
-  allowsViewingContent,
-  allowsViewingInfo,
   canCurrentUserViewContent,
+  canCurrentUserViewInfo,
   ItemPermWithView,
 } from 'src/app/items/models/item-view-permission';
 import { isGroupTypeVisible } from 'src/app/groups/models/group-types';
@@ -147,7 +146,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   }
 
   private isInfoOnlyVisibility(perms: ItemPermWithView): boolean {
-    return allowsViewingInfo(perms) && !allowsViewingContent(perms);
+    return canCurrentUserViewInfo({ permissions: perms }) && !canCurrentUserViewContent({ permissions: perms });
   }
 
   private mapNavData(data: ItemNavigationData, pathToParent: string[]): { parent: NavTreeElement, elements: NavTreeElement[] } {

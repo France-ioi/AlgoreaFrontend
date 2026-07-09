@@ -9,7 +9,7 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ItemChildren } from 'src/app/data-access/get-item-children.service';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { allowsEditingAll } from '../../models/item-edit-permission';
+import { canCurrentUserEditAll } from '../../models/item-edit-permission';
 import { PermissionsTokenService } from '../../data-access/permissions-token.service';
 import { GetTaskStatsService } from '../../data-access/get-task-stats.service';
 import { TaskStatsLoaderService } from '../../data-access/task-stats-loader.service';
@@ -42,7 +42,7 @@ export class ChapterStatsRowComponent {
 
   readonly mode = computed<RowMode>(() => {
     const child = this.child();
-    if (!allowsEditingAll(child.permissions)) return 'cannot-edit';
+    if (!canCurrentUserEditAll(child)) return 'cannot-edit';
     if (child.type !== 'Task') return 'not-a-task';
     return 'fetch';
   });

@@ -17,16 +17,18 @@ export const itemEditPermSchema = z.object({
 export type ItemPermWithEdit = z.infer<typeof itemEditPermSchema>;
 export interface ItemWithEditPerm { permissions: ItemPermWithEdit }
 
+// Internal helpers — do NOT export. Use canCurrentUserEditChildren / canCurrentUserEditAll instead.
+
 /**
  * Whether the permission allows the user/group to change the children (and the properties of the relation) of the item
  */
-export function allowsEditingChildren(p: ItemPermWithEdit): boolean {
+function allowsEditingChildren(p: ItemPermWithEdit): boolean {
   return [ P.Children, P.All, P.AllWithGrant ].includes(p.canEdit);
 }
 /**
  * Whether the permission allows the user/group to change children and all properties of the item (but cannot delete)
  */
-export function allowsEditingAll(p: ItemPermWithEdit): boolean {
+function allowsEditingAll(p: ItemPermWithEdit): boolean {
   return [ P.All, P.AllWithGrant ].includes(p.canEdit);
 }
 /**
@@ -34,6 +36,18 @@ export function allowsEditingAll(p: ItemPermWithEdit): boolean {
  */
 export function allowsGrantingEdition(p: ItemPermWithEdit): boolean {
   return p.canEdit === P.AllWithGrant;
+}
+
+// ********************************************
+// Shortcut/helper functions on items directly
+// ********************************************
+
+export function canCurrentUserEditChildren(i: ItemWithEditPerm): boolean {
+  return allowsEditingChildren(i.permissions);
+}
+
+export function canCurrentUserEditAll(i: ItemWithEditPerm): boolean {
+  return allowsEditingAll(i.permissions);
 }
 
 // ********************************************

@@ -11,7 +11,7 @@ import {
   generateCanViewValues,
   generateCanWatchValues
 } from '../../models/permissions-texts';
-import { allowsGivingPermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
+import { canCurrentUserGivePermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
 import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe, ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import {
   PermissionsEditDialogComponent,
@@ -98,7 +98,7 @@ export class ItemPermissionsComponent {
     const observedGroup = this.observedGroup();
     const itemData = this.itemData();
     const currentUserCanGrantAccess = observedGroup.currentUserCanGrantAccess;
-    const currentUserCanGivePermissions = allowsGivingPermToItem(itemData.item.permissions);
+    const currentUserCanGivePermissions = canCurrentUserGivePermToItem(itemData.item);
 
     if (currentUserCanGrantAccess && !currentUserCanGivePermissions) return 'content';
     if (!currentUserCanGrantAccess && currentUserCanGivePermissions) return 'group';

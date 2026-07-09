@@ -15,7 +15,7 @@ import { ProgressData, UserProgressDetailsComponent } from '../../containers/use
 import { DataPager } from 'src/app/utils/data-pager';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
-import { allowsGivingPermToItem } from 'src/app/items/models/item-permissions';
+import { canCurrentUserGivePermToItem } from 'src/app/items/models/item-permissions';
 import { itemRoute, itemRouteWith } from 'src/app/models/routing/item-route';
 import { selectObservedGroupRouteAsItemRouteParameter } from 'src/app/models/routing/item-route-observation-selector';
 import { Store } from '@ngrx/store';
@@ -104,7 +104,7 @@ export class GroupProgressGridComponent {
 
   readonly canAccess = computed(() =>
     canCurrentUserGrantGroupAccess(this.group())
-    && allowsGivingPermToItem(this.itemData().item.permissions)
+    && canCurrentUserGivePermToItem(this.itemData().item)
   );
 
   readonly isCSVDataFetching = this.csvExportService.isFetching;
