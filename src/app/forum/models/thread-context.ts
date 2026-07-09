@@ -1,6 +1,6 @@
 import { isUser } from 'src/app/models/routing/group-route';
 import { isATask, ItemType } from 'src/app/items/models/item-type';
-import { allowsWatchingAnswers, ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
+import { canCurrentUserWatchAnswers, ItemPermWithWatch } from 'src/app/items/models/item-watch-permission';
 import { ObservationInfo } from 'src/app/store/observation/models';
 
 /**
@@ -19,7 +19,7 @@ export function canThreadExist(item: { type: ItemType }, observationInfo: Observ
  * Whether the user has permissions to open a thread without needing an API call.
  * Returns true if:
  * - Not observing AND canRequestHelp is true, OR
- * - Observing a user AND allowsWatchingAnswers AND currentUserWatchGroup
+ * - Observing a user AND canCurrentUserWatchAnswers AND currentUserWatchGroup
  */
 export function canOpenThread(
   item: { permissions: ItemPermWithWatch & { canRequestHelp: boolean } },
@@ -33,6 +33,6 @@ export function canOpenThread(
     // Observing a group (not a user): cannot open thread
     return false;
   }
-  // Observing a user: check allowsWatchingAnswers AND currentUserWatchGroup
-  return allowsWatchingAnswers(item.permissions) && observationInfo.currentUserWatchGroup;
+  // Observing a user: check canCurrentUserWatchAnswers AND currentUserWatchGroup
+  return canCurrentUserWatchAnswers(item) && observationInfo.currentUserWatchGroup;
 }

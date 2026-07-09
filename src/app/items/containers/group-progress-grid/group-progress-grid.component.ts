@@ -28,7 +28,7 @@ import {
   PermissionsEditDialogParams,
 } from '../../containers/permissions-edit-dialog/permissions-edit-dialog.component';
 import { UserProgressComponent } from '../../containers/user-progress/user-progress.component';
-import { RouterLink } from '@angular/router';
+import { RouterLink, UrlTree } from '@angular/router';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { AsyncPipe } from '@angular/common';
@@ -39,18 +39,15 @@ import { CdkMenu, CdkMenuTrigger } from '@angular/cdk/menu';
 import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { UserLinkWithActionsComponent } from 'src/app/ui-components/user-link-with-actions/user-link-with-actions.component';
-import { UrlTree } from '@angular/router';
 import { typeCategoryOfItem } from 'src/app/items/models/item-type';
 import { RawGroupRoute, rawGroupRoute } from 'src/app/models/routing/group-route';
 import { getGroupProgressGridColumns } from './group-progress-grid-columns';
 import { groupProgressDetailMenuPositions } from './group-progress-grid-menu-positions';
 import { getRowsWithProgress } from './group-progress-grid-data';
 import { GroupProgressGridCsvExportService } from './group-progress-grid-csv-export.service';
-import {
-  DataColumn,
-  DataRow,
-  ProgressDataDialog,
-} from './group-progress-grid.types';
+import { GroupProgressGridZipExportService } from './group-progress-grid-zip-export.service';
+import { canExportGroupProgressZip, triggerGroupProgressZipExport } from './group-progress-grid-zip-export.utils';
+import { DataColumn, DataRow, ProgressDataDialog } from './group-progress-grid.types';
 
 export type { Progress } from './group-progress-grid.types';
 
@@ -58,7 +55,7 @@ export type { Progress } from './group-progress-grid.types';
   selector: 'alg-group-progress-grid',
   templateUrl: './group-progress-grid.component.html',
   styleUrl: './group-progress-grid.component.scss',
-  providers: [ GroupProgressGridCsvExportService ],
+  providers: [ GroupProgressGridCsvExportService, GroupProgressGridZipExportService ],
   imports: [
     CompositionFilterComponent,
     ErrorComponent,
@@ -86,6 +83,7 @@ export class GroupProgressGridComponent {
   private getGroupChildrenService = inject(GetGroupChildrenService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private csvExportService = inject(GroupProgressGridCsvExportService);
+  private zipExportService = inject(GroupProgressGridZipExportService);
   private store = inject(Store);
   private observedGroupRouteParam = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
   private itemRouter = inject(ItemRouter);
@@ -110,6 +108,11 @@ export class GroupProgressGridComponent {
   );
 
   readonly isCSVDataFetching = this.csvExportService.isFetching;
+  readonly isZipDataFetching = this.zipExportService.isFetching;
+
+  readonly canExportZip = computed(() =>
+    canExportGroupProgressZip(this.currentFilter(), this.group(), this.itemData().item),
+  );
 
   private readonly refresh$ = new Subject<void>();
   // columns containing results, including the first "chapter summary" one
@@ -282,5 +285,9 @@ export class GroupProgressGridComponent {
     const group = this.group();
     const itemData = this.itemData();
     this.csvExportService.export(group.id, itemData.item.id, this.currentFilter());
+  }
+
+  onZipExport(): void {
+    triggerGroupProgressZipExport(this.zipExportService, this.group().id, this.itemData().item.id);
   }
 }

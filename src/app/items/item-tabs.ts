@@ -6,7 +6,7 @@ import { TabService } from 'src/app/services/tab.service';
 import { TaskTab } from './containers/item-display/item-display.component';
 import { APPCONFIG } from 'src/app/config';
 import { isAChapter, isATask } from 'src/app/items/models/item-type';
-import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
+import { canCurrentUserWatchResult } from 'src/app/items/models/item-watch-permission';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
@@ -75,7 +75,7 @@ export class ItemTabs implements OnDestroy {
 
       const hasEditionPerm = state.isReady ? allowsEditingAll(state.data.item.permissions) : false;
       const canViewContent = state.isReady ? canCurrentUserViewContent(state.data.item) : false;
-      const canWatchResults = state.isReady ? allowsWatchingResults(state.data.item.permissions) : false;
+      const canWatchResults = state.isReady ? canCurrentUserWatchResult(state.data.item) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
       const isChapter = state.isReady ? isAChapter(state.data.item) : undefined;
       const canViewStats = isObserving ? canWatchResults : canViewContent;

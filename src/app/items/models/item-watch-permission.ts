@@ -17,17 +17,20 @@ export const itemWatchPermSchema = z.object({
 export type ItemPermWithWatch = z.infer<typeof itemWatchPermSchema>;
 export interface ItemWithWatchPerm { permissions: ItemPermWithWatch }
 
+// Internal helpers — do NOT export. Use canCurrentUserWatchResult / canCurrentUserWatchAnswers instead.
+// Agents: keep these unexported; add or extend the canCurrentUser* wrappers for item-level checks.
+
 /**
  * Whether the permission allows the user/group to watch others' results (require perm on the receiver as well!)
  */
-export function allowsWatchingResults(p: ItemPermWithWatch): boolean {
+function allowsWatchingResults(p: ItemPermWithWatch): boolean {
   return [ P.Result, P.Answer, P.AnswerWithGrant ].includes(p.canWatch);
 }
 
 /**
  * Whether the permission allows the user/group to watch others' results and answers (require perm on the receiver as well!)
  */
-export function allowsWatchingAnswers(p: ItemPermWithWatch): boolean {
+function allowsWatchingAnswers(p: ItemPermWithWatch): boolean {
   return [ P.Answer, P.AnswerWithGrant ].includes(p.canWatch);
 }
 
@@ -44,6 +47,10 @@ export function allowsGrantingWatch(p: ItemPermWithWatch): boolean {
 
 export function canCurrentUserWatchResult(i: ItemWithWatchPerm): boolean {
   return allowsWatchingResults(i.permissions);
+}
+
+export function canCurrentUserWatchAnswers(i: ItemWithWatchPerm): boolean {
+  return allowsWatchingAnswers(i.permissions);
 }
 
 // ********************************************

@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { allowsViewingContent } from 'src/app/items/models/item-view-permission';
-import { allowsWatchingResults } from 'src/app/items/models/item-watch-permission';
+import { canCurrentUserWatchResult } from 'src/app/items/models/item-watch-permission';
 import { fromObservation } from 'src/app/store/observation';
 import { fromItemContent } from 'src/app/items/store';
 import { ItemGroupProgressComponent } from '../item-group-progress/item-group-progress.component';
@@ -43,7 +43,6 @@ export class ItemProgressComponent {
     if (!item) {
       return false;
     }
-    const permissions = item.permissions;
-    return (!this.isObserving() && allowsViewingContent(permissions)) || allowsWatchingResults(permissions);
+    return (!this.isObserving() && allowsViewingContent(item.permissions)) || canCurrentUserWatchResult(item);
   });
 }
