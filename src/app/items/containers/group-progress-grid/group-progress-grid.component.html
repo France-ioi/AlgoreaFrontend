@@ -48,6 +48,17 @@
             [disabled]="isCSVDataFetching()"
             i18n
           >Export as CSV</button>
+          @if (canExportZip()) {
+            <button
+              alg-button
+              type="button"
+              icon="ph ph-file-zip"
+              (click)="onZipExport()"
+              [disabled]="isZipDataFetching()"
+              [attr.aria-busy]="isZipDataFetching()"
+              i18n
+            >Export as zip</button>
+          }
         </div>
 
         <div class="alg-table-page-wrapper">
