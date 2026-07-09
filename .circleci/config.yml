@@ -109,7 +109,8 @@ jobs:
           at: ./
       - run: npm install -g @crowdin/cli
       - run: npx ng extract-i18n
-      - run: crowdin push sources -s messages.xlf -t src/locale/messages.%two_letters_code%.xlf
+      # Source/translation paths and file-level context come from crowdin.yml.
+      - run: crowdin push sources
 
   fetch-translations:
     docker: *node_image
