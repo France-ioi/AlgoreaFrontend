@@ -1,0 +1,19 @@
+# Crowdin CLI configuration.
+#
+# Project credentials are provided through the CROWDIN_PROJECT_ID and
+# CROWDIN_PERSONAL_TOKEN environment variables (set in the CircleCI "crowdin"
+# context) and are therefore intentionally NOT stored in this file. The CLI
+# reads those variables automatically.
+#
+# Angular's `ng extract-i18n` produces a single `messages.xlf` at the repo
+# root containing every translatable string of the app, so there is only one
+# source file to manage here. The `context` property attaches file-level
+# context (see crowdin-context.md) shown to translators in the Editor's
+# "File Context" tab. Requires Crowdin CLI >= 4.10.0.
+"files": [
+  {
+    "source": "/messages.xlf",
+    "translation": "/src/locale/messages.%two_letters_code%.xlf",
+    "context": "/crowdin-context.md"
+  }
+]
