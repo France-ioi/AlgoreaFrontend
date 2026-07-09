@@ -152,14 +152,14 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
       'Info'
     );
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can grant view" to be at least "Info & enter"',
+      'Insufficient permissions. You need Can grant view >= "Info & enter"',
     );
     await propagationAdvancedConfigurationDialogComponent.hoverOnOptionValue(
       'Propagation of "content" view permission',
       'Content'
     );
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can grant view" to be at least "Content"',
+      'Insufficient permissions. You need Can grant view >= "Content"',
     );
     await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
       'Propagation of "content" view permission'
@@ -173,14 +173,14 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
       'Content with descendants'
     );
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can grant view" to be at least "Content and descendants"',
+      'Insufficient permissions. You need Can grant view >= "Content and descendants"',
     );
     await propagationAdvancedConfigurationDialogComponent.hoverOnOptionValue(
       'Propagation of higher view permission',
       'Solution'
     );
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can grant view" to be at least "Solution"',
+      'Insufficient permissions. You need Can grant view >= "Solution"',
     );
     await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
       'Propagation of higher view permission',
@@ -191,7 +191,7 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
     );
     await propagationAdvancedConfigurationDialogComponent.hoverOnSwitchValue('Propagation of "grant view" permission');
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can grant view" to be at least "Solution and grant"',
+      'Insufficient permissions. You need Can grant view >= "Solution and grant"',
     );
     await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
       'Propagation of "grant view" permission',
@@ -202,7 +202,7 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
     );
     await propagationAdvancedConfigurationDialogComponent.hoverOnSwitchValue('Propagation of "watch" permission');
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can watch" to be at least "Answer and grant"',
+      'Insufficient permissions. You need Can watch >= "Answer and grant"',
     );
     await propagationAdvancedConfigurationDialogComponent.toggleCollapsableSection(
       'Propagation of "watch" permission',
@@ -213,7 +213,7 @@ test('checks edit advanced propagation full flow', { tag: '@no-parallelism' }, a
     );
     await propagationAdvancedConfigurationDialogComponent.hoverOnSwitchValue('Propagation of "edit" permission');
     await propagationAdvancedConfigurationDialogComponent.checkIsValidationTooltipVisible(
-      'You needs "Can edit" to be at least "All and grant"',
+      'Insufficient permissions. You need Can edit >= "All and grant"',
     );
   });
 });

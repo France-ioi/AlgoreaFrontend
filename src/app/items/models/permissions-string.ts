@@ -35,17 +35,6 @@ export const permissionsInfoString = {
   }
 };
 
-function getTargetTypeString(targetType: TypeFilter): string {
-  switch (targetType) {
-    case 'Users':
-      return $localize`This user`;
-    case 'Groups':
-      return $localize`This group`;
-    case 'Teams':
-      return $localize`This team`;
-  }
-}
-
 const multipleValuesPermissions = [ 'canView', 'canGrantView', 'canWatch', 'canEdit' ] as const;
 
 function isMultipleValuesPermissionConstraint(
@@ -54,17 +43,21 @@ function isMultipleValuesPermissionConstraint(
   return multipleValuesPermissions.includes(constraintError.permission as typeof multipleValuesPermissions[number]);
 }
 
-export function generateErrorMessage(targetType: TypeFilter) {
+export function generateErrorMessage(_targetType: TypeFilter) {
   return (constraintError: ConstraintError): string => {
     if (isMultipleValuesPermissionConstraint(constraintError)) {
       const permissionString = permissionsInfoString[constraintError.permission];
-
-      const target = constraintError.on === 'giver' ? $localize`You` : getTargetTypeString(targetType);
       const permission = permissionString.string;
-      const comparison = constraintError.constraintType === 'atLeast' ? $localize`to be at least` : $localize`to be`;
       const permissionValue = permissionString[constraintError.expectedValue as keyof typeof permissionString];
+      const atLeast = constraintError.constraintType === 'atLeast';
 
-      return `${target} needs "${permission}" ${comparison} "${permissionValue}"`;
+      if (constraintError.on === 'giver') {
+        if (atLeast) return $localize`Insufficient permissions. You need ${permission} >= "${permissionValue}"`;
+        else return $localize`Insufficient permissions. You need ${permission} = "${permissionValue}"`;
+      } else {
+        if (atLeast) return $localize`This requires "${permission}" to be at least "${permissionValue}"`;
+        else return $localize`This requires "${permission}" to be "${permissionValue}"`;
+      }
     }
 
     if (constraintError.permission === 'isOwner' && constraintError.expectedValue === true) {
