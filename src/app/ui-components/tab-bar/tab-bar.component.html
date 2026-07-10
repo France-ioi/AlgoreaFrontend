@@ -27,7 +27,7 @@
       [sensorThrottleTime]="1"
       appearance="native"
       >
-      <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabEntries">
+      <ul class="tabs" [class.for-header]="styleClass() === 'for-header'" *ngrxLet="tabs$ as tabEntries">
         @for (entry of tabEntries; track entry.trackId) {
           <li class="content-pill">
             <div class="content-pill-list" role="tablist">
@@ -35,8 +35,10 @@
                 class="content-pill-indicator"
                 [class.content-pill-indicator-animate]="indicatorAnimate()"
                 [class.content-pill-indicator-visible]="indicatorVisible()"
+                [style.left.px]="indicatorLeft()"
+                [style.top.px]="indicatorTop()"
                 [style.width.px]="indicatorWidth()"
-                [style.transform]="indicatorTransform()"
+                [style.height.px]="indicatorHeight()"
                 aria-hidden="true"
               ></span>
               @for (tab of entry.tabs; track tab.id; let tabIndex = $index) {

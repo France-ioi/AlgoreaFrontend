@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, Component, computed, DestroyRef, ElementRef,
+  AfterViewInit, Component, DestroyRef, ElementRef,
   input, OnDestroy, inject, signal, viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,7 +29,7 @@ type TabBarEntry = {
 
 const TAB_ICONS: Record<string, string> = {
   task: 'ph ph-file-text',
-  editor: 'ph ph-user-gear',
+  editor: 'ph ph-brain',
   hints: 'ph ph-lightbulb',
   solution: 'ph ph-check-circle',
   submission: 'ph ph-paper-plane-tilt',
@@ -45,6 +45,12 @@ const TAB_ICONS: Record<string, string> = {
   'alg-forum': 'ph ph-chats-circle',
   'alg-item-stats': 'ph ph-chart-pie',
 };
+
+const CONTENT_TASK_TAB_IDS = new Set([ 'alg-content', 'alg-children-edit' ]);
+
+function isTaskTabForDesign(tab: { isTaskTab?: boolean, tag: string }): boolean {
+  return !!tab.isTaskTab || CONTENT_TASK_TAB_IDS.has(tab.tag);
+}
 
 function contentPillSeparatorAfterIndex(tabs: TabView[]): number | null {
   let lastTaskTabIndex = -1;
@@ -87,9 +93,10 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   showNextButton = signal(false);
   indicatorVisible = signal(false);
   indicatorLeft = signal(0);
+  indicatorTop = signal(0);
   indicatorWidth = signal(0);
+  indicatorHeight = signal(0);
   indicatorAnimate = signal(false);
-  indicatorTransform = computed(() => `translateX(${this.indicatorLeft()}px)`);
   private indicatorInitialized = false;
 
   tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
@@ -97,7 +104,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
       label: tab.title,
       routerLink: tab.command,
       id: tab.tag,
-      isTaskTab: !!tab.isTaskTab,
+      isTaskTab: isTaskTabForDesign(tab),
       isActive: tab.tag === active,
     })))),
   );
@@ -152,11 +159,11 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
       this.indicatorVisible.set(false);
       return;
     }
-    const listRect = listEl.getBoundingClientRect();
-    const activeRect = activeEl.getBoundingClientRect();
     this.indicatorAnimate.set(animate && this.indicatorInitialized);
-    this.indicatorLeft.set(activeRect.left - listRect.left);
-    this.indicatorWidth.set(activeRect.width);
+    this.indicatorLeft.set(activeEl.offsetLeft);
+    this.indicatorTop.set(activeEl.offsetTop);
+    this.indicatorWidth.set(activeEl.offsetWidth);
+    this.indicatorHeight.set(activeEl.offsetHeight);
     this.indicatorVisible.set(true);
     this.indicatorInitialized = true;
   }
