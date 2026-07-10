@@ -4,8 +4,12 @@ $content-pill-font-size: functions.toRem(14);
 $content-pill-height: functions.toRem(44);
 $content-pill-item-height: functions.toRem(36);
 $content-pill-icon-size: functions.toRem(18);
+$header-pill-height: functions.toRem(36);
 
 :host {
+  display: flex;
+  align-items: center;
+  height: 100%;
   overflow: hidden;
 
   &:not(:has(.tabs.for-header)) {
@@ -19,16 +23,56 @@ $content-pill-icon-size: functions.toRem(18);
 }
 
 .container {
-  position: relative;
   display: flex;
   align-items: center;
   height: 100%;
+  max-width: 100%;
+}
 
-  &:has(.tabs.for-header) {
-    align-items: stretch;
+.content-pill-scroll-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
 
-    .alg-top-bar-scrollbar {
+  &.is-header {
+    box-sizing: border-box;
+    align-self: center;
+    height: $header-pill-height;
+    padding: functions.toRem(3);
+    border: functions.toRem(1) solid var(--alg-border-color, #DEDEDE);
+    border-radius: functions.toRem(999);
+    background: #f5f6f8;
+    box-shadow: 0 functions.toRem(1) functions.toRem(4) rgba(29, 34, 39, 0.06);
+
+    .content-pill-scroll-viewport {
+      flex: 1;
+      min-width: 0;
+      height: auto;
+      align-self: center;
+    }
+
+    .content-pill-list {
       height: 100%;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    &.has-scroll-prev .content-pill-scroll-viewport,
+    &.has-scroll-next .content-pill-scroll-viewport {
+      mask-image: linear-gradient(to right, transparent, #000 functions.toRem(12), #000 calc(100% - #{functions.toRem(12)}), transparent);
+    }
+
+    &.has-scroll-prev:not(.has-scroll-next) .content-pill-scroll-viewport {
+      mask-image: linear-gradient(to right, transparent, #000 functions.toRem(12));
+    }
+
+    &.has-scroll-next:not(.has-scroll-prev) .content-pill-scroll-viewport {
+      mask-image: linear-gradient(to left, transparent, #000 functions.toRem(12));
     }
   }
 }
@@ -44,26 +88,21 @@ $content-pill-icon-size: functions.toRem(18);
   align-items: center;
 
   &.for-header {
-    height: 100%;
+    height: auto;
     align-items: center;
 
-    .content-pill-list {
-      height: functions.toRem(36);
-      padding: functions.toRem(3);
-    }
-
     .content-pill-item {
-      height: functions.toRem(30);
-      padding: 0 functions.toRem(12);
+      height: functions.toRem(28);
+      padding: 0 functions.toRem(10);
       font-size: functions.toRem(13);
     }
 
     .content-pill-icon {
-      font-size: functions.toRem(16);
+      font-size: functions.toRem(15);
     }
 
     .content-pill-separator {
-      height: functions.toRem(20);
+      height: functions.toRem(18);
     }
   }
 }
@@ -153,14 +192,17 @@ $content-pill-icon-size: functions.toRem(18);
   background: var(--alg-border-color, #DEDEDE);
 }
 
-.prev-button {
+.tab-scroll-button {
   position: absolute;
-  left: 0;
+  top: 50%;
   z-index: 2;
-}
+  transform: translateY(-50%);
 
-.next-button {
-  position: absolute;
-  right: 0;
-  z-index: 1;
+  &.tab-scroll-prev {
+    left: functions.toRem(4);
+  }
+
+  &.tab-scroll-next {
+    right: functions.toRem(4);
+  }
 }

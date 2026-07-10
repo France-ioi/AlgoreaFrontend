@@ -135,32 +135,29 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   handleArrows(): void {
     const scrollbar = this.scrollbarRef();
     if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = scrollbar.nativeElement.scrollLeft;
-    const scrollWidth = scrollbar.nativeElement.scrollWidth;
-    const clientWidth = scrollbar.nativeElement.clientWidth;
+    const viewport = scrollbar.adapter.viewportElement;
+    const scrollLeft = viewport.scrollLeft;
+    const scrollWidth = viewport.scrollWidth;
+    const clientWidth = viewport.clientWidth;
     const gap = 5;
-    this.showPrevButton.set(clientWidth !== Math.round(scrollWidth) && scrollLeft > gap);
-    this.showNextButton.set(clientWidth !== Math.round(scrollWidth)
-      && (scrollLeft + clientWidth) < (Math.round(scrollWidth) - gap));
+    const hasOverflow = clientWidth < scrollWidth - 1;
+    this.showPrevButton.set(hasOverflow && scrollLeft > gap);
+    this.showNextButton.set(hasOverflow && (scrollLeft + clientWidth) < (scrollWidth - gap));
   }
 
   onPrev(): void {
     const scrollbar = this.scrollbarRef();
     if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = scrollbar.nativeElement.scrollLeft;
-    const clientWidth = scrollbar.nativeElement.clientWidth;
-    void scrollbar.scrollTo({
-      left: scrollLeft - (clientWidth / 2),
-    });
+    const viewport = scrollbar.adapter.viewportElement;
+    viewport.scrollLeft = Math.max(0, viewport.scrollLeft - (viewport.clientWidth / 2));
+    requestAnimationFrame(() => this.handleArrows());
   }
 
   onNext(): void {
     const scrollbar = this.scrollbarRef();
     if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
-    const scrollLeft = scrollbar.nativeElement.scrollLeft;
-    const clientWidth = scrollbar.nativeElement.clientWidth;
-    void scrollbar.scrollTo({
-      left: scrollLeft + (clientWidth / 2),
-    });
+    const viewport = scrollbar.adapter.viewportElement;
+    viewport.scrollLeft += viewport.clientWidth / 2;
+    requestAnimationFrame(() => this.handleArrows());
   }
 }

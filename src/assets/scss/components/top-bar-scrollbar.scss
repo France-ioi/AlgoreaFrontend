@@ -6,6 +6,17 @@
     padding-bottom: 0 !important;
     height: 100%;
   }
+
+  &.content-pill-scroll-viewport {
+    height: auto;
+    align-self: center;
+
+    .ng-scroll-content {
+      height: auto !important;
+      display: flex;
+      align-items: center;
+    }
+  }
 }
 
 .alg-content-tab-bar-scrollbar {

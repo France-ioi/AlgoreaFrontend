@@ -1,54 +1,68 @@
-<div class="container">
-  @if (showPrevButton()) {
-    <button
-      class="size-s primary no-bg tab-arrow tab-prev prev-button"
-      type="button"
-      icon="ph-bold ph-caret-left"
-      alg-button-icon
-      (click)="onPrev()"
-    ></button>
-  }
-  <ng-scrollbar
-    class="alg-top-bar-scrollbar"
-    [class.alg-content-tab-bar-scrollbar]="styleClass() !== 'for-header'"
-    trackClass="alg-top-bar-scrollbar-no-track"
-    orientation="horizontal"
-    [sensorThrottleTime]="1"
-    appearance="native"
-    >
-    <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabEntries">
-      @for (entry of tabEntries; track entry.trackId) {
-        <li class="content-pill">
-          <div class="content-pill-list" role="tablist">
-            @for (tab of entry.tabs; track tab.id; let tabIndex = $index) {
-              @if (entry.separatorAfterIndex !== null && tabIndex === entry.separatorAfterIndex + 1) {
-                <span class="content-pill-separator" aria-hidden="true"></span>
+<div
+  class="container"
+  [class.for-header-tabs]="styleClass() === 'for-header'"
+>
+  <div
+    class="content-pill-scroll-shell"
+    [class.is-header]="styleClass() === 'for-header'"
+    [class.has-scroll-prev]="showPrevButton()"
+    [class.has-scroll-next]="showNextButton()"
+  >
+    @if (showPrevButton()) {
+      <button
+        class="size-xs secondary tab-scroll-button tab-scroll-prev"
+        type="button"
+        icon="ph ph-caret-left"
+        alg-button-icon
+        aria-label="Scroll tabs left"
+        i18n-aria-label
+        (click)="onPrev()"
+      ></button>
+    }
+    <ng-scrollbar
+      class="alg-top-bar-scrollbar content-pill-scroll-viewport"
+      [class.alg-content-tab-bar-scrollbar]="styleClass() !== 'for-header'"
+      trackClass="alg-top-bar-scrollbar-no-track"
+      orientation="horizontal"
+      [sensorThrottleTime]="1"
+      appearance="native"
+      >
+      <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabEntries">
+        @for (entry of tabEntries; track entry.trackId) {
+          <li class="content-pill">
+            <div class="content-pill-list" role="tablist">
+              @for (tab of entry.tabs; track tab.id; let tabIndex = $index) {
+                @if (entry.separatorAfterIndex !== null && tabIndex === entry.separatorAfterIndex + 1) {
+                  <span class="content-pill-separator" aria-hidden="true"></span>
+                }
+                <a
+                  class="content-pill-item"
+                  role="tab"
+                  [class.alg-tab-bar-active]="tab.isActive"
+                  [class.content-pill-item-task]="tab.isTaskTab"
+                  [attr.aria-selected]="tab.isActive"
+                  [routerLink]="tab.routerLink"
+                  (click)="onChange(tab.id)"
+                >
+                  <i class="content-pill-icon" [class]="getTabIcon(tab.id)" aria-hidden="true"></i>
+                  <span class="content-pill-label">{{ tab.label }}</span>
+                </a>
               }
-              <a
-                class="content-pill-item"
-                role="tab"
-                [class.alg-tab-bar-active]="tab.isActive"
-                [class.content-pill-item-task]="tab.isTaskTab"
-                [attr.aria-selected]="tab.isActive"
-                [routerLink]="tab.routerLink"
-                (click)="onChange(tab.id)"
-              >
-                <i class="content-pill-icon" [class]="getTabIcon(tab.id)" aria-hidden="true"></i>
-                <span class="content-pill-label">{{ tab.label }}</span>
-              </a>
-            }
-          </div>
-        </li>
-      }
-    </ul>
-  </ng-scrollbar>
-  @if (showNextButton()) {
-    <button
-      class="size-s primary no-bg tab-arrow tab-next next-button"
-      type="button"
-      icon="ph-bold ph-caret-right"
-      alg-button-icon
-      (click)="onNext()"
-    ></button>
-  }
+            </div>
+          </li>
+        }
+      </ul>
+    </ng-scrollbar>
+    @if (showNextButton()) {
+      <button
+        class="size-xs secondary tab-scroll-button tab-scroll-next"
+        type="button"
+        icon="ph ph-caret-right"
+        alg-button-icon
+        aria-label="Scroll tabs right"
+        i18n-aria-label
+        (click)="onNext()"
+      ></button>
+    }
+  </div>
 </div>
