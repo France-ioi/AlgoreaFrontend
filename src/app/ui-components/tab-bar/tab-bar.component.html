@@ -10,6 +10,7 @@
   }
   <ng-scrollbar
     class="alg-top-bar-scrollbar"
+    [class.alg-content-tab-bar-scrollbar]="styleClass() !== 'for-header'"
     trackClass="alg-top-bar-scrollbar-no-track"
     orientation="horizontal"
     [sensorThrottleTime]="1"

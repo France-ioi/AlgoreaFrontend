@@ -1,7 +1,29 @@
 @use 'src/assets/scss/functions';
 
+$content-tab-font-size: functions.toRem(16);
+$content-tab-font-weight: 300;
+$content-tab-underline-gap: functions.toRem(10);
+$content-tab-underline-size: functions.toRem(3);
+$content-tab-segment-height: functions.toRem(28);
+$content-tab-row-height: functions.toRem(32);
+// Raise the pill visually so centered labels match underline tab text (layout slot unchanged).
+$content-tab-segment-nudge: functions.toRem(-5);
+
 :host {
   overflow: hidden;
+
+  &:not(:has(.tabs.for-header)) {
+    overflow: visible;
+
+    .container,
+    .alg-top-bar-scrollbar {
+      overflow: visible;
+    }
+
+    .container {
+      align-items: flex-start;
+    }
+  }
 }
 
 .container {
@@ -112,101 +134,137 @@
     }
 
     .task-tabs-segment {
-      $segment-height: functions.toRem(32);
-      $segment-outer-radius: functions.toRem(20);
-
-      position: relative;
       align-self: stretch;
       height: 100%;
-      display: flex;
-      align-items: center;
       margin: 0 functions.toRem(8) !important;
-      list-style: none;
-      flex-shrink: 0;
 
       &::after {
-        content: '';
-        position: absolute;
-        right: 0;
         bottom: functions.toRem(2);
-        left: 0;
-        height: functions.toRem(3);
-        background: transparent;
-        z-index: 2;
-      }
-
-      &:has(.alg-tab-bar-active)::after {
-        background: var(--alg-primary-color);
-      }
-
-      &:not(:has(.alg-tab-bar-active)):has(.task-tabs-segment-item:hover)::after {
-        background: var(--alg-border-color, #DEDEDE);
       }
 
       .task-tabs-segment-list {
-        position: relative;
-        display: flex;
-        align-items: stretch;
-        box-sizing: border-box;
-        width: 100%;
-        height: $segment-height;
-        border: none;
-        border-radius: $segment-outer-radius;
-        background: var(--alg-white-color, #fff);
-        overflow: hidden;
-
-        &::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border: functions.toRem(1) solid var(--alg-primary-color);
-          border-radius: inherit;
-          pointer-events: none;
-          z-index: 1;
-        }
+        height: functions.toRem(32);
       }
 
       .task-tabs-segment-item {
-        position: relative;
-        z-index: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        height: 100%;
         padding: 0 functions.toRem(18);
-        border: none;
         font-size: functions.toRem(14);
         font-weight: 400;
-        line-height: 1;
-        color: var(--alg-primary-color);
-        text-decoration: none;
-        background: transparent;
-        white-space: nowrap;
-        cursor: pointer;
-
-        &.alg-tab-bar-active {
-          color: var(--alg-white-color);
-          background: var(--alg-primary-color);
-        }
-
-        &:not(.alg-tab-bar-active):hover {
-          background: var(--alg-primary-light-color, #dfe6f7);
-        }
-
-        &:focus-visible {
-          outline: functions.toRem(2) solid var(--alg-primary-color);
-          outline-offset: functions.toRem(-2);
-          z-index: 2;
-        }
-
-        &.alg-tab-bar-active:focus-visible {
-          outline-color: var(--alg-white-color, #fff);
-        }
       }
     }
   }
 
+  .task-tabs-segment {
+    $segment-outer-radius: functions.toRem(20);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    list-style: none;
+    flex-shrink: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: functions.toRem(3);
+      background: transparent;
+      z-index: 2;
+    }
+
+    &:has(.alg-tab-bar-active)::after {
+      background: var(--alg-primary-color);
+    }
+
+    .task-tabs-segment-list {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      box-sizing: border-box;
+      width: 100%;
+      border: none;
+      border-radius: $segment-outer-radius;
+      background: var(--alg-white-color, #fff);
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: functions.toRem(1) solid var(--alg-primary-color);
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 1;
+      }
+    }
+
+    .task-tabs-segment-item {
+      position: relative;
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      height: 100%;
+      border: none;
+      line-height: 1;
+      color: var(--alg-primary-color);
+      text-decoration: none;
+      background: transparent;
+      white-space: nowrap;
+      cursor: pointer;
+
+      &.alg-tab-bar-active {
+        color: var(--alg-white-color);
+        background: var(--alg-primary-color);
+      }
+
+      &:not(.alg-tab-bar-active):hover {
+        background: var(--alg-primary-light-color, #dfe6f7);
+      }
+
+      &:focus-visible {
+        outline: functions.toRem(2) solid var(--alg-primary-color);
+        outline-offset: functions.toRem(-2);
+        z-index: 2;
+      }
+
+      &.alg-tab-bar-active:focus-visible {
+        outline-color: var(--alg-white-color, #fff);
+      }
+    }
+  }
+
+  &:not(.for-header) {
+    align-items: flex-start;
+
+    .task-tabs-segment {
+      // Full tab-row height so the absolute bottom indicator lines up with the
+      // underline of regular tabs (e.g. History).
+      align-self: flex-start;
+      align-items: flex-start !important;
+      height: $content-tab-row-height;
+      margin: 0 functions.toRem(16) 0 0 !important;
+
+      .task-tabs-segment-list {
+        height: $content-tab-segment-height;
+        width: fit-content;
+        // Raise the pill so its centered labels line up with the other tabs'
+        // text; the indicator stays absolutely pinned to the row bottom.
+        transform: translateY($content-tab-segment-nudge);
+      }
+
+      .task-tabs-segment-item {
+        height: 100%;
+        padding: 0 functions.toRem(14);
+        font-size: $content-tab-font-size;
+        font-weight: $content-tab-font-weight;
+        line-height: 1;
+      }
+    }
+  }
 }
 
 .tabs-item {
@@ -218,7 +276,7 @@
     .tabs-item-link {
       color: var(--alg-primary-color) !important;
       opacity: 1 !important;
-      border-bottom: functions.toRem(3) solid var(--alg-primary-color) !important;
+      border-bottom: $content-tab-underline-size solid var(--alg-primary-color) !important;
     }
   }
 
@@ -233,14 +291,21 @@
 
 .tabs-item-link {
   display: inline-block;
-  padding-bottom: functions.toRem(10);
-  border-bottom: functions.toRem(3) solid transparent;
+  padding-bottom: $content-tab-underline-gap;
+  border-bottom: $content-tab-underline-size solid transparent;
   z-index: 1;
   color: var(--alg-secondary-color) !important;
-  font-size: functions.toRem(16);
-  font-weight: 300;
+  font-size: $content-tab-font-size;
+  font-weight: $content-tab-font-weight;
   text-decoration: none;
   opacity: .5;
+}
+
+.tabs-item:not(.alg-tab-bar-active) .tabs-item-link {
+  &:hover {
+    opacity: 1;
+    border-bottom-color: var(--alg-border-color, #DEDEDE) !important;
+  }
 }
 
 .prev-button {
