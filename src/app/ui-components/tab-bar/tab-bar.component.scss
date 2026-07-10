@@ -39,6 +39,7 @@
 
   &.for-header {
     height: 100%;
+    margin-top: functions.toRem(2);
 
     &:after {
       content: none;
