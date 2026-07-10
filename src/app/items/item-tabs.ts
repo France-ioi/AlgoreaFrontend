@@ -8,7 +8,7 @@ import { APPCONFIG } from 'src/app/config';
 import { isAChapter, isATask } from 'src/app/items/models/item-type';
 import { canCurrentUserWatchResult } from 'src/app/items/models/item-watch-permission';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
-import { allowsEditingAll } from 'src/app/items/models/item-edit-permission';
+import { canCurrentUserEditAll } from 'src/app/items/models/item-edit-permission';
 import { isNotNull, isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { NavigationEnd, Router } from '@angular/router';
 import { arraysEqual } from 'src/app/utils/array';
@@ -73,7 +73,7 @@ export class ItemTabs implements OnDestroy {
     map(([ state, taskTabs, isObserving, disablePlatformProgressOnTasks, editTabEnabled, userProfile ]) => {
       if (!state.isReady) return [];
 
-      const hasEditionPerm = state.isReady ? allowsEditingAll(state.data.item.permissions) : false;
+      const hasEditionPerm = state.isReady ? canCurrentUserEditAll(state.data.item) : false;
       const canViewContent = state.isReady ? canCurrentUserViewContent(state.data.item) : false;
       const canWatchResults = state.isReady ? canCurrentUserWatchResult(state.data.item) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;

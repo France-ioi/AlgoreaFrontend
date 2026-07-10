@@ -24,7 +24,7 @@ export function allowsGrantingView(p: ItemPermWithGrantView): boolean {
   return [ P.Enter, P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ].includes(p.canGrantView);
 }
 
-export function allowsGrantingContentView(p: ItemPermWithGrantView): boolean {
+function allowsGrantingContentView(p: ItemPermWithGrantView): boolean {
   return [ P.Content, P.ContentWithDescendants, P.Solution, P.SolutionWithGrant ].includes(p.canGrantView);
 }
 

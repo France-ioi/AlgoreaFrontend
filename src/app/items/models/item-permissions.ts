@@ -37,10 +37,17 @@ export const itemCorePermSchema = itemViewPermSchema
 
 export type ItemCorePerm = z.infer<typeof itemCorePermSchema>;
 
+export type ItemPermWithGive = ItemPermWithGrantView & ItemPermWithWatch & ItemPermWithEdit;
+export interface ItemWithGivePerm { permissions: ItemPermWithGive }
+
 /**
  * Whether the item permissions allows giving some permissions on the item to groups/users.
  * (warning: it requires also permissions on the receiving group/user!)
  */
-export function allowsGivingPermToItem(p: ItemPermWithGrantView & ItemPermWithWatch & ItemPermWithEdit): boolean {
+function allowsGivingPermToItem(p: ItemPermWithGive): boolean {
   return allowsGrantingView(p) || allowsGrantingWatch(p) || allowsGrantingEdition(p);
+}
+
+export function canCurrentUserGivePermToItem(i: ItemWithGivePerm): boolean {
+  return allowsGivingPermToItem(i.permissions);
 }

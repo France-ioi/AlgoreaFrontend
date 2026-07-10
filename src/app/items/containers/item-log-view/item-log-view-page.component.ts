@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { fromItemContent } from 'src/app/items/store';
 import { fromObservation } from 'src/app/store/observation';
-import { allowsViewingContent } from 'src/app/items/models/item-view-permission';
+import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { canCurrentUserWatchResult } from 'src/app/items/models/item-watch-permission';
 import { ItemData } from '../../models/item-data';
 import { ItemLogViewComponent } from './item-log-view.component';
@@ -54,6 +54,6 @@ export class ItemLogViewPageComponent {
     if (!item) {
       return false;
     }
-    return (!this.isObserving() && allowsViewingContent(item.permissions)) || canCurrentUserWatchResult(item);
+    return (!this.isObserving() && canCurrentUserViewContent(item)) || canCurrentUserWatchResult(item);
   });
 }
