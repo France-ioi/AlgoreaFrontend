@@ -2,7 +2,7 @@ import {
   AfterViewInit, Component, DestroyRef, ElementRef,
   input, OnDestroy, inject, signal, viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { combineLatest, map, Subject, merge, fromEvent } from 'rxjs';
 import { TabService } from '../../services/tab.service';
 import { LetDirective } from '@ngrx/component';
@@ -72,14 +72,23 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   showPrevButton = signal(false);
   showNextButton = signal(false);
 
-  tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
-    map(([ tabs, active ]) => groupTabBarEntries(tabs.map(tab => ({
-      label: tab.title,
-      routerLink: tab.command,
-      id: tab.tag,
-      isTaskTab: !!tab.isTaskTab,
-      isActive: tab.tag === active,
-    })))),
+  tabs$ = combineLatest([
+    this.tabService.tabs$,
+    this.tabService.activeTab$,
+    toObservable(this.styleClass),
+  ]).pipe(
+    map(([ tabs, active, styleClass ]) => {
+      const tabViews = tabs.map(tab => ({
+        label: tab.title,
+        routerLink: tab.command,
+        id: tab.tag,
+        isTaskTab: !!tab.isTaskTab,
+        isActive: tab.tag === active,
+      }));
+      return styleClass === 'for-header'
+        ? groupTabBarEntries(tabViews)
+        : tabViews.map(tab => ({ kind: 'tab' as const, tab, trackId: tab.id }));
+    }),
   );
 
   resizeEvent = new Subject<void>();
