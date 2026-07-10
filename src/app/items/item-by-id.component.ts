@@ -21,7 +21,6 @@ import { BeforeUnloadComponent } from 'src/app/guards/before-unload-guard';
 import { ItemContentComponent } from './containers/item-content/item-content.component';
 import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
-import { TaskTab } from './containers/item-display/item-display.component';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TabService } from 'src/app/services/tab.service';
@@ -190,7 +189,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemRouter.navigateTo(route, { page: [], useCurrentObservation: true });
   }
 
-  setTaskTabs(tabs: TaskTab[]): void {
+  setTaskTabs(tabs: string[]): void {
     this.itemTabs.setTaskTabs(tabs);
   }
 
