@@ -44,13 +44,14 @@
             ></span>
             @for (tab of tabBarView.tabs; track tab.id; let tabIndex = $index) {
               @if (tabBarView.separatorAfterIndex !== null && tabIndex === tabBarView.separatorAfterIndex + 1) {
-                <span class="content-pill-separator" aria-hidden="true"></span>
+                <span class="content-pill-separator" animate.enter="tab-fade-in" aria-hidden="true"></span>
               }
               <a
                 class="content-pill-item"
                 [class.alg-tab-bar-active]="tab.isActive"
                 [class.content-pill-item-task]="tab.isTaskTab"
                 [attr.aria-current]="tab.isActive ? 'page' : null"
+                [animate.enter]="tab.isActive ? 'tab-fade-in' : 'tab-enter'"
                 [routerLink]="tab.routerLink"
                 (click)="onChange(tab.id)"
               >

@@ -32,6 +32,17 @@ const SCROLL_EDGE_GAP_PX = 5;
 const SCROLL_STEP_VIEWPORT_RATIO = 0.5;
 /** Sub-pixel tolerance when comparing scrollWidth to clientWidth. */
 const SCROLL_OVERFLOW_TOLERANCE_PX = 1;
+/** Fallback when `--tab-transition-duration` is missing or unparseable. */
+const TAB_TRANSITION_MS_FALLBACK = 280;
+
+function cssDurationToMs(duration: string): number {
+  const value = duration.trim();
+  if (!value) return TAB_TRANSITION_MS_FALLBACK;
+  if (value.endsWith('ms')) return Number.parseFloat(value);
+  if (value.endsWith('s')) return Number.parseFloat(value) * 1000;
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : TAB_TRANSITION_MS_FALLBACK;
+}
 
 function contentPillSeparatorAfterIndex(tabs: TabView[]): number | null {
   let lastTaskTabIndex = -1;
@@ -78,6 +89,8 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   indicatorAnimate = signal(false);
   private indicatorInitialized = false;
   private indicatorUpdateGeneration = 0;
+  private indicatorRemeasureTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private tabTransitionMsCache: number | null = null;
 
   readonly navAriaLabel = $localize`Item navigation`;
 
@@ -108,22 +121,26 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     if (!scrollbar) return;
     const viewport = scrollbar.adapter.viewportElement;
     this.resizeObserver.observe(this.elementRef.nativeElement);
+    // Resize/scroll are debounced (they can fire rapidly and only reposition the indicator/arrows).
     merge(
       this.resizeEvent.asObservable(),
       fromEvent(viewport, 'scroll'),
-      this.tabBarView$,
     ).pipe(
       debounceTime(50),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(() => {
-      this.handleArrows();
-      this.scheduleActiveIndicatorUpdate();
-    });
+    ).subscribe(() => this.refreshIndicatorAndArrows());
+    // Tab set / active tab changes are handled without debounce so the indicator starts moving in the
+    // same frame as the tabs' enter animation (otherwise the label fades before the indicator, which
+    // makes the load transition look like two separate steps).
+    this.tabBarView$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.refreshIndicatorAndArrows());
     this.scheduleActiveIndicatorUpdate(false);
   }
 
   ngOnDestroy(): void {
     this.indicatorUpdateGeneration += 1;
+    this.clearIndicatorRemeasureTimeout();
     this.resizeObserver.unobserve(this.elementRef.nativeElement);
     this.resizeEvent.complete();
   }
@@ -132,12 +149,38 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     this.tabService.setActiveTab(id);
   }
 
+  private refreshIndicatorAndArrows(): void {
+    this.handleArrows();
+    this.scheduleActiveIndicatorUpdate();
+  }
+
   private scheduleActiveIndicatorUpdate(animate = true): void {
     const generation = ++this.indicatorUpdateGeneration;
+    this.clearIndicatorRemeasureTimeout();
     requestAnimationFrame(() => {
       if (generation !== this.indicatorUpdateGeneration) return;
       this.updateActiveIndicator(animate);
     });
+    // Tabs expand asynchronously via CSS animation when the tab set changes (e.g. on task load).
+    // Re-measure once the animation has settled so the indicator lands on the final tab position/size.
+    this.indicatorRemeasureTimeoutId = setTimeout(() => {
+      this.indicatorRemeasureTimeoutId = null;
+      if (generation !== this.indicatorUpdateGeneration) return;
+      this.updateActiveIndicator(animate);
+    }, this.tabTransitionMs());
+  }
+
+  private clearIndicatorRemeasureTimeout(): void {
+    if (this.indicatorRemeasureTimeoutId === null) return;
+    clearTimeout(this.indicatorRemeasureTimeoutId);
+    this.indicatorRemeasureTimeoutId = null;
+  }
+
+  private tabTransitionMs(): number {
+    if (this.tabTransitionMsCache !== null) return this.tabTransitionMsCache;
+    const duration = getComputedStyle(this.elementRef.nativeElement).getPropertyValue('--tab-transition-duration');
+    this.tabTransitionMsCache = cssDurationToMs(duration);
+    return this.tabTransitionMsCache;
   }
 
   private updateActiveIndicator(animate = true): void {

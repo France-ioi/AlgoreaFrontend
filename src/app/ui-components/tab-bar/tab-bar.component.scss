@@ -4,12 +4,17 @@ $content-pill-font-size: functions.toRem(14);
 $content-pill-padding: functions.toRem(4);
 $content-pill-border-width: functions.toRem(1);
 $content-pill-item-height: functions.toRem(36);
+$content-pill-item-padding-x: functions.toRem(14);
 $content-pill-icon-size: functions.toRem(18);
 $content-pill-height: functions.toRem(46);
 $header-pill-height: $content-pill-height;
 $header-pill-padding: $content-pill-padding;
+// Upper-bound width a tab expands to while entering. Longer translated labels may need a larger value.
+$tab-enter-max-width: functions.toRem(320);
 
 :host {
+  // Single source of truth for tab enter/indicator timing; read by the component for post-animation re-measure.
+  --tab-transition-duration: 0.28s;
   display: flex;
   align-items: center;
   height: 100%;
@@ -95,7 +100,7 @@ $header-pill-padding: $content-pill-padding;
 
     .content-pill-item {
       height: $content-pill-item-height;
-      padding: 0 functions.toRem(14);
+      padding: 0 $content-pill-item-padding-x;
       font-size: $content-pill-font-size;
     }
 
@@ -139,11 +144,12 @@ $header-pill-padding: $content-pill-padding;
   }
 
   &.content-pill-indicator-animate {
+    // Kept in sync with the tab enter animation so the active tab's highlight grows while its label fades.
     transition:
-      left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      left var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+      top var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+      width var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+      height var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -159,7 +165,7 @@ $header-pill-padding: $content-pill-padding;
   gap: functions.toRem(8);
   box-sizing: border-box;
   height: $content-pill-item-height;
-  padding: 0 functions.toRem(14);
+  padding: 0 $content-pill-item-padding-x;
   border: none;
   border-radius: functions.toRem(999);
   font-size: $content-pill-font-size;
@@ -242,5 +248,50 @@ $header-pill-padding: $content-pill-padding;
 
   &.tab-scroll-next {
     right: functions.toRem(4);
+  }
+}
+
+// New tabs (e.g. task views appearing on task load) grow in horizontally so the pill widens smoothly.
+.tab-enter {
+  overflow: hidden;
+  animation: tab-enter var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+// The active tab keeps its final width immediately (so the sliding indicator can measure it correctly)
+// and only fades in, in sync with its highlight (indicator) growing. Also used for the separator.
+.tab-fade-in {
+  animation: tab-fade-in var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes tab-enter {
+  from {
+    max-width: 0;
+    padding-right: 0;
+    padding-left: 0;
+    opacity: 0;
+  }
+
+  to {
+    max-width: $tab-enter-max-width;
+    padding-right: $content-pill-item-padding-x;
+    padding-left: $content-pill-item-padding-x;
+    opacity: 1;
+  }
+}
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-enter,
+  .tab-fade-in {
+    animation: none;
   }
 }
