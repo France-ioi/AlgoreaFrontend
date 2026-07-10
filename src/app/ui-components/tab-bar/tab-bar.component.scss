@@ -1,13 +1,9 @@
 @use 'src/assets/scss/functions';
 
-$content-tab-font-size: functions.toRem(16);
-$content-tab-font-weight: 300;
-$content-tab-underline-gap: functions.toRem(10);
-$content-tab-underline-size: functions.toRem(3);
-$content-tab-segment-height: functions.toRem(28);
-$content-tab-row-height: functions.toRem(32);
-// Raise the pill visually so centered labels match underline tab text (layout slot unchanged).
-$content-tab-segment-nudge: functions.toRem(-5);
+$content-pill-font-size: functions.toRem(14);
+$content-pill-height: functions.toRem(44);
+$content-pill-item-height: functions.toRem(36);
+$content-pill-icon-size: functions.toRem(18);
 
 :host {
   overflow: hidden;
@@ -18,10 +14,6 @@ $content-tab-segment-nudge: functions.toRem(-5);
     .container,
     .alg-top-bar-scrollbar {
       overflow: visible;
-    }
-
-    .container {
-      align-items: flex-start;
     }
   }
 }
@@ -42,270 +34,123 @@ $content-tab-segment-nudge: functions.toRem(-5);
 }
 
 .tabs {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   display: flex;
   list-style-type: none;
   margin: 0;
   padding: 0;
   position: relative;
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    display: block;
-    width: 100%;
-    height: functions.toRem(1);
-    background: rgb(255,255,255);
-    background: -moz-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
-    background: -webkit-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
-    background: linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
-  }
+  align-items: center;
 
   &.for-header {
     height: 100%;
-    margin-top: functions.toRem(2);
     align-items: center;
 
-    &:after {
-      content: none;
+    .content-pill-list {
+      height: functions.toRem(36);
+      padding: functions.toRem(3);
     }
 
-    .tabs-item {
-      margin: 0 functions.toRem(7.5) 0 functions.toRem(7.5) !important;
-
-      &:first-child {
-        margin-left: 0 !important;
-      }
-
-      &:last-child {
-        margin-right: 0 !important;
-      }
+    .content-pill-item {
+      height: functions.toRem(30);
+      padding: 0 functions.toRem(12);
+      font-size: functions.toRem(13);
     }
 
-    .tabs-item:not(.task-tab) {
-      display: flex;
-      align-items: stretch;
-      align-self: stretch;
-
-      .tabs-item-link {
-        position: relative;
-        padding-bottom: 0 !important;
-        font-size: functions.toRem(14);
-        height: 100%;
-        display: flex;
-        align-items: center;
-        border-bottom: none !important;
-
-        &::after {
-          content: '';
-          position: absolute;
-          right: 0;
-          bottom: functions.toRem(2);
-          left: 0;
-          height: functions.toRem(3);
-          background: transparent;
-        }
-      }
-
-      &:not(.alg-tab-bar-active) .tabs-item-link {
-        color: var(--alg-black-color, #1D2227) !important;
-        opacity: 0.75;
-
-        &:hover {
-          opacity: 1;
-
-          &::after {
-            background: var(--alg-border-color, #DEDEDE);
-          }
-        }
-      }
-
-      &.alg-tab-bar-active .tabs-item-link {
-        color: var(--alg-primary-color) !important;
-        opacity: 1 !important;
-        border-bottom: none !important;
-
-        &::after {
-          background: var(--alg-primary-color);
-        }
-      }
+    .content-pill-icon {
+      font-size: functions.toRem(16);
     }
 
-    .task-tabs-segment {
-      align-self: stretch;
-      height: 100%;
-      margin: 0 functions.toRem(8) !important;
-
-      &::after {
-        bottom: functions.toRem(2);
-      }
-
-      .task-tabs-segment-list {
-        height: functions.toRem(32);
-      }
-
-      .task-tabs-segment-item {
-        padding: 0 functions.toRem(18);
-        font-size: functions.toRem(14);
-        font-weight: 400;
-      }
-    }
-  }
-
-  .task-tabs-segment {
-    $segment-outer-radius: functions.toRem(20);
-
-    position: relative;
-    display: flex;
-    align-items: center;
-    list-style: none;
-    flex-shrink: 0;
-
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: functions.toRem(3);
-      background: transparent;
-      z-index: 2;
-    }
-
-    &:has(.alg-tab-bar-active)::after {
-      background: var(--alg-primary-color);
-    }
-
-    .task-tabs-segment-list {
-      position: relative;
-      display: flex;
-      align-items: stretch;
-      box-sizing: border-box;
-      width: 100%;
-      border: none;
-      border-radius: $segment-outer-radius;
-      background: var(--alg-white-color, #fff);
-      overflow: hidden;
-
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border: functions.toRem(1) solid var(--alg-primary-color);
-        border-radius: inherit;
-        pointer-events: none;
-        z-index: 1;
-      }
-    }
-
-    .task-tabs-segment-item {
-      position: relative;
-      z-index: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      height: 100%;
-      border: none;
-      line-height: 1;
-      color: var(--alg-primary-color);
-      text-decoration: none;
-      background: transparent;
-      white-space: nowrap;
-      cursor: pointer;
-
-      &.alg-tab-bar-active {
-        color: var(--alg-white-color);
-        background: var(--alg-primary-color);
-      }
-
-      &:not(.alg-tab-bar-active):hover {
-        background: var(--alg-primary-light-color, #dfe6f7);
-      }
-
-      &:focus-visible {
-        outline: functions.toRem(2) solid var(--alg-primary-color);
-        outline-offset: functions.toRem(-2);
-        z-index: 2;
-      }
-
-      &.alg-tab-bar-active:focus-visible {
-        outline-color: var(--alg-white-color, #fff);
-      }
-    }
-  }
-
-  &:not(.for-header) {
-    align-items: flex-start;
-
-    .task-tabs-segment {
-      // Full tab-row height so the absolute bottom indicator lines up with the
-      // underline of regular tabs (e.g. History).
-      align-self: flex-start;
-      align-items: flex-start !important;
-      height: $content-tab-row-height;
-      margin: 0 functions.toRem(16) 0 0 !important;
-
-      .task-tabs-segment-list {
-        height: $content-tab-segment-height;
-        width: fit-content;
-        // Raise the pill so its centered labels line up with the other tabs'
-        // text; the indicator stays absolutely pinned to the row bottom.
-        transform: translateY($content-tab-segment-nudge);
-      }
-
-      .task-tabs-segment-item {
-        height: 100%;
-        padding: 0 functions.toRem(14);
-        font-size: $content-tab-font-size;
-        font-weight: $content-tab-font-weight;
-        line-height: 1;
-      }
+    .content-pill-separator {
+      height: functions.toRem(20);
     }
   }
 }
 
-.tabs-item {
-  position: relative;
-  z-index: 1;
-  margin: 0 functions.toRem(16) !important;
+.content-pill {
+  list-style: none;
+  flex-shrink: 0;
+}
+
+.content-pill-list {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  height: $content-pill-height;
+  padding: functions.toRem(4);
+  border: functions.toRem(1) solid var(--alg-border-color, #DEDEDE);
+  border-radius: functions.toRem(999);
+  background: #f5f6f8;
+  box-shadow: 0 functions.toRem(1) functions.toRem(4) rgba(29, 34, 39, 0.06);
+}
+
+.content-pill-item {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(8);
+  box-sizing: border-box;
+  height: $content-pill-item-height;
+  padding: 0 functions.toRem(14);
+  border: none;
+  border-radius: functions.toRem(999);
+  color: var(--alg-secondary-color, #616F82);
+  font-size: $content-pill-font-size;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+
+  &:not(.alg-tab-bar-active):hover {
+    background: var(--alg-white-color, #fff);
+    color: var(--alg-black-color, #1D2227);
+    opacity: 1;
+  }
+
+  &.content-pill-item-task:not(.alg-tab-bar-active) {
+    color: var(--alg-black-color, #1D2227);
+    opacity: 0.85;
+  }
 
   &.alg-tab-bar-active {
-    .tabs-item-link {
-      color: var(--alg-primary-color) !important;
-      opacity: 1 !important;
-      border-bottom: $content-tab-underline-size solid var(--alg-primary-color) !important;
+    color: var(--alg-primary-dark-color, #012873);
+    background: var(--alg-primary-light-color, #dfe6f7);
+    font-weight: 500;
+    opacity: 1;
+
+    &:hover {
+      background: var(--alg-light-bg-color, #e8efff);
     }
   }
 
-  &:first-child {
-    margin-left: 0 !important;
-  }
-
-  &:last-child {
-    margin-right: 0 !important;
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #0F61FF);
+    outline-offset: functions.toRem(2);
+    z-index: 1;
   }
 }
 
-.tabs-item-link {
-  display: inline-block;
-  padding-bottom: $content-tab-underline-gap;
-  border-bottom: $content-tab-underline-size solid transparent;
-  z-index: 1;
-  color: var(--alg-secondary-color) !important;
-  font-size: $content-tab-font-size;
-  font-weight: $content-tab-font-weight;
-  text-decoration: none;
-  opacity: .5;
+.content-pill-icon {
+  flex-shrink: 0;
+  font-size: $content-pill-icon-size;
+  line-height: 1;
 }
 
-.tabs-item:not(.alg-tab-bar-active) .tabs-item-link {
-  &:hover {
-    opacity: 1;
-    border-bottom-color: var(--alg-border-color, #DEDEDE) !important;
-  }
+.content-pill-label {
+  line-height: 1.2;
+}
+
+.content-pill-separator {
+  flex-shrink: 0;
+  width: functions.toRem(1);
+  height: functions.toRem(22);
+  margin: 0 functions.toRem(4);
+  background: var(--alg-border-color, #DEDEDE);
 }
 
 .prev-button {

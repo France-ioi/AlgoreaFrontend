@@ -18,24 +18,27 @@
     >
     <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabEntries">
       @for (entry of tabEntries; track entry.trackId) {
-        @if (entry.kind === 'task-segment') {
-          <li class="task-tabs-segment">
-            <div class="task-tabs-segment-list" role="tablist">
-              @for (tab of entry.tabs; track tab.id) {
-                <a
-                  class="task-tabs-segment-item"
-                  [class.alg-tab-bar-active]="tab.isActive"
-                  [routerLink]="tab.routerLink"
-                  (click)="onChange(tab.id)"
-                >{{ tab.label }}</a>
+        <li class="content-pill">
+          <div class="content-pill-list" role="tablist">
+            @for (tab of entry.tabs; track tab.id; let tabIndex = $index) {
+              @if (entry.separatorAfterIndex !== null && tabIndex === entry.separatorAfterIndex + 1) {
+                <span class="content-pill-separator" aria-hidden="true"></span>
               }
-            </div>
-          </li>
-        } @else {
-          <li class="tabs-item" [class.alg-tab-bar-active]="entry.tab.isActive">
-            <a class="tabs-item-link" [routerLink]="entry.tab.routerLink" (click)="onChange(entry.tab.id)">{{ entry.tab.label }}</a>
-          </li>
-        }
+              <a
+                class="content-pill-item"
+                role="tab"
+                [class.alg-tab-bar-active]="tab.isActive"
+                [class.content-pill-item-task]="tab.isTaskTab"
+                [attr.aria-selected]="tab.isActive"
+                [routerLink]="tab.routerLink"
+                (click)="onChange(tab.id)"
+              >
+                <i class="content-pill-icon" [class]="getTabIcon(tab.id)" aria-hidden="true"></i>
+                <span class="content-pill-label">{{ tab.label }}</span>
+              </a>
+            }
+          </div>
+        </li>
       }
     </ul>
   </ng-scrollbar>

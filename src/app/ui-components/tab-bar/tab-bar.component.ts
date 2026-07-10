@@ -20,35 +20,49 @@ interface TabView {
   isActive: boolean,
 }
 
-type TabBarEntry =
-  | { kind: 'tab', tab: TabView, trackId: string }
-  | { kind: 'task-segment', tabs: TabView[], trackId: string };
+type TabBarEntry = {
+  kind: 'content-pill',
+  tabs: TabView[],
+  trackId: string,
+  separatorAfterIndex: number | null,
+};
+
+const TAB_ICONS: Record<string, string> = {
+  task: 'ph ph-file-text',
+  editor: 'ph ph-user-gear',
+  hints: 'ph ph-lightbulb',
+  solution: 'ph ph-check-circle',
+  submission: 'ph ph-paper-plane-tilt',
+  forum: 'ph ph-chats-circle',
+  'alg-content': 'ph ph-article',
+  'alg-children-edit': 'ph ph-article',
+  'alg-task-edit': 'ph ph-pencil-simple',
+  'alg-item-progress': 'ph ph-chart-bar',
+  'alg-log': 'ph ph-clock-counter-clockwise',
+  'alg-dependencies': 'ph ph-tree-structure',
+  'alg-extra-time': 'ph ph-hourglass',
+  'alg-parameters': 'ph ph-sliders',
+  'alg-forum': 'ph ph-chats-circle',
+  'alg-item-stats': 'ph ph-chart-pie',
+};
+
+function contentPillSeparatorAfterIndex(tabs: TabView[]): number | null {
+  let lastTaskTabIndex = -1;
+  tabs.forEach((tab, index) => {
+    if (tab.isTaskTab) lastTaskTabIndex = index;
+  });
+  if (lastTaskTabIndex >= 0 && lastTaskTabIndex < tabs.length - 1) return lastTaskTabIndex;
+  return null;
+}
 
 function groupTabBarEntries(tabs: TabView[]): TabBarEntry[] {
-  const entries: TabBarEntry[] = [];
-  let taskGroup: TabView[] = [];
-
-  const flushTaskGroup = (): void => {
-    if (taskGroup.length === 0) return;
-    entries.push({
-      kind: 'task-segment',
-      tabs: taskGroup,
-      trackId: `task-segment-${taskGroup.map(tab => tab.id).join('-')}`,
-    });
-    taskGroup = [];
-  };
-
-  for (const tab of tabs) {
-    if (tab.isTaskTab) {
-      taskGroup.push(tab);
-      continue;
-    }
-    flushTaskGroup();
-    entries.push({ kind: 'tab', tab, trackId: tab.id });
-  }
-  flushTaskGroup();
-
-  return entries;
+  if (tabs.length === 0) return [];
+  return [ {
+    kind: 'content-pill',
+    tabs,
+    trackId: `content-pill-${tabs.map(tab => tab.id).join('-')}`,
+    separatorAfterIndex: contentPillSeparatorAfterIndex(tabs),
+  } ];
 }
 
 @Component({
@@ -112,6 +126,10 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   onChange(id: string): void {
     this.tabService.setActiveTab(id);
+  }
+
+  getTabIcon(tabId: string): string {
+    return TAB_ICONS[tabId] ?? 'ph ph-square';
   }
 
   handleArrows(): void {
