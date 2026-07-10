@@ -33,6 +33,10 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
   }
 
+  &:has(.task-tabs-segment)::after {
+    content: none;
+  }
+
   &.for-header {
     height: 100%;
 
@@ -52,12 +56,16 @@
       }
     }
 
-    .tabs-item-link {
+    .tabs-item:not(.task-tab) .tabs-item-link {
       padding-bottom: 0 !important;
-      font-size: functions.toRem(12);
+      font-size: functions.toRem(14);
       height: 100%;
       display: flex;
       align-items: center;
+    }
+
+    .task-tabs-segment .task-tabs-segment-item {
+      font-size: functions.toRem(14);
     }
   }
 }
@@ -67,7 +75,7 @@
   z-index: 1;
   margin: 0 functions.toRem(16) !important;
 
-  &.alg-tab-bar-active {
+  &.alg-tab-bar-active:not(.task-tab) {
     .tabs-item-link {
       color: var(--alg-primary-color) !important;
       opacity: 1 !important;
@@ -90,10 +98,69 @@
   border-bottom: functions.toRem(3) solid transparent;
   z-index: 1;
   color: var(--alg-secondary-color) !important;
-  font-size: functions.toRem(16);
+  font-size: functions.toRem(18);
   font-weight: 300;
   text-decoration: none;
   opacity: .5;
+}
+
+.tabs-item:not(.task-tab):not(.alg-tab-bar-active) .tabs-item-link {
+  color: var(--alg-black-color, #1D2227) !important;
+  opacity: 0.75;
+}
+
+.task-tabs-segment {
+  $segment-height: functions.toRem(32);
+  $segment-outer-radius: functions.toRem(20);
+
+  margin: 0 functions.toRem(8) !important;
+  list-style: none;
+  flex-shrink: 0;
+
+  &-list {
+    display: flex;
+    align-items: stretch;
+    box-sizing: border-box;
+    height: $segment-height;
+    border: functions.toRem(1) solid var(--alg-primary-color);
+    border-radius: $segment-outer-radius;
+    background: var(--alg-white-color, #fff);
+    overflow: hidden;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 0 functions.toRem(18);
+    border: none;
+    font-size: functions.toRem(18);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--alg-primary-color);
+    text-decoration: none;
+    background: transparent;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &.alg-tab-bar-active {
+      color: var(--alg-white-color);
+      background: var(--alg-primary-color);
+    }
+
+    &:focus-visible {
+      outline: functions.toRem(2) solid var(--alg-primary-color);
+      outline-offset: functions.toRem(-2);
+      z-index: 1;
+      position: relative;
+    }
+
+    &.alg-tab-bar-active:focus-visible {
+      outline-color: var(--alg-white-color, #fff);
+    }
+  }
 }
 
 .prev-button {

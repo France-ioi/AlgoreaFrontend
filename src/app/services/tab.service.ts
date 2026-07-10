@@ -8,6 +8,7 @@ interface Tab {
   command: UrlCommand,
   exactpathMatch?: boolean,
   tag: string,
+  isTaskTab?: boolean,
 }
 
 @Injectable({

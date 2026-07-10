@@ -15,11 +15,26 @@
     [sensorThrottleTime]="1"
     appearance="native"
     >
-    <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabs">
-      @for (tab of tabs; track tab.id) {
-        <li class="tabs-item" [class]="tab.styleClass">
-          <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
-        </li>
+    <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabEntries">
+      @for (entry of tabEntries; track entry.trackId) {
+        @if (entry.kind === 'task-segment') {
+          <li class="task-tabs-segment">
+            <div class="task-tabs-segment-list" role="tablist">
+              @for (tab of entry.tabs; track tab.id) {
+                <a
+                  class="task-tabs-segment-item"
+                  [class.alg-tab-bar-active]="tab.isActive"
+                  [routerLink]="tab.routerLink"
+                  (click)="onChange(tab.id)"
+                >{{ tab.label }}</a>
+              }
+            </div>
+          </li>
+        } @else {
+          <li class="tabs-item" [class.alg-tab-bar-active]="entry.tab.isActive">
+            <a class="tabs-item-link" [routerLink]="entry.tab.routerLink" (click)="onChange(entry.tab.id)">{{ entry.tab.label }}</a>
+          </li>
+        }
       }
     </ul>
   </ng-scrollbar>

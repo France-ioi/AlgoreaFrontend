@@ -10,6 +10,46 @@ import { RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
+import { UrlCommand } from 'src/app/utils/url';
+
+interface TabView {
+  label: string,
+  routerLink: UrlCommand,
+  id: string,
+  isTaskTab: boolean,
+  isActive: boolean,
+}
+
+type TabBarEntry =
+  | { kind: 'tab', tab: TabView, trackId: string }
+  | { kind: 'task-segment', tabs: TabView[], trackId: string };
+
+function groupTabBarEntries(tabs: TabView[]): TabBarEntry[] {
+  const entries: TabBarEntry[] = [];
+  let taskGroup: TabView[] = [];
+
+  const flushTaskGroup = (): void => {
+    if (taskGroup.length === 0) return;
+    entries.push({
+      kind: 'task-segment',
+      tabs: taskGroup,
+      trackId: `task-segment-${taskGroup.map(tab => tab.id).join('-')}`,
+    });
+    taskGroup = [];
+  };
+
+  for (const tab of tabs) {
+    if (tab.isTaskTab) {
+      taskGroup.push(tab);
+      continue;
+    }
+    flushTaskGroup();
+    entries.push({ kind: 'tab', tab, trackId: tab.id });
+  }
+  flushTaskGroup();
+
+  return entries;
+}
 
 @Component({
   selector: 'alg-tab-bar',
@@ -33,12 +73,13 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
   showNextButton = signal(false);
 
   tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
-    map(([ tabs, active ]) => tabs.map(tab => ({
+    map(([ tabs, active ]) => groupTabBarEntries(tabs.map(tab => ({
       label: tab.title,
       routerLink: tab.command,
       id: tab.tag,
-      styleClass: tab.tag === active ? 'alg-tab-bar-active' : undefined,
-    }))),
+      isTaskTab: !!tab.isTaskTab,
+      isActive: tab.tag === active,
+    })))),
   );
 
   resizeEvent = new Subject<void>();
