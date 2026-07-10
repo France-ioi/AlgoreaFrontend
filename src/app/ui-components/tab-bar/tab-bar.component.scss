@@ -9,6 +9,14 @@
   display: flex;
   align-items: center;
   height: 100%;
+
+  &:has(.tabs.for-header) {
+    align-items: stretch;
+
+    .alg-top-bar-scrollbar {
+      height: 100%;
+    }
+  }
 }
 
 .tabs {
@@ -40,13 +48,14 @@
   &.for-header {
     height: 100%;
     margin-top: functions.toRem(2);
+    align-items: center;
 
     &:after {
       content: none;
     }
 
     .tabs-item {
-      margin: 0 functions.toRem(7.5) functions.toRem(3) functions.toRem(7.5) !important;
+      margin: 0 functions.toRem(7.5) 0 functions.toRem(7.5) !important;
 
       &:first-child {
         margin-left: 0 !important;
@@ -57,12 +66,53 @@
       }
     }
 
-    .tabs-item:not(.task-tab) .tabs-item-link {
-      padding-bottom: 0 !important;
-      font-size: functions.toRem(14);
-      height: 100%;
+    .tabs-item:not(.task-tab) {
       display: flex;
-      align-items: center;
+      align-items: stretch;
+      align-self: stretch;
+
+      .tabs-item-link {
+        position: relative;
+        padding-bottom: 0 !important;
+        font-size: functions.toRem(14);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-bottom: none !important;
+
+        &::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          bottom: functions.toRem(2);
+          left: 0;
+          height: functions.toRem(3);
+          background: transparent;
+        }
+      }
+
+      &:not(.alg-tab-bar-active) .tabs-item-link {
+        color: var(--alg-black-color, #1D2227) !important;
+        opacity: 0.75;
+
+        &:hover {
+          opacity: 1;
+
+          &::after {
+            background: var(--alg-border-color, #DEDEDE);
+          }
+        }
+      }
+
+      &.alg-tab-bar-active .tabs-item-link {
+        color: var(--alg-primary-color) !important;
+        opacity: 1 !important;
+        border-bottom: none !important;
+
+        &::after {
+          background: var(--alg-primary-color);
+        }
+      }
     }
 
     .task-tabs-segment .task-tabs-segment-item {
@@ -124,17 +174,30 @@
   flex-shrink: 0;
 
   &-list {
+    position: relative;
     display: flex;
     align-items: stretch;
     box-sizing: border-box;
     height: $segment-height;
-    border: functions.toRem(1) solid var(--alg-primary-color);
+    border: none;
     border-radius: $segment-outer-radius;
     background: var(--alg-white-color, #fff);
     overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: functions.toRem(1) solid var(--alg-primary-color);
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 1;
+    }
   }
 
   &-item {
+    position: relative;
+    z-index: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,7 +226,7 @@
     &:focus-visible {
       outline: functions.toRem(2) solid var(--alg-primary-color);
       outline-offset: functions.toRem(-2);
-      z-index: 1;
+      z-index: 2;
       position: relative;
     }
 
