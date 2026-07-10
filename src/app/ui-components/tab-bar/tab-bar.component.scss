@@ -108,6 +108,11 @@
 .tabs-item:not(.task-tab):not(.alg-tab-bar-active) .tabs-item-link {
   color: var(--alg-black-color, #1D2227) !important;
   opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+    border-bottom-color: var(--alg-border-color, #DEDEDE) !important;
+  }
 }
 
 .task-tabs-segment {
@@ -149,6 +154,10 @@
     &.alg-tab-bar-active {
       color: var(--alg-white-color);
       background: var(--alg-primary-color);
+    }
+
+    &:not(.alg-tab-bar-active):hover {
+      background: var(--alg-primary-light-color, #dfe6f7);
     }
 
     &:focus-visible {
