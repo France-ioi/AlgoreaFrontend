@@ -254,11 +254,11 @@ export class TestTaskPage {
   }
 
   activeTab() {
-    return this.page.locator('alg-tab-bar li.alg-tab-bar-active');
+    return this.page.locator('alg-tab-bar .alg-tab-bar-active');
   }
 
   tabByName(name: string) {
-    return this.page.locator('alg-tab-bar li', { hasText: name });
+    return this.page.locator('alg-tab-bar .content-pill-item', { hasText: name });
   }
 }
 

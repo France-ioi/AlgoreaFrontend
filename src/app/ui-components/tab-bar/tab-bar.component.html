@@ -1,35 +1,77 @@
 <div class="container">
-  @if (showPrevButton()) {
-    <button
-      class="size-s primary no-bg tab-arrow tab-prev prev-button"
-      type="button"
-      icon="ph-bold ph-caret-left"
-      alg-button-icon
-      (click)="onPrev()"
-    ></button>
-  }
-  <ng-scrollbar
-    class="alg-top-bar-scrollbar"
-    trackClass="alg-top-bar-scrollbar-no-track"
-    orientation="horizontal"
-    [sensorThrottleTime]="1"
-    appearance="native"
-    >
-    <ul class="tabs" [class]="styleClass()" *ngrxLet="tabs$ as tabs">
-      @for (tab of tabs; track tab.id) {
-        <li class="tabs-item" [class]="tab.styleClass">
-          <a class="tabs-item-link" [routerLink]="tab.routerLink" (click)="onChange(tab.id)">{{ tab.label }}</a>
-        </li>
-      }
-    </ul>
-  </ng-scrollbar>
-  @if (showNextButton()) {
-    <button
-      class="size-s primary no-bg tab-arrow tab-next next-button"
-      type="button"
-      icon="ph-bold ph-caret-right"
-      alg-button-icon
-      (click)="onNext()"
-    ></button>
-  }
+  <div
+    class="content-pill-scroll-shell"
+    [class.is-header]="styleClass() === 'for-header'"
+    [class.has-scroll-prev]="showPrevButton()"
+    [class.has-scroll-next]="showNextButton()"
+  >
+    @if (showPrevButton()) {
+      <button
+        class="size-xs secondary tab-scroll-button tab-scroll-prev"
+        type="button"
+        icon="ph ph-caret-left"
+        alg-button-icon
+        aria-label="Scroll tabs left"
+        i18n-aria-label
+        (click)="onPrev()"
+      ></button>
+    }
+    <ng-scrollbar
+      class="alg-top-bar-scrollbar content-pill-scroll-viewport"
+      [class.alg-content-tab-bar-scrollbar]="styleClass() !== 'for-header'"
+      trackClass="alg-top-bar-scrollbar-no-track"
+      orientation="horizontal"
+      [sensorThrottleTime]="1"
+      appearance="native"
+      >
+      <nav
+        class="tabs"
+        [class.for-header]="styleClass() === 'for-header'"
+        [attr.aria-label]="navAriaLabel"
+        *ngrxLet="tabBarView$ as tabBarView"
+      >
+        @if (tabBarView) {
+          <div class="content-pill-list">
+            <span
+              class="content-pill-indicator"
+              [class.content-pill-indicator-animate]="indicatorAnimate()"
+              [class.content-pill-indicator-visible]="indicatorVisible()"
+              [style.left.px]="indicatorLeft()"
+              [style.top.px]="indicatorTop()"
+              [style.width.px]="indicatorWidth()"
+              [style.height.px]="indicatorHeight()"
+              aria-hidden="true"
+            ></span>
+            @for (tab of tabBarView.tabs; track tab.id; let tabIndex = $index) {
+              @if (tabBarView.separatorAfterIndex !== null && tabIndex === tabBarView.separatorAfterIndex + 1) {
+                <span class="content-pill-separator" aria-hidden="true"></span>
+              }
+              <a
+                class="content-pill-item"
+                [class.alg-tab-bar-active]="tab.isActive"
+                [class.content-pill-item-task]="tab.isTaskTab"
+                [attr.aria-current]="tab.isActive ? 'page' : null"
+                [routerLink]="tab.routerLink"
+                (click)="onChange(tab.id)"
+              >
+                <i class="content-pill-icon" [class]="tab.icon" aria-hidden="true"></i>
+                <span class="content-pill-label">{{ tab.label }}</span>
+              </a>
+            }
+          </div>
+        }
+      </nav>
+    </ng-scrollbar>
+    @if (showNextButton()) {
+      <button
+        class="size-xs secondary tab-scroll-button tab-scroll-next"
+        type="button"
+        icon="ph ph-caret-right"
+        alg-button-icon
+        aria-label="Scroll tabs right"
+        i18n-aria-label
+        (click)="onNext()"
+      ></button>
+    }
+  </div>
 </div>

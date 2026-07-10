@@ -1,13 +1,15 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, shareReplay, startWith, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, Observable, shareReplay, startWith, Subject } from 'rxjs';
 import { UrlCommand } from '../utils/url';
 
-interface Tab {
+export interface Tab {
   title: string,
   command: UrlCommand,
   exactpathMatch?: boolean,
   tag: string,
+  isTaskTab?: boolean,
+  icon: string,
 }
 
 @Injectable({
@@ -17,7 +19,7 @@ export class TabService implements OnDestroy {
   private router = inject(Router);
 
   private tabs = new BehaviorSubject<Tab[]>([]);
-  tabs$ = this.tabs.asObservable();
+  tabs$: Observable<Tab[]> = this.tabs.asObservable();
 
   shouldDisplayTabBar$ = this.tabs.pipe(map(tabs => tabs.length > 1));
 
