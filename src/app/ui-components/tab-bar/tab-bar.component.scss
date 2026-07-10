@@ -4,7 +4,8 @@ $content-pill-font-size: functions.toRem(14);
 $content-pill-height: functions.toRem(44);
 $content-pill-item-height: functions.toRem(36);
 $content-pill-icon-size: functions.toRem(18);
-$header-pill-height: functions.toRem(36);
+$header-pill-height: functions.toRem(44);
+$header-pill-padding: functions.toRem(4);
 
 :host {
   display: flex;
@@ -40,7 +41,7 @@ $header-pill-height: functions.toRem(36);
     box-sizing: border-box;
     align-self: center;
     height: $header-pill-height;
-    padding: functions.toRem(3);
+    padding: $header-pill-padding;
     border: functions.toRem(1) solid var(--alg-border-color, #DEDEDE);
     border-radius: functions.toRem(999);
     background: #f5f6f8;
@@ -92,17 +93,17 @@ $header-pill-height: functions.toRem(36);
     align-items: center;
 
     .content-pill-item {
-      height: functions.toRem(28);
-      padding: 0 functions.toRem(10);
-      font-size: functions.toRem(13);
+      height: $content-pill-item-height;
+      padding: 0 functions.toRem(14);
+      font-size: $content-pill-font-size;
     }
 
     .content-pill-icon {
-      font-size: functions.toRem(15);
+      font-size: $content-pill-icon-size;
     }
 
     .content-pill-separator {
-      height: functions.toRem(18);
+      height: functions.toRem(22);
     }
   }
 }
