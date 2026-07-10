@@ -6,6 +6,17 @@ orbs:
 
 commands:
 
+  notify-app-version:
+    parameters:
+      status:
+        type: string
+    steps:
+      - run: |
+          curl -fsS -X POST "$ALGOPS_NOTIFY_URL/ops/versions" \
+            -H "X-Api-Key: $NOTIFY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"app\":\"$CIRCLE_PROJECT_REPONAME\",\"version\":\"${CIRCLE_TAG#v}\",\"status\":\"<< parameters.status >>\"}"
+
   deploy-to-s3-shortcache:
     parameters:
       # from current dir, with trailing slash
@@ -353,6 +364,20 @@ jobs:
           bucket: $FRONTEND_PUBLIC_BUCKET
           path: /frontend/releases/<< pipeline.git.tag >>/
 
+  notify-building:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - notify-app-version:
+          status: building
+
+  notify-ready:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - notify-app-version:
+          status: ready
+
 workflows:
   version: 2
   default:
@@ -460,6 +485,16 @@ workflows:
             branches:
               ignore: /.*/
           context: sentry-sourcemaps
+      - notify-building:
+          requires:
+            - deps
+            - fetch-translations
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              ignore: /.*/
+          context: ops-notify
       - deploy-version:
           requires:
             - build-version-en
@@ -472,3 +507,12 @@ workflows:
             branches:
               ignore: /.*/
           context: aws-prod
+      - notify-ready:
+          requires:
+            - deploy-version
+          filters:
+            tags:
+              only: /^v\d+\.\d+\..*/
+            branches:
+              ignore: /.*/
+          context: ops-notify
