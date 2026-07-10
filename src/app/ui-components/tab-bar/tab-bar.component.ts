@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, Component, DestroyRef, ElementRef,
+  AfterViewInit, Component, computed, DestroyRef, ElementRef,
   input, OnDestroy, inject, signal, viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -85,6 +85,12 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   showPrevButton = signal(false);
   showNextButton = signal(false);
+  indicatorVisible = signal(false);
+  indicatorLeft = signal(0);
+  indicatorWidth = signal(0);
+  indicatorAnimate = signal(false);
+  indicatorTransform = computed(() => `translateX(${this.indicatorLeft()}px)`);
+  private indicatorInitialized = false;
 
   tabs$ = combineLatest([ this.tabService.tabs$, this.tabService.activeTab$ ]).pipe(
     map(([ tabs, active ]) => groupTabBarEntries(tabs.map(tab => ({
@@ -103,6 +109,7 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   resize(): void {
     this.handleArrows();
+    this.updateActiveIndicator();
   }
 
   ngAfterViewInit(): void {
@@ -116,7 +123,11 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     ).pipe(
       debounceTime(50),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(() => this.handleArrows());
+    ).subscribe(() => {
+      this.handleArrows();
+      this.scheduleActiveIndicatorUpdate();
+    });
+    this.scheduleActiveIndicatorUpdate(false);
   }
 
   ngOnDestroy(): void {
@@ -126,6 +137,28 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
 
   onChange(id: string): void {
     this.tabService.setActiveTab(id);
+  }
+
+  private scheduleActiveIndicatorUpdate(animate = true): void {
+    requestAnimationFrame(() => {
+      this.updateActiveIndicator(animate);
+    });
+  }
+
+  private updateActiveIndicator(animate = true): void {
+    const listEl = this.elementRef.nativeElement.querySelector('.content-pill-list');
+    const activeEl = listEl?.querySelector('.content-pill-item.alg-tab-bar-active') as HTMLElement | null;
+    if (!listEl || !activeEl) {
+      this.indicatorVisible.set(false);
+      return;
+    }
+    const listRect = listEl.getBoundingClientRect();
+    const activeRect = activeEl.getBoundingClientRect();
+    this.indicatorAnimate.set(animate && this.indicatorInitialized);
+    this.indicatorLeft.set(activeRect.left - listRect.left);
+    this.indicatorWidth.set(activeRect.width);
+    this.indicatorVisible.set(true);
+    this.indicatorInitialized = true;
   }
 
   getTabIcon(tabId: string): string {
@@ -150,7 +183,10 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
     const viewport = scrollbar.adapter.viewportElement;
     viewport.scrollLeft = Math.max(0, viewport.scrollLeft - (viewport.clientWidth / 2));
-    requestAnimationFrame(() => this.handleArrows());
+    requestAnimationFrame(() => {
+      this.handleArrows();
+      this.updateActiveIndicator();
+    });
   }
 
   onNext(): void {
@@ -158,6 +194,9 @@ export class TabBarComponent implements AfterViewInit, OnDestroy {
     if (!scrollbar) throw new Error('Unexpected: Missed scrollbar');
     const viewport = scrollbar.adapter.viewportElement;
     viewport.scrollLeft += viewport.clientWidth / 2;
-    requestAnimationFrame(() => this.handleArrows());
+    requestAnimationFrame(() => {
+      this.handleArrows();
+      this.updateActiveIndicator();
+    });
   }
 }

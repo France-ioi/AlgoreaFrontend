@@ -63,6 +63,11 @@ $header-pill-padding: functions.toRem(4);
       box-shadow: none;
     }
 
+    .content-pill-indicator {
+      top: 0;
+      height: 100%;
+    }
+
     &.has-scroll-prev .content-pill-scroll-viewport,
     &.has-scroll-next .content-pill-scroll-viewport {
       mask-image: linear-gradient(to right, transparent, #000 functions.toRem(12), #000 calc(100% - #{functions.toRem(12)}), transparent);
@@ -114,6 +119,7 @@ $header-pill-padding: functions.toRem(4);
 }
 
 .content-pill-list {
+  position: relative;
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
@@ -127,7 +133,33 @@ $header-pill-padding: functions.toRem(4);
   box-shadow: 0 functions.toRem(1) functions.toRem(4) rgba(29, 34, 39, 0.06);
 }
 
+.content-pill-indicator {
+  position: absolute;
+  top: functions.toRem(4);
+  left: 0;
+  z-index: 0;
+  height: $content-pill-item-height;
+  border-radius: functions.toRem(999);
+  background: var(--alg-primary-light-color, #dfe6f7);
+  opacity: 0;
+  pointer-events: none;
+
+  &.content-pill-indicator-visible {
+    opacity: 1;
+  }
+
+  &.content-pill-indicator-animate {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}
+
 .content-pill-item {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: functions.toRem(8);
@@ -144,7 +176,7 @@ $header-pill-padding: functions.toRem(4);
   white-space: nowrap;
   cursor: pointer;
   background: transparent;
-  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  transition: color 0.15s ease, opacity 0.15s ease;
 
   &:not(.alg-tab-bar-active):hover {
     background: var(--alg-white-color, #fff);
@@ -159,13 +191,8 @@ $header-pill-padding: functions.toRem(4);
 
   &.alg-tab-bar-active {
     color: var(--alg-primary-dark-color, #012873);
-    background: var(--alg-primary-light-color, #dfe6f7);
     font-weight: 500;
     opacity: 1;
-
-    &:hover {
-      background: var(--alg-light-bg-color, #e8efff);
-    }
   }
 
   &:focus-visible {
