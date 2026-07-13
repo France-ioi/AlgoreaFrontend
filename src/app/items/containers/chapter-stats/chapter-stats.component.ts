@@ -4,7 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { GetItemChildrenService } from 'src/app/data-access/get-item-children.service';
+import { GetItemChildrenService, ItemChildren } from 'src/app/data-access/get-item-children.service';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { EmptyContentComponent } from 'src/app/ui-components/empty-content/empty-content.component';
@@ -58,5 +58,9 @@ export class ChapterStatsComponent {
 
   refresh(): void {
     this.refresh$.next();
+  }
+
+  hasAtLeastOneTask(children: ItemChildren): boolean {
+    return children.some(child => child.type === 'Task');
   }
 }

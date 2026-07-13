@@ -1,5 +1,27 @@
 @use 'src/assets/scss/functions';
 
+:host {
+  display: block;
+  padding: 0 0 var(--alg-space-size-4) 0;
+}
+
+.page-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: functions.toRem(8) functions.toRem(16);
+
+  .alg-h2 {
+    margin: 0;
+  }
+}
+
+.stats-caption {
+  margin: 0;
+  font-size: functions.toRem(13);
+  color: var(--alg-secondary-color, #666);
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(functions.toRem(200), 1fr));
@@ -39,15 +61,22 @@
   font-weight: 600;
 }
 
-.section-title {
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(4);
   margin: functions.toRem(24) 0 functions.toRem(12) 0;
+}
+
+.section-title {
+  margin: 0;
   font-size: functions.toRem(16);
   font-weight: 600;
 }
 
-.chart-caption {
-  margin-top: functions.toRem(8);
-  font-size: functions.toRem(13);
-  color: var(--alg-secondary-color, #666);
-  text-align: center;
+.section-info-icon {
+  font-size: functions.toRem(14);
+  color: var(--alg-secondary-color, #888);
+  cursor: help;
+  line-height: 1;
 }

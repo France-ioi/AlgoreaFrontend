@@ -96,7 +96,7 @@
 </div>
 
 <div class="legend">
-  @for (area of areas(); track area.bucket) {
+  @for (area of legendAreas(); track area.bucket) {
     <div class="legend-item">
       <span class="legend-swatch" [style.background-color]="area.color"></span>
       <span class="legend-text"><span i18n>Score</span> {{ area.label }}</span>
