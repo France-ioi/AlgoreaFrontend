@@ -26,6 +26,10 @@
   }
 </form>
 
-<div class="delete-button">
-  <alg-item-remove-button [itemData]="itemData()" (confirmRemoval)="confirmRemoval.emit()" />
-</div>
+<section class="owners-section">
+  <h2 class="alg-h2 alg-text-normal title" i18n>Owners</h2>
+  <alg-item-owners [itemId]="itemData().item.id" />
+  <div class="delete-button">
+    <alg-item-remove-button [itemData]="itemData()" (confirmRemoval)="confirmRemoval.emit()" />
+  </div>
+</section>

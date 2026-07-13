@@ -23,7 +23,11 @@ import { GetItemChildrenService } from 'src/app/data-access/get-item-children.se
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { RemoveItemService } from '../../data-access/remove-item.service';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { UserSessionService } from 'src/app/services/user-session.service';
 
 function buildItem(overrides: Partial<Item> = {}): Item {
   return {
@@ -106,6 +110,16 @@ function wrapperProviders(
     { provide: ConfirmationModalService, useValue: { confirm: () => of(true) } },
     { provide: ItemRouter, useValue: { navigate: () => {} } },
     { provide: RemoveItemService, useValue: { remove: () => of(undefined) } },
+    provideRouter([]),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClientTesting(),
+    {
+      provide: UserSessionService,
+      useValue: {
+        session$: new BehaviorSubject({ groupId: 'user-1' }),
+        userProfile$: of({ groupId: 'user-1' }),
+      },
+    },
   ];
 }
 
@@ -113,6 +127,7 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
   let fixture: ComponentFixture<ItemEditWrapperComponent>;
   let component: ItemEditWrapperComponent;
   let store: MockStore;
+  let httpTesting: HttpTestingController;
 
   async function setup(appConfig: { apiUrl: string, languages: { tag: string, label: string }[] }): Promise<void> {
     await TestBed.configureTestingModule({
@@ -121,8 +136,18 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
     }).compileComponents();
 
     store = TestBed.inject(MockStore);
+    httpTesting = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(ItemEditWrapperComponent);
     component = fixture.componentInstance;
+  }
+
+  afterEach(() => {
+    httpTesting.verify();
+  });
+
+  function flushOwnersRequest(): void {
+    const ownersRequest = httpTesting.match(req => req.url.includes('/owners'));
+    ownersRequest.forEach(req => req.flush([]));
   }
 
   async function loadItem(item: Item): Promise<void> {
@@ -132,6 +157,7 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
     store.overrideSelector(fromItemContent.selectActiveContentCurrentResult, data.currentResult ?? null);
     store.refreshState();
     fixture.detectChanges();
+    flushOwnersRequest();
     await fixture.whenStable();
     fixture.detectChanges();
   }
@@ -277,6 +303,7 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
       store.overrideSelector(fromItemContent.selectActiveContentCurrentResult, null);
       store.refreshState();
       fixture.detectChanges();
+      flushOwnersRequest();
       await fixture.whenStable();
 
       const stringsForm = fixture.debugElement.query(By.directive(ItemAllStringsFormComponent))
