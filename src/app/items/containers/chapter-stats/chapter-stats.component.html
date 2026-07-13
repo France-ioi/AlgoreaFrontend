@@ -1,5 +1,12 @@
 @if (state$ | async; as state) {
-  <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space" i18n>Chapter Statistics (beta)</h2>
+  <div class="page-title-row alg-base-title-primary-space">
+    <h2 class="alg-h2 alg-text-normal" i18n>Chapter Statistics</h2>
+    @if (state.isReady && state.data && hasAtLeastOneTask(state.data)) {
+      <p class="stats-caption" i18n="@@statsUsageDataCaption">
+        Based on usage data collected since April 2026.
+      </p>
+    }
+  </div>
 
   @if (state.isFetching) {
     <alg-loading size="medium" />

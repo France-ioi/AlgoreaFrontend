@@ -1,5 +1,22 @@
 @use 'src/assets/scss/functions';
 
+.page-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: functions.toRem(8) functions.toRem(16);
+
+  .alg-h2 {
+    margin: 0;
+  }
+}
+
+.stats-caption {
+  margin: 0;
+  font-size: functions.toRem(13);
+  color: var(--alg-secondary-color, #666);
+}
+
 .stats-table {
   // Fixed layout so the title column (auto width) takes all the remaining space
   // after the stat columns get their explicit widths, instead of being squeezed.

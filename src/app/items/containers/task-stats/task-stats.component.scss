@@ -1,5 +1,22 @@
 @use 'src/assets/scss/functions';
 
+.page-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: functions.toRem(8) functions.toRem(16);
+
+  .alg-h2 {
+    margin: 0;
+  }
+}
+
+.stats-caption {
+  margin: 0;
+  font-size: functions.toRem(13);
+  color: var(--alg-secondary-color, #666);
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(functions.toRem(200), 1fr));
