@@ -105,7 +105,9 @@
   flex-wrap: wrap;
   gap: functions.toRem(8) functions.toRem(16);
   margin-top: functions.toRem(12);
-  justify-content: center;
+  margin-left: functions.toRem(40);
+  max-width: functions.toRem(650);
+  justify-content: flex-start;
 }
 
 .legend-item {
