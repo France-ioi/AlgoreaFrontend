@@ -1,5 +1,10 @@
 @use 'src/assets/scss/functions';
 
+:host {
+  display: block;
+  padding: 0 0 var(--alg-space-size-4) 0;
+}
+
 .page-title-row {
   display: flex;
   align-items: baseline;
