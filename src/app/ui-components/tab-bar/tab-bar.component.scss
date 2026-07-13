@@ -1,109 +1,297 @@
 @use 'src/assets/scss/functions';
 
-:host {
-  overflow: hidden;
-}
+$content-pill-font-size: functions.toRem(14);
+$content-pill-padding: functions.toRem(4);
+$content-pill-border-width: functions.toRem(1);
+$content-pill-item-height: functions.toRem(36);
+$content-pill-item-padding-x: functions.toRem(14);
+$content-pill-icon-size: functions.toRem(18);
+$content-pill-height: functions.toRem(46);
+$header-pill-height: $content-pill-height;
+$header-pill-padding: $content-pill-padding;
+// Upper-bound width a tab expands to while entering. Longer translated labels may need a larger value.
+$tab-enter-max-width: functions.toRem(320);
 
-.container {
-  position: relative;
+:host {
+  // Single source of truth for tab enter/indicator timing; read by the component for post-animation re-measure.
+  --tab-transition-duration: 0.28s;
   display: flex;
   align-items: center;
   height: 100%;
+  overflow: hidden;
+
+  &:not(:has(.tabs.for-header)) {
+    overflow: visible;
+
+    .container,
+    .alg-top-bar-scrollbar {
+      overflow: visible;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-width: 100%;
+}
+
+.content-pill-scroll-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+
+  &.is-header {
+    box-sizing: border-box;
+    align-self: center;
+    height: $header-pill-height;
+    padding: $header-pill-padding;
+    border: functions.toRem(1) solid var(--alg-border-color, #DEDEDE);
+    border-radius: functions.toRem(999);
+    background: #f5f6f8;
+    box-shadow: 0 functions.toRem(1) functions.toRem(4) rgba(29, 34, 39, 0.06);
+
+    .content-pill-scroll-viewport {
+      flex: 1;
+      min-width: 0;
+      height: auto;
+      align-self: center;
+    }
+
+    .content-pill-list {
+      height: 100%;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    &.has-scroll-prev .content-pill-scroll-viewport,
+    &.has-scroll-next .content-pill-scroll-viewport {
+      mask-image: linear-gradient(to right, transparent, #000 functions.toRem(12), #000 calc(100% - #{functions.toRem(12)}), transparent);
+    }
+
+    &.has-scroll-prev:not(.has-scroll-next) .content-pill-scroll-viewport {
+      mask-image: linear-gradient(to right, transparent, #000 functions.toRem(12));
+    }
+
+    &.has-scroll-next:not(.has-scroll-prev) .content-pill-scroll-viewport {
+      mask-image: linear-gradient(to left, transparent, #000 functions.toRem(12));
+    }
+  }
 }
 
 .tabs {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   display: flex;
-  list-style-type: none;
   margin: 0;
   padding: 0;
   position: relative;
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    display: block;
-    width: 100%;
-    height: functions.toRem(1);
-    background: rgb(255,255,255);
-    background: -moz-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
-    background: -webkit-linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
-    background: linear-gradient(90deg, rgba(209,215,230,1) 50%, rgba(255,255,255,0) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
-  }
+  align-items: center;
 
   &.for-header {
-    height: 100%;
+    height: auto;
+    align-items: center;
 
-    &:after {
-      content: none;
+    .content-pill-item {
+      height: $content-pill-item-height;
+      padding: 0 $content-pill-item-padding-x;
+      font-size: $content-pill-font-size;
     }
 
-    .tabs-item {
-      margin: 0 functions.toRem(7.5) functions.toRem(3) functions.toRem(7.5) !important;
-
-      &:first-child {
-        margin-left: 0 !important;
-      }
-
-      &:last-child {
-        margin-right: 0 !important;
-      }
+    .content-pill-icon {
+      font-size: $content-pill-icon-size;
     }
 
-    .tabs-item-link {
-      padding-bottom: 0 !important;
-      font-size: functions.toRem(12);
-      height: 100%;
-      display: flex;
-      align-items: center;
+    .content-pill-separator {
+      height: functions.toRem(22);
     }
   }
 }
 
-.tabs-item {
+.content-pill-list {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  height: $content-pill-height;
+  padding: $content-pill-padding;
+  border: $content-pill-border-width solid var(--alg-border-color, #DEDEDE);
+  border-radius: functions.toRem(999);
+  background: #f5f6f8;
+  box-shadow: 0 functions.toRem(1) functions.toRem(4) rgba(29, 34, 39, 0.06);
+}
+
+.content-pill-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: functions.toRem(999);
+  background: var(--alg-primary-light-color, #dfe6f7);
+  opacity: 0;
+  pointer-events: none;
+
+  &.content-pill-indicator-visible {
+    opacity: 1;
+  }
+
+  &.content-pill-indicator-animate {
+    // Kept in sync with the tab enter animation so the active tab's highlight grows while its label fades.
+    transition:
+      left var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+      top var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+      width var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+      height var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}
+
+.content-pill-item {
   position: relative;
   z-index: 1;
-  margin: 0 functions.toRem(16) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(8);
+  box-sizing: border-box;
+  height: $content-pill-item-height;
+  padding: 0 $content-pill-item-padding-x;
+  border: none;
+  border-radius: functions.toRem(999);
+  font-size: $content-pill-font-size;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  transition: color 0.15s ease, opacity 0.15s ease;
 
-  &.alg-tab-bar-active {
-    .tabs-item-link {
-      color: var(--alg-primary-color) !important;
-      opacity: 1 !important;
-      border-bottom: functions.toRem(3) solid var(--alg-primary-color) !important;
+  &.content-pill-item-task:not(.alg-tab-bar-active) {
+    color: var(--alg-black-color, #1D2227);
+    font-weight: 400;
+    opacity: 0.9;
+
+    &:hover {
+      background: var(--alg-white-color, #fff);
+      opacity: 1;
     }
   }
 
-  &:first-child {
-    margin-left: 0 !important;
+  &:not(.content-pill-item-task):not(.alg-tab-bar-active) {
+    color: var(--alg-secondary-color, #616F82);
+    font-weight: 300;
+    opacity: 1;
+
+    .content-pill-icon {
+      opacity: 0.7;
+    }
+
+    &:hover {
+      background: var(--alg-white-color, #fff);
+      opacity: 0.75;
+    }
   }
 
-  &:last-child {
-    margin-right: 0 !important;
+  &.alg-tab-bar-active {
+    color: var(--alg-primary-dark-color, #012873);
+    opacity: 1;
+
+    .content-pill-icon {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #0F61FF);
+    outline-offset: functions.toRem(2);
+    z-index: 1;
   }
 }
 
-.tabs-item-link {
-  display: inline-block;
-  padding-bottom: functions.toRem(10);
-  border-bottom: functions.toRem(3) solid transparent;
-  z-index: 1;
-  color: var(--alg-secondary-color) !important;
-  font-size: functions.toRem(16);
-  font-weight: 300;
-  text-decoration: none;
-  opacity: .5;
+.content-pill-icon {
+  flex-shrink: 0;
+  font-size: $content-pill-icon-size;
+  line-height: 1;
 }
 
-.prev-button {
+.content-pill-label {
+  line-height: 1.2;
+}
+
+.content-pill-separator {
+  flex-shrink: 0;
+  width: functions.toRem(1);
+  height: functions.toRem(22);
+  margin: 0 functions.toRem(4);
+  background: var(--alg-border-color, #DEDEDE);
+}
+
+.tab-scroll-button {
   position: absolute;
-  left: 0;
+  top: 50%;
   z-index: 2;
+  transform: translateY(-50%);
+
+  &.tab-scroll-prev {
+    left: functions.toRem(4);
+  }
+
+  &.tab-scroll-next {
+    right: functions.toRem(4);
+  }
 }
 
-.next-button {
-  position: absolute;
-  right: 0;
-  z-index: 1;
+// New tabs (e.g. task views appearing on task load) grow in horizontally so the pill widens smoothly.
+.tab-enter {
+  overflow: hidden;
+  animation: tab-enter var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+// The active tab keeps its final width immediately (so the sliding indicator can measure it correctly)
+// and only fades in, in sync with its highlight (indicator) growing. Also used for the separator.
+.tab-fade-in {
+  animation: tab-fade-in var(--tab-transition-duration) cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes tab-enter {
+  from {
+    max-width: 0;
+    padding-right: 0;
+    padding-left: 0;
+    opacity: 0;
+  }
+
+  to {
+    max-width: $tab-enter-max-width;
+    padding-right: $content-pill-item-padding-x;
+    padding-left: $content-pill-item-padding-x;
+    opacity: 1;
+  }
+}
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-enter,
+  .tab-fade-in {
+    animation: none;
+  }
 }

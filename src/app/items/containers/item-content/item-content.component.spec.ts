@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, input, output } from '@angular/core';
 import { ItemContentComponent } from './item-content.component';
 import { ItemData } from '../../models/item-data';
-import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
+import { ItemDisplayComponent } from '../item-display/item-display.component';
 import { itemRoute, FullItemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
@@ -34,7 +34,7 @@ class MockItemDisplayComponent {
   taskConfig = input<TaskConfig>({ readOnly: false, initialAnswer: undefined });
   savingAnswer = input(false);
   viewChange = output<string>();
-  tabsChange = output<TaskTab[]>();
+  tabsChange = output<string[]>();
   scoreChange = output<number>();
   skipSave = output<void>();
   refresh = output<void>();

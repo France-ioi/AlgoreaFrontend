@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ItemData } from '../../models/item-data';
 import { TaskConfig } from '../../services/item-task.service';
-import { ItemDisplayComponent, TaskTab } from '../item-display/item-display.component';
+import { ItemDisplayComponent } from '../item-display/item-display.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ItemChildrenEditFormComponent
@@ -89,14 +89,14 @@ export class ItemContentComponent implements PendingChangesComponent {
   private switchComponent = viewChild(SwitchComponent);
 
   itemData = input.required<ItemData>();
-  taskView = input<TaskTab['view']>();
+  taskView = input<string>();
   taskConfig = input<TaskConfig | null>(null);
   savingAnswer = input(false);
   editModeEnabled = input(false);
   editMode = linkedSignal(() => this.editModeEnabled());
 
-  taskTabsChange = output<TaskTab[]>();
-  taskViewChange = output<TaskTab['view']>();
+  taskTabsChange = output<string[]>();
+  taskViewChange = output<string>();
   scoreChange = output<number>();
   skipSave = output<void>();
   refresh = output<void>();

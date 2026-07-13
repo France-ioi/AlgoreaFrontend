@@ -24,7 +24,6 @@ import {
 } from 'rxjs/operators';
 import { TaskConfig, ItemTaskService } from '../../services/item-task.service';
 import { errorState, fetchingState, readyState } from 'src/app/utils/state';
-import { capitalize } from 'src/app/utils/case_conversion';
 import { ItemTaskInitService } from '../../services/item-task-init.service';
 import { ItemTaskAnswerService } from '../../services/item-task-answer.service';
 import { ItemTaskViewsService } from '../../services/item-task-views.service';
@@ -49,11 +48,6 @@ import { outputFromObservable, takeUntilDestroyed, toObservable } from '@angular
 import { UnlockedItems } from 'src/app/items/data-access/grade.service';
 import { itemDisplayIframeHeight$ } from './item-display-iframe-height';
 import { createItemDisplaySideEffectSubscriptions } from './item-display-side-effects';
-
-export interface TaskTab {
-  name: string,
-  view: string,
-}
 
 @Component({
   selector: 'alg-item-display',
@@ -89,7 +83,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   editingPermission = input<ItemPermWithEdit>({ canEdit: ItemEditPerm.None });
   attemptId = input<string>();
   resultStartedAt = input<Date | null>(null);
-  view = input<TaskTab['view']>();
+  view = input<string>();
   taskConfig = input<TaskConfig>({ readOnly: false, initialAnswer: undefined });
   savingAnswer = input(false);
 
@@ -134,9 +128,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   showTaskAnyway = signal(false);
 
   viewChange = outputFromObservable(this.taskService.activeView$);
-  tabsChange = outputFromObservable(this.taskService.views$.pipe(
-    map(views => views.map(view => ({ view, name: this.getTabNameByView(view) }))),
-  ));
+  tabsChange = outputFromObservable(this.taskService.views$);
 
   private subscriptions = createItemDisplaySideEffectSubscriptions({
     taskService: this.taskService,
@@ -220,18 +212,6 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   saveAnswerAndState(): ReturnType<ItemTaskService['saveAnswerAndState']> {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     return this.taskService.saveAnswerAndState();
-  }
-
-  private getTabNameByView(view: string): string {
-    switch (view) {
-      case 'editor': return $localize`Solve`;
-      case 'forum': return $localize`Forum`;
-      case 'hints': return $localize`Hints`;
-      case 'solution': return $localize`Solution`;
-      case 'submission': return $localize`Submission`;
-      case 'task': return $localize`Statement`;
-      default: return capitalize(view);
-    }
   }
 
   openUnlockedItemsDialog(items: UnlockedItems): void {

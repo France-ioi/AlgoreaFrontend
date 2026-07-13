@@ -152,6 +152,41 @@
       box-shadow: functions.toRem(-1) functions.toRem(1) functions.toRem(5) functions.toRem(1) rgba(0,0,0,0.3);
     }
   }
+
+  &.tab-scroll-button {
+    width: functions.toRem(24);
+    height: functions.toRem(24);
+    padding: 0;
+    border: functions.toRem(1) solid var(--alg-border-color, #DEDEDE);
+    border-radius: 50%;
+    background: #f5f6f8;
+    box-shadow: 0 functions.toRem(1) functions.toRem(3) rgba(29, 34, 39, 0.08);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      color: var(--alg-secondary-color, #616F82);
+    }
+
+    .icon {
+      font-size: functions.toRem(12);
+    }
+
+    &:hover:not(:disabled) {
+      background: var(--alg-white-color, #fff);
+      border-color: var(--alg-primary-light-color, #dfe6f7);
+
+      .wrapper {
+        color: var(--alg-primary-dark-color, #012873);
+      }
+    }
+
+    &:focus-visible {
+      outline: functions.toRem(2) solid var(--alg-primary-color, #0F61FF);
+      outline-offset: functions.toRem(1);
+    }
+  }
   &.nav-arrow {
     padding: 0 functions.toRem(12);
     height: 100%;
