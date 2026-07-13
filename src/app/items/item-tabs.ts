@@ -52,7 +52,7 @@ const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' 
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters', icon: 'ph ph-sliders' };
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum', icon: 'ph ph-chats-circle' };
 // Task and chapter stats share the same route and component (alg-item-stats); only the tab title differs by item type.
-const itemStatsTab = { routerLink: [ 'item-stats' ], tag: 'alg-item-stats', icon: 'ph ph-chart-pie' };
+const statsTab = { title: $localize`Statistics`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats', icon: 'ph ph-chart-pie' };
 
 /**
  * Service for letting item-by-id component know what tabs and active tab to be displayed
@@ -130,9 +130,7 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
         this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
         this.isCurrentTab(forumTab) || (!userProfile.tempUser && this.config.featureFlags.enableForum) ? forumTab : null,
-        this.isCurrentTab(itemStatsTab)|| ((isTask || isChapter) && hasEditionPerm && !isObserving)
-          ? { ...itemStatsTab, title: isTask ? $localize`Task stats` : $localize`Chapter stats` }
-          : null,
+        this.isCurrentTab(statsTab)|| ((isTask || isChapter) && hasEditionPerm && !isObserving) ? statsTab : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag)) // uniform safety net (also lets a feature flag hide a non-task tab by tag)
