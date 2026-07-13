@@ -43,7 +43,7 @@ const childrenEditTab = {
   title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit', isTaskTab: true, icon: 'ph ph-article',
 };
 const editTab = { title: $localize`Edit`, routerLink: [ 'edit' ], tag: 'alg-task-edit', icon: 'ph ph-pencil-simple' };
-const statsTab = { title: $localize`Stats`, routerLink: [ 'progress' ], tag: 'alg-item-progress', icon: 'ph ph-chart-bar' };
+const progressTab = { title: $localize`Progress`, routerLink: [ 'progress' ], tag: 'alg-item-progress', icon: 'ph ph-chart-line-up' };
 const historyTab = { title: $localize`History`, routerLink: [ 'history' ], tag: 'alg-log', icon: 'ph ph-clock-counter-clockwise' };
 const dependenciesTab = {
   title: $localize`Dependencies`, routerLink: [ 'dependencies' ], tag: 'alg-dependencies', icon: 'ph ph-tree-structure',
@@ -102,8 +102,8 @@ export class ItemTabs implements OnDestroy {
       const canWatchResults = state.isReady ? canCurrentUserWatchResult(state.data.item) : false;
       const isTask = state.isReady ? isATask(state.data.item) : undefined;
       const isChapter = state.isReady ? isAChapter(state.data.item) : undefined;
-      const canViewStats = isObserving ? canWatchResults : canViewContent;
-      const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewStats;
+      const canViewProgress = isObserving ? canWatchResults : canViewContent;
+      const showProgress = (!isTask || !disablePlatformProgressOnTasks) && canViewProgress;
       const canSetExtraTime = state.isReady ? isTimeLimitedActivity(state.data.item) && canCurrentUserSetExtraTime(state.data.item) : false;
 
       const shouldHideTab = (v: string): boolean => this.config.featureFlags.hideTaskTabs.includes(v);
@@ -124,7 +124,7 @@ export class ItemTabs implements OnDestroy {
           isTaskTab: true,
         })),
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
-        this.isCurrentTab(statsTab) || (canViewStats && !isTask && isObserving) ? statsTab : null,
+        this.isCurrentTab(progressTab) || (canViewProgress && !isTask && isObserving) ? progressTab : null,
         this.isCurrentTab(historyTab) || (showProgress && (isObserving || isTask)) ? historyTab : null,
         this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
         this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
