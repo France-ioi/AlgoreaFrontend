@@ -14,16 +14,12 @@ export class CompositionFilterComponent {
 
   change = output<TypeFilter>();
 
+  // 'Teams' remains in the shared TypeFilter type and data layer; it is omitted here on purpose (Option A).
   readonly typeFilters: {icon:string, label:string, value:TypeFilter}[] = [
     {
       icon: 'ph-duotone ph-users',
       label: $localize`sub-groups`,
       value: 'Groups'
-    },
-    {
-      icon: 'ph-duotone ph-users',
-      label: $localize`teams`,
-      value: 'Teams'
     },
     {
       icon: 'ph-duotone ph-users',
