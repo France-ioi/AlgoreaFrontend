@@ -1,0 +1,29 @@
+@if (ownersResource.isLoading() || awaitingUser()) {
+  <alg-loading />
+} @else if (ownersResource.error()) {
+  <div role="alert">
+    <alg-error class="dark"
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Error while loading the owners."
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="true"
+      (refresh)="onRefresh()"
+     />
+  </div>
+} @else if (displayOwners().length === 0 && !includesSelf()) {
+  <p i18n aria-live="polite">No owners.</p>
+} @else {
+  <p aria-live="polite">
+    @if (ownerCount() === 1) {
+      <span i18n>The owner of this content is: </span>
+    } @else {
+      <span i18n>The owners of this content are: </span>
+    }
+    @for (owner of displayOwners(); track owner.id; let last = $last) {
+      <a class="alg-link" [routerLink]="owner | groupLink">{{ owner.name }}</a>@if (!last || includesSelf()) {<span>, </span>}
+    }
+    @if (includesSelf()) {
+      <span i18n>yourself</span>
+    }
+  </p>
+}

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 // domain level group typing
-const groupTypeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base', 'ContestParticipants', 'User' ]);
-export const groupTypeEnum = groupTypeSchema.enum;
+export const groupTypeSchema = z.enum([ 'Class', 'Team', 'Club', 'Friends', 'Other', 'Session', 'Base', 'ContestParticipants', 'User' ]);
+const groupTypeEnum = groupTypeSchema.enum;
 const t = groupTypeEnum; // local shorthand
 
 export const nonUserGroupTypeSchema = groupTypeSchema.exclude([ t.User ]);

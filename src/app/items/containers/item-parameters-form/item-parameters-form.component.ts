@@ -24,6 +24,7 @@ import {
   ItemValidationType,
   sectionsForItemType,
 } from 'src/app/items/models/item-parameters';
+import { ItemOwnersComponent } from 'src/app/items/containers/item-owners/item-owners.component';
 import { ItemRemoveButtonComponent } from 'src/app/items/containers/item-remove-button/item-remove-button.component';
 import { ItemParametersGlobalComponent } from './sections/item-parameters-global.component';
 import { ItemParametersScoreComponent } from './sections/item-parameters-score.component';
@@ -45,6 +46,7 @@ import { createCvaEcho } from 'src/app/utils/cva-echo';
     ItemParametersDisplayComponent,
     ItemParametersParticipationComponent,
     ItemParametersTeamComponent,
+    ItemOwnersComponent,
     ItemRemoveButtonComponent,
   ],
   providers: [

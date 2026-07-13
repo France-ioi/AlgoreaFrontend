@@ -1,0 +1,6 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: block;
+  margin-bottom: functions.toRem(16);
+}
