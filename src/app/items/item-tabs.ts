@@ -52,7 +52,7 @@ const extraTimeTab = { title: $localize`Extra time`, routerLink: [ 'extra-time' 
 const parametersTab = { title: $localize`Parameters`, routerLink: [ 'parameters' ], tag: 'alg-parameters', icon: 'ph ph-sliders' };
 const forumTab = { title: $localize`Forum`, routerLink: [ 'forum' ], tag: 'alg-forum', icon: 'ph ph-chats-circle' };
 // Task and chapter stats share the same route and component (alg-item-stats); only the tab title differs by item type.
-const statsTab = { title: $localize`Statistics`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats', icon: 'ph ph-chart-pie' };
+const statsTab = { title: $localize`Statistics`, routerLink: [ 'item-stats' ], tag: 'alg-item-stats', icon: 'ph ph-chart-bar' };
 
 /**
  * Service for letting item-by-id component know what tabs and active tab to be displayed
