@@ -38,13 +38,18 @@
     </div>
 
     @if (stats.scoreDistribution.length > 0) {
-      <h3 class="section-title" i18n>Score distribution over time spent</h3>
+      <div class="section-title-row">
+        <h3 class="section-title" i18n>Score distribution over time spent</h3>
+        <i
+          class="ph-duotone ph-info section-info-icon"
+          i18n-algTooltip
+          algTooltip="Each area shows the percentage of all users who reached at least the given score within the given time."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
+      </div>
 
       <alg-score-over-time-chart [entries]="stats.scoreDistribution" />
-
-      <p class="chart-caption" i18n>
-        Each area shows the percentage of all users who reached at least the given score within the given time.
-      </p>
     }
   }
 }
