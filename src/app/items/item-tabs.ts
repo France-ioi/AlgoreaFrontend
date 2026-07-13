@@ -126,11 +126,11 @@ export class ItemTabs implements OnDestroy {
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
         this.isCurrentTab(progressTab) || (canViewProgress && !isTask && isObserving) ? progressTab : null,
         this.isCurrentTab(historyTab) || (showProgress && (isObserving || isTask)) ? historyTab : null,
-        this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
-        this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
-        this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
         this.isCurrentTab(forumTab) || (!userProfile.tempUser && this.config.featureFlags.enableForum) ? forumTab : null,
         this.isCurrentTab(statsTab)|| ((isTask || isChapter) && hasEditionPerm && !isObserving) ? statsTab : null,
+        this.isCurrentTab(dependenciesTab) || hasEditionPerm ? dependenciesTab : null,
+        this.isCurrentTab(extraTimeTab) || canSetExtraTime ? extraTimeTab : null,
+        this.isCurrentTab(parametersTab) || hasEditionPerm ? parametersTab : null,
       ]
         .filter(isNotNull)
         .filter(t => !shouldHideTab(t.tag)) // uniform safety net (also lets a feature flag hide a non-task tab by tag)
