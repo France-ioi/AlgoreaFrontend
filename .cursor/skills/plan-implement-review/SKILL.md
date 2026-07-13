@@ -1,80 +1,87 @@
 ---
 name: plan-implement-review
-description: Orchestrates a plan-driven implementation loop with a built-in Angular code review. Use after a plan has been approved (Plan mode) and the user wants the change implemented by a dev subagent, reviewed by an Opus subagent running the angular-code-review skill, fixed by the dev subagent, then summarized. Trigger when the user asks to "implement and review", "build then review", or run the implement → review → fix → summary workflow.
+description: End-to-end feature workflow from user instructions to shipped code. Plans with an Opus subagent in Plan mode (read-only exploration, no implementation), obtains plan approval, then runs the implement-review skill (dev subagent implements, Opus reviews, dev fixes, orchestrator summarizes). Use when the user gives a feature request or task and wants planning plus implementation with review. Trigger on "plan, implement and review", full feature delivery from instructions, or when no approved plan exists yet.
 ---
 
 # Plan, Implement, Review
 
 ## Overview
 
-This skill turns an approved plan into shipped code through a delegated loop: a dev subagent implements, an Opus review subagent runs `/angular-code-review`, the same dev subagent fixes the findings, and the orchestrator reports what was and wasn't done.
+This skill extends [implement-review](implement-review/SKILL.md) with an upfront planning phase:
 
-The orchestrator (the agent running this skill) stays lightweight: it coordinates subagents and writes the final summary. It does NOT implement or review the code itself.
+1. **Plan** — Opus subagent explores the codebase in Plan mode and produces a structured plan.
+2. **Approve** — User confirms the plan (or requests revisions).
+3. **Implement → Review → Fix → Summarize** — Follow the [implement-review](implement-review/SKILL.md) skill with the approved plan.
+
+The orchestrator coordinates subagents and writes the final summary. It does NOT plan, implement, or review code itself.
 
 ## Preconditions (verify before any work)
 
-Stop and ask the user if either is missing — do not start implementing.
+Stop and ask the user if either is missing — do not start.
 
-1. **An approved plan exists.** The plan must come from Cursor Plan mode / an approved plan in the current conversation. If there is no clear, approved plan, ask the user to provide or approve one first. Restate the plan as a numbered list of concrete deliverables so completion can be checked later.
-2. **The orchestrator is running the `auto` model.** State which model you are currently on. If it is not `auto`, stop and ask the user to switch to the `auto` model before continuing — this workflow is cost-optimized: cheap `auto` orchestration delegates expensive work to subagents. Do not proceed until on `auto`.
+1. **User instructions exist.** The user has stated what they want built or changed. If vague, ask clarifying questions before launching the planning subagent.
+2. **The orchestrator is running the `auto` model in Agent mode.** State which model and mode you are on. If not `auto` in Agent mode, stop and ask the user to switch before continuing.
 
 ## Workflow checklist
 
-Copy this and keep it updated as you go:
-
 ```
-- [ ] Step 0: Preconditions verified (approved plan + orchestrator on `auto`)
-- [ ] Step 1: Implement the plan in the dev subagent (auto model)
-- [ ] Step 2: Review the changes in an Opus subagent (/angular-code-review)
-- [ ] Step 3: Fix review findings in the SAME dev subagent
-- [ ] Step 4: Write the final summary
+- [ ] Step 0: Preconditions verified (user instructions + orchestrator on `auto` in Agent mode)
+- [ ] Step 1: Plan in an Opus subagent (Plan mode — read-only)
+- [ ] Step 2: Present plan and get user approval
+- [ ] Step 3–6: Follow implement-review skill (implement → review → fix → summarize)
 ```
 
-## Step 1: Implement in the dev subagent
+## Step 1: Plan in an Opus subagent (Plan mode)
 
-Launch ONE dev subagent to do the implementation. Reuse this same subagent later for fixes (keep its agent ID).
+Launch a planning subagent that behaves like Cursor Plan mode: explore and design only, **no code changes**.
 
-- Tool: `Task` with `subagent_type: "generalPurpose"`.
-- Model: **do not pass a `model`** — omitting it makes the subagent inherit the orchestrator's `auto` model, satisfying the "both on auto" requirement.
-- Prompt: subagents do not see the conversation, so include the **full plan** (all numbered deliverables), the relevant file paths, and the project conventions reminder ("follow `AGENTS.md`: standalone components, signals, `inject()`, native control flow, ngrx `FetchState`, i18n all user-facing strings, files < 300 lines"). Instruct it to run `npm run lint` and fix lint errors before returning.
-- Ask the subagent to return: a list of changed files, which plan deliverables it completed, and anything it could not do (with the reason).
-
-Record the dev subagent's **agent ID** — you will `resume` it in Step 3.
-
-## Step 2: Review in an Opus subagent
-
-Launch a separate review subagent over the code that was just written.
-
-- Tool: `Task` with `subagent_type: "generalPurpose"`, `readonly: true`.
+- Tool: `Task` with `subagent_type: "explore"` (preferred for codebase exploration) or `subagent_type: "generalPurpose"`, **`readonly: true`**.
 - Model: **`claude-opus-4-8-thinking-high`** (Opus). If that slug is unavailable, tell the user Opus is unavailable rather than silently substituting another model.
-- Prompt the review subagent to:
-  1. Read and follow the skill at `/home/dle/.claude/skills/angular-code-review/SKILL.md`.
-  2. Scope the review to the just-written changes: run `git diff` (and `git status`) to find modified/untracked files, then read them.
-  3. Produce its report using that skill's output template (Critical / Suggestions / Positive across the four roles).
-  4. Save the report to `.cursor/reviews/` (e.g. `.cursor/reviews/<short-feature-name>-review.md`) and also return it.
+- Prompt must include:
+  - The **full user instructions** (verbatim or faithfully summarized).
+  - Instruction to act in **Plan mode**: read files, search the codebase, understand architecture (`AGENTS.md`, `.cursor/ARCHITECTURE.md`), and produce a plan — **do not write or modify any files**.
+  - Required plan output format:
 
-## Step 3: Fix in the same dev subagent
+```markdown
+# Plan: [short title]
 
-`resume` the Step 1 dev subagent (pass its agent ID) with the review report. Instruct it to:
+## Goal
+[One paragraph]
 
-- **Fix every Critical issue.**
-- **Address Suggestions that are relevant** — apply the ones that genuinely improve the code; for any suggestion it deliberately skips, record a one-line reason. Do not blindly apply suggestions that conflict with the plan or project conventions.
-- Re-run `npm run lint` (and unit tests with `CHROME_BIN=/usr/bin/chromium ng test` when the change warrants it) and fix failures.
-- Return: which Critical issues were fixed, which Suggestions were applied vs. skipped (with reasons).
+## Deliverables
+1. [Concrete, checkable deliverable]
+2. ...
 
-## Step 4: Final summary (orchestrator writes this)
+## Approach
+[Key technical decisions, files to touch, patterns to follow]
 
-After fixes land, the orchestrator presents a concise summary to the user covering:
+## Risks / open questions
+- [Anything needing user input, or "None"]
+```
 
-- **Fixed:** Critical issues resolved and Suggestions applied.
-- **Not fixed / deferred:** review findings intentionally skipped, each with a reason.
-- **Plan coverage:** which planned deliverables are done, and which were not done (with why).
-- **Manual testing needed:** call out anything that should be verified by hand (e.g. visual/UX checks, accessibility/AXE, i18n rendering, flows not covered by automated tests, mock-server interactions). Be specific about what to click/check.
+- Ask the subagent to return the complete plan and any open questions.
 
-Keep it scannable. This summary is the deliverable of the skill.
+Record the planning subagent's **agent ID** if the user requests plan revisions — `resume` it with feedback instead of starting over.
+
+## Step 2: Present plan and get approval
+
+1. Present the plan to the user clearly (the numbered **Deliverables** list is what implement-review will track).
+2. If there are open questions, resolve them with the user before proceeding.
+3. **Do not start implementation until the user approves the plan** (explicit "go ahead", "approved", or equivalent). If they want changes, `resume` the planning subagent with their feedback and repeat this step.
+
+Once approved, restate the deliverables as the approved plan for the next phase.
+
+## Steps 3–6: Implement, review, fix, summarize
+
+Read and follow [implement-review/SKILL.md](implement-review/SKILL.md) using the approved plan from Step 2.
+
+- The implement-review preconditions are satisfied once the plan is approved and you remain on `auto` in Agent mode.
+- Start at implement-review **Step 1** (dev subagent implementation). Do not re-run planning.
+- The **final summary** (implement-review Step 4) is the deliverable of this skill.
 
 ## Notes
 
-- Always reuse the single dev subagent across Steps 1 and 3 so it keeps the context of what it built.
-- The review subagent is independent and read-only — it must not modify code.
-- If the orchestrator drifts off `auto` or no plan is approved, return to Preconditions before continuing.
+- Planning subagent: read-only, Opus, no implementation.
+- Implementation and fix subagent: auto model (inherit from orchestrator), same subagent reused for fixes.
+- Review subagent: read-only, Opus, angular-code-review skill.
+- If the user already has an approved plan and only wants implementation, use [implement-review](implement-review/SKILL.md) directly instead of this skill.

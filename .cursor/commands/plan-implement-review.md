@@ -1,12 +1,12 @@
 ---
 name: 'plan-implement-review'
-description: 'Run the plan-driven implement → review → fix → summary loop. Use after a plan is approved to implement it in a dev subagent, review with an Opus subagent (/angular-code-review), fix findings, then summarize.'
+description: 'Full feature workflow from user instructions: Opus plans (Plan mode), user approves, then implement → review → fix → summarize via implement-review.'
 ---
 
-Read and follow the skill at `.cursor/skills/plan-implement-review/SKILL.md`, then execute its workflow on the currently approved plan.
+Read and follow the skill at `.cursor/skills/plan-implement-review/SKILL.md`, then execute its workflow on the user's instructions.
 
 Before doing anything else, verify the skill's preconditions:
-1. An approved plan exists (from Plan mode / this conversation). If not, stop and ask for one.
-2. You (the orchestrator) are running the `auto` model. State your current model; if it is not `auto`, stop and ask the user to switch before continuing.
+1. The user has stated what they want built or changed. If not, stop and ask.
+2. You (the orchestrator) are running the `auto` model in Agent mode. State your current model and mode; if not `auto` in Agent mode, stop and ask the user to switch before continuing.
 
-Then proceed through the skill's steps: implement in the dev subagent (auto), review in an Opus subagent, fix in the same dev subagent, and write the final summary (fixed / not fixed / plan coverage / manual testing needed).
+Then proceed: Opus planning subagent (read-only Plan mode) → present plan and get approval → follow `.cursor/skills/implement-review/SKILL.md` for implement (auto dev subagent) → Opus review → dev fixes → final summary.
