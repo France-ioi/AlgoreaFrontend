@@ -75,6 +75,15 @@ function pctsAtTime(t: number, sortedEntries: ScoreDistributionEntry[]): Record<
   return Object.fromEntries(sortedEntries.map(e => [ e.score, e.pctByTime[tStr] ?? 0 ]));
 }
 
+function isBucketRepresented(bucket: number, sortedEntries: ScoreDistributionEntry[]): boolean {
+  return PATH_TIMES.some(t => {
+    const pcts = pctsAtTime(t, sortedEntries);
+    const bottom = cumulativeBottomOf(bucket, pcts);
+    const top = bucket === 100 ? 100 : cumulativeBottomOf(bucket + 10, pcts);
+    return top > bottom;
+  });
+}
+
 @Component({
   selector: 'alg-score-over-time-chart',
   templateUrl: './score-over-time-chart.component.html',
@@ -127,6 +136,11 @@ export class ScoreOverTimeChartComponent {
         pathD: `M${topPath} L${bottomPath} Z`,
       };
     });
+  });
+
+  readonly legendAreas = computed<ChartArea[]>(() => {
+    const sorted = this.sortedEntries();
+    return this.areas().filter(area => isBucketRepresented(area.bucket, sorted));
   });
 
   readonly tooltip = computed<TooltipData | null>(() => {
