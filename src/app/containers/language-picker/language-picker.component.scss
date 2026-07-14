@@ -1,0 +1,28 @@
+@use 'src/assets/scss/functions';
+
+.compact-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compact-trigger-icon {
+  font-size: functions.toRem(20);
+  color: var(--alg-primary-color, #0f61ff);
+}
+
+.lang-tag {
+  position: absolute;
+  right: functions.toRem(-5);
+  bottom: functions.toRem(-6);
+  min-width: functions.toRem(16);
+  padding: 0 functions.toRem(1);
+  border-radius: functions.toRem(4);
+  background-color: var(--alg-primary-color, #0f61ff);
+  color: var(--alg-white-color, #fff);
+  font-size: functions.toRem(10);
+  font-weight: 600;
+  line-height: functions.toRem(15);
+  text-align: center;
+}

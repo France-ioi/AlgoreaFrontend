@@ -7,15 +7,23 @@
 
 .no-left-border {
   padding-left: functions.toRem(16);
+
+  &:has(.lang-button) {
+    padding-left: functions.toRem(6);
+  }
 }
 
 .with-left-border {
   padding-left: functions.toRem(16);
   border-bottom-left-radius: functions.toRem(16);
+
+  &:has(.lang-button) {
+    padding-left: functions.toRem(6);
+  }
 }
 
 .lang-button {
-  margin-right: functions.toRem(16);
+  margin-right: functions.toRem(6);
 }
 
 .controls-zone.rail {
@@ -23,6 +31,10 @@
   align-items: center;
   gap: functions.toRem(8);
   padding: functions.toRem(8) 0;
+
+  &:has(.lang-button) {
+    gap: functions.toRem(3);
+  }
 
   .lang-button {
     margin-right: 0;

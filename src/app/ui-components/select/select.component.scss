@@ -1,5 +1,18 @@
 @use 'src/assets/scss/functions';
 
+:host(.has-custom-trigger) {
+  button {
+    // ButtonComponent host binding overrides a no-caption class string; mirror no-caption stroke styles here.
+    padding: 0 functions.toRem(6) !important;
+    border-color: transparent;
+  }
+
+  button:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #0f61ff);
+    outline-offset: functions.toRem(1);
+  }
+}
+
 .select-button-label {
   text-transform: capitalize;
 }
