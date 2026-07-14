@@ -1,78 +1,70 @@
-import { isAChapter, ItemType } from './item-type';
+import { isAChapter, isASkill, ItemType, ItemTypeCategory } from './item-type';
+import { isLeftNavIconOption } from './left-nav-icon-options';
 
-/**
- * Phosphor icon names selectable as a custom left-nav icon (without the `ph-` prefix).
- * Grouped by theme so related icons appear together in the picker grid.
- */
-export const LEFT_NAV_ICON_OPTIONS = [
-  // Learning & content
-  'books',
-  'book-open-text',
-  'notepad',
-  'certificate',
-  'puzzle-piece',
-  'lightbulb-filament',
-  'video',
-  'brain',
-  // Programming & files
-  'file-py',
-  'file-cpp',
-  'file-c',
-  'code',
-  'code-block',
-  'laptop',
-  // Science & discovery
-  'test-tube',
-  'magnifying-glass',
-  'flashlight',
-  'robot',
-  'magic-wand',
-  // Achievement & games
-  'trophy',
-  'medal',
-  'ranking',
-  'strategy',
-  'target',
-  'seal-check',
-  'game-controller',
-  // Data & structure
-  'database',
-  'disc',
-  'network',
-  'graph',
-  'tree-structure',
-  // People & social
-  'user-rectangle',
-  'address-book',
-  'handshake',
-  'heart',
-  'headset',
-  // Media
-  'camera',
-  'images',
-  // Organization & lists
-  'list-checks',
-  'list-bullets',
-  'package',
-  // Tools & settings
-  'wrench',
-  'toolbox',
-  'gear',
-  'sliders-horizontal',
-  'sliders',
-  'cube',
-  // Misc
-  'info',
-  'question',
-  'archive',
-] as const;
+export { LEFT_NAV_ICON_OPTIONS, type LeftNavIconOption, isLeftNavIconOption } from './left-nav-icon-options';
 
-export type LeftNavIconOption = (typeof LEFT_NAV_ICON_OPTIONS)[number];
+export type LeftNavCategory = ItemTypeCategory | 'group';
+
+export type LeftNavElementType = 'chapter' | 'task' | 'skill-folder' | 'skill-leaf' | 'group';
+
+export interface ResolveLeftNavIconParams {
+  category: LeftNavCategory,
+  itemType?: ItemType,
+  hasChildren?: boolean,
+  leftNavIcon?: string | null,
+  locked?: boolean,
+}
 
 export function defaultLeftNavIcon(type: ItemType): string {
   return isAChapter({ type }) ? 'folder-simple' : 'file-text';
 }
 
-export function isLeftNavIconOption(value: string): value is LeftNavIconOption {
-  return (LEFT_NAV_ICON_OPTIONS as readonly string[]).includes(value);
+export function resolveLeftNavElementType(params: ResolveLeftNavIconParams): LeftNavElementType {
+  switch (params.category) {
+    case 'activity':
+      if (params.itemType) {
+        return isAChapter({ type: params.itemType }) ? 'chapter' : 'task';
+      }
+      return params.hasChildren ? 'chapter' : 'task';
+    case 'skill':
+      if (params.itemType) {
+        return isASkill({ type: params.itemType }) ? 'skill-folder' : 'skill-leaf';
+      }
+      return params.hasChildren ? 'skill-folder' : 'skill-leaf';
+    case 'group':
+      return 'group';
+  }
+}
+
+export function resolveLeftNavIcon(params: ResolveLeftNavIconParams): string {
+  return resolveLeftNavIconForType(resolveLeftNavElementType(params), params.locked ?? false, params.leftNavIcon);
+}
+
+export function resolveLeftNavIconForType(type: LeftNavElementType, locked = false, leftNavIcon?: string | null): string {
+  if (locked) {
+    switch (type) {
+      case 'chapter':
+        return 'ph-folder-simple-lock';
+      case 'task':
+        return 'ph-file-lock';
+      case 'skill-folder':
+      case 'skill-leaf':
+      case 'group':
+        break;
+    }
+  }
+  if (leftNavIcon && isLeftNavIconOption(leftNavIcon)) {
+    return `ph-${leftNavIcon}`;
+  }
+  switch (type) {
+    case 'chapter':
+    case 'skill-folder':
+      return 'ph-folder-simple';
+    case 'task':
+      return 'ph-file-text';
+    case 'skill-leaf':
+      return 'ph-graduation-cap';
+    case 'group':
+      return 'ph-users-three';
+  }
 }

@@ -26,6 +26,11 @@
   height: 100%;
 }
 
+.left-pane-title--stretch {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .left-pane-title-text {
   font-size: functions.toRem(16);
   color: var(--alg-black-color);
@@ -37,10 +42,12 @@
 .neighbor-widget {
   display: block;
   height: 100%;
+  flex-shrink: 0;
 }
 
 .breadcrumbs {
   flex: 1;
+  min-width: 0;
 }
 
 .margin-right {
@@ -66,6 +73,7 @@
   height: 100%;
   overflow: hidden;
   flex: 1;
+  min-width: 0;
 }
 
 .right-pane {
@@ -73,4 +81,5 @@
   align-items: center;
   overflow: hidden;
   height: 100%;
+  min-width: 0;
 }

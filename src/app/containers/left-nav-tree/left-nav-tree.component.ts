@@ -16,7 +16,7 @@ import {
   CdkTreeNodeOutlet,
   NestedTreeControl
 } from '@angular/cdk/tree';
-import { isLeftNavIconOption } from 'src/app/items/models/left-nav-icons';
+import { resolveLeftNavIconForType, LeftNavElementType } from 'src/app/items/models/left-nav-icons';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 
 interface TreeNode<T> {
@@ -146,7 +146,7 @@ export class LeftNavTreeComponent {
     node.data?.navigateTo(true);
   }
 
-  private typeForElement(e: NavTreeElement): string {
+  private typeForElement(e: NavTreeElement): LeftNavElementType {
     switch (this.elementType()) {
       case 'activity':
         if (e.itemType) {
@@ -167,35 +167,8 @@ export class LeftNavTreeComponent {
     return !!e.infoOnly && !e.requiresExplicitEntry;
   }
 
-  private iconForElementWithType(e: NavTreeElement, type: string): string {
-    return this.iconForType(type, this.isNavLocked(e), e.leftNavIcon);
-  }
-
-  private iconForType(type: string, locked = false, leftNavIcon?: string): string {
-    if (locked) {
-      switch (type) {
-        case 'chapter':
-          return 'ph-folder-simple-lock';
-        case 'task':
-          return 'ph-file-lock';
-      }
-    }
-    if (leftNavIcon && isLeftNavIconOption(leftNavIcon)) {
-      return `ph-${leftNavIcon}`;
-    }
-    switch (type) {
-      case 'chapter':
-      case 'skill-folder':
-        return 'ph-folder-simple';
-      case 'task':
-        return 'ph-file-text';
-      case 'skill-leaf':
-        return 'ph-graduation-cap';
-      case 'group':
-        return 'ph-users-three';
-      default:
-        return 'ph-files';
-    }
+  private iconForElementWithType(e: NavTreeElement, type: LeftNavElementType): string {
+    return resolveLeftNavIconForType(type, this.isNavLocked(e), e.leftNavIcon);
   }
 
   private isExpandableType(type: string, hasChildren: boolean): boolean {

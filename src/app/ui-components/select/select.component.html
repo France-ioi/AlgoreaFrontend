@@ -2,13 +2,17 @@
   type="button"
   class="{{ buttonStyleClass() }}"
   alg-button
-  [icon]="openAbove() ? 'ph ph-caret-up' : 'ph ph-caret-down'"
+  [icon]="caretIcon()"
+  [attr.aria-label]="triggerAriaLabel() ?? null"
   cdkOverlayOrigin
   #trigger="cdkOverlayOrigin"
   (click)="isOpen.set(!isOpen())"
 >
-  @if (selected()?.label; as label) {
-    <span class="select-button-label">{{ label }}</span>
+  <ng-content select="[algSelectTrigger]" />
+  @if (!hasCustomTrigger()) {
+    @if (selected()?.label; as label) {
+      <span class="select-button-label">{{ label }}</span>
+    }
   }
 </button>
 
@@ -24,7 +28,7 @@
   <div
     class="dropdown"
     [class.open-above]="openAbove()"
-    [style.width.px]="el.nativeElement.getBoundingClientRect().width"
+    [style.minWidth.px]="el.nativeElement.getBoundingClientRect().width"
   >
     <ng-content />
   </div>

@@ -1,44 +1,36 @@
 @use 'src/assets/scss/functions';
 
+:host(.has-custom-trigger) {
+  button {
+    // ButtonComponent host binding overrides a no-caption class string; mirror no-caption stroke styles here.
+    padding: 0 functions.toRem(6) !important;
+    border-color: transparent;
+  }
+
+  button:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #0f61ff);
+    outline-offset: functions.toRem(1);
+  }
+}
+
 .select-button-label {
   text-transform: capitalize;
 }
 
 .dropdown {
-  width: 100%;
+  width: max-content;
   position: relative;
   display: flex;
   flex-direction: column;
   margin-top: functions.toRem(10);
-  background-color: var(--alg-primary-color);
-  border-radius: functions.toRem(10);
-  border: none;
-  box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 functions.toRem(6) functions.toRem(10) 0 rgba(0, 0, 0, 0.2);
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: -.5rem;
-    left: 50%;
-    margin-left: -.5rem;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 .5rem .5rem .5rem;
-    border-color: transparent transparent var(--alg-primary-color)
-  }
+  background-color: var(--alg-white-color, #fff);
+  border: functions.toRem(1) solid var(--alg-border-light-color, rgba(0, 0, 0, 0.1));
+  border-radius: functions.toRem(8);
+  box-shadow: 0 functions.toRem(4) functions.toRem(12) rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 
   &.open-above {
     margin-top: 0;
     margin-bottom: functions.toRem(10);
-
-    &:before {
-      top: auto;
-      bottom: -.5rem;
-      border-width: .5rem .5rem 0 .5rem;
-      border-color: var(--alg-primary-color) transparent transparent transparent;
-    }
   }
 }

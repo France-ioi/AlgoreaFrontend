@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { LanguagePickerComponent } from './language-picker.component';
 import { LocaleService } from '../../services/localeService';
@@ -46,5 +47,54 @@ describe('LanguagePickerComponent', () => {
 
     fixture.componentRef.setInput('defaultLang', 'es');
     expect(component.current()).toBe('es');
+  });
+
+  it('should render labeled variant by default', () => {
+    fixture.detectChanges();
+    const select = fixture.debugElement.query(By.css('alg-select'));
+    const trigger = fixture.debugElement.query(By.css('button'));
+    expect(select.nativeElement.classList.contains('has-custom-trigger')).toBeFalse();
+    expect(trigger.nativeElement.querySelector('.ph-caret-down')).toBeTruthy();
+    expect(trigger.nativeElement.querySelector('.ph-globe')).toBeFalsy();
+  });
+
+  it('should map languages to full endonym display names', () => {
+    expect(component.languages).toEqual([
+      { label: 'English', value: 'en' },
+      { label: 'français', value: 'fr' },
+    ]);
+  });
+
+  it('should render labeled variant with full language name in trigger', async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const trigger = fixture.debugElement.query(By.css('button'));
+    expect(trigger.nativeElement.querySelector('.select-button-label')?.textContent).toBe('English');
+  });
+
+  it('should render compact variant with globe icon and language tag', () => {
+    fixture.componentRef.setInput('variant', 'compact');
+    fixture.detectChanges();
+    const trigger = fixture.debugElement.query(By.css('button'));
+    expect(trigger.nativeElement.querySelector('.ph-globe')).toBeTruthy();
+    expect(trigger.nativeElement.querySelector('.lang-tag')?.textContent).toBe('EN');
+    expect(trigger.nativeElement.querySelector('.ph-caret-down')).toBeFalsy();
+    expect(trigger.nativeElement.getAttribute('aria-label')).toContain('Change language');
+  });
+
+  it('should return empty currentLanguageName when current is unset', () => {
+    component.current.set('');
+    expect(component.currentLanguageName()).toBe('');
+  });
+
+  it('should fallback to uppercased tag when DisplayNames is unavailable', () => {
+    spyOn(Intl, 'DisplayNames').and.throwError('unsupported');
+    const fallbackFixture = TestBed.createComponent(LanguagePickerComponent);
+    const fallbackComponent = fallbackFixture.componentInstance;
+    expect(fallbackComponent.languages).toEqual([
+      { label: 'EN', value: 'en' },
+      { label: 'FR', value: 'fr' },
+    ]);
   });
 });

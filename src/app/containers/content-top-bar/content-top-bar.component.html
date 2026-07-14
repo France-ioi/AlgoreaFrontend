@@ -34,7 +34,10 @@
       hideHeader: hideHeader$,
     } as behaviourInfo">
       @if ((!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) && isTitleSectionReady()) {
-        <div class="left-pane-title margin-right">
+        <div
+          class="left-pane-title margin-right"
+          [class.left-pane-title--stretch]="showBreadcrumbs() && !showPlatformLogo()"
+        >
           @if (showPlatformLogo()) {
             <alg-platform-logo />
           } @else {

@@ -3,10 +3,17 @@
   <alg-select
     [ngModel]="current()"
     [openAbove]="openAbove()"
+    [triggerAriaLabel]="variant() === 'compact' ? triggerAriaLabel() : undefined"
     (ngModelChange)="current.set($event)"
     (change)="languageChanged($event)"
   >
-    @for (lang of languages; track $index) {
+    @if (variant() === 'compact') {
+      <span algSelectTrigger class="compact-trigger">
+        <span class="ph ph-globe compact-trigger-icon" aria-hidden="true"></span>
+        <span class="lang-tag">{{ current() | uppercase }}</span>
+      </span>
+    }
+    @for (lang of languages; track lang.value) {
       <alg-select-option [value]="lang">
         {{ lang.label }}
       </alg-select-option>

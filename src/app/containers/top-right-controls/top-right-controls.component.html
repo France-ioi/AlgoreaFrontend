@@ -12,7 +12,7 @@
     <alg-top-right-menu [styleClass]="topRightMenuStyleClass()" />
   } @else {
     @if (languages.length > 1) {
-      <alg-language-picker class="lang-button" [openAbove]="layout() === 'rail'" />
+      <alg-language-picker class="lang-button" [openAbove]="layout() === 'rail'" [variant]="'compact'" />
     }
     @if (layout() === 'rail') {
       <button

@@ -2,6 +2,7 @@ import {
   afterRenderEffect,
   Component,
   computed,
+  contentChild,
   contentChildren,
   ElementRef,
   forwardRef,
@@ -11,6 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { SelectTriggerDirective } from 'src/app/ui-components/select/select-trigger.directive';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import {
   ControlValueAccessor,
@@ -29,6 +31,10 @@ import { SelectedOptionService, SelectOption } from 'src/app/ui-components/selec
   selector: 'alg-select',
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
+  host: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    '[class.has-custom-trigger]': 'hasCustomTrigger()',
+  },
   imports: [
     ButtonComponent,
     CdkOverlayOrigin,
@@ -51,7 +57,16 @@ export class SelectComponent implements ControlValueAccessor {
     this.options().find(o => o.value().value === this.selectedValue())?.value()
   );
   buttonStyleClass = input('select-button stroke size-s');
+  triggerAriaLabel = input<string>();
   openAbove = input(false);
+  private customTrigger = contentChild(SelectTriggerDirective);
+  hasCustomTrigger = computed(() => this.customTrigger() !== undefined);
+  caretIcon = computed((): string | undefined => {
+    if (this.hasCustomTrigger()) {
+      return undefined;
+    }
+    return this.openAbove() ? 'ph ph-caret-up' : 'ph ph-caret-down';
+  });
   isOpen = signal<boolean>(false);
   positions = computed<ConnectedPosition[]>(() => (this.openAbove()
     ? [
