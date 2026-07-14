@@ -126,7 +126,8 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.showOverlaySubject$.complete();
-    this.detachOverlay();
+    // dispose() tears down the overlay host; detach() only removes the portal and leaves it in the DOM.
+    this.overlayRef.dispose();
   }
 
   private hoverShowEvents$(): Observable<Event | undefined> {

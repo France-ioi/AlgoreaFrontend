@@ -55,4 +55,21 @@ describe('TooltipDirective', () => {
 
     expect(document.querySelector('.cdk-overlay-pane alg-tooltip')).not.toBeNull();
   });
+
+  it('removes overlay host from the CDK container on destroy', () => {
+    stubHoverMediaQuery(true);
+
+    fixture = TestBed.createComponent(TooltipTestHostComponent);
+    fixture.detectChanges();
+    trigger = fixture.nativeElement.querySelector('button') as HTMLButtonElement;
+
+    trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+    fixture.detectChanges();
+
+    expect(document.querySelector('.cdk-overlay-container .cdk-overlay-connected-position-bounding-box')).not.toBeNull();
+
+    fixture.destroy();
+
+    expect(document.querySelector('.cdk-overlay-container .cdk-overlay-connected-position-bounding-box')).toBeNull();
+  });
 });
