@@ -39,7 +39,6 @@ import { SelectedOptionService, SelectOption } from 'src/app/ui-components/selec
     ButtonComponent,
     CdkOverlayOrigin,
     CdkConnectedOverlay,
-    SelectTriggerDirective,
   ],
   providers: [
     {
