@@ -1,8 +1,11 @@
 
-export type ContentBreadcrumbs = {
+export interface ContentBreadcrumb {
   title: string,
   navigateTo?: () => void,
-}[];
+  icon?: string,
+}
+
+export type ContentBreadcrumbs = ContentBreadcrumb[];
 
 /*
  * Returns, among the given list of breadcrumbs given as path, the one which is the closest from the base.

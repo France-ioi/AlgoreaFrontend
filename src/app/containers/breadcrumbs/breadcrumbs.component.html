@@ -11,13 +11,19 @@
         <li
           class="breadcrumb-item"
           [class.active]="last"
+          [class.icon-only]="last && breadcrumb.icon"
           [class.routable]="breadcrumb.navigateTo"
           (click)="onElementClick(breadcrumb)"
           [algTooltip]="breadcrumb.title"
           tooltipPosition="bottom"
           tooltipStyleClass="secondary"
         >
-          <span class="label">{{ breadcrumb.title }}</span>
+          @if (last && breadcrumb.icon) {
+            <i class="breadcrumb-icon ph" [class]="breadcrumb.icon" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ breadcrumb.title }}</span>
+          } @else {
+            <span class="label">{{ breadcrumb.title }}</span>
+          }
         </li>
       }
     </ul>

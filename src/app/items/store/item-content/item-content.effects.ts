@@ -7,6 +7,7 @@ import { itemContentStore } from './item-content.store';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { fromCurrentContent } from 'src/app/store/navigation/current-content/current-content.store';
 import { formatBreadcrumbs } from '../../models/item-breadcrumbs';
+import { typeCategoryOfItem } from '../../models/item-type';
 
 const selectCurrentContent = createSelector(
   itemContentStore.selectActiveContentRoute,
@@ -23,7 +24,10 @@ export const dispatchCurrentContentEffect = createEffect(
     filter(isNotNull),
     map(({ route, breadcrumbs, item }) => fromCurrentContent.contentPageActions.changeContent({
       route: route,
-      breadcrumbs: breadcrumbs ? formatBreadcrumbs(breadcrumbs, itemRouter) : undefined,
+      breadcrumbs: breadcrumbs ? formatBreadcrumbs(breadcrumbs, itemRouter, item ? {
+        category: typeCategoryOfItem(item),
+        item,
+      } : undefined) : undefined,
       title: item?.string.title ?? undefined,
     }))
   ),

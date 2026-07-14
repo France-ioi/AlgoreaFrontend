@@ -12,7 +12,8 @@ test('visit an already-started chapter', async ({ page }) => {
 
   await test.step('check breadcrumbs', async () => {
     await expect.soft(page.locator('.breadcrumb-list li:nth-child(1)')).toContainText('Algorea Testing Content for devs');
-    await expect.soft(page.locator('.breadcrumb-list li:nth-child(3)')).toContainText('Tasks Showcase');
+    await expect.soft(page.locator('.breadcrumb-list li:nth-child(3) .visually-hidden')).toHaveText('Tasks Showcase');
+    await expect.soft(page.locator('.breadcrumb-list li:nth-child(3) .breadcrumb-icon')).toBeVisible();
   });
 
   await test.step('check content', async () => {

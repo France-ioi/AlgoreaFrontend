@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { resolveLeftNavIcon } from 'src/app/items/models/left-nav-icons';
 import { ContentBreadcrumbs } from 'src/app/models/content/content-breadcrumbs';
 import { GroupRoute } from 'src/app/models/routing/group-route';
 import { GroupRouter } from 'src/app/models/routing/group-router';
@@ -16,8 +17,14 @@ interface GroupBreadcrumb extends z.infer<typeof breadcrumbSchema> {
 export type GroupBreadcrumbs = GroupBreadcrumb[];
 
 export function formatBreadcrumbs(breadcrumbs: GroupBreadcrumbs, groupRouter: GroupRouter): ContentBreadcrumbs {
-  return breadcrumbs.map(breadcrumb => ({
+  const formatted: ContentBreadcrumbs = breadcrumbs.map(breadcrumb => ({
     title: breadcrumb.name,
     navigateTo: (): void => groupRouter.navigateTo(breadcrumb.route),
   }));
+
+  if (formatted.length > 0) {
+    formatted[formatted.length - 1]!.icon = resolveLeftNavIcon({ category: 'group' });
+  }
+
+  return formatted;
 }

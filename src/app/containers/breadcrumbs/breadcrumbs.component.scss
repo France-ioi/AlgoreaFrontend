@@ -54,4 +54,24 @@
     white-space: nowrap;
     flex: 1;
   }
+
+  &.icon-only {
+    flex: none;
+
+    .breadcrumb-icon {
+      font-size: functions.toRem(16);
+    }
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 }
