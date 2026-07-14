@@ -1,8 +1,51 @@
-<div class="breadcrumb-container">
+<div class="breadcrumb-container" #breadcrumbContainer>
   @let breadcrumbsVal = breadcrumbs();
   @if (breadcrumbsVal) {
-    <ul class="breadcrumb-list"> <!-- TODO: handle "smart" ellipsis (as in https://codepen.io/shippin/pen/YrwrYa) -->
-      @for (breadcrumb of breadcrumbsVal; track $index; let last = $last, first = $first) {
+    <ul class="breadcrumb-measure-list" #measureList aria-hidden="true">
+      @for (breadcrumb of breadcrumbsVal; track $index) {
+        <li
+          class="breadcrumb-item measure-item"
+          [class.icon-only]="isLastBreadcrumb(breadcrumb) && breadcrumb.icon"
+        >
+          @if (isLastBreadcrumb(breadcrumb) && breadcrumb.icon) {
+            <i class="breadcrumb-icon ph" [class]="breadcrumb.icon" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ breadcrumb.title }}</span>
+          } @else {
+            <span class="label">{{ breadcrumb.title }}</span>
+          }
+        </li>
+      }
+      <li class="breadcrumb-item separator measure-separator">
+        <i class="ph ph-caret-right separator-icon"></i>
+      </li>
+      <li class="breadcrumb-item collapsed-trigger-item measure-ellipsis">
+        <button type="button" class="collapsed-trigger" tabindex="-1" aria-hidden="true">
+          <span class="collapsed-trigger-label" aria-hidden="true">…</span>
+        </button>
+      </li>
+    </ul>
+
+    <ul class="breadcrumb-list">
+      @if (collapsedCount() > 0) {
+        <li class="breadcrumb-item collapsed-trigger-item">
+          <button
+            type="button"
+            class="collapsed-trigger"
+            #collapsedMenuTrigger="cdkMenuTriggerFor"
+            [cdkMenuTriggerFor]="collapsedMenu"
+            (mouseenter)="onCollapsedMenuMouseEnter()"
+            (mouseleave)="onCollapsedMenuMouseLeave()"
+            [attr.aria-label]="showHiddenBreadcrumbsAriaLabel"
+          >
+            <span class="collapsed-trigger-label" aria-hidden="true">…</span>
+          </button>
+        </li>
+        <li class="breadcrumb-item separator">
+          <i class="ph ph-caret-right separator-icon"></i>
+        </li>
+      }
+
+      @for (breadcrumb of visibleBreadcrumbs(); track $index; let last = $last, first = $first) {
         @if (!first) {
           <li class="breadcrumb-item separator" [class.active]="last">
             <i class="ph ph-caret-right separator-icon"></i>
@@ -13,6 +56,7 @@
           [class.active]="last"
           [class.icon-only]="last && breadcrumb.icon"
           [class.routable]="breadcrumb.navigateTo"
+          [class.label-ellipsis]="last && lastItemEllipsis()"
           (click)="onElementClick(breadcrumb)"
           [algTooltip]="breadcrumb.title"
           tooltipPosition="bottom"
@@ -29,3 +73,27 @@
     </ul>
   }
 </div>
+
+<ng-template #collapsedMenu>
+  <div
+    class="collapsed-breadcrumbs-menu"
+    cdkMenu
+    (mouseenter)="onCollapsedMenuMouseEnter()"
+    (mouseleave)="onCollapsedMenuMouseLeave()"
+  >
+    <ul class="collapsed-breadcrumbs-menu-list">
+      @for (breadcrumb of collapsedBreadcrumbs(); track $index) {
+        <li class="collapsed-breadcrumbs-menu-entry">
+          <button
+            type="button"
+            class="collapsed-breadcrumbs-menu-item"
+            cdkMenuItem
+            (click)="onCollapsedMenuItemClick(breadcrumb)"
+          >
+            {{ breadcrumb.title }}
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
