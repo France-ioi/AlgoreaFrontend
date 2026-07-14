@@ -28,7 +28,7 @@
   <div
     class="dropdown"
     [class.open-above]="openAbove()"
-    [style.width.px]="el.nativeElement.getBoundingClientRect().width"
+    [style.minWidth.px]="el.nativeElement.getBoundingClientRect().width"
   >
     <ng-content />
   </div>

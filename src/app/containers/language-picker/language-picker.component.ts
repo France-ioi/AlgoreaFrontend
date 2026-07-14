@@ -21,16 +21,16 @@ export class LanguagePickerComponent {
   variant = input<'labeled' | 'compact'>('labeled');
   changeLang = output<string>();
 
-  readonly languages = this.localeService.languages.map(({ tag }) => ({ label: tag, value: tag }));
+  readonly languages = this.localeService.languages.map(({ tag }) => ({
+    label: this.languageDisplayName(tag),
+    value: tag,
+  }));
   // linkedSignal (not computed): recomputes when defaultLang() changes so platform-settings can
   // pre-select the user's default language, while user picks via ngModel still persist until then.
   current = linkedSignal(() => this.defaultLang() ?? this.localeService.currentLang?.tag);
   currentLanguageName = computed((): string => {
     const tag = this.current();
-    if (!tag) {
-      return '';
-    }
-    return new Intl.DisplayNames([ tag ], { type: 'language' }).of(tag) ?? tag.toUpperCase();
+    return tag ? this.languageDisplayName(tag) : '';
   });
   triggerAriaLabel = computed((): string =>
     $localize`:@@languagePicker.changeLanguage:Change language, current: ${this.currentLanguageName()}:currentLanguage:`
@@ -41,6 +41,15 @@ export class LanguagePickerComponent {
 
     if (this.redirectOnChange()) {
       this.localeService.navigateTo(lang.value);
+    }
+  }
+
+  // [tag] as the locale list is intentional: each language is named in its own language (endonym).
+  private languageDisplayName(tag: string): string {
+    try {
+      return new Intl.DisplayNames([ tag ], { type: 'language' }).of(tag) ?? tag.toUpperCase();
+    } catch {
+      return tag.toUpperCase();
     }
   }
 
