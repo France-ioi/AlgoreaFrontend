@@ -2,7 +2,7 @@
 
 :host {
   height: functions.toRem(57);
-  padding: 0 var(--alg-space-size-3);
+  padding: 0 functions.toRem(12) 0 var(--alg-space-size-3);
   display: flex;
   align-items: center;
   border-bottom: 0.1rem solid var(--alg-light-color);
