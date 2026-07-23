@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { map, skip, switchMap, take } from 'rxjs/operators';
 import { bestAttemptFromResults, defaultAttemptId } from 'src/app/items/models/attempts';
@@ -36,6 +37,7 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
     /* reload the item menus when observed group changes */
     this.store.select(fromObservation.selectObservedGroupId).pipe(
       skip(1),
+      takeUntilDestroyed(),
     ).subscribe(() => {
       this.retry();
     });
