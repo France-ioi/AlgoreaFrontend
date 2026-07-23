@@ -1,6 +1,6 @@
 import { createEffect } from '@ngrx/effects';
 import { inject } from '@angular/core';
-import { combineLatest, tap, withLatestFrom, fromEvent, filter, pairwise, EMPTY } from 'rxjs';
+import { combineLatest, withLatestFrom, fromEvent, filter, pairwise, EMPTY } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { fromForum } from '..';
 import { fromWebsocket } from 'src/app/store/websocket';
@@ -8,6 +8,7 @@ import { WebsocketClient } from 'src/app/data-access/websocket-client.service';
 import { subscribeAction, unsubscribeAction } from '../../data-access/websocket-messages/threads-outbound-actions';
 import { APPCONFIG } from 'src/app/config';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
+import { runSideEffectSafely } from 'src/app/utils/operators/run-side-effect-safely';
 
 /**
  * Unsubscribe from the current thread on window.beforeunload.
@@ -21,12 +22,12 @@ export const threadUnsubscriptionOnUnloadEffect = createEffect(
   ) => (config.featureFlags.enableForum ?
     fromEvent(window, 'beforeunload').pipe(
       withLatestFrom(store.select(fromForum.selectCurrentThread)),
-      tap(([ , state ]) => {
+      runSideEffectSafely(([ , state ]) => {
         const thread = state.info.data;
         if (thread && state.visible) {
           websocketClient.send(unsubscribeAction(thread.token));
         }
-      })
+      }),
     ) : EMPTY),
   { functional: true, dispatch: false }
 );
@@ -53,9 +54,9 @@ export const threadUnsubscriptionEffect = createEffect(
         const threadCleared = !!(prev.id && !curr.id);
         return visibilityChanged || threadChanged || threadCleared;
       }),
-      tap(([ prev ]) => {
+      runSideEffectSafely(([ prev ]) => {
         websocketClient.send(unsubscribeAction(prev.info.data!.token));
-      })
+      }),
     ) : EMPTY),
   { functional: true, dispatch: false }
 );
@@ -76,9 +77,9 @@ export const threadSubscriptionEffect = createEffect(
       store$.select(fromForum.selectVisible),
     ]).pipe(
       filter(([ token, wsOpen, visible ]) => isNotUndefined(token) && wsOpen && visible),
-      tap(([ token ]) => {
+      runSideEffectSafely(([ token ]) => {
         websocketClient.send(subscribeAction(token!));
-      })
+      }),
     ) : EMPTY),
   { functional: true, dispatch: false }
 );
