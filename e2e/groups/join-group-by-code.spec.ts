@@ -1,96 +1,34 @@
-import { test } from './fixture';
-import { initAsDemoUser, initAsUsualUser } from '../helpers/e2e_auth';
+import { test } from './create-group-fixture';
+import { initAsDemoUser, initAsTesterUser } from '../helpers/e2e_auth';
 import { convertDateToString } from 'src/app/utils/input-date';
 import { DAYS } from 'src/app/utils/duration';
 
-const groupUrl = '/groups/by-id/7603612676907243141;p=/settings';
-const groupName = 'E2EJoinByCode';
-const code = '8mp35xuh6f';
+// Create + join + empty members + delete exceeds the default 30s budget.
+test.setTimeout(60_000);
 
-test.beforeEach(async ({ page, groupSettingsPage, minePage }) => {
-  await initAsUsualUser(page);
-  await groupSettingsPage.goto(groupUrl);
-
-  await test.step('checks is required approvals section visible', async () => {
-    await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
-  });
-
-  await test.step('checks if any required approvals enabled then turns it off', async () => {
-    const isLockMembershipInputDateEnabled = await groupSettingsPage.isLockMembershipInputDateVisible();
-    const isManagersCanAccessMemberPersonalInformationEnabled
-      = !await groupSettingsPage.isManagersCanAccessMemberPersonalInformationSelected('No');
-
-    if (isLockMembershipInputDateEnabled) {
-      await groupSettingsPage.disableLockMembershipUntilInputDate();
-    }
-
-    if (isManagersCanAccessMemberPersonalInformationEnabled) {
-      await groupSettingsPage.selectManagersCanAccessMemberPersonalInformation('No');
-    }
-
-    if (isLockMembershipInputDateEnabled || isManagersCanAccessMemberPersonalInformationEnabled) {
-      await groupSettingsPage.saveChangesAndCheckNotification();
-    }
-  });
-
-  await test.step('checks if demo user is member of group then do leave it', async () => {
-    await initAsDemoUser(page);
-    await minePage.goto();
-    await minePage.waitGroupMembershipsResponse();
-    await minePage.checkHeaderIsVisible();
-    await minePage.checkJoinedGroupsSectionIsVisible();
-    if (await minePage.isUserJoinedToGroup(groupName)) {
-      await minePage.leaveGroup(groupName);
-    }
-  });
+test.beforeEach(async ({ page }) => {
+  await initAsTesterUser(page);
 });
 
-test.afterEach(async ({ page, groupSettingsPage, minePage }) => {
-  await initAsUsualUser(page);
-  await groupSettingsPage.goto(groupUrl);
-
-  await test.step('checks is required approvals section visible', async () => {
-    await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
-  });
-
-  await test.step('checks if any required approvals enabled then turns it off', async () => {
-    const isLockMembershipInputDateEnabled = await groupSettingsPage.isLockMembershipInputDateVisible();
-    const isManagersCanAccessMemberPersonalInformationEnabled
-      = !await groupSettingsPage.isManagersCanAccessMemberPersonalInformationSelected('No');
-
-    if (isLockMembershipInputDateEnabled) {
-      await groupSettingsPage.disableLockMembershipUntilInputDate();
-    }
-
-    if (isManagersCanAccessMemberPersonalInformationEnabled) {
-      await groupSettingsPage.selectManagersCanAccessMemberPersonalInformation('No');
-    }
-
-    if (isLockMembershipInputDateEnabled || isManagersCanAccessMemberPersonalInformationEnabled) {
-      await groupSettingsPage.saveChangesAndCheckNotification();
-    }
-  });
-
-  await test.step('checks if demo user is member of group then do leave it', async () => {
-    await initAsDemoUser(page);
-    await minePage.goto();
-    await minePage.waitGroupMembershipsResponse();
-    await minePage.checkHeaderIsVisible();
-    await minePage.checkJoinedGroupsSectionIsVisible();
-    if (await minePage.isUserJoinedToGroup(groupName)) {
-      await minePage.leaveGroup(groupName);
-    }
-  });
+test.afterEach(({ deleteGroup }) => {
+  if (!deleteGroup) throw new Error('Unexpected: missed deleted group data');
 });
 
+// Demo user invitations/memberships are shared mutable state across these tests.
 test(
   'checks join group by code with "Lock membership until a given date" required approval',
   { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
-    await initAsUsualUser(page);
-    await groupSettingsPage.goto(groupUrl);
+  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation, createGroup }) => {
+    if (!createGroup) throw new Error('The group is not created');
+    const { groupId, groupName } = createGroup;
+
+    const code = await test.step('generate join code', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/members`);
+      return groupSettingsPage.generateJoinCode();
+    });
 
     await test.step('checks is required approvals section visible', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/settings`);
       await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
     });
 
@@ -133,11 +71,17 @@ test(
 test(
   'checks join group by code with "Managers can access member\'s personal information" required approval',
   { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
-    await initAsUsualUser(page);
-    await groupSettingsPage.goto(groupUrl);
+  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation, createGroup }) => {
+    if (!createGroup) throw new Error('The group is not created');
+    const { groupId, groupName } = createGroup;
+
+    const code = await test.step('generate join code', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/members`);
+      return groupSettingsPage.generateJoinCode();
+    });
 
     await test.step('checks the required approvals section is visible', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/settings`);
       await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
     });
 
@@ -175,11 +119,17 @@ test(
 test(
   'checks join group by code with all required approvals',
   { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
-    await initAsUsualUser(page);
-    await groupSettingsPage.goto(groupUrl);
+  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation, createGroup }) => {
+    if (!createGroup) throw new Error('The group is not created');
+    const { groupId, groupName } = createGroup;
+
+    const code = await test.step('generate join code', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/members`);
+      return groupSettingsPage.generateJoinCode();
+    });
 
     await test.step('checks the required approvals section is visible', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/settings`);
       await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
     });
 
@@ -224,11 +174,17 @@ test(
 test(
   'checks cancel join group confirmation modal',
   { tag: '@no-parallelism' },
-  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation }) => {
-    await initAsUsualUser(page);
-    await groupSettingsPage.goto(groupUrl);
+  async ({ page, groupSettingsPage, minePage, joinGroupConfirmation, createGroup }) => {
+    if (!createGroup) throw new Error('The group is not created');
+    const { groupId, groupName } = createGroup;
+
+    const code = await test.step('generate join code', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/members`);
+      return groupSettingsPage.generateJoinCode();
+    });
 
     await test.step('checks the required approvals section is visible', async () => {
+      await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/settings`);
       await groupSettingsPage.checkRequiredApprovalsSectionIsVisible();
     });
 

@@ -1,4 +1,6 @@
+import { expect } from '@playwright/test';
 import { test as base } from './fixture';
+import { initAsTesterUser } from '../helpers/e2e_auth';
 
 interface GroupData {
   groupName: string,
@@ -22,11 +24,19 @@ export const test = base.extend<CreateGroupFixtures>({
     const groupId = await groupMembersPage.createChild(groupName);
     if (groupId) await use({ groupName, groupId });
   },
-  deleteGroup: async ({ groupSettingsPage, minePage, createGroup }, use) => {
+  deleteGroup: async ({ page, groupSettingsPage, groupMembersPage, minePage, createGroup }, use) => {
     if (!createGroup) return;
-    await groupSettingsPage.goto(`/groups/by-id/${ createGroup.groupId };p=/settings`);
-    await groupSettingsPage.waitForGroupResponse(createGroup.groupId);
+    // Ensure the deleter is a group manager regardless of the test's end-state auth.
+    await initAsTesterUser(page);
+    // Delete stays disabled while User children remain (plan assumed only subgroups block it).
+    await groupMembersPage.removeAllMembersIfAny(createGroup.groupId);
+    await Promise.all([
+      groupSettingsPage.goto(`/groups/by-id/${ createGroup.groupId };p=/settings`),
+      groupSettingsPage.waitForGroupResponse(createGroup.groupId),
+    ]);
     await groupSettingsPage.checksIsDeleteButtonVisible();
+    // Hard wait: soft-enabled check would still proceed to a hung click if disabled.
+    await expect(groupSettingsPage.deleteGroupBtnLocator).toBeEnabled();
     await groupSettingsPage.deleteGroup();
     await minePage.checkHeaderIsVisible();
     await groupSettingsPage.goto(`/groups/by-id/${ createGroup.groupId };p=/settings`);
