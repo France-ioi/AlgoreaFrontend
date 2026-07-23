@@ -14,7 +14,7 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
   page,
   groupMembersPage,
   groupSettingsPage,
-  toast,
+  minePage,
 }) => {
   await initAsTesterUser(page);
   await Promise.all([
@@ -30,6 +30,7 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
 
   const groupNamesForRemove = (await Promise.all((await leftNavRootGroup.getByText(regExpGroup).all())
     .map(item => item.textContent())))
+    .map(text => text?.trim())
     .filter(isNotNull)
     .filter(itemName => {
       const createdAtResult = itemName.match(/\d{13}/);
@@ -38,9 +39,14 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
       return Date.now() - Number(createdAt) > HOURS;
     });
 
-  await leftNavFirstChild.click();
-
   for (const groupName of groupNamesForRemove) {
+    // After a prior delete we land on /groups/mine — reopen root so left nav is reliable.
+    await Promise.all([
+      page.goto(`groups/by-id/${rootGroupId};p=/members`),
+      page.waitForResponse(`${apiUrl}/groups/${rootGroupId}/navigation`),
+    ]);
+    await groupMembersPage.checksIsHeaderVisible(rootGroupName);
+
     const leftNavGroupLocator = page.locator('cdk-nested-tree-node').getByText(groupName).first();
     await expect.soft(leftNavGroupLocator).toBeVisible();
     await leftNavGroupLocator.click();
@@ -60,10 +66,8 @@ test('checks old e2e groups and remove it', { tag: '@no-parallelism' }, async ({
     // Hard wait: soft-enabled check would still proceed to a hung click if disabled.
     await expect(groupSettingsPage.deleteGroupBtnLocator).toBeEnabled();
     await groupSettingsPage.deleteGroup();
-    await groupSettingsPage.checksIsDeleteButtonDisabled();
-    await Promise.all([
-      toast.checksIsMessageVisible(`You have deleted "${ groupName }"`),
-      page.waitForResponse(`${apiUrl}/groups/${rootGroupId}/navigation`),
-    ]);
+    await minePage.checkHeaderIsVisible();
+    await groupSettingsPage.goto(`/groups/by-id/${ groupId };p=/settings`);
+    await groupSettingsPage.isNotAllowToViewMessageVisible();
   }
 });
