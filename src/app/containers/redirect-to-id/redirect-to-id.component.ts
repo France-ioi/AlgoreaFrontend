@@ -1,4 +1,5 @@
-import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
@@ -16,7 +17,7 @@ import { LoadingComponent } from '../../ui-components/loading/loading.component'
     LoadingComponent,
   ]
 })
-export class RedirectToIdComponent implements OnDestroy {
+export class RedirectToIdComponent {
   private activatedRoute = inject(ActivatedRoute);
   private itemRouter = inject(ItemRouter);
   private currentContentService = inject(CurrentContentService);
@@ -32,18 +33,16 @@ export class RedirectToIdComponent implements OnDestroy {
     }),
   );
 
-  private subscription = this.path$.pipe(
-    map(path => this.config.redirects[path]),
-  ).subscribe(route => {
-    if (route) this.itemRouter.navigateTo(itemRoute('activity', route.id, { path: route.path }), { useCurrentObservation: true });
-    else this.notExisting.set(true);
-  });
-
   constructor() {
+    // Clear before subscribing so a synchronous paramMap emit/navigate cannot race with clearing.
     this.currentContentService.clear();
-  }
 
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.path$.pipe(
+      map(path => this.config.redirects[path]),
+      takeUntilDestroyed(),
+    ).subscribe(route => {
+      if (route) this.itemRouter.navigateTo(itemRoute('activity', route.id, { path: route.path }), { useCurrentObservation: true });
+      else this.notExisting.set(true);
+    });
   }
 }
