@@ -1,5 +1,6 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable, Subject, of } from 'rxjs';
+import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 import { switchMap, distinctUntilChanged, map, filter, skip, shareReplay, retry } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, CurrentUserProfile } from '../data-access/current-user.service';
@@ -12,6 +13,8 @@ import { repeatLatestWhen } from '../utils/operators/repeatLatestWhen';
 export class UserSessionService implements OnDestroy {
   private authService = inject(AuthService);
   private currentUserService = inject(CurrentUserHttpService);
+  // Explicit DestroyRef: updateCurrentUser/refresh subscribe outside injection context, so bare takeUntilDestroyed() would fail.
+  private destroyRef = inject(DestroyRef);
 
   session$ = new BehaviorSubject<CurrentUserProfile|undefined>(undefined);
   userProfileError$ = new Subject<Error>();
@@ -24,17 +27,17 @@ export class UserSessionService implements OnDestroy {
   /** triggered when the user identity changes (but skipping first user value), which happens when auth token is invalidated */
   userChanged$ = this.userProfile$.pipe(distinctUntilChanged((u1, u2) => u1.groupId === u2.groupId), map(() => undefined), skip(1));
 
-  private subscription?: Subscription;
   private userProfileUpdated$ = new Subject<void>();
 
   constructor() {
-    this.subscription = this.authService.status$.pipe(
+    this.authService.status$.pipe(
       repeatLatestWhen(this.userProfileUpdated$),
       switchMap(auth => {
         if (!auth.authenticated) return of<CurrentUserProfile | undefined>(undefined);
         return this.currentUserService.getProfileInfo().pipe(retry(1));
       }),
       distinctUntilChanged(), // skip two undefined values in a row
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: profile => this.session$.next(profile),
       error: () => this.userProfileError$.next(new Error('unable to fetch user profile'))
@@ -42,7 +45,6 @@ export class UserSessionService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
     this.session$.complete();
     this.userProfileUpdated$.complete();
   }
@@ -54,7 +56,7 @@ export class UserSessionService implements OnDestroy {
 
   updateCurrentUser(changes: UpdateUserBody): Observable<void> {
     const update$ = this.currentUserService.update(changes).pipe(shareReplay(1));
-    update$.subscribe({
+    update$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.userProfileUpdated$.next(),
       error: () => { /* error is handled by caller */ },
     });
@@ -63,7 +65,7 @@ export class UserSessionService implements OnDestroy {
 
   refresh(): Observable<void> {
     const refresh$ = this.currentUserService.refresh().pipe(shareReplay(1));
-    refresh$.subscribe({
+    refresh$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.userProfileUpdated$.next(),
       // error has to be handled in the caller of the `refresh()` function
       error: () => {},
