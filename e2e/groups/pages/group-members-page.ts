@@ -33,10 +33,10 @@ export class GroupMembersPage {
   }
 
   async selectAllCheckboxes(): Promise<void> {
-    await expect.soft(
-      this.page.getByTestId('member-list-select-all')
-    ).toBeVisible();
-    await this.page.getByTestId('member-list-select-all').click();
+    const selectAll = this.page.getByTestId('member-list-select-all');
+    await expect.soft(selectAll).toBeVisible();
+    // Prefer check() so the native change handler runs and selection becomes non-empty.
+    await selectAll.check();
   }
 
   async removeCheckedFromGroup(): Promise<void> {
@@ -44,6 +44,31 @@ export class GroupMembersPage {
       this.page.getByRole('button', { name: 'Remove from group' })
     ).toBeVisible();
     await this.page.getByRole('button', { name: 'Remove from group' }).click();
+  }
+
+  /**
+   * Empties the Users membership list when non-empty.
+   * Required before group deletion: the settings delete button stays disabled while User children remain.
+   */
+  async removeAllMembersIfAny(groupId: string): Promise<void> {
+    await this.page.goto(`/groups/by-id/${ groupId };p=/members`);
+    await expect.soft(this.memberListLocator).toBeVisible();
+    const emptyMessage = this.page.getByText('This group has no members.');
+    const selectAll = this.page.getByTestId('member-list-select-all');
+    await expect(emptyMessage.or(selectAll)).toBeVisible();
+    if (!(await selectAll.isVisible())) return;
+
+    await this.selectAllCheckboxes();
+    // Footer-scoped role query: Phosphor icon glyphs pollute the accessible name, so exact 'Remove' fails.
+    const removeBtn = this.memberListLocator.locator('.alg-table-footer').getByRole('button');
+    await expect(removeBtn).toBeEnabled();
+    await Promise.all([
+      removeBtn.click(),
+      this.page.waitForResponse(response =>
+        response.url().includes(`/groups/${ groupId }/members`) && response.request().method() === 'DELETE'
+      ),
+    ]);
+    await expect(emptyMessage).toBeVisible();
   }
 
   async checksIsDeleteConfirmationVisible(text: string | RegExp): Promise<void> {
@@ -80,5 +105,22 @@ export class GroupMembersPage {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jsonResponse: { data: { id: string | undefined } | undefined } = await response.json();
     return jsonResponse.data?.id;
+  }
+
+  async inviteUser(login: string, groupId: string): Promise<void> {
+    await expect.soft(this.page.getByRole('heading', { name: 'Invitations' })).toBeVisible();
+    const loginsInputLocator = this.page.getByRole('textbox', {
+      name: 'logins of users to invite, separated by commas (e.g., login1, login2, ...)',
+    });
+    await expect.soft(loginsInputLocator).toBeVisible();
+    await loginsInputLocator.fill(login);
+    const inviteBtn = this.page.getByRole('button', { name: /^Invite$/ });
+    // Wait until the form is ready (button enables after logins parse) before racing the POST.
+    await expect(inviteBtn).toBeEnabled();
+    await Promise.all([
+      inviteBtn.click(),
+      this.page.waitForResponse(`${apiUrl}/groups/${ groupId }/invitations`),
+    ]);
+    await expect.soft(this.page.locator('alg-message-info').getByText(`user(s) invited successfully: ${ login }`)).toBeVisible();
   }
 }

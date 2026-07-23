@@ -196,4 +196,21 @@ export class GroupSettingsPage {
     await expect.soft(retrySubtitleBtnLocator).toBeVisible();
     await retrySubtitleBtnLocator.click();
   }
+
+  async generateJoinCode(): Promise<string> {
+    const generateCodeBtnLocator = this.page.getByRole('button', { name: /Generate a code/ });
+    await expect.soft(generateCodeBtnLocator).toBeVisible();
+    await Promise.all([
+      generateCodeBtnLocator.click(),
+      this.page.waitForResponse(response =>
+        response.request().method() === 'POST' && /\/groups\/[^/]+\/code$/.test(response.url())
+      ),
+    ]);
+    const codeLocator = this.page.locator('alg-code-token').locator('.alg-text-secondary');
+    await expect.soft(codeLocator).toBeVisible();
+    await expect(codeLocator).not.toBeEmpty();
+    const code = await codeLocator.textContent();
+    if (!code) throw new Error('Unexpected: missed generated join code');
+    return code.trim();
+  }
 }
