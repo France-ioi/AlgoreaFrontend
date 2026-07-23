@@ -1,7 +1,8 @@
 import { createEffect } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
-import { filter, tap } from 'rxjs';
+import { filter } from 'rxjs';
+import { runSideEffectSafely } from 'src/app/utils/operators/run-side-effect-safely';
 import { fromCurrentContent } from './current-content/current-content.store';
 
 /**
@@ -12,7 +13,7 @@ export const trackContentPageViewEffect = createEffect(
   (actions$ = inject(Actions)) => actions$.pipe(
     ofType(fromCurrentContent.contentPageActions.changeContent),
     filter(({ title }) => title !== undefined),
-    tap(({ title, breadcrumbs }) => {
+    runSideEffectSafely(({ title, breadcrumbs }) => {
       const detail = {
         page_title: title,
         page_path: window.location.pathname,
