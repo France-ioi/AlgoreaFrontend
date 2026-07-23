@@ -1,4 +1,5 @@
-import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
 import { catchError, filter, retry, switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -24,7 +25,7 @@ export interface LanguageMismatchModalParams {
     ButtonComponent,
   ]
 })
-export class LanguageMismatchModalComponent implements OnDestroy {
+export class LanguageMismatchModalComponent {
   private localeService = inject(LocaleService);
   private sessionService = inject(UserSessionService);
 
@@ -36,13 +37,16 @@ export class LanguageMismatchModalComponent implements OnDestroy {
 
   protected readonly updating = signal(false);
 
-  private updateTempUserLanguage = this.sessionService.userProfile$.pipe(
-    filter(profile => profile.tempUser && profile.defaultLanguage !== this.currentLanguage),
-    switchMap(() => (this.currentLanguage ? this.sessionService.updateCurrentUser({ default_language: this.currentLanguage }) : EMPTY)),
-    retry(3),
-    // An error is not that problematic, no need to break the app for the language of a temp user.
-    catchError(() => EMPTY),
-  ).subscribe();
+  constructor() {
+    this.sessionService.userProfile$.pipe(
+      filter(profile => profile.tempUser && profile.defaultLanguage !== this.currentLanguage),
+      switchMap(() => (this.currentLanguage ? this.sessionService.updateCurrentUser({ default_language: this.currentLanguage }) : EMPTY)),
+      retry(3),
+      // An error is not that problematic, no need to break the app for the language of a temp user.
+      catchError(() => EMPTY),
+      takeUntilDestroyed(),
+    ).subscribe();
+  }
 
   onUpdateUserLanguage(language?: string): void {
     if (!language) throw new Error('language should be defined');
@@ -58,9 +62,5 @@ export class LanguageMismatchModalComponent implements OnDestroy {
 
   onVisitPlatformInUserLanguage(language: string): void {
     this.localeService.navigateTo(language);
-  }
-
-  ngOnDestroy(): void {
-    this.updateTempUserLanguage.unsubscribe();
   }
 }
