@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnDestroy, inject } from '@angular/core';
-import { EMPTY, Subscription } from 'rxjs';
+import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY } from 'rxjs';
 import { catchError, switchMap, take } from 'rxjs/operators';
 import { MINUTES } from 'src/app/utils/duration';
 import { reportAnError } from 'src/app/utils/error-handling/error-reporting';
@@ -13,12 +14,12 @@ const KEEP_ALIVE_INTERVAL = 2 * MINUTES;
 export class TaskSessionTrackerService implements OnDestroy {
   private taskSessionHttp = inject(TaskSessionHttpService);
   private taskInitService = inject(ItemTaskInitService);
+  private destroyRef = inject(DestroyRef);
 
   private token: string | null = null;
   private attemptId: string | null = null;
   private resultStartedAt: Date | null = null;
   private intervalId: ReturnType<typeof setInterval> | null = null;
-  private initSubscription: Subscription | null = null;
   private initialized = false;
   private active = false;
 
@@ -47,9 +48,10 @@ export class TaskSessionTrackerService implements OnDestroy {
     this.attemptId = attemptId;
     this.resultStartedAt = resultStartedAt;
 
-    this.initSubscription = this.taskInitService.loadedTask$.pipe(
+    this.taskInitService.loadedTask$.pipe(
       take(1),
       switchMap(() => this.taskInitService.taskToken$.pipe(take(1))),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(token => {
       this.token = token;
       this.callStart();
@@ -61,12 +63,12 @@ export class TaskSessionTrackerService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.initSubscription?.unsubscribe();
     this.clearInterval();
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
     window.removeEventListener('beforeunload', this.onBeforeUnload);
 
     if (this.active && this.token) {
+      // No takeUntilDestroyed: DestroyRef already fired; wrapping would cancel this final stop request.
       this.taskSessionHttp.stop(this.token).pipe(
         catchError(err => {
           if (!(err instanceof HttpErrorResponse)) reportAnError(err);
@@ -83,6 +85,7 @@ export class TaskSessionTrackerService implements OnDestroy {
         if (!(err instanceof HttpErrorResponse)) reportAnError(err);
         return EMPTY;
       }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 
@@ -93,6 +96,7 @@ export class TaskSessionTrackerService implements OnDestroy {
         if (!(err instanceof HttpErrorResponse)) reportAnError(err);
         return EMPTY;
       }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 

@@ -189,7 +189,7 @@ export class ItemTaskInitService implements OnDestroy {
   initialized = false;
 
   /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
-  guardSubscription = this.config$.pipe(pairwise()).subscribe(([ prev, cur ]) => {
+  guardSubscription = this.config$.pipe(pairwise(), takeUntilDestroyed(this.destroyRef)).subscribe(([ prev, cur ]) => {
     if (prev.readOnly !== cur.readOnly) throw new Error(`cannot change task config (readonly prev:${prev.readOnly} cur:${cur.readOnly})`);
     if (prev.locale !== cur.locale) throw new Error(`cannot change task config (locale prev:${prev.locale} cur:${cur.locale})`);
     if (!equal(prev.route, cur.route)) {
@@ -199,18 +199,16 @@ export class ItemTaskInitService implements OnDestroy {
   });
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
-  tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY)).subscribe();
+  tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY), takeUntilDestroyed(this.destroyRef)).subscribe();
   // keep the token pushed to the task even if no other consumer subscribes to `tokenUpdatedOnTask$`
-  tokenPushSubscription = this.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY)).subscribe();
+  tokenPushSubscription = this.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY), takeUntilDestroyed(this.destroyRef)).subscribe();
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
+    // No takeUntilDestroyed: DestroyRef already fired; wrapping would cancel this destroy work.
     this.task$.pipe(timeout(0), catchError(() => EMPTY)).subscribe(task => task.destroy());
     if (!this.configFromItem$.closed) this.configFromItem$.complete();
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
-    this.guardSubscription.unsubscribe();
-    this.tokenSubscription.unsubscribe();
-    this.tokenPushSubscription.unsubscribe();
     this.refreshToken$.complete();
   }
 
