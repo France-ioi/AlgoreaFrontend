@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, input, output } from '@angular/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GroupLeaveService } from 'src/app/data-access/group-leave.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { Group } from '../../models/group';
@@ -15,13 +16,16 @@ import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 export class GroupLeaveComponent {
   private groupLeaveService = inject(GroupLeaveService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   leave = output<void>();
 
   group = input.required<Group>();
 
   leaveGroup(): void {
-    this.groupLeaveService.leave(this.group().id).subscribe({
+    this.groupLeaveService.leave(this.group().id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`You've left group`);
         this.leave.emit();

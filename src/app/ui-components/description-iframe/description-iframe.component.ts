@@ -1,15 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-  Component,
-  DestroyRef,
-  ElementRef,
-  computed,
-  inject,
-  input,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { fromEvent } from 'rxjs';
@@ -42,7 +32,6 @@ function escapeHtmlAttributeValue(value: string): string {
 export class DescriptionIframeComponent {
   private readonly document = inject(DOCUMENT);
   private readonly sanitizer = inject(DomSanitizer);
-  private readonly destroyRef = inject(DestroyRef);
 
   /**
    * Snapshotted at construct time on purpose:
@@ -126,7 +115,7 @@ export class DescriptionIframeComponent {
     const win = this.document.defaultView;
     if (!win) return;
     fromEvent<MessageEvent>(win, 'message')
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntilDestroyed())
       .subscribe(event => this.handleMessage(event));
   }
 

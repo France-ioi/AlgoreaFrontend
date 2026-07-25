@@ -70,7 +70,7 @@ export class AuthService implements OnDestroy {
         if (!defaultLanguage) throw new Error('default language should be defined');
         return this.authHttp.createTempUser(defaultLanguage).pipe(retry(2));
       }),
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe({
       next: (auth: AuthResult) => {
         this.status$.next(auth);
@@ -105,7 +105,7 @@ export class AuthService implements OnDestroy {
           map(auth => ({ auth, tokenIsExpired: false })),
         );
       }),
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe(result => {
       if (result.tokenIsExpired) this.invalidToken(result.auth);
       else this.status$.next(result.auth);

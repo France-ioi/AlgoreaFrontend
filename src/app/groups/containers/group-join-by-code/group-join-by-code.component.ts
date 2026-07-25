@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs/operators';
 import { Duration } from 'src/app/utils/duration';
 import { Group } from '../../models/group';
@@ -42,6 +43,7 @@ export class GroupJoinByCodeComponent {
   private groupActionsService = inject(GroupActionsService);
   private codeActionsService = inject(CodeActionsService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   group = input.required<Group>();
   refreshRequired = output<void>();
@@ -106,6 +108,7 @@ export class GroupJoinByCodeComponent {
         // if a code expiration was defined, reset it to null
           (expiresAt === null ? of(undefined) : this.groupActionsService.updateGroup(groupId, { code_expires_at: null }))
         ),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {
@@ -135,7 +138,9 @@ export class GroupJoinByCodeComponent {
     this.groupActionsService.updateGroup(group.id, {
       code_lifetime: newCodeLifetime.valueInSeconds,
       code_expires_at: null,
-    }).subscribe({
+    }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`The validity has been changed`);
         this.processing.set(false);
@@ -163,6 +168,7 @@ export class GroupJoinByCodeComponent {
           // if a code expiration was defined, reset it to null
           (expiresAt === null ? of(undefined) : this.groupActionsService.updateGroup(groupId, { code_expires_at: null }))
         ),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {

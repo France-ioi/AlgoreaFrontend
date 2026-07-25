@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   catchError,
@@ -39,7 +39,6 @@ export class InitialAnswerDataSource implements OnDestroy {
   private answerService = inject(AnswerService);
 
   private readonly itemInfo$ = new ReplaySubject<{ route: FullItemRoute, isTask: boolean|undefined }>();
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly answer$ = combineLatest([ this.itemInfo$, this.store.select(fromObservation.selectIsObserving) ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
@@ -70,7 +69,7 @@ export class InitialAnswerDataSource implements OnDestroy {
       }
       return of(undefined); // "Wait" and "NotApplicable" cases - undefined -> not defined yet
     }),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 

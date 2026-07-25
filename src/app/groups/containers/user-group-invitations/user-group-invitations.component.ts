@@ -1,4 +1,5 @@
-import { Component, inject, OnDestroy, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GetRequestsService, GroupInvitation } from '../../data-access/get-requests.service';
@@ -62,6 +63,7 @@ export class UserGroupInvitationsComponent implements OnDestroy {
   private actionFeedbackService = inject(ActionFeedbackService);
   private currentContentService = inject(CurrentContentService);
   private processGroupInvitationService = inject(ProcessGroupInvitationService);
+  private destroyRef = inject(DestroyRef);
 
   groupJoined = output<void>();
 
@@ -108,7 +110,8 @@ export class UserGroupInvitationsComponent implements OnDestroy {
       JoinGroupConfirmationDialogComponent,
       { data, disableClose: true },
     ).closed.pipe(
-      switchMap(response => (response?.confirmed ? this.accept(groupInvitation.group.id, data.params) : EMPTY))
+      switchMap(response => (response?.confirmed ? this.accept(groupInvitation.group.id, data.params) : EMPTY)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: result => {
         this.processing.set(false);
@@ -135,7 +138,9 @@ export class UserGroupInvitationsComponent implements OnDestroy {
 
   onReject(groupInvitation: GroupInvitation): void {
     this.processing.set(true);
-    this.processGroupInvitationService.reject(groupInvitation.group.id).subscribe({
+    this.processGroupInvitationService.reject(groupInvitation.group.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: result => {
         this.processing.set(false);
         if (!result.changed) {

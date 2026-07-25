@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
 import { catchError, filter, retry, switchMap } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export interface LanguageMismatchModalParams {
 export class LanguageMismatchModalComponent {
   private localeService = inject(LocaleService);
   private sessionService = inject(UserSessionService);
+  private destroyRef = inject(DestroyRef);
 
   params = signal(inject<LanguageMismatchModalParams>(DIALOG_DATA));
 
@@ -51,7 +52,10 @@ export class LanguageMismatchModalComponent {
   onUpdateUserLanguage(language?: string): void {
     if (!language) throw new Error('language should be defined');
     this.sessionService.updateCurrentUser({ default_language: language })
-      .pipe(mapPending())
+      .pipe(
+        mapPending(),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(updating => {
         this.updating.set(updating);
         if (!updating) {

@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
 import { GroupPermissions, GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
 import { catchError, of, ReplaySubject, switchMap } from 'rxjs';
@@ -45,6 +46,7 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
   private groupPermissionsService = inject(GroupPermissionsService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private currentContentService = inject(CurrentContentService);
+  private destroyRef = inject(DestroyRef);
 
   params = signal(inject<PermissionsEditDialogParams>(DIALOG_DATA));
   private dialogRef = inject(DialogRef);
@@ -104,21 +106,22 @@ export class PermissionsEditDialogComponent implements OnDestroy, OnInit {
       this.params().group.id,
       this.params().item.id,
       permissions,
-    )
-      .subscribe({
-        next: () => {
-          this.updateInProcess.set(false);
-          this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
-          this.currentContentService.forceNavMenuReload();
-          this.closeDialog(true);
-        },
-        error: err => {
-          this.updateInProcess.set(false);
-          this.actionFeedbackService.unexpectedError();
-          this.currentContentService.forceNavMenuReload();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        },
-      });
+    ).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: () => {
+        this.updateInProcess.set(false);
+        this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
+        this.currentContentService.forceNavMenuReload();
+        this.closeDialog(true);
+      },
+      error: err => {
+        this.updateInProcess.set(false);
+        this.actionFeedbackService.unexpectedError();
+        this.currentContentService.forceNavMenuReload();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
+    });
   }
 
   closeDialog(changed = false): void {

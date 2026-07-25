@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MessageV2, MessageService } from 'src/app/services/message.service';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
@@ -13,13 +13,12 @@ import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-ic
 })
 export class ToastMessagesComponent {
   private toastService = inject(MessageService);
-  private destroyRef = inject(DestroyRef);
 
   messages = toSignal(this.toastService.messages$);
 
   constructor() {
     this.toastService.messageCloseEvent$.pipe(
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe(m => this.toastService.dismiss(m));
   }
 

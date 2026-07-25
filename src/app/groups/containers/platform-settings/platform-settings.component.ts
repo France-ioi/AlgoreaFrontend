@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { LocaleService } from 'src/app/services/localeService';
 import { UserSessionService } from 'src/app/services/user-session.service';
@@ -19,6 +20,7 @@ export class PlatformSettingsComponent {
   private userSessionService = inject(UserSessionService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private localeService = inject(LocaleService);
+  private destroyRef = inject(DestroyRef);
 
   currentUser$ = this.userSessionService.userProfile$;
 
@@ -27,7 +29,9 @@ export class PlatformSettingsComponent {
   }
 
   update(changes: { default_language: string }): void {
-    this.userSessionService.updateCurrentUser(changes).subscribe({
+    this.userSessionService.updateCurrentUser(changes).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
 

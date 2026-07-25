@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { from, EMPTY, throwError } from 'rxjs';
 import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
 import { ProgressZipService } from 'src/app/data-access/progress-zip.service';
@@ -13,6 +14,7 @@ import { mapZipExportError } from './group-progress-grid-zip-export.errors';
 export class GroupProgressGridZipExportService {
   private progressZipService = inject(ProgressZipService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   readonly isFetching = signal(false);
 
@@ -38,6 +40,7 @@ export class GroupProgressGridZipExportService {
           );
         }),
         finalize(() => this.isFetching.set(false)),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         error: err => {

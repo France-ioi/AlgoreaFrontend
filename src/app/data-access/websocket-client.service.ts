@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, map, merge, retry, shareReplay, startWith, Subject, switchMap, tap, timer } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { MINUTES, SECONDS } from 'src/app/utils/duration';
@@ -56,15 +57,17 @@ export class WebsocketClient implements OnDestroy {
     shareReplay(1),
   ) : EMPTY;
 
-  private heartbeatSubscription = this.isWsOpen$.pipe(
-    switchMap(open => {
-      if (!open) return EMPTY;
-      return timer(heartbeatStartDelay, heartbeatStartPeriod);
-    })
-  ).subscribe(() => this.send({ action: 'heartbeat' })); // the action is not necessarily recognized, it is used to keep the connection up
+  constructor() {
+    this.isWsOpen$.pipe(
+      switchMap(open => {
+        if (!open) return EMPTY;
+        return timer(heartbeatStartDelay, heartbeatStartPeriod);
+      }),
+      takeUntilDestroyed(),
+    ).subscribe(() => this.send({ action: 'heartbeat' })); // the action is not necessarily recognized, it is used to keep the connection up
+  }
 
   ngOnDestroy(): void {
-    this.heartbeatSubscription.unsubscribe();
     this.currentWs?.complete();
     this.openEvents$.complete();
     this.closeEvents$.complete();

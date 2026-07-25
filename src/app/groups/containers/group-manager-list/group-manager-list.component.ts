@@ -199,7 +199,8 @@ export class GroupManagerListComponent {
           this.selection().filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
           ownManagerId,
         )
-      )
+      ),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: result => {
         displayGroupManagerRemovalResponseToast(this.actionFeedbackService, result);

@@ -81,7 +81,7 @@ export class CommunityActivityFeedComponent {
       map(({ message }) => liveActivityValidationSchema.safeParse(message)),
       filter(result => result.success),
       map(result => result.data),
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe(validation => {
       this.prependLiveEntry({
         time: validation.time,

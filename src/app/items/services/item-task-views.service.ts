@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, EMPTY, merge, ReplaySubject, Subject } from 'rxjs';
 import { catchError, delayWhen, distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
@@ -39,23 +40,26 @@ export class ItemTaskViewsService implements OnDestroy {
     switchMap(([ task, view ]) => task.showViews({ [view]: true })),
   );
 
-  private subscriptions = [
-    combineLatest([ this.showViews$, this.views ]).subscribe({
+  constructor() {
+    combineLatest([ this.showViews$, this.views ]).pipe(
+      takeUntilDestroyed(),
+    ).subscribe({
       error: err => this.errorSubject.next(err),
-    }),
+    });
     combineLatest([
       this.initService.iframe$,
       this.display$.pipe(map(display => display.scrollTop), filter(isNotUndefined)),
-    ]).subscribe(([ iframe, scrollTopInPx ]) => {
+    ]).pipe(
+      takeUntilDestroyed(),
+    ).subscribe(([ iframe, scrollTopInPx ]) => {
       const mainContentWrapperEl = window.document.querySelector('#main-content-wrapper');
       if (!mainContentWrapperEl) throw new Error('Unexpected: Missed main content wrapper element');
       const iframeTopInPx = iframe.getBoundingClientRect().top + mainContentWrapperEl.scrollTop;
       mainContentWrapperEl.scrollTo({ behavior: 'smooth', top: iframeTopInPx + scrollTopInPx });
-    }),
-  ];
+    });
+  }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.displaySubject.complete();
     this.activeViewSubject.complete();
     this.errorSubject.complete();

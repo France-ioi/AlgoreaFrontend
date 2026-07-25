@@ -233,6 +233,7 @@ export class ThreadComponent implements AfterViewInit, OnDestroy {
       updateThreadService: this.updateThreadService,
       actionFeedbackService: this.actionFeedbackService,
       config: this.config,
+      destroyRef: this.destroyRef,
     };
   }
 

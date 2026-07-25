@@ -75,7 +75,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       return of(initialAnswer);
     }),
     retry(3),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1), // avoid duplicate xhr calls on multiple subscriptions.
   );
 
@@ -87,7 +87,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     switchMap(([ initialAnswer, task, { readOnly }]) =>
       (initialAnswer?.state && !readOnly ? task.reloadState(initialAnswer.state).pipe(map(() => undefined)) : of(undefined))
     ),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
   private initializedTaskAnswer$ = combineLatest([
@@ -106,7 +106,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       ) :
       of(undefined)
     )),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 
@@ -125,7 +125,7 @@ export class ItemTaskAnswerService implements OnDestroy {
     // exhaustMap: ignore interval ticks while a save is in flight (switchMap would cancel it).
     // Each save reads the latest task state/answer, so dropped ticks lose nothing.
     exhaustMap(() => this.saveTaskStateAnswerAsCurrent()),
-    takeUntilDestroyed(this.destroyRef), // make sure the repetition ends when the service gets destroyed
+    takeUntilDestroyed(), // make sure the repetition ends when the service gets destroyed
     shareReplay(1), // do not save several times in parallel if there are more subscribers
   );
   autoSaveResult$ = this.autoSaveCurrentState$.pipe(
@@ -136,23 +136,32 @@ export class ItemTaskAnswerService implements OnDestroy {
     })
   );
 
-  private subscriptions = [
-    this.initializedTaskAnswer$.subscribe(),
-    this.initializedTaskState$.subscribe({
+  constructor() {
+    this.initializedTaskAnswer$.pipe(
+      takeUntilDestroyed(),
+    ).subscribe();
+    this.initializedTaskState$.pipe(
+      takeUntilDestroyed(),
+    ).subscribe({
       error: err => this.errorSubject.next(err),
-    }),
-    this.taskInitService.loadedTask$.subscribe({
+    });
+    this.taskInitService.loadedTask$.pipe(
+      takeUntilDestroyed(),
+    ).subscribe({
       error: err => this.errorSubject.next(err),
-    }),
-    this.initialAnswer$.subscribe({
+    });
+    this.initialAnswer$.pipe(
+      takeUntilDestroyed(),
+    ).subscribe({
       next: answer => this.latestSavedCurrentAnswer = answer ? { answer: answer.answer ?? '', state: answer.state ?? '' } : null,
       error: err => this.errorSubject.next(err),
-    }),
-    this.autoSaveCurrentState$.subscribe(),
-  ];
+    });
+    this.autoSaveCurrentState$.pipe(
+      takeUntilDestroyed(),
+    ).subscribe();
+  }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.errorSubject.complete();
   }
 
@@ -198,7 +207,10 @@ export class ItemTaskAnswerService implements OnDestroy {
       shareReplay(1),
     );
     combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent(), wasValidated$ ])
-      .pipe(catchError(() => EMPTY)) // error is handled elsewhere by returning saveGrade$
+      .pipe(
+        catchError(() => EMPTY), // error is handled elsewhere by returning saveGrade$
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(([ grade, saveGradeResult, , wasValidated ]) => {
         if (grade.score !== undefined) this.scoreChange.next(grade.score);
         if (saveGradeResult.unlockedItems.length > 0) this.unlockedItems.next(saveGradeResult.unlockedItems);

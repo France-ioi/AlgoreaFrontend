@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CreateGroupInvitationsService, InvitationResult } from '../../data-access/create-group-invitations.service';
 import { Group } from '../../models/group';
@@ -33,6 +33,7 @@ export class GroupInviteUsersComponent {
   private createGroupInvitationsService = inject(CreateGroupInvitationsService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private formBuilder = inject(UntypedFormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   group = input.required<Group>();
   invitationsChanged = output<void>();
@@ -143,7 +144,9 @@ export class GroupInviteUsersComponent {
     // disable UI
     this.setState('loading');
 
-    this.createGroupInvitationsService.createInvitations(this.group().id, logins).subscribe({
+    this.createGroupInvitationsService.createInvitations(this.group().id, logins).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: res => {
         this.displayResponse(res);
 

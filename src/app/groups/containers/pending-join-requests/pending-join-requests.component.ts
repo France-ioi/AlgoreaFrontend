@@ -113,23 +113,24 @@ export class PendingJoinRequestsComponent {
       else requestMap.set(groupID, [ memberID ]);
     });
 
-    this.requestActionService.processJoinRequests(requestMap, params.type)
-      .subscribe({
-        next: result => {
-          this.state.set('ready');
-          displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
-          this.dataFetching.next({
-            groupId: this.groupId(),
-            includeSubgroup: this.includeSubgroup(),
-            sort: this.currentSort(),
-          });
-        },
-        error: err => {
-          this.state.set('ready');
-          this.actionFeedbackService.unexpectedError();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        }
-      });
+    this.requestActionService.processJoinRequests(requestMap, params.type).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: result => {
+        this.state.set('ready');
+        displayResponseToast(this.actionFeedbackService, parseResults(result), params.type);
+        this.dataFetching.next({
+          groupId: this.groupId(),
+          includeSubgroup: this.includeSubgroup(),
+          sort: this.currentSort(),
+        });
+      },
+      error: err => {
+        this.state.set('ready');
+        this.actionFeedbackService.unexpectedError();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      }
+    });
   }
 
   onSubgroupSwitch(selectedIdx: number): void {

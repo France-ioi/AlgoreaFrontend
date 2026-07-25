@@ -1,10 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
 import { APPCONFIG } from '../config';
-import { inject } from '@angular/core';
 import { ItemTypeCategory, itemTypeCategoryEnum, itemTypeSchema } from 'src/app/items/models/item-type';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { itemViewPermSchema } from 'src/app/items/models/item-view-permission';
@@ -14,7 +14,6 @@ import { groupBy } from 'src/app/utils/array';
 import { z } from 'zod';
 import { MINUTES } from '../utils/duration';
 import { Cacheable } from 'ts-cacheable';
-import { Subject } from 'rxjs';
 import { CurrentContentService } from '../services/current-content.service';
 import { IObservableCacheConfig } from 'ts-cacheable/dist/cjs/common/IObservableCacheConfig';
 
@@ -95,12 +94,16 @@ export type RootItem = z.infer<typeof itemNavigationChildBaseSchema> & { groups:
 @Injectable({
   providedIn: 'root'
 })
-export class ItemNavigationService implements OnDestroy {
+export class ItemNavigationService {
   private http = inject(HttpClient);
   private currentContent = inject(CurrentContentService);
   private config = inject(APPCONFIG);
 
-  private subscription = this.currentContent.navMenuReload$.subscribe(() => cacheBuster$.next());
+  constructor() {
+    this.currentContent.navMenuReload$.pipe(
+      takeUntilDestroyed(),
+    ).subscribe(() => cacheBuster$.next());
+  }
 
   @Cacheable(cacheConfig)
   getItemNavigation(
@@ -150,10 +153,6 @@ export class ItemNavigationService implements OnDestroy {
       this.getRootSkills(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.skill })))) :
       this.getRootActivities(watchedGroupId).pipe(map(groups => groups.map(g => ({ ...g, item: g.activity }))));
     return rootAsGroupList$.pipe(map(groupList => this.mapToItemList(groupList)));
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   /**

@@ -1,16 +1,4 @@
-import {
-  AfterViewChecked,
-  Component,
-  computed,
-  DestroyRef,
-  ElementRef,
-  inject,
-  input,
-  OnDestroy,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { AfterViewChecked, Component, computed, ElementRef, inject, input, OnDestroy, output, signal, viewChild } from '@angular/core';
 import { EMPTY, merge, of } from 'rxjs';
 import { Location, AsyncPipe } from '@angular/common';
 import {
@@ -76,7 +64,6 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   private ltiDataSource = inject(LTIDataSource);
   private sessionTracker = inject(TaskSessionTrackerService);
   private dialogService = inject(Dialog);
-  private destroyRef = inject(DestroyRef);
 
   route = input.required<FullItemRoute>();
   url = input.required<string>();
@@ -110,7 +97,7 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
 
   private metadata = this.taskService.task$.pipe(
     switchMap(task => task.getMetaData()),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
   metadataError$ = this.metadata.pipe(ignoreElements(), catchError(err => of(err)));
