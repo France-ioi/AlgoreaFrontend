@@ -1,4 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, of } from 'rxjs';
 import { filter, map, share, switchMap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -18,6 +20,7 @@ export interface ThreadActionsDeps {
   updateThreadService: UpdateThreadService,
   actionFeedbackService: ActionFeedbackService,
   config: AppConfig,
+  destroyRef: DestroyRef,
 }
 
 export interface SendThreadMessageContext extends ThreadActionsDeps {
@@ -47,6 +50,7 @@ export function sendThreadMessage(ctx: SendThreadMessageContext): void {
       updateThreadService: ctx.updateThreadService,
       actionFeedbackService: ctx.actionFeedbackService,
       config: ctx.config,
+      destroyRef: ctx.destroyRef,
       params: {
         open: true,
         threadId: ctx.threadId,
@@ -76,6 +80,7 @@ export function sendThreadMessage(ctx: SendThreadMessageContext): void {
       ctx.threadId.participantId,
       { messageCountIncrement: 1 },
     )),
+    takeUntilDestroyed(ctx.destroyRef),
   ).subscribe({
     next: () => {
       ctx.clearMessageToSend();
@@ -111,7 +116,9 @@ export function changeThreadStatus(ctx: ChangeThreadStatusContext): Observable<v
   const update$ = ctx.updateThreadService.update(
     ctx.params.threadId.itemId, ctx.params.threadId.participantId, payload,
   ).pipe(share());
-  update$.subscribe({
+  update$.pipe(
+    takeUntilDestroyed(ctx.destroyRef),
+  ).subscribe({
     next: () => ctx.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
     error: () => ctx.actionFeedbackService.unexpectedError(),
   });
@@ -127,7 +134,9 @@ export function changeAssignment(ctx: ChangeAssignmentContext): void {
   const payload = ctx.index === 0
     ? { status: 'waiting_for_participant' as const, helperGroupId: ctx.config.allUsersGroupId }
     : { status: 'waiting_for_trainer' as const, helperGroupId: ctx.config.allUsersGroupId };
-  ctx.updateThreadService.update(ctx.threadId.itemId, ctx.threadId.participantId, payload).subscribe({
+  ctx.updateThreadService.update(ctx.threadId.itemId, ctx.threadId.participantId, payload).pipe(
+    takeUntilDestroyed(ctx.destroyRef),
+  ).subscribe({
     next: () => ctx.store.dispatch(fromForum.threadPanelActions.threadStatusChanged()),
     error: () => ctx.actionFeedbackService.unexpectedError(),
   });

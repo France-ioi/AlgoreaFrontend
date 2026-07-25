@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -31,6 +32,7 @@ export interface GroupChildData {
 export class GroupSubGroupsComponent {
   private groupCreationService = inject(GroupCreationService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   addSubGroupComponent = viewChild<AddSubGroupComponent>('addSubGroupComponent');
 
@@ -49,7 +51,10 @@ export class GroupSubGroupsComponent {
     forkJoin({
       parentGroupId: of(this.groupData().group.id),
       childGroupId: group.id ? of(group.id) : this.groupCreationService.create(group.title, group.type),
-    }).pipe(switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId))).subscribe({
+    }).pipe(
+      switchMap(ids => this.groupCreationService.addSubgroup(ids.parentGroupId, ids.childGroupId)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: _ => {
         this.actionFeedbackService.success($localize`Group successfully added as child group`);
         this.memberList()?.fetchRows();

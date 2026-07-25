@@ -134,20 +134,21 @@ export class ItemPermissionsComponent {
       groupId,
       itemId,
       { canView: ItemViewPerm.Content },
-    )
-      .subscribe({
-        next: () => {
-          this.updateInProcess.set(false);
-          this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
-          this.changed.emit();
-          this.currentContentService.forceNavMenuReload();
-        },
-        error: err => {
-          this.updateInProcess.set(false);
-          this.actionFeedbackService.unexpectedError();
-          this.currentContentService.forceNavMenuReload();
-          if (!(err instanceof HttpErrorResponse)) throw err;
-        },
-      });
+    ).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: () => {
+        this.updateInProcess.set(false);
+        this.actionFeedbackService.success($localize`:@@permissionsUpdated:Permissions successfully updated.`);
+        this.changed.emit();
+        this.currentContentService.forceNavMenuReload();
+      },
+      error: err => {
+        this.updateInProcess.set(false);
+        this.actionFeedbackService.unexpectedError();
+        this.currentContentService.forceNavMenuReload();
+        if (!(err instanceof HttpErrorResponse)) throw err;
+      },
+    });
   }
 }

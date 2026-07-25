@@ -1,5 +1,5 @@
-import { Component, input, OnDestroy, signal, inject } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, input, OnDestroy, signal, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, Subject, switchMap } from 'rxjs';
 import { ExtraTimeService } from 'src/app/items/data-access/extra-time.service';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -55,6 +55,7 @@ export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
   private extraTimeService = inject(ExtraTimeService);
   private setExtraTimeService = inject(SetExtraTimeService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   itemId = input.required<string>();
   groupId = input.required<string>();
@@ -79,7 +80,9 @@ export class ItemExtraTimeForDescendantsComponent implements OnDestroy {
 
   onExtraTimeSave(additionalTime: number, groupId: string): void {
     this.updating.set(true);
-    this.setExtraTimeService.set(this.itemId(), groupId, additionalTime).subscribe({
+    this.setExtraTimeService.set(this.itemId(), groupId, additionalTime).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => {
         this.refreshSubject.next(undefined);
         this.updating.set(false);

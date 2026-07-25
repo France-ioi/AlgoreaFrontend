@@ -37,7 +37,7 @@ export class UserSessionService implements OnDestroy {
         return this.currentUserService.getProfileInfo().pipe(retry(1));
       }),
       distinctUntilChanged(), // skip two undefined values in a row
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe({
       next: profile => this.session$.next(profile),
       error: () => this.userProfileError$.next(new Error('unable to fetch user profile'))

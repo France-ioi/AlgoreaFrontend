@@ -1,4 +1,5 @@
-import { Component, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import {
   ChildDataWithId,
@@ -38,6 +39,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
   private updateItemService = inject(UpdateItemService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private pendingChangesService = inject(PendingChangesService);
+  private destroyRef = inject(DestroyRef);
   private currentContentService = inject(CurrentContentService);
 
   itemData = input.required<ItemData>();
@@ -119,7 +121,9 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
 
   save(): void {
     this.disabled.set(true);
-    this.updateItem().subscribe({
+    this.updateItem().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: _status => {
         this.actionFeedbackService.success($localize`Changes successfully saved.`);
         this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());

@@ -36,14 +36,14 @@ export class ItemTaskService implements OnDestroy {
   private destroyRef = inject(DestroyRef);
 
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
-  readonly initError$ = this.initService.initError$.pipe(takeUntilDestroyed(this.destroyRef), shareReplay(1));
+  readonly initError$ = this.initService.initError$.pipe(takeUntilDestroyed(), shareReplay(1));
   readonly urlError$ = merge(
     this.initService.urlError$,
     this.initService.apiVersionError$,
-  ).pipe(takeUntilDestroyed(this.destroyRef), shareReplay(1));
+  ).pipe(takeUntilDestroyed(), shareReplay(1));
   readonly hintError$ = new Subject<void>();
 
   readonly error$ = merge(
@@ -77,7 +77,7 @@ export class ItemTaskService implements OnDestroy {
 
   private navigateToNext$ = this.activityNavTreeService.navigationNeighbors$.pipe(
     map(neighborsState => (neighborsState.isReady ? (neighborsState.data?.next ?? neighborsState.data?.parent)?.navigateTo : undefined)),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 

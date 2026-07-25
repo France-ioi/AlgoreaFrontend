@@ -159,7 +159,7 @@ export class GroupProgressGridComponent {
     combineLatest([
       toObservable(this.group),
       toObservable(this.itemData),
-    ]).pipe(takeUntilDestroyed(this.destroyRef))
+    ]).pipe(takeUntilDestroyed())
       .subscribe(([ group ]) => {
         this.fetchRows();
         this.sourceGroup.set(rawGroupRoute(group));
@@ -168,7 +168,7 @@ export class GroupProgressGridComponent {
     this.rows$.pipe(
       filter(() => this.isRefreshing()),
       filter(state => state.isReady || state.isError),
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe(state => {
       this.isRefreshing.set(false);
       if (state.isReady) {
@@ -271,7 +271,9 @@ export class GroupProgressGridComponent {
         permGiverName: progressDataDialog.sourceGroupName,
       },
       disableClose: true,
-    }).closed.subscribe(() => {
+    }).closed.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => {
       this.progressDataDialog.set(undefined);
     });
   }

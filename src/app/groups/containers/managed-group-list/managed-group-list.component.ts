@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Group, GroupType, ManagedGroupsService } from 'src/app/data-access/managed-groups.service';
 import { RouterLink } from '@angular/router';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
@@ -41,6 +42,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 })
 export class ManagedGroupListComponent implements OnInit {
   private managedGroupService = inject(ManagedGroupsService);
+  private destroyRef = inject(DestroyRef);
 
   state = signal<'error' | 'ready' | 'fetching'>('fetching');
 
@@ -54,7 +56,9 @@ export class ManagedGroupListComponent implements OnInit {
 
   fetchData(): void {
     this.state.set('fetching');
-    this.managedGroupService.getManagedGroups().subscribe({
+    this.managedGroupService.getManagedGroups().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: data => {
         this.state.set('ready');
         this.data.set(data);

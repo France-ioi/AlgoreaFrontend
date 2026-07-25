@@ -157,6 +157,28 @@ Two operators wrap async work into `FetchState<T>` (both in `src/app/utils/opera
 Use `mapToFetchState` for one-shot effects. Use `switchMapToFetchState` when a component pipeline
 can re-emit and must auto-retry after a previous failure (e.g., `ChapterChildrenComponent`).
 
+### Subscription teardown
+
+Long-lived classes (components, directives, services) that call `.subscribe()` must complete or
+tear down the subscription when the instance is destroyed. Prefer:
+
+1. **`takeUntilDestroyed()`** — default for field initializers / constructors (injection context).
+2. **`takeUntilDestroyed(destroyRef)`** — when subscribing from methods called later; inject
+   `private destroyRef = inject(DestroyRef)` and pass it explicitly.
+3. **`async` pipe / `toSignal()`** — when the template or signal consumer owns the subscription.
+4. **`take(1)` / `first()`** — only when a single emission is enough *and* a late callback on a
+   destroyed host is acceptable (rare for UI side effects).
+
+Do **not** rely on finite HTTP completion alone for action handlers that update component state or
+open UI: the request can outlive the component. Guarding with `takeUntilDestroyed` cancels in-flight
+`HttpClient` work on destroy — mutations that must finish after navigation belong in a root service or
+ngrx effect instead. Manual `Subscription.unsubscribe()` / `destroyed$` subjects are legacy; convert
+when touching the code.
+
+`eslint-plugin-rxjs-x` (ESLint 9+ flat config) has no `prefer-takeuntil` rule. The older
+`eslint-plugin-rxjs-angular` rule is ESLint-8-only, so this convention is documented rather than
+lint-enforced.
+
 ## Data Flow
 
 ```

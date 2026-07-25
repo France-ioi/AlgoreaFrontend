@@ -1,4 +1,5 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs/operators';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { GetUserByLoginService } from 'src/app/data-access/get-user-by-login.service';
@@ -20,6 +21,7 @@ export class GroupManagerAddComponent {
   private getUserByLoginService = inject(GetUserByLoginService);
   private groupCreateManagerService = inject(GroupCreateManagerService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   added = output<void>();
 
@@ -40,6 +42,7 @@ export class GroupManagerAddComponent {
     this.state.set('loading');
     this.getUserByLoginService.get(this.login()).pipe(
       switchMap(user => this.groupCreateManagerService.create(groupId, user.groupId)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
         this.state.set('ready');

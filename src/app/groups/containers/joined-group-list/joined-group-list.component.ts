@@ -1,4 +1,5 @@
-import { Component, OnDestroy, signal, inject } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, signal, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, startWith, switchMap } from 'rxjs/operators';
 import { GroupMembership, JoinedGroupsService } from 'src/app/data-access/joined-groups.service';
@@ -59,6 +60,7 @@ export class JoinedGroupListComponent implements OnDestroy {
   private groupLeaveService = inject(GroupLeaveService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private confirmationModalService = inject(ConfirmationModalService);
+  private destroyRef = inject(DestroyRef);
 
   private refresh$ = new Subject<void>();
   private readonly sort$ = new ReplaySubject<SortOptions>(1);
@@ -91,6 +93,7 @@ export class JoinedGroupListComponent implements OnDestroy {
     }, { maxWidth: '18.5rem' }).pipe(
       filter(accepted => !!accepted),
       switchMap(() => this.groupLeaveService.leave(membership.group.id)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
         this.refresh();

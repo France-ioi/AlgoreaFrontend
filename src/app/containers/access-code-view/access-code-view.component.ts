@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { InvalidCodeReason, JoinByCodeService } from '../../data-access/join-by-code.service';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +22,7 @@ import { EMPTY, Observable, throwError } from 'rxjs';
 export class AccessCodeViewComponent {
   private joinByCodeService = inject(JoinByCodeService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private destroyRef = inject(DestroyRef);
 
   buttonLabel = input.required<string>();
   groupJoined = output<void>();
@@ -58,6 +60,7 @@ export class AccessCodeViewComponent {
           switchMap(result => (result?.confirmed ? this.joinGroup(trimmedCode, group) : EMPTY))
         );
       }),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
         this.code.set('');

@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
+import { Injectable, InjectionToken, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
@@ -58,7 +58,6 @@ export class ItemTaskInitService implements OnDestroy {
   private config = inject(APPCONFIG);
   private loadTaskTimeout = inject(LOAD_TASK_TIMEOUT);
   private taskProxyFromIframe = inject(TASK_PROXY_FROM_IFRAME);
-  private destroyRef = inject(DestroyRef);
   private configFromItem$ = new ReplaySubject<ItemTaskConfig>(1);
   private configFromIframe$ = new ReplaySubject<{ iframe: HTMLIFrameElement, bindPlatform(task: Task): void }>(1);
   // forces `taskToken$` to re-generate a token even when the generation strategy is unchanged (e.g. after a validating
@@ -79,7 +78,7 @@ export class ItemTaskInitService implements OnDestroy {
   readonly task$ = this.configFromIframe$.pipe(
     delayWhen(({ iframe }) => fromEvent(iframe, 'load')), // triggered for good & bad url, not for not responding servers
     switchMap(config => this.taskProxyFromIframe(config.iframe).pipe(tap(task => config.bindPlatform(task)))),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 
@@ -120,7 +119,7 @@ export class ItemTaskInitService implements OnDestroy {
       // instead. Initial-load / strategy-change generation keeps propagating errors (handled by load timeout / consumers).
       return isRefresh ? generate$.pipe(retry(2), catchError(() => EMPTY)) : generate$;
     }),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 
@@ -141,7 +140,7 @@ export class ItemTaskInitService implements OnDestroy {
     switchMap(({ usesTokens, task }) => task.load(
       { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true }
     ).pipe(map(() => ({ usesTokens, task })))),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 
@@ -164,7 +163,7 @@ export class ItemTaskInitService implements OnDestroy {
         catchError(() => EMPTY), // a single failed push must not kill future view re-queries
       )),
     ) : EMPTY)),
-    takeUntilDestroyed(this.destroyRef),
+    takeUntilDestroyed(),
     shareReplay(1),
   );
 
@@ -189,7 +188,7 @@ export class ItemTaskInitService implements OnDestroy {
   initialized = false;
 
   /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
-  guardSubscription = this.config$.pipe(pairwise(), takeUntilDestroyed(this.destroyRef)).subscribe(([ prev, cur ]) => {
+  guardSubscription = this.config$.pipe(pairwise(), takeUntilDestroyed()).subscribe(([ prev, cur ]) => {
     if (prev.readOnly !== cur.readOnly) throw new Error(`cannot change task config (readonly prev:${prev.readOnly} cur:${cur.readOnly})`);
     if (prev.locale !== cur.locale) throw new Error(`cannot change task config (locale prev:${prev.locale} cur:${cur.locale})`);
     if (!equal(prev.route, cur.route)) {
@@ -199,9 +198,9 @@ export class ItemTaskInitService implements OnDestroy {
   });
 
   // subscribe to the task token so that it is requested even before it is needed (so ready more quickly)
-  tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY), takeUntilDestroyed(this.destroyRef)).subscribe();
+  tokenSubscription = this.taskToken$.pipe(catchError(() => EMPTY), takeUntilDestroyed()).subscribe();
   // keep the token pushed to the task even if no other consumer subscribes to `tokenUpdatedOnTask$`
-  tokenPushSubscription = this.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY), takeUntilDestroyed(this.destroyRef)).subscribe();
+  tokenPushSubscription = this.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY), takeUntilDestroyed()).subscribe();
 
   ngOnDestroy(): void {
     // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.

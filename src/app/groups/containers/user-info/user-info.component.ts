@@ -1,4 +1,5 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CanEditPersonalInfoPipe, CanViewPersonalInfoPipe, User } from 'src/app/groups/models/user';
 import { GenerateProfileEditTokenService } from 'src/app/groups/data-access/generate-profile-edit-token.service';
 import { Location } from '@angular/common';
@@ -21,6 +22,7 @@ import { UserGroupsWithGrantsComponent } from '../user-groups-with-grants/user-g
 export class UserInfoComponent {
   private generateProfileEditTokenService = inject(GenerateProfileEditTokenService);
   private location = inject(Location);
+  private destroyRef = inject(DestroyRef);
 
   user = input.required<User>();
   hasChanged = output();
@@ -28,7 +30,9 @@ export class UserInfoComponent {
   private config = inject(APPCONFIG);
 
   onModifyPassword(): void {
-    this.generateProfileEditTokenService.generate(this.user().groupId).subscribe(response => {
+    this.generateProfileEditTokenService.generate(this.user().groupId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(response => {
       const params = new HttpParams({
         fromObject: {
           client_id: this.config.oauthClientId,

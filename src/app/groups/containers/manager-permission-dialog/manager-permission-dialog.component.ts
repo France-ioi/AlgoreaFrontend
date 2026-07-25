@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Group } from '../../models/group';
 import { Manager } from '../../data-access/get-group-managers.service';
 import { ProgressSelectValue, ProgressSelectComponent } from
@@ -49,6 +50,7 @@ export class ManagerPermissionDialogComponent implements OnInit {
   private actionFeedbackService = inject(ActionFeedbackService);
   private fb = inject(UntypedFormBuilder);
   private confirmationModalService = inject(ConfirmationModalService);
+  private destroyRef = inject(DestroyRef);
 
   params = signal(inject<ManagerPermissionDialogParams>(DIALOG_DATA));
   dialogRef = inject(DialogRef<ManagerPermissionDialogResult>);
@@ -135,6 +137,7 @@ export class ManagerPermissionDialogComponent implements OnInit {
     proceedSaving$.pipe(
       switchMap(() => this.updateGroupManagersService.update(group.id, manager.id, managerPermissions)),
       finalize(() => this.isUpdating.set(false)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: () => {
         this.actionFeedbackService.success($localize`New permissions successfully saved.`);

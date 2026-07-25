@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AddedContent, NewContentType } from 'src/app/ui-components/add-content/add-content.component';
 import { GroupCreationService } from '../../data-access/group-creation.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -22,6 +23,7 @@ export class AddGroupComponent {
   private actionFeedbackService = inject(ActionFeedbackService);
   private groupRouter = inject(GroupRouter);
   private currentContentService = inject(CurrentContentService);
+  private destroyRef = inject(DestroyRef);
 
   allowedNewGroupTypes: NewContentType<GroupType>[] = [
     {
@@ -54,7 +56,9 @@ export class AddGroupComponent {
 
   addChild(group: AddedContent<GroupType>): void {
     this.state.set('addingGroup');
-    this.groupCreationService.create(group.title, group.type).subscribe({
+    this.groupCreationService.create(group.title, group.type).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: createdId => {
         this.state.set('ready');
         this.actionFeedbackService.success($localize`Group successfully created`);

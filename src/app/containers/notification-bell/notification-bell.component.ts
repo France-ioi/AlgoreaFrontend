@@ -51,7 +51,7 @@ export class NotificationBellComponent {
     this.actions$.pipe(
       ofType(notificationWebsocketActions.notificationReceived),
       filter(({ notification }) => isForumNewMessageNotification(notification)),
-      takeUntilDestroyed(this.destroyRef),
+      takeUntilDestroyed(),
     ).subscribe(({ notification }) => {
       if (isForumNewMessageNotification(notification)) {
         this.messageService.add({
@@ -72,6 +72,7 @@ export class NotificationBellComponent {
         ? $localize`Not visible content`
         : $localize`Error fetching content title`
       )),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe(title => {
       this.store.dispatch(fromForum.notificationActions.showThread({
         id: { participantId, itemId },
@@ -81,7 +82,9 @@ export class NotificationBellComponent {
   }
 
   clearAll(): void {
-    this.notificationService.deleteAllNotifications().subscribe({
+    this.notificationService.deleteAllNotifications().pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: () => this.store.dispatch(notificationApiActions.allNotificationsCleared()),
       error: () => this.messageService.add({
         severity: 'error',
