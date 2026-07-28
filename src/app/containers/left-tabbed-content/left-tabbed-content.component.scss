@@ -57,6 +57,8 @@
 .tab-rail-tabs {
   flex: 1 1 0;
   min-height: 0;
+  // overflow-y:auto alone computes overflow-x to auto; never allow a horizontal scrollbar here.
+  overflow-x: hidden;
   overflow-y: auto;
   --scrollbar-track-color: transparent;
   --scrollbar-track-thickness: #{functions.toRem(5)};
