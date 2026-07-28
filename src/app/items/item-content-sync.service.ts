@@ -30,9 +30,11 @@ export class ItemContentSyncService {
 
   private itemDataState = this.store.selectSignal(fromItemContent.selectActiveContentData);
   private breadcrumbsState = this.store.selectSignal(fromItemContent.selectActiveContentBreadcrumbsState);
+  private routeErrorHandlingState = this.store.selectSignal(fromItemContent.selectActiveContentRouteErrorHandlingState);
   private fullFrameContentSig = toSignal(this.fullFrameContent$, { initialValue: false });
 
-  // to prevent looping indefinitely in case of bug in services (wrong path > item without path > fetch path > item with path > wrong path)
+  // Guards against service redirect loops (wrong path → strip → recover path → wrong path again). Cleared when
+  // path recovery fails (routeErrorHandling error) so a later user navigation back to the failing route is allowed.
   private hasRedirected = false;
   private lastTrackedRouteId: string | undefined;
   private lastTrackedRouteIdInitialized = false;
@@ -47,6 +49,9 @@ export class ItemContentSyncService {
     });
     effect(() => {
       this.applyBreadcrumbsErrorHandling();
+    });
+    effect(() => {
+      this.applyRedirectGuardReset();
     });
     effect(() => {
       this.applyLayoutDisplaySync();
@@ -114,6 +119,14 @@ export class ItemContentSyncService {
       this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
     }
     if (state.isReady) this.hasRedirected = false;
+  }
+
+  private applyRedirectGuardReset(): void {
+    // Recovering the path after our redirect failed, so no automatic navigation will follow: disarm the loop guard
+    // so a later user-initiated navigation back to the failing route is treated as a new redirect, not as a loop.
+    // Invariant: a route is either an error route (routeErrorHandlingState non-null) or a valid route whose
+    // breadcrumbs may 403 — never both — so clearing here cannot defeat genuine-loop detection.
+    if (this.routeErrorHandlingState()?.isError) this.hasRedirected = false;
   }
 
   private applyLayoutDisplaySync(): void {
