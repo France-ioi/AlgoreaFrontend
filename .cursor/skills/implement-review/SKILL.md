@@ -44,7 +44,7 @@ Record the dev subagent's **agent ID** — you will `resume` it in Step 3.
 Launch a separate review subagent over the code that was just written.
 
 - Tool: `Task` with `subagent_type: "generalPurpose"`, `readonly: true`.
-- Model: **`claude-opus-4-8-thinking-high`** (Opus). If that slug is unavailable, tell the user Opus is unavailable rather than silently substituting another model.
+- Model: the **latest Opus** from the Task tool's available model list (newest `claude-opus-*-thinking-high`). Do not pin an older Opus version. If no Opus slug is available, tell the user rather than silently substituting another model.
 - Prompt the review subagent to:
   1. Read and follow the skill at `/home/dle/.claude/skills/angular-code-review/SKILL.md`.
   2. Scope the review to the just-written changes: run `git diff` (and `git status`) to find modified/untracked files, then read them.

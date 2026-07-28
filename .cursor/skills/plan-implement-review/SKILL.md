@@ -36,7 +36,7 @@ Stop and ask the user if either is missing — do not start.
 Launch a planning subagent that behaves like Cursor Plan mode: explore and design only, **no code changes**.
 
 - Tool: `Task` with `subagent_type: "explore"` (preferred for codebase exploration) or `subagent_type: "generalPurpose"`, **`readonly: true`**.
-- Model: **`claude-opus-4-8-thinking-high`** (Opus). If that slug is unavailable, tell the user Opus is unavailable rather than silently substituting another model.
+- Model: the **latest Opus** from the Task tool's available model list (newest `claude-opus-*-thinking-high`). Do not pin an older Opus version. If no Opus slug is available, tell the user rather than silently substituting another model.
 - Prompt must include:
   - The **full user instructions** (verbatim or faithfully summarized).
   - Instruction to act in **Plan mode**: read files, search the codebase, understand architecture (`AGENTS.md`, `.cursor/ARCHITECTURE.md`), and produce a plan — **do not write or modify any files**.
