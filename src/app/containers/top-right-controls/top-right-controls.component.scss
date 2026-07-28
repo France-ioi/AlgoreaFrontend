@@ -29,12 +29,9 @@
 .controls-zone.rail {
   flex-direction: column;
   align-items: center;
-  gap: functions.toRem(8);
+  // Match left-tab-bar inter-item spacing (`--main-menu-item-gap`).
+  gap: functions.toRem(16);
   padding: functions.toRem(8) 0;
-
-  &:has(.lang-button) {
-    gap: functions.toRem(3);
-  }
 
   .lang-button {
     margin-right: 0;

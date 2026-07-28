@@ -8,7 +8,8 @@
 }
 
 .compact-trigger-icon {
-  font-size: functions.toRem(20);
+  // Match left-tab-bar `.main-menu-icon` (and rail Sign in) when shown in the tab rail.
+  font-size: functions.toRem(24);
   color: var(--alg-primary-color, #0f61ff);
 }
 
