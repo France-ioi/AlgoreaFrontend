@@ -61,6 +61,9 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
 
   private readonly activeContentFullRoute = this.store.selectSignal(fromGroupContent.selectActiveContentFullRoute);
   private readonly breadcrumbsState = this.store.selectSignal(fromGroupContent.selectActiveContentBreadcrumbsState);
+  private readonly routeErrorHandlingState = this.store.selectSignal(fromGroupContent.selectActiveContentRouteErrorHandlingState);
+  // Guards against service redirect loops. Cleared when path recovery fails (routeErrorHandling error) so a later
+  // user navigation back to the failing route is allowed.
   private hasRedirected = false;
 
   constructor() {
@@ -72,6 +75,9 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
     });
     effect(() => {
       this.applyBreadcrumbsErrorHandling();
+    });
+    effect(() => {
+      this.applyRedirectGuardReset();
     });
   }
 
@@ -120,6 +126,14 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
       this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: false }), { navExtras: { replaceUrl: true } });
     }
     if (state.isReady) this.hasRedirected = false;
+  }
+
+  private applyRedirectGuardReset(): void {
+    // Recovering the path after our redirect failed, so no automatic navigation will follow: disarm the loop guard
+    // so a later user-initiated navigation back to the failing route is treated as a new redirect, not as a loop.
+    // Invariant: a route is either an error route (routeErrorHandlingState non-null) or a valid route whose
+    // breadcrumbs may 403 — never both — so clearing here cannot defeat genuine-loop detection.
+    if (this.routeErrorHandlingState()?.isError) this.hasRedirected = false;
   }
 
 }

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
@@ -10,7 +11,9 @@ import { ItemEditPerm } from 'src/app/items/models/item-edit-permission';
 import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permission';
 import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
-import { readyState } from 'src/app/utils/state';
+import { tagError } from 'src/app/utils/errors';
+import { errorState, fetchingState, readyState } from 'src/app/utils/state';
+import { breadcrumbServiceTag } from './data-access/get-breadcrumb.service';
 import { ItemContentSyncService } from './item-content-sync.service';
 import { ItemData } from './models/item-data';
 import { ItemTabs } from './item-tabs';
@@ -56,19 +59,26 @@ function createItemData(route: FullItemRoute, itemOverrides?: Partial<Item>): It
   };
 }
 
+function taggedBreadcrumbForbiddenError(): HttpErrorResponse {
+  return tagError(new HttpErrorResponse({ status: 403 }), breadcrumbServiceTag);
+}
+
 describe('ItemContentSyncService', () => {
   let store: MockStore;
   let currentContent: jasmine.SpyObj<Pick<CurrentContentService, 'replace' | 'clear'>>;
   let layoutService: jasmine.SpyObj<Pick<LayoutService, 'configure'>>;
   let itemTabs: jasmine.SpyObj<Pick<ItemTabs, 'itemChanged'>>;
+  let itemRouter: jasmine.SpyObj<Pick<ItemRouter, 'navigateTo'>>;
 
   const route1 = itemRoute('activity', '1', { attemptId: '0', path: [] });
   const route2 = itemRoute('activity', '2', { attemptId: '0', path: [] });
+  const routeWithPath = itemRoute('activity', '1', { attemptId: '0', path: [ 'parent' ] });
 
   beforeEach(() => {
     currentContent = jasmine.createSpyObj('CurrentContentService', [ 'replace', 'clear' ]);
     layoutService = jasmine.createSpyObj('LayoutService', [ 'configure' ]);
     itemTabs = jasmine.createSpyObj('ItemTabs', [ 'itemChanged' ]);
+    itemRouter = jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]);
 
     TestBed.configureTestingModule({
       providers: [
@@ -77,12 +87,13 @@ describe('ItemContentSyncService', () => {
           selectors: [
             { selector: fromItemContent.selectActiveContentData, value: readyState(createItemData(route1)) },
             { selector: fromItemContent.selectActiveContentBreadcrumbsState, value: readyState([], route1) },
+            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: fetchingState() },
           ],
         }),
         { provide: CurrentContentService, useValue: currentContent },
         { provide: LayoutService, useValue: layoutService },
         { provide: ItemTabs, useValue: itemTabs },
-        { provide: ItemRouter, useValue: jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]) },
+        { provide: ItemRouter, useValue: itemRouter },
       ],
     });
 
@@ -119,5 +130,63 @@ describe('ItemContentSyncService', () => {
     TestBed.flushEffects();
 
     expect(currentContent.replace).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows a second path-strip redirect after route error handling fails', () => {
+    TestBed.flushEffects();
+    itemRouter.navigateTo.calls.reset();
+
+    const breadcrumbsError = errorState(taggedBreadcrumbForbiddenError(), routeWithPath);
+    store.overrideSelector(fromItemContent.selectActiveContentBreadcrumbsState, breadcrumbsError);
+    store.refreshState();
+    TestBed.flushEffects();
+
+    expect(itemRouter.navigateTo).toHaveBeenCalledTimes(1);
+
+    // Path recovery failed: disarm the loop guard so a later user navigation is not treated as a loop.
+    store.overrideSelector(
+      fromItemContent.selectActiveContentRouteErrorHandlingState,
+      errorState(new Error('path recovery failed')),
+    );
+    store.refreshState();
+    TestBed.flushEffects();
+
+    // Same breadcrumbs error re-selected (e.g. Content tab restores the remembered path).
+    store.overrideSelector(
+      fromItemContent.selectActiveContentBreadcrumbsState,
+      errorState(taggedBreadcrumbForbiddenError(), routeWithPath),
+    );
+    store.refreshState();
+
+    expect(() => TestBed.flushEffects()).not.toThrow();
+    expect(itemRouter.navigateTo).toHaveBeenCalledTimes(2);
+  });
+
+  it('throws Too many redirections when breadcrumbs error re-emits without route error handling failure', () => {
+    TestBed.flushEffects();
+    itemRouter.navigateTo.calls.reset();
+
+    store.overrideSelector(
+      fromItemContent.selectActiveContentBreadcrumbsState,
+      errorState(taggedBreadcrumbForbiddenError(), routeWithPath),
+    );
+    store.refreshState();
+    TestBed.flushEffects();
+
+    expect(itemRouter.navigateTo).toHaveBeenCalledTimes(1);
+
+    // Genuine service loop: path recovery still fetching (not failed), so the guard must stay armed.
+    store.overrideSelector(fromItemContent.selectActiveContentRouteErrorHandlingState, fetchingState());
+    store.refreshState();
+    TestBed.flushEffects();
+
+    store.overrideSelector(
+      fromItemContent.selectActiveContentBreadcrumbsState,
+      errorState(taggedBreadcrumbForbiddenError(), routeWithPath),
+    );
+    store.refreshState();
+
+    expect(() => TestBed.flushEffects()).toThrowError('Too many redirections (unexpected)');
+    expect(itemRouter.navigateTo).toHaveBeenCalledTimes(1);
   });
 });
