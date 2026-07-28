@@ -42,10 +42,13 @@
   align-items: stretch;
 }
 
+// flex-shrink/min-width: keep the rail from being squeezed by the non-shrinking expandable content column.
 .tab-rail {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   width: var(--left-panel-tab-bar-width, 5rem);
+  min-width: var(--left-panel-tab-bar-width, 5rem);
   align-self: stretch;
   min-height: 0;
   overflow: hidden;

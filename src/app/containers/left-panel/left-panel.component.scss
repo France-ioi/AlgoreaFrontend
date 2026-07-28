@@ -18,8 +18,10 @@
   height: 100%;
 }
 
+// Compact: keep full --left-panel-width so rail + masked content fit; outer .left-menu clips to tab-bar width.
+// Search drops tree-compact, so the narrow width:100% override still applies when expanding for search.
 @media screen and (max-width: bp.$narrow-screen-max-width) {
-  :host(.tree-expandable) {
+  :host(.tree-expandable:not(.tree-compact)) {
     width: 100%;
     min-width: 0;
   }

@@ -13,6 +13,7 @@ export class LeftMenu {
   private searchPanelLocator = this.leftPanelLocator.locator('alg-left-menu-search');
   private searchTabButtonLocator = this.tabBarLocator.locator('[data-cy="main-menu-search-btn"]');
   private collapseButtonLocator = this.page.locator('[data-cy="left-menu-btn"]');
+  private openSidebarButtonLocator = this.page.getByRole('button', { name: 'Open sidebar' });
 
   constructor(private page: Page) {
   }
@@ -144,9 +145,49 @@ export class LeftMenu {
     await expect(this.leftMenuShellLocator).toHaveClass(/collapsed/);
   }
 
+  async expandLeftMenu(): Promise<void> {
+    await this.openSidebarButtonLocator.click();
+    await expect(this.leftMenuShellLocator).not.toHaveClass(/collapsed/);
+  }
+
   async checksLeftMenuIsCollapsed(): Promise<void> {
     await expect.soft(this.leftMenuShellLocator).toHaveClass(/collapsed/);
     await this.checksRightContentIsFullWidth();
+  }
+
+  async getTabRailWidth(): Promise<number> {
+    const rail = this.leftPanelLocator.locator('.tab-rail');
+    await expect(rail).toBeAttached();
+    return rail.evaluate(el => (el as HTMLElement).getBoundingClientRect().width);
+  }
+
+  /**
+   * On a narrow viewport, compact mode must keep the tab rail visible (non-zero width) with its tabs.
+   * Regression for the flex squeeze that collapsed `.tab-rail` to 0px when the inner panel was width:100%.
+   * Measure `.tab-rail` itself: `alg-left-tab-bar` can still report a non-zero box while clipped by a 0-width rail.
+   * Require a stable width so the left-menu open animation cannot false-pass mid-transition.
+   */
+  async checksCompactTabRailIsVisibleOnNarrowScreen(): Promise<void> {
+    await this.checksLeftMenuShellIsVisible();
+    await expect(this.leftPanelLocator).toHaveClass(/tree-compact/);
+    const expectedWidth = await this.getExpectedCompactLeftMenuWidth();
+    expect(expectedWidth, 'expected --left-panel-tab-bar-width to resolve to a positive length').toBeGreaterThan(40);
+
+    await expect.poll(async () => {
+      const first = await this.getTabRailWidth();
+      await this.page.waitForTimeout(300);
+      const second = await this.getTabRailWidth();
+      return Math.abs(first - second) <= 1 ? second : null;
+    }, { message: 'tab rail width should settle after the left-menu open animation' }).not.toBeNull();
+
+    const railWidth = await this.getTabRailWidth();
+    expect(
+      railWidth,
+      'tab rail should keep compact tab-bar width on narrow compact mode (not collapse to 0)',
+    ).toBeGreaterThan(expectedWidth - layoutTolerancePx);
+
+    await this.checksIsTabVisible('Content');
+    await this.checksIsTabVisible('Skills');
   }
 
   async navigateToHiddenTreeChild(title: string | RegExp, itemId?: string): Promise<void> {
