@@ -49,6 +49,7 @@ export const LEFT_NAV_ICON_OPTIONS = [
   'camera',
   'images',
   // Organization & lists
+  'house',
   'list-checks',
   'list-bullets',
   'package',
