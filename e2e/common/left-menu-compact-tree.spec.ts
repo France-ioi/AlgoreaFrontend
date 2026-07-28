@@ -89,4 +89,14 @@ test.describe('left menu compact tree', () => {
     await leftMenu.collapseLeftMenu();
     await leftMenu.checksLeftMenuIsCollapsed();
   });
+
+  test('on narrow screen, compact left menu keeps tab rail icons visible', async ({ page, leftMenu }) => {
+    // Below narrowScreenMaxWidthPx (700): mobile overlay + tree-expandable width:100% layout.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(hiddenItemUrl);
+    await expect(page).toHaveURL(new RegExp(`/a/${hiddenTreeItemId}`));
+
+    await leftMenu.expandLeftMenu();
+    await leftMenu.checksCompactTabRailIsVisibleOnNarrowScreen();
+  });
 });

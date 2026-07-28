@@ -6,6 +6,7 @@
   flex-shrink: 0;
   width: var(--left-panel-tab-bar-width, 5rem);
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   box-sizing: border-box;
   --scrollbar-track-color: transparent;
@@ -16,6 +17,7 @@
 // Scroll lives on `.tab-rail-tabs` in left-tabbed-content so bottom rail controls stay pinned.
 :host-context(.tab-rail-tabs) {
   flex-shrink: 1;
+  width: 100%;
   overflow: visible;
 }
 

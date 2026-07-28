@@ -42,10 +42,13 @@
   align-items: stretch;
 }
 
+// flex-shrink/min-width: keep the rail from being squeezed by the non-shrinking expandable content column.
 .tab-rail {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   width: var(--left-panel-tab-bar-width, 5rem);
+  min-width: var(--left-panel-tab-bar-width, 5rem);
   align-self: stretch;
   min-height: 0;
   overflow: hidden;
@@ -54,6 +57,8 @@
 .tab-rail-tabs {
   flex: 1 1 0;
   min-height: 0;
+  // overflow-y:auto alone computes overflow-x to auto; never allow a horizontal scrollbar here.
+  overflow-x: hidden;
   overflow-y: auto;
   --scrollbar-track-color: transparent;
   --scrollbar-track-thickness: #{functions.toRem(5)};
