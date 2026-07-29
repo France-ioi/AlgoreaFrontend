@@ -73,6 +73,7 @@ describe('ItemContentSyncService', () => {
   const route1 = itemRoute('activity', '1', { attemptId: '0', path: [] });
   const route2 = itemRoute('activity', '2', { attemptId: '0', path: [] });
   const routeWithPath = itemRoute('activity', '1', { attemptId: '0', path: [ 'parent' ] });
+  const route2WithPath = itemRoute('activity', '2', { attemptId: '0', path: [ 'parent' ] });
 
   beforeEach(() => {
     currentContent = jasmine.createSpyObj('CurrentContentService', [ 'replace', 'clear' ]);
@@ -188,5 +189,33 @@ describe('ItemContentSyncService', () => {
 
     expect(() => TestBed.flushEffects()).toThrowError('Too many redirections (unexpected)');
     expect(itemRouter.navigateTo).toHaveBeenCalledTimes(1);
+  });
+
+  it('redirects again for another item while the previous path recovery is still in flight', () => {
+    TestBed.flushEffects();
+    itemRouter.navigateTo.calls.reset();
+
+    store.overrideSelector(
+      fromItemContent.selectActiveContentBreadcrumbsState,
+      errorState(taggedBreadcrumbForbiddenError(), routeWithPath),
+    );
+    store.refreshState();
+    TestBed.flushEffects();
+
+    expect(itemRouter.navigateTo).toHaveBeenCalledTimes(1);
+
+    // Previous item's path recovery still fetching — guard must not block a different item.
+    store.overrideSelector(fromItemContent.selectActiveContentRouteErrorHandlingState, fetchingState());
+    store.refreshState();
+    TestBed.flushEffects();
+
+    store.overrideSelector(
+      fromItemContent.selectActiveContentBreadcrumbsState,
+      errorState(taggedBreadcrumbForbiddenError(), route2WithPath),
+    );
+    store.refreshState();
+
+    expect(() => TestBed.flushEffects()).not.toThrow();
+    expect(itemRouter.navigateTo).toHaveBeenCalledTimes(2);
   });
 });
