@@ -33,9 +33,11 @@ export class ItemContentSyncService {
   private routeErrorHandlingState = this.store.selectSignal(fromItemContent.selectActiveContentRouteErrorHandlingState);
   private fullFrameContentSig = toSignal(this.fullFrameContent$, { initialValue: false });
 
-  // Guards against service redirect loops (wrong path → strip → recover path → wrong path again). Cleared when
-  // path recovery fails (routeErrorHandling error) so a later user navigation back to the failing route is allowed.
-  private hasRedirected = false;
+  // Guards against service redirect loops (wrong path → strip path → recover path → wrong path again). Holds the id
+  // of the item we redirected for: scoping per item keeps the guard from staying armed when the user navigates to
+  // another item before the path recovery of the previous one settles. A scalar id is safe because only one content
+  // is active at a time, so a genuine loop is always same-target.
+  private redirectedForItemId: string | undefined;
   private lastTrackedRouteId: string | undefined;
   private lastTrackedRouteIdInitialized = false;
   private lastLayoutConfig: { id: string, display: ContentDisplayType } | undefined;
@@ -111,14 +113,14 @@ export class ItemContentSyncService {
       errorHasTag(state.error, breadcrumbServiceTag) &&
       (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
     ) {
-      if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
-      this.hasRedirected = true;
       const route = state.identifier;
       if (!route) throw new Error('unexpected: the active breadcrumbs state should always have an identifier');
+      if (this.redirectedForItemId === route.id) throw new Error('Too many redirections (unexpected)');
+      this.redirectedForItemId = route.id;
       const routeWithoutPath = { ...route, path: undefined };
       this.itemRouter.navigateTo(routeWithoutPath, { navExtras: { replaceUrl: true }, useCurrentObservation: true });
     }
-    if (state.isReady) this.hasRedirected = false;
+    if (state.isReady) this.redirectedForItemId = undefined;
   }
 
   private applyRedirectGuardReset(): void {
@@ -126,7 +128,7 @@ export class ItemContentSyncService {
     // so a later user-initiated navigation back to the failing route is treated as a new redirect, not as a loop.
     // Invariant: a route is either an error route (routeErrorHandlingState non-null) or a valid route whose
     // breadcrumbs may 403 — never both — so clearing here cannot defeat genuine-loop detection.
-    if (this.routeErrorHandlingState()?.isError) this.hasRedirected = false;
+    if (this.routeErrorHandlingState()?.isError) this.redirectedForItemId = undefined;
   }
 
   private applyLayoutDisplaySync(): void {

@@ -27,6 +27,8 @@ export class ItemBreadcrumbsWithFailoverService {
         delay: (err: unknown) => {
           if (!errorIsHTTPForbidden(err)) throw err;
           const path = itemRoute.attemptId !== undefined ? [ ...itemRoute.path, itemRoute.id ] : itemRoute.path;
+          // Empty path would POST `/api/items//start-result-path` — skip failover for root items.
+          if (path.length === 0) throw err;
           return this.resultActionsService.startWithoutAttempt(path).pipe(
             tap(() => this.resultPathStarted.next()), // side effect: inform this operation has been done
             catchError(() => {

@@ -62,9 +62,11 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
   private readonly activeContentFullRoute = this.store.selectSignal(fromGroupContent.selectActiveContentFullRoute);
   private readonly breadcrumbsState = this.store.selectSignal(fromGroupContent.selectActiveContentBreadcrumbsState);
   private readonly routeErrorHandlingState = this.store.selectSignal(fromGroupContent.selectActiveContentRouteErrorHandlingState);
-  // Guards against service redirect loops. Cleared when path recovery fails (routeErrorHandling error) so a later
-  // user navigation back to the failing route is allowed.
-  private hasRedirected = false;
+  // Guards against service redirect loops (wrong path → strip path → recover path → wrong path again). Holds the id
+  // of the group we redirected for: scoping per group keeps the guard from staying armed when the user navigates to
+  // another group before the path recovery of the previous one settles. A scalar id is safe because only one content
+  // is active at a time, so a genuine loop is always same-target.
+  private redirectedForGroupId: string | undefined;
 
   constructor() {
     effect(() => {
@@ -119,13 +121,13 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
       errorHasTag(state.error, breadcrumbServiceTag) &&
       (errorIsHTTPForbidden(state.error) || errorIsHTTPNotFound(state.error))
     ) {
-      if (this.hasRedirected) throw new Error('Too many redirections (unexpected)');
-      this.hasRedirected = true;
       const id = state.identifier?.id;
       if (!id) throw new Error('Unexpected: group id should exist');
+      if (this.redirectedForGroupId === id) throw new Error('Too many redirections (unexpected)');
+      this.redirectedForGroupId = id;
       this.groupRouter.navigateTo(rawGroupRoute({ id, isUser: false }), { navExtras: { replaceUrl: true } });
     }
-    if (state.isReady) this.hasRedirected = false;
+    if (state.isReady) this.redirectedForGroupId = undefined;
   }
 
   private applyRedirectGuardReset(): void {
@@ -133,7 +135,7 @@ export class GroupByIdComponent implements OnDestroy, PendingChangesComponent {
     // so a later user-initiated navigation back to the failing route is treated as a new redirect, not as a loop.
     // Invariant: a route is either an error route (routeErrorHandlingState non-null) or a valid route whose
     // breadcrumbs may 403 — never both — so clearing here cannot defeat genuine-loop detection.
-    if (this.routeErrorHandlingState()?.isError) this.hasRedirected = false;
+    if (this.routeErrorHandlingState()?.isError) this.redirectedForGroupId = undefined;
   }
 
 }
