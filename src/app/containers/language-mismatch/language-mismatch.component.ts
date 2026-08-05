@@ -1,9 +1,11 @@
 import { Component, effect, inject } from '@angular/core';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Dialog } from '@angular/cdk/dialog';
+import { EMPTY } from 'rxjs';
+import { catchError, filter, map, retry, switchMap, take, takeUntil } from 'rxjs/operators';
 import { UserSessionService } from '../../services/user-session.service';
 import { LocaleService } from '../../services/localeService';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Dialog } from '@angular/cdk/dialog';
+import { UserLanguageService } from '../../services/user-language.service';
 import {
   LanguageMismatchModalComponent
 } from 'src/app/containers/language-mismatch/language-mismatch-modal/language-mismatch-modal.component';
@@ -16,7 +18,7 @@ import {
 export class LanguageMismatchComponent {
   private localeService = inject(LocaleService);
   private sessionService = inject(UserSessionService);
-
+  private userLanguageService = inject(UserLanguageService);
   private dialogService = inject(Dialog);
 
   readonly currentLanguage = this.localeService.currentLang?.tag;
@@ -38,4 +40,20 @@ export class LanguageMismatchComponent {
     }
   });
 
+  constructor() {
+    const language = this.currentLanguage;
+    if (!language) return;
+
+    // Temp users: silently align profile language with site language (once per load). No modal.
+    this.sessionService.userProfile$.pipe(
+      filter(profile => profile.tempUser && profile.defaultLanguage !== language),
+      take(1),
+      switchMap(() => this.userLanguageService.setUserLanguage(language)),
+      retry(3),
+      // An error is not that problematic, no need to break the app for the language of a temp user.
+      catchError(() => EMPTY),
+      takeUntil(this.localeService.navigatingToNewLanguage$),
+      takeUntilDestroyed(),
+    ).subscribe();
+  }
 }

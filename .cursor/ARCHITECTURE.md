@@ -282,6 +282,7 @@ Auth flow handled by `AuthService` and `OAuthService` in `services/auth/`.
 - Translations managed via Crowdin
 - Locale detection via URL path prefix
 - Supported languages configured in `config.js`
+- When a temp user's profile `defaultLanguage` differs from the site language, `LanguageMismatchComponent` auto-aligns once per load via `UserLanguageService` (persist + force nav-menu reload); logged-in users get the language-mismatch modal instead
 
 ## Build & Deployment
 
@@ -324,6 +325,7 @@ origin (which would also let us drop the deprecated `--deploy-url` flag).
 |---------|---------|
 | `AuthService` | Authentication state and flow |
 | `UserSessionService` | Current user session management |
+| `UserLanguageService` | Persist profile language and force nav-menu reload |
 | `LayoutService` | UI layout state (left menu, breadcrumbs) |
 | `LocaleService` | Language/locale management |
 | `ItemNavTreeService` | Item navigation tree building |

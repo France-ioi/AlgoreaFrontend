@@ -1,10 +1,8 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationModalComponent } from 'src/app/ui-components/notification-modal/notification-modal.component';
-import { catchError, filter, retry, switchMap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
 import { LocaleService } from 'src/app/services/localeService';
-import { UserSessionService } from 'src/app/services/user-session.service';
+import { UserLanguageService } from 'src/app/services/user-language.service';
 import { mapPending } from 'src/app/utils/operators/map-pending';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -27,7 +25,7 @@ export interface LanguageMismatchModalParams {
 })
 export class LanguageMismatchModalComponent {
   private localeService = inject(LocaleService);
-  private sessionService = inject(UserSessionService);
+  private userLanguageService = inject(UserLanguageService);
   private destroyRef = inject(DestroyRef);
 
   params = signal(inject<LanguageMismatchModalParams>(DIALOG_DATA));
@@ -38,20 +36,9 @@ export class LanguageMismatchModalComponent {
 
   protected readonly updating = signal(false);
 
-  constructor() {
-    this.sessionService.userProfile$.pipe(
-      filter(profile => profile.tempUser && profile.defaultLanguage !== this.currentLanguage),
-      switchMap(() => (this.currentLanguage ? this.sessionService.updateCurrentUser({ default_language: this.currentLanguage }) : EMPTY)),
-      retry(3),
-      // An error is not that problematic, no need to break the app for the language of a temp user.
-      catchError(() => EMPTY),
-      takeUntilDestroyed(),
-    ).subscribe();
-  }
-
   onUpdateUserLanguage(language?: string): void {
     if (!language) throw new Error('language should be defined');
-    this.sessionService.updateCurrentUser({ default_language: language })
+    this.userLanguageService.setUserLanguage(language)
       .pipe(
         mapPending(),
         takeUntilDestroyed(this.destroyRef),
