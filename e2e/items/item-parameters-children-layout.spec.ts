@@ -49,3 +49,42 @@ test('persists children layout selection after save and page refresh', async ({ 
     await expect.soft(activeLayoutLabel).toHaveText('Grid');
   });
 });
+
+test('persists Two levels children layout after save and page refresh', async ({ page, createItem, itemContentPage }) => {
+  if (!createItem) throw new Error('The item is not created');
+
+  const paramsUrl = `a/${createItem.itemId};p=${rootItemId};pa=0/parameters`;
+  const childrenLayoutView = page.locator('.form-item-view').filter({ hasText: 'Children layout' });
+  const childrenLayoutSelection = childrenLayoutView.locator('alg-selection');
+  const activeLayoutLabel = childrenLayoutSelection.locator('li.active .label');
+
+  await Promise.all([
+    page.goto(paramsUrl),
+    itemContentPage.waitForItemResponse(createItem.itemId),
+  ]);
+  await expect.soft(childrenLayoutSelection).toBeVisible();
+
+  await test.step('Select Two levels and save', async () => {
+    await childrenLayoutSelection.getByTestId('selection-control-value').filter({ hasText: 'Two levels' }).click();
+    await expect.soft(activeLayoutLabel).toHaveText('Two levels');
+
+    const itemPut = page.waitForResponse(resp =>
+      resp.request().method() === 'PUT'
+      && resp.url() === `${apiUrl}/items/${createItem.itemId}`
+      && resp.request().postData()?.includes('"children_layout":"TwoLevels"') === true
+      && resp.ok());
+    await Promise.all([
+      itemPut,
+      itemContentPage.saveChangesAndCheckNotification(),
+    ]);
+  });
+
+  await test.step('Reload parameters and check Two levels is still selected', async () => {
+    await Promise.all([
+      page.goto(paramsUrl),
+      itemContentPage.waitForItemResponse(createItem.itemId),
+    ]);
+    await expect.soft(childrenLayoutSelection).toBeVisible();
+    await expect.soft(activeLayoutLabel).toHaveText('Two levels');
+  });
+});

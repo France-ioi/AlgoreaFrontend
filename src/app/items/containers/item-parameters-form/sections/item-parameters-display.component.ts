@@ -47,6 +47,7 @@ export class ItemParametersDisplayComponent {
   readonly childrenLayoutOptions: { label: string, value: ItemChildrenLayout }[] = [
     { label: $localize`List`, value: 'List' },
     { label: $localize`Grid`, value: 'Grid' },
+    { label: $localize`Two levels`, value: 'TwoLevels' },
     { label: $localize`Hide`, value: 'Hide' },
   ];
 

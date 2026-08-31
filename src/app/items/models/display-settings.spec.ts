@@ -24,6 +24,10 @@ describe('displaySettingsSchema', () => {
       leftNavIcon: null,
     });
   });
+
+  it('should accept TwoLevels children layout', () => {
+    expect(displaySettingsSchema.parse({ childrenLayout: 'TwoLevels' }).childrenLayout).toBe('TwoLevels');
+  });
 });
 
 describe('buildDisplaySettingsBody', () => {

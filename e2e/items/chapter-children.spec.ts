@@ -4,7 +4,7 @@ import { initAsUsualUser } from '../helpers/e2e_auth';
 test('check chapter children as a grid', async ({ page }) => {
   await initAsUsualUser(page);
   await page.goto('/a/9151590357867554022;p=7528142386663912287,6621899821435600308;a=0');
-  const firstChildLink = page.locator('alg-chapter-children > div > div:first-child > a');
+  const firstChildLink = page.locator('alg-chapter-children alg-chapter-children-grid .grid-item').first().locator('a');
   await expect(firstChildLink).toBeVisible();
 
   await test.step('check the path to child is correctly built', async () => {
