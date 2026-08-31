@@ -39,7 +39,8 @@ router.get('/api/items/:itemId/children', (req, res, next) => {
   // Presence of show_level2_children (any value) enables nested children on eligible L1 items.
   // Nested `children` is not yet on the generated OpenAPI childItem type; cast for the mock payload.
   const showLevel2 = req.query.show_level2_children !== undefined;
-  const payload = showLevel2
+  const includeDescription = req.query.include_description !== undefined;
+  let payload: ChildItem[] = showLevel2
     ? visible.map(child => {
       if (!canViewContent(child) || !hasStartedResult(child)) {
         return child;
@@ -47,6 +48,21 @@ router.get('/api/items/:itemId/children', (req, res, next) => {
       return { ...child, children: sampleLevel2Children(visible, child.id) };
     })
     : visible;
+
+  if (includeDescription) {
+    payload = payload.map(child => {
+      if (!canViewContent(child) || !child.string) {
+        return child;
+      }
+      return {
+        ...child,
+        string: {
+          ...child.string,
+          description: child.string.subtitle ?? null,
+        },
+      };
+    });
+  }
 
   res
     .operation('/items/{item_id}/children', 'get')

@@ -20,6 +20,7 @@ import { groupTwoLevelsSections, twoLevelsSectionTrackId } from './group-two-lev
 import { RouterLink } from '@angular/router';
 import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
+import { DescriptionIframeComponent } from 'src/app/ui-components/description-iframe/description-iframe.component';
 
 @Component({
   selector: 'alg-chapter-children',
@@ -36,6 +37,7 @@ import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
     ItemRoutePipe,
     ItemRouteWithExtraPipe,
     RouteUrlPipe,
+    DescriptionIframeComponent,
   ]
 })
 export class ChapterChildrenComponent {
@@ -81,6 +83,7 @@ export class ChapterChildrenComponent {
         this.getItemChildrenService.get(id, attemptId, {
           watchedGroupId: observedGroupId ?? undefined,
           showLevel2Children,
+          includeDescription: showLevel2Children,
         }).pipe(
           map(itemChildren => itemChildren.map(mapChildWithAdditions)),
           map(children => ({

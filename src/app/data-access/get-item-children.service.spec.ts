@@ -67,6 +67,17 @@ describe('GetItemChildrenService', () => {
       r => r.url === `${apiUrl}/items/42/children` && r.method === 'GET',
     );
     expect(req.request.params.get('show_level2_children')).toBe('1');
+    expect(req.request.params.has('include_description')).toBe(false);
+    req.flush([]);
+  });
+
+  it('should send include_description=1 when enabled', () => {
+    service.get('42', '0', { includeDescription: true }).subscribe();
+
+    const req = httpTestingController.expectOne(
+      r => r.url === `${apiUrl}/items/42/children` && r.method === 'GET',
+    );
+    expect(req.request.params.get('include_description')).toBe('1');
     req.flush([]);
   });
 
@@ -110,5 +121,58 @@ describe('GetItemChildrenService', () => {
     expect(children[0]?.children?.[0]?.string.title).toBe('Nested');
     expect(children[1]?.children).toBeUndefined();
     expect(children[2]?.children).toEqual([]);
+  });
+
+  it('should decode string.description on top-level children only', () => {
+    let result: ItemChildren | undefined;
+    service.get('42', '0', { includeDescription: true, showLevel2Children: true }).subscribe(children => {
+      result = children;
+    });
+
+    const req = httpTestingController.expectOne(
+      r => r.url === `${apiUrl}/items/42/children`,
+    );
+    expect(req.request.params.get('include_description')).toBe('1');
+    expect(req.request.params.get('show_level2_children')).toBe('1');
+    req.flush([
+      {
+        ...visibleChildBody,
+        string: {
+          ...visibleChildBody.string,
+          description: '<p>Hello</p>',
+        },
+        children: [
+          {
+            ...visibleChildBody,
+            id: '2',
+            string: { language_tag: 'en', title: 'Nested', subtitle: null, image_url: null },
+          },
+        ],
+      },
+      {
+        ...visibleChildBody,
+        id: '3',
+        string: {
+          ...visibleChildBody.string,
+          title: 'Null desc',
+          description: null,
+        },
+      },
+      {
+        ...visibleChildBody,
+        id: '4',
+        string: { ...visibleChildBody.string, title: 'No desc key' },
+      },
+    ]);
+
+    expect(result).toBeDefined();
+    const children = result as ItemChildren;
+    expect(children[0]?.string.description).toBe('<p>Hello</p>');
+    expect(children[0]?.children?.[0]?.string).not.toEqual(
+      jasmine.objectContaining({ description: jasmine.anything() }),
+    );
+    expect('description' in (children[0]?.children?.[0]?.string ?? {})).toBe(false);
+    expect(children[1]?.string.description).toBeNull();
+    expect(children[2]?.string.description).toBeUndefined();
   });
 });

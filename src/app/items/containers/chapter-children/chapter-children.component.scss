@@ -36,6 +36,11 @@
   }
 }
 
+.two-levels-description {
+  display: block;
+  margin-bottom: functions.toRem(12);
+}
+
 .two-levels-empty {
   margin: 0;
   color: var(--alg-secondary-color, #545454);

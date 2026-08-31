@@ -7,6 +7,8 @@ export interface ItemChildWithAdditions {
   string: {
     title: string | null,
     subtitle?: string | null,
+    /** Present on L1 when include_description was requested and can_view >= content; null = empty. */
+    description?: string | null,
   },
   displaySettings: DisplaySettings,
   category: ItemChildCategory,
