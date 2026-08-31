@@ -1,0 +1,101 @@
+<section class="two-levels-section">
+  @let result = item().result;
+  <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space">
+    <a
+      class="alg-link two-levels-title-link"
+      [routerLink]="item() | itemRoute: { path: path() } |
+        with: (result && result.attemptId
+          ? { attemptId: result.attemptId }
+          : { parentAttemptId: parentAttemptId() }) |
+        url"
+    >{{ item().string.title }}</a>
+  </h2>
+  @if (item().string.description; as description) {
+    <alg-description-iframe class="two-levels-description" [content]="description" />
+  }
+
+  @switch (plan().action) {
+    @case ('showLocked') {
+      <p class="two-levels-info">
+        @if (isSkill()) {
+          <ng-container i18n>Your current access rights do not allow you to list the content of this skill.</ng-container>
+        } @else {
+          <ng-container i18n>Your current access rights do not allow you to list the content of this chapter.</ng-container>
+        }
+      </p>
+    }
+    @case ('showExplicitEntry') {
+      <p class="two-levels-info">
+        @if (isSkill()) {
+          <ng-container i18n>
+            This skill requires a manual action to enter. Visit the skill to know more.
+          </ng-container>
+        } @else {
+          <ng-container i18n>
+            This chapter requires a manual action to enter. Visit the chapter to know more.
+          </ng-container>
+        }
+      </p>
+    }
+    @case ('useNested') {
+      @if (plan(); as nestedPlan) {
+        @if (nestedPlan.action === 'useNested') {
+          @if (nestedPlan.children.length > 0) {
+            <alg-chapter-children-grid
+              [children]="nestedPlan.children"
+              [path]="path().concat([ item().id ])"
+              [parentAttemptId]="nestedPlan.attemptId"
+              [leftMenuShown]="leftMenuShown()"
+              size="compact"
+            />
+          } @else if (isSkill()) {
+            <p class="two-levels-empty" i18n>This skill does not have any content visible to you.</p>
+          } @else {
+            <p class="two-levels-empty" i18n>This chapter does not have any content visible to you.</p>
+          }
+        }
+      }
+    }
+    @default {
+      @if (fetchState$ | async; as state) {
+        @if (state.isFetching) {
+          <div
+            class="placeholder-grid"
+            [class.left-menu-shown]="leftMenuShown()"
+            role="status"
+            aria-busy="true"
+            [attr.aria-label]="loadingAriaLabel()"
+          >
+            @for (slot of placeholderSlots; track slot) {
+              <div class="placeholder-card" aria-hidden="true">
+                <div class="placeholder-image alg-skeleton">&nbsp;</div>
+                <div class="placeholder-title alg-skeleton">&nbsp;</div>
+              </div>
+            }
+          </div>
+        } @else if (state.isError) {
+          <alg-error
+            i18n-message
+            message="Error while loading this content"
+            [showRefreshButton]="true"
+            (refresh)="refresh()"
+          />
+        } @else if (state.isReady && state.data; as body) {
+          @if (body.children.length > 0) {
+            <alg-chapter-children-grid
+              [children]="body.children"
+              [path]="path().concat([ item().id ])"
+              [parentAttemptId]="body.attemptId"
+              [leftMenuShown]="leftMenuShown()"
+              size="compact"
+            />
+          } @else if (isSkill()) {
+            <p class="two-levels-empty" i18n>This skill does not have any content visible to you.</p>
+          } @else {
+            <p class="two-levels-empty" i18n>This chapter does not have any content visible to you.</p>
+          }
+        }
+      }
+    }
+  }
+</section>

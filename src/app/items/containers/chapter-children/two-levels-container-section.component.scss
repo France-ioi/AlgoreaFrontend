@@ -1,0 +1,70 @@
+@use 'src/assets/scss/functions';
+
+:host {
+  display: block;
+}
+
+.two-levels-title-link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.two-levels-description {
+  display: block;
+  margin-bottom: functions.toRem(12);
+}
+
+.two-levels-empty,
+.two-levels-info {
+  margin: 0;
+  color: var(--alg-secondary-color, #545454);
+  font-size: functions.toRem(14);
+}
+
+.placeholder-grid {
+  display: grid;
+  column-gap: functions.toRem(16);
+  row-gap: functions.toRem(16);
+  grid-template-columns: 1fr 1fr;
+
+  &.left-menu-shown {
+    @media screen and (min-width: 888px) and (max-width: 1145.98px) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @media screen and (min-width: 1146px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+
+  &:not(.left-menu-shown) {
+    @media screen and (min-width: 544px) and (max-width: 847.98px) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @media screen and (min-width: 848px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+}
+
+.placeholder-card {
+  overflow: hidden;
+  border-radius: functions.toRem(10);
+}
+
+.placeholder-image {
+  display: block;
+  width: 100%;
+  height: functions.toRem(72);
+  border-radius: functions.toRem(10) functions.toRem(10) 0 0;
+}
+
+.placeholder-title {
+  display: block;
+  width: 70%;
+  height: functions.toRem(12);
+  margin: functions.toRem(8) functions.toRem(8) functions.toRem(10);
+}

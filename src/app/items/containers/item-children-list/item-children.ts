@@ -19,6 +19,8 @@ export interface ItemChildWithAdditions {
   },
   bestScore: number,
   isLocked: boolean,
+  /** From children API when present; absent/false means implicit start is allowed. */
+  requiresExplicitEntry?: boolean,
   result?: {
     attemptId: string,
     validated: boolean,

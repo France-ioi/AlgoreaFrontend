@@ -19,32 +19,13 @@
   padding-top: 0 !important;
 }
 
-.two-levels-section {
+.two-levels-section,
+alg-two-levels-container-section {
   margin-bottom: functions.toRem(24);
 
   &:last-child {
     margin-bottom: 0;
   }
-}
-
-.two-levels-title-link {
-  color: inherit;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-.two-levels-description {
-  display: block;
-  margin-bottom: functions.toRem(12);
-}
-
-.two-levels-empty {
-  margin: 0;
-  color: var(--alg-secondary-color, #545454);
-  font-size: functions.toRem(14);
 }
 
 .hidden-children-hint {

@@ -43,32 +43,12 @@
               />
             </section>
           } @else {
-            <section class="two-levels-section">
-              <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space">
-                <a
-                  class="alg-link two-levels-title-link"
-                  [routerLink]="section.item | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]) } |
-                    with: (section.item.result && section.item.result.attemptId
-                      ? { attemptId: section.item.result.attemptId }
-                      : { parentAttemptId: attemptId }) |
-                    url"
-                >{{ section.item.string.title }}</a>
-              </h2>
-              @if (section.item.string.description; as description) {
-                <alg-description-iframe class="two-levels-description" [content]="description" />
-              }
-              @if (section.item.children && section.item.children.length > 0) {
-                <alg-chapter-children-grid
-                  [children]="section.item.children"
-                  [path]="itemData().route.path.concat([ itemData().item.id, section.item.id ])"
-                  [parentAttemptId]="section.item.result?.attemptId ?? attemptId"
-                  [leftMenuShown]="leftMenuShown()"
-                  size="compact"
-                />
-              } @else {
-                <p class="two-levels-empty" i18n>This chapter does not have any content visible to you.</p>
-              }
-            </section>
+            <alg-two-levels-container-section
+              [item]="section.item"
+              [path]="itemData().route.path.concat([ itemData().item.id ])"
+              [parentAttemptId]="attemptId"
+              [leftMenuShown]="leftMenuShown()"
+            />
           }
         }
       }

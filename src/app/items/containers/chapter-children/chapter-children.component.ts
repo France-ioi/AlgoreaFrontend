@@ -15,12 +15,9 @@ import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { LayoutService } from 'src/app/services/layout.service';
 import { ChapterChildrenGridComponent } from './chapter-children-grid.component';
+import { TwoLevelsContainerSectionComponent } from './two-levels-container-section.component';
 import { mapChildWithAdditions } from '../item-children-list/map-item-child-with-additions';
 import { groupTwoLevelsSections, twoLevelsSectionTrackId } from './group-two-levels-sections';
-import { RouterLink } from '@angular/router';
-import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
-import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
-import { DescriptionIframeComponent } from 'src/app/ui-components/description-iframe/description-iframe.component';
 
 @Component({
   selector: 'alg-chapter-children',
@@ -33,11 +30,7 @@ import { DescriptionIframeComponent } from 'src/app/ui-components/description-if
     AsyncPipe,
     ButtonComponent,
     ChapterChildrenGridComponent,
-    RouterLink,
-    ItemRoutePipe,
-    ItemRouteWithExtraPipe,
-    RouteUrlPipe,
-    DescriptionIframeComponent,
+    TwoLevelsContainerSectionComponent,
   ]
 })
 export class ChapterChildrenComponent {

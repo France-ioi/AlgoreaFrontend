@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { GetItemChildrenService, ItemChildren } from '../../../data-access/get-item-children.service';
+import { ResultActionsService } from 'src/app/data-access/result-actions.service';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { displaySettingsSchema } from 'src/app/items/models/display-settings';
 import { ItemData } from '../../models/item-data';
@@ -17,6 +18,7 @@ import { selectObservedGroupRouteAsItemRouteParameter } from 'src/app/models/rou
 import { LayoutService } from 'src/app/services/layout.service';
 import { ChapterChildrenComponent } from './chapter-children.component';
 import { ChapterChildrenGridComponent } from './chapter-children-grid.component';
+import { TwoLevelsContainerSectionComponent } from './two-levels-container-section.component';
 
 const mockItem: Item = {
   id: 'chapter-1',
@@ -66,10 +68,19 @@ const mockItemData: ItemData = {
 
 type NestedChildren = NonNullable<ItemChildren[number]['children']>;
 
+const startedResult = {
+  attemptId: 'child-attempt',
+  latestActivityAt: new Date('2020-01-02'),
+  startedAt: new Date('2020-01-01'),
+  scoreComputed: 0,
+  validated: false,
+};
+
 function makeApiChild(
   id: string,
   title: string,
   children?: NestedChildren,
+  overrides: Partial<ItemChildren[number]> = {},
 ): ItemChildren[number] {
   return {
     id,
@@ -91,10 +102,11 @@ function makeApiChild(
     editPropagation: false,
     bestScore: 0,
     string: { title, languageTag: 'en', imageUrl: null, subtitle: null },
-    results: [],
+    results: [ startedResult ],
     noScore: false,
     displaySettings: displaySettingsSchema.parse({}),
     ...(children !== undefined ? { children } : {}),
+    ...overrides,
   };
 }
 
@@ -117,6 +129,10 @@ describe('ChapterChildrenComponent TwoLevels', () => {
         }),
         { provide: GetItemChildrenService, useValue: getChildren },
         {
+          provide: ResultActionsService,
+          useValue: jasmine.createSpyObj('ResultActionsService', [ 'start' ]),
+        },
+        {
           provide: LayoutService,
           useValue: {
             leftMenu$: of({ shown: true }),
@@ -130,7 +146,11 @@ describe('ChapterChildrenComponent TwoLevels', () => {
   });
 
   async function renderWithChildren(children: ItemChildren): Promise<void> {
-    getChildren.get.and.returnValue(of(children));
+    getChildren.get.and.callFake((id: string) => {
+      if (id === mockItem.id) return of(children);
+      // Per-section fetch when nested children are absent on an elected result.
+      return of([]);
+    });
     fixture.componentRef.setInput('itemData', mockItemData);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -154,6 +174,8 @@ describe('ChapterChildrenComponent TwoLevels', () => {
       'Eligible empty',
       'Not eligible',
     ]);
+
+    expect(fixture.debugElement.queryAll(By.directive(TwoLevelsContainerSectionComponent))).toHaveSize(3);
 
     const grids = fixture.debugElement.queryAll(By.directive(ChapterChildrenGridComponent));
     expect(grids).toHaveSize(1);

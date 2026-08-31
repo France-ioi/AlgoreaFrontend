@@ -81,4 +81,10 @@ describe('mapChildWithAdditions', () => {
     }));
     expect(mapped.isLocked).toBe(true);
   });
+
+  it('preserves requiresExplicitEntry from the API child', () => {
+    expect(mapChildWithAdditions(makeChild({ id: '1', requiresExplicitEntry: true })).requiresExplicitEntry)
+      .toBe(true);
+    expect(mapChildWithAdditions(makeChild({ id: '2' })).requiresExplicitEntry).toBeUndefined();
+  });
 });
