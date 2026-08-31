@@ -26,7 +26,8 @@ const baseItemChildSchema = z.object({
 /** an invisible item is an item which has a view perm set to 'none' */
 const invisibleItemChildSchema = baseItemChildSchema.and(z.object({ permissions: z.object({ canView: z.literal(ItemViewPerm.None) }) }));
 
-const itemChildSchema = baseItemChildSchema.and(z.object({
+/** Leaf child: no further nesting (L2 under TwoLevels, or any child when the flag is off). */
+const leafItemChildSchema = baseItemChildSchema.and(z.object({
   bestScore: z.number(),
   string: itemStringSchema,
   results: z.array(z.object({
@@ -41,6 +42,14 @@ const itemChildSchema = baseItemChildSchema.and(z.object({
   watchedGroup: itemViewPermSchema.and(z.object({ allValidated: z.boolean().optional(), avgScore: z.number().optional() })).optional(),
 }));
 
+/**
+ * Top-level child. Optional `children` is only present when `show_level2_children` is on and the
+ * child is eligible: `[]` means eligible but empty, absent means not eligible. Nesting stops here.
+ */
+const itemChildSchema = leafItemChildSchema.and(z.object({
+  children: z.array(leafItemChildSchema).optional(),
+}));
+
 const itemChildrenSchema = z.array(itemChildSchema);
 export type ItemChildren = z.infer<typeof itemChildrenSchema>;
 const possiblyInvisibleItemChildrenSchema = z.array(z.union([ invisibleItemChildSchema, itemChildSchema ]));
@@ -50,6 +59,11 @@ export function isVisibleItemChild(item: ItemWithViewPerm): item is ItemChildren
   return canCurrentUserViewInfo(item);
 }
 
+export interface GetItemChildrenOptions {
+  watchedGroupId?: string,
+  showLevel2Children?: boolean,
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -57,15 +71,20 @@ export class GetItemChildrenService {
   private http = inject(HttpClient);
   private config = inject(APPCONFIG);
 
-  private getRaw(id: string, attemptId: string, options?: { showInvisible?: boolean, watchedGroupId?: string }): Observable<unknown[]> {
+  private getRaw(
+    id: string,
+    attemptId: string,
+    options?: GetItemChildrenOptions & { showInvisible?: boolean },
+  ): Observable<unknown[]> {
     let params = new HttpParams();
     params = params.set('attempt_id', attemptId);
-    if (options?.watchedGroupId !== undefined) params = params.set('watched_group_id', options?.watchedGroupId);
+    if (options?.watchedGroupId !== undefined) params = params.set('watched_group_id', options.watchedGroupId);
     if (options?.showInvisible) params = params.set('show_invisible_items', '1');
+    if (options?.showLevel2Children) params = params.set('show_level2_children', '1');
     return this.http.get<unknown[]>(`${this.config.apiUrl}/items/${id}/children`, { params });
   }
 
-  get(id: string, attemptId: string, options?: { watchedGroupId?: string }): Observable<ItemChildren> {
+  get(id: string, attemptId: string, options?: GetItemChildrenOptions): Observable<ItemChildren> {
     return this.getRaw(id, attemptId, options).pipe(
       decodeSnakeCase(itemChildrenSchema),
     );

@@ -7,7 +7,7 @@
       i18n-message message="Error while loading this chapter's children"
       [showRefreshButton]="true"
       (refresh)="refresh()"
-     />
+    />
   }
   @if (state.isReady && state.data; as data) {
     @if (data.missingValidation) {
@@ -19,66 +19,61 @@
       <alg-error class="alg-flex-1"
         icon="ph ph-folder-simple-lock"
         i18n-message message="This chapter has no content visible to you, so you can't validate it for now."
-       />
+      />
     }
     @if (itemData().item.displaySettings.childrenLayout === 'Grid') {
-      @if (data.children.length > 0) {
-        <div
-          class="grid-container"
-          [class.left-menu-shown]="leftMenuShown()"
-        >
-          @for (item of data.children; track item; let i = $index) {
-            <div class="grid-item">
-              @if (itemData().currentResult?.attemptId; as attemptId) {
-                <a class="grid-card"
-                  [routerLink]="item | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]) } |
-                    with: (item.result && item.result.attemptId ? { attemptId : item.result.attemptId } : { parentAttemptId: attemptId }) |
+      @if (itemData().currentResult?.attemptId; as attemptId) {
+        <alg-chapter-children-grid
+          [children]="data.children"
+          [path]="itemData().route.path.concat([ itemData().item.id ])"
+          [parentAttemptId]="attemptId"
+          [leftMenuShown]="leftMenuShown()"
+        />
+      }
+    } @else if (itemData().item.displaySettings.childrenLayout === 'TwoLevels') {
+      @if (itemData().currentResult?.attemptId; as attemptId) {
+        @for (section of data.sections; track sectionTrackId(section)) {
+          @if (section.kind === 'tasks') {
+            <section class="two-levels-section">
+              <alg-chapter-children-grid
+                [children]="section.items"
+                [path]="itemData().route.path.concat([ itemData().item.id ])"
+                [parentAttemptId]="attemptId"
+                [leftMenuShown]="leftMenuShown()"
+              />
+            </section>
+          } @else {
+            <section class="two-levels-section">
+              <h2 class="alg-h2 alg-text-normal alg-base-title-primary-space">
+                <a
+                  class="alg-link two-levels-title-link"
+                  [routerLink]="section.item | itemRoute: { path: itemData().route.path.concat([ itemData().item.id ]) } |
+                    with: (section.item.result && section.item.result.attemptId
+                      ? { attemptId: section.item.result.attemptId }
+                      : { parentAttemptId: attemptId }) |
                     url"
-                >
-                  <div class="grid-card-image-section">
-                    @if (item.isLocked) {
-                      <div class="grid-card-lock-status">
-                        <i class="grid-card-lock-status-icon ph ph-lock"></i>
-                      </div>
-                      <div class="grid-card-lock-bg"></div>
-                    }
-                    @if (item.displaySettings.thumbnailUrl) {
-                      <div
-                        class="grid-card-image"
-                        [style.background-image]="'url(' + item.displaySettings.thumbnailUrl + ')'"
-                      ></div>
-                    } @else {
-                      <div class="grid-card-image grid-card-image-default-bg"></div>
-                    }
-                  </div>
-                  @if (!item.noScore && ((!item.watchedGroup && item.result) || (item.watchedGroup && item.watchedGroup.avgScore !== undefined))) {
-                    <div class="grid-card-activity-progress">
-                      <alg-score-ring [currentScore]="(item.watchedGroup ? item.watchedGroup.avgScore : item.result?.score) ?? 0"
-                        [isValidated]="(item.watchedGroup ? item.watchedGroup.allValidated : item.result?.validated) ?? false"
-                        [bestScore]="item.watchedGroup ? (item.watchedGroup.avgScore ?? 0) : item.bestScore"
-                        [compact]="true"
-                       />
-                    </div>
-                  }
-                  <div class="grid-card-text-section">
-                    <div class="grid-card-title text-dots">{{ item.string.title }}</div>
-                    @if (item.string.subtitle) {
-                      <div class="grid-card-description">
-                        {{ item.string.subtitle }}
-                      </div>
-                    }
-                  </div>
-                </a>
+                >{{ section.item.string.title }}</a>
+              </h2>
+              @if (section.item.children && section.item.children.length > 0) {
+                <alg-chapter-children-grid
+                  [children]="section.item.children"
+                  [path]="itemData().route.path.concat([ itemData().item.id, section.item.id ])"
+                  [parentAttemptId]="section.item.result?.attemptId ?? attemptId"
+                  [leftMenuShown]="leftMenuShown()"
+                  size="compact"
+                />
+              } @else {
+                <p class="two-levels-empty" i18n>This chapter does not have any content visible to you.</p>
               }
-            </div>
+            </section>
           }
-        </div>
+        }
       }
     } @else if (itemData().item.displaySettings.childrenLayout === 'List') {
       @if (itemData().currentResult?.attemptId; as attemptId) {
         <alg-item-children-list [children]="data.children"
           [routeParams]="{ parentAttemptId: attemptId, path: itemData().route.path.concat([ itemData().item.id ]) }"
-         />
+        />
       }
     } @else if (itemData().item.displaySettings.childrenLayout === 'Hide') {
       @if (!leftMenuShown()) {

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const itemValidationTypeSchema = z.enum([ 'None','All','AllButOne','Categories','One','Manual' ]);
 
-export const itemChildrenLayoutSchema = z.enum([ 'List', 'Grid', 'Hide' ]);
+export const itemChildrenLayoutSchema = z.enum([ 'List', 'Grid', 'Hide', 'TwoLevels' ]);
 
 export const itemEntryMinAdmittedMembersRatioSchema = z.enum([ 'All', 'Half', 'One', 'None' ]);
 

@@ -2,17 +2,16 @@ import { Component, DestroyRef, inject, input } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
-import { bestAttemptFromResults } from 'src/app/items/models/attempts';
 import { isASkill } from 'src/app/items/models/item-type';
 import { GetItemChildrenService } from '../../../data-access/get-item-children.service';
 import { ItemData } from '../../models/item-data';
 import { mapToFetchState } from 'src/app/utils/operators/state';
-import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { isNotUndefined } from 'src/app/utils/null-undefined-predicates';
 import { ItemChildrenListComponent } from '../item-children-list/item-children-list.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe } from '@angular/common';
+import { mapChildWithAdditions } from '../item-children-list/map-item-child-with-additions';
 
 @Component({
   selector: 'alg-sub-skills',
@@ -42,19 +41,7 @@ export class SubSkillsComponent {
   readonly state$ = this.params$.pipe(
     switchMap(({ id, attemptId }) => this.getItemChildrenService.get(id, attemptId)),
     map(children => {
-      const newChildren = children
-        .map(child => {
-          const res = bestAttemptFromResults(child.results);
-          return {
-            ...child,
-            isLocked: !canCurrentUserViewContent(child),
-            result: res === null ? undefined : {
-              attemptId: res.attemptId,
-              validated: res.validated,
-              score: res.scoreComputed,
-            },
-          };
-        });
+      const newChildren = children.map(mapChildWithAdditions);
       return {
         skills: newChildren.filter(child => isASkill(child)),
         activities: newChildren.filter(child => !isASkill(child)),

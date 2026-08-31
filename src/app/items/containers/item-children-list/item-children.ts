@@ -23,4 +23,6 @@ export interface ItemChildWithAdditions {
     score: number,
   },
   noScore?: boolean,
+  /** Present only for L1 children when TwoLevels layout fetches nested children; absent = not eligible. */
+  children?: ItemChildWithAdditions[],
 }
