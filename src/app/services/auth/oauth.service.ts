@@ -48,13 +48,17 @@ export class OAuthService {
     const parts = getArgsFromUrl();
     const code = parts.get('code');
     const state = parts.get('state');
-    // get and store 'sesssionState' as well?
-    clearHash([ 'code', 'state' ]);
+    clearHash([ 'code', 'state', 'session_state', 'iss', 'error', 'error_description' ]);
+    // OIDC/OAuth2 use singular `error` (and optional `error_description`); check before the
+    // missing-code path so IdP errors are not masked as "No code or state".
+    if (parts.has('error')) {
+      const error = parts.get('error') || 'no error';
+      const description = parts.get('error_description');
+      const detail = description ? `${error}: ${description}` : error;
+      return throwError(() => new Error(`Error received from authenticator: ${detail}`));
+    }
     if (!code || !state) {
       return throwError(() => new Error('No code or state for code flow'));
-    }
-    if (parts.has('errors')) {
-      return throwError(() => new Error(`Error received from authenticator: ${parts.get('errors')||'no error'}`));
     }
     const { nonce: nonceInState } = this.parseState(state);
     if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {

@@ -54,11 +54,11 @@ export function getArgsFromUrl(): Map<string, string> {
 }
 
 export function clearHash(paramNames: string[]): void {
-  let href = location.href;
+  const url = new URL(location.href);
   for (const param of paramNames) {
-    href = href.replace(new RegExp('[&\\?]'+param+'=[^&\\$]*'), '');
+    url.searchParams.delete(param);
   }
-  history.replaceState(null, window.name, href);
+  history.replaceState(null, window.name, url.href);
 }
 
 /**
