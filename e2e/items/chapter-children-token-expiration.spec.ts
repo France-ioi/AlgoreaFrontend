@@ -7,7 +7,7 @@ test('chapter-children grid recovers from a token-expiration cascade', async ({ 
   // updated, update it here too.
   await page.goto('/a/9151590357867554022;p=7528142386663912287,6621899821435600308;a=0');
 
-  const firstChildLink = page.locator('alg-chapter-children > div > div:first-child > a');
+  const firstChildLink = page.locator('alg-chapter-children alg-chapter-children-grid .grid-item').first().locator('a');
   await expect(firstChildLink).toBeVisible();
 
   // Reproduce the wake-from-sleep cascade: invalidate the current token and let the app silently
