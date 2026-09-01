@@ -12,6 +12,10 @@ export const LEFT_NAV_ICON_OPTIONS = [
   'lightbulb-filament',
   'video',
   'brain',
+  'chalkboard-teacher',
+  'chalkboard-simple',
+  'graduation-cap',
+  'student',
   // Programming & files
   'file-py',
   'file-cpp',

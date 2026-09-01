@@ -41,7 +41,7 @@ const primeNgSafelist = [
 
 /** Regular-weight Phosphor icons referenced dynamically (ngClass, saved settings, etc.). */
 function phosphorRegularSafelist() {
-  const leftNavIconsPath = path.join(__dirname, 'src/app/items/models/left-nav-icons.ts');
+  const leftNavIconsPath = path.join(__dirname, 'src/app/items/models/left-nav-icon-options.ts');
   const content = fs.readFileSync(leftNavIconsPath, 'utf8');
   const catalogIcons = [ ...content.matchAll(/^\s+'([a-z0-9-]+)',$/gm) ]
     .map(([, name]) => `ph-${name}`);
