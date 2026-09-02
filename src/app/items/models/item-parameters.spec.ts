@@ -234,6 +234,21 @@ describe('buildItemParametersChanges', () => {
     expect(changes.validation_type).toEqual('None');
   });
 
+  it('emits allows_multiple_attempts when the toggle changed', () => {
+    const initial = makeValue();
+    const current = makeValue({ allowsMultipleAttempts: true });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
+    expect(changes.allows_multiple_attempts).toBe(true);
+  });
+
+  it('does not emit allows_multiple_attempts when the toggle is unchanged', () => {
+    const initial = makeValue({ allowsMultipleAttempts: true });
+    const current = makeValue({ allowsMultipleAttempts: true, requiresExplicitEntry: true });
+    const changes = buildItemParametersChanges(current, initial, sectionsForItemType('Chapter'), initialDisplaySettings);
+    expect(changes.allows_multiple_attempts).toBeUndefined();
+    expect(changes.requires_explicit_entry).toBe(true);
+  });
+
   it('clears duration when participation is required but duration is disabled', () => {
     const initial = makeValue({
       requiresExplicitEntry: true,
