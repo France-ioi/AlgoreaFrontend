@@ -61,9 +61,6 @@
           [class.routable]="breadcrumb.navigateTo"
           [class.label-ellipsis]="last && lastItemEllipsis()"
           (click)="onElementClick(breadcrumb)"
-          [algTooltip]="breadcrumb.title"
-          tooltipPosition="bottom"
-          tooltipStyleClass="secondary"
         >
           @if (last && breadcrumb.icon) {
             <i class="breadcrumb-icon ph" [class]="breadcrumb.icon" aria-hidden="true"></i>
