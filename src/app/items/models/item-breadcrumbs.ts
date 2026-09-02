@@ -23,6 +23,7 @@ export function formatBreadcrumbs(
   const formatted: ContentBreadcrumbs = breadcrumbs.map(el => ({
     title: el.title,
     navigateTo: (): void => itemRouter.navigateTo(el.route, { useCurrentObservation: true }),
+    attemptCnt: el.attemptCnt,
   }));
 
   if (iconContext && formatted.length > 0) {

@@ -116,6 +116,83 @@ describe('BreadcrumbsComponent', () => {
     });
   });
 
+  describe('with attempt count tags', () => {
+    let fixture: ComponentFixture<BreadcrumbsComponent>;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [ BreadcrumbsComponent ],
+        providers: [
+          provideMockStore({
+            selectors: [
+              {
+                selector: fromCurrentContent.selectBreadcrumbs,
+                value: [
+                  { title: 'Parent chapter', navigateTo: (): void => {}, attemptCnt: 0 },
+                  { title: 'Current task', icon: 'ph-file-text', attemptCnt: 3 },
+                ],
+              },
+              { selector: fromCurrentContent.selectTitle, value: undefined },
+            ],
+          }),
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(BreadcrumbsComponent);
+      fixture.detectChanges();
+    });
+
+    it('should render attempt tags next to titles and icons', () => {
+      const tags = fixture.debugElement.queryAll(By.css('.breadcrumb-list .attempt-tag'));
+      expect(tags.map(tag => tag.nativeElement.textContent.trim())).toEqual([ '0', '3' ]);
+      expect(tags[0]!.nativeElement.getAttribute('aria-label')).toContain('0');
+      expect(tags[1]!.nativeElement.getAttribute('aria-label')).toContain('3');
+    });
+
+    it('should render attemptCnt 0 (not treat it as missing)', () => {
+      const firstTag = fixture.debugElement.query(By.css('.breadcrumb-list .attempt-tag'));
+      expect(firstTag).toBeTruthy();
+      expect(firstTag.nativeElement.textContent.trim()).toBe('0');
+    });
+
+    it('should include attempt tags in the measure list for width calculation', () => {
+      const measureTags = fixture.debugElement.queryAll(By.css('.breadcrumb-measure-list .attempt-tag'));
+      expect(measureTags.map(tag => tag.nativeElement.textContent.trim())).toEqual([ '0', '3' ]);
+    });
+  });
+
+  describe('without attempt count', () => {
+    let fixture: ComponentFixture<BreadcrumbsComponent>;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [ BreadcrumbsComponent ],
+        providers: [
+          provideMockStore({
+            selectors: [
+              {
+                selector: fromCurrentContent.selectBreadcrumbs,
+                value: [
+                  { title: 'Parent chapter', navigateTo: (): void => {} },
+                  { title: 'Current task', icon: 'ph-file-text' },
+                ],
+              },
+              { selector: fromCurrentContent.selectTitle, value: undefined },
+            ],
+          }),
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(BreadcrumbsComponent);
+      fixture.detectChanges();
+    });
+
+    it('should not render attempt tags when attemptCnt is undefined', () => {
+      expect(fixture.debugElement.query(By.css('.breadcrumb-list .attempt-tag'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.breadcrumb-measure-list .attempt-tag'))).toBeNull();
+    });
+  });
+
   describe('with an icon on a non-last breadcrumb', () => {
     let fixture: ComponentFixture<BreadcrumbsComponent>;
 

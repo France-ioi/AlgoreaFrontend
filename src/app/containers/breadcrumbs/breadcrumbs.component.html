@@ -13,6 +13,9 @@
           } @else {
             <span class="label">{{ breadcrumb.title }}</span>
           }
+          @if (breadcrumb.attemptCnt !== undefined) {
+            <span class="alg-tag attempt-tag">{{ breadcrumb.attemptCnt }}</span>
+          }
         </li>
       }
       <li class="breadcrumb-item separator measure-separator">
@@ -68,6 +71,17 @@
           } @else {
             <span class="label">{{ breadcrumb.title }}</span>
           }
+          @if (breadcrumb.attemptCnt !== undefined) {
+            @let attemptLabel = attemptCntAriaLabel(breadcrumb.attemptCnt);
+            <span
+              class="alg-tag attempt-tag"
+              role="img"
+              [attr.aria-label]="attemptLabel"
+              [algTooltip]="attemptLabel"
+              tooltipPosition="bottom"
+              tooltipStyleClass="secondary"
+            >{{ breadcrumb.attemptCnt }}</span>
+          }
         </li>
       }
     </ul>
@@ -90,7 +104,18 @@
             cdkMenuItem
             (click)="onCollapsedMenuItemClick(breadcrumb)"
           >
-            {{ breadcrumb.title }}
+            <span class="collapsed-breadcrumbs-menu-title">{{ breadcrumb.title }}</span>
+            @if (breadcrumb.attemptCnt !== undefined) {
+              @let attemptLabel = attemptCntAriaLabel(breadcrumb.attemptCnt);
+              <span
+                class="alg-tag attempt-tag"
+                role="img"
+                [attr.aria-label]="attemptLabel"
+                [algTooltip]="attemptLabel"
+                tooltipPosition="bottom"
+                tooltipStyleClass="secondary"
+              >{{ breadcrumb.attemptCnt }}</span>
+            }
           </button>
         </li>
       }

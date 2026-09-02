@@ -8,7 +8,7 @@ import { ItemGrantViewPerm } from './item-grant-view-permission';
 import { ItemEditPerm } from './item-edit-permission';
 import { ItemWatchPerm } from './item-watch-permission';
 
-function makeBreadcrumb(title: string): BreadcrumbItem {
+function makeBreadcrumb(title: string, attemptCnt?: number): BreadcrumbItem {
   return {
     itemId: 'item-1',
     title,
@@ -18,6 +18,7 @@ function makeBreadcrumb(title: string): BreadcrumbItem {
       contentType: 'activity',
       attemptId: '0',
     },
+    attemptCnt,
   };
 }
 
@@ -63,11 +64,28 @@ describe('item-breadcrumbs', () => {
     const breadcrumbs = formatBreadcrumbs([ makeBreadcrumb('Parent'), makeBreadcrumb('Current') ], itemRouter);
 
     expect(breadcrumbs).toEqual([
-      { title: 'Parent', navigateTo: jasmine.any(Function) },
-      { title: 'Current', navigateTo: jasmine.any(Function) },
+      { title: 'Parent', navigateTo: jasmine.any(Function), attemptCnt: undefined },
+      { title: 'Current', navigateTo: jasmine.any(Function), attemptCnt: undefined },
     ]);
     expect(breadcrumbs[0]!.icon).toBeUndefined();
     expect(breadcrumbs[1]!.icon).toBeUndefined();
+  });
+
+  it('should propagate attemptCnt when present on breadcrumb items', () => {
+    const breadcrumbs = formatBreadcrumbs(
+      [ makeBreadcrumb('Parent', 2), makeBreadcrumb('Current', 0) ],
+      itemRouter,
+    );
+
+    expect(breadcrumbs[0]!.attemptCnt).toBe(2);
+    expect(breadcrumbs[1]!.attemptCnt).toBe(0);
+  });
+
+  it('should omit attemptCnt when not present on breadcrumb items', () => {
+    const breadcrumbs = formatBreadcrumbs([ makeBreadcrumb('Parent'), makeBreadcrumb('Current') ], itemRouter);
+
+    expect(breadcrumbs[0]!.attemptCnt).toBeUndefined();
+    expect(breadcrumbs[1]!.attemptCnt).toBeUndefined();
   });
 
   it('should add a resolved icon only on the last breadcrumb', () => {

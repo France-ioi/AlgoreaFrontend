@@ -20,7 +20,7 @@ const breadcrumbsApiSchema = z.array(
     title: z.string(),
     type: itemTypeSchema,
     attemptId: z.string().optional(), // set in all but the last one if parent_attempt_id param has been given
-    attemptNumber: z.string().optional(), // set in all but the last one if parent_attempt_id param has been given
+    attemptOrder: z.coerce.number().optional(), // set when the item allows multiple attempts
   })
 );
 
@@ -58,11 +58,11 @@ export class GetBreadcrumbService {
               attemptId: item.attemptId!, // the service ensures the attempt for all but last is given
               contentType: typeCategoryOfItem(item),
             },
-            attemptCnt: item.attemptNumber ? +item.attemptNumber : undefined,
+            attemptCnt: item.attemptOrder,
           })).concat([{
             itemId: last.itemId,
             title: last.title,
-            attemptCnt: last.attemptNumber ? +last.attemptNumber : undefined,
+            attemptCnt: last.attemptOrder,
             route: itemRoute
           }]);
         }),
