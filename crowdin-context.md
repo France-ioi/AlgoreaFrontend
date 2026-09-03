@@ -44,7 +44,7 @@ and notifications.
   translate the surrounding text.
 - Keep leading/trailing whitespace and punctuation consistent with the source.
 - Preserve HTML tags and their attributes; translate only the visible text.
-- Target languages: French (fr), German (de), and Italian (it); source is
-  English (en).
+- Target languages: French (fr), German (de), Italian (it), and Dutch (nl);
+  source is English (en).
 - In case of doubt, also check the French translation, which is the
   most-reviewed one and can serve as a reference for the intended meaning.

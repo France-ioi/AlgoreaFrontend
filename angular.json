@@ -99,6 +99,9 @@
             "it": {
               "localize": [ "it" ]
             },
+            "nl": {
+              "localize": [ "nl" ]
+            },
             "production-en": {
               "localize": [ "en" ],
               "fileReplacements": [
@@ -215,6 +218,35 @@
                 }
               ]
             },
+            "production-nl": {
+              "localize": [ "nl" ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": { "minify": true, "inlineCritical": false },
+                "fonts": true
+              },
+              "outputHashing": "bundles",
+              "sourceMap": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
             "e2e": {
               "fileReplacements": [
                 {
@@ -262,6 +294,9 @@
             },
             "it": {
               "buildTarget": "algorea:build:it"
+            },
+            "nl": {
+              "buildTarget": "algorea:build:nl"
             }
           }
         },
@@ -327,6 +362,10 @@
           "it": {
             "translation": "src/locale/messages.it.xlf",
             "baseHref": "/it/"
+          },
+          "nl": {
+            "translation": "src/locale/messages.nl.xlf",
+            "baseHref": "/nl/"
           }
         }
       }

@@ -350,6 +350,11 @@ jobs:
           bucket: $DEPLOYMENT_BUCKET
           path: ""
           lang: it
+      - deploy-to-s3-shortcache:
+          from: ./dist/algorea/browser/
+          bucket: $DEPLOYMENT_BUCKET
+          path: ""
+          lang: nl
 
   deploy-version:
     docker:
@@ -451,7 +456,7 @@ workflows:
           name: build-master-<< matrix.lang >>
           matrix:
             parameters:
-              lang: [ en, fr, de, it ]
+              lang: [ en, fr, de, it, nl ]
           requires:
             - deps
             - fetch-translations
@@ -464,6 +469,7 @@ workflows:
             - build-master-fr
             - build-master-it
             - build-master-de
+            - build-master-nl
             - tests
             - e2e-no-parallelism
             - e2e-parallelism-chromium
@@ -478,7 +484,7 @@ workflows:
             - fetch-translations
           matrix:
             parameters:
-              lang: [ en, fr, de, it ]
+              lang: [ en, fr, de, it, nl ]
           filters:
             tags:
               only: /^v\d+\.\d+\..*/
@@ -501,6 +507,7 @@ workflows:
             - build-version-fr
             - build-version-de
             - build-version-it
+            - build-version-nl
           filters:
             tags:
               only: /^v\d+\.\d+\..*/

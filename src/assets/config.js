@@ -16,6 +16,7 @@ window.appConfig = {
     { tag: 'fr', path: '/fr/' },
     { tag: 'de', path: '/de/' },
     { tag: 'it', path: '/it/' },
+    { tag: 'nl', path: '/nl/' },
     { tag: 'en', path: '/' },
   ],
   defaultTitle: 'Algorea Platform',
