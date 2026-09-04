@@ -50,6 +50,10 @@ export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRoute &
   return item.attemptId !== undefined;
 }
 
+export function isRouteWithParentAttempt(item: FullItemRoute): item is ItemRoute & Required<Pick<ItemRoute, 'parentAttemptId'>> {
+  return item.parentAttemptId !== undefined;
+}
+
 // FACTORIES
 export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs: Omit<FullItemRoute, 'contentType'|'id'>): FullItemRoute;
 export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs: Omit<ItemRoute, 'contentType'|'id'>): ItemRoute;
@@ -65,10 +69,11 @@ export function itemRouteWith<T extends RawItemRoute, U extends T>(route: T, att
 
 
 /**
- * Add to the given route, the given self attempt id (if any) (used when only the parent id was know until now)
+ * Set the self attempt id on the route when one is provided.
+ * Leaves the route unchanged when `attemptId` is undefined (does not clear an existing value).
  */
 export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|undefined): FullItemRoute {
-  return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
+  return attemptId === undefined ? route : { ...route, attemptId };
 }
 
 /**

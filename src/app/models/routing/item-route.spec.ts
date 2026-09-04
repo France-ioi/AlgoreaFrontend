@@ -1,4 +1,22 @@
-import { FullItemRoute, itemRoute, parentRoute } from './item-route';
+import { FullItemRoute, itemRoute, parentRoute, routeWithSelfAttempt } from './item-route';
+
+describe('routeWithSelfAttempt', () => {
+  const routeWithParent = itemRoute('activity', '1', { path: [], parentAttemptId: '0' });
+  const routeWithSelf = itemRoute('activity', '1', { path: [], attemptId: 'old', parentAttemptId: '0' });
+
+  it('should add the attempt id when the route only has a parent attempt', () => {
+    expect(routeWithSelfAttempt(routeWithParent, '42')).toEqual({ ...routeWithParent, attemptId: '42' });
+  });
+
+  it('should replace an existing self attempt id', () => {
+    expect(routeWithSelfAttempt(routeWithSelf, '99')).toEqual({ ...routeWithSelf, attemptId: '99' });
+  });
+
+  it('should leave the route unchanged when attempt id is undefined', () => {
+    expect(routeWithSelfAttempt(routeWithSelf, undefined)).toBe(routeWithSelf);
+    expect(routeWithSelfAttempt(routeWithParent, undefined)).toBe(routeWithParent);
+  });
+});
 
 describe('parentRoute', () => {
   const mockDefaultActivityId = '100';

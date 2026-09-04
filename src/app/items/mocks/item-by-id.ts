@@ -32,4 +32,5 @@ export const mockItem: Item = {
   entryMaxTeamSize: 0,
   entryMinAdmittedMembersRatio: 'None',
   defaultLanguageTag: 'en',
+  supportedLanguageTags: [ 'en' ],
 };
