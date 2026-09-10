@@ -41,8 +41,7 @@ export function parseItemUrlSegments(segments: UrlSegment[], aliases: Aliases): 
 
   // creating the response from what we parsed
   if (!path) return { route: { tag: 'error', contentType, id, answer, observedGroup }, page };
-  if (attemptId) return { route: itemRoute(contentType, id, { path, attemptId, answer, observedGroup }), page };
-  if (parentAttemptId) return { route: itemRoute(contentType, id, { path, parentAttemptId, answer, observedGroup }), page };
+  if (attemptId || parentAttemptId) return { route: itemRoute(contentType, id, { path, attemptId, parentAttemptId, answer, observedGroup }), page };
   return { route: { tag: 'error', contentType, id, path, answer, observedGroup }, page };
 }
 

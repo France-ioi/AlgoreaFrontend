@@ -54,6 +54,26 @@ export function isRouteWithParentAttempt(item: FullItemRoute): item is ItemRoute
   return item.parentAttemptId !== undefined;
 }
 
+/**
+ * Cache / fetch identity for the attempts list of an item view.
+ * The parent attempt identifies the whole sibling list, so the self attempt adds nothing once it is
+ * known. Without a parent attempt we cannot tell which list a self attempt belongs to, so it stays
+ * part of the key. `contentType` and `answer` are deliberately omitted: `/attempts` does not take them.
+ */
+export type ResultsFetchKey = Pick<ItemRoute, 'id' | 'path' | 'observedGroup' | 'parentAttemptId' | 'attemptId'>;
+
+export function resultsFetchKey(
+  { id, path, observedGroup, parentAttemptId, attemptId }: FullItemRoute,
+): ResultsFetchKey {
+  return {
+    id,
+    path,
+    observedGroup,
+    parentAttemptId,
+    attemptId: parentAttemptId === undefined ? attemptId : undefined,
+  };
+}
+
 // FACTORIES
 export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs: Omit<FullItemRoute, 'contentType'|'id'>): FullItemRoute;
 export function itemRoute(contentType: ItemTypeCategory, id: ItemId, attrs: Omit<ItemRoute, 'contentType'|'id'>): ItemRoute;

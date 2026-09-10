@@ -1,5 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { State } from './item-content.state';
+import { Result } from '../../models/attempts';
 
 export const itemRouteErrorHandlingActions = createActionGroup({
   source: 'Item route error handling',
@@ -12,7 +13,8 @@ export const itemByIdPageActions = createActionGroup({
   source: 'Item-by-id page',
   events: {
     refresh: emptyProps(),
-    patchScore: props<{ score: number }>(),
+    patchScore: props<{ score: number, attemptId: string }>(),
+    attemptStarted: props<{ result: Result }>(),
   }
 });
 

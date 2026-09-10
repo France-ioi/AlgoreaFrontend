@@ -242,6 +242,7 @@ The SLS (serverless) API is separate from the main backend API:
 Items support complex routing with:
 - `path`: Navigation breadcrumb path
 - `parentAttemptId`: Attempt context
+- `attemptId`: Selected self attempt (URL concern only). The attempts list is cached per attempt context via `resultsFetchKey` (parent attempt when present; otherwise the self attempt). `ensureAttemptInUrlEffect` writes a missing `a=` into the URL (`pick` or implicit `start`) with `replaceUrl`, keeping `pa` when both are present. Breadcrumbs use full-route identity and refetch on attempt change.
 - `observedGroupId`: Observation mode
 
 ## Configuration

@@ -1,4 +1,10 @@
-import { FullItemRoute, itemRoute, parentRoute, routeWithSelfAttempt } from './item-route';
+import {
+  FullItemRoute,
+  itemRoute,
+  parentRoute,
+  routeWithSelfAttempt,
+  resultsFetchKey,
+} from './item-route';
 
 describe('routeWithSelfAttempt', () => {
   const routeWithParent = itemRoute('activity', '1', { path: [], parentAttemptId: '0' });
@@ -15,6 +21,54 @@ describe('routeWithSelfAttempt', () => {
   it('should leave the route unchanged when attempt id is undefined', () => {
     expect(routeWithSelfAttempt(routeWithSelf, undefined)).toBe(routeWithSelf);
     expect(routeWithSelfAttempt(routeWithParent, undefined)).toBe(routeWithParent);
+  });
+});
+
+describe('resultsFetchKey', () => {
+  const base = { path: [ '1' ] as string[], parentAttemptId: '0' };
+
+  it('drops the self attempt when a parent attempt is present', () => {
+    const parentOnly = itemRoute('activity', '2', { ...base });
+    const withSelf = itemRoute('activity', '2', { ...base, attemptId: '42' });
+    expect(resultsFetchKey(parentOnly)).toEqual(resultsFetchKey(withSelf));
+    expect(resultsFetchKey(withSelf).attemptId).toBeUndefined();
+  });
+
+  it('shares a key for two self attempts under the same parent', () => {
+    const a = itemRoute('activity', '2', { ...base, attemptId: '42' });
+    const b = itemRoute('activity', '2', { ...base, attemptId: '99' });
+    expect(resultsFetchKey(a)).toEqual(resultsFetchKey(b));
+  });
+
+  it('keeps distinct keys for self attempts without a parent', () => {
+    const a = itemRoute('activity', '2', { path: [ '1' ], attemptId: '42' });
+    const b = itemRoute('activity', '2', { path: [ '1' ], attemptId: '99' });
+    expect(resultsFetchKey(a)).not.toEqual(resultsFetchKey(b));
+    expect(resultsFetchKey(a).attemptId).toBe('42');
+  });
+
+  it('keeps distinct keys for different parent attempts', () => {
+    const a = itemRoute('activity', '2', { path: [ '1' ], parentAttemptId: '0' });
+    const b = itemRoute('activity', '2', { path: [ '1' ], parentAttemptId: '1' });
+    expect(resultsFetchKey(a)).not.toEqual(resultsFetchKey(b));
+  });
+
+  it('ignores answer in the key', () => {
+    const a = itemRoute('activity', '2', { ...base, answer: { id: 'ans-1' } });
+    const b = itemRoute('activity', '2', { ...base, answer: { id: 'ans-2' } });
+    expect(resultsFetchKey(a)).toEqual(resultsFetchKey(b));
+  });
+
+  it('ignores contentType in the key', () => {
+    const a = itemRoute('activity', '2', { ...base });
+    const b = itemRoute('skill', '2', { ...base });
+    expect(resultsFetchKey(a)).toEqual(resultsFetchKey(b));
+  });
+
+  it('keeps distinct keys for different observed groups', () => {
+    const a = itemRoute('activity', '2', { ...base, observedGroup: { id: 'g1', isUser: false } });
+    const b = itemRoute('activity', '2', { ...base, observedGroup: { id: 'g2', isUser: false } });
+    expect(resultsFetchKey(a)).not.toEqual(resultsFetchKey(b));
   });
 });
 

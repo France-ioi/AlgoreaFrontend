@@ -5,6 +5,9 @@ import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
 import { displaySettingsSchema } from 'src/app/items/models/display-settings';
 import { Item, State } from './item-content.state';
 import { selectors } from './item-content.selectors';
+import { itemRoute, resultsFetchKey } from 'src/app/models/routing/item-route';
+import { readyState, fetchingState, errorState } from 'src/app/utils/state';
+import { Result } from '../../models/attempts';
 
 const testSelectors = selectors<{ itemContent: State }>(state => state.itemContent);
 
@@ -71,5 +74,113 @@ describe('selectActiveContentShowPlatformInsteadOfScore', () => {
 
   it('returns false when there is no active item', () => {
     expect(testSelectors.selectActiveContentShowPlatformInsteadOfScore.projector(null)).toBe(false);
+  });
+});
+
+describe('selectActiveContentCurrentResult', () => {
+  const resultA: Result = {
+    attemptId: '42',
+    latestActivityAt: new Date(),
+    startedAt: new Date(),
+    score: 10,
+    validated: false,
+    allowsSubmissionsUntil: new Date(),
+  };
+  const resultB: Result = { ...resultA, attemptId: '99', score: 20 };
+
+  it('derives the current result from the route attemptId and the list', () => {
+    const route = itemRoute('activity', '1', { path: [], parentAttemptId: '0', attemptId: '99' });
+    const resultsState = readyState([ resultA, resultB ], resultsFetchKey(route));
+    expect(testSelectors.selectActiveContentCurrentResult.projector(route, resultsState)).toBe(resultB);
+  });
+
+  it('returns null when the route has no self attempt', () => {
+    const route = itemRoute('activity', '1', { path: [], parentAttemptId: '0' });
+    const resultsState = readyState([ resultA ], resultsFetchKey(route));
+    expect(testSelectors.selectActiveContentCurrentResult.projector(route, resultsState)).toBeNull();
+  });
+
+  it('returns null when the named attempt is absent from the list', () => {
+    const route = itemRoute('activity', '1', { path: [], parentAttemptId: '0', attemptId: 'missing' });
+    const resultsState = readyState([ resultA ], resultsFetchKey(route));
+    expect(testSelectors.selectActiveContentCurrentResult.projector(route, resultsState)).toBeNull();
+  });
+});
+
+describe('selectActiveContentData', () => {
+  const route = itemRoute('activity', '1', { path: [], parentAttemptId: '0', attemptId: '42' });
+  const item = makeItem();
+  const breadcrumbs = [ { itemId: '1', title: 'T', route } ];
+  const result: Result = {
+    attemptId: '42',
+    latestActivityAt: new Date(),
+    startedAt: new Date(),
+    score: 0,
+    validated: false,
+    allowsSubmissionsUntil: new Date(),
+  };
+
+  it('returns fetching while attempt resolution is pending', () => {
+    const itemState = readyState(item, { id: route.id, observedGroup: route.observedGroup });
+    const breadcrumbsState = readyState(breadcrumbs, route);
+    const resultsState = readyState([ result ], resultsFetchKey(route));
+    const state = testSelectors.selectActiveContentData.projector(
+      itemRoute('activity', '1', { path: [], parentAttemptId: '0' }),
+      itemState,
+      breadcrumbsState,
+      resultsState,
+      null,
+      { kind: 'pick', attemptId: '42' },
+    );
+    expect(state?.isFetching).toBeTrue();
+  });
+
+  it('returns ready data with derived currentResult when resolved', () => {
+    const itemState = readyState(item, { id: route.id, observedGroup: route.observedGroup });
+    const breadcrumbsState = readyState(breadcrumbs, route);
+    const resultsState = readyState([ result ], resultsFetchKey(route));
+    const state = testSelectors.selectActiveContentData.projector(
+      route,
+      itemState,
+      breadcrumbsState,
+      resultsState,
+      result,
+      null,
+    );
+    expect(state?.isReady).toBeTrue();
+    expect(state?.data?.currentResult).toBe(result);
+    expect(state?.data?.results).toEqual([ result ]);
+  });
+
+  it('returns fetching while results are not ready', () => {
+    const itemState = readyState(item, { id: route.id, observedGroup: route.observedGroup });
+    const breadcrumbsState = readyState(breadcrumbs, route);
+    const resultsState = fetchingState(undefined, resultsFetchKey(route));
+    const state = testSelectors.selectActiveContentData.projector(
+      route,
+      itemState,
+      breadcrumbsState,
+      resultsState,
+      null,
+      null,
+    );
+    expect(state?.isFetching).toBeTrue();
+  });
+
+  it('returns error when results are in error', () => {
+    const itemState = readyState(item, { id: route.id, observedGroup: route.observedGroup });
+    const breadcrumbsState = readyState(breadcrumbs, route);
+    const err = new Error('start failed');
+    const resultsState = errorState(err, resultsFetchKey(route));
+    const state = testSelectors.selectActiveContentData.projector(
+      route,
+      itemState,
+      breadcrumbsState,
+      resultsState,
+      null,
+      null,
+    );
+    expect(state?.isError).toBeTrue();
+    expect(state?.error).toBe(err);
   });
 });

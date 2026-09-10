@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isRouteWithSelfAttempt, FullItemRoute } from 'src/app/models/routing/item-route';
+import { FullItemRoute, isRouteWithParentAttempt } from 'src/app/models/routing/item-route';
 import { APPCONFIG } from 'src/app/config';
-import { inject } from '@angular/core';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { z } from 'zod';
 import { Result, attemptResultSchema, resultFromFetchedResult } from '../models/attempts';
@@ -17,10 +16,13 @@ export class GetResultsService {
   private config = inject(APPCONFIG);
 
   getResults(item: FullItemRoute): Observable<Result[]> {
+    // Same precedence as `resultsFetchKey`: parent attempt is the authoritative list context.
+    // `FullItemRoute` guarantees a parent or self attempt, so the else branch always has `attemptId`.
+    const params: Record<string, string> = isRouteWithParentAttempt(item)
+      ? { parent_attempt_id: item.parentAttemptId }
+      : { attempt_id: item.attemptId };
     return this.http
-      .get<unknown>(`${this.config.apiUrl}/items/${item.id}/attempts`, {
-        params: isRouteWithSelfAttempt(item) ? { attempt_id: item.attemptId } : { parent_attempt_id: item.parentAttemptId },
-      })
+      .get<unknown>(`${this.config.apiUrl}/items/${item.id}/attempts`, { params })
       .pipe(
         decodeSnakeCase(z.array(attemptResultSchema)),
         map(results => results.map(resultFromFetchedResult)),

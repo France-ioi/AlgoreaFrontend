@@ -1,8 +1,8 @@
 import { MemoizedSelector, Selector, createSelector } from '@ngrx/store';
 import { fromRouter } from 'src/app/store/router';
 import { RootState } from 'src/app/utils/store/root_state';
-import { FullItemRoute, ItemContentIdentifier, ItemRoute } from 'src/app/models/routing/item-route';
-import { Breadcumbs, Item, Results, State, initialState } from './item-content.state';
+import { FullItemRoute, ItemContentIdentifier, ItemRoute, resultsFetchKey } from 'src/app/models/routing/item-route';
+import { Breadcumbs, Item, State, initialState } from './item-content.state';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
 import equal from 'fast-deep-equal/es6';
@@ -10,6 +10,7 @@ import { Result } from '../../models/attempts';
 import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
 import { fromConfig } from 'src/app/store/config';
 import { GroupId } from 'src/app/models/ids';
+import { AttemptResolution, attemptResolution } from './attempt-resolution';
 
 interface UserContentSelectors<T extends RootState> {
   selectIsItemContentActive: MemoizedSelector<T, boolean>,
@@ -72,11 +73,15 @@ interface UserContentSelectors<T extends RootState> {
   /**
    * The results of the active item if there is one and it has been fetched
    */
-  selectActiveContentResults: MemoizedSelector<T, Results|null>,
+  selectActiveContentResults: MemoizedSelector<T, Result[]|null>,
   /**
-   * The current result of the active item if there is one and it has been fetched
+   * The current result of the active item, derived from the route's `attemptId` and the results list
    */
   selectActiveContentCurrentResult: MemoizedSelector<T, Result|null>,
+  /**
+   * Whether the active item URL still needs an attempt (`pick` / `start`), or `null` when nothing to resolve
+   */
+  selectAttemptResolution: MemoizedSelector<T, AttemptResolution|null>,
 
   /**
    * Data that can be used for fetching results
@@ -163,15 +168,16 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectState,
     selectActiveContentRoute,
     ({ breadcrumbsState }, route) =>
-      (equal(route, breadcrumbsState.identifier) ?
-        breadcrumbsState : initialState.breadcrumbsState)
+      (route !== null && equal(route, breadcrumbsState.identifier) ? breadcrumbsState : initialState.breadcrumbsState)
   );
 
   const selectActiveContentResultsState = createSelector(
     selectState,
     selectActiveContentRoute,
-    ({ resultsState }, route) => (equal(route, resultsState?.identifier) ?
-      resultsState : initialState.resultsState)
+    ({ resultsState }, route) =>
+      (route !== null && resultsState.identifier !== undefined
+        && equal(resultsFetchKey(route), resultsState.identifier) ?
+        resultsState : initialState.resultsState)
   );
 
   const selectActiveContentItem = createSelector(
@@ -200,8 +206,18 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
   );
 
   const selectActiveContentCurrentResult = createSelector(
-    selectActiveContentResults,
-    results => results?.currentResult ?? null
+    selectActiveContentRoute,
+    selectActiveContentResultsState,
+    (route, resultsState) => (route?.attemptId === undefined
+      ? null
+      : resultsState.data?.find(r => r.attemptId === route.attemptId) ?? null)
+  );
+
+  const selectAttemptResolution = createSelector(
+    selectActiveContentRoute,
+    selectActiveContentItem,
+    selectActiveContentResultsState,
+    attemptResolution,
   );
 
   const selectActiveContentInfoForFetchingResults = createSelector(
@@ -217,17 +233,21 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentItemState,
     selectActiveContentBreadcrumbsState,
     selectActiveContentResultsState,
-    (route, itemState, breadcrumbsState, resultsState) => {
+    selectActiveContentCurrentResult,
+    selectAttemptResolution,
+    (route, itemState, breadcrumbsState, resultsState, currentResult, resolution) => {
       if (route === null) return null;
       if (itemState.isError) return errorState(itemState.error);
       if (breadcrumbsState.isError) return errorState(breadcrumbsState.error);
+      if (resultsState.isError) return errorState(resultsState.error);
       if (itemState.isFetching || breadcrumbsState.isFetching) return fetchingState<ItemData>();
+      if (!resultsState.isReady || resolution !== null) return fetchingState<ItemData>();
       return readyState<ItemData>({
         route,
         item: itemState.data,
         breadcrumbs: breadcrumbsState.data,
-        results: resultsState.data?.results,
-        currentResult: resultsState.data?.currentResult,
+        results: resultsState.data,
+        currentResult: currentResult ?? undefined,
       });
     }
   );
@@ -251,6 +271,7 @@ export function selectors<T extends RootState>(selectState: Selector<T, State>):
     selectActiveContentBreadcrumbs,
     selectActiveContentResults,
     selectActiveContentCurrentResult,
+    selectAttemptResolution,
     selectActiveContentInfoForFetchingResults,
     selectActiveContentData,
   };

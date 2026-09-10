@@ -16,7 +16,12 @@ import { TimeLimitedContentEndComponent } from 'src/app/containers/time-limited-
  */
 const selectCurrentResult = createSelector(
   fromItemContent.selectActiveContentResultsState,
-  resultsState => (resultsState.isReady ? (resultsState.data.currentResult ?? null) : undefined)
+  fromItemContent.selectActiveContentCurrentResult,
+  fromItemContent.selectAttemptResolution,
+  (resultsState, currentResult, resolution) => {
+    if (!resultsState.isReady || resolution !== null) return undefined;
+    return currentResult;
+  }
 );
 
 /**

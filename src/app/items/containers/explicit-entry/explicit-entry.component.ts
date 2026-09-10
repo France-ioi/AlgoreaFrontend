@@ -6,10 +6,14 @@ import { ItemEntryService } from '../../data-access/item-entry.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { switchMap } from 'rxjs';
 import { CanEnterNowPipe, HasAlreadyStatedPipe } from '../../models/item-entry';
-import { FullItemRoute, isRouteWithParentAttempt, routeWithSelfAttempt } from 'src/app/models/routing/item-route';
+import { FullItemRoute, isRouteWithParentAttempt, itemRouteWith } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
+import { Store } from '@ngrx/store';
+import { fromItemContent } from '../../store';
+import { Result } from '../../models/attempts';
+import { backendInfiniteDateString } from 'src/app/utils/date';
 
 @Component({
   selector: 'alg-explicit-entry',
@@ -26,6 +30,7 @@ export class ExplicitEntryComponent {
   private itemEntryService = inject(ItemEntryService);
   private actionFeedbackService = inject(ActionFeedbackService);
   private itemRouter = inject(ItemRouter);
+  private store = inject(Store);
   private destroyRef = inject(DestroyRef);
 
   itemData = input.required<ItemData>();
@@ -54,8 +59,23 @@ export class ExplicitEntryComponent {
           $localize`You have entered this activity. You have ${resp.duration.toReadable()} left.`:
           $localize`You have entered this activity.`;
         this.actionFeedbackService.success(message);
-        // Also refresh: item fetch is keyed only on id/observedGroup, so an attempt-only URL change would not refetch.
-        this.itemRouter.navigateTo(routeWithSelfAttempt(route, resp.attemptId), { useCurrentObservation: true });
+        // `/enter` returns only attempt_id/duration/entered_at — synthesize a provisional Result so
+        // `currentResult` is non-null as soon as we navigate to `a=NEW` (avoids flashing the Enter button).
+        const provisionalResult: Result = {
+          attemptId: resp.attemptId,
+          startedAt: resp.enteredAt,
+          latestActivityAt: resp.enteredAt,
+          score: 0,
+          validated: false,
+          allowsSubmissionsUntil: resp.duration !== null
+            ? new Date(resp.enteredAt.getTime() + resp.duration.getMs())
+            : new Date(backendInfiniteDateString),
+        };
+        this.store.dispatch(fromItemContent.itemByIdPageActions.attemptStarted({ result: provisionalResult }));
+        this.itemRouter.navigateTo(
+          itemRouteWith(route, { attemptId: resp.attemptId }),
+          { useCurrentObservation: true },
+        );
         this.itemRefreshRequired.emit();
         // Keep in-progress true: this view is torn down on navigation/re-render; resetting would allow double-enter.
       },
