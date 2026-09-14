@@ -16,7 +16,7 @@ import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { MessageService, MessageV2 } from 'src/app/services/message.service';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { ItemViewPerm } from '../../models/item-view-permission';
 import { ItemGrantViewPerm } from '../../models/item-grant-view-permission';
 import { ItemEditPerm } from '../../models/item-edit-permission';
@@ -46,6 +46,7 @@ class MockItemDisplayComponent {
   disablePlatformProgress = output<boolean>();
   fullFrame = output<boolean>();
   loadingComplete = output<boolean>();
+  teardown = (): Observable<void> => of(undefined);
 }
 
 @Component({

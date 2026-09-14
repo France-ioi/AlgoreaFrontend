@@ -12,9 +12,10 @@ const testTimeout = 200;
 const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
 
 function createMockTask(): jasmine.SpyObj<Task> {
-  const task = jasmine.createSpyObj<Task>('Task', [ 'getMetaData', 'load', 'updateToken', 'destroy', 'bindPlatform' ]);
+  const task = jasmine.createSpyObj<Task>('Task', [ 'getMetaData', 'load', 'updateToken', 'unload', 'destroy', 'bindPlatform' ]);
   task.getMetaData.and.returnValue(of({ usesTokens: false }));
   task.load.and.returnValue(of(undefined));
+  task.unload.and.returnValue(of(undefined));
   return task;
 }
 
@@ -319,10 +320,13 @@ describe('ItemTaskInitService – token refresh', () => {
   let generateFn: () => Observable<TaskToken>;
 
   function createTokenMockTask(usesTokens = true): jasmine.SpyObj<Task> {
-    const task = jasmine.createSpyObj<Task>('Task', [ 'getMetaData', 'load', 'updateToken', 'getViews', 'destroy', 'bindPlatform' ]);
+    const task = jasmine.createSpyObj<Task>('Task', [
+      'getMetaData', 'load', 'updateToken', 'getViews', 'unload', 'destroy', 'bindPlatform',
+    ]);
     task.getMetaData.and.returnValue(of({ usesTokens }));
     task.load.and.returnValue(of(undefined));
     task.updateToken.and.returnValue(of(undefined));
+    task.unload.and.returnValue(of(undefined));
     task.getViews.and.returnValue(of({ task: {} }));
     return task;
   }
@@ -445,6 +449,110 @@ describe('ItemTaskInitService – token refresh', () => {
       let latestToken: TaskToken | undefined;
       service.taskToken$.subscribe(token => latestToken = token);
       expect(latestToken).withContext('previous token still available to consumers').toBe('token1');
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+});
+
+describe('ItemTaskInitService – teardown', () => {
+  let service: ItemTaskInitService;
+  let iframe: HTMLIFrameElement;
+  let taskProxy$: Subject<Task>;
+
+  function loadTask(mockTask: Task): void {
+    iframe.dispatchEvent(new Event('load'));
+    jasmine.clock().tick(0);
+    taskProxy$.next(mockTask);
+    taskProxy$.complete();
+    jasmine.clock().tick(0);
+  }
+
+  beforeEach(() => {
+    taskProxy$ = new Subject<Task>();
+
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskInitService,
+        { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
+        { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
+        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+      ],
+    });
+
+    service = TestBed.inject(ItemTaskInitService);
+    iframe = document.createElement('iframe');
+    service.configure(route, 'http://example.com/task', '0', null, undefined, false);
+    service.initTask(iframe, () => {});
+  });
+
+  afterEach(() => {
+    service.ngOnDestroy();
+  });
+
+  it('calls unload then destroy', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      const unloadOrder: string[] = [];
+      mockTask.unload.and.callFake(() => {
+        unloadOrder.push('unload');
+        return of(undefined);
+      });
+      mockTask.destroy.and.callFake(() => {
+        unloadOrder.push('destroy');
+      });
+      service.loadedTask$.subscribe();
+      loadTask(mockTask);
+
+      let done = false;
+      service.teardown().subscribe(() => {
+        done = true;
+      });
+      jasmine.clock().tick(0);
+
+      expect(done).toBeTrue();
+      expect(unloadOrder).toEqual([ 'unload', 'destroy' ]);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
+  it('no-ops on a second teardown call', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      service.loadedTask$.subscribe();
+      loadTask(mockTask);
+
+      service.teardown().subscribe();
+      jasmine.clock().tick(0);
+      service.teardown().subscribe();
+      jasmine.clock().tick(0);
+
+      expect(mockTask.unload).toHaveBeenCalledTimes(1);
+      expect(mockTask.destroy).toHaveBeenCalledTimes(1);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
+  it('still destroys when unload errors', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      mockTask.unload.and.returnValue(throwError(() => new Error('unload failed')));
+      service.loadedTask$.subscribe();
+      loadTask(mockTask);
+
+      let done = false;
+      service.teardown().subscribe(() => {
+        done = true;
+      });
+      jasmine.clock().tick(0);
+
+      expect(done).toBeTrue();
+      expect(mockTask.destroy).toHaveBeenCalledTimes(1);
     } finally {
       jasmine.clock().uninstall();
     }
