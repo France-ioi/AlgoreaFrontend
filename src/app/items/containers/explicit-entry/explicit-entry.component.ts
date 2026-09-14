@@ -1,12 +1,13 @@
-import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { ItemData } from '../../models/item-data';
 import { IsTeamActivityPipe } from '../../models/team-activity';
 import { ItemEntryService } from '../../data-access/item-entry.service';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { switchMap } from 'rxjs';
 import { CanEnterNowPipe, HasAlreadyStatedPipe } from '../../models/item-entry';
-import { FullItemRoute, isRouteWithParentAttempt, itemRouteWith } from 'src/app/models/routing/item-route';
+import { FullItemRoute, isRouteWithParentAttempt, itemRouteWith, newAttemptId } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -22,6 +23,7 @@ import { backendInfiniteDateString } from 'src/app/utils/date';
     CanEnterNowPipe,
     HasAlreadyStatedPipe,
     ButtonComponent,
+    RouterLink,
   ],
   templateUrl: './explicit-entry.component.html',
   styleUrl: './explicit-entry.component.scss',
@@ -43,6 +45,9 @@ export class ExplicitEntryComponent {
   entryStateState = toSignal(this.entryStateState$, { requireSync: true });
 
   enterActivityInProgress = signal(false);
+
+  protected readonly newAttemptRequested = computed(() => this.itemData().route.attemptId === newAttemptId);
+  protected readonly attemptsTabLink = computed(() => this.itemRouter.url(this.itemData().route, [ 'attempts' ]));
 
   enterActivity(route: FullItemRoute): void {
     if (!isRouteWithParentAttempt(route)) {

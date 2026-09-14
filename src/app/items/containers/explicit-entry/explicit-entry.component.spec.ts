@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ExplicitEntryComponent } from './explicit-entry.component';
 import { ItemEntryService } from '../../data-access/item-entry.service';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { ItemData } from '../../models/item-data';
-import { itemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute, newAttemptId } from 'src/app/models/routing/item-route';
 import { mockItem } from '../../mocks/item-by-id';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { fromItemContent } from '../../store';
@@ -24,23 +25,25 @@ describe('ExplicitEntryComponent', () => {
   let fixture: ComponentFixture<ExplicitEntryComponent>;
   let component: ExplicitEntryComponent;
   let itemEntryService: jasmine.SpyObj<Pick<ItemEntryService, 'getEntryState' | 'enter'>>;
-  let itemRouter: jasmine.SpyObj<Pick<ItemRouter, 'navigateTo'>>;
+  let itemRouter: jasmine.SpyObj<Pick<ItemRouter, 'navigateTo' | 'url'>>;
   let actionFeedbackService: jasmine.SpyObj<Pick<ActionFeedbackService, 'success' | 'error'>>;
   let store: MockStore;
 
   beforeEach(async () => {
     itemEntryService = jasmine.createSpyObj('ItemEntryService', [ 'getEntryState', 'enter' ]);
-    itemRouter = jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]);
+    itemRouter = jasmine.createSpyObj('ItemRouter', [ 'navigateTo', 'url' ]);
     actionFeedbackService = jasmine.createSpyObj('ActionFeedbackService', [ 'success', 'error' ]);
 
     itemEntryService.getEntryState.and.returnValue(of({
       currentUserCanEnter: true,
       state: 'ready',
     }));
+    itemRouter.url.and.returnValue('/a/activity-1;a=new/attempts' as never);
 
     await TestBed.configureTestingModule({
       imports: [ ExplicitEntryComponent ],
       providers: [
+        provideRouter([]),
         provideMockStore(),
         { provide: ItemEntryService, useValue: itemEntryService },
         { provide: ItemRouter, useValue: itemRouter },
@@ -55,6 +58,45 @@ describe('ExplicitEntryComponent', () => {
     component = fixture.componentInstance;
     fixture.componentRef.setInput('itemData', mockItemData);
     fixture.detectChanges();
+  });
+
+  describe('already_started advice', () => {
+    beforeEach(() => {
+      itemEntryService.getEntryState.and.returnValue(of({
+        currentUserCanEnter: false,
+        state: 'already_started',
+      }));
+    });
+
+    it('links to the attempts tab when a=new is in the route', () => {
+      const route = itemRoute('activity', 'activity-1', {
+        parentAttemptId: '0',
+        path: [],
+        attemptId: newAttemptId,
+      });
+      fixture = TestBed.createComponent(ExplicitEntryComponent);
+      fixture.componentRef.setInput('itemData', { ...mockItemData, route });
+      fixture.detectChanges();
+
+      const text = fixture.nativeElement.textContent as string;
+      expect(text).toContain('attempts tab');
+      expect(text).not.toContain('refresh the page');
+      expect(fixture.nativeElement.querySelector('a.alg-link')).toBeTruthy();
+      expect(itemRouter.url).toHaveBeenCalledWith(
+        jasmine.objectContaining({ attemptId: newAttemptId }),
+        [ 'attempts' ],
+      );
+    });
+
+    it('asks to refresh when a=new is not in the route', () => {
+      fixture = TestBed.createComponent(ExplicitEntryComponent);
+      fixture.componentRef.setInput('itemData', mockItemData);
+      fixture.detectChanges();
+
+      const text = fixture.nativeElement.textContent as string;
+      expect(text).toContain('Please refresh the page');
+      expect(fixture.nativeElement.querySelector('a.alg-link')).toBeNull();
+    });
   });
 
   it('dispatches attemptStarted then navigates with a=NEW keeping pa', () => {

@@ -15,7 +15,14 @@
   @else {
     @let entryState = entryStateFetchState.data;
     @if (entryState | hasAlreadyStated) {
-      <p i18n>You have already started the activity. Please refresh the page.</p>
+      @if (newAttemptRequested()) {
+        <p i18n>
+          You have already started the activity.
+          Select the started attempt in the <a class="alg-link" [routerLink]="attemptsTabLink()">attempts tab</a> to continue it.
+        </p>
+      } @else {
+        <p i18n>You have already started the activity. Please refresh the page.</p>
+      }
     }
     @else if (entryState | canEnterNow) {
       <p i18n>You can currently start the activity.</p>
