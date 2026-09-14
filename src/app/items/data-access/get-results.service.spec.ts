@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APPCONFIG } from 'src/app/config';
 import { GetResultsService } from './get-results.service';
-import { itemRoute } from 'src/app/models/routing/item-route';
+import { itemRoute, newAttemptId } from 'src/app/models/routing/item-route';
 
 describe('GetResultsService', () => {
   let service: GetResultsService;
@@ -60,5 +60,24 @@ describe('GetResultsService', () => {
     expect(req.request.params.get('attempt_id')).toBe('42');
     expect(req.request.params.has('parent_attempt_id')).toBeFalse();
     req.flush([]);
+  });
+
+  it('uses parent_attempt_id when a=new is paired with a parent attempt', () => {
+    const route = itemRoute('activity', '1', { path: [], parentAttemptId: '0', attemptId: newAttemptId });
+    service.getResults(route).subscribe();
+
+    const req = httpTestingController.expectOne(
+      r => r.url === `${apiUrl}/items/1/attempts` && r.method === 'GET',
+    );
+    expect(req.request.params.get('parent_attempt_id')).toBe('0');
+    expect(req.request.params.has('attempt_id')).toBeFalse();
+    req.flush([]);
+  });
+
+  it('throws when the route has only the a=new sentinel', () => {
+    const route = itemRoute('activity', '1', { path: [], attemptId: newAttemptId });
+    expect(() => service.getResults(route).subscribe()).toThrowError(
+      /Cannot fetch results without a parent or self attempt/,
+    );
   });
 });

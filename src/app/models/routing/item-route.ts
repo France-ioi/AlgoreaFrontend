@@ -37,6 +37,9 @@ export interface ItemContentIdentifier {
   observedGroupId?: GroupId,
 }
 
+/** Sentinel `a=` value: the user asked for a brand new attempt; no existing result must be selected. */
+export const newAttemptId = 'new';
+
 // TYPE ASSERT FUNCTIONS
 export function isItemRoute(route: ContentRoute): route is ItemRoute {
   return ([ 'activity', 'skill' ].includes(route.contentType));
@@ -47,7 +50,7 @@ export function isFullItemRoute(route: ContentRoute): route is FullItemRoute {
 }
 
 export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRoute & Required<Pick<ItemRoute, 'attemptId'>> {
-  return item.attemptId !== undefined;
+  return item.attemptId !== undefined && item.attemptId !== newAttemptId;
 }
 
 export function isRouteWithParentAttempt(item: FullItemRoute): item is ItemRoute & Required<Pick<ItemRoute, 'parentAttemptId'>> {
@@ -59,6 +62,7 @@ export function isRouteWithParentAttempt(item: FullItemRoute): item is ItemRoute
  * The parent attempt identifies the whole sibling list, so the self attempt adds nothing once it is
  * known. Without a parent attempt we cannot tell which list a self attempt belongs to, so it stays
  * part of the key. `contentType` and `answer` are deliberately omitted: `/attempts` does not take them.
+ * The `a=new` sentinel is never part of the key (it is not a real attempt).
  */
 export type ResultsFetchKey = Pick<ItemRoute, 'id' | 'path' | 'observedGroup' | 'parentAttemptId' | 'attemptId'>;
 
@@ -70,7 +74,7 @@ export function resultsFetchKey(
     path,
     observedGroup,
     parentAttemptId,
-    attemptId: parentAttemptId === undefined ? attemptId : undefined,
+    attemptId: parentAttemptId === undefined && attemptId !== newAttemptId ? attemptId : undefined,
   };
 }
 

@@ -74,6 +74,7 @@ describe('ExplicitEntryComponent', () => {
         result: {
           attemptId,
           startedAt: enteredAt,
+          endedAt: null,
           latestActivityAt: enteredAt,
           score: 0,
           validated: false,

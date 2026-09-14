@@ -11,7 +11,7 @@ import { fromCurrentContent } from 'src/app/store/navigation/current-content/cur
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { displaySettingsSchema } from '../../models/display-settings';
 import { ItemViewPerm } from '../../models/item-view-permission';
-import { FullItemRoute, itemRoute, resultsFetchKey } from 'src/app/models/routing/item-route';
+import { FullItemRoute, itemRoute, newAttemptId, resultsFetchKey } from 'src/app/models/routing/item-route';
 import { TestScheduler } from 'rxjs/testing';
 import { fetchingState, readyState, errorState } from 'src/app/utils/state';
 import { Result } from '../../models/attempts';
@@ -113,6 +113,7 @@ describe('attemptResolution', () => {
     attemptId: '42',
     latestActivityAt: new Date('2020-01-02'),
     startedAt: new Date('2020-01-01'),
+    endedAt: null,
     score: 0,
     validated: false,
     allowsSubmissionsUntil: new Date('2099-01-01'),
@@ -154,6 +155,39 @@ describe('attemptResolution', () => {
   it('returns null when results are in error (stops re-triggering start)', () => {
     const resultsState = errorState<typeof key>(new Error('start failed'), key);
     expect(attemptResolution(parentOnlyRoute, contentItem, resultsState)).toBeNull();
+  });
+
+  it('returns null for a=new on an explicit-entry item', () => {
+    const newRoute = itemRoute('activity', '1', {
+      path: [],
+      parentAttemptId: '0',
+      attemptId: newAttemptId,
+    });
+    const resultsState = readyState([ started ], key);
+    expect(attemptResolution(newRoute, explicitItem, resultsState)).toBeNull();
+  });
+
+  it('picks the best attempt for a=new when explicit entry is not required', () => {
+    const newRoute = itemRoute('activity', '1', {
+      path: [],
+      parentAttemptId: '0',
+      attemptId: newAttemptId,
+    });
+    const resultsState = readyState([ started ], key);
+    expect(attemptResolution(newRoute, contentItem, resultsState)).toEqual({
+      kind: 'pick',
+      attemptId: '42',
+    });
+  });
+
+  it('starts for a=new when there is no attempt and implicit start is allowed', () => {
+    const newRoute = itemRoute('activity', '1', {
+      path: [],
+      parentAttemptId: '0',
+      attemptId: newAttemptId,
+    });
+    const resultsState = readyState<Result[], typeof key>([], key);
+    expect(attemptResolution(newRoute, contentItem, resultsState)).toEqual({ kind: 'start' });
   });
 });
 
@@ -217,6 +251,7 @@ describe('ensureAttemptInUrlEffect', () => {
       attemptId: '77',
       latestActivityAt: new Date(),
       startedAt: new Date(),
+      endedAt: null,
       score: 0,
       validated: false,
       allowsSubmissionsUntil: new Date('2099-01-01'),

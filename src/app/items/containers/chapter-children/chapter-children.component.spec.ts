@@ -62,6 +62,7 @@ const mockItemData: ItemData = {
     score: 0,
     validated: true,
     startedAt: new Date(),
+    endedAt: null,
     allowsSubmissionsUntil: new Date(),
   },
 };

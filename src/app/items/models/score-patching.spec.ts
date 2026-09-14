@@ -7,6 +7,7 @@ describe('patchResultScore', () => {
     attemptId: '42',
     latestActivityAt: new Date(),
     startedAt: new Date(),
+    endedAt: null,
     score: 10,
     validated: false,
     allowsSubmissionsUntil: new Date(),

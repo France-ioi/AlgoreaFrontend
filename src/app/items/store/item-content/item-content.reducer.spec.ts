@@ -12,6 +12,7 @@ describe('item-content reducer attemptStarted', () => {
     attemptId: '42',
     latestActivityAt: new Date(),
     startedAt: new Date(),
+    endedAt: null,
     score: 0,
     validated: false,
     allowsSubmissionsUntil: new Date(),

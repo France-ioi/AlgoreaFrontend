@@ -1,7 +1,7 @@
 import { userBaseSchema, withGroupId } from 'src/app/groups/models/user';
 import { canCurrentUserViewContent, ItemPermWithView } from './item-view-permission';
 import { z } from 'zod';
-import { Pipe, PipeTransform } from '@angular/core';
+import { isPastDate } from 'src/app/utils/date';
 
 export const attemptResultSchema = z.object({
   id: z.string(),
@@ -19,6 +19,7 @@ export interface Result {
   attemptId: string,
   latestActivityAt: Date,
   startedAt: Date|null,
+  endedAt: Date|null,
   score: number,
   validated: boolean,
   allowsSubmissionsUntil: Date,
@@ -29,6 +30,7 @@ export function resultFromFetchedResult(result: z.infer<typeof attemptResultSche
     attemptId: result.id,
     latestActivityAt: result.latestActivityAt,
     startedAt: result.startedAt,
+    endedAt: result.endedAt,
     score: result.scoreComputed,
     validated: result.validated,
     allowsSubmissionsUntil: result.allowsSubmissionsUntil
@@ -57,15 +59,13 @@ export function implicitResultStart(item: Item): boolean {
   return canCurrentUserViewContent(item) && !item.requiresExplicitEntry;
 }
 
-/**
- * Returns true if the user can (still) submit on this result.
- */
-@Pipe({
-  name: 'isActive', pure: true
-})
-export class ResultIsActivePipe implements PipeTransform {
+export function canCreateResults(item: Item): boolean {
+  return canCurrentUserViewContent(item);
+}
 
-  transform(result: Result): boolean {
-    return result.startedAt !== null && new Date().getTime() < result.allowsSubmissionsUntil.getTime();
-  }
+/**
+ * Whether `allowsSubmissionsUntil` is in the past. An infinite deadline is never past, so no extra guard.
+ */
+export function areSubmissionsClosed(result: Pick<Result, 'allowsSubmissionsUntil'>): boolean {
+  return isPastDate(result.allowsSubmissionsUntil);
 }

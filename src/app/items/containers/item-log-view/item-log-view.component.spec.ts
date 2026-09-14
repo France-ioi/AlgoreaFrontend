@@ -56,7 +56,13 @@ const mockItemData: ItemData = {
   item: mockItem,
   breadcrumbs: [],
   currentResult: {
-    attemptId: '0', latestActivityAt: new Date(), score: 0, validated: false, startedAt: new Date(), allowsSubmissionsUntil: new Date(),
+    attemptId: '0',
+    latestActivityAt: new Date(),
+    score: 0,
+    validated: false,
+    startedAt: new Date(),
+    endedAt: null,
+    allowsSubmissionsUntil: new Date(),
   },
 };
 

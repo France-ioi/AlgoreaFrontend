@@ -30,13 +30,14 @@ import { DescriptionIframeNavigationRequest } from 'src/app/ui-components/descri
 import { Location } from '@angular/common';
 import { LoginWallComponent } from '../login-wall/login-wall.component';
 import { ErrorComponent } from '../../../ui-components/error/error.component';
+import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
 import { FormsModule } from '@angular/forms';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { Subject, map, merge, take, timer } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ResultIsActivePipe } from '../../models/attempts';
+import { areSubmissionsClosed } from '../../models/attempts';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { MessageService } from 'src/app/services/message.service';
@@ -72,7 +73,7 @@ const EXTERNAL_URL_AUTO_OPEN_DELAY_MS = 900;
     IsAChapterPipe,
     IsASkillPipe,
     FormsModule,
-    ResultIsActivePipe,
+    MessageInfoComponent,
   ]
 })
 export class ItemContentComponent implements PendingChangesComponent {
@@ -112,6 +113,24 @@ export class ItemContentComponent implements PendingChangesComponent {
     const description = this.item().string.description;
     return (!isATask(this.item()) && description && description.trim() !== '') ? description : null;
   });
+
+  /**
+   * Shown for any item whose selected attempt can no longer be submitted — including descendants of a
+   * time-limited ancestor attempt, since `allows_submissions_until` is set on their results too.
+   * Hidden while observing: the message is addressed to the participant, not the observer.
+   * Not a ticking clock: while the page stays open the banner appears after
+   * `TimeLimitedContentEndComponent` closes and dispatches `refresh()` (which updates `itemData`).
+   */
+  submissionsClosed = computed(() => {
+    const { currentResult, route } = this.itemData();
+    return !!currentResult && !route.observedGroup && areSubmissionsClosed(currentResult);
+  });
+
+  /**
+   * Remount `alg-item-display` when readOnly flips: ItemTaskInitService forbids changing readOnly on a
+   * live task config, so a closed attempt after `refresh()` needs a fresh instance.
+   */
+  taskDisplayRemountKey = computed(() => String(this.taskConfig()?.readOnly ?? ''));
 
   isTaskLoaded = signal(false); // whether the task has finished loading, i.e. is ready or in error
   showTaskDisplay = signal(true);

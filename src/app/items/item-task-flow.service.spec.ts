@@ -14,10 +14,13 @@ import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permissi
 import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
 import { fetchingState, readyState } from 'src/app/utils/state';
+import { backendInfiniteDateString } from 'src/app/utils/date';
 import { ItemTaskFlowService } from './item-task-flow.service';
 import { ItemData } from './models/item-data';
+import { Result } from './models/attempts';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { fromItemContent } from './store';
+import { firstValueFrom } from 'rxjs';
 
 const mockItemBase: Item = {
   id: '1',
@@ -196,5 +199,73 @@ describe('ItemTaskFlowService – before-unload save', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+});
+
+describe('ItemTaskFlowService – taskConfig readOnly', () => {
+  const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
+
+  function currentResult(allowsSubmissionsUntil: Date): Result {
+    return {
+      attemptId: '0',
+      latestActivityAt: new Date(),
+      score: 0,
+      validated: false,
+      startedAt: new Date(),
+      endedAt: null,
+      allowsSubmissionsUntil,
+    };
+  }
+
+  function setup(itemData: ItemData): ItemTaskFlowService {
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskFlowService,
+        provideMockStore({
+          selectors: [
+            { selector: fromItemContent.selectActiveContentRoute, value: itemData.route },
+            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
+            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData) },
+          ],
+        }),
+        { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
+        { provide: ConfirmationModalService, useValue: { open: (): typeof EMPTY => EMPTY } },
+        { provide: ItemRouter, useValue: jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]) },
+        {
+          provide: InitialAnswerDataSource,
+          useValue: {
+            answer$: of(null),
+            error$: of(undefined),
+            setInfo: jasmine.createSpy('setInfo'),
+          },
+        },
+        { provide: APPCONFIG, useValue: { redirects: {} } },
+      ],
+    });
+    return TestBed.inject(ItemTaskFlowService);
+  }
+
+  afterEach(() => {
+    TestBed.inject(ItemTaskFlowService).ngOnDestroy();
+  });
+
+  it('configures the task as read-only when submissions are closed', async () => {
+    const service = setup({
+      ...createItemData(route),
+      currentResult: currentResult(new Date('2000-01-01T00:00:00Z')),
+    });
+
+    const config = await firstValueFrom(service.taskConfig$);
+    expect(config?.readOnly).toBeTrue();
+  });
+
+  it('keeps the task writable when submissions are still open', async () => {
+    const service = setup({
+      ...createItemData(route),
+      currentResult: currentResult(new Date(backendInfiniteDateString)),
+    });
+
+    const config = await firstValueFrom(service.taskConfig$);
+    expect(config?.readOnly).toBeFalse();
   });
 });

@@ -1,6 +1,8 @@
 import {
   FullItemRoute,
+  isRouteWithSelfAttempt,
   itemRoute,
+  newAttemptId,
   parentRoute,
   routeWithSelfAttempt,
   resultsFetchKey,
@@ -21,6 +23,22 @@ describe('routeWithSelfAttempt', () => {
   it('should leave the route unchanged when attempt id is undefined', () => {
     expect(routeWithSelfAttempt(routeWithSelf, undefined)).toBe(routeWithSelf);
     expect(routeWithSelfAttempt(routeWithParent, undefined)).toBe(routeWithParent);
+  });
+});
+
+describe('isRouteWithSelfAttempt', () => {
+  it('returns true for a real self attempt', () => {
+    expect(isRouteWithSelfAttempt(itemRoute('activity', '1', { path: [], attemptId: '42' }))).toBeTrue();
+  });
+
+  it('returns false when only a parent attempt is present', () => {
+    expect(isRouteWithSelfAttempt(itemRoute('activity', '1', { path: [], parentAttemptId: '0' }))).toBeFalse();
+  });
+
+  it('returns false for the a=new sentinel', () => {
+    expect(isRouteWithSelfAttempt(
+      itemRoute('activity', '1', { path: [], parentAttemptId: '0', attemptId: newAttemptId }),
+    )).toBeFalse();
   });
 });
 
@@ -45,6 +63,11 @@ describe('resultsFetchKey', () => {
     const b = itemRoute('activity', '2', { path: [ '1' ], attemptId: '99' });
     expect(resultsFetchKey(a)).not.toEqual(resultsFetchKey(b));
     expect(resultsFetchKey(a).attemptId).toBe('42');
+  });
+
+  it('drops the a=new sentinel when there is no parent attempt', () => {
+    const route = itemRoute('activity', '2', { path: [ '1' ], attemptId: newAttemptId });
+    expect(resultsFetchKey(route).attemptId).toBeUndefined();
   });
 
   it('keeps distinct keys for different parent attempts', () => {

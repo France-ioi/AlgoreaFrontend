@@ -81,6 +81,7 @@ function buildItemData(item: Item): ItemData {
       score: 0,
       validated: false,
       startedAt: new Date(),
+      endedAt: null,
       allowsSubmissionsUntil: new Date(),
     },
   };

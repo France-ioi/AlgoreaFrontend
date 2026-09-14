@@ -6,6 +6,7 @@ function resultStub(attemptId: string): Result {
     attemptId,
     latestActivityAt: new Date(0),
     startedAt: null,
+    endedAt: null,
     score: 0,
     validated: false,
     allowsSubmissionsUntil: new Date(0),

@@ -64,6 +64,7 @@ export class ExplicitEntryComponent {
         const provisionalResult: Result = {
           attemptId: resp.attemptId,
           startedAt: resp.enteredAt,
+          endedAt: null,
           latestActivityAt: resp.enteredAt,
           score: 0,
           validated: false,

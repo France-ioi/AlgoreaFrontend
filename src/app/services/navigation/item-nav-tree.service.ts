@@ -56,13 +56,16 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   canFetchChildren(content: ItemInfo): boolean {
     if (!content.details) return false; // no item detail yet -> no children
     if (!mayHaveChildren(content.details)) return false; // only chapters or skills may have children
-    return !!content.route.attemptId; // an attempt is required to fetch children
+    // Require a real self attempt — the `a=new` sentinel must not hit `/navigation?attempt_id=new`
+    return isFullItemRoute(content.route) && isRouteWithSelfAttempt(content.route);
   }
 
   fetchNavData(route: EntityPathRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }> {
     if (!isItemRoute(route)) throw new Error('expect requesting nav data with a route which is an item route');
+    if (!isFullItemRoute(route) || !isRouteWithSelfAttempt(route)) {
+      throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
+    }
     const attemptId = route.attemptId;
-    if (!attemptId) throw new Error('attemptId cannot be determined (should have been checked by canFetchChildren)');
     return this.store.select(fromObservation.selectObservedGroupId).pipe(
       take(1),
       switchMap(observedGroupId => this.itemNavService.getItemNavigation(route.id,

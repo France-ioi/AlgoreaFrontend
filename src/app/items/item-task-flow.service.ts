@@ -25,6 +25,7 @@ import { isATask } from 'src/app/items/models/item-type';
 import { FetchState, readyState } from 'src/app/utils/state';
 import { readyData } from 'src/app/utils/operators/state';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
+import { areSubmissionsClosed } from './models/attempts';
 import { ItemData } from './models/item-data';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { TaskConfig } from './services/item-task.service';
@@ -70,16 +71,23 @@ export class ItemTaskFlowService implements OnDestroy {
 
   readonly taskConfig$: Observable<TaskConfig|null> = this.state$.pipe(
     readyData(),
-    map(data => ({ isTask: isATask(data.item), route: data.route })),
-    distinctUntilChanged((x, y) => JSON.stringify(x.route) === JSON.stringify(y.route)),
-    switchMap(({ isTask, route }) => {
+    map(data => ({
+      isTask: isATask(data.item),
+      route: data.route,
+      // Decide readOnly here (not later): ItemTaskInitService forbids flipping readOnly on a live config.
+      submissionsClosed: !!data.currentResult && areSubmissionsClosed(data.currentResult),
+    })),
+    distinctUntilChanged((x, y) =>
+      JSON.stringify(x.route) === JSON.stringify(y.route) && x.submissionsClosed === y.submissionsClosed
+    ),
+    switchMap(({ isTask, route, submissionsClosed }) => {
       if (!isTask) return of(null);
       const userLocale = this.localeService.currentLang?.tag;
       if (!userLocale) throw new Error('unexpected: locale not defined');
       return this.initialAnswerDataSource.answer$.pipe(
         catchError(() => EMPTY),
         map(initialAnswer => ({
-          readOnly: !!route.answer,
+          readOnly: !!route.answer || submissionsClosed,
           initialAnswer,
           locale: userLocale,
         }))
