@@ -44,6 +44,19 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   }
 
   /**
+   * May return the `a=new` sentinel (`newAttemptId`) when that is on the route. Children fetches are
+   * still gated by `canFetchChildren` → `isRouteWithSelfAttempt` (excludes `'new'`), so no
+   * `/navigation?attempt_id=new` request is created.
+   */
+  protected override selfAttemptOf(content: ItemInfo): string|undefined {
+    return content.route.attemptId;
+  }
+
+  protected override parentAttemptOf(content: ItemInfo): string|undefined {
+    return content.route.parentAttemptId;
+  }
+
+  /**
    * Guess content info from the nav tree parent. (yypically so that we can fetch nav)
    * The element MUST have an attempt already, which should be the case for the parent.
    */
@@ -100,10 +113,18 @@ abstract class ItemNavTreeService extends NavTreeService<ItemInfo> {
   addDetailsToTreeElement(treeElement: NavTreeElement, contentInfo: ItemInfo): NavTreeElement {
     const details = contentInfo.details;
     if (!details) return treeElement;
+    // Copy only attempt fields so per-view concerns (answer, observedGroup) do not leak into the nav element.
+    // Safe for lookups: areSameElements() compares contentType + id + path only.
+    const route = {
+      ...treeElement.route,
+      attemptId: contentInfo.route.attemptId,
+      parentAttemptId: contentInfo.route.parentAttemptId,
+    };
     return {
       ...treeElement,
       title: details.title ?? '',
       leftNavIcon: details.leftNavIcon ?? treeElement.leftNavIcon,
+      route,
       navigateTo: (preventFullFrame = false): void =>
         this.itemRouter.navigateTo(contentInfo.route, { preventFullFrame, useCurrentObservation: true }),
       score: details.bestScore !== undefined && details.currentScore !== undefined && details.validated !== undefined ? {

@@ -13,12 +13,34 @@ import { computeNavigationNeighbors, NavigationNeighbors } from './nav-tree-navi
 
 interface FetchInfo {
   path: EntityPathRoute['path'], /* path to the fetched elements */
+  /** Attempt the listed elements belong to (the attempt of the item at `path`). Undefined for trees without attempts. */
+  attemptId?: string,
   fetch: Observable<FetchState<NavTreeData>>,
+}
+
+function matchesFetch(fetch: FetchInfo|undefined, path: EntityPathRoute['path'], attemptId: string|undefined): boolean {
+  return !!fetch && arraysEqual(fetch.path, path) && fetch.attemptId === attemptId;
 }
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   protected readonly currentContent = inject(CurrentContentService);
+
+  /**
+   * Attempt of the content itself — identifies the fetch listing its children.
+   * Default undefined so trees without attempts (e.g. groups) keep path-only caching.
+   */
+  protected selfAttemptOf(_content: ContentT): string|undefined {
+    return undefined;
+  }
+  /**
+   * Attempt of the content's parent — identifies the fetch listing its siblings.
+   * Sibling lists are shared across all self-attempts of an item (same parent_attempt_id), so
+   * switching only the self attempt reuses l1 and refetches only children.
+   */
+  protected parentAttemptOf(_content: ContentT): string|undefined {
+    return undefined;
+  }
 
   private reloadTrigger = new Subject<void>();
   private reload$ = merge(
@@ -66,6 +88,10 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       // Test case: loading a chapter with children, then select a group -> the activity tab does not trigger any refetches
       if (!content) return { content, l1Fetch$: prev.l1Fetch$, l2Fetch$: prev.l2Fetch$ };
 
+      const childrenPath = [ ...content.route.path, content.route.id ];
+      const selfAttempt = this.selfAttemptOf(content);
+      const parentAttempt = this.parentAttemptOf(content);
+
       // CASE 4: The l1 AND l2 needed are exactly what was fetched in the previous step -> reuse the fetches
       // Test cases:
       //  1) on loading content -> no navigation re-fetches are done while the content is "built-up" and children are shown after a while
@@ -73,29 +99,26 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
       //  3) navigate to l2 content without children to a sibling without children -> no fetch at all
       //  4) navigate from a l2 content to a sibling of the parent -> no fetch at all
       if (
-        prev.l2Fetch$ && (
-          // either the path to content children matches previous l2 path (so l1 will)
-          arraysEqual([ ...content.route.path, content.route.id ], prev.l2Fetch$.path) ||
-          // or the content is on l2 (it is a leaf), and so its path matches the previous l2 path (so l1 will)
-          (!this.canFetchChildren(content) && arraysEqual(content.route.path, prev.l2Fetch$.path))
-        )
+        matchesFetch(prev.l2Fetch$, childrenPath, selfAttempt) ||
+        (!this.canFetchChildren(content) && matchesFetch(prev.l2Fetch$, content.route.path, parentAttempt))
       ) return { content, l1Fetch$: prev.l1Fetch$, l2Fetch$: prev.l2Fetch$ };
 
       // CASE 5: The l1 needed is the same as the previous l1. L2 is new (or empty) -> reuse l1
       // Test case: navigate from a l1 content to a sibling should only fetch the children
-      if (arraysEqual(content.route.path, prev.l1Fetch$.path)) {
+      // Also: switching only the self attempt on the same item (same parent attempt) falls here — l1 reused, children refetched
+      if (matchesFetch(prev.l1Fetch$, content.route.path, parentAttempt)) {
         return { content, l1Fetch$: prev.l1Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
       }
 
       // CASE 6: The previous l2 becomes the new l1 (i.e., we navigate to a child content with children) -> reuse l2 as l1
       // Test case: navigate to a children -> only the new l2 (if any) is fetched, not the l1
-      if (prev.l2Fetch$ && arraysEqual(content.route.path, prev.l2Fetch$.path)) {
+      if (prev.l2Fetch$ && matchesFetch(prev.l2Fetch$, content.route.path, parentAttempt)) {
         return { content, l1Fetch$: prev.l2Fetch$, l2Fetch$: this.fetchChildrenNav(content) };
       }
 
       // CASE 7: The previous l1 becomes the new l2 (i.e., we navigate to the parent) -> reuse l1 as l2
       // Test case: navigating to the parent -> only the new l1 is fetched, not the new l2 (children are shown immediately)
-      if (arraysEqual([ ...content.route.path, content.route.id ], prev.l1Fetch$.path)) {
+      if (matchesFetch(prev.l1Fetch$, childrenPath, selfAttempt)) {
         return { content, l1Fetch$: this.fetchNav(content), l2Fetch$: prev.l1Fetch$ };
       }
 
@@ -192,31 +215,33 @@ export abstract class NavTreeService<ContentT extends RoutedContentInfo> {
 
   protected abstract fetchNavData(route: EntityPathRoute): Observable<{ parent: NavTreeElement, elements: NavTreeElement[] }>;
 
-  private fetchChildrenNav(content: RoutedContentInfo): FetchInfo|undefined {
+  private fetchChildrenNav(content: ContentT): FetchInfo|undefined {
     if (!this.canFetchChildren(content)) return undefined;
     const path = [ ...content.route.path, content.route.id ];
-    return this.fetch(path, () => this.fetchNavData(content.route).pipe(
+    return this.fetch(path, this.selfAttemptOf(content), () => this.fetchNavData(content.route).pipe(
       map(data => new NavTreeData(data.elements, path, data.parent)),
     ));
   }
 
   private fetchRootNav(): FetchInfo {
-    return this.fetch([], () => this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
+    return this.fetch([], undefined, () => this.fetchRootTreeData().pipe(map(elements => new NavTreeData(elements, []))));
   }
 
   private fetchNav(content: ContentT): FetchInfo {
     const route = content.route;
     const parentId = route.path[route.path.length-1];
     if (isDefined(parentId)) {
-      return this.fetch(route.path, () =>
+      return this.fetch(route.path, this.parentAttemptOf(content), () =>
         this.fetchNavDataFromChild(parentId, content).pipe(map(data => new NavTreeData(data.elements, route.path, data.parent)))
       );
     } else return this.fetchRootNav();
   }
 
-  private fetch(path: EntityPathRoute['path'], fetch: () => Observable<NavTreeData>): FetchInfo {
+  /** Creates a cached fetch identity. Protected so tests can count creations vs shareReplay re-subscriptions. */
+  protected fetch(path: EntityPathRoute['path'], attemptId: string|undefined, fetch: () => Observable<NavTreeData>): FetchInfo {
     return {
-      path: path,
+      path,
+      attemptId,
       fetch: defer(fetch).pipe(
         mapToFetchState({ resetter: this.reload$ }),
         // The fetches need to use a `shareReplay` which protect them from cancellation as long as they are retained by the `scan`.
