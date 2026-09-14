@@ -18,8 +18,15 @@ interface FetchInfo {
   fetch: Observable<FetchState<NavTreeData>>,
 }
 
+/**
+ * Match a cached fetch by path, and by attempt when the content provides one.
+ * `attemptId === undefined` is treated as path-only: many content links still carry only
+ * `attemptId` or only `parentAttemptId` (XOR), so a missing key must not force a full refetch
+ * (that would promote children to l1 and break L2 selection / neighbor nav). When the key is
+ * present — e.g. switching self attempt while `pa=` stays — equality is required so children refetch.
+ */
 function matchesFetch(fetch: FetchInfo|undefined, path: EntityPathRoute['path'], attemptId: string|undefined): boolean {
-  return !!fetch && arraysEqual(fetch.path, path) && fetch.attemptId === attemptId;
+  return !!fetch && arraysEqual(fetch.path, path) && (attemptId === undefined || fetch.attemptId === attemptId);
 }
 
 export abstract class NavTreeService<ContentT extends RoutedContentInfo> {

@@ -190,6 +190,18 @@ describe('NavTreeService fetch reuse', () => {
       // CASE 7: previous l1 becomes l2 — only the new siblings fetch
       expect(creationsSince(service, afterChild)).toEqual([ { path: [ 'P' ], attemptId: '0' } ]);
     });
+
+    it('reuses l1+l2 when navigating to a leaf child whose route has only attemptId (no pa)', () => {
+      // Content-area child links often XOR attempt vs parentAttempt; missing pa must not force CASE 8.
+      const parent = testContent('C', [ 'P' ], { attemptId: '1', parentAttemptId: '0', mayHaveChildren: true });
+      const leaf = testContent('D', [ 'P', 'C' ], { attemptId: '10', mayHaveChildren: false });
+
+      currentContent.replace(parent);
+      const afterParent = service.fetchCreations.length;
+
+      currentContent.replace(leaf);
+      expect(creationsSince(service, afterParent)).toEqual([]);
+    });
   });
 
   describe('with group-style hooks (no attempts)', () => {
