@@ -1,5 +1,5 @@
 import { UrlSegment } from '@angular/router';
-import { FullItemRoute, itemRoute, ItemRoute, RawItemRoute } from './item-route';
+import { FullItemRoute, itemRoute, ItemRoute, newAttemptId, RawItemRoute } from './item-route';
 import { UrlCommand } from 'src/app/utils/url';
 import { ItemTypeCategory, itemTypeCategoryEnum } from 'src/app/items/models/item-type';
 import { encodeItemRouteParameters, extractItemRouteParameters } from './item-route-parameters';
@@ -41,8 +41,13 @@ export function parseItemUrlSegments(segments: UrlSegment[], aliases: Aliases): 
 
   // creating the response from what we parsed
   if (!path) return { route: { tag: 'error', contentType, id, answer, observedGroup }, page };
-  if (attemptId) return { route: itemRoute(contentType, id, { path, attemptId, answer, observedGroup }), page };
-  if (parentAttemptId) return { route: itemRoute(contentType, id, { path, parentAttemptId, answer, observedGroup }), page };
+  // `a=new` is only meaningful with a parent attempt; alone it would break FullItemRoute consumers
+  if (attemptId === newAttemptId && parentAttemptId === undefined) {
+    return { route: { tag: 'error', contentType, id, path, answer, observedGroup }, page };
+  }
+  if (attemptId || parentAttemptId) {
+    return { route: itemRoute(contentType, id, { path, attemptId, parentAttemptId, answer, observedGroup }), page };
+  }
   return { route: { tag: 'error', contentType, id, path, answer, observedGroup }, page };
 }
 

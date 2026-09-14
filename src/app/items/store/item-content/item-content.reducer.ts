@@ -28,12 +28,20 @@ export const reducer = createReducer(
   ),
 
   on(itemByIdPageActions.patchScore,
-    (state, { score }): State => ({
+    (state, { score, attemptId }): State => ({
       ...state,
       itemState: mapStateData(state.itemState, i => patchItemScore(i, score)),
-      resultsState: mapStateData(state.resultsState, r => patchResultScore(r, score)),
+      resultsState: mapStateData(state.resultsState, r => patchResultScore(r, attemptId, score)),
     })
+  ),
 
-  )
+  on(itemByIdPageActions.attemptStarted,
+    (state, { result }): State => ({
+      ...state,
+      resultsState: mapStateData(state.resultsState, results =>
+        (results.some(r => r.attemptId === result.attemptId) ? results : [ ...results, result ])
+      ),
+    })
+  ),
 
 );

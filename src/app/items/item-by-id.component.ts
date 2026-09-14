@@ -136,6 +136,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
 
+  private readonly currentResult = this.store.selectSignal(fromItemContent.selectActiveContentCurrentResult);
   constructor() {
     this.taskFlow.registerSaveHandler(() =>
       this.itemContentComponent()?.itemDisplayComponent()?.saveAnswerAndState() ?? of(readyState<void>(undefined))
@@ -165,8 +166,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   }
 
   onScoreChange(score: number): void {
+    const attemptId = this.currentResult()?.attemptId;
+    // Score events only come from a running task, which already has a selected attempt in the URL.
+    if (attemptId === undefined) throw new Error('unexpected: score change without a current attempt');
     this.currentContentService.forceNavMenuReload();
-    this.store.dispatch(fromItemContent.itemByIdPageActions.patchScore({ score }));
+    this.store.dispatch(fromItemContent.itemByIdPageActions.patchScore({ score, attemptId }));
   }
 
   beforeUnload(): Observable<boolean> {

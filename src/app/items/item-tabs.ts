@@ -18,8 +18,14 @@ import { fromItemContent } from './store';
 import { canCurrentUserSetExtraTime, isTimeLimitedActivity } from './models/time-limited-activity';
 import { itemRouteAsUrlCommand } from '../models/routing/item-route-serialization';
 import { capitalize } from 'src/app/utils/case_conversion';
+import { Result } from './models/attempts';
 
 const DEFAULT_TASK_VIEW_ICON = 'ph ph-file-text';
+
+/** Show when multiple attempts are allowed, or the participant already has more than one result (e.g. legacy). */
+export function shouldShowAttemptsTab(item: { allowsMultipleAttempts: boolean }, results: Result[] | undefined): boolean {
+  return item.allowsMultipleAttempts || (results?.length ?? 0) > 1;
+}
 
 // Presentation (title + icon) for the views advertised by a task. Views not listed here fall back to a
 // capitalized view name and the default icon.
@@ -41,6 +47,9 @@ const contentTab = {
 };
 const childrenEditTab = {
   title: $localize`Content`, routerLink: [ 'edit-children' ], tag: 'alg-children-edit', isTaskTab: true, icon: 'ph ph-article',
+};
+const attemptsTab = {
+  title: $localize`Attempts`, routerLink: [ 'attempts' ], tag: 'alg-attempts', icon: 'ph ph-arrows-split alg-rotate-90-ccw',
 };
 const editTab = { title: $localize`Edit`, routerLink: [ 'edit' ], tag: 'alg-task-edit', icon: 'ph ph-pencil-simple' };
 const progressTab = { title: $localize`Progress`, routerLink: [ 'progress' ], tag: 'alg-item-progress', icon: 'ph ph-chart-line-up' };
@@ -123,6 +132,7 @@ export class ItemTabs implements OnDestroy {
           exactpathMatch: true,
           isTaskTab: true,
         })),
+        this.isCurrentTab(attemptsTab) || shouldShowAttemptsTab(state.data.item, state.data.results) ? attemptsTab : null,
         this.isCurrentTab(editTab) || (editTabEnabled && hasEditionPerm) ? editTab : null,
         this.isCurrentTab(progressTab) || (canViewProgress && !isTask && isObserving) ? progressTab : null,
         this.isCurrentTab(historyTab) || (showProgress && (isObserving || isTask)) ? historyTab : null,

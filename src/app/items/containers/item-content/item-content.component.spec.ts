@@ -3,7 +3,11 @@ import { Component, input, output } from '@angular/core';
 import { ItemContentComponent } from './item-content.component';
 import { ItemData } from '../../models/item-data';
 import { ItemDisplayComponent } from '../item-display/item-display.component';
+import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
+import { ChapterChildrenComponent } from '../chapter-children/chapter-children.component';
 import { itemRoute, FullItemRoute } from 'src/app/models/routing/item-route';
+import { backendInfiniteDateString } from 'src/app/utils/date';
+import { Result } from '../../models/attempts';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { displaySettingsSchema } from 'src/app/items/models/display-settings';
@@ -42,6 +46,23 @@ class MockItemDisplayComponent {
   disablePlatformProgress = output<boolean>();
   fullFrame = output<boolean>();
   loadingComplete = output<boolean>();
+}
+
+@Component({
+  selector: 'alg-explicit-entry',
+  template: '',
+})
+class MockExplicitEntryComponent {
+  itemData = input.required<ItemData>();
+  itemRefreshRequired = output<void>();
+}
+
+@Component({
+  selector: 'alg-chapter-children',
+  template: '',
+})
+class MockChapterChildrenComponent {
+  itemData = input.required<ItemData>();
 }
 
 const mockRoute = itemRoute('activity', '1', { attemptId: '0', path: [] });
@@ -83,7 +104,13 @@ const mockItemData: ItemData = {
   item: mockItem,
   breadcrumbs: [],
   currentResult: {
-    attemptId: '0', latestActivityAt: new Date(), score: 0, validated: false, startedAt: new Date(), allowsSubmissionsUntil: new Date(),
+    attemptId: '0',
+    latestActivityAt: new Date(),
+    score: 0,
+    validated: false,
+    startedAt: new Date(),
+    endedAt: null,
+    allowsSubmissionsUntil: new Date(backendInfiniteDateString),
   },
 };
 
@@ -344,5 +371,183 @@ describe('ItemContentComponent – description navigation', () => {
   it('should not navigate via ItemRouter for url payloads', () => {
     component.onDescriptionNavigate({ url: 'https://example.com/z' });
     expect(itemRouterSpy.navigateTo).not.toHaveBeenCalled();
+  });
+});
+
+describe('ItemContentComponent – explicit entry and submissions closed', () => {
+  let fixture: ComponentFixture<ItemContentComponent>;
+
+  const explicitItem: Item = { ...mockItem, requiresExplicitEntry: true };
+  const pastDeadline = new Date('2000-01-01T00:00:00Z');
+
+  function pastDeadlineResult(overrides: Partial<Result> = {}): Result {
+    return {
+      attemptId: '0',
+      latestActivityAt: new Date(),
+      score: 0,
+      validated: false,
+      startedAt: new Date(),
+      endedAt: null,
+      allowsSubmissionsUntil: pastDeadline,
+      ...overrides,
+    };
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ ItemContentComponent ],
+      providers: [
+        provideRouter([]),
+        provideMockStore(),
+        {
+          provide: UserSessionService,
+          useValue: { userProfile$: EMPTY, isCurrentUserTemp: () => false },
+        },
+      ],
+    })
+      .overrideComponent(ItemContentComponent, {
+        remove: { imports: [ ItemDisplayComponent, ExplicitEntryComponent, ChapterChildrenComponent ] },
+        add: { imports: [ MockItemDisplayComponent, MockExplicitEntryComponent, MockChapterChildrenComponent ] },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(ItemContentComponent);
+  });
+
+  it('shows the explicit-entry gate when no attempt is selected', () => {
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: explicitItem,
+      results: [],
+      currentResult: undefined,
+    });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('alg-explicit-entry'))).toBeTruthy();
+    expect(fixture.debugElement.query(By.css('alg-item-display'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('[data-testid=submissions-closed-banner]'))).toBeFalsy();
+  });
+
+  it('renders task content instead of the gate when the selected attempt is past its deadline', () => {
+    const currentResult = pastDeadlineResult();
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: explicitItem,
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.componentRef.setInput('taskConfig', { readOnly: true, initialAnswer: null });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('alg-explicit-entry'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('alg-item-display'))).toBeTruthy();
+  });
+
+  it('renders chapter children instead of the gate when the selected attempt is past its deadline', () => {
+    const currentResult = pastDeadlineResult();
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: { ...explicitItem, type: 'Chapter', url: null },
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('alg-explicit-entry'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('alg-chapter-children'))).toBeTruthy();
+  });
+
+  it('does not show the explicit-entry gate when the selected result has not started', () => {
+    const currentResult = pastDeadlineResult({
+      startedAt: null,
+      allowsSubmissionsUntil: new Date(backendInfiniteDateString),
+    });
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: explicitItem,
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.componentRef.setInput('taskConfig', { readOnly: false, initialAnswer: null });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('alg-explicit-entry'))).toBeFalsy();
+  });
+
+  it('shows the submissions-closed banner when the selected attempt is past its deadline', () => {
+    const currentResult = pastDeadlineResult();
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: explicitItem,
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.componentRef.setInput('taskConfig', { readOnly: true, initialAnswer: null });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('[data-testid=submissions-closed-banner]'))).toBeTruthy();
+  });
+
+  it('hides the submissions-closed banner when the deadline is still in the future', () => {
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: explicitItem,
+    });
+    fixture.componentRef.setInput('taskConfig', { readOnly: false, initialAnswer: null });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('[data-testid=submissions-closed-banner]'))).toBeFalsy();
+  });
+
+  it('hides the submissions-closed banner while observing a group', () => {
+    const currentResult = pastDeadlineResult();
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      route: itemRoute('activity', '1', {
+        attemptId: '0',
+        path: [],
+        observedGroup: { id: 'g1', isUser: false },
+      }),
+      item: explicitItem,
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.componentRef.setInput('taskConfig', { readOnly: true, initialAnswer: null });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('[data-testid=submissions-closed-banner]'))).toBeFalsy();
+  });
+
+  it('hides the submissions-closed banner when the user cannot view content', () => {
+    const currentResult = pastDeadlineResult();
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: {
+        ...explicitItem,
+        requiresExplicitEntry: false,
+        permissions: { ...mockItem.permissions, canView: ItemViewPerm.None },
+      },
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('[data-testid=submissions-closed-banner]'))).toBeFalsy();
+  });
+
+  it('passes a read-only taskConfig through to the task display when submissions are closed', () => {
+    const currentResult = pastDeadlineResult();
+    fixture.componentRef.setInput('itemData', {
+      ...mockItemData,
+      item: explicitItem,
+      results: [ currentResult ],
+      currentResult,
+    });
+    fixture.componentRef.setInput('taskConfig', { readOnly: true, initialAnswer: null });
+    fixture.detectChanges();
+
+    const display = queryComponent(fixture.debugElement);
+    expect(display).toBeTruthy();
+    expect(display!.taskConfig().readOnly).toBeTrue();
   });
 });

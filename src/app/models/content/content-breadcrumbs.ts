@@ -3,6 +3,7 @@ export interface ContentBreadcrumb {
   title: string,
   navigateTo?: () => void,
   icon?: string,
+  attemptCnt?: number,
 }
 
 export type ContentBreadcrumbs = ContentBreadcrumb[];

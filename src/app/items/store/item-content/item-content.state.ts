@@ -2,12 +2,10 @@ import { FetchError, FetchState, Fetching, fetchingState } from 'src/app/utils/s
 import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { Item as ItemFromService } from 'src/app/data-access/get-item-by-id.service';
 import { Result } from '../../models/attempts';
-import { FullItemRoute } from 'src/app/models/routing/item-route';
+import { FullItemRoute, ResultsFetchKey } from 'src/app/models/routing/item-route';
 
 export type Item = ItemFromService;
 export type Breadcumbs = BreadcrumbItem[];
-export interface Results { results: Result[], currentResult?: Result }
-
 
 export interface State {
   /**
@@ -18,8 +16,8 @@ export interface State {
 
   itemState: FetchState<Item, Pick<FullItemRoute, 'id' | 'observedGroup'>>,
   breadcrumbsState: FetchState<Breadcumbs, FullItemRoute>,
-  /** `results` of the current participant on the active item */
-  resultsState: FetchState<Results, FullItemRoute>,
+  /** Attempts list of the current participant on the active item (selected attempt lives in the URL) */
+  resultsState: FetchState<Result[], ResultsFetchKey>,
 }
 
 export const initialState: State = {

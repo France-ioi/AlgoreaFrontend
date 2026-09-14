@@ -1,7 +1,16 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, debounceTime, distinctUntilChanged, filter, map, merge, skip, switchMap } from 'rxjs';
+import {
+  Observable,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  merge,
+  skip,
+  switchMap,
+} from 'rxjs';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { itemContentStore } from './item-content.store';
 import { mapToFetchState } from 'src/app/utils/operators/state';
@@ -10,6 +19,7 @@ import { itemByIdPageActions, itemFetchingActions } from './item-content.actions
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
 import { ResultFetchingService } from '../../services/result-fetching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
+import { resultsFetchKey } from 'src/app/models/routing/item-route';
 import equal from 'fast-deep-equal/es6';
 
 const refreshTriggers = (
@@ -53,7 +63,7 @@ export const breadcrumbsFetchingEffect = createEffect(
     breadcrumbsService = inject(ItemBreadcrumbsWithFailoverService),
   ) => store$.select(itemContentStore.selectActiveContentRoute).pipe(
     filter(isNotNull),
-    distinctUntilChanged((x, y) => equal(x, y)),
+    distinctUntilChanged((prev, cur) => equal(prev, cur)),
     switchMap(route => breadcrumbsService.get(route).pipe(
       mapToFetchState({
         resetter: refreshTriggers(actions$.pipe(ofType(itemByIdPageActions.refresh)), userSessionService$),
@@ -73,13 +83,14 @@ export const resultsFetchingEffect = createEffect(
     resultFetchingService = inject(ResultFetchingService),
   ) => store$.select(itemContentStore.selectActiveContentInfoForFetchingResults).pipe(
     filter(isNotNull),
-    distinctUntilChanged((x, y) => // for results, it needs to be re-fetched only if the route or perm change (+ refresh via the resetter)
-      equal(x.route, y.route) && x.item.permissions.canView === y.item.permissions.canView
+    distinctUntilChanged((prev, cur) =>
+      equal(resultsFetchKey(prev.route), resultsFetchKey(cur.route))
+      && prev.item.permissions.canView === cur.item.permissions.canView
     ),
     switchMap(({ route, item }) => resultFetchingService.fetchResults(route, item).pipe(
       mapToFetchState({
         resetter: refreshTriggers(actions$.pipe(ofType(itemByIdPageActions.refresh)), userSessionService$),
-        identifier: route
+        identifier: resultsFetchKey(route),
       }),
     )),
     map(fetchState => itemFetchingActions.resultsFetchStateChanged({ fetchState })),

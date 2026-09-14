@@ -1,0 +1,40 @@
+@use 'src/assets/scss/functions';
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.attempt-number-cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: functions.toRem(8);
+}
+
+.dates-cell {
+  display: flex;
+  flex-direction: column;
+  gap: functions.toRem(4);
+}
+
+.score-cell {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(8);
+}
+
+.create-attempt {
+  margin-top: functions.toRem(16);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: functions.toRem(8);
+}

@@ -5,9 +5,11 @@ export function patchItemScore(item: Item, newScore: number): Item {
   return { ...item, bestScore: Math.max(item.bestScore, newScore) };
 }
 
-interface Results { results: Result[], currentResult?: Result }
-export function patchResultScore(results: Results, newScore: number): Results {
-  const score = Math.max(newScore, results.currentResult?.score ?? 0);
-  const validated = newScore >= 100 || !!results.currentResult?.validated;
-  return { ...results, currentResult: results.currentResult ? { ...results.currentResult, score, validated } : undefined };
+export function patchResultScore(results: Result[], attemptId: string, newScore: number): Result[] {
+  return results.map(result => {
+    if (result.attemptId !== attemptId) return result;
+    const score = Math.max(newScore, result.score);
+    const validated = newScore >= 100 || result.validated;
+    return { ...result, score, validated };
+  });
 }

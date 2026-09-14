@@ -1,0 +1,144 @@
+@if (resultsState(); as state) {
+  @if (state.isFetching && !state.data) {
+    <alg-loading class="alg-flex-1" size="medium" />
+  }
+  @if (state.isError) {
+    <alg-error class="alg-flex-1"
+      icon="ph-duotone ph-warning-circle"
+      i18n-message message="Unable to load the attempts"
+      i18n-buttonCaption buttonCaption="Retry"
+      [showRefreshButton]="true"
+      (refresh)="refresh()"
+     />
+  }
+  @if (item(); as item) {
+    @if (state.data; as results) {
+      @if (!item.allowsMultipleAttempts) {
+        <p i18n>This content does not support multiple attempts.</p>
+      } @else {
+        <p i18n>
+          This content allows creating multiple attempts, each attempt acts as a fresh start on the content.
+          Some content may even change between two attempts.
+        </p>
+
+        @if (results.length > 0) {
+          <div class="alg-table-page-wrapper">
+            <div class="alg-table-horizontal-scroll">
+              <table class="alg-table-v2">
+                <thead>
+                  <tr class="alg-table-header-tr">
+                    <th class="alg-table-th" i18n>#</th>
+                    <th class="alg-table-th" i18n>When</th>
+                    <th class="alg-table-th" i18n>Latest activity</th>
+                    <th class="alg-table-th" i18n>Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of rows(); track row.result.attemptId) {
+                    <tr class="alg-table-body-tr">
+                      <td class="alg-table-td">
+                        <div class="attempt-number-cell">
+                          <span>{{ row.number }}</span>
+                          @if (row.isCurrent) {
+                            <span class="alg-tag success" i18n>active</span>
+                          }
+                          @if (row.isReadOnly) {
+                            <span class="alg-tag warning" i18n>Read only</span>
+                          }
+                          @if (!row.isCurrent && !isObserving() && row.canSelect) {
+                            <button
+                              type="button"
+                              class="size-s stroke"
+                              alg-button
+                              [attr.aria-label]="selectAttemptAriaLabel(row.number)"
+                              (click)="selectAttempt(row)"
+                              i18n
+                            >Select</button>
+                          }
+                        </div>
+                      </td>
+                      <td class="alg-table-td">
+                        <div class="dates-cell">
+                          @if (row.result.startedAt; as startedAt) {
+                            <div i18n>Started at {{ startedAt | date:'short' }}</div>
+                          }
+                          @if (row.result.endedAt; as endedAt) {
+                            <div i18n>Ended at {{ endedAt | date:'short' }}</div>
+                          }
+                          @if (row.submissionsUntil; as submissionsUntil) {
+                            <div i18n>Allow submission until {{ submissionsUntil | date:'short' }}</div>
+                          }
+                        </div>
+                      </td>
+                      <td class="alg-table-td">
+                        <alg-relative-time [value]="row.result.latestActivityAt" />
+                      </td>
+                      <td class="alg-table-td">
+                        <div class="score-cell">
+                          <alg-score-ring
+                            [currentScore]="row.result.score"
+                            [bestScore]="row.result.score"
+                            [isValidated]="row.result.validated"
+                           />
+                          <span class="visually-hidden" i18n>Score: {{ row.result.score }}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          @if (canCreate()) {
+            @if (!item.requiresExplicitEntry) {
+              <div class="create-attempt">
+                <button
+                  type="button"
+                  class="size-s"
+                  alg-button
+                  [disabled]="createInProgress()"
+                  (click)="createAttempt()"
+                  i18n
+                >Create a new attempt</button>
+              </div>
+            } @else {
+              <div class="create-attempt">
+                <button
+                  type="button"
+                  class="size-s"
+                  alg-button
+                  (click)="requestNewAttempt()"
+                  i18n
+                >Create a new attempt</button>
+                @if (newAttemptRequested() && contentTabLink(); as contentTabLink) {
+                  <p i18n>
+                    Visit the <a class="alg-link" [routerLink]="contentTabLink">content tab</a> to enter this content.
+                  </p>
+                }
+              </div>
+            }
+          }
+        } @else if (item.requiresExplicitEntry) {
+          <p i18n>This content does not have an attempt yet.</p>
+          @if (contentTabLink(); as contentTabLink) {
+            <p i18n>
+              Visit the <a class="alg-link" [routerLink]="contentTabLink">content tab</a> to enter this content.
+            </p>
+          }
+        } @else if (canCreate()) {
+          <div class="create-attempt">
+            <button
+              type="button"
+              class="size-s"
+              alg-button
+              [disabled]="createInProgress()"
+              (click)="createAttempt()"
+              i18n
+            >Create a new attempt</button>
+          </div>
+        }
+      }
+    }
+  }
+}

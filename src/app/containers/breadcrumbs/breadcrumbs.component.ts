@@ -110,6 +110,10 @@ export class BreadcrumbsComponent implements AfterViewInit, OnDestroy {
     if (breadcrumb.navigateTo) breadcrumb.navigateTo();
   }
 
+  attemptCntAriaLabel(attemptCnt: number): string {
+    return $localize`Attempt ${ attemptCnt }:attemptCnt:`;
+  }
+
   onCollapsedMenuMouseEnter(): void {
     this.clearMenuCloseTimeout();
     this.collapsedMenuTrigger()?.open();

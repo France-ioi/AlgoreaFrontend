@@ -5,6 +5,10 @@
   flex-direction: column;
   padding: 0;
   position: relative;
+
+  alg-message-info {
+    margin-bottom: var(--alg-space-size-4);
+  }
 }
 
 .edit {

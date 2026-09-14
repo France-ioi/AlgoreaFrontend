@@ -149,6 +149,85 @@ describe('breadcrumbsFetchingEffect', () => {
     });
   });
 
+  it('refetches when self attempt is resolved into the route (full-route identity)', done => {
+    const routeWithParent: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', path: [] });
+    const routeResolved: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '42', path: [] });
+    const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
+    testScheduler.run(({ hot, cold }) => {
+      breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
+      const selectActiveRoute$ = hot('p-r-|', { p: routeWithParent, r: routeResolved });
+      const actions$ = hot('          ----|');
+      const storeMock$ = {
+        select: () => selectActiveRoute$,
+      } as unknown as Store;
+
+      breadcrumbsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: () => {
+          expect(breadcrumbsServiceSpy.get).toHaveBeenCalledTimes(2);
+          done();
+        }
+      });
+    });
+  });
+
+  it('refetches when switching to a different self attempt under the same parent', done => {
+    const routeAttemptA: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '42', path: [] });
+    const routeAttemptB: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '99', path: [] });
+    const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
+    testScheduler.run(({ hot, cold }) => {
+      breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
+      const selectActiveRoute$ = hot('a-b-|', { a: routeAttemptA, b: routeAttemptB });
+      const actions$ = hot('          ----|');
+      const storeMock$ = {
+        select: () => selectActiveRoute$,
+      } as unknown as Store;
+
+      breadcrumbsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: () => {
+          expect(breadcrumbsServiceSpy.get).toHaveBeenCalledTimes(2);
+          expect(breadcrumbsServiceSpy.get).toHaveBeenCalledWith(routeAttemptB);
+          done();
+        }
+      });
+    });
+  });
+
+  it('refetches when going from a resolved self attempt back to parent-only', done => {
+    const routeResolved: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '42', path: [] });
+    const routeWithParent: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', path: [] });
+    const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
+    testScheduler.run(({ hot, cold }) => {
+      breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
+      const selectActiveRoute$ = hot('r-p-|', { r: routeResolved, p: routeWithParent });
+      const actions$ = hot('          ----|');
+      const storeMock$ = {
+        select: () => selectActiveRoute$,
+      } as unknown as Store;
+
+      breadcrumbsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: () => {
+          expect(breadcrumbsServiceSpy.get).toHaveBeenCalledTimes(2);
+          done();
+        }
+      });
+    });
+  });
+
   it('refetches on refresh', done => {
     const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
     testScheduler.run(({ hot, cold }) => {
@@ -180,7 +259,7 @@ describe('breadcrumbsFetchingEffect', () => {
 
 describe('resultsFetchingEffect', () => {
   const mockItem = { permissions: { canView: 'content' } } as unknown as Item;
-  const mockResults = {} as unknown as { results: Result[], currentResult?: Result };
+  const mockResults = [] as Result[];
 
   it('fetches when required info is ready, do not refetch while the route does not change', done => {
     const resultsServiceSpy = jasmine.createSpyObj<ResultFetchingService>('ResultFetchingService', [ 'fetchResults' ]);
@@ -254,6 +333,93 @@ describe('resultsFetchingEffect', () => {
       ).pipe(toArray()).subscribe({
         next: () => {
           expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(2);
+          done();
+        }
+      });
+    });
+  });
+
+  it('does not refetch when self attempt is resolved into the route', done => {
+    const routeWithParent: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', path: [] });
+    const routeResolved: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '42', path: [] });
+    const resultsServiceSpy = jasmine.createSpyObj<ResultFetchingService>('ResultFetchingService', [ 'fetchResults' ]);
+    testScheduler.run(({ hot, cold }) => {
+      resultsServiceSpy.fetchResults.and.callFake(() => cold('-a|', { a: mockResults }));
+      const selectInfo$ = hot('r-s-|', {
+        r: { route: routeWithParent, item: mockItem },
+        s: { route: routeResolved, item: mockItem },
+      });
+      const actions$ = hot('   ----|');
+      const storeMock$ = {
+        select: () => selectInfo$
+      } as unknown as Store;
+
+      resultsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        resultsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: () => {
+          expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(1);
+          done();
+        }
+      });
+    });
+  });
+
+  it('does not refetch when switching to a different self attempt under the same parent', done => {
+    const routeAttemptA: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '42', path: [] });
+    const routeAttemptB: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '99', path: [] });
+    const resultsServiceSpy = jasmine.createSpyObj<ResultFetchingService>('ResultFetchingService', [ 'fetchResults' ]);
+    testScheduler.run(({ hot, cold }) => {
+      resultsServiceSpy.fetchResults.and.callFake(() => cold('-a|', { a: mockResults }));
+      const selectInfo$ = hot('r-s-|', {
+        r: { route: routeAttemptA, item: mockItem },
+        s: { route: routeAttemptB, item: mockItem },
+      });
+      const actions$ = hot('   ----|');
+      const storeMock$ = {
+        select: () => selectInfo$
+      } as unknown as Store;
+
+      resultsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        resultsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: () => {
+          expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(1);
+          done();
+        }
+      });
+    });
+  });
+
+  it('does not refetch when going from a resolved self attempt back to parent-only', done => {
+    const routeResolved: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', attemptId: '42', path: [] });
+    const routeWithParent: FullItemRoute = itemRoute('activity', '1', { parentAttemptId: '0', path: [] });
+    const resultsServiceSpy = jasmine.createSpyObj<ResultFetchingService>('ResultFetchingService', [ 'fetchResults' ]);
+    testScheduler.run(({ hot, cold }) => {
+      resultsServiceSpy.fetchResults.and.callFake(() => cold('-a|', { a: mockResults }));
+      const selectInfo$ = hot('r-s-|', {
+        r: { route: routeResolved, item: mockItem },
+        s: { route: routeWithParent, item: mockItem },
+      });
+      const actions$ = hot('   ----|');
+      const storeMock$ = {
+        select: () => selectInfo$
+      } as unknown as Store;
+
+      resultsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        resultsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: () => {
+          expect(resultsServiceSpy.fetchResults).toHaveBeenCalledTimes(1);
           done();
         }
       });

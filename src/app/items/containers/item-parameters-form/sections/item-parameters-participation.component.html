@@ -1,10 +1,16 @@
 <div [formGroup]="form">
   <h2 class="alg-h2 alg-text-normal title" i18n>Participation</h2>
 
-  <div class="form-item-view alg-display-none">
+  <div class="form-item-view" data-testid="allow-multiple-attempts">
     <span class="form-item-label">
-      <ng-container i18n>Allow multiple attempts</ng-container>&nbsp;
-      <ng-container i18n="@@notImplemented">(not implemented)</ng-container>
+      <ng-container i18n>Allow multiple attempts</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="Learners can start a new attempt, which acts as a fresh start on this content."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
     </span>
     <div class="form-item-control">
       <alg-switch formControlName="allowsMultipleAttempts" />

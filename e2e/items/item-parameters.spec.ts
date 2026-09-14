@@ -12,6 +12,8 @@ test('checks edit parameters components are visible', async ({ page }) => {
   await page.goto('a/6707691810849260111;p=;a=0/parameters');
   await expect.soft(page.getByRole('heading', { name: 'Header & Description' })).toBeVisible();
   await expect.soft(page.getByRole('heading', { name: 'Score & Validation' })).toBeVisible();
+  await expect.soft(page.getByRole('heading', { name: 'Participation' })).toBeVisible();
+  await expect.soft(page.getByTestId('allow-multiple-attempts')).toBeVisible();
 });
 
 // currently disabled as settings for teams is currently hidden

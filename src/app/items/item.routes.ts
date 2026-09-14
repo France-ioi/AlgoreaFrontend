@@ -41,6 +41,11 @@ const routes: Routes = [
           import('./containers/item-progress/item-progress.component').then(m => m.ItemProgressComponent),
       },
       {
+        path: 'attempts',
+        loadComponent: () =>
+          import('./containers/item-attempts/item-attempts.component').then(m => m.ItemAttemptsComponent),
+      },
+      {
         path: 'dependencies',
         loadComponent: () =>
           import('./containers/item-dependencies/item-dependencies.component').then(m => m.ItemDependenciesComponent),

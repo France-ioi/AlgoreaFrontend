@@ -37,6 +37,9 @@ export interface ItemContentIdentifier {
   observedGroupId?: GroupId,
 }
 
+/** Sentinel `a=` value: the user asked for a brand new attempt; no existing result must be selected. */
+export const newAttemptId = 'new';
+
 // TYPE ASSERT FUNCTIONS
 export function isItemRoute(route: ContentRoute): route is ItemRoute {
   return ([ 'activity', 'skill' ].includes(route.contentType));
@@ -47,7 +50,32 @@ export function isFullItemRoute(route: ContentRoute): route is FullItemRoute {
 }
 
 export function isRouteWithSelfAttempt(item: FullItemRoute): item is ItemRoute & Required<Pick<ItemRoute, 'attemptId'>> {
-  return item.attemptId !== undefined;
+  return item.attemptId !== undefined && item.attemptId !== newAttemptId;
+}
+
+export function isRouteWithParentAttempt(item: FullItemRoute): item is ItemRoute & Required<Pick<ItemRoute, 'parentAttemptId'>> {
+  return item.parentAttemptId !== undefined;
+}
+
+/**
+ * Cache / fetch identity for the attempts list of an item view.
+ * The parent attempt identifies the whole sibling list, so the self attempt adds nothing once it is
+ * known. Without a parent attempt we cannot tell which list a self attempt belongs to, so it stays
+ * part of the key. `contentType` and `answer` are deliberately omitted: `/attempts` does not take them.
+ * The `a=new` sentinel is never part of the key (it is not a real attempt).
+ */
+export type ResultsFetchKey = Pick<ItemRoute, 'id' | 'path' | 'observedGroup' | 'parentAttemptId' | 'attemptId'>;
+
+export function resultsFetchKey(
+  { id, path, observedGroup, parentAttemptId, attemptId }: FullItemRoute,
+): ResultsFetchKey {
+  return {
+    id,
+    path,
+    observedGroup,
+    parentAttemptId,
+    attemptId: parentAttemptId === undefined && attemptId !== newAttemptId ? attemptId : undefined,
+  };
 }
 
 // FACTORIES
@@ -65,10 +93,11 @@ export function itemRouteWith<T extends RawItemRoute, U extends T>(route: T, att
 
 
 /**
- * Add to the given route, the given self attempt id (if any) (used when only the parent id was know until now)
+ * Set the self attempt id on the route when one is provided.
+ * Leaves the route unchanged when `attemptId` is undefined (does not clear an existing value).
  */
 export function routeWithSelfAttempt(route: FullItemRoute, attemptId: string|undefined): FullItemRoute {
-  return isRouteWithSelfAttempt(route) ? route : { ...route, attemptId };
+  return attemptId === undefined ? route : { ...route, attemptId };
 }
 
 /**

@@ -10,7 +10,8 @@
 @let canViewContent = perms | allowsViewingContent;
 @let resultsFetched = itemData().results !== undefined;
 @let hasCurentResult = !!itemData().currentResult;
-@let userHasToEnterExplicitely = item.requiresExplicitEntry && resultsFetched && (!hasCurentResult || !(itemData().currentResult! | isActive));
+<!-- Selected attempt (incl. never-started) renders content; Enter is only when none is selected / a=new. -->
+@let userHasToEnterExplicitely = item.requiresExplicitEntry && resultsFetched && !hasCurentResult;
 
 @if (userHasToEnterExplicitely) {
   <alg-explicit-entry [itemData]="itemData()" (itemRefreshRequired)="refresh.emit()" />
@@ -59,88 +60,103 @@
   }
 }
 
-@else if ((item | isAChapter) || (item | isASkill)) { <!-- with canViewContent, results may not be fetched yet-->
-
-  @if (!hasCurentResult) {
-    <!-- waiting for the results to load, do not show anything -->
+@else {
+  @if (submissionsClosed()) {
+    <alg-message-info
+      class="info"
+      data-testid="submissions-closed-banner"
+      icon="ph-duotone ph-lock-key"
+      [live]="true"
+    >
+      <span i18n>This attempt is over. You can still view its content, but you cannot submit any more answers.</span>
+    </alg-message-info>
   }
-  @else {
-    @if ((perms | allowsEditingChildren) || editMode()) {
-      <div class="edit">
-        <span class="edit-label">
-          <span class="alg-base-text-color" i18n>Edit content</span>
-          <alg-switch class="edit-switch"
-            data-testid="edit-switch"
-            [ngModel]="editMode()"
-            (ngModelChange)="editMode.set($event)"
-            (change)="onEditModeEnableChange($event)"
-           />
-        </span>
-      </div>
+
+  @if ((item | isAChapter) || (item | isASkill)) { <!-- with canViewContent, results may not be fetched yet-->
+
+    @if (!hasCurentResult) {
+      <!-- waiting for the results to load, do not show anything -->
     }
-    @if (editMode()) {
-      <alg-item-children-edit-form [itemData]="itemData()"
-       />
-    }
-    @else { <!-- !editModeEnabled -->
-      @if (item | isAChapter) {
-        <alg-chapter-children class="alg-flex-1" [itemData]="itemData()" />
+    @else {
+      @if ((perms | allowsEditingChildren) || editMode()) {
+        <div class="edit">
+          <span class="edit-label">
+            <span class="alg-base-text-color" i18n>Edit content</span>
+            <alg-switch class="edit-switch"
+              data-testid="edit-switch"
+              [ngModel]="editMode()"
+              (ngModelChange)="editMode.set($event)"
+              (change)="onEditModeEnableChange($event)"
+             />
+          </span>
+        </div>
       }
-      @else { <!-- skill -->
-        <alg-sub-skills class="alg-flex-1" [itemData]="itemData()" />
+      @if (editMode()) {
+        <alg-item-children-edit-form [itemData]="itemData()"
+         />
       }
-    }
-    @if (item | isASkill) {
-      <alg-parent-skills class="alg-flex-1" [itemData]="itemData()" />
+      @else { <!-- !editModeEnabled -->
+        @if (item | isAChapter) {
+          <alg-chapter-children class="alg-flex-1" [itemData]="itemData()" />
+        }
+        @else { <!-- skill -->
+          <alg-sub-skills class="alg-flex-1" [itemData]="itemData()" />
+        }
+      }
+      @if (item | isASkill) {
+        <alg-parent-skills class="alg-flex-1" [itemData]="itemData()" />
+      }
     }
   }
-}
 
-@else { <!-- task with canViewContent, results may not be fetched yet -->
+  @else { <!-- task with canViewContent, results may not be fetched yet -->
 
-  @let url = item.url;
-  @if (!url) {
-    <alg-error class="alg-flex-1" icon="ph-duotone ph-wrench">
-      <p i18n>
-        This activity has not been correctly configured.
-      </p>
-      @if (perms | allowsEditingAll) {
+    @let url = item.url;
+    @if (!url) {
+      <alg-error class="alg-flex-1" icon="ph-duotone ph-wrench">
         <p i18n>
-          You need to set a url in editing mode.
+          This activity has not been correctly configured.
         </p>
+        @if (perms | allowsEditingAll) {
+          <p i18n>
+            You need to set a url in editing mode.
+          </p>
+        }
+      </alg-error>
+    }
+    @else { <!-- url set -->
+
+      @if (taskConfig() && showTaskDisplay()) {
+        @for (_ of [ taskDisplayRemountKey() ]; track _) {
+          <alg-item-display class="alg-flex-1"
+            [class.alg-opacity-0]="!isTaskLoaded()"
+            [route]="itemData().route"
+            [editingPermission]="itemData().item.permissions"
+            [url]="url"
+            [attemptId]="itemData().currentResult ? $safeNavigationMigration(itemData().currentResult?.attemptId) : undefined"
+            [resultStartedAt]="itemData().currentResult?.startedAt ?? null"
+            [view]="taskView()"
+            [taskConfig]="taskConfig()!"
+            [savingAnswer]="savingAnswer()"
+            (viewChange)="taskViewChange.emit($event)"
+            (tabsChange)="taskTabsChange.emit($event)"
+            (scoreChange)="onScoreChange($event)"
+            (skipSave)="skipSave.emit()"
+            (refresh)="onTaskRetry()"
+            (editorUrl)="editorUrl.emit($event)"
+            (disablePlatformProgress)="disablePlatformProgress.emit($event)"
+            (fullFrame)="fullFrameTask.emit($event)"
+            (loadingComplete)="onTaskLoadChange($event)"
+           />
+        }
       }
-    </alg-error>
-  }
-  @else { <!-- url set -->
+      @if (!isTaskLoaded()) {
+        <alg-task-loader class="alg-flex-1 task-loader"
+          i18n-label label="Loading the content"
+          i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
+         />
+      }
 
-    @if (taskConfig() && showTaskDisplay()) {
-      <alg-item-display class="alg-flex-1"
-        [class.alg-opacity-0]="!isTaskLoaded()"
-        [route]="itemData().route"
-        [editingPermission]="itemData().item.permissions"
-        [url]="url"
-        [attemptId]="itemData().currentResult ? $safeNavigationMigration(itemData().currentResult?.attemptId) : undefined"
-        [resultStartedAt]="itemData().currentResult?.startedAt ?? null"
-        [view]="taskView()"
-        [taskConfig]="taskConfig()!"
-        [savingAnswer]="savingAnswer()"
-        (viewChange)="taskViewChange.emit($event)"
-        (tabsChange)="taskTabsChange.emit($event)"
-        (scoreChange)="onScoreChange($event)"
-        (skipSave)="skipSave.emit()"
-        (refresh)="onTaskRetry()"
-        (editorUrl)="editorUrl.emit($event)"
-        (disablePlatformProgress)="disablePlatformProgress.emit($event)"
-        (fullFrame)="fullFrameTask.emit($event)"
-        (loadingComplete)="onTaskLoadChange($event)"
-       />
     }
-    @if (!isTaskLoaded()) {
-      <alg-task-loader class="alg-flex-1 task-loader"
-        i18n-label label="Loading the content"
-        i18n-delayedLabel delayedLabel="The content is taking an unexpected long time to load... please wait..."
-       />
-    }
-
   }
 }

@@ -15,6 +15,7 @@ import { Duration, HOURS } from 'src/app/utils/duration';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
+import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import {
   DEFAULT_ENTERING_TIME_MAX,
   DEFAULT_ENTERING_TIME_MIN,
@@ -32,6 +33,7 @@ import {
     SwitchComponent,
     DurationComponent,
     InputDateComponent,
+    TooltipDirective,
   ],
   providers: [
     {
