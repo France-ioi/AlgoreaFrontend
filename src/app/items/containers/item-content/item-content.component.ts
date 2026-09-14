@@ -35,7 +35,8 @@ import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
 import { FormsModule } from '@angular/forms';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { Subject, map, merge, take, timer } from 'rxjs';
+import { Subject, map, merge, of, take, timer } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { areSubmissionsClosed } from '../../models/attempts';
 import { ItemRouter } from 'src/app/models/routing/item-router';
@@ -158,9 +159,16 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   onTaskRetry(): void {
     this.isTaskLoaded.set(false);
-    this.showTaskDisplay.set(false);
-    // Destroy/recreate ItemDisplayComponent to fully reset the task iframe and service state.
-    setTimeout(() => this.showTaskDisplay.set(true));
+    // Await unload while the iframe is still mounted, then remount ItemDisplay.
+    (this.itemDisplayComponent()?.teardown() ?? of(undefined)).pipe(
+      catchError(() => of(undefined)),
+      take(1),
+      switchMap(() => {
+        this.showTaskDisplay.set(false);
+        return timer(0);
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.showTaskDisplay.set(true));
   }
 
   onTaskLoadChange(loadingComplete: boolean): void {

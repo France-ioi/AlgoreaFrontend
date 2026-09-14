@@ -9,6 +9,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { FetchState, readyState } from 'src/app/utils/state';
+import { TaskConfig } from './services/item-task.service';
 import { CurrentContentService } from 'src/app/services/current-content.service';
 import { ItemData } from './models/item-data';
 import { isItemUnavailableError } from './utils/item-unavailable-error';
@@ -37,7 +38,7 @@ import { ItemPermissionsComponent } from './containers/item-permissions/item-per
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
 import { ItemHeaderComponent } from './containers/item-header/item-header.component';
 import { AsyncPipe } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { fromForum, isThreadInline } from '../forum/store';
 import { isNotNull } from '../utils/null-undefined-predicates';
@@ -131,6 +132,16 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   readonly answerLoadingError$ = this.taskFlow.answerLoadingError$;
   readonly taskConfig$ = this.taskFlow.taskConfig$;
   readonly savingAnswer$ = this.taskFlow.savingAnswer$;
+  readonly isTearingDownTask = this.taskFlow.isTearingDownTask;
+
+  /** Prefer sticky task config while the previous iframe stays mounted for unload. */
+  readonly taskConfigForDisplay$: Observable<TaskConfig | null> = combineLatest([
+    this.taskConfig$,
+    toObservable(this.taskFlow.stickyTaskConfig),
+    toObservable(this.taskFlow.isTearingDownTask),
+  ]).pipe(
+    map(([ live, sticky, tearingDown ]) => (tearingDown ? sticky : live)),
+  );
 
   userProfile$ = this.userSessionService.userProfile$;
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
@@ -141,11 +152,19 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.taskFlow.registerSaveHandler(() =>
       this.itemContentComponent()?.itemDisplayComponent()?.saveAnswerAndState() ?? of(readyState<void>(undefined))
     );
+    this.taskFlow.registerTeardownHandler(() =>
+      this.itemContentComponent()?.itemDisplayComponent()?.teardown() ?? of(undefined)
+    );
 
     this.breadcrumbService.resultPathStarted$.pipe(takeUntilDestroyed()).subscribe(() => this.currentContent.forceNavMenuReload());
   }
 
   errorMessageContactUs = $localize`:@@contactUs:If the problem persists, please contact us.`;
+
+  /** Sticky last-ready data keeps the task iframe mounted until awaited teardown completes. */
+  displayItemData(state: FetchState<ItemData>): ItemData | undefined {
+    return this.taskFlow.stickyItemData() ?? (state.isReady ? state.data : undefined);
+  }
 
   ngOnDestroy(): void {
     this.tabService.setTabs([]);

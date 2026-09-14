@@ -134,6 +134,18 @@ test.describe('platform-task interaction', () => {
     await expect(testTaskPage.taskFrame.getByTestId('state-input')).toHaveValue('saved-state');
   });
 
+  test('calls task.unload when leaving the task', async ({ page }) => {
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+    await testTaskPage.clearHostCalls();
+
+    // In-app leave runs BeforeUnloadGuard → save then awaited teardown while the iframe is mounted.
+    // Full page.goto only gets best-effort window beforeunload and does not reliably deliver unload.
+    await page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' }).click();
+    await expect(page).toHaveURL(/\/groups/, { timeout: 15000 });
+    await testTaskPage.waitForHostCall('task.unload');
+  });
+
   test.describe('device proxy', () => {
     test.skip(({ browserName }) => browserName !== 'chromium', 'device proxy: chromium only');
 

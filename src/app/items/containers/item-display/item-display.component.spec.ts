@@ -44,6 +44,7 @@ function createMockTaskService(): Record<string, unknown> {
     initTask: jasmine.createSpy('initTask'),
     showView: jasmine.createSpy('showView'),
     saveAnswerAndState: jasmine.createSpy('saveAnswerAndState').and.returnValue(of(readyState<void>(undefined))),
+    teardown: jasmine.createSpy('teardown').and.returnValue(of(undefined)),
   };
 }
 
@@ -223,6 +224,19 @@ describe('ItemDisplayComponent – saveAnswerAndState', () => {
 
     hintErrorSubject.next();
     expect(ctx.actionFeedbackService.error).not.toHaveBeenCalled();
+  });
+});
+
+describe('ItemDisplayComponent – teardown', () => {
+  let ctx: ItemDisplayTestContext;
+
+  beforeEach(async () => {
+    ctx = await setupItemDisplayTest();
+  });
+
+  it('delegates to the task service', () => {
+    void ctx.component.teardown();
+    expect(ctx.mockTaskService.teardown).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -201,6 +201,10 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
     return this.taskService.saveAnswerAndState();
   }
 
+  teardown(): ReturnType<ItemTaskService['teardown']> {
+    return this.taskService.teardown();
+  }
+
   openUnlockedItemsDialog(items: UnlockedItems): void {
     this.dialogService.open(UnlockedItemsModalComponent, {
       data: items,

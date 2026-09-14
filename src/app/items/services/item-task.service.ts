@@ -108,6 +108,10 @@ export class ItemTaskService implements OnDestroy {
     return this.answerService.saveTaskStateAnswerAsCurrent();
   }
 
+  teardown(): Observable<void> {
+    return this.initService.teardown();
+  }
+
   private bindPlatform(task: Task): void {
     const platform: TaskPlatform = {
       validate: mode => (this.readOnly ? this.validateReadOnly(mode) : this.validate(mode)).pipe(map(() => undefined)),

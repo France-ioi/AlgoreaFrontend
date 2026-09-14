@@ -54,11 +54,25 @@
   function logCall(method, callParams) {
     var entry = { method: method, params: callParams, timestamp: Date.now() };
     calls.push(entry);
-    var item = document.createElement('li');
-    item.dataset.method = method;
-    item.textContent = method + ' ' + JSON.stringify(callParams);
-    callLogEl.appendChild(item);
     window.testTaskCalls = calls;
+    // Durable logs for e2e: parent mirror (SPA) + sessionStorage (survives full navigations).
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.testTaskCallsHost = window.parent.testTaskCallsHost || [];
+        window.parent.testTaskCallsHost.push(entry);
+      }
+    } catch (e) { /* cross-origin parent */ }
+    try {
+      var stored = JSON.parse(sessionStorage.getItem('testTaskCallsHost') || '[]');
+      stored.push(entry);
+      sessionStorage.setItem('testTaskCallsHost', JSON.stringify(stored));
+    } catch (e) { /* private mode / quota */ }
+    try {
+      var item = document.createElement('li');
+      item.dataset.method = method;
+      item.textContent = method + ' ' + JSON.stringify(callParams);
+      callLogEl.appendChild(item);
+    } catch (e) { /* DOM already gone during teardown */ }
     window.testTaskState = getPublicState();
   }
 
@@ -174,6 +188,7 @@
     state.loaded = false;
     loadedMarker.hidden = true;
     loadedMarker.setAttribute('aria-hidden', 'true');
+    return true;
   });
 
   chan.bind('task.getHeight', function () {

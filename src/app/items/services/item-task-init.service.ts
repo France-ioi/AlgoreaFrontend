@@ -3,9 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, fromEvent, merge, Observable, of, ReplaySubject, Subject, TimeoutError } from 'rxjs';
 import {
   catchError,
+  defaultIfEmpty,
   delayWhen,
   distinctUntilChanged,
   filter,
+  finalize,
   map,
   pairwise,
   retry,
@@ -186,6 +188,7 @@ export class ItemTaskInitService implements OnDestroy {
   );
 
   initialized = false;
+  private tornDown = false;
 
   /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
   guardSubscription = this.config$.pipe(pairwise(), takeUntilDestroyed()).subscribe(([ prev, cur ]) => {
@@ -202,10 +205,38 @@ export class ItemTaskInitService implements OnDestroy {
   // keep the token pushed to the task even if no other consumer subscribes to `tokenUpdatedOnTask$`
   tokenPushSubscription = this.tokenUpdatedOnTask$.pipe(catchError(() => EMPTY), takeUntilDestroyed()).subscribe();
 
+  /**
+   * Call Bebras `task.unload` then destroy the JSChannel. Idempotent: safe if never loaded or already torn down.
+   * Prefer awaiting this while the iframe is still mounted; `ngOnDestroy` only fire-and-forgets as a safety net.
+   *
+   * Gap (same as the former destroy-only ngOnDestroy): if the user leaves before `task$` has emitted,
+   * `tornDown` is set and a task that finishes loading afterwards is never unload/destroy-ed (its stream
+   * is completed by takeUntilDestroyed when the host is destroyed).
+   */
+  teardown(): Observable<void> {
+    if (this.tornDown) return of(undefined);
+    this.tornDown = true;
+
+    // task$ is shareReplay(1): timeout(0) yields the emitted task if any, else empties (never loaded).
+    return this.task$.pipe(
+      timeout(0),
+      take(1),
+      catchError(() => EMPTY),
+      switchMap(task => task.unload().pipe(
+        catchError(() => EMPTY),
+        take(1),
+        // Always destroy once the unload attempt ends (success, error, or empty) — not only on next.
+        finalize(() => task.destroy()),
+        map(() => undefined),
+      )),
+      defaultIfEmpty(undefined),
+    );
+  }
+
   ngOnDestroy(): void {
-    // task is a one replayed value observable. If a task has been emitted, destroy it ; else nothing to do.
-    // No takeUntilDestroyed: DestroyRef already fired; wrapping would cancel this destroy work.
-    this.task$.pipe(timeout(0), catchError(() => EMPTY)).subscribe(task => task.destroy());
+    // Safety net only: primary leave paths must have awaited teardown() while the iframe was still mounted.
+    // No takeUntilDestroyed: DestroyRef already fired; wrapping would cancel this work.
+    this.teardown().subscribe();
     if (!this.configFromItem$.closed) this.configFromItem$.complete();
     if (!this.configFromIframe$.closed) this.configFromIframe$.complete();
     this.refreshToken$.complete();

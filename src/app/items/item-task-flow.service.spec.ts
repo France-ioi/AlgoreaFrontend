@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { concat, EMPTY, of, timer } from 'rxjs';
+import { concat, EMPTY, of, Subject, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { APPCONFIG } from 'src/app/config';
@@ -14,13 +14,10 @@ import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permissi
 import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
 import { fetchingState, readyState } from 'src/app/utils/state';
-import { backendInfiniteDateString } from 'src/app/utils/date';
 import { ItemTaskFlowService } from './item-task-flow.service';
 import { ItemData } from './models/item-data';
-import { Result } from './models/attempts';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { fromItemContent } from './store';
-import { firstValueFrom } from 'rxjs';
 
 const mockItemBase: Item = {
   id: '1',
@@ -78,12 +75,13 @@ describe('ItemTaskFlowService', () => {
         provideMockStore({
           selectors: [
             { selector: fromItemContent.selectActiveContentRoute, value: route1 },
+            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
             { selector: fromItemContent.selectActiveContentData, value: readyState(createItemData(route1)) },
           ],
         }),
         {
           provide: InitialAnswerDataSource,
-          useValue: { setInfo, error$: EMPTY },
+          useValue: { setInfo, error$: EMPTY, answer$: EMPTY },
         },
         { provide: LocaleService, useValue: { currentLang: { tag: 'en' } } },
         { provide: ConfirmationModalService, useValue: { open: (): typeof EMPTY => EMPTY } },
@@ -127,15 +125,19 @@ describe('ItemTaskFlowService', () => {
   });
 });
 
-describe('ItemTaskFlowService – before-unload save', () => {
+describe('ItemTaskFlowService – before-unload save then teardown', () => {
   let service: ItemTaskFlowService;
   let saveStarted = 0;
+  let teardownStarted = 0;
+  const callOrder: string[] = [];
 
   const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
   const itemData = createItemData(route);
 
   beforeEach(() => {
     saveStarted = 0;
+    teardownStarted = 0;
+    callOrder.length = 0;
 
     TestBed.configureTestingModule({
       providers: [
@@ -165,10 +167,16 @@ describe('ItemTaskFlowService – before-unload save', () => {
     service = TestBed.inject(ItemTaskFlowService);
     service.registerSaveHandler(() => {
       saveStarted += 1;
+      callOrder.push('save');
       return concat(
         of(fetchingState<void>(undefined)),
         timer(5000).pipe(map(() => readyState(undefined))),
       );
+    });
+    service.registerTeardownHandler(() => {
+      teardownStarted += 1;
+      callOrder.push('teardown');
+      return of(undefined);
     });
   });
 
@@ -195,6 +203,30 @@ describe('ItemTaskFlowService – before-unload save', () => {
 
       jasmine.clock().tick(4000);
       expect(saveStarted).toBe(1);
+      expect(teardownStarted).toBe(1);
+      expect(callOrder).toEqual([ 'save', 'teardown' ]);
+      expect(beforeUnloadDone).toBe(true);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
+  it('runs teardown after skipBeforeUnload', () => {
+    jasmine.clock().install();
+    try {
+      let beforeUnloadDone: boolean | undefined;
+      service.beforeUnload().subscribe(done => {
+        beforeUnloadDone = done;
+      });
+      jasmine.clock().tick(0);
+      expect(saveStarted).toBe(1);
+      expect(beforeUnloadDone).toBeUndefined();
+
+      service.skipBeforeUnload();
+      jasmine.clock().tick(0);
+
+      expect(teardownStarted).toBe(1);
+      expect(callOrder).toEqual([ 'save', 'teardown' ]);
       expect(beforeUnloadDone).toBe(true);
     } finally {
       jasmine.clock().uninstall();
@@ -202,35 +234,34 @@ describe('ItemTaskFlowService – before-unload save', () => {
   });
 });
 
-describe('ItemTaskFlowService – taskConfig readOnly', () => {
-  const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
+describe('ItemTaskFlowService – sticky item→item teardown', () => {
+  let service: ItemTaskFlowService;
+  let store: MockStore;
+  let teardownRelease$: Subject<void>;
+  let teardownCalls = 0;
 
-  function currentResult(allowsSubmissionsUntil: Date): Result {
-    return {
-      attemptId: '0',
-      latestActivityAt: new Date(),
-      score: 0,
-      validated: false,
-      startedAt: new Date(),
-      endedAt: null,
-      allowsSubmissionsUntil,
-    };
-  }
+  const route1 = itemRoute('activity', '1', { attemptId: '0', path: [] });
+  const route2 = itemRoute('activity', '2', { attemptId: '0', path: [] });
+  const itemData1 = createItemData(route1);
+  const itemData2 = createItemData(route2);
 
-  function setup(itemData: ItemData): ItemTaskFlowService {
+  beforeEach(() => {
+    teardownCalls = 0;
+    teardownRelease$ = new Subject<void>();
+
     TestBed.configureTestingModule({
       providers: [
         ItemTaskFlowService,
         provideMockStore({
           selectors: [
-            { selector: fromItemContent.selectActiveContentRoute, value: itemData.route },
+            { selector: fromItemContent.selectActiveContentRoute, value: route1 },
             { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
-            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData) },
+            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData1) },
           ],
         }),
         { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
         { provide: ConfirmationModalService, useValue: { open: (): typeof EMPTY => EMPTY } },
-        { provide: ItemRouter, useValue: jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]) },
+        { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
         {
           provide: InitialAnswerDataSource,
           useValue: {
@@ -239,33 +270,57 @@ describe('ItemTaskFlowService – taskConfig readOnly', () => {
             setInfo: jasmine.createSpy('setInfo'),
           },
         },
-        { provide: APPCONFIG, useValue: { redirects: {} } },
+        { provide: APPCONFIG, useValue: { redirects: [] } },
       ],
     });
-    return TestBed.inject(ItemTaskFlowService);
-  }
+
+    store = TestBed.inject(MockStore);
+    service = TestBed.inject(ItemTaskFlowService);
+    service.registerTeardownHandler(() => {
+      teardownCalls += 1;
+      return teardownRelease$.pipe(map(() => undefined));
+    });
+    TestBed.flushEffects();
+  });
 
   afterEach(() => {
-    TestBed.inject(ItemTaskFlowService).ngOnDestroy();
+    teardownRelease$.complete();
+    service.ngOnDestroy();
   });
 
-  it('configures the task as read-only when submissions are closed', async () => {
-    const service = setup({
-      ...createItemData(route),
-      currentResult: currentResult(new Date('2000-01-01T00:00:00Z')),
-    });
+  it('keeps sticky item data until awaited teardown completes', () => {
+    store.overrideSelector(fromItemContent.selectActiveContentRoute, route2);
+    store.overrideSelector(fromItemContent.selectActiveContentData, fetchingState());
+    store.refreshState();
+    TestBed.flushEffects();
 
-    const config = await firstValueFrom(service.taskConfig$);
-    expect(config?.readOnly).toBeTrue();
+    expect(service.isTearingDownTask()).toBeTrue();
+    expect(service.stickyItemData()?.item.id).toBe('1');
+    expect(teardownCalls).toBe(1);
+
+    teardownRelease$.next();
+    teardownRelease$.complete();
+    TestBed.flushEffects();
+
+    expect(service.isTearingDownTask()).toBeFalse();
+    expect(service.stickyItemData()).toBeNull();
   });
 
-  it('keeps the task writable when submissions are still open', async () => {
-    const service = setup({
-      ...createItemData(route),
-      currentResult: currentResult(new Date(backendInfiniteDateString)),
-    });
+  it('awaits teardown before clearing sticky when next item is already ready', () => {
+    store.overrideSelector(fromItemContent.selectActiveContentRoute, route2);
+    store.overrideSelector(fromItemContent.selectActiveContentData, readyState(itemData2));
+    store.refreshState();
+    TestBed.flushEffects();
 
-    const config = await firstValueFrom(service.taskConfig$);
-    expect(config?.readOnly).toBeFalse();
+    expect(service.isTearingDownTask()).toBeTrue();
+    expect(service.stickyItemData()?.item.id).toBe('1');
+    expect(teardownCalls).toBe(1);
+
+    teardownRelease$.next();
+    teardownRelease$.complete();
+    TestBed.flushEffects();
+
+    expect(service.isTearingDownTask()).toBeFalse();
+    expect(service.stickyItemData()).toBeNull();
   });
 });

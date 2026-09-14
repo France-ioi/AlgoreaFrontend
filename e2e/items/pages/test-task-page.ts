@@ -131,10 +131,6 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
   await page.route(`${apiUrl}/items/${itemId}/breadcrumbs*`, route => route.fulfill({ json: breadcrumbs }));
   await page.route(`${apiUrl}/items/${itemId}/attempts*`, route => route.fulfill({ json: attempts }));
   await page.route(`${apiUrl}/items/${itemId}/current-answer*`, route => {
-    if (route.request().method() === 'PUT') {
-      route.fulfill({ json: actionSuccess });
-      return;
-    }
     if (options.currentAnswer) {
       route.fulfill({
         json: {
@@ -152,6 +148,14 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
       return;
     }
     route.fulfill({ json: { type: null } });
+  });
+  // Leave-save uses PUT .../attempts/{id}/answers/current (not .../current-answer).
+  await page.route(`${apiUrl}/items/${itemId}/attempts/*/answers/current*`, route => {
+    if (route.request().method() === 'PUT') {
+      route.fulfill({ json: actionSuccess });
+      return;
+    }
+    route.fallback();
   });
   await page.route(`${apiUrl}/items/${itemId}/attempts/*/generate-task-token`, route => route.fulfill({
     json: { ...actionSuccess, data: { task_token: 'mock-task-token' } },
@@ -199,6 +203,43 @@ export class TestTaskPage {
     }).toBe(true);
     const calls = await this.getCalls();
     return calls.find(isMatch)!;
+  }
+
+  /** Clear durable host-side call logs (parent mirror + sessionStorage). */
+  async clearHostCalls(): Promise<void> {
+    await this.page.evaluate(() => {
+      sessionStorage.removeItem('testTaskCallsHost');
+      (window as unknown as { testTaskCallsHost?: TaskCallLogEntry[] }).testTaskCallsHost = [];
+    });
+  }
+
+  /**
+   * After iframe teardown: mock mirrors calls to parent `testTaskCallsHost` and sessionStorage.
+   * Prefer in-app leave (canDeactivate awaits unload); full page.goto beforeunload is best-effort only.
+   */
+  async waitForHostCall(method: string): Promise<TaskCallLogEntry> {
+    const readHost = (): Promise<TaskCallLogEntry[]> => this.page.evaluate(() => {
+      const fromWindow = (window as unknown as { testTaskCallsHost?: TaskCallLogEntry[] }).testTaskCallsHost ?? [];
+      let fromStorage: TaskCallLogEntry[] = [];
+      try {
+        fromStorage = JSON.parse(sessionStorage.getItem('testTaskCallsHost') || '[]') as TaskCallLogEntry[];
+      } catch {
+        fromStorage = [];
+      }
+      const seen = new Set<string>();
+      const merged: TaskCallLogEntry[] = [];
+      for (const entry of [ ...fromStorage, ...fromWindow ]) {
+        const key = `${ entry.method }|${ entry.timestamp }`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        merged.push(entry);
+      }
+      return merged;
+    });
+    await expect.poll(async () => (await readHost()).some(entry => entry.method === method), {
+      timeout: 15000,
+    }).toBe(true);
+    return (await readHost()).find(entry => entry.method === method)!;
   }
 
   async waitForPlatformCall(method: string): Promise<TaskCallLogEntry> {

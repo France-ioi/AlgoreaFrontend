@@ -437,6 +437,10 @@ Whether a task exposes its `solution` view is decided by the task itself, from t
 - [ItemTaskAnswerService](../src/app/items/services/item-task-answer.service.ts) calls `refreshToken()` after a grade is saved when the backend's `save-grade` response reports `validated: true` and the result was not already validated (snapshotted before `patchScore` flips `validated`).
 - [ItemTaskViewsService](../src/app/items/services/item-task-views.service.ts) re-calls `task.getViews()` on each `tokenUpdatedOnTask$` emission, because tasks (e.g. codecast) refetch their content on `task.updateToken` but do not spontaneously re-advertise views. The refreshed view list flows through `tabsChange` → `ItemTabs.setTaskTabs`, and the tab bar recomputes.
 
+#### Leaving a task (unload then destroy)
+
+When the user leaves a loaded task (another item, leaving the items area, or retry remount), the platform calls Bebras `task.unload` on the live JSChannel and **then** `destroy()` (channel teardown). In-app leaves **await** unload (task-proxy timeout 2000ms; errors/timeouts still proceed to destroy). Tab close/refresh is best-effort only (fire-and-forget, same as save-on-close). Item→item navigation keeps a sticky last-ready `ItemData` so the iframe stays mounted until awaited teardown finishes.
+
 #### Test task for platform-task integration
 
 [mocks/test-task/](../mocks/test-task/) is a static jschannel task page used to exercise platform↔task flows without relying on external task content. It is served by the dev mock server (`http://localhost:3000/test-task/`) and never included in Angular production builds. E2E tests intercept the same files via Playwright (`e2e/items/task-platform-interaction.spec.ts`). Update it whenever the task API surface changes.
