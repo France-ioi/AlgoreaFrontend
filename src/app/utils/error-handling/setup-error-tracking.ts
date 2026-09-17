@@ -18,6 +18,49 @@ export function dropHttpErrors(event: ErrorEvent, hint: EventHint): ErrorEvent |
   return event;
 }
 
+/** Types seen for Firefox privacy/storage noise (ALGOREA-GA); avoid dropping all NS_ERROR_*. */
+const OPAQUE_FIREFOX_NS_TYPES = new Set([ 'NS_ERROR_FAILURE', 'NS_ERROR_ABORT' ]);
+
+function isOpaqueNsMessage(message: string): boolean {
+  const trimmed = message.trim();
+  return trimmed === '' || trimmed === 'No error message';
+}
+
+function isOpaqueFirefoxNsError(type: string, message: string): boolean {
+  return OPAQUE_FIREFOX_NS_TYPES.has(type) && isOpaqueNsMessage(message);
+}
+
+function isOpaqueFirefoxNsException(ex: unknown): boolean {
+  if (ex === null || ex === undefined || typeof ex !== 'object') return false;
+  const name = 'name' in ex && typeof ex.name === 'string' ? ex.name : '';
+  const message = 'message' in ex && typeof ex.message === 'string' ? ex.message : '';
+  return isOpaqueFirefoxNsError(name, message);
+}
+
+/**
+ * Firefox often throws opaque NS_ERROR_FAILURE / NS_ERROR_ABORT ("No error message") when
+ * storage is blocked under privacy modes. Those are not actionable frontend bugs — drop them
+ * so they do not flood Sentry (see ALGOREA-GA).
+ *
+ * Only those two types with an empty/opaque message are dropped. Mixed exception chains that
+ * include any other error are kept.
+ */
+export function dropOpaqueFirefoxNsErrors(event: ErrorEvent, hint: EventHint): ErrorEvent | null {
+  const values = event.exception?.values ?? [];
+  if (values.length > 0) {
+    // Drop only when every serialized exception is opaque FAILURE/ABORT.
+    const allOpaque = values.every(v => isOpaqueFirefoxNsError(v.type ?? '', v.value ?? ''));
+    return allOpaque ? null : event;
+  }
+  // No exception.values — fall back to the original thrown object (e.g. DOMException).
+  return isOpaqueFirefoxNsException(hint.originalException) ? null : event;
+}
+
+export function beforeSend(event: ErrorEvent, hint: EventHint): ErrorEvent | null {
+  if (dropHttpErrors(event, hint) === null) return null;
+  return dropOpaqueFirefoxNsErrors(event, hint);
+}
+
 export function initErrorTracking(): void {
 
   const sentryDsn = getSentryDsnConfig();
@@ -30,7 +73,7 @@ export function initErrorTracking(): void {
     integrations: [],
     profilesSampleRate: 0, // disable profiling
     tracesSampleRate: 0,
-    beforeSend: dropHttpErrors,
+    beforeSend,
     ignoreErrors: [
       'Cannot redefine property: googletag',
       "Cannot read properties of undefined (reading 'sendMessage')", // a chrome extension error
