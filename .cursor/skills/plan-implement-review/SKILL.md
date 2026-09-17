@@ -1,6 +1,6 @@
 ---
 name: plan-implement-review
-description: End-to-end feature workflow from user instructions to shipped code. Plans with an Opus subagent in Plan mode (read-only exploration, no implementation). If the plan has open questions, obtains user answers/approval; otherwise proceeds immediately. Then runs the implement-review skill (dev subagent implements, Opus reviews, dev fixes, orchestrator summarizes). Use when the user gives a feature request or task and wants planning plus implementation with review. Trigger on "plan, implement and review", full feature delivery from instructions, or when no approved plan exists yet.
+description: End-to-end feature workflow from user instructions to shipped code. Plans with a Fable 5.1 high subagent in Plan mode (read-only exploration, no implementation). If the plan has open questions, obtains user answers/approval; otherwise proceeds immediately. Then runs the implement-review skill (dev subagent implements, Grok 4.6 high fast reviews, dev fixes, orchestrator summarizes). Use when the user gives a feature request or task and wants planning plus implementation with review. Trigger on "plan, implement and review", full feature delivery from instructions, or when no approved plan exists yet.
 ---
 
 # Plan, Implement, Review
@@ -9,7 +9,7 @@ description: End-to-end feature workflow from user instructions to shipped code.
 
 This skill extends [implement-review](implement-review/SKILL.md) with an upfront planning phase:
 
-1. **Plan** — Opus subagent explores the codebase in Plan mode and produces a structured plan.
+1. **Plan** — Fable 5.1 high subagent explores the codebase in Plan mode and produces a structured plan.
 2. **Gate** — If the plan has open questions for the user, resolve them and get approval. If it has none, skip validation and proceed.
 3. **Implement → Review → Fix → Summarize** — Follow the [implement-review](implement-review/SKILL.md) skill with the (auto-)approved plan.
 
@@ -26,17 +26,17 @@ Stop and ask the user if either is missing — do not start.
 
 ```
 - [ ] Step 0: Preconditions verified (user instructions + orchestrator on `auto` in Agent mode)
-- [ ] Step 1: Plan in an Opus subagent (Plan mode — read-only)
+- [ ] Step 1: Plan in a Fable 5.1 high subagent (Plan mode — read-only)
 - [ ] Step 2: Present plan; ask for approval only if there are open questions
 - [ ] Step 3–6: Follow implement-review skill (implement → review → fix → summarize)
 ```
 
-## Step 1: Plan in an Opus subagent (Plan mode)
+## Step 1: Plan in a Fable 5.1 high subagent (Plan mode)
 
 Launch a planning subagent that behaves like Cursor Plan mode: explore and design only, **no code changes**.
 
 - Tool: `Task` with `subagent_type: "explore"` (preferred for codebase exploration) or `subagent_type: "generalPurpose"`, **`readonly: true`**.
-- Model: the **latest Opus** from the Task tool's available model list (newest `claude-opus-*-thinking-high`). Do not pin an older Opus version. If no Opus slug is available, tell the user rather than silently substituting another model.
+- Model: **`claude-fable-5-1-thinking-high`** (Fable 5.1 high). If that slug is not available, tell the user rather than silently substituting another model.
 - Prompt must include:
   - The **full user instructions** (verbatim or faithfully summarized).
   - Instruction to act in **Plan mode**: read files, search the codebase, understand architecture (`AGENTS.md`, `.cursor/ARCHITECTURE.md`), and produce a plan — **do not write or modify any files**.
@@ -82,7 +82,7 @@ Read and follow [implement-review/SKILL.md](implement-review/SKILL.md) using the
 
 ## Notes
 
-- Planning subagent: read-only, Opus, no implementation.
+- Planning subagent: read-only, Fable 5.1 high (`claude-fable-5-1-thinking-high`), no implementation.
 - Implementation and fix subagent: auto model (inherit from orchestrator), same subagent reused for fixes.
-- Review subagent: read-only, Opus, angular-code-review skill.
+- Review subagent: read-only, Grok 4.6 high fast (`cursor-grok-4.6-high-fast`), angular-code-review skill.
 - If the user already has an approved plan and only wants implementation, use [implement-review](implement-review/SKILL.md) directly instead of this skill.

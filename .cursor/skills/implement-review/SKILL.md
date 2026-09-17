@@ -1,13 +1,13 @@
 ---
 name: implement-review
-description: Orchestrates an approved plan into shipped code with a built-in Angular code review. Use when a plan is already approved and the user wants it implemented by a dev subagent, reviewed by an Opus subagent running angular-code-review, fixed by the dev subagent, then summarized. Trigger when the user asks to "implement and review", "build then review", or run the implement → review → fix → summary workflow on an existing plan.
+description: Orchestrates an approved plan into shipped code with a built-in Angular code review. Use when a plan is already approved and the user wants it implemented by a dev subagent, reviewed by a Grok 4.6 high fast subagent running angular-code-review, fixed by the dev subagent, then summarized. Trigger when the user asks to "implement and review", "build then review", or run the implement → review → fix → summary workflow on an existing plan.
 ---
 
 # Implement, Review
 
 ## Overview
 
-This skill turns an **approved plan** into shipped code through a delegated loop: a dev subagent implements, an Opus review subagent runs `/angular-code-review`, the same dev subagent fixes the findings, and the orchestrator reports what was and wasn't done.
+This skill turns an **approved plan** into shipped code through a delegated loop: a dev subagent implements, a Grok 4.6 high fast review subagent runs `/angular-code-review`, the same dev subagent fixes the findings, and the orchestrator reports what was and wasn't done.
 
 The orchestrator stays lightweight: it coordinates subagents and writes the final summary. It does NOT implement or review the code itself.
 
@@ -23,7 +23,7 @@ Stop and ask the user if either is missing — do not start implementing.
 ```
 - [ ] Step 0: Preconditions verified (approved plan + orchestrator on `auto` in Agent mode)
 - [ ] Step 1: Implement the plan in the dev subagent (auto model)
-- [ ] Step 2: Review the changes in an Opus subagent (/angular-code-review)
+- [ ] Step 2: Review the changes in a Grok 4.6 high fast subagent (/angular-code-review)
 - [ ] Step 3: Fix review findings in the SAME dev subagent
 - [ ] Step 4: Write the final summary
 ```
@@ -39,12 +39,12 @@ Launch ONE dev subagent to do the implementation. Reuse this same subagent later
 
 Record the dev subagent's **agent ID** — you will `resume` it in Step 3.
 
-## Step 2: Review in an Opus subagent
+## Step 2: Review in a Grok 4.6 high fast subagent
 
 Launch a separate review subagent over the code that was just written.
 
 - Tool: `Task` with `subagent_type: "generalPurpose"`, `readonly: true`.
-- Model: the **latest Opus** from the Task tool's available model list (newest `claude-opus-*-thinking-high`). Do not pin an older Opus version. If no Opus slug is available, tell the user rather than silently substituting another model.
+- Model: **`cursor-grok-4.6-high-fast`** (Grok 4.6 high fast). If that slug is not available, tell the user rather than silently substituting another model.
 - Prompt the review subagent to:
   1. Read and follow the skill at `/home/dle/.claude/skills/angular-code-review/SKILL.md`.
   2. Scope the review to the just-written changes: run `git diff` (and `git status`) to find modified/untracked files, then read them.
