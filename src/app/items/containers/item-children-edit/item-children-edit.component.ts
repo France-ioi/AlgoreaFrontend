@@ -30,6 +30,7 @@ interface ChildData extends BaseChildData {
   isVisible: true,
   title: string | null,
   url?: string,
+  requiresExplicitEntry?: boolean,
   result?: {
     attemptId: string,
     validated: boolean,

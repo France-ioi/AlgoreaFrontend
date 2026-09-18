@@ -2,13 +2,22 @@ import { NewContentType } from 'src/app/ui-components/add-content/add-content.co
 import { ActivityType, ItemType } from './item-type';
 import { resolveLeftNavIconForType } from './left-nav-icons';
 
+const chapterIcon = `ph-duotone ${resolveLeftNavIconForType('chapter')}`;
+
 export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   {
     type: 'Chapter',
     // Duotone weight matches other create-type cards; glyph matches left-nav defaults.
-    icon: `ph-duotone ${resolveLeftNavIconForType('chapter')}`,
+    icon: chapterIcon,
     title: $localize`Chapter`,
     description: $localize`A new folder which can contain any activities.`,
+  },
+  {
+    type: 'Chapter',
+    icon: chapterIcon,
+    title: $localize`Chapter with manual participation`,
+    description: $localize`Learners must press a button to start. Typically used for contests.`,
+    requiresExplicitEntry: true,
   },
   {
     type: 'Task',

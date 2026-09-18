@@ -88,6 +88,7 @@ export class ItemChildrenEditFormComponent implements OnInit, PendingChangesComp
           url: child.url,
           languageTag,
           parent: this.itemData().item.id,
+          ...(child.requiresExplicitEntry ? { requiresExplicitEntry: true } : {}),
         };
         return this.createItemService
           .create(newChild)

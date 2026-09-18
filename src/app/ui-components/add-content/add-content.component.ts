@@ -19,6 +19,7 @@ export interface AddedContent<T> {
   title: string,
   url?: string,
   type: T,
+  requiresExplicitEntry?: boolean,
   permissions?: ItemCorePerm,
 }
 
@@ -28,6 +29,7 @@ export interface NewContentType<T> {
   title: string,
   description?: string,
   allowToAddUrl?: boolean,
+  requiresExplicitEntry?: boolean,
 }
 
 const defaultFormValues = { title: '', url: '', searchExisting: '' };
@@ -128,17 +130,18 @@ export class AddContentComponent<Type> implements OnInit {
       this.selected = content;
       return;
     }
-    this.addNew(content.type);
+    this.addNew(content);
   }
 
-  addNew(type: Type): void {
+  addNew(content: NewContentType<Type>): void {
     const title = this.trimmedInputsValue().title;
     const url = this.trimmedInputsValue().url;
     if (!this.checkLength(title)) return;
     this.contentAdded.emit({
       title,
       ...(url ? { url } : {}),
-      type,
+      type: content.type,
+      ...(content.requiresExplicitEntry ? { requiresExplicitEntry: true } : {}),
     });
   }
 

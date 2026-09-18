@@ -6,7 +6,13 @@ export const noAssociatedItem = { tag: 'no-item' } as const;
 
 export type NoAssociatedItem = typeof noAssociatedItem;
 
-export interface NewAssociatedItem { tag: 'new-item', name: string, url?: string, itemType: ItemType }
+export interface NewAssociatedItem {
+  tag: 'new-item',
+  name: string,
+  url?: string,
+  itemType: ItemType,
+  requiresExplicitEntry?: boolean,
+}
 
 export interface ExistingAssociatedItem { tag: 'existing-item', id: AssociatedItemId }
 

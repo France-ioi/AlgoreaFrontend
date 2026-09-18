@@ -148,4 +148,24 @@ describe('AddContentComponent', () => {
     expect(emitted).toEqual([ { title: 'New chapter', type: 'Chapter' } ]);
     expect(fixture.debugElement.query(By.css('.input-group'))).toBeNull();
   });
+
+  it('should emit requiresExplicitEntry when creating an explicit-entry chapter', () => {
+    const emitted: unknown[] = [];
+    component.contentAdded.subscribe(value => emitted.push(value));
+
+    fixture.componentRef.setInput('showCreateUI', true);
+    fixture.componentRef.setInput('showSearchUI', false);
+    fixture.componentRef.setInput('allowedTypesForNewContent', allowedNewActivityTypes);
+    component.addContentForm.patchValue({ title: 'Contest chapter' });
+    fixture.detectChanges();
+
+    typeButtonByTitle('Chapter with manual participation').nativeElement.click();
+    fixture.detectChanges();
+
+    expect(emitted).toEqual([ {
+      title: 'Contest chapter',
+      type: 'Chapter',
+      requiresExplicitEntry: true,
+    } ]);
+  });
 });
