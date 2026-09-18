@@ -56,13 +56,21 @@
               <i class="{{ newContent.icon }}"></i>
             </span>
             <span class="item-title">{{ newContent.title }}</span>
-            <span class="item-description">{{ newContent.description }}</span>
+            @if (newContent.description) {
+              <span class="item-description">{{ newContent.description }}</span>
+            }
           </button>
         }
       </div>
       @if (selected) {
         <div class="input-group">
-          <alg-input class="input-group-control white-bg" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm" />
+          <alg-input
+            class="input-group-control white-bg"
+            i18n-placeholder
+            placeholder="Task URL (omit to configure it later)"
+            name="url"
+            [parentForm]="addContentForm"
+          />
           <button class="size-l" alg-button (click)="addNew(selected.type)">Add Task</button>
         </div>
       }

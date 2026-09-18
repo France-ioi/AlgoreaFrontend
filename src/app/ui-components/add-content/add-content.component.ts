@@ -26,7 +26,7 @@ export interface NewContentType<T> {
   type: T,
   icon: string,
   title: string,
-  description: string,
+  description?: string,
   allowToAddUrl?: boolean,
 }
 

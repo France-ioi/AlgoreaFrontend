@@ -11,14 +11,7 @@ export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   {
     type: 'Task',
     icon: 'ph-duotone ph-code',
-    title: $localize`Empty task`,
-    description: $localize`A new task which will be configured later.`,
-  },
-  {
-    type: 'Task',
-    icon: 'ph-duotone ph-code',
     title: $localize`Task`,
-    description: $localize`A new task configured with a given url.`,
     allowToAddUrl: true,
   },
 ];
