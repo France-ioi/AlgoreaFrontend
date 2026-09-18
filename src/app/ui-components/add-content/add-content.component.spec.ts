@@ -121,6 +121,17 @@ describe('AddContentComponent', () => {
     } ]);
   });
 
+  it('should show the content type caption by default', () => {
+    fixture.componentRef.setInput('showCreateUI', true);
+    fixture.componentRef.setInput('showSearchUI', false);
+    fixture.componentRef.setInput('allowedTypesForNewContent', allowedNewActivityTypes);
+    component.addContentForm.patchValue({ title: 'New content' });
+    fixture.detectChanges();
+
+    const caption = fixture.debugElement.query(By.css('.select-caption'));
+    expect(caption.nativeElement.textContent.trim()).toBe('Select the type of content to create');
+  });
+
   it('should create Chapter immediately without showing the URL field', () => {
     const emitted: unknown[] = [];
     component.contentAdded.subscribe(value => emitted.push(value));

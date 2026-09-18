@@ -42,7 +42,7 @@
   <alg-loading class="loading" size="medium" />
 } @else {
   @if (trimmedInputsValue().title.length >= minInputLength) {
-    <p class="select-caption" i18n>Select the type of group to create</p>
+    <p class="select-caption">{{ selectTypeCaption() }}</p>
     <div class="new-content-type">
       <div class="new-content-container">
         @for (newContent of allowedTypesForNewContent(); track newContent) {

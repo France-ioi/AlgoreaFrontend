@@ -57,6 +57,7 @@ export class AddContentComponent<Type> implements OnInit {
   selectExistingText = input($localize`Add`);
   addedText = input($localize`Already added`);
   inputCreatePlaceholder = input($localize`Enter a title to create a new child`);
+  selectTypeCaption = input($localize`Select the type of content to create`);
   showCreateUI = input(true);
   showSearchUI = input(true);
   isLight = input(false);
