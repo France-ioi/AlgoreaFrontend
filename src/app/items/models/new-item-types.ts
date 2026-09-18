@@ -1,16 +1,18 @@
 import { NewContentType } from 'src/app/ui-components/add-content/add-content.component';
 import { ActivityType, ItemType } from './item-type';
+import { resolveLeftNavIconForType } from './left-nav-icons';
 
 export const allowedNewActivityTypes: NewContentType<ActivityType>[] = [
   {
     type: 'Chapter',
-    icon: 'ph-duotone ph-book',
+    // Duotone weight matches other create-type cards; glyph matches left-nav defaults.
+    icon: `ph-duotone ${resolveLeftNavIconForType('chapter')}`,
     title: $localize`Chapter`,
     description: $localize`A new folder which can contain any activities.`,
   },
   {
     type: 'Task',
-    icon: 'ph-duotone ph-code',
+    icon: `ph-duotone ${resolveLeftNavIconForType('task')}`,
     title: $localize`Task`,
     allowToAddUrl: true,
   },
