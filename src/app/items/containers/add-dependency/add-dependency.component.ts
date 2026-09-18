@@ -32,7 +32,10 @@ export class AddDependencyComponent {
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(
-      value, getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills() }).map(item => item.type)
+      value,
+      [ ...new Set(
+        getAllowedNewItemTypes({ allowActivities: true, allowSkills: this.allowSkills() }).map(item => item.type)
+      ) ]
     );
 
   onAdd(item: AddedContent<ItemType>): void {

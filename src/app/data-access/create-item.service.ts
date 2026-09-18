@@ -16,6 +16,7 @@ export type NewItem = {
   url?: string,
   type: ItemType,
   languageTag: string,
+  requiresExplicitEntry?: boolean,
 } & ({ parent: string } | { asRootOfGroupId: string });
 
 interface CreateItemRequestBody {
@@ -23,6 +24,7 @@ interface CreateItemRequestBody {
   url?: string,
   type: ItemType,
   language_tag: string,
+  requires_explicit_entry?: boolean,
   parent?: { item_id: string },
   as_root_of_group_id?: string,
 }
@@ -40,6 +42,7 @@ export class CreateItemService {
       url: newItem.url,
       type: newItem.type,
       language_tag: newItem.languageTag,
+      ...(newItem.requiresExplicitEntry ? { requires_explicit_entry: true } : {}),
     };
     if ('parent' in newItem) body.parent = { item_id: newItem.parent };
     if ('asRootOfGroupId' in newItem) body.as_root_of_group_id = newItem.asRootOfGroupId;

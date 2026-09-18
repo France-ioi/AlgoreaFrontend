@@ -19,6 +19,7 @@ export interface AddedContent<T> {
   title: string,
   url?: string,
   type: T,
+  requiresExplicitEntry?: boolean,
   permissions?: ItemCorePerm,
 }
 
@@ -26,8 +27,9 @@ export interface NewContentType<T> {
   type: T,
   icon: string,
   title: string,
-  description: string,
+  description?: string,
   allowToAddUrl?: boolean,
+  requiresExplicitEntry?: boolean,
 }
 
 const defaultFormValues = { title: '', url: '', searchExisting: '' };
@@ -57,6 +59,7 @@ export class AddContentComponent<Type> implements OnInit {
   selectExistingText = input($localize`Add`);
   addedText = input($localize`Already added`);
   inputCreatePlaceholder = input($localize`Enter a title to create a new child`);
+  selectTypeCaption = input($localize`Select the type of content to create`);
   showCreateUI = input(true);
   showSearchUI = input(true);
   isLight = input(false);
@@ -127,17 +130,18 @@ export class AddContentComponent<Type> implements OnInit {
       this.selected = content;
       return;
     }
-    this.addNew(content.type);
+    this.addNew(content);
   }
 
-  addNew(type: Type): void {
+  addNew(content: NewContentType<Type>): void {
     const title = this.trimmedInputsValue().title;
     const url = this.trimmedInputsValue().url;
     if (!this.checkLength(title)) return;
     this.contentAdded.emit({
       title,
       ...(url ? { url } : {}),
-      type,
+      type: content.type,
+      ...(content.requiresExplicitEntry ? { requiresExplicitEntry: true } : {}),
     });
   }
 

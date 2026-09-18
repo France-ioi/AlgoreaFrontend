@@ -131,7 +131,13 @@ export class AssociatedItemComponent implements ControlValueAccessor, OnDestroy 
   setAssociatedItem(item: AddedContent<ItemType>): void {
     const newValue = item.id !== undefined ?
       { tag: 'existing-item' as const, id: item.id, name: item.title } :
-      { tag: 'new-item' as const, name: item.title, url: item.url, itemType: item.type };
+      {
+        tag: 'new-item' as const,
+        name: item.title,
+        url: item.url,
+        itemType: item.type,
+        ...(item.requiresExplicitEntry ? { requiresExplicitEntry: true } : {}),
+      };
     this.associatedItem.set(newValue);
     this.onChange(newValue);
   }

@@ -158,6 +158,7 @@ export class GroupEditComponent implements OnInit, OnDestroy, PendingChangesComp
         type: rootActivity.itemType,
         languageTag,
         asRootOfGroupId: this.initialFormData.id,
+        ...(rootActivity.requiresExplicitEntry ? { requiresExplicitEntry: true } : {}),
       });
 
     const rootSkill = this.groupForm.get('rootSkill')?.value as NoAssociatedItem|NewAssociatedItem|ExistingAssociatedItem;
