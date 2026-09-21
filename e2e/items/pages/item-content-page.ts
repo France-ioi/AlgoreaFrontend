@@ -245,7 +245,8 @@ export class ItemContentPage {
     const inputLocator = this.page.getByPlaceholder('Enter a title to create a new child');
     await expect.soft(inputLocator).toBeVisible();
     await inputLocator.fill(name);
-    const classBtnLocator = this.page.locator('alg-add-content').getByText(type);
+    // Exact match: "Chapter" must not also match "Chapter with manual participation".
+    const classBtnLocator = this.page.locator('alg-add-content').getByText(type, { exact: true });
     await expect.soft(classBtnLocator).toBeVisible();
     await classBtnLocator.click();
   }
