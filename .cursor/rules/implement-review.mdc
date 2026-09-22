@@ -1,0 +1,6 @@
+---
+description: Review skill override for implement-review / plan-implement-review in this project
+alwaysApply: true
+---
+
+When running the `implement-review` or `plan-implement-review` skills or commands in this project, the review step MUST use `/angular-code-review` (skill at `/home/dle/.claude/skills/angular-code-review/SKILL.md`), not the generic `/code-review`.
