@@ -42,7 +42,7 @@
   <alg-loading class="loading" size="medium" />
 } @else {
   @if (trimmedInputsValue().title.length >= minInputLength) {
-    <p class="select-caption" i18n>Select the type of group to create</p>
+    <p class="select-caption">{{ selectTypeCaption() }}</p>
     <div class="new-content-type">
       <div class="new-content-container">
         @for (newContent of allowedTypesForNewContent(); track newContent) {
@@ -56,14 +56,22 @@
               <i class="{{ newContent.icon }}"></i>
             </span>
             <span class="item-title">{{ newContent.title }}</span>
-            <span class="item-description">{{ newContent.description }}</span>
+            @if (newContent.description) {
+              <span class="item-description">{{ newContent.description }}</span>
+            }
           </button>
         }
       </div>
       @if (selected) {
         <div class="input-group">
-          <alg-input class="input-group-control white-bg" i18n-placeholder placeholder="Task URL" name="url" [parentForm]="addContentForm" />
-          <button class="size-l" alg-button (click)="addNew(selected.type)">Add Task</button>
+          <alg-input
+            class="input-group-control white-bg"
+            i18n-placeholder
+            placeholder="Task URL (omit to configure it later)"
+            name="url"
+            [parentForm]="addContentForm"
+          />
+          <button class="size-l" alg-button (click)="addNew(selected)">Add Task</button>
         </div>
       }
     </div>

@@ -34,7 +34,10 @@ export class AddItemComponent {
 
   searchFunction = (value: string): Observable<AddedContent<ItemType>[]> =>
     this.searchItemService.search(
-      value, getAllowedNewItemTypes({ allowActivities: !this.isSkill(), allowSkills: this.isSkill() }).map(item => item.type)
+      value,
+      [ ...new Set(
+        getAllowedNewItemTypes({ allowActivities: !this.isSkill(), allowSkills: this.isSkill() }).map(item => item.type)
+      ) ]
     );
 
   addChild(item: AddedContent<ItemType>): void {

@@ -7,7 +7,7 @@
       <i
         class="ph-duotone ph-info hint-icon"
         i18n-algTooltip
-        algTooltip="Learners can start a new attempt, which acts as a fresh start on this content."
+        algTooltip="Learners can start more than one attempt, each of which acts as a fresh start on this content."
         tooltipPosition="top"
         aria-hidden="true"
       ></i>
@@ -18,7 +18,16 @@
   </div>
 
   <div class="form-item-view" data-testid="form-item-view">
-    <span class="form-item-label" i18n>Start participation manually</span>
+    <span class="form-item-label">
+      <ng-container i18n>Start participation manually</ng-container>
+      <i
+        class="ph-duotone ph-info hint-icon"
+        i18n-algTooltip
+        algTooltip="When enabled, learners must press an &quot;Enter now&quot; button to start this activity. Learners need to be given specific permissions to enter the activity."
+        tooltipPosition="top"
+        aria-hidden="true"
+      ></i>
+    </span>
     <div class="form-item-control">
       <alg-switch formControlName="requiresExplicitEntry" />
     </div>
@@ -27,7 +36,14 @@
   @if (form.controls.requiresExplicitEntry.value) {
     <div class="form-item-view form-item-duration" data-testid="form-item-view">
       <span class="form-item-label">
-        <ng-container i18n>Duration</ng-container>&nbsp;
+        <ng-container i18n>Duration</ng-container>
+        <i
+          class="ph-duotone ph-info hint-icon"
+          i18n-algTooltip
+          algTooltip="How long learners may access this content after entering. When disabled, there is no time limit. If multiple attempts are allowed, each attempt gets this duration."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
       </span>
       <div class="form-item-control another-input">
         <alg-switch class="first-child" formControlName="durationEnabled" />
@@ -46,7 +62,16 @@
     </div>
 
     <div class="form-item-view form-item-datepicker" data-testid="entering-time-min-container">
-      <span class="form-item-label" i18n>First allowed entering time</span>
+      <span class="form-item-label">
+        <ng-container i18n>First allowed entering time</ng-container>
+        <i
+          class="ph-duotone ph-info hint-icon"
+          i18n-algTooltip
+          algTooltip="Earliest time at which learners may enter this content. When enabled, they cannot enter before this time, even with permission to enter this activity. When disabled, only permissions control who can enter."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
+      </span>
       <div class="form-item-control another-input">
         <alg-switch class="first-child"
           formControlName="enteringTimeMinEnabled"
@@ -66,7 +91,16 @@
     </div>
 
     <div class="form-item-view form-item-datepicker" data-testid="entering-time-max-container">
-      <span class="form-item-label" i18n>Latest allowed entering time</span>
+      <span class="form-item-label">
+        <ng-container i18n>Latest allowed entering time</ng-container>
+        <i
+          class="ph-duotone ph-info hint-icon"
+          i18n-algTooltip
+          algTooltip="Latest time at which learners may enter this content. When enabled, they cannot enter after this time, even with permission to enter this activity. When disabled, only permissions control who can enter."
+          tooltipPosition="top"
+          aria-hidden="true"
+        ></i>
+      </span>
       <div class="form-item-control another-input">
         <alg-switch class="first-child"
           formControlName="enteringTimeMaxEnabled"
