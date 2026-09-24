@@ -1,7 +1,7 @@
 @let state = notificationsState();
 
-<button class="bell-button" [cdkMenuTriggerFor]="notificationMenu">
-  <i class="ph-duotone ph-bell"></i>
+<button class="bell-button" [cdkMenuTriggerFor]="notificationMenu" i18n-aria-label aria-label="Notifications">
+  <i class="ph-duotone ph-bell" aria-hidden="true"></i>
   <span class="badge" [class.error]="state.isError">{{ badgeText() }}</span>
 </button>
 
@@ -30,12 +30,50 @@
         } @else {
           <ul class="notification-list">
             @for (notification of data; track notification.sk) {
-              <li class="notification-item" cdkMenuItem (click)="openThread(notification)">
-                <i class="notification-icon ph-bold ph-chat-circle"></i>
-                <div class="notification-content">
-                  <div class="notification-text">{{ notification.payload.text }}</div>
-                  <alg-relative-time class="notification-time" [value]="notification.payload.time | toDate" />
-                </div>
+              @let disabled = isNotificationDisabled(notification);
+              <li
+                class="notification-item"
+                [class.disabled]="disabled"
+                [attr.aria-disabled]="disabled || null"
+                [cdkMenuItemDisabled]="disabled"
+                [attr.aria-busy]="(isGroupResultsExportReadyNotification(notification) && isDownloading(notification)) || null"
+                cdkMenuItem
+                (click)="onNotificationClick(notification)"
+              >
+                @if (isForumNewMessageNotification(notification)) {
+                  <i class="notification-icon ph-bold ph-chat-circle" aria-hidden="true"></i>
+                  <div class="notification-content">
+                    <div class="notification-text">{{ notification.payload.text }}</div>
+                    <alg-relative-time class="notification-time" [value]="notification.payload.time | toDate" />
+                  </div>
+                } @else if (isGroupResultsExportReadyNotification(notification)) {
+                  <i class="notification-icon ph-bold ph-file-zip" aria-hidden="true"></i>
+                  <div class="notification-content">
+                    <div class="notification-text">{{ readySummary(notification) }}</div>
+                    <!--
+                      Export payloads have no created-at; `sk` is only a DynamoDB sort key for ordering/deletion
+                      (forum rows use payload.time). Omit relative time rather than treating sk as milliseconds.
+                    -->
+                    @if (isExportLinkExpired(notification)) {
+                      <div class="notification-secondary" i18n>Link expired</div>
+                    } @else {
+                      <div class="notification-secondary">
+                        <ng-container i18n>Available until {{ notification.payload.expiresAt | date: 'medium' }}</ng-container>
+                      </div>
+                      <div class="notification-secondary" i18n>Click to download</div>
+                    }
+                    @if (isDownloading(notification)) {
+                      <div class="notification-secondary" i18n>Preparing download…</div>
+                    }
+                  </div>
+                } @else if (isGroupResultsExportFailedNotification(notification)) {
+                  <i class="notification-icon warning ph-bold ph-warning" aria-hidden="true"></i>
+                  <div class="notification-content">
+                    <div class="notification-text">
+                      {{ failedSummary(notification.payload.groupName, notification.payload.error) }}
+                    </div>
+                  </div>
+                }
               </li>
             }
           </ul>

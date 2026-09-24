@@ -1,57 +1,70 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { from, EMPTY, throwError } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
-import { ProgressZipService } from 'src/app/data-access/progress-zip.service';
+import { APPCONFIG } from 'src/app/config';
+import { GroupResultsExportService } from 'src/app/data-access/group-results-export.service';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { getContentDispositionFilename } from 'src/app/utils/content-disposition-filename';
-import { downloadFile } from 'src/app/utils/download-file';
-import { readHttpBlobError } from 'src/app/utils/http-blob-error';
-import { mapZipExportError } from './group-progress-grid-zip-export.errors';
+import { mapConfiguredExportServiceError } from './group-progress-grid-zip-export.display';
+import { mapZipExportError, readHttpActionError } from './group-progress-grid-zip-export.errors';
+import { areGroupResultsExportNotificationsAvailable } from './group-progress-grid-zip-export.utils';
 
 @Injectable()
 export class GroupProgressGridZipExportService {
-  private progressZipService = inject(ProgressZipService);
+  private groupResultsExportService = inject(GroupResultsExportService);
   private actionFeedbackService = inject(ActionFeedbackService);
+  private config = inject(APPCONFIG);
   private destroyRef = inject(DestroyRef);
 
   readonly isFetching = signal(false);
 
   export(groupId: string, parentItemId: string): void {
+    if (this.isFetching()) return;
+
+    if (!areGroupResultsExportNotificationsAvailable(this.config)) {
+      this.actionFeedbackService.error(
+        $localize`ZIP export is unavailable because notifications are disabled.`,
+      );
+      return;
+    }
+
     this.isFetching.set(true);
-    this.progressZipService
-      .getZipData(groupId, [ parentItemId ])
+    this.groupResultsExportService
+      .getGroupResultsToken(groupId, [ parentItemId ])
       .pipe(
-        tap(response => {
-          const blob = response.body;
-          if (!blob) throw new Error('Unexpected: empty ZIP response body');
-          const filename = getContentDispositionFilename(
-            response.headers.get('Content-Disposition'),
-            groupId,
+        switchMap(({ groupResultsToken }) =>
+          this.groupResultsExportService.requestExport(groupResultsToken, groupId, [ parentItemId ])
+        ),
+        tap(() => {
+          this.actionFeedbackService.success(
+            $localize`Export requested. You will be notified when the file is ready.`,
           );
-          downloadFile([ blob ], filename, 'application/zip');
         }),
         catchError((err: unknown) => {
-          if (!(err instanceof HttpErrorResponse)) return throwError(() => err);
-          return from(readHttpBlobError(err)).pipe(
-            tap(({ status, errorText }) => this.showExportError(status, errorText)),
-            switchMap(() => EMPTY),
-          );
+          this.handleExportError(err);
+          return EMPTY;
         }),
         finalize(() => this.isFetching.set(false)),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe({
-        error: err => {
-          // Mirrors CSV export: rethrow non-HTTP failures so programmer errors surface in dev tools.
-          throw err;
-        },
-      });
+      .subscribe();
   }
 
-  private showExportError(status: number, errorText?: string): void {
-    const feedback = mapZipExportError(status, errorText);
+  private handleExportError(err: unknown): void {
+    if (err instanceof HttpErrorResponse) {
+      const { status, errorText } = readHttpActionError(err);
+      this.showFeedback(mapZipExportError(status, errorText));
+      return;
+    }
+    if (err instanceof Error && err.message.includes('slsApiUrl')) {
+      this.showFeedback(mapConfiguredExportServiceError());
+      return;
+    }
+    this.showFeedback({ type: 'unexpected' });
+  }
+
+  private showFeedback(feedback: ReturnType<typeof mapZipExportError>): void {
     if (feedback.type === 'unexpected') {
       this.actionFeedbackService.unexpectedError();
       return;

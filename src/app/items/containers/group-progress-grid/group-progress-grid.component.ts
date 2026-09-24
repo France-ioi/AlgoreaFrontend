@@ -44,9 +44,14 @@ import { RawGroupRoute, rawGroupRoute } from 'src/app/models/routing/group-route
 import { getGroupProgressGridColumns } from './group-progress-grid-columns';
 import { groupProgressDetailMenuPositions } from './group-progress-grid-menu-positions';
 import { getRowsWithProgress } from './group-progress-grid-data';
+import { APPCONFIG } from 'src/app/config';
 import { GroupProgressGridCsvExportService } from './group-progress-grid-csv-export.service';
 import { GroupProgressGridZipExportService } from './group-progress-grid-zip-export.service';
-import { canExportGroupProgressZip, triggerGroupProgressZipExport } from './group-progress-grid-zip-export.utils';
+import {
+  areGroupResultsExportNotificationsAvailable,
+  canExportGroupProgressZip,
+  triggerGroupProgressZipExport,
+} from './group-progress-grid-zip-export.utils';
 import { DataColumn, DataRow, ProgressDataDialog } from './group-progress-grid.types';
 
 export type { Progress } from './group-progress-grid.types';
@@ -84,6 +89,7 @@ export class GroupProgressGridComponent {
   private actionFeedbackService = inject(ActionFeedbackService);
   private csvExportService = inject(GroupProgressGridCsvExportService);
   private zipExportService = inject(GroupProgressGridZipExportService);
+  private config = inject(APPCONFIG);
   private store = inject(Store);
   private observedGroupRouteParam = this.store.selectSignal(selectObservedGroupRouteAsItemRouteParameter);
   private itemRouter = inject(ItemRouter);
@@ -111,7 +117,12 @@ export class GroupProgressGridComponent {
   readonly isZipDataFetching = this.zipExportService.isFetching;
 
   readonly canExportZip = computed(() =>
-    canExportGroupProgressZip(this.currentFilter(), this.group(), this.itemData().item),
+    canExportGroupProgressZip(
+      this.currentFilter(),
+      this.group(),
+      this.itemData().item,
+      areGroupResultsExportNotificationsAvailable(this.config),
+    ),
   );
 
   private readonly refresh$ = new Subject<void>();

@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { SECONDS } from 'src/app/utils/duration';
-import { mapZipExportError } from './group-progress-grid-zip-export.errors';
+import { mapZipExportError, readHttpActionError } from './group-progress-grid-zip-export.errors';
 
 describe('mapZipExportError', () => {
   const cases: {
@@ -41,12 +42,36 @@ describe('mapZipExportError', () => {
       messageIncludes: 'not authorized',
     },
     {
-      name: 'unexpected server error',
-      status: 500,
+      name: 'serverless unavailable',
+      status: 503,
       errorText: 'Internal error',
+      expectedType: 'message',
+      messageIncludes: 'temporarily unavailable',
+    },
+    {
+      name: 'export start failure',
+      status: 404,
+      expectedType: 'message',
+      messageIncludes: 'could not be started',
+    },
+    {
+      name: 'unexpected client error',
+      status: 418,
+      errorText: 'I am a teapot',
       expectedType: 'unexpected',
     },
   ];
+
+  it('readHttpActionError extracts error_text from JSON bodies', () => {
+    const err = new HttpErrorResponse({
+      error: { error_text: 'Insufficient access rights' },
+      status: 403,
+    });
+    expect(readHttpActionError(err)).toEqual({
+      status: 403,
+      errorText: 'Insufficient access rights',
+    });
+  });
 
   cases.forEach(({ name, status, errorText, expectedType, expectedLife, messageIncludes }) => {
     it(`maps ${name}`, () => {

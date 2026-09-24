@@ -114,11 +114,30 @@
   }
 }
 
+.notification-item.disabled {
+  cursor: default;
+  opacity: 0.65;
+  pointer-events: none;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
 .notification-icon {
   flex-shrink: 0;
   font-size: functions.toRem(20);
   color: var(--alg-primary-color, #4a6cf5);
   margin-top: functions.toRem(2);
+
+  &.warning {
+    color: var(--warning-color, #f5a623);
+  }
+}
+
+.notification-secondary {
+  font-size: functions.toRem(12);
+  color: var(--alg-text-secondary, #666);
 }
 
 .notification-content {

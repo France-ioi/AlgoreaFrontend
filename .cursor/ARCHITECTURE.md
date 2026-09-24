@@ -334,6 +334,7 @@ origin (which would also let us drop the deprecated `--deploy-url` flag).
 | `ItemNavTreeService` | Item navigation tree building |
 | `GroupNavTreeService` | Group navigation tree building |
 | `NotificationHttpService` | Fetch and manage user notifications from SLS API |
+| `GroupResultsExportService` | Request async group-results ZIP exports (backend token + SLS) |
 | `ThreadFollowService` | Follow/unfollow forum threads (SLS API) |
 | `IdentityTokenService` | Manage user identity tokens for SLS API |
 | `WebsocketClient` | WebSocket connection management |
@@ -344,9 +345,11 @@ origin (which would also let us drop the deprecated `--deploy-url` flag).
 
 - Real-time notifications via WebSocket (SLS API)
 - Notification bell component in top bar with unread count badge
-- Dropdown panel showing forum message notifications
-- Toast notifications for new messages (clickable to open thread)
-- Notifications automatically cleared when visiting the relevant thread
+- Dropdown panel showing forum messages and group-results export ready/failed notifications
+- Toast notifications for new forum messages (clickable to open thread)
+- Async ZIP export is only offered when `enableNotifications` is on and `slsApiUrl` is set (retrieval is via the bell)
+- Export-ready notifications download via SLS `download-url` (https-only, new-tab anchor); expired links are marked in place
+- Forum notifications automatically cleared when visiting the relevant thread
 - Controlled by `enableNotifications` feature flag
 
 ### WebSocket Architecture
