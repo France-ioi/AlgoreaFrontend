@@ -1,41 +1,60 @@
 import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DatePipe } from '@angular/common';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
-import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, filter, map, of } from 'rxjs';
-import { fromNotification, notificationApiActions, notificationWebsocketActions } from '../../store/notification';
-import { fromForum } from '../../forum/store';
+import { fromNotification, notificationApiActions } from '../../store/notification';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
 import { ToDatePipe } from 'src/app/pipes/toDate';
-import { ForumNewMessageNotification, isForumNewMessageNotification } from 'src/app/models/notification';
+import {
+  DisplayableNotification,
+  GroupResultsExportReadyNotification,
+  isDisplayableNotification,
+  isForumNewMessageNotification,
+  isGroupResultsExportFailedNotification,
+  isGroupResultsExportReadyNotification,
+} from 'src/app/models/notification';
+import {
+  exportFailedSummary,
+  exportReadySummary,
+} from 'src/app/models/notification-display';
 import { mapStateData } from 'src/app/utils/state';
 import { MessageService } from 'src/app/services/message.service';
-import { itemRoute } from 'src/app/models/routing/item-route';
-import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { errorIsHTTPForbidden } from 'src/app/utils/errors';
 import { NotificationHttpService } from 'src/app/data-access/notification.service';
+import { NotificationInteractionService } from 'src/app/services/notification-interaction.service';
 
 @Component({
   selector: 'alg-notification-bell',
   templateUrl: './notification-bell.component.html',
   styleUrl: './notification-bell.component.scss',
-  imports: [ CdkMenuTrigger, CdkMenu, CdkMenuItem, LoadingComponent, ErrorComponent, RelativeTimeComponent, ToDatePipe ],
+  imports: [
+    CdkMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+    LoadingComponent,
+    ErrorComponent,
+    RelativeTimeComponent,
+    ToDatePipe,
+    DatePipe,
+  ],
 })
 export class NotificationBellComponent {
   private store = inject(Store);
-  private actions$ = inject(Actions);
   private messageService = inject(MessageService);
-  private getItemByIdService = inject(GetItemByIdService);
   private notificationService = inject(NotificationHttpService);
+  private notificationInteraction = inject(NotificationInteractionService);
   private destroyRef = inject(DestroyRef);
 
   private rawState = this.store.selectSignal(fromNotification.selectNotificationsState);
 
+  readonly isForumNewMessageNotification = isForumNewMessageNotification;
+  readonly isGroupResultsExportReadyNotification = isGroupResultsExportReadyNotification;
+  readonly isGroupResultsExportFailedNotification = isGroupResultsExportFailedNotification;
+
   notificationsState = computed(() =>
-    mapStateData(this.rawState(), data => data.filter(isForumNewMessageNotification))
+    mapStateData(this.rawState(), data => data.filter(isDisplayableNotification))
   );
 
   badgeText = computed(() => {
@@ -47,38 +66,34 @@ export class NotificationBellComponent {
     }
   });
 
-  constructor() {
-    this.actions$.pipe(
-      ofType(notificationWebsocketActions.notificationReceived),
-      filter(({ notification }) => isForumNewMessageNotification(notification)),
-      takeUntilDestroyed(),
-    ).subscribe(({ notification }) => {
-      if (isForumNewMessageNotification(notification)) {
-        this.messageService.add({
-          severity: 'info',
-          summary: $localize`New message`,
-          detail: notification.payload.text,
-          onClick: () => this.openThread(notification),
-        });
-      }
-    });
+  isExportLinkExpired(notification: GroupResultsExportReadyNotification): boolean {
+    return this.notificationInteraction.isExportLinkExpired(notification);
   }
 
-  openThread(notification: ForumNewMessageNotification): void {
-    const { participantId, itemId } = notification.payload;
-    this.getItemByIdService.get(itemId).pipe(
-      map(item => item.string.title),
-      catchError(err => of(errorIsHTTPForbidden(err)
-        ? $localize`Not visible content`
-        : $localize`Error fetching content title`
-      )),
+  isDownloading(notification: GroupResultsExportReadyNotification): boolean {
+    return this.notificationInteraction.isDownloading(notification);
+  }
+
+  readySummary(notification: GroupResultsExportReadyNotification): string {
+    return exportReadySummary(notification.payload.groupName, notification.payload.items);
+  }
+
+  failedSummary(groupName: string, error: string): string {
+    return exportFailedSummary(groupName, error);
+  }
+
+  onNotificationClick(notification: DisplayableNotification): void {
+    this.notificationInteraction.activate$(notification).pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(title => {
-      this.store.dispatch(fromForum.notificationActions.showThread({
-        id: { participantId, itemId },
-        item: { route: itemRoute('activity', itemId), title },
-      }));
-    });
+    ).subscribe();
+  }
+
+  onClearClick(event: Event, notification: DisplayableNotification): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.notificationInteraction.clear$(notification.sk).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 
   clearAll(): void {

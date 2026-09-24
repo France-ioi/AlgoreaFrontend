@@ -1,9 +1,13 @@
 <div class="container">
-  @for (message of messages(); track $index) {
+  @for (message of messages(); track message) {
     <div
       class="message {{ message.severity || '' }}"
       [class.clickable]="!!message.onClick"
       (click)="onMessageClick(message)"
+      (mouseenter)="onMouseEnter(message)"
+      (mouseleave)="onMouseLeave(message)"
+      (focusin)="onFocusIn(message)"
+      (focusout)="onFocusOut(message, $event)"
     >
       <div class="close-button-container">
         <button

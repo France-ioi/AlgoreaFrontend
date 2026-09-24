@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { NotificationBellComponent } from './notification-bell.component';
 import { fromNotification } from '../../store/notification';
-import { fromForum } from '../../forum/store';
 import { fetchingState, readyState, errorState } from 'src/app/utils/state';
-import { ForumNewMessageNotification } from 'src/app/models/notification';
+import {
+  ForumNewMessageNotification,
+  GroupResultsExportFailedNotification,
+  GroupResultsExportReadyNotification,
+  Notification,
+} from 'src/app/models/notification';
 import { MessageService } from 'src/app/services/message.service';
-import { itemRoute } from 'src/app/models/routing/item-route';
-import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationHttpService } from 'src/app/data-access/notification.service';
+import { NotificationInteractionService } from 'src/app/services/notification-interaction.service';
 
 const mockForumNotifications: ForumNewMessageNotification[] = [
   {
@@ -28,17 +30,59 @@ const mockForumNotifications: ForumNewMessageNotification[] = [
   },
 ];
 
+const readyExportNotification: GroupResultsExportReadyNotification = {
+  sk: 200,
+  notificationType: 'group_results_export.ready',
+  payload: {
+    exportId: 'exp-1',
+    groupId: 'g1',
+    groupName: 'Class A',
+    items: [ { id: 'i1', title: 'Chapter 1' } ],
+    filename: 'export.zip',
+    sizeBytes: 1024,
+    expiresAt: 1893456000000,
+  },
+};
+
+const expiredExportNotification: GroupResultsExportReadyNotification = {
+  ...readyExportNotification,
+  sk: 201,
+  payload: {
+    ...readyExportNotification.payload,
+    exportId: 'exp-expired',
+    expiresAt: 1577836800000,
+  },
+};
+
+const failedExportNotification: GroupResultsExportFailedNotification = {
+  sk: 202,
+  notificationType: 'group_results_export.failed',
+  payload: {
+    exportId: 'exp-2',
+    groupId: 'g1',
+    groupName: 'Class A',
+    items: [ { id: 'i1', title: 'Chapter 1' } ],
+    error: 'Timeout',
+  },
+};
+
 describe('NotificationBellComponent', () => {
   let component: NotificationBellComponent;
   let fixture: ComponentFixture<NotificationBellComponent>;
   let store: MockStore<object>;
-  let actions$: Subject<unknown>;
-  let getItemByIdService: jasmine.SpyObj<GetItemByIdService>;
+  let notificationInteraction: jasmine.SpyObj<NotificationInteractionService>;
 
   beforeEach(async () => {
-    actions$ = new Subject<unknown>();
-    getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', ['get']);
-    getItemByIdService.get.and.returnValue(of({ string: { title: 'Test Item' } } as Item));
+    notificationInteraction = jasmine.createSpyObj<NotificationInteractionService>(
+      'NotificationInteractionService',
+      [ 'activate$', 'clear$', 'isExportLinkExpired', 'isDownloading' ],
+    );
+    notificationInteraction.activate$.and.returnValue(of(undefined));
+    notificationInteraction.clear$.and.returnValue(of(undefined));
+    notificationInteraction.isExportLinkExpired.and.callFake(
+      (n: GroupResultsExportReadyNotification) => n.payload.expiresAt <= Date.now(),
+    );
+    notificationInteraction.isDownloading.and.returnValue(false);
 
     await TestBed.configureTestingModule({
       imports: [ NotificationBellComponent ],
@@ -48,10 +92,9 @@ describe('NotificationBellComponent', () => {
             { selector: fromNotification.selectNotificationsState, value: fetchingState() }
           ]
         }),
-        provideMockActions(() => actions$),
         { provide: MessageService, useValue: { add: jasmine.createSpy('add') } },
-        { provide: GetItemByIdService, useValue: getItemByIdService },
         { provide: NotificationHttpService, useValue: { deleteAllNotifications: () => of(undefined) } },
+        { provide: NotificationInteractionService, useValue: notificationInteraction },
       ]
     }).compileComponents();
 
@@ -105,16 +148,78 @@ describe('NotificationBellComponent', () => {
     expect(component.badgeText()).toEqual('0');
   });
 
-  it('should filter to forum.new_message notifications only', () => {
-    store.overrideSelector(fromNotification.selectNotificationsState, readyState(mockForumNotifications));
+  it('should keep forum, ready and failed exports while ignoring unknown types', () => {
+    const unknown: Notification = {
+      sk: 999,
+      notificationType: 'something.unknown',
+      payload: { foo: 'bar' },
+    };
+    store.overrideSelector(
+      fromNotification.selectNotificationsState,
+      readyState([ ...mockForumNotifications, readyExportNotification, failedExportNotification, unknown ]),
+    );
     store.refreshState();
     fixture.detectChanges();
+
     const state = component.notificationsState();
     expect(state.isReady).toBeTrue();
     if (state.isReady) {
-      expect(state.data.length).toEqual(2);
-      expect(state.data[0]?.payload.text).toEqual('Hello');
+      expect(state.data.map(n => n.notificationType)).toEqual([
+        'forum.new_message',
+        'forum.new_message',
+        'group_results_export.ready',
+        'group_results_export.failed',
+      ]);
     }
+    expect(component.readySummary(readyExportNotification)).toContain('Chapter 1');
+  });
+
+  it('should activate on row click for ready, failed, and forum', () => {
+    component.onNotificationClick(readyExportNotification);
+    component.onNotificationClick(failedExportNotification);
+    component.onNotificationClick(mockForumNotifications[0]!);
+
+    expect(notificationInteraction.activate$).toHaveBeenCalledWith(readyExportNotification);
+    expect(notificationInteraction.activate$).toHaveBeenCalledWith(failedExportNotification);
+    expect(notificationInteraction.activate$).toHaveBeenCalledWith(mockForumNotifications[0]!);
+  });
+
+  it('should clear without activating when trash is clicked', () => {
+    const event = jasmine.createSpyObj<MouseEvent>('MouseEvent', [ 'preventDefault', 'stopPropagation' ]);
+
+    component.onClearClick(event, readyExportNotification);
+
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(event.stopPropagation).toHaveBeenCalled();
+    expect(notificationInteraction.clear$).toHaveBeenCalledWith(200);
+    expect(notificationInteraction.activate$).not.toHaveBeenCalled();
+  });
+
+  it('should enable failed rows and show a trash button for every notification', () => {
+    store.overrideSelector(
+      fromNotification.selectNotificationsState,
+      readyState([ mockForumNotifications[0]!, readyExportNotification, failedExportNotification, expiredExportNotification ]),
+    );
+    store.refreshState();
+    fixture.detectChanges();
+
+    const trigger = fixture.debugElement.query(By.css('.bell-button'));
+    trigger.triggerEventHandler('click');
+    fixture.detectChanges();
+
+    const rows = document.querySelectorAll('.notification-row');
+    expect(rows.length).toBe(4);
+    rows.forEach(row => {
+      const item = row.querySelector('.notification-item');
+      expect(item).toBeTruthy();
+      expect(item?.getAttribute('aria-disabled')).toBeNull();
+      expect(item?.classList.contains('disabled')).toBeFalse();
+      const trash = row.querySelector('button.clear-button');
+      expect(trash).toBeTruthy();
+      expect(trash?.getAttribute('aria-label')).toBe('Clear notification');
+      expect(trash?.getAttribute('type')).toBe('button');
+      expect(item?.contains(trash)).toBeFalse();
+    });
   });
 
   it('should report isFetching true when fetching', () => {
@@ -129,52 +234,5 @@ describe('NotificationBellComponent', () => {
     store.refreshState();
     fixture.detectChanges();
     expect(component.notificationsState().isFetching).toBeFalse();
-  });
-
-  it('should dispatch showThread with fetched title when openThread is called', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const notification = mockForumNotifications[0]!;
-
-    component.openThread(notification);
-
-    expect(getItemByIdService.get).toHaveBeenCalledWith(notification.payload.itemId);
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      fromForum.notificationActions.showThread({
-        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
-        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Test Item' },
-      })
-    );
-  });
-
-  it('should dispatch showThread with forbidden message when item fetch is forbidden', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const notification = mockForumNotifications[0]!;
-    const forbiddenError = new HttpErrorResponse({ status: 403 });
-    getItemByIdService.get.and.returnValue(throwError(() => forbiddenError));
-
-    component.openThread(notification);
-
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      fromForum.notificationActions.showThread({
-        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
-        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Not visible content' },
-      })
-    );
-  });
-
-  it('should dispatch showThread with error message when item fetch fails', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const notification = mockForumNotifications[0]!;
-    const serverError = new HttpErrorResponse({ status: 500 });
-    getItemByIdService.get.and.returnValue(throwError(() => serverError));
-
-    component.openThread(notification);
-
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      fromForum.notificationActions.showThread({
-        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
-        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Error fetching content title' },
-      })
-    );
   });
 });

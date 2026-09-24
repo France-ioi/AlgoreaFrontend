@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { APPCONFIG } from '../config';
 import { IdentityTokenService } from '../services/auth/identity-token.service';
 import { Notification } from '../models/notification';
@@ -63,5 +63,36 @@ describe('NotificationHttpService', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('deleteNotification completes after one delete even when identityToken$ stays open', () => {
+    const token$ = new BehaviorSubject('mock-token');
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        { provide: APPCONFIG, useValue: { apiUrl: 'http://mock.api', slsApiUrl } },
+        { provide: IdentityTokenService, useValue: { identityToken$: token$.asObservable() } },
+      ],
+    });
+    const oneShotService = TestBed.inject(NotificationHttpService);
+    const http = TestBed.inject(HttpTestingController);
+
+    let completed = false;
+    oneShotService.deleteNotification(42).subscribe({
+      complete: () => {
+        completed = true;
+      },
+    });
+
+    const req = http.expectOne(`${slsApiUrl}/notifications/42`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush({ success: true });
+
+    expect(completed).toBeTrue();
+    token$.next('other-token');
+    http.expectNone(`${slsApiUrl}/notifications/42`);
+    http.verify();
   });
 });

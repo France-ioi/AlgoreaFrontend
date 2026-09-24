@@ -13,6 +13,8 @@ export class Toast {
     // the close button may already be gone by the time we try to click it; don't fail the test
     // on that — the next `not.toBeVisible()` assertion is the real post-condition.
     await messageRow.getByRole('button').click({ timeout: 1000 }).catch(() => undefined);
+    // Pause-on-hover: if the click missed, leave the toast so auto-dismiss can still fire.
+    await this.page.mouse.move(0, 0).catch(() => undefined);
     await expect.soft(messageRow).not.toBeVisible();
   }
 }

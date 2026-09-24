@@ -96,14 +96,13 @@
   padding: 0;
 }
 
-.notification-item {
+.notification-row {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: functions.toRem(12);
-  padding: functions.toRem(12) functions.toRem(16);
+  gap: functions.toRem(4);
+  padding-right: functions.toRem(8);
   border-bottom: functions.toRem(1) solid var(--alg-border-color, #e0e0e0);
-  cursor: pointer;
 
   &:last-child {
     border-bottom: none;
@@ -114,11 +113,31 @@
   }
 }
 
+.notification-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: functions.toRem(12);
+  padding: functions.toRem(12) functions.toRem(8) functions.toRem(12) functions.toRem(16);
+  cursor: pointer;
+}
+
 .notification-icon {
   flex-shrink: 0;
   font-size: functions.toRem(20);
   color: var(--alg-primary-color, #4a6cf5);
   margin-top: functions.toRem(2);
+
+  &.warning {
+    color: var(--warning-color, #f5a623);
+  }
+}
+
+.notification-secondary {
+  font-size: functions.toRem(12);
+  color: var(--alg-text-secondary, #666);
 }
 
 .notification-content {
@@ -149,4 +168,57 @@
 .notification-time {
   font-size: functions.toRem(12);
   color: var(--alg-text-secondary, #666);
+}
+
+.clear-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: functions.toRem(28);
+  height: functions.toRem(28);
+  margin-top: functions.toRem(10);
+  padding: 0;
+  border: none;
+  border-radius: functions.toRem(4);
+  background: transparent;
+  color: var(--alg-text-secondary, #666);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+
+  i {
+    font-size: functions.toRem(16);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--alg-primary-color, #4a6cf5);
+    background-color: var(--alg-bg-primary, white);
+  }
+
+  &:focus-visible {
+    outline: functions.toRem(2) solid var(--alg-primary-color, #4a6cf5);
+    outline-offset: functions.toRem(2);
+  }
+}
+
+@media (hover: hover) {
+  .notification-row:hover .clear-button {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.notification-row:focus-within .clear-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .clear-button {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

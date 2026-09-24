@@ -1,96 +1,179 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Subject, config as rxjsConfig, of, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Subject, of, throwError } from 'rxjs';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
-import { ProgressZipService } from 'src/app/data-access/progress-zip.service';
+import { APPCONFIG } from 'src/app/config';
+import {
+  GroupResultsExportRequest,
+  GroupResultsExportService,
+  GroupResultsTokenData,
+} from 'src/app/data-access/group-results-export.service';
 import { GroupProgressGridZipExportService } from './group-progress-grid-zip-export.service';
 
 describe('GroupProgressGridZipExportService', () => {
   let service: GroupProgressGridZipExportService;
-  let progressZipService: jasmine.SpyObj<ProgressZipService>;
+  let groupResultsExportService: jasmine.SpyObj<GroupResultsExportService>;
   let actionFeedbackService: jasmine.SpyObj<ActionFeedbackService>;
 
+  const tokenData: GroupResultsTokenData = { groupResultsToken: 'tok', expiresIn: 60 };
+  const exportData: GroupResultsExportRequest = {
+    exportId: 'exp-1',
+    expiresAt: 1893456000000,
+  };
+
   beforeEach(() => {
-    progressZipService = jasmine.createSpyObj('ProgressZipService', [ 'getZipData' ]);
-    actionFeedbackService = jasmine.createSpyObj('ActionFeedbackService', [ 'error', 'unexpectedError' ]);
+    groupResultsExportService = jasmine.createSpyObj('GroupResultsExportService', [
+      'getGroupResultsToken',
+      'requestExport',
+      'getDownloadUrl',
+    ]);
+    actionFeedbackService = jasmine.createSpyObj('ActionFeedbackService', [
+      'error',
+      'unexpectedError',
+      'success',
+    ]);
 
     TestBed.configureTestingModule({
       providers: [
         GroupProgressGridZipExportService,
-        { provide: ProgressZipService, useValue: progressZipService },
+        { provide: GroupResultsExportService, useValue: groupResultsExportService },
         { provide: ActionFeedbackService, useValue: actionFeedbackService },
+        {
+          provide: APPCONFIG,
+          useValue: {
+            featureFlags: { enableNotifications: true },
+            slsApiUrl: 'https://sls.example',
+          },
+        },
       ],
     });
     service = TestBed.inject(GroupProgressGridZipExportService);
   });
 
-  it('triggers download with parsed filename on success', () => {
-    const blob = new Blob([ 'zip-content' ], { type: 'application/zip' });
-    const response = new HttpResponse({
-      body: blob,
-      headers: new HttpHeaders({ 'Content-Disposition': 'attachment; filename="custom-export.zip"' }),
-    });
-    progressZipService.getZipData.and.returnValue(of(response));
-    const clickSpy = spyOn(HTMLAnchorElement.prototype, 'click').and.stub();
-    const createElementSpy = spyOn(document, 'createElement').and.callThrough();
+  it('chains token then requestExport and shows success feedback', () => {
+    groupResultsExportService.getGroupResultsToken.and.returnValue(of(tokenData));
+    groupResultsExportService.requestExport.and.returnValue(of(exportData));
 
     service.export('42', '210');
 
-    expect(createElementSpy).toHaveBeenCalledWith('a');
-    const anchor = createElementSpy.calls.mostRecent().returnValue as HTMLAnchorElement;
-    expect(anchor.download).toBe('custom-export.zip');
-    expect(clickSpy).toHaveBeenCalled();
-    expect(service.isFetching()).toBe(false);
-  });
-
-  it('throws on empty response body', async () => {
-    progressZipService.getZipData.and.returnValue(of(new HttpResponse<Blob>({ body: null })));
-    const previousHandler = rxjsConfig.onUnhandledError;
-    const errorPromise = new Promise<unknown>(resolve => {
-      rxjsConfig.onUnhandledError = resolve;
-    });
-
-    service.export('42', '210');
-    const error = await errorPromise;
-    rxjsConfig.onUnhandledError = previousHandler;
-
-    expect(String(error)).toMatch(/empty ZIP response body/);
+    expect(groupResultsExportService.getGroupResultsToken).toHaveBeenCalledWith('42', [ '210' ]);
+    expect(groupResultsExportService.requestExport).toHaveBeenCalledWith('tok', '42', [ '210' ]);
+    expect(actionFeedbackService.success).toHaveBeenCalledWith(
+      jasmine.stringMatching(/export requested/i),
+    );
     expect(service.isFetching()).toBe(false);
   });
 
   it('toggles isFetching via finalize', () => {
-    const response$ = new Subject<HttpResponse<Blob>>();
-    progressZipService.getZipData.and.returnValue(response$.asObservable());
+    const token$ = new Subject<GroupResultsTokenData>();
+    groupResultsExportService.getGroupResultsToken.and.returnValue(token$.asObservable());
+    groupResultsExportService.requestExport.and.returnValue(of(exportData));
 
     service.export('42', '210');
     expect(service.isFetching()).toBe(true);
 
-    response$.next(new HttpResponse({ body: new Blob([ 'zip' ]) }));
-    response$.complete();
+    token$.next(tokenData);
+    token$.complete();
 
     expect(service.isFetching()).toBe(false);
   });
 
-  it('routes blob HTTP errors to actionFeedbackService.error with mapped message', async () => {
-    const errorBlob = new Blob(
-      [ JSON.stringify({ error_text: 'Insufficient access rights' }) ],
-      { type: 'application/json' },
-    );
+  it('ignores overlapping export while isFetching', () => {
+    const token$ = new Subject<GroupResultsTokenData>();
+    groupResultsExportService.getGroupResultsToken.and.returnValue(token$.asObservable());
+
+    service.export('42', '210');
+    service.export('42', '210');
+
+    expect(groupResultsExportService.getGroupResultsToken).toHaveBeenCalledTimes(1);
+    token$.complete();
+  });
+
+  it('maps backend 403 errors to actionFeedbackService.error', () => {
     const httpError = new HttpErrorResponse({
-      error: errorBlob,
+      error: { error_text: 'Insufficient access rights' },
       status: 403,
       statusText: 'Forbidden',
     });
-    progressZipService.getZipData.and.returnValue(throwError(() => httpError));
+    groupResultsExportService.getGroupResultsToken.and.returnValue(throwError(() => httpError));
 
     service.export('42', '210');
-    await new Promise<void>(resolve => setTimeout(resolve, 50));
 
     expect(actionFeedbackService.error).toHaveBeenCalledWith(
       jasmine.stringMatching(/permission to export answers/i),
       undefined,
     );
     expect(actionFeedbackService.unexpectedError).not.toHaveBeenCalled();
+    expect(groupResultsExportService.requestExport).not.toHaveBeenCalled();
     expect(service.isFetching()).toBe(false);
+  });
+
+  it('maps serverless 503 errors after token success', () => {
+    groupResultsExportService.getGroupResultsToken.and.returnValue(of(tokenData));
+    groupResultsExportService.requestExport.and.returnValue(throwError(() => new HttpErrorResponse({
+      status: 503,
+      statusText: 'Service Unavailable',
+    })));
+
+    service.export('42', '210');
+
+    expect(actionFeedbackService.error).toHaveBeenCalledWith(
+      jasmine.stringMatching(/temporarily unavailable/i),
+      undefined,
+    );
+    expect(service.isFetching()).toBe(false);
+  });
+
+  it('maps missing slsApiUrl from requireSlsApiUrl to user feedback', () => {
+    groupResultsExportService.getGroupResultsToken.and.returnValue(of(tokenData));
+    groupResultsExportService.requestExport.and.returnValue(
+      throwError(() => new Error('slsApiUrl is not configured')),
+    );
+
+    service.export('42', '210');
+
+    expect(actionFeedbackService.error).toHaveBeenCalledWith(
+      jasmine.stringMatching(/not configured/i),
+      jasmine.anything(),
+    );
+    expect(service.isFetching()).toBe(false);
+  });
+});
+
+describe('GroupProgressGridZipExportService without notifications', () => {
+  it('does not start export when notifications are unavailable', () => {
+    TestBed.resetTestingModule();
+    const groupResultsExportService = jasmine.createSpyObj('GroupResultsExportService', [
+      'getGroupResultsToken',
+      'requestExport',
+    ]);
+    const actionFeedbackService = jasmine.createSpyObj('ActionFeedbackService', [
+      'error',
+      'unexpectedError',
+      'success',
+    ]);
+
+    TestBed.configureTestingModule({
+      providers: [
+        GroupProgressGridZipExportService,
+        { provide: GroupResultsExportService, useValue: groupResultsExportService },
+        { provide: ActionFeedbackService, useValue: actionFeedbackService },
+        {
+          provide: APPCONFIG,
+          useValue: {
+            featureFlags: { enableNotifications: false },
+            slsApiUrl: 'https://sls.example',
+          },
+        },
+      ],
+    });
+    const service = TestBed.inject(GroupProgressGridZipExportService);
+
+    service.export('42', '210');
+
+    expect(groupResultsExportService.getGroupResultsToken).not.toHaveBeenCalled();
+    expect(actionFeedbackService.error).toHaveBeenCalledWith(
+      jasmine.stringMatching(/notifications are disabled/i),
+    );
   });
 });

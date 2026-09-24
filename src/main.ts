@@ -31,7 +31,7 @@ import { timeOffsetComputationInterceptor } from './app/interceptors/time_offset
 import { fromTimeOffset } from './app/store/time-offset';
 import { fromNotification } from './app/store/notification';
 import {
-  notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects
+  notificationEffects, notificationWebsocketEffects, notificationThreadCleanupEffects, notificationToastEffects
 } from './app/store/notification/effects';
 import { fromCommunity } from './app/community/store';
 import { communityEffects, communityWsSubscriptionEffects, communityStatsEffects } from './app/community/store/effects';
@@ -90,6 +90,7 @@ bootstrapApplication(AppComponent, {
       notificationEffects,
       notificationWebsocketEffects,
       notificationThreadCleanupEffects,
+      notificationToastEffects,
       communityEffects,
       communityWsSubscriptionEffects,
       communityStatsEffects,

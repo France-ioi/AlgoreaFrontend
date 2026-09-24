@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, switchMap, Observable } from 'rxjs';
+import { map, switchMap, take, Observable } from 'rxjs';
 import { z } from 'zod';
 import { APPCONFIG } from '../config';
 import { IdentityTokenService } from '../services/auth/identity-token.service';
@@ -53,7 +53,10 @@ export class NotificationHttpService {
     if (!this.config.slsApiUrl) {
       throw new Error('slsApiUrl is not configured');
     }
+    // One-shot: take(1) so callers (forkJoin, take(1) toast clicks) complete and unsubscribe
+    // from the long-lived identityToken$ / userProfile$ chain.
     return this.identityTokenService.identityToken$.pipe(
+      take(1),
       switchMap(token => this.http.delete<SimpleActionResponse>(
         `${this.config.slsApiUrl}/notifications/${sk}`,
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -68,6 +71,7 @@ export class NotificationHttpService {
       throw new Error('slsApiUrl is not configured');
     }
     return this.identityTokenService.identityToken$.pipe(
+      take(1),
       switchMap(token => this.http.delete<SimpleActionResponse>(
         `${this.config.slsApiUrl}/notifications/all`,
         // eslint-disable-next-line @typescript-eslint/naming-convention
