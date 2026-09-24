@@ -19,7 +19,7 @@ describe('group-progress-grid-zip-export.display', () => {
   });
 
   it('maps machine failure codes to user-facing reasons', () => {
-    expect(mapExportFailureReason('too_many_users')).toMatch(/too many users/i);
+    expect(mapExportFailureReason('too_many_entries')).toMatch(/100/);
     expect(mapExportFailureReason('Timeout')).toMatch(/timed out/i);
     expect(mapExportFailureReason('weird-stack')).toMatch(/unexpected error/i);
     expect(exportFailedSummary('Class A', 'Timeout')).toMatch(/failed \(the export timed out\)/i);

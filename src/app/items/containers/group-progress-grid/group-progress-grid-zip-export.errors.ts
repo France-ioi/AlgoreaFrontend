@@ -22,18 +22,10 @@ export function readHttpActionError(error: unknown): { status: number, errorText
 }
 
 export function mapZipExportError(status: number, errorText?: string): ZipExportErrorFeedback {
-  if (errorText?.includes('The number of items exceeds the limit')) {
+  if (errorText?.includes('The number of user-item entries exceeds the limit')) {
     return {
       type: 'message',
-      message: $localize`Export is limited to 100 items. Open a sub-chapter, then export again from that chapter's progress page.`,
-      life: 10 * SECONDS,
-    };
-  }
-
-  if (errorText?.includes('The number of users exceeds the limit')) {
-    return {
-      type: 'message',
-      message: $localize`Export is limited to 100 users. Open a sub-group, then export again from that group's progress page.`,
+      message: $localize`Export is too large (users × items exceeds 100\u202f000). Narrow the group or the selected items.`,
       life: 10 * SECONDS,
     };
   }

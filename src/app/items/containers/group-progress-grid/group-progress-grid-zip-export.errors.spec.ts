@@ -12,20 +12,12 @@ describe('mapZipExportError', () => {
     messageIncludes?: string,
   }[] = [
     {
-      name: 'items limit',
+      name: 'user-item entries limit',
       status: 400,
-      errorText: 'The number of items exceeds the limit (100)',
+      errorText: 'The number of user-item entries exceeds the limit (100000)',
       expectedType: 'message',
       expectedLife: 10 * SECONDS,
-      messageIncludes: '100 items',
-    },
-    {
-      name: 'users limit',
-      status: 400,
-      errorText: 'The number of users exceeds the limit (100)',
-      expectedType: 'message',
-      expectedLife: 10 * SECONDS,
-      messageIncludes: '100 users',
+      messageIncludes: 'too large',
     },
     {
       name: '403 forbidden',

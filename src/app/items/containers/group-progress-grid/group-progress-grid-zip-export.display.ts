@@ -20,11 +20,8 @@ export function exportReadySummary(groupName: string, items: { title: string }[]
 
 export function mapExportFailureReason(error: string): string {
   const normalized = error.toLowerCase();
-  if (normalized.includes('too_many_users') || normalized.includes('users exceeds')) {
-    return $localize`too many users`;
-  }
-  if (normalized.includes('too_many_items') || normalized.includes('items exceeds')) {
-    return $localize`too many items`;
+  if (normalized.includes('too_many_entries') || normalized.includes('user-item entries exceeds')) {
+    return $localize`users × items exceeds 100\u202f000`;
   }
   if (normalized.includes('timeout')) {
     return $localize`the export timed out`;
