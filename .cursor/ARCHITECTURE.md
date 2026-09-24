@@ -346,7 +346,7 @@ origin (which would also let us drop the deprecated `--deploy-url` flag).
 - Real-time notifications via WebSocket (SLS API)
 - Notification bell component in top bar with unread count badge
 - Dropdown panel showing forum messages and group-results export ready/failed notifications
-- Toast notifications for new forum messages (clickable to open thread)
+- Toast notifications for displayable types by default (forum, export ready/failed) via a global store effect; display copy lives in `models/notification-display`
 - Async ZIP export is only offered when `enableNotifications` is on and `slsApiUrl` is set (retrieval is via the bell)
 - Export-ready notifications download via SLS `download-url` (https-only, new-tab anchor); expired links are marked in place
 - Forum notifications automatically cleared when visiting the relevant thread

@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
 import { of, Subject, throwError } from 'rxjs';
 import { NotificationBellComponent } from './notification-bell.component';
 import { fromNotification } from '../../store/notification';
@@ -84,13 +83,11 @@ describe('NotificationBellComponent', () => {
   let component: NotificationBellComponent;
   let fixture: ComponentFixture<NotificationBellComponent>;
   let store: MockStore<object>;
-  let actions$: Subject<unknown>;
   let getItemByIdService: jasmine.SpyObj<GetItemByIdService>;
   let groupResultsExportService: jasmine.SpyObj<GroupResultsExportService>;
   let messageService: { add: jasmine.Spy };
 
   beforeEach(async () => {
-    actions$ = new Subject<unknown>();
     getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
     getItemByIdService.get.and.returnValue(of({ string: { title: 'Test Item' } } as Item));
     groupResultsExportService = jasmine.createSpyObj('GroupResultsExportService', [ 'getDownloadUrl' ]);
@@ -104,7 +101,6 @@ describe('NotificationBellComponent', () => {
             { selector: fromNotification.selectNotificationsState, value: fetchingState() }
           ]
         }),
-        provideMockActions(() => actions$),
         { provide: MessageService, useValue: messageService },
         { provide: GetItemByIdService, useValue: getItemByIdService },
         { provide: NotificationHttpService, useValue: { deleteAllNotifications: () => of(undefined) } },

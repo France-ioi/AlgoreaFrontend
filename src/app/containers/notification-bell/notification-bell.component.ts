@@ -2,11 +2,9 @@ import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
-import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { catchError, filter, finalize, map, of } from 'rxjs';
-import { fromNotification, notificationApiActions, notificationWebsocketActions } from '../../store/notification';
-import { fromForum } from '../../forum/store';
+import { finalize } from 'rxjs';
+import { fromNotification, notificationApiActions } from '../../store/notification';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
@@ -20,19 +18,19 @@ import {
   isGroupResultsExportFailedNotification,
   isGroupResultsExportReadyNotification,
 } from 'src/app/models/notification';
-import { mapStateData } from 'src/app/utils/state';
-import { MessageService } from 'src/app/services/message.service';
-import { itemRoute } from 'src/app/models/routing/item-route';
-import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { GroupResultsExportService } from 'src/app/data-access/group-results-export.service';
-import { errorIsHTTPForbidden, errorIsHTTPNotFound } from 'src/app/utils/errors';
-import { NotificationHttpService } from 'src/app/data-access/notification.service';
-import { openHttpsDownloadUrl } from 'src/app/utils/open-https-download-url';
 import {
   exportFailedSummary,
   exportReadySummary,
   isExportExpiresAtPast,
-} from 'src/app/items/containers/group-progress-grid/group-progress-grid-zip-export.display';
+} from 'src/app/models/notification-display';
+import { mapStateData } from 'src/app/utils/state';
+import { MessageService } from 'src/app/services/message.service';
+import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
+import { GroupResultsExportService } from 'src/app/data-access/group-results-export.service';
+import { errorIsHTTPNotFound } from 'src/app/utils/errors';
+import { NotificationHttpService } from 'src/app/data-access/notification.service';
+import { openHttpsDownloadUrl } from 'src/app/utils/open-https-download-url';
+import { openForumThreadFromNotification$ } from 'src/app/forum/utils/open-forum-thread-from-notification';
 
 @Component({
   selector: 'alg-notification-bell',
@@ -51,7 +49,6 @@ import {
 })
 export class NotificationBellComponent {
   private store = inject(Store);
-  private actions$ = inject(Actions);
   private messageService = inject(MessageService);
   private getItemByIdService = inject(GetItemByIdService);
   private notificationService = inject(NotificationHttpService);
@@ -79,23 +76,6 @@ export class NotificationBellComponent {
     }
   });
 
-  constructor() {
-    this.actions$.pipe(
-      ofType(notificationWebsocketActions.notificationReceived),
-      filter(({ notification }) => isForumNewMessageNotification(notification)),
-      takeUntilDestroyed(),
-    ).subscribe(({ notification }) => {
-      if (isForumNewMessageNotification(notification)) {
-        this.messageService.add({
-          severity: 'info',
-          summary: $localize`New message`,
-          detail: notification.payload.text,
-          onClick: () => this.openThread(notification),
-        });
-      }
-    });
-  }
-
   isExportLinkExpired(notification: GroupResultsExportReadyNotification): boolean {
     if (this.expiredExportIds().has(notification.payload.exportId)) return true;
     return isExportExpiresAtPast(notification.payload.expiresAt);
@@ -119,20 +99,9 @@ export class NotificationBellComponent {
   }
 
   openThread(notification: ForumNewMessageNotification): void {
-    const { participantId, itemId } = notification.payload;
-    this.getItemByIdService.get(itemId).pipe(
-      map(item => item.string.title),
-      catchError(err => of(errorIsHTTPForbidden(err)
-        ? $localize`Not visible content`
-        : $localize`Error fetching content title`
-      )),
+    openForumThreadFromNotification$(notification, this.getItemByIdService, this.store).pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(title => {
-      this.store.dispatch(fromForum.notificationActions.showThread({
-        id: { participantId, itemId },
-        item: { route: itemRoute('activity', itemId), title },
-      }));
-    });
+    ).subscribe();
   }
 
   onNotificationClick(notification: DisplayableNotification): void {

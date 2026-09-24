@@ -3,9 +3,9 @@ import {
   exportReadySummary,
   isExportExpiresAtPast,
   mapExportFailureReason,
-} from './group-progress-grid-zip-export.display';
+} from './notification-display';
 
-describe('group-progress-grid-zip-export.display', () => {
+describe('notification-display', () => {
   it('treats invalid or past expiresAt as expired', () => {
     const now = Date.parse('2025-01-01T00:00:00.000Z');
     expect(isExportExpiresAtPast(Number.NaN, now)).toBeTrue();
