@@ -1,35 +1,31 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import { take, tap } from 'rxjs';
-import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { openForumThreadFromNotification$ } from 'src/app/forum/utils/open-forum-thread-from-notification';
-import { isForumNewMessageNotification } from 'src/app/models/notification';
+import { isDisplayableNotification } from 'src/app/models/notification';
 import { MessageService } from 'src/app/services/message.service';
+import { NotificationInteractionService } from 'src/app/services/notification-interaction.service';
 import { notificationWebsocketActions } from './notification.actions';
 import { toastMessageForNotification } from './notification-toast';
 
 /**
  * Shows a toast for every displayable notification by default.
- * Forum toasts stay clickable to open the thread; other types are informational.
+ * Click runs the shared activate path (forum → open thread; export → download/clear).
+ * Dismiss (X) only hides the toast; the notification stays in the bell.
  */
 export const showNotificationToastEffect = createEffect(
   (
     actions$ = inject(Actions),
     messageService = inject(MessageService),
-    getItemByIdService = inject(GetItemByIdService),
-    store = inject(Store),
+    notificationInteraction = inject(NotificationInteractionService),
   ) => actions$.pipe(
     ofType(notificationWebsocketActions.notificationReceived),
     tap(({ notification }) => {
       const message = toastMessageForNotification(notification);
       if (!message) return;
 
-      if (isForumNewMessageNotification(notification)) {
+      if (isDisplayableNotification(notification)) {
         message.onClick = (): void => {
-          openForumThreadFromNotification$(notification, getItemByIdService, store)
-            .pipe(take(1))
-            .subscribe();
+          notificationInteraction.activate$(notification).pipe(take(1)).subscribe();
         };
       }
 

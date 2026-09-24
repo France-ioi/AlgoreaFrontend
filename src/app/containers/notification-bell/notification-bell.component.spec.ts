@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { of, Subject, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { NotificationBellComponent } from './notification-bell.component';
 import { fromNotification } from '../../store/notification';
-import { fromForum } from '../../forum/store';
 import { fetchingState, readyState, errorState } from 'src/app/utils/state';
 import {
   ForumNewMessageNotification,
@@ -12,11 +12,8 @@ import {
   Notification,
 } from 'src/app/models/notification';
 import { MessageService } from 'src/app/services/message.service';
-import { itemRoute } from 'src/app/models/routing/item-route';
-import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationHttpService } from 'src/app/data-access/notification.service';
-import { GroupResultsExportService } from 'src/app/data-access/group-results-export.service';
+import { NotificationInteractionService } from 'src/app/services/notification-interaction.service';
 
 const mockForumNotifications: ForumNewMessageNotification[] = [
   {
@@ -57,16 +54,6 @@ const expiredExportNotification: GroupResultsExportReadyNotification = {
   },
 };
 
-const invalidExpiryNotification: GroupResultsExportReadyNotification = {
-  ...readyExportNotification,
-  sk: 203,
-  payload: {
-    ...readyExportNotification.payload,
-    exportId: 'exp-invalid',
-    expiresAt: Number.NaN,
-  },
-};
-
 const failedExportNotification: GroupResultsExportFailedNotification = {
   sk: 202,
   notificationType: 'group_results_export.failed',
@@ -83,15 +70,19 @@ describe('NotificationBellComponent', () => {
   let component: NotificationBellComponent;
   let fixture: ComponentFixture<NotificationBellComponent>;
   let store: MockStore<object>;
-  let getItemByIdService: jasmine.SpyObj<GetItemByIdService>;
-  let groupResultsExportService: jasmine.SpyObj<GroupResultsExportService>;
-  let messageService: { add: jasmine.Spy };
+  let notificationInteraction: jasmine.SpyObj<NotificationInteractionService>;
 
   beforeEach(async () => {
-    getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
-    getItemByIdService.get.and.returnValue(of({ string: { title: 'Test Item' } } as Item));
-    groupResultsExportService = jasmine.createSpyObj('GroupResultsExportService', [ 'getDownloadUrl' ]);
-    messageService = { add: jasmine.createSpy('add') };
+    notificationInteraction = jasmine.createSpyObj<NotificationInteractionService>(
+      'NotificationInteractionService',
+      [ 'activate$', 'clear$', 'isExportLinkExpired', 'isDownloading' ],
+    );
+    notificationInteraction.activate$.and.returnValue(of(undefined));
+    notificationInteraction.clear$.and.returnValue(of(undefined));
+    notificationInteraction.isExportLinkExpired.and.callFake(
+      (n: GroupResultsExportReadyNotification) => n.payload.expiresAt <= Date.now(),
+    );
+    notificationInteraction.isDownloading.and.returnValue(false);
 
     await TestBed.configureTestingModule({
       imports: [ NotificationBellComponent ],
@@ -101,10 +92,9 @@ describe('NotificationBellComponent', () => {
             { selector: fromNotification.selectNotificationsState, value: fetchingState() }
           ]
         }),
-        { provide: MessageService, useValue: messageService },
-        { provide: GetItemByIdService, useValue: getItemByIdService },
+        { provide: MessageService, useValue: { add: jasmine.createSpy('add') } },
         { provide: NotificationHttpService, useValue: { deleteAllNotifications: () => of(undefined) } },
-        { provide: GroupResultsExportService, useValue: groupResultsExportService },
+        { provide: NotificationInteractionService, useValue: notificationInteraction },
       ]
     }).compileComponents();
 
@@ -184,63 +174,52 @@ describe('NotificationBellComponent', () => {
     expect(component.readySummary(readyExportNotification)).toContain('Chapter 1');
   });
 
-  it('should treat past and invalid expiresAt as expired', () => {
-    expect(component.isExportLinkExpired(expiredExportNotification)).toBeTrue();
-    expect(component.isExportLinkExpired(invalidExpiryNotification)).toBeTrue();
-    expect(component.isExportLinkExpired(readyExportNotification)).toBeFalse();
-    expect(component.isNotificationDisabled(expiredExportNotification)).toBeTrue();
-    expect(component.isNotificationDisabled(failedExportNotification)).toBeTrue();
+  it('should activate on row click for ready, failed, and forum', () => {
+    component.onNotificationClick(readyExportNotification);
+    component.onNotificationClick(failedExportNotification);
+    component.onNotificationClick(mockForumNotifications[0]!);
+
+    expect(notificationInteraction.activate$).toHaveBeenCalledWith(readyExportNotification);
+    expect(notificationInteraction.activate$).toHaveBeenCalledWith(failedExportNotification);
+    expect(notificationInteraction.activate$).toHaveBeenCalledWith(mockForumNotifications[0]!);
   });
 
-  it('should download export on click via https open helper', () => {
-    groupResultsExportService.getDownloadUrl.and.returnValue(of('https://cdn.example/file.zip'));
-    const openSpy = spyOn(component, 'openDownloadUrl').and.returnValue(true);
+  it('should clear without activating when trash is clicked', () => {
+    const event = jasmine.createSpyObj<MouseEvent>('MouseEvent', [ 'preventDefault', 'stopPropagation' ]);
 
-    component.downloadExport(readyExportNotification);
+    component.onClearClick(event, readyExportNotification);
 
-    expect(groupResultsExportService.getDownloadUrl).toHaveBeenCalledWith('exp-1');
-    expect(openSpy).toHaveBeenCalledWith('https://cdn.example/file.zip');
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(event.stopPropagation).toHaveBeenCalled();
+    expect(notificationInteraction.clear$).toHaveBeenCalledWith(200);
+    expect(notificationInteraction.activate$).not.toHaveBeenCalled();
   });
 
-  it('should not call getDownloadUrl for expired exports', () => {
-    component.downloadExport(expiredExportNotification);
-    expect(groupResultsExportService.getDownloadUrl).not.toHaveBeenCalled();
-  });
-
-  it('should ignore overlapping download while one is in flight', () => {
-    const download$ = new Subject<string>();
-    groupResultsExportService.getDownloadUrl.and.returnValue(download$.asObservable());
-
-    component.downloadExport(readyExportNotification);
-    component.downloadExport(readyExportNotification);
-
-    expect(groupResultsExportService.getDownloadUrl).toHaveBeenCalledTimes(1);
-    download$.next('https://cdn.example/file.zip');
-    download$.complete();
-  });
-
-  it('should mark export expired in place on download-url 404', () => {
-    groupResultsExportService.getDownloadUrl.and.returnValue(
-      throwError(() => new HttpErrorResponse({ status: 404 })),
+  it('should enable failed rows and show a trash button for every notification', () => {
+    store.overrideSelector(
+      fromNotification.selectNotificationsState,
+      readyState([ mockForumNotifications[0]!, readyExportNotification, failedExportNotification, expiredExportNotification ]),
     );
+    store.refreshState();
+    fixture.detectChanges();
 
-    component.downloadExport(readyExportNotification);
+    const trigger = fixture.debugElement.query(By.css('.bell-button'));
+    trigger.triggerEventHandler('click');
+    fixture.detectChanges();
 
-    expect(component.isExportLinkExpired(readyExportNotification)).toBeTrue();
-    expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({
-      detail: jasmine.stringMatching(/expired/i),
-    }));
-  });
-
-  it('should toast when openDownloadUrl rejects a non-https URL', () => {
-    groupResultsExportService.getDownloadUrl.and.returnValue(of('http://insecure.example/x'));
-    spyOn(component, 'openDownloadUrl').and.callThrough();
-
-    component.downloadExport(readyExportNotification);
-
-    expect(messageService.add).toHaveBeenCalledWith(jasmine.objectContaining({
-      detail: jasmine.stringMatching(/failed to download/i),
-    }));
+    const rows = document.querySelectorAll('.notification-row');
+    expect(rows.length).toBe(4);
+    rows.forEach(row => {
+      const item = row.querySelector('.notification-item');
+      expect(item).toBeTruthy();
+      expect(item?.getAttribute('aria-disabled')).toBeNull();
+      expect(item?.classList.contains('disabled')).toBeFalse();
+      const trash = row.querySelector('button.clear-button');
+      expect(trash).toBeTruthy();
+      expect(trash?.getAttribute('aria-label')).toBe('Clear notification');
+      expect(trash?.getAttribute('type')).toBe('button');
+      expect(item?.contains(trash)).toBeFalse();
+    });
   });
 
   it('should report isFetching true when fetching', () => {
@@ -255,52 +234,5 @@ describe('NotificationBellComponent', () => {
     store.refreshState();
     fixture.detectChanges();
     expect(component.notificationsState().isFetching).toBeFalse();
-  });
-
-  it('should dispatch showThread with fetched title when openThread is called', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const notification = mockForumNotifications[0]!;
-
-    component.openThread(notification);
-
-    expect(getItemByIdService.get).toHaveBeenCalledWith(notification.payload.itemId);
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      fromForum.notificationActions.showThread({
-        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
-        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Test Item' },
-      })
-    );
-  });
-
-  it('should dispatch showThread with forbidden message when item fetch is forbidden', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const notification = mockForumNotifications[0]!;
-    const forbiddenError = new HttpErrorResponse({ status: 403 });
-    getItemByIdService.get.and.returnValue(throwError(() => forbiddenError));
-
-    component.openThread(notification);
-
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      fromForum.notificationActions.showThread({
-        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
-        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Not visible content' },
-      })
-    );
-  });
-
-  it('should dispatch showThread with error message when item fetch fails', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const notification = mockForumNotifications[0]!;
-    const serverError = new HttpErrorResponse({ status: 500 });
-    getItemByIdService.get.and.returnValue(throwError(() => serverError));
-
-    component.openThread(notification);
-
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      fromForum.notificationActions.showThread({
-        id: { participantId: notification.payload.participantId, itemId: notification.payload.itemId },
-        item: { route: itemRoute('activity', notification.payload.itemId), title: 'Error fetching content title' },
-      })
-    );
   });
 });

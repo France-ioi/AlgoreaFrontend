@@ -1,8 +1,12 @@
 import { of } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
-import { ForumNewMessageNotification, GroupResultsExportReadyNotification } from 'src/app/models/notification';
+import {
+  ForumNewMessageNotification,
+  GroupResultsExportFailedNotification,
+  GroupResultsExportReadyNotification,
+} from 'src/app/models/notification';
 import { MessageService } from 'src/app/services/message.service';
+import { NotificationInteractionService } from 'src/app/services/notification-interaction.service';
 import { notificationWebsocketActions } from './notification.actions';
 import { showNotificationToastEffect } from './notification-toast.effects';
 
@@ -37,78 +41,88 @@ const readyNotification: GroupResultsExportReadyNotification = {
   },
 };
 
+const failedNotification: GroupResultsExportFailedNotification = {
+  sk: 3,
+  notificationType: 'group_results_export.failed',
+  payload: {
+    exportId: 'exp-2',
+    groupId: 'g1',
+    groupName: 'Class A',
+    items: [ { id: 'i1', title: 'Chapter 1' } ],
+    error: 'Timeout',
+  },
+};
+
 describe('showNotificationToastEffect', () => {
-  it('toasts forum and export notifications and attaches forum onClick', () => {
+  it('toasts forum and export notifications with onClick for each', () => {
     testScheduler.run(({ hot, flush }) => {
       const messageService = jasmine.createSpyObj<MessageService>('MessageService', [ 'add' ]);
-      const getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
-      const store = jasmine.createSpyObj('Store', [ 'dispatch' ]);
-      const actions$ = hot('-a-b-|', {
+      const notificationInteraction = jasmine.createSpyObj<NotificationInteractionService>(
+        'NotificationInteractionService',
+        [ 'activate$' ],
+      );
+      notificationInteraction.activate$.and.returnValue(of(undefined));
+      const actions$ = hot('-a-b-c-|', {
         a: notificationWebsocketActions.notificationReceived({ notification: forumNotification }),
         b: notificationWebsocketActions.notificationReceived({ notification: readyNotification }),
+        c: notificationWebsocketActions.notificationReceived({ notification: failedNotification }),
       });
 
-      showNotificationToastEffect(
-        actions$,
-        messageService,
-        getItemByIdService,
-        store as never,
-      ).subscribe();
+      showNotificationToastEffect(actions$, messageService, notificationInteraction).subscribe();
       flush();
 
-      expect(messageService.add).toHaveBeenCalledTimes(2);
-      const forumToast = messageService.add.calls.argsFor(0)[0];
-      expect(forumToast.summary).toBe('New message');
-      expect(forumToast.onClick).toEqual(jasmine.any(Function));
-
-      const exportToast = messageService.add.calls.argsFor(1)[0];
-      expect(exportToast.summary).toBe('Export ready');
-      expect(exportToast.onClick).toBeUndefined();
+      expect(messageService.add).toHaveBeenCalledTimes(3);
+      expect(messageService.add.calls.argsFor(0)[0].onClick).toEqual(jasmine.any(Function));
+      expect(messageService.add.calls.argsFor(1)[0].onClick).toEqual(jasmine.any(Function));
+      expect(messageService.add.calls.argsFor(2)[0].onClick).toEqual(jasmine.any(Function));
     });
   });
 
   it('does not toast unknown notification types', () => {
     testScheduler.run(({ hot, flush }) => {
       const messageService = jasmine.createSpyObj<MessageService>('MessageService', [ 'add' ]);
+      const notificationInteraction = jasmine.createSpyObj<NotificationInteractionService>(
+        'NotificationInteractionService',
+        [ 'activate$' ],
+      );
       const actions$ = hot('-a-|', {
         a: notificationWebsocketActions.notificationReceived({
           notification: { sk: 9, notificationType: 'something.unknown', payload: {} },
         }),
       });
 
-      showNotificationToastEffect(
-        actions$,
-        messageService,
-        {} as GetItemByIdService,
-        {} as never,
-      ).subscribe();
+      showNotificationToastEffect(actions$, messageService, notificationInteraction).subscribe();
       flush();
 
       expect(messageService.add).not.toHaveBeenCalled();
     });
   });
 
-  it('opens the forum thread when the toast is clicked', () => {
+  it('activates the notification when the toast is clicked', () => {
     testScheduler.run(({ hot, flush }) => {
       const messageService = jasmine.createSpyObj<MessageService>('MessageService', [ 'add' ]);
-      const getItemByIdService = jasmine.createSpyObj<GetItemByIdService>('GetItemByIdService', [ 'get' ]);
-      getItemByIdService.get.and.returnValue(of({ string: { title: 'Activity' } } as Item));
-      const store = jasmine.createSpyObj('Store', [ 'dispatch' ]);
-      const actions$ = hot('-a-|', {
+      const notificationInteraction = jasmine.createSpyObj<NotificationInteractionService>(
+        'NotificationInteractionService',
+        [ 'activate$' ],
+      );
+      notificationInteraction.activate$.and.returnValue(of(undefined));
+      const actions$ = hot('-a-b-c-|', {
         a: notificationWebsocketActions.notificationReceived({ notification: forumNotification }),
+        b: notificationWebsocketActions.notificationReceived({ notification: readyNotification }),
+        c: notificationWebsocketActions.notificationReceived({ notification: failedNotification }),
       });
 
-      showNotificationToastEffect(
-        actions$,
-        messageService,
-        getItemByIdService,
-        store as never,
-      ).subscribe();
+      showNotificationToastEffect(actions$, messageService, notificationInteraction).subscribe();
       flush();
 
       messageService.add.calls.argsFor(0)[0].onClick?.();
-      expect(getItemByIdService.get).toHaveBeenCalledWith('i1');
-      expect(store.dispatch).toHaveBeenCalled();
+      expect(notificationInteraction.activate$).toHaveBeenCalledWith(forumNotification);
+
+      messageService.add.calls.argsFor(1)[0].onClick?.();
+      expect(notificationInteraction.activate$).toHaveBeenCalledWith(readyNotification);
+
+      messageService.add.calls.argsFor(2)[0].onClick?.();
+      expect(notificationInteraction.activate$).toHaveBeenCalledWith(failedNotification);
     });
   });
 });
