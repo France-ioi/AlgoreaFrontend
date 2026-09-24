@@ -40,8 +40,8 @@ function toastMessageForDisplayableNotification(notification: DisplayableNotific
         detail: exportFailedSummary(notification.payload.groupName, notification.payload.error),
       };
     default: {
-      const _exhaustive: never = notification;
-      return _exhaustive;
+      const exhaustiveCheck: never = notification;
+      return exhaustiveCheck;
     }
   }
 }
