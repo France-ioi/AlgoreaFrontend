@@ -1,4 +1,4 @@
-import { test as base } from './fixture';
+import { test as base, expect } from './fixture';
 
 interface ItemData {
   itemName: string,
@@ -6,6 +6,8 @@ interface ItemData {
 }
 
 interface CreateGroupFixtures {
+  /** Creation type label passed to alg-add-content (exact match). Default: Chapter. */
+  itemCreationType: string,
   createItem: ItemData | undefined,
   deleteItem: ItemData | undefined,
 }
@@ -13,7 +15,8 @@ interface CreateGroupFixtures {
 export const rootItemId = '1751831682141956756';
 
 export const test = base.extend<CreateGroupFixtures>({
-  createItem: async ({ itemContentPage }, use) => {
+  itemCreationType: [ 'Chapter', { option: true }],
+  createItem: async ({ itemContentPage, itemCreationType }, use) => {
     const itemName = `E2E_Item_${ Date.now() }`;
     await Promise.all([
       itemContentPage.goto(`a/${rootItemId};p=;a=0/edit-children`),
@@ -22,16 +25,30 @@ export const test = base.extend<CreateGroupFixtures>({
     await itemContentPage.waitForChildrenResponse(rootItemId, 'attempt_id=0&show_invisible_items=1');
     await itemContentPage.checksIsItemChildrenEditListVisible();
     await itemContentPage.checksIsAddContentVisible();
-    const itemId = await itemContentPage.createChildItem(itemName);
+    const itemId = await itemContentPage.createChildItem(itemName, itemCreationType);
     if (itemId) await use({ itemName, itemId });
   },
-  deleteItem: async ({ itemContentPage, createItem }, use) => {
+  deleteItem: async ({ page, itemContentPage, createItem }, use) => {
     if (!createItem) return;
+    // Chapter deletion needs a selected attempt to check emptiness. Explicit-entry items have no
+    // attempt until started, so resolve/create one before opening Parameters.
     await Promise.all([
-      itemContentPage.goto(`a/${createItem.itemId};p=${rootItemId};pa=0/parameters`),
+      itemContentPage.goto(`a/${createItem.itemId};p=${rootItemId};pa=0`),
       itemContentPage.waitForItemResponse(createItem.itemId),
-      itemContentPage.waitForChildrenResponse(createItem.itemId),
     ]);
+    const startBtn = page.getByRole('button', { name: 'Start this activity' });
+    if (await startBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await Promise.all([
+        startBtn.click(),
+        page.waitForResponse(response =>
+          response.request().method() === 'POST' &&
+          /\/items\/[\d/]+\/attempts\?/.test(response.url()) &&
+          response.ok()
+        ),
+      ]);
+    }
+    await expect.poll(() => /(?:^|[;/])a=\d+/.test(page.url()), { timeout: 15000 }).toBe(true);
+    await itemContentPage.openParametersTab();
     await itemContentPage.checksIsDeleteButtonVisible();
     // `deleteItem` already waits for the DELETE response, and the next assertion below
     // (`checksIsTitleVisible('E2E-generated-items')`) proves the post-deletion navigation

@@ -16,6 +16,7 @@ export class ItemContentPage {
   cancelBtnLocator = this.page.getByRole('button', { name: 'Cancel' });
   addItemLocator = this.page.locator('alg-add-item').filter({ hasText: 'Add a content' });
   deleteItemBtnLocator = this.page.getByRole('button', { name: 'Delete this item' });
+  explicitEntryLocator = this.page.locator('alg-explicit-entry');
 
   constructor(private readonly page: Page) {
   }
@@ -172,7 +173,55 @@ export class ItemContentPage {
   }
 
   async checksExplicitEntryIsVisible(): Promise<void> {
-    await expect.soft(this.page.locator('alg-explicit-entry')).toBeVisible();
+    await expect.soft(this.explicitEntryLocator).toBeVisible();
+  }
+
+  async checksOwnerManualEntryGateVisible(options?: { withEditChildrenPhrase?: boolean }): Promise<void> {
+    const withEditChildren = options?.withEditChildrenPhrase ?? true;
+    const entry = this.explicitEntryLocator;
+    await expect.soft(entry).toBeVisible();
+    if (withEditChildren) {
+      await expect.soft(entry.getByText('This content requires manual entry (including for editing children).')).toBeVisible();
+    } else {
+      await expect.soft(entry.getByText('This content requires manual entry.', { exact: true })).toBeVisible();
+    }
+    // Button accessible name appends the Phosphor icon glyph; do not use exact: true.
+    await expect.soft(entry.getByRole('button', { name: 'Start this activity' })).toBeVisible();
+  }
+
+  async checksRegularEnterNotAllowedVisible(): Promise<void> {
+    const entry = this.explicitEntryLocator;
+    await expect.soft(entry.getByText('You are not allowed to start the activity for now.')).toBeVisible();
+    await expect.soft(entry.getByRole('button', { name: 'Enter now' })).toBeDisabled();
+  }
+
+  async checksAlreadyStartedAdviceVisible(): Promise<void> {
+    const entry = this.explicitEntryLocator;
+    await expect.soft(entry.getByText(/You have already started the activity/)).toBeVisible();
+    await expect.soft(entry.getByRole('button', { name: 'Enter now' })).toBeDisabled();
+  }
+
+  async clickStartThisActivity(): Promise<void> {
+    await this.explicitEntryLocator.getByRole('button', { name: 'Start this activity' }).click();
+  }
+
+  async openContentTab(): Promise<void> {
+    const contentTabLocator = this.page.getByRole('link', { name: 'Content' });
+    await expect(contentTabLocator).toBeVisible();
+    await contentTabLocator.click();
+  }
+
+  async openAttemptsTab(): Promise<void> {
+    const attemptsTabLocator = this.page.getByRole('link', { name: 'Attempts' });
+    await expect(attemptsTabLocator).toBeVisible();
+    await attemptsTabLocator.click();
+  }
+
+  async enableAllowMultipleAttemptsAndSave(): Promise<void> {
+    const switchLocator = this.page.getByTestId('allow-multiple-attempts').locator('alg-switch');
+    await expect(switchLocator).toBeVisible();
+    await switchLocator.click();
+    await this.saveChangesAndCheckNotification();
   }
 
   async checksTaskNotCorrectlyConfiguredMessageIsVisible(): Promise<void> {
@@ -247,6 +296,14 @@ export class ItemContentPage {
     const inputLocator = this.page.getByPlaceholder('Enter a title to create a new child');
     await expect.soft(inputLocator).toBeVisible();
     await inputLocator.fill(name);
+    // Prefer the type card button (accessible name includes title; description may follow).
+    // Fall back to exact title text for short labels like "Chapter".
+    const typeButton = this.page.locator('alg-add-content').getByRole('button', { name: type });
+    if (await typeButton.count() > 0) {
+      await expect.soft(typeButton.first()).toBeVisible();
+      await typeButton.first().click();
+      return;
+    }
     // Exact match: "Chapter" must not also match "Chapter with manual participation".
     const classBtnLocator = this.page.locator('alg-add-content').getByText(type, { exact: true });
     await expect.soft(classBtnLocator).toBeVisible();
