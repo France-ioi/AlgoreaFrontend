@@ -1,9 +1,30 @@
-@let item = itemData().item;
+@if (canStartDirectly()) {
+  <p>
+    @if (canEditChildren()) {
+      <ng-container i18n>This content requires manual entry (including for editing children).</ng-container>
+    } @else {
+      <ng-container i18n>This content requires manual entry.</ng-container>
+    }
+  </p>
+  <button
+    class="size-l"
+    icon="ph-bold ph-play"
+    [disabled]="actionInProgress()"
+    (click)="startDirectly(itemData().route)"
+    alg-button
+  >
+    @if (isTimeLimited()) {
+      <ng-container i18n>Start this activity without time constraints</ng-container>
+    } @else {
+      <ng-container i18n>Start this activity</ng-container>
+    }
+  </button>
+}
 
-@if (item | isTeamActivity) {
+@if (isTeamActivityItem()) {
   <p i18n>Team activities are currently not supported</p>
 }
-@else {
+@else if (showRegularEntry()) {
   @let entryStateFetchState = entryStateState();
 
   @if (entryStateFetchState.isError) {
@@ -33,7 +54,7 @@
     <button
       class="size-l"
       icon="ph-bold ph-door"
-      [disabled]="enterActivityInProgress() || !(entryState | canEnterNow)"
+      [disabled]="actionInProgress() || !(entryState | canEnterNow)"
       (click)="enterActivity(itemData().route)"
       alg-button
     i18n>Enter now</button>
