@@ -20,6 +20,7 @@ type BaseChildData = Partial<ItemPermPropagations> & {
   scoreWeight: number,
   permissions?: ItemCorePerm,
   type: ItemType,
+  requiresExplicitEntry?: boolean,
 };
 interface InvisibleChildData extends BaseChildData {
   id: string,
@@ -30,7 +31,6 @@ interface ChildData extends BaseChildData {
   isVisible: true,
   title: string | null,
   url?: string,
-  requiresExplicitEntry?: boolean,
   result?: {
     attemptId: string,
     validated: boolean,
@@ -90,6 +90,7 @@ export class ItemChildrenEditComponent {
           watchPropagation: child.watchPropagation,
           permissions: child.permissions,
           type: child.type,
+          requiresExplicitEntry: child.requiresExplicitEntry,
         };
 
         if (isVisibleItemChild(child)) {
