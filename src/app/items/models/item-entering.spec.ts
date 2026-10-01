@@ -124,7 +124,8 @@ describe('allowsEntering', () => {
   });
 });
 
-describe('activityOpeningPeriod', () => {  it('returns closedSince when enteringTimeMax is in the past', () => {
+describe('activityOpeningPeriod', () => {
+  it('returns closedSince when enteringTimeMax is in the past', () => {
     expect(activityOpeningPeriod({ enteringTimeMin: farPast, enteringTimeMax: past }, now)).toEqual({
       kind: 'closedSince',
       date: past,
