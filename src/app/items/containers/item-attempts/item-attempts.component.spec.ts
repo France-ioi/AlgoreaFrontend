@@ -34,6 +34,7 @@ const baseItem: Item = {
     canWatch: ItemWatchPerm.None,
     isOwner: false,
     canRequestHelp: false,
+    enteringTimeIntervals: [],
   },
   type: 'Task',
   displaySettings: displaySettingsSchema.parse({}),

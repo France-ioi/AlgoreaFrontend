@@ -11,17 +11,26 @@ import {
   generateCanViewValues,
   generateCanWatchValues
 } from '../../models/permissions-texts';
-import { canCurrentUserGivePermToItem, ItemCorePerm, ItemOwnerPerm, ItemSessionPerm } from 'src/app/items/models/item-permissions';
-import { AllowsViewingItemContentPipe, AllowsViewingItemInfoPipe, ItemViewPerm } from 'src/app/items/models/item-view-permission';
+import {
+  canCurrentUserGivePermToItem,
+  WatchedGroupPermissions,
+} from 'src/app/items/models/item-permissions';
+import {
+  AllowsViewingItemContentPipe,
+  AllowsViewingItemInfoPipe,
+  allowsViewingContent,
+  ItemViewPerm,
+} from 'src/app/items/models/item-view-permission';
 import {
   PermissionsEditDialogComponent,
   PermissionsEditDialogParams,
 } from '../permissions-edit-dialog/permissions-edit-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from 'src/app/ui-components/section-header/section-header.component';
-import { I18nSelectPipe } from '@angular/common';
+import { DatePipe, I18nSelectPipe } from '@angular/common';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
+import { UtcOffsetPipe } from 'src/app/pipes/utcOffset';
 import { AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
@@ -32,6 +41,15 @@ import { Dialog } from '@angular/cdk/dialog';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
 import { catchError, filter, of, switchMap } from 'rxjs';
+import {
+  allowsEntering,
+  doesActivityAllowEnteringNow,
+  enterIntervalDisplay,
+  EnterIntervalDisplay,
+} from '../../models/item-entering';
+import { ItemEntryPermissionInfoComponent } from '../item-entry-permission-info/item-entry-permission-info.component';
+
+type VisibleEnterIntervalDisplay = Exclude<EnterIntervalDisplay, { kind: 'none' }>;
 
 @Component({
   selector: 'alg-item-permissions',
@@ -42,6 +60,8 @@ import { catchError, filter, of, switchMap } from 'rxjs';
     ProgressSelectComponent,
     FormsModule,
     I18nSelectPipe,
+    DatePipe,
+    UtcOffsetPipe,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
     GroupIsUserPipe,
@@ -49,6 +69,7 @@ import { catchError, filter, of, switchMap } from 'rxjs';
     ButtonComponent,
     TooltipDirective,
     MessageInfoComponent,
+    ItemEntryPermissionInfoComponent,
   ]
 })
 export class ItemPermissionsComponent {
@@ -74,12 +95,41 @@ export class ItemPermissionsComponent {
     contentGroup: $localize`You are not allowed to give permissions on this content and to this group`,
   };
 
-  protected readonly watchedGroupPermissions = computed((): (ItemCorePerm & ItemOwnerPerm & ItemSessionPerm) | undefined => {
+  protected readonly watchedGroupPermissions = computed((): WatchedGroupPermissions | undefined => {
     const itemData = this.itemData();
     return itemData.item?.watchedGroup?.permissions ? {
       ...itemData.item.watchedGroup.permissions,
       canMakeSessionOfficial: false,
     } : undefined;
+  });
+
+  /** Frozen when itemData changes so templates reflect load time, not a live clock. */
+  protected readonly entryEvalNow = computed((): Date => {
+    this.itemData();
+    return new Date();
+  });
+
+  protected readonly headerEntryState = computed((): 'canEnter' | 'canEnterIfAllowed' | 'mayNotEnter' | undefined => {
+    const item = this.itemData().item;
+    if (!item.requiresExplicitEntry) return undefined;
+    const permissions = this.watchedGroupPermissions();
+    if (!permissions) return undefined;
+
+    const now = this.entryEvalNow();
+    const allowsNow = doesActivityAllowEnteringNow(item, now);
+    const canEnterPerm = allowsEntering(permissions, item, now);
+
+    if (allowsViewingContent(permissions) || (canEnterPerm && allowsNow === true)) return 'canEnter';
+    if (canEnterPerm && allowsNow === undefined) return 'canEnterIfAllowed';
+    return 'mayNotEnter';
+  });
+
+  protected readonly enterIntervalDisplays = computed((): VisibleEnterIntervalDisplay[] => {
+    const intervals = this.watchedGroupPermissions()?.enteringTimeIntervals ?? [];
+    const now = this.entryEvalNow();
+    return intervals
+      .map(interval => enterIntervalDisplay(interval, now))
+      .filter((display): display is VisibleEnterIntervalDisplay => display.kind !== 'none');
   });
 
   private hasPath$ = toObservable(computed(() => ({

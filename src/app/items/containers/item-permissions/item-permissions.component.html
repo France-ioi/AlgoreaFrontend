@@ -2,12 +2,23 @@
   <i class="header-icon ph-duotone ph-lock-open"></i>
   <div class="header-title">
     @if (watchedGroupPermissions(); as permissions) {
-      <ng-container label-section i18n>
-        «{{ observedGroup().name }}»
-        {(permissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
-        access this
-        {itemData().item.type, select, Skill {skill} other {activity}}
-      </ng-container>
+      @if (headerEntryState(); as entryState) {
+        <ng-container i18n>
+          «{{ observedGroup().name }}»
+          {entryState, select,
+            canEnter {can enter this activity}
+            canEnterIfAllowed {can enter this activity (if the activity allows it)}
+            other {may not be able to enter this activity}
+          }
+        </ng-container>
+      } @else {
+        <ng-container label-section i18n>
+          «{{ observedGroup().name }}»
+          {(permissions | allowsViewingContent).toString(), select, true {can} other {may not be able to}}
+          access this
+          {itemData().item.type, select, Skill {skill} other {activity}}
+        </ng-container>
+      }
     } @else {
       <ng-container i18n>
         You cannot watch other users progress on this {itemData().item.type, select, Skill {skill} other {activity}}
@@ -24,17 +35,26 @@
 @if (!collapsed()) {
   <div class="content">
     @if (watchedGroupPermissions(); as permissions) {
-      @if (!(permissions | allowsViewingInfo)) {
-        <div class="no-access" i18n>
-          This {(observedGroup().route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
-        </div>
-      }
-      @if ((permissions | allowsViewingInfo) && !(permissions | allowsViewingContent)) {
-        <div class="no-access" i18n>
-          This {(observedGroup().route | isUser).toString(), select, true {user} other {group}}
-          can view the title, subtitle and description of this {itemData().item.type, select, Skill {skill} other {activity}}
-          but may not be able to {itemData().item.type, select, Task {view its content} other {view what it contains}}.
-        </div>
+      @if (itemData().item.requiresExplicitEntry) {
+        <alg-item-entry-permission-info
+          [item]="itemData().item"
+          [permissions]="permissions"
+          [isUser]="observedGroup().route | isUser"
+          [now]="entryEvalNow()"
+        />
+      } @else {
+        @if (!(permissions | allowsViewingInfo)) {
+          <div class="no-access" i18n>
+            This {(observedGroup().route | isUser).toString(), select, true {user} other {group}} didn't directly obtain rights to view this content.
+          </div>
+        }
+        @if ((permissions | allowsViewingInfo) && !(permissions | allowsViewingContent)) {
+          <div class="no-access" i18n>
+            This {(observedGroup().route | isUser).toString(), select, true {user} other {group}}
+            can view the title, subtitle and description of this {itemData().item.type, select, Skill {skill} other {activity}}
+            but may not be able to {itemData().item.type, select, Task {view its content} other {view what it contains}}.
+          </div>
+        }
       }
     } @else {
       <div class="no-access" i18n>
@@ -60,6 +80,40 @@
           </alg-section-header>
         </div>
       } @else {
+        @if (itemData().item.requiresExplicitEntry) {
+          <div class="permission-indicator-section">
+            <alg-section-header
+              i18n-caption caption="Can enter"
+              icon="ph-duotone ph-door"
+              theme="warning"
+            >
+              <ng-template #content>
+                @if (enterIntervalDisplays().length === 0) {
+                  <span class="alg-text-small alg-text-secondary" i18n>No</span>
+                } @else {
+                  <div class="enter-intervals">
+                    @for (interval of enterIntervalDisplays(); track $index) {
+                      <div class="alg-text-small alg-text-secondary enter-interval">
+                        @if (interval.kind === 'always') {
+                          <ng-container i18n>Always</ng-container>
+                        } @else if (interval.kind === 'from') {
+                          <ng-container i18n>
+                            From {{ interval.from | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.from | utcOffset }})
+                          </ng-container>
+                        } @else {
+                          <ng-container i18n>
+                            From {{ interval.from | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.from | utcOffset }})
+                            until {{ interval.until | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.until | utcOffset }})
+                          </ng-container>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </ng-template>
+            </alg-section-header>
+          </div>
+        }
         <div class="permission-indicator-section">
           <alg-section-header
             i18n-caption caption="Can view"

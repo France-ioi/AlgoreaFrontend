@@ -18,12 +18,12 @@ export const itemViewPermSchema = z.object({
 export type ItemPermWithView = z.infer<typeof itemViewPermSchema>;
 export interface ItemWithViewPerm { permissions: ItemPermWithView }
 
-// Internal helper — do NOT export. Use canCurrentUserViewInfo instead.
-
 /**
- * Permission required for listing the title of an item
+ * Permission required for listing the title of an item.
+ * Exported for permission-object checks (e.g. watched-group permissions).
+ * On items, use canCurrentUserViewInfo instead.
  */
-function allowsViewingInfo(p: ItemPermWithView): boolean {
+export function allowsViewingInfo(p: ItemPermWithView): boolean {
   return [ P.Info, P.Content, P.ContentWithDescendants, P.Solution ].includes(p.canView);
 }
 /**

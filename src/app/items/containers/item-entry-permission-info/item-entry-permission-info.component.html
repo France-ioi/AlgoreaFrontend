@@ -1,0 +1,63 @@
+<div class="explanation">
+  <span i18n>This activity requires a manual action from the user to participate.</span>
+  @if (enterPermissionRequired()) {
+    <span i18n>To allow a user to participate, the user needs both the 'info' view permission and an appropriate enter permission.</span>
+  } @else {
+    <span i18n>To allow a user to participate, the user needs the 'info' view permission.</span>
+  }
+  <span i18n>The activity also needs to be open. Users with 'content' or higher view permissions are able to enter the activity without any additional restrictions.</span>
+  @if (!isUserOnly()) {
+    <span i18n>Teams may also have extra conditions to meet for entering.</span>
+  }
+</div>
+
+<div class="clock-line">
+  <i class="clock-icon ph ph-clock" aria-hidden="true"></i>
+  <span>
+    @let period = openingPeriod();
+    @if (period.kind === 'always') {
+      <ng-container i18n>This activity is always open.</ng-container>
+    } @else if (period.kind === 'between') {
+      <ng-container i18n>
+        This activity will be open between {{ period.from | date: 'dd/MM/yyyy HH:mm' }} ({{ period.from | utcOffset }}) and
+        {{ period.until | date: 'dd/MM/yyyy HH:mm' }} ({{ period.until | utcOffset }}).
+      </ng-container>
+    } @else if (period.kind === 'from') {
+      <ng-container i18n>
+        This activity will be open from {{ period.from | date: 'dd/MM/yyyy HH:mm' }} ({{ period.from | utcOffset }}).
+      </ng-container>
+    } @else if (period.kind === 'until') {
+      <ng-container i18n>
+        This activity will be open until {{ period.until | date: 'dd/MM/yyyy HH:mm' }} ({{ period.until | utcOffset }}).
+      </ng-container>
+    } @else {
+      <ng-container i18n>
+        This activity has been closed since {{ period.date | date: 'dd/MM/yyyy HH:mm' }} ({{ period.date | utcOffset }}).
+      </ng-container>
+    }
+  </span>
+</div>
+
+@if (hasContentView()) {
+  <div class="status-line" i18n>
+    This {isUser().toString(), select, true {user} other {group}} is able to start an attempt on that content without extra
+    conditions.
+  </div>
+} @else if (allowsEnteringStatus(); as status) {
+  @if (status.kind === 'ifConditions') {
+    <div class="status-line" i18n>
+      This {isUser().toString(), select, true {user} other {group}} has, at this moment, the sufficient permissions to enter
+      this activity if the activity conditions allow it.
+    </div>
+  } @else if (status.kind === 'allows') {
+    <div class="status-line" i18n>
+      This {isUser().toString(), select, true {user} other {group}} has, at this moment, the sufficient permissions to enter
+      this activity and the activity allows entering.
+    </div>
+  } @else {
+    <div class="status-line" i18n>
+      This {isUser().toString(), select, true {user} other {group}} has, at this moment, the sufficient permissions to enter
+      this activity but the activity currently does not allow it.
+    </div>
+  }
+}

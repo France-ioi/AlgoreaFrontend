@@ -24,6 +24,7 @@ function makeItem(displayOverrides: { hideHeader?: boolean, showPlatformInsteadO
       canWatch: ItemWatchPerm.None,
       isOwner: false,
       canRequestHelp: false,
+      enteringTimeIntervals: [],
     },
     type: 'Chapter',
     displaySettings: displaySettingsSchema.parse(displayOverrides),

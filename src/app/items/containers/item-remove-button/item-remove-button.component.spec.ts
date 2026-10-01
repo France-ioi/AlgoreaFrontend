@@ -28,6 +28,7 @@ const mockItem: Item = {
     canWatch: ItemWatchPerm.None,
     isOwner: true,
     canRequestHelp: false,
+    enteringTimeIntervals: [],
   },
   type: 'Task',
   displaySettings: displaySettingsSchema.parse({}),
