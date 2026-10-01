@@ -39,6 +39,7 @@ import {
 import { FindInArray } from 'src/app/pipes/findInArray';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Dialog } from '@angular/cdk/dialog';
+import { ContentViewPropagationIconPipe, ContentViewPropagationLabelPipe } from 'src/app/items/models/content-view-propagation-display';
 
 @Component({
   selector: 'alg-item-children-edit-list',
@@ -69,6 +70,8 @@ import { Dialog } from '@angular/cdk/dialog';
     FindInArray,
     CdkDropList,
     CdkDrag,
+    ContentViewPropagationIconPipe,
+    ContentViewPropagationLabelPipe,
   ]
 })
 export class ItemChildrenEditListComponent {

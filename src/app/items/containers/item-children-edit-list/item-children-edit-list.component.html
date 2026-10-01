@@ -86,10 +86,8 @@
             <button
               class="size-s"
               type="button"
-              icon="{{
-                rowData.contentViewPropagation === 'as_content' ? 'ph-duotone ph-eye' : rowData.contentViewPropagation === 'as_info'
-                ? 'ph-duotone ph-lock-simple' : rowData.contentViewPropagation === 'none' ? 'ph-duotone ph-eye-slash' : ''
-              }}"
+              icon="{{ rowData.contentViewPropagation | contentViewPropagationIcon: !!rowData.requiresExplicitEntry }}"
+              [attr.aria-label]="rowData.contentViewPropagation | contentViewPropagationLabel: !!rowData.requiresExplicitEntry"
             (click)="openPropagationEditMenu(rowData)"
             alg-button-icon
             [cdkMenuTriggerFor]="menu"
