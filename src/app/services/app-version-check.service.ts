@@ -6,6 +6,8 @@ import { catchError, exhaustMap, filter, map, retry, take } from 'rxjs/operators
 import { readAppVersionFromDocument, readAppVersionFromHtml } from 'src/app/utils/app-version';
 import { MINUTES, SECONDS } from 'src/app/utils/duration';
 
+// How long the tab must have been inactive (hidden, asleep, or frozen) before we compare versions.
+// Short enough that multi-hour stale sessions are caught; long enough that brief tab switches do not nag.
 const INACTIVITY_THRESHOLD_MS = 20 * MINUTES;
 // Fallback when no wake event or user input fires after sleep; far below the threshold so normal
 // timer jitter cannot look like a 20 min freeze. (Visible-tab timers are not ~1 min throttled.)

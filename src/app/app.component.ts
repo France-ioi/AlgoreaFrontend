@@ -37,6 +37,7 @@ import {
 } from 'src/app/containers/group-observation-error-modal/group-observation-error-modal.component';
 import { NewVersionModalComponent } from 'src/app/containers/new-version-modal/new-version-modal.component';
 import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toast-messages.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'alg-root',
@@ -139,9 +140,7 @@ export class AppComponent implements OnInit {
 
     this.appVersionCheckService.newVersionAvailable$.pipe(
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(() =>
-      this.dialogService.open(NewVersionModalComponent, { disableClose: true, autoFocus: undefined })
-    );
+    ).subscribe(() => this.openNewVersionModal());
 
     this.groupObservationError$.pipe(
       filter(isNotNullOrUndefined),
@@ -151,6 +150,24 @@ export class AppComponent implements OnInit {
       ),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => this.onCloseObservationErrorDialog());
+
+    // Dev-only hook so the new-version modal can be previewed from the console via
+    // `window.algoreaPreviewNewVersionModal()`. The `typeof window` guard covers non-browser contexts.
+    if (!environment.production && typeof window !== 'undefined') {
+      (window as unknown as { algoreaPreviewNewVersionModal?: () => void })
+        .algoreaPreviewNewVersionModal = (): void => {
+          // Avoid stacking disableClose modals when the helper is called repeatedly from the console.
+          if (this.dialogService.openDialogs.length) return;
+          this.openNewVersionModal();
+        };
+      this.destroyRef.onDestroy(() => {
+        delete (window as { algoreaPreviewNewVersionModal?: () => void }).algoreaPreviewNewVersionModal;
+      });
+    }
+  }
+
+  private openNewVersionModal(): void {
+    this.dialogService.open(NewVersionModalComponent, { disableClose: true, autoFocus: undefined });
   }
 
   onScrollContent(scrollEl: HTMLElement): void {

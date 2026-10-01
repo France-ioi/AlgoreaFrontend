@@ -337,6 +337,7 @@ re-fetches the same-origin HTML shell (this locale's `document.baseURI`),
 compares meta values, and — on mismatch only — opens a blocking reload modal.
 Offline (HTTP status 0) gets one short delayed retry; other fetch/parse/
 missing-version failures are ignored silently. There is no auto-reload.
+In non-production builds, `window.algoreaPreviewNewVersionModal()` opens the modal for visual preview.
 
 ## Key Services
 
