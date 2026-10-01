@@ -81,9 +81,15 @@
           <div>
             <alg-input-date formControlName="enteringTimeMin" />
             @if (form.controls.enteringTimeMin.valid) {
-              <p class="alg-text-small date-note" i18n>
-                The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
-              </p>
+              @if (form.controls.enteringTimeMin.value | timeZoneName; as timeZone) {
+                <p class="alg-text-small date-note" i18n>
+                  The time is entered in your own timezone ({{ timeZone }})
+                </p>
+              } @else {
+                <p class="alg-text-small date-note" i18n>
+                  The time is entered in your own timezone.
+                </p>
+              }
             }
           </div>
         }
@@ -112,9 +118,15 @@
               [minDate]="minEnteringTimeMaxDate()"
              />
             @if (form.controls.enteringTimeMax.valid) {
-              <p class="alg-text-small date-note" i18n>
-                The time is entered in your own timezone ({{ currentDate | date: 'zzzz' }})
-              </p>
+              @if (form.controls.enteringTimeMax.value | timeZoneName; as timeZone) {
+                <p class="alg-text-small date-note" i18n>
+                  The time is entered in your own timezone ({{ timeZone }})
+                </p>
+              } @else {
+                <p class="alg-text-small date-note" i18n>
+                  The time is entered in your own timezone.
+                </p>
+              }
             }
           </div>
         }

@@ -14,16 +14,11 @@ export function isPastDate(d: Date): boolean {
 }
 
 /**
- * Local UTC offset label for display, e.g. `UTC+2` or `UTC+5:30`.
- * Uses the offset that applies at `date` (DST-aware).
+ * Short timezone name at `date` (DST-aware).
+ * Uses `en-GB` so Intl returns a CLDR abbreviation where one exists (e.g. `CET` / `CEST`),
+ * otherwise a `GMT±H` offset.
  */
-export function formatUtcOffset(date: Date): string {
-  const offsetMinutes = -date.getTimezoneOffset();
-  const sign = offsetMinutes >= 0 ? '+' : '-';
-  const absolute = Math.abs(offsetMinutes);
-  const hours = Math.floor(absolute / 60);
-  const minutes = absolute % 60;
-  return minutes === 0
-    ? `UTC${sign}${hours}`
-    : `UTC${sign}${hours}:${minutes.toString().padStart(2, '0')}`;
+export function formatTimeZoneName(date: Date): string {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZoneName: 'short' }).formatToParts(date);
+  return parts.find(part => part.type === 'timeZoneName')?.value ?? '';
 }

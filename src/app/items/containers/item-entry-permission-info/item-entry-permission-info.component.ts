@@ -9,7 +9,7 @@ import {
   isEnterPermissionRequired,
 } from 'src/app/items/models/item-entering';
 import { allowsViewingContent } from 'src/app/items/models/item-view-permission';
-import { UtcOffsetPipe } from 'src/app/pipes/utcOffset';
+import { TimeZoneNamePipe } from 'src/app/pipes/timeZoneName';
 
 export type AllowsEnteringStatus =
   | { kind: 'ifConditions' }
@@ -20,7 +20,7 @@ export type AllowsEnteringStatus =
   selector: 'alg-item-entry-permission-info',
   templateUrl: './item-entry-permission-info.component.html',
   styleUrl: './item-entry-permission-info.component.scss',
-  imports: [ DatePipe, UtcOffsetPipe ],
+  imports: [ DatePipe, TimeZoneNamePipe ],
 })
 export class ItemEntryPermissionInfoComponent {
   item = input.required<Item>();

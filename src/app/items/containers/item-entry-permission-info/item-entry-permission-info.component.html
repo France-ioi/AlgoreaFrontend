@@ -19,20 +19,20 @@
       <ng-container i18n>This activity is always open.</ng-container>
     } @else if (period.kind === 'between') {
       <ng-container i18n>
-        This activity will be open between {{ period.from | date: 'dd/MM/yyyy HH:mm' }} ({{ period.from | utcOffset }}) and
-        {{ period.until | date: 'dd/MM/yyyy HH:mm' }} ({{ period.until | utcOffset }}).
+        This activity will be open between {{ period.from | date: 'dd/MM/yyyy HH:mm' }} ({{ period.from | timeZoneName }}) and
+        {{ period.until | date: 'dd/MM/yyyy HH:mm' }} ({{ period.until | timeZoneName }}).
       </ng-container>
     } @else if (period.kind === 'from') {
       <ng-container i18n>
-        This activity will be open from {{ period.from | date: 'dd/MM/yyyy HH:mm' }} ({{ period.from | utcOffset }}).
+        This activity will be open from {{ period.from | date: 'dd/MM/yyyy HH:mm' }} ({{ period.from | timeZoneName }}).
       </ng-container>
     } @else if (period.kind === 'until') {
       <ng-container i18n>
-        This activity will be open until {{ period.until | date: 'dd/MM/yyyy HH:mm' }} ({{ period.until | utcOffset }}).
+        This activity will be open until {{ period.until | date: 'dd/MM/yyyy HH:mm' }} ({{ period.until | timeZoneName }}).
       </ng-container>
     } @else {
       <ng-container i18n>
-        This activity has been closed since {{ period.date | date: 'dd/MM/yyyy HH:mm' }} ({{ period.date | utcOffset }}).
+        This activity has been closed since {{ period.date | date: 'dd/MM/yyyy HH:mm' }} ({{ period.date | timeZoneName }}).
       </ng-container>
     }
   </span>

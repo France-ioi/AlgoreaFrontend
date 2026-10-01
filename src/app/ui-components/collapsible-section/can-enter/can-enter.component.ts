@@ -15,9 +15,9 @@ import {
   NgControl,
   ValidationErrors,
 } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { farFutureDateString } from 'src/app/utils/date';
 import { FormErrorComponent } from 'src/app/ui-components/form-error/form-error.component';
+import { TimeZoneNamePipe } from 'src/app/pipes/timeZoneName';
 
 export interface CanEnterValue {
   canEnterFrom: Date,
@@ -31,7 +31,7 @@ export interface CanEnterValue {
   imports: [
     InputDateComponent,
     FormsModule,
-    DatePipe,
+    TimeZoneNamePipe,
     FormErrorComponent
   ],
   providers: [
@@ -55,7 +55,6 @@ export class CanEnterComponent implements ControlValueAccessor, OnInit, OnDestro
 
   canEnterFrom = signal<Date | null>(null);
   canEnterUntil = signal<Date | null>(null);
-  currentDate = signal(new Date());
   control = signal<FormControl<CanEnterValue | null> | undefined>(undefined);
 
   ngOnInit(): void {

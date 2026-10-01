@@ -30,7 +30,7 @@ import { SectionHeaderComponent } from 'src/app/ui-components/section-header/sec
 import { DatePipe, I18nSelectPipe } from '@angular/common';
 import { RawGroupRoute } from 'src/app/models/routing/group-route';
 import { GroupIsUserPipe } from 'src/app/pipes/groupIsUser';
-import { UtcOffsetPipe } from 'src/app/pipes/utcOffset';
+import { TimeZoneNamePipe } from 'src/app/pipes/timeZoneName';
 import { AllowsGrantingContentViewItemPipe } from 'src/app/items/models/item-grant-view-permission';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GroupPermissionsService } from 'src/app/data-access/group-permissions.service';
@@ -61,7 +61,7 @@ type VisibleEnterIntervalDisplay = Exclude<EnterIntervalDisplay, { kind: 'none' 
     FormsModule,
     I18nSelectPipe,
     DatePipe,
-    UtcOffsetPipe,
+    TimeZoneNamePipe,
     AllowsViewingItemContentPipe,
     AllowsViewingItemInfoPipe,
     GroupIsUserPipe,

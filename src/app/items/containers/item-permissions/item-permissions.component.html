@@ -98,12 +98,12 @@
                           <ng-container i18n>Always</ng-container>
                         } @else if (interval.kind === 'from') {
                           <ng-container i18n>
-                            From {{ interval.from | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.from | utcOffset }})
+                            From {{ interval.from | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.from | timeZoneName }})
                           </ng-container>
                         } @else {
                           <ng-container i18n>
-                            From {{ interval.from | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.from | utcOffset }})
-                            until {{ interval.until | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.until | utcOffset }})
+                            From {{ interval.from | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.from | timeZoneName }})
+                            until {{ interval.until | date: 'dd/MM/yyyy HH:mm' }} ({{ interval.until | timeZoneName }})
                           </ng-container>
                         }
                       </div>

@@ -1,4 +1,4 @@
-import { formatUtcOffset, isInfinite, isPastDate } from './date';
+import { formatTimeZoneName, isInfinite, isPastDate } from './date';
 import { MINUTES } from './duration';
 
 describe('isInfinite', () => {
@@ -25,22 +25,21 @@ describe('isPastDate', () => {
 
 });
 
-describe('formatUtcOffset', () => {
-  it('formats whole-hour positive offsets as UTC+H', () => {
-    const date = new Date('2024-06-01T12:00:00Z');
-    spyOn(date, 'getTimezoneOffset').and.returnValue(-120);
-    expect(formatUtcOffset(date)).toBe('UTC+2');
+describe('formatTimeZoneName', () => {
+  it('returns the short timezone name from Intl for the given date', () => {
+    const date = new Date('2024-07-01T12:00:00Z');
+    spyOn(Intl, 'DateTimeFormat').and.returnValue({
+      formatToParts: () => [ { type: 'timeZoneName', value: 'CEST' } ],
+    } as unknown as Intl.DateTimeFormat);
+    expect(formatTimeZoneName(date)).toBe('CEST');
+    expect(Intl.DateTimeFormat).toHaveBeenCalledWith('en-GB', { timeZoneName: 'short' });
   });
 
-  it('formats whole-hour negative offsets as UTC-H', () => {
-    const date = new Date('2024-06-01T12:00:00Z');
-    spyOn(date, 'getTimezoneOffset').and.returnValue(300);
-    expect(formatUtcOffset(date)).toBe('UTC-5');
-  });
-
-  it('includes minutes for fractional offsets', () => {
-    const date = new Date('2024-06-01T12:00:00Z');
-    spyOn(date, 'getTimezoneOffset').and.returnValue(-330);
-    expect(formatUtcOffset(date)).toBe('UTC+5:30');
+  it('returns an empty string when Intl provides no timezone name', () => {
+    const date = new Date('2024-01-01T12:00:00Z');
+    spyOn(Intl, 'DateTimeFormat').and.returnValue({
+      formatToParts: () => [],
+    } as unknown as Intl.DateTimeFormat);
+    expect(formatTimeZoneName(date)).toBe('');
   });
 });
