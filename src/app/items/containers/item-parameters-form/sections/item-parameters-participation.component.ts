@@ -9,13 +9,13 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Duration, HOURS } from 'src/app/utils/duration';
 import { DurationComponent } from 'src/app/ui-components/duration/duration.component';
 import { InputDateComponent } from 'src/app/ui-components/input-date/input-date.component';
 import { SwitchComponent } from 'src/app/ui-components/switch/switch.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
+import { TimeZoneNamePipe } from 'src/app/pipes/timeZoneName';
 import {
   DEFAULT_ENTERING_TIME_MAX,
   DEFAULT_ENTERING_TIME_MIN,
@@ -29,7 +29,7 @@ import {
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    DatePipe,
+    TimeZoneNamePipe,
     SwitchComponent,
     DurationComponent,
     InputDateComponent,
@@ -61,13 +61,6 @@ export class ItemParametersParticipationComponent implements ControlValueAccesso
     enteringTimeMaxEnabled: [ false ],
     enteringTimeMax: this.fb.control<Date | null>(null),
   });
-
-  /**
-   * The component is rendered once on first interaction so we capture `new Date()` here, like the
-   * old implementation did. The input-date validator that depends on this will pick up the new
-   * lower bound through Angular's `valueChanges` re-validation.
-   */
-  readonly currentDate = new Date();
 
   private readonly enteringTimeMin = signal<Date | null>(null);
   private readonly enteringTimeMax = signal<Date | null>(null);

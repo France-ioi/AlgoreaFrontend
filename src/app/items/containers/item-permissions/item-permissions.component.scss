@@ -79,3 +79,13 @@
 .grant-access-button {
   margin-left: var(--alg-space-size-6);
 }
+
+.enter-intervals {
+  display: flex;
+  flex-direction: column;
+  gap: functions.toRem(4);
+}
+
+.enter-interval {
+  line-height: 1.4;
+}

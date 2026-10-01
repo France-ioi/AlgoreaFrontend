@@ -3,17 +3,17 @@ import { expect } from 'e2e/items/fixture';
 import { apiUrl } from 'e2e/helpers/e2e_http';
 
 export class EditPermissionsModal {
-  private canEnterHeaderLocator = this.page.locator('alg-section-header').filter({ hasText: 'Can enter' });
-  private canEnterSwitchFieldLocator = this.page.getByTestId('can-enter-switch-field');
-  private canEnterSwitchLocator = this.canEnterSwitchFieldLocator.locator('alg-switch');
-  private fromInputLocator = this.page.getByTestId('can-enter-from-control').getByTestId('input-date');
-  private untilInputLocator = this.page.getByTestId('can-enter-until-control').getByTestId('input-date');
   private proceedLocator = this.page.getByRole('button', { name: 'Proceed' });
   private itemPermissionsLocator = this.page.locator('alg-item-permissions');
   private editPermissionsBtnLocator = this.page.getByText('Edit permissions');
   private canEnterWarningLocator = this.page.getByText('As the group or user has currently "can view >= content" permission, the configured entering times have no effect, the group or user will be able to enter the activity at any time the activity allows it.');
   private editPermissionsModalLocator = this.page.getByText('Permission editor');
   private collapsibleSectionLocator = this.page.locator('alg-collapsible-section');
+  private canEnterHeaderLocator = this.collapsibleSectionLocator.locator('alg-section-header').filter({ hasText: 'Can enter' });
+  private canEnterSwitchFieldLocator = this.page.getByTestId('can-enter-switch-field');
+  private canEnterSwitchLocator = this.canEnterSwitchFieldLocator.locator('alg-switch');
+  private fromInputLocator = this.page.getByTestId('can-enter-from-control').getByTestId('input-date');
+  private untilInputLocator = this.page.getByTestId('can-enter-until-control').getByTestId('input-date');
 
   constructor(private readonly page: Page) {
   }

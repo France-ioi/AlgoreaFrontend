@@ -24,6 +24,7 @@ const baseItem: Item = {
     canWatch: ItemWatchPerm.None,
     isOwner: false,
     canRequestHelp: false,
+    enteringTimeIntervals: [],
   },
   type: 'Chapter',
   displaySettings: displaySettingsSchema.parse({}),

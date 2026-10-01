@@ -12,9 +12,14 @@
 }
 
 .control {
-  margin-left: var(--alg-space-size-6);
+  margin-left: var(--alg-space-size-6, #{functions.toRem(8)});
+}
+
+.time-zone {
+  margin-left: var(--alg-space-size-6, #{functions.toRem(8)});
+  font-size: functions.toRem(14);
 }
 
 .note {
-  margin: var(--alg-space-size-6) 0;
+  margin: var(--alg-space-size-6, #{functions.toRem(8)}) 0;
 }

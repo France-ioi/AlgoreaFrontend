@@ -48,6 +48,7 @@ function buildItem(overrides: Partial<Item> = {}): Item {
       canWatch: ItemWatchPerm.None,
       isOwner: true,
       canRequestHelp: false,
+      enteringTimeIntervals: [],
     },
     type: 'Skill',
     displaySettings: displaySettingsSchema.parse({}),

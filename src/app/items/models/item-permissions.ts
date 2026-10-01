@@ -24,6 +24,13 @@ export const itemEntryTimePermSchema = itemEntryFromPermSchema.and(itemEntryUnti
 
 export type ItemEntryTimePerm = z.infer<typeof itemEntryTimePermSchema>;
 
+export const itemEnteringTimeIntervalsSchema = z.array(itemEntryTimePermSchema).optional().default([]);
+export type ItemEnteringTimeIntervals = z.infer<typeof itemEnteringTimeIntervalsSchema>;
+
+export const itemEnteringTimeIntervalsPermSchema = z.object({
+  enteringTimeIntervals: itemEnteringTimeIntervalsSchema,
+});
+export type ItemEnteringTimeIntervalsPerm = z.infer<typeof itemEnteringTimeIntervalsPermSchema>;
 
 export const itemCanRequestHelpSchema = z.object({
   canRequestHelp: z.boolean()
@@ -36,6 +43,9 @@ export const itemCorePermSchema = itemViewPermSchema
   .and(itemOwnerPermSchema);
 
 export type ItemCorePerm = z.infer<typeof itemCorePermSchema>;
+
+/** Watched-group permissions as used in the item permissions panel (session flag filled locally). */
+export type WatchedGroupPermissions = ItemCorePerm & ItemSessionPerm & ItemEnteringTimeIntervalsPerm;
 
 export type ItemPermWithGive = ItemPermWithGrantView & ItemPermWithWatch & ItemPermWithEdit;
 export interface ItemWithGivePerm { permissions: ItemPermWithGive }

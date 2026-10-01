@@ -1,4 +1,4 @@
-import { isInfinite, isPastDate } from './date';
+import { formatTimeZoneName, isInfinite, isPastDate } from './date';
 import { MINUTES } from './duration';
 
 describe('isInfinite', () => {
@@ -23,4 +23,23 @@ describe('isPastDate', () => {
     expect(isPastDate(new Date(Date.now() + 30 * MINUTES))).toBeFalse();
   });
 
+});
+
+describe('formatTimeZoneName', () => {
+  it('returns the short timezone name from Intl for the given date', () => {
+    const date = new Date('2024-07-01T12:00:00Z');
+    spyOn(Intl, 'DateTimeFormat').and.returnValue({
+      formatToParts: () => [ { type: 'timeZoneName', value: 'CEST' } ],
+    } as unknown as Intl.DateTimeFormat);
+    expect(formatTimeZoneName(date)).toBe('CEST');
+    expect(Intl.DateTimeFormat).toHaveBeenCalledWith('en-GB', { timeZoneName: 'short' });
+  });
+
+  it('returns an empty string when Intl provides no timezone name', () => {
+    const date = new Date('2024-01-01T12:00:00Z');
+    spyOn(Intl, 'DateTimeFormat').and.returnValue({
+      formatToParts: () => [],
+    } as unknown as Intl.DateTimeFormat);
+    expect(formatTimeZoneName(date)).toBe('');
+  });
 });

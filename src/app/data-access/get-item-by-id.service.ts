@@ -4,7 +4,11 @@ import { Observable } from 'rxjs';
 import { z } from 'zod';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
 import { durationSchema } from 'src/app/utils/decoders';
-import { itemCanRequestHelpSchema, itemCorePermSchema } from 'src/app/items/models/item-permissions';
+import {
+  itemCanRequestHelpSchema,
+  itemCorePermSchema,
+  itemEnteringTimeIntervalsPermSchema,
+} from 'src/app/items/models/item-permissions';
 import { itemStringSchema, withDescription } from '../items/models/item-string';
 import { itemTypeSchema } from '../items/models/item-type';
 import { displaySettingsSchema } from '../items/models/display-settings';
@@ -17,7 +21,7 @@ const itemSchema = z.object({
   requiresExplicitEntry: z.boolean(),
   string: withDescription(itemStringSchema),
   bestScore: z.number(),
-  permissions: itemCorePermSchema.and(itemCanRequestHelpSchema),
+  permissions: itemCorePermSchema.and(itemCanRequestHelpSchema).and(itemEnteringTimeIntervalsPermSchema),
   type: itemTypeSchema,
   displaySettings: displaySettingsSchema.optional().default(() => displaySettingsSchema.parse({})),
   textId: z.string().nullable(),
@@ -35,7 +39,7 @@ const itemSchema = z.object({
   usesApi: z.boolean().nullable().optional(),
   watchedGroup: z.object({
     averageScore: z.number().optional(),
-    permissions: itemCorePermSchema.optional(),
+    permissions: itemCorePermSchema.and(itemEnteringTimeIntervalsPermSchema).optional(),
   }).optional(),
   defaultLanguageTag: z.string(),
   supportedLanguageTags: z.array(z.string()),

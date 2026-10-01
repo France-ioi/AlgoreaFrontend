@@ -6,6 +6,7 @@
     data-testid="can-enter-from-control"
     #canEnterFromRef
    />
+  <span class="time-zone" data-testid="can-enter-from-time-zone">{{ canEnterFrom() | timeZoneName }}</span>
 </div>
 <div class="control-container">
   <span class="label" i18n>Until:</span>
@@ -15,11 +16,12 @@
     data-testid="can-enter-until-control"
     #canEnterUntilRef
    />
+  <span class="time-zone" data-testid="can-enter-until-time-zone">{{ canEnterUntil() | timeZoneName }}</span>
 </div>
 @if (control()?.invalid) {
   <alg-input-error [control]="control()!" />
 } @else {
   <p class="alg-text-small note" i18n>
-    The time is entered in your own timezone ({{ currentDate() | date: 'zzzz' }})
+    The time is entered in your own timezone.
   </p>
 }
