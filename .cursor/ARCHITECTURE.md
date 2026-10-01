@@ -322,6 +322,22 @@ issue is resolved — either by Angular/`beasties` honoring `--deploy-url`
 when inlining critical CSS, or by serving HTML and assets from the same
 origin (which would also let us drop the deprecated `--deploy-url` flag).
 
+### New version detection
+
+The app version is stamped into `<meta name="app-version">` in `index.html` by
+CI before each build (`git describe --always`, overwriting any existing content;
+the committed source keeps `content=""` as a placeholder). Tag builds get the
+tag name from `git describe`. `AppVersionCheckService` checks for a newer build
+after ≥ 20 minutes of inactivity: either the tab was hidden that long and becomes
+visible again, or JS was frozen (system sleep / lid-close while still visible).
+While visible, wake is the earliest of: first `pointerdown` / `keydown` on the
+parent document past that gap (not events inside task/description iframes),
+`resume` / `focus` / `pageshow`, or a ~30s heartbeat. On either path it
+re-fetches the same-origin HTML shell (this locale's `document.baseURI`),
+compares meta values, and — on mismatch only — opens a blocking reload modal.
+Offline (HTTP status 0) gets one short delayed retry; other fetch/parse/
+missing-version failures are ignored silently. There is no auto-reload.
+
 ## Key Services
 
 | Service | Purpose |
@@ -333,6 +349,7 @@ origin (which would also let us drop the deprecated `--deploy-url` flag).
 | `LocaleService` | Language/locale management |
 | `ItemNavTreeService` | Item navigation tree building |
 | `GroupNavTreeService` | Group navigation tree building |
+| `AppVersionCheckService` | Soft check for a newer deployed build after long tab hide or system sleep |
 | `NotificationHttpService` | Fetch and manage user notifications from SLS API |
 | `NotificationInteractionService` | Shared activate/clear for notification toasts and bell (download + delete) |
 | `GroupResultsExportService` | Request async group-results ZIP exports (backend token + SLS) |

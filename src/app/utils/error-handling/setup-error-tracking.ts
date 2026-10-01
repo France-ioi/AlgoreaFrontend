@@ -2,8 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import * as Sentry from '@sentry/angular';
 import type { ErrorEvent, EventHint } from '@sentry/angular';
 import { environment } from 'src/environments/environment';
-import { version } from 'src/version';
 import { getSentryDsnConfig } from 'src/app/config/crash-reporting';
+import { readAppVersionFromDocument } from 'src/app/utils/app-version';
 import { HTTPError } from './error-conversion';
 
 /**
@@ -69,7 +69,7 @@ export function initErrorTracking(): void {
   Sentry.init({
     dsn: sentryDsn,
     environment: environment.production ? `prod-${window.location.hostname}` : 'dev',
-    release: version,
+    release: readAppVersionFromDocument(document) ?? undefined,
     integrations: [],
     profilesSampleRate: 0, // disable profiling
     tracesSampleRate: 0,

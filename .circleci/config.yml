@@ -79,7 +79,10 @@ commands:
       baseHref:
         type: string
     steps:
-      - run: echo "export const version = '`git describe --always`';" > ./src/version.ts
+      - run: |
+          VERSION="$(git describe --always)"
+          sed -i "s/<meta name=\"app-version\" content=\"[^\"]*\">/<meta name=\"app-version\" content=\"${VERSION}\">/" ./src/index.html
+          grep -q "<meta name=\"app-version\" content=\"${VERSION}\">" ./src/index.html
       - run: npm run injectDeployUrlForAssets --url='//<< parameters.assetDomain >><< parameters.path >>'
       - run: npx ng build --configuration production-<< parameters.lang >> --base-href << parameters.baseHref >> --deploy-url //<< parameters.assetDomain >><< parameters.path >> --progress=false
       - run: npm run postBuild

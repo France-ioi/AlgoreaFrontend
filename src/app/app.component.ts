@@ -10,10 +10,11 @@ import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { APPCONFIG } from './config';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
-import { version } from 'src/version';
+import { readAppVersionFromDocument } from 'src/app/utils/app-version';
 import { CrashReportingService } from './services/crash-reporting.service';
-import { Location, AsyncPipe } from '@angular/common';
+import { DOCUMENT, Location, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
+import { AppVersionCheckService } from './services/app-version-check.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
@@ -34,6 +35,7 @@ import { FatalErrorModalComponent } from 'src/app/containers/fatal-error-modal/f
 import {
   GroupObservationErrorModalComponent
 } from 'src/app/containers/group-observation-error-modal/group-observation-error-modal.component';
+import { NewVersionModalComponent } from 'src/app/containers/new-version-modal/new-version-modal.component';
 import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toast-messages.component';
 
 @Component({
@@ -63,8 +65,10 @@ export class AppComponent implements OnInit {
   private layoutService = inject(LayoutService);
   private crashReportingService = inject(CrashReportingService);
   private location = inject(Location);
+  private document = inject(DOCUMENT);
   private titleService = inject(Title);
   private chunkErrorService = inject(ChunkErrorService);
+  private appVersionCheckService = inject(AppVersionCheckService);
   private itemRouter = inject(ItemRouter);
   private config = inject(APPCONFIG);
   private topBarComponent = viewChild(TopBarComponent);
@@ -114,7 +118,7 @@ export class AppComponent implements OnInit {
     if (redirectTo) void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
 
     // eslint-disable-next-line no-console
-    console.log(`App version: ${version}`);
+    console.log(`App version: ${readAppVersionFromDocument(this.document) ?? 'unknown'}`);
 
     this.crashReportingService.init();
   }
@@ -131,6 +135,12 @@ export class AppComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(error =>
       this.dialogService.open(FatalErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined })
+    );
+
+    this.appVersionCheckService.newVersionAvailable$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() =>
+      this.dialogService.open(NewVersionModalComponent, { disableClose: true, autoFocus: undefined })
     );
 
     this.groupObservationError$.pipe(

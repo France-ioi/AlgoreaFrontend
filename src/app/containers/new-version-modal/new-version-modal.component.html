@@ -1,0 +1,20 @@
+<alg-notification-modal
+  i18n-modalTitle
+  modalTitle="New version available"
+  icon="ph ph-info"
+  [allowToClose]="false"
+>
+  <p class="message" i18n>
+    A new version of the application is available. Please reload to continue with the latest version.
+  </p>
+
+  <div class="reload-button">
+    <button
+      type="button"
+      alg-button
+      icon="ph ph-arrow-clockwise"
+      (click)="onReload()"
+      i18n
+    >Reload</button>
+  </div>
+</alg-notification-modal>
