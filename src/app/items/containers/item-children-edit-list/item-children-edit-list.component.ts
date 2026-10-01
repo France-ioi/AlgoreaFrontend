@@ -238,6 +238,7 @@ export class ItemChildrenEditListComponent {
           grantViewPropagation: child.grantViewPropagation,
           watchPropagation: child.watchPropagation,
         },
+        requiresExplicitEntry: child.requiresExplicitEntry,
       },
     }).closed.pipe(
       takeUntilDestroyed(this.destroyRef),
