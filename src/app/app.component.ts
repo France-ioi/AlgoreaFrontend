@@ -10,10 +10,11 @@ import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
 import { APPCONFIG } from './config';
 import { urlToRedirectTo } from './utils/redirect-to-sub-path-at-init';
-import { version } from 'src/version';
+import { readAppVersionFromDocument } from 'src/app/utils/app-version';
 import { CrashReportingService } from './services/crash-reporting.service';
-import { Location, AsyncPipe } from '@angular/common';
+import { DOCUMENT, Location, AsyncPipe } from '@angular/common';
 import { ChunkErrorService } from './services/chunk-error.service';
+import { AppVersionCheckService } from './services/app-version-check.service';
 import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
@@ -34,7 +35,9 @@ import { FatalErrorModalComponent } from 'src/app/containers/fatal-error-modal/f
 import {
   GroupObservationErrorModalComponent
 } from 'src/app/containers/group-observation-error-modal/group-observation-error-modal.component';
+import { NewVersionModalComponent } from 'src/app/containers/new-version-modal/new-version-modal.component';
 import { ToastMessagesComponent } from 'src/app/ui-components/toast-messages/toast-messages.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'alg-root',
@@ -63,8 +66,10 @@ export class AppComponent implements OnInit {
   private layoutService = inject(LayoutService);
   private crashReportingService = inject(CrashReportingService);
   private location = inject(Location);
+  private document = inject(DOCUMENT);
   private titleService = inject(Title);
   private chunkErrorService = inject(ChunkErrorService);
+  private appVersionCheckService = inject(AppVersionCheckService);
   private itemRouter = inject(ItemRouter);
   private config = inject(APPCONFIG);
   private topBarComponent = viewChild(TopBarComponent);
@@ -114,7 +119,7 @@ export class AppComponent implements OnInit {
     if (redirectTo) void this.router.navigateByUrl(redirectTo, { replaceUrl: true });
 
     // eslint-disable-next-line no-console
-    console.log(`App version: ${version}`);
+    console.log(`App version: ${readAppVersionFromDocument(this.document) ?? 'unknown'}`);
 
     this.crashReportingService.init();
   }
@@ -133,6 +138,10 @@ export class AppComponent implements OnInit {
       this.dialogService.open(FatalErrorModalComponent, { data: error, disableClose: true, autoFocus: undefined })
     );
 
+    this.appVersionCheckService.newVersionAvailable$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.openNewVersionModal());
+
     this.groupObservationError$.pipe(
       filter(isNotNullOrUndefined),
       take(1),
@@ -141,6 +150,24 @@ export class AppComponent implements OnInit {
       ),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(() => this.onCloseObservationErrorDialog());
+
+    // Dev-only hook so the new-version modal can be previewed from the console via
+    // `window.algoreaPreviewNewVersionModal()`. The `typeof window` guard covers non-browser contexts.
+    if (!environment.production && typeof window !== 'undefined') {
+      (window as unknown as { algoreaPreviewNewVersionModal?: () => void })
+        .algoreaPreviewNewVersionModal = (): void => {
+          // Avoid stacking disableClose modals when the helper is called repeatedly from the console.
+          if (this.dialogService.openDialogs.length) return;
+          this.openNewVersionModal();
+        };
+      this.destroyRef.onDestroy(() => {
+        delete (window as { algoreaPreviewNewVersionModal?: () => void }).algoreaPreviewNewVersionModal;
+      });
+    }
+  }
+
+  private openNewVersionModal(): void {
+    this.dialogService.open(NewVersionModalComponent, { disableClose: true, autoFocus: undefined });
   }
 
   onScrollContent(scrollEl: HTMLElement): void {

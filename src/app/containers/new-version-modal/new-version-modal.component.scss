@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  width: 50vw;
+}
+
+.message,
+.reload-button {
+  text-align: center;
+}
+
+.reload-button {
+  margin: var(--alg-space-size-6) 0 0;
+}
