@@ -28,8 +28,8 @@
         class="tabs"
         [class.for-header]="styleClass() === 'for-header'"
         [attr.aria-label]="navAriaLabel"
-        *ngrxLet="tabBarView$ as tabBarView"
       >
+        @let tabBarView = tabBarView$ | async;
         @if (tabBarView) {
           <div class="content-pill-list">
             <span

@@ -16,7 +16,6 @@ import { GetItemByIdService } from '../../../data-access/get-item-by-id.service'
 import { ActionFeedbackService } from '../../../services/action-feedback.service';
 import { FetchState } from '../../../utils/state';
 import { UpdateThreadService } from '../../../data-access/update-thread.service';
-import { LetDirective } from '@ngrx/component';
 import { ThreadMessageComponent } from '../thread-message/thread-message.component';
 import { AsyncPipe } from '@angular/common';
 import { APPCONFIG } from 'src/app/config';
@@ -48,7 +47,6 @@ import { changeAssignment, changeThreadStatus, sendThreadMessage, ThreadActionsD
   styleUrl: './thread.component.scss',
   imports: [
     ThreadMessageComponent,
-    LetDirective,
     FormsModule,
     ReactiveFormsModule,
     ItemRoutePipe,

@@ -27,7 +27,7 @@ import { LeftMenuSearchComponent } from '../../ui-components/left-menu-search/le
 import { LoadingComponent } from '../../ui-components/loading/loading.component';
 import { ErrorComponent } from '../../ui-components/error/error.component';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { LetDirective } from '@ngrx/component';
+import { AsyncPipe } from '@angular/common';
 import { CommunityStatsComponent } from '../../community/containers/community-stats/community-stats.component';
 import { LayoutService } from '../../services/layout.service';
 import { TopRightControlsComponent } from '../top-right-controls/top-right-controls.component';
@@ -49,7 +49,7 @@ const TREE_TAB_TYPES: LeftMenuTabType[] = [ 'activities', 'skills', 'groups' ];
     LoadingComponent,
     ErrorComponent,
     NgScrollbar,
-    LetDirective,
+    AsyncPipe,
     CommunityStatsComponent,
     TopRightControlsComponent,
   ],

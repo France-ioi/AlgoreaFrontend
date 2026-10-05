@@ -19,7 +19,11 @@
      />
   }
   @if (secs.participation) {
-    <alg-item-parameters-participation [formControl]="form.controls.participation" />
+    <alg-item-parameters-participation [formControl]="form.controls.participation"
+      [itemType]="itemData().item.type"
+      [savedRequiresExplicitEntry]="itemData().item.requiresExplicitEntry"
+      [savedIsTimeLimited]="itemData().item.duration !== null"
+     />
   }
   @if (secs.team) {
     <alg-item-parameters-team [formControl]="form.controls.team" />

@@ -1,4 +1,4 @@
-<ng-container *ngrxLet="{ currentUserId: currentUserId$, isObserving: isObserving$ } as info">
+@if (infoVm$ | async; as info) {
   @if (answer$ | async; as answer) {
     @if (author$ | async; as author) {
       <div class="container">
@@ -61,4 +61,4 @@
       </div>
     }
   }
-</ng-container>
+}

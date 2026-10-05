@@ -7,7 +7,6 @@ import { GroupNavTreeService } from '../../services/navigation/group-nav-tree.se
 import { NeighborWidgetComponent } from '../../ui-components/neighbor-widget/neighbor-widget.component';
 import { TabBarComponent } from '../../ui-components/tab-bar/tab-bar.component';
 import { BreadcrumbsComponent } from '../breadcrumbs/breadcrumbs.component';
-import { LetDirective } from '@ngrx/component';
 import { ScoreRingComponent } from '../../ui-components/score-ring/score-ring.component';
 import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -29,7 +28,6 @@ import { PlatformLogoComponent } from 'src/app/ui-components/platform-logo/platf
   styleUrl: './content-top-bar.component.scss',
   imports: [
     ScoreRingComponent,
-    LetDirective,
     BreadcrumbsComponent,
     TabBarComponent,
     ObservationBarComponent,

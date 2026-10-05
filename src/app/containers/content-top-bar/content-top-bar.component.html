@@ -27,36 +27,33 @@
         }
       </div>
     }
-    <ng-container *ngrxLet="{
-      fullFrameContentDisplayed: fullFrameContentDisplayed$,
-      shouldDisplayTabBar: shouldDisplayTabBar$,
-      isNarrowScreen: isNarrowScreen$,
-      hideHeader: hideHeader$,
-    } as behaviourInfo">
-      @if ((!behaviourInfo.isNarrowScreen || behaviourInfo.isNarrowScreen && !behaviourInfo.fullFrameContentDisplayed) && isTitleSectionReady()) {
-        <div
-          class="left-pane-title margin-right"
-          [class.left-pane-title--stretch]="showBreadcrumbs() && !showPlatformLogo()"
-        >
-          @if (showPlatformLogo()) {
-            <alg-platform-logo />
+    @let fullFrameContentDisplayed = fullFrameContentDisplayed$ | async;
+    @let shouldDisplayTabBar = shouldDisplayTabBar$ | async;
+    @let isNarrowScreen = isNarrowScreen$ | async;
+    @let hideHeader = hideHeader$ | async;
+    @if ((!isNarrowScreen || isNarrowScreen && !fullFrameContentDisplayed) && isTitleSectionReady()) {
+      <div
+        class="left-pane-title margin-right"
+        [class.left-pane-title--stretch]="showBreadcrumbs() && !showPlatformLogo()"
+      >
+        @if (showPlatformLogo()) {
+          <alg-platform-logo />
+        } @else {
+          @let titleVal = title();
+          @if (!showBreadcrumbs() && titleVal) {
+            <p class="left-pane-title-text">{{ titleVal }}</p>
           } @else {
-            @let titleVal = title();
-            @if (!showBreadcrumbs() && titleVal) {
-              <p class="left-pane-title-text">{{ titleVal }}</p>
-            } @else {
-              <alg-breadcrumbs class="breadcrumbs" />
-            }
+            <alg-breadcrumbs class="breadcrumbs" />
           }
-        </div>
-      }
-      <!-- Tab bar in top bar: mirror of item-by-id tab bar; keep conditions mutually exclusive. -->
-      @if (behaviourInfo.shouldDisplayTabBar && (behaviourInfo.fullFrameContentDisplayed || behaviourInfo.hideHeader)) {
-        <alg-tab-bar class="tab-bar"
-          styleClass="for-header"
-         />
-      }
-    </ng-container>
+        }
+      </div>
+    }
+    <!-- Tab bar in top bar: mirror of item-by-id tab bar; keep conditions mutually exclusive. -->
+    @if (shouldDisplayTabBar && (fullFrameContentDisplayed || hideHeader)) {
+      <alg-tab-bar class="tab-bar"
+        styleClass="for-header"
+       />
+    }
   </div>
   <div class="right-pane">
     <alg-time-limited-content-info />

@@ -5,7 +5,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, map, Subject, merge, fromEvent, shareReplay } from 'rxjs';
 import { TabService } from '../../services/tab.service';
-import { LetDirective } from '@ngrx/component';
+import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -69,7 +69,7 @@ function buildTabBarView(tabs: TabView[]): TabBarView | null {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '(window:resize)': 'resize()',
   },
-  imports: [ LetDirective, RouterLink, NgScrollbar, ButtonIconComponent ]
+  imports: [ AsyncPipe, RouterLink, NgScrollbar, ButtonIconComponent ]
 })
 export class TabBarComponent implements AfterViewInit, OnDestroy {
   private tabService = inject(TabService);

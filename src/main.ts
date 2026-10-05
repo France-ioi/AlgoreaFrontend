@@ -2,7 +2,6 @@ import { enableProdMode, ErrorHandler, importProvidersFrom, isDevMode, provideZo
 import { AppComponent } from './app/app.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LetDirective } from '@ngrx/component';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AlgErrorHandler } from './app/utils/error-handling/error-handler';
 import { withCredentialsInterceptor } from './app/interceptors/with_credentials.interceptor';
@@ -59,7 +58,6 @@ bootstrapApplication(AppComponent, {
       useClass: AlgErrorHandler,
     },
     importProvidersFrom(
-      LetDirective,
       FormsModule,
       LayoutModule,
       ReactiveFormsModule,
