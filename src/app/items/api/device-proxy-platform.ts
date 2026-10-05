@@ -1,4 +1,5 @@
 import { deployUrlAssetPath } from 'src/app/utils/deploy-url';
+import { reportDeviceProxyLoadFailure } from './device-proxy-load-diagnostics';
 
 export interface DeviceProxyPlatformApi {
   deviceProxy(
@@ -45,9 +46,15 @@ export function ensureDeviceProxyPlatformLoaded(): Promise<void> {
     script.async = true;
     script.onload = (): void => {
       if (window.DeviceProxyPlatform) resolve();
-      else reject(new Error('DeviceProxyPlatform script loaded but global is missing'));
+      else {
+        reportDeviceProxyLoadFailure('global-missing', script.src);
+        reject(new Error('DeviceProxyPlatform script loaded but global is missing'));
+      }
     };
-    script.onerror = (): void => reject(new Error('Failed to load DeviceProxyPlatform script'));
+    script.onerror = (): void => {
+      reportDeviceProxyLoadFailure('network-error', script.src);
+      reject(new Error('Failed to load DeviceProxyPlatform script'));
+    };
     document.head.appendChild(script);
   });
   return loadPromise;
