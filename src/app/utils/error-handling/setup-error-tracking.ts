@@ -4,6 +4,7 @@ import type { Breadcrumb, BreadcrumbHint, ErrorEvent, EventHint } from '@sentry/
 import { environment } from 'src/environments/environment';
 import { getSentryDsnConfig } from 'src/app/config/crash-reporting';
 import { readAppVersionFromDocument } from 'src/app/utils/app-version';
+import { isChunkLoadingErrorMessage } from './chunk-loading-error';
 import { HTTPError } from './error-conversion';
 
 /**
@@ -130,6 +131,22 @@ export function dropHttpErrors(event: ErrorEvent, hint: EventHint): ErrorEvent |
   return event;
 }
 
+/**
+ * Chunk-load failures after a deploy often bypass Angular's `ErrorHandler` and reach Sentry
+ * via the global unhandled-rejection handler (ALGOREA-FH / ALGOREA-FX). Safari events may have
+ * no stack trace, but `exception.values[].value` is still set — match on that first.
+ */
+export function dropChunkLoadingErrors(event: ErrorEvent, hint: EventHint): ErrorEvent | null {
+  const values = event.exception?.values ?? [];
+  // Use `some` (not `every` like dropOpaqueFirefoxNsErrors): any chunk-load value means drop the event.
+  if (values.some(v => typeof v.value === 'string' && isChunkLoadingErrorMessage(v.value))) {
+    return null;
+  }
+  const ex = hint.originalException;
+  if (ex instanceof Error && isChunkLoadingErrorMessage(ex.message)) return null;
+  return event;
+}
+
 /** Types seen for Firefox privacy/storage noise (ALGOREA-GA); avoid dropping all NS_ERROR_*. */
 const OPAQUE_FIREFOX_NS_TYPES = new Set([ 'NS_ERROR_FAILURE', 'NS_ERROR_ABORT' ]);
 
@@ -170,6 +187,7 @@ export function dropOpaqueFirefoxNsErrors(event: ErrorEvent, hint: EventHint): E
 
 export function beforeSend(event: ErrorEvent, hint: EventHint): ErrorEvent | null {
   if (dropHttpErrors(event, hint) === null) return null;
+  if (dropChunkLoadingErrors(event, hint) === null) return null;
   return dropOpaqueFirefoxNsErrors(event, hint);
 }
 

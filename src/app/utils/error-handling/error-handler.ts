@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, inject } from '@angular/core';
+import { isChunkLoadingErrorMessage } from './chunk-loading-error';
 import { convertToError } from './error-conversion';
 import { sentryReporter } from './error-reporting';
 import { ChunkErrorService } from '../../services/chunk-error.service';
@@ -37,13 +38,7 @@ export class AlgErrorHandler extends ErrorHandler {
   }
 
   isChunkLoadingError(err: unknown): boolean {
-    const chunkErrormessages = [
-      'Loading chunk [a-z_\\d]+ failed', // older ?
-      'Failed to fetch dynamically imported module', // chrome
-      'error loading dynamically imported module', // firefox
-      'Importing a module script failed', // safari
-    ];
-    return new RegExp(chunkErrormessages.map(m => `(${m})`).join('|')).test(convertToError(err).message);
+    return isChunkLoadingErrorMessage(convertToError(err).message);
   }
 
 }
