@@ -4,20 +4,49 @@ import { APPCONFIG } from 'src/app/config';
 import { AuthService } from './auth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { LocaleService } from 'src/app/services/localeService';
-import { EMPTY } from 'rxjs';
+import { EMPTY, Observable, of, Subject, throwError } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { AUTH_SESSION_LOCK } from './cookie-session';
+import { ExclusiveLock } from '../../utils/web-lock';
+import { cookieAuthFromServiceResp, tokenAuthFromServiceResp, clearTokenFromStorage } from './auth-info';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let authHttp: AuthHttpService;
+  let sessionLock: jasmine.Spy<ExclusiveLock>;
+  let refreshAuth: jasmine.Spy;
+  let createTempUser: jasmine.Spy;
 
-  beforeEach(() => {
+  const passthroughLock: ExclusiveLock = <T>(work: () => Observable<T>): Observable<T> => work();
+
+  function holdingLock(): { lock: ExclusiveLock, release: () => void } {
+    const gate = new Subject<void>();
+    return {
+      lock: <T>(work: () => Observable<T>): Observable<T> => gate.pipe(take(1), switchMap(() => work())),
+      release: (): void => {
+        gate.next();
+      },
+    };
+  }
+
+  function configure(options: {
+    authType?: 'cookies' | 'tokens',
+    refreshAuth?: jasmine.Spy,
+    createTempUser?: jasmine.Spy,
+    lock?: ExclusiveLock,
+  } = {}): void {
+    sessionLock = jasmine.createSpy('sessionLock').and.callFake(options.lock ?? passthroughLock);
+    refreshAuth = options.refreshAuth ?? jasmine.createSpy('refreshAuth').and.returnValue(EMPTY);
+    createTempUser = options.createTempUser ?? jasmine.createSpy('createTempUser').and.returnValue(EMPTY);
+
     TestBed.configureTestingModule({
       providers: [
-        { provide: APPCONFIG, useValue: { apiUrl: 'http://localhost:3000/api' } },
+        { provide: APPCONFIG, useValue: { apiUrl: 'http://localhost:3000/api', authType: options.authType ?? 'cookies' } },
+        { provide: AUTH_SESSION_LOCK, useValue: sessionLock },
         {
           provide: AuthHttpService,
           useValue: {
-            createTempUser: () => EMPTY
+            refreshAuth,
+            createTempUser,
           }
         },
         {
@@ -29,15 +58,138 @@ describe('AuthService', () => {
       ]
     });
     authService = TestBed.inject(AuthService);
-    authHttp = TestBed.inject(AuthHttpService);
-  });
+  }
 
   afterEach(() => {
     authService.ngOnDestroy();
+    clearTokenFromStorage();
   });
 
   it('should be created', () => {
+    configure();
     expect(authService).toBeTruthy();
-    expect(authHttp).toBeTruthy();
+  });
+
+  it('uses the session lock and refreshAuth with the create flag on cookie-mode startup', () => {
+    const held = holdingLock();
+    const auth = cookieAuthFromServiceResp(3600);
+    configure({
+      lock: held.lock,
+      refreshAuth: jasmine.createSpy('refreshAuth').and.returnValue(of(auth)),
+    });
+
+    expect(sessionLock).toHaveBeenCalled();
+    expect(refreshAuth).not.toHaveBeenCalled();
+    held.release();
+    expect(refreshAuth).toHaveBeenCalledWith({
+      createTempUserOnRefreshFailure: true,
+      tempUserDefaultLanguage: 'fr',
+    });
+    expect(createTempUser).not.toHaveBeenCalled();
+    expect(authService.status$.value).toEqual(auth);
+  });
+
+  it('recovers cookie-mode invalidToken through the lock and refreshAuth, without createTempUser', () => {
+    const startupAuth = cookieAuthFromServiceResp(3600);
+    const recoveredAuth = cookieAuthFromServiceResp(4000);
+    configure({
+      refreshAuth: jasmine.createSpy('refreshAuth').and.returnValues(of(startupAuth), of(recoveredAuth)),
+    });
+
+    const held = holdingLock();
+    sessionLock.and.callFake(held.lock);
+    sessionLock.calls.reset();
+    refreshAuth.calls.reset();
+    createTempUser.calls.reset();
+
+    authService.invalidToken(startupAuth);
+    expect(sessionLock).toHaveBeenCalled();
+    expect(refreshAuth).not.toHaveBeenCalled();
+    held.release();
+    expect(refreshAuth).toHaveBeenCalledWith({
+      createTempUserOnRefreshFailure: true,
+      tempUserDefaultLanguage: 'fr',
+    });
+    expect(createTempUser).not.toHaveBeenCalled();
+    expect(authService.status$.value).toEqual(recoveredAuth);
+  });
+
+  it('falls back to createTempUser when cookie-mode invalidToken refreshAuth errors', () => {
+    const startupAuth = cookieAuthFromServiceResp(3600);
+    const createdAuth = cookieAuthFromServiceResp(4000);
+    configure({
+      refreshAuth: jasmine.createSpy('refreshAuth').and.returnValues(
+        of(startupAuth),
+        throwError(() => new Error('refresh failed')),
+      ),
+      createTempUser: jasmine.createSpy('createTempUser').and.returnValue(of(createdAuth)),
+    });
+
+    authService.invalidToken(startupAuth);
+
+    expect(createTempUser).toHaveBeenCalledWith('fr');
+    expect(authService.status$.value).toEqual(createdAuth);
+  });
+
+  it('calls createTempUser directly on token-mode invalidToken and never uses the lock', () => {
+    // Seeds sessionStorage so constructor restore authenticates; otherwise invalidToken returns early.
+    const createdAuth = tokenAuthFromServiceResp('tok', 3600);
+    configure({
+      authType: 'tokens',
+      createTempUser: jasmine.createSpy('createTempUser').and.returnValue(of(createdAuth)),
+    });
+
+    sessionLock.calls.reset();
+    createTempUser.calls.reset();
+
+    authService.invalidToken(createdAuth);
+
+    expect(sessionLock).not.toHaveBeenCalled();
+    expect(createTempUser).toHaveBeenCalledWith('fr');
+    expect(refreshAuth).not.toHaveBeenCalled();
+    expect(authService.status$.value).toEqual(createdAuth);
+  });
+
+  it('runs cookie-mode periodic refresh through the lock', () => {
+    // Zoneless: no fakeAsync; jasmine.clock advances RxJS timer(0) when expiry is within minTokenLifetime.
+    jasmine.clock().install();
+    try {
+      const auth = cookieAuthFromServiceResp(60);
+      configure({
+        refreshAuth: jasmine.createSpy('refreshAuth').and.returnValue(of(auth)),
+      });
+      sessionLock.calls.reset();
+      refreshAuth.calls.reset();
+
+      jasmine.clock().tick(0);
+
+      expect(sessionLock).toHaveBeenCalled();
+      expect(refreshAuth).toHaveBeenCalled();
+      expect(refreshAuth.calls.mostRecent().args.length).toBe(0);
+      authService.ngOnDestroy();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
+  it('does not use the lock for token-mode periodic refresh', () => {
+    jasmine.clock().install();
+    try {
+      const auth = tokenAuthFromServiceResp('tok', 60);
+      configure({
+        authType: 'tokens',
+        refreshAuth: jasmine.createSpy('refreshAuth').and.returnValue(of(auth)),
+      });
+      sessionLock.calls.reset();
+      refreshAuth.calls.reset();
+
+      jasmine.clock().tick(0);
+
+      expect(sessionLock).not.toHaveBeenCalled();
+      expect(refreshAuth).toHaveBeenCalled();
+      authService.ngOnDestroy();
+    } finally {
+      jasmine.clock().uninstall();
+    }
   });
 });

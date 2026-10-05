@@ -1,7 +1,7 @@
 import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, switchMap, retry, map } from 'rxjs/operators';
-import { BehaviorSubject, of, timer, Subject, EMPTY, TimeoutError } from 'rxjs';
+import { catchError, switchMap, map } from 'rxjs/operators';
+import { BehaviorSubject, of, timer, Subject, EMPTY, TimeoutError, Observable } from 'rxjs';
 import { OAuthService } from './oauth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { MINUTES } from '../../utils/duration';
@@ -18,6 +18,7 @@ import {
 import { LocaleService } from '../../services/localeService';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { AUTH_SESSION_LOCK, createTempUserWithRetry, resumeOrCreateCookieSession } from './cookie-session';
 
 // Lifetime under which we refresh the token.
 export const minTokenLifetime = 5*MINUTES;
@@ -40,6 +41,7 @@ export class AuthService implements OnDestroy {
   private authHttp = inject(AuthHttpService);
   private localeService = inject(LocaleService);
   private config = inject(APPCONFIG);
+  private sessionLock = inject(AUTH_SESSION_LOCK);
   // Explicit DestroyRef: logoutAuthUser/invalidToken subscribe outside injection context, so bare takeUntilDestroyed() would fail.
   private destroyRef = inject(DestroyRef);
 
@@ -58,17 +60,13 @@ export class AuthService implements OnDestroy {
         else {
           // try to refresh the cookie-stored token
           // there may not be any (valid) token (we cannot know)... in such a case the service create a temp user (using the given language)
-          const defaultLanguage = this.localeService.currentLang?.tag;
-          if (!defaultLanguage) throw new Error('default language should be defined');
-          return this.authHttp.refreshAuth({ createTempUserOnRefreshFailure: true, tempUserDefaultLanguage: defaultLanguage });
+          return resumeOrCreateCookieSession(this.authHttp, this.sessionLock, this.defaultLanguage());
         }
       }),
-      catchError(_e => {
-        // (3) otherwise, create a temp session
-        const defaultLanguage = this.localeService.currentLang?.tag;
-        // If no default language, the app is in error state, no need to create a temp user.
-        if (!defaultLanguage) throw new Error('default language should be defined');
-        return this.authHttp.createTempUser(defaultLanguage).pipe(retry(2));
+      catchError(err => {
+        // (3) token mode: create a temp session (cookie mode already did inside the lock)
+        if (this.config.authType !== 'tokens') throw err;
+        return createTempUserWithRetry(this.authHttp, this.defaultLanguage());
       }),
       takeUntilDestroyed(),
     ).subscribe({
@@ -96,7 +94,10 @@ export class AuthService implements OnDestroy {
       switchMap(auth => {
         const isExpired = auth.expiration.valueOf() < Date.now();
         if (isExpired) return of({ auth, tokenIsExpired: true }); // don't even try to refresh the token if it is expired
-        return this.authHttp.refreshAuth().pipe(
+        const refresh$: Observable<AuthResult> = this.config.authType === 'tokens' ?
+          this.authHttp.refreshAuth() :
+          this.sessionLock(() => this.authHttp.refreshAuth());
+        return refresh$.pipe(
           catchError(err => {
             // For any http error, ignore it since the token is valid. Another try will occur the next minute.
             if (err instanceof HttpErrorResponse || err instanceof TimeoutError) return EMPTY;
@@ -156,9 +157,10 @@ export class AuthService implements OnDestroy {
 
   /**
    * Dev/test-only entry point that simulates a server-side token expiration: the current auth is
-   * invalidated and the same recovery path used by the HTTP interceptor (creating a temp user) is
-   * taken. No-op in production builds and when no user is authenticated. Reused by the
-   * "Invalidate token" dev menu and by Playwright via `window.algoreaSimulateTokenExpiration`.
+   * invalidated and the same recovery path used by the HTTP interceptor is taken (cookie mode
+   * refreshes or creates a session; token mode creates a temp user). No-op in production builds
+   * and when no user is authenticated. Reused by the "Invalidate token" dev menu and by Playwright
+   * via `window.algoreaSimulateTokenExpiration`.
    */
   simulateTokenExpiration(): void {
     if (environment.production) return;
@@ -182,12 +184,11 @@ export class AuthService implements OnDestroy {
       return;
     }
 
-    const defaultLanguage = this.localeService.currentLang?.tag;
-    // If no default language, the app is in error state, no need to create a temp user.
-    if (!defaultLanguage) throw new Error('default language should be defined');
+    const recover$ = this.config.authType === 'tokens' ?
+      createTempUserWithRetry(this.authHttp, this.defaultLanguage()) :
+      resumeOrCreateCookieSession(this.authHttp, this.sessionLock, this.defaultLanguage());
 
-    this.authHttp.createTempUser(defaultLanguage).pipe(
-      retry(2),
+    recover$.pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe({
       next: auth => {
@@ -198,6 +199,13 @@ export class AuthService implements OnDestroy {
       }
     });
 
+  }
+
+  // If no default language, the app is in error state, no need to create a temp user.
+  private defaultLanguage(): string {
+    const defaultLanguage = this.localeService.currentLang?.tag;
+    if (!defaultLanguage) throw new Error('default language should be defined');
+    return defaultLanguage;
   }
 
 }
