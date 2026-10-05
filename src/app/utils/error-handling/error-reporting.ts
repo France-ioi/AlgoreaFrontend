@@ -2,13 +2,16 @@ import * as Sentry from '@sentry/angular';
 import type { ReportDialogOptions } from '@sentry/angular';
 import { convertToError } from './error-conversion';
 
+type CaptureContext = Parameters<typeof Sentry.captureException>[1];
+
 /**
  * Indirection around Sentry calls so tests can spy on them: the `@sentry/angular` ESM
  * namespace exports functions as read-only, non-configurable bindings, which prevents
  * `spyOn(Sentry, ...)` from working. Production code goes through this object.
  */
 export const sentryReporter = {
-  captureException: (error: unknown): string => Sentry.captureException(error),
+  captureException: (error: unknown, context?: CaptureContext): string =>
+    Sentry.captureException(error, context),
   showReportDialog: (options: ReportDialogOptions): void => Sentry.showReportDialog(options),
 };
 
