@@ -32,9 +32,14 @@ export class PropagationAdvancedConfigurationFormComponent {
   closeEvent = output<ItemPermPropagations | undefined>();
   giverPermissions = input.required<ItemCorePerm>();
   itemPropagations = input.required<Partial<ItemPermPropagations>>();
+  requiresExplicitEntry = input(false);
 
   data = computed(() =>
-    generatePropagationsValuesWithValidation(this.giverPermissions(), this.itemPropagations())
+    generatePropagationsValuesWithValidation(
+      this.giverPermissions(),
+      this.itemPropagations(),
+      this.requiresExplicitEntry(),
+    )
   );
 
   form = this.fb.nonNullable.group({

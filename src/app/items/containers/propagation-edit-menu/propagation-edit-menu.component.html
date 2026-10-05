@@ -16,9 +16,9 @@
       [class.active]="childData().contentViewPropagation === 'none'"
       (click)="onClick('none')"
     >
-      <div class="menu-item-title" i18n>Locked and hidden</div>
+      <div class="menu-item-title">{{ noneOption().label }}</div>
       <div class="menu-item-icon">
-        <i class="ph-duotone ph-eye-slash"></i>
+        <i [class]="noneOption().icon" aria-hidden="true"></i>
       </div>
     </button>
   </li>
@@ -30,9 +30,9 @@
       [disabled]="!((childData().permissions && (childData().permissions! | allowsGrantingView)) || [ 'as_info', 'as_content' ].includes(childData().contentViewPropagation || ''))"
       (click)="onClick('as_info')"
     >
-      <div class="menu-item-title" i18n>Locked</div>
+      <div class="menu-item-title">{{ asInfoOption().label }}</div>
       <div class="menu-item-icon">
-        <i class="ph-duotone ph-lock-simple"></i>
+        <i [class]="asInfoOption().icon" aria-hidden="true"></i>
       </div>
     </button>
   </li>
@@ -46,9 +46,9 @@
       [disabled]="!((childData().permissions && (childData().permissions! | allowsGrantingContentView)) || childData().contentViewPropagation === 'as_content')"
       (click)="onClick('as_content')"
     >
-      <div class="menu-item-title" i18n>Open</div>
+      <div class="menu-item-title">{{ asContentOption().label }}</div>
       <div class="menu-item-icon">
-        <i class="ph-duotone ph-eye"></i>
+        <i [class]="asContentOption().icon" aria-hidden="true"></i>
       </div>
     </button>
   </li>

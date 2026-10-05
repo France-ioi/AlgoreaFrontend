@@ -15,6 +15,7 @@ export interface PropagationAdvancedConfigurationDialogData {
   childTitle?: string,
   permissions: ItemCorePerm,
   itemPropagations: Partial<ItemPermPropagations>,
+  requiresExplicitEntry?: boolean,
 }
 
 @Component({

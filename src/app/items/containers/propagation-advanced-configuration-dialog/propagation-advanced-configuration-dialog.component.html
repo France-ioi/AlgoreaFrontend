@@ -19,6 +19,7 @@
     </p>
     <alg-propagation-advanced-configuration-form [giverPermissions]="data().permissions"
       [itemPropagations]="data().itemPropagations"
+      [requiresExplicitEntry]="!!data().requiresExplicitEntry"
       (closeEvent)="dialogRef.close($event)"
      />
   </div>
