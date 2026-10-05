@@ -4,6 +4,7 @@ import { TestScheduler } from 'rxjs/testing';
 import { GetItemByIdService, Item } from 'src/app/data-access/get-item-by-id.service';
 import { itemContentStore } from './item-content.store';
 import { breadcrumbsFetchingEffect, itemFetchingEffect, resultsFetchingEffect } from './item-fetching.effects';
+import { itemRouteErrorHandlingActions } from './item-content.actions';
 import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
 import { FullItemRoute, itemRoute } from 'src/app/models/routing/item-route';
@@ -245,6 +246,91 @@ describe('breadcrumbsFetchingEffect', () => {
         breadcrumbsServiceSpy,
       ).pipe(toArray()).subscribe({
         next: actions => {
+          expect(actions[0]?.fetchState.isFetching).toBeTrue();
+          expect(actions[1]?.fetchState.isReady).toBeTrue();
+          expect(actions[2]?.fetchState.isFetching).toBeTrue();
+          expect(actions[3]?.fetchState.isReady).toBeTrue();
+          done();
+        }
+      });
+    });
+  });
+
+  it('refetches when results are started on a path overlapping the active route', done => {
+    const overlappingRoute: FullItemRoute = itemRoute('activity', '1', { attemptId: '0', path: [ '10' ] });
+    const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
+    testScheduler.run(({ hot, cold }) => {
+      breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
+      const selectActiveRoute$ = hot('a-------|', { a: overlappingRoute });
+      const actions$ = hot('          --s-----|', { s: itemRouteErrorHandlingActions.resultPathStarted({ path: [ '10' ] }) });
+      const storeMock$ = {
+        select: () => selectActiveRoute$,
+      } as unknown as Store;
+
+      breadcrumbsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: actions => {
+          expect(actions[0]?.fetchState.isFetching).toBeTrue();
+          expect(actions[1]?.fetchState.isReady).toBeTrue();
+          expect(actions[2]?.fetchState.isFetching).toBeTrue();
+          expect(actions[3]?.fetchState.isReady).toBeTrue();
+          done();
+        }
+      });
+    });
+  });
+
+  it('does not refetch when results are started on an unrelated path', done => {
+    const overlappingRoute: FullItemRoute = itemRoute('activity', '1', { attemptId: '0', path: [ '10' ] });
+    const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
+    testScheduler.run(({ hot, cold }) => {
+      breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
+      const selectActiveRoute$ = hot('a-------|', { a: overlappingRoute });
+      const actions$ = hot('          --s-----|', { s: itemRouteErrorHandlingActions.resultPathStarted({ path: [ '99' ] }) });
+      const storeMock$ = {
+        select: () => selectActiveRoute$,
+      } as unknown as Store;
+
+      breadcrumbsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: actions => {
+          expect(breadcrumbsServiceSpy.get).toHaveBeenCalledTimes(1);
+          expect(actions.length).toEqual(2);
+          expect(actions[0]?.fetchState.isFetching).toBeTrue();
+          expect(actions[1]?.fetchState.isReady).toBeTrue();
+          done();
+        }
+      });
+    });
+  });
+
+  it('refetches after a null route when results are started on an overlapping path', done => {
+    const overlappingRoute: FullItemRoute = itemRoute('activity', '1', { attemptId: '0', path: [ '10' ] });
+    const breadcrumbsServiceSpy = jasmine.createSpyObj<ItemBreadcrumbsWithFailoverService>('ItemBreadcrumbsWithFailoverService', [ 'get' ]);
+    testScheduler.run(({ hot, cold }) => {
+      breadcrumbsServiceSpy.get.and.callFake(() => cold('-a|', { a: mockBreadcrumbs }));
+      const selectActiveRoute$ = hot('a-x-a----|', { a: overlappingRoute, x: null });
+      const actions$ = hot('          ---s-----|', { s: itemRouteErrorHandlingActions.resultPathStarted({ path: [ '10' ] }) });
+      const storeMock$ = {
+        select: () => selectActiveRoute$,
+      } as unknown as Store;
+
+      breadcrumbsFetchingEffect(
+        storeMock$,
+        actions$,
+        userSessionServiceMock,
+        breadcrumbsServiceSpy,
+      ).pipe(toArray()).subscribe({
+        next: actions => {
+          expect(actions.length).toEqual(4);
           expect(actions[0]?.fetchState.isFetching).toBeTrue();
           expect(actions[1]?.fetchState.isReady).toBeTrue();
           expect(actions[2]?.fetchState.isFetching).toBeTrue();

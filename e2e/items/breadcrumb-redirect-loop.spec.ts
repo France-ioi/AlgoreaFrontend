@@ -111,3 +111,62 @@ test('does not throw Too many redirections when switching tabs while path recove
   await expect(page).not.toHaveURL(/;p=/);
   expect(await hasThrownTooManyRedirections(page)).toBe(false);
 });
+
+test('refetches breadcrumbs after recovery start succeeds following an aborted failover', async ({ page }) => {
+  await installTooManyRedirectionsDetector(page);
+
+  // `pa=0` matches what `solveRouteError` writes (parentAttemptId only). Starting with `a=0` would recover to a different
+  // route, so distinctUntilChanged would refetch even without itemRouteErrorHandlingActions.resultPathStarted.
+  const recoveredItemUrl = `/a/${inaccessibleItemId};p=${inaccessibleItemPath};pa=0`;
+  const recoveryStartPath = inaccessibleItemPathIds.join('/');
+  const recoveredBreadcrumbs = [
+    ...inaccessibleItemPathIds.map(id => ({
+      item_id: id,
+      language_tag: 'en',
+      title: `Item ${id}`,
+      type: 'Chapter',
+      attempt_id: '0',
+    })),
+    {
+      item_id: inaccessibleItemId,
+      language_tag: 'en',
+      title: 'Recovered',
+      type: 'Chapter',
+    },
+  ];
+
+  let breadcrumbCalls = 0;
+  await page.route(`**/items/${breadcrumbsPath}/breadcrumbs*`, async route => {
+    breadcrumbCalls += 1;
+    if (breadcrumbCalls === 1) {
+      await route.fulfill({ status: 403, contentType: 'application/json', body: '{}' });
+      return;
+    }
+    await route.fulfill({ json: recoveredBreadcrumbs });
+  });
+  // With only `pa=`, failover and recovery both POST the parent path. Abort the first (failover); let the second succeed.
+  let startCalls = 0;
+  await page.route(`**/items/${recoveryStartPath}/start-result-path*`, async route => {
+    startCalls += 1;
+    if (startCalls === 1) {
+      await route.abort();
+      return;
+    }
+    await route.fulfill({ json: { success: true, message: 'ok', data: { attempt_id: '0' } } });
+  });
+  await page.route(`**/items/${inaccessibleItemId}/path-from-root*`, route => route.fulfill({
+    json: { path: [ ...inaccessibleItemPathIds, inaccessibleItemId ] },
+  }));
+
+  const secondBreadcrumbs = page.waitForResponse(response =>
+    response.url().startsWith(`${apiUrl}/items/${breadcrumbsPath}/breadcrumbs`) && response.status() === 200
+  );
+
+  await page.goto(recoveredItemUrl);
+  await secondBreadcrumbs;
+
+  // Recovered URL is identical to the initial `pa=0` route; without
+  // itemRouteErrorHandlingActions.resultPathStarted the effect would not refetch.
+  await expect(page).toHaveURL(new RegExp(`/a/${inaccessibleItemId};p=${inaccessibleItemPath};pa=0`));
+  expect(await hasThrownTooManyRedirections(page)).toBe(false);
+});

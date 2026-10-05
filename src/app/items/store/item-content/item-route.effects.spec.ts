@@ -62,7 +62,7 @@ describe('routeParamParsingEffect', () => {
     });
   });
 
-  it('only emits fetching on error handling success', done => {
+  it('emits only fetching (no resultPathStarted) for root items', done => {
     testScheduler.run(({ hot }) => {
       const routeError = { tag: 'error', contentType: 'activity', id: '1', path: [] };
       const selectActiveContentItemParams$ = hot('-x--|', { x: routeError }).pipe(shareReplay(1));
@@ -83,9 +83,44 @@ describe('routeParamParsingEffect', () => {
     });
   });
 
+  it('emits resultPathStarted before navigating when the path is non-empty', done => {
+    testScheduler.run(({ hot, cold }) => {
+      const startedPath = [ '10', '1' ];
+      const routeError = { tag: 'error', contentType: 'activity', id: '1', path: startedPath };
+      const selectActiveContentItemParams$ = hot('-x--|', { x: routeError }).pipe(shareReplay(1));
+      const userSessionNoChangeMock$ = { userChanged$: hot('----|', { x: null }) } as unknown as UserSessionService;
+      const storeMock$ = { select: () => selectActiveContentItemParams$ } as unknown as Store;
+      resultActionsServiceSpy.startWithoutAttempt.and.callFake(() => cold('--x|', { x: '1' }));
+
+      const events: unknown[] = [];
+      routeErrorHandlingEffect(
+        storeMock$,
+        userSessionNoChangeMock$,
+        getItemPathServiceSpy,
+        resultActionsServiceSpy,
+        itemRouterSpy
+      ).subscribe({
+        next: event => {
+          events.push(event);
+          if (event.type === itemRouteErrorHandlingActions.resultPathStarted.type) {
+            expect(itemRouterSpy.navigateTo).toHaveBeenCalledTimes(0);
+          }
+        },
+        complete: () => {
+          expect(events).toEqual([
+            fetchingAction,
+            itemRouteErrorHandlingActions.resultPathStarted({ path: startedPath }),
+          ]);
+          expect(itemRouterSpy.navigateTo).toHaveBeenCalledTimes(1);
+          done();
+        },
+      });
+    });
+  });
+
   it('restarts the fetching in case of user change during the fetching', done => {
     testScheduler.run(({ hot, cold }) => {
-      const routeError = { tag: 'error', contentType: 'activity', id: '1', path: [ 2 ] };
+      const routeError = { tag: 'error', contentType: 'activity', id: '1', path: [ '2' ] };
       const selectActiveContentItemParams$ = hot('-x---|', { x: routeError }).pipe(shareReplay(1));
       const userSessionNoChangeMock$ = { userChanged$: hot('--x--|', { x: null }) } as unknown as UserSessionService;
       const storeMock$ = { select: () => selectActiveContentItemParams$ } as unknown as Store;
@@ -98,7 +133,11 @@ describe('routeParamParsingEffect', () => {
         resultActionsServiceSpy,
         itemRouterSpy
       ).pipe(toArray()).subscribe(events => {
-        expect(events).toEqual([ fetchingAction, fetchingAction ]);
+        expect(events).toEqual([
+          fetchingAction,
+          fetchingAction,
+          itemRouteErrorHandlingActions.resultPathStarted({ path: [ '2' ] }),
+        ]);
         expect(itemRouterSpy.navigateTo).toHaveBeenCalledTimes(1);
         done();
       });
