@@ -18,6 +18,20 @@ class NoSuchAliasError extends Error {
 }
 
 /**
+ * Navigate to `route` with `replaceUrl` on the next macrotask. Emits nothing and completes.
+ */
+export function navigateReplacingItemRoute(itemRouter: ItemRouter, route: RawItemRoute): Observable<never> {
+  return of(route).pipe(
+    delay(0), // required in order to trigger new navigation after the current one
+    switchMap(itemRoute => {
+      const loadAnswerIdAsCurrent = loadAnswerAsCurrentFromNavigationState();
+      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent, useCurrentObservation: true });
+      return EMPTY;
+    }),
+  );
+}
+
+/**
  * Called when either path or attempt is missing. Will fetch the path if missing, then will be fetch the attempt.
  * Will redirect when relevant data has been fetched. Emits the started path once after a successful start-result-path
  * (root items have an empty path and emit nothing). May emit errors.
@@ -29,24 +43,22 @@ export function solveRouteError(
   itemRouter: ItemRouter
 ): Observable<ItemPath> {
   if (!id) return throwError(() => new NoSuchAliasError());
-  const navigate = (itemRoute: RawItemRoute): Observable<never> => of(itemRoute).pipe(
-    delay(0), // required in order to trigger new navigation after the current one
-    switchMap(itemRoute => {
-      const loadAnswerIdAsCurrent = loadAnswerAsCurrentFromNavigationState();
-      itemRouter.navigateTo(itemRoute, { navExtras: { replaceUrl: true }, loadAnswerIdAsCurrent, useCurrentObservation: true });
-      return EMPTY;
-    }),
-  );
   return of(path).pipe(
     switchMap(path => (path ? of(path) : getItemPathService.getItemPath(id))),
     switchMap(path => {
       // for empty path (root items), consider the item has a (fake) parent attempt id 0
-      if (path.length === 0) return navigate({ contentType, id, path, parentAttemptId: defaultAttemptId, answer, observedGroup });
+      if (path.length === 0) {
+        return navigateReplacingItemRoute(itemRouter, {
+          contentType, id, path, parentAttemptId: defaultAttemptId, answer, observedGroup,
+        });
+      }
       // else, will start all path but the current item
       return resultActionsService.startWithoutAttempt(path).pipe(
         switchMap(attemptId => concat(
           of(path),
-          navigate({ contentType, id, path, parentAttemptId: attemptId, answer, observedGroup }),
+          navigateReplacingItemRoute(itemRouter, {
+            contentType, id, path, parentAttemptId: attemptId, answer, observedGroup,
+          }),
         )),
       );
     }),
