@@ -215,6 +215,7 @@ export function initErrorTracking(): void {
       "Can't find variable: gmo", // an error on Chrome (354 & 355) on iOS
       /change_ua/,
       'The object is in an invalid state.', // a safari error triggered by tasks when resizing
+      'posthog.capture is not a function', // GTM/PostHog tag when posthog is not loaded (ALGOREA-G7)
     ],
     // from https://docs.sentry.io/clients/javascript/tips/
     denyUrls: [
