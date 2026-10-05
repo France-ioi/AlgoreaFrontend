@@ -49,6 +49,7 @@ import { LoginWallComponent } from './containers/login-wall/login-wall.component
 import { RestrictedContentComponent } from './containers/restricted-content/restricted-content.component';
 import { ItemTaskFlowService, selectState } from './item-task-flow.service';
 import { ItemContentSyncService } from './item-content-sync.service';
+import { isScoreForRoute, ScoreChange } from './models/score-change';
 
 /**
  * ItemByIdComponent is just a container for detail or edit page but manages the fetching on id change and (un)setting the current content.
@@ -148,7 +149,7 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   fullFrameContentDisplayed$ = this.layoutService.fullFrameContentDisplayed$;
   withLeftPaddingContentDisplayed$ = this.layoutService.withLeftPaddingContentDisplayed$;
 
-  private readonly currentResult = this.store.selectSignal(fromItemContent.selectActiveContentCurrentResult);
+  private readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
   constructor() {
     this.taskFlow.registerSaveHandler(() =>
       this.itemContentComponent()?.itemDisplayComponent()?.saveAnswerAndState() ?? of(readyState<void>(undefined))
@@ -185,12 +186,12 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());
   }
 
-  onScoreChange(score: number): void {
-    const attemptId = this.currentResult()?.attemptId;
-    // Score events only come from a running task, which already has a selected attempt in the URL.
-    if (attemptId === undefined) throw new Error('unexpected: score change without a current attempt');
+  onScoreChange(event: ScoreChange): void {
+    // The grade is saved server-side even if the user already left the task, so the menu must refresh anyway.
     this.currentContentService.forceNavMenuReload();
-    this.store.dispatch(fromItemContent.itemByIdPageActions.patchScore({ score, attemptId }));
+    // A late score from a task being torn down after navigation must not patch the newly displayed content.
+    if (!isScoreForRoute(event, this.route())) return;
+    this.store.dispatch(fromItemContent.itemByIdPageActions.patchScore({ score: event.score, attemptId: event.attemptId }));
   }
 
   beforeUnload(): Observable<boolean> {

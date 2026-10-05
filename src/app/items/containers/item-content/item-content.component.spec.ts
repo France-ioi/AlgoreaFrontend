@@ -23,6 +23,7 @@ import { ItemEditPerm } from '../../models/item-edit-permission';
 import { ItemWatchPerm } from '../../models/item-watch-permission';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { ScoreChange } from '../../models/score-change';
 
 @Component({
   selector: 'alg-item-display',
@@ -39,7 +40,7 @@ class MockItemDisplayComponent {
   savingAnswer = input(false);
   viewChange = output<string>();
   tabsChange = output<string[]>();
-  scoreChange = output<number>();
+  scoreChange = output<ScoreChange>();
   skipSave = output<void>();
   refresh = output<void>();
   editorUrl = output<string | undefined>();

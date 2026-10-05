@@ -27,6 +27,7 @@ import { areStateAnswerEqual } from '../models/answers';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { FetchState } from 'src/app/utils/state';
 import { fromItemContent } from '../store';
+import { ScoreChange } from '../models/score-change';
 
 export const answerAndStateSaveInterval = 60*SECONDS;
 
@@ -50,7 +51,7 @@ export class ItemTaskAnswerService implements OnDestroy {
   private errorSubject = new Subject<unknown>();
   readonly error$ = this.errorSubject.asObservable();
 
-  private scoreChange = new Subject<number>();
+  private scoreChange = new Subject<ScoreChange>();
   readonly scoreChange$ = this.scoreChange.asObservable();
 
   private unlockedItems = new Subject<UnlockedItems>();
@@ -206,13 +207,15 @@ export class ItemTaskAnswerService implements OnDestroy {
       takeUntilDestroyed(this.destroyRef),
       shareReplay(1),
     );
-    combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent(), wasValidated$ ])
+    combineLatest([ grade$, saveGrade$, this.saveTaskStateAnswerAsCurrent(), wasValidated$, this.config$.pipe(take(1)) ])
       .pipe(
         catchError(() => EMPTY), // error is handled elsewhere by returning saveGrade$
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(([ grade, saveGradeResult, , wasValidated ]) => {
-        if (grade.score !== undefined) this.scoreChange.next(grade.score);
+      .subscribe(([ grade, saveGradeResult, , wasValidated, config ]) => {
+        if (grade.score !== undefined) {
+          this.scoreChange.next({ score: grade.score, itemId: config.route.id, attemptId: config.attemptId });
+        }
         if (saveGradeResult.unlockedItems.length > 0) this.unlockedItems.next(saveGradeResult.unlockedItems);
         // a newly-validated task grants solution access: regenerate the token so the task can expose the solution view
         // without a full reload. Use the backend's authoritative `validated` flag, and skip if it was already
