@@ -1,14 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { APPCONFIG } from 'src/app/config';
 
-import { AuthService } from './auth.service';
+import { AuthService, maxInvalidToken } from './auth.service';
 import { AuthHttpService } from '../../data-access/auth.http-service';
 import { LocaleService } from 'src/app/services/localeService';
 import { EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AUTH_SESSION_LOCK } from './cookie-session';
 import { ExclusiveLock } from '../../utils/web-lock';
-import { cookieAuthFromServiceResp, tokenAuthFromServiceResp, clearTokenFromStorage } from './auth-info';
+import {
+  cookieAuthFromServiceResp,
+  cookieAuthenticated,
+  tokenAuthFromServiceResp,
+  clearTokenFromStorage,
+  notAuthenticated,
+} from './auth-info';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -142,7 +148,9 @@ describe('AuthService', () => {
     sessionLock.calls.reset();
     createTempUser.calls.reset();
 
-    authService.invalidToken(createdAuth);
+    const current = authService.status$.value;
+    expect(current.authenticated).toBeTrue();
+    if (current.authenticated) authService.invalidToken(current);
 
     expect(sessionLock).not.toHaveBeenCalled();
     expect(createTempUser).toHaveBeenCalledWith('fr');
@@ -191,5 +199,85 @@ describe('AuthService', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('ignores a late 401 after cookie-mode renewal even when both expire the same day', () => {
+    const noonTomorrow = new Date();
+    noonTomorrow.setDate(noonTomorrow.getDate() + 1);
+    noonTomorrow.setHours(12, 0, 0, 0);
+    const authA = cookieAuthenticated(noonTomorrow);
+    const authB = cookieAuthenticated(new Date(noonTomorrow.getTime() + 60_000));
+    configure({
+      refreshAuth: jasmine.createSpy('refreshAuth').and.returnValues(of(authA), of(authB)),
+    });
+
+    authService.invalidToken(authA);
+    expect(authService.status$.value).toBe(authB);
+
+    sessionLock.calls.reset();
+    refreshAuth.calls.reset();
+    createTempUser.calls.reset();
+
+    authService.invalidToken(authA);
+    expect(refreshAuth).not.toHaveBeenCalled();
+    expect(createTempUser).not.toHaveBeenCalled();
+    expect(sessionLock).not.toHaveBeenCalled();
+    expect(authService.status$.value).toBe(authB);
+  });
+
+  it('ignores a distinct AuthResult object that has an identical expiration', () => {
+    const expiration = new Date(Date.now() + 3_600_000);
+    const current = cookieAuthenticated(expiration);
+    configure({
+      refreshAuth: jasmine.createSpy('refreshAuth').and.returnValue(of(current)),
+    });
+    sessionLock.calls.reset();
+    refreshAuth.calls.reset();
+    createTempUser.calls.reset();
+
+    authService.invalidToken({ ...current });
+    expect(refreshAuth).not.toHaveBeenCalled();
+    expect(createTempUser).not.toHaveBeenCalled();
+    expect(sessionLock).not.toHaveBeenCalled();
+    expect(authService.status$.value).toBe(current);
+  });
+
+  it('does nothing on invalidToken while not authenticated', () => {
+    configure();
+    const statusBefore = authService.status$.value;
+    expect(statusBefore).toEqual(notAuthenticated());
+
+    sessionLock.calls.reset();
+    refreshAuth.calls.reset();
+    createTempUser.calls.reset();
+
+    authService.invalidToken(cookieAuthenticated(new Date(Date.now() + 3_600_000)));
+    expect(refreshAuth).not.toHaveBeenCalled();
+    expect(createTempUser).not.toHaveBeenCalled();
+    expect(sessionLock).not.toHaveBeenCalled();
+    expect(authService.status$.value).toBe(statusBefore);
+  });
+
+  it('raises a failure after more than maxInvalidToken invalidations', () => {
+    configure({
+      refreshAuth: jasmine.createSpy('refreshAuth').and.callFake(() => of(cookieAuthFromServiceResp(3600))),
+    });
+    sessionLock.calls.reset();
+    refreshAuth.calls.reset();
+    createTempUser.calls.reset();
+
+    let failure: Error | undefined;
+    authService.failure$.subscribe(err => {
+      failure = err;
+    });
+
+    for (let i = 0; i < maxInvalidToken + 1; i++) {
+      const current = authService.status$.value;
+      if (current.authenticated) authService.invalidToken(current);
+    }
+
+    expect(refreshAuth).toHaveBeenCalledTimes(maxInvalidToken);
+    expect(failure?.message).toBe('too many invalid token');
+    expect(authService.status$.value).toEqual(notAuthenticated());
   });
 });

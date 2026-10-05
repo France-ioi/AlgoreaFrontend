@@ -171,11 +171,12 @@ export class AuthService implements OnDestroy {
   /**
    * Called when the API token is invalid (typically by an interceptor) and so that a fallback solution has to be found.
    * The auth arg is what was used with the request that was considered as invalid, so that we can check it is still in use.
+   * Callers must pass the exact AuthResult object taken from status$; a copy is treated as stale and ignored.
    */
   invalidToken(auth: AuthResult): void {
     const currentauth = this.status$.value;
     if (!currentauth.authenticated) return; // not the first time we are not notified of that, ignore.
-    if (currentauth.expiration.getDate() !== auth.expiration.getDate()) return; // auth has been renewed in the meantime
+    if (currentauth !== auth) return; // auth has been renewed in the meantime
 
     this.countInvalidToken ++;
     this.status$.next(notAuthenticated());
