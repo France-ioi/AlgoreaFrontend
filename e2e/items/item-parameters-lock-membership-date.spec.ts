@@ -21,17 +21,15 @@ test('checks lock membership date saving', async ({ page, createItem, itemConten
 
   await expect.soft(page.getByRole('heading', { name: 'Participation' })).toBeVisible();
 
-  const switchTargetLocator = page.getByTestId('form-item-view')
-    .filter({ hasText: /^Start participation manually$/ })
-    .locator('alg-switch');
-  await expect.soft(switchTargetLocator).toBeVisible();
-  await switchTargetLocator.click();
+  const convertLocator = page.getByTestId('explicit-entry-convert');
+  await expect.soft(convertLocator).toBeVisible();
+  await convertLocator.click();
 
-  const switch2TargetLocator = page.getByTestId('form-item-view')
+  const durationSwitchLocator = page.getByTestId('form-item-view')
     .filter({ hasText: 'Duration' })
     .locator('alg-switch');
-  await expect.soft(switch2TargetLocator).toBeVisible();
-  await switch2TargetLocator.click();
+  await expect.soft(durationSwitchLocator).toBeVisible();
+  await durationSwitchLocator.click();
 
   await test.step('fill duration and save', async () => {
     const durationLocator = page.locator('alg-duration');
@@ -43,7 +41,7 @@ test('checks lock membership date saving', async ({ page, createItem, itemConten
   });
 
   await test.step('checks the duration displayed correct after save', async () => {
-    await expect.soft(switchTargetLocator).toBeVisible();
+    await expect.soft(convertLocator).toHaveText('Convert this time-limited chapter to a regular chapter');
     await duration.checksIsHHasValue('1');
     await duration.checksIsMHasValue('10');
     await duration.checksIsSHasValue('15');

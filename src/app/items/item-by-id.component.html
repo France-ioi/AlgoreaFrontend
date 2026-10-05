@@ -1,122 +1,122 @@
 @if (state$ | async; as state) {
   @if (displayItemData(state); as itemData) {
-      <!-- Hide previous task UI while unload runs; loading indicator below covers the next item.
-           Must stay a flex column + flex:1 child: a plain block wrapper collapses the iframe (CSS height:0). -->
-      <ng-container *ngrxLet="fullFrameContentDisplayed$ as fullFrameContentDisplayed">
-        <div
-          class="alg-flex-1"
-          [style.display]="isTearingDownTask() ? 'none' : 'flex'"
-          [style.flex-direction]="isTearingDownTask() ? null : 'column'"
-        >
-        @if (!(fullFrameContent$ | async) && !itemData.item.displaySettings.hideHeader) {
-          <alg-item-header [itemData]="itemData" />
-        }
-        @if (showAccessCodeField$ | async) {
-          <div class="access-code-view">
-            <alg-access-code-view i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
-              (groupJoined)="reloadItem()"
-             />
-          </div>
-        }
-        @if (observedGroup$ | async; as observedGroup) {
-          <alg-item-permissions class="item-permissions"
-            [class.with-margin]="fullFrameContentDisplayed"
-            [class.with-right-margin]="!!(withLeftPaddingContentDisplayed$ | async)"
-            [itemData]="itemData"
-            [observedGroup]="observedGroup"
-            (changed)="reloadItem()"
+    <!-- Hide previous task UI while unload runs; loading indicator below covers the next item.
+         Must stay a flex column + flex:1 child: a plain block wrapper collapses the iframe (CSS height:0). -->
+    @let fullFrameContentDisplayed = fullFrameContentDisplayed$ | async;
+    <div
+      class="alg-flex-1"
+      [style.display]="isTearingDownTask() ? 'none' : 'flex'"
+      [style.flex-direction]="isTearingDownTask() ? null : 'column'"
+    >
+      @if (!(fullFrameContent$ | async) && !itemData.item.displaySettings.hideHeader) {
+        <alg-item-header [itemData]="itemData" />
+      }
+      @if (showAccessCodeField$ | async) {
+        <div class="access-code-view">
+          <alg-access-code-view i18n-buttonLabel="Button label for joining an item by (group) code" buttonLabel="Access"
+            (groupJoined)="reloadItem()"
            />
-        }
-        <!-- Tab bar in item content: mirror of content-top-bar tab bar; keep conditions mutually exclusive. -->
-        @if (!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed && !itemData.item.displaySettings.hideHeader) {
-          <alg-tab-bar class="tab-bar" />
-        }
-        <div
-          class="content-container"
-          [class.no-top-padding]="itemData.item.type === 'Task' && !!currentTab?.isTaskTab"
-          [class.side-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed"
-          *ngrxLet="currentTab$ as currentTab"
-          >
-          @if (isTearingDownTask() || currentTab?.isTaskTab || itemContentComponent()?.isTaskLoaded() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
-            @if (answerLoadingError$ | async; as error) {
-              <alg-error>
-                @if (!error.fallbackLink) {
-                  <ng-container i18n>Unable to load the answer</ng-container>
-                } @else {
-                  <ng-container i18n>
-                    Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
-                  </ng-container>
-                }
-                @if (!error.isForbidden) {
-                  <p>{{ errorMessageContactUs }}</p>
-                }
-              </alg-error>
-            } @else {
-              <ng-container *ngrxLet="taskConfigForDisplay$ as taskConfig">
-                @if (taskConfig && taskConfig.readOnly && taskConfig.initialAnswer && currentTab && currentTab?.isTaskTab) {
-                  <div
-                    class="indicator"
-                    [class.no-left-padding]="!fullFrameContentDisplayed"
-                    >
-                      <alg-answer-author-indicator [answer]="taskConfig.initialAnswer"
-                        [itemData]="itemData"
-                       />
-                  </div>
-                }
-                <!-- Track by item id so sticky A → live B remounts ItemContent (ItemDisplay forbids route changes). -->
-                @for (id of [ itemData.item.id ]; track id) {
-                  <alg-item-content class="alg-flex-1"
-                    [style.display]="currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit' || currentTab?.isTaskTab ? 'flex' : 'none'"
+        </div>
+      }
+      @if (observedGroup$ | async; as observedGroup) {
+        <alg-item-permissions class="item-permissions"
+          [class.with-margin]="fullFrameContentDisplayed"
+          [class.with-right-margin]="!!(withLeftPaddingContentDisplayed$ | async)"
+          [itemData]="itemData"
+          [observedGroup]="observedGroup"
+          (changed)="reloadItem()"
+         />
+      }
+      <!-- Tab bar in item content: mirror of content-top-bar tab bar; keep conditions mutually exclusive. -->
+      @if (!!(shouldDisplayTabBar$ | async) && !fullFrameContentDisplayed && !itemData.item.displaySettings.hideHeader) {
+        <alg-tab-bar class="tab-bar" />
+      }
+      @let currentTab = currentTab$ | async;
+      <div
+        class="content-container"
+        [class.no-top-padding]="itemData.item.type === 'Task' && !!currentTab?.isTaskTab"
+        [class.side-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed"
+      >
+        @if (isTearingDownTask() || currentTab?.isTaskTab || itemContentComponent()?.isTaskLoaded() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
+          @if (answerLoadingError$ | async; as error) {
+            <alg-error>
+              @if (!error.fallbackLink) {
+                <ng-container i18n>Unable to load the answer</ng-container>
+              } @else {
+                <ng-container i18n>
+                  Unable to load the answer, <a [routerLink]="error.fallbackLink" class="alg-link">back to the regular task page</a>.
+                </ng-container>
+              }
+              @if (!error.isForbidden) {
+                <p>{{ errorMessageContactUs }}</p>
+              }
+            </alg-error>
+          } @else {
+            @if (taskConfigVm$ | async; as vm) {
+              @let taskConfig = vm.taskConfig;
+              @if (taskConfig && taskConfig.readOnly && taskConfig.initialAnswer && currentTab && currentTab?.isTaskTab) {
+                <div
+                  class="indicator"
+                  [class.no-left-padding]="!fullFrameContentDisplayed"
+                >
+                  <alg-answer-author-indicator [answer]="taskConfig.initialAnswer"
                     [itemData]="itemData"
-                    [taskConfig]="taskConfig"
-                    [savingAnswer]="(savingAnswer$ | async) ?? false"
-                    [taskView]="(currentTaskView$ | async) ?? undefined"
-                    [editModeEnabled]="currentTab?.tag ==='alg-children-edit'"
-                    (taskViewChange)="setTaskView($event, itemData.route)"
-                    (taskTabsChange)="setTaskTabs($event)"
-                    (scoreChange)="onScoreChange($event)"
-                    (skipSave)="skipBeforeUnload()"
-                    (refresh)="reloadItem()"
-                    (editorUrl)="editorUrlChanged($event)"
-                    (disablePlatformProgress)="disablePlatformProgressChanged($event)"
-                    (fullFrameTask)="fullFrameContent$.next($event)"
                    />
-                }
-              </ng-container>
+                </div>
+              }
+              <!-- Track by item id so sticky A → live B remounts ItemContent (ItemDisplay forbids route changes). -->
+              @for (id of [ itemData.item.id ]; track id) {
+                <alg-item-content class="alg-flex-1"
+                  [style.display]="currentTab?.tag ==='alg-content' || currentTab?.tag ==='alg-children-edit' || currentTab?.isTaskTab ? 'flex' : 'none'"
+                  [itemData]="itemData"
+                  [taskConfig]="taskConfig"
+                  [savingAnswer]="(savingAnswer$ | async) ?? false"
+                  [taskView]="(currentTaskView$ | async) ?? undefined"
+                  [editModeEnabled]="currentTab?.tag ==='alg-children-edit'"
+                  (taskViewChange)="setTaskView($event, itemData.route)"
+                  (taskTabsChange)="setTaskTabs($event)"
+                  (scoreChange)="onScoreChange($event)"
+                  (skipSave)="skipBeforeUnload()"
+                  (refresh)="reloadItem()"
+                  (editorUrl)="editorUrlChanged($event)"
+                  (disablePlatformProgress)="disablePlatformProgressChanged($event)"
+                  (fullFrameTask)="fullFrameContent$.next($event)"
+                 />
+              }
             }
           }
-          @if (currentTab?.tag ==='alg-task-edit') {
-            <alg-item-task-edit [editorUrl]="editorUrl()"
-              (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
-             />
-          }
-          @if ((savingAnswer$ | async) ?? false) {
-            <div class="save-answer-loader">
-              <p class="save-answer-loader-message">
-                <span i18n>Saving answer before loading submission...</span>
-                <alg-loading size="medium" />
-                <button alg-button type="button" (click)="skipBeforeUnload()" i18n>Skip</button>
-              </p>
-            </div>
-          }
-          <router-outlet />
-        </div>
-        @if (isThreadInline$ | async) {
-          <div class="inline-thread-panel">
-            <div class="inline-thread-actions">
-              <button
-                class="inline-thread-close"
-                type="button"
-                icon="ph ph-x"
-                alg-button-icon
-                (click)="closeThread()"
-              ></button>
-            </div>
-            <alg-thread class="inline-thread" indicatorLayout="inline" />
+        }
+        @if (currentTab?.tag ==='alg-task-edit') {
+          <alg-item-task-edit [editorUrl]="editorUrl()"
+            (redirectToDefaultTab)="navigateToDefaultTab(itemData.route)"
+           />
+        }
+        @if ((savingAnswer$ | async) ?? false) {
+          <div class="save-answer-loader">
+            <p class="save-answer-loader-message">
+              <span i18n>Saving answer before loading submission...</span>
+              <alg-loading size="medium" />
+              <button alg-button type="button" (click)="skipBeforeUnload()" i18n>Skip</button>
+            </p>
           </div>
         }
+        <router-outlet />
+      </div>
+      @if (isThreadInline$ | async) {
+        <div class="inline-thread-panel">
+          <div class="inline-thread-actions">
+            <button
+              class="inline-thread-close"
+              type="button"
+              icon="ph ph-x"
+              alg-button-icon
+              (click)="closeThread()"
+            ></button>
+          </div>
+          <alg-thread class="inline-thread" indicatorLayout="inline" />
         </div>
-      </ng-container>
+      }
+    </div>
   }
   @if (state.isFetching || isTearingDownTask()) {
     <alg-loading class="alg-flex-1" />

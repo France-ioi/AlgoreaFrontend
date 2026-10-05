@@ -1,7 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { LayoutService } from '../../services/layout.service';
-import { LetDirective } from '@ngrx/component';
-import { NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
 import { PlatformLogoComponent } from 'src/app/ui-components/platform-logo/platform-logo.component';
@@ -11,7 +10,7 @@ import { PlatformLogoComponent } from 'src/app/ui-components/platform-logo/platf
   templateUrl: './left-header.component.html',
   styleUrl: './left-header.component.scss',
   imports: [
-    LetDirective,
+    AsyncPipe,
     NgTemplateOutlet,
     ButtonIconComponent,
     TooltipDirective,

@@ -32,7 +32,6 @@ import { AnswerAuthorIndicatorComponent } from './containers/answer-author-indic
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ThreadComponent } from 'src/app/forum/containers/thread/thread.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
-import { LetDirective } from '@ngrx/component';
 import { TabBarComponent } from 'src/app/ui-components/tab-bar/tab-bar.component';
 import { ItemPermissionsComponent } from './containers/item-permissions/item-permissions.component';
 import { AccessCodeViewComponent } from 'src/app/containers/access-code-view/access-code-view.component';
@@ -64,7 +63,6 @@ import { ItemContentSyncService } from './item-content-sync.service';
     AccessCodeViewComponent,
     ItemPermissionsComponent,
     TabBarComponent,
-    LetDirective,
     ErrorComponent,
     RouterLink,
     AnswerAuthorIndicatorComponent,
@@ -141,6 +139,9 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     toObservable(this.taskFlow.isTearingDownTask),
   ]).pipe(
     map(([ live, sticky, tearingDown ]) => (tearingDown ? sticky : live)),
+  );
+  readonly taskConfigVm$ = this.taskConfigForDisplay$.pipe(
+    map(taskConfig => ({ taskConfig })),
   );
 
   userProfile$ = this.userSessionService.userProfile$;

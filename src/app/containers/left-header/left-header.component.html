@@ -18,22 +18,21 @@
   </ng-template>
 
   <div class="container" [class.expandable-layout]="hideTree()">
-    <ng-container *ngrxLet="isNarrowScreen$; let isNarrowScreen">
-      @if (hideTree()) {
-        <div class="header-row">
-          <div class="header-tab-column">
-            <ng-container *ngTemplateOutlet="collapseButton" />
-          </div>
-          <div class="header-content-column" [class.content-masked]="treeHidden()">
-            <alg-platform-logo [class.for-mobile]="isNarrowScreen" />
-          </div>
-        </div>
-      } @else {
-        <div class="left-section alg-flex-1" [class.for-mobile]="isNarrowScreen">
-          <alg-platform-logo [class.for-mobile]="isNarrowScreen" />
+    @let isNarrowScreen = isNarrowScreen$ | async;
+    @if (hideTree()) {
+      <div class="header-row">
+        <div class="header-tab-column">
           <ng-container *ngTemplateOutlet="collapseButton" />
         </div>
-      }
-    </ng-container>
+        <div class="header-content-column" [class.content-masked]="treeHidden()">
+          <alg-platform-logo [class.for-mobile]="isNarrowScreen" />
+        </div>
+      </div>
+    } @else {
+      <div class="left-section alg-flex-1" [class.for-mobile]="isNarrowScreen">
+        <alg-platform-logo [class.for-mobile]="isNarrowScreen" />
+        <ng-container *ngTemplateOutlet="collapseButton" />
+      </div>
+    }
   </div>
 }

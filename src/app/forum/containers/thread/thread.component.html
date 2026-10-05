@@ -29,6 +29,7 @@
       <div class="widget-body">
           @let followStatus = followStatus$ | async;
           @let threadIdForIndicator = threadId$ | async;
+          @let canCurrentUserLoadAnswers = canCurrentUserLoadAnswers$ | async;
           @if (!isMine && threadIdForIndicator && threadStatus?.data?.open) {
             @if (participantUser$ | async; as participantUser) {
               @if (participantUser.name) {
@@ -41,20 +42,20 @@
             }
           }
           @let showTopIndicator = !isMine && threadIdForIndicator && threadStatus?.data?.open && (participantUser$ | async)?.name;
-          <div class="widget-scroll" [class.with-top-indicator]="showTopIndicator" #messagesScroll *ngrxLet="{ id: threadId$ | async, canCurrentUserLoadAnswers: canCurrentUserLoadAnswers$ | async } as threadMetadata">
+          <div class="widget-scroll" [class.with-top-indicator]="showTopIndicator" #messagesScroll>
             @if (isCurrentUserThreadParticipant && threadStatus?.isReady && currentState.data?.length === 0) {
               <div class="no-messages" i18n>
               In this panel, you can request help from other users about the content you are on.
               People who have already validated this activity will see your request and be able to answer.
             </div>
             } @else {
-              @if (threadMetadata.id) {
+              @if (threadIdForIndicator) {
                 @for (event of currentState.data; track event.time) {
                   <alg-thread-message class="thread-message"
-                    [threadId]="threadMetadata.id"
+                    [threadId]="threadIdForIndicator"
                     [event]="event"
-                    [canCurrentUserLoadAnswers]="threadMetadata.canCurrentUserLoadAnswers ?? false"
-                    [itemRoute]="threadMetadata.id ? ({ id: threadMetadata.id.itemId, type: 'Task' } | itemRoute) : undefined"
+                    [canCurrentUserLoadAnswers]="canCurrentUserLoadAnswers ?? false"
+                    [itemRoute]="{ id: threadIdForIndicator.itemId, type: 'Task' } | itemRoute"
                    />
                 }
                 @if (currentState.isFetching && currentState.data) {
@@ -68,8 +69,9 @@
                 }
               }
             }
-            @if (threadMetadata.id; as threadId) {
-              <div class="footer-panel" *ngrxLet="!!(threadStatus && !!threadStatus.data && !!threadStatus.data.open) as isThreadOpened">
+            @if (threadIdForIndicator; as threadId) {
+              @let isThreadOpened = !!(threadStatus && !!threadStatus.data && !!threadStatus.data.open);
+              <div class="footer-panel">
                 @if (isLastMessageByCurrentUser) {
                   @if (isMine && threadRawStatus === 'waiting_for_participant') {
                     <p class="assignment-suggestion">
@@ -144,8 +146,10 @@
                       }
                     </div>
                   }
+                  @let canSwitch = !!threadStatus && !!threadStatus.data
+                    && ((threadStatus.data.open && threadStatus.data.canClose)
+                      || (!threadStatus.data.open && threadStatus.data.canOpen));
                   <div
-                    *ngrxLet="!!threadStatus && !!threadStatus.data && ((threadStatus.data.open && threadStatus.data.canClose) || (!threadStatus.data.open && threadStatus.data.canOpen)) as canSwitch"
                     [algTooltip]="threadStatusTooltip"
                     [tooltipDisabled]="canSwitch"
                     tooltipPosition="top"

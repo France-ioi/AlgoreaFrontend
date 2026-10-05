@@ -40,7 +40,7 @@ import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { ItemAllStringsFormComponent } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.component';
 import { StringsValue } from 'src/app/items/containers/item-strings-form-group/item-strings-control/item-strings-control.component';
 import { AllStringsFormValue } from 'src/app/items/containers/item-strings-form-group/all-strings-form-value';
-import { shouldResyncStringsBaseline } from './item-edit-wrapper-sync';
+import { shouldResyncServerBaseline } from './item-edit-wrapper-sync';
 import { APPCONFIG } from 'src/app/config';
 import { DeleteItemStringService } from 'src/app/items/data-access/delete-item-string.service';
 import {
@@ -124,7 +124,7 @@ export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChang
 
       if (idChanged) {
         this.applyFullItemSnapshot(currItem);
-      } else if (shouldResyncStringsBaseline(prevItem, currItem)) {
+      } else if (shouldResyncServerBaseline(prevItem, currItem)) {
         this.resyncServerBaseline(currItem);
       }
 
@@ -177,6 +177,13 @@ export class ItemEditWrapperComponent implements OnInit, OnDestroy, PendingChang
       setFormsDisabled: disabled => this.setFormsDisabled(disabled),
       onSaveSuccess: kind => {
         this.syncFormStateAfterSave();
+        // Keep the parameters baseline in sync with what was just saved so a reverse
+        // conversion in the same session still emits `requires_explicit_entry` (and Cancel
+        // restores the post-save values). Store refresh also resyncs when it arrives.
+        const savedParameters = this.itemForm.controls.parameters.getRawValue();
+        if (savedParameters) {
+          this.initialParameters = savedParameters;
+        }
         if (kind === 'server') {
           this.store.dispatch(fromItemContent.itemByIdPageActions.refresh());
           this.currentContentService.forceNavMenuReload();

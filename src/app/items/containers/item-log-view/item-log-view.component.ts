@@ -14,7 +14,6 @@ import { RouteUrlPipe } from 'src/app/pipes/routeUrl';
 import { ItemRoutePipe, ItemRouteWithExtraPipe } from 'src/app/pipes/itemRoute';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { Router, RouterLink } from '@angular/router';
-import { LetDirective } from '@ngrx/component';
 import { ErrorComponent } from 'src/app/ui-components/error/error.component';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
 import { AsyncPipe } from '@angular/common';
@@ -57,7 +56,6 @@ const logsLimit = 20;
   imports: [
     LoadingComponent,
     ErrorComponent,
-    LetDirective,
     RouterLink,
     ScoreRingComponent,
     AsyncPipe,

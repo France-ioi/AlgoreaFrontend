@@ -1,12 +1,12 @@
 import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
-import { delay, filter, fromEvent } from 'rxjs';
+import { delay, filter, fromEvent, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSessionService } from '../../services/user-session.service';
 import { LocaleService } from '../../services/localeService';
 import { LanguagePickerComponent } from '../language-picker/language-picker.component';
 import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 import { TopRightMenuComponent } from '../top-right-menu/top-right-menu.component';
-import { LetDirective } from '@ngrx/component';
+import { AsyncPipe } from '@angular/common';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { ButtonIconComponent } from 'src/app/ui-components/button-icon/button-icon.component';
 import { APPCONFIG } from 'src/app/config';
@@ -16,7 +16,7 @@ import { APPCONFIG } from 'src/app/config';
   templateUrl: './top-right-controls.component.html',
   styleUrl: './top-right-controls.component.scss',
   imports: [
-    LetDirective,
+    AsyncPipe,
     TopRightMenuComponent,
     LanguagePickerComponent,
     ButtonComponent,
@@ -34,6 +34,7 @@ export class TopRightControlsComponent implements OnInit {
   layout = input<'bar' | 'rail'>('bar');
   topRightMenuStyleClass = input<string>();
   session$ = this.sessionService.session$.pipe(delay(0));
+  sessionVm$ = this.session$.pipe(map(session => ({ session })));
   readonly languages = this.localeService.languages;
   readonly enableNotifications = this.config.featureFlags.enableNotifications;
 

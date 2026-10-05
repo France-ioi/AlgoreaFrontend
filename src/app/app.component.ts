@@ -19,7 +19,6 @@ import { TopBarComponent } from './containers/top-bar/top-bar.component';
 import { LanguageMismatchComponent } from './containers/language-mismatch/language-mismatch.component';
 import { ThreadContainerComponent } from './forum/containers/thread-container/thread-container.component';
 import { HtmlElLoadedDirective } from './directives/html-el-loaded.directive';
-import { LetDirective } from '@ngrx/component';
 import { LeftPanelComponent } from './containers/left-panel/left-panel.component';
 import { Store } from '@ngrx/store';
 import { fromForum, isThreadInline } from 'src/app/forum/store';
@@ -45,7 +44,6 @@ import { environment } from 'src/environments/environment';
   styleUrl: './app.component.scss',
   imports: [
     LeftPanelComponent,
-    LetDirective,
     TopBarComponent,
     HtmlElLoadedDirective,
     RouterOutlet,

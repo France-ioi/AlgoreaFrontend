@@ -30,12 +30,12 @@
       <div>
         @if (itemData().currentResult?.attemptId; as parentAttemptId) {
           @if (itemData().item.type === 'Task') {
+            @let observedGroupId = observedGroupId$ | async;
             <a class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise"
               [routerLink]="itemData().route | with: {
                   parentAttemptId,
                   answer: { best: { id: observedGroupId ? observedGroupId : undefined }}
                 } | url"
-              *ngrxLet="observedGroupId$; let observedGroupId"
             >
               {(!!observedGroupId ? 'isObserving' : ''), select,
                 isObserving: {View the best answer}

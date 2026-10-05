@@ -1,5 +1,6 @@
 import { Component, DestroyRef, input, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { combineLatest } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { GetUserService } from 'src/app/groups/data-access/get-user.service';
 import { mapToFetchState, readyData } from 'src/app/utils/operators/state';
@@ -16,7 +17,6 @@ import { ItemRoutePipe } from '../../../pipes/itemRoute';
 import { ItemData } from '../../models/item-data';
 import { RouteUrlPipe } from '../../../pipes/routeUrl';
 import { UserSessionService } from '../../../services/user-session.service';
-import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
@@ -38,7 +38,6 @@ import { fromItemContent } from 'src/app/items/store';
     ScoreRingComponent,
     ItemRoutePipe,
     RouteUrlPipe,
-    LetDirective,
     ButtonComponent,
   ]
 })
@@ -76,6 +75,10 @@ export class AnswerAuthorIndicatorComponent {
     map(userProfile => userProfile.groupId),
   );
   readonly isObserving$ = this.store.select(fromObservation.selectIsObserving);
+  readonly infoVm$ = combineLatest({
+    currentUserId: this.currentUserId$,
+    isObserving: this.isObserving$,
+  });
   readonly backLink = this.store.selectSignal(fromItemContent.selectBackLink);
 
   onBackLinkClick(url: string): void {

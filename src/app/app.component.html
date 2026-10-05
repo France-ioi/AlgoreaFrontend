@@ -7,49 +7,47 @@
     >
       <alg-left-panel />
     </div>
-    <ng-container *ngrxLet="{
-      fullFrameContentDisplayed: fullFrameContentDisplayed$,
-      withLeftPaddingContentDisplayed: withLeftPaddingContentDisplayed$,
-      canShowLeftMenu: canShowLeftMenu$,
-      hideLeftMenuTree: hideLeftMenuTree$,
-      searchActive: searchActive$
-    } as layout">
-      <ng-container *ngrxLet="isObserving$ as isObserving">
+    @let layout = {
+      fullFrameContentDisplayed: (fullFrameContentDisplayed$ | async),
+      withLeftPaddingContentDisplayed: (withLeftPaddingContentDisplayed$ | async),
+      canShowLeftMenu: (canShowLeftMenu$ | async),
+      hideLeftMenuTree: (hideLeftMenuTree$ | async),
+      searchActive: (searchActive$ | async)
+    };
+    @let isObserving = isObserving$ | async;
+    <div
+      class="right-container"
+      [class.collapsed]="!leftMenu.shown"
+      [class.animated]="leftMenu.animated"
+      [class.thread-collapsed]="!(isDiscussionVisible$ | async) || (isThreadInline$ | async)"
+    >
+      <alg-top-bar [showBreadcrumbs]="!scrolled() && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
+        [modeBarDisplayed]="!!isObserving"
+        [showLeftMenuOpener]="!!layout.canShowLeftMenu && !leftMenu.shown"
+        [canDisplayPlatformLogo]="canDisplayPlatformLogo(layout, leftMenu.shown)"
+        [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
+       />
+      <div
+        id="main-content-wrapper"
+        data-testid="main-content-wrapper"
+        class="main-content-wrapper alg-flex-1"
+        [class.with-inline-thread]="isThreadInline$ | async"
+        algHtmlElLoaded
+        (elLoaded)="onLoaded($event)"
+        cdkScrollable
+      >
         <div
-          class="right-container"
-          [class.collapsed]="!leftMenu.shown"
-          [class.animated]="leftMenu.animated"
-          [class.thread-collapsed]="!(isDiscussionVisible$ | async) || (isThreadInline$ | async)"
+          class="main-content"
+          [class.with-left-padding]="layout.withLeftPaddingContentDisplayed"
+          [class.full-frame]="layout.fullFrameContentDisplayed"
+          id="main-container"
         >
-          <alg-top-bar [showBreadcrumbs]="!scrolled() && !layout.fullFrameContentDisplayed && !(isNarrowScreen$ | async) && !!(canShowBreadcrumbs$ | async)"
-            [modeBarDisplayed]="isObserving"
-            [showLeftMenuOpener]="!!layout.canShowLeftMenu && !leftMenu.shown"
-            [canDisplayPlatformLogo]="canDisplayPlatformLogo(layout, leftMenu.shown)"
-            [showTopRightControls]="!!(showTopRightControls$ | async) && !(isNarrowScreen$ | async)"
-           />
-          <div
-            id="main-content-wrapper"
-            data-testid="main-content-wrapper"
-            class="main-content-wrapper alg-flex-1"
-            [class.with-inline-thread]="isThreadInline$ | async"
-            algHtmlElLoaded
-            (elLoaded)="onLoaded($event)"
-            cdkScrollable
-          >
-            <div
-              class="main-content"
-              [class.with-left-padding]="layout.withLeftPaddingContentDisplayed"
-              [class.full-frame]="layout.fullFrameContentDisplayed"
-              id="main-container"
-            >
-              <div class="main-content-bottom-padding alg-flex-1">
-                <router-outlet />
-              </div>
-            </div>
+          <div class="main-content-bottom-padding alg-flex-1">
+            <router-outlet />
           </div>
         </div>
-      </ng-container>
-    </ng-container>
+      </div>
+    </div>
     <div
       class="right-thread"
       [class.collapsed]="!(isDiscussionVisible$ | async)"
