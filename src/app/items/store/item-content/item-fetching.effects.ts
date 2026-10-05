@@ -15,12 +15,21 @@ import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { itemContentStore } from './item-content.store';
 import { mapToFetchState } from 'src/app/utils/operators/state';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
-import { itemByIdPageActions, itemFetchingActions } from './item-content.actions';
+import { itemByIdPageActions, itemFetchingActions, itemRouteErrorHandlingActions } from './item-content.actions';
 import { ItemBreadcrumbsWithFailoverService } from '../../services/item-breadcrumbs-with-failover.service';
 import { ResultFetchingService } from '../../services/result-fetching.service';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { resultsFetchKey } from 'src/app/models/routing/item-route';
+import { FullItemRoute, resultsFetchKey } from 'src/app/models/routing/item-route';
+import { ItemPath } from 'src/app/models/ids';
+import { isArrayPrefix } from 'src/app/utils/array';
 import equal from 'fast-deep-equal/es6';
+
+// Results are chained from the root, so a start on a prefix creates results on the route's ancestors, and a start on an
+// extension creates results on the route itself. Both change the breadcrumbs.
+function startedPathAffectsRoute(startedPath: ItemPath, route: FullItemRoute): boolean {
+  const routePath = [ ...route.path, route.id ];
+  return isArrayPrefix(startedPath, routePath) || isArrayPrefix(routePath, startedPath);
+}
 
 const refreshTriggers = (
   refreshActions$: Observable<unknown>,
@@ -66,7 +75,22 @@ export const breadcrumbsFetchingEffect = createEffect(
     distinctUntilChanged((prev, cur) => equal(prev, cur)),
     switchMap(route => breadcrumbsService.get(route).pipe(
       mapToFetchState({
-        resetter: refreshTriggers(actions$.pipe(ofType(itemByIdPageActions.refresh)), userSessionService$),
+        // Keep filter(isNotNull) before distinctUntilChanged so path recovery's null does not tear down this inner
+        // subscription: the resetter still sees resultPathStarted. Moving filter(isNotNull) after distinctUntilChanged
+        // would drop that trigger for an identical recovered URL. resultPathStarted can fire before delay(0) navigation,
+        // so a breadcrumbs request for the stale overlapping route may start and then be cancelled; do not reorder
+        // those operators to avoid that.
+        resetter: refreshTriggers(
+          merge(
+            actions$.pipe(ofType(itemByIdPageActions.refresh)),
+            actions$.pipe(
+              ofType(itemRouteErrorHandlingActions.resultPathStarted),
+              map(({ path }) => path),
+              filter(startedPath => startedPathAffectsRoute(startedPath, route)),
+            ),
+          ),
+          userSessionService$,
+        ),
         identifier: route,
       })
     )),

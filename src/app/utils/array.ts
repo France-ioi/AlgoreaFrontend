@@ -7,6 +7,11 @@ export function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
   return arr1.every((id, idx) => id === arr2[idx]);
 }
 
+export function isArrayPrefix<T>(prefix: readonly T[], arr: readonly T[]): boolean {
+  if (prefix.length > arr.length) return false;
+  return prefix.every((value, idx) => value === arr[idx]);
+}
+
 /**
  * @description
  * Takes an Array<V>, and a grouping function,

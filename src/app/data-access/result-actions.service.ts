@@ -36,7 +36,7 @@ export class ResultActionsService {
       );
   }
 
-  /*
+  /**
    * Start an item when no attempt or parent attempt is known. To be used only in this case!
    */
   startWithoutAttempt(itemIdPath: ItemPath): Observable<AttemptId> {
@@ -47,7 +47,7 @@ export class ResultActionsService {
       })
       .pipe(
         map(successData),
-        map(data => data.attempt_id)
+        map(data => data.attempt_id),
       );
   }
 
