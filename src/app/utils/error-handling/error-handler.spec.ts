@@ -32,6 +32,13 @@ describe('AlgErrorHandler.handleError', () => {
     expect(showReportDialog).not.toHaveBeenCalled();
   });
 
+  it('should emit on Safari chunk loading errors and not capture', () => {
+    handler.handleError(new Error('Importing a module script failed.'));
+    expect(chunkErrorService.emitError).toHaveBeenCalledTimes(1);
+    expect(captureException).not.toHaveBeenCalled();
+    expect(showReportDialog).not.toHaveBeenCalled();
+  });
+
   it('should ignore HttpErrorResponse (no capture, no dialog)', () => {
     handler.handleError(new HttpErrorResponse({ status: 0, statusText: 'Unknown', url: '/x' }));
     expect(captureException).not.toHaveBeenCalled();

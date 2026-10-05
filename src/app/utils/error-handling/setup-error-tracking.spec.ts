@@ -1,7 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import type { Breadcrumb, ErrorEvent, EventHint } from '@sentry/angular';
 import { HTTPError } from './error-conversion';
-import { beforeBreadcrumb, beforeSend, dropHttpErrors, dropOpaqueFirefoxNsErrors } from './setup-error-tracking';
+import {
+  beforeBreadcrumb,
+  beforeSend,
+  dropHttpErrors,
+  dropOpaqueFirefoxNsErrors,
+} from './setup-error-tracking';
 
 const event = { event_id: 'evt' } as ErrorEvent;
 
@@ -109,6 +114,11 @@ describe('beforeSend', () => {
   it('should drop opaque Firefox NS_ERROR events', () => {
     const opaque = exceptionEvent('NS_ERROR_FAILURE', 'No error message');
     expect(beforeSend(opaque, hint(undefined))).toBeNull();
+  });
+
+  it('should drop chunk loading errors', () => {
+    const chunkEvent = exceptionEvent('TypeError', 'Importing a module script failed.');
+    expect(beforeSend(chunkEvent, hint(undefined))).toBeNull();
   });
 
   it('should keep actionable errors', () => {
