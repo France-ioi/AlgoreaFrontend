@@ -43,6 +43,7 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { MessageService } from 'src/app/services/message.service';
 import { openNewTab } from 'src/app/utils/url';
+import { ScoreChange } from '../../models/score-change';
 
 /**
  * Auto-open delay (ms) for `alg.navigate`-`{ url }` requests originating from the description iframe.
@@ -99,7 +100,7 @@ export class ItemContentComponent implements PendingChangesComponent {
 
   taskTabsChange = output<string[]>();
   taskViewChange = output<string>();
-  scoreChange = output<number>();
+  scoreChange = output<ScoreChange>();
   skipSave = output<void>();
   refresh = output<void>();
   editorUrl = output<string | undefined>();
@@ -153,8 +154,8 @@ export class ItemContentComponent implements PendingChangesComponent {
     });
   }
 
-  onScoreChange(score: number): void {
-    this.scoreChange.emit(score);
+  onScoreChange(event: ScoreChange): void {
+    this.scoreChange.emit(event);
   }
 
   onTaskRetry(): void {

@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable, of, timer } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
 import { provideMockStore } from '@ngrx/store/testing';
 import { answerAndStateSaveInterval, ItemTaskAnswerService } from './item-task-answer.service';
-import { ItemTaskInitService } from './item-task-init.service';
+import { ItemTaskConfig, ItemTaskInitService } from './item-task-init.service';
 import { CurrentAnswerService } from '../data-access/current-answer.service';
 import { AnswerTokenService } from '../data-access/answer-token.service';
 import { GradeService } from '../data-access/grade.service';
@@ -10,6 +10,7 @@ import { Task } from '../api/task-proxy';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { fromItemContent } from '../store';
 import { SECONDS } from 'src/app/utils/duration';
+import { ScoreChange } from '../models/score-change';
 
 const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
 
@@ -87,6 +88,70 @@ describe('ItemTaskAnswerService – refresh token on validation', () => {
     service.submitAnswer().subscribe();
 
     expect(refreshToken).not.toHaveBeenCalled();
+  });
+
+  it('emits scoreChange with the graded score and task identity', () => {
+    const { service } = setup();
+    const emitted: ScoreChange[] = [];
+    service.scoreChange$.subscribe(event => emitted.push(event));
+
+    service.submitAnswer().subscribe();
+
+    expect(emitted).toEqual([ { score: 100, itemId: '1', attemptId: '0' } ]);
+  });
+});
+
+describe('ItemTaskAnswerService – scoreChange config capture', () => {
+  afterEach(() => {
+    TestBed.inject(ItemTaskAnswerService).ngOnDestroy();
+  });
+
+  it('keeps the submit-time item and attempt when config$ later emits a different route', () => {
+    const laterRoute = itemRoute('activity', '2', { attemptId: '9', path: [] });
+    // ReplaySubject(1) matches ItemTaskInitService: take(1) must see the config already present at submit.
+    const config$ = new ReplaySubject<ItemTaskConfig>(1);
+    config$.next({ route, url: 'http://example.com/task', attemptId: '0', initialAnswer: null, readOnly: false });
+
+    const gradeResult$ = new Subject<{ score: number, message: string, scoreToken: null }>();
+    const mockTask = createMockTask();
+    mockTask.gradeAnswer.and.returnValue(gradeResult$);
+
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskAnswerService,
+        provideMockStore({
+          selectors: [
+            { selector: fromItemContent.selectActiveContentCurrentResult, value: { validated: false } },
+          ],
+        }),
+        {
+          provide: ItemTaskInitService,
+          useValue: {
+            loadedTask$: of(mockTask),
+            config$,
+            taskToken$: of('task-token'),
+            refreshToken: jasmine.createSpy('refreshToken'),
+          },
+        },
+        { provide: CurrentAnswerService, useValue: { update: (): ReturnType<CurrentAnswerService['update']> => of(undefined) } },
+        { provide: AnswerTokenService, useValue: { generate: (): ReturnType<AnswerTokenService['generate']> => of('answer-token') } },
+        {
+          provide: GradeService,
+          useValue: { save: (): ReturnType<GradeService['save']> => of({ validated: false, unlockedItems: [] }) },
+        },
+      ],
+    });
+
+    const service = TestBed.inject(ItemTaskAnswerService);
+    const emitted: ScoreChange[] = [];
+    service.scoreChange$.subscribe(event => emitted.push(event));
+
+    service.submitAnswer().subscribe();
+    config$.next({ route: laterRoute, url: 'http://example.com/task', attemptId: '9', initialAnswer: null, readOnly: false });
+    gradeResult$.next({ score: 100, message: 'ok', scoreToken: null });
+    gradeResult$.complete();
+
+    expect(emitted).toEqual([ { score: 100, itemId: '1', attemptId: '0' } ]);
   });
 });
 
