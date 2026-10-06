@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/angular';
 import type { Breadcrumb, BreadcrumbHint, ErrorEvent, EventHint } from '@sentry/angular';
 import { environment } from 'src/environments/environment';
 import { getSentryDsnConfig } from 'src/app/config/crash-reporting';
-import { readAppVersionFromDocument } from 'src/app/utils/app-version';
+import { readAppVersionFromDocument, toSentryRelease } from 'src/app/utils/app-version';
 import { isChunkLoadingErrorMessage } from './chunk-loading-error';
 import { HTTPError } from './error-conversion';
 
@@ -199,7 +199,7 @@ export function initErrorTracking(): void {
   Sentry.init({
     dsn: sentryDsn,
     environment: environment.production ? `prod-${window.location.hostname}` : 'dev',
-    release: readAppVersionFromDocument(document) ?? undefined,
+    release: toSentryRelease(readAppVersionFromDocument(document)),
     integrations: [],
     profilesSampleRate: 0, // disable profiling
     tracesSampleRate: 0,

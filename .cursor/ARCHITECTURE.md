@@ -329,7 +329,11 @@ origin (which would also let us drop the deprecated `--deploy-url` flag).
 The app version is stamped into `<meta name="app-version">` in `index.html` by
 CI before each build (`git describe --always`, overwriting any existing content;
 the committed source keeps `content=""` as a placeholder). Tag builds get the
-tag name from `git describe`. `AppVersionCheckService` checks for a newer build
+tag name from `git describe`. Sentry events use `algorea@` plus that version with
+a leading `v` stripped (`algorea@2.94.2`), which is the `package@version` form
+Sentry requires to treat releases as semver; the HTML meta is left unchanged so
+version-check still compares `git describe` strings. Sourcemap upload in CI uses
+the same Sentry release name. `AppVersionCheckService` checks for a newer build
 after ≥ 20 minutes of inactivity: either the tab was hidden that long and becomes
 visible again, or JS was frozen (system sleep / lid-close while still visible).
 While visible, wake is the earliest of: first `pointerdown` / `keydown` on the

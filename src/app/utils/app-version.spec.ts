@@ -1,4 +1,4 @@
-import { readAppVersionFromDocument, readAppVersionFromHtml } from './app-version';
+import { readAppVersionFromDocument, readAppVersionFromHtml, toSentryRelease } from './app-version';
 
 describe('app-version', () => {
   describe('readAppVersionFromDocument', () => {
@@ -32,6 +32,25 @@ describe('app-version', () => {
     it('returns null for empty or missing meta', () => {
       expect(readAppVersionFromHtml('<html></html>')).toBeNull();
       expect(readAppVersionFromHtml('<meta name="app-version" content="">')).toBeNull();
+    });
+  });
+
+  describe('toSentryRelease', () => {
+    it('maps a tagged version to package@version without a leading v', () => {
+      expect(toSentryRelease('v2.94.2')).toBe('algorea@2.94.2');
+    });
+
+    it('keeps a version that is already without a leading v', () => {
+      expect(toSentryRelease('2.94.2')).toBe('algorea@2.94.2');
+    });
+
+    it('does not strip a leading v unless a digit follows', () => {
+      expect(toSentryRelease('void')).toBe('algorea@void');
+    });
+
+    it('returns undefined when the app version is missing', () => {
+      expect(toSentryRelease(null)).toBeUndefined();
+      expect(toSentryRelease('')).toBeUndefined();
     });
   });
 });
