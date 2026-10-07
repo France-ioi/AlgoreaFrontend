@@ -2,10 +2,13 @@ import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
 import { AuthService } from './auth/auth.service';
+import { OAuthStorageUnavailableError } from './auth/oauth.service';
 import { switchMap, distinctUntilChanged, map, filter, skip, shareReplay, retry } from 'rxjs/operators';
 import { CurrentUserHttpService, UpdateUserBody, CurrentUserProfile } from '../data-access/current-user.service';
 import { isNotUndefined } from '../utils/null-undefined-predicates';
 import { repeatLatestWhen } from '../utils/operators/repeatLatestWhen';
+import { ActionFeedbackService } from './action-feedback.service';
+import { SECONDS } from '../utils/duration';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ import { repeatLatestWhen } from '../utils/operators/repeatLatestWhen';
 export class UserSessionService implements OnDestroy {
   private authService = inject(AuthService);
   private currentUserService = inject(CurrentUserHttpService);
+  private actionFeedbackService = inject(ActionFeedbackService);
   // Explicit DestroyRef: updateCurrentUser/refresh subscribe outside injection context, so bare takeUntilDestroyed() would fail.
   private destroyRef = inject(DestroyRef);
 
@@ -74,7 +78,19 @@ export class UserSessionService implements OnDestroy {
   }
 
   login(): void {
-    this.authService.startAuthLogin();
+    try {
+      this.authService.startAuthLogin();
+    } catch (err) {
+      if (err instanceof OAuthStorageUnavailableError) {
+        // Longer than the default 5s toast so the user can read the recovery instructions.
+        this.actionFeedbackService.error($localize`Unable to sign in: your browser is blocking storage for this site. \
+Please allow cookies and site data (or disable strict tracking protection for this site), then try again.`, {
+          life: 20 * SECONDS,
+        });
+        return;
+      }
+      throw err;
+    }
   }
 
   logout(): void {
