@@ -3,6 +3,7 @@ import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
 import {
   mockTestTaskItemApi,
   routeTestTaskAssets,
+  TEST_TASK_URL,
   TestTaskPage,
 } from 'e2e/items/pages/test-task-page';
 
@@ -132,6 +133,36 @@ test.describe('platform-task interaction', () => {
     expect(reloadStateCall.params).toBe('saved-state');
     await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('42');
     await expect(testTaskPage.taskFrame.getByTestId('state-input')).toHaveValue('saved-state');
+  });
+
+  test('restarts the task from scratch when item.url changes after refresh', async ({ page, itemContentPage }) => {
+    test.setTimeout(60_000); // load + parameters save + awaited unload + second handshake
+    const versionedUrl = `${TEST_TASK_URL}?version=1`;
+    await mockTestTaskItemApi(page, { canEdit: 'all' });
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+    await testTaskPage.waitForCall('task.load');
+    await testTaskPage.clearHostCalls();
+
+    await mockTestTaskItemApi(page, { canEdit: 'all', taskUrl: versionedUrl });
+    await itemContentPage.openParametersTab();
+    await expect(page).toHaveURL(/\/parameters/);
+    await expect(page.getByTestId('allow-multiple-attempts')).toBeVisible();
+    await page.getByTestId('allow-multiple-attempts').locator('alg-switch').click();
+    await itemContentPage.saveChangesAndCheckNotification();
+
+    await testTaskPage.waitForHostCall('task.unload');
+
+    // Item refresh resets advertised task views, so the tab is Content until the new instance loads.
+    const taskTab = page.getByRole('link', { name: 'Content' }).or(page.getByRole('link', { name: 'Statement' }));
+    await expect(taskTab).toBeVisible();
+    await taskTab.click();
+    await testTaskPage.waitForLoaded();
+    await testTaskPage.waitForCall('task.load');
+    await expect(testTaskPage.taskIframeLocator()).toHaveAttribute('src', /[?&]version=1(?:&|$)/);
+    await expect(page.locator('alg-item-display alg-error')).toHaveCount(0);
+    await expect(page.getByText('cannot change task config')).toHaveCount(0);
+    await expect(page.locator('.sentry-error-embed')).toHaveCount(0);
   });
 
   test('calls task.unload when leaving the task', async ({ page }) => {

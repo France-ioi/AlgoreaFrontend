@@ -16,7 +16,7 @@ import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { MessageService, MessageV2 } from 'src/app/services/message.service';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, Subject, of } from 'rxjs';
 import { ItemViewPerm } from '../../models/item-view-permission';
 import { ItemGrantViewPerm } from '../../models/item-grant-view-permission';
 import { ItemEditPerm } from '../../models/item-edit-permission';
@@ -47,7 +47,7 @@ class MockItemDisplayComponent {
   disablePlatformProgress = output<boolean>();
   fullFrame = output<boolean>();
   loadingComplete = output<boolean>();
-  teardown = (): Observable<void> => of(undefined);
+  teardown = jasmine.createSpy('teardown').and.returnValue(of(undefined));
 }
 
 @Component({
@@ -222,6 +222,146 @@ describe('ItemContentComponent – task retry', () => {
     component.refresh.subscribe(() => refreshEmitted = true);
     component.onTaskRetry();
     expect(refreshEmitted).toBeFalse();
+  });
+});
+
+describe('ItemContentComponent – task url change', () => {
+  const updatedUrl = 'http://example.com/task?version=1';
+  const laterUrl = 'http://example.com/task?version=2';
+
+  let component: ItemContentComponent;
+  let fixture: ComponentFixture<ItemContentComponent>;
+
+  function itemDataWithUrl(url: string | null): ItemData {
+    return { ...mockItemData, item: { ...mockItem, url } };
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ ItemContentComponent ],
+      providers: [
+        provideRouter([]),
+        provideMockStore(),
+        {
+          provide: UserSessionService,
+          useValue: { userProfile$: EMPTY, isCurrentUserTemp: () => false },
+        },
+      ],
+    })
+      .overrideComponent(ItemContentComponent, {
+        remove: { imports: [ ItemDisplayComponent ] },
+        add: { imports: [ MockItemDisplayComponent ] },
+      })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(ItemContentComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('itemData', mockItemData);
+    fixture.componentRef.setInput('taskConfig', { readOnly: false, initialAnswer: null });
+    fixture.detectChanges();
+  });
+
+  it('keeps the live instance on the old url, tears it down, then remounts with the new url', async () => {
+    const firstInstance = queryComponent(fixture.debugElement);
+    expect(firstInstance).toBeTruthy();
+    component.isTaskLoaded.set(true);
+
+    fixture.componentRef.setInput('itemData', itemDataWithUrl(updatedUrl));
+    fixture.detectChanges();
+
+    expect(firstInstance!.url()).toBe('http://example.com/task');
+    expect(firstInstance!.teardown).toHaveBeenCalled();
+    expect(component.isTaskLoaded()).toBeFalse();
+
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    const secondInstance = queryComponent(fixture.debugElement);
+    expect(secondInstance).toBeTruthy();
+    expect(secondInstance).not.toBe(firstInstance);
+    expect(secondInstance!.url()).toBe(updatedUrl);
+    expect(component.isTaskLoaded()).toBeFalse();
+  });
+
+  it('coalesces url changes during a pending teardown into one instance with the latest url', async () => {
+    const firstInstance = queryComponent(fixture.debugElement);
+    expect(firstInstance).toBeTruthy();
+    const teardown$ = new Subject<void>();
+    firstInstance!.teardown.and.returnValue(teardown$.asObservable());
+
+    fixture.componentRef.setInput('itemData', itemDataWithUrl(updatedUrl));
+    fixture.detectChanges();
+    fixture.componentRef.setInput('itemData', itemDataWithUrl(laterUrl));
+    fixture.detectChanges();
+
+    expect(queryComponent(fixture.debugElement)).toBe(firstInstance);
+    expect(firstInstance!.url()).toBe('http://example.com/task');
+    expect(firstInstance!.teardown).toHaveBeenCalledTimes(1);
+
+    teardown$.next();
+    teardown$.complete();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    const displays = fixture.debugElement.queryAll(By.directive(MockItemDisplayComponent));
+    expect(displays.length).toBe(1);
+    const remounted = displays[0]!.componentInstance as MockItemDisplayComponent;
+    expect(remounted).not.toBe(firstInstance!);
+    expect(remounted.url()).toBe(laterUrl);
+  });
+
+  it('does not tear down or remount when itemData is re-emitted with the same url', async () => {
+    const firstInstance = queryComponent(fixture.debugElement);
+    expect(firstInstance).toBeTruthy();
+    firstInstance!.teardown.calls.reset();
+
+    fixture.componentRef.setInput('itemData', itemDataWithUrl('http://example.com/task'));
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    expect(firstInstance!.teardown).not.toHaveBeenCalled();
+    expect(queryComponent(fixture.debugElement)).toBe(firstInstance);
+    expect(firstInstance!.url()).toBe('http://example.com/task');
+  });
+
+  it('follows a null url then a new url without binding the new url onto the old display', async () => {
+    const firstInstance = queryComponent(fixture.debugElement);
+    expect(firstInstance).toBeTruthy();
+    firstInstance!.teardown.calls.reset();
+
+    fixture.componentRef.setInput('itemData', itemDataWithUrl(null));
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('alg-item-display'))).toBeFalsy();
+    expect(fixture.debugElement.query(By.css('alg-error'))).toBeTruthy();
+    expect(firstInstance!.url()).toBe('http://example.com/task');
+    expect(component.taskUrl()).toBeNull();
+
+    fixture.componentRef.setInput('itemData', itemDataWithUrl(updatedUrl));
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    const remounted = queryComponent(fixture.debugElement);
+    expect(remounted).toBeTruthy();
+    expect(remounted).not.toBe(firstInstance);
+    expect(remounted!.url()).toBe(updatedUrl);
+    expect(component.taskUrl()).toBe(updatedUrl);
+  });
+
+  it('updates taskUrl when the item url changes while no display is mounted', async () => {
+    fixture.componentRef.setInput('taskConfig', null);
+    fixture.detectChanges();
+    expect(queryComponent(fixture.debugElement)).toBeUndefined();
+
+    fixture.componentRef.setInput('itemData', itemDataWithUrl(updatedUrl));
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    expect(component.taskUrl()).toBe(updatedUrl);
+    expect(queryComponent(fixture.debugElement)).toBeUndefined();
   });
 });
 

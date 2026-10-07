@@ -35,9 +35,9 @@ import { IsAChapterPipe, IsASkillPipe, isATask } from '../../models/item-type';
 import { ExplicitEntryComponent } from '../explicit-entry/explicit-entry.component';
 import { FormsModule } from '@angular/forms';
 import { UserSessionService } from 'src/app/services/user-session.service';
-import { Subject, map, merge, of, take, timer } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Subject, filter, map, merge, of, take, timer } from 'rxjs';
+import { catchError, exhaustMap, switchMap } from 'rxjs/operators';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { areSubmissionsClosed } from '../../models/attempts';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRoute } from 'src/app/models/routing/item-route';
@@ -87,7 +87,8 @@ export class ItemContentComponent implements PendingChangesComponent {
   private location = inject(Location);
   private destroyRef = inject(DestroyRef);
 
-  readonly itemDisplayComponent = viewChild(ItemDisplayComponent);
+  // Template ref so the spec mock is the teardown target (`viewChild(ItemDisplayComponent)` misses it).
+  readonly itemDisplayComponent = viewChild<ItemDisplayComponent>('taskDisplay');
   private itemChildrenEditFormComponent = viewChild(ItemChildrenEditFormComponent);
   private switchComponent = viewChild(SwitchComponent);
 
@@ -131,13 +132,65 @@ export class ItemContentComponent implements PendingChangesComponent {
   /**
    * Remount `alg-item-display` when readOnly flips: ItemTaskInitService forbids changing readOnly on a
    * live task config, so a closed attempt after `refresh()` needs a fresh instance.
+   * Url changes do not use this key: `@for` destroy skips awaited unload. They go through
+   * teardown-then-remount (`taskUrl` + `showTaskDisplay`) instead.
+   * If readOnly and url flip in the same refresh, the key remounts first (old url) and the url
+   * restart follows — an extra load, rare and acceptable.
    */
   taskDisplayRemountKey = computed(() => String(this.taskConfig()?.readOnly ?? ''));
 
+  /**
+   * Url bound to the live `alg-item-display`. Follows `item.url` when there is no instance to protect
+   * (first value, previous null, or new url null). Otherwise keeps the previous value so a live
+   * iframe never sees a url change; the restart pipeline updates it between instances.
+   */
+  taskUrl = linkedSignal<string | null, string | null>({
+    source: () => this.item().url ?? null,
+    computation: (url, previous): string | null => {
+      if (!previous || previous.value === null || url === null) return url;
+      return previous.value;
+    },
+  });
+
   isTaskLoaded = signal(false); // whether the task has finished loading, i.e. is ready or in error
   showTaskDisplay = signal(true);
+  private readonly taskRestart$ = new Subject<void>();
+  /**
+   * `toObservable` emits on false→true only (computed is distinct). Extra url changes while this
+   * stays true coalesce: the pipeline's last step reads the latest `item().url`.
+   */
+  private isTaskUrlOutdated = computed(() => this.item().url !== this.taskUrl() && !!this.item().url && !!this.taskUrl());
   isCurrentUserTemp = toSignal(this.userSessionService.userProfile$.pipe(map(user => user.tempUser)));
   hasPrerequisites = signal<boolean | undefined>(undefined); // undefined while not known
+
+  constructor() {
+    this.taskRestart$.pipe(
+      // exhaustMap: do not cancel in-flight unload (`switchMap` can skip `task.unload` / no-op a re-teardown).
+      exhaustMap(() => {
+        this.isTaskLoaded.set(false);
+        // No saveAnswerAndState: url-change answers may not apply (unsaved iframe state dropped).
+        // Retry also skips save because the task is in error.
+        // Await unload while the iframe is still mounted, then remount ItemDisplay.
+        return (this.itemDisplayComponent()?.teardown() ?? of(undefined)).pipe(
+          catchError(() => of(undefined)),
+          take(1),
+          switchMap(() => {
+            this.showTaskDisplay.set(false);
+            return timer(0);
+          }),
+        );
+      }),
+      takeUntilDestroyed(),
+    ).subscribe(() => {
+      this.taskUrl.set(this.item().url ?? null);
+      this.showTaskDisplay.set(true);
+    });
+
+    toObservable(this.isTaskUrlOutdated).pipe(
+      filter(needsRestart => needsRestart),
+      takeUntilDestroyed(),
+    ).subscribe(() => this.taskRestart$.next());
+  }
 
   isDirty(): boolean {
     return !!this.itemChildrenEditFormComponent()?.dirty();
@@ -159,17 +212,7 @@ export class ItemContentComponent implements PendingChangesComponent {
   }
 
   onTaskRetry(): void {
-    this.isTaskLoaded.set(false);
-    // Await unload while the iframe is still mounted, then remount ItemDisplay.
-    (this.itemDisplayComponent()?.teardown() ?? of(undefined)).pipe(
-      catchError(() => of(undefined)),
-      take(1),
-      switchMap(() => {
-        this.showTaskDisplay.set(false);
-        return timer(0);
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe(() => this.showTaskDisplay.set(true));
+    this.taskRestart$.next();
   }
 
   onTaskLoadChange(loadingComplete: boolean): void {
