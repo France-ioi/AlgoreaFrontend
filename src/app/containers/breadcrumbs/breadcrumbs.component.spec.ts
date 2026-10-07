@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { By } from '@angular/platform-browser';
 import { ContentBreadcrumb } from 'src/app/models/content/content-breadcrumbs';
 
@@ -29,7 +29,13 @@ function mockListFitsContainer(fixture: ComponentFixture<BreadcrumbsComponent>):
 
 function triggerResize(fixture: ComponentFixture<BreadcrumbsComponent>): void {
   MockResizeObserver.callback?.();
-  (fixture.componentInstance as unknown as { updateCollapsedCount(): void }).updateCollapsedCount();
+  // Sync helper: cancel the afterNextRender scheduled by the resize callback and measure immediately.
+  const component = fixture.componentInstance as unknown as {
+    cancelCollapsedCountUpdate(): void,
+    updateCollapsedCount(): void,
+  };
+  component.cancelCollapsedCountUpdate();
+  component.updateCollapsedCount();
   fixture.changeDetectorRef.markForCheck();
   fixture.detectChanges();
 }
@@ -54,6 +60,30 @@ function setMeasureWidths(fixture: ComponentFixture<BreadcrumbsComponent>, itemW
   if (ellipsis !== null) {
     Object.defineProperty(ellipsis.nativeElement, 'offsetWidth', { configurable: true, value: 16 });
   }
+}
+
+/** Prototype stubs so widths apply when measure nodes appear after a store-driven re-render. */
+function stubMeasureWidthsByClass(itemWidths: number[]): void {
+  const offsetWidthDesc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth');
+  spyOnProperty(HTMLElement.prototype, 'offsetWidth', 'get').and.callFake(function (this: HTMLElement): number {
+    if (this.classList.contains('measure-separator')) return 20;
+    if (this.classList.contains('measure-ellipsis')) return 16;
+    if (this.classList.contains('measure-item')) {
+      const siblings = this.parentElement?.querySelectorAll('.measure-item');
+      const index = siblings ? Array.from(siblings).indexOf(this) : -1;
+      return itemWidths[index] ?? 0;
+    }
+    return offsetWidthDesc?.get?.call(this) ?? 0;
+  });
+
+  const scrollWidthDesc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollWidth');
+  spyOnProperty(HTMLElement.prototype, 'scrollWidth', 'get').and.callFake(function (this: HTMLElement): number {
+    if (this.classList.contains('breadcrumb-list')) {
+      const container = this.closest('.breadcrumb-container');
+      return container?.clientWidth ?? 0;
+    }
+    return scrollWidthDesc?.get?.call(this) ?? 0;
+  });
 }
 
 describe('BreadcrumbsComponent', () => {
@@ -236,6 +266,7 @@ describe('BreadcrumbsComponent', () => {
     ];
 
     let fixture: ComponentFixture<BreadcrumbsComponent>;
+    let store: MockStore;
 
     beforeEach(async () => {
       await TestBed.configureTestingModule({
@@ -250,6 +281,7 @@ describe('BreadcrumbsComponent', () => {
         ],
       }).compileComponents();
 
+      store = TestBed.inject(MockStore);
       fixture = TestBed.createComponent(BreadcrumbsComponent);
       fixture.detectChanges();
     });
@@ -333,27 +365,66 @@ describe('BreadcrumbsComponent', () => {
       expect(labels.map(label => label.nativeElement.textContent)).toEqual([ 'Root chapter', 'Middle chapter' ]);
     });
 
-    it('should collapse after a ResizeObserver resize event', done => {
+    it('should collapse after a ResizeObserver resize event', () => {
       const localFixture = TestBed.createComponent(BreadcrumbsComponent);
-      const rafSpy = spyOn(window, 'requestAnimationFrame').and.callFake((_callback: FrameRequestCallback) => 1);
       localFixture.detectChanges();
 
       setContainerWidth(localFixture, 300);
       setMeasureWidths(localFixture, [ 120, 140, 32 ]);
+      mockListFitsContainer(localFixture);
 
       MockResizeObserver.callback?.();
-      const callback = rafSpy.calls.mostRecent().args[0] as FrameRequestCallback;
-      mockListFitsContainer(localFixture);
-      callback(0);
-
-      localFixture.changeDetectorRef.markForCheck();
-      localFixture.detectChanges();
+      TestBed.tick();
 
       expect(localFixture.componentInstance.collapsedCount()).toBe(1);
       expect(localFixture.debugElement.query(By.css('.breadcrumb-list .collapsed-trigger'))).toBeTruthy();
       const labels = localFixture.debugElement.queryAll(By.css('.breadcrumb-list .breadcrumb-item .label'));
       expect(labels.map(label => label.nativeElement.textContent)).toEqual([ 'Middle chapter' ]);
-      done();
+    });
+
+    it('should collapse when breadcrumbs become available after creation', () => {
+      // NG0600 from rAF-vs-zoneless timing is not deterministically reproducible in unit tests;
+      // this covers the store-change → scheduleCollapsedCountUpdate path (403 then 200).
+      store.overrideSelector(fromCurrentContent.selectBreadcrumbs, undefined);
+      store.refreshState();
+
+      const localFixture = TestBed.createComponent(BreadcrumbsComponent);
+      localFixture.detectChanges();
+      TestBed.tick();
+
+      expect(localFixture.componentInstance.collapsedCount()).toBe(0);
+
+      setContainerWidth(localFixture, 300);
+      stubMeasureWidthsByClass([ 120, 140, 32 ]);
+
+      store.overrideSelector(fromCurrentContent.selectBreadcrumbs, breadcrumbs);
+      store.refreshState();
+      TestBed.tick();
+
+      expect(localFixture.componentInstance.collapsedCount()).toBe(1);
+      expect(localFixture.debugElement.query(By.css('.breadcrumb-list .collapsed-trigger'))).toBeTruthy();
+      const labels = localFixture.debugElement.queryAll(By.css('.breadcrumb-list .breadcrumb-item .label'));
+      expect(labels.map(label => label.nativeElement.textContent)).toEqual([ 'Middle chapter' ]);
+    });
+
+    it('should not run measurement after destroy when a collapse update is pending', () => {
+      const localFixture = TestBed.createComponent(BreadcrumbsComponent);
+      localFixture.detectChanges();
+
+      setContainerWidth(localFixture, 300);
+      setMeasureWidths(localFixture, [ 120, 140, 32 ]);
+      mockListFitsContainer(localFixture);
+
+      const updateSpy = spyOn(
+        localFixture.componentInstance as unknown as { updateCollapsedCount(): void },
+        'updateCollapsedCount',
+      ).and.callThrough();
+
+      MockResizeObserver.callback?.();
+      localFixture.destroy();
+      TestBed.tick();
+
+      expect(updateSpy).not.toHaveBeenCalled();
     });
 
     it('should collapse further when the visible list still overflows the container', () => {
