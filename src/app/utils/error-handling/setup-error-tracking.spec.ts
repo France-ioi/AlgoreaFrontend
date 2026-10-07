@@ -88,6 +88,12 @@ describe('dropOpaqueFirefoxNsErrors', () => {
     expect(dropOpaqueFirefoxNsErrors(event, hint(domEx))).toBeNull();
   });
 
+  it('should drop when originalException is a converted Error with NS_ERROR_FAILURE and empty message', () => {
+    const converted = new Error('');
+    converted.name = 'NS_ERROR_FAILURE';
+    expect(dropOpaqueFirefoxNsErrors(event, hint(converted))).toBeNull();
+  });
+
   it('should keep mixed chains that include an actionable error', () => {
     const mixed = multiExceptionEvent([
       { type: 'NS_ERROR_FAILURE', value: 'No error message' },

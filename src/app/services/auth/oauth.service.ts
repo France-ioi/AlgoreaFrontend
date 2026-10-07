@@ -6,10 +6,37 @@ import { base64UrlEncode } from '../../utils/base64';
 import { APPCONFIG } from '../../config';
 import { AuthResult } from './auth-info';
 
-// Use localStorage for nonce if possible localStorage is the only storage who survives a redirect in ALL browsers (also IE)
-const nonceStorage = localStorage;
+export class OAuthStorageUnavailableError extends Error {
+  constructor(message = 'OAuth storage unavailable', options?: ErrorOptions) {
+    super(message, options);
+    this.name = 'OAuthStorageUnavailableError';
+  }
+}
+
+// Use localStorage for nonce if possible — localStorage is the only storage who survives a redirect in ALL browsers (also IE).
+// Lazy access: even reading `window.localStorage` can throw SecurityError when storage is blocked (e.g. Firefox tracking protection).
 const nonceStorageKey = 'oauth_nonce';
 const redirectUriStorageKey = 'oauth_redirect_uri';
+
+function getNonceStorage(): Storage {
+  return window.localStorage;
+}
+
+function safeStorageGetItem(key: string): string | null {
+  try {
+    return getNonceStorage().getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageRemoveItem(key: string): void {
+  try {
+    getNonceStorage().removeItem(key);
+  } catch {
+    // no-op: storage may be blocked after a privacy-mode redirect
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +61,15 @@ export class OAuthService {
     // should add PKCE here
     // could add '&prompt=none' here
 
-    nonceStorage.setItem(nonceStorageKey, state);
-    nonceStorage.setItem(redirectUriStorageKey, redirectUri);
+    try {
+      const storage = getNonceStorage();
+      storage.setItem(nonceStorageKey, state);
+      storage.setItem(redirectUriStorageKey, redirectUri);
+    } catch (err) {
+      // Do not redirect without a stored nonce — that fails later with "Invalid state received"
+      // and silently falls back to a temp user.
+      throw new OAuthStorageUnavailableError(undefined, { cause: err });
+    }
 
     location.href = url;
   }
@@ -61,12 +95,12 @@ export class OAuthService {
       return throwError(() => new Error('No code or state for code flow'));
     }
     const { nonce: nonceInState } = this.parseState(state);
-    if (!nonceInState || nonceInState !== nonceStorage.getItem(nonceStorageKey)) {
+    if (!nonceInState || nonceInState !== safeStorageGetItem(nonceStorageKey)) {
       return throwError(() => new Error('Invalid state received'));
     }
-    const redirectUri = nonceStorage.getItem(redirectUriStorageKey) ?? window.location.href;
-    nonceStorage.removeItem(nonceStorageKey);
-    nonceStorage.removeItem(redirectUriStorageKey);
+    const redirectUri = safeStorageGetItem(redirectUriStorageKey) ?? window.location.href;
+    safeStorageRemoveItem(nonceStorageKey);
+    safeStorageRemoveItem(redirectUriStorageKey);
     return this.authHttp.createTokenFromCode(code, redirectUri);
   }
 
