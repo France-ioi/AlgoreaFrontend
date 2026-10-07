@@ -1,10 +1,13 @@
 import {
+  AfterRenderRef,
   AfterViewInit,
+  afterNextRender,
   ChangeDetectorRef,
   Component,
   computed,
   ElementRef,
   inject,
+  Injector,
   OnDestroy,
   signal,
   viewChild,
@@ -49,6 +52,7 @@ interface MeasureWidths {
 export class BreadcrumbsComponent implements AfterViewInit, OnDestroy {
   private store = inject(Store);
   private changeDetectorRef = inject(ChangeDetectorRef);
+  private injector = inject(Injector);
 
   containerRef = viewChild<ElementRef<HTMLElement>>('breadcrumbContainer');
   measureListRef = viewChild<ElementRef<HTMLElement>>('measureList');
@@ -77,7 +81,7 @@ export class BreadcrumbsComponent implements AfterViewInit, OnDestroy {
   private resizeObserver = new ResizeObserver(() => this.resizeEvent.next());
 
   private menuCloseTimeoutId: ReturnType<typeof setTimeout> | null = null;
-  private pendingAnimationFrameId: number | null = null;
+  private pendingRender: AfterRenderRef | null = null;
 
   constructor() {
     merge(
@@ -140,18 +144,21 @@ export class BreadcrumbsComponent implements AfterViewInit, OnDestroy {
 
   private scheduleCollapsedCountUpdate(): void {
     this.cancelCollapsedCountUpdate();
-    this.pendingAnimationFrameId = requestAnimationFrame(() => {
-      this.pendingAnimationFrameId = null;
+    this.pendingRender = afterNextRender(() => {
+      this.pendingRender = null;
       this.updateCollapsedCount();
+      // Required: overflow correction measures the rendered list in this same hook.
       this.changeDetectorRef.detectChanges();
       this.correctCollapsedCountFromOverflow();
-    });
+    }, { injector: this.injector });
+    // afterNextRender with a component injector only runs when this view is refreshed; markForCheck
+    // schedules that refresh (ResizeObserver callbacks don't trigger CD under zoneless).
+    this.changeDetectorRef.markForCheck();
   }
 
   private cancelCollapsedCountUpdate(): void {
-    if (this.pendingAnimationFrameId === null) return;
-    cancelAnimationFrame(this.pendingAnimationFrameId);
-    this.pendingAnimationFrameId = null;
+    this.pendingRender?.destroy();
+    this.pendingRender = null;
   }
 
   private updateCollapsedCount(): void {
