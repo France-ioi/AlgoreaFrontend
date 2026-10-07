@@ -125,14 +125,15 @@
       </alg-error>
     }
     @else { <!-- url set -->
+      @let displayUrl = taskUrl();
 
-      @if (taskConfig() && showTaskDisplay()) {
+      @if (taskConfig() && showTaskDisplay() && displayUrl) {
         @for (_ of [ taskDisplayRemountKey() ]; track _) {
-          <alg-item-display class="alg-flex-1"
+          <alg-item-display #taskDisplay class="alg-flex-1"
             [class.alg-opacity-0]="!isTaskLoaded()"
             [route]="itemData().route"
             [editingPermission]="itemData().item.permissions"
-            [url]="url"
+            [url]="displayUrl"
             [attemptId]="itemData().currentResult ? $safeNavigationMigration(itemData().currentResult?.attemptId) : undefined"
             [resultStartedAt]="itemData().currentResult?.startedAt ?? null"
             [view]="taskView()"

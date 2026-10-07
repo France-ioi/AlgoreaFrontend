@@ -10,6 +10,7 @@ export interface TestTaskApiOptions {
   itemId?: string,
   taskUrl?: string,
   taskQuery?: string,
+  canEdit?: 'none' | 'children' | 'all' | 'all_with_grant',
   currentAnswer?: { answer: string, state: string } | null,
 }
 
@@ -21,7 +22,7 @@ interface TaskCallLogEntry {
 
 const actionSuccess = { success: true as const, message: 'ok' };
 
-function buildTaskResponse(itemId: string, taskUrl: string): object {
+function buildTaskResponse(itemId: string, taskUrl: string, canEdit: TestTaskApiOptions['canEdit'] = 'none'): object {
   return {
     id: itemId,
     type: 'Task',
@@ -36,7 +37,7 @@ function buildTaskResponse(itemId: string, taskUrl: string): object {
       can_view: 'content',
       can_grant_view: 'none',
       can_watch: 'none',
-      can_edit: 'none',
+      can_edit: canEdit,
       is_owner: true,
       can_request_help: true,
     },
@@ -102,7 +103,7 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
   const taskUrl = options.taskUrl ?? (
     options.taskQuery ? `${TEST_TASK_URL}?${options.taskQuery}` : TEST_TASK_URL
   );
-  const taskResponse = buildTaskResponse(itemId, taskUrl);
+  const taskResponse = buildTaskResponse(itemId, taskUrl, options.canEdit);
   const breadcrumbs = [{
     item_id: itemId,
     language_tag: 'en',
@@ -127,7 +128,12 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
     },
   }];
 
-  await page.route(`${apiUrl}/items/${itemId}`, route => route.fulfill({ json: taskResponse }));
+  await page.route(`${apiUrl}/items/${itemId}`, route => {
+    if (route.request().method() === 'PUT') {
+      return route.fulfill({ json: actionSuccess });
+    }
+    return route.fulfill({ json: taskResponse });
+  });
   await page.route(`${apiUrl}/items/${itemId}/breadcrumbs*`, route => route.fulfill({ json: breadcrumbs }));
   await page.route(`${apiUrl}/items/${itemId}/attempts*`, route => route.fulfill({ json: attempts }));
   await page.route(`${apiUrl}/items/${itemId}/current-answer*`, route => {
