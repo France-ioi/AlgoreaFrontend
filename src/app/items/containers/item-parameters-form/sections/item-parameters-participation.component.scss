@@ -1,9 +1,49 @@
 @use 'src/assets/scss/functions';
 @use 'section-shared';
 
+.explicit-entry-row {
+  align-items: flex-start;
+}
+
+.explicit-entry-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: functions.toRem(12);
+}
+
+.explicit-entry-switch-line {
+  display: flex;
+  align-items: center;
+  gap: functions.toRem(8);
+}
+
+.advice-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font-size: functions.toRem(18);
+  line-height: 1;
+  cursor: help;
+  color: inherit;
+
+  &.warning {
+    // Prefer toast text brown over the light icon amber so the glyph meets WCAG 1.4.11 (≥3:1) on white.
+    color: var(--toast-warning-text, #92400e);
+  }
+
+  &.info {
+    color: var(--alg-message-info-color, #3b82f6);
+  }
+}
+
 .explicit-entry-message {
   display: block;
-  margin: 0 0 functions.toRem(16);
+  align-self: stretch;
 }
 
 .form-item-duration {

@@ -22,7 +22,7 @@ const defaultValue: ItemParametersParticipationValue = {
     <alg-item-parameters-participation [formControl]="control"
       [itemType]="itemType()"
       [savedRequiresExplicitEntry]="savedRequiresExplicitEntry()"
-      [savedIsTimeLimited]="savedIsTimeLimited()"
+      [savedAllowsMultipleAttempts]="savedAllowsMultipleAttempts()"
      />
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -32,7 +32,7 @@ class HostComponent {
   control = new FormControl(defaultValue, { nonNullable: true });
   itemType = input<ItemType>('Chapter');
   savedRequiresExplicitEntry = input(false);
-  savedIsTimeLimited = input(false);
+  savedAllowsMultipleAttempts = input(false);
 }
 
 describe('ItemParametersParticipationComponent', () => {
@@ -42,7 +42,7 @@ describe('ItemParametersParticipationComponent', () => {
   async function setup(opts: {
     itemType?: ItemType,
     savedRequiresExplicitEntry?: boolean,
-    savedIsTimeLimited?: boolean,
+    savedAllowsMultipleAttempts?: boolean,
     value?: Partial<ItemParametersParticipationValue>,
   } = {}): Promise<void> {
     await TestBed.configureTestingModule({
@@ -52,159 +52,161 @@ describe('ItemParametersParticipationComponent', () => {
     host = fixture.componentInstance;
     fixture.componentRef.setInput('itemType', opts.itemType ?? 'Chapter');
     fixture.componentRef.setInput('savedRequiresExplicitEntry', opts.savedRequiresExplicitEntry ?? false);
-    fixture.componentRef.setInput('savedIsTimeLimited', opts.savedIsTimeLimited ?? false);
+    fixture.componentRef.setInput('savedAllowsMultipleAttempts', opts.savedAllowsMultipleAttempts ?? false);
     const value = { ...defaultValue, ...opts.value };
     if (opts.savedRequiresExplicitEntry !== undefined) {
       value.requiresExplicitEntry = opts.savedRequiresExplicitEntry;
+    }
+    if (opts.savedAllowsMultipleAttempts !== undefined) {
+      value.allowsMultipleAttempts = opts.savedAllowsMultipleAttempts;
     }
     host.control.setValue(value);
     fixture.detectChanges();
   }
 
-  function convertButton(): HTMLButtonElement {
-    return fixture.debugElement.query(By.css('[data-testid="explicit-entry-convert"]')).nativeElement;
+  function explicitEntryRow(): HTMLElement {
+    return fixture.debugElement.query(By.css('[data-testid="requires-explicit-entry"]')).nativeElement;
   }
 
-  function undoButton(): HTMLButtonElement | null {
-    const el = fixture.debugElement.query(By.css('[data-testid="explicit-entry-undo"]'));
-    return el !== null ? el.nativeElement as HTMLButtonElement : null;
+  function toggleExplicitEntrySwitch(): void {
+    const switchEl = fixture.debugElement.query(
+      By.css('[data-testid="requires-explicit-entry"] alg-switch .switch')
+    );
+    switchEl.nativeElement.click();
+    fixture.detectChanges();
   }
 
-  function message(): HTMLElement {
-    return fixture.debugElement.query(By.css('[data-testid="explicit-entry-message"]')).nativeElement;
+  function adviceIcon(): HTMLElement | null {
+    const el = fixture.debugElement.query(By.css('[data-testid="explicit-entry-advice-icon"]'));
+    return el !== null ? el.nativeElement as HTMLElement : null;
+  }
+
+  function message(): HTMLElement | null {
+    const el = fixture.debugElement.query(By.css('[data-testid="explicit-entry-message"]'));
+    return el !== null ? el.nativeElement as HTMLElement : null;
   }
 
   function hasDurationFields(): boolean {
     return fixture.debugElement.query(By.css('[data-testid="entering-time-min-container"]')) !== null;
   }
 
-  it('shows orange convert button and warning panel when saved requiresExplicitEntry is false', async () => {
+  it('shows orange warning icon when saved without manual entry and not switched (Chapter)', async () => {
     await setup({ savedRequiresExplicitEntry: false });
-    const btn = convertButton();
-    expect(btn.classList.contains('warning')).toBe(true);
-    expect(btn.textContent).toContain('Convert this chapter to manual participation');
-    expect(undoButton()).toBeNull();
-    const msg = message();
-    expect(msg.classList.contains('warning')).toBe(true);
-    expect(msg.textContent).toContain('not recommended to convert a regular chapter to manual participation');
+    expect(host.control.value.requiresExplicitEntry).toBe(false);
+    expect(hasDurationFields()).toBe(false);
+
+    const icon = adviceIcon();
+    expect(icon).not.toBeNull();
+    expect(icon!.classList.contains('warning')).toBe(true);
+    expect(icon!.getAttribute('aria-label')).toContain(
+      'not recommended to convert a regular chapter to manual participation'
+    );
+    expect(message()).toBeNull();
   });
 
-  it('shows green convert button and info panel when saved requiresExplicitEntry is true', async () => {
-    await setup({ savedRequiresExplicitEntry: true });
-    const btn = convertButton();
-    expect(btn.classList.contains('success')).toBe(true);
-    expect(btn.textContent).toContain('Convert this manual-participation chapter to a regular chapter');
+  it('shows orange warning box under the switch when toggled on from no manual entry (Chapter)', async () => {
+    await setup({ savedRequiresExplicitEntry: false });
+    toggleExplicitEntrySwitch();
+
+    expect(host.control.value.requiresExplicitEntry).toBe(true);
+    expect(adviceIcon()).toBeNull();
     const msg = message();
-    expect(msg.classList.contains('info')).toBe(true);
-    expect(msg.textContent).toContain('recommended to allow multiple attempts when converting to a regular chapter');
+    expect(msg).not.toBeNull();
+    expect(msg!.classList.contains('warning')).toBe(true);
+    expect(msg!.textContent).toContain('not recommended to convert a regular chapter to manual participation');
+    expect(explicitEntryRow().querySelector('.form-item-control')!.contains(msg)).toBe(true);
+    expect(explicitEntryRow().querySelector('.form-item-label')!.contains(msg)).toBe(false);
   });
 
-  it('uses task wording when itemType is Task', async () => {
+  it('restores warning icon after toggling back to the saved value', async () => {
+    await setup({ savedRequiresExplicitEntry: false });
+    toggleExplicitEntrySwitch();
+    expect(message()).not.toBeNull();
+
+    toggleExplicitEntrySwitch();
+    expect(host.control.value.requiresExplicitEntry).toBe(false);
+    expect(message()).toBeNull();
+    expect(adviceIcon()).not.toBeNull();
+    expect(adviceIcon()!.classList.contains('warning')).toBe(true);
+  });
+
+  it('shows blue info icon when saved with manual entry and without multiple attempts, not switched (Chapter)', async () => {
+    await setup({ savedRequiresExplicitEntry: true, savedAllowsMultipleAttempts: false });
+    expect(host.control.value.requiresExplicitEntry).toBe(true);
+    expect(hasDurationFields()).toBe(true);
+
+    const icon = adviceIcon();
+    expect(icon).not.toBeNull();
+    expect(icon!.classList.contains('info')).toBe(true);
+    expect(icon!.getAttribute('aria-label')).toContain(
+      'recommended to allow multiple attempts when converting to a regular chapter'
+    );
+    expect(message()).toBeNull();
+  });
+
+  it('shows blue info box under the switch when toggled off from manual entry without multiple attempts (Chapter)', async () => {
+    await setup({ savedRequiresExplicitEntry: true, savedAllowsMultipleAttempts: false });
+    toggleExplicitEntrySwitch();
+
+    expect(host.control.value.requiresExplicitEntry).toBe(false);
+    expect(adviceIcon()).toBeNull();
+    const msg = message();
+    expect(msg).not.toBeNull();
+    expect(msg!.classList.contains('info')).toBe(true);
+    expect(msg!.textContent).toContain(
+      'recommended to allow multiple attempts when converting to a regular chapter'
+    );
+    expect(explicitEntryRow().querySelector('.form-item-control')!.contains(msg)).toBe(true);
+    expect(explicitEntryRow().querySelector('.form-item-label')!.contains(msg)).toBe(false);
+  });
+
+  it('shows nothing when saved with manual entry and multiple attempts', async () => {
+    await setup({ savedRequiresExplicitEntry: true, savedAllowsMultipleAttempts: true });
+    expect(adviceIcon()).toBeNull();
+    expect(message()).toBeNull();
+
+    toggleExplicitEntrySwitch();
+    expect(host.control.value.requiresExplicitEntry).toBe(false);
+    expect(adviceIcon()).toBeNull();
+    expect(message()).toBeNull();
+  });
+
+  it('uses task wording for the warning icon and box', async () => {
     await setup({ itemType: 'Task', savedRequiresExplicitEntry: false });
-    expect(convertButton().textContent).toContain('Convert this task to manual participation');
-    expect(message().textContent).toContain('not recommended to convert a regular task to manual participation');
-  });
-
-  it('uses time-limited wording when saved duration is set', async () => {
-    await setup({ savedRequiresExplicitEntry: true, savedIsTimeLimited: true });
-    expect(convertButton().textContent).toContain('Convert this time-limited chapter to a regular chapter');
-  });
-
-  it('uses time-limited task wording when itemType is Task', async () => {
-    await setup({ itemType: 'Task', savedRequiresExplicitEntry: true, savedIsTimeLimited: true });
-    expect(convertButton().textContent).toContain('Convert this time-limited task to a regular task');
-  });
-
-  it('flips the control on convert, keeps the panel, and shows Undo', async () => {
-    await setup({ savedRequiresExplicitEntry: false });
-    convertButton().click();
-    fixture.detectChanges();
-
-    expect(host.control.value.requiresExplicitEntry).toBe(true);
-    expect(fixture.debugElement.query(By.css('[data-testid="explicit-entry-convert"]'))).toBeNull();
-    expect(undoButton()).not.toBeNull();
-    expect(message().classList.contains('warning')).toBe(true);
-    expect(message().textContent).toContain('not recommended to convert a regular chapter');
-  });
-
-  it('restores the control on Undo', async () => {
-    await setup({ savedRequiresExplicitEntry: false });
-    convertButton().click();
-    fixture.detectChanges();
-    undoButton()!.click();
-    fixture.detectChanges();
-
-    expect(host.control.value.requiresExplicitEntry).toBe(false);
-    expect(convertButton().textContent).toContain('Convert this chapter to manual participation');
-    expect(undoButton()).toBeNull();
-  });
-
-  it('disables convert and undo when the form is disabled', async () => {
-    await setup({ savedRequiresExplicitEntry: false });
-    host.control.disable();
-    fixture.detectChanges();
-    expect(convertButton().disabled).toBe(true);
-
-    host.control.enable();
-    fixture.detectChanges();
-    convertButton().click();
-    fixture.detectChanges();
-    host.control.disable();
-    fixture.detectChanges();
-    expect(undoButton()!.disabled).toBe(true);
-  });
-
-  it('after convert, matching savedRequiresExplicitEntry hides Undo and shows the opposite convert UI', async () => {
-    await setup({ savedRequiresExplicitEntry: false });
-    convertButton().click();
-    fixture.detectChanges();
-    expect(undoButton()).not.toBeNull();
-    expect(hasDurationFields()).toBe(true);
-
-    fixture.componentRef.setInput('savedRequiresExplicitEntry', true);
-    fixture.detectChanges();
-
-    expect(undoButton()).toBeNull();
-    expect(convertButton().classList.contains('success')).toBe(true);
-    expect(convertButton().textContent).toContain(
-      'Convert this manual-participation chapter to a regular chapter'
+    expect(adviceIcon()!.getAttribute('aria-label')).toContain(
+      'not recommended to convert a regular task to manual participation'
     );
-    expect(message().classList.contains('info')).toBe(true);
-    expect(hasDurationFields()).toBe(true);
-  });
 
-  it('converts and undoes in the green direction, toggling duration fields', async () => {
-    await setup({ savedRequiresExplicitEntry: true });
-    expect(hasDurationFields()).toBe(true);
-
-    convertButton().click();
-    fixture.detectChanges();
-
-    expect(host.control.value.requiresExplicitEntry).toBe(false);
-    expect(undoButton()).not.toBeNull();
-    expect(hasDurationFields()).toBe(false);
-    expect(message().classList.contains('info')).toBe(true);
-
-    undoButton()!.click();
-    fixture.detectChanges();
-
-    expect(host.control.value.requiresExplicitEntry).toBe(true);
-    expect(convertButton().textContent).toContain(
-      'Convert this manual-participation chapter to a regular chapter'
+    toggleExplicitEntrySwitch();
+    expect(message()!.textContent).toContain(
+      'not recommended to convert a regular task to manual participation'
     );
-    expect(hasDurationFields()).toBe(true);
   });
 
-  it('shows duration fields after converting to manual participation and hides them on Undo', async () => {
+  it('uses task wording for the info icon and box', async () => {
+    await setup({
+      itemType: 'Task',
+      savedRequiresExplicitEntry: true,
+      savedAllowsMultipleAttempts: false,
+    });
+    expect(adviceIcon()!.getAttribute('aria-label')).toContain(
+      'recommended to allow multiple attempts when converting to a regular task'
+    );
+
+    toggleExplicitEntrySwitch();
+    expect(message()!.textContent).toContain(
+      'recommended to allow multiple attempts when converting to a regular task'
+    );
+  });
+
+  it('shows and hides Duration and entering-time fields with the switch', async () => {
     await setup({ savedRequiresExplicitEntry: false });
     expect(hasDurationFields()).toBe(false);
 
-    convertButton().click();
-    fixture.detectChanges();
+    toggleExplicitEntrySwitch();
     expect(hasDurationFields()).toBe(true);
 
-    undoButton()!.click();
-    fixture.detectChanges();
+    toggleExplicitEntrySwitch();
     expect(hasDurationFields()).toBe(false);
   });
 });

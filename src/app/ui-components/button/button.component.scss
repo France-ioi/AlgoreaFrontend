@@ -100,17 +100,6 @@
     }
   }
 
-  // White / toast-warning-text on --warning-color fail WCAG AA; #5c2a06 reaches ~5.8:1.
-  &.warning {
-    color: var(--alg-warning-button-text, #5c2a06);
-    border: functions.toRem(1) solid var(--warning-color, #f5a623);
-    background: var(--warning-color, #f5a623);
-
-    .icon {
-      color: var(--alg-warning-button-text, #5c2a06);
-    }
-  }
-
   &.accent-dark:not(.only-caption) {
     color: var(--alg-white-color);
     border: functions.toRem(1) solid var(--alg-accent-dark-color);

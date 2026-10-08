@@ -22,7 +22,7 @@
     <alg-item-parameters-participation [formControl]="form.controls.participation"
       [itemType]="itemData().item.type"
       [savedRequiresExplicitEntry]="itemData().item.requiresExplicitEntry"
-      [savedIsTimeLimited]="itemData().item.duration !== null"
+      [savedAllowsMultipleAttempts]="itemData().item.allowsMultipleAttempts"
      />
   }
   @if (secs.team) {
