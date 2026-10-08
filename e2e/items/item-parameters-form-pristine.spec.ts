@@ -51,7 +51,8 @@ test.describe('floating save visibility on parameters load', () => {
 });
 
 test.describe('floating save visibility with pre-populated masked fields', () => {
-  const participationConvertLocator = (page: Page) => page.getByTestId('explicit-entry-convert');
+  const explicitEntrySwitchLocator = (page: Page) =>
+    page.getByTestId('requires-explicit-entry').locator('alg-switch');
 
   test('duration: no save bar after reload with saved duration', async ({ page, createItem, itemContentPage, duration }) => {
     if (!createItem) throw new Error('The item is not created');
@@ -65,7 +66,11 @@ test.describe('floating save visibility with pre-populated masked fields', () =>
       itemContentPage.waitForItemResponse(createItem.itemId),
     ]);
 
-    await participationConvertLocator(page).click();
+    const adviceIcon = page.getByTestId('explicit-entry-advice-icon');
+    await expect.soft(adviceIcon).toBeVisible();
+    await expect.soft(adviceIcon).toHaveClass(/warning/);
+
+    await explicitEntrySwitchLocator(page).click();
     await page.getByTestId('form-item-view').filter({ hasText: 'Duration' }).locator('alg-switch').click();
     await duration.fillH('01');
     await duration.fillM('10');
@@ -80,8 +85,13 @@ test.describe('floating save visibility with pre-populated masked fields', () =>
     await expect.soft(page.getByRole('heading', { name: 'Participation' })).toBeVisible();
     await expect.soft(saveBtnLocator).not.toBeVisible();
     await expect.soft(cancelBtnLocator).not.toBeVisible();
-    await expect.soft(participationConvertLocator(page)).toHaveText(
-      'Convert this time-limited chapter to a regular chapter'
+    await expect.soft(explicitEntrySwitchLocator(page)).toBeVisible();
+    const savedAdviceIcon = page.getByTestId('explicit-entry-advice-icon');
+    await expect.soft(savedAdviceIcon).toBeVisible();
+    await expect.soft(savedAdviceIcon).toHaveClass(/info/);
+    await expect.soft(savedAdviceIcon).toHaveAttribute(
+      'aria-label',
+      /recommended to allow multiple attempts when converting to a regular chapter/
     );
     await duration.checksIsHHasValue('1');
     await duration.checksIsMHasValue('10');
@@ -112,7 +122,7 @@ test.describe('floating save visibility with pre-populated masked fields', () =>
       itemContentPage.waitForItemResponse(createItem.itemId),
     ]);
 
-    await participationConvertLocator(page).click();
+    await explicitEntrySwitchLocator(page).click();
     await enteringTimeMinContainerLocator.locator('alg-switch').click();
     await enteringTimeMinInputDateLocator.fill(savedDate);
     await itemContentPage.saveChangesAndCheckNotification();

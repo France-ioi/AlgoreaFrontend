@@ -22,8 +22,13 @@ import {
   ItemParametersParticipationValue,
 } from 'src/app/items/models/item-parameters';
 import { ItemType } from 'src/app/items/models/item-type';
-import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { MessageInfoComponent } from 'src/app/ui-components/message-info/message-info.component';
+
+interface ExplicitEntryAdvice {
+  kind: 'warning' | 'info',
+  text: string,
+  icon: string,
+}
 
 @Component({
   selector: 'alg-item-parameters-participation',
@@ -37,7 +42,6 @@ import { MessageInfoComponent } from 'src/app/ui-components/message-info/message
     DurationComponent,
     InputDateComponent,
     TooltipDirective,
-    ButtonComponent,
     MessageInfoComponent,
   ],
   providers: [
@@ -58,7 +62,16 @@ export class ItemParametersParticipationComponent implements ControlValueAccesso
 
   itemType = input.required<ItemType>();
   savedRequiresExplicitEntry = input.required<boolean>();
-  savedIsTimeLimited = input.required<boolean>();
+  savedAllowsMultipleAttempts = input.required<boolean>();
+
+  // eslint-disable-next-line max-len
+  private readonly notRecommendedTaskText = $localize`It is not recommended to convert a regular task to manual participation as some users may already have attempts of that task and so these users may be unable to enter manually. Prefer creating directly a task with manual participation.`;
+  // eslint-disable-next-line max-len
+  private readonly notRecommendedChapterText = $localize`It is not recommended to convert a regular chapter to manual participation as some users may already have attempts of that chapter and so these users may be unable to enter manually. Prefer creating directly a chapter with manual participation.`;
+  // eslint-disable-next-line max-len
+  private readonly allowMultipleTaskText = $localize`It is recommended to allow multiple attempts when converting to a regular task so that users who already participated previously can try new submissions on that task.`;
+  // eslint-disable-next-line max-len
+  private readonly allowMultipleChapterText = $localize`It is recommended to allow multiple attempts when converting to a regular chapter so that users who already participated previously can try new submissions on that chapter.`;
 
   form = this.fb.nonNullable.group({
     allowsMultipleAttempts: [ false ],
@@ -75,22 +88,27 @@ export class ItemParametersParticipationComponent implements ControlValueAccesso
   private readonly enteringTimeMax = signal<Date | null>(null);
   private readonly enteringTimeMinEnabled = signal(false);
   readonly requiresExplicitEntry = signal(false);
-  readonly disabled = signal(false);
 
-  readonly converted = computed(() => this.requiresExplicitEntry() !== this.savedRequiresExplicitEntry());
+  readonly switched = computed(() => this.requiresExplicitEntry() !== this.savedRequiresExplicitEntry());
 
-  readonly participationModeButtonClass = computed(() => {
-    if (this.converted()) return 'secondary';
-    return this.savedRequiresExplicitEntry() ? 'success' : 'warning';
+  readonly explicitEntryAdvice = computed((): ExplicitEntryAdvice | null => {
+    const isTask = this.itemType() === 'Task';
+    if (!this.savedRequiresExplicitEntry()) {
+      return {
+        kind: 'warning',
+        text: isTask ? this.notRecommendedTaskText : this.notRecommendedChapterText,
+        icon: 'ph-duotone ph-warning-circle',
+      };
+    }
+    if (!this.savedAllowsMultipleAttempts()) {
+      return {
+        kind: 'info',
+        text: isTask ? this.allowMultipleTaskText : this.allowMultipleChapterText,
+        icon: 'ph-duotone ph-info',
+      };
+    }
+    return null;
   });
-
-  readonly participationModeButtonTestId = computed(() =>
-    (this.converted() ? 'explicit-entry-undo' : 'explicit-entry-convert')
-  );
-
-  // Crowdin meaning/description: context for the generic "Undo" caption on the convert button.
-  readonly undoAriaLabel =
-    $localize`:Undo the participation-mode conversion|Reverts convert before save:Undo the participation mode conversion`;
 
   readonly minEnteringTimeMaxDate = computed(() => {
     const minEnabled = this.enteringTimeMinEnabled();
@@ -137,22 +155,8 @@ export class ItemParametersParticipationComponent implements ControlValueAccesso
   registerOnTouched(_fn: () => void): void {}
 
   setDisabledState(isDisabled: boolean): void {
-    this.disabled.set(isDisabled);
     if (isDisabled) this.form.disable({ emitEvent: false });
     else this.form.enable({ emitEvent: false });
-  }
-
-  convert(): void {
-    this.form.controls.requiresExplicitEntry.patchValue(!this.savedRequiresExplicitEntry());
-  }
-
-  undoConversion(): void {
-    this.form.controls.requiresExplicitEntry.patchValue(this.savedRequiresExplicitEntry());
-  }
-
-  onParticipationModeButtonClick(): void {
-    if (this.converted()) this.undoConversion();
-    else this.convert();
   }
 
   onEnteringTimeMinEnabledChange(enabled: boolean): void {

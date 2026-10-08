@@ -73,7 +73,7 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
   tooltipPosition = input<TooltipPosition>('bottom');
   tooltipStyleClass = input('');
   tooltipDisabled = input(false);
-  tooltipEvent = input<'hover' | 'focus'>('hover');
+  tooltipEvent = input<'hover' | 'focus' | 'both'>('hover');
 
   tooltipEvent$ = toObservable(this.tooltipEvent);
 
@@ -104,12 +104,11 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
     );
 
     this.tooltipEvent$.pipe(
-      switchMap(event => (event === 'hover'
-        ? this.hoverShowEvents$()
-        : merge(
-          fromEvent(this.elementRef.nativeElement, 'focus'),
-          fromEvent(this.elementRef.nativeElement, 'blur').pipe(map(() => undefined)),
-        ))),
+      switchMap(event => {
+        if (event === 'hover') return this.hoverShowEvents$();
+        if (event === 'focus') return this.focusShowEvents$();
+        return merge(this.hoverShowEvents$(), this.focusShowEvents$());
+      }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(event => {
       this.showOverlaySubject$.next(event);
@@ -149,6 +148,14 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
           takeUntil(mouseEnter$),
         ),
       )),
+    );
+  }
+
+  private focusShowEvents$(): Observable<Event | undefined> {
+    const host = this.elementRef.nativeElement;
+    return merge(
+      fromEvent(host, 'focus'),
+      fromEvent(host, 'blur').pipe(map(() => undefined)),
     );
   }
 

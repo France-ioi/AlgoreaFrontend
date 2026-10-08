@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div class="form-item-view" data-testid="form-item-view">
+  <div class="form-item-view explicit-entry-row" data-testid="requires-explicit-entry">
     <span class="form-item-label">
       <ng-container i18n>Start participation manually</ng-container>
       <i
@@ -28,79 +28,37 @@
         aria-hidden="true"
       ></i>
     </span>
-    <div class="form-item-control">
-      <button
-        type="button"
-        [class]="participationModeButtonClass()"
-        alg-button
-        [attr.data-testid]="participationModeButtonTestId()"
-        [disabled]="disabled()"
-        [attr.aria-label]="converted() ? undoAriaLabel : null"
-        aria-describedby="explicit-entry-message"
-        (click)="onParticipationModeButtonClick()"
-      >
-        @if (converted()) {
-          <ng-container
-            i18n="Undo the participation-mode conversion|Button that reverts converting start-participation-manually before save"
-          >Undo</ng-container>
-        } @else if (!savedRequiresExplicitEntry()) {
-          @if (itemType() === 'Task') {
-            <ng-container i18n>Convert this task to manual participation</ng-container>
-          } @else {
-            <ng-container i18n>Convert this chapter to manual participation</ng-container>
-          }
-        } @else if (savedIsTimeLimited()) {
-          @if (itemType() === 'Task') {
-            <ng-container i18n>Convert this time-limited task to a regular task</ng-container>
-          } @else {
-            <ng-container i18n>Convert this time-limited chapter to a regular chapter</ng-container>
-          }
-        } @else {
-          @if (itemType() === 'Task') {
-            <ng-container i18n>Convert this manual-participation task to a regular task</ng-container>
-          } @else {
-            <ng-container i18n>Convert this manual-participation chapter to a regular chapter</ng-container>
-          }
+    <div class="form-item-control explicit-entry-control">
+      <div class="explicit-entry-switch-line">
+        <alg-switch formControlName="requiresExplicitEntry" />
+        @if (!switched() && explicitEntryAdvice(); as advice) {
+          <button
+            type="button"
+            class="advice-icon-btn"
+            [class.warning]="advice.kind === 'warning'"
+            [class.info]="advice.kind === 'info'"
+            [algTooltip]="advice.text"
+            tooltipEvent="both"
+            tooltipPosition="top"
+            [attr.aria-label]="advice.text"
+            data-testid="explicit-entry-advice-icon"
+          >
+            <i [class]="advice.icon" aria-hidden="true"></i>
+          </button>
         }
-      </button>
+      </div>
+      @if (switched() && explicitEntryAdvice(); as advice) {
+        <alg-message-info
+          class="explicit-entry-message"
+          [class.warning]="advice.kind === 'warning'"
+          [class.info]="advice.kind === 'info'"
+          [icon]="advice.icon"
+          [live]="true"
+          data-testid="explicit-entry-message"
+        >{{ advice.text }}</alg-message-info>
+      }
     </div>
   </div>
-
-  @if (!savedRequiresExplicitEntry()) {
-    <alg-message-info
-      id="explicit-entry-message"
-      class="explicit-entry-message warning"
-      icon="ph-duotone ph-warning-circle"
-      data-testid="explicit-entry-message"
-    >
-      @if (itemType() === 'Task') {
-        <ng-container i18n>
-          It is not recommended to convert a regular task to manual participation as some users may already have attempts of that task and so these users may be unable to enter manually. Prefer creating directly a task with manual participation.
-        </ng-container>
-      } @else {
-        <ng-container i18n>
-          It is not recommended to convert a regular chapter to manual participation as some users may already have attempts of that chapter and so these users may be unable to enter manually. Prefer creating directly a chapter with manual participation.
-        </ng-container>
-      }
-    </alg-message-info>
-  } @else {
-    <alg-message-info
-      id="explicit-entry-message"
-      class="explicit-entry-message info"
-      icon="ph-duotone ph-info"
-      data-testid="explicit-entry-message"
-    >
-      @if (itemType() === 'Task') {
-        <ng-container i18n>
-          It is recommended to allow multiple attempts when converting to a regular task so that users who already participated previously can try new submissions on that task.
-        </ng-container>
-      } @else {
-        <ng-container i18n>
-          It is recommended to allow multiple attempts when converting to a regular chapter so that users who already participated previously can try new submissions on that chapter.
-        </ng-container>
-      }
-    </alg-message-info>
-  }
 
   @if (requiresExplicitEntry()) {
     <div class="form-item-view form-item-duration" data-testid="form-item-view">

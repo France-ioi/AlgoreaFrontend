@@ -21,9 +21,15 @@ test('checks lock membership date saving', async ({ page, createItem, itemConten
 
   await expect.soft(page.getByRole('heading', { name: 'Participation' })).toBeVisible();
 
-  const convertLocator = page.getByTestId('explicit-entry-convert');
-  await expect.soft(convertLocator).toBeVisible();
-  await convertLocator.click();
+  const adviceIcon = page.getByTestId('explicit-entry-advice-icon');
+  await expect.soft(adviceIcon).toBeVisible();
+  await expect.soft(adviceIcon).toHaveClass(/warning/);
+
+  const explicitEntrySwitch = page.getByTestId('requires-explicit-entry').locator('alg-switch');
+  await expect.soft(explicitEntrySwitch).toBeVisible();
+  await explicitEntrySwitch.click();
+  await expect.soft(page.getByTestId('explicit-entry-message')).toBeVisible();
+  await expect.soft(page.getByTestId('explicit-entry-message')).toHaveClass(/warning/);
 
   const durationSwitchLocator = page.getByTestId('form-item-view')
     .filter({ hasText: 'Duration' })
@@ -41,9 +47,17 @@ test('checks lock membership date saving', async ({ page, createItem, itemConten
   });
 
   await test.step('checks the duration displayed correct after save', async () => {
-    await expect.soft(convertLocator).toHaveText('Convert this time-limited chapter to a regular chapter');
+    const savedAdviceIcon = page.getByTestId('explicit-entry-advice-icon');
+    await expect.soft(savedAdviceIcon).toBeVisible();
+    await expect.soft(savedAdviceIcon).toHaveClass(/info/);
+    await expect.soft(savedAdviceIcon).toHaveAttribute(
+      'aria-label',
+      /recommended to allow multiple attempts when converting to a regular chapter/
+    );
+    await expect.soft(page.getByTestId('explicit-entry-message')).toBeHidden();
     await duration.checksIsHHasValue('1');
     await duration.checksIsMHasValue('10');
     await duration.checksIsSHasValue('15');
   });
 });
+
