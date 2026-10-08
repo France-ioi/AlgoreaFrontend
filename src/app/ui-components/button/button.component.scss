@@ -89,14 +89,14 @@
     }
   }
 
-  // White on --alg-success-color fails WCAG AA (~1.9:1); use dark green text instead.
+  // Use --alg-success-btn-color (not the lighter --alg-success-color) so white label stays readable.
   &.success {
-    color: var(--alg-success-text, #14532d);
-    border: functions.toRem(1) solid var(--alg-success-color);
-    background: var(--alg-success-color);
+    color: var(--alg-white-color, #fff);
+    border: functions.toRem(1) solid var(--alg-success-btn-color, #34a835);
+    background: var(--alg-success-btn-color, #34a835);
 
     .icon {
-      color: var(--alg-success-text, #14532d);
+      color: var(--alg-white-color, #fff);
     }
   }
 
