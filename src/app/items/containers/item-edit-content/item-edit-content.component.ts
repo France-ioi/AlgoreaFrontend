@@ -3,6 +3,7 @@ import { UntypedFormGroup } from '@angular/forms';
 import { TextareaComponent } from 'src/app/ui-components/textarea/textarea.component';
 import { PreviewHtmlComponent } from 'src/app/containers/preview-html/preview-html.component';
 import { ItemEditContentHelpComponent } from './item-edit-content-help/item-edit-content-help.component';
+import { ITEM_DESCRIPTION_MAX_LENGTH } from 'src/app/items/containers/item-strings-form-group/item-strings-validators';
 
 type Tab = 'write' | 'preview' | 'help';
 
@@ -14,6 +15,8 @@ type Tab = 'write' | 'preview' | 'help';
 })
 export class ItemEditContentComponent {
   parentForm = input.required<UntypedFormGroup>();
+
+  protected readonly descriptionMaxLength = ITEM_DESCRIPTION_MAX_LENGTH;
 
   activeTab = signal<Tab>('write');
 

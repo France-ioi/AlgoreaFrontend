@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { stringsValueEqual } from 'src/app/items/containers/item-strings-form-group/item-all-strings-form.helpers';
 import { createCvaEcho } from 'src/app/utils/cva-echo';
 import {
+  stringsDescriptionValidators,
   stringsLanguageTagValidators,
   stringsSubtitleValidators,
   stringsTitleValidators,
@@ -59,7 +60,7 @@ export class ItemStringsControlComponent implements ControlValueAccessor {
     languageTag: [ '', stringsLanguageTagValidators ],
     title: [ '', stringsTitleValidators ],
     subtitle: [ '', stringsSubtitleValidators ],
-    description: [ '' ],
+    description: [ '', stringsDescriptionValidators ],
   });
 
   // Propagate the inner form value to the parent CVA synchronously so that

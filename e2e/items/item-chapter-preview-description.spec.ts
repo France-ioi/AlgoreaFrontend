@@ -118,6 +118,34 @@ test('checks no preview description', async ({ page }) => {
   await expect.soft(page.locator('alg-preview-html')).toHaveText('Nothing to preview');
 });
 
+// Description soft limit is 100000 chars; the counter appears from 90% (90000) and turns red over the limit.
+// Save stays clickable; invalid form shows the same toast as other field errors.
+test('shows description length counter near the limit and blocks save when over', async ({ page }) => {
+  await initAsTesterUser(page);
+  await page.goto('/a/3244687538937221949;p=;a=0/parameters');
+  const editItemDescriptionLocator = page.getByTestId('edit-item-description');
+  await expect.soft(editItemDescriptionLocator).toBeVisible();
+  const textbox = editItemDescriptionLocator.getByRole('textbox');
+  const counter = editItemDescriptionLocator.getByTestId('textarea-length-counter');
+
+  const nearLimitLength = 90_000;
+  await textbox.fill('a'.repeat(nearLimitLength));
+  await expect.soft(counter).toBeVisible();
+  await expect.soft(counter).toContainText(`${ nearLimitLength }/100000`);
+  await expect.soft(counter).not.toHaveClass(/over-limit/);
+
+  const overLimitLength = 100_001;
+  await textbox.fill('a'.repeat(overLimitLength));
+  await expect.soft(counter).toContainText(`${ overLimitLength }/100000`);
+  await expect.soft(counter).toHaveClass(/over-limit/);
+  await expect.soft(editItemDescriptionLocator.getByText(/This field is too long/)).toBeVisible();
+
+  const saveBtn = page.getByRole('button', { name: 'Save' });
+  await expect.soft(saveBtn).toBeEnabled();
+  await saveBtn.click();
+  await expect.soft(page.getByText('You need to solve all the errors displayed in the form to save changes.')).toBeVisible();
+});
+
 // Regression for the v2 messaging protocol: in `srcdoc` iframes, an unintercepted hash click
 // navigates to `about:srcdoc#name` and blanks the iframe (especially visible in Firefox). The
 // runtime helper must intercept hash anchors (resolving the target by `id` or legacy `name`)
