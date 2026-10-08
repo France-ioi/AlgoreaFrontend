@@ -46,3 +46,27 @@
   color: var(--base-text-color);
   font-size: 1.2rem;
 }
+
+.length-counter {
+  margin-top: functions.toRem(4);
+  text-align: end;
+  font-size: functions.toRem(12);
+  color: var(--alg-secondary-color, #616F82);
+
+  &.over-limit {
+    /* Same literal as `.input-error` in form-error.component.scss */
+    color: #a94442;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

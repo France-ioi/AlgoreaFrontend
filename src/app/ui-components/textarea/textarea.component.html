@@ -7,12 +7,24 @@
       [placeholder]="placeholder()"
       [class.no-icon]="!icon()"
       [class.resizable]="resizable()"
+      [attr.aria-describedby]="showCounter() ? counterId() : null"
       >
     </textarea>
     @if (icon()) {
       <span class="placeholder-icon">
         <i class="ph ph-text-t"></i>
       </span>
+    }
+    @if (showCounter()) {
+      <div
+        class="length-counter"
+        [id]="counterId()"
+        [class.over-limit]="overLimit()"
+        data-testid="textarea-length-counter"
+      >
+        {{ length() }}/{{ maxLength() }}
+        <span class="visually-hidden" i18n>characters</span>
+      </div>
     }
     <alg-input-error [form]="parentForm()!" [inputName]="inputName()" />
   </ng-container>
