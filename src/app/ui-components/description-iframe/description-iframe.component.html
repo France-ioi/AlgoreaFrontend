@@ -1,11 +1,14 @@
 <!--
   Security: keep `sandbox="allow-scripts"` exact. Do NOT add `allow-same-origin`; the `srcdoc`
   bypass in description-iframe.component.ts is only safe because this iframe has an opaque origin.
+  The `allow` attribute is also a security contract: grant `fullscreen` only — do not add
+  autoplay, encrypted-media, clipboard-write, or other Permissions Policy features.
 -->
 <iframe
   #iframe
   [srcdoc]="srcdoc()"
   sandbox="allow-scripts"
+  allow="fullscreen"
   referrerpolicy="no-referrer"
   loading="lazy"
   [title]="resolvedTitle()"
