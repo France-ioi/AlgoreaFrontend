@@ -150,3 +150,17 @@ See [mocks/test-task/README.md](mocks/test-task/README.md) for scenario query pa
 
 - The `.cursor/ARCHITECTURE.md` document must be updated each time a change may affect the global app architecture
 - Keep the architecture document shorter than 1000 lines
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` + `docs/adr/` (plus Algorea knowledge base). See `docs/agents/domain.md`.
