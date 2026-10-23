@@ -2,165 +2,88 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 # Project Overview
 
-Algorea Frontend is an educational platform built with Angular 21 and ngrx. The project supports internationalization via Crowdin.
+Algorea Frontend is an educational platform built with Angular 22 and ngrx, internationalized via Crowdin. Change detection is zoneless.
 
-The architecture of the project is documented in `.cursor/ARCHITECTURE.md`.
+**Architecture map:** [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md) — folders, store shape, FetchState, API/routing/config. Feature deep-dives in the same folder (left nav, item parameters, item routing, descriptions iframe, task↔platform, notifications, build/deploy, auth). Read the map when structure or shared patterns change; read a deep-dive only when that branch is in scope. Update the file you changed.
 
 # Code quality
 
-- files should not be longer than 300 lines.
+- Files ≤ 300 lines.
 
 ## Comments
-- Do NOT add obvious, narrating comments (e.g., `// increment counter`, `// return result`).
-- DO add comments when a non-trivial choice has been made and the reasoning is not self-evident from the code. Examples:
-  - Why a particular algorithm, data structure, or approach was chosen over alternatives
-  - Why a value is hardcoded or why a specific threshold/constant was picked
-  - Workarounds for framework quirks, browser bugs, or API limitations
-  - Non-obvious performance considerations or trade-offs
-  - Business logic constraints that aren't apparent from the code alone
-  - Why something is intentionally left out (e.g., `// No need to unsubscribe: completed by takeUntilDestroyed`)
-- When refactoring or rewriting code, **preserve all existing explanatory comments**. Move them to the appropriate new location if the code they describe has moved. Only remove a comment if the code change makes the comment factually obsolete.
 
-## TypeScript Best Practices
+Comment non-obvious choices (algorithm trade-off, hardcoded threshold, framework quirk, intentional omission). Skip narrating comments. When refactoring, **preserve** existing explanatory comments (move with the code); remove only when factually obsolete.
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
-- Explicit return types are required on functions
-- Use single quotes for strings
+## TypeScript
 
-## Angular Best Practices
+- Strict checking; prefer inference when obvious; `unknown` over `any`
+- Explicit return types on functions
+- Single quotes for strings
+- RxJS over promises
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for local component state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
-- Component selector prefix: `alg` (kebab-case)
-- Directive selector prefix: `alg` (camelCase)
+## Angular
 
-## Linting
-- Linting rules are defined in the `.eslintrc.js` file
-- Use `.editorconfig` file for basic editor config
-- Max line length: 140 characters
+- Standalone components (do not set `standalone: true` — default in v20+)
+- Signals for local state; `computed()` for derived state; `update`/`set` on signals (not `mutate`)
+- Lazy-load feature routes
+- Host bindings via the `host` object on `@Component` / `@Directive` (not `@HostBinding` / `@HostListener`)
+- `NgOptimizedImage` for static images (not inline base64)
+- Selectors: components `alg` kebab-case; directives `alg` camelCase
+- `inject()` over constructor injection
+- Reactive forms over template-driven
+- Self-closing tags for empty components/elements; open/close when there is projected or inner content
+- Native control flow (`@if` / `@for` / `@switch`); `class` / `style` bindings (not `ngClass` / `ngStyle`)
+- Paths for external templates/styles relative to the component TS file
+- Prefer inline templates for small components
+
+### Change detection & modernization
+
+- Omit `ChangeDetectionStrategy.OnPush` (default in Angular 22). Set `ChangeDetectionStrategy.Eager` only when a component must run every cycle (legacy).
+- When modernizing legacy components (projection vs inputs, migration order), check for [`.cursor/MODERNIZING-COMPONENTS.md`](.cursor/MODERNIZING-COMPONENTS.md) if present.
+
+### Accessibility
+
+Pass AXE checks and WCAG AA (focus, contrast, ARIA).
 
 ## Styling
-- CSS variables are defined in `src/variables.scss` and can be overridden per customer at deploy time (see `.cursor/ARCHITECTURE.md`)
-- Primary color: `--alg-primary-color` (not `--alg-primary`)
-- Always provide fallback values for CSS variables
-- Use `functions.toRem()` for all pixel values instead of direct `rem` values (e.g., `functions.toRem(16)` not `1rem`)
-- Import functions at the top of SCSS files: `@use 'src/assets/scss/functions';`
-- Avoid `::ng-deep` - use `:host` selectors with class bindings for component-specific styling
-  - Place host-based styles (`:host.class-name`) in the component that owns them, not in parent components
 
-## Accessibility Requirements
+- Tokens in `src/variables.scss` (overridable per customer at deploy — see architecture map). Primary: `--alg-primary-color` (not `--alg-primary`). Always provide CSS-variable fallbacks.
+- `functions.toRem()` for lengths; `@use 'src/assets/scss/functions'` at top of SCSS.
+- Component-owned `:host` / class bindings instead of `::ng-deep`; host styles live on the owning component.
 
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+## State (ngrx + local)
 
-### Components
-
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Do not set `changeDetection: ChangeDetectionStrategy.OnPush` — it is the default in Angular 22. Only set `ChangeDetectionStrategy.Eager` when a component must be checked on every change detection cycle (legacy behavior).
-- When modernizing legacy components, follow [.cursor/MODERNIZING-COMPONENTS.md](.cursor/MODERNIZING-COMPONENTS.md) (projection vs inputs, migration order, verification).
-- Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file.
-- Use the `inject()` function instead of constructor injection
-
-## State Management
-
-- Use ngrx Store for global state management
-- Use ngrx Effects for side effects
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
-
-### ngrx Store Patterns
-
-- Use `FetchState<T>` from `src/app/utils/state.ts` for async state (combines loading/success/error states)
-- Use helper functions: `fetchingState()`, `readyState(data)`, `errorState(error)`
-- For actions, prefer a single `fetchStateChanged` action with full `FetchState` instead of separate success/failure actions
-- Store imports must be from index files (e.g., `import { fromNotification } from './store/notification'`)
+- ngrx Store for global state; Effects for side effects; signals for local component state
+- Async state: `FetchState<T>` + `fetchingState()` / `readyState(data)` / `errorState(error)` from `src/app/utils/state.ts`
+- Prefer one `fetchStateChanged` action carrying full `FetchState` over separate success/failure actions
+- Store imports from feature index files (e.g. `import { fromNotification } from './store/notification'`)
+- Operator choice and subscription teardown: architecture map (`FetchState` / teardown sections)
 
 ## Templates
 
-- Use self-closing tags for empty Angular components and structural elements (e.g. `<alg-foo [input]="value" />`); keep open/close tags when the element has projected or inner content.
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available.
-- Do not write arrow functions in templates (they are not supported).
+Keep logic out of templates. Use the async pipe for observables. No `new Date()` (or other globals) and no arrow functions in templates.
 
 ## Services
 
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
+Single responsibility; `providedIn: 'root'` for singletons; `inject()`.
 
-## Our other preferences:
-- Do NOT use promises, use RxJS instead
+## Linting
+
+Max line length 140. Config lives in the repo ESLint / EditorConfig files.
 
 # Dev workflow
 
-## Development server
-
-- Run `ng serve` for dev server at `http://localhost:4200/`
-- Run `npm start` to run both mock server and Angular serve together
-- For mock server, copy `mocks/environment.dev.ts` to `mocks/environment.ts` and update the dev token
-
-## Linting and tests
-
-Make sure after each modification that:
-- the linting (`npm run lint`) pass — includes `@angular-eslint/template/prefer-self-closing-tags` for template HTML
-- the unit tests pass (`ng test`)
-- the e2e tests pass (`npm run test:e2e`)
-
-## E2E tests
-
-- E2E tests use Playwright
-- Set the user token in `.e2e.env` (start from `.e2e.env.sample`)
-- Launch web server (`ng serve`) before running tests
-
-## Testing platform-task interaction
-
-When changing code under `src/app/items/api/` or the `item-task-*` services:
-
-1. Keep [mocks/test-task/](mocks/test-task/) in sync with the Bebras task API (add bindings and control-panel buttons for new methods).
-2. For manual checks, run `npm start` and set a dev task URL to `http://localhost:3000/test-task/index.html`.
-3. Add or update coverage in [e2e/items/task-platform-interaction.spec.ts](e2e/items/task-platform-interaction.spec.ts).
-
-See [mocks/test-task/README.md](mocks/test-task/README.md) for scenario query params and API coverage.
+- Dev server: `ng serve` → `http://localhost:4200/`. `npm start` runs mock server + serve. Mock env: copy `mocks/environment.dev.ts` → `mocks/environment.ts` and set the token.
+- After changes: `npm run lint`, `ng test`, and `npm run test:e2e` must pass.
+- E2E: Playwright; token in `.e2e.env` (from `.e2e.env.sample`); `ng serve` must be up.
+- **Platform↔task** (`src/app/items/api/` or `item-task-*`): keep [mocks/test-task/](mocks/test-task/) in sync; manual check via `npm start` + task URL `http://localhost:3000/test-task/index.html`; cover in [e2e/items/task-platform-interaction.spec.ts](e2e/items/task-platform-interaction.spec.ts). Details: [mocks/test-task/README.md](mocks/test-task/README.md) and [docs/architecture/task-platform.md](docs/architecture/task-platform.md).
 
 ## Internationalization
 
-- All English strings in templates and code must be internationalized
-- Use Angular i18n markers for all translatable strings
-- Translated strings are managed via Crowdin
-- New strings are pushed to Crowdin when merged to `master`
+Internationalize all English UI strings with Angular i18n markers. Crowdin owns translations; new strings ship to Crowdin on merge to `master`.
 
-## Documentation and architecture
+# Agent skills
 
-- The `.cursor/ARCHITECTURE.md` document must be updated each time a change may affect the global app architecture
-- Keep the architecture document shorter than 1000 lines
-
-## Agent skills
-
-### Issue tracker
-
-Issues live as markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Single-context: root `GLOSSARY.md` + `docs/adr/` (plus Algorea knowledge base). See `docs/agents/domain.md`.
+- **Issue tracker:** markdown under `.scratch/<feature>/` — [docs/agents/issue-tracker.md](docs/agents/issue-tracker.md)
+- **Triage labels:** `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix` — [docs/agents/triage-labels.md](docs/agents/triage-labels.md)
+- **Domain docs:** root `GLOSSARY.md` + `docs/adr/` (+ Algorea knowledge base) — [docs/agents/domain.md](docs/agents/domain.md)
