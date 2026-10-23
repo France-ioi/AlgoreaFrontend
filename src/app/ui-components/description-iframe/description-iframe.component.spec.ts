@@ -48,6 +48,55 @@ describe('DescriptionIframeComponent', () => {
     expect(iframe.getAttribute('sandbox')).not.toContain('allow-same-origin');
   });
 
+  // Security contract: fullscreen is the only Permissions Policy feature we delegate. Widening
+  // `allow` (autoplay, encrypted-media, clipboard-write, …) or dropping it must fail this test.
+  it('should grant allow=fullscreen exactly and keep sandbox allow-scripts only', () => {
+    const iframe = iframeEl();
+    expect(iframe.getAttribute('allow')).toBe('fullscreen');
+    expect(iframe.getAttribute('sandbox')).toBe('allow-scripts');
+  });
+
+  // Behavior, not markup: author script inside the real sandboxed opaque-origin srcdoc posts
+  // `document.fullscreenEnabled`. Must use the component iframe (not the same-origin harness
+  // below) so we prove the permission reaches production sandbox conditions. Production uses
+  // `loading="lazy"`; Karma's off-screen fixture would never load it, so we force eager +
+  // scrollIntoView before updating srcdoc. Wrap the script in a real body element so
+  // `parseDescriptionContent` keeps raw HTML (a lone `<script>` is parsed into `<head>` and
+  // would otherwise be escaped as plain text).
+  it('should enable fullscreen inside the sandboxed description document', async () => {
+    const iframe = iframeEl();
+
+    const enabled = await new Promise<boolean>((resolve, reject) => {
+      const timeout = window.setTimeout(() => {
+        window.removeEventListener('message', onMessage);
+        reject(new Error('Timed out waiting for fullscreen probe message'));
+      }, 8000);
+
+      function onMessage(event: MessageEvent): void {
+        if (event.source !== iframe.contentWindow) return;
+        const data = event.data as { type?: unknown, enabled?: unknown } | null;
+        if (data === null || typeof data !== 'object' || data.type !== 'alg.fullscreenProbe') return;
+        window.clearTimeout(timeout);
+        window.removeEventListener('message', onMessage);
+        resolve(data.enabled === true);
+      }
+
+      // Attach before updating srcdoc so we cannot miss the probe postMessage.
+      window.addEventListener('message', onMessage);
+
+      const probe =
+        '<div><script>parent.postMessage({ type: "alg.fullscreenProbe", enabled: document.fullscreenEnabled }, "*");</script></div>';
+      fixture.componentRef.setInput('content', probe);
+      fixture.detectChanges();
+      // Template re-applies loading="lazy"; force eager after detectChanges so Karma's
+      // off-screen fixture still loads the srcdoc and runs the author probe.
+      iframe.loading = 'eager';
+      iframe.scrollIntoView();
+    });
+
+    expect(enabled).toBeTrue();
+  }, 10000);
+
   it('should embed base CSS marker and author HTML in srcdoc', () => {
     fixture.componentRef.setInput('content', '<p id="author">hello</p>');
     fixture.detectChanges();
