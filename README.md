@@ -105,6 +105,10 @@ test('home page loaded as usual user', async ({ page }) => {
 - press "record at cursor" so that all new actions in the browser are added where you cursor is
 - cleanup what has been generated
 
+## Create a release
+
+Ask an agent to run the `release` skill ([`.agents/skills/release/SKILL.md`](.agents/skills/release/SKILL.md)), optionally in auto mode. It drafts the `CHANGELOG.md` section from the merged PRs, proposes the version, then commits, tags, pushes and creates the GitHub release once you reply "do it". To do it by hand, follow the same steps.
+
 ## Internationalization
 
 Every developer who adds text into the code should localize it. See the [Angular doc](https://angular.io/guide/i18n#prepare-templates-for-translations) to know how to mark it as localizable.
