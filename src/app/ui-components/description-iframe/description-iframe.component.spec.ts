@@ -60,7 +60,7 @@ describe('DescriptionIframeComponent', () => {
   // `document.fullscreenEnabled`. Must use the component iframe (not the same-origin harness
   // below) so we prove the permission reaches production sandbox conditions. Production uses
   // `loading="lazy"`; Karma's off-screen fixture would never load it, so we force eager +
-  // scrollIntoView before updating srcdoc. Wrap the script in a real body element so
+  // scrollIntoView before updating srcdoc. Wrap the script in a real element (e.g. `<div>`) so
   // `parseDescriptionContent` keeps raw HTML (a lone `<script>` is parsed into `<head>` and
   // would otherwise be escaped as plain text).
   it('should enable fullscreen inside the sandboxed description document', async () => {
@@ -84,14 +84,14 @@ describe('DescriptionIframeComponent', () => {
       // Attach before updating srcdoc so we cannot miss the probe postMessage.
       window.addEventListener('message', onMessage);
 
+      // Force eager before srcdoc assignment so a deferred lazy load cannot skip the probe.
+      iframe.loading = 'eager';
+      iframe.scrollIntoView();
+
       const probe =
         '<div><script>parent.postMessage({ type: "alg.fullscreenProbe", enabled: document.fullscreenEnabled }, "*");</script></div>';
       fixture.componentRef.setInput('content', probe);
       fixture.detectChanges();
-      // Template re-applies loading="lazy"; force eager after detectChanges so Karma's
-      // off-screen fixture still loads the srcdoc and runs the author probe.
-      iframe.loading = 'eager';
-      iframe.scrollIntoView();
     });
 
     expect(enabled).toBeTrue();
