@@ -73,8 +73,5 @@ Thumbs.db
 .cursor/rules/local.mdc
 .cursor/reviews/*
 
-# bmad artifacts
-.cursor/commands/bmad-*
-.claude/commands/bmad-*
-_bmad/
-_bmad-output/
+# Local agent issue tracker (specs/tickets; not product source)
+.scratch/
