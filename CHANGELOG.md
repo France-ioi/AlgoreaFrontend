@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.95.0](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.94.6...v2.95.0) - 2026-10-23
+
+- allow fullscreen for video embeds in item descriptions
+- help: document that nested player iframes need the allowfullscreen attribute
+
 ## [v2.94.6](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.94.5...v2.94.6) - 2026-10-08
 
 - item parameters: limit the description length
