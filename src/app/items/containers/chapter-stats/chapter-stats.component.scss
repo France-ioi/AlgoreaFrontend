@@ -1,5 +1,9 @@
 @use 'src/assets/scss/functions';
 
+:host {
+  display: block;
+}
+
 .page-title-row {
   display: flex;
   align-items: baseline;
@@ -18,13 +22,18 @@
 }
 
 .stats-table {
-  // Fixed layout so the title column (auto width) takes all the remaining space
-  // after the stat columns get their explicit widths, instead of being squeezed.
-  table-layout: fixed;
+  .title-col {
+    // Readable floor so the column stops shrinking before titles wrap one
+    // character per line; further narrowing then triggers horizontal scroll.
+    min-width: functions.toRem(160);
+  }
 
   .stat-col {
     text-align: right;
-    width: functions.toRem(110);
+    // Shrink-to-content: 1% + nowrap makes the column only as wide as its
+    // header/value, so the title column absorbs leftover width under auto layout.
+    width: 1%;
+    white-space: nowrap;
   }
 
   .alg-table-td {
