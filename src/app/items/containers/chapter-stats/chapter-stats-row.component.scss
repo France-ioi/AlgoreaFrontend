@@ -2,7 +2,15 @@
 
 .title-cell {
   white-space: normal;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  // Same floor as `.title-col`: some browsers ignore min-width on `<th>` under
+  // auto table layout, so the body cell (and its content) must carry it too.
+  min-width: functions.toRem(160);
+
+  .item-title {
+    display: inline-block;
+    min-width: functions.toRem(160);
+  }
 }
 
 .item-subtitle {
@@ -13,6 +21,7 @@
 
 .stat-cell {
   text-align: right;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 
   // Numeric values are short (typically 1–6 chars), so the placeholder is narrower
