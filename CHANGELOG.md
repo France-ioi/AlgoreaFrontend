@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.95.1](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.0...v2.95.1) - 2026-11-02
+
+- fix chapter stats first column squeezing on narrow screens
+- update bebras device proxy
+
 ## [v2.95.0](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.94.6...v2.95.0) - 2026-10-23
 
 - allow fullscreen for video embeds in item descriptions
