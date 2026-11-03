@@ -1,7 +1,9 @@
 @use 'src/assets/scss/functions';
+@use './chapter-children-grid-columns' as grid-cols;
 
 :host {
   display: block;
+  @include grid-cols.chapter-children-grid-width-container;
 }
 
 .grid-container {
@@ -71,6 +73,15 @@
     }
   }
 }
+
+// Match media-query specificity (incl. .left-menu-shown) so these can override the viewport floor.
+// Apply :not(.compact) on each normal selector — Sass attaches trailing suffixes only to the last list item.
+@include grid-cols.chapter-children-normal-extra-columns(
+  '.grid-container.left-menu-shown:not(.compact), .grid-container:not(.left-menu-shown):not(.compact)'
+);
+@include grid-cols.chapter-children-compact-extra-columns(
+  '.grid-container.compact.left-menu-shown, .grid-container.compact:not(.left-menu-shown)'
+);
 
 .grid-item {
   overflow: hidden;
