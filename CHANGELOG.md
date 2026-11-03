@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.95.2](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.1...v2.95.2) - 2026-11-03
+
+- show more chapter children tiles on wide screens, with a max tile size
+
 ## [v2.95.1](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.0...v2.95.1) - 2026-11-02
 
 - fix chapter stats first column squeezing on narrow screens
