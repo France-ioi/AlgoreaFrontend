@@ -77,6 +77,7 @@ Max line length 140. Config lives in the repo ESLint / EditorConfig files.
 - After changes: `npm run lint`, `ng test`, and `npm run test:e2e` must pass.
 - E2E: Playwright; token in `.e2e.env` (from `.e2e.env.sample`); `ng serve` must be up.
 - **Platform↔task** (`src/app/items/api/` or `item-task-*`): keep [mocks/test-task/](mocks/test-task/) in sync; manual check via `npm start` + task URL `http://localhost:3000/test-task/index.html`; cover in [e2e/items/task-platform-interaction.spec.ts](e2e/items/task-platform-interaction.spec.ts). Details: [mocks/test-task/README.md](mocks/test-task/README.md) and [docs/architecture/task-platform.md](docs/architecture/task-platform.md).
+- **Git:** never commit on or push to `master`. Work on a feature branch; open a pull request into `master`. If `HEAD` is already on `master`, create and check out a feature branch before the first commit.
 
 ## Internationalization
 

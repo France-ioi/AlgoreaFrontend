@@ -1,0 +1,12 @@
+---
+description: Never commit or push on master; always use a feature branch and PR
+alwaysApply: true
+---
+
+# Git: branch + PR only
+
+Never commit on `master`, and never push to `master`.
+
+- If `HEAD` is `master`, create and check out a feature branch before the first commit (`git checkout -b <slug>`).
+- Commit only on that feature branch.
+- Ship work by pushing the feature branch and opening a pull request into `master`. Do not merge unless the user asks.
