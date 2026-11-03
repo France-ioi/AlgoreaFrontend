@@ -9,4 +9,4 @@ Never commit on `master`, and never push to `master`.
 
 - If `HEAD` is `master`, create and check out a feature branch before the first commit (`git checkout -b <slug>`).
 - Commit only on that feature branch.
-- Ship work by pushing the feature branch and opening a pull request into `master`. Do not merge unless the user asks.
+- Ship work by pushing the feature branch and opening a pull request into `master`. When writing the PR body, use the `pr` skill. Do not merge unless the user asks.
