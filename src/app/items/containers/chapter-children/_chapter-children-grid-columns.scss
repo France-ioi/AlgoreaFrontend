@@ -1,0 +1,66 @@
+@use 'sass:math';
+
+// Extra column steps from the grid's own width (container queries). Viewport media queries
+// still own 1–4 (normal) and 2/3/4/jump-to-6 (compact); these only add columns and the cap.
+// Caps/thresholds stay in px so column steps do not shift when the root font-size changes.
+
+$chapter-children-gap: 16px;
+$chapter-children-normal-cap: 265px;
+// 6×265 + 5×16 — shared max row for 6 normal or 9 compact capped tiles.
+$chapter-children-max-row: 1670px;
+// (1670 − 8×16) / 9 so 9 capped compact tiles line up with 6 capped normal tiles.
+$chapter-children-compact-cap: math.div($chapter-children-max-row - 8 * $chapter-children-gap, 9);
+
+@mixin chapter-children-grid-width-container {
+  container-type: inline-size;
+  container-name: chapter-children-grid;
+}
+
+@mixin chapter-children-normal-extra-columns($grid-selector) {
+  @container chapter-children-grid (width > #{4 * $chapter-children-normal-cap + 3 * $chapter-children-gap}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  @container chapter-children-grid (width > #{5 * $chapter-children-normal-cap + 4 * $chapter-children-gap}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  @container chapter-children-grid (width > #{$chapter-children-max-row}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(6, $chapter-children-normal-cap);
+      justify-content: start;
+    }
+  }
+}
+
+// $grid-selector must match or beat the viewport media-query specificity (see call sites).
+@mixin chapter-children-compact-extra-columns($grid-selector) {
+  @container chapter-children-grid (width > #{6 * $chapter-children-compact-cap + 5 * $chapter-children-gap}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(7, 1fr);
+    }
+  }
+
+  @container chapter-children-grid (width > #{7 * $chapter-children-compact-cap + 6 * $chapter-children-gap}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(8, 1fr);
+    }
+  }
+
+  @container chapter-children-grid (width > #{8 * $chapter-children-compact-cap + 7 * $chapter-children-gap}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(9, 1fr);
+    }
+  }
+
+  @container chapter-children-grid (width > #{$chapter-children-max-row}) {
+    #{$grid-selector} {
+      grid-template-columns: repeat(9, $chapter-children-compact-cap);
+      justify-content: start;
+    }
+  }
+}

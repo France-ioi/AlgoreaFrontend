@@ -1,7 +1,9 @@
 @use 'src/assets/scss/functions';
+@use './chapter-children-grid-columns' as grid-cols;
 
 :host {
   display: block;
+  @include grid-cols.chapter-children-grid-width-container;
 }
 
 .two-levels-title-link {
@@ -25,6 +27,7 @@
   font-size: functions.toRem(14);
 }
 
+// Same column ladder as compact tiles (viewport 2/3/4/jump-to-6, then container 7–9 + cap).
 .placeholder-grid {
   display: grid;
   column-gap: functions.toRem(16);
@@ -32,23 +35,39 @@
   grid-template-columns: 1fr 1fr;
 
   &.left-menu-shown {
+    @media screen and (max-width: 887.98px) {
+      grid-template-columns: 1fr 1fr;
+    }
     @media screen and (min-width: 888px) and (max-width: 1145.98px) {
       grid-template-columns: 1fr 1fr 1fr;
     }
-    @media screen and (min-width: 1146px) {
+    @media screen and (min-width: 1146px) and (max-width: 1399.98px) {
       grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    @media screen and (min-width: 1400px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
   }
 
   &:not(.left-menu-shown) {
+    @media screen and (max-width: 543.98px) {
+      grid-template-columns: 1fr 1fr;
+    }
     @media screen and (min-width: 544px) and (max-width: 847.98px) {
       grid-template-columns: 1fr 1fr 1fr;
     }
-    @media screen and (min-width: 848px) {
+    @media screen and (min-width: 848px) and (max-width: 1104.98px) {
       grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    @media screen and (min-width: 1105px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
   }
 }
+
+@include grid-cols.chapter-children-compact-extra-columns(
+  '.placeholder-grid.left-menu-shown, .placeholder-grid:not(.left-menu-shown)'
+);
 
 .placeholder-card {
   overflow: hidden;
