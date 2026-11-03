@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.95.3](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.2...v2.95.3) - 2026-11-03
+
+- add optional Content-Security-Policy for description iframes (new config key)
+
 ## [v2.95.2](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.1...v2.95.2) - 2026-11-03
 
 - show more chapter children tiles on wide screens, with a max tile size
