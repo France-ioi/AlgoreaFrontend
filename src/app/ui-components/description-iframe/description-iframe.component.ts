@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { fromEvent } from 'rxjs';
 import { APPCONFIG } from 'src/app/config';
-import { buildDescriptionContentSecurityPolicy } from 'src/app/config/description-content-security-policy';
+import { buildDescriptionContentSecurityPolicy } from './description-iframe.csp';
 import {
   DescriptionIframeNavigationRequest,
   iframeMessageSchema,

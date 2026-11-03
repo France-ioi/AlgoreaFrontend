@@ -23,11 +23,13 @@
         interactive content (animations, small widgets, hint reveals…).
       </li>
       <li i18n>
-        <strong>Images</strong>: any reachable HTTPS URL, or inline <code>data:</code> URIs.
+        <strong>Images</strong>: HTTPS URLs (subject to any deployment host restriction above), or inline
+        <code>data:</code> URIs.
       </li>
       <li i18n>
         <strong>Fullscreen</strong>: supported for videos and interactive widgets. Embedded player iframes
-        (YouTube, Vimeo…) must carry <code>allowfullscreen</code>.
+        (YouTube, Vimeo…) must carry <code>allowfullscreen</code>, and the player host must be allowed for
+        frames when the deployment restricts hosts.
       </li>
     </ul>
   </section>

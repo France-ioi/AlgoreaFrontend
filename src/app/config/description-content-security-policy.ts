@@ -8,17 +8,21 @@ import { z } from 'zod';
 const httpHttpsProtocols: readonly string[] = [ 'http:', 'https:' ];
 const connectProtocols: readonly string[] = [ 'http:', 'https:', 'ws:', 'wss:' ];
 
+/**
+ * True when `value` is an origin (scheme://host[:port], optional trailing slash).
+ * Host matching is case-insensitive; an explicit default port (e.g. `:443` on https) is allowed.
+ */
 function isOrigin(value: string, protocols: readonly string[]): boolean {
   try {
     const url = new URL(value);
     if (!protocols.includes(url.protocol)) return false;
     if (url.username !== '' || url.password !== '') return false;
-    // Origins have no path/query/hash; URL parser normalizes a bare origin to pathname "/".
-    if (url.pathname !== '/' || url.search !== '' || url.hash !== '') return false;
+    if (url.search !== '' || url.hash !== '') return false;
+    // Bare origins parse with pathname "/"; anything else is a path and must be rejected.
+    if (url.pathname !== '/') return false;
     if (url.hostname === '' || url.hostname.includes('*')) return false;
-    // Rebuild without `url.origin` — browsers remap `ws:`/`wss:` origins to `http:`/`https:`.
-    const expected = `${url.protocol}//${url.host}`;
-    return value === expected;
+    // Reject junk after the authority other than an optional trailing slash (no path segments).
+    return /^[a-z][a-z0-9+.-]*:\/\/[^/?#]+\/?$/i.test(value);
   } catch {
     return false;
   }
@@ -44,29 +48,3 @@ export const descriptionContentSecurityPolicySchema = z.object({
 }).strict();
 
 export type DescriptionContentSecurityPolicy = z.infer<typeof descriptionContentSecurityPolicySchema>;
-
-function sourcesOrNone(origins: readonly string[]): string {
-  return origins.length === 0 ? "'none'" : origins.join(' ');
-}
-
-/** CSP policy string for a description srcdoc meta tag (fixed directives + configured origins). */
-export function buildDescriptionContentSecurityPolicy(
-  allowlist: DescriptionContentSecurityPolicy,
-): string {
-  const styleSrc = [ "'unsafe-inline'", ...allowlist.styleSrc ].join(' ');
-  const imgSrc = [ 'data:', ...allowlist.imgSrc ].join(' ');
-  return [
-    "default-src 'none'",
-    "script-src 'unsafe-inline'",
-    `style-src ${styleSrc}`,
-    `font-src ${sourcesOrNone(allowlist.fontSrc)}`,
-    `img-src ${imgSrc}`,
-    `media-src ${sourcesOrNone(allowlist.mediaSrc)}`,
-    `connect-src ${sourcesOrNone(allowlist.connectSrc)}`,
-    `frame-src ${sourcesOrNone(allowlist.frameSrc)}`,
-    "form-action 'none'",
-    "object-src 'none'",
-    "base-uri 'none'",
-    "navigate-to 'none'",
-  ].join('; ');
-}

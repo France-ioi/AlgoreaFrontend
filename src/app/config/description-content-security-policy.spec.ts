@@ -13,9 +13,9 @@ const minimalAppConfig = {
 };
 
 describe('descriptionContentSecurityPolicySchema', () => {
-  it('accepts http(s) origins with an optional port', () => {
+  it('accepts http(s) origins with an optional port, including a default port and mixed-case host', () => {
     const result = descriptionContentSecurityPolicySchema.safeParse({
-      styleSrc: [ 'https://fonts.googleapis.com', 'http://localhost:8080' ],
+      styleSrc: [ 'https://fonts.googleapis.com', 'http://localhost:8080', 'https://Example.com:443' ],
       connectSrc: [ 'https://thymio.org', 'wss://example.com:9443' ],
     });
     expect(result.success).toBeTrue();
