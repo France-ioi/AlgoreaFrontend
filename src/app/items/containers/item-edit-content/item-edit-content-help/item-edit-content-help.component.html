@@ -4,6 +4,9 @@
     but author code cannot reach the rest of the application: it has no access to the parent page, cookies, local
     storage, or the user's session.
   </p>
+  <p class="intro" i18n>
+    A deployment may also restrict which hosts a description can load resources from or contact over the network.
+  </p>
 
   <section>
     <h3 class="alg-h3 alg-text-normal section-title" i18n>What is allowed</h3>
@@ -20,11 +23,13 @@
         interactive content (animations, small widgets, hint reveals…).
       </li>
       <li i18n>
-        <strong>Images</strong>: any reachable HTTPS URL, or inline <code>data:</code> URIs.
+        <strong>Images</strong>: HTTPS URLs (subject to any deployment host restriction above), or inline
+        <code>data:</code> URIs.
       </li>
       <li i18n>
         <strong>Fullscreen</strong>: supported for videos and interactive widgets. Embedded player iframes
-        (YouTube, Vimeo…) must carry <code>allowfullscreen</code>.
+        (YouTube, Vimeo…) must carry <code>allowfullscreen</code>, and the player host must be allowed for
+        frames when the deployment restricts hosts.
       </li>
     </ul>
   </section>

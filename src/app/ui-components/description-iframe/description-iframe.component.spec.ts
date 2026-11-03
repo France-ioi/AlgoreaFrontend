@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { APPCONFIG, AppConfig } from 'src/app/config';
 import { DescriptionIframeComponent } from './description-iframe.component';
 import { DescriptionIframeNavigationRequest } from './description-iframe.messages';
 import { DESCRIPTION_IFRAME_RUNTIME_MARKER, descriptionIframeRuntimeJs } from './description-iframe.runtime';
@@ -12,6 +13,9 @@ describe('DescriptionIframeComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ DescriptionIframeComponent ],
+      providers: [
+        { provide: APPCONFIG, useValue: {} as AppConfig },
+      ],
     }).compileComponents();
 
     document.documentElement.lang = 'fr';

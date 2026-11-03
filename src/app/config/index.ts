@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { z } from 'zod';
+import { descriptionContentSecurityPolicySchema } from './description-content-security-policy';
 
 const userSet = z.union([
   z.enum([ 'all', 'tempUsers', 'nonTempUsers' ]),
@@ -12,7 +13,7 @@ const tabContent = z.object({ id: z.string(), path: z.array(z.string()).default(
 
 const tabCaption = z.object({ default: z.string() }).catchall(z.string());
 
-const configSchema = z.object({
+export const configSchema = z.object({
   apiUrl: z.string(), // full url (not including the trailing slash) of the backend
 
   slsApiUrl: z.string().optional(),
@@ -79,6 +80,12 @@ const configSchema = z.object({
       z.object({ type: z.literal('search') }),
     ]),
   )),
+
+  /**
+   * Optional per-deployment allowlist for description iframe CSP. When present, descriptions
+   * get a Content-Security-Policy meta in their srcdoc. When absent, descriptions stay unrestricted.
+   */
+  descriptionContentSecurityPolicy: descriptionContentSecurityPolicySchema.optional(),
 
 });
 
