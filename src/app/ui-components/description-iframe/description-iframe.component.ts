@@ -3,6 +3,8 @@ import { Component, ElementRef, computed, inject, input, output, signal, viewChi
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { fromEvent } from 'rxjs';
+import { APPCONFIG } from 'src/app/config';
+import { buildDescriptionContentSecurityPolicy } from 'src/app/config/description-content-security-policy';
 import {
   DescriptionIframeNavigationRequest,
   iframeMessageSchema,
@@ -20,6 +22,13 @@ function escapeHtmlAttributeValue(value: string): string {
     .replace(/>/g, '&gt;');
 }
 
+/** Escape for a double-quoted attribute; keep CSP `'keyword'` quotes as literal apostrophes. */
+function escapeDoubleQuotedAttributeValue(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;');
+}
+
 @Component({
   selector: 'alg-description-iframe',
   templateUrl: './description-iframe.component.html',
@@ -32,6 +41,7 @@ function escapeHtmlAttributeValue(value: string): string {
 export class DescriptionIframeComponent {
   private readonly document = inject(DOCUMENT);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly appConfig = inject(APPCONFIG);
 
   /**
    * Snapshotted at construct time on purpose:
@@ -93,12 +103,18 @@ export class DescriptionIframeComponent {
   readonly srcdoc = computed((): SafeHtml => {
     const bodyInner = this.parsedContent().bodyHtml;
     const langAttr = escapeHtmlAttributeValue(this.iframeLang);
+    const allowlist = this.appConfig.descriptionContentSecurityPolicy;
+    const cspMeta = allowlist === undefined
+      ? ''
+      : `<meta http-equiv="Content-Security-Policy" content="${
+        escapeDoubleQuotedAttributeValue(buildDescriptionContentSecurityPolicy(allowlist))
+      }">`;
     const srcdocHtml = `<!doctype html>
 <html lang="${langAttr}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<style>${descriptionBaseCss}${this.parentThemeCss}</style>
+${cspMeta}<style>${descriptionBaseCss}${this.parentThemeCss}</style>
 <script>${descriptionIframeRuntimeJs}</script>
 </head>
 <body>${bodyInner}</body>
