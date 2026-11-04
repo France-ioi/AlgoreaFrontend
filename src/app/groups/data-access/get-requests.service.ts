@@ -7,7 +7,7 @@ import { decodeSnakeCase } from '../../utils/operators/decode';
 import { groupApprovalsSchema } from 'src/app/groups/models/group-approvals';
 import { z } from 'zod';
 import { map } from 'rxjs/operators';
-import { userBaseSchema, withGrade, withGroupId, withId } from 'src/app/groups/models/user';
+import { userBaseSchema, withGroupId, withId } from 'src/app/groups/models/user';
 
 const groupPendingRequestSchema = z.array(
   z.object({
@@ -17,7 +17,7 @@ const groupPendingRequestSchema = z.array(
       name: z.string(),
     }),
     type: z.enum([ 'join_request', 'leave_request' ]),
-    user: withGrade(withGroupId(userBaseSchema)),
+    user: withGroupId(userBaseSchema),
   })
 );
 
@@ -82,7 +82,6 @@ export class GetRequestsService {
             login: r.user.login,
             firstName: r.user.firstName || null,
             lastName: r.user.lastName || null,
-            grade: r.user.grade || null,
           }
         })))
       );

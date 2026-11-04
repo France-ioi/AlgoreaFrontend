@@ -5,12 +5,12 @@ import { APPCONFIG } from 'src/app/config';
 import { inject } from '@angular/core';
 import { z } from 'zod';
 import { decodeSnakeCase } from 'src/app/utils/operators/decode';
-import { userBaseSchema, withGrade, withGroupId } from '../models/user';
+import { userBaseSchema, withGroupId } from '../models/user';
 
 const groupMembersSchema = z.array(
   z.object({
     id: z.string(),
-    user: withGrade(withGroupId(userBaseSchema)),
+    user: withGroupId(userBaseSchema),
     action: z.enum([ 'invitation_accepted', 'join_request_accepted', 'joined_by_code', 'joined_by_badge', 'added_directly' ]).optional(),
     memberSince: z.coerce.date().optional(),
   })

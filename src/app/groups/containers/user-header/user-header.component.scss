@@ -1,5 +1,3 @@
-@use 'src/assets/scss/functions';
-
 .user-header-container {
   padding: var(--alg-space-size-3) 0;
   display: flex;
@@ -18,12 +16,4 @@
 
 .user-title {
   margin: 0;
-}
-
-.user-subtitle {
-  margin-top: functions.toRem(16);
-}
-
-.user-subtitle-icon {
-  margin-right: var(--alg-space-size-5);
 }
