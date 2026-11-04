@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { snakeToCamelKeys } from 'src/app/utils/case_conversion';
-import { userBaseSchema, withGrade, withGroupId } from './user';
+import { userBaseSchema, withGroupId } from './user';
 
 const groupPendingRequestActionSchema = z.enum([
   'invitation_created',
@@ -19,7 +19,7 @@ const groupPendingRequestRowSchema = z.object({
   memberId: z.string(),
   at: z.coerce.date(),
   action: groupPendingRequestActionSchema,
-  joiningUser: withGrade(withGroupId(userBaseSchema)),
+  joiningUser: withGroupId(userBaseSchema),
   invitingUser: z.nullable(withGroupId(userBaseSchema)),
 });
 
