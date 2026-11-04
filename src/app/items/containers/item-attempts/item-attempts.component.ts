@@ -19,7 +19,7 @@ import { LoadingComponent } from 'src/app/ui-components/loading/loading.componen
 import { RelativeTimeComponent } from 'src/app/ui-components/relative-time/relative-time.component';
 import { ScoreRingComponent } from 'src/app/ui-components/score-ring/score-ring.component';
 import { backendInfiniteDateString } from 'src/app/utils/date';
-import { canCreateResults, Result } from '../../models/attempts';
+import { canCreateResults, defaultAttemptId, Result } from '../../models/attempts';
 import { fromItemContent } from '../../store';
 import { AttemptRow, buildAttemptRows } from './attempt-rows';
 
@@ -48,6 +48,7 @@ export class ItemAttemptsComponent {
   protected readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
   protected readonly resultsState = this.store.selectSignal(fromItemContent.selectActiveContentResultsState);
   protected readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
+  protected readonly breadcrumbsState = this.store.selectSignal(fromItemContent.selectActiveContentBreadcrumbsState);
   protected readonly attemptResolution = this.store.selectSignal(fromItemContent.selectAttemptResolution);
   protected readonly isObserving = this.store.selectSignal(fromObservation.selectIsObserving);
 
@@ -66,10 +67,26 @@ export class ItemAttemptsComponent {
     return route ? this.itemRouter.url(route, []) : null;
   });
 
+  /**
+   * Parent attempt for creating another attempt: route `pa`, else default attempt on a root item, else the
+   * immediate parent's attempt from breadcrumbs for this route. Undefined while that breadcrumb is needed
+   * and not ready (or ready without a parent attempt).
+   */
+  protected readonly parentAttemptId = computed(() => {
+    const route = this.route();
+    if (!route) return undefined;
+    if (isRouteWithParentAttempt(route)) return route.parentAttemptId;
+    if (route.path.length === 0) return defaultAttemptId;
+    const breadcrumbsState = this.breadcrumbsState();
+    if (!breadcrumbsState.isReady) return undefined;
+    const parent = breadcrumbsState.data[breadcrumbsState.data.length - 2];
+    return parent?.route.attemptId;
+  });
+
   protected readonly canCreate = computed(() => {
     const item = this.item();
     const route = this.route();
-    if (!item || !route || !isRouteWithParentAttempt(route)) return false;
+    if (!item || !route || this.parentAttemptId() === undefined) return false;
     if (this.isObserving() || this.attemptResolution() !== null) return false;
     // Explicit entry is authorized by `GET /items/{id}/entry-state` (checked by alg-explicit-entry on the content
     // tab, which this button navigates to), not by the view permission: an "info"-only item can still be entered.
@@ -92,9 +109,10 @@ export class ItemAttemptsComponent {
 
   protected requestNewAttempt(): void {
     const route = this.route();
-    if (!route) return;
+    const parentAttemptId = this.parentAttemptId();
+    if (!route || parentAttemptId === undefined) return;
     this.itemRouter.navigateTo(
-      itemRouteWith(route, { attemptId: newAttemptId }),
+      itemRouteWith(route, { attemptId: newAttemptId, parentAttemptId }),
       {
         page: [],
         useCurrentObservation: true,
@@ -106,11 +124,12 @@ export class ItemAttemptsComponent {
   protected createAttempt(): void {
     const route = this.route();
     const item = this.item();
-    if (!route || !item || !isRouteWithParentAttempt(route) || this.createInProgress()) return;
+    const parentAttemptId = this.parentAttemptId();
+    if (!route || !item || parentAttemptId === undefined || this.createInProgress()) return;
     if (this.isObserving() || this.attemptResolution() !== null || !canCreateResults(item)) return;
 
     this.createInProgress.set(true);
-    this.attemptActions.create(route.path.concat([ route.id ]), route.parentAttemptId).pipe(
+    this.attemptActions.create(route.path.concat([ route.id ]), parentAttemptId).pipe(
       takeUntilDestroyed(this.destroyRef),
       finalize(() => this.createInProgress.set(false)),
     ).subscribe({

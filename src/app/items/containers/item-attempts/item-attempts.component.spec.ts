@@ -10,17 +10,32 @@ import { ItemGrantViewPerm } from 'src/app/items/models/item-grant-view-permissi
 import { ItemViewPerm } from 'src/app/items/models/item-view-permission';
 import { ItemWatchPerm } from 'src/app/items/models/item-watch-permission';
 import { fromItemContent } from 'src/app/items/store';
-import { itemRoute, newAttemptId, ResultsFetchKey, resultsFetchKey } from 'src/app/models/routing/item-route';
+import { FullItemRoute, itemRoute, newAttemptId, ResultsFetchKey, resultsFetchKey } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
 import { fromObservation } from 'src/app/store/observation';
 import { backendInfiniteDateString } from 'src/app/utils/date';
 import { errorState, fetchingState, FetchState, readyState } from 'src/app/utils/state';
-import { Result } from '../../models/attempts';
+import { BreadcrumbItem } from '../../data-access/get-breadcrumb.service';
+import { defaultAttemptId, Result } from '../../models/attempts';
 import { ItemAttemptsComponent } from './item-attempts.component';
 
 const baseRoute = itemRoute('activity', '1', { path: [ 'p' ], parentAttemptId: '0', attemptId: '42' });
 const key = resultsFetchKey(baseRoute);
+const routeWithoutParentAttempt = itemRoute('activity', '1', { path: [ 'p' ], attemptId: '42' });
+const rootRoute = itemRoute('activity', '1', { path: [], attemptId: '42' });
+
+function parentBreadcrumbs(route: FullItemRoute, parentAttemptId = '7'): BreadcrumbItem[] {
+  const parentId = route.path[route.path.length - 1]!;
+  return [
+    {
+      itemId: parentId,
+      title: 'Parent',
+      route: itemRoute('activity', parentId, { path: route.path.slice(0, -1), attemptId: parentAttemptId }),
+    },
+    { itemId: route.id, title: 'Current', route },
+  ];
+}
 
 const baseItem: Item = {
   id: '1',
@@ -92,6 +107,10 @@ describe('ItemAttemptsComponent', () => {
               value: readyState([ makeResult('42', new Date('2020-01-01')) ], key),
             },
             { selector: fromItemContent.selectActiveContentRoute, value: baseRoute },
+            {
+              selector: fromItemContent.selectActiveContentBreadcrumbsState,
+              value: readyState(parentBreadcrumbs(baseRoute), baseRoute),
+            },
             { selector: fromItemContent.selectAttemptResolution, value: null },
             { selector: fromObservation.selectIsObserving, value: false },
           ],
@@ -111,7 +130,8 @@ describe('ItemAttemptsComponent', () => {
   function setState(options: {
     item?: Item | null,
     resultsState?: FetchState<Result[], ResultsFetchKey>,
-    route?: typeof baseRoute | null,
+    route?: FullItemRoute | null,
+    breadcrumbsState?: FetchState<BreadcrumbItem[], FullItemRoute>,
     attemptResolution?: { kind: 'pick', attemptId: string } | { kind: 'start' } | null,
     isObserving?: boolean,
   }): void {
@@ -123,6 +143,9 @@ describe('ItemAttemptsComponent', () => {
     }
     if (options.route !== undefined) {
       store.overrideSelector(fromItemContent.selectActiveContentRoute, options.route);
+    }
+    if (options.breadcrumbsState !== undefined) {
+      store.overrideSelector(fromItemContent.selectActiveContentBreadcrumbsState, options.breadcrumbsState);
     }
     if (options.attemptResolution !== undefined) {
       store.overrideSelector(fromItemContent.selectAttemptResolution, options.attemptResolution);
@@ -314,5 +337,174 @@ describe('ItemAttemptsComponent', () => {
   it('shows error state', () => {
     setState({ resultsState: errorState(new Error('x'), key) });
     expect(fixture.nativeElement.querySelector('alg-error')).toBeTruthy();
+  });
+
+  it('shows create when the route has only a current attempt and the breadcrumb has a parent attempt', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      breadcrumbsState: readyState(parentBreadcrumbs(routeWithoutParentAttempt), routeWithoutParentAttempt),
+    });
+    expect(fixture.nativeElement.querySelector('table')).toBeTruthy();
+    expect(createButton()).toBeDefined();
+  });
+
+  it('creates under the breadcrumb parent attempt and keeps the route without a parent attempt', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      breadcrumbsState: readyState(parentBreadcrumbs(routeWithoutParentAttempt, '7'), routeWithoutParentAttempt),
+    });
+    attemptActions.create.and.returnValue(of('99'));
+    createButton()!.click();
+    fixture.detectChanges();
+
+    expect(attemptActions.create).toHaveBeenCalledOnceWith([ 'p', '1' ], '7');
+    expect(itemRouter.navigateTo).toHaveBeenCalledOnceWith(
+      { ...routeWithoutParentAttempt, attemptId: '99' },
+      { useCurrentObservation: true },
+    );
+  });
+
+  it('shows create without waiting for breadcrumbs when the route already has a parent attempt', () => {
+    setState({ breadcrumbsState: fetchingState(undefined, baseRoute) });
+    expect(createButton()).toBeDefined();
+  });
+
+  it('shows create when the route has a parent attempt even if breadcrumbs failed', () => {
+    setState({ breadcrumbsState: errorState(new Error('breadcrumb'), baseRoute) });
+    expect(createButton()).toBeDefined();
+  });
+
+  it('creates under the default attempt on a root item without waiting for breadcrumbs', () => {
+    setState({
+      route: rootRoute,
+      resultsState: readyState([ makeResult('42', new Date('2020-01-01')) ], resultsFetchKey(rootRoute)),
+      breadcrumbsState: fetchingState(undefined, rootRoute),
+    });
+    attemptActions.create.and.returnValue(of('99'));
+    expect(createButton()).toBeDefined();
+    createButton()!.click();
+    fixture.detectChanges();
+
+    expect(attemptActions.create).toHaveBeenCalledOnceWith([ '1' ], defaultAttemptId);
+    expect(itemRouter.navigateTo).toHaveBeenCalledOnceWith(
+      { ...rootRoute, attemptId: '99' },
+      { useCurrentObservation: true },
+    );
+  });
+
+  it('shows create on a root item when breadcrumbs failed', () => {
+    setState({
+      route: rootRoute,
+      resultsState: readyState([ makeResult('42', new Date('2020-01-01')) ], resultsFetchKey(rootRoute)),
+      breadcrumbsState: errorState(new Error('breadcrumb'), rootRoute),
+    });
+    expect(createButton()).toBeDefined();
+  });
+
+  it('hides create while breadcrumbs are loading when the parent attempt must come from them', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      breadcrumbsState: fetchingState(undefined, routeWithoutParentAttempt),
+    });
+    expect(fixture.nativeElement.querySelector('table')).toBeTruthy();
+    expect(createButton()).toBeUndefined();
+  });
+
+  it('hides create when breadcrumbs failed and the parent attempt must come from them', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      breadcrumbsState: errorState(new Error('breadcrumb'), routeWithoutParentAttempt),
+    });
+    expect(fixture.nativeElement.querySelector('table')).toBeTruthy();
+    expect(createButton()).toBeUndefined();
+  });
+
+  it('hides create when breadcrumbs are not for the current route', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      breadcrumbsState: fetchingState(),
+    });
+    expect(fixture.nativeElement.querySelector('table')).toBeTruthy();
+    expect(createButton()).toBeUndefined();
+  });
+
+  it('hides create when breadcrumbs are ready but the parent item has no attempt', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      breadcrumbsState: readyState([
+        {
+          itemId: 'p',
+          title: 'Parent',
+          route: itemRoute('activity', 'p', { path: [], parentAttemptId: '0' }),
+        },
+        { itemId: '1', title: 'Current', route: routeWithoutParentAttempt },
+      ], routeWithoutParentAttempt),
+    });
+    expect(createButton()).toBeUndefined();
+  });
+
+  it('shows create on an ordinary empty item once the breadcrumb parent attempt is ready', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      resultsState: readyState([], resultsFetchKey(routeWithoutParentAttempt)),
+      breadcrumbsState: readyState(parentBreadcrumbs(routeWithoutParentAttempt), routeWithoutParentAttempt),
+    });
+    expect(createButton()).toBeDefined();
+  });
+
+  it('hides create on an ordinary empty item while breadcrumbs are loading', () => {
+    setState({
+      route: routeWithoutParentAttempt,
+      resultsState: readyState([], resultsFetchKey(routeWithoutParentAttempt)),
+      breadcrumbsState: fetchingState(undefined, routeWithoutParentAttempt),
+    });
+    expect(createButton()).toBeUndefined();
+  });
+
+  it('requests a brand-new attempt with the breadcrumb parent attempt for explicit-entry', () => {
+    setState({
+      item: { ...baseItem, requiresExplicitEntry: true },
+      route: routeWithoutParentAttempt,
+      resultsState: readyState([ makeResult('42', new Date('2020-01-01')) ], resultsFetchKey(routeWithoutParentAttempt)),
+      breadcrumbsState: readyState(parentBreadcrumbs(routeWithoutParentAttempt, '7'), routeWithoutParentAttempt),
+    });
+    createButton()!.click();
+    expect(itemRouter.navigateTo).toHaveBeenCalledOnceWith(
+      { ...routeWithoutParentAttempt, attemptId: newAttemptId, parentAttemptId: '7' },
+      {
+        page: [],
+        useCurrentObservation: true,
+        navExtras: { replaceUrl: true },
+      },
+    );
+  });
+
+  it('requests a brand-new attempt with the default attempt for an explicit-entry root item', () => {
+    setState({
+      item: { ...baseItem, requiresExplicitEntry: true },
+      route: rootRoute,
+      resultsState: readyState([ makeResult('42', new Date('2020-01-01')) ], resultsFetchKey(rootRoute)),
+      breadcrumbsState: fetchingState(undefined, rootRoute),
+    });
+    createButton()!.click();
+    expect(itemRouter.navigateTo).toHaveBeenCalledOnceWith(
+      { ...rootRoute, attemptId: newAttemptId, parentAttemptId: defaultAttemptId },
+      {
+        page: [],
+        useCurrentObservation: true,
+        navExtras: { replaceUrl: true },
+      },
+    );
+  });
+
+  it('does not offer create on an empty explicit-entry item', () => {
+    setState({
+      item: { ...baseItem, requiresExplicitEntry: true },
+      route: routeWithoutParentAttempt,
+      resultsState: readyState([], resultsFetchKey(routeWithoutParentAttempt)),
+      breadcrumbsState: readyState(parentBreadcrumbs(routeWithoutParentAttempt), routeWithoutParentAttempt),
+    });
+    expect(fixture.nativeElement.textContent).toContain('This content does not have an attempt yet.');
+    expect(createButton()).toBeUndefined();
   });
 });
