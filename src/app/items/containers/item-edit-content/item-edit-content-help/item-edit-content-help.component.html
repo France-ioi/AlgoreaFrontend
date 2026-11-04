@@ -2,10 +2,8 @@
   <p class="intro" i18n>
     The description is rendered inside a <strong>sandboxed iframe</strong>. You can use HTML, CSS and JavaScript freely,
     but author code cannot reach the rest of the application: it has no access to the parent page, cookies, local
-    storage, or the user's session.
-  </p>
-  <p class="intro" i18n>
-    A deployment may also restrict which hosts a description can load resources from or contact over the network.
+    storage, or the user's session. There are also restrictions on which hosts a description can load resources from
+    or contact over the network.
   </p>
 
   <section>
@@ -23,13 +21,13 @@
         interactive content (animations, small widgets, hint reveals…).
       </li>
       <li i18n>
-        <strong>Images</strong>: HTTPS URLs (subject to any deployment host restriction above), or inline
+        <strong>Images</strong>: HTTPS URLs (subject to the host restrictions above), or inline
         <code>data:</code> URIs.
       </li>
       <li i18n>
         <strong>Fullscreen</strong>: supported for videos and interactive widgets. Embedded player iframes
         (YouTube, Vimeo…) must carry <code>allowfullscreen</code>, and the player host must be allowed for
-        frames when the deployment restricts hosts.
+        frames when those hosts are restricted.
       </li>
     </ul>
   </section>
