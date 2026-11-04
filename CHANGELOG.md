@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.96.0](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.3...v2.96.0) - 2026-11-04
+
+- allow creating a new attempt when the route has no parent attempt
+- remove free text and website from the user header (retired flat user fields)
+
 ## [v2.95.3](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.2...v2.95.3) - 2026-11-03
 
 - add optional Content-Security-Policy for description iframes (new config key)
