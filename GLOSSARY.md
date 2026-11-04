@@ -19,3 +19,11 @@ _Avoid_: parent item
 **Parent item**:
 An ancestor of the current item on the path from a root to that item.
 _Avoid_: parent attempt
+
+**User**:
+The signed-in person on the platform (current session identity).
+_Avoid_: account, profile (unless meaning Profile below)
+
+**Profile**:
+The login-module profile payload nested under the current-user (and user-view) `profile` field. It is not the flat root attributes of those responses.
+_Avoid_: user info, personal info, account details
