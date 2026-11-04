@@ -211,6 +211,8 @@ describe('ItemEditWrapperComponent – form pristine on load', () => {
     });
 
     afterEach(() => {
+      // Floating save clears padding on .main-content in ngOnDestroy. TestBed destroys the fixture after this hook.
+      fixture?.destroy();
       mainContent.remove();
     });
 
