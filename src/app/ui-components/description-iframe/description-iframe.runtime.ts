@@ -6,8 +6,9 @@ export const DESCRIPTION_IFRAME_RUNTIME_MARKER = 'alg-description-iframe-runtime
  *
  * What it does (no external deps, ~1.2 KB):
  *  1. Reports the document height to the parent (`alg.updateDisplay`) via `ResizeObserver`,
- *     debounced through `requestAnimationFrame`, so the parent can grow the iframe and never
- *     show a scrollbar inside.
+ *     debounced through `requestAnimationFrame`, plus a forced remasure on `load` / `setTimeout(0)`
+ *     (the first rAF post is often dropped while `srcdoc` swaps `contentWindow`). The parent can
+ *     grow the iframe and never show a scrollbar inside.
  *  2. Intercepts clicks on every `<a>` anchor and turns them into structured `alg.navigate` /
  *     `alg.scrollIntoView` messages, so the parent decides the destination (and external URLs
  *     always end up in a new tab — see component-side handler). Anchor classification:
@@ -50,13 +51,19 @@ export const descriptionIframeRuntimeJs = `
     if (h !== last) { last = h; post({ type: 'alg.updateDisplay', data: { height: h } }); }
   };
   var queue = function () { if (!scheduled) { scheduled = true; requestAnimationFrame(measure); } };
+  // Parent filters with event.source === iframe.contentWindow. The first rAF measure often runs
+  // while srcdoc is still swapping windows, so that post is dropped; force a remasure after the
+  // window has settled (load + macrotask) so the parent always gets a height.
+  var force = function () { last = -1; measure(); };
 
   if (typeof ResizeObserver === 'function') {
     new ResizeObserver(queue).observe(document.documentElement);
   } else {
-    addEventListener('load', queue);
     addEventListener('resize', queue);
   }
+  addEventListener('load', force);
+  setTimeout(force, 0);
+  setTimeout(force, 50);
 
   document.addEventListener('click', function (e) {
     var t = e.target;
@@ -99,5 +106,6 @@ export const descriptionIframeRuntimeJs = `
   });
 
   queue();
+  // Body may not exist yet (this script is in <head>); load/setTimeout force cover that.
 })();
 `;
