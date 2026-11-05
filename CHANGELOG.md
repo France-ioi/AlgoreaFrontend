@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.96.1](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.96.0...v2.96.1) - 2026-11-05
+
+- internal maintenance
+
 ## [v2.96.0](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.95.3...v2.96.0) - 2026-11-04
 
 - allow creating a new attempt when the route has no parent attempt
