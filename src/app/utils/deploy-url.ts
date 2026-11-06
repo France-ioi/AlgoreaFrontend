@@ -7,5 +7,8 @@
  * `assets/` share the same `--deploy-url` folder, so this works on the CDN and locally.
  */
 export function bundleAssetUrl(relativePath: string): string {
-  return new URL(`assets/${relativePath}`, import.meta.url).href;
+  // Vite's dev server rewrites `new URL(<literal>, import.meta.url)` into `import.meta.glob`,
+  // so the path argument must stay a variable.
+  const path = `assets/${relativePath}`;
+  return new URL(path, import.meta.url).href;
 }
