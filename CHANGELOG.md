@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.96.2](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.96.1...v2.96.2) - 2026-11-06
+
+- fix device-connected tasks (Bluetooth / WebSocket) failing to load when an analytics tracker script such as Matomo is added to the page head
+
 ## [v2.96.1](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.96.0...v2.96.1) - 2026-11-05
 
 - internal maintenance
