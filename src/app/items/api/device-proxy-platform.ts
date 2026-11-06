@@ -1,4 +1,4 @@
-import { deployUrlAssetPath } from 'src/app/utils/deploy-url';
+import { bundleAssetUrl } from 'src/app/utils/deploy-url';
 import { reportDeviceProxyLoadFailure } from './device-proxy-load-diagnostics';
 
 export interface DeviceProxyPlatformApi {
@@ -30,7 +30,7 @@ declare global {
 }
 
 function deviceProxyScriptPath(): string {
-  return deployUrlAssetPath('scripts/device-proxy-platform.js');
+  return bundleAssetUrl('scripts/device-proxy-platform.js');
 }
 
 let loadPromise: Promise<void> | null = null;
