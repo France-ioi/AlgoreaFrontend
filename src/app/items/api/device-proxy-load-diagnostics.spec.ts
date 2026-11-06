@@ -10,7 +10,7 @@ describe('collectDeviceProxyLoadDiagnostics', () => {
     document.head.innerHTML = '';
   });
 
-  it('records script srcs in document order and the first absolute script as the prefix source', () => {
+  it('records script srcs in document order and the running bundle URL', () => {
     document.head.innerHTML = `
       <script src="https://lab.thymio.org/injected.js"></script>
       <script src="//static5.algorea.org/frontend/releases/v2.93.1/fr/main-abc.js"></script>
@@ -21,9 +21,9 @@ describe('collectDeviceProxyLoadDiagnostics', () => {
     );
 
     expect(diagnostics['scriptUrl']).toBe('https://lab.thymio.org/assets/scripts/device-proxy-platform.js');
-    expect(diagnostics['deployUrlPrefix']).toBe('https://lab.thymio.org/');
+    // Diagnostics are compiled into their own Karma chunk, so this is not the spec's import.meta.url.
+    expect(diagnostics['bundleUrl']).toEqual(jasmine.stringMatching(/\.js$/));
     expect(diagnostics['baseURI']).toBe(document.baseURI);
-    expect(diagnostics['prefixSourceIndex']).toBe(0);
     expect(diagnostics['scriptSrcs']).toEqual(jasmine.arrayContaining([
       'https://lab.thymio.org/injected.js',
       '//static5.algorea.org/frontend/releases/v2.93.1/fr/main-abc.js',
@@ -75,8 +75,8 @@ describe('reportDeviceProxyLoadFailure', () => {
       contexts: jasmine.objectContaining({
         deviceProxyLoad: jasmine.objectContaining({
           scriptUrl: 'https://lab.thymio.org/assets/scripts/device-proxy-platform.js',
-          deployUrlPrefix: 'https://lab.thymio.org/',
-          prefixSourceIndex: 0,
+          bundleUrl: jasmine.stringMatching(/\.js$/),
+          scriptSrcs: jasmine.arrayContaining([ 'https://lab.thymio.org/injected.js' ]),
         }),
       }),
     }));
