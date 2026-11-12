@@ -35,6 +35,7 @@ function setup(options: SetupOptions = {}): { service: ItemTaskAnswerService, re
     loadedTask$: of(mockTask),
     config$: of({ route, url: 'http://example.com/task', attemptId: '0', initialAnswer: null, readOnly: false }),
     taskToken$: of('task-token'),
+    savesEditorHistory$: of(false),
     refreshToken,
   };
 
@@ -130,6 +131,7 @@ describe('ItemTaskAnswerService – scoreChange config capture', () => {
             loadedTask$: of(mockTask),
             config$,
             taskToken$: of('task-token'),
+            savesEditorHistory$: of(false),
             refreshToken: jasmine.createSpy('refreshToken'),
           },
         },
@@ -197,6 +199,7 @@ describe('ItemTaskAnswerService – auto-save interval', () => {
               loadedTask$: of(mockTask),
               config$: of({ route, url: 'http://example.com/task', attemptId: '0', initialAnswer: null, readOnly: false }),
               taskToken$: of('task-token'),
+              savesEditorHistory$: of(false),
               refreshToken: jasmine.createSpy('refreshToken'),
             },
           },
@@ -228,5 +231,88 @@ describe('ItemTaskAnswerService – auto-save interval', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('does not auto-save the current answer when the task saves editor history', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      const update = jasmine.createSpy('update').and.returnValue(of(undefined));
+
+      TestBed.configureTestingModule({
+        providers: [
+          ItemTaskAnswerService,
+          provideMockStore({
+            selectors: [
+              { selector: fromItemContent.selectActiveContentCurrentResult, value: { validated: false } },
+            ],
+          }),
+          {
+            provide: ItemTaskInitService,
+            useValue: {
+              loadedTask$: of(mockTask),
+              config$: of({ route, url: 'http://example.com/task', attemptId: '0', initialAnswer: null, readOnly: false }),
+              taskToken$: of('task-token'),
+              savesEditorHistory$: of(true),
+              refreshToken: jasmine.createSpy('refreshToken'),
+            },
+          },
+          { provide: CurrentAnswerService, useValue: { update } },
+          { provide: AnswerTokenService, useValue: { generate: (): ReturnType<AnswerTokenService['generate']> => of('answer-token') } },
+          {
+            provide: GradeService,
+            useValue: { save: (): ReturnType<GradeService['save']> => of({ validated: false, unlockedItems: [] }) },
+          },
+        ],
+      });
+
+      TestBed.inject(ItemTaskAnswerService);
+      jasmine.clock().tick(answerAndStateSaveInterval);
+      expect(update).not.toHaveBeenCalled();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+});
+
+describe('ItemTaskAnswerService – save beside submission', () => {
+  afterEach(() => {
+    TestBed.inject(ItemTaskAnswerService).ngOnDestroy();
+  });
+
+  it('does not save a current answer beside a submission when the task saves editor history', () => {
+    const mockTask = createMockTask();
+    const update = jasmine.createSpy('update').and.returnValue(of(undefined));
+
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskAnswerService,
+        provideMockStore({
+          selectors: [
+            { selector: fromItemContent.selectActiveContentCurrentResult, value: { validated: false } },
+          ],
+        }),
+        {
+          provide: ItemTaskInitService,
+          useValue: {
+            loadedTask$: of(mockTask),
+            config$: of({ route, url: 'http://example.com/task', attemptId: '0', initialAnswer: null, readOnly: false }),
+            taskToken$: of('task-token'),
+            savesEditorHistory$: of(true),
+            refreshToken: jasmine.createSpy('refreshToken'),
+          },
+        },
+        { provide: CurrentAnswerService, useValue: { update } },
+        { provide: AnswerTokenService, useValue: { generate: (): ReturnType<AnswerTokenService['generate']> => of('answer-token') } },
+        {
+          provide: GradeService,
+          useValue: { save: (): ReturnType<GradeService['save']> => of({ validated: false, unlockedItems: [] }) },
+        },
+      ],
+    });
+
+    const service = TestBed.inject(ItemTaskAnswerService);
+    service.submitAnswer().subscribe();
+    expect(update).not.toHaveBeenCalled();
   });
 });

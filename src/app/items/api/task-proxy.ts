@@ -28,14 +28,13 @@ import {
 } from './types';
 import { z } from 'zod';
 
-export const PLATFORM_MIN_API_VERSION = 1;
-export const PLATFORM_MAX_API_VERSION = 2;
-
-export function negotiateApiVersion(taskMin = 1, taskMax = 1): number | null {
-  const min = Math.max(taskMin, PLATFORM_MIN_API_VERSION);
-  const max = Math.min(taskMax, PLATFORM_MAX_API_VERSION);
-  return min <= max ? max : null;
-}
+export {
+  PLATFORM_MIN_API_VERSION,
+  PLATFORM_MAX_API_VERSION,
+  negotiateApiVersion,
+  savesEditorHistory,
+  withNegotiatedMetadata,
+} from './task-api-version';
 
 function getRandomID(): string {
   const low = Math.floor(Math.random() * 922337203).toString();

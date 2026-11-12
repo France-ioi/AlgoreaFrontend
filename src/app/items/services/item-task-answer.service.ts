@@ -67,6 +67,10 @@ export class ItemTaskAnswerService implements OnDestroy {
     filter((config): config is RunningItemTaskConfig => config.attemptId !== undefined)
   );
   private taskToken$ = this.taskInitService.taskToken$.pipe(takeUntil(this.error$));
+  private savesEditorHistory$ = this.taskInitService.savesEditorHistory$.pipe(
+    catchError(() => of(false)),
+    takeUntil(this.error$),
+  );
 
   private latestSavedCurrentAnswer: { state: string, answer: string } | null = null;
 
@@ -262,13 +266,13 @@ export class ItemTaskAnswerService implements OnDestroy {
    * Errors if the config was not set or if the save failed
    */
   private saveAsCurrentAnswer(answer: { state: string, answer: string }): Observable<void> {
-    return this.config$.pipe(
+    return combineLatest([ this.config$, this.savesEditorHistory$ ]).pipe(
       take(1),
       timeout(1), // skip the saving if there are no config immediately
       catchError(() => EMPTY), // no config is not considered as an error but a normal case doing nothing
-      switchMap(({ route, attemptId, readOnly }) => {
-        // skip save if readonly
-        if (readOnly) return EMPTY;
+      switchMap(([ { route, attemptId, readOnly }, savesEditorHistory ]) => {
+        // skip save if readonly, or when the task owns work in progress
+        if (readOnly || savesEditorHistory) return EMPTY;
         // skip save if no change since latest successful save
         if (this.latestSavedCurrentAnswer && areStateAnswerEqual(this.latestSavedCurrentAnswer, answer)) return EMPTY;
         return this.currentAnswerService.update(route.id, attemptId, answer).pipe(
