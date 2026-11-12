@@ -23,7 +23,8 @@ import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
 import equal from 'fast-deep-equal/es6';
-import { Task, negotiateApiVersion, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
+import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
+import { withNegotiatedMetadata } from '../api/task-api-version';
 import { Answer } from './item-task.service';
 import { TaskToken, TaskTokenService } from '../data-access/task-token.service';
 
@@ -125,29 +126,35 @@ export class ItemTaskInitService implements OnDestroy {
     shareReplay(1),
   );
 
-  // the loaded task together with whether it consumes task tokens (kept internally so `tokenUpdatedOnTask$` can gate on
-  // it without re-fetching the metadata). May fail!
-  private loadedTaskWithTokenUse$ = this.task$.pipe(
+  // Metadata + API negotiation (before token/load). May fail on incompatible version.
+  private taskWithMetadata$ = this.task$.pipe(
     switchMap(task => task.getMetaData().pipe(map(metadata => {
-      const negotiated = negotiateApiVersion(metadata.minApiVersion, metadata.apiVersion);
+      const negotiated = withNegotiatedMetadata(task, metadata);
       if (negotiated === null) throw new IncompatibleTaskApiVersionError();
-      task.apiVersion = negotiated;
-      return { usesTokens: metadata.usesTokens ?? true, task };
+      return negotiated;
     }))),
-    switchMap(({ usesTokens, task }) => (usesTokens ? this.taskToken$.pipe(
-      take(1), // only the first token is used to load the task; later tokens are pushed via `tokenUpdatedOnTask$`
-      switchMap(token => task.updateToken(token)),
-      map(() => ({ usesTokens, task })),
-    ): of({ usesTokens, task }))),
-    switchMap(({ usesTokens, task }) => task.load(
-      { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true }
-    ).pipe(map(() => ({ usesTokens, task })))),
     takeUntilDestroyed(),
     shareReplay(1),
   );
 
-  // the task (i.e., a client to the task in the iframe) which has been loaded (may fail!)
-  // no shareReplay here: the source is already multicast+replayed; this is just a pure projection of it
+  /** Known as soon as metadata is read — gates current-answer load before `task.load()`. */
+  readonly savesEditorHistory$ = this.taskWithMetadata$.pipe(map(v => v.savesEditorHistory));
+
+  // Loaded task + token use (kept so `tokenUpdatedOnTask$` can gate without re-fetching metadata). May fail!
+  private loadedTaskWithTokenUse$ = this.taskWithMetadata$.pipe(
+    switchMap(meta => (meta.usesTokens ? this.taskToken$.pipe(
+      take(1), // only the first token is used to load the task; later tokens are pushed via `tokenUpdatedOnTask$`
+      switchMap(token => meta.task.updateToken(token)),
+      map(() => meta),
+    ): of(meta))),
+    switchMap(meta => meta.task.load(
+      { task: true, solution: true, editor: true, hints: true, grader: true, metadata: true }
+    ).pipe(map(() => meta))),
+    takeUntilDestroyed(),
+    shareReplay(1),
+  );
+
+  // Loaded task (may fail!). No shareReplay: source is already multicast+replayed.
   readonly loadedTask$ = this.loadedTaskWithTokenUse$.pipe(map(({ task }) => task));
 
   // pushes tokens generated after the initial load to the task (e.g. after a refresh), so the task can re-evaluate what

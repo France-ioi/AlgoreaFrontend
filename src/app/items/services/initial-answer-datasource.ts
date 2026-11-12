@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  BehaviorSubject,
   catchError,
   combineLatest,
   concat,
@@ -39,19 +40,35 @@ export class InitialAnswerDataSource implements OnDestroy {
   private answerService = inject(AnswerService);
 
   private readonly itemInfo$ = new ReplaySubject<{ route: FullItemRoute, isTask: boolean|undefined }>();
+  /** undefined until the loaded task reports whether it saves editor history */
+  private readonly savesEditorHistory$ = new BehaviorSubject<boolean | undefined>(undefined);
+  private flagScopeKey: string | undefined;
 
-  readonly answer$ = combineLatest([ this.itemInfo$, this.store.select(fromObservation.selectIsObserving) ]).pipe(
+  readonly answer$ = combineLatest([
+    this.itemInfo$,
+    this.store.select(fromObservation.selectIsObserving),
+    this.savesEditorHistory$,
+  ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
-    map(([{ route: { id, attemptId, answer }, isTask }, isObserving ]): Strategy => {
+    map(([{ route: { id, attemptId, answer }, isTask }, isObserving, savesEditorHistory ]): Strategy => {
       if (isTask === false) return { tag: 'NotApplicable' };
       if (!answer) {
         const loadAnswerAsCurrent = loadAnswerAsCurrentFromNavigationState();
         if (loadAnswerAsCurrent) {
-          return attemptId ? { tag: 'LoadAsCurrent', itemId: id, attemptId, answerId: loadAnswerAsCurrent } : { tag: 'Wait' };
+          if (!attemptId) return { tag: 'Wait' };
+          // Edit-it backup/update depends on the flag; wait until metadata is known.
+          if (savesEditorHistory === undefined) return { tag: 'Wait' };
+          // Task owns WIP: load the submission editable without a platform WIP backup.
+          if (savesEditorHistory) return { tag: 'LoadById', answerId: loadAnswerAsCurrent };
+          return { tag: 'LoadAsCurrent', itemId: id, attemptId, answerId: loadAnswerAsCurrent };
         }
         if (isObserving) return { tag: 'EmptyInitialAnswer' };
         if (isTask === undefined) return { tag: 'Wait' };
-        return attemptId ? { tag: 'LoadCurrent', itemId: id, attemptId } : { tag: 'Wait' };
+        if (!attemptId) return { tag: 'Wait' };
+        // Current-answer reload waits for metadata on a fresh load.
+        if (savesEditorHistory === undefined) return { tag: 'Wait' };
+        if (savesEditorHistory) return { tag: 'EmptyInitialAnswer' };
+        return { tag: 'LoadCurrent', itemId: id, attemptId };
       }
       if (answer.id) return { tag: 'LoadById', answerId: answer.id };
       return { tag: 'LoadBest', itemId: id, participantId: answer.best?.id };
@@ -80,11 +97,27 @@ export class InitialAnswerDataSource implements OnDestroy {
   );
 
   setInfo(route: FullItemRoute, isTask: boolean|undefined): void {
+    const scopeKey = `${ route.id }:${ route.attemptId ?? '' }`;
+    if (this.flagScopeKey !== scopeKey) {
+      this.flagScopeKey = scopeKey;
+      this.savesEditorHistory$.next(undefined);
+    }
     this.itemInfo$.next({ route, isTask });
+  }
+
+  /** Called once the task metadata has been negotiated (from the item-display provider tree). */
+  setSavesEditorHistory(value: boolean): void {
+    this.savesEditorHistory$.next(value);
+  }
+
+  /** Reset before a new task instance reports metadata (avoids a stale flag across remounts). */
+  clearSavesEditorHistory(): void {
+    this.savesEditorHistory$.next(undefined);
   }
 
   ngOnDestroy(): void {
     this.itemInfo$.complete();
+    this.savesEditorHistory$.complete();
   }
 
   private getAnswerAndSaveAsCurrent(itemId: string, attemptId: string, answerId: string): Observable<Answer> {

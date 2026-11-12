@@ -71,7 +71,8 @@ npm run e2e -- e2e/items/task-platform-interaction.spec.ts
 
 | Parameter | Effect |
 |-----------|--------|
-| `apiVersion` / `minApiVersion` | Negotiated task API version (default 2 / 1) |
+| `apiVersion` / `minApiVersion` | Negotiated task API version (default 2 / 1). Use `apiVersion=3` for Bebras API v3. |
+| `savesHistory=1` | Metadata `savesHistory: true` (meaningful when negotiated version ≥ 3; platform stops saving/reloading the current answer) |
 | `usesTokens=1` | Task metadata requests token flow (`task.updateToken`) |
 | `autoHeight=1` | Metadata `autoHeight: true` |
 | `loadDelay=ms` | Delay `task.load` completion |

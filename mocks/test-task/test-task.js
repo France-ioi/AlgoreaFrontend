@@ -7,6 +7,8 @@
     apiVersion: Number(params.get('apiVersion') || '2'),
     minApiVersion: Number(params.get('minApiVersion') || '1'),
     usesTokens: params.get('usesTokens') === '1',
+    // v3 tasks may declare that they own work in progress (platform must not save/reload current answer)
+    savesHistory: params.get('savesHistory') === '1',
     autoHeight: params.get('autoHeight') === '1',
     loadDelay: Number(params.get('loadDelay') || '0'),
     gradeDelay: Number(params.get('gradeDelay') || '0'),
@@ -163,7 +165,7 @@
 
   chan.bind('task.getMetaData', function () {
     logCall('task.getMetaData', []);
-    return {
+    var metadata = {
       autoHeight: config.autoHeight,
       usesTokens: config.usesTokens,
       apiVersion: config.apiVersion,
@@ -171,6 +173,8 @@
       fullFeedback: true,
       minWidth: 'auto',
     };
+    if (config.savesHistory) metadata.savesHistory = true;
+    return metadata;
   });
 
   chan.bind('task.load', function (trans, loadViews) {

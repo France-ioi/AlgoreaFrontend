@@ -283,6 +283,65 @@ describe('ItemTaskInitService – API version negotiation', () => {
     }
   });
 
+  it('should negotiate api version 3 and expose savesEditorHistory when metadata sets savesHistory', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      // Delay load so we can assert the flag is known after metadata, before load completes.
+      const load$ = new Subject<undefined>();
+      mockTask.getMetaData.and.returnValue(of({
+        usesTokens: false,
+        apiVersion: 3,
+        minApiVersion: 1,
+        savesHistory: true,
+      }));
+      mockTask.load.and.returnValue(load$);
+      let loadedTask: Task | undefined;
+      let savesHistoryFlag: boolean | undefined;
+
+      service.loadedTask$.subscribe(task => loadedTask = task);
+      service.savesEditorHistory$.subscribe(flag => savesHistoryFlag = flag);
+
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
+
+      expect(savesHistoryFlag).withContext('savesEditorHistory$ should emit after metadata').toBeTrue();
+      expect(loadedTask).withContext('loadedTask$ should wait for task.load').toBeUndefined();
+      expect(mockTask.apiVersion).withContext('task.apiVersion should be negotiated to 3').toBe(3);
+
+      load$.next(undefined);
+      load$.complete();
+      jasmine.clock().tick(0);
+      expect(loadedTask).withContext('loadedTask$ should emit after load').toBe(mockTask);
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
+  it('should expose savesEditorHistory false for v3 without savesHistory', () => {
+    jasmine.clock().install();
+    try {
+      const mockTask = createMockTask();
+      mockTask.getMetaData.and.returnValue(of({ usesTokens: false, apiVersion: 3, minApiVersion: 1 }));
+      let savesHistoryFlag: boolean | undefined;
+
+      service.savesEditorHistory$.subscribe(flag => savesHistoryFlag = flag);
+
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
+      taskProxy$.next(mockTask);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
+
+      expect(savesHistoryFlag).toBeFalse();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
   it('should emit apiVersionError$ when the task API range is incompatible', () => {
     jasmine.clock().install();
     try {

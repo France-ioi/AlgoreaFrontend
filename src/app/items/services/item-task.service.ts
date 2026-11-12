@@ -13,6 +13,7 @@ import { ItemTaskAnswerService } from './item-task-answer.service';
 import { DeviceProxyService } from './device-proxy.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
+import { InitialAnswerDataSource } from './initial-answer-datasource';
 
 export type Answer =
   Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'|'participantId'|'type'>
@@ -34,6 +35,8 @@ export class ItemTaskService implements OnDestroy {
   private askHintService = inject(AskHintService);
   private deviceProxyService = inject(DeviceProxyService);
   private destroyRef = inject(DestroyRef);
+  // Optional: provided on the item-by-id host; absent in isolated unit tests of this service.
+  private initialAnswerDataSource = inject(InitialAnswerDataSource, { optional: true });
 
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(
     takeUntilDestroyed(),
@@ -83,6 +86,16 @@ export class ItemTaskService implements OnDestroy {
 
   private readOnly = false;
   private attemptId$ = new ReplaySubject(1);
+
+  constructor() {
+    // Clear any stale flag from a previous display instance on the same item/attempt, then push the
+    // derived flag so InitialAnswerDataSource can decide LoadCurrent / Edit-it after metadata.
+    this.initialAnswerDataSource?.clearSavesEditorHistory();
+    this.initService.savesEditorHistory$.pipe(
+      catchError(() => EMPTY),
+      takeUntilDestroyed(),
+    ).subscribe(value => this.initialAnswerDataSource?.setSavesEditorHistory(value));
+  }
 
   ngOnDestroy(): void {
     this.deviceProxyService.disconnectTask();

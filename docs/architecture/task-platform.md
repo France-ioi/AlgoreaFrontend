@@ -4,7 +4,9 @@ Reached from [ARCHITECTURE.md](ARCHITECTURE.md) when changing Bebras task loadin
 
 ## Task API versioning
 
-Task API versioning is negotiated at load time via optional `apiVersion` / `minApiVersion` fields returned by `task.getMetaData()`. The platform supports versions 1–2 and picks the highest version in the overlapping range. When the negotiated version is ≥ 2, `Task.reloadAnswer()` dispatches to the v2 wire method `task.reloadAnswerWithOptions`, passing `idUserAnswer` when reloading a submitted answer so the task can fetch submission feedback from its own backend using the signed task token.
+Task API versioning is negotiated at load time via optional `apiVersion` / `minApiVersion` fields returned by `task.getMetaData()`. The platform supports versions 1–3 and picks the highest version in the overlapping range. When the negotiated version is ≥ 2, `Task.reloadAnswer()` dispatches to the v2 wire method `task.reloadAnswerWithOptions`, passing `idUserAnswer` when reloading a submitted answer so the task can fetch submission feedback from its own backend using the signed task token.
+
+Optional metadata `savesHistory` (boolean) is honored only when the negotiated version is at least 3. The platform derives one **saves editor history** flag (`negotiated ≥ 3` and `savesHistory === true`). When that flag is set, the task owns work in progress: the platform does not autosave, save-on-leave, save-on-tab-close, or save beside a submission; it does not reload a leftover platform current answer on open; and “Edit it” does not back up WIP as a saved answer. Submissions are still graded and can still be viewed or loaded editable. Decision about loading the current answer waits until metadata is known on a fresh load.
 
 ## Device proxy (Web Bluetooth / WebSocket)
 

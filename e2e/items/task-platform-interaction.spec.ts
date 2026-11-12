@@ -119,7 +119,7 @@ test.describe('platform-task interaction', () => {
     expect(calls.filter(entry => entry.method === 'task.load').length).toBe(1);
   });
 
-  test('reloads an existing answer and state on load', async ({ page }) => {
+  test('reloads an existing answer and state on load (v1/v2)', async ({ page }) => {
     await mockTestTaskItemApi(page, {
       taskQuery: 'apiVersion=1&minApiVersion=1',
       currentAnswer: { answer: '42', state: 'saved-state' },
@@ -133,6 +133,94 @@ test.describe('platform-task interaction', () => {
     expect(reloadStateCall.params).toBe('saved-state');
     await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('42');
     await expect(testTaskPage.taskFrame.getByTestId('state-input')).toHaveValue('saved-state');
+  });
+
+  test('reloads an existing answer on load for v3 without savesHistory', async ({ page }) => {
+    await mockTestTaskItemApi(page, {
+      taskQuery: 'apiVersion=3&minApiVersion=1',
+      currentAnswer: { answer: '42', state: 'saved-state' },
+    });
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+
+    // Negotiated v3 uses the v2+ wire method (same as v2 tasks).
+    const reloadAnswerCall = await testTaskPage.waitForCall('task.reloadAnswerWithOptions');
+    expect(reloadAnswerCall.params).toEqual([ '42', {} ]);
+    await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('42');
+  });
+
+  test('does not reload a leftover current answer when v3 savesHistory is set', async ({ page }) => {
+    await mockTestTaskItemApi(page, {
+      taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+      currentAnswer: { answer: '42', state: 'saved-state' },
+    });
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+    await testTaskPage.waitForCall('task.load');
+
+    // Flag is known after metadata; EmptyInitialAnswer must win over the leftover current answer.
+    await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('');
+    const calls = await testTaskPage.getCalls();
+    expect(calls.some(entry => entry.method === 'task.reloadAnswer')).toBe(false);
+    expect(calls.some(entry => entry.method === 'task.reloadAnswerWithOptions')).toBe(false);
+    expect(calls.some(entry => entry.method === 'task.reloadState')).toBe(false);
+  });
+  test('does not save a current answer on leave or submit when v3 savesHistory is set', async ({ page }) => {
+    await mockTestTaskItemApi(page, {
+      taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+    });
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+
+    let currentAnswerPuts = 0;
+    page.on('request', request => {
+      if (request.method() === 'PUT' && /\/attempts\/[^/]+\/answers\/current/.test(request.url())) {
+        currentAnswerPuts += 1;
+      }
+    });
+
+    const saveGradeRequest = page.waitForRequest(
+      request => request.url().includes('/items/save-grade') && request.method() === 'POST',
+    );
+    await testTaskPage.setAnswer('80');
+    await testTaskPage.clickValidate('top');
+    await saveGradeRequest;
+
+    await testTaskPage.clearHostCalls();
+    await page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' }).click();
+    await expect(page).toHaveURL(/\/groups/, { timeout: 15000 });
+    await testTaskPage.waitForHostCall('task.unload');
+
+    expect(currentAnswerPuts).toBe(0);
+  });
+
+  test('still saves a current answer on leave when v3 does not set savesHistory', async ({ page }) => {
+    await mockTestTaskItemApi(page, {
+      taskQuery: 'apiVersion=3&minApiVersion=1',
+    });
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+
+    const currentAnswerPut = page.waitForRequest(
+      request => request.method() === 'PUT' && /\/attempts\/[^/]+\/answers\/current/.test(request.url()),
+    );
+    await testTaskPage.setAnswer('55');
+    await page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' }).click();
+    await currentAnswerPut;
+    await expect(page).toHaveURL(/\/groups/, { timeout: 15000 });
+  });
+
+  test('View answer still reloads a submission read-only when v3 savesHistory is set', async ({ page }) => {
+    await mockTestTaskItemApi(page, {
+      taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+      submission: { id: 'sub-answer-1', answer: '77', state: 'submitted-state' },
+    });
+    await testTaskPage.gotoAnswer('sub-answer-1');
+    await testTaskPage.waitForLoaded();
+
+    const reloadAnswerCall = await testTaskPage.waitForCall('task.reloadAnswerWithOptions');
+    expect(reloadAnswerCall.params).toEqual([ '77', { idUserAnswer: 'sub-answer-1' } ]);
+    await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('77');
   });
 
   test('restarts the task from scratch when item.url changes after refresh', async ({ page, itemContentPage }) => {

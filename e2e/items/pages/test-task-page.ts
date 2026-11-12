@@ -12,6 +12,8 @@ export interface TestTaskApiOptions {
   taskQuery?: string,
   canEdit?: 'none' | 'children' | 'all' | 'all_with_grant',
   currentAnswer?: { answer: string, state: string } | null,
+  /** When set, GET /answers/:id returns this submission (for View answer). */
+  submission?: { id: string, answer: string, state: string } | null,
 }
 
 interface TaskCallLogEntry {
@@ -169,6 +171,32 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
   await page.route(`${apiUrl}/answers`, route => route.fulfill({
     json: { ...actionSuccess, data: { answer_token: 'mock-answer-token' } },
   }));
+  if (options.submission) {
+    const submission = options.submission;
+    await page.route(`${apiUrl}/answers/${submission.id}`, route => {
+      if (route.request().url().includes('generate-task-token')) {
+        return route.fulfill({ json: { ...actionSuccess, data: { task_token: 'mock-answer-task-token' } } });
+      }
+      return route.fulfill({
+        json: {
+          answer: submission.answer,
+          state: submission.state,
+          attempt_id: '0',
+          author_id: '1',
+          participant_id: '1',
+          created_at: '2024-01-01T00:00:00Z',
+          graded_at: '2024-01-01T00:01:00Z',
+          id: submission.id,
+          item_id: itemId,
+          score: 80,
+          type: 'Submission',
+        },
+      });
+    });
+    await page.route(`${apiUrl}/answers/${submission.id}/generate-task-token`, route => route.fulfill({
+      json: { ...actionSuccess, data: { task_token: 'mock-answer-task-token' } },
+    }));
+  }
   await page.route(`${apiUrl}/items/save-grade`, route => {
     // mirror the backend: a submission validates the item once it reaches the max score
     const score = (route.request().postDataJSON() as { score?: number } | null)?.score ?? 0;
@@ -185,6 +213,10 @@ export class TestTaskPage {
 
   async gotoItem(itemId = TEST_TASK_ITEM_ID): Promise<void> {
     await this.page.goto(`/a/${itemId};p=;a=0`);
+  }
+
+  async gotoAnswer(answerId: string, itemId = TEST_TASK_ITEM_ID): Promise<void> {
+    await this.page.goto(`/a/${itemId};p=;a=0;answerId=${answerId}`);
   }
 
   async waitForLoaded(): Promise<void> {
