@@ -50,7 +50,7 @@ export class InitialAnswerDataSource implements OnDestroy {
     this.savesEditorHistory$,
   ]).pipe(
     /* we do the computation in 2 stages to prevent cancelling requests which shouldn't have been cancelled */
-    map(([ { route: { id, attemptId, answer }, isTask }, isObserving, savesEditorHistory ]): Strategy => {
+    map(([{ route: { id, attemptId, answer }, isTask }, isObserving, savesEditorHistory ]): Strategy => {
       if (isTask === false) return { tag: 'NotApplicable' };
       if (!answer) {
         const loadAnswerAsCurrent = loadAnswerAsCurrentFromNavigationState();

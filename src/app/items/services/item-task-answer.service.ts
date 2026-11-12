@@ -270,7 +270,7 @@ export class ItemTaskAnswerService implements OnDestroy {
       take(1),
       timeout(1), // skip the saving if there are no config immediately
       catchError(() => EMPTY), // no config is not considered as an error but a normal case doing nothing
-      switchMap(([ { route, attemptId, readOnly }, savesEditorHistory ]) => {
+      switchMap(([{ route, attemptId, readOnly }, savesEditorHistory ]) => {
         // skip save if readonly, or when the task owns work in progress
         if (readOnly || savesEditorHistory) return EMPTY;
         // skip save if no change since latest successful save
