@@ -1,8 +1,10 @@
 import { test, expect } from 'e2e/items/fixture';
 import { initAsUsualUser } from 'e2e/helpers/e2e_auth';
+import { apiUrl } from 'e2e/helpers/e2e_http';
 import {
   mockTestTaskItemApi,
   routeTestTaskAssets,
+  TEST_TASK_ITEM_ID,
   TEST_TASK_URL,
   TestTaskPage,
 } from 'e2e/items/pages/test-task-page';
@@ -263,6 +265,71 @@ test.describe('platform-task interaction', () => {
     await page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' }).click();
     await expect(page).toHaveURL(/\/groups/, { timeout: 15000 });
     await testTaskPage.waitForHostCall('task.unload');
+  });
+
+  test.describe('History Events & Edits', () => {
+    const submissionBetweenCheckpoints = [{
+      at: '2024-06-01T10:01:30Z',
+      activity_type: 'submission',
+      attempt_id: '0',
+      answer_id: 'ans-between',
+      participant: { id: '1', name: 'test-user', type: 'User' },
+      item: {
+        id: TEST_TASK_ITEM_ID,
+        type: 'Task',
+        string: { title: 'Platform-task test task' },
+      },
+      score: 80,
+      can_watch_answer: true,
+    }];
+
+    test('defaults to Events & Edits with a submission between two checkpoints', async ({ page }) => {
+      await mockTestTaskItemApi(page, { taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1' });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, async route => {
+        const url = new URL(route.request().url());
+        if (url.searchParams.get('attempt_id') === '0') {
+          await route.fulfill({ json: submissionBetweenCheckpoints });
+          return;
+        }
+        await route.fulfill({ json: submissionBetweenCheckpoints });
+      });
+
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+
+      const selection = page.getByTestId('selection-control-value');
+      await expect(selection).toHaveCount(2);
+      await expect(selection.filter({ hasText: 'Events & Edits' })).toHaveClass(/active/);
+      await expect(selection.filter({ hasText: 'Events & Edits of attempt' })).toHaveCount(0);
+
+      await testTaskPage.waitForCall('task.getHistory');
+      const captions = page.locator('.item-title-caption');
+      await expect(captions).toHaveCount(3);
+      await expect(captions.nth(0)).toContainText('Manual');
+      await expect(captions.nth(1)).toContainText('Submission');
+      await expect(captions.nth(2)).toContainText('Start');
+      await expect(page.getByRole('link', { name: 'View answer' })).toBeVisible();
+    });
+
+    test('labels Events & Edits with the attempt number when there are several attempts', async ({ page }) => {
+      await mockTestTaskItemApi(page, {
+        taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+        attempts: [
+          { id: '0', started_at: '2024-01-01T00:00:00Z' },
+          { id: '1', started_at: '2024-02-01T00:00:00Z' },
+        ],
+      });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({ json: [] }));
+
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+      await expect(page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits of attempt #1' }))
+        .toBeVisible();
+    });
   });
 
   test.describe('device proxy', () => {

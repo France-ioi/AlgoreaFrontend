@@ -24,6 +24,7 @@ import { PendingChangesComponent } from 'src/app/guards/pending-changes-guard';
 import { PendingChangesService } from 'src/app/services/pending-changes-service';
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
+import { ItemLoadedTaskRegistry } from './services/item-loaded-task-registry';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -58,7 +59,7 @@ import { isScoreForRoute, ScoreChange } from './models/score-change';
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrl: './item-by-id.component.scss',
-  providers: [ InitialAnswerDataSource, ItemTabs, ItemTaskFlowService, ItemContentSyncService ],
+  providers: [ InitialAnswerDataSource, ItemTabs, ItemTaskFlowService, ItemContentSyncService, ItemLoadedTaskRegistry ],
   imports: [
     ItemHeaderComponent,
     AccessCodeViewComponent,

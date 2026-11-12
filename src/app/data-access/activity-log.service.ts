@@ -50,6 +50,8 @@ export class ActivityLogService {
 
   getActivityLog(itemId: string, options?: {
     watchedGroupId?: string,
+    /** Real attempt filter (tasks only); distinct from pagination `from.attempt_id`. */
+    attemptId?: string,
     limit?: number,
     pagination?: {
       fromItemId: string,
@@ -65,6 +67,10 @@ export class ActivityLogService {
 
     if (options?.watchedGroupId !== undefined) {
       params = params.set('watched_group_id', options.watchedGroupId);
+    }
+
+    if (options?.attemptId !== undefined) {
+      params = params.set('attempt_id', options.attemptId);
     }
 
     if (options?.pagination !== undefined) {

@@ -6,6 +6,11 @@ import { apiUrl } from 'e2e/helpers/e2e_http';
 export const TEST_TASK_ITEM_ID = '9999999999999999001';
 export const TEST_TASK_URL = 'http://localhost:4200/test-task/index.html';
 
+export interface TestTaskAttemptFixture {
+  id: string,
+  started_at: string,
+}
+
 export interface TestTaskApiOptions {
   itemId?: string,
   taskUrl?: string,
@@ -14,8 +19,9 @@ export interface TestTaskApiOptions {
   currentAnswer?: { answer: string, state: string } | null,
   /** When set, GET /answers/:id returns this submission (for View answer). */
   submission?: { id: string, answer: string, state: string } | null,
+  /** Override attempts list (for History attempt-number labels). */
+  attempts?: TestTaskAttemptFixture[],
 }
-
 interface TaskCallLogEntry {
   method: string,
   params: unknown,
@@ -112,15 +118,16 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
     title: 'Platform-task test task',
     type: 'Task',
   }];
-  const attempts = [{
-    id: '0',
-    created_at: '2024-01-01T00:00:00Z',
+  const attemptFixtures = options.attempts ?? [{ id: '0', started_at: '2024-01-01T00:00:00Z' }];
+  const attempts = attemptFixtures.map(attempt => ({
+    id: attempt.id,
+    created_at: attempt.started_at,
     score_computed: 0,
     validated: false,
-    started_at: '2024-01-01T00:00:00Z',
+    started_at: attempt.started_at,
     ended_at: null,
     allows_submissions_until: '9999-12-31T23:59:59Z',
-    latest_activity_at: '2024-01-01T00:00:00Z',
+    latest_activity_at: attempt.started_at,
     help_requested: false,
     user_creator: {
       login: 'test-user',
@@ -128,7 +135,7 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
       last_name: null,
       group_id: '1',
     },
-  }];
+  }));
 
   await page.route(`${apiUrl}/items/${itemId}`, route => {
     if (route.request().method() === 'PUT') {

@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
 import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { animationFrames, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
-import { catchError, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { animationFrames, combineLatest, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
+import { catchError, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
@@ -14,6 +14,7 @@ import { DeviceProxyService } from './device-proxy.service';
 import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
+import { ItemLoadedTaskRegistry } from './item-loaded-task-registry';
 
 export type Answer =
   Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'|'participantId'|'type'>
@@ -37,6 +38,7 @@ export class ItemTaskService implements OnDestroy {
   private destroyRef = inject(DestroyRef);
   // Optional: provided on the item-by-id host; absent in isolated unit tests of this service.
   private initialAnswerDataSource = inject(InitialAnswerDataSource, { optional: true });
+  private loadedTaskRegistry = inject(ItemLoadedTaskRegistry, { optional: true });
 
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(
     takeUntilDestroyed(),
@@ -85,7 +87,7 @@ export class ItemTaskService implements OnDestroy {
   );
 
   private readOnly = false;
-  private attemptId$ = new ReplaySubject(1);
+  private attemptId$ = new ReplaySubject<string | undefined>(1);
 
   constructor() {
     // Clear any stale flag from a previous display instance on the same item/attempt, then push the
@@ -95,9 +97,29 @@ export class ItemTaskService implements OnDestroy {
       catchError(() => EMPTY),
       takeUntilDestroyed(),
     ).subscribe(value => this.initialAnswerDataSource?.setSavesEditorHistory(value));
+
+    // Publish the loaded task so History (and later Restore) can call getHistory without DI into ItemDisplay.
+    if (this.loadedTaskRegistry) {
+      const registry = this.loadedTaskRegistry;
+      combineLatest([
+        this.initService.loadedTask$,
+        this.attemptId$,
+        this.initService.savesEditorHistory$.pipe(startWith(undefined as boolean | undefined), catchError(() => of(undefined))),
+      ]).pipe(
+        catchError(() => EMPTY),
+        takeUntilDestroyed(),
+      ).subscribe(([ task, attemptId, savesEditorHistory ]) => {
+        if (attemptId === undefined) {
+          registry.clear();
+          return;
+        }
+        registry.set({ task, attemptId, savesEditorHistory });
+      });
+    }
   }
 
   ngOnDestroy(): void {
+    this.loadedTaskRegistry?.clear();
     this.deviceProxyService.disconnectTask();
     this.hintError$.complete();
     this.navigateTo.complete();
