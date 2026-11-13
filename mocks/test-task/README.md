@@ -72,7 +72,7 @@ npm run e2e -- e2e/items/task-platform-interaction.spec.ts
 | Parameter | Effect |
 |-----------|--------|
 | `apiVersion` / `minApiVersion` | Negotiated task API version (default 2 / 1). Use `apiVersion=3` for Bebras API v3. |
-| `savesHistory=1` | Metadata `savesHistory: true` (meaningful when negotiated version ≥ 3; platform stops saving/reloading the current answer) |
+| `savesHistory=1` | Metadata `savesHistory: true` (meaningful when negotiated version ≥ 3; platform stops saving/reloading the current answer). Seeds a small in-memory editor history answered by `task.getHistory`. |
 | `usesTokens=1` | Task metadata requests token flow (`task.updateToken`) |
 | `autoHeight=1` | Metadata `autoHeight: true` |
 | `loadDelay=ms` | Delay `task.load` completion |
@@ -85,7 +85,7 @@ npm run e2e -- e2e/items/task-platform-interaction.spec.ts
 
 ### Platform → task (logged automatically)
 
-`task.getMetaData`, `task.load`, `task.unload`, `task.getHeight`, `task.updateToken`, `task.getAnswer`, `task.reloadAnswer`, `task.reloadAnswerWithOptions`, `task.getState`, `task.reloadState`, `task.getViews`, `task.showViews`, `task.gradeAnswer`, `task.getResources`, `task.deviceProxy`
+`task.getMetaData`, `task.load`, `task.unload`, `task.getHeight`, `task.updateToken`, `task.getAnswer`, `task.reloadAnswer`, `task.reloadAnswerWithOptions`, `task.getState`, `task.reloadState`, `task.getViews`, `task.showViews`, `task.gradeAnswer`, `task.getResources`, `task.getHistory`, `task.deviceProxy`
 
 ### Task → platform (buttons in the page)
 

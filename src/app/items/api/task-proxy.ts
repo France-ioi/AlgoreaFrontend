@@ -5,14 +5,17 @@
  * It depends on jschannel.
  */
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap, retry } from 'rxjs/operators';
 import { rxBuild, RxMessagingChannel } from './rxjschannel';
 import {
   OpenUrlParams,
   openUrlParamsSchema,
+  TaskGetHistoryOptions,
   TaskGrade,
   taskGradeSchema,
+  TaskHistory,
+  taskHistorySchema,
   TaskLog,
   taskLogSchema,
   TaskMetaData,
@@ -260,30 +263,27 @@ export class Task {
     );
   }
 
-  getResources() : Observable<TaskResources> {
-    // TODO: validator (currently unused)
-    return this.chan.call({
-      method: 'task.getResources',
-      params: [],
-      timeout: 2000
-    });
+  getResources(): Observable<TaskResources> {
+    return this.chan.call({ method: 'task.getResources', params: [], timeout: 2000 });
+  }
+
+  /** Bebras API v3: editor history for the currently loaded attempt. */
+  getHistory(options: TaskGetHistoryOptions = {}): Observable<TaskHistory> {
+    if (this.apiVersion < 3) {
+      return throwError(() => new Error('task.getHistory requires API version ≥ 3'));
+    }
+    return this.chan.call({ method: 'task.getHistory', params: options, timeout: 5000 })
+      .pipe(map(([ history ]) => taskHistorySchema.parse(history)));
   }
 
   /** Platform→task: single event payload (e.g. a WebSocket close notification). */
   deviceProxy(category: string, method: string, args: unknown): Observable<unknown> {
-    return this.chan.call({
-      method: 'task.deviceProxy',
-      params: [ category, method, args ],
-      timeout: 10000,
-    }).pipe(map(([ result ]) => result));
+    return this.chan.call({ method: 'task.deviceProxy', params: [ category, method, args ], timeout: 10000 })
+      .pipe(map(([ result ]) => result));
   }
 }
 
 export interface TaskPlatform {
-  /*
-   * Simple prototypes for Bebras platform API functions, to be overriden by your
-   * "platform"'s specific functions (for each platform object).
-   */
   validate(mode: string): Observable<void>,
   showView(views: string): void,
   askHint(hintToken: string): Observable<void>,

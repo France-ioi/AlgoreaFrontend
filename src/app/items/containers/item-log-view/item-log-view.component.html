@@ -13,7 +13,7 @@
   <p i18n>In this tab, you will find a list of all your past activity for this content. For exercises, you may view your previous submissions.</p>
 }
 
-@if (state$ | async; as state) {
+@if (listState(); as state) {
   @if (state.isFetching && !state.data) {
     <alg-loading class="alg-flex-1" size="medium" />
   }
@@ -25,7 +25,7 @@
       (refresh)="refresh()"
      />
   }
-  @if (state.data) {
+  @if (state.data; as rows) {
     <div class="operation-buttons">
       <div>
         @if (itemData().currentResult?.attemptId; as parentAttemptId) {
@@ -45,69 +45,91 @@
           }
         }
       </div>
-      <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
-        Refresh
-      </button>
+      <div class="operation-actions">
+        @if (showModeSelection()) {
+          <alg-selection
+            class="small"
+            [items]="modeOptions()"
+            [selected]="selectedModeIndex()"
+            (change)="onModeChange($event)"
+           />
+        }
+        <button class="size-s stroke" alg-button icon="ph-duotone ph-arrows-clockwise" (click)="refresh()" i18n>
+          Refresh
+        </button>
+      </div>
     </div>
     @let isObserving = isObserving$ | async;
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
-        <table class="alg-table-v2" cdk-table [dataSource]="state.data">
+        <table class="alg-table-v2" cdk-table [dataSource]="rows">
           @for (column of columns(); track column.field) {
             <ng-container [cdkColumnDef]="column.field">
               <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>{{ column.header }}</th>
               <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
                 @switch (column.field) {
                   @case ('activityType') {
-                    <div class="item-title-section">
-                      <div class="item-title-section-left">
-                        @if (rowData.score) {
-                          <alg-score-ring [currentScore]="rowData.score"
-                           />
-                        } @else {
-                          <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
-                        }
+                    @if (rowData.kind === 'checkpoint') {
+                      <div class="item-title-section">
+                        <div class="item-title-section-left">
+                          <i class="item-icon ph-duotone ph-flag"></i>
+                        </div>
+                        <div class="item-title">
+                          <p class="item-title-caption">{{ checkpointCaption(rowData) }}</p>
+                        </div>
                       </div>
-                      <div class="item-title">
-                        <p class="item-title-caption">{{ rowData.activityType | logActionDisplay }}</p>
-                        @if (rowData.answerId) {
-                          @let path = rowData.item.id === itemData().item.id ? itemData().route.path : undefined;
-                          @let attemptId = rowData.item.id === itemData().item.id ? itemData().route.attemptId : undefined;
-                          @let parentAttemptId = rowData.item.id === itemData().item.id ? itemData().route.parentAttemptId : undefined;
-                          @let route = rowData.item | itemRoute: { path, attemptId, parentAttemptId };
-                          @if (!isObserving || !!rowData.canWatchAnswer) {
-                            <a
-                              class="alg-link item-title-link"
-                              [routerLink]="route | with: { answer: { id: rowData.answerId } } | url: ['task', 'editor']"
-                              (click)="onViewAnswer()"
-                              i18n
-                            >
-                              View answer
-                            </a>
+                    } @else {
+                      <div class="item-title-section">
+                        <div class="item-title-section-left">
+                          @if (rowData.event.score) {
+                            <alg-score-ring [currentScore]="rowData.event.score"
+                             />
+                          } @else {
+                            <i class="item-icon {{ rowData.event.activityType | logActivityTypeIcon }}"></i>
                           }
-                        }
+                        </div>
+                        <div class="item-title">
+                          <p class="item-title-caption">{{ rowData.event.activityType | logActionDisplay }}</p>
+                          @if (rowData.event.answerId) {
+                            @let path = rowData.event.item.id === itemData().item.id ? itemData().route.path : undefined;
+                            @let attemptId = rowData.event.item.id === itemData().item.id ? itemData().route.attemptId : undefined;
+                            @let parentAttemptId = rowData.event.item.id === itemData().item.id ? itemData().route.parentAttemptId : undefined;
+                            @let route = rowData.event.item | itemRoute: { path, attemptId, parentAttemptId };
+                            @if (!isObserving || !!rowData.event.canWatchAnswer) {
+                              <a
+                                class="alg-link item-title-link"
+                                [routerLink]="route | with: { answer: { id: rowData.event.answerId } } | url: ['task', 'editor']"
+                                (click)="onViewAnswer()"
+                                i18n
+                              >
+                                View answer
+                              </a>
+                            }
+                          }
+                        </div>
                       </div>
-                    </div>
+                    }
                   }
                   @case ('item.string.title') {
-                    <a class="alg-link" [class.disabled]="!rowData.item" [routerLink]="rowData.item | itemRoute | url">
-                      {{ rowData.item.string.title }}
-                    </a>
+                    @if (rowData.kind === 'event') {
+                      <a class="alg-link" [class.disabled]="!rowData.event.item" [routerLink]="rowData.event.item | itemRoute | url">
+                        {{ rowData.event.item.string.title }}
+                      </a>
+                    }
                   }
                   @case ('item.user') {
-                    @if (rowData.user; as user) {
-                      <alg-user-link-with-actions [user]="user"
-                        [observeLink]="getObserveLink(user)"
-                       />
-                    } @else {
-                      {{ rowData.participant.name }}
+                    @if (rowData.kind === 'event') {
+                      @if (rowData.event.user; as user) {
+                        <alg-user-link-with-actions [user]="user"
+                          [observeLink]="getObserveLink(user)"
+                         />
+                      } @else {
+                        {{ rowData.event.participant.name }}
+                      }
                     }
                   }
                   @case ('at') {
                     <alg-relative-time [value]="rowData.at" />
-                  }
-                  @default {
-                    {{ rowData[column.field] }}
                   }
                 }
               </td>
@@ -123,7 +145,7 @@
         </table>
       </div>
     </div>
-    @if (datapager.canLoadMore$ | async) {
+    @if (mode() === 'events' && (datapager.canLoadMore$ | async)) {
       <div class="alg-table-load-more">
         <button
           alg-button

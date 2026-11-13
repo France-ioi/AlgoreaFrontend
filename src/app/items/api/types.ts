@@ -93,3 +93,44 @@ export const openUrlParamsSchema = z.union([
 ]);
 
 export type OpenUrlParams = z.infer<typeof openUrlParamsSchema>;
+
+const historyCharDeltaSchema = z.object({
+  charsAdded: z.number().int(),
+  charsRemoved: z.number().int(),
+});
+
+const historyCheckpointDeltaSchema = historyCharDeltaSchema.extend({
+  elementsCount: z.number().int(),
+});
+
+export const taskHistoryTagSchema = z.object({
+  identifier: z.string(),
+  i18nText: z.string().optional(),
+});
+
+export const taskHistoryElementSchema = z.object({
+  id: z.number().int(),
+  datetime: z.string(),
+  tags: z.array(taskHistoryTagSchema),
+  idUser: z.string(),
+  isCheckpoint: z.boolean(),
+  sinceEarlier: historyCharDeltaSchema,
+  sinceEarlierCheckpoint: historyCheckpointDeltaSchema.optional(),
+  activeTab: z.object({
+    name: z.string().nullable(),
+    length: z.number().int(),
+    progLang: z.string(),
+  }),
+});
+export type TaskHistoryElement = z.infer<typeof taskHistoryElementSchema>;
+
+export const taskHistorySchema = z.array(taskHistoryElementSchema);
+export type TaskHistory = z.infer<typeof taskHistorySchema>;
+
+export const taskGetHistoryOptionsSchema = z.object({
+  limit: z.number().int().positive().max(1000).optional(),
+  maxId: z.number().int().optional(),
+  minId: z.number().int().optional(),
+  onlyCheckpoints: z.boolean().optional(),
+}).partial();
+export type TaskGetHistoryOptions = z.infer<typeof taskGetHistoryOptionsSchema>;

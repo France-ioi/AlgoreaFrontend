@@ -33,6 +33,7 @@ export class ItemLogViewPageComponent {
   private readonly item = this.store.selectSignal(fromItemContent.selectActiveContentItem);
   private readonly route = this.store.selectSignal(fromItemContent.selectActiveContentRoute);
   private readonly currentResult = this.store.selectSignal(fromItemContent.selectActiveContentCurrentResult);
+  private readonly results = this.store.selectSignal(fromItemContent.selectActiveContentResults);
   protected readonly isObserving = this.store.selectSignal(fromObservation.selectIsObserving);
 
   protected readonly itemData = computed((): ItemData | undefined => {
@@ -45,6 +46,7 @@ export class ItemLogViewPageComponent {
       route,
       item,
       breadcrumbs: [],
+      results: this.results() ?? undefined,
       currentResult: this.currentResult() ?? undefined,
     };
   });

@@ -20,6 +20,42 @@
   };
 
   var calls = [];
+  // Small in-memory editor history for API v3 getHistory (newest-first by id).
+  // Seeded with two checkpoints and one non-checkpoint edit between them so the History
+  // page can place a submission between checkpoints in e2e.
+  var historySeedBase = Date.parse('2024-06-01T10:00:00Z');
+  var editorHistory = [
+    {
+      id: 1,
+      datetime: new Date(historySeedBase).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+      tags: [{ identifier: 'start', i18nText: 'Start' }],
+      idUser: 'test-user',
+      isCheckpoint: true,
+      sinceEarlier: { charsAdded: 20, charsRemoved: 0 },
+      sinceEarlierCheckpoint: { charsAdded: 20, charsRemoved: 0, elementsCount: 0 },
+      activeTab: { name: 'main.py', length: 20, progLang: 'python' },
+    },
+    {
+      id: 2,
+      datetime: new Date(historySeedBase + 60 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+      tags: [],
+      idUser: 'test-user',
+      isCheckpoint: false,
+      sinceEarlier: { charsAdded: 15, charsRemoved: 2 },
+      activeTab: { name: 'main.py', length: 33, progLang: 'python' },
+    },
+    {
+      id: 3,
+      datetime: new Date(historySeedBase + 120 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+      tags: [{ identifier: 'manual', i18nText: 'Manual' }],
+      idUser: 'test-user',
+      isCheckpoint: true,
+      sinceEarlier: { charsAdded: 8, charsRemoved: 1 },
+      sinceEarlierCheckpoint: { charsAdded: 23, charsRemoved: 3, elementsCount: 1 },
+      activeTab: { name: 'main.py', length: 40, progLang: 'python' },
+    },
+  ];
+
   var state = {
     answer: '',
     taskState: '',
@@ -29,6 +65,26 @@
     // solution is granted up-front unless the scenario defers it to a post-load token update
     solutionGranted: !config.solutionOnTokenUpdate,
   };
+
+  function filterEditorHistory(options) {
+    var opts = options || {};
+    var limit = opts.limit != null ? Number(opts.limit) : 100;
+    if (!Number.isFinite(limit) || limit < 1) limit = 100;
+    if (limit > 1000) limit = 1000;
+    var items = editorHistory.slice().sort(function (a, b) { return b.id - a.id; });
+    if (opts.onlyCheckpoints) {
+      items = items.filter(function (el) { return el.isCheckpoint; });
+    }
+    if (opts.maxId != null) {
+      var maxId = Number(opts.maxId);
+      items = items.filter(function (el) { return el.id <= maxId; });
+    }
+    if (opts.minId != null) {
+      var minId = Number(opts.minId);
+      items = items.filter(function (el) { return el.id > minId; });
+    }
+    return items.slice(0, limit);
+  }
 
   var statusEl = document.getElementById('status');
   var callLogEl = document.getElementById('call-log');
@@ -281,6 +337,11 @@
   chan.bind('task.getResources', function () {
     logCall('task.getResources', []);
     return {};
+  });
+
+  chan.bind('task.getHistory', function (trans, options) {
+    logCall('task.getHistory', options || {});
+    return filterEditorHistory(options);
   });
 
   function logPlatformCall(method, callParams, status, detail) {

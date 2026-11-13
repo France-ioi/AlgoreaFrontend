@@ -60,3 +60,13 @@ test('checks view link in logs on item page', async ({ page }) => {
     expect(page).toHaveURL(new RegExp('/a/6379723280369399253;answerId=')),
   ]);
 });
+
+test('shows no Events & Edits selection on a chapter history page', async ({ page }) => {
+  await initAsUsualUser(page);
+  await page.route(`${apiUrl}/items/7523720120450464843/log*`, async route => {
+    await route.fulfill({ json: otherItemJson });
+  });
+  await page.goto('a/7523720120450464843;p=7528142386663912287;a=0/history');
+  await expect(page.getByRole('heading', { name: 'Tasks Showcase' })).toBeVisible();
+  await expect(page.getByTestId('selection-control-value')).toHaveCount(0);
+});

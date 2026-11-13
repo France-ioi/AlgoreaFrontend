@@ -1,9 +1,24 @@
+import { of } from 'rxjs';
 import {
   negotiateApiVersion,
   PLATFORM_MAX_API_VERSION,
   PLATFORM_MIN_API_VERSION,
   savesEditorHistory,
 } from './task-api-version';
+import { Task } from './task-proxy';
+import { RxMessagingChannel } from './rxjschannel';
+import { TaskHistoryElement } from './types';
+
+const sampleHistoryElement: TaskHistoryElement = {
+  id: 2,
+  datetime: '2024-01-01T12:00:00Z',
+  tags: [{ identifier: 'manual', i18nText: 'Manual' }],
+  idUser: 'u1',
+  isCheckpoint: true,
+  sinceEarlier: { charsAdded: 4, charsRemoved: 1 },
+  sinceEarlierCheckpoint: { charsAdded: 10, charsRemoved: 2, elementsCount: 1 },
+  activeTab: { name: 'main.py', length: 40, progLang: 'python' },
+};
 
 describe('negotiateApiVersion', () => {
   it('should default to version 1 when metadata omits apiVersion fields', () => {
@@ -44,5 +59,52 @@ describe('savesEditorHistory', () => {
     expect(savesEditorHistory(3, undefined)).toBe(false);
     expect(savesEditorHistory(2, true)).toBe(false);
     expect(savesEditorHistory(1, true)).toBe(false);
+  });
+});
+
+describe('Task.getHistory', () => {
+  function createTask(apiVersion: number, history: unknown = [ sampleHistoryElement ]): Task {
+    const chan = {
+      call: jasmine.createSpy('call').and.returnValue(of([ history ])),
+      destroy: jasmine.createSpy('destroy'),
+      bind: jasmine.createSpy('bind'),
+      unbind: jasmine.createSpy('unbind'),
+    } as unknown as RxMessagingChannel;
+    const task = new Task(chan);
+    task.apiVersion = apiVersion;
+    return task;
+  }
+
+  it('should call task.getHistory and validate the result when apiVersion is ≥ 3', done => {
+    const task = createTask(3);
+    task.getHistory({ onlyCheckpoints: true, limit: 50 }).subscribe({
+      next: history => {
+        expect(history).toEqual([ sampleHistoryElement ]);
+        done();
+      },
+      error: done.fail,
+    });
+  });
+
+  it('should reject when apiVersion is below 3', done => {
+    const task = createTask(2);
+    task.getHistory().subscribe({
+      next: () => done.fail('expected error'),
+      error: err => {
+        expect((err as Error).message).toContain('API version');
+        done();
+      },
+    });
+  });
+
+  it('should fail when the task returns an invalid history payload', done => {
+    const task = createTask(3, [{ id: 'not-a-number' }]);
+    task.getHistory().subscribe({
+      next: () => done.fail('expected validation error'),
+      error: err => {
+        expect(err).toBeTruthy();
+        done();
+      },
+    });
   });
 });
