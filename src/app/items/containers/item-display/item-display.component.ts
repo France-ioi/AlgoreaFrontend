@@ -192,7 +192,8 @@ export class ItemDisplayComponent implements AfterViewChecked, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.actionFeedbackService.hasFeedback) this.actionFeedbackService.clear();
+    // Do not clear ActionFeedback here: URL-change remount (and parameters-save refresh) destroys
+    // this instance while a success toast from another tab may still be on screen.
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 

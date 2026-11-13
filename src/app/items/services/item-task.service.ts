@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { DestroyRef, Injectable, OnDestroy, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animationFrames, combineLatest, EMPTY, merge, Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
-import { catchError, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { ActivityNavTreeService } from 'src/app/services/navigation/item-nav-tree.service';
 import { openNewTab, replaceWindowUrl } from 'src/app/utils/url';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
@@ -97,25 +97,6 @@ export class ItemTaskService implements OnDestroy {
       catchError(() => EMPTY),
       takeUntilDestroyed(),
     ).subscribe(value => this.initialAnswerDataSource?.setSavesEditorHistory(value));
-
-    // Publish the loaded task so History (and later Restore) can call getHistory without DI into ItemDisplay.
-    if (this.loadedTaskRegistry) {
-      const registry = this.loadedTaskRegistry;
-      combineLatest([
-        this.initService.loadedTask$,
-        this.attemptId$,
-        this.initService.savesEditorHistory$.pipe(startWith(undefined as boolean | undefined), catchError(() => of(undefined))),
-      ]).pipe(
-        catchError(() => EMPTY),
-        takeUntilDestroyed(),
-      ).subscribe(([ task, attemptId, savesEditorHistory ]) => {
-        if (attemptId === undefined) {
-          registry.clear();
-          return;
-        }
-        registry.set({ task, attemptId, savesEditorHistory });
-      });
-    }
   }
 
   ngOnDestroy(): void {
@@ -133,6 +114,34 @@ export class ItemTaskService implements OnDestroy {
 
   initTask(iframe: HTMLIFrameElement): void {
     this.initService.initTask(iframe, task => this.bindPlatform(task));
+    this.publishLoadedTaskAfterLoad();
+  }
+
+  /**
+   * Publish a one-shot snapshot after `task.load` for History (and later Restore).
+   * Must not keep a live `combineLatest` with `attemptId$`: during parameters save → refresh,
+   * `currentResult` briefly unsets so `attemptId` flaps undefined→set; registry clear/set churn
+   * races with URL remount and historically wiped the save toast. Intentional: History only merges
+   * when the task was loaded on the URL attempt (stale if attempt changes later on the same display).
+   */
+  private publishLoadedTaskAfterLoad(): void {
+    if (!this.loadedTaskRegistry) return;
+    const registry = this.loadedTaskRegistry;
+    combineLatest([
+      this.initService.loadedTask$.pipe(catchError(() => EMPTY)),
+      this.attemptId$,
+      // Defensive: metadata normally emits before load; keep a value if that stream errors alone.
+      this.initService.savesEditorHistory$.pipe(catchError(() => of(undefined as boolean | undefined))),
+    ]).pipe(
+      take(1),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(([ task, attemptId, savesEditorHistory ]) => {
+      if (attemptId === undefined) {
+        registry.clear();
+        return;
+      }
+      registry.set({ task, attemptId, savesEditorHistory });
+    });
   }
 
   showView(view: string): void {

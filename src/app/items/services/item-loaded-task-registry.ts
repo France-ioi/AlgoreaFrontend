@@ -12,6 +12,7 @@ export interface LoadedItemTask {
 /**
  * Bridges the task iframe (ItemDisplay / ItemTaskService) to sibling tabs such as History.
  * Provided on the item host so both the display and the log view share one instance.
+ * Snapshot is one-shot at `task.load` (not live-synced to later `attemptId` changes).
  */
 @Injectable()
 export class ItemLoadedTaskRegistry {
