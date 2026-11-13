@@ -330,6 +330,67 @@ test.describe('platform-task interaction', () => {
       await expect(page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits of attempt #1' }))
         .toBeVisible();
     });
+
+    test('Load more fetches a second page without reordering already-visible rows', async ({ page }) => {
+      // Few events (first page exhausts them) and many checkpoints so Load more must
+      // page getHistory with maxId while the activity-log stream is already done.
+      const historySeedBase = Date.parse('2024-06-01T10:00:00Z');
+      const logRows = Array.from({ length: 5 }, (_, index) => {
+        const n = 5 - index;
+        return {
+          at: new Date(historySeedBase + (20 + n) * 60 * 1000).toISOString(),
+          activity_type: 'submission',
+          attempt_id: '0',
+          answer_id: `ans-${n}`,
+          participant: { id: '1', name: 'test-user', type: 'User' },
+          item: {
+            id: TEST_TASK_ITEM_ID,
+            type: 'Task',
+            string: { title: 'Platform-task test task' },
+          },
+          score: 80,
+          can_watch_answer: true,
+        };
+      });
+
+      await mockTestTaskItemApi(page, {
+        taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1&historyCheckpoints=25',
+      });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, async route => {
+        const url = new URL(route.request().url());
+        const limit = Number(url.searchParams.get('limit') || '20');
+        let start = 0;
+        const fromAnswerId = url.searchParams.get('from.answer_id');
+        if (fromAnswerId) {
+          const idx = logRows.findIndex(row => row.answer_id === fromAnswerId);
+          start = idx >= 0 ? idx + 1 : logRows.length;
+        }
+        await route.fulfill({ json: logRows.slice(start, start + limit) });
+      });
+
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+      await testTaskPage.waitForCall('task.getHistory');
+
+      const captions = page.locator('.item-title-caption');
+      const firstCaptionBefore = await captions.first().textContent();
+      const countBefore = await captions.count();
+      expect(countBefore).toBeGreaterThan(0);
+
+      const loadMore = page.getByRole('button', { name: 'Load more' });
+      await expect(loadMore).toBeVisible();
+      await loadMore.click();
+
+      await testTaskPage.waitForCall(
+        'task.getHistory',
+        entry => (entry.params as { maxId?: number }).maxId !== undefined,
+      );
+
+      await expect.poll(async () => captions.count()).toBeGreaterThan(countBefore);
+      await expect(captions.first()).toHaveText(firstCaptionBefore ?? '');
+    });
   });
 
   test.describe('device proxy', () => {

@@ -2,9 +2,8 @@ import { Component, computed, DestroyRef, effect, input, inject, signal, untrack
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ItemData } from '../../models/item-data';
 import { ActivityLogs, ActivityLogService } from 'src/app/data-access/activity-log.service';
-import { combineLatest, forkJoin, Observable, of, Subject } from 'rxjs';
-import { distinctUntilChanged, switchMap, map, catchError, take } from 'rxjs/operators';
-import { ItemType } from 'src/app/items/models/item-type';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import { distinctUntilChanged, switchMap, map } from 'rxjs/operators';
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { DataPager } from 'src/app/utils/data-pager';
 import { ActionFeedbackService } from 'src/app/services/action-feedback.service';
@@ -20,7 +19,7 @@ import { AsyncPipe } from '@angular/common';
 import { RelativeTimeComponent } from '../../../ui-components/relative-time/relative-time.component';
 import { Store } from '@ngrx/store';
 import { fromObservation } from 'src/app/store/observation';
-import { RawGroupRoute, isUser } from 'src/app/models/routing/group-route';
+import { isUser } from 'src/app/models/routing/group-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRouteWith } from 'src/app/models/routing/item-route';
 import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
@@ -33,19 +32,17 @@ import {
 } from '@angular/cdk/table';
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { ItemLoadedTaskRegistry } from '../../services/item-loaded-task-registry';
-import { errorState, FetchState, fetchingState, mapStateData, readyState } from 'src/app/utils/state';
-import { HistoryListCheckpointRow, HistoryListRow, mergeEventsAndCheckpoints } from './history-list-merge';
+import { FetchState, fetchingState, mapStateData } from 'src/app/utils/state';
+import { HistoryListRow } from './history-list-merge';
+import { checkpointCaption } from './history-checkpoint-caption';
+import { HistoryEditsFacade } from './history-edits-facade';
+import { fetchAttemptActivityLog$ } from './history-edits-load';
+import { historyEditsPageSize } from './history-edits-pager';
+import { HistoryLogColumn, historyLogColumns } from './history-log-columns';
 import {
   attemptNumberForLabel, HistoryViewMode, historyModeOptions,
   initialHistoryViewMode, shouldShowHistoryModeSelection,
 } from './history-view-mode';
-
-interface Column {
-  field: string,
-  header: string,
-}
-
-const logsLimit = 20;
 
 @Component({
   selector: 'alg-item-log-view',
@@ -92,10 +89,21 @@ export class ItemLogViewComponent {
   readonly mode = signal<HistoryViewMode>('events');
   private readonly editsReload$ = new Subject<void>();
   readonly editsState = signal<FetchState<HistoryListRow[]>>(fetchingState());
-  /**
-   * Identity of the History list context. Includes loaded-task fingerprint so the default mode
-   * rebinds when the iframe becomes ready on this attempt (without latching forever).
-   */
+  readonly editsCanLoadMore = signal(false);
+  private readonly editsFacade = new HistoryEditsFacade(
+    state => this.editsState.set(state),
+    canLoadMore => this.editsCanLoadMore.set(canLoadMore),
+    () => this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`),
+    this.sessionService.userProfile$.pipe(map(profile => profile.groupId)),
+    (attemptId, latest) => fetchAttemptActivityLog$(
+      this.activityLogService,
+      this.itemData().item.id,
+      attemptId,
+      this.store.select(fromObservation.selectObservedGroupId),
+      latest,
+    ),
+  );
+  /** Includes loaded-task fingerprint so default mode rebinds when the iframe becomes ready. */
   private readonly historyContextKey = computed(() => {
     const data = this.itemData();
     const observed = this.observedGroupRoute();
@@ -129,7 +137,7 @@ export class ItemLogViewComponent {
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> => this.getRows(pageSize, latestRow),
-    pageSize: logsLimit,
+    pageSize: historyEditsPageSize,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
     },
@@ -140,7 +148,7 @@ export class ItemLogViewComponent {
     combineLatest([ this.datapager.list$, this.sessionService.userProfile$ ]).pipe(
       map(([ fetchData, profile ]) => mapStateData(fetchData, (logs): HistoryListRow[] =>
         logs
-          .filter(log => !this.isSelfCurrentAnswer(log, profile.groupId))
+          .filter(log => !(log.activityType === 'current_answer' && log.participant.id === profile.groupId))
           .map(event => ({ kind: 'event' as const, at: event.at, event })),
       )),
     ),
@@ -155,12 +163,13 @@ export class ItemLogViewComponent {
   readonly columns$ = combineLatest([
     this.item$.pipe(distinctUntilChanged()),
     this.store.select(fromObservation.selectObservedGroupRoute),
-  ]).pipe(map(([ item, observedGroupRoute ]) => this.getLogColumns(item.type, observedGroupRoute)));
-  columns = toSignal(this.columns$, { initialValue: [] as Column[] });
+  ]).pipe(map(([ item, observedGroupRoute ]) => historyLogColumns(item.type, observedGroupRoute)));
+  columns = toSignal(this.columns$, { initialValue: [] as HistoryLogColumn[] });
   displayedColumns = computed(() => this.columns().map(column => column.field));
 
   constructor() {
     this.destroyRef.onDestroy(() => {
+      this.editsFacade.destroy();
       this.store.dispatch(fromItemContent.backLinkActions.clear());
       this.editsReload$.complete();
     });
@@ -180,7 +189,17 @@ export class ItemLogViewComponent {
     });
 
     this.editsReload$.pipe(
-      switchMap(() => this.fetchEventsAndEdits()),
+      switchMap(() => {
+        const loaded = this.loadedTask();
+        const previous = this.editsState().data;
+        this.editsState.set(fetchingState(previous));
+        return this.editsFacade.reload(
+          loaded?.task,
+          this.itemData().route.attemptId,
+          loaded?.savesEditorHistory,
+          loaded?.attemptId,
+        );
+      }),
       takeUntilDestroyed(),
     ).subscribe(state => this.editsState.set(state));
   }
@@ -222,6 +241,16 @@ export class ItemLogViewComponent {
   }
 
   fetchMoreRows(): void {
+    if (this.mode() === 'events_and_edits') {
+      const loaded = this.loadedTask();
+      this.editsFacade.loadMore(
+        this.editsState().isFetching,
+        this.editsState().data,
+        loaded?.task,
+        this.itemData().route.attemptId,
+      );
+      return;
+    }
     this.datapager.load();
   }
 
@@ -239,59 +268,5 @@ export class ItemLogViewComponent {
     return this.itemRouter.url(itemRouteWith(this.itemData().route, { observedGroup: { id: user.id, isUser: true } }));
   }
 
-  checkpointCaption(row: HistoryListCheckpointRow): string {
-    const { tags, activeTab, sinceEarlierCheckpoint, sinceEarlier } = row.checkpoint;
-    const tag = tags.map(t => t.i18nText ?? t.identifier).filter(Boolean).join(', ') || $localize`Checkpoint`;
-    const file = activeTab.name ?? $localize`Untitled`;
-    const delta = sinceEarlierCheckpoint ?? sinceEarlier;
-    return $localize`${tag}:tag: · ${activeTab.progLang}:lang: · ${file}:file: · +${
-      delta.charsAdded
-    }:added:/−${delta.charsRemoved}:removed:`;
-  }
-
-  private fetchEventsAndEdits(): Observable<FetchState<HistoryListRow[]>> {
-    const attemptId = this.itemData().route.attemptId;
-    const loaded = this.loadedTask();
-    const previous = this.editsState().data;
-    this.editsState.set(fetchingState(previous));
-
-    // Only called when Events & Edits is selected; selection requires a matching loaded task.
-    if (!loaded || loaded.savesEditorHistory !== true || loaded.attemptId !== attemptId) {
-      return of(readyState([]));
-    }
-
-    const events$ = this.store.select(fromObservation.selectObservedGroupId).pipe(
-      take(1),
-      switchMap(observedGroupId => this.activityLogService.getActivityLog(this.itemData().item.id, {
-        limit: logsLimit,
-        watchedGroupId: observedGroupId ?? undefined,
-        attemptId,
-      })),
-    );
-
-    return forkJoin({
-      events: events$,
-      checkpoints: loaded.task.getHistory({ onlyCheckpoints: true }),
-      profile: this.sessionService.userProfile$.pipe(take(1)),
-    }).pipe(
-      map(({ events, checkpoints, profile }) => readyState(mergeEventsAndCheckpoints(
-        events.filter(log => !this.isSelfCurrentAnswer(log, profile.groupId)),
-        checkpoints,
-      ))),
-      catchError(err => of(errorState(err))),
-    );
-  }
-
-  private isSelfCurrentAnswer(log: ActivityLogs[number], profileId: string): boolean {
-    return log.activityType === 'current_answer' && log.participant.id === profileId;
-  }
-
-  private getLogColumns(type: ItemType, observedGroupRoute: RawGroupRoute|null): Column[] {
-    return [
-      { field: 'activityType', header: $localize`Action`, enabled: true },
-      { field: 'item.string.title', header: $localize`Content`, enabled: type !== 'Task' },
-      { field: 'item.user', header: $localize`User`, enabled: !!(observedGroupRoute && !isUser(observedGroupRoute)) },
-      { field: 'at', header: $localize`Time`, enabled: true },
-    ].filter(item => item.enabled).map(({ field, header }) => ({ field, header }));
-  }
+  readonly checkpointCaption = checkpointCaption;
 }

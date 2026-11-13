@@ -145,7 +145,10 @@
         </table>
       </div>
     </div>
-    @if (mode() === 'events' && (datapager.canLoadMore$ | async)) {
+    @if (
+      (mode() === 'events' && (datapager.canLoadMore$ | async))
+      || (mode() === 'events_and_edits' && editsCanLoadMore())
+    ) {
       <div class="alg-table-load-more">
         <button
           alg-button
