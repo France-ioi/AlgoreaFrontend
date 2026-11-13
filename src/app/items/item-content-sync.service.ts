@@ -62,9 +62,11 @@ export class ItemContentSyncService {
 
   private applyResetOnItemChange(): void {
     const state = this.itemDataState();
-    if (state === null) return;
+    // A results refetch (attempt switch) is fetching with no data. That is not a new item:
+    // resetting tabs here would hide History until the task is opened again.
+    if (!state?.isReady) return;
 
-    const itemId = state.data?.route.id;
+    const itemId = state.data.route.id;
     if (!this.lastTrackedRouteIdInitialized) {
       this.lastTrackedRouteIdInitialized = true;
       this.lastTrackedRouteId = itemId;

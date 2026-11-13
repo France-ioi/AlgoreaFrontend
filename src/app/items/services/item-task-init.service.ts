@@ -197,11 +197,11 @@ export class ItemTaskInitService implements OnDestroy {
   initialized = false;
   private tornDown = false;
 
-  /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId` */
+  /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId`. */
   guardSubscription = this.config$.pipe(pairwise(), takeUntilDestroyed()).subscribe(([ prev, cur ]) => {
     if (prev.readOnly !== cur.readOnly) throw new Error(`cannot change task config (readonly prev:${prev.readOnly} cur:${cur.readOnly})`);
     if (prev.locale !== cur.locale) throw new Error(`cannot change task config (locale prev:${prev.locale} cur:${cur.locale})`);
-    if (!equal(prev.route, cur.route)) {
+    if (!equal({ ...prev.route, attemptId: undefined }, { ...cur.route, attemptId: undefined })) {
       throw new Error(`cannot change task config (route prev:${JSON.stringify(prev.route)} cur:${JSON.stringify(cur.route)})`);
     }
     if (prev.url !== cur.url) throw new Error(`cannot change task config (url prev:${prev.url} cur:${cur.url})`);

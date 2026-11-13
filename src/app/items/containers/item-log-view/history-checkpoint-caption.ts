@@ -1,3 +1,4 @@
+import { TaskHistoryElement } from 'src/app/items/api/types';
 import { HistoryListCheckpointRow } from './history-list-merge';
 
 export function checkpointCaption(row: HistoryListCheckpointRow): string {
@@ -8,4 +9,10 @@ export function checkpointCaption(row: HistoryListCheckpointRow): string {
   return $localize`${tag}:tag: · ${activeTab.progLang}:lang: · ${file}:file: · +${
     delta.charsAdded
   }:added:/−${delta.charsRemoved}:removed:`;
+}
+
+export function editCaption(element: TaskHistoryElement): string {
+  const file = element.activeTab.name ?? $localize`Untitled`;
+  const { charsAdded, charsRemoved } = element.sinceEarlier;
+  return $localize`Edit · +${charsAdded}:added:/−${charsRemoved}:removed: · ${element.activeTab.progLang}:lang: · ${file}:file:`;
 }

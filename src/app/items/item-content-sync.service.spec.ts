@@ -112,6 +112,17 @@ describe('ItemContentSyncService', () => {
     expect(itemTabs.itemChanged).toHaveBeenCalledTimes(1);
   });
 
+  it('does not reset tabs while item data is refetching', () => {
+    TestBed.flushEffects();
+    itemTabs.itemChanged.calls.reset();
+
+    store.overrideSelector(fromItemContent.selectActiveContentData, fetchingState<ReturnType<typeof createItemData>>());
+    store.refreshState();
+    TestBed.flushEffects();
+
+    expect(itemTabs.itemChanged).not.toHaveBeenCalled();
+  });
+
   it('runs item reset sync once when item id changes', () => {
     TestBed.flushEffects();
     itemTabs.itemChanged.calls.reset();
