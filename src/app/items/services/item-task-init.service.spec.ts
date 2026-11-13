@@ -55,6 +55,22 @@ describe('ItemTaskInitService – config guard', () => {
     }
   });
 
+  it('should allow re-configure when only the attempt id changes', () => {
+    let unhandled: unknown;
+    const original = config.onUnhandledError;
+    config.onUnhandledError = (err: unknown) => {
+      unhandled = err;
+    };
+    try {
+      service.configure(route, 'http://example.com/task', '0', null, undefined, false);
+      const otherAttempt = itemRoute('activity', '1', { attemptId: '1', path: [] });
+      service.configure(otherAttempt, 'http://example.com/task', '1', null, undefined, false);
+      expect(unhandled).toBeUndefined();
+    } finally {
+      config.onUnhandledError = original;
+    }
+  });
+
   it('should throw when route content changes', done => {
     const original = config.onUnhandledError;
     config.onUnhandledError = (err: unknown) => {

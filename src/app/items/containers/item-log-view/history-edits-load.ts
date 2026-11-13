@@ -1,4 +1,4 @@
-import { Observable, forkJoin, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { ActivityLogService, ActivityLogs } from 'src/app/data-access/activity-log.service';
 import { Task } from 'src/app/items/api/task-proxy';
@@ -27,6 +27,29 @@ export function fetchAttemptActivityLog(
     watchedGroupId: observedGroupId ?? undefined,
     attemptId,
   });
+}
+
+/** Activity log for Events only: every attempt, not filtered. */
+export function fetchAllActivityLog(
+  activityLogService: ActivityLogService,
+  itemId: string,
+  observedGroupId$: Observable<string | null>,
+  pageSize: number,
+  latestRow?: ActivityLogs[number],
+): Observable<ActivityLogs> {
+  return observedGroupId$.pipe(
+    switchMap(observedGroupId => activityLogService.getActivityLog(itemId, {
+      limit: pageSize,
+      pagination: latestRow === undefined ? undefined : {
+        fromItemId: latestRow.item.id,
+        fromParticipantId: latestRow.participant.id,
+        fromAttemptId: latestRow.attemptId,
+        fromAnswerId: latestRow.answerId ?? '0',
+        fromActivityType: latestRow.activityType,
+      },
+      watchedGroupId: observedGroupId ?? undefined,
+    })),
+  );
 }
 
 export function fetchAttemptActivityLog$(

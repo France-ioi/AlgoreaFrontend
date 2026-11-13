@@ -391,6 +391,142 @@ test.describe('platform-task interaction', () => {
       await expect.poll(async () => captions.count()).toBeGreaterThan(countBefore);
       await expect(captions.first()).toHaveText(firstCaptionBefore ?? '');
     });
+
+    test('opens and closes a checkpoint, keeping the submission among its edits', async ({ page }) => {
+      await mockTestTaskItemApi(page, { taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1' });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({
+        json: submissionBetweenCheckpoints,
+      }));
+
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+      await testTaskPage.waitForCall('task.getHistory');
+
+      const manualRow = page.getByRole('row').filter({ hasText: 'Manual' });
+      const showEdits = manualRow.getByRole('button', { name: 'Show 1 edit' });
+      await expect(showEdits).toHaveAttribute('aria-expanded', 'false');
+      await showEdits.click();
+
+      await testTaskPage.waitForCall('task.getHistory', entry => {
+        const params = entry.params as { minId?: number, maxId?: number, onlyCheckpoints?: boolean };
+        return params.minId === 1 && params.maxId === 3 && !params.onlyCheckpoints;
+      });
+
+      const captions = page.locator('.item-title-caption');
+      await expect(captions).toHaveCount(4);
+      await expect(captions.nth(0)).toContainText('Manual');
+      await expect(captions.nth(1)).toContainText('Submission');
+      await expect(captions.nth(2)).toContainText('Edit');
+      await expect(captions.nth(3)).toContainText('Start');
+      await expect(manualRow.getByRole('button', { name: 'Hide 1 edit' })).toHaveAttribute('aria-expanded', 'true');
+
+      await manualRow.getByRole('button', { name: 'Hide 1 edit' }).click();
+      await expect(captions).toHaveCount(3);
+      await expect(captions.nth(0)).toContainText('Manual');
+      await expect(captions.nth(1)).toContainText('Submission');
+      await expect(captions.nth(2)).toContainText('Start');
+      await expect(showEdits).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('starts on Events only until Events & Edits loads the task, and keeps it when switching back', async ({ page }) => {
+      await mockTestTaskItemApi(page, { taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1' });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({ json: [] }));
+
+      await page.goto(`/a/${TEST_TASK_ITEM_ID};p=;a=0/history`);
+      await expect(page.getByRole('button', { name: 'Refresh' })).toBeVisible();
+      const selection = page.getByTestId('selection-control-value');
+      await expect(selection.filter({ hasText: 'Events only' })).toHaveClass(/active/);
+      await expect(page.locator('alg-item-display iframe')).toHaveCount(0);
+
+      await selection.filter({ hasText: 'Events & Edits' }).click();
+      await testTaskPage.waitForCall('task.load');
+      await testTaskPage.waitForCall('task.getHistory');
+      await expect(page.locator('.item-title-caption').first()).toContainText('Manual');
+
+      await selection.filter({ hasText: 'Events only' }).click();
+      await expect(page.locator('.item-title-caption').filter({ hasText: 'Manual' })).toHaveCount(0);
+      await expect(page.locator('alg-item-display iframe')).toHaveCount(1);
+
+      await page.getByRole('link', { name: 'Statement' }).click();
+      await expect(page).not.toHaveURL(/\/history/);
+      await expect(testTaskPage.taskFrame.getByTestId('test-task-status')).toHaveText('Ready');
+      const calls = await testTaskPage.getCalls();
+      expect(calls.filter(entry => entry.method === 'task.load').length).toBe(1);
+    });
+
+    test('drops Events & Edits when the loaded task does not save editor history', async ({ page }) => {
+      await mockTestTaskItemApi(page, { taskQuery: 'apiVersion=3&minApiVersion=1' });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({ json: [] }));
+
+      await page.goto(`/a/${TEST_TASK_ITEM_ID};p=;a=0/history`);
+      await expect(page.getByRole('button', { name: 'Refresh' })).toBeVisible();
+      await page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits' }).click();
+      await testTaskPage.waitForCall('task.load');
+      await expect(page.getByTestId('selection-control-value')).toHaveCount(0);
+      await expect(page.getByText('There is no progress to report for this item.')).toBeVisible();
+    });
+
+    test('starts on Events only when the task is loaded on another attempt, then reloads that attempt', async ({ page }) => {
+      await mockTestTaskItemApi(page, {
+        taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+        attempts: [
+          { id: '0', started_at: '2024-01-01T00:00:00Z' },
+          { id: '1', started_at: '2024-02-01T00:00:00Z' },
+        ],
+      });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({ json: [] }));
+
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+      await page.getByRole('link', { name: 'Attempts' }).click();
+      await page.getByRole('button', { name: 'Select attempt 2' }).click();
+      await expect(page).toHaveURL(/a=1/);
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+
+      const selection = page.getByTestId('selection-control-value');
+      await expect(selection.filter({ hasText: 'Events only' })).toHaveClass(/active/);
+
+      await selection.filter({ hasText: 'Events & Edits' }).click();
+      await expect.poll(async () => {
+        const host = await page.evaluate(() =>
+          (window as unknown as { testTaskCallsHost?: { method: string }[] }).testTaskCallsHost ?? []);
+        return host.filter(entry => entry.method === 'task.load').length;
+      }).toBeGreaterThanOrEqual(2);
+      await expect(page.locator('.item-title-caption').first()).toContainText('Manual');
+    });
+
+    test('restores a checkpoint on the task and keeps the state you left as a new history element', async ({ page }) => {
+      await mockTestTaskItemApi(page, { taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1' });
+      await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({ json: [] }));
+
+      await testTaskPage.gotoItem();
+      await testTaskPage.waitForLoaded();
+      await testTaskPage.setAnswer('work-in-progress');
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+      await testTaskPage.waitForCall('task.getHistory');
+
+      let currentAnswerPuts = 0;
+      page.on('request', request => {
+        if (request.method() === 'PUT' && /\/attempts\/[^/]+\/answers\/current/.test(request.url())) {
+          currentAnswerPuts += 1;
+        }
+      });
+
+      await page.getByRole('row').filter({ hasText: 'Manual' }).getByRole('button', { name: 'Restore' }).click();
+      await expect(page).toHaveURL(/\/task\/editor/);
+      const reload = await testTaskPage.waitForCall('task.reloadHistory');
+      expect(reload.params).toEqual({ elementId: 3 });
+      await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('manual');
+      expect(currentAnswerPuts).toBe(0);
+
+      await page.getByRole('link', { name: 'History' }).click();
+      await expect(page).toHaveURL(/\/history/);
+      await expect(page.locator('.item-title-caption').first()).toContainText('Autosave');
+    });
   });
 
   test.describe('device proxy', () => {

@@ -57,6 +57,12 @@ export function mergeEventsAndCheckpoints(
   });
 }
 
+export function activityLogsToEventRows(logs: ActivityLogs, profileId: string): HistoryListRow[] {
+  return logs
+    .filter(log => !(log.activityType === 'current_answer' && log.participant.id === profileId))
+    .map(event => ({ kind: 'event', at: event.at, event }));
+}
+
 /**
  * Merge buffered pages from both streams. A row is shown only once both streams have reached
  * its time (watermark = max of each non-exhausted stream's oldest buffered time).

@@ -108,3 +108,43 @@ describe('Task.getHistory', () => {
     });
   });
 });
+
+describe('Task.reloadHistory', () => {
+  function createTask(apiVersion: number): { task: Task, call: jasmine.Spy } {
+    const call = jasmine.createSpy('call').and.returnValue(of([ true ]));
+    const chan = {
+      call,
+      destroy: jasmine.createSpy('destroy'),
+      bind: jasmine.createSpy('bind'),
+      unbind: jasmine.createSpy('unbind'),
+    } as unknown as RxMessagingChannel;
+    const task = new Task(chan);
+    task.apiVersion = apiVersion;
+    return { task, call };
+  }
+
+  it('should call task.reloadHistory with the element id when apiVersion is ≥ 3', done => {
+    const { task, call } = createTask(3);
+    task.reloadHistory({ elementId: 3 }).subscribe({
+      next: () => {
+        expect(call).toHaveBeenCalledWith(jasmine.objectContaining({
+          method: 'task.reloadHistory',
+          params: { elementId: 3 },
+        }));
+        done();
+      },
+      error: done.fail,
+    });
+  });
+
+  it('should reject when apiVersion is below 3', done => {
+    const { task } = createTask(2);
+    task.reloadHistory({ elementId: 3 }).subscribe({
+      next: () => done.fail('expected error'),
+      error: err => {
+        expect((err as Error).message).toContain('API version');
+        done();
+      },
+    });
+  });
+});
