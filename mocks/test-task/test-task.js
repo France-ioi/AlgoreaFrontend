@@ -20,41 +20,58 @@
   };
 
   var calls = [];
-  // Small in-memory editor history for API v3 getHistory (newest-first by id).
-  // Seeded with two checkpoints and one non-checkpoint edit between them so the History
-  // page can place a submission between checkpoints in e2e.
+  // In-memory editor history for API v3 getHistory (newest-first by id).
+  // Default: two checkpoints + one edit between them (submission-between-checkpoints e2e).
+  // historyCheckpoints=N seeds N checkpoints only (multi-page History e2e).
   var historySeedBase = Date.parse('2024-06-01T10:00:00Z');
-  var editorHistory = [
-    {
-      id: 1,
-      datetime: new Date(historySeedBase).toISOString().replace(/\.\d{3}Z$/, 'Z'),
-      tags: [{ identifier: 'start', i18nText: 'Start' }],
-      idUser: 'test-user',
-      isCheckpoint: true,
-      sinceEarlier: { charsAdded: 20, charsRemoved: 0 },
-      sinceEarlierCheckpoint: { charsAdded: 20, charsRemoved: 0, elementsCount: 0 },
-      activeTab: { name: 'main.py', length: 20, progLang: 'python' },
-    },
-    {
-      id: 2,
-      datetime: new Date(historySeedBase + 60 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
-      tags: [],
-      idUser: 'test-user',
-      isCheckpoint: false,
-      sinceEarlier: { charsAdded: 15, charsRemoved: 2 },
-      activeTab: { name: 'main.py', length: 33, progLang: 'python' },
-    },
-    {
-      id: 3,
-      datetime: new Date(historySeedBase + 120 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
-      tags: [{ identifier: 'manual', i18nText: 'Manual' }],
-      idUser: 'test-user',
-      isCheckpoint: true,
-      sinceEarlier: { charsAdded: 8, charsRemoved: 1 },
-      sinceEarlierCheckpoint: { charsAdded: 23, charsRemoved: 3, elementsCount: 1 },
-      activeTab: { name: 'main.py', length: 40, progLang: 'python' },
-    },
-  ];
+  var historyCheckpointCount = Number(params.get('historyCheckpoints') || '0');
+  var editorHistory = [];
+  if (historyCheckpointCount > 0) {
+    for (var cp = 1; cp <= historyCheckpointCount; cp++) {
+      editorHistory.push({
+        id: cp,
+        datetime: new Date(historySeedBase + (cp - 1) * 60 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+        tags: [{ identifier: 'cp' + cp, i18nText: 'Checkpoint ' + cp }],
+        idUser: 'test-user',
+        isCheckpoint: true,
+        sinceEarlier: { charsAdded: 10, charsRemoved: 1 },
+        sinceEarlierCheckpoint: { charsAdded: 10, charsRemoved: 1, elementsCount: 0 },
+        activeTab: { name: 'main.py', length: 20 + cp, progLang: 'python' },
+      });
+    }
+  } else {
+    editorHistory = [
+      {
+        id: 1,
+        datetime: new Date(historySeedBase).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+        tags: [{ identifier: 'start', i18nText: 'Start' }],
+        idUser: 'test-user',
+        isCheckpoint: true,
+        sinceEarlier: { charsAdded: 20, charsRemoved: 0 },
+        sinceEarlierCheckpoint: { charsAdded: 20, charsRemoved: 0, elementsCount: 0 },
+        activeTab: { name: 'main.py', length: 20, progLang: 'python' },
+      },
+      {
+        id: 2,
+        datetime: new Date(historySeedBase + 60 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+        tags: [],
+        idUser: 'test-user',
+        isCheckpoint: false,
+        sinceEarlier: { charsAdded: 15, charsRemoved: 2 },
+        activeTab: { name: 'main.py', length: 33, progLang: 'python' },
+      },
+      {
+        id: 3,
+        datetime: new Date(historySeedBase + 120 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z'),
+        tags: [{ identifier: 'manual', i18nText: 'Manual' }],
+        idUser: 'test-user',
+        isCheckpoint: true,
+        sinceEarlier: { charsAdded: 8, charsRemoved: 1 },
+        sinceEarlierCheckpoint: { charsAdded: 23, charsRemoved: 3, elementsCount: 1 },
+        activeTab: { name: 'main.py', length: 40, progLang: 'python' },
+      },
+    ];
+  }
 
   var state = {
     answer: '',
