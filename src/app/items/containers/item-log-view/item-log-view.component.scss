@@ -50,3 +50,18 @@
   display: inline-block;
   margin-top: functions.toRem(5);
 }
+
+.history-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: functions.toRem(12);
+  margin-top: functions.toRem(5);
+}
+
+.history-row-actions .alg-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}

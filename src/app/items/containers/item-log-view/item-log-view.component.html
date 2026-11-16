@@ -59,10 +59,10 @@
         </button>
       </div>
     </div>
-    @let isObserving = isObserving$ | async;
+    @let observing = isObserving$ | async;
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
-        <table class="alg-table-v2" cdk-table [dataSource]="rows">
+        <table class="alg-table-v2" cdk-table [dataSource]="displayedRows()">
           @for (column of columns(); track column.field) {
             <ng-container [cdkColumnDef]="column.field">
               <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>{{ column.header }}</th>
@@ -76,6 +76,40 @@
                         </div>
                         <div class="item-title">
                           <p class="item-title-caption">{{ checkpointCaption(rowData) }}</p>
+                          <div class="history-row-actions">
+                            @if (!observing) {
+                              <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)" i18n>
+                                Restore
+                              </button>
+                            }
+                            @if ((rowData.checkpoint.sinceEarlierCheckpoint?.elementsCount ?? 0) > 0) {
+                              <button
+                                type="button"
+                                class="alg-link"
+                                [attr.aria-expanded]="expansion.isExpanded(rowData.checkpoint.id)"
+                                [disabled]="expansion.loadingCheckpointId() === rowData.checkpoint.id"
+                                (click)="toggleCheckpoint(rowData)"
+                              >
+                                {{ expansion.toggleLabel(rowData) }}
+                              </button>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    } @else if (rowData.kind === 'edit') {
+                      <div class="item-title-section">
+                        <div class="item-title-section-left">
+                          <i class="item-icon ph ph-circle"></i>
+                        </div>
+                        <div class="item-title">
+                          <p class="item-title-caption">{{ editCaption(rowData.edit) }}</p>
+                          @if (!observing) {
+                            <div class="history-row-actions">
+                              <button type="button" class="alg-link" (click)="onRestore(rowData.edit.id)" i18n>
+                                Restore
+                              </button>
+                            </div>
+                          }
                         </div>
                       </div>
                     } @else {
@@ -95,7 +129,7 @@
                             @let attemptId = rowData.event.item.id === itemData().item.id ? itemData().route.attemptId : undefined;
                             @let parentAttemptId = rowData.event.item.id === itemData().item.id ? itemData().route.parentAttemptId : undefined;
                             @let route = rowData.event.item | itemRoute: { path, attemptId, parentAttemptId };
-                            @if (!isObserving || !!rowData.event.canWatchAnswer) {
+                            @if (!observing || !!rowData.event.canWatchAnswer) {
                               <a
                                 class="alg-link item-title-link"
                                 [routerLink]="route | with: { answer: { id: rowData.event.answerId } } | url: ['task', 'editor']"

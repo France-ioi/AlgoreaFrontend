@@ -2,6 +2,7 @@ import {
   Component,
   DestroyRef,
   computed,
+  effect,
   inject,
   input,
   linkedSignal,
@@ -44,6 +45,8 @@ import { itemRoute } from 'src/app/models/routing/item-route';
 import { MessageService } from 'src/app/services/message.service';
 import { openNewTab } from 'src/app/utils/url';
 import { ScoreChange } from '../../models/score-change';
+import { HistoryTaskLoadRequest } from '../../services/history-task-load.request';
+import { ItemLoadedTaskRegistry } from '../../services/item-loaded-task-registry';
 
 /**
  * Auto-open delay (ms) for `alg.navigate`-`{ url }` requests originating from the description iframe.
@@ -86,6 +89,9 @@ export class ItemContentComponent implements PendingChangesComponent {
   private messageService = inject(MessageService);
   private location = inject(Location);
   private destroyRef = inject(DestroyRef);
+  private historyTaskLoad = inject(HistoryTaskLoadRequest, { optional: true });
+  private loadedTaskRegistry = inject(ItemLoadedTaskRegistry, { optional: true });
+  private loadedTask = toSignal(this.loadedTaskRegistry?.snapshot$ ?? of(null), { initialValue: null });
 
   // Template ref so the spec mock is the teardown target (`viewChild(ItemDisplayComponent)` misses it).
   readonly itemDisplayComponent = viewChild<ItemDisplayComponent>('taskDisplay');
@@ -190,6 +196,15 @@ export class ItemContentComponent implements PendingChangesComponent {
       filter(needsRestart => needsRestart),
       takeUntilDestroyed(),
     ).subscribe(() => this.taskRestart$.next());
+
+    // History asked for the URL attempt, but the live iframe was loaded on another one.
+    effect(() => {
+      const pending = this.historyTaskLoad?.pendingAttemptId() ?? null;
+      const loaded = this.loadedTask();
+      const attemptId = this.itemData().route.attemptId;
+      if (!pending || pending !== attemptId || !loaded || loaded.attemptId === pending) return;
+      this.taskRestart$.next();
+    });
   }
 
   isDirty(): boolean {

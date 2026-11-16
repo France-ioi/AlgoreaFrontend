@@ -266,14 +266,17 @@ export class Task {
   getResources(): Observable<TaskResources> {
     return this.chan.call({ method: 'task.getResources', params: [], timeout: 2000 });
   }
-
   /** Bebras API v3: editor history for the currently loaded attempt. */
   getHistory(options: TaskGetHistoryOptions = {}): Observable<TaskHistory> {
-    if (this.apiVersion < 3) {
-      return throwError(() => new Error('task.getHistory requires API version ≥ 3'));
-    }
+    if (this.apiVersion < 3) return throwError(() => new Error('task.getHistory requires API version ≥ 3'));
     return this.chan.call({ method: 'task.getHistory', params: options, timeout: 5000 })
       .pipe(map(([ history ]) => taskHistorySchema.parse(history)));
+  }
+
+  /** Bebras API v3: save the latest editor state (unless read-only), then load that element. */
+  reloadHistory(options: { elementId: number }): Observable<void> {
+    if (this.apiVersion < 3) return throwError(() => new Error('task.reloadHistory requires API version ≥ 3'));
+    return this.chan.call({ method: 'task.reloadHistory', params: options, timeout: 5000 }).pipe(map(() => undefined));
   }
 
   /** Platform→task: single event payload (e.g. a WebSocket close notification). */

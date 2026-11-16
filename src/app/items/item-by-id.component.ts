@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, viewChild } from '@angular/core';
+import { Component, computed, inject, OnDestroy, viewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
 import {
@@ -25,6 +25,8 @@ import { PendingChangesService } from 'src/app/services/pending-changes-service'
 import { canCurrentUserViewContent } from 'src/app/items/models/item-view-permission';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { ItemLoadedTaskRegistry } from './services/item-loaded-task-registry';
+import { HistoryTaskLoadRequest } from './services/history-task-load.request';
+import { HistoryRestoreRequest } from './services/history-restore.request';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -59,7 +61,15 @@ import { isScoreForRoute, ScoreChange } from './models/score-change';
   selector: 'alg-item-by-id',
   templateUrl: './item-by-id.component.html',
   styleUrl: './item-by-id.component.scss',
-  providers: [ InitialAnswerDataSource, ItemTabs, ItemTaskFlowService, ItemContentSyncService, ItemLoadedTaskRegistry ],
+  providers: [
+    InitialAnswerDataSource,
+    ItemTabs,
+    ItemTaskFlowService,
+    ItemContentSyncService,
+    ItemLoadedTaskRegistry,
+    HistoryTaskLoadRequest,
+    HistoryRestoreRequest,
+  ],
   imports: [
     ItemHeaderComponent,
     AccessCodeViewComponent,
@@ -94,6 +104,10 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
   private currentContentService = inject(CurrentContentService);
   private tabService = inject(TabService);
   private pendingChangesService = inject(PendingChangesService);
+  private historyTaskLoad = inject(HistoryTaskLoadRequest);
+
+  /** Keep the task iframe mounted (hidden) while History is loading the URL attempt. */
+  readonly mountTaskForHistory = computed(() => this.historyTaskLoad.pendingAttemptId() !== null);
 
   readonly itemContentComponent = viewChild(ItemContentComponent);
 
@@ -228,7 +242,11 @@ export class ItemByIdComponent implements OnDestroy, BeforeUnloadComponent, Pend
     this.itemTabs.disablePlatformProgressChanged(value);
   }
 
+  private readonly contentPage = this.store.selectSignal(fromItemContent.selectActiveContentPage);
+
   setTaskView(view: string, route: RawItemRoute): void {
+    // The task announces its initial view as soon as it loads. History asked for that load while staying here.
+    if (this.contentPage()?.[0] === 'history') return;
     this.taskFlow.setTaskView(view, route);
   }
 

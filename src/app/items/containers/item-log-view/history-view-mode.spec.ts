@@ -51,11 +51,17 @@ describe('history-view-mode helpers', () => {
       expect(canShowEventsAndEdits(false, '1', loaded)).toBeFalse();
     });
 
-    it('hides the control on chapters, groups, missing load, or no editor history', () => {
+    it('hides the control on chapters, groups, while observing, or when the task does not save history', () => {
       expect(shouldShowHistoryModeSelection('Chapter', null, false, '0', loaded)).toBeFalse();
       expect(shouldShowHistoryModeSelection('Task', rawGroupRoute({ id: 'g1', isUser: false }), false, '0', loaded))
         .toBeFalse();
-      expect(shouldShowHistoryModeSelection('Task', null, false, '0', null)).toBeFalse();
+      expect(shouldShowHistoryModeSelection(
+        'Task',
+        rawGroupRoute({ id: 'u1', isUser: true }),
+        true,
+        '0',
+        loaded,
+      )).toBeFalse();
       expect(shouldShowHistoryModeSelection(
         'Task',
         null,
@@ -63,6 +69,14 @@ describe('history-view-mode helpers', () => {
         '0',
         { ...loaded, savesEditorHistory: false },
       )).toBeFalse();
+    });
+
+    it('shows the control when the task is not loaded, so choosing edits can load it', () => {
+      expect(shouldShowHistoryModeSelection('Task', null, false, '0', null)).toBeTrue();
+    });
+
+    it('shows the control when the task is loaded on another attempt', () => {
+      expect(shouldShowHistoryModeSelection('Task', null, false, '1', loaded)).toBeTrue();
     });
 
     it('shows the control when Events & Edits is available', () => {

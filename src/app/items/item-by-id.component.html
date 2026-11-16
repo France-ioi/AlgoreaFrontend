@@ -37,7 +37,7 @@
         [class.no-top-padding]="itemData.item.type === 'Task' && !!currentTab?.isTaskTab"
         [class.side-padding]="itemData.item.type === 'Task' && !currentTab?.isTaskTab && fullFrameContentDisplayed"
       >
-        @if (isTearingDownTask() || currentTab?.isTaskTab || itemContentComponent()?.isTaskLoaded() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
+        @if (isTearingDownTask() || currentTab?.isTaskTab || itemContentComponent()?.isTaskLoaded() || mountTaskForHistory() || currentTab?.tag === 'alg-content' || currentTab?.tag === 'alg-children-edit') {
           @if (answerLoadingError$ | async; as error) {
             <alg-error>
               @if (!error.fallbackLink) {

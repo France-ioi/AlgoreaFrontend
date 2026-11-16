@@ -33,16 +33,21 @@ import {
 import { SelectionComponent } from 'src/app/ui-components/selection/selection.component';
 import { ItemLoadedTaskRegistry } from '../../services/item-loaded-task-registry';
 import { FetchState, fetchingState, mapStateData } from 'src/app/utils/state';
-import { HistoryListRow } from './history-list-merge';
-import { checkpointCaption } from './history-checkpoint-caption';
+import { HistoryListRow, activityLogsToEventRows } from './history-list-merge';
+import { checkpointCaption, editCaption } from './history-checkpoint-caption';
+import { HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
+import { HistoryCheckpointExpansion } from './history-checkpoint-expansion';
+import { HistoryModeMemory, chooseHistoryMode, followHistoryMode } from './history-mode-sync';
 import { HistoryEditsFacade } from './history-edits-facade';
-import { fetchAttemptActivityLog$ } from './history-edits-load';
+import { fetchAllActivityLog, fetchAttemptActivityLog$ } from './history-edits-load';
 import { historyEditsPageSize } from './history-edits-pager';
 import { HistoryLogColumn, historyLogColumns } from './history-log-columns';
 import {
   attemptNumberForLabel, HistoryViewMode, historyModeOptions,
-  initialHistoryViewMode, shouldShowHistoryModeSelection,
+  shouldShowHistoryModeSelection,
 } from './history-view-mode';
+import { HistoryTaskLoadRequest } from '../../services/history-task-load.request';
+import { HistoryRestoreRequest } from '../../services/history-restore.request';
 
 @Component({
   selector: 'alg-item-log-view',
@@ -64,6 +69,8 @@ export class ItemLogViewComponent {
   private router = inject(Router);
   private itemRouter = inject(ItemRouter);
   private loadedTaskRegistry = inject(ItemLoadedTaskRegistry, { optional: true });
+  private historyTaskLoad = inject(HistoryTaskLoadRequest, { optional: true });
+  private restoreRequest = inject(HistoryRestoreRequest, { optional: true });
   private destroyRef = inject(DestroyRef);
 
   itemData = input.required<ItemData>();
@@ -87,6 +94,8 @@ export class ItemLogViewComponent {
   readonly loadedTask = toSignal(this.loadedTask$, { initialValue: null });
 
   readonly mode = signal<HistoryViewMode>('events');
+  private readonly modeMemory: HistoryModeMemory = { userChoseEventsOnly: false, seenNavigationKey: '' };
+  readonly expansion = new HistoryCheckpointExpansion();
   private readonly editsReload$ = new Subject<void>();
   readonly editsState = signal<FetchState<HistoryListRow[]>>(fetchingState());
   readonly editsCanLoadMore = signal(false);
@@ -103,19 +112,10 @@ export class ItemLogViewComponent {
       latest,
     ),
   );
-  /** Includes loaded-task fingerprint so default mode rebinds when the iframe becomes ready. */
-  private readonly historyContextKey = computed(() => {
+  private readonly navigationKey = computed(() => {
     const data = this.itemData();
     const observed = this.observedGroupRoute();
-    const loaded = this.loadedTask();
-    return [
-      data.item.id,
-      data.route.attemptId ?? '',
-      this.isObserving() ? '1' : '0',
-      observed?.id ?? '',
-      loaded?.attemptId ?? '',
-      loaded?.savesEditorHistory === true ? '1' : loaded?.savesEditorHistory === false ? '0' : 'u',
-    ].join('|');
+    return [ data.item.id, data.route.attemptId ?? '', this.isObserving() ? '1' : '0', observed?.id ?? '' ].join('|');
   });
 
   readonly showModeSelection = computed(() =>
@@ -130,13 +130,19 @@ export class ItemLogViewComponent {
   readonly modeOptions = computed(() =>
     historyModeOptions(attemptNumberForLabel(this.itemData().results, this.itemData().route.attemptId))
   );
-  readonly selectedModeIndex = computed(() => {
-    const index = this.modeOptions().findIndex(option => option.value === this.mode());
-    return index >= 0 ? index : 0;
-  });
+  readonly selectedModeIndex = computed(() =>
+    Math.max(this.modeOptions().findIndex(option => option.value === this.mode()), 0)
+  );
 
   datapager = new DataPager({
-    fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> => this.getRows(pageSize, latestRow),
+    fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> =>
+      fetchAllActivityLog(
+        this.activityLogService,
+        this.itemData().item.id,
+        this.store.select(fromObservation.selectObservedGroupId),
+        pageSize,
+        latestRow,
+      ),
     pageSize: historyEditsPageSize,
     onLoadMoreError: (): void => {
       this.actionFeedbackService.error($localize`Could not load more logs, are you connected to the internet?`);
@@ -146,11 +152,7 @@ export class ItemLogViewComponent {
   private readonly item$ = toObservable(this.itemData).pipe(map(itemData => itemData.item));
   private readonly eventsListState = toSignal(
     combineLatest([ this.datapager.list$, this.sessionService.userProfile$ ]).pipe(
-      map(([ fetchData, profile ]) => mapStateData(fetchData, (logs): HistoryListRow[] =>
-        logs
-          .filter(log => !(log.activityType === 'current_answer' && log.participant.id === profile.groupId))
-          .map(event => ({ kind: 'event' as const, at: event.at, event })),
-      )),
+      map(([ fetchData, profile ]) => mapStateData(fetchData, logs => activityLogsToEventRows(logs, profile.groupId))),
     ),
     { initialValue: fetchingState<HistoryListRow[]>() },
   );
@@ -158,6 +160,13 @@ export class ItemLogViewComponent {
   readonly listState = computed((): FetchState<HistoryListRow[]> => {
     if (this.mode() === 'events_and_edits') return this.editsState();
     return this.eventsListState();
+  });
+
+  readonly displayedRows = computed((): HistoryDisplayRow[] => {
+    const rows = this.listState().data;
+    if (!rows) return [];
+    if (this.mode() !== 'events_and_edits') return rows;
+    return insertExpandedEdits(rows, this.expansion.expandedEdits());
   });
 
   readonly columns$ = combineLatest([
@@ -175,17 +184,22 @@ export class ItemLogViewComponent {
     });
 
     effect(() => {
-      const contextKey = this.historyContextKey();
-      const isObserving = this.isObserving();
+      const nav = this.navigationKey();
       const loaded = this.loadedTask();
-      const attemptId = this.itemData().route.attemptId;
-      untracked(() => {
-        void contextKey;
-        const nextMode = initialHistoryViewMode(isObserving, attemptId, loaded);
-        this.mode.set(nextMode);
-        if (nextMode === 'events') this.resetRows();
-        else this.editsReload$.next();
-      });
+      const isObserving = this.isObserving();
+      untracked(() => followHistoryMode(
+        this.modeMemory,
+        nav,
+        isObserving,
+        this.itemData().route.attemptId,
+        loaded,
+        this.mode(),
+        {
+          clearExpansions: () => this.expansion.clear(),
+          applyMode: next => this.applyMode(next),
+          reload: () => this.editsReload$.next(),
+        },
+      ));
     });
 
     this.editsReload$.pipe(
@@ -205,35 +219,45 @@ export class ItemLogViewComponent {
   }
 
   refresh(): void {
+    this.expansion.clear();
     if (this.mode() === 'events_and_edits') this.editsReload$.next();
     else this.resetRows();
   }
 
   onModeChange(index: number): void {
     const option = this.modeOptions()[index];
-    if (!option || option.value === this.mode()) return;
-    this.mode.set(option.value);
-    if (option.value === 'events') this.resetRows();
-    else this.editsReload$.next();
+    if (!option) return;
+    chooseHistoryMode(
+      this.modeMemory,
+      this.mode(),
+      option.value,
+      this.isObserving(),
+      this.itemData().route.attemptId,
+      this.loadedTask(),
+      {
+        clearExpansions: () => this.expansion.clear(),
+        applyMode: next => this.applyMode(next),
+        showEditsLoading: () => {
+          this.mode.set('events_and_edits');
+          this.editsState.set(fetchingState());
+        },
+        loadTask: attemptId => this.historyTaskLoad?.request(attemptId),
+      },
+    );
   }
 
-  getRows(pageSize: number, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> {
-    return this.store.select(fromObservation.selectObservedGroupId).pipe(
-      switchMap(observedGroupId => {
-        const paginationParams = latestRow === undefined ? undefined : {
-          fromItemId: latestRow.item.id,
-          fromParticipantId: latestRow.participant.id,
-          fromAttemptId: latestRow.attemptId,
-          fromAnswerId: latestRow.answerId ?? '0',
-          fromActivityType: latestRow.activityType,
-        };
-        return this.activityLogService.getActivityLog(this.itemData().item.id, {
-          limit: pageSize,
-          pagination: paginationParams,
-          watchedGroupId: observedGroupId ?? undefined,
-        });
-      }),
-    );
+  toggleCheckpoint(row: HistoryListRow & { kind: 'checkpoint' }): void {
+    this.expansion.toggle(row, this.loadedTask()?.task, this.editsState().data, this.destroyRef, () =>
+      this.actionFeedbackService.error($localize`Could not load edits. Are you connected to the internet?`));
+  }
+
+  onRestore(elementId: number): void {
+    const attemptId = this.itemData().route.attemptId;
+    if (!attemptId) return;
+    this.restoreRequest?.queue(elementId, attemptId);
+    this.itemRouter.navigateTo(itemRouteWith(this.itemData().route, { answer: undefined }), {
+      page: [ 'task', 'editor' ], useCurrentObservation: true,
+    });
   }
 
   resetRows(): void {
@@ -241,17 +265,14 @@ export class ItemLogViewComponent {
   }
 
   fetchMoreRows(): void {
-    if (this.mode() === 'events_and_edits') {
-      const loaded = this.loadedTask();
-      this.editsFacade.loadMore(
-        this.editsState().isFetching,
-        this.editsState().data,
-        loaded?.task,
-        this.itemData().route.attemptId,
-      );
+    if (this.mode() !== 'events_and_edits') {
+      this.datapager.load();
       return;
     }
-    this.datapager.load();
+    const loaded = this.loadedTask();
+    this.editsFacade.loadMore(
+      this.editsState().isFetching, this.editsState().data, loaded?.task, this.itemData().route.attemptId,
+    );
   }
 
   onViewAnswer(): void {
@@ -269,4 +290,11 @@ export class ItemLogViewComponent {
   }
 
   readonly checkpointCaption = checkpointCaption;
+  readonly editCaption = editCaption;
+
+  private applyMode(next: HistoryViewMode): void {
+    this.mode.set(next);
+    if (next === 'events') this.resetRows();
+    else this.editsReload$.next();
+  }
 }

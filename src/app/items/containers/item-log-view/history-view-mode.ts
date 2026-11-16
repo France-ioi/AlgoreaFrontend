@@ -24,8 +24,8 @@ export function attemptNumberForLabel(results: Result[] | undefined, attemptId: 
 }
 
 /**
- * True when checkpoints can be read for the URL attempt (signed-in user's task already loaded there).
- * Ticket 06 will also offer Events & Edits when the task still needs loading.
+ * True when checkpoints can be read now: the signed-in user's task is already loaded on the URL attempt
+ * and it saves editor history.
  */
 export function canShowEventsAndEdits(
   isObserving: boolean,
@@ -40,21 +40,24 @@ export function canShowEventsAndEdits(
 }
 
 /**
- * Show the mode control only when Events & Edits is actually available (two real choices).
- * Hidden on chapters, while observing a group, when the task lacks editor history, or when
- * the task is not yet loaded on this attempt (ticket 06 will widen this).
+ * Show the mode control when Events & Edits is a real choice.
+ * Hidden on chapters, while observing (group or user — the observer view is separate), and once
+ * metadata says the task does not save editor history.
+ * Shown when the task is not loaded yet, or is loaded on another attempt: choosing Events & Edits
+ * loads the URL attempt. `routeAttemptId` is unused until that load; kept so callers pass the route.
  */
 export function shouldShowHistoryModeSelection(
   itemType: ItemType,
   observedGroupRoute: RawGroupRoute | null,
   isObserving: boolean,
-  routeAttemptId: string | undefined,
+  _routeAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
 ): boolean {
   if (itemType !== 'Task') return false;
+  if (isObserving) return false;
   if (observedGroupRoute && !isUser(observedGroupRoute)) return false;
   if (loaded?.savesEditorHistory === false) return false;
-  return canShowEventsAndEdits(isObserving, routeAttemptId, loaded);
+  return true;
 }
 
 /** Default to Events & Edits only when checkpoints are available for the URL attempt. */

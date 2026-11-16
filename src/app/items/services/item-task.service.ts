@@ -15,6 +15,8 @@ import { ItemTaskInitService } from './item-task-init.service';
 import { ItemTaskViewsService } from './item-task-views.service';
 import { InitialAnswerDataSource } from './initial-answer-datasource';
 import { ItemLoadedTaskRegistry } from './item-loaded-task-registry';
+import { HistoryRestoreRequest } from './history-restore.request';
+import { listenForHistoryRestore } from './listen-for-history-restore';
 
 export type Answer =
   Pick<GetAnswerType, 'id'|'authorId'|'answer'|'state'|'score'|'itemId'|'participantId'|'type'>
@@ -39,6 +41,7 @@ export class ItemTaskService implements OnDestroy {
   // Optional: provided on the item-by-id host; absent in isolated unit tests of this service.
   private initialAnswerDataSource = inject(InitialAnswerDataSource, { optional: true });
   private loadedTaskRegistry = inject(ItemLoadedTaskRegistry, { optional: true });
+  private restoreRequest = inject(HistoryRestoreRequest, { optional: true });
 
   readonly unknownError$ = merge(this.answerService.error$, this.viewsService.error$).pipe(
     takeUntilDestroyed(),
@@ -97,6 +100,19 @@ export class ItemTaskService implements OnDestroy {
       catchError(() => EMPTY),
       takeUntilDestroyed(),
     ).subscribe(value => this.initialAnswerDataSource?.setSavesEditorHistory(value));
+
+    this.listenForHistoryRestore();
+  }
+
+  private listenForHistoryRestore(): void {
+    if (!this.restoreRequest) return;
+    listenForHistoryRestore(
+      this.restoreRequest,
+      this.initService.loadedTask$.pipe(catchError(() => EMPTY)),
+      this.attemptId$,
+      () => this.readOnly,
+      this.destroyRef,
+    );
   }
 
   ngOnDestroy(): void {

@@ -9,6 +9,8 @@
     usesTokens: params.get('usesTokens') === '1',
     // v3 tasks may declare that they own work in progress (platform must not save/reload current answer)
     savesHistory: params.get('savesHistory') === '1',
+    // reloadHistory skips the pre-reload save when the task is read-only (observer case).
+    readOnly: params.get('readOnly') === '1',
     autoHeight: params.get('autoHeight') === '1',
     loadDelay: Number(params.get('loadDelay') || '0'),
     gradeDelay: Number(params.get('gradeDelay') || '0'),
@@ -50,6 +52,7 @@
         sinceEarlier: { charsAdded: 20, charsRemoved: 0 },
         sinceEarlierCheckpoint: { charsAdded: 20, charsRemoved: 0, elementsCount: 0 },
         activeTab: { name: 'main.py', length: 20, progLang: 'python' },
+        answer: 'start',
       },
       {
         id: 2,
@@ -59,6 +62,7 @@
         isCheckpoint: false,
         sinceEarlier: { charsAdded: 15, charsRemoved: 2 },
         activeTab: { name: 'main.py', length: 33, progLang: 'python' },
+        answer: 'edit',
       },
       {
         id: 3,
@@ -69,6 +73,7 @@
         sinceEarlier: { charsAdded: 8, charsRemoved: 1 },
         sinceEarlierCheckpoint: { charsAdded: 23, charsRemoved: 3, elementsCount: 1 },
         activeTab: { name: 'main.py', length: 40, progLang: 'python' },
+        answer: 'manual',
       },
     ];
   }
@@ -359,6 +364,38 @@
   chan.bind('task.getHistory', function (trans, options) {
     logCall('task.getHistory', options || {});
     return filterEditorHistory(options);
+  });
+
+  chan.bind('task.reloadHistory', function (trans, options) {
+    logCall('task.reloadHistory', options || {});
+    var elementId = Number(options && options.elementId);
+    if (!config.readOnly) {
+      var nextId = editorHistory.reduce(function (max, el) { return Math.max(max, el.id); }, 0) + 1;
+      var answer = answerInput.value;
+      // A checkpoint so the saved state shows in the History list, which lists checkpoints until a span is opened.
+      editorHistory.push({
+        id: nextId,
+        datetime: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+        tags: [{ identifier: 'autosave', i18nText: 'Autosave' }],
+        idUser: 'test-user',
+        isCheckpoint: true,
+        sinceEarlier: { charsAdded: answer.length, charsRemoved: 0 },
+        sinceEarlierCheckpoint: { charsAdded: answer.length, charsRemoved: 0, elementsCount: 0 },
+        activeTab: { name: 'main.py', length: answer.length, progLang: 'python' },
+        answer: answer,
+      });
+    }
+    var target = null;
+    for (var i = 0; i < editorHistory.length; i++) {
+      if (editorHistory[i].id === elementId) target = editorHistory[i];
+    }
+    if (!target) {
+      trans.error('not_found', 'Unknown history element ' + elementId);
+      return;
+    }
+    state.answer = target.answer || '';
+    syncInputsFromState();
+    return true;
   });
 
   function logPlatformCall(method, callParams, status, detail) {
